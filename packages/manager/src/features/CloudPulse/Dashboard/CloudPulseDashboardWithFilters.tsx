@@ -185,8 +185,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 <CloudPulseDashboardSelect
                   defaultValue={currentDashboard.id}
                   handleDashboardChange={handleDashboardChange}
-                  integrationServiceType={serviceType}
-                  isServiceLevelDashboardId={!!dashboardId}
+                  integrationServiceType={currentDashboard.service_type}
+                  onlyServiceLevelDashboardIdAvailable={
+                    !!dashboardId && !serviceType
+                  }
                 />
                 <Box
                   display="flex"
