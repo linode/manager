@@ -51,7 +51,8 @@ const accountUsersRoute = createRoute({
   beforeLoad: async ({ context }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
 
     if (isIAMEnabled) {
@@ -161,7 +162,8 @@ const accountUsersUsernameRoute = createRoute({
 
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
 
     if (!username) {
