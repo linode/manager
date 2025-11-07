@@ -487,6 +487,7 @@ export const LKE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'region',
+        children: ['resource_id'],
         filterType: 'string',
         isFilterable: false,
         isMetricsFilter: false,
