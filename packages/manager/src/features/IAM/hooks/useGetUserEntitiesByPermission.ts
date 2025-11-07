@@ -42,6 +42,9 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   username,
   enabled = true,
 }: UseGetEntitiesByPermissionProps<T>) => {
+  /**
+   * Get the full entities from the API
+   */
   const {
     data: allEntities,
     error: isAllEntitiesError,
@@ -101,7 +104,7 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   );
 
   /**
-   * Build the entities list based on the user types (restricted or unrestricted)
+   * Build the entities list based on the user types (restricted or unrestricted) and the beta/LA permission logic
    */
   const _availableEntities = shouldUseIAMPermissions
     ? profile?.restricted
