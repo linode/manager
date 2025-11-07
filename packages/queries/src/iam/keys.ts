@@ -1,7 +1,7 @@
 import {
   getAccountRoles,
-  getAvailableEntitiesFromPermission,
   getUserAccountPermissions,
+  getUserEntitiesByPermission,
   getUserEntityPermissions,
   getUserRoles,
 } from '@linode/api-v4';
@@ -27,12 +27,12 @@ export const iamQueries = createQueryKeys('iam', {
         queryFn: () => getUserEntityPermissions(username, entityType, entityId),
         queryKey: [entityType, entityId],
       }),
-      availableEntitiesFromPermission: (
+      getEntitiesByPermission: (
         entityType: AccessType,
         permission: PermissionType,
       ) => ({
         queryFn: () =>
-          getAvailableEntitiesFromPermission({
+          getUserEntitiesByPermission({
             username,
             entityType,
             permission,

@@ -3,7 +3,7 @@ import Request, { setData, setMethod, setURL } from '../request';
 
 import type {
   AccessType,
-  AvailableEntityFromPermission,
+  EntityByPermission,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
@@ -104,24 +104,22 @@ export const getUserEntityPermissions = (
   );
 
 /**
- * getAvailableEntitiesFromPermission
+ * getUserEntitiesByPermission
  *
  * Returns the available entities for a given permission.
- *
- * @param permission { PermissionType } the permission to look up.
  */
-export interface GetAvailableEntitiesFromPermissionParams {
+export interface GetEntitiesByPermissionParams {
   entityType: EntityType;
   permission: PermissionType;
   username: string;
 }
 
-export const getAvailableEntitiesFromPermission = ({
+export const getUserEntitiesByPermission = ({
   username,
   entityType,
   permission,
-}: GetAvailableEntitiesFromPermissionParams) =>
-  Request<AvailableEntityFromPermission[]>(
+}: GetEntitiesByPermissionParams) =>
+  Request<EntityByPermission[]>(
     setURL(
       `${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}?permission=${permission}`,
     ),

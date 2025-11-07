@@ -22,7 +22,7 @@ export const getStateSeederGroups = (
 };
 
 export const emptyStore: MockState = {
-  availableEntitiesFromPermission: [],
+  userEntitiesByPermission: [],
   childAccounts: [],
   cloudnats: [],
   configInterfaces: [],

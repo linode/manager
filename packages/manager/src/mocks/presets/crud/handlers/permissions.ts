@@ -11,8 +11,9 @@ import {
 import type {
   AccessType,
   AccountRoleType,
-  AvailableEntityFromPermission,
+  EntityByPermission,
   EntityRoleType,
+  EntityType,
   IamAccountRoles,
   IamUserRoles,
 } from '@linode/api-v4';
@@ -83,6 +84,60 @@ export const getPermissions = (mockState: MockState) => [
         return makeNotFoundResponse();
       }
 
+      const nextUserEntityPermissions = body.entity_access
+        ? [
+            ...currentState.userEntityPermissions.filter(
+              (entry) => entry.username !== username
+            ),
+            ...body.entity_access.map((entityAccess) => ({
+              username,
+              entityType: entityAccess.type,
+              entityId: entityAccess.id,
+              permissions: entityAccess.roles,
+            })),
+          ]
+        : currentState.userEntityPermissions;
+
+      const nextUserEntitiesByPermission = body.entity_access
+        ? nextUserEntityPermissions.reduce<EntityByPermission[]>(
+            (acc, entry) => {
+              if (
+                acc.some(
+                  (existing) =>
+                    existing.id === Number(entry.entityId) &&
+                    existing.type === entry.entityType
+                )
+              ) {
+                return acc;
+              }
+
+              const existingEntry = currentState.userEntitiesByPermission.find(
+                (available) =>
+                  available.id === Number(entry.entityId) &&
+                  available.type === entry.entityType
+              );
+
+              const entityFromState = currentState.entities?.find(
+                (entity) =>
+                  entity.id === Number(entry.entityId) &&
+                  entity.type === entry.entityType
+              );
+
+              acc.push({
+                id: Number(entry.entityId),
+                label:
+                  existingEntry?.label ??
+                  entityFromState?.label ??
+                  `${entry.entityType}-${entry.entityId}`,
+                type: entry.entityType as EntityType,
+              });
+
+              return acc;
+            },
+            []
+          )
+        : currentState.userEntitiesByPermission;
+
       const updatedState = {
         ...currentState,
         userRoles: [
@@ -99,19 +154,8 @@ export const getPermissions = (mockState: MockState) => [
               { username, permissions: body.account_access },
             ]
           : currentState.userAccountPermissions,
-        userEntityPermissions: body.entity_access
-          ? [
-              ...currentState.userEntityPermissions.filter(
-                (entry) => entry.username !== username
-              ),
-              ...body.entity_access.map((entityAccess) => ({
-                username,
-                entityType: entityAccess.type,
-                entityId: entityAccess.id,
-                permissions: entityAccess.roles,
-              })),
-            ]
-          : currentState.userEntityPermissions,
+        userEntityPermissions: nextUserEntityPermissions,
+        userEntitiesByPermission: nextUserEntitiesByPermission,
       };
 
       await mswDB.saveStore(updatedState, 'mockState');
@@ -310,7 +354,7 @@ export const getPermissions = (mockState: MockState) => [
     }
   ),
 
-  // Get available entities from permission
+  // Get user entities by permission
   http.get(
     '*/v4*/iam/users/:username/entities/:entityType',
     async ({
@@ -318,14 +362,14 @@ export const getPermissions = (mockState: MockState) => [
       request,
     }): Promise<
       StrictResponse<
-        APIErrorResponse | APIPaginatedResponse<AvailableEntityFromPermission>
+        APIErrorResponse | APIPaginatedResponse<EntityByPermission>
       >
     > => {
       const username = params.username as string;
       const entityType = params.entityType as string;
       const url = new URL(request.url);
 
-      // Get permission from query param, default to view_{entity_type}
+      // Get user permission from query param, default to view_{entity_type}
       const permission =
         url.searchParams.get('permission') || `view_${entityType}`;
 
@@ -345,23 +389,21 @@ export const getPermissions = (mockState: MockState) => [
       );
 
       // Get all available entities
-      const availableEntitiesFromPermissionEntries = await mswDB.getAll(
-        'availableEntitiesFromPermission'
+      const userEntitiesByPermissionEntries = await mswDB.getAll(
+        'userEntitiesByPermission'
       );
 
-      if (!availableEntitiesFromPermissionEntries) {
+      if (!userEntitiesByPermissionEntries) {
         return makeNotFoundResponse();
       }
 
       // Filter entities where user has the specified permission
-      const entitiesWithPermission =
-        availableEntitiesFromPermissionEntries.filter((entity) => {
-          // Check if this entity matches the requested entity type
+      const entitiesWithPermission = userEntitiesByPermissionEntries.filter(
+        (entity) => {
           if (entity.type !== entityType) {
             return false;
           }
 
-          // Find the user's permissions for this specific entity
           const entityPermission = userPermissions.find(
             (perm) =>
               perm.entityId === entity.id && perm.entityType === entity.type
@@ -371,38 +413,26 @@ export const getPermissions = (mockState: MockState) => [
             return false;
           }
 
-          // Check if the user has a role that grants the requested permission
-          // Role hierarchy: admin > contributor > viewer
-          // Extract permission action (e.g., "view" from "view_linode")
-          const [permissionAction, permissionEntity] = permission.split('_', 2);
+          const [permissionVerb, permissionEntity] = permission.split('_', 2);
 
           return entityPermission.permissions.some((role) => {
-            // Extract role level and entity (e.g., "viewer" and "linode" from "linode_viewer")
-            const roleParts = role.split('_');
-            const roleLevel = roleParts[roleParts.length - 1]; // viewer, contributor, or admin
-            const roleEntity = roleParts.slice(0, -1).join('_'); // linode, nodebalancer, etc.
+            const [roleEntity, roleLevel] = role.split('_', 2);
 
-            // Role must match the entity type
             if (roleEntity !== permissionEntity) {
               return false;
             }
 
-            // Check role hierarchy
-            // viewer can: view
-            // contributor can: view, modify
-            // admin can: view, modify, delete
-            const roleHierarchy: Record<string, string[]> = {
-              viewer: ['view'],
-              contributor: ['view', 'modify', 'update', 'edit'],
-              admin: ['view', 'modify', 'update', 'edit', 'delete'],
-            };
+            // For now, `view_*` is the only verb we need. All role levels grant `view`.
+            if (permissionVerb === 'view') {
+              return ['admin', 'contributor', 'viewer'].includes(roleLevel);
+            }
 
-            const allowedActions = roleHierarchy[roleLevel] || [];
-            return allowedActions.includes(permissionAction);
+            // Future verbs (update/delete/etc.) can be added here as needed.
+            return false;
           });
-        });
+        }
+      );
 
-      // Return paginated response
       return makePaginatedResponse({
         data: entitiesWithPermission,
         request,
