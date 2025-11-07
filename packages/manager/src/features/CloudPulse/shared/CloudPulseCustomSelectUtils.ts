@@ -105,6 +105,9 @@ interface CloudPulseCustomSelectionChangeProps
    */
   clearSelections: string[];
 
+  /**
+   * Id of the selected dashboard
+   */
   dashboardId: number;
 
   /**

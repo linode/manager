@@ -146,8 +146,7 @@ export const clearChildPreferences = (
   const filterToChildrenMap: Record<string, string[]> = filters.reduce<
     Record<string, string[]>
   >((previousValue, filter) => {
-    const key = filter.configuration.filterKey;
-    const children = filter.configuration.children;
+    const { filterKey: key, children } = filter.configuration;
     if (children) {
       previousValue[key] = children;
     }
