@@ -334,6 +334,7 @@ export type ProductInformationBannerLocation =
   | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
