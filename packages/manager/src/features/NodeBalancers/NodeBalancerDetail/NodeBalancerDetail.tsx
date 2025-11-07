@@ -12,7 +12,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -97,14 +96,6 @@ export const NodeBalancerDetail = () => {
         title={nodebalancer.label}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-      {!permissions.update_nodebalancer && (
-        <Notice
-          text={getRestrictedResourceText({
-            resourceType: 'NodeBalancers',
-          })}
-          variant="warning"
-        />
-      )}
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
