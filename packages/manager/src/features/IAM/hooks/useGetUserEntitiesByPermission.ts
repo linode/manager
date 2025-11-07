@@ -99,9 +99,9 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   /**
    * Map the entities by permission to the full entities
    */
-  const fullEntitiesFromEntitiesByPermission = entitiesByPermission?.map(
-    (entity) => allEntities?.find((e) => e.id === entity.id)
-  );
+  const fullEntitiesFromEntitiesByPermission = entitiesByPermission
+    ?.map((entity) => allEntities?.find((e) => e.id === entity.id))
+    .filter((e): e is T => e !== undefined);
 
   /**
    * Build the entities list based on the user types (restricted or unrestricted) and the beta/LA permission logic
