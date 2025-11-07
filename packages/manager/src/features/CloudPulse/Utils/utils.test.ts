@@ -1,7 +1,7 @@
 import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
-import { serviceTypesFactory } from 'src/factories';
+import { kubernetesClusterFactory, serviceTypesFactory } from 'src/factories';
 import {
   firewallEntityfactory,
   firewallFactory,
@@ -25,6 +25,7 @@ import {
   arePortsValid,
   areValidInterfaceIds,
   filterFirewallResources,
+  filterKubernetesClusters,
   getAssociatedEntityType,
   getEnabledServiceTypes,
   getFilteredDimensions,
@@ -449,6 +450,49 @@ describe('getEnabledServiceTypes', () => {
         resources[1],
       ]);
     });
+  });
+});
+
+describe('filterKubernetesClusters', () => {
+  it('should return the filtered kubernetes clusters for enterprise', () => {
+    const clusters = [
+      ...kubernetesClusterFactory.buildList(5, { tier: 'standard' }),
+      ...kubernetesClusterFactory.buildList(5, { tier: 'enterprise' }),
+    ];
+    expect(filterKubernetesClusters(clusters)).toHaveLength(5);
+  });
+  it('should return the filtered kubernetes clusters for enterprise sorted by label', () => {
+    const clusters = [
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-redis-cluster',
+      }),
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-mr-api-4',
+      }),
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-alertmanager2',
+      }),
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-alertmanager',
+      }),
+    ];
+
+    expect(filterKubernetesClusters(clusters)[0].label).toBe(
+      'pl-labkrk-2-alertmanager'
+    );
+    expect(filterKubernetesClusters(clusters)[1].label).toBe(
+      'pl-labkrk-2-alertmanager2'
+    );
+    expect(filterKubernetesClusters(clusters)[2].label).toBe(
+      'pl-labkrk-2-mr-api-4'
+    );
+    expect(filterKubernetesClusters(clusters)[3].label).toBe(
+      'pl-labkrk-2-redis-cluster'
+    );
   });
 });
 
