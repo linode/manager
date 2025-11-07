@@ -140,11 +140,6 @@ export const NodeBalancerSettings = () => {
             })
           }
           sx={sxButton}
-          tooltipText={
-            connectionThrottle === nodebalancer.client_conn_throttle
-              ? 'Connection throttle is already set to this value.'
-              : undefined
-          }
         >
           Save
         </Button>
