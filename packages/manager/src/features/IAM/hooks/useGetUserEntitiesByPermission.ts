@@ -50,6 +50,10 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   } = query;
   const { isIAMBeta, isIAMEnabled, profile } = useIsIAMEnabled();
 
+  /**
+   * Get the entities by permission from the API
+   * This returns entities IDs which we need to map against the allEntities query
+   */
   const {
     data: entitiesByPermission,
     isLoading: isEntitiesByPermissionLoading,
@@ -60,6 +64,10 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     username,
   });
 
+  /**
+   * Beta/LA permission logic
+   * Will be cleaned up as soon as LA is fully adopted
+   */
   const useBetaPermissions =
     isIAMEnabled &&
     isIAMBeta &&
@@ -70,14 +78,12 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   const useLAPermissions = isIAMEnabled && !isIAMBeta;
   const shouldUseIAMPermissions = useBetaPermissions || useLAPermissions;
 
+  /**
+   * Legacy Grants - only used for restricted users if IAM is disabled
+   */
   const { data: grants } = useGrants(
     (!isIAMEnabled || !shouldUseIAMPermissions) && enabled
   );
-
-  const fullEntitiesFromEntitiesByPermission = entitiesByPermission?.map(
-    (entity) => allEntities?.find((e) => e.id === entity.id)
-  );
-
   let entityPermissionsMap: EntityPermissionMap = {};
   if (profile?.restricted) {
     entityPermissionsMap = entityPermissionMapFrom(
@@ -87,6 +93,16 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     );
   }
 
+  /**
+   * Map the entities by permission to the full entities
+   */
+  const fullEntitiesFromEntitiesByPermission = entitiesByPermission?.map(
+    (entity) => allEntities?.find((e) => e.id === entity.id)
+  );
+
+  /**
+   * Build the entities list based on the user types (restricted or unrestricted)
+   */
   const _availableEntities = shouldUseIAMPermissions
     ? profile?.restricted
       ? fullEntitiesFromEntitiesByPermission
