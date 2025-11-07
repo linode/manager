@@ -15,11 +15,9 @@ interface Props {
 export const VolumeEntityDetailFooter = ({ volume }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: updateVolume } = useVolumeUpdateMutation(volume.id);
-  const { data: volumePermissions } = usePermissions(
-    'volume',
-    ['update_volume'],
-    volume.id
-  );
+  const { data: accountPermissions } = usePermissions('account', [
+    'is_account_admin',
+  ]);
 
   const updateTags = React.useCallback(
     async (tags: string[]) => {
@@ -37,7 +35,7 @@ export const VolumeEntityDetailFooter = ({ volume }: Props) => {
 
   return (
     <TagCell
-      disabled={!volumePermissions.update_volume}
+      disabled={!accountPermissions.is_account_admin}
       entity="Volume"
       sx={{
         width: '100%',

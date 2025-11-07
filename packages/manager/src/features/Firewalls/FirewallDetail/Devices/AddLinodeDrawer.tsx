@@ -61,7 +61,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const { data: availableLinodes, isLoading: availableLinodesLoading } =
     useQueryWithPermissions<Linode>(
-      useAllLinodesQuery({}, {}),
+      useAllLinodesQuery({}, {}, open),
       'linode',
       ['update_linode'],
       open
