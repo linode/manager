@@ -89,7 +89,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       serviceType: 'blockstorage',
     },
     {
-      dimensionKey: 'cluster_id',
+      dimensionKey: 'lke',
       maxResourceSelections: 10,
       serviceType: 'lke',
     },

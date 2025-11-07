@@ -177,6 +177,7 @@ const mockedEnterpriseClusters = [
   kubernetesClusterFactory.build({
     label: 'enterprise-cluster-eu-ord-1',
     region: 'us-ord',
+    tier: 'standard',
   }),
   kubernetesClusterFactory.build({
     label: 'enterprise-cluster-eu-west',
