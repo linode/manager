@@ -15,10 +15,17 @@ interface Props {
 export const NoAssignedRoles = (props: Props) => {
   const { text, hasAssignNewRoleDrawer } = props;
   const theme = useTheme();
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
-
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_default_delegate_access',
+  ]);
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
+
   const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
     React.useState<boolean>(false);
 
@@ -47,10 +54,10 @@ export const NoAssignedRoles = (props: Props) => {
       {hasAssignNewRoleDrawer && (
         <Button
           buttonType="primary"
-          disabled={!permissions?.is_account_admin}
+          disabled={!permissionToCheck}
           onClick={() => setIsAssignNewRoleDrawerOpen(true)}
           tooltipText={
-            !permissions?.is_account_admin
+            !permissionToCheck
               ? 'You do not have permission to assign roles.'
               : undefined
           }
