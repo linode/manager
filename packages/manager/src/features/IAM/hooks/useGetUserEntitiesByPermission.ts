@@ -74,9 +74,9 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     (!isIAMEnabled || !shouldUseIAMPermissions) && enabled
   );
 
-  const fullEntitiesFromEntitiesByPermission = entitiesByPermission
-    ?.map((entity) => allEntities?.find((e) => e.id === entity.id))
-    .filter((e): e is T => e !== undefined);
+  const fullEntitiesFromEntitiesByPermission = entitiesByPermission?.map(
+    (entity) => allEntities?.find((e) => e.id === entity.id)
+  );
 
   let entityPermissionsMap: EntityPermissionMap = {};
   if (profile?.restricted) {
