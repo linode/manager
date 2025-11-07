@@ -1,8 +1,8 @@
-import { DateTime } from 'luxon';
 import { randomItem } from 'support/util/random';
 
-import type { Image, ImageCapabilities } from '@linode/api-v4';
+import { isImageDeprecated } from 'src/components/ImageSelect/utilities';
 
+import type { Image, ImageCapabilities } from '@linode/api-v4';
 /**
  * Images that cannot be selected using `chooseImages()`.
  */
@@ -38,20 +38,17 @@ export const chooseImage = (options?: ChooseImageOptions): Image => {
  * @returns Array of Image objects that meet criteria specified by `options` param.
  */
 const resolveSearchImages = (options?: ChooseImageOptions): Image[] => {
-  const currentImages = images.filter((image) => {
-    if (image.eol === null) {
-      return image.deprecated;
-    }
-    const isImageEOL = DateTime.fromISO(image.eol) < DateTime.now();
-    return image.deprecated || isImageEOL;
-  });
+  const imageFixtures = options?.images ?? images;
+  const currentImages = imageFixtures.filter(
+    (image) => !isImageDeprecated(image)
+  );
   const requiredCapabilities = options?.capabilities ?? [];
   const allDisallowedImageIds = [
     ...disallowedImageIds,
     ...(options?.exclude ?? []),
   ];
   const capableImages = imagesWithCapabilities(
-    options?.images ?? currentImages,
+    currentImages,
     requiredCapabilities
   ).filter((image: Image) => !allDisallowedImageIds.includes(image.id));
 
