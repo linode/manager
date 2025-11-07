@@ -32,6 +32,10 @@ export interface CloudPulseDashboardSelectProps {
    */
   integrationServiceType?: CloudPulseServiceType;
   /**
+   * boolean value to identify whether the dashboard id is provided by service owner
+   */
+  isServiceLevelDashboardId?: boolean;
+  /**
    * boolean value to identify whether changes to be saved on preferences or not
    */
   savePreferences?: boolean;
@@ -44,13 +48,17 @@ export const CloudPulseDashboardSelect = React.memo(
       handleDashboardChange = () => {},
       savePreferences,
       integrationServiceType,
+      isServiceLevelDashboardId,
     } = props;
 
     const {
       data: serviceTypesList,
       error: serviceTypesError,
       isLoading: serviceTypesLoading,
-    } = useCloudPulseServiceTypes(!integrationServiceType);
+    } = useCloudPulseServiceTypes(
+      savePreferences ||
+        (!!isServiceLevelDashboardId && !integrationServiceType)
+    );
 
     const { aclpServices } = useFlags();
     // Check if the integration service type is enabled
@@ -109,7 +117,7 @@ export const CloudPulseDashboardSelect = React.memo(
     React.useEffect(() => {
       // only call this code when the component is rendered initially
       if (
-        (savePreferences || !!serviceType) &&
+        (savePreferences || !!serviceType || isServiceLevelDashboardId) &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
@@ -128,7 +136,9 @@ export const CloudPulseDashboardSelect = React.memo(
         data-testid="cloudpulse-dashboard-select"
         disableClearable={!!serviceType}
         disabled={
-          !dashboardsList.length || (serviceType && dashboardsList.length === 1)
+          !dashboardsList.length ||
+          (!savePreferences && serviceType && dashboardsList.length === 1) ||
+          (!savePreferences && !serviceType && isServiceLevelDashboardId)
         }
         errorText={dashboardsList?.length ? '' : errorText}
         fullWidth
