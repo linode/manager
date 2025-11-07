@@ -217,7 +217,7 @@ export function usePermissions<
   const permissionMap = shouldUsePermissionMap
     ? toPermissionMap(
         permissionsToCheck,
-        usersPermissions!,
+        Array.isArray(usersPermissions) ? usersPermissions : [],
         profile?.restricted,
         accessType
       )
