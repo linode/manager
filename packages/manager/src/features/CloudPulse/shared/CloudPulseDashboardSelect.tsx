@@ -126,7 +126,7 @@ export const CloudPulseDashboardSelect = React.memo(
           : undefined;
         setSelectedDashboard(dashboard);
         // If only dashboard id is provided by service owner, there is no need to call the handleDashboardChange function
-        if (!isServiceLevelDashboardId) {
+        if (!isServiceLevelDashboardId || !!serviceType) {
           handleDashboardChange(dashboard);
         }
       }
