@@ -5,6 +5,79 @@
  * and interacting with dashboard widgets.
  */
 export const widgetDetails = {
+  lke: {
+    clusterName: 'lke-cluster',
+    dashboardName: 'LKE Cluster Status Dashboard',
+    engine: 'Kubernetes',
+    id: 9,
+    metrics: [
+      {
+        expectedAggregation: 'sum',
+        expectedAggregationArray: ['avg', 'sum', 'max', 'min'],
+        expectedGranularity: '1 min',
+        name: 'lke_e_ready_worker_nodes',
+        title: 'Ready Worker Nodes',
+        unit: 'Count',
+        yLabel: 'lke_e_lke_nodepool_spec_replicas',
+        filters: [
+          { dimension_label: 'entity_id', operator: 'eq', value: 'Cluster ID' },
+        ],
+      },
+      {
+        expectedAggregation: 'sum',
+        expectedAggregationArray: ['avg', 'sum', 'max', 'min'],
+        expectedGranularity: '1 min',
+        name: 'lke_e_not_ready_worker_nodes',
+        title: 'Not Ready Worker Nodes',
+        unit: 'Count',
+        yLabel: 'lke_e_capi_machinedeployment_status_replicas_available',
+        filters: [
+          { dimension_label: 'entity_id', operator: 'eq', value: 'Cluster ID' },
+        ],
+      },
+      {
+        expectedAggregation: 'sum',
+        expectedAggregationArray: ['avg', 'max', 'min', 'sum'],
+        expectedGranularity: '1 min',
+        name: 'lke_e_apiserver_request_rate',
+        title: 'Apiserver Request Rate',
+        unit: 'Rate',
+        yLabel: 'lke_e_apiserver_request_total',
+        filters: [
+          { dimension_label: 'entity_id', operator: 'eq', value: 'Cluster ID' },
+        ],
+      },
+      {
+        expectedAggregation: 'sum',
+        expectedAggregationArray: ['avg', 'max', 'min', 'sum'],
+        expectedGranularity: '5 min',
+        name: 'lke_e_apiserver_request_error_rate',
+        title: 'Apiserver Request Error Rate',
+        unit: 'Rate',
+        yLabel: 'lke_e_apiserver_request_total',
+        filters: [
+          { dimension_label: 'entity_id', operator: 'eq', value: 'Cluster ID' },
+          { dimension_label: 'code', operator: 'eq', value: '5xx' },
+        ],
+      },
+      {
+        expectedAggregation: 'max',
+        expectedAggregationArray: ['avg', 'max', 'min', 'sum'],
+        expectedGranularity: '5 min',
+        name: 'lke_e_apiserver_availability_percent',
+        title: 'Apiserver Availability',
+        unit: 'Percent',
+        yLabel: 'lke_e_apiserver_availability_percent',
+        filters: [
+          { dimension_label: 'entity_id', operator: 'eq', value: 'Cluster ID' },
+        ],
+      },
+    ],
+    region: 'US, Chicago, IL (us-ord)',
+    resource: 'LKE-resource',
+    serviceType: 'lke',
+  },
+
   dbaas: {
     clusterName: 'mysql-cluster',
     dashboardName: 'Dbaas Dashboard',
