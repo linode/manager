@@ -1,301 +1,328 @@
 /**
- * Refactored Cypress test for "Create Block Storage Alert".
+ * @file Integration Tests for the CloudPulse Alerts Show Detail Page.
  *
- * Key improvements:
- * - Centralized mock setup.
- * - Clear data builders for alert + metrics.
- * - Reduced inline complexity; improved semantic clarity.
+ * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
+ * It ensures that all alert details, criteria, and entity information are displayed correctly.
  */
+import { capitalize, profileFactory, regionFactory } from '@linode/utilities';
 import {
-  linodeFactory,
-  profileFactory,
-  regionFactory,
-} from '@linode/utilities';
-import { statusMap } from 'support/constants/alert';
-import { widgetDetails } from 'support/constants/widgets';
+  aggregationTypeMap,
+  dimensionOperatorTypeMap,
+  metricOperatorTypeMap,
+  severityMap,
+} from 'support/constants/alert';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateAlertDefinition,
   mockGetAlertChannels,
+  mockGetAlertDefinitions,
   mockGetAllAlertDefinitions,
-  mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServiceByType,
-  mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVolumes } from 'support/intercepts/volumes';
-import { ui } from 'support/ui';
 
 import {
   accountFactory,
   alertFactory,
-  dashboardMetricFactory,
-  flagsFactory,
-  metricBuilder,
+  blockStorageMetricCriteria,
+  databaseFactory,
   notificationChannelFactory,
   serviceAlertFactory,
   serviceTypesFactory,
   triggerConditionFactory,
   volumeFactory,
 } from 'src/factories';
-import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
-import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
+import {
+  ACCOUNT_GROUP_INFO_MESSAGE,
+  entityGroupingOptions,
+  REGION_GROUP_INFO_MESSAGE,
+} from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type {
+  AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
-  DimensionFilter,
-  Linode,
+  Database,
 } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
 
-export interface MetricDetails {
-  aggregationType: string;
-  dataField: string;
-  operator: string;
-  ruleIndex: number;
-  threshold: string;
-}
-// Create mock data
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
-const { metrics, serviceType } = widgetDetails.blockstorage;
-const regionList = ['us-ord', 'us-east'];
-
-const notificationChannels = notificationChannelFactory.build({
-  channel_type: 'email',
-  id: 1,
-  label: 'channel-1',
-  type: 'custom',
-});
-const BLOCK_STORAGE = 'Block Storage';
+const BLOCK_STORAGE_CAPABILITY = 'Block Storage';
 const REGION_LABEL = 'Chicago, IL';
 
-const mockRegion = regionFactory.build({
-  capabilities: [BLOCK_STORAGE],
-  id: 'us-ord',
-  label: REGION_LABEL,
-  monitors: {
-    metrics: [BLOCK_STORAGE],
-    alerts: [BLOCK_STORAGE],
-  },
-});
-
-const dimensions = [
-  {
-    label: 'Region',
-    dimension_label: 'region',
-    value: 'us-ord',
-  },
+const regions = [
+  regionFactory.build({
+    capabilities: [BLOCK_STORAGE_CAPABILITY],
+    country: 'us',
+    id: 'us-ord',
+    label: REGION_LABEL,
+    monitors: { alerts: [BLOCK_STORAGE_CAPABILITY] },
+  }),
+  regionFactory.build({
+    capabilities: [BLOCK_STORAGE_CAPABILITY],
+    country: 'us',
+    id: 'us-east',
+    label: 'Newark',
+    monitors: { alerts: [BLOCK_STORAGE_CAPABILITY] },
+  }),
 ];
 
-// Convert widget filters to dashboard filters
-const getFiltersForMetric = (metricName: string) => {
-  const metric = metrics.find(({ name }) => name === metricName);
-  if (!metric) return [];
+const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
+  ...db,
+  region: regions[index % regions.length].id,
+}));
 
-  return metric.filters.map((filter) => ({
-    dimension_label: filter.dimension_label,
-    label: filter.dimension_label, // or friendly name
-    values: filter.value ? [filter.value] : undefined,
-  }));
-};
+const alertDetails = alertFactory.build({
+  entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
+  rule_criteria: {
+    rules: [blockStorageMetricCriteria.build()],
+  },
 
-// Metric definitions
-const metricDefinitions = metrics.map(({ name, title, unit }) =>
-  dashboardMetricFactory.build({
-    label: title,
-    metric: name,
-    unit,
-    dimensions: [...dimensions, ...getFiltersForMetric(name)],
-  })
-);
-const mockProfile = profileFactory.build({
-  timezone: 'utc',
-});
-const mockAlerts = alertFactory.build({
-  label: 'Alert-1',
   service_type: 'blockstorage',
-  entity_ids: ['2'],
+  severity: 1,
+  status: 'enabled',
+  type: 'user',
+  created_by: 'user1',
+  updated_by: 'user2',
+  created: '2023-10-01T12:00:00Z',
+  updated: new Date().toISOString(),
+});
+const { rule_criteria } = alertDetails;
+const { rules } = rule_criteria;
+const notificationChannels = notificationChannelFactory.build();
+
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
 });
 
-const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
-
-const DataField = 'Data Field';
-const BE_VISIBLE = 'be.visible';
-const ADD_DIMENSION_FILTER = 'Add dimension filter';
-
 /**
- * Fills metric details in the form.
- * @param ruleIndex - The index of the rule to fill.
- * @param dataField - The metric's data field (e.g., "CPU Utilization").
- * @param aggregationType - The aggregation type (e.g., "Average").
- * @param operator - The operator (e.g., ">=", "==").
- * @param threshold - The threshold value for the metric.
- */
-const fillMetricDetailsForSpecificRule = ({
-  aggregationType,
-  dataField,
-  operator,
-  ruleIndex,
-  threshold,
-}: MetricDetails) => {
-  cy.get(`[data-testid="rule_criteria.rules.${ruleIndex}-id"]`).within(() => {
-    // Fill Data Field
-    ui.autocomplete.findByLabel(DataField).should(BE_VISIBLE).type(dataField);
-
-    ui.autocompletePopper.findByTitle(dataField).should(BE_VISIBLE).click();
-
-    // Validate Aggregation Type
-    ui.autocomplete
-      .findByLabel('Aggregation Type')
-      .should(BE_VISIBLE)
-      .type(aggregationType);
-
-    ui.autocompletePopper
-      .findByTitle(aggregationType)
-      .should(BE_VISIBLE)
-      .click();
-
-    // Fill Operator
-    ui.autocomplete.findByLabel('Operator').should(BE_VISIBLE).type(operator);
-
-    ui.autocompletePopper.findByTitle(operator).should(BE_VISIBLE).click();
-
-    // Fill Threshold
-    cy.get('[data-qa-threshold]').should(BE_VISIBLE).clear();
-    cy.get('[data-qa-threshold]').should(BE_VISIBLE).type(threshold);
-  });
-};
-/**
- * Verifies that a specific alert row in the alert definitions table is correctly displayed.
+ * Asserts that the given dimension filter's label, operator, and value
+ * are correctly displayed in the UI as visible chips.
  *
- * This function locates the row by the given alert label, then asserts the presence and
- * visibility of key values including the status (mapped through `statusMap`), service type,
- * creator, and the formatted update date.
- *
- * @param label - The label of the alert to find in the table.
- * @param status - The raw status key to be mapped using `statusMap`.
- * @param statusMap - A mapping of raw status keys to human-readable status strings.
- * @param createdBy - The username of the user who created the alert.
- * @param updated - The ISO timestamp string indicating when the alert was last updated.
+ * @param {AlertDefinitionDimensionFilter} filter - The dimension filter object containing
+ *   the label (string), operator (string), and value (string) to validate.
  */
-const verifyAlertRow = (
-  label: string,
-  status: string,
-  statusMap: Record<string, string>,
-  createdBy: string,
-  updated: string
-) => {
-  cy.findByText(label)
-    .closest('tr')
-    .should('exist')
-    .then(($row) => {
-      cy.wrap($row).within(() => {
-        cy.findByText(label).should(BE_VISIBLE);
-        cy.findByText(statusMap[status]).should(BE_VISIBLE);
-        cy.findByText('Block Storage').should(BE_VISIBLE);
-        cy.findByText(createdBy).should(BE_VISIBLE);
-        cy.findByText(
-          formatDate(updated, {
-            format: 'MMM dd, yyyy, h:mm a',
-            timezone: 'GMT',
-          })
-        ).should(BE_VISIBLE);
-      });
+const assertDimensionFilter = (filter: AlertDefinitionDimensionFilter) => {
+  cy.get(`[data-qa-chip="${filter.label}"]`)
+    .should('be.visible')
+    .each(($chip) => {
+      expect($chip).to.have.text(filter.label);
+    });
+
+  cy.get(`[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
+    .should('be.visible')
+    .each(($chip) => {
+      expect($chip).to.have.text(dimensionOperatorTypeMap[filter.operator]);
+    });
+
+  cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
+    .should('be.visible')
+    .each(($chip) => {
+      expect($chip).to.have.text(capitalize(filter.value));
     });
 };
+/**
+ * Validates the UI display of an array of metric criteria rules.
+ *
+ * For each rule, it checks the Metric Threshold section and the Dimension Filters section,
+ * ensuring all expected chips are visible and have the correct text.
+ *
+ * @param {AlertDefinitionMetricCriteria[]} rules - Array of metric criteria objects,
+ *   each containing properties such as aggregate_function, label, operator, threshold,
+ *   unit, and optional dimension_filters to validate.
+ */
+// Validate all rule blocks in Criteria section
+export const assertRuleBlock = (rules: AlertDefinitionMetricCriteria[]) => {
+  cy.get('[data-qa-section="Criteria"]').within(() => {
+    rules.forEach((rule, index) => {
+      // Validate Metric Threshold section
+      cy.get('[data-qa-item="Metric Threshold"]')
+        .eq(index)
+        .within(() => {
+          const aggLabel = aggregationTypeMap[rule.aggregate_function];
+          const opLabel = metricOperatorTypeMap[rule.operator];
 
-const mockLinodes: Linode[] = [
-  linodeFactory.build({
-    id: 1,
-    label: 'Linode 1',
-    region: 'us-ord',
-  }),
-];
-const mockVolumesEncrypted = [
-  volumeFactory.build({
-    encryption: 'enabled',
-    label: 'test-volume-ord',
-    region: 'us-ord', // Chicago
-  }),
-  volumeFactory.build({
-    encryption: 'enabled',
-    label: 'test-volume-ord1',
-    region: 'us-ord', // Chicago
-  }),
-  volumeFactory.build({
-    encryption: 'enabled',
-    label: 'test-volume-west',
-    region: 'us-west', // Fremont
-  }),
-  volumeFactory.build({
-    encryption: 'enabled',
-    label: 'test-volume-eu',
-    region: 'eu-central', // Frankfurt
-  }),
-];
+          cy.get(`[data-qa-chip="${aggLabel}"]`)
+            .should('be.visible')
+            .should('have.text', aggLabel);
 
-describe('Blockstorage alert configured successfully', () => {
-  /*
-   * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
-   * - Confirms that users can enter alert details, select entities, and configure conditions.
-   * - Confirms that the UI allows adding notification channels and setting thresholds.
-   * - Confirms client-side validation when entering invalid metric values.
-   * - Confirms that API interactions work correctly and return the expected responses.
-   * - Confirms that the UI displays a success message after creating an alert.
-   */
-  // entityScopingOptions is an array of predefined scoping strategies for alert definitions.
-  // Each item in the array represents a way to scope entities when generating or organizing alerts.
-  // The scoping strategies include 'Per Account', 'Per Entity'.
-  // Temporary: Only testing entity-level for blockstorage  alerts.
-  // Once account-level is supported, remove `value === 'entity'` condition.
+          cy.get(`[data-qa-chip="${rule.label}"]`)
+            .should('be.visible')
+            .should('have.text', rule.label);
+
+          cy.get(`[data-qa-chip="${opLabel}"]`)
+            .should('be.visible')
+            .should('have.text', opLabel);
+
+          cy.get(`[data-qa-chip="${rule.threshold}"]`)
+            .should('be.visible')
+            .should('have.text', String(rule.threshold));
+
+          cy.get(`[data-qa-chip="${rule.unit}"]`)
+            .should('be.visible')
+            .should('have.text', rule.unit);
+        });
+
+      // Validate Dimension Filters section
+      cy.get('[data-qa-item="Dimension Filter"]')
+        .eq(index)
+        .within(() => {
+          (rule.dimension_filters ?? []).forEach((filter) => {
+            assertDimensionFilter(filter);
+          });
+        });
+    });
+  });
+};
+
+/**
+ * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and entity information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
+ */
+
+describe('Integration Tests for Alert Show Detail Page', () => {
+  // Define actions to validate alert details based on the grouping scope (Region or Account)
+  const scopeActions: Record<string, () => void> = {
+    Region: () => {
+      cy.log('🌎 Validating Region scope view');
+
+      cy.get('[data-qa-section="Resources"]').within(() => {
+        // ✅ Verify section heading
+        cy.contains('h2', 'Regions').should('be.visible');
+
+        // ✅ Verify info notice
+        cy.get('[data-qa-notice="true"] [data-testid="alert_message_notice"]')
+          .should('be.visible')
+          .and('have.text', REGION_GROUP_INFO_MESSAGE);
+
+        // ✅ Verify region table
+        const expectedRegions = [
+          { id: 'us-ord', name: 'US, Chicago, IL (us-ord)', entities: '2' },
+        ];
+
+        cy.get('[data-qa="region-tabls"]').within(() => {
+          // Verify column headers
+          cy.get('[data-qa-header="Region"]').should('contain.text', 'Region');
+          cy.get('[data-qa-header="associated-entities"]').should(
+            'contain.text',
+            'Associated Entities'
+          );
+
+          // ✅ Verify rows using testid
+          expectedRegions.forEach(({ id, name, entities }) => {
+            cy.get(`[data-testid="region-row-${id}"]`).within(() => {
+              cy.get('td').eq(0).should('have.text', name);
+              cy.get('td').eq(1).should('have.text', entities);
+            });
+          });
+
+          // ✅ Optional: ensure row count matches
+          cy.get('[data-testid^="region-row-"]').should(
+            'have.length',
+            expectedRegions.length
+          );
+        });
+      });
+    },
+
+    Account: () => {
+      cy.get('[data-qa-notice="true"]')
+        .find('[data-testid="alert_message_notice"]')
+        .should('have.text', ACCOUNT_GROUP_INFO_MESSAGE);
+    },
+
+    Entity: () => {
+      const searchPlaceholder = 'Search for a Region or Entity';
+
+      cy.log('📦 Validating Entity scope view');
+
+      cy.get('[data-qa-section="Resources"]').within(() => {
+        // ✅ Validate table headers
+        cy.get('[data-qa-header="entity"]').should('contain.text', 'Entity');
+        cy.get('[data-qa-header="region"]').should('contain.text', 'Region');
+
+        // ✅ Validate search inputs
+        cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
+        cy.findByPlaceholderText('Select Regions').should('be.visible');
+
+        // ✅ Expected table data
+        const expectedRows = [
+          { entity: 'test-volume-ord', region: 'US, Chicago, IL (us-ord)' },
+          { entity: 'test-volume-ord1', region: 'US, Chicago, IL (us-ord)' },
+        ];
+
+        // ✅ Verify rows count
+        cy.get('[data-qa-alert-row]').should(
+          'have.length',
+          expectedRows.length
+        );
+
+        // ✅ Validate each row’s entity and region values
+        expectedRows.forEach((row, i) => {
+          const rowNumber = i + 1;
+          cy.get(`[data-qa-alert-row="${rowNumber}"]`).within(() => {
+            cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`)
+              .should('be.visible')
+              .and('have.text', row.entity);
+
+            cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`)
+              .should('be.visible')
+              .and('have.text', row.region);
+          });
+        });
+      });
+    },
+  };
+
+  const mockVolumesEncrypted = [
+    volumeFactory.build({
+      id: 1,
+      label: 'test-volume-ord',
+      region: 'us-ord', // Chicago
+    }),
+    volumeFactory.build({
+      id: 2,
+      label: 'test-volume-ord1',
+      region: 'us-ord', // Chicago
+    }),
+    volumeFactory.build({
+      id: 3,
+      label: 'test-volume-west',
+      region: 'us-west', // Fremont
+    }),
+    volumeFactory.build({
+      id: 4,
+      label: 'test-volume-eu',
+      region: 'eu-central', // Frankfurt
+    }),
+  ];
 
   entityGroupingOptions.forEach(({ label: groupLabel, value }) => {
-    it(`should successfully create a new alert for ${groupLabel} level`, () => {
-      const alerts = alertFactory.build({
+    it(`should correctly display the details of the blockstorage alert in the alert details view for ${groupLabel} level`, () => {
+      const regionList = ['us-ord', 'us-east'];
+      const alertDetails = alertFactory.build({
         alert_channels: [{ id: 1 }],
         created_by: 'user1',
         description: 'My Custom Description',
+        entity_ids: ['1', '2', '3', '4'],
         label: 'Alert-1',
-        entity_ids: ['2'],
-        rule_criteria: {
-          rules: [
-            metricBuilder.build({
-              metric: 'volume_read_ops',
-              dimension_filters: [
-                {
-                  dimension_label: 'region',
-                  operator: 'eq',
-                  value: REGION_LABEL,
-                },
-                {
-                  // match what UI test enters
-                  dimension_label: 'response_type',
-                  operator: 'in',
-                  value: '200,400,500',
-                },
-                {
-                  dimension_label: 'entity_id',
-                  operator: 'eq',
-                  value: 'blocket',
-                },
-              ],
-            }),
-          ],
-        },
+        rule_criteria: { rules: blockStorageMetricCriteria.buildList(5) },
         service_type: 'blockstorage',
+        type: 'user',
         severity: 0,
-        tags: [''],
+        created: '2023-10-01T12:00:00Z',
+        updated: new Date().toISOString(),
         trigger_conditions: triggerConditionFactory.build(),
         scope: value,
         ...(value === 'region' ? { regions: regionList } : {}),
       });
-
       const services = serviceTypesFactory.build({
         service_type: 'blockstorage',
-        label: serviceType,
+        label: 'blockstorage',
         alert: serviceAlertFactory.build({
           evaluation_period_seconds: [300],
           polling_interval_seconds: [300],
@@ -303,403 +330,129 @@ describe('Blockstorage alert configured successfully', () => {
         }),
         regions: 'us-ord',
       });
-      const { created_by, status, updated } = mockAlerts;
-
-      mockAppendFeatureFlags(flagsFactory.build());
+      const {
+        created_by,
+        description,
+        id,
+        label,
+        service_type,
+        severity,
+        created,
+        updated,
+      } = alertDetails;
+      mockAppendFeatureFlags(flags);
       mockGetAccount(mockAccount);
       mockGetProfile(mockProfile);
-      mockGetCloudPulseServices([serviceType]);
-      mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+      mockGetRegions(regions);
+      mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+      mockGetAlertDefinitions(service_type, id, alertDetails).as(
+        'getDBaaSAlertDefinitions'
+      );
       mockGetVolumes(mockVolumesEncrypted);
-      mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
+      mockGetDatabases(databases).as('getMockedDbaasDatabases');
       mockGetAlertChannels([notificationChannels]);
-      mockGetLinodes(mockLinodes);
-      mockGetCloudPulseServiceByType(serviceType, services);
-      mockCreateAlertDefinition(serviceType, alerts).as(
+      mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+      mockGetAlertDefinitions(service_type, id, alertDetails).as(
+        'getDBaaSAlertDefinitions'
+      );
+      mockGetCloudPulseServiceByType('blockstorage', services);
+      mockCreateAlertDefinition('blockstorage', alertDetails).as(
         'createAlertDefinition'
       );
-      mockGetRegions([mockRegion]);
+      cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
+      cy.wait(['@getDBaaSAlertDefinitions']);
 
-      cy.visitWithLogin(CREATE_ALERT_PAGE_URL);
-      // Fill in Name and Description
-      cy.findByPlaceholderText('Enter a Name').type(alerts.label);
-      cy.findByPlaceholderText('Enter a Description').type(
-        alerts.description || ''
-      );
+      // Validating contents of Overview Section
+      cy.get('[data-qa-section="Overview"]').within(() => {
+        // Validate Name field
+        cy.findByText('Name:').should('be.visible');
+        cy.findByText(label).should('be.visible');
 
-      // Fill in Service and Severity
-      ui.autocomplete.findByLabel('Service').type(BLOCK_STORAGE);
-      ui.autocompletePopper.findByTitle(BLOCK_STORAGE).click();
-      ui.tooltip.findByText(
-        'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.'
-      );
+        // Validate Description field
+        cy.findByText('Description:').should('be.visible');
+        cy.findByText(description).should('be.visible');
 
-      ui.autocomplete.findByLabel('Severity').type('Severe');
-      ui.autocompletePopper.findByTitle('Severe').click();
+        // Validate Status field
+        cy.findByText('Status:').should('be.visible');
+        cy.findByText('Enabled').should('be.visible');
 
-      ui.tooltip.findByText(
-        'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.'
-      );
+        cy.findByText('Severity:').should('be.visible');
+        cy.findByText(severityMap[severity]).should('be.visible');
 
-      ui.autocomplete
-        .findByLabel('Scope')
-        .should(BE_VISIBLE)
-        .clear()
-        .type(groupLabel);
+        // Validate Service field
+        cy.findByText('Service:').should('be.visible');
+        cy.findByText('BlockStorage').should('be.visible');
 
-      ui.autocompletePopper.findByTitle(groupLabel).should(BE_VISIBLE).click();
+        // Validate Type field
+        cy.findByText('Type:').should('be.visible');
+        cy.findByText('User').should('be.visible');
 
-      groupLabel !== 'Account' &&
-        cy.get('[data-testid="select_all_notice"]').click();
+        // Validate Created By field
+        cy.findByText('Created By:').should('be.visible');
+        cy.findByText(created_by).should('be.visible');
 
-      const REGION_US_CHICAGO = 'US, Chicago, IL (us-ord)';
-      const expectedData = [
-        { entity: 'test-volume-ord', region: REGION_US_CHICAGO },
-        { entity: 'test-volume-ord1', region: REGION_US_CHICAGO },
-      ];
-      if (groupLabel === 'Entity') {
-        cy.get('[data-testid="alert_resources_content"] tr').each(
-          ($row, index) => {
-            cy.wrap($row).within(() => {
-              cy.get(`[data-qa-alert-cell="${index + 1}_entity"]`)
-                .invoke('text')
-                .then((entityText) => {
-                  const entity = entityText.trim();
+        // Validate Last Modified field
+        cy.findByText('Last Modified:').should('be.visible');
+        cy.findByText(
+          formatDate(updated, {
+            format: 'MMM dd, yyyy, h:mm a',
+            timezone: 'GMT',
+          })
+        ).should('be.visible');
+        cy.findByText(
+          formatDate(created, {
+            format: 'MMM dd, yyyy, h:mm a',
+            timezone: 'GMT',
+          })
+        ).should('be.visible');
 
-                  cy.get(`[data-qa-alert-cell="${index + 1}_region"]`)
-                    .invoke('text')
-                    .then((regionText) => {
-                      const region = regionText.trim();
-                      expect(entity).to.eq(expectedData[index].entity);
-                      expect(region).to.eq(expectedData[index].region);
-                    });
-                });
-            });
-          }
-        );
-      }
-      // Expected table data
-      const expectedRegions = [
-        { region: 'US, Chicago, IL (us-ord)', entities: '2' },
-      ];
-      if (groupLabel === 'Region') {
-        cy.get('[data-testid="region-table"] tbody tr').each(($row, index) => {
-          cy.wrap($row)
-            .find('td')
-            .eq(1)
-            .invoke('text')
-            .then((regionText) => {
-              const region = regionText.trim();
+        cy.findByText('Scope:').should('be.visible');
+        cy.findByText(groupLabel).should('be.visible');
+      });
+      // Validate the Criteria section by checking each metric rule's threshold details
+      // and all related dimension filters for correct visibility and text content.
+      assertRuleBlock(rules);
+      // Validating contents of Polling Interval
+      cy.get('[data-qa-item="Polling Interval"]')
+        .find('[data-qa-chip]')
+        .should('be.visible')
+        .should('have.text', '5 min');
 
-              cy.wrap($row)
-                .find('td')
-                .eq(2)
-                .invoke('text')
-                .then((entitiesText) => {
-                  const entities = entitiesText.trim();
+      // Validating contents of Evaluation Periods
+      cy.get('[data-qa-item="Evaluation Period"]')
+        .find('[data-qa-chip]')
+        .should('be.visible')
+        .should('have.text', '5 min');
 
-                  expect(region).to.eq(expectedRegions[index].region);
-                  expect(entities).to.eq(
-                    expectedRegions[index].entities.toString()
-                  );
-                });
-            });
-        });
-      }
-      // Add two rules
+      // Validating contents of Trigger Alert
+      cy.get('[data-qa-chip="All"]')
+        .should('be.visible')
+        .should('have.text', 'All');
 
-      // Fill metric details for the first rule
-      const allRequestsMetricDetails = {
-        aggregationType: 'Avg',
-        dataField: 'Volume Read Operations',
-        operator: '=',
-        ruleIndex: 0,
-        threshold: '1000',
-      };
+      cy.get('[data-qa-chip="5 min"]')
+        .should('be.visible')
+        .should('contain.text', '5 min');
 
-      fillMetricDetailsForSpecificRule(allRequestsMetricDetails);
+      cy.get('[data-qa-item="criteria are met for"]')
+        .should('be.visible')
+        .should('have.text', 'criteria are met for');
 
-      // Add metrics
-      cy.findByRole('button', { name: 'Add metric' })
-        .should(BE_VISIBLE)
-        .click();
+      cy.get('[data-qa-item="consecutive occurrences"]')
+        .should('be.visible')
+        .should('have.text', 'consecutive occurrences.');
+      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
 
-      ui.buttonGroup
-        .findButtonByTitle(ADD_DIMENSION_FILTER)
-        .should(BE_VISIBLE)
-        .click();
-
-      ui.autocomplete
-        .findByLabel(DataField)
-        .should(BE_VISIBLE)
-        .eq(1)
-        .type('Region');
-
-      ui.autocompletePopper.findByTitle('Region').should(BE_VISIBLE).click();
-
-      ui.autocomplete.findByLabel('Operator').eq(1).should(BE_VISIBLE).clear();
-
-      ui.autocomplete.findByLabel('Operator').eq(1).type('Equal');
-
-      cy.findByText('Equal').should(BE_VISIBLE).click();
-
-      cy.findByPlaceholderText('Enter a Value')
-        .should(BE_VISIBLE)
-        .type(REGION_LABEL);
-
-      ui.buttonGroup
-        .findButtonByTitle(ADD_DIMENSION_FILTER)
-        .should(BE_VISIBLE)
-        .click();
-
-      // IN operator flow
-      ui.autocomplete.findByLabel(DataField).eq(2).should(BE_VISIBLE).clear();
-
-      ui.autocomplete
-        .findByLabel(DataField)
-        .should(BE_VISIBLE)
-        .eq(2)
-        .type('response_type');
-
-      cy.findByText('response_type').should(BE_VISIBLE).click();
-      ui.autocomplete.findByLabel('Operator').eq(2).type('In');
-
-      cy.findByText('In').should(BE_VISIBLE).click();
-
-      // Define a constant for the alias
-      const VALUE_INPUT_ALIAS = '@valueInput';
-
-      // Create an alias for the input field
-      cy.get(
-        '[data-qa-dimension-filter="rule_criteria.rules.0.dimension_filters.1-value"] input'
-      ).should(BE_VISIBLE);
-      cy.get(VALUE_INPUT_ALIAS).click();
-      cy.get(VALUE_INPUT_ALIAS).type('200,400,500{enter}');
-      // Reuse the alias for further actions
-      cy.get('@valueInput').click();
-      cy.get('@valueInput').type('200,400,500{enter}');
-
-      // Equal operator flow
-
-      ui.buttonGroup
-        .findButtonByTitle(ADD_DIMENSION_FILTER)
-        .should(BE_VISIBLE)
-        .click();
-
-      ui.autocomplete.findByLabel(DataField).eq(3).should(BE_VISIBLE).clear();
-
-      ui.autocomplete
-        .findByLabel(DataField)
-        .should(BE_VISIBLE)
-        .eq(3)
-        .type('entity_id');
-
-      cy.findByText('entity_id').should(BE_VISIBLE).click();
-      ui.autocomplete.findByLabel('Operator').eq(3).type('Equal');
-
-      cy.findByText('Equal').should(BE_VISIBLE).click();
-
-      // Alias the input
-      cy.get(
-        '[data-qa-dimension-filter="rule_criteria.rules.0.dimension_filters.2-value"] input'
-      )
-        .should(BE_VISIBLE)
-        .as('valueInput');
-
-      cy.get(VALUE_INPUT_ALIAS).type('blocket{enter}');
-      cy.get('@valueInput').click();
-
-      cy.get('@valueInput').type('blocket{enter}');
-
-      // Fill metric details for the second rule
-
-      const totalBucketSizeMetricDetails = {
-        aggregationType: 'Avg',
-        dataField: 'Volume Write Operations',
-        operator: '=',
-        ruleIndex: 1,
-        threshold: '1000',
-      };
-
-      fillMetricDetailsForSpecificRule(totalBucketSizeMetricDetails);
-
-      // Set evaluation period
-      ui.autocomplete
-        .findByLabel('Evaluation Period')
-        .should(BE_VISIBLE)
-        .type('5 min');
-      ui.autocompletePopper.findByTitle('5 min').should(BE_VISIBLE).click();
-
-      // Set polling interval
-      ui.autocomplete
-        .findByLabel('Polling Interval')
-        .should(BE_VISIBLE)
-        .type('5 min');
-      ui.autocompletePopper.findByTitle('5 min').should(BE_VISIBLE).click();
-
-      // Set trigger occurrences
-      cy.get('[data-qa-trigger-occurrences]').should(BE_VISIBLE).clear();
-
-      cy.get('[data-qa-trigger-occurrences]').should(BE_VISIBLE).type('5');
-
-      // Add notification channel
-      ui.buttonGroup.find().contains('Add notification channel').click();
-
-      ui.autocomplete.findByLabel('Type').should(BE_VISIBLE).type('Email');
-      ui.autocompletePopper.findByTitle('Email').should(BE_VISIBLE).click();
-
-      ui.autocomplete
-        .findByLabel('Channel')
-        .should(BE_VISIBLE)
-        .type('channel-1');
-
-      ui.autocompletePopper.findByTitle('channel-1').should(BE_VISIBLE).click();
-
-      // Add channel
-      ui.drawer
-        .findByTitle('Add Notification Channel')
-        .should(BE_VISIBLE)
-        .within(() => {
-          ui.buttonGroup
-            .findButtonByTitle('Add channel')
-            .should(BE_VISIBLE)
-            .click();
-        });
-      // Click on submit button
-      ui.buttonGroup
-        .find()
-        .find('button')
-        .filter('[type="submit"]')
-        .should(BE_VISIBLE)
-        .should('be.enabled')
-        .click();
-
-      cy.wait('@createAlertDefinition').then(({ request, response }) => {
-        const reqBody = request.body;
-        const resBody = response?.body;
-
-        // --- Sanity Checks ---
-        expect(resBody).to.have.property('id');
-        expect(resBody).to.have.property('label', reqBody.label);
-        expect(resBody).to.have.property('service_type', 'blockstorage');
-        expect(resBody).to.have.property('status', 'enabled');
-        expect(resBody).to.have.property('severity', reqBody.severity);
-
-        // --- Compare Rule Criteria ---
-        const reqRules = reqBody.rule_criteria.rules;
-        const resRules = resBody.rule_criteria.rules;
-        resRules.forEach(
-          (rule: AlertDefinitionMetricCriteria, index: number) => {
-            const reqRule = reqRules[index];
-
-            // ✅ Basic field checks
-            expect(rule.metric, `Metric mismatch at rule[${index}]`).to.eq(
-              reqRule.metric
-            );
-            expect(rule.operator, `Operator mismatch at rule[${index}]`).to.eq(
-              reqRule.operator
-            );
-            expect(
-              rule.aggregate_function,
-              `Aggregate function mismatch at rule[${index}]`
-            ).to.eq(reqRule.aggregate_function);
-            expect(
-              rule.threshold,
-              `Threshold mismatch at rule[${index}]`
-            ).to.eq(reqRule.threshold);
-
-            // ✅ Validate dimension_filters
-            expect(
-              rule.dimension_filters,
-              `rule[${index}] dimension_filters should exist`
-            ).to.exist;
-            expect(
-              rule.dimension_filters,
-              `rule[${index}] dimension_filters should be an array`
-            ).to.be.an('array').that.is.not.empty;
-
-            const resFilters = rule.dimension_filters ?? [];
-            const reqFilters = reqRule.dimension_filters ?? [];
-
-            resFilters.forEach((filter: DimensionFilter) => {
-              const matchingReqFilter = reqFilters.find(
-                (f: DimensionFilter) =>
-                  f.dimension_label === filter.dimension_label &&
-                  f.operator === filter.operator
-              );
-
-              expect(
-                matchingReqFilter,
-                `No matching request filter found for label '${filter.dimension_label}' and operator '${filter.operator}'`
-              ).to.exist;
-
-              if (matchingReqFilter) {
-                if (filter.operator?.toLowerCase() === 'in') {
-                  // ✅ Handle 'in' operator as array comparison
-                  const resValues: string[] = Array.isArray(filter.value)
-                    ? filter.value
-                    : (filter.value as string).split(',').map((v) => v.trim());
-
-                  const reqValues: string[] = Array.isArray(
-                    matchingReqFilter.value
-                  )
-                    ? matchingReqFilter.value
-                    : (matchingReqFilter.value as string)
-                        .split(',')
-                        .map((v) => v.trim());
-
-                  reqValues.forEach((v: string) => {
-                    expect(
-                      resValues,
-                      `Value '${v}' from request filter '${filter.dimension_label}' not found in response`
-                    ).to.include(v);
-                  });
-                } else {
-                  // For other operators, assert equality
-                  expect(
-                    filter.value,
-                    `Value mismatch for filter '${filter.dimension_label}' and operator '${filter.operator}'`
-                  ).to.eq(matchingReqFilter.value);
-                }
-              }
-            });
-
-            // ✅ Optional: verify dimension labels and operators only (ignore value for order issues)
-            const sortedResFilters = [...resFilters].sort(
-              (a, b) =>
-                a.dimension_label.localeCompare(b.dimension_label) ||
-                a.operator.localeCompare(b.operator)
-            );
-            const sortedReqFilters = [...reqFilters].sort(
-              (a, b) =>
-                a.dimension_label.localeCompare(b.dimension_label) ||
-                a.operator.localeCompare(b.operator)
-            );
-            expect(
-              sortedResFilters.map((f) => ({
-                label: f.dimension_label,
-                op: f.operator,
-              })),
-              `Dimension labels/operators mismatch at rule[${index}]`
-            ).to.deep.eq(
-              sortedReqFilters.map((f) => ({
-                label: f.dimension_label,
-                op: f.operator,
-              }))
-            );
-
-            // --- Compare Other Metadata ---
-            expect(resBody.label).to.eq(reqBody.label);
-            expect(resBody.class).to.eq('dedicated');
-            expect(resBody.service_type).to.eq('blockstorage');
-            expect(resBody.entity_ids).to.deep.eq(['2']);
-            expect(resBody.scope).to.eq(reqBody.scope);
-
-            cy.url().should('endWith', '/alerts/definitions');
-            ui.toast.assertMessage(CREATE_ALERT_SUCCESS_MESSAGE);
-            verifyAlertRow('Alert-1', status, statusMap, created_by, updated);
-          }
-        );
+      cy.log(`Validating ${groupLabel} level specific details`);
+      scopeActions[groupLabel]?.();
+      // Validate Notification Channels Section
+      cy.get('[data-qa-section="Notification Channels"]').within(() => {
+        cy.findByText('Type:').should('be.visible');
+        cy.findByText('Email').should('be.visible');
+        cy.findByText('Channel:').should('be.visible');
+        cy.findByText('Channel-1').should('be.visible');
+        cy.findByText('To:').should('be.visible');
+        cy.findByText('test@test.com').should('be.visible');
+        cy.findByText('test2@test.com').should('be.visible');
       });
     });
   });

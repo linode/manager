@@ -10,6 +10,7 @@ export const cloudPulseServiceMap: Record<string, string> = {
   firewall: 'Firewall',
   objectstorage: 'Object Storage',
   blockstorage: 'Block Storage',
+  lke: 'LKE',
 };
 /**
  * Descriptions used in the Create/Edit Alert form to guide users
