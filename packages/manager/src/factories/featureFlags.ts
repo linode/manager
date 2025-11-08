@@ -26,6 +26,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
     alertDefinitions: true,
     recentActivity: false,
     notificationChannels: false,
+    editDisabledStatuses: ['in progress', 'failed'],
   },
   aclpServices: {
     linode: {
@@ -49,6 +50,10 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       metrics: { beta: true, enabled: true },
     },
     blockstorage: {
+      alerts: { beta: true, enabled: true },
+      metrics: { beta: true, enabled: true },
+    },
+    lke: {
       alerts: { beta: true, enabled: true },
       metrics: { beta: true, enabled: true },
     },
@@ -83,6 +88,11 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       dimensionKey: 'blockstorage',
       maxResourceSelections: 10,
       serviceType: 'blockstorage',
+    },
+    {
+      dimensionKey: 'lke',
+      maxResourceSelections: 10,
+      serviceType: 'lke',
     },
   ],
 });
