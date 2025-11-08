@@ -26,6 +26,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
     alertDefinitions: true,
     recentActivity: false,
     notificationChannels: false,
+    editDisabledStatuses: ['in progress', 'failed'],
   },
   aclpServices: {
     linode: {
