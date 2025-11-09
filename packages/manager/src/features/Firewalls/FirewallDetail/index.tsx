@@ -25,6 +25,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
@@ -122,6 +123,10 @@ export const FirewallDetail = () => {
     {
       title: `NodeBalancers (${nodebalancerCount})`,
       to: `/firewalls/$id/nodebalancers`,
+    },
+    {
+      title: 'Metrics',
+      to: `/firewalls/$id/metrics`,
     },
   ]);
 
@@ -245,6 +250,12 @@ export const FirewallDetail = () => {
                 firewallId={firewallId}
                 firewallLabel={firewall.label}
                 type="nodebalancer"
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <CloudPulseDashboardWithFilters
+                resource={firewallId}
+                serviceType="firewall"
               />
             </SafeTabPanel>
           </TabPanels>
