@@ -128,7 +128,7 @@ export const CloudPulseDashboardSelect = React.memo(
         data-testid="cloudpulse-dashboard-select"
         disableClearable={!!serviceType}
         disabled={
-          (serviceType && dashboardsList.length === 1) || !dashboardsList
+          !dashboardsList.length || (serviceType && dashboardsList.length === 1)
         }
         errorText={dashboardsList?.length ? '' : errorText}
         fullWidth
