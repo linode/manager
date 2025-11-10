@@ -20,13 +20,14 @@ export interface FirewallRuleDrawerProps {
 }
 
 export interface FormState {
-  action: FirewallPolicyType;
-  addresses: string;
-  description: string;
-  label: string;
-  ports?: string;
-  protocol: string;
-  type: string;
+  action?: FirewallPolicyType | null;
+  addresses?: null | string;
+  description?: null | string;
+  label?: null | string;
+  ports?: null | string;
+  protocol?: null | string;
+  ruleset?: null | number;
+  type?: null | string;
 }
 
 export interface FirewallRuleFormProps extends FormikProps<FormState> {

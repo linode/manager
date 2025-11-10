@@ -96,7 +96,7 @@ export const FirewallRuleDrawer = React.memo(
     const onSubmit = (values: FormState) => {
       const ports = itemsToPortString(presetPorts, values.ports);
       const protocol = values.protocol as FirewallRuleProtocol;
-      const addresses = formValueToIPs(values.addresses, ips);
+      const addresses = formValueToIPs(values.addresses as string, ips);
 
       const payload: FirewallRuleType = {
         action: values.action,
