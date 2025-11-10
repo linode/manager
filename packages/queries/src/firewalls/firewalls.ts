@@ -7,7 +7,7 @@ import {
   getFirewallDevices,
   getFirewallPrefixList,
   getFirewallPrefixLists,
-  getFirewallRuleset,
+  getFirewallRuleSet,
   getFirewallRuleSets,
   getFirewalls,
   getFirewallSettings,
@@ -143,7 +143,7 @@ export const firewallQueries = createQueryKeys('firewalls', {
     queryKey: null,
   },
   ruleset: (id: number) => ({
-    queryFn: () => getFirewallRuleset(id),
+    queryFn: () => getFirewallRuleSet(id),
     queryKey: [id],
   }),
   rulesets: {
