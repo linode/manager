@@ -11,12 +11,9 @@ import type { ButtonProps } from '@linode/ui';
 export const SwitchAccountButton = (props: ButtonProps) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const { data: permissions } = usePermissions(
-    'account',
-    ['create_child_account_token'],
-    undefined,
-    isIAMDelegationEnabled
-  );
+  const { data: permissions } = usePermissions('account', [
+    'create_child_account_token',
+  ]);
 
   return (
     <Button
