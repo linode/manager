@@ -65,14 +65,14 @@ import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: null | string;
-  addresses?: string;
+  addresses?: null | string;
   description?: null | string;
   errors?: FirewallRuleError[];
   id: number;
   index: number;
   label?: null | string;
   originalIndex: number;
-  ports?: string;
+  ports?: null | string;
   protocol?: null | string;
   ruleset?: null | number;
   status: RuleStatus;
