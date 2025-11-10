@@ -76,7 +76,7 @@ export const FirewallRuleDrawer = React.memo(
       });
       setIPs(validatedIPs);
 
-      const _ports = itemsToPortString(presetPorts, ports);
+      const _ports = itemsToPortString(presetPorts, ports!);
 
       return {
         ...validateForm({
@@ -94,9 +94,9 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     const onSubmit = (values: FormState) => {
-      const ports = itemsToPortString(presetPorts, values.ports);
+      const ports = itemsToPortString(presetPorts, values.ports!);
       const protocol = values.protocol as FirewallRuleProtocol;
-      const addresses = formValueToIPs(values.addresses as string, ips);
+      const addresses = formValueToIPs(values.addresses!, ips);
 
       const payload: FirewallRuleType = {
         action: values.action,
