@@ -64,6 +64,10 @@ import {
   firewallFactory,
   firewallMetricDefinitionsResponse,
   firewallMetricRulesFactory,
+  firewallPrefixListFactory,
+  firewallRuleFactory,
+  firewallRuleSetFactory,
+  firewallRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -584,6 +588,18 @@ const parentAccountNonAdminUser = accountUserFactory.build({
   last_login: null,
   restricted: false,
   username: 'NonAdminUser',
+});
+
+// Firewall with the Rule and RuleSet Reference
+const firewall1001WithRuleAndRuleSetRef = firewallFactory.build({
+  id: 1001,
+  label: 'firewall with rule and ruleset reference',
+  rules: firewallRulesFactory.build({
+    inbound: [
+      firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall
+      ...firewallRuleFactory.buildList(2),
+    ],
+  }),
 });
 
 export const handlers = [
@@ -1231,6 +1247,8 @@ export const handlers = [
           }),
         ],
       }),
+      // Firewall with the Rule and RuleSet Reference
+      firewall1001WithRuleAndRuleSetRef,
     ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
@@ -1238,6 +1256,33 @@ export const handlers = [
   http.get('*/v4beta/networking/firewalls/*/devices', () => {
     const devices = firewallDeviceFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(devices));
+  }),
+  http.get('*/v4beta/networking/firewalls/rulesets', () => {
+    const rulesets = firewallRuleSetFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(rulesets));
+  }),
+  http.get('*/v4beta/networking/prefixlists', () => {
+    const prefixlists = firewallPrefixListFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(prefixlists));
+  }),
+  http.get(
+    '*/v4beta/networking/firewalls/rulesets/:rulesetId',
+    ({ params }) => {
+      const firewallRuleSet =
+        params.rulesetId === '123'
+          ? firewallRuleSetFactory.build({
+              id: 123,
+            })
+          : firewallRuleSetFactory.build();
+      return HttpResponse.json(firewallRuleSet);
+    }
+  ),
+  http.get('*/v4beta/networking/firewalls/:firewallId', ({ params }) => {
+    const firewall =
+      params.firewallId === '1001'
+        ? firewall1001WithRuleAndRuleSetRef
+        : firewallFactory.build();
+    return HttpResponse.json(firewall);
   }),
   http.get('*/v4beta/networking/firewalls/:firewallId', () => {
     const firewall = firewallFactory.build();
