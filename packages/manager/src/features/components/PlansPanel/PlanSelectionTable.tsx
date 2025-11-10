@@ -7,6 +7,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
@@ -18,12 +19,9 @@ import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planRows?: React.JSX.Element[];
   plans?: PlanWithAvailability[];
   planType?: LinodeTypeClass;
-  renderPlanSelection?: (
-    filterOptions?: PlanSelectionFilterOptionsTable | undefined
-  ) => React.JSX.Element[];
+  renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
@@ -50,7 +48,6 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
-    planRows,
     planType,
     plans,
     renderPlanSelection,
@@ -60,12 +57,12 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showUsableStorage,
   } = props;
   const flags = useFlags();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
 
-  // Auto-detect pagination mode:
-  // - If planRows is provided, we're in pagination mode (modern) -> spacingBottom={0}
-  // - If only renderPlanSelection is provided, we're in legacy mode -> spacingBottom={16}
-  const isPaginationMode = planRows !== undefined;
-  const spacingBottom = isPaginationMode ? 0 : 16;
+  // Determine spacing based on feature flag:
+  // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
+  // - If disabled (legacy mode) -> spacingBottom={16}
+  const spacingBottom = isGenerationalPlansEnabled ? 0 : 16;
 
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>
@@ -168,7 +165,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          (planRows ?? renderPlanSelection?.(filterOptions) ?? null)
+          ((plans && renderPlanSelection?.(plans)) ?? null)
         )}
       </TableBody>
     </StyledTable>

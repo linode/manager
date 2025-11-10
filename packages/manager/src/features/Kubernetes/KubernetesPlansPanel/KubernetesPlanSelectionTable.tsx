@@ -6,16 +6,16 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import type { PlanSelectionFilterOptionsTable } from 'src/features/components/PlansPanel/PlanContainer';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 interface KubernetesPlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planRows?: React.JSX.Element[];
-  renderPlanSelection?: (
-    filterOptions?: PlanSelectionFilterOptionsTable | undefined
-  ) => React.JSX.Element[];
+  plans?: PlanWithAvailability[];
+  renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
 }
 
@@ -34,16 +34,16 @@ export const KubernetesPlanSelectionTable = (
 ) => {
   const {
     filterOptions,
-    planRows,
+    plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
   } = props;
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
 
-  // Auto-detect pagination mode:
-  // - If planRows is provided, we're in pagination mode (modern) -> spacingBottom={0}
-  // - If only renderPlanSelection is provided, we're in legacy mode -> spacingBottom={16}
-  const isPaginationMode = planRows !== undefined;
-  const spacingBottom = isPaginationMode ? 0 : 16;
+  // Determine spacing based on feature flag:
+  // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
+  // - If disabled (legacy mode) -> spacingBottom={16}
+  const spacingBottom = isGenerationalPlansEnabled ? 0 : 16;
 
   return (
     <Table
@@ -80,7 +80,7 @@ export const KubernetesPlanSelectionTable = (
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          (planRows ?? renderPlanSelection?.(filterOptions) ?? null)
+          ((plans && renderPlanSelection?.(plans)) ?? null)
         )}
       </TableBody>
     </Table>
