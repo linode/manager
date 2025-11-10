@@ -20,6 +20,7 @@ import {
 } from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -100,6 +101,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
+  const { isACLPLogsEnabled, isACLPLogsBeta } = useIsACLPLogsEnabled();
 
   const isAlertsEnabled =
     isACLPEnabled &&
@@ -244,9 +246,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Logs',
-                hide: !flags.aclpLogs?.enabled,
+                hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
-                isBeta: flags.aclpLogs?.beta,
+                isBeta: isACLPLogsBeta,
               },
             ],
             name: 'Monitor',
@@ -333,6 +335,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isManaged,
         isPlacementGroupsEnabled,
         isACLPEnabled,
+        isACLPLogsBeta,
+        isACLPLogsEnabled,
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
