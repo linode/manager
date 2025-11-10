@@ -81,5 +81,13 @@ export const accountGrantsToPermissions = (
     update_oauth_client: true,
     delete_oauth_client: true,
     reset_oauth_client_secret: true,
+    // delegation permissions
+    list_delegate_users: true,
+    list_all_child_accounts: true,
+    update_delegate_users: true,
+    list_user_delegate_accounts: true,
+    update_default_delegate_access: true,
+    view_child_account: true,
+    create_child_account_token: true,
   } as Record<AccountAdmin, boolean>;
 };

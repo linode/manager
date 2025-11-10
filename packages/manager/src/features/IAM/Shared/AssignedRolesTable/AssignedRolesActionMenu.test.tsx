@@ -41,7 +41,10 @@ describe('AssignedRolesActionMenu', () => {
         handleUnassignRole={mockOnUnassignRole}
         handleUpdateEntities={mockOnUpdateEntities}
         handleViewEntities={mockOnViewEntities}
-        permissions={{ is_account_admin: true }}
+        permissions={{
+          is_account_admin: true,
+          update_default_delegate_access: true,
+        }}
         role={mockAccountRole}
       />
     );
@@ -63,7 +66,10 @@ describe('AssignedRolesActionMenu', () => {
         handleUnassignRole={mockOnUnassignRole}
         handleUpdateEntities={mockOnUpdateEntities}
         handleViewEntities={mockOnViewEntities}
-        permissions={{ is_account_admin: true }}
+        permissions={{
+          is_account_admin: true,
+          update_default_delegate_access: true,
+        }}
         role={mockEntityRole}
       />
     );

@@ -1,6 +1,6 @@
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 
 import type {
@@ -185,7 +185,7 @@ export const rescueMetalLinode = (linodeId: number): Promise<{}> =>
 export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
   return Request<Linode>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(sourceLinodeId)}/clone`,
+      `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(sourceLinodeId)}/clone`,
     ),
     setMethod('POST'),
     setData(data),

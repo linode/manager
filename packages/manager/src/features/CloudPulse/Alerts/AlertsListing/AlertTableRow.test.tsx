@@ -172,6 +172,7 @@ describe('Alert Row', () => {
 
   it("should disable 'Edit' action item in menu if alert has no enabled/disabled status", async () => {
     const alert = alertFactory.build({ status: 'in progress', type: 'user' });
+
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         alert={alert}
@@ -182,7 +183,19 @@ describe('Alert Row', () => {
           handleStatusChange: vi.fn(),
         }}
         services={mockServices}
-      />
+      />,
+      {
+        flags: {
+          aclpAlerting: {
+            editDisabledStatuses: ['failed', 'in progress'],
+            accountAlertLimit: 10,
+            accountMetricLimit: 100,
+            alertDefinitions: true,
+            notificationChannels: false,
+            recentActivity: false,
+          },
+        },
+      }
     );
     const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(ActionMenu);

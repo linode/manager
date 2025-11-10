@@ -8,6 +8,7 @@ import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../types';
+import type { User } from '@linode/api-v4';
 
 interface IamEntitiesSearchParams {
   selectedRole?: string;
@@ -65,7 +66,8 @@ const iamRolesRoute = createRoute({
   beforeLoad: async ({ context }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
 
     if (!isIAMEnabled) {
@@ -162,7 +164,8 @@ const iamUserNameRoute = createRoute({
   loader: async ({ context, params, location }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
     const isIAMDelegationEnabled = context.flags?.iamDelegation?.enabled;
@@ -175,12 +178,17 @@ const iamUserNameRoute = createRoute({
       const isChildAccount = profile?.user_type === 'child';
 
       if (!profile.restricted && isChildAccount) {
-        const user = await context.queryClient.ensureQueryData(
-          queryOptions(accountQueries.users._ctx.user(username))
-        );
+        let user: undefined | User;
+        try {
+          user = await context.queryClient.ensureQueryData(
+            queryOptions(accountQueries.users._ctx.user(username))
+          );
+        } catch (error) {
+          return error[0].reason;
+        }
 
         const isChildAccount = profile?.user_type === 'child';
-        const isDelegateUser = user?.user_type === 'delegate';
+        const isDelegateUser = user.user_type === 'delegate';
 
         // Determine if the current account is a child account with isIAMDelegationEnabled enabled
         // If so, we need to hide 'View User Details' and 'Account Delegations' tabs for delegate users
@@ -241,7 +249,8 @@ const iamUserNameDetailsRoute = createRoute({
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
     if (!isIAMEnabled && username) {
@@ -263,7 +272,8 @@ const iamUserNameRolesRoute = createRoute({
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
 
@@ -287,7 +297,8 @@ const iamUserNameEntitiesRoute = createRoute({
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
 
