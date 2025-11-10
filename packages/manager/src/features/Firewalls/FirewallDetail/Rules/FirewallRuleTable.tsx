@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useFirewallRuleSetQuery } from '@linode/queries';
-import { Box, Chip, LinkButton, Typography } from '@linode/ui';
+import { Box, Chip, LinkButton, Stack, Typography } from '@linode/ui';
 import { Autocomplete } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
@@ -376,6 +376,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       color: theme.palette.primary.main,
       display: 'inline-block',
       position: 'relative',
+      marginTop: theme.spacingFunction(2),
     },
   }));
 
@@ -433,26 +434,42 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       {isRuleSetRowEnabled && (
         <>
           <TableCell aria-label={`Label: ${label}`}>
-            <StyledDragIndicator aria-label="Drag indicator icon" />
-            {rulesetDetails && (
-              <Link onClick={() => {}}>{rulesetDetails?.label}</Link>
-            )}
-            <Chip
-              label="Rule Set"
-              sx={(theme) => ({
-                background: theme.tokens.alias.Accent.Info.Secondary,
-                color: theme.tokens.alias.Accent.Info.Primary,
-                font: theme.font.bold,
-                marginLeft: theme.spacingFunction(12),
-              })}
-            />
-            <span style={{ marginLeft: theme.spacingFunction(12) }}>
-              ID: {ruleset}
-              <CopyTooltip
-                className={classes.copyIcon}
-                text={String(ruleset)}
-              />
-            </span>
+            <Stack direction="row" gap={1}>
+              <Stack alignItems="center" direction="row">
+                <StyledDragIndicator
+                  aria-label="Drag indicator icon"
+                  sx={{ flexShrink: 0 }}
+                />
+                {rulesetDetails && (
+                  <Link onClick={() => {}}>{rulesetDetails?.label}</Link>
+                )}
+              </Stack>
+              <Stack alignItems="center" direction="row" gap={1}>
+                <Hidden smDown>
+                  <Chip
+                    label="Rule Set"
+                    sx={(theme) => ({
+                      background: theme.tokens.alias.Accent.Info.Secondary,
+                      color: theme.tokens.alias.Accent.Info.Primary,
+                      font: theme.font.bold,
+                    })}
+                  />
+                </Hidden>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  ID: {ruleset}
+                  <CopyTooltip
+                    className={classes.copyIcon}
+                    text={String(ruleset)}
+                  />
+                </Box>
+              </Stack>
+            </Stack>
           </TableCell>
           <TableCell colSpan={smDown ? 0 : lgDown ? 3 : 4} />
         </>
