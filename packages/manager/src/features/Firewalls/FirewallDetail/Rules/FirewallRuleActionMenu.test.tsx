@@ -12,7 +12,7 @@ const props: FirewallRuleActionMenuProps = {
   handleCloneFirewallRule: vi.fn(),
   handleDeleteFirewallRule: vi.fn(),
   handleOpenRuleDrawerForEditing: vi.fn(),
-  isRuleSet: false,
+  isRuleSetRowEnabled: false,
   idx: 1,
 };
 
@@ -34,7 +34,9 @@ describe('Firewall rule action menu', () => {
 
   it('should include the correct actions when Firewall rules row is a RuleSet', async () => {
     const { getByText, queryByText, queryByLabelText, findByRole } =
-      renderWithTheme(<FirewallRuleActionMenu {...props} isRuleSet={true} />);
+      renderWithTheme(
+        <FirewallRuleActionMenu {...props} isRuleSetRowEnabled={true} />
+      );
 
     const actionMenuButton = queryByLabelText(/^Action menu for/)!;
 

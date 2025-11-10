@@ -310,20 +310,25 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     ruleset,
   } = props;
 
+  const { isFirewallRulesetsPrefixlistsEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  const isRuleSetRow = Boolean(ruleset);
+  const isRuleSetRowEnabled =
+    isRuleSetRow && isFirewallRulesetsPrefixlistsEnabled;
+
   const actionMenuProps = {
     disabled: status === 'PENDING_DELETION' || disabled,
     handleCloneFirewallRule,
     handleDeleteFirewallRule,
     handleOpenRuleDrawerForEditing,
     idx: index,
-    isRuleSet: Boolean(ruleset),
+    isRuleSetRowEnabled,
   };
 
   const theme = useTheme();
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const { isFirewallRulesetsPrefixlistsEnabled } =
-    useIsFirewallRulesetsPrefixlistsEnabled();
 
   const {
     active,
@@ -357,10 +362,6 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     zIndex: isDragging ? 9999 : 0,
   } as const;
 
-  const isRuleSetRow = Boolean(ruleset);
-
-  const isRuleSetRowEnabled =
-    isRuleSetRow && isFirewallRulesetsPrefixlistsEnabled;
   const { data: rulesetDetails } = useFirewallRuleSetQuery(
     ruleset ?? -1,
     ruleset !== undefined && isRuleSetRowEnabled
