@@ -201,11 +201,7 @@ export const toPermissionMap = (
 
   permissionsToCheck?.forEach((permission) => {
     if (accessType === 'account') {
-      // Check backend permission first, but fall back to unrestricted for admin-only permissions that aren't returned by the backend
-      const hasBackendPermission = usersPermissionMap[permission] ?? false;
-      const needsUnrestrictedFallback = !hasBackendPermission && unrestricted;
-      permissionMap[permission] =
-        hasBackendPermission || needsUnrestrictedFallback;
+      permissionMap[permission] = usersPermissionMap[permission] ?? false;
     } else {
       permissionMap[permission] =
         (unrestricted || usersPermissionMap[permission]) ?? false;
