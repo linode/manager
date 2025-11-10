@@ -105,7 +105,11 @@ const mockDestinations: Destination[] = new Array(3)
 describe('destinations landing checks for non-empty state', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
 
     // Mock setup to display the Destinations landing page in a non-empty state
