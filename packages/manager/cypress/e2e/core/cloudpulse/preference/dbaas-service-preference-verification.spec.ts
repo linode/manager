@@ -346,7 +346,6 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
 
       const expectedAclpPreference = {
         dashboardId: 1,
-        node_type: 'primary',
         groupBy: ['entity_id', 'region'],
         dateTimeDuration: {
           preset: 'Last day',
@@ -394,7 +393,6 @@ describe('Integration Tests for DBaaS Dashboard Preferences', () => {
 
       const expectedAclpPreference = {
         dashboardId: 1,
-        node_type: 'primary',
         engine: 'mysql',
         groupBy: ['entity_id', 'region'],
         dateTimeDuration: {
