@@ -8,6 +8,7 @@ import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { PLAN_PANEL_PAGE_SIZE_OPTIONS } from 'src/features/components/PlansPanel/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
@@ -52,11 +53,10 @@ export const KubernetesPlanContainer = (
     wholePanelIsDisabled,
   } = props;
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
 
   // Feature gate for pagination functionality
-  // TODO: Replace 'true' with actual feature flag once available
-  // Example: const isK8PlanPaginationEnabled = flags.planPagination?.enabled ?? false;
-  const isK8PlanPaginationEnabled = true;
+  const isK8PlanPaginationEnabled = isGenerationalPlansEnabled;
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -133,48 +133,6 @@ export const KubernetesPlanContainer = (
     queryParamsPrefix: paginationPrefix,
   });
 
-  // Legacy render function for when pagination is disabled
-  const renderPlanSelectionLegacy = React.useCallback(
-    (filterOptions?: {
-      planFilter?: (plan: PlanWithAvailability) => boolean;
-    }) => {
-      const _plans = filterOptions?.planFilter
-        ? plans.filter(filterOptions.planFilter)
-        : plans;
-
-      return _plans.map((plan, idx) => (
-        <KubernetesPlanSelection
-          getTypeCount={getTypeCount}
-          handleConfigurePool={handleConfigurePool}
-          hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-          idx={idx}
-          key={plan.id}
-          onAdd={onAdd}
-          onSelect={onSelect}
-          plan={plan}
-          selectedId={selectedId}
-          selectedRegionId={selectedRegionId}
-          selectedTier={selectedTier}
-          updatePlanCount={updatePlanCount}
-          wholePanelIsDisabled={wholePanelIsDisabled}
-        />
-      ));
-    },
-    [
-      plans,
-      getTypeCount,
-      handleConfigurePool,
-      hasMajorityOfPlansDisabled,
-      onAdd,
-      onSelect,
-      selectedId,
-      selectedRegionId,
-      selectedTier,
-      updatePlanCount,
-      wholePanelIsDisabled,
-    ]
-  );
-
   // Feature gate: if pagination is disabled, render the old way
   if (!isK8PlanPaginationEnabled) {
     return (
@@ -201,12 +159,10 @@ export const KubernetesPlanContainer = (
                           <Typography variant="h3">{table.header}</Typography>
                         </Grid>
                       ),
-                      renderPlanSelectionLegacy({
-                        planFilter: table.planFilter,
-                      }),
+                      renderPlanSelection(filteredPlans),
                     ];
                   })
-                : renderPlanSelectionLegacy()
+                : renderPlanSelection(plans)
             )
           )}
         </Hidden>
@@ -228,11 +184,8 @@ export const KubernetesPlanContainer = (
                       <KubernetesPlanSelectionTable
                         filterOptions={table}
                         key={`k8-plan-filter-${idx}`}
-                        renderPlanSelection={() =>
-                          renderPlanSelectionLegacy({
-                            planFilter: table.planFilter,
-                          })
-                        }
+                        plans={filteredPlans}
+                        renderPlanSelection={renderPlanSelection}
                         shouldDisplayNoRegionSelectedMessage={
                           shouldDisplayNoRegionSelectedMessage
                         }
@@ -243,7 +196,8 @@ export const KubernetesPlanContainer = (
               ) : (
                 <KubernetesPlanSelectionTable
                   key={planType}
-                  renderPlanSelection={renderPlanSelectionLegacy}
+                  plans={plans}
+                  renderPlanSelection={renderPlanSelection}
                   shouldDisplayNoRegionSelectedMessage={
                     shouldDisplayNoRegionSelectedMessage
                   }
@@ -300,86 +254,85 @@ export const KubernetesPlanContainer = (
         const hasActiveGpuDivider = planType === 'gpu' && activeDivider;
 
         return (
-          <Grid container spacing={0}>
-            <Hidden mdUp>
-              {shouldDisplayNoRegionSelectedMessage ? (
-                <Notice
-                  spacingLeft={8}
-                  spacingTop={8}
-                  sx={{ '& p': { fontSize: '0.875rem' } }}
-                  text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
-                  variant="info"
-                />
-              ) : hasActiveGpuDivider ? (
-                activeDivider.tables.map(({ filterOptions, plans }, idx) => (
-                  <React.Fragment
-                    key={`k8-mobile-${filterOptions.header ?? idx}`}
-                  >
-                    {filterOptions.header ? (
-                      <Grid size={12}>
-                        <Typography variant="h3">
-                          {filterOptions.header}
-                        </Typography>
-                      </Grid>
-                    ) : null}
-                    {renderPlanSelection(plans)}
-                  </React.Fragment>
-                ))
-              ) : (
-                renderPlanSelection(paginatedPlans)
-              )}
-            </Hidden>
-            <Hidden mdDown>
-              <Grid
-                size={{
-                  lg: 12,
-                  xs: 12,
-                }}
-              >
-                {hasActiveGpuDivider ? (
+          <>
+            <Grid container spacing={2}>
+              <Hidden mdUp>
+                {shouldDisplayNoRegionSelectedMessage ? (
+                  <Notice
+                    spacingLeft={8}
+                    spacingTop={8}
+                    sx={{ '& p': { fontSize: '0.875rem' } }}
+                    text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+                    variant="info"
+                  />
+                ) : hasActiveGpuDivider ? (
                   activeDivider.tables.map(({ filterOptions, plans }, idx) => (
+                    <React.Fragment
+                      key={`k8-mobile-${filterOptions.header ?? idx}`}
+                    >
+                      {filterOptions.header ? (
+                        <Grid size={12}>
+                          <Typography variant="h3">
+                            {filterOptions.header}
+                          </Typography>
+                        </Grid>
+                      ) : null}
+                      {renderPlanSelection(plans)}
+                    </React.Fragment>
+                  ))
+                ) : (
+                  renderPlanSelection(paginatedPlans)
+                )}
+              </Hidden>
+              <Hidden mdDown>
+                <Grid
+                  size={{
+                    lg: 12,
+                    xs: 12,
+                  }}
+                >
+                  {hasActiveGpuDivider ? (
+                    activeDivider.tables.map(
+                      ({ filterOptions, plans }, idx) => (
+                        <KubernetesPlanSelectionTable
+                          filterOptions={filterOptions}
+                          key={`k8-plan-filter-${idx}`}
+                          plans={plans}
+                          renderPlanSelection={renderPlanSelection}
+                          shouldDisplayNoRegionSelectedMessage={
+                            shouldDisplayNoRegionSelectedMessage
+                          }
+                        />
+                      )
+                    )
+                  ) : (
                     <KubernetesPlanSelectionTable
-                      filterOptions={filterOptions}
-                      key={`k8-plan-filter-${idx}`}
-                      planRows={renderPlanSelection(plans)}
+                      key={planType ?? 'all'}
+                      plans={paginatedPlans}
+                      renderPlanSelection={renderPlanSelection}
                       shouldDisplayNoRegionSelectedMessage={
                         shouldDisplayNoRegionSelectedMessage
                       }
                     />
-                  ))
-                ) : (
-                  <KubernetesPlanSelectionTable
-                    key={planType ?? 'all'}
-                    planRows={renderPlanSelection(paginatedPlans)}
-                    shouldDisplayNoRegionSelectedMessage={
-                      shouldDisplayNoRegionSelectedMessage
-                    }
-                  />
-                )}
-              </Grid>
-            </Hidden>
+                  )}
+                </Grid>
+              </Hidden>
+            </Grid>
             {shouldDisplayPagination && (
-              <Grid
-                size={12}
+              <PaginationFooter
+                count={count}
+                customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
                 sx={{
-                  marginTop: 0,
+                  borderLeft: 'none',
+                  borderRight: 'none',
                 }}
-              >
-                <PaginationFooter
-                  count={count}
-                  customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  sx={{
-                    borderLeft: 'none',
-                    borderRight: 'none',
-                  }}
-                />
-              </Grid>
+              />
             )}
-          </Grid>
+          </>
         );
       }}
     </Paginate>
