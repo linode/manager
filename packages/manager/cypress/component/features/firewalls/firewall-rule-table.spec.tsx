@@ -13,7 +13,11 @@ import {
 import { firewallRuleFactory } from 'src/factories';
 import { FirewallRulesLanding } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRulesLanding';
 
-import type { FirewallPolicyType, FirewallRuleType } from '@linode/api-v4';
+import type {
+  FirewallPolicyType,
+  FirewallRuleProtocol,
+  FirewallRuleType,
+} from '@linode/api-v4';
 
 interface MoveFocusedElementViaKeyboard {
   direction: 'DOWN' | 'UP';
@@ -122,13 +126,19 @@ const verifyFirewallWithRules = ({
       .within(() => {
         if (isSmallViewport) {
           // Column 'Protocol' is not visible for smaller screens.
-          cy.findByText(rule.protocol).should('not.exist');
+          cy.findByText(rule.protocol as FirewallRuleProtocol).should(
+            'not.exist'
+          );
         } else {
-          cy.findByText(rule.protocol).should('be.visible');
+          cy.findByText(rule.protocol as FirewallRuleProtocol).should(
+            'be.visible'
+          );
         }
 
         cy.findByText(rule.ports!).should('be.visible');
-        cy.findByText(getRuleActionLabel(rule.action)).should('be.visible');
+        cy.findByText(
+          getRuleActionLabel(rule.action as FirewallPolicyType)
+        ).should('be.visible');
       });
   });
 };

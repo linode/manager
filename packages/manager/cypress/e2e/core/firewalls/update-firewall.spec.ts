@@ -22,6 +22,7 @@ import type {
   CreateLinodeRequest,
   Firewall,
   FirewallPolicyType,
+  FirewallRuleProtocol,
   FirewallRuleType,
   Linode,
 } from '@linode/api-v4';
@@ -227,11 +228,13 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(inboundRule.protocol).should('be.visible');
-          cy.findByText(inboundRule.ports!).should('be.visible');
-          cy.findByText(getRuleActionLabel(inboundRule.action)).should(
+          cy.findByText(inboundRule.protocol as FirewallRuleProtocol).should(
             'be.visible'
           );
+          cy.findByText(inboundRule.ports!).should('be.visible');
+          cy.findByText(
+            getRuleActionLabel(inboundRule.action as FirewallPolicyType)
+          ).should('be.visible');
         });
 
       // Add outbound rules
@@ -242,11 +245,13 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(outboundRule.protocol).should('be.visible');
-          cy.findByText(outboundRule.ports!).should('be.visible');
-          cy.findByText(getRuleActionLabel(outboundRule.action)).should(
+          cy.findByText(outboundRule.protocol as FirewallRuleProtocol).should(
             'be.visible'
           );
+          cy.findByText(outboundRule.ports!).should('be.visible');
+          cy.findByText(
+            getRuleActionLabel(outboundRule.action as FirewallPolicyType)
+          ).should('be.visible');
         });
 
       // Save configuration
