@@ -247,3 +247,8 @@ export const CONFIGS_ID_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
 
 export const INTERFACE_ID_ERROR_MESSAGE = 'Enter a valid interface ID number.';
 export const INTERFACE_ID_HELPER_TEXT = 'Enter an interface ID number.';
+
+export const entityLabelMap = {
+  linode: 'Linode',
+  nodebalancer: 'Node Balancer',
+};

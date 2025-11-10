@@ -30,21 +30,17 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
   const { control } = useFormContext<CreateAlertDefinitionForm>();
 
   const handleAutocompleteChange = (
-    field: ControllerRenderProps<CreateAlertDefinitionForm, 'entity_type'>
+    field: ControllerRenderProps<CreateAlertDefinitionForm, 'entity_type'>,
+    selected: null | { label: string; value: 'linode' | 'nodebalancer' },
+    reason: string
   ) => {
-    return (
-      _: unknown,
-      selected: null | { label: string; value: 'linode' | 'nodebalancer' },
-      reason: string
-    ) => {
-      if (selected) {
-        field.onChange(selected.value);
-      }
-      if (reason === 'clear') {
-        field.onChange(null);
-      }
-      onEntityTypeChange();
-    };
+    if (selected) {
+      field.onChange(selected.value);
+    }
+    if (reason === 'clear') {
+      field.onChange(null);
+    }
+    onEntityTypeChange();
   };
 
   return (
@@ -58,7 +54,9 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
           fullWidth
           label="Entity Type"
           onBlur={field.onBlur}
-          onChange={handleAutocompleteChange(field)}
+          onChange={(_, selected, reason) =>
+            handleAutocompleteChange(field, selected, reason)
+          }
           options={entityTypeOptions}
           placeholder="Select an Entity Type"
           sx={{ marginTop: '5px' }}

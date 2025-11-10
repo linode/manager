@@ -6,6 +6,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
 import {
+  entityLabelMap,
   metricAggregationOptions,
   metricOperatorOptions,
 } from '../../constants';
@@ -80,10 +81,7 @@ export const Metric = (props: MetricCriteriaProps) => {
   };
   const serviceType = useWatch({ control, name: 'serviceType' });
   const entityType = useWatch({ control, name: 'entity_type' });
-  const entityLabelMap = {
-    linode: 'Linode',
-    nodebalancer: 'Node Balancer',
-  }
+
   const metricOptions = React.useMemo(() => {
     let filteredData = data;
 
