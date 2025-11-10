@@ -326,7 +326,7 @@ export const getFirewallRuleSets = (params?: Params, filter?: Filter) =>
  *
  * Get a specific Firewall Rule Set by its ID.
  */
-export const getFirewallRuleset = (ruleSetID: number) =>
+export const getFirewallRuleSet = (ruleSetID: number) =>
   Request<FirewallRuleSet>(
     setMethod('GET'),
     setURL(
