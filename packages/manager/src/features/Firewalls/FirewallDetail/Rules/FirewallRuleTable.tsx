@@ -28,13 +28,14 @@ import { makeStyles } from 'tss-react/mui';
 import Undo from 'src/assets/icons/undo.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-// import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import {
   generateAddressesLabel,
   generateRuleLabel,
@@ -317,6 +318,12 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   const isRuleSetRowEnabled =
     isRuleSetRow && isFirewallRulesetsPrefixlistsEnabled;
 
+  const { data: rulesetDetails, isLoading: isRuleSetLoading } =
+    useFirewallRuleSetQuery(
+      ruleset ?? -1,
+      ruleset !== undefined && isRuleSetRowEnabled
+    );
+
   const actionMenuProps = {
     disabled: status === 'PENDING_DELETION' || disabled,
     handleCloneFirewallRule,
@@ -362,11 +369,6 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     zIndex: isDragging ? 9999 : 0,
   } as const;
 
-  const { data: rulesetDetails } = useFirewallRuleSetQuery(
-    ruleset ?? -1,
-    ruleset !== undefined && isRuleSetRowEnabled
-  );
-
   const useStyles = makeStyles()((theme: Theme) => ({
     copyIcon: {
       '& svg': {
@@ -381,6 +383,10 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   }));
 
   const { classes } = useStyles();
+
+  if (isRuleSetLoading) {
+    return <TableRowLoading columns={smDown ? 3 : lgDown ? 5 : 6} />;
+  }
 
   return (
     <StyledTableRow
@@ -420,8 +426,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               <ConditionalError errors={errors} formField="ports" />
             </TableCell>
             <TableCell aria-label={`Addresses: ${addresses}`}>
-              {/* <MaskableText text={addresses} /> */}
-              {addresses}
+              <MaskableText text={addresses ?? ''} />
               <ConditionalError errors={errors} formField="addresses" />
             </TableCell>
           </Hidden>
