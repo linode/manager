@@ -24,6 +24,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'region',
+        children: ['resource_id'],
         filterType: 'string',
         isFilterable: false,
         isMetricsFilter: false,
@@ -72,6 +73,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'engine',
+        children: ['region', 'resource_id'],
         filterType: 'string',
         isFilterable: false, // isFilterable -- this determines whethere you need to pass it metrics api
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
@@ -97,6 +99,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         dependency: ['engine'],
+        children: ['resource_id'],
         filterKey: 'region',
         filterType: 'string',
         isFilterable: false,
@@ -110,6 +113,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         dependency: ['region', 'engine'],
+        children: ['node_type'],
         filterKey: 'resource_id',
         filterType: 'string',
         isFilterable: true,
@@ -164,6 +168,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'region',
+        children: ['resource_id'],
         filterType: 'string',
         isFilterable: false,
         isMetricsFilter: false,
@@ -229,6 +234,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'resource_id',
+        children: [PARENT_ENTITY_REGION],
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,
@@ -333,6 +339,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       {
         configuration: {
           filterKey: RESOURCE_ID,
+          children: [PARENT_ENTITY_REGION, NODEBALANCER_ID],
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
@@ -350,6 +357,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       {
         configuration: {
           dependency: [RESOURCE_ID],
+          children: [NODEBALANCER_ID],
           filterKey: PARENT_ENTITY_REGION,
           filterType: 'string',
           isFilterable: true,
@@ -395,6 +403,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
       {
         configuration: {
           filterKey: REGION,
+          children: [ENDPOINT, RESOURCE_ID],
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
@@ -407,6 +416,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
       {
         configuration: {
           dependency: [REGION],
+          children: [RESOURCE_ID],
           filterKey: ENDPOINT,
           filterType: 'string',
           isFilterable: false,
@@ -443,6 +453,7 @@ export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'region',
+        children: ['resource_id'],
         filterType: 'string',
         isFilterable: false,
         isMetricsFilter: false,
@@ -476,6 +487,7 @@ export const LKE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'region',
+        children: ['resource_id'],
         filterType: 'string',
         isFilterable: false,
         isMetricsFilter: false,
