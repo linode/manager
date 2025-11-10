@@ -228,13 +228,11 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(inboundRule.protocol as FirewallRuleProtocol).should(
+          cy.findByText(inboundRule.protocol!).should('be.visible');
+          cy.findByText(inboundRule.ports!).should('be.visible');
+          cy.findByText(getRuleActionLabel(inboundRule.action!)).should(
             'be.visible'
           );
-          cy.findByText(inboundRule.ports!).should('be.visible');
-          cy.findByText(
-            getRuleActionLabel(inboundRule.action as FirewallPolicyType)
-          ).should('be.visible');
         });
 
       // Add outbound rules
