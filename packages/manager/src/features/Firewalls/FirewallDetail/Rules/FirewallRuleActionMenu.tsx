@@ -17,7 +17,7 @@ export interface FirewallRuleActionMenuProps extends Partial<ActionMenuProps> {
   handleDeleteFirewallRule: (idx: number) => void;
   handleOpenRuleDrawerForEditing?: (idx: number) => void; // Editing is NOT applicable in the case of ruleset
   idx: number;
-  isRuleSet: boolean;
+  isRuleSetRowEnabled: boolean;
 }
 
 export const FirewallRuleActionMenu = React.memo(
@@ -34,20 +34,20 @@ export const FirewallRuleActionMenu = React.memo(
       handleDeleteFirewallRule,
       handleOpenRuleDrawerForEditing,
       idx,
-      isRuleSet,
+      isRuleSetRowEnabled,
       ...actionMenuProps
     } = props;
 
     const actions: Action[] = [
       {
-        disabled: disabled || isRuleSet,
+        disabled: disabled || isRuleSetRowEnabled,
         onClick: () => {
           handleOpenRuleDrawerForEditing?.(idx);
         },
         title: 'Edit',
-        tooltip: isRuleSet ? rulesetEditActionToolTipText : undefined,
+        tooltip: isRuleSetRowEnabled ? rulesetEditActionToolTipText : undefined,
       },
-      ...(!isRuleSet
+      ...(!isRuleSetRowEnabled
         ? [
             {
               disabled,
