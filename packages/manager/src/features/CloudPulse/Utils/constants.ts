@@ -99,6 +99,7 @@ export const NO_REGION_MESSAGE: Record<number, string> = {
   6: 'No Object Storage buckets configured in any region.',
   7: 'No volumes configured in any regions.',
   8: 'No firewalls configured in any Nodebalancer regions.',
+  9: 'No LKE clusters configured in any regions.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {

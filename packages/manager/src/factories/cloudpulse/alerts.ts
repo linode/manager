@@ -617,20 +617,115 @@ export const blockStorageMetricCriteria =
     metric: 'volume_read_ops',
     unit: 'Count',
     aggregate_function: 'avg',
-    operator: 'gt',
+    operator: 'eq',
     threshold: 1000,
     dimension_filters: [
       {
         label: 'linode_id',
         dimension_label: 'linode_id',
         operator: 'in',
-        value: '1,2,3',
+        value: '1',
       },
       {
-        label: 'linode_id',
-        dimension_label: 'linode_id',
+        label: 'region',
+        dimension_label: 'region',
         operator: 'eq',
-        value: '5',
+        value: 'us-east',
       },
     ],
   });
+
+// --- Additional Metrics (Examples) ---
+
+export const blockStorageMetricCriteriaList = [
+  blockStorageMetricCriteria.build({
+    label: 'Volume Write Operations',
+    metric: 'volume_write_ops',
+    unit: 'Count',
+    aggregate_function: 'avg',
+    operator: 'gt',
+    threshold: 2000,
+    dimension_filters: [
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'us-west',
+      },
+      {
+        label: 'entity_id',
+        dimension_label: 'entity_id',
+        operator: 'eq',
+        value: 'vol-1',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Read Bytes',
+    metric: 'volume_read_bytes',
+    unit: 'Bytes',
+    aggregate_function: 'sum',
+    operator: 'gte',
+    threshold: 500000,
+    dimension_filters: [
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'ap-south',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Write Bytes',
+    metric: 'volume_write_bytes',
+    unit: 'Bytes',
+    aggregate_function: 'sum',
+    operator: 'lt',
+    threshold: 1000000,
+    dimension_filters: [
+      {
+        label: 'response_type',
+        dimension_label: 'response_type',
+        operator: 'in',
+        value: '200,400,500',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Read IOPS',
+    metric: 'volume_read_iops',
+    unit: 'Count',
+    aggregate_function: 'max',
+    operator: 'lte',
+    threshold: 1500,
+    dimension_filters: [
+      {
+        label: 'entity_id',
+        dimension_label: 'entity_id',
+        operator: 'eq',
+        value: 'block-01',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Write IOPS',
+    metric: 'volume_write_iops',
+    unit: 'Count',
+    aggregate_function: 'max',
+    operator: 'gt',
+    threshold: 2500,
+    dimension_filters: [
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'us-central',
+      },
+    ],
+  }),
+];

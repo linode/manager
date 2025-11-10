@@ -11,10 +11,10 @@ import {
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
-import { filterFirewallResources } from './utils';
+import { filterFirewallResources, filterKubernetesClusters } from './utils';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
-import type { Firewall } from '@linode/api-v4';
+import type { Firewall, KubernetesCluster } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -478,7 +478,41 @@ export const BLOCKSTORAGE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   ],
   serviceType: 'blockstorage',
 };
-
+export const LKE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['lke'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Clusters',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Clusters',
+        priority: 2,
+        filterFn: (resources: KubernetesCluster[]) =>
+          filterKubernetesClusters(resources),
+      },
+      name: 'Clusters',
+    },
+  ],
+  serviceType: 'lke',
+};
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -489,4 +523,5 @@ export const FILTER_CONFIG: Readonly<
   [6, OBJECTSTORAGE_CONFIG_BUCKET],
   [7, BLOCKSTORAGE_CONFIG],
   [8, FIREWALL_NODEBALANCER_CONFIG],
+  [9, LKE_CONFIG],
 ]);

@@ -13,7 +13,7 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
   const apiRootToCloudMap: Record<string, string> = {
     'https://api.linode.com/v4': 'https://api.linode.com/api',
     'https://api.dev.linode.com/v4': 'https://api.dev.linode.com',
-    'https://api.staging.linode.com/v4': 'https://api.staging.linode.com/api',
+    'https://api.staging.linode.com/v4': 'https://api.staging.linode.com',
     'https://api.devcloud.linode.com/v4': 'https://api.devcloud.linode.com',
   };
 
@@ -28,6 +28,7 @@ describe('CloudPulse API - Dashboards and Metric Definitions', () => {
     'page',
     'pages',
     'results',
+    'is_alertable',
   ];
   const UNORDERED_ARRAY_PATHS = [
     'available_aggregate_functions',
