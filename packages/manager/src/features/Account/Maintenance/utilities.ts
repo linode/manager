@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
 
 import type { MaintenanceTableType } from './MaintenanceTable';
-import type { AccountMaintenance, MaintenancePolicy } from '@linode/api-v4';
+import type { AccountMaintenance } from '@linode/api-v4';
 
 export const COMPLETED_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['completed', 'canceled'] },
@@ -56,39 +56,26 @@ export const getMaintenanceDateLabel = (type: MaintenanceTableType): string => {
 };
 
 /**
- * Derive the maintenance start when API `start_time` is absent by adding the
- * policy notification window to the `when` (notice publish time).
+ * Derive the maintenance start timestamp.
+ *
+ * The `when` and `start_time` fields are equivalent timestamps representing
+ * when the maintenance will happen (or has happened). Prefer `start_time` if
+ * available, otherwise use `when`.
  */
 export const deriveMaintenanceStartISO = (
-  maintenance: AccountMaintenance,
-  policies?: MaintenancePolicy[]
+  maintenance: AccountMaintenance
 ): string | undefined => {
   if (maintenance.start_time) {
     return maintenance.start_time;
-  }
-
-  // If no policies provided or no policy slug, cannot derive start time
-  if (!policies || !maintenance.maintenance_policy_set) {
-    return undefined;
-  }
-
-  const policy = policies.find(
-    (p) => p.slug === maintenance.maintenance_policy_set
-  );
-
-  if (!policy?.notification_period_sec) {
-    return undefined;
   }
 
   if (!maintenance.when) {
     return undefined;
   }
 
+  // `when` is a timestamp equivalent to `start_time`
   try {
-    // Parse the 'when' date as UTC and add the notification period
-    const whenDT = parseAPIDate(maintenance.when);
-    const startDT = whenDT.plus({ seconds: policy.notification_period_sec });
-    return startDT.toISO();
+    return parseAPIDate(maintenance.when).toISO();
   } catch {
     return undefined;
   }
@@ -98,8 +85,7 @@ export const deriveMaintenanceStartISO = (
  * Build a user-friendly relative label for the Upcoming table.
  *
  * Behavior:
- * - Prefers the actual or policy-derived start time to express time until maintenance
- * - Falls back to the notice relative time when the start cannot be determined
+ * - Uses `start_time` if available, otherwise uses `when` (both are equivalent timestamps)
  * - Avoids day-only rounding by showing days + hours when >= 1 day
  *
  * Formatting rules:
@@ -109,12 +95,11 @@ export const deriveMaintenanceStartISO = (
  * - "in N seconds" when < 1 minute
  */
 export const getUpcomingRelativeLabel = (
-  maintenance: AccountMaintenance,
-  policies?: MaintenancePolicy[]
+  maintenance: AccountMaintenance
 ): string => {
-  const startISO = deriveMaintenanceStartISO(maintenance, policies);
+  const startISO = deriveMaintenanceStartISO(maintenance);
 
-  // Use the derived start time if available, otherwise fall back to 'when' (notification time)
+  // Use the derived start timestamp (from start_time or when)
   const targetDT = startISO
     ? parseAPIDate(startISO)
     : maintenance.when
@@ -148,6 +133,17 @@ export const getUpcomingRelativeLabel = (
   if (hours === 24) {
     days += 1;
     hours = 0;
+  }
+
+  // Round up hours when we have significant minutes (>= 30) for better accuracy
+  if (days >= 1 && minutes >= 30) {
+    hours += 1;
+    minutes = 0;
+    // Check if rounding caused hours to overflow
+    if (hours === 24) {
+      days += 1;
+      hours = 0;
+    }
   }
 
   if (days >= 1) {
