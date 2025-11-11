@@ -1,7 +1,7 @@
 import { Notice, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { type ToSubOptions, useLocation } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -19,6 +19,7 @@ import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
+import type { ToSubOptions } from '@tanstack/react-router';
 
 export interface PlanSelectionFilterOptionsTable {
   header?: string;
