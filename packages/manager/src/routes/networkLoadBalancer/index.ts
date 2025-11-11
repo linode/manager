@@ -1,7 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { NetworkLoadBalancersRoute } from './networkLoadBalancersLazyRoute';
+import { NetworkLoadBalancersRoute } from './networkLoadBalancersRoute';
 
 const networkLoadBalancersRoute = createRoute({
   component: NetworkLoadBalancersRoute,
@@ -35,6 +35,7 @@ const networkLoadBalancerDetailRoute = createRoute({
   ).then((m) => m.networkLoadBalancersLazyRoute)
 );
 
+// TODO: Update to the lazy route for listeners when implemented
 const networkLoadBalancerListenersRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
   path: '$id/listeners',
@@ -44,6 +45,7 @@ const networkLoadBalancerListenersRoute = createRoute({
   ).then((m) => m.networkLoadBalancersLazyRoute)
 );
 
+// TODO: Update to the lazy route for listeners when implemented
 const networkLoadBalancerListenerDetailRoute = createRoute({
   beforeLoad: async ({ params }) => {
     throw redirect({
@@ -61,6 +63,7 @@ const networkLoadBalancerListenerDetailRoute = createRoute({
   ).then((m) => m.networkLoadBalancersLazyRoute)
 );
 
+// TODO: Update to the lazy route for nodes when implemented
 const networkLoadBalancerNodesRoute = createRoute({
   getParentRoute: () => networkLoadBalancerListenersRoute,
   path: '$listenerId/nodes',
