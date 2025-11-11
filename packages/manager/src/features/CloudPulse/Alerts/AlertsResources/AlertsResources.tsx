@@ -7,6 +7,7 @@ import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { filterFirewallResources } from '../../Utils/utils';
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { MULTILINE_ERROR_SEPARATOR } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
@@ -41,6 +42,7 @@ import type {
   AlertDefinitionType,
   CloudPulseServiceType,
   Filter,
+  Firewall,
   Region,
 } from '@linode/api-v4';
 
@@ -63,6 +65,11 @@ export interface AlertResourcesProp {
    * The type of the alert system | user
    */
   alertType: AlertDefinitionType;
+
+  /**
+   * The entity type for firewall filtering (linode or nodebalancer)
+   */
+  entityType?: 'linode' | 'nodebalancer' | null;
 
   /**
    * The error text that needs to displayed incase needed
@@ -106,6 +113,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds = [],
     alertType,
+    entityType,
     errorText,
     handleResourcesSelection,
     hideLabel,
@@ -194,7 +202,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     ), // Enable query only if serviceType and supportedRegionIds are available, in case of firewall only serviceType is needed
     serviceType,
     {},
-    xFilterToBeApplied
+    xFilterToBeApplied,
+    serviceType === 'firewall' && entityType ? entityType : undefined,
+    serviceType === 'firewall' && entityType
+      ? (resources: Firewall[]) =>
+          filterFirewallResources(resources, entityType)
+      : undefined
   );
 
   const regionFilteredResources = React.useMemo(() => {

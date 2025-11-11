@@ -62,6 +62,7 @@ import {
   firewallFactory,
   firewallMetricDefinitionsResponse,
   firewallMetricRulesFactory,
+  firewallNodebalancerMetricCriteria,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -141,6 +142,7 @@ import { userRolesFactory } from 'src/factories/userRoles';
 
 import type {
   AccountMaintenance,
+  AlertDefinitionScope,
   AlertDefinitionType,
   AlertSeverityType,
   AlertStatusType,
@@ -1166,13 +1168,7 @@ export const handlers = [
 
   http.get('*/lke/clusters', async () => {
     const clusters = kubernetesAPIResponse.buildList(10);
-    const enterpriseClusters = kubernetesAPIResponse.buildList(11, {
-      tier: 'enterprise',
-      region: 'ap-west',
-    });
-    return HttpResponse.json(
-      makeResourcePage([...clusters, ...enterpriseClusters])
-    );
+    return HttpResponse.json(makeResourcePage(clusters));
   }),
   http.get('*/lke/types', async () => {
     const lkeTypes = [
@@ -1249,11 +1245,17 @@ export const handlers = [
             parent_entity: null,
             id: 90909,
           }),
+        ],
+      }),
+      firewallFactory.build({
+        label: 'Firewall - Nodebalancer',
+        id: 25,
+        entities: [
           firewallEntityfactory.build({
-            type: 'linode',
-            label: 'Linode-fireall-test',
+            type: 'nodebalancer',
+            label: 'Nodebalancer-test',
             parent_entity: null,
-            id: 90901,
+            id: 333,
           }),
         ],
       }),
@@ -1292,6 +1294,13 @@ export const handlers = [
   }),
   http.get('*/v4/nodebalancers', () => {
     const nodeBalancers = nodeBalancerFactory.buildList(3);
+    nodeBalancers.push(
+      nodeBalancerFactory.build({
+        id: 333,
+        label: 'NodeBalancer-33',
+        region: 'ap-west',
+      })
+    );
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -3059,6 +3068,16 @@ export const handlers = [
           rules: [blockStorageMetricCriteria.build()],
         },
       }),
+      alertFactory.build({
+        id: 650,
+        label: 'Firewall - nodebalancer',
+        type: 'user',
+        service_type: 'firewall',
+        entity_ids: ['25'],
+        rule_criteria: {
+          rules: [firewallNodebalancerMetricCriteria.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3069,6 +3088,7 @@ export const handlers = [
         return HttpResponse.json(
           alertFactory.build({
             scope: 'account',
+            entity_ids: ['1', '2', '3'],
             id: 999,
             label: 'Firewall - testing',
             service_type: 'firewall',
@@ -3110,6 +3130,21 @@ export const handlers = [
           })
         );
       }
+      if (params.id === '650' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 650,
+            label: 'Firewall - nodebalancer',
+            type: 'user',
+            scope: 'entity',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [firewallNodebalancerMetricCriteria.build()],
+            },
+          })
+        );
+      }
       if (params.id !== undefined) {
         return HttpResponse.json(
           alertFactory.build({
@@ -3144,6 +3179,20 @@ export const handlers = [
             type: 'user',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '650' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 650,
+            label: 'Firewall - nodebalancer',
+            type: 'user',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [firewallNodebalancerMetricCriteria.build()],
             },
           })
         );
@@ -3244,14 +3293,6 @@ export const handlers = [
             scope: ['entity', 'account', 'region'],
           }),
         }),
-        serviceTypesFactory.build({
-          label: 'LKE Enterprise',
-          service_type: 'lke',
-          regions: 'us-iad,us-east',
-          alert: serviceAlertFactory.build({
-            scope: ['entity', 'account', 'region'],
-          }),
-        }),
       ],
     };
 
@@ -3267,7 +3308,19 @@ export const handlers = [
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
       blockstorage: 'Block Storage',
-      lke: 'LKE Enterprise',
+      lke: 'LKE',
+    };
+    const serviceTypeScopeMap: Record<
+      CloudPulseServiceType,
+      AlertDefinitionScope[]
+    > = {
+      linode: ['entity'],
+      dbaas: ['entity'],
+      nodebalancer: ['entity'],
+      firewall: ['entity', 'account'],
+      objectstorage: ['entity', 'account', 'region'],
+      blockstorage: ['entity', 'account', 'region'],
+      lke: ['entity'],
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -3275,10 +3328,7 @@ export const handlers = [
       alert: serviceAlertFactory.build({
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
-        scope:
-          serviceType === 'objectstorage' || serviceType === 'blockstorage'
-            ? ['entity', 'account', 'region']
-            : ['entity'],
+        scope: serviceTypeScopeMap[serviceType],
       }),
     });
 
@@ -3370,16 +3420,6 @@ export const handlers = [
           id: 7,
           label: 'Block Storage Dashboard',
           service_type: 'blockstorage',
-        })
-      );
-    }
-
-    if (params.serviceType === 'lke') {
-      response.data.push(
-        dashboardFactory.build({
-          id: 9,
-          label: 'LKE Enterprise Dashboard',
-          service_type: 'lke',
         })
       );
     }
@@ -3779,9 +3819,6 @@ export const handlers = [
     } else if (id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
-    } else if (id === '9') {
-      serviceType = 'lke';
-      dashboardLabel = 'Kubernetes Enterprise Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

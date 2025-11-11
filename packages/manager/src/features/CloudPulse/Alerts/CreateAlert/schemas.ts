@@ -8,6 +8,7 @@ import { array, lazy, mixed, number, object, string } from 'yup';
 
 import { getDimensionFilterValueSchema } from './Criteria/DimensionFilterValue/ValueSchemas';
 
+import type { AssociatedEntityType } from '../../shared/types';
 import type { AlertSeverityType, CloudPulseServiceType } from '@linode/api-v4';
 import type { AlertDefinitionScope } from '@linode/api-v4';
 
@@ -73,6 +74,13 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
     entity_ids: array().of(string().defined()).optional(),
+    entity_type: mixed<AssociatedEntityType>()
+      .oneOf(['linode', 'nodebalancer'])
+      .when('serviceType', {
+        is: 'firewall',
+        then: (schema) => schema.required(fieldErrorMessage),
+        otherwise: (schema) => schema.optional(),
+      }),
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)
