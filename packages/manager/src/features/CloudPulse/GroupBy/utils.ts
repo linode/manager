@@ -2,7 +2,7 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
 import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
-import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { getAssociatedEntityType } from '../Utils/utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
@@ -180,9 +180,7 @@ export const getMetricDimensions = (
   if (!dashboard) {
     return {};
   }
-  const associatedEntityType = FILTER_CONFIG.get(
-    dashboard.id
-  )?.associatedEntityType;
+  const associatedEntityType = getAssociatedEntityType(dashboard.id);
   return metricDefinition
     .filter(({ label }) =>
       associatedEntityType
