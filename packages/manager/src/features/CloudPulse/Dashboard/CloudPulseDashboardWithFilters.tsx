@@ -2,7 +2,10 @@ import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
 import React from 'react';
 
-import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
+import {
+  useCloudPulseDashboardByIdQuery,
+  useCloudPulseDashboardsQuery,
+} from 'src/queries/cloudpulse/dashboards';
 
 import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
@@ -18,16 +21,21 @@ import {
   checkMandatoryFiltersSelected,
   getDashboardProperties,
 } from '../Utils/ReusableDashboardFilterUtils';
+import { getAllDashboards } from '../Utils/utils';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { DateTimeWithPreset } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  Dashboard,
+  DateTimeWithPreset,
+} from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
   /**
    * The id of the dashboard that needs to be rendered
    */
-  dashboardId: number;
+  dashboardId?: number;
   /**
    * The region for which the metrics will be listed
    */
@@ -36,17 +44,39 @@ export interface CloudPulseDashboardWithFiltersProp {
    * The resource id for which the metrics will be listed
    */
   resource: number | string;
+  /**
+   * The service type for which the metrics will be listed
+   */
+  serviceType?: CloudPulseServiceType;
 }
 
 export const CloudPulseDashboardWithFilters = React.memo(
   (props: CloudPulseDashboardWithFiltersProp) => {
-    const { dashboardId, resource, region } = props;
-    const { data: dashboard, isError } =
-      useCloudPulseDashboardByIdQuery(dashboardId);
+    const { dashboardId, resource, region, serviceType } = props;
+
+    const { data: dashboardById, isError: isDashboardByIdError } =
+      useCloudPulseDashboardByIdQuery(dashboardId, !serviceType);
+
+    const { data: dashboardsList, error: isError } = getAllDashboards(
+      useCloudPulseDashboardsQuery(serviceType ? [serviceType] : []),
+      serviceType ? [serviceType] : []
+    );
+
     const [filterData, setFilterData] = React.useState<FilterData>({
       id: {},
       label: {},
     });
+
+    const [dashboard, setDashboard] = React.useState<Dashboard | undefined>();
+
+    // Update dashboard when dashboardsList loads
+    React.useEffect(() => {
+      if (dashboardsList.length > 0 && !dashboard) {
+        setDashboard(dashboardsList[0]);
+      }
+    }, [dashboardsList, dashboard]);
+
+    const currentDashboard = serviceType ? dashboard : dashboardById;
 
     const [groupBy, setGroupBy] = React.useState<string[]>([]);
 
@@ -82,6 +112,14 @@ export const CloudPulseDashboardWithFilters = React.memo(
       setGroupBy(groupBy);
     }, []);
 
+    const handleDashboardChange = React.useCallback(
+      (dashboard: Dashboard | undefined) => {
+        setFilterData({ id: {}, label: {} });
+        setDashboard(dashboard);
+      },
+      []
+    );
+
     const handleTimeRangeChange = React.useCallback(
       (timeDuration: DateTimeWithPreset) => {
         setTimeDuration({
@@ -101,29 +139,25 @@ export const CloudPulseDashboardWithFilters = React.memo(
       );
     };
 
-    if (isError) {
-      return (
-        <ErrorState
-          errorText={`Error while loading Dashboard with Id - ${dashboardId}`}
-        />
-      );
+    if (isError || isDashboardByIdError) {
+      return <ErrorState errorText="Error loading dashboards" />;
     }
 
-    if (!dashboard) {
+    if (!currentDashboard) {
       return <CircleProgress />;
     }
 
-    if (!FILTER_CONFIG.get(dashboardId)) {
+    if (!FILTER_CONFIG.get(currentDashboard.id)) {
       return (
         <ErrorState
-          errorText={`No Filters Configured for Service Type - ${dashboard.service_type}`}
+          errorText={`No Filters Configured for Dashboard with Id - ${currentDashboard.id}`}
         />
       );
     }
 
-    const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(dashboard);
+    const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(currentDashboard);
     const isMandatoryFiltersSelected = checkMandatoryFiltersSelected({
-      dashboardObj: dashboard,
+      dashboardObj: currentDashboard,
       filterValue: filterData.id,
       resource,
       region,
@@ -149,8 +183,12 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 m={3}
               >
                 <CloudPulseDashboardSelect
-                  defaultValue={dashboardId}
-                  isServiceIntegration
+                  defaultValue={currentDashboard.id}
+                  handleDashboardChange={handleDashboardChange}
+                  integrationServiceType={currentDashboard.service_type}
+                  onlyServiceLevelDashboardIdAvailable={
+                    !!dashboardId && !serviceType
+                  }
                 />
                 <Box
                   display="flex"
@@ -181,12 +219,12 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
             {isFilterBuilderNeeded && (
               <CloudPulseDashboardFilterBuilder
-                dashboard={dashboard}
+                dashboard={currentDashboard}
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
                 resource_ids={
-                  dashboard.service_type !== 'objectstorage'
+                  currentDashboard.service_type !== 'objectstorage'
                     ? typeof resource === 'number'
                       ? [resource]
                       : undefined
@@ -204,7 +242,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
             >
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
-                  dashboardId={dashboard.id}
+                  dashboardId={currentDashboard.id}
                   filters={filterData.label}
                 />
               )}
@@ -214,7 +252,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
             {...getDashboardProperties({
-              dashboardObj: dashboard,
+              dashboardObj: currentDashboard,
               filterValue: filterData.id,
               resource,
               region,

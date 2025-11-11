@@ -254,8 +254,8 @@ export const FirewallDetail = () => {
             </SafeTabPanel>
             <SafeTabPanel index={3}>
               <CloudPulseDashboardWithFilters
-                dashboardId={8}
                 resource={firewallId}
+                serviceType="firewall"
               />
             </SafeTabPanel>
           </TabPanels>
