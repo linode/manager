@@ -32,6 +32,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
     linode_id: TRANSFORMS.original,
     nodebalancer_id: TRANSFORMS.original,
     ip_version: TRANSFORMS.original,
+    region_id: TRANSFORMS.original,
   },
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,
