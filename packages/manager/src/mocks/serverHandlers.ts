@@ -590,18 +590,6 @@ const parentAccountNonAdminUser = accountUserFactory.build({
   username: 'NonAdminUser',
 });
 
-// Firewall with the Rule and RuleSet Reference
-const firewall1001WithRuleAndRuleSetRef = firewallFactory.build({
-  id: 1001,
-  label: 'firewall with rule and ruleset reference',
-  rules: firewallRulesFactory.build({
-    inbound: [
-      firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall
-      ...firewallRuleFactory.buildList(2),
-    ],
-  }),
-});
-
 export const handlers = [
   ...iam,
   http.get('*/profile', () => {
@@ -1218,7 +1206,7 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = [
-      // ...firewallFactory.buildList(9),
+      ...firewallFactory.buildList(9),
       firewallFactory.build({
         entities: [
           firewallEntityfactory.build({
@@ -1248,7 +1236,16 @@ export const handlers = [
         ],
       }),
       // Firewall with the Rule and RuleSet Reference
-      // firewall1001WithRuleAndRuleSetRef,
+      firewallFactory.build({
+        id: 1001,
+        label: 'firewall with rule and ruleset reference',
+        rules: firewallRulesFactory.build({
+          inbound: [
+            firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall
+            ...firewallRuleFactory.buildList(2),
+          ],
+        }),
+      }),
     ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
@@ -1280,7 +1277,16 @@ export const handlers = [
   http.get('*/v4beta/networking/firewalls/:firewallId', ({ params }) => {
     const firewall =
       params.firewallId === '1001'
-        ? firewall1001WithRuleAndRuleSetRef
+        ? firewallFactory.build({
+            id: 1001,
+            label: 'firewall with rule and ruleset reference',
+            rules: firewallRulesFactory.build({
+              inbound: [
+                firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall
+                ...firewallRuleFactory.buildList(2),
+              ],
+            }),
+          })
         : firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
