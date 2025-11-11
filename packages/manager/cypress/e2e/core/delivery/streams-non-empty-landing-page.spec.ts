@@ -130,7 +130,11 @@ const mockStreams: Stream[] = new Array(3)
 describe('Streams non-empty landing page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
 
     // Mock setup to display the Streams landing page in a non-empty state
