@@ -145,5 +145,4 @@ export const ASSOCIATED_ENTITY_METRIC_MAP: Record<
 > = {
   linode: 'Linode',
   nodebalancer: 'Node Balancer',
-  both: '',
 };
