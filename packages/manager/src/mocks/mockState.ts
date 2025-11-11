@@ -33,6 +33,7 @@ export const emptyStore: MockState = {
   eventQueue: [],
   firewallDevices: [],
   firewalls: [],
+  images: [],
   ipAddresses: [],
   kubernetesClusters: [],
   kubernetesNodePools: [],
