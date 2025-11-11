@@ -36,6 +36,12 @@ export type UpdateFirewallRules = Omit<
 
 export type FirewallTemplateRules = UpdateFirewallRules;
 
+/**
+ * The API may return either a full firewall rule object or a ruleset reference
+ * containing only the `ruleset` field. This interface supports both formats
+ * to ensure backward compatibility with existing implementations and avoid
+ * widespread refactoring.
+ */
 export interface FirewallRuleType {
   action?: FirewallPolicyType | null;
   addresses?: null | {
@@ -46,6 +52,9 @@ export interface FirewallRuleType {
   label?: null | string;
   ports?: null | string;
   protocol?: FirewallRuleProtocol | null;
+  /**
+   * Present when the object represents a ruleset reference.
+   */
   ruleset?: null | number;
 }
 
