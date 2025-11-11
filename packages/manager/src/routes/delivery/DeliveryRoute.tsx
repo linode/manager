@@ -3,14 +3,14 @@ import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 
 export const DeliveryRoute = () => {
-  const flags = useFlags();
-  const { aclpLogs } = flags;
+  const { isACLPLogsEnabled } = useIsACLPLogsEnabled();
+
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      {aclpLogs?.enabled ? <Outlet /> : <NotFound />}
+      {isACLPLogsEnabled ? <Outlet /> : <NotFound />}
     </React.Suspense>
   );
 };
