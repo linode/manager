@@ -211,6 +211,7 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc: MTC;
+  networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;

@@ -200,6 +200,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Network Load Balancers',
+                hide: !flags.networkLoadBalancer,
                 to: '/netloadbalancers',
               },
               {
