@@ -1694,22 +1694,37 @@ export const handlers = [
       'resizing',
     ];
     const volumes = statuses.map((status) =>
-      volumeFactory.build({ status, region: 'ap-west', linode_id: 1 })
+      volumeFactory.build({
+        status,
+        id: 1,
+        region: 'ap-west',
+        linode_id: 1,
+        linode_label: 'linode-1',
+      })
     );
     volumes.push(
-      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 2 })
+      ...volumeFactory.buildList(1, { region: 'us-east', linode_id: 2 })
     );
     volumes.push(
-      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 3 })
+      ...volumeFactory.buildList(1, { region: 'us-east', linode_id: 3 })
     );
     volumes.push(
-      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 4 })
+      ...volumeFactory.buildList(1, { region: 'us-east', linode_id: 4 })
     );
     volumes.push(
-      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 5 })
+      ...volumeFactory.buildList(1, { region: 'us-east', linode_id: 5 })
     );
     volumes.push(
-      ...volumeFactory.buildList(5, { region: 'eu-central', linode_id: 1 })
+      ...volumeFactory.buildList(1, { region: 'eu-central', linode_id: 6 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(1, {
+        id: 7,
+        label: 'volume-7',
+        region: 'ap-west',
+        linode_id: 7,
+        linode_label: 'linode-7',
+      })
     );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
@@ -3897,7 +3912,7 @@ export const handlers = [
         result: [
           {
             metric: {
-              entity_id: '123',
+              entity_id: '1',
               metric_name: 'average_cpu_usage',
               linode_id: '1',
               node_id: 'primary-1',
@@ -3941,9 +3956,9 @@ export const handlers = [
           // })),
           {
             metric: {
-              entity_id: '456',
+              entity_id: '7',
               metric_name: 'average_cpu_usage',
-              linode_id: '123',
+              linode_id: '7',
               node_id: 'primary-2',
             },
             values: [
