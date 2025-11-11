@@ -405,13 +405,13 @@ export const firewallMetricRulesFactory =
         label: 'VPC-Subnet',
         dimension_label: 'vpc_subnet_id',
         operator: 'in',
-        value: '1,2',
+        value: '1',
       },
       {
         label: 'Linode',
         dimension_label: 'linode_id',
         operator: 'in',
-        value: '1,2',
+        value: '1',
       },
       {
         label: 'Linode Region',
@@ -798,6 +798,6 @@ export const firewallNodebalancerMetricCriteria =
         dimension_label: 'nodebalancer_id',
         operator: 'in',
         value: '333',
-      }
-    ]
+      },
+    ],
   });
