@@ -57,6 +57,11 @@ export interface NetworkLoadBalancerNode {
 
 export interface NetworkLoadBalancer {
   /**
+   * Virtual IP addresses assigned to this Network Load Balancer
+   */
+  address_v4: string;
+  address_v6: string;
+  /**
    * When this Network Load Balancer was created
    */
   created: string;
@@ -64,11 +69,6 @@ export interface NetworkLoadBalancer {
    * The unique ID of this Network Load Balancer
    */
   id: number;
-  /**
-   * Virtual IP addresses assigned to this Network Load Balancer
-   */
-  ipv4: string;
-  ipv6: string;
   /**
    * The label for this Network Load Balancer
    */
@@ -81,7 +81,7 @@ export interface NetworkLoadBalancer {
   /**
    * Information about the LKE cluster this NLB is associated with
    */
-  lke_cluster: LKEClusterInfo;
+  lke_cluster?: LKEClusterInfo;
   /**
    * The region where this Network Load Balancer is deployed
    */
