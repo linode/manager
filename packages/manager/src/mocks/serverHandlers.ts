@@ -1218,7 +1218,7 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/firewalls', () => {
     const firewalls = [
-      ...firewallFactory.buildList(9),
+      // ...firewallFactory.buildList(9),
       firewallFactory.build({
         entities: [
           firewallEntityfactory.build({
@@ -1248,7 +1248,7 @@ export const handlers = [
         ],
       }),
       // Firewall with the Rule and RuleSet Reference
-      firewall1001WithRuleAndRuleSetRef,
+      // firewall1001WithRuleAndRuleSetRef,
     ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
@@ -1282,10 +1282,6 @@ export const handlers = [
       params.firewallId === '1001'
         ? firewall1001WithRuleAndRuleSetRef
         : firewallFactory.build();
-    return HttpResponse.json(firewall);
-  }),
-  http.get('*/v4beta/networking/firewalls/:firewallId', () => {
-    const firewall = firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
   http.put<{}, { status: FirewallStatus }>(
