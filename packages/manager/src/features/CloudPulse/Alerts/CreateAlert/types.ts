@@ -19,7 +19,7 @@ export interface CreateAlertDefinitionForm
     'rule_criteria' | 'severity' | 'trigger_conditions'
   > {
   entity_ids?: string[];
-  entity_type?: AssociatedEntityType | null;
+  entity_type?: AssociatedEntityType;
   regions?: string[];
   rule_criteria: {
     rules: MetricCriteriaForm[];

@@ -76,13 +76,9 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
     entity_ids: array().of(string().defined()).optional(),
     entity_type: mixed<AssociatedEntityType>()
       .oneOf(['linode', 'nodebalancer'])
-      .nullable()
       .when('serviceType', {
         is: 'firewall',
-        then: (schema) =>
-          schema
-            .required(fieldErrorMessage)
-            .test('nonNull', fieldErrorMessage, (value) => value !== null),
+        then: (schema) => schema.required(fieldErrorMessage),
         otherwise: (schema) => schema.optional(),
       }),
     rule_criteria: object({

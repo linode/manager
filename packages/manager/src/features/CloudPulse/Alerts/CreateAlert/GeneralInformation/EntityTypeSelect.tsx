@@ -12,7 +12,7 @@ interface EntityTypeSelectProps {
    */
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
-    'linode' | 'nodebalancer' | null | undefined
+    'linode' | 'nodebalancer' | undefined
   >;
   /**
    * Callback function triggered when entity type changes
@@ -31,16 +31,12 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
 
   const handleAutocompleteChange = (
     field: ControllerRenderProps<CreateAlertDefinitionForm, 'entity_type'>,
-    selected: null | { label: string; value: 'linode' | 'nodebalancer' },
-    reason: string
+    selected: null | { label: string; value: 'linode' | 'nodebalancer' }
   ) => {
     if (selected) {
       field.onChange(selected.value);
+      onEntityTypeChange();
     }
-    if (reason === 'clear') {
-      field.onChange(null);
-    }
-    onEntityTypeChange();
   };
 
   return (
@@ -50,19 +46,18 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
       render={({ field, fieldState }) => (
         <Autocomplete
           data-testid="entity-type-select"
+          disableClearable
           errorText={fieldState.error?.message}
           fullWidth
           label="Entity Type"
           onBlur={field.onBlur}
-          onChange={(_, selected, reason) =>
-            handleAutocompleteChange(field, selected, reason)
-          }
+          onChange={(_, selected) => handleAutocompleteChange(field, selected)}
           options={entityTypeOptions}
           placeholder="Select an Entity Type"
           sx={{ marginTop: '5px' }}
           value={
             entityTypeOptions.find((option) => option.value === field.value) ??
-            null
+            undefined
           }
         />
       )}

@@ -58,7 +58,7 @@ const criteriaInitialValues: MetricCriteriaForm = {
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
   entity_ids: [],
-  entity_type: null,
+  entity_type: 'linode',
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
@@ -164,7 +164,7 @@ export const CreateAlertDefinition = () => {
       defaultValue: triggerConditionInitialValues,
     });
     resetField('scope', { defaultValue: null });
-    resetField('entity_type', { defaultValue: null });
+    resetField('entity_type', { defaultValue: 'linode' });
   }, [resetField]);
 
   const handleEntityTypeChange = React.useCallback(() => {
