@@ -1717,6 +1717,10 @@ export const handlers = [
     );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
+  http.get('*/v4/volumes/:id', () => {
+    const volume = volumeFactory.build();
+    return HttpResponse.json(volume);
+  }),
   http.get('*/volumes/types', () => {
     const volumeTypes = volumeTypeFactory.buildList(1);
     return HttpResponse.json(makeResourcePage(volumeTypes));

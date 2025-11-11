@@ -16,7 +16,11 @@ import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 describe('Create Destination', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
   });
 
