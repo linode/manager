@@ -266,7 +266,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
       page={pagination.page}
       pageSize={pagination.pageSize}
       pageSizeSetter={pagination.handlePageSizeChange}
-      shouldScroll={false}
+      shouldScroll={true}
       updatePageUrl={pagination.handlePageChange}
     >
       {({
@@ -274,7 +274,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
         data: paginatedPlans,
         handlePageChange,
         handlePageSizeChange,
-        page,
         pageSize,
       }) => {
         const shouldDisplayPagination =
@@ -383,7 +382,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
-                page={page}
+                page={pagination.page}
                 pageSize={pageSize}
                 sx={{
                   borderLeft: 'none',
