@@ -8,6 +8,7 @@ import type {
   Domain,
   DomainRecord,
   Entity,
+  EntityByPermission,
   EntityRoleType,
   Event,
   Firewall,
@@ -205,6 +206,7 @@ export interface UserEntityPermissionsEntry {
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  userEntitiesByPermission: EntityByPermission[];
   childAccounts: ChildAccount[];
   cloudnats: CloudNAT[];
   configInterfaces: [number, Interface][]; // number is Config ID
