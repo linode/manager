@@ -8,6 +8,7 @@ describe('Streams empty landing page', () => {
       aclpLogs: {
         enabled: true,
         beta: true,
+        bypassAccountCapabilities: true,
       },
     });
   });
