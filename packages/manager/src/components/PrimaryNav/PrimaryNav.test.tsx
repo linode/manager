@@ -3,7 +3,6 @@ import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
@@ -260,11 +259,11 @@ describe('PrimaryNav', () => {
       capabilities: ['Akamai Cloud Pulse'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclp: {
@@ -300,11 +299,11 @@ describe('PrimaryNav', () => {
       capabilities: ['Akamai Cloud Pulse'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclp: {
@@ -340,7 +339,12 @@ describe('PrimaryNav', () => {
     const account = accountFactory.build({
       capabilities: ['Akamai Cloud Pulse Logs'],
     });
-    server.use(http.get('*/account', () => HttpResponse.json(account)));
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclpLogs: {
@@ -364,7 +368,12 @@ describe('PrimaryNav', () => {
     const account = accountFactory.build({
       capabilities: ['Akamai Cloud Pulse Logs'],
     });
-    server.use(http.get('*/account', () => HttpResponse.json(account)));
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclpLogs: {
@@ -385,7 +394,12 @@ describe('PrimaryNav', () => {
     const account = accountFactory.build({
       capabilities: [],
     });
-    server.use(http.get('*/account', () => HttpResponse.json(account)));
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclpLogs: {
@@ -409,7 +423,12 @@ describe('PrimaryNav', () => {
     const account = accountFactory.build({
       capabilities: [],
     });
-    server.use(http.get('*/account', () => HttpResponse.json(account)));
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclpLogs: {
