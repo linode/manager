@@ -67,11 +67,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     serviceType
   );
 
-  const entityType = alertDetails.rule_criteria.rules[0]?.label.includes(
-    'Linode'
-  )
-    ? 'linode'
-    : 'nodebalancer';
+  const entityType =
+    serviceType === 'firewall'
+      ? alertDetails.rule_criteria.rules[0]?.label.includes('Linode')
+        ? 'linode'
+        : 'nodebalancer'
+      : undefined;
+
   const flags = useFlags();
   const formMethods = useForm<EditAlertDefintionForm>({
     defaultValues: {
