@@ -15,6 +15,7 @@ import type {
   FirewallDevice,
   IamAccountRoles,
   IamUserRoles,
+  Image,
   Interface,
   IPAddress,
   KubeNodePoolResponse,
@@ -135,6 +136,7 @@ export type MockPresetCrudGroup = {
     | 'Domains'
     | 'Entities'
     | 'Firewalls'
+    | 'Images'
     | 'IP Addresses'
     | 'Kubernetes'
     | 'Linodes'
@@ -155,6 +157,7 @@ export type MockPresetCrudId =
   | 'domains:crud'
   | 'entities:crud'
   | 'firewalls:crud'
+  | 'images:crud'
   | 'ip-addresses:crud'
   | 'kubernetes:crud'
   | 'linodes:crud'
@@ -215,6 +218,7 @@ export interface MockState {
   eventQueue: Event[];
   firewallDevices: [number, FirewallDevice][]; // number is Firewall ID
   firewalls: Firewall[];
+  images: Image[];
   ipAddresses: IPAddress[];
   kubernetesClusters: KubernetesCluster[];
   kubernetesNodePools: KubeNodePoolResponse[];
