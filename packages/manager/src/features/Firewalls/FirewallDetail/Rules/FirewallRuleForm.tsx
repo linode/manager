@@ -10,10 +10,12 @@ import {
   Typography,
 } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
+import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import {
   addressOptions,
   firewallOptionItemsShort,
@@ -22,8 +24,13 @@ import {
 } from 'src/features/Firewalls/shared';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
+import { AssignRuleSetToFirewall } from './AssignRuleSetToFirewall';
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
-import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
+import {
+  firewallRuleCreateOptions,
+  PORT_PRESETS,
+  PORT_PRESETS_ITEMS,
+} from './shared';
 
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
 import type {
@@ -39,12 +46,14 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   const {
     addressesLabel,
     category,
+    createEntityType,
     errors,
     handleBlur,
     handleChange,
     handleSubmit,
     ips,
     mode,
+    onCreateEntityTypeChange,
     presetPorts,
     ruleErrors,
     setFieldError,
@@ -200,6 +209,13 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     );
   }, [values]);
 
+  const handleRuleSetChange = React.useCallback(
+    (id: number) => {
+      setFieldValue('ruleset', id);
+    },
+    [setFieldValue]
+  );
+
   return (
     <form onSubmit={handleSubmit}>
       {status && (
@@ -210,140 +226,180 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           variant="error"
         />
       )}
-      <Autocomplete
-        aria-label="Preset for firewall rule"
-        autoHighlight
-        disableClearable
-        label="Preset"
-        onBlur={handleBlur}
-        onChange={(_, selected) => handleTypeChange(selected)}
-        options={firewallOptionItemsShort}
-        placeholder="Select a rule preset..."
-        textFieldProps={{
-          dataAttrs: {
-            'data-qa-rule-select': true,
-          },
-        }}
-      />
-      <TextField
-        aria-label="Label for firewall rule"
-        errorText={errors.label}
-        label="Label"
-        name="label"
-        onBlur={handleBlur}
-        onChange={handleTextFieldChange}
-        placeholder="Enter a label..."
-        required
-        value={values.label}
-      />
-      <TextField
-        aria-label="Description for firewall rule"
-        errorText={errors.description}
-        label="Description"
-        name="description"
-        onBlur={handleBlur}
-        onChange={handleTextFieldChange}
-        placeholder="Enter a description..."
-        value={values.description}
-      />
-      <Select
-        aria-label="Select rule protocol."
-        errorText={errors.protocol}
-        label="Protocol"
-        onBlur={handleBlur}
-        onChange={(_, selected) => handleProtocolChange(selected.value)}
-        options={protocolOptions}
-        placeholder="Select a protocol..."
-        required
-        value={protocolOptions.find((p) => p.value === values.protocol)}
-      />
-      <Autocomplete
-        autoHighlight
-        disabled={['ICMP', 'IPENCAP'].includes(values.protocol ?? '')}
-        disableSelectAll
-        errorText={generalPortError}
-        label="Ports"
-        multiple
-        onChange={(_, selected) => handlePortPresetChange(selected)}
-        options={portOptions}
-        // If options are selected, hide the placeholder
-        placeholder={presetPorts.length > 0 ? ' ' : 'Select a port...'}
-        textFieldProps={{
-          InputProps: {
-            required: true,
-          },
-          dataAttrs: {
-            'data-qa-port-select': true,
-          },
-          helperText: ['ICMP', 'IPENCAP'].includes(values.protocol ?? '')
-            ? `Ports are not allowed for ${values.protocol} protocols.`
-            : undefined,
-        }}
-        value={presetPorts}
-      />
-      {hasCustomInput ? (
-        <TextField
-          aria-label="Custom port range for firewall rule"
-          errorText={errors.ports}
-          label="Custom Port Range"
-          name="ports"
-          onBlur={handleBlur}
-          onChange={handleTextFieldChange}
-          placeholder="Enter a custom port range..."
-          value={values.ports}
-        />
-      ) : null}
-      <Select
-        aria-label={`Select rule ${addressesLabel}s.`}
-        errorText={errors.addresses}
-        label={`${capitalize(addressesLabel)}s`}
-        onBlur={handleBlur}
-        onChange={(_, selected) => {
-          handleAddressesChange(selected.value);
-        }}
-        options={addressOptions}
-        placeholder={`Select ${addressesLabel}s...`}
-        textFieldProps={{
-          InputProps: {
-            required: true,
-          },
-          dataAttrs: {
-            'data-qa-address-source-select': true,
-          },
-        }}
-        value={addressesValue}
-      />
-      {/* Show this field only if "IP / Netmask has been selected." */}
-      {values.addresses === 'ip/netmask' && (
-        <StyledMultipleIPInput
-          aria-label="IP / Netmask for Firewall rule"
-          ips={ips}
-          onBlur={handleIPBlur}
-          onChange={handleIPChange}
-          placeholder={ipFieldPlaceholder}
-          title="IP / Netmask"
-          tooltip={ipNetmaskTooltipText}
+
+      {mode === 'create' && onCreateEntityTypeChange && (
+        <Grid container spacing={2}>
+          {firewallRuleCreateOptions.map((option) => (
+            <SelectionCard
+              checked={createEntityType === option.purpose}
+              gridSize={{
+                md: 6,
+                sm: 12,
+                xs: 12,
+              }}
+              heading={option.label}
+              key={option.purpose}
+              onClick={() => onCreateEntityTypeChange(option.purpose)}
+              renderIcon={() => (
+                <Radio checked={createEntityType === option.purpose} />
+              )}
+              subheadings={[]}
+              sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
+            />
+          ))}
+        </Grid>
+      )}
+
+      {(mode === 'edit' || createEntityType === 'rule') && (
+        <>
+          <Autocomplete
+            aria-label="Preset for firewall rule"
+            autoHighlight
+            disableClearable
+            label="Preset"
+            onBlur={handleBlur}
+            onChange={(_, selected) => handleTypeChange(selected)}
+            options={firewallOptionItemsShort}
+            placeholder="Select a rule preset..."
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-rule-select': true,
+              },
+            }}
+          />
+          <TextField
+            aria-label="Label for firewall rule"
+            errorText={errors.label}
+            label="Label"
+            name="label"
+            onBlur={handleBlur}
+            onChange={handleTextFieldChange}
+            placeholder="Enter a label..."
+            required
+            value={values.label}
+          />
+          <TextField
+            aria-label="Description for firewall rule"
+            errorText={errors.description}
+            label="Description"
+            name="description"
+            onBlur={handleBlur}
+            onChange={handleTextFieldChange}
+            placeholder="Enter a description..."
+            value={values.description}
+          />
+          <Select
+            aria-label="Select rule protocol."
+            errorText={errors.protocol}
+            label="Protocol"
+            onBlur={handleBlur}
+            onChange={(_, selected) => handleProtocolChange(selected.value)}
+            options={protocolOptions}
+            placeholder="Select a protocol..."
+            required
+            value={protocolOptions.find((p) => p.value === values.protocol)}
+          />
+          <Autocomplete
+            autoHighlight
+            disabled={['ICMP', 'IPENCAP'].includes(values.protocol ?? '')}
+            disableSelectAll
+            errorText={generalPortError}
+            label="Ports"
+            multiple
+            onChange={(_, selected) => handlePortPresetChange(selected)}
+            options={portOptions}
+            // If options are selected, hide the placeholder
+            placeholder={presetPorts.length > 0 ? ' ' : 'Select a port...'}
+            textFieldProps={{
+              InputProps: {
+                required: true,
+              },
+              dataAttrs: {
+                'data-qa-port-select': true,
+              },
+              helperText: ['ICMP', 'IPENCAP'].includes(values.protocol ?? '')
+                ? `Ports are not allowed for ${values.protocol} protocols.`
+                : undefined,
+            }}
+            value={presetPorts}
+          />
+          {hasCustomInput ? (
+            <TextField
+              aria-label="Custom port range for firewall rule"
+              errorText={errors.ports}
+              label="Custom Port Range"
+              name="ports"
+              onBlur={handleBlur}
+              onChange={handleTextFieldChange}
+              placeholder="Enter a custom port range..."
+              value={values.ports}
+            />
+          ) : null}
+          <Select
+            aria-label={`Select rule ${addressesLabel}s.`}
+            errorText={errors.addresses}
+            label={`${capitalize(addressesLabel)}s`}
+            onBlur={handleBlur}
+            onChange={(_, selected) => {
+              handleAddressesChange(selected.value);
+            }}
+            options={addressOptions}
+            placeholder={`Select ${addressesLabel}s...`}
+            textFieldProps={{
+              InputProps: {
+                required: true,
+              },
+              dataAttrs: {
+                'data-qa-address-source-select': true,
+              },
+            }}
+            value={addressesValue}
+          />
+          {/* Show this field only if "IP / Netmask has been selected." */}
+          {values.addresses === 'ip/netmask' && (
+            <StyledMultipleIPInput
+              aria-label="IP / Netmask for Firewall rule"
+              ips={ips}
+              onBlur={handleIPBlur}
+              onChange={handleIPChange}
+              placeholder={ipFieldPlaceholder}
+              title="IP / Netmask"
+              tooltip={ipNetmaskTooltipText}
+            />
+          )}
+          <StyledDiv>
+            <Typography>
+              <strong>Action</strong>
+            </Typography>
+            <RadioGroup
+              aria-label="action"
+              name="action"
+              onChange={handleActionChange}
+              row
+              value={values.action}
+            >
+              <FormControlLabel
+                control={<Radio />}
+                label="Accept"
+                value="ACCEPT"
+              />
+              <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+              <Typography style={{ paddingTop: 4 }}>
+                This will take precedence over the Firewall&rsquo;s {category}{' '}
+                policy.
+              </Typography>
+            </RadioGroup>
+          </StyledDiv>
+        </>
+      )}
+
+      {createEntityType === 'ruleset' && (
+        <AssignRuleSetToFirewall
+          errorText={errors.ruleset}
+          handleRuleSetChange={handleRuleSetChange}
+          selectedRuleSetId={values.ruleset as number}
         />
       )}
-      <StyledDiv>
-        <Typography>
-          <strong>Action</strong>
-        </Typography>
-        <RadioGroup
-          aria-label="action"
-          name="action"
-          onChange={handleActionChange}
-          row
-          value={values.action}
-        >
-          <FormControlLabel control={<Radio />} label="Accept" value="ACCEPT" />
-          <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
-          <Typography style={{ paddingTop: 4 }}>
-            This will take precedence over the Firewall&rsquo;s {category}{' '}
-            policy.
-          </Typography>
-        </RadioGroup>
-      </StyledDiv>
 
       <ActionsPanel
         primaryButtonProps={{

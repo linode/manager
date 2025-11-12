@@ -30,11 +30,19 @@ export interface FormState {
   type?: null | string;
 }
 
+export type FirewallCreateEntityType = 'rule' | 'ruleset';
+
 export interface FirewallRuleFormProps extends FormikProps<FormState> {
   addressesLabel: string;
   category: Category;
+  createEntityType?: FirewallCreateEntityType;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
+  /**
+   * Optional callback to notify the parent of the current create entity type.
+   * Called when the user switches between creating a 'rule' or referencing a 'ruleset'.
+   */
+  onCreateEntityTypeChange?: (type: FirewallCreateEntityType) => void;
   presetPorts: FirewallOptionItem<string>[];
   ruleErrors?: FirewallRuleError[];
   setIPs: (ips: ExtendedIP[]) => void;
