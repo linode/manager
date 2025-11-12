@@ -25,24 +25,24 @@ export const UserProfile = () => {
     'delete_user',
   ]);
 
+  const isAccountAdmin = permissions?.is_account_admin;
+
   const {
     data: user,
     error,
     isLoading,
-  } = useAccountUser(username ?? '', permissions?.is_account_admin);
-  const { data: assignedRoles } = useUserRoles(
-    username ?? '',
-    permissions?.is_account_admin
-  );
+  } = useAccountUser(username ?? '', isAccountAdmin);
+  const { data: assignedRoles } = useUserRoles(username ?? '', isAccountAdmin);
 
-  const canUpdateUser = permissions?.update_user;
-  const canDeleteUser = permissions?.delete_user;
+  // Only admin users get update_user and delete_user permissions, but doing a bit of defensive programming here to be safe.
+  const canUpdateUser = isAccountAdmin || permissions?.update_user;
+  const canDeleteUser = isAccountAdmin || permissions?.delete_user;
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!permissions?.is_account_admin) {
+  if (!isAccountAdmin) {
     return (
       <Notice variant="error">
         You do not have permission to view this user&apos;s details.
