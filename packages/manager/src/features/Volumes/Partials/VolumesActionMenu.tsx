@@ -34,7 +34,6 @@ export const VolumesActionMenu = (props: Props) => {
   const isAttached = volume.linode_id !== null;
 
   const { data: accountPermissions } = usePermissions('account', [
-    'create_volume',
     'is_account_admin',
   ]);
   const { data: volumePermissions, isLoading } = usePermissions(
@@ -97,18 +96,16 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     CLONE: {
-      disabled:
-        !volumePermissions?.clone_volume || !accountPermissions?.create_volume,
+      disabled: !volumePermissions?.clone_volume,
       onClick: handlers.handleClone,
       title: 'Clone',
-      tooltip:
-        !volumePermissions?.clone_volume || !accountPermissions?.create_volume
-          ? getRestrictedResourceText({
-              action: 'clone',
-              isSingular: true,
-              resourceType: 'Volumes',
-            })
-          : undefined,
+      tooltip: !volumePermissions?.clone_volume
+        ? getRestrictedResourceText({
+            action: 'clone',
+            isSingular: true,
+            resourceType: 'Volumes',
+          })
+        : undefined,
     },
     ATTACH: {
       disabled: !volumePermissions?.attach_volume,
