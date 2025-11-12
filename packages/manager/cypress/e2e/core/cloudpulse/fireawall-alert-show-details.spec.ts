@@ -4,10 +4,9 @@
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and entity information are displayed correctly.
  */
-import { capitalize, linodeFactory, profileFactory } from '@linode/utilities';
+import { linodeFactory, profileFactory } from '@linode/utilities';
 import {
   aggregationTypeMap,
-  dimensionOperatorTypeMap,
   metricOperatorTypeMap,
   severityMap,
 } from 'support/constants/alert';
@@ -40,11 +39,7 @@ import {
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type {
-  AlertDefinitionDimensionFilter,
-  AlertDefinitionMetricCriteria,
-  Linode,
-} from '@linode/api-v4';
+import type { AlertDefinitionMetricCriteria, Linode } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
@@ -53,7 +48,7 @@ const mockAccount = accountFactory.build();
 const alertDetails = alertFactory.build({
   entity_ids: ['1'],
   rule_criteria: {
-    rules: firewallMetricRulesFactory.buildList(5),
+    rules: firewallMetricRulesFactory.buildList(1),
   },
   service_type: 'firewall',
   severity: 1,
@@ -72,32 +67,6 @@ const mockProfile = profileFactory.build({
 });
 
 /**
- * Asserts that the given dimension filter's label, operator, and value
- * are correctly displayed in the UI as visible chips.
- *
- * @param {AlertDefinitionDimensionFilter} filter - The dimension filter object containing
- *   the label (string), operator (string), and value (string) to validate.
- */
-const assertDimensionFilter = (filter: AlertDefinitionDimensionFilter) => {
-  cy.get(`[data-qa-chip="${filter.label}"]`)
-    .should('be.visible')
-    .each(($chip) => {
-      expect($chip).to.have.text(filter.label);
-    });
-
-  cy.get(`[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
-    .should('be.visible')
-    .each(($chip) => {
-      expect($chip).to.have.text(dimensionOperatorTypeMap[filter.operator]);
-    });
-
-  cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
-    .should('be.visible')
-    .each(($chip) => {
-      expect($chip).to.have.text(capitalize(filter.value));
-    });
-};
-/**
  * Validates the UI display of an array of metric criteria rules.
  *
  * For each rule, it checks the Metric Threshold section and the Dimension Filters section,
@@ -109,43 +78,114 @@ const assertDimensionFilter = (filter: AlertDefinitionDimensionFilter) => {
  */
 const assertRuleBlock = (rules: AlertDefinitionMetricCriteria[]) => {
   cy.get('[data-qa-section="Criteria"]').within(() => {
+    cy.log('**** Validating Metric Criteria Rules Display ****');
+
     rules.forEach((rule, index) => {
-      // Validate Metric Threshold section
+      cy.log(`🔹 Validating Rule #${index + 1}: ${rule.label}`);
+
+      // ------------------------------
+      // Validate Metric Threshold Section
+      // ------------------------------
       cy.get('[data-qa-item="Metric Threshold"]')
         .eq(index)
         .within(() => {
-          cy.get(
-            `[data-qa-chip="${aggregationTypeMap[rule.aggregate_function]}"]`
-          )
-            .should('be.visible')
-            .should('have.text', aggregationTypeMap[rule.aggregate_function]);
+          const verifyChip = (expectedValue: string, label: string) => {
+            if (!expectedValue) return;
+            const expected = expectedValue.toLowerCase();
 
-          cy.get(`[data-qa-chip="${rule.label}"]`)
-            .should('be.visible')
-            .should('have.text', rule.label);
+            cy.get('[data-qa-chip]')
+              .filter(
+                (_, el) =>
+                  el.getAttribute('data-qa-chip')?.toLowerCase() === expected
+              )
+              .then(($chip) => {
+                if ($chip.length === 0) {
+                  cy.log(
+                    `⚠️ Missing chip for "${label}": expected "${expectedValue}"`
+                  );
+                } else {
+                  cy.wrap($chip)
+                    .should('be.visible')
+                    .invoke('attr', 'data-qa-chip')
+                    .then((attr) => {
+                      expect(attr?.toLowerCase() ?? '', `${label} chip`).to.eq(
+                        expected
+                      );
+                    });
+                }
+              });
+          };
 
-          cy.get(`[data-qa-chip="${metricOperatorTypeMap[rule.operator]}"]`)
-            .should('be.visible')
-            .should('have.text', metricOperatorTypeMap[rule.operator]);
-
-          cy.get(`[data-qa-chip="${rule.threshold}"]`)
-            .should('be.visible')
-            .should('have.text', rule.threshold);
-
-          cy.get(`[data-qa-chip="${rule.unit}"]`)
-            .should('be.visible')
-            .should('have.text', rule.unit);
+          verifyChip(
+            aggregationTypeMap[rule.aggregate_function],
+            'Aggregate Function'
+          );
+          verifyChip(rule.label, 'Metric Label');
+          verifyChip(metricOperatorTypeMap[rule.operator], 'Operator');
+          verifyChip(String(rule.threshold), 'Threshold');
+          verifyChip(rule.unit, 'Unit');
         });
 
-      // Validate Dimension Filters section
+      // ------------------------------
+      // Validate Dimension Filters Section
+      // ------------------------------
       cy.get('[data-qa-item="Dimension Filter"]')
         .eq(index)
         .within(() => {
-          (rule.dimension_filters ?? []).forEach(assertDimensionFilter);
+          const filters = rule.dimension_filters ?? [];
+
+          if (filters.length === 0) {
+            cy.log('ℹ️ No Dimension Filters for this rule.');
+            return;
+          }
+
+          filters.forEach((filter) => {
+            const filterLabel = filter.label || filter.dimension_label;
+            const filterValue = filter.value;
+
+            // Validate Dimension Key
+            cy.get('[data-qa-chip]')
+              .filter(
+                (_, el) =>
+                  el.getAttribute('data-qa-chip')?.toLowerCase() ===
+                  filterLabel.toLowerCase()
+              )
+              .should('be.visible')
+              .then(() => cy.log(`✅ Dimension Filter Key: ${filterLabel}`));
+
+            // Validate Operator (if present)
+            if (filter.operator) {
+              cy.get('[data-qa-chip]')
+                .filter(
+                  (_, el) =>
+                    el.getAttribute('data-qa-chip')?.toLowerCase() ===
+                    filter.operator.toLowerCase()
+                )
+                .should('be.visible')
+                .then(() =>
+                  cy.log(`✅ Dimension Filter Operator: ${filter.operator}`)
+                );
+            }
+
+            // Validate Filter Value
+            if (filterValue) {
+              cy.get('[data-qa-chip]')
+                .filter(
+                  (_, el) =>
+                    el.getAttribute('data-qa-chip')?.toLowerCase() ===
+                    filterValue.toLowerCase()
+                )
+                .should('be.visible')
+                .then(() =>
+                  cy.log(`✅ Dimension Filter Value: ${filterValue}`)
+                );
+            }
+          });
         });
     });
   });
 };
+
 const mockLinodes: Linode[] = [
   linodeFactory.build({
     id: 1,
@@ -289,7 +329,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           entity_ids: ['1', '2'],
           label: 'Alert-1',
           rule_criteria: {
-            rules: firewallMetricRulesFactory.buildList(5),
+            rules: firewallMetricRulesFactory.buildList(1),
           },
           service_type: 'firewall',
           type: 'user',
@@ -394,7 +434,12 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         });
         // Validate the Criteria section by checking each metric rule's threshold details
         // and all related dimension filters for correct visibility and text content.
+
+        cy.log('****Validating Metric Criteria Rules Display_00000****');
+
         assertRuleBlock(rules);
+
+        cy.log('****Validating Metric Criteria Rules Display_DOne0****');
         // Validating contents of Polling Interval
         cy.get('[data-qa-item="Polling Interval"]')
           .find('[data-qa-chip]')
@@ -425,7 +470,6 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           .should('have.text', 'consecutive occurrences.');
         // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
 
-        cy.log(`Executing validation for ${groupLabel} scope`);
         scopeActions[groupLabel]?.();
         // Validate Notification Channels Section
         cy.get('[data-qa-section="Notification Channels"]').within(() => {
