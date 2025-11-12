@@ -21,7 +21,11 @@ import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 describe('Edit Destination', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
     cy.visitWithLogin(`/logs/delivery/destinations/${mockDestination.id}/edit`);
     mockGetDestination(mockDestination);

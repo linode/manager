@@ -7,10 +7,13 @@
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
 import {
+  acceleratedTypeFactory,
   accountAvailabilityFactory,
   accountBetaFactory,
   betaFactory,
   dedicatedTypeFactory,
+  gpuTypeAdaFactory,
+  gpuTypeRtxFactory,
   grantFactory,
   grantsFactory,
   linodeFactory,
@@ -22,6 +25,7 @@ import {
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
   pickRandom,
+  premiumTypeFactory,
   proDedicatedTypeFactory,
   profileFactory,
   regionAvailabilityFactory,
@@ -534,21 +538,10 @@ const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
-const gpuTypesAda = linodeTypeFactory.buildList(7, {
-  class: 'gpu',
-  gpus: 5,
-  label: 'Ada Lovelace',
-  transfer: 0,
-});
-const gpuTypesRX = linodeTypeFactory.buildList(7, {
-  class: 'gpu',
-  gpus: 1,
-  transfer: 5000,
-});
+const gpuTypesAda = gpuTypeAdaFactory.buildList(7);
+const gpuTypesRX = gpuTypeRtxFactory.buildList(7);
 const premiumTypes = [
-  ...linodeTypeFactory.buildList(6, {
-    class: 'premium',
-  }),
+  ...premiumTypeFactory.buildList(6),
   linodeTypeFactory.build({
     class: 'premium',
     disk: 10240000,
@@ -564,13 +557,8 @@ const premiumTypes = [
     vcpus: 128,
   }),
 ];
+const acceleratedType = acceleratedTypeFactory.buildList(7);
 
-const acceleratedType = linodeTypeFactory.buildList(7, {
-  accelerated_devices: 1,
-  class: 'accelerated',
-  label: 'Netint Quadra T1U X',
-  transfer: 0,
-});
 const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
   last_login: null,
@@ -1689,6 +1677,10 @@ export const handlers = [
       volumeFactory.build({ status, region: 'ap-west' })
     );
     return HttpResponse.json(makeResourcePage(volumes));
+  }),
+  http.get('*/v4/volumes/:id', () => {
+    const volume = volumeFactory.build();
+    return HttpResponse.json(volume);
   }),
   http.get('*/volumes/types', () => {
     const volumeTypes = volumeTypeFactory.buildList(1);
