@@ -97,6 +97,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const location = useLocation();
 
   const { data: accountSettings } = useAccountSettings();
+
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
@@ -115,16 +116,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
 
   const {
-    data: collapsedSideNavPreference,
+    data: preferences,
     error: preferencesError,
     isLoading: preferencesLoading,
-  } = usePreferences(
-    (preferences) => preferences?.collapsedSideNavProductFamilies
-  );
+  } = usePreferences();
 
-  const collapsedAccordions = collapsedSideNavPreference ?? [
-    1, 2, 3, 4, 5, 6, 7,
-  ]; // by default, we collapse all categories if no preference is set;
+  const collapsedSideNavPreference =
+    preferences?.collapsedSideNavProductFamilies;
+
+  const collapsedAccordions = React.useMemo(
+    () => collapsedSideNavPreference ?? [1, 2, 3, 4, 5, 6, 7], // by default, we collapse all categories if no preference is set;
+    [collapsedSideNavPreference]
+  );
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
@@ -343,22 +346,22 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       ]
     );
 
-  const accordionClicked = (index: number) => {
-    let updatedCollapsedAccordions: number[] = [1, 2, 3, 4, 5, 6, 7];
-    if (collapsedAccordions.includes(index)) {
-      updatedCollapsedAccordions = collapsedAccordions.filter(
-        (accIndex) => accIndex !== index
-      );
+  const accordionClicked = React.useCallback(
+    (index: number) => {
+      let updatedCollapsedAccordions: number[];
+      if (collapsedAccordions.includes(index)) {
+        updatedCollapsedAccordions = collapsedAccordions.filter(
+          (accIndex) => accIndex !== index
+        );
+      } else {
+        updatedCollapsedAccordions = [...collapsedAccordions, index];
+      }
       updatePreferences({
         collapsedSideNavProductFamilies: updatedCollapsedAccordions,
       });
-    } else {
-      updatedCollapsedAccordions = [...collapsedAccordions, index];
-      updatePreferences({
-        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
-      });
-    }
-  };
+    },
+    [collapsedAccordions, updatePreferences]
+  );
 
   const checkOverflow = React.useCallback(() => {
     if (navItemsRef.current && primaryNavRef.current) {
@@ -410,10 +413,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   // When a user lands on a page and does not have any preference set,
   // we want to expand the accordion that contains the active link for convenience and discoverability
   React.useEffect(() => {
+    // Wait for preferences to load or if there's an error
     if (preferencesLoading || preferencesError) {
       return;
     }
 
+    // Wait for preferences data to be available (not just the field, but the whole object)
+    if (!preferences) {
+      return;
+    }
+
+    // If user has already set collapsedSideNavProductFamilies preference, don't override it
     if (collapsedSideNavPreference) {
       return;
     }
@@ -430,13 +440,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     if (activeGroupIndex !== -1) {
       accordionClicked(activeGroupIndex);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    accordionClicked,
     location.pathname,
     location.search,
     productFamilyLinkGroups,
     collapsedSideNavPreference,
+    preferences,
     preferencesLoading,
     preferencesError,
   ]);
