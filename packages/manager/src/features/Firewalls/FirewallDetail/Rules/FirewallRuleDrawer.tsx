@@ -16,6 +16,7 @@ import { FirewallRuleForm } from './FirewallRuleForm';
 
 import type { FirewallOptionItem } from '../../shared';
 import type {
+  FirewallCreateEntityType,
   FirewallRuleDrawerProps,
   FormState,
 } from './FirewallRuleDrawer.types';
@@ -32,6 +33,16 @@ export const FirewallRuleDrawer = React.memo(
   (props: FirewallRuleDrawerProps) => {
     const { category, isOpen, mode, onClose, ruleToModify } = props;
 
+    /**
+     * State for the type of entity being created: either a firewall 'rule' or
+     * referencing an existing 'ruleset' in the firewall.
+     * Only relevant when `mode === 'create'`.
+     * Optional: undefined in edit or view flows.
+     */
+    const [createEntityType, setCreateEntityType] = React.useState<
+      FirewallCreateEntityType | undefined
+    >(undefined);
+
     // Custom IPs are tracked separately from the form. The <MultipleIPs />
     // component consumes this state. We use this on form submission if the
     // `addresses` form value is "ip/netmask", which indicates the user has
@@ -45,9 +56,14 @@ export const FirewallRuleDrawer = React.memo(
       FirewallOptionItem<string>[]
     >([]);
 
-    // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
-    // (along with any errors we may have).
     React.useEffect(() => {
+      // If we're in CREATE mode, set 'rule' as a default create mode
+      if (mode === 'create') {
+        setCreateEntityType('rule');
+      }
+
+      // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
+      // (along with any errors we may have).
       if (mode === 'edit' && ruleToModify) {
         setIPs(getInitialIPs(ruleToModify));
         setPresetPorts(portStringToItems(ruleToModify.ports)[0]);
@@ -69,7 +85,17 @@ export const FirewallRuleDrawer = React.memo(
       label,
       ports,
       protocol,
+      ruleset,
     }: FormState) => {
+      // If we're in add 'ruleset' mode, only validate the ruleset field
+      if (mode === 'create' && createEntityType === 'ruleset') {
+        const errors: Record<string, string> = {};
+        if (ruleset === undefined || ruleset === null || isNaN(ruleset)) {
+          errors.ruleset = 'Ruleset is required.';
+        }
+        return errors;
+      }
+
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
         allowEmptyAddress: addresses !== 'ip/netmask',
@@ -94,22 +120,33 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     const onSubmit = (values: FormState) => {
-      const ports = itemsToPortString(presetPorts, values.ports!);
-      const protocol = values.protocol as FirewallRuleProtocol;
-      const addresses = formValueToIPs(values.addresses!, ips);
+      const isCreateRuleSetMode =
+        mode === 'create' && createEntityType === 'ruleset';
 
-      const payload: FirewallRuleType = {
-        action: values.action,
-        addresses,
-        ports,
-        protocol,
-      };
+      if (isCreateRuleSetMode) {
+        const payload: Pick<FirewallRuleType, 'ruleset'> = {
+          ruleset: values.ruleset,
+        };
+        props.onSubmit(category, payload);
+      } else {
+        const ports = itemsToPortString(presetPorts, values.ports!);
+        const protocol = values.protocol as FirewallRuleProtocol;
+        const addresses = formValueToIPs(values.addresses!, ips);
 
-      payload.label = values.label === '' ? null : values.label;
-      payload.description =
-        values.description === '' ? null : values.description;
+        const payload: FirewallRuleType = {
+          action: values.action,
+          addresses,
+          ports,
+          protocol,
+        };
 
-      props.onSubmit(category, payload);
+        payload.label = values.label === '' ? null : values.label;
+        payload.description =
+          values.description === '' ? null : values.description;
+
+        props.onSubmit(category, payload);
+      }
+
       onClose();
     };
 
@@ -127,8 +164,14 @@ export const FirewallRuleDrawer = React.memo(
               <FirewallRuleForm
                 addressesLabel={addressesLabel}
                 category={category}
+                createEntityType={createEntityType}
                 ips={ips}
                 mode={mode}
+                onCreateEntityTypeChange={(newType) => {
+                  setCreateEntityType(newType);
+                  // Clear Formik errors when createMode changes
+                  formikProps.setErrors({});
+                }}
                 presetPorts={presetPorts}
                 ruleErrors={ruleToModify?.errors}
                 setIPs={setIPs}
