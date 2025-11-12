@@ -75,8 +75,10 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
         render={({ field, fieldState }) => (
           <TextField
             aria-required
-            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Name`}
             errorText={fieldState.error?.message}
+            inputProps={{
+              'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Name`,
+            }}
             label="Name"
             onBlur={field.onBlur}
             onChange={(value) => {
@@ -92,7 +94,6 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
         name="stream.type"
         render={({ field, fieldState }) => (
           <Autocomplete
-            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Stream Type`}
             disableClearable
             disabled={isFormInEditMode(mode)}
             errorText={fieldState.error?.message}
@@ -121,6 +122,11 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
                   <SelectedIcon visible={selected} />
                 </li>
               );
+            }}
+            textFieldProps={{
+              inputProps: {
+                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Stream Type`,
+              },
             }}
             value={getStreamTypeOption(field.value)}
           />

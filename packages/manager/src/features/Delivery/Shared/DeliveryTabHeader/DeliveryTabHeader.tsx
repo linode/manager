@@ -88,8 +88,10 @@ export const DeliveryTabHeader = ({
         {onSearch && searchValue !== undefined && (
           <DebouncedSearchTextField
             clearable
-            data-pendo-id={`Logs Delivery ${entity}s-Search`}
             hideLabel
+            inputProps={{
+              'data-pendo-id': `Logs Delivery ${entity}s-Search`,
+            }}
             isSearching={isSearching}
             label={searchLabel}
             onSearch={onSearch}
@@ -100,7 +102,6 @@ export const DeliveryTabHeader = ({
         <StyledActions>
           {selectList && onSelect && (
             <Autocomplete
-              data-pendo-id={`Logs Delivery ${entity}s-Status`}
               label={'Status'}
               noMarginTop
               onChange={(_, option) => {
@@ -126,6 +127,11 @@ export const DeliveryTabHeader = ({
                     <SelectedIcon visible={selected} />
                   </li>
                 );
+              }}
+              textFieldProps={{
+                inputProps: {
+                  'data-pendo-id': `Logs Delivery ${entity}s-Status`,
+                },
               }}
               value={selectList.find(({ value }) => value === selectValue)}
             />
