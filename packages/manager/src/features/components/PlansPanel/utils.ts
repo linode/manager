@@ -23,6 +23,7 @@ import type {
 import type {
   BaseType,
   Capabilities,
+  LinodeType,
   LinodeTypeClass,
   Region,
   RegionAvailability,
@@ -494,4 +495,19 @@ export const getDisabledPlanReasonCopy = ({
   }
 
   return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
+};
+
+export const useShouldDisablePremiumPlansTab = ({
+  types,
+}: {
+  types: LinodeType[] | PlanSelectionType[] | undefined;
+}): boolean => {
+  const flags = useFlags();
+  // Check if any public premium plans are available.
+  // We can omit "Premium HT" and "Premium nested" plans as customers don't deploy them using cloud manager.
+  const arePublicPremiumPlansAvailable = types?.some(
+    (plan) => plan.class === 'premium' && /^Premium \d+GB$/i.test(plan.label)
+  );
+
+  return Boolean(flags.generationalPlans) && !arePublicPremiumPlansAvailable;
 };
