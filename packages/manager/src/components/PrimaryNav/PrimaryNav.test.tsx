@@ -567,11 +567,11 @@ describe('PrimaryNav', () => {
       capabilities: ['Network LoadBalancer'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags: Partial<Flags> = {
       networkLoadBalancer: true,
