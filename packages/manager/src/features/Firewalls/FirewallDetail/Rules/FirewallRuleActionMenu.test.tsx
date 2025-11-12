@@ -42,14 +42,14 @@ describe('Firewall rule action menu', () => {
 
     await userEvent.click(actionMenuButton);
 
-    // "Edit" is visible but disabled, "Clone" is not present, and "Delete" is visible and enabled
-    for (const action of ['Edit', 'Delete']) {
+    // "Edit" is visible but disabled, "Clone" is not present, and "Remove" is visible and enabled
+    for (const action of ['Edit', 'Remove']) {
       expect(getByText(action)).toBeVisible();
     }
     expect(queryByText('Clone')).toBeNull();
 
     expect(getByText('Edit')).toBeDisabled();
-    expect(getByText('Delete')).toBeEnabled();
+    expect(getByText('Remove')).toBeEnabled();
 
     // Hover over "Edit" and assert tooltip text
     const editButton = getByText('Edit');

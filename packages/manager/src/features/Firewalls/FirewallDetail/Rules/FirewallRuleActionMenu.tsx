@@ -63,7 +63,7 @@ export const FirewallRuleActionMenu = React.memo(
         onClick: () => {
           handleDeleteFirewallRule(idx);
         },
-        title: 'Delete',
+        title: isRuleSetRowEnabled ? 'Remove' : 'Delete',
       },
     ];
 
