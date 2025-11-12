@@ -388,6 +388,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 
       {createEntityType === 'ruleset' && (
         <AssignRuleSetToFirewall
+          category={category}
           errorText={errors.ruleset}
           handleRuleSetChange={(ruleSetId) =>
             setFieldValue('ruleset', ruleSetId)

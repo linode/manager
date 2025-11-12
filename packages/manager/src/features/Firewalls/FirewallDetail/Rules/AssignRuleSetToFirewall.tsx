@@ -1,8 +1,14 @@
 import { useAllFirewallRuleSetsQuery } from '@linode/queries';
-import { Autocomplete, Box, Typography } from '@linode/ui';
+import { Autocomplete, Box, Chip, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
+import { generateAddressesLabel } from '../../shared';
+
+import type { Category } from './shared';
+
 interface AssignRuleSetToFirewallProps {
+  category: Category;
   errorText?: string;
   handleRuleSetChange: (ruleSetId?: number) => void;
   selectedRuleSetId: number;
@@ -10,27 +16,33 @@ interface AssignRuleSetToFirewallProps {
 
 export const AssignRuleSetToFirewall = React.memo(
   (props: AssignRuleSetToFirewallProps) => {
-    const { errorText, handleRuleSetChange, selectedRuleSetId } = props;
+    const { category, errorText, handleRuleSetChange, selectedRuleSetId } =
+      props;
     // @TODO - Enable this query only when Firewall RS & PS feature flag is enabled
     const { data, error, isLoading } = useAllFirewallRuleSetsQuery();
 
     const ruleSets = data ?? [];
 
-    const ruleSetDropdownOptions: { label: string; value: number }[] =
-      React.useMemo(() => {
-        return ruleSets.map((ruleSet) => ({
+    // Find the selected ruleset once
+    const selectedRuleSet = React.useMemo(
+      () => ruleSets.find((r) => r.id === selectedRuleSetId) ?? null,
+      [ruleSets, selectedRuleSetId]
+    );
+
+    // Build dropdown options
+    const ruleSetDropdownOptions = React.useMemo(
+      () =>
+        ruleSets.map((ruleSet) => ({
           label: ruleSet.label,
           value: ruleSet.id,
-        }));
-      }, [ruleSets]);
+        })),
+      [ruleSets]
+    );
 
-    const selectedOption = React.useMemo(() => {
-      return (
-        ruleSetDropdownOptions.find(
-          (option) => option.value === selectedRuleSetId
-        ) ?? null
-      );
-    }, [ruleSetDropdownOptions, selectedRuleSetId]);
+    // The dropdown's selected option can be derived from the selectedRuleSet itself
+    const selectedOption = selectedRuleSet
+      ? { label: selectedRuleSet.label, value: selectedRuleSet.id }
+      : null;
 
     return (
       <Box>
@@ -51,6 +63,40 @@ export const AssignRuleSetToFirewall = React.memo(
           placeholder="Select Rule Set"
           value={selectedOption}
         />
+        {selectedRuleSet && (
+          <Box mt={2}>
+            <Box pb={1}>Label: {selectedRuleSet?.label}</Box>
+            <Box pb={1}>ID: {selectedRuleSet?.id}</Box>
+            <Typography pb={1}>{selectedRuleSet?.description}</Typography>
+            <Box pb={1}>
+              Service Defined: {selectedRuleSet?.is_service_defined}
+            </Box>
+            <Box pb={1}>Version: {selectedRuleSet?.version}</Box>
+            <Box pb={1}>Created: {selectedRuleSet?.created}</Box>
+            <Box pb={1}>Updated: {selectedRuleSet?.updated}</Box>
+            <Box pb={1}>{capitalize(category)} Rules</Box>
+            {selectedRuleSet.rules.map((rule, idx) => (
+              <Box key={`firewall-ruleset-rule-${idx}`} pb={0.25}>
+                <Chip
+                  label={rule.action}
+                  sx={(theme) => ({
+                    background:
+                      rule.action === 'ACCEPT'
+                        ? theme.tokens.alias.Background.Positivesubtle
+                        : theme.tokens.alias.Background.Negativesubtle,
+                    color:
+                      rule.action === 'ACCEPT'
+                        ? theme.tokens.alias.Content.Text.Positive
+                        : theme.tokens.alias.Content.Text.Negative,
+                    font: theme.font.bold,
+                  })}
+                />
+                {rule.protocol};&nbsp;{rule.ports};&nbsp;
+                {generateAddressesLabel(rule.addresses)}
+              </Box>
+            ))}
+          </Box>
+        )}
       </Box>
     );
   }
