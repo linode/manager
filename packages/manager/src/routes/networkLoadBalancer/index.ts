@@ -22,13 +22,13 @@ const networkLoadBalancerDetailRoute = createRoute({
   beforeLoad: async ({ params }) => {
     throw redirect({
       params: {
-        id: params.id,
+        nlbId: params.nlbId,
       },
-      to: '/netloadbalancers/$id/listeners',
+      to: '/netloadbalancers/$nlbId/listeners',
     });
   },
   getParentRoute: () => networkLoadBalancersRoute,
-  path: '$id',
+  path: '$nlbId',
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/networkLoadBalancersLazyRoute'
@@ -38,25 +38,26 @@ const networkLoadBalancerDetailRoute = createRoute({
 // TODO: Update to the lazy route for listeners when implemented
 const networkLoadBalancerListenersRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
-  path: '$id/listeners',
+  path: '$nlbId/listeners',
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/networkLoadBalancersLazyRoute'
   ).then((m) => m.networkLoadBalancersLazyRoute)
 );
 
-// TODO: Update to the lazy route for listeners when implemented
+// TODO: Update to the lazy route for nodes when implemented
 const networkLoadBalancerListenerDetailRoute = createRoute({
   beforeLoad: async ({ params }) => {
     throw redirect({
       params: {
-        id: params.id,
+        nlbId: params.nlbId,
+        listenerId: params.listenerId,
       },
-      to: '/netloadbalancers/$id/listeners',
+      to: '/netloadbalancers/$nlbId/listeners/$listenerId/nodes',
     });
   },
   getParentRoute: () => networkLoadBalancerListenersRoute,
-  path: '$nodeId',
+  path: '$listenerId',
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/networkLoadBalancersLazyRoute'

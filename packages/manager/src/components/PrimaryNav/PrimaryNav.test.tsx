@@ -451,10 +451,6 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Network Load Balancers menu item if the user has the account capability and the flag is enabled', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const account = accountFactory.build({
       capabilities: ['Network LoadBalancer'],
     });
