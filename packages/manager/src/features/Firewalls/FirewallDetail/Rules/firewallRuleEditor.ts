@@ -251,7 +251,7 @@ export const removeICMPPort = (
 const removeEmptyAddressArrays = (rules: ExtendedFirewallRule[]) => {
   return rules.map((rule) => {
     // Ruleset references do not have addresses
-    if (rule.ruleset !== null) {
+    if (rule.ruleset !== null && rule.ruleset !== undefined) {
       return { ...rule };
     }
 
