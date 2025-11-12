@@ -57,7 +57,7 @@ export const FirewallRuleDrawer = React.memo(
     >([]);
 
     React.useEffect(() => {
-      // If we're in CREATE mode, set 'rule' as a default create mode
+      // If we're in CREATE mode, set 'rule' as a default create entity type
       if (mode === 'create') {
         setCreateEntityType('rule');
       }
