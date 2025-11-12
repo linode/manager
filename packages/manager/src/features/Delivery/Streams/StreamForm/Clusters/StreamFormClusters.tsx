@@ -140,10 +140,12 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                 mt: 2,
               },
             }}
-            data-pendo-id={`Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`}
             debounceTime={250}
             errorText={searchParseError?.message}
             hideLabel
+            inputProps={{
+              'data-pendo-id': `Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`,
+            }}
             label="Search"
             onSearch={(value) => setSearchText(value)}
             placeholder="Search"
