@@ -19,6 +19,7 @@ import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface ValueFieldRendererProps {
   /**
@@ -35,6 +36,10 @@ interface ValueFieldRendererProps {
    * List of entity IDs used to filter resources like firewalls.
    */
   entities?: string[];
+  /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: AssociatedEntityType;
   /**
    * Error message to be displayed under the input field, if any.
    */
@@ -87,20 +92,21 @@ interface ValueFieldRendererProps {
 
 export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const {
-    serviceType,
-    scope,
     dimensionLabel,
     disabled,
     entities,
+    entityType,
     errorText,
     name,
     onBlur,
     onChange,
     operator,
+    scope,
     value,
     values,
-    selectedRegions,
     type = 'alerts',
+    selectedRegions,
+    serviceType,
   } = props;
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
@@ -181,6 +187,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             dimensionLabel={dimensionLabel}
             disabled={disabled}
             entities={entities}
+            entityType={entityType}
             errorText={errorText}
             fieldOnBlur={onBlur}
             fieldOnChange={onChange}
@@ -189,6 +196,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             name={name}
             placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
+            selectedRegions={selectedRegions ?? undefined}
             serviceType={serviceType ?? null}
             type={type}
           />

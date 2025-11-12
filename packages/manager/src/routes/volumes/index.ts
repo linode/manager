@@ -47,6 +47,11 @@ const volumeDetailsSummaryRoute = createRoute({
   getParentRoute: () => volumeDetailsRoute,
 });
 
+const volumeDetailsMetricsRoute = createRoute({
+  path: 'metrics',
+  getParentRoute: () => volumeDetailsRoute,
+});
+
 const volumeDetailsSummaryActionRoute = createRoute({
   path: 'summary/$action',
   getParentRoute: () => volumeDetailsRoute,
@@ -141,5 +146,6 @@ export const volumesRouteTree = volumesRoute.addChildren([
   volumeDetailsRoute.addChildren([
     volumeDetailsSummaryRoute,
     volumeDetailsSummaryActionRoute,
+    volumeDetailsMetricsRoute,
   ]),
 ]);

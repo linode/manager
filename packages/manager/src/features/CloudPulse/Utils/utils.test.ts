@@ -530,7 +530,7 @@ describe('isValidFilter', () => {
   it('returns true for static dimensions (no values array) regardless of value', () => {
     const filter: MetricsDimensionFilter = {
       dimension_label: 'browser',
-      operator: 'eq',
+      operator: 'startswith',
       value: 'chrome',
     };
     expect(isValidFilter(filter, [staticDim])).toBe(true);
