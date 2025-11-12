@@ -170,44 +170,11 @@ export const KubernetesPlansPanel = (props: Props) => {
     currentPlanHeading
   );
 
-  // Initialize ref with the actual starting tab to avoid cleaning wrong tab's params on first switch
-  const prevTabIndexRef = React.useRef<number>(
-    initialTab >= 0 ? initialTab : 0
-  );
-
-  const handleTabChangeWithCleanup = (newTabIndex: number) => {
-    const prevTabIndex = prevTabIndexRef.current;
-
-    // Clean up pagination params from the previous tab
-    if (prevTabIndex !== newTabIndex) {
-      const planKeys = Object.keys(plans);
-      const prevPlanType = planKeys[prevTabIndex];
-
-      if (prevPlanType && prevTabIndex < planKeys.length) {
-        const prevPrefix = `plan-panel-k8-${prevPlanType}`;
-        const pageKey = `${prevPrefix}-page`;
-        const pageSizeKey = `${prevPrefix}-pageSize`;
-
-        // Remove the pagination params from URL
-        const url = new URL(window.location.href);
-        url.searchParams.delete(pageKey);
-        url.searchParams.delete(pageSizeKey);
-        window.history.replaceState({}, '', url.toString());
-      }
-    }
-
-    // Update ref
-    prevTabIndexRef.current = newTabIndex;
-
-    // Call resetValues
-    resetValues();
-  };
-
   return (
     <TabbedPanel
       copy={copy}
       error={error}
-      handleTabChange={handleTabChangeWithCleanup}
+      handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
       notice={notice}

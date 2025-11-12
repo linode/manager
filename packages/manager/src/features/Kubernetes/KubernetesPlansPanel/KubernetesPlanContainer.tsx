@@ -1,13 +1,11 @@
 import { Notice, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { type ToSubOptions, useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { PLAN_PANEL_PAGE_SIZE_OPTIONS } from 'src/features/components/PlansPanel/constants';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -118,20 +116,10 @@ export const KubernetesPlanContainer = (
     ]
   );
 
-  const location = useLocation();
-
   const paginationPrefix = React.useMemo(
     () => `plan-panel-k8-${planType ?? 'all'}`,
     [planType]
   );
-
-  const pagination = usePaginationV2({
-    currentRoute: location.pathname as ToSubOptions['to'],
-    defaultPageSize: PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value,
-    initialPage: 1,
-    preferenceKey: paginationPrefix,
-    queryParamsPrefix: paginationPrefix,
-  });
 
   // Feature gate: if pagination is disabled, render the old way
   if (!isK8PlanPaginationEnabled) {
@@ -214,21 +202,14 @@ export const KubernetesPlanContainer = (
 
   // Pagination enabled: use new paginated rendering
   return (
-    <Paginate
-      data={plans}
-      key={paginationPrefix}
-      page={pagination.page}
-      pageSize={pagination.pageSize}
-      pageSizeSetter={pagination.handlePageSizeChange}
-      shouldScroll={true}
-      updatePageUrl={pagination.handlePageChange}
-    >
+    <Paginate data={plans} key={paginationPrefix} shouldScroll={false}>
       {({
         count,
         data: paginatedPlans,
         handlePageChange,
         handlePageSizeChange,
         pageSize,
+        page,
       }) => {
         const shouldDisplayPagination =
           !shouldDisplayNoRegionSelectedMessage &&
@@ -327,7 +308,7 @@ export const KubernetesPlanContainer = (
                 customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
-                page={pagination.page}
+                page={page}
                 pageSize={pageSize}
                 sx={{
                   borderLeft: 'none',
