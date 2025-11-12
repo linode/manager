@@ -12,12 +12,19 @@ import type { NetworkLoadBalancerNode } from './types';
  * @param networkLoadBalancerId { number } The ID of the Network Load Balancer.
  * @param listenerId { number } The ID of the listener.
  */
-export const getNetworkLoadBalancerNodes = (
-  networkLoadBalancerId: number,
-  listenerId: number,
-  params?: Params,
-  filters?: Filter,
-) =>
+interface GetNetworkLoadBalancerNodesOptions {
+  filters?: Filter;
+  listenerId: number;
+  networkLoadBalancerId: number;
+  params?: Params;
+}
+
+export const getNetworkLoadBalancerNodes = ({
+  networkLoadBalancerId,
+  listenerId,
+  params,
+  filters,
+}: GetNetworkLoadBalancerNodesOptions) =>
   Request<Page<NetworkLoadBalancerNode>>(
     setURL(
       `${BETA_API_ROOT}/netloadbalancers/${encodeURIComponent(networkLoadBalancerId)}/listeners/${encodeURIComponent(listenerId)}/nodes`,
@@ -36,11 +43,17 @@ export const getNetworkLoadBalancerNodes = (
  * @param listenerId { number } The ID of the listener.
  * @param nodeId { number } The ID of the node to retrieve.
  */
-export const getNetworkLoadBalancerNode = (
-  networkLoadBalancerId: number,
-  listenerId: number,
-  nodeId: number,
-) =>
+interface GetNetworkLoadBalancerNodeOptions {
+  listenerId: number;
+  networkLoadBalancerId: number;
+  nodeId: number;
+}
+
+export const getNetworkLoadBalancerNode = ({
+  listenerId,
+  networkLoadBalancerId,
+  nodeId,
+}: GetNetworkLoadBalancerNodeOptions) =>
   Request<NetworkLoadBalancerNode>(
     setURL(
       `${BETA_API_ROOT}/netloadbalancers/${encodeURIComponent(networkLoadBalancerId)}/listeners/${encodeURIComponent(listenerId)}/nodes/${encodeURIComponent(nodeId)}`,
