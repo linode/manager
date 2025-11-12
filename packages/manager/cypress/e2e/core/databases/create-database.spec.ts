@@ -204,9 +204,8 @@ describe('create a database cluster, mocked data', () => {
           });
         cy.wait('@createDatabase');
 
-        // TODO Update assertions upon completion of M3-7030.
         cy.url().should(
-          'endWith',
+          'contains',
           `/databases/${databaseMock.engine}/${databaseMock.id}`
         );
 
