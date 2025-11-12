@@ -22,6 +22,7 @@ export const CloudPulseModifyAlertResources = React.memo(
     const { name } = props;
     const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+    const entityTypeWatcher = useWatch({ control, name: 'entity_type' });
 
     const flags = useFlags();
 
@@ -63,6 +64,7 @@ export const CloudPulseModifyAlertResources = React.memo(
               <AlertResources
                 alertResourceIds={field.value ?? []}
                 alertType="user"
+                entityType={entityTypeWatcher}
                 errorText={fieldState.error?.message}
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel

@@ -14,11 +14,10 @@ const queryMocks = vi.hoisted(() => ({
 
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
-  useRegionsQuery: queryMocks.useRegionsQuery.mockReturnValue({ data: [] }),
+  useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
 vi.mock('./useFirewallFetchOptions', () => ({
-  ...vi.importActual('./useFirewallFetchOptions'),
   useFirewallFetchOptions: queryMocks.useFirewallFetchOptions,
 }));
 
@@ -39,10 +38,17 @@ describe('<FirewallDimensionFilterAutocomplete />', () => {
     scope: 'account',
     serviceType: 'firewall',
     type: 'alerts',
+    entityType: 'linode',
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
+    queryMocks.useRegionsQuery.mockReturnValue({ data: [] });
+    queryMocks.useFirewallFetchOptions.mockReturnValue({
+      values: [],
+      isLoading: false,
+      isError: false,
+    });
   });
 
   it('renders with options when values are provided', () => {

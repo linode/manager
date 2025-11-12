@@ -133,17 +133,21 @@ export const getFirewallLinodes = (
 };
 
 /**
- * Extracts linode items from firewall resources by merging entities.
- * @param resources - List of firewall resources with entity mappings.
- * @returns - Flattened list of linode ID/label pairs as options.
+ * Extracts nodebalancer items from firewall resources.
+ * @param nodebalancers - List of nodebalancers.
+ * @returns - Flattened list of nodebalancer ID/label pairs as options.
  */
-export const getFirewallNodeBalancers = (
+export const getFirewallNodebalancers = (
   nodebalancers: NodeBalancer[]
 ): Item<string, string>[] => {
   if (!nodebalancers) return [];
-  return nodebalancers.map(({ id, label }) => ({
-    label: transformDimensionValue('firewall', 'nodebalancer_id', label),
-    value: String(id),
+  return nodebalancers.map((nodebalancer) => ({
+    label: transformDimensionValue(
+      'firewall',
+      'nodebalancer_id',
+      nodebalancer.label
+    ),
+    value: String(nodebalancer.id),
   }));
 };
 
