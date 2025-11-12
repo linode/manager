@@ -66,7 +66,8 @@ const iamRolesRoute = createRoute({
   beforeLoad: async ({ context }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
 
     if (!isIAMEnabled) {
@@ -137,7 +138,10 @@ const iamDelegationsRoute = createRoute({
   path: 'delegations',
   beforeLoad: async ({ context }) => {
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
-    if (!isDelegationEnabled) {
+    const profile = context?.profile;
+
+    const isChildAccount = profile?.user_type === 'child';
+    if (!isDelegationEnabled || isChildAccount) {
       throw redirect({
         to: '/iam/users',
       });
@@ -163,7 +167,8 @@ const iamUserNameRoute = createRoute({
   loader: async ({ context, params, location }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
     const isIAMDelegationEnabled = context.flags?.iamDelegation?.enabled;
@@ -247,7 +252,8 @@ const iamUserNameDetailsRoute = createRoute({
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
     if (!isIAMEnabled && username) {
@@ -269,7 +275,8 @@ const iamUserNameRolesRoute = createRoute({
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
 
@@ -293,7 +300,8 @@ const iamUserNameEntitiesRoute = createRoute({
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
-      context.flags
+      context.flags,
+      context.profile
     );
     const { username } = params;
 
