@@ -4,7 +4,7 @@ import { transformDimensionValue } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
-  getFirewallNodeBalancers,
+  getFirewallNodebalancers,
   getLinodeRegions,
   getNodebalancerRegions,
   getOperatorGroup,
@@ -183,7 +183,7 @@ describe('Utils', () => {
 
     it('should return nodebalancer options with transformed labels', () => {
       // checking for same label as nodebalancer_id dimension filter should not have any transformation
-      expect(getFirewallNodeBalancers(nodebalancers)).toEqual([
+      expect(getFirewallNodebalancers(nodebalancers)).toEqual([
         {
           label: nodebalancers[0].label,
           value: nodebalancers[0].id.toString(),
@@ -196,7 +196,7 @@ describe('Utils', () => {
     });
 
     it('should handle empty nodebalancer list', () => {
-      expect(getFirewallNodeBalancers([])).toEqual([]);
+      expect(getFirewallNodebalancers([])).toEqual([]);
     });
   });
 
