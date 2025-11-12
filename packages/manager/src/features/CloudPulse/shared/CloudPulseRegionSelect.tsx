@@ -15,7 +15,10 @@ import {
 } from '../Utils/constants';
 import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { getAssociatedEntityType } from '../Utils/utils';
+import {
+  getAssociatedEntityType,
+  getResourcesFilterConfig,
+} from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { Item } from '../Alerts/constants';
@@ -56,6 +59,11 @@ export const CloudPulseRegionSelect = React.memo(
     } = props;
 
     const { data: regions, isError, isLoading } = useRegionsQuery();
+    // Get the resources filter configuration for the dashboard
+    const resourcesFilterConfig = getResourcesFilterConfig(
+      selectedDashboard?.id
+    );
+    const filterFn = resourcesFilterConfig?.filterFn;
     const {
       data: resources,
       isError: isResourcesError,
@@ -66,7 +74,9 @@ export const CloudPulseRegionSelect = React.memo(
       {},
       {
         ...(RESOURCE_FILTER_MAP[selectedDashboard?.service_type ?? ''] ?? {}),
-      }
+      },
+      undefined,
+      filterFn
     );
 
     const flags = useFlags();
