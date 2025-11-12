@@ -173,9 +173,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
           {isCreate && isDatabaseGA && (
             <Typography
               sx={(theme: Theme) => ({
-                marginBottom: theme.spacing(2),
-                marginLeft: theme.spacing(1),
-                marginTop: theme.spacing(1),
+                marginBottom: theme.spacingFunction(16),
+                marginLeft: theme.spacingFunction(8),
+                marginTop: theme.spacingFunction(8),
               })}
             >
               Usable storage is smaller than the actual plan storage due to the
@@ -186,7 +186,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
             <Notice
               spacingLeft={8}
               spacingTop={8}
-              sx={{ '& p': { fontSize: '0.875rem' } }}
+              sx={(theme) => ({
+                '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+              })}
               text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
               variant="info"
             />
@@ -288,9 +290,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 {isCreate && isDatabaseGA && (
                   <Typography
                     sx={(theme: Theme) => ({
-                      marginBottom: theme.spacing(2),
-                      marginLeft: theme.spacing(1),
-                      marginTop: theme.spacing(1),
+                      marginBottom: theme.spacingFunction(16),
+                      marginLeft: theme.spacingFunction(8),
+                      marginTop: theme.spacingFunction(8),
                     })}
                   >
                     Usable storage is smaller than the actual plan storage due
@@ -301,7 +303,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
                   <Notice
                     spacingLeft={8}
                     spacingTop={8}
-                    sx={{ '& p': { fontSize: '0.875rem' } }}
+                    sx={(theme) => ({
+                      '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+                    })}
                     text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
                     variant="info"
                   />

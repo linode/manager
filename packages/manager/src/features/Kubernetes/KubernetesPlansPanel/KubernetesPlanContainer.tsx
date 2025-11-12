@@ -142,7 +142,9 @@ export const KubernetesPlanContainer = (
             <Notice
               spacingLeft={8}
               spacingTop={8}
-              sx={{ '& p': { fontSize: '0.875rem' } }}
+              sx={(theme) => ({
+                '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+              })}
               text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
               variant="info"
             />
@@ -260,7 +262,9 @@ export const KubernetesPlanContainer = (
                   <Notice
                     spacingLeft={8}
                     spacingTop={8}
-                    sx={{ '& p': { fontSize: '0.875rem' } }}
+                    sx={(theme) => ({
+                      '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+                    })}
                     text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
                     variant="info"
                   />
