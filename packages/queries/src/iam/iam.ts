@@ -83,6 +83,7 @@ export const useGetUserEntitiesByPermissionQuery = ({
   username,
   entityType,
   permission,
+  enabled = true,
 }: GetEntitiesByPermissionParams) => {
   const { data: profile } = useProfile();
   return useQuery<EntityByPermission[], APIError[]>({
@@ -90,6 +91,8 @@ export const useGetUserEntitiesByPermissionQuery = ({
       .user(username ?? '')
       ._ctx.getEntitiesByPermission(entityType, permission),
     enabled:
-      Boolean(username && entityType && permission) && profile?.restricted,
+      Boolean(username && entityType && permission) &&
+      profile?.restricted &&
+      enabled,
   });
 };

@@ -2,7 +2,7 @@ import {
   linodeQueries,
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-  useAllLinodesQuery,
+  useProfile,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
@@ -21,7 +21,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -47,6 +47,8 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const { id } = useParams({ strict: false });
 
+  const { data: profile } = useProfile();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -59,13 +61,17 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
-  const { data: availableLinodes, isLoading: availableLinodesLoading } =
-    useQueryWithPermissions<Linode>(
-      useAllLinodesQuery({}, {}, open),
-      'linode',
-      ['update_linode'],
-      open
-    );
+  const {
+    data: availableLinodes,
+    filter: availableLinodesFilter,
+    isLoading: availableLinodesLoading,
+    error: availableLinodesError,
+  } = useGetUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: open,
+    username: profile?.username,
+  });
 
   const linodesUsingLinodeInterfaces =
     availableLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
@@ -338,7 +344,10 @@ export const AddLinodeDrawer = (props: Props) => {
     if (error) {
       setLocalError('Could not load firewall data');
     }
-  }, [error]);
+    if (availableLinodesError) {
+      setLocalError('Could not load linode data');
+    }
+  }, [error, availableLinodesError]);
 
   return (
     <Drawer
@@ -365,6 +374,7 @@ export const AddLinodeDrawer = (props: Props) => {
           disabled={
             isLoadingAllFirewalls || availableLinodesLoading || disabled
           }
+          filter={availableLinodesFilter}
           helperText={helperText}
           loading={isLoadingAllFirewalls || availableLinodesLoading}
           multiple
