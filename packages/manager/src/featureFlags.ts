@@ -1,5 +1,7 @@
 import type { OCA } from './features/OneClickApps/types';
+import type { Region } from '@linode/api-v4';
 import type {
+  AlertStatusType,
   CloudPulseServiceType,
   TPAProvider,
 } from '@linode/api-v4/lib/profile';
@@ -70,6 +72,7 @@ interface LinodeInterfacesFlag extends BaseFeatureFlag {
 
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
+  hasQueue?: boolean;
   new: boolean;
 }
 
@@ -100,6 +103,13 @@ interface AclpFlag {
    * This property indicates whether to show widget dimension filters or not
    */
   showWidgetDimensionFilters?: boolean;
+}
+
+interface AclpLogsFlag extends BetaFeatureFlag {
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
+  bypassAccountCapabilities?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -139,6 +149,7 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
 }
@@ -149,12 +160,23 @@ interface LimitsEvolution {
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
 }
 
+interface MTC {
+  /**
+   * Whether the MTC feature is enabled.
+   */
+  enabled: boolean;
+  /**
+   * Region IDs where MTC is supported (Only used for Linode Migration region dropdown).
+   */
+  supportedRegions: Region['id'][];
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpLogs: BetaFeatureFlag;
+  aclpLogs: AclpLogsFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   aclpServices: Partial<AclpServices>;
@@ -178,7 +200,9 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  firewallRulesetsPrefixlists: boolean;
   gecko2: GeckoFeatureFlag;
+  generationalPlans: boolean;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
@@ -193,7 +217,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  mtc2025: boolean;
+  mtc: MTC;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;

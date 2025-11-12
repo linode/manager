@@ -217,8 +217,9 @@ export function usePermissions<
   const permissionMap = shouldUsePermissionMap
     ? toPermissionMap(
         permissionsToCheck,
-        usersPermissions!,
-        profile?.restricted
+        Array.isArray(usersPermissions) ? usersPermissions : [],
+        profile?.restricted,
+        accessType
       )
     : fromGrants(
         accessType,
@@ -240,6 +241,13 @@ export function usePermissions<
 
 export type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
 
+/**
+ * Helper function to get the permissions for a list of entities.
+ * Used only for restricted users who need to check permissions for each entity.
+ *
+ * ⚠️ This is a performance bottleneck for restricted users who have many entities.
+ * It will need to be deprecated and refactored when we add the ability to filter entities by permission(s).
+ */
 export const useEntitiesPermissions = <T extends EntityBase>(
   entities: T[] | undefined,
   entityType: EntityType,
@@ -255,7 +263,7 @@ export const useEntitiesPermissions = <T extends EntityBase>(
           entityType,
           entity.id
         ),
-      enabled,
+      enabled: enabled && Boolean(profile?.restricted),
     })),
   });
 

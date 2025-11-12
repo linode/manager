@@ -6,6 +6,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 
 import {
   addMaintenanceToLinodes,
+  useIsGenerationalPlansEnabled,
   useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
 } from './linodes';
@@ -76,5 +77,27 @@ describe('useIsLinodeCloneFirewallEnabled', () => {
     });
 
     expect(result.current?.isLinodeCloneFirewallEnabled).toBe(false);
+  });
+});
+
+describe('useIsGenerationalPlansEnabled', () => {
+  it('returns isGenerationalPlansEnabled: true if the feature is enabled', () => {
+    const options = { flags: { generationalPlans: true } };
+
+    const { result } = renderHook(() => useIsGenerationalPlansEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isGenerationalPlansEnabled).toBe(true);
+  });
+
+  it('returns isGenerationalPlansEnabled: false if the feature is NOT enabled', () => {
+    const options = { flags: { generationalPlans: false } };
+
+    const { result } = renderHook(() => useIsGenerationalPlansEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isGenerationalPlansEnabled).toBe(false);
   });
 });

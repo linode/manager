@@ -11,9 +11,9 @@ import {
 import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import AddAccessControlDrawer from 'src/features/Databases/DatabaseDetail/AddAccessControlDrawer';
 import DatabaseSettingsDeleteClusterDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
+import { ManageAccessControlDrawer } from 'src/features/Databases/DatabaseDetail/ManageAccessControlDrawer';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
@@ -34,7 +34,6 @@ interface Props {
   order: 'asc' | 'desc';
   orderBy: string;
   results: number | undefined;
-  showSuspend?: boolean;
 }
 const DatabaseLandingTable = ({
   data,
@@ -284,7 +283,7 @@ const DatabaseLandingTable = ({
         onClose={() => setIsSuspendClusterDialogOpen(false)}
         open={isSuspendClusterDialogOpen}
       />
-      <AddAccessControlDrawer
+      <ManageAccessControlDrawer
         database={selectedDatabase}
         onClose={onCloseAccesControls}
         open={isManageAccessControlsDialogOpen}

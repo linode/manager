@@ -40,6 +40,7 @@ export const SubnetActionMenu = (props: Props) => {
     ['update_vpc', 'delete_vpc'],
     vpcId
   );
+
   const canUpdateVPC = permissions?.update_vpc;
   const canDeleteVPC = permissions?.delete_vpc;
 
@@ -49,20 +50,12 @@ export const SubnetActionMenu = (props: Props) => {
         handleAssignLinodes(subnet);
       },
       title: 'Assign Linodes',
-      disabled: !canUpdateVPC,
-      tooltip: !canUpdateVPC
-        ? 'You do not have permission to assign Linode to this subnet.'
-        : undefined,
     },
     {
       onClick: () => {
         handleUnassignLinodes(subnet);
       },
       title: 'Unassign Linodes',
-      disabled: !canUpdateVPC,
-      tooltip: !canUpdateVPC
-        ? 'You do not have permission to unassign Linode from this subnet.'
-        : undefined,
     },
     {
       onClick: () => {

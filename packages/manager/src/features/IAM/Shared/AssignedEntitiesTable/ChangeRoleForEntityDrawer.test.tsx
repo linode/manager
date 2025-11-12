@@ -11,7 +11,7 @@ import { ChangeRoleForEntityDrawer } from '../../Shared/AssignedEntitiesTable/Ch
 import type { EntitiesRole } from '../../Shared/types';
 
 const queryMocks = vi.hoisted(() => ({
-  useParams: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({ username: 'test_user' }),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
@@ -47,6 +47,7 @@ const props = {
   onClose: vi.fn(),
   open: true,
   role: mockRole,
+  username: 'test_user',
 };
 
 const mockUpdateUserRole = vi.fn();

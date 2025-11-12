@@ -19,6 +19,10 @@ interface Props {
 export const ManageTagsDrawer = (props: Props) => {
   const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
+  const { data: accountPermissions } = usePermissions('account', [
+    'is_account_admin',
+  ]);
+
   const { data: permissions } = usePermissions(
     'volume',
     ['update_volume'],
@@ -89,7 +93,7 @@ export const ManageTagsDrawer = (props: Props) => {
           name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              disabled={!canUpdateVolume}
+              disabled={!accountPermissions?.is_account_admin}
               label="Tags"
               name="tags"
               onChange={(selected) =>

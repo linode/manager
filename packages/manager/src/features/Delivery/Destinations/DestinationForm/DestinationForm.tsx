@@ -1,5 +1,6 @@
 import { destinationType } from '@linode/api-v4';
 import { Autocomplete, Paper, TextField } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -61,6 +62,11 @@ export const DestinationForm = (props: DestinationFormProps) => {
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
+                  textFieldProps={{
+                    inputProps: {
+                      'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Type`,
+                    },
+                  }}
                   value={getDestinationTypeOption(field.value)}
                 />
               )}
@@ -72,6 +78,9 @@ export const DestinationForm = (props: DestinationFormProps) => {
                 <TextField
                   aria-required
                   errorText={fieldState.error?.message}
+                  inputProps={{
+                    'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Name`,
+                  }}
                   label="Destination Name"
                   onBlur={field.onBlur}
                   onChange={(value) => {
@@ -83,7 +92,10 @@ export const DestinationForm = (props: DestinationFormProps) => {
               )}
             />
             {destination.type === destinationType.AkamaiObjectStorage && (
-              <DestinationAkamaiObjectStorageDetailsForm />
+              <DestinationAkamaiObjectStorageDetailsForm
+                entity="destination"
+                mode={mode}
+              />
             )}
           </Paper>
         </Grid>
