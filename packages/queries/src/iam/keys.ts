@@ -1,12 +1,13 @@
 import {
   getAccountRoles,
   getUserAccountPermissions,
+  getUserEntitiesByPermission,
   getUserEntityPermissions,
   getUserRoles,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import type { AccessType } from '@linode/api-v4';
+import type { AccessType, PermissionType } from '@linode/api-v4';
 
 export const iamQueries = createQueryKeys('iam', {
   user: (username: string) => ({
@@ -25,6 +26,18 @@ export const iamQueries = createQueryKeys('iam', {
       ) => ({
         queryFn: () => getUserEntityPermissions(username, entityType, entityId),
         queryKey: [entityType, entityId],
+      }),
+      getEntitiesByPermission: (
+        entityType: AccessType,
+        permission: PermissionType,
+      ) => ({
+        queryFn: () =>
+          getUserEntitiesByPermission({
+            username,
+            entityType,
+            permission,
+          }),
+        queryKey: [entityType, permission],
       }),
     },
     queryKey: [username],
