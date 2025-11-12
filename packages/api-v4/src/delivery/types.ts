@@ -20,13 +20,11 @@ export interface AuditData {
 }
 
 export interface Stream extends AuditData {
-  destinations: Destination[];
+  destinations: DestinationCore[];
   details: StreamDetailsType;
   id: number;
   label: string;
-  primary_destination_id: number;
   status: StreamStatus;
-  stream_audit_id: number;
   type: StreamType;
   version: string;
 }
@@ -46,11 +44,14 @@ export const destinationType = {
 export type DestinationType =
   (typeof destinationType)[keyof typeof destinationType];
 
-export interface Destination extends AuditData {
+export interface DestinationCore {
   details: DestinationDetails;
   id: number;
   label: string;
   type: DestinationType;
+}
+
+export interface Destination extends DestinationCore, AuditData {
   version: string;
 }
 

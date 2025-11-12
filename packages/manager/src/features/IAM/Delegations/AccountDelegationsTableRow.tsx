@@ -5,6 +5,7 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
 
+import { usePermissions } from '../hooks/usePermissions';
 import { TruncatedList } from '../Shared/TruncatedList';
 import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
@@ -19,6 +20,9 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
+  const { data: permissions } = usePermissions('account', [
+    'update_delegate_users',
+  ]);
   const handleUpdateDelegations = () => {
     setIsDrawerOpen(true);
   };
@@ -118,11 +122,17 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+      <TableCell sx={{ textAlign: 'right', whiteSpace: 'nowrap', pr: 0 }}>
         <InlineMenuAction
           actionText="Update Delegations"
           buttonHeight={40}
+          disabled={!permissions.update_delegate_users}
           onClick={handleUpdateDelegations}
+          tooltip={
+            !permissions.update_delegate_users
+              ? 'You do not have permission to update delegations.'
+              : undefined
+          }
         />
       </TableCell>
       <UpdateDelegationsDrawer
