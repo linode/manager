@@ -87,7 +87,9 @@ describe('useGlobalDimensions method test', () => {
 
   it('should return non-empty options and defaultValue if no common dimensions', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build(),
+      data: dashboardFactory.build({
+        widgets: [{ metric: 'Metric 1' }, { metric: 'Metric 2' }],
+      }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
@@ -106,7 +108,9 @@ describe('useGlobalDimensions method test', () => {
 
   it('should return non-empty options and defaultValue from preferences', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build(),
+      data: dashboardFactory.build({
+        widgets: [{ metric: 'Metric 1' }, { metric: 'Metric 2' }],
+      }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({

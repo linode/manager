@@ -26,6 +26,13 @@ describe('CloudPulse dimension filter drawer tests', () => {
     const selectText = screen.getByText('Select up to 5 filters.');
     expect(selectText).toBeInTheDocument();
     await userEvent.click(screen.getByText('Add Filter'));
+    // validate for form fields to be present
+    const dataFieldContainer = screen.queryByTestId('dimension-field');
+    expect(dataFieldContainer).toBeInTheDocument();
+    const operatorContainer = screen.getByTestId('operator');
+    expect(operatorContainer).toBeInTheDocument();
+    const valueContainer = screen.getByTestId('value');
+    expect(valueContainer).toBeInTheDocument();
     const applyButton = screen.getByText('Apply');
     expect(applyButton).toBeInTheDocument();
     const cancelButton = screen.getByText('Cancel');
