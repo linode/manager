@@ -1,3 +1,10 @@
+## [2025-11-04] - v0.23.0
+
+
+### Fixed:
+
+- Misaligned focus indicator on the Toggle component causing visual inconsistency when navigating via keyboard ([#12988](https://github.com/linode/manager/pull/12988))
+
 ## [2025-10-21] - v0.22.0
 
 
