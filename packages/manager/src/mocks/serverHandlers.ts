@@ -1154,7 +1154,13 @@ export const handlers = [
 
   http.get('*/lke/clusters', async () => {
     const clusters = kubernetesAPIResponse.buildList(10);
-    return HttpResponse.json(makeResourcePage(clusters));
+    const enterpriseClusters = kubernetesAPIResponse.buildList(11, {
+      tier: 'enterprise',
+      region: 'ap-west',
+    });
+    return HttpResponse.json(
+      makeResourcePage([...clusters, ...enterpriseClusters])
+    );
   }),
   http.get('*/lke/types', async () => {
     const lkeTypes = [
@@ -3215,6 +3221,14 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'LKE Enterprise',
+          service_type: 'lke',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({
+            scope: ['entity', 'account', 'region'],
+          }),
+        }),
       ],
     };
 
@@ -3229,6 +3243,7 @@ export const handlers = [
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
       blockstorage: 'Block Storage',
+      lke: 'LKE Enterprise',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -3331,6 +3346,16 @@ export const handlers = [
           id: 7,
           label: 'Block Storage Dashboard',
           service_type: 'blockstorage',
+        })
+      );
+    }
+
+    if (params.serviceType === 'lke') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 9,
+          label: 'LKE Enterprise Dashboard',
+          service_type: 'lke',
         })
       );
     }
@@ -3730,6 +3755,9 @@ export const handlers = [
     } else if (id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
+    } else if (id === '9') {
+      serviceType = 'lke';
+      dashboardLabel = 'Kubernetes Enterprise Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
