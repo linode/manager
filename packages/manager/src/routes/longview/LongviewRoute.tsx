@@ -13,7 +13,7 @@ export const LongviewRoute = () => {
     <React.Suspense fallback={<SuspenseLoader />}>
       <DismissibleBanner
         dismissible={false}
-        preferenceKey="longview-banner"
+        preferenceKey="longview-gpg-key-update"
         spacingBottom={8}
         title="Update required: Longview GPG key"
         variant="warning"
