@@ -29,13 +29,15 @@ export const Plan = () => {
 
   const { data: permissions } = usePermissions('account', ['create_linode']);
 
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
   return (
     <PlansPanel
       data-qa-select-plan
       disabled={!permissions.create_linode}
-      disabledTabs={
-        useShouldDisablePremiumPlansTab({ types }) ? ['premium'] : undefined
-      }
+      disabledTabs={shouldDisablePremiumPlansTab ? ['premium'] : undefined}
       docsLink={
         <DocsLink
           href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
@@ -60,7 +62,7 @@ export const Plan = () => {
       selectedRegionID={regionId}
       showLimits
       tabDisabledMessage={
-        useShouldDisablePremiumPlansTab({ types })
+        shouldDisablePremiumPlansTab
           ? 'Premium CPUs are now called Dedicated G7 Plans.'
           : undefined
       }
