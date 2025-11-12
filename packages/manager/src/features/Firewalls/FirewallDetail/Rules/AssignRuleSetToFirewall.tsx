@@ -3,7 +3,10 @@ import { Autocomplete, Box, Chip, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
-import { generateAddressesLabel } from '../../shared';
+import {
+  generateAddressesLabel,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 
 import type { Category } from './shared';
 
@@ -18,8 +21,13 @@ export const AssignRuleSetToFirewall = React.memo(
   (props: AssignRuleSetToFirewallProps) => {
     const { category, errorText, handleRuleSetChange, selectedRuleSetId } =
       props;
-    // @TODO - Enable this query only when Firewall RS & PS feature flag is enabled
-    const { data, error, isLoading } = useAllFirewallRuleSetsQuery();
+
+    const { isFirewallRulesetsPrefixlistsEnabled } =
+      useIsFirewallRulesetsPrefixlistsEnabled();
+
+    const { data, error, isLoading } = useAllFirewallRuleSetsQuery(
+      isFirewallRulesetsPrefixlistsEnabled
+    );
 
     const ruleSets = data ?? [];
 
