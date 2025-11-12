@@ -209,13 +209,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     );
   }, [values]);
 
-  const handleRuleSetChange = React.useCallback(
-    (id: number) => {
-      setFieldValue('ruleset', id);
-    },
-    [setFieldValue]
-  );
-
   return (
     <form onSubmit={handleSubmit}>
       {status && (
@@ -396,7 +389,9 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       {createEntityType === 'ruleset' && (
         <AssignRuleSetToFirewall
           errorText={errors.ruleset}
-          handleRuleSetChange={handleRuleSetChange}
+          handleRuleSetChange={(ruleSetId) =>
+            setFieldValue('ruleset', ruleSetId)
+          }
           selectedRuleSetId={values.ruleset as number}
         />
       )}

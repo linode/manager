@@ -90,7 +90,11 @@ export const FirewallRuleDrawer = React.memo(
       // If we're in add 'ruleset' mode, only validate the ruleset field
       if (mode === 'create' && createEntityType === 'ruleset') {
         const errors: Record<string, string> = {};
-        if (ruleset === undefined || ruleset === null || isNaN(ruleset)) {
+        if (
+          ruleset === undefined ||
+          ruleset === null ||
+          typeof ruleset !== 'number'
+        ) {
           errors.ruleset = 'Ruleset is required.';
         }
         return errors;

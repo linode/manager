@@ -4,7 +4,7 @@ import * as React from 'react';
 
 interface AssignRuleSetToFirewallProps {
   errorText?: string;
-  handleRuleSetChange: (ruleSetId: number) => void;
+  handleRuleSetChange: (ruleSetId?: number) => void;
   selectedRuleSetId: number;
 }
 
@@ -45,7 +45,7 @@ export const AssignRuleSetToFirewall = React.memo(
           label="Rule Set"
           loading={isLoading}
           onChange={(_, selectedRuleSet) => {
-            handleRuleSetChange(selectedRuleSet?.value ?? -1);
+            handleRuleSetChange(selectedRuleSet?.value);
           }}
           options={ruleSetDropdownOptions}
           placeholder="Select Rule Set"
