@@ -456,6 +456,11 @@ export interface Roles {
   name: RoleName;
   permissions: PermissionType[];
 }
+export interface EntityByPermission {
+  id: number;
+  label: string;
+  type: EntityType;
+}
 
 export type IamAccessType = keyof IamAccountRoles;
 

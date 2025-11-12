@@ -45,8 +45,12 @@ import type {
 } from '@linode/api-v4';
 import type { UseQueryResult } from '@linode/queries';
 
-const BETA_ACCESS_TYPE_SCOPE: AccessType[] = ['account', 'linode', 'firewall'];
-const LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE = [
+export const BETA_ACCESS_TYPE_SCOPE: AccessType[] = [
+  'account',
+  'linode',
+  'firewall',
+];
+export const LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE = [
   'create_image',
   'upload_image',
   'create_vpc',

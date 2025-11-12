@@ -15,7 +15,7 @@ import type {
   Profile,
 } from '@linode/api-v4';
 
-export type EntityPermissionMap = Record<number, PermissionMap>;
+export type EntityPermissionMap = Record<number | string, PermissionMap>;
 
 export type PermissionMap = Record<PermissionType, boolean>;
 
