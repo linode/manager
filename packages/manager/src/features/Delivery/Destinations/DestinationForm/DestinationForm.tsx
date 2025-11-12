@@ -54,7 +54,6 @@ export const DestinationForm = (props: DestinationFormProps) => {
               name="type"
               render={({ field }) => (
                 <Autocomplete
-                  data-pendo-id={`Logs Delivery Destinations ${capitalize(mode)}-Destination Type`}
                   disableClearable
                   disabled
                   label="Destination Type"
@@ -63,6 +62,11 @@ export const DestinationForm = (props: DestinationFormProps) => {
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
+                  textFieldProps={{
+                    inputProps: {
+                      'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Type`,
+                    },
+                  }}
                   value={getDestinationTypeOption(field.value)}
                 />
               )}
@@ -73,8 +77,10 @@ export const DestinationForm = (props: DestinationFormProps) => {
               render={({ field, fieldState }) => (
                 <TextField
                   aria-required
-                  data-pendo-id={`Logs Delivery Destinations ${capitalize(mode)}-Destination Name`}
                   errorText={fieldState.error?.message}
+                  inputProps={{
+                    'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Name`,
+                  }}
                   label="Destination Name"
                   onBlur={field.onBlur}
                   onChange={(value) => {
