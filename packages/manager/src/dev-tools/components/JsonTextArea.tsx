@@ -24,6 +24,23 @@ export const JsonTextArea = ({
   const debouncedUpdate = React.useMemo(
     () =>
       debounce((text: string) => {
+        // Handle empty/whitespace text as null
+        if (!text.trim()) {
+          const event = {
+            currentTarget: {
+              name,
+              value: null,
+            },
+            target: {
+              name,
+              value: null,
+            },
+          } as unknown as React.ChangeEvent<HTMLTextAreaElement>;
+
+          onChange(event);
+          return;
+        }
+
         try {
           const parsedJson = JSON.parse(text);
           const event = {
@@ -35,7 +52,7 @@ export const JsonTextArea = ({
               name,
               value: parsedJson,
             },
-          } as React.ChangeEvent<HTMLTextAreaElement>;
+          } as unknown as React.ChangeEvent<HTMLTextAreaElement>;
 
           onChange(event);
         } catch (err) {
