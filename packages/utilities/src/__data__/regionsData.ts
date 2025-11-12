@@ -36,6 +36,7 @@ export const regions: Region[] = [
         'Linodes',
         'Managed Databases',
         'Block Storage',
+        'Kubernetes',
       ],
     },
   },

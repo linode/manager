@@ -6,6 +6,7 @@ import type {
   DatabaseInstance,
   DatabaseType,
   Firewall,
+  KubernetesCluster,
   Linode,
   NodeBalancer,
   ObjectStorageBucket,
@@ -59,11 +60,11 @@ export type QueryFunctionType =
   | DatabaseInstance[]
   | DatabaseType[]
   | Firewall[]
+  | KubernetesCluster[]
   | Linode[]
   | NodeBalancer[]
   | ObjectStorageBucket[]
   | Volume[];
-
 /**
  * The non array types of QueryFunctionType like DatabaseEngine|DatabaseType
  */
