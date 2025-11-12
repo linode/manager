@@ -250,6 +250,11 @@ export const removeICMPPort = (
 
 const removeEmptyAddressArrays = (rules: ExtendedFirewallRule[]) => {
   return rules.map((rule) => {
+    // Ruleset references do not have addresses
+    if (rule.ruleset !== null) {
+      return { ...rule };
+    }
+
     const keepIPv4 = rule.addresses?.ipv4 && rule.addresses.ipv4.length > 0;
     const keepIPv6 = rule.addresses?.ipv6 && rule.addresses.ipv6.length > 0;
 
