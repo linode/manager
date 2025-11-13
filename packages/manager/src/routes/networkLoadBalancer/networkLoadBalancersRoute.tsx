@@ -4,15 +4,18 @@ import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 
 export const NetworkLoadBalancersRoute = () => {
-  const flags = useFlags();
-  const { networkLoadBalancer } = flags;
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
+
+  if (!isNetworkLoadBalancerEnabled) {
+    return <NotFound />;
+  }
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <ProductInformationBanner bannerLocation="Network LoadBalancers" />
-      {networkLoadBalancer ? <Outlet /> : <NotFound />}
+      <Outlet />
     </React.Suspense>
   );
 };

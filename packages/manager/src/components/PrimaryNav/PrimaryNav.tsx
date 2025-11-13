@@ -22,6 +22,7 @@ import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -116,6 +117,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const {
     data: preferences,
@@ -205,7 +207,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Network Load Balancers',
-                hide: !flags.networkLoadBalancer,
+                hide: isNetworkLoadBalancerEnabled,
                 to: '/netloadbalancers',
               },
               {
@@ -346,6 +348,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
+        isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]
     );
