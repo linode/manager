@@ -25,6 +25,7 @@ import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
+import { CloudPulseDimensionFiltersSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -392,6 +393,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 />
               )}
               <Box sx={{ display: 'flex', gap: 2 }}>
+                {flags.aclp?.showWidgetDimensionFilters && (
+                  <CloudPulseDimensionFiltersSelect // upcoming: Need to pass selected dimensions from widget in upcoming
+                    dimensionOptions={availableMetrics?.dimensions ?? []}
+                    drawerLabel={availableMetrics?.label ?? ''}
+                    handleSelectionChange={() => {}}
+                    selectedDimensions={[]}
+                    selectedEntities={entityIds}
+                    selectedRegions={linodeRegion ? [linodeRegion] : undefined}
+                    serviceType={serviceType}
+                  />
+                )}
                 <WidgetFilterGroupByRenderer
                   dashboardId={dashboardId}
                   handleChange={handleGroupByChange}
