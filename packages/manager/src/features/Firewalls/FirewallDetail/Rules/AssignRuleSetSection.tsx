@@ -184,6 +184,7 @@ export const AssignRuleSetSection = React.memo(
                       width: '58px',
                       fontSize: theme.tokens.font.FontSize.Xxxs,
                       marginRight: theme.spacingFunction(6),
+                      flexShrink: 0,
                     })}
                   />
                   {rule.protocol};&nbsp;{rule.ports};&nbsp;
