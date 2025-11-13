@@ -1,5 +1,4 @@
 import {
-  useAllLinodesQuery,
   useLinodeBackupRestoreMutation,
   useLinodeQuery,
 } from '@linode/queries';
@@ -17,7 +16,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -37,19 +36,18 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const query = useAllLinodesQuery(
-    {},
-    {
-      region: linode?.region,
-    },
-    open && linode !== undefined
-  );
-
   const {
-    data: linodes,
-    error: linodeError,
-    isLoading: linodesLoading,
-  } = useQueryWithPermissions<Linode>(query, 'linode', ['update_linode']);
+    data: availableLinodes,
+    isLoading: availableLinodesLoading,
+    error: availableLinodesError,
+  } = useGetUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: open,
+  });
+  const linodes = availableLinodes?.filter(
+    (l: Linode) => l.region === linode?.region
+  );
 
   const {
     error,
@@ -111,9 +109,9 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         <Autocomplete
           autoHighlight
           disableClearable
-          errorText={linodeError?.[0].reason ?? errorMap.linode_id}
+          errorText={availableLinodesError?.[0].reason ?? errorMap.linode_id}
           label="Linode"
-          loading={linodesLoading}
+          loading={availableLinodesLoading}
           onChange={(_, selected) =>
             formik.setFieldValue('linode_id', selected?.value)
           }
