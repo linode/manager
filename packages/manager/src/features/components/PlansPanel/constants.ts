@@ -32,6 +32,12 @@ export const TRANSFER_COSTS_LINK =
 export const ACCELERATED_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
 
+export const PLAN_PANEL_PAGE_SIZE_OPTIONS = [
+  { label: 'Show 15', value: 15 },
+  { label: 'Show 25', value: 25 },
+  { label: 'Show 50', value: 50 },
+];
+
 // List of plan types that belong to the MTC plan group.
 export const MTC_AVAILABLE_PLAN_TYPES = ['g8-premium-128-ht'];
 

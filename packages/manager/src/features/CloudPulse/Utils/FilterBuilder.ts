@@ -295,6 +295,7 @@ export const getCustomSelectProperties = (
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
     filterFn,
+    dashboardId: dashboard.id,
   };
 };
 

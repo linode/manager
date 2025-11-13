@@ -16,6 +16,7 @@ import {
 } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
+import { kubernetesQueries } from '../kubernetes';
 import { objectStorageQueries } from '../object-storage/queries';
 import {
   getAllBucketsFromEndpoints,
@@ -128,6 +129,8 @@ export const queryFactory = createQueryKeys(key, {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys
           queryKey: ['linodes', params, filters],
         };
+      case 'lke':
+        return kubernetesQueries.lists._ctx.all;
       case 'nodebalancer':
         return nodebalancerQueries.nodebalancers._ctx.all(params, filters);
       case 'objectstorage':

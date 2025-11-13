@@ -42,6 +42,11 @@ export interface CloudPulseCustomSelectProps {
   clearDependentSelections?: string[];
 
   /**
+   * The dashboard id where this filter is being used
+   */
+  dashboardId: number;
+
+  /**
    * Last selected values from user preferences
    */
   defaultValue?: FilterValue;
@@ -93,6 +98,9 @@ export interface CloudPulseCustomSelectProps {
    */
   isOptional?: boolean;
 
+  /**
+   * The label that needs to be displayed for the select component
+   */
   label: string;
 
   /**
@@ -110,6 +118,9 @@ export interface CloudPulseCustomSelectProps {
    */
   placeholder?: string;
 
+  /**
+   * The user preferences object to get the last selected values
+   */
   preferences?: AclpConfig;
 
   /**
@@ -146,6 +157,7 @@ export const CloudPulseCustomSelect = React.memo(
       options,
       placeholder,
       preferences,
+      dashboardId,
       savePreferences,
       type,
       isOptional,
@@ -203,6 +215,7 @@ export const CloudPulseCustomSelect = React.memo(
         maxSelections,
         savePreferences,
         value,
+        dashboardId,
       });
       setResource(
         Array.isArray(filteredValue)

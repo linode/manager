@@ -1,3 +1,10 @@
+## [2025-11-18] - v0.12.0
+
+
+### Tech Stories:
+
+- Add MSW crud support for types API ([#13067](https://github.com/linode/manager/pull/13067))
+
 ## [2025-10-21] - v0.11.0
 
 
