@@ -1,30 +1,20 @@
-import { getUserEntityPermissions } from '@linode/api-v4';
 import {
   useGrants,
   useProfile,
-  useQueries,
   useUserAccountPermissions,
   useUserEntityPermissions,
 } from '@linode/queries';
 
-import {
-  entityPermissionMapFrom,
-  fromGrants,
-  toEntityPermissionMap,
-  toPermissionMap,
-} from './adapters/permissionAdapters';
+import { fromGrants, toPermissionMap } from './adapters/permissionAdapters';
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 
 import type {
   AccessType,
   AccountAdmin,
-  AccountEntity,
   APIError,
-  EntityType,
   FirewallAdmin,
   FirewallContributor,
   FirewallViewer,
-  GrantType,
   ImageAdmin,
   ImageContributor,
   ImageViewer,
@@ -35,7 +25,6 @@ import type {
   NodeBalancerContributor,
   NodeBalancerViewer,
   PermissionType,
-  Profile,
   VolumeAdmin,
   VolumeContributor,
   VolumeViewer,
@@ -242,126 +231,3 @@ export function usePermissions<
     ...restEntityPermissions,
   } as const;
 }
-
-export type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
-
-/**
- * Helper function to get the permissions for a list of entities.
- * Used only for restricted users who need to check permissions for each entity.
- *
- * ⚠️ This is a performance bottleneck for restricted users who have many entities.
- * It will need to be deprecated and refactored when we add the ability to filter entities by permission(s).
- */
-export const useEntitiesPermissions = <T extends EntityBase>(
-  entities: T[] | undefined,
-  entityType: EntityType,
-  profile?: Profile,
-  enabled = true
-) => {
-  const queries = useQueries({
-    queries: (entities || []).map((entity: T) => ({
-      queryKey: [entityType, entity.id],
-      queryFn: () =>
-        getUserEntityPermissions(
-          profile?.username || '',
-          entityType,
-          entity.id
-        ),
-      enabled: enabled && Boolean(profile?.restricted),
-    })),
-  });
-
-  const data = queries.map((query) => query.data);
-  const error = queries.map((query) => query.error);
-  const isError = queries.some((query) => query.isError);
-  const isLoading = queries.some((query) => query.isLoading);
-
-  return { data, error, isError, isLoading };
-};
-
-export type QueryWithPermissionsResult<T> = {
-  data: T[];
-  error: APIError[] | null;
-  hasFiltered: boolean;
-  isError: boolean;
-  isLoading: boolean;
-} & Omit<
-  UseQueryResult<T[], APIError[]>,
-  'data' | 'error' | 'isError' | 'isLoading'
->;
-
-export const useQueryWithPermissions = <T extends EntityBase>(
-  useQueryResult: UseQueryResult<T[], APIError[]>,
-  entityType: EntityType,
-  permissionsToCheck: PermissionType[],
-  enabled?: boolean
-): QueryWithPermissionsResult<T> => {
-  const {
-    data: allEntities,
-    error: allEntitiesError,
-    isLoading: areEntitiesLoading,
-    isError: isEntitiesError,
-    ...restQueryResult
-  } = useQueryResult;
-  const { data: profile } = useProfile();
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
-
-  const accessType = entityType;
-
-  /**
-   * Apply the same Beta/LA permission logic as usePermissions.
-   * - Use Beta Permissions if:
-   *   - The feature is beta
-   *   - The access type is in the BETA_ACCESS_TYPE_SCOPE
-   *   - The account permission is not in the LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE
-   * - Use LA Permissions if:
-   *   - The feature is not beta
-   */
-  const useBetaPermissions =
-    isIAMEnabled &&
-    isIAMBeta &&
-    BETA_ACCESS_TYPE_SCOPE.includes(accessType) &&
-    LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE.some((blacklistedPermission) =>
-      permissionsToCheck.includes(blacklistedPermission as AccountAdmin)
-    ) === false;
-  const useLAPermissions = isIAMEnabled && !isIAMBeta;
-  const shouldUsePermissionMap = useBetaPermissions || useLAPermissions;
-
-  const { data: entityPermissions, isLoading: areEntityPermissionsLoading } =
-    useEntitiesPermissions<T>(
-      allEntities,
-      entityType,
-      profile,
-      shouldUsePermissionMap && enabled
-    );
-  const { data: grants } = useGrants(
-    (!isIAMEnabled || !shouldUsePermissionMap) && enabled
-  );
-
-  const entityPermissionsMap = shouldUsePermissionMap
-    ? toEntityPermissionMap(
-        allEntities,
-        entityPermissions,
-        permissionsToCheck,
-        profile?.restricted
-      )
-    : entityPermissionMapFrom(grants, entityType as GrantType, profile);
-
-  const entities: T[] | undefined = allEntities?.filter((entity: T) => {
-    const permissions = entityPermissionsMap[entity.id] ?? {};
-    return (
-      !profile?.restricted ||
-      (permissions &&
-        permissionsToCheck.every((permission) => permissions[permission]))
-    );
-  });
-
-  return {
-    data: entities || [],
-    error: allEntitiesError,
-    hasFiltered: allEntities?.length !== entities?.length,
-    isError: isEntitiesError,
-    isLoading: areEntitiesLoading || areEntityPermissionsLoading,
-    ...restQueryResult,
-  } as const;
-};

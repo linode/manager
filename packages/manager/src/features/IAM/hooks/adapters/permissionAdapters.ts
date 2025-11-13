@@ -6,9 +6,9 @@ import { nodeBalancerGrantsToPermissions } from './nodeBalancerGrantsToPermissio
 import { volumeGrantsToPermissions } from './volumeGrantsToPermissions';
 import { vpcGrantsToPermissions } from './vpcGrantsToPermissions';
 
-import type { EntityBase } from '../usePermissions';
 import type {
   AccessType,
+  AccountEntity,
   Grants,
   GrantType,
   PermissionType,
@@ -160,6 +160,8 @@ export const fromGrants = (
 
   return permissionsMap;
 };
+
+type EntityBase = Pick<AccountEntity, 'id' | 'label'>;
 
 /** Combines a list of entities and the permissions associated with the entity */
 export const toEntityPermissionMap = (
