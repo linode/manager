@@ -8,6 +8,7 @@ export type CloudPulseServiceType =
   | 'dbaas'
   | 'firewall'
   | 'linode'
+  | 'lke'
   | 'nodebalancer'
   | 'objectstorage';
 export type AlertClass = 'dedicated' | 'shared';
@@ -381,6 +382,7 @@ export const capabilityServiceTypeMapping: Record<
   firewall: 'Cloud Firewall',
   objectstorage: 'Object Storage',
   blockstorage: 'Block Storage',
+  lke: 'Kubernetes',
 };
 
 /**

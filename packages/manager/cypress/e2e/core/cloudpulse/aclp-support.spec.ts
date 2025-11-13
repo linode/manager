@@ -101,9 +101,7 @@ describe('ACLP Components UI varies according to ACLP support by region and user
             .should('be.visible')
             .should('be.enabled');
           // UI displays mock error msg
-          cy.contains(
-            `Error while loading Dashboard with Id - ${this.mockDashboardId}`
-          );
+          cy.contains('Error loading dashboards');
         });
     });
 

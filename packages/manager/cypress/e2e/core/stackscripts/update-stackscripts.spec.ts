@@ -11,6 +11,8 @@ import { ui } from 'support/ui';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomPhrase } from 'support/util/random';
 
+import { isImageDeprecated } from 'src/components/ImageSelect/utilities';
+
 import type { Image, StackScript } from '@linode/api-v4';
 
 // StackScript fixture paths.
@@ -98,7 +100,7 @@ describe('Update stackscripts', () => {
         getImages({ page }, { is_public: true })
       );
       return allPublicImages.find(
-        (image) => image.vendor === 'Alpine' && image.deprecated === false
+        (image) => image.vendor === 'Alpine' && !isImageDeprecated(image)
       );
     };
 

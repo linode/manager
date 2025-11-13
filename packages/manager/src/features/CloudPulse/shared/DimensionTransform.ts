@@ -38,4 +38,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
   objectstorage: {
     endpoint: TRANSFORMS.original,
   },
+  blockstorage: {
+    linode_id: TRANSFORMS.original,
+  },
 };
