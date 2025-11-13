@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
-  useAllLinodesQuery,
   useCreateImageMutation,
   useLinodeQuery,
   useRegionsQuery,
@@ -28,10 +27,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
@@ -108,13 +105,16 @@ export const CreateImageTab = () => {
     selectedLinodeId !== null
   );
 
-  const { data: linodes, isLoading } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery({}, {}, Boolean(imagePermissions.create_image)),
-    'linode',
-    ['view_linode', 'update_linode'],
-    Boolean(imagePermissions.create_image)
-  );
-  const availableLinodes = linodes?.map((linode) => linode.id);
+  const {
+    data: linodes,
+    isLoading,
+    filter: linodeFilter,
+  } = useGetUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: Boolean(imagePermissions.create_image),
+  });
+  const availableLinodes = linodes?.map((linode) => linode.id) ?? [];
 
   const {
     data: disks,
@@ -160,7 +160,7 @@ export const CreateImageTab = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
-        {!canCreateImage && (
+        {!canCreateImage && !isLoading && (
           <Notice
             text={getRestrictedResourceText({
               action: 'create',
@@ -195,6 +195,7 @@ export const CreateImageTab = () => {
 
             <LinodeSelect
               disabled={!canCreateImage}
+              filter={linodeFilter}
               getOptionDisabled={(linode) =>
                 !availableLinodes.includes(linode.id)
               }
