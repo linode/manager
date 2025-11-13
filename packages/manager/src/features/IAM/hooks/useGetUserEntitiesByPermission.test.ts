@@ -125,7 +125,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -159,7 +158,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -194,7 +192,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -220,7 +217,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -255,7 +251,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -295,7 +290,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'unrestricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -323,7 +317,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'unrestricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -377,7 +370,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'beta-restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -417,7 +409,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'beta-unrestricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -472,7 +463,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'grants-restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -513,7 +503,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'grants-restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -541,7 +530,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'grants-restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -566,7 +554,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'grants-restricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -609,7 +596,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'grants-unrestricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -635,7 +621,6 @@ describe('useGetUserEntitiesByPermission', () => {
             useGetUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
-              username: 'grants-unrestricted-user',
             }),
           {
             wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -675,7 +660,6 @@ describe('useGetUserEntitiesByPermission', () => {
           useGetUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
-            username: 'test-user',
           }),
         {
           wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -710,7 +694,6 @@ describe('useGetUserEntitiesByPermission', () => {
           useGetUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
-            username: 'test-user',
           }),
         {
           wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -746,7 +729,6 @@ describe('useGetUserEntitiesByPermission', () => {
           useGetUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
-            username: 'test-user',
           }),
         {
           wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -786,7 +768,6 @@ describe('useGetUserEntitiesByPermission', () => {
           useGetUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
-            username: 'test-user',
           }),
         {
           wrapper: (ui) => wrapWithTheme(ui, { flags }),
@@ -823,7 +804,6 @@ describe('useGetUserEntitiesByPermission', () => {
           useGetUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
-            username: 'test-user',
             filter: customFilter,
           }),
         {
@@ -862,7 +842,6 @@ describe('useGetUserEntitiesByPermission', () => {
           useGetUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
-            username: 'test-user',
             params: customParams,
           }),
         {
