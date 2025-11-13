@@ -40,7 +40,6 @@ interface UseGetEntitiesByPermissionProps {
   filter?: Filter;
   params?: Params;
   permission: PermissionType;
-  username: string | undefined;
 }
 
 type EntityQueryResult<T extends FullEntityType> = UseQueryResult<
@@ -112,7 +111,6 @@ const useEntityQuery = <T extends FullEntityType>(
 export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   entityType,
   permission,
-  username,
   enabled = true,
   filter = {},
   params = {},
@@ -125,9 +123,9 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     isLoading: isEntitiesByPermissionLoading,
     error: isEntitiesByPermissionError,
   } = useGetUserEntitiesByPermissionQuery({
+    username: profile?.username,
     entityType,
     permission,
-    username,
     enabled: enabled && isIAMEnabled,
   });
 

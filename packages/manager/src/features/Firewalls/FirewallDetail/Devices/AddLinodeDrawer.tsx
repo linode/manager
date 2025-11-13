@@ -2,7 +2,6 @@ import {
   linodeQueries,
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-  useProfile,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
@@ -47,8 +46,6 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const { id } = useParams({ strict: false });
 
-  const { data: profile } = useProfile();
-
   const { enqueueSnackbar } = useSnackbar();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -70,7 +67,6 @@ export const AddLinodeDrawer = (props: Props) => {
     entityType: 'linode',
     permission: 'update_linode',
     enabled: open,
-    username: profile?.username,
   });
 
   const linodesUsingLinodeInterfaces =
