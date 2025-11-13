@@ -1,6 +1,7 @@
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
+import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
 import { getAssociatedEntityType } from '../Utils/utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
@@ -10,7 +11,6 @@ import type {
   Dimension,
   MetricDefinition,
 } from '@linode/api-v4';
-import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
 
 export const defaultOption: GroupByOption = {
   label: 'Entity Id',
