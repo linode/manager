@@ -5,7 +5,7 @@ import {
   getOfflineRegionFilteredResources,
 } from '../../../Utils/AlertResourceUtils';
 import { filterRegionByServiceType } from '../../../Utils/utils';
-import { scopeBasedFilteredBuckets } from './utils';
+import { scopeBasedFilteredResources } from './utils';
 
 import type { FetchOptions, FetchOptionsProps } from './constants';
 /**
@@ -40,9 +40,9 @@ export function useObjectStorageFetchOptions(
   );
 
   // Filtering the buckets based on the scope
-  const filteredBuckets = scopeBasedFilteredBuckets({
+  const filteredBuckets = scopeBasedFilteredResources({
     scope: scope ?? null,
-    buckets: regionFilteredBuckets,
+    resources: regionFilteredBuckets,
     entities,
     selectedRegions,
   });
