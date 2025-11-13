@@ -1,8 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useAddFirewallDeviceMutation,
-  useAllFirewallsQuery,
-} from '@linode/queries';
+import { useAddFirewallDeviceMutation } from '@linode/queries';
 import { ActionsPanel, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -13,7 +10,7 @@ import { number, object } from 'yup';
 import { Link } from 'src/components/Link';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 
@@ -39,12 +36,11 @@ export const AddFirewallForm = (props: Props) => {
 
   const { mutateAsync } = useAddFirewallDeviceMutation();
 
-  const {
-    data: availableFirewalls,
-    isLoading: isLoadingAllAvailableFirewalls,
-  } = useQueryWithPermissions<Firewall>(useAllFirewallsQuery(), 'firewall', [
-    'create_firewall_device',
-  ]);
+  const { data: availableFirewalls, isLoading: availableFirewallsLoading } =
+    useGetUserEntitiesByPermission<Firewall>({
+      entityType: 'firewall',
+      permission: 'create_firewall_device',
+    });
 
   const form = useForm<Values>({
     resolver: yupResolver(schema) as Resolver<Values>,
@@ -74,10 +70,10 @@ export const AddFirewallForm = (props: Props) => {
           name="firewallId"
           render={({ field, fieldState }) => (
             <FirewallSelect
-              disabled={isLoadingAllAvailableFirewalls}
+              disabled={availableFirewallsLoading}
               errorText={fieldState.error?.message}
               label="Firewall"
-              loading={isLoadingAllAvailableFirewalls}
+              loading={availableFirewallsLoading}
               onChange={(e, value) => field.onChange(value?.id)}
               options={availableFirewalls}
               placeholder="Select a Firewall"
