@@ -138,6 +138,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     if (
       serviceType === 'firewall' ||
       serviceType === 'objectstorage' ||
+      serviceType === 'blockstorage' ||
       !supportedRegionIds?.length
     ) {
       return undefined;
@@ -197,7 +198,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const regionFilteredResources = React.useMemo(() => {
-    if (serviceType === 'objectstorage' && resources && supportedRegionIds) {
+    if (
+      (serviceType === 'objectstorage' || serviceType === 'blockstorage') &&
+      resources &&
+      supportedRegionIds
+    ) {
       return getOfflineRegionFilteredResources(resources, supportedRegionIds);
     }
     return resources;

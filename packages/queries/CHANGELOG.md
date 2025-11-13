@@ -1,3 +1,11 @@
+## [2025-11-18] - v0.17.0
+
+
+### Upcoming Features:
+
+- Add new queries for Firewall RS & PL ([#13061](https://github.com/linode/manager/pull/13061))
+- New IAM getUserEntitiesByPermission queries ([#13070](https://github.com/linode/manager/pull/13070))
+
 ## [2025-10-21] - v0.16.0
 
 ### Added:

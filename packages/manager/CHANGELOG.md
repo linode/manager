@@ -4,6 +4,63 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-11-18] - v1.155.0
+
+
+### Added:
+
+- IAM Parent/Child: delegate permissions for child account ([#13033](https://github.com/linode/manager/pull/13033))
+- IAM: add a permission check for delete nodebalancer drawer ([#13043](https://github.com/linode/manager/pull/13043))
+- Implement pagination for Plans table ([#13055](https://github.com/linode/manager/pull/13055))
+- A notice banner to inform the customers about the upcoming maintenance activity in longview and to download and use the new GPG key ([#13080](https://github.com/linode/manager/pull/13080))
+
+### Changed:
+
+- IAM: clean up in mapping for nodebalancer permissions ([#13017](https://github.com/linode/manager/pull/13017))
+- IAM: fix permissiom's check for vpc for assigning/unassigning linodes ([#13050](https://github.com/linode/manager/pull/13050))
+- ACLP Alert: control `edit & delete button` based on status using flag ([#13052](https://github.com/linode/manager/pull/13052))
+
+### Fixed:
+
+- Typo + expose search filters on /iam/roles route ([#13034](https://github.com/linode/manager/pull/13034))
+- Address oAuth issue with IAM OAuthCallback  ([#13037](https://github.com/linode/manager/pull/13037))
+- IAM: tags editing was enabled for restricted users ([#13046](https://github.com/linode/manager/pull/13046))
+- IAM Child Account - user not found error handling ([#13047](https://github.com/linode/manager/pull/13047))
+- IAM: restricted  users could access delete and detach popups without permissions ([#13049](https://github.com/linode/manager/pull/13049))
+- Race condition with Preferences overrides in PrimaryNav ([#13056](https://github.com/linode/manager/pull/13056))
+- IAM: add tooltips for disabled buttons for nodebalancers, remove notification banner ([#13058](https://github.com/linode/manager/pull/13058))
+- IAM: incorrect permission check disabled Clone Volume for volume_admin role ([#13065](https://github.com/linode/manager/pull/13065))
+- ACLP Metric: update preference logic to clear children filters ([#13066](https://github.com/linode/manager/pull/13066))
+- Permissions fixes for admin users on users pages ([#13074](https://github.com/linode/manager/pull/13074))
+
+### Tech Stories:
+
+- Replace Formik with React Hook Form in DatabaseManageNetworkingDrawer ([#13002](https://github.com/linode/manager/pull/13002))
+- Replace Formik with React Hook Form in ManageAccessControlDrawer  ([#13044](https://github.com/linode/manager/pull/13044))
+- Add MSW crud support for types API ([#13067](https://github.com/linode/manager/pull/13067))
+
+### Tests:
+
+- Fix flakey timerange test ([#12967](https://github.com/linode/manager/pull/12967))
+- Add Streams Landing, Create Stream and Edit Stream tests ([#13008](https://github.com/linode/manager/pull/13008))
+- Fix flakey stackscript tests ([#13072](https://github.com/linode/manager/pull/13072))
+- Fix flakey create-database test ([#13076](https://github.com/linode/manager/pull/13076))
+
+### Upcoming Features:
+
+- Logs Delivery Stream/Destination Pendo tags ([#13022](https://github.com/linode/manager/pull/13022))
+- Update Delivery Stream factory ([#13038](https://github.com/linode/manager/pull/13038))
+- IAM: Empty state for the Default Roles and Default Entities Access tabs ([#13042](https://github.com/linode/manager/pull/13042))
+- ACLP-Alerting: Onboarding Blockstorage service for ACLP Alerts ([#13048](https://github.com/linode/manager/pull/13048))
+- Feature flag for Firewall Rulesets & Prefixlists ([#13051](https://github.com/linode/manager/pull/13051))
+- Feature flag for new Generational Compute Plans ([#13054](https://github.com/linode/manager/pull/13054))
+- Limit Logs feature based on `Akamai Cloud Pulse Logs` Account Capability ([#13062](https://github.com/linode/manager/pull/13062))
+- IAM Parent/Child: delegate permissions for parent account ([#13063](https://github.com/linode/manager/pull/13063))
+- CloudPulse-Metrics: Update `FilterConfig.ts`, add lke service and the associated filters ([#13064](https://github.com/linode/manager/pull/13064))
+- Update data-pendo-id tags placemanet within Logs Delivery ([#13069](https://github.com/linode/manager/pull/13069))
+- New IAM getUserEntitiesByPermission (types, queries, hooks, mocks) ([#13070](https://github.com/linode/manager/pull/13070))
+- CloudPulse-Metrics: Enhance `CloudPulseDashboardWithFilters.tsx` and `CloudPulseDashboardSelect.tsx` to handle switching between dashboards in contextual view ([#13073](https://github.com/linode/manager/pull/13073))
+
 ## [2025-11-04] - v1.154.0
 
 ### Added:
