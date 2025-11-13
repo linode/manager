@@ -237,7 +237,15 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
                 <Radio checked={createEntityType === option.purpose} />
               )}
               subheadings={[]}
-              sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
+              sxCardBase={(theme) => ({
+                gap: 0,
+                '& .cardSubheadingTitle': {
+                  fontSize: theme.tokens.font.FontSize.Xs,
+                },
+              })}
+              sxCardBaseIcon={(theme) => ({
+                svg: { fontSize: theme.tokens.font.FontSize.L },
+              })}
             />
           ))}
         </Grid>
