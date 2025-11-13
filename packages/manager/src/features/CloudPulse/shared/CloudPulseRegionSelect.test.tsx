@@ -304,6 +304,21 @@ describe('CloudPulseRegionSelect', () => {
     expect(screen.getByText(NO_REGION_MESSAGE[4])).toBeVisible();
   });
 
+  it('should render a Region Select component with correct info message when no regions are available for lke service type', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(
+      <CloudPulseRegionSelect
+        {...props}
+        selectedDashboard={dashboardFactory.build({
+          service_type: 'lke',
+          id: 9,
+        })}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByText(NO_REGION_MESSAGE[9])).toBeVisible();
+  });
+
   it('Should show the correct linode region in the dropdown for firewall service type when savePreferences is true', async () => {
     const user = userEvent.setup();
     queryMocks.useRegionsQuery.mockReturnValue({

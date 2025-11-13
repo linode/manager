@@ -104,6 +104,18 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'endpoint',
     },
   ],
+  blockstorage: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+  ],
 };
 
 export const serviceToFiltersMap: Partial<
@@ -125,6 +137,7 @@ export const serviceToFiltersMap: Partial<
     { component: AlertsRegionFilter, filterKey: 'region' },
     { component: AlertsEndpointFilter, filterKey: 'endpoint' },
   ],
+  blockstorage: [{ component: AlertsRegionFilter, filterKey: 'region' }],
 };
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.

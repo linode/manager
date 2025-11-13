@@ -7,6 +7,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
@@ -20,9 +21,7 @@ interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
   plans?: PlanWithAvailability[];
   planType?: LinodeTypeClass;
-  renderPlanSelection: (
-    filterOptions?: PlanSelectionFilterOptionsTable | undefined
-  ) => React.JSX.Element[];
+  renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
@@ -58,6 +57,12 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showUsableStorage,
   } = props;
   const flags = useFlags();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
+
+  // Determine spacing based on feature flag:
+  // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
+  // - If disabled (legacy mode) -> spacingBottom={16}
+  const spacingBottom = isGenerationalPlansEnabled ? 0 : 16;
 
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>
@@ -101,7 +106,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   return (
     <StyledTable
       aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
-      spacingBottom={16}
+      spacingBottom={spacingBottom}
     >
       <TableHead>
         <TableRow>
@@ -160,7 +165,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection()
+          ((plans && renderPlanSelection?.(plans)) ?? null)
         )}
       </TableBody>
     </StyledTable>

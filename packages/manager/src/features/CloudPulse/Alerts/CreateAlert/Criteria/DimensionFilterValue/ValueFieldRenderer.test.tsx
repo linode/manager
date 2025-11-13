@@ -7,14 +7,27 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ValueFieldRenderer } from './ValueFieldRenderer';
 
+import type { DimensionFilterAutocompleteProps } from './constants';
 import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
 
 // Mock child components
+vi.mock('./BlockStorageDimensionFilterAutocomplete', () => ({
+  BlockStorageDimensionFilterAutocomplete: (
+    props: DimensionFilterAutocompleteProps
+  ) => (
+    <div data-testid="blockstorage-autocomplete" {...props}>
+      BlockStorage Autocomplete
+    </div>
+  ),
+}));
+
 vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
-  FirewallDimensionFilterAutocomplete: (props: any) => (
+  FirewallDimensionFilterAutocomplete: (
+    props: DimensionFilterAutocompleteProps
+  ) => (
     <div data-testid="firewall-autocomplete" {...props}>
       Firewall Autocomplete
     </div>
@@ -22,7 +35,9 @@ vi.mock('./FirewallDimensionFilterAutocomplete', () => ({
 }));
 
 vi.mock('./ObjectStorageDimensionFilterAutocomplete', () => ({
-  ObjectStorageDimensionFilterAutocomplete: (props: any) => (
+  ObjectStorageDimensionFilterAutocomplete: (
+    props: DimensionFilterAutocompleteProps
+  ) => (
     <div data-testid="objectstorage-autocomplete" {...props}>
       ObjectStorage Autocomplete
     </div>
@@ -30,7 +45,7 @@ vi.mock('./ObjectStorageDimensionFilterAutocomplete', () => ({
 }));
 
 vi.mock('./DimensionFilterAutocomplete', () => ({
-  DimensionFilterAutocomplete: (props: any) => (
+  DimensionFilterAutocomplete: (props: DimensionFilterAutocompleteProps) => (
     <div data-testid="dimensionfilter-autocomplete" {...props}>
       DimensionFilter Autocomplete
     </div>
@@ -40,7 +55,9 @@ vi.mock('./DimensionFilterAutocomplete', () => ({
 const EQ: DimensionFilterOperatorType = 'eq';
 const IN: DimensionFilterOperatorType = 'in';
 const NB: CloudPulseServiceType = 'nodebalancer';
-
+const CF: CloudPulseServiceType = 'firewall';
+const OS: CloudPulseServiceType = 'objectstorage';
+const BS: CloudPulseServiceType = 'blockstorage';
 describe('<ValueFieldRenderer />', () => {
   const defaultProps = {
     serviceType: NB,
@@ -85,6 +102,7 @@ describe('<ValueFieldRenderer />', () => {
       ...defaultProps,
       dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'firewall'
       operator: IN,
+      serviceType: CF,
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
@@ -96,10 +114,22 @@ describe('<ValueFieldRenderer />', () => {
       ...defaultProps,
       dimensionLabel: 'endpoint', // assume this is configured with useCustomFetch: 'objectstorage'
       operator: IN,
+      serviceType: OS,
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
     expect(screen.getByTestId('objectstorage-autocomplete')).toBeVisible();
+  });
+  it('renders BlockStorageDimensionFilter if config.useCustomFetch = blockstorage', () => {
+    const props = {
+      ...defaultProps,
+      serviceType: BS,
+      dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'blockstorage'
+      operator: IN,
+    };
+
+    renderWithTheme(<ValueFieldRenderer {...props} />);
+    expect(screen.getByTestId('blockstorage-autocomplete')).toBeVisible();
   });
 
   it('calls onChange when typing into TextField', async () => {

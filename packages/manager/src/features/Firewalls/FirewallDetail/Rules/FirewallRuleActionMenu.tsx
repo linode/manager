@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -23,7 +24,7 @@ export interface FirewallRuleActionMenuProps extends Partial<ActionMenuProps> {
 export const FirewallRuleActionMenu = React.memo(
   (props: FirewallRuleActionMenuProps) => {
     const theme = useTheme<Theme>();
-    const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+    const matchesLgDown = useMediaQuery(theme.breakpoints.down('lg'));
 
     const rulesetEditActionToolTipText =
       'Edit your custom Rule Set\u2019s label, description, or rules, using the API. Rule Sets that are defined by a managed-service can only be updated by service accounts.';
@@ -69,19 +70,22 @@ export const FirewallRuleActionMenu = React.memo(
 
     return (
       <>
-        {!matchesSmDown &&
-          actions.map((action) => {
-            return (
-              <InlineMenuAction
-                actionText={action.title}
-                disabled={action.disabled}
-                key={action.title}
-                onClick={action.onClick}
-                tooltip={action.tooltip}
-              />
-            );
-          })}
-        {matchesSmDown && (
+        {!matchesLgDown && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {actions.map((action) => {
+              return (
+                <InlineMenuAction
+                  actionText={action.title}
+                  disabled={action.disabled}
+                  key={action.title}
+                  onClick={action.onClick}
+                  tooltip={action.tooltip}
+                />
+              );
+            })}
+          </Box>
+        )}
+        {matchesLgDown && (
           <ActionMenu
             actionsList={actions}
             ariaLabel={`Action menu for Firewall Rule`}

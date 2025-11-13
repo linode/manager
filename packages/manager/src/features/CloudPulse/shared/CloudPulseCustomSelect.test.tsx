@@ -54,6 +54,7 @@ describe('CloudPulseCustomSelect component tests', () => {
   it('should render a component successfully with required props static', () => {
     const screen = renderWithTheme(
       <CloudPulseCustomSelect
+        dashboardId={1}
         filterKey="testfilter"
         filterType="number"
         handleSelectionChange={vi.fn()}
@@ -75,6 +76,7 @@ describe('CloudPulseCustomSelect component tests', () => {
   it('should render a component successfully with required props static with multi select', () => {
     const screen = renderWithTheme(
       <CloudPulseCustomSelect
+        dashboardId={1}
         filterKey="testfilter"
         filterType="number"
         handleSelectionChange={vi.fn()}
@@ -107,6 +109,7 @@ describe('CloudPulseCustomSelect component tests', () => {
     const screen = renderWithTheme(
       <CloudPulseCustomSelect
         apiV4QueryKey={databaseQueries.engines}
+        dashboardId={1}
         filterKey="testfilter"
         filterType="number"
         handleSelectionChange={selectionChnage}
@@ -134,6 +137,7 @@ describe('CloudPulseCustomSelect component tests', () => {
     const screen = renderWithTheme(
       <CloudPulseCustomSelect
         apiV4QueryKey={databaseQueries.engines}
+        dashboardId={1}
         filterKey="testfilter"
         filterType="number"
         handleSelectionChange={selectionChnage}
@@ -168,6 +172,7 @@ describe('CloudPulseCustomSelect component tests', () => {
   it('should render a component successfully with static props and no default value with isOptional true', () => {
     renderWithTheme(
       <CloudPulseCustomSelect
+        dashboardId={1}
         filterKey="testfilter"
         filterType="number"
         handleSelectionChange={vi.fn()}

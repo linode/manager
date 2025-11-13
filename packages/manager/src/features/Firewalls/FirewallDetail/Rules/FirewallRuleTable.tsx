@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useFirewallRuleSetQuery } from '@linode/queries';
-import { Box, Chip, LinkButton, Stack, Typography } from '@linode/ui';
+import { Box, Chip, LinkButton, Typography } from '@linode/ui';
 import { Autocomplete } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
@@ -121,7 +121,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const addressColumnLabel =
@@ -204,27 +203,21 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
               <TableRow>
                 <TableCell
                   sx={{
-                    width: smDown
-                      ? '65%'
-                      : mdDown
-                        ? '50%'
-                        : lgDown
-                          ? '32%'
-                          : '26%',
+                    width: smDown ? '65%' : lgDown ? '45%' : '30%',
                   }}
                 >
                   Label
                 </TableCell>
-                <Hidden lgDown>
-                  <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
-                </Hidden>
+                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <Hidden smDown>
+                  <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
                   <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
+                </Hidden>
+                <Hidden lgDown>
                   <TableCell sx={{ width: '15%' }}>
                     {capitalize(addressColumnLabel)}
                   </TableCell>
                 </Hidden>
-                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -414,33 +407,33 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               </LinkButton>
             )}
           </TableCell>
-          <Hidden lgDown>
+          <TableCell aria-label={`Action: ${action}`}>
+            {capitalize(action?.toLocaleLowerCase() ?? '')}
+          </TableCell>
+          <Hidden smDown>
             <TableCell aria-label={`Protocol: ${protocol}`}>
               {protocol}
               <ConditionalError errors={errors} formField="protocol" />
             </TableCell>
-          </Hidden>
-          <Hidden smDown>
             <TableCell aria-label={`Ports: ${ports}`}>
               {ports === '1-65535' ? 'All Ports' : ports}
               <ConditionalError errors={errors} formField="ports" />
             </TableCell>
+          </Hidden>
+          <Hidden lgDown>
             <TableCell aria-label={`Addresses: ${addresses}`}>
               <MaskableText text={addresses ?? ''} />
               <ConditionalError errors={errors} formField="addresses" />
             </TableCell>
           </Hidden>
-          <TableCell aria-label={`Action: ${action}`}>
-            {capitalize(action?.toLocaleLowerCase() ?? '')}
-          </TableCell>
         </>
       )}
 
       {isRuleSetRowEnabled && (
         <>
           <TableCell aria-label={`Label: ${label}`}>
-            <Stack direction="row" gap={1}>
-              <Stack alignItems="center" direction="row">
+            <Box alignItems="center" display="flex" gap={1}>
+              <Box alignItems="center" display="flex">
                 <StyledDragIndicator
                   aria-label="Drag indicator icon"
                   sx={{ flexShrink: 0 }}
@@ -448,18 +441,16 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
                 {rulesetDetails && (
                   <Link onClick={() => {}}>{rulesetDetails?.label}</Link>
                 )}
-              </Stack>
-              <Stack alignItems="center" direction="row" gap={1}>
-                <Hidden smDown>
-                  <Chip
-                    label="Rule Set"
-                    sx={(theme) => ({
-                      background: theme.tokens.alias.Accent.Info.Secondary,
-                      color: theme.tokens.alias.Accent.Info.Primary,
-                      font: theme.font.bold,
-                    })}
-                  />
-                </Hidden>
+              </Box>
+              <Chip
+                label="Rule Set"
+                sx={(theme) => ({
+                  background: theme.tokens.alias.Accent.Info.Secondary,
+                  color: theme.tokens.alias.Accent.Info.Primary,
+                  font: theme.font.bold,
+                })}
+              />
+              <Hidden smDown>
                 <Box
                   sx={{
                     alignItems: 'center',
@@ -473,8 +464,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
                     text={String(ruleset)}
                   />
                 </Box>
-              </Stack>
-            </Stack>
+              </Hidden>
+            </Box>
           </TableCell>
           <TableCell colSpan={smDown ? 0 : lgDown ? 3 : 4} />
         </>
