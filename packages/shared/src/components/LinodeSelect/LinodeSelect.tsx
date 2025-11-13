@@ -104,8 +104,6 @@ export const LinodeSelect = (
     value,
   } = props;
 
-  console.log({ filter });
-
   const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
 
   const [inputValue, setInputValue] = React.useState('');
