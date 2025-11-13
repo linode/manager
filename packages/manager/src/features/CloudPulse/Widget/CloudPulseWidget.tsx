@@ -394,7 +394,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               )}
               <Box sx={{ display: 'flex', gap: 2 }}>
                 {flags.aclp?.showWidgetDimensionFilters && (
-                  <CloudPulseDimensionFiltersSelect // upcoming: Need to pass selected dimensions from widget in upcoming
+                  <CloudPulseDimensionFiltersSelect // upcoming: Need to pass selected dimensions from widget in upcoming PR
                     dimensionOptions={availableMetrics?.dimensions ?? []}
                     drawerLabel={availableMetrics?.label ?? ''}
                     handleSelectionChange={() => {}}
