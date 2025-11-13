@@ -1,4 +1,3 @@
-import { useAllLinodesQuery } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import { ActionsPanel, Divider, Drawer, Notice, Stack } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
@@ -6,7 +5,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
 import type { APIError, Image, Linode } from '@linode/api-v4';
@@ -23,12 +22,16 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
   const navigate = useNavigate();
-  const { data: linodes, isLoading } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery({}, {}, open),
-    'linode',
-    ['rebuild_linode', 'view_linode'],
-    open
-  );
+  const {
+    data: linodes,
+    filter: linodeFilter,
+    isLoading,
+    error: linodeError,
+  } = useGetUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'rebuild_linode',
+    enabled: open,
+  });
   const availableLinodes = linodes?.map((linode) => linode.id);
 
   const { control, formState, handleSubmit, reset } = useForm<{
@@ -77,6 +80,10 @@ export const RebuildImageDrawer = (props: Props) => {
           />
         )}
 
+        {linodeError && (
+          <Notice data-qa-notice text={linodeError[0].reason} variant="error" />
+        )}
+
         <DescriptionList
           items={[{ description: image?.label ?? '', title: 'Image' }]}
         />
@@ -90,6 +97,7 @@ export const RebuildImageDrawer = (props: Props) => {
             <LinodeSelect
               clearable={true}
               errorText={fieldState.error?.message}
+              filter={linodeFilter}
               onBlur={field.onBlur}
               onSelectionChange={(linode) => {
                 field.onChange(linode?.id);
