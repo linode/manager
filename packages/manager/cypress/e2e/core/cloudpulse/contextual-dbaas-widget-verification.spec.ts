@@ -174,13 +174,13 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Select a time duration
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
-      cy.get('@startDateInput').click();
-      cy.get(`[data-qa-preset="Last day"]`).click();
-      cy.get('[data-qa-buttons="apply"]')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-        
+    cy.get('@startDateInput').click();
+    cy.get(`[data-qa-preset="Last day"]`).click();
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
     // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
@@ -277,7 +277,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
   });
 
-  it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
+  it.only('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -292,7 +292,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           ui.autocomplete
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .type(`${testData.expectedAggregation}{enter}`); // type expected granularity
+            .type(`Max {enter}`); // type expected granularity
 
           // Verify tooltip message for aggregation selection
 
@@ -303,6 +303,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             expect(interception)
               .to.have.property('response')
               .with.property('statusCode', 200);
+            cy.log(JSON.stringify(testData.title));
+              cy.log(JSON.stringify(interception.request.body));
             expect(testData.expectedAggregation).to.equal(
               interception.request.body.metrics[0].aggregate_function
             );

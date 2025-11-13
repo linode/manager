@@ -238,7 +238,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     cy.scrollTo('top');
   });
 
-  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it.only('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;

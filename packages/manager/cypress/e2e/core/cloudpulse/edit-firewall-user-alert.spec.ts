@@ -35,6 +35,7 @@ import {
   firewallFactory,
   firewallMetricDefinitionsResponse,
   firewallMetricRulesFactory,
+  firewallNodebalancerMetricCriteria,
   flagsFactory,
   notificationChannelFactory,
   serviceAlertFactory,
@@ -586,6 +587,11 @@ describe('Integration Tests for Edit Alert', () => {
     cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
+    cy.findByPlaceholderText('Select an Entity Type').should(
+      'have.value',
+      'Linodes'
+    );
+
     // Update Entity Type → NodeBalancers
     ui.autocomplete.findByLabel('Entity Type').clear().type('NodeBalancers');
     ui.autocompletePopper.findByTitle('NodeBalancers').click();
@@ -640,6 +646,125 @@ describe('Integration Tests for Edit Alert', () => {
       expect(rule.operator).to.equal('gt');
       expect(rule.aggregate_function).to.equal('sum');
       expect(rule.metric).to.equal('nb_ingress_bytes_accepted'); // ✔ Correct mapping
+
+      // Redirect + toast
+      cy.url().should('endWith', 'alerts/definitions');
+      ui.toast.assertMessage(UPDATE_ALERT_SUCCESS_MESSAGE);
+
+      // Landing page row validation
+      assertAlertRow('Alert-2', updated);
+    });
+  });
+
+  it('updates entity type from NodeBalancers to linode and verifies Metric Threshold update', () => {
+    const alertDetails = alertFactory.build({
+      alert_channels: [{ id: 1 }],
+      created_by: 'user1',
+      description: 'My Custom Description',
+      entity_ids: ['2'],
+      label: 'Alert-2',
+      rule_criteria: {
+        rules: [
+          firewallNodebalancerMetricCriteria.build({
+            dimension_filters: [
+              {
+                label: 'Interface Type',
+                dimension_label: 'interface_type',
+                operator: 'eq',
+                value: 'vpc',
+              },
+            ],
+          }),
+        ],
+      },
+      service_type: 'firewall',
+      severity: 0,
+      tags: [''],
+      trigger_conditions: triggerConditionFactory.build(),
+      type: 'user',
+      updated,
+      scope: 'entity',
+      id: 1,
+      regions: regionList,
+    });
+
+    // Mocks
+    mockGetCloudPulseServiceByType('firewall', services);
+    mockGetCloudPulseServices([alertDetails.service_type]);
+    mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+    mockGetAlertDefinitions(service_type, id, alertDetails).as(
+      'getAlertDefinitions'
+    );
+    mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
+      'updateDefinitions'
+    );
+    mockCreateAlertDefinition(service_type, alertDetails).as(
+      'createAlertDefinition'
+    );
+
+    // Visit Edit Alert page
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
+    cy.wait('@getAlertDefinitions');
+
+    cy.findByPlaceholderText('Select an Entity Type').should(
+      'have.value',
+      'NodeBalancers'
+    );
+
+    // Update Entity Type → NodeBalancers
+    ui.autocomplete.findByLabel('Entity Type').clear().type('Linodes');
+    ui.autocompletePopper.findByTitle('Linodes').click();
+
+    // Update the rule to NodeBalancer metric fields
+    cy.get('[data-testid="rule_criteria.rules.0-id"]').within(() => {
+      ui.autocomplete
+        .findByLabel('Data Field')
+        .type('Ingress Packets Accepted (Linode)');
+      ui.autocompletePopper
+        .findByTitle('Ingress Packets Accepted (Linode)')
+        .click();
+
+      ui.autocomplete.findByLabel('Aggregation Type').type('Sum');
+      ui.autocompletePopper.findByTitle('Sum').click();
+
+      ui.autocomplete.findByLabel('Operator').type('>');
+      ui.autocompletePopper.findByTitle('>').click();
+
+      cy.get('[data-qa-threshold]').clear();
+      cy.get('[data-qa-threshold]').type('2000');
+    });
+
+    // Submit
+    ui.buttonGroup
+      .find()
+      .find('button[type="submit"]')
+      .should('be.enabled')
+      .click();
+
+    // Validate update API request
+    cy.wait('@updateDefinitions').then(({ request }) => {
+      expect(request.body.label).to.equal('Alert-2');
+      expect(request.body.description).to.equal('My Custom Description');
+      expect(request.body.severity).to.equal(0);
+
+      // Trigger conditions unchanged (correct)
+      expect(request.body.trigger_conditions.criteria_condition).to.equal(
+        'ALL'
+      );
+      expect(
+        request.body.trigger_conditions.evaluation_period_seconds
+      ).to.equal(300);
+      expect(request.body.trigger_conditions.polling_interval_seconds).to.equal(
+        300
+      );
+      expect(request.body.trigger_conditions.trigger_occurrences).to.equal(5);
+
+      // Rule updated correctly
+      const rule = request.body.rule_criteria.rules[0];
+      expect(rule.threshold).to.equal(2000);
+      expect(rule.operator).to.equal('gt');
+      expect(rule.aggregate_function).to.equal('sum');
+      expect(rule.metric).to.equal('fw_ingress_packets_accepted'); // ✔ Correct mapping
 
       // Redirect + toast
       cy.url().should('endWith', 'alerts/definitions');
