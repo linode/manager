@@ -103,7 +103,6 @@ describe('<ValueFieldRenderer />', () => {
       serviceType: CF,
       dimensionLabel: 'linode_id', // assume this is configured with useCustomFetch: 'firewall'
       operator: IN,
-      serviceType: CF,
     };
 
     renderWithTheme(<ValueFieldRenderer {...props} />);
