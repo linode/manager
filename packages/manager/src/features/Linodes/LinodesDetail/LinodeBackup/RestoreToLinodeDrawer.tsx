@@ -36,6 +36,9 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
+  const regionFilter = {
+    region: linode?.region,
+  };
   const {
     data: availableLinodes,
     isLoading: availableLinodesLoading,
@@ -44,6 +47,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
     entityType: 'linode',
     permission: 'update_linode',
     enabled: open,
+    filter: regionFilter,
   });
   const linodes = availableLinodes?.filter(
     (l: Linode) => l.region === linode?.region
