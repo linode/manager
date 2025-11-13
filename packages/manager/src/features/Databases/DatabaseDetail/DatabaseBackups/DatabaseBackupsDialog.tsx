@@ -18,11 +18,19 @@ interface Props extends Omit<DialogProps, 'title'> {
   onClose: () => void;
   open: boolean;
   selectedDate?: DateTime | null;
+  selectedRegion?: string;
   selectedTime?: DateTime | null;
 }
 
 export const DatabaseBackupDialog = (props: Props) => {
-  const { database, onClose, open, selectedDate, selectedTime } = props;
+  const {
+    database,
+    onClose,
+    open,
+    selectedDate,
+    selectedTime,
+    selectedRegion,
+  } = props;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [isRestoring, setIsRestoring] = useState(false);
@@ -31,7 +39,10 @@ export const DatabaseBackupDialog = (props: Props) => {
 
   const { error, mutateAsync: restore } = useRestoreFromBackupMutation(
     database.engine,
-    toDatabaseFork(database.id, selectedDate, selectedTime)
+    {
+      fork: toDatabaseFork(database.id, selectedDate, selectedTime),
+      region: selectedRegion,
+    }
   );
 
   const handleRestoreDatabase = () => {

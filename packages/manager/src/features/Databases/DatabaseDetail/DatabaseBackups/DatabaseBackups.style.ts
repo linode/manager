@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers';
 
@@ -44,3 +44,11 @@ export const StyledTypography = styled(Typography)(() => ({
   lineHeight: '20px',
   marginTop: '4px',
 }));
+
+export const StyledRegionStack = styled(Stack, { label: 'StyledRegionStack' })(
+  ({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacingFunction(24),
+    },
+  })
+);

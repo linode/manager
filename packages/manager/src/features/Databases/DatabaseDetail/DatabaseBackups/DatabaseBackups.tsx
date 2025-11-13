@@ -1,4 +1,5 @@
-import { useDatabaseQuery } from '@linode/queries';
+import { useDatabaseQuery, useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Box,
   Button,
@@ -11,6 +12,7 @@ import {
 import {
   FormControl,
   FormControlLabel,
+  FormLabel,
   Radio,
   RadioGroup,
 } from '@mui/material';
@@ -18,11 +20,14 @@ import { GridLegacy } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useParams } from '@tanstack/react-router';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
   StyledDateCalendar,
+  StyledRegionStack,
   StyledTypography,
 } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups.style';
 import {
@@ -57,6 +62,13 @@ export const DatabaseBackups = () => {
   });
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
+  const { data: regionsData } = useRegionsQuery();
+
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(null);
   const [selectedTime, setSelectedTime] = React.useState<DateTime | null>(null);
@@ -70,6 +82,13 @@ export const DatabaseBackups = () => {
     error: databaseError,
     isLoading: isDatabaseLoading,
   } = useDatabaseQuery(engine, Number(databaseId));
+
+  const [restoreDestination, setRestoreDestination] = React.useState<
+    string | undefined
+  >(database?.region);
+  const [selectedRegion, setSelectedRegion] = React.useState<
+    string | undefined
+  >(undefined);
 
   const isDefaultDatabase = database?.platform === 'rdbms-default';
 
@@ -155,6 +174,10 @@ export const DatabaseBackups = () => {
   };
 
   if (isDefaultDatabase) {
+    const currentRegion = regionsData?.find(
+      (region) => region.id === database.region
+    );
+
     return (
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h2">Summary</Typography>
@@ -259,6 +282,46 @@ export const DatabaseBackups = () => {
             </FormControl>
           </GridLegacy>
         </GridLegacy>
+        <StyledRegionStack>
+          <FormLabel id="region-radio-group">Restore destination</FormLabel>
+          <RadioGroup
+            aria-labelledby="region-radio-group"
+            name="region-radio-group"
+            onChange={(_, value) => {
+              setRestoreDestination(value);
+              if (value === 'current') {
+                setSelectedRegion(currentRegion?.id);
+              }
+            }}
+            style={{ marginBottom: 0 }}
+            value={restoreDestination}
+          >
+            <FormControlLabel
+              control={<Radio />}
+              data-qa-dbaas-radio="Current region"
+              disabled={disabled}
+              label={`Current region - ${currentRegion?.label}`}
+              value="current"
+            />
+            <FormControlLabel
+              control={<Radio />}
+              data-qa-dbaas-radio="New region"
+              disabled={disabled}
+              label="New region"
+              value="new"
+            />
+          </RadioGroup>
+          <RegionSelect
+            currentCapability="Managed Databases"
+            disableClearable
+            disabled={disabled || restoreDestination !== 'new'}
+            // errorText={fieldState.error?.message}
+            isGeckoLAEnabled={isGeckoLAEnabled}
+            onChange={(e, region) => setSelectedRegion(region.id)}
+            regions={regionsData ?? []}
+            value={selectedRegion ?? null}
+          />
+        </StyledRegionStack>
         <GridLegacy item xs={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button
@@ -280,6 +343,7 @@ export const DatabaseBackups = () => {
             onClose={() => setIsRestoreDialogOpen(false)}
             open={isRestoreDialogOpen}
             selectedDate={selectedDate}
+            selectedRegion={selectedRegion}
             selectedTime={selectedTime}
           />
         )}
