@@ -1,8 +1,7 @@
-import { useAllFirewallsQuery, useAllLinodesQuery } from '@linode/queries';
+import { useAllFirewallsQuery } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
-  CircleProgress,
   FormControlLabel,
   Notice,
   Radio,
@@ -14,7 +13,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -60,16 +59,18 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
     useAllFirewallsQuery(open);
 
   const {
-    data: permissableLinodes,
-    hasFiltered: hasFilteredLinodes,
-    isLoading: isLoadingLinodes,
-  } = useQueryWithPermissions<Linode>(useAllLinodesQuery(), 'linode', [
-    'apply_linode_firewalls',
-  ]);
-
-  const deviceSelectGuidance = hasFilteredLinodes
-    ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
-    : undefined;
+    data: availableLinodes,
+    filter: availableLinodesFilter,
+    isLoading: availableLinodesLoading,
+  } = useGetUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'apply_linode_firewalls',
+    enabled: open,
+  });
+  const deviceSelectGuidance =
+    availableLinodes?.length !== 0
+      ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
+      : undefined;
 
   const assignedServices = firewalls
     ?.map((firewall) => firewall.entities)
@@ -110,10 +111,6 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
       Learn more
     </Link>
   );
-
-  if (isLoadingLinodes) {
-    return <CircleProgress />;
-  }
 
   return (
     <>
@@ -211,16 +208,17 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
           <LinodeSelect
             disabled={userCannotAddFirewall || isLoadingAllFirewalls}
             errorText={fieldState.error?.message}
+            filter={availableLinodesFilter}
             helperText={deviceSelectGuidance}
             label={
               createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
             }
-            loading={isLoadingAllFirewalls}
+            loading={isLoadingAllFirewalls || availableLinodesLoading}
             multiple
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
-            options={permissableLinodes ?? []}
+            options={availableLinodes ?? []}
             optionsFilter={linodeOptionsFilter}
             value={field.value ?? null}
           />
