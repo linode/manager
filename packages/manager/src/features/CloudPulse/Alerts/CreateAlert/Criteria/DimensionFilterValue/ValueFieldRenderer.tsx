@@ -152,6 +152,21 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
 
+    // Common props shared across all autocomplete components
+    const commonAutocompleteProps = {
+      dimensionLabel,
+      disabled,
+      errorText,
+      fieldOnBlur: onBlur,
+      fieldOnChange: onChange,
+      fieldValue: value,
+      multiple: config.multiple,
+      name,
+      placeholderText: config.placeholder ?? autocompletePlaceholder,
+      serviceType: serviceType ?? null,
+      type,
+    };
+
     // Determine custom fetch behaviour if there are same dimension_labels across service types
     const customFetch = Array.isArray(config.useCustomFetch)
       ? config.useCustomFetch.includes(serviceType ?? '')
@@ -165,75 +180,34 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       case 'blockstorage':
         return (
           <BlockStorageDimensionFilterAutocomplete
-            dimensionLabel={dimensionLabel}
-            disabled={disabled}
+            {...commonAutocompleteProps}
             entities={entities}
-            errorText={errorText}
-            fieldOnBlur={onBlur}
-            fieldOnChange={onChange}
-            fieldValue={value}
-            multiple={config.multiple}
-            name={name}
-            placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
             selectedRegions={selectedRegions}
-            serviceType={serviceType ?? null}
-            type={type}
           />
         );
       case 'firewall':
         return (
           <FirewallDimensionFilterAutocomplete
-            dimensionLabel={dimensionLabel}
-            disabled={disabled}
+            {...commonAutocompleteProps}
             entities={entities}
             entityType={entityType}
-            errorText={errorText}
-            fieldOnBlur={onBlur}
-            fieldOnChange={onChange}
-            fieldValue={value}
-            multiple={config.multiple}
-            name={name}
-            placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
-            selectedRegions={selectedRegions ?? undefined}
-            serviceType={serviceType ?? null}
-            type={type}
           />
         );
       case 'objectstorage':
         return (
           <ObjectStorageDimensionFilterAutocomplete
-            dimensionLabel={dimensionLabel}
-            disabled={disabled}
+            {...commonAutocompleteProps}
             entities={entities ?? []}
-            errorText={errorText}
-            fieldOnBlur={onBlur}
-            fieldOnChange={onChange}
-            fieldValue={value}
-            multiple={config.multiple}
-            name={name}
-            placeholderText={config.placeholder ?? autocompletePlaceholder}
             scope={scope}
             selectedRegions={selectedRegions}
-            serviceType={serviceType ?? null}
-            type={type}
           />
         );
       default:
         return (
           <DimensionFilterAutocomplete
-            dimensionLabel={dimensionLabel}
-            disabled={disabled}
-            errorText={errorText}
-            fieldOnBlur={onBlur}
-            fieldOnChange={onChange}
-            fieldValue={value}
-            multiple={config.multiple}
-            name={name}
-            placeholderText={config.placeholder ?? autocompletePlaceholder}
-            serviceType={serviceType ?? null}
-            type={type}
+            {...commonAutocompleteProps}
             values={values}
           />
         );

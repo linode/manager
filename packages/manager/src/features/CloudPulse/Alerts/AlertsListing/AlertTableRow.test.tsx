@@ -200,7 +200,19 @@ describe('Alert Row', () => {
           handleStatusChange: vi.fn(),
         }}
         services={mockServices}
-      />
+      />,
+      {
+        flags: {
+          aclpAlerting: {
+            editDisabledStatuses: ['failed', 'in progress'],
+            accountAlertLimit: 10,
+            accountMetricLimit: 100,
+            alertDefinitions: true,
+            notificationChannels: false,
+            recentActivity: false,
+          },
+        },
+      }
     );
     const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(ActionMenu);

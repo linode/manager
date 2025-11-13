@@ -102,7 +102,6 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         name="destination.type"
         render={({ field, fieldState }) => (
           <Autocomplete
-            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Destination Type`}
             disableClearable
             disabled
             errorText={fieldState.error?.message}
@@ -112,6 +111,11 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               field.onChange(value);
             }}
             options={destinationTypeOptions}
+            textFieldProps={{
+              inputProps: {
+                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Type`,
+              },
+            }}
             value={getDestinationTypeOption(field.value)}
           />
         )}
@@ -121,7 +125,6 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         name="destination.label"
         render={({ field, fieldState }) => (
           <Autocomplete
-            data-pendo-id={`Logs Delivery Streams ${capitalizedMode}-Destination Name`}
             errorText={fieldState.error?.message}
             filterOptions={(options, params) => {
               const filtered = destinationNameFilterOptions(options, params);
@@ -182,6 +185,11 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                   )}
                 </li>
               );
+            }}
+            textFieldProps={{
+              inputProps: {
+                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Name`,
+              },
             }}
             value={field.value ? { label: field.value } : null}
           />

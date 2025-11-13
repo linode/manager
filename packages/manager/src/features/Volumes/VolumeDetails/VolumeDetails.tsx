@@ -1,28 +1,25 @@
 import { useVolumeQuery } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 import { VolumeDrawers } from '../VolumeDrawers/VolumeDrawers';
 import { VolumeDetailsHeader } from './VolumeDetailsHeader';
-import { VolumeEntityDetail } from './VolumeEntityDetails/VolumeEntityDetail';
 
 export const VolumeDetails = () => {
   const navigate = useNavigate();
 
-  const { volumeSummaryPage } = useFlags();
+  const { volumeSummaryPage, aclpServices } = useFlags();
   const { volumeId } = useParams({ from: '/volumes/$volumeId' });
   const { data: volume, isLoading, error } = useVolumeQuery(volumeId);
-  const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
+  const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       to: '/volumes/$volumeId/summary',
       title: 'Summary',
@@ -30,6 +27,7 @@ export const VolumeDetails = () => {
     {
       to: '/volumes/$volumeId/metrics',
       title: 'Metrics',
+      chip: aclpServices?.blockstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);
 
@@ -67,16 +65,7 @@ export const VolumeDetails = () => {
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <SafeTabPanel index={getTabIndex('/volumes/$volumeId/summary')}>
-              <VolumeEntityDetail volume={volume} />
-            </SafeTabPanel>
-            <SafeTabPanel index={getTabIndex('/volumes/$volumeId/metrics')}>
-              <CloudPulseDashboardWithFilters
-                dashboardId={7}
-                region={volume.region}
-                resource={volume.id}
-              />
-            </SafeTabPanel>
+            <Outlet />
           </TabPanels>
         </React.Suspense>
       </Tabs>

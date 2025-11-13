@@ -75,6 +75,7 @@ export type AccountAdmin =
   | 'answer_profile_security_questions'
   | 'cancel_account'
   | 'cancel_service_transfer'
+  | 'create_child_account_token'
   | 'create_profile_pat'
   | 'create_profile_ssh_key'
   | 'create_profile_tfa_secret'
@@ -91,17 +92,22 @@ export type AccountAdmin =
   | 'is_account_admin'
   | 'list_account_agreements'
   | 'list_account_logins'
+  | 'list_all_child_accounts'
   | 'list_available_services'
   | 'list_default_firewalls'
+  | 'list_delegate_users'
   | 'list_enrolled_beta_programs'
   | 'list_service_transfers'
+  | 'list_user_delegate_accounts'
   | 'list_user_grants'
   | 'revoke_profile_app'
   | 'revoke_profile_device'
   | 'send_profile_phone_number_verification_code'
   | 'update_account'
   | 'update_account_settings'
+  | 'update_default_delegate_access'
   | 'update_default_firewalls'
+  | 'update_delegate_users'
   | 'update_profile'
   | 'update_profile_pat'
   | 'update_profile_ssh_key'
@@ -112,6 +118,7 @@ export type AccountAdmin =
   | 'view_account'
   | 'view_account_login'
   | 'view_account_settings'
+  | 'view_child_account'
   | 'view_enrolled_beta_program'
   | 'view_network_usage'
   | 'view_profile_security_question'
@@ -448,6 +455,11 @@ export interface Roles {
   description: string;
   name: RoleName;
   permissions: PermissionType[];
+}
+export interface EntityByPermission {
+  id: number;
+  label: string;
+  type: EntityType;
 }
 
 export type IamAccessType = keyof IamAccountRoles;
