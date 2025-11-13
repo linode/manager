@@ -202,7 +202,7 @@ export interface Flags {
   disableLargestGbPlans: boolean;
   firewallRulesetsPrefixlists: boolean;
   gecko2: GeckoFeatureFlag;
-  generationalPlans: boolean;
+  generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
@@ -386,3 +386,7 @@ export type AclpServices = {
     metrics?: AclpFlag;
   };
 };
+
+interface GenerationalPlansFlag extends BaseFeatureFlag {
+  allowedPlans: string[];
+}
