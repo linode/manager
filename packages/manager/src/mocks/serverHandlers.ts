@@ -45,6 +45,8 @@ import {
   alertFactory,
   alertRulesFactory,
   appTokenFactory,
+  blockStorageMetricCriteria,
+  blockStorageMetricRules,
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
@@ -1674,7 +1676,22 @@ export const handlers = [
       'resizing',
     ];
     const volumes = statuses.map((status) =>
-      volumeFactory.build({ status, region: 'ap-west' })
+      volumeFactory.build({ status, region: 'ap-west', linode_id: 1 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 2 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 3 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 4 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(2, { region: 'us-east', linode_id: 5 })
+    );
+    volumes.push(
+      ...volumeFactory.buildList(5, { region: 'eu-central', linode_id: 1 })
     );
     return HttpResponse.json(makeResourcePage(volumes));
   }),
@@ -3014,6 +3031,16 @@ export const handlers = [
         service_type: 'objectstorage',
         entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
       }),
+      alertFactory.build({
+        id: 300,
+        type: 'user',
+        label: 'block-storage - testing',
+        service_type: 'blockstorage',
+        entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
+        rule_criteria: {
+          rules: [blockStorageMetricCriteria.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3047,6 +3074,20 @@ export const handlers = [
             ],
             rule_criteria: {
               rules: [objectStorageMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '300' && params.serviceType === 'blockstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 300,
+            type: 'user',
+            label: 'block-storage - testing',
+            service_type: 'blockstorage',
+            entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
+            rule_criteria: {
+              rules: [blockStorageMetricCriteria.build()],
             },
           })
         );
@@ -3100,6 +3141,20 @@ export const handlers = [
             },
             service_type: 'objectstorage',
             entity_ids: ['obj-bucket-804.ap-west.linodeobjects.com'],
+          })
+        );
+      }
+      if (params.id === '300' && params.serviceType === 'blockstorage') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 300,
+            type: 'user',
+            label: 'block-storage - testing',
+            service_type: 'blockstorage',
+            entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
+            rule_criteria: {
+              rules: [blockStorageMetricCriteria.build()],
+            },
           })
         );
       }
@@ -3197,7 +3252,7 @@ export const handlers = [
         evaluation_period_seconds: [300],
         polling_interval_seconds: [300],
         scope:
-          serviceType === 'objectstorage'
+          serviceType === 'objectstorage' || serviceType === 'blockstorage'
             ? ['entity', 'account', 'region']
             : ['entity'],
       }),
@@ -3589,6 +3644,9 @@ export const handlers = [
       }
       if (params.serviceType === 'objectstorage') {
         return HttpResponse.json({ data: objectStorageMetricRules });
+      }
+      if (params.serviceType === 'blockstorage') {
+        return HttpResponse.json({ data: blockStorageMetricRules });
       }
       return HttpResponse.json(response);
     }

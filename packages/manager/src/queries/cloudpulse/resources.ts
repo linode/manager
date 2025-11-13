@@ -57,6 +57,7 @@ export const useResourcesQuery = (
           endpoint: resource.s3_endpoint,
           entities,
           clusterSize: resource.cluster_size,
+          volumeLinodeId: String(resource.linode_id),
         };
       });
     },

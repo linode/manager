@@ -102,7 +102,7 @@ export interface AutocompleteConfig extends BaseConfig {
   /**
    * Flag to use a custom fetch function instead of the static options.
    */
-  useCustomFetch?: string;
+  useCustomFetch?: string | string[];
 }
 
 /**
@@ -161,7 +161,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
-      useCustomFetch: 'firewall',
+      useCustomFetch: ['firewall', 'blockstorage'],
     },
     startswith_endswith: {
       type: 'textfield',
@@ -170,7 +170,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
-      useCustomFetch: 'firewall',
+      useCustomFetch: ['firewall', 'blockstorage'],
     },
     '*': {
       type: 'textfield',
