@@ -3,8 +3,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { imageFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RebuildImageDrawer } from './RebuildImageDrawer';
@@ -21,8 +19,9 @@ const props = {
 const mockNavigate = vi.fn();
 
 const queryMocks = vi.hoisted(() => ({
+  useAllLinodesQuery: vi.fn().mockReturnValue({}),
   useNavigate: vi.fn(() => mockNavigate),
-  useQueryWithPermissions: vi.fn().mockReturnValue({}),
+  useGetUserEntitiesByPermission: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -33,14 +32,22 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/useGetUserEntitiesByPermission', () => ({
+  useGetUserEntitiesByPermission: queryMocks.useGetUserEntitiesByPermission,
 }));
 
 describe('RebuildImageDrawer', () => {
   beforeEach(() => {
-    vi.mocked(queryMocks.useQueryWithPermissions).mockReturnValue({
-      loading: false,
+    queryMocks.useGetUserEntitiesByPermission.mockReturnValue({
+      isLoading: false,
     });
   });
 
@@ -55,14 +62,12 @@ describe('RebuildImageDrawer', () => {
   });
 
   it('should allow selecting a Linode to rebuild', async () => {
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      isLoading: false,
+      data: linodeFactory.buildList(5),
+    });
     const { findByText, getByRole, getByText } = renderWithTheme(
       <RebuildImageDrawer {...props} />
-    );
-
-    server.use(
-      http.get('*/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage(linodeFactory.buildList(5)));
-      })
     );
 
     await userEvent.click(getByRole('combobox'));
