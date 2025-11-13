@@ -175,6 +175,9 @@ export const FirewallRuleDrawer = React.memo(
                   setCreateEntityType(newType);
                   // Clear Formik errors when createMode changes
                   formikProps.setErrors({});
+
+                  // Reset form
+                  formikProps.resetForm();
                 }}
                 presetPorts={presetPorts}
                 ruleErrors={ruleToModify?.errors}

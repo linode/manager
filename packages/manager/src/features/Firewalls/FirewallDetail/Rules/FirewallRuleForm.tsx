@@ -24,7 +24,7 @@ import {
 } from 'src/features/Firewalls/shared';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
-import { AssignRuleSetToFirewall } from './AssignRuleSetToFirewall';
+import { AssignRuleSetSection } from './AssignRuleSetSection';
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
 import {
   firewallRuleCreateOptions,
@@ -387,13 +387,13 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       )}
 
       {createEntityType === 'ruleset' && (
-        <AssignRuleSetToFirewall
+        <AssignRuleSetSection
           category={category}
           errorText={errors.ruleset}
           handleRuleSetChange={(ruleSetId) =>
             setFieldValue('ruleset', ruleSetId)
           }
-          selectedRuleSetId={values.ruleset as number}
+          selectedRuleSetId={values.ruleset}
         />
       )}
 
