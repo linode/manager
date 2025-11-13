@@ -57,7 +57,10 @@ interface Props {
 
 export const AssignedEntitiesTable = ({ username }: Props) => {
   const theme = useTheme();
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_default_delegate_access',
+  ]);
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
@@ -130,6 +133,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const loading = isDefaultDelegationRolesForChildAccount
     ? delegateDefaultRolesLoading
     : assignedUserRolesLoading;
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
@@ -219,22 +226,22 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
             .map((el: EntitiesRole) => {
               const actions: Action[] = [
                 {
-                  disabled: !permissions?.is_account_admin,
+                  disabled: !permissionToCheck,
                   onClick: () => {
                     handleChangeRole(el, 'change-role-for-entity');
                   },
-                  title: 'Change Role ',
-                  tooltip: !permissions?.is_account_admin
+                  title: 'Change Role',
+                  tooltip: !permissionToCheck
                     ? 'You do not have permission to change this role.'
                     : undefined,
                 },
                 {
-                  disabled: !permissions?.is_account_admin,
+                  disabled: !permissionToCheck,
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
                   title: 'Remove Assignment',
-                  tooltip: !permissions?.is_account_admin
+                  tooltip: !permissionToCheck
                     ? 'You do not have permission to remove this assignment.'
                     : undefined,
                 },

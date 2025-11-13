@@ -265,6 +265,109 @@ export const dedicatedTypeFactory = linodeTypeFactory.extend({
   label: Factory.each((i) => `Dedicated 2${i}GB`),
 });
 
+export const gcpDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType[]>(
+  ['G7', 'G8', 'G7 copy', 'G8 copy']
+    .map((gen) => {
+      const computeOptimizedPlanConfigs = [
+        // 1:2 ratio (vcpus:memory GB)
+        { memory: 4, vcpus: 2, generation: gen },
+        { memory: 8, vcpus: 4, generation: gen },
+        { memory: 16, vcpus: 8, generation: gen },
+        { memory: 32, vcpus: 16, generation: gen },
+        { memory: 48, vcpus: 24, generation: gen },
+        { memory: 64, vcpus: 32, generation: gen },
+        { memory: 96, vcpus: 48, generation: gen },
+        {
+          memory: 128,
+          vcpus: gen.includes('G7') ? 50 : 64,
+          generation: gen,
+        },
+        {
+          memory: 256,
+          vcpus: gen.includes('G7') ? 56 : 128,
+          generation: gen,
+        },
+        {
+          memory: 512,
+          vcpus: gen.includes('G7') ? 64 : 256,
+          generation: gen,
+        },
+      ];
+
+      // 1:4 ratio configs
+      const GeneralPurposePlanConfigs = [
+        { memory: 8, vcpus: 2, generation: gen },
+        { memory: 16, vcpus: 4, generation: gen },
+        { memory: 32, vcpus: 8, generation: gen },
+        { memory: 64, vcpus: 16, generation: gen },
+        { memory: 96, vcpus: 24, generation: gen },
+        { memory: 128, vcpus: 32, generation: gen },
+        { memory: 192, vcpus: 48, generation: gen },
+        { memory: 256, vcpus: 50, generation: gen },
+        { memory: 384, vcpus: 56, generation: gen },
+        { memory: 512, vcpus: 64, generation: gen },
+      ];
+
+      return [...computeOptimizedPlanConfigs, ...GeneralPurposePlanConfigs];
+    })
+    .flat()
+    .map((planConfig) => {
+      return {
+        accelerated_devices: 0,
+        addons: {
+          backups: {
+            price: {
+              hourly: null,
+              monthly: null,
+            },
+            region_prices: [
+              {
+                hourly: null,
+                id: 'id-cgk',
+                monthly: null,
+              },
+              {
+                hourly: null,
+                id: 'br-gru',
+                monthly: null,
+              },
+            ],
+          },
+        },
+        class: 'dedicated',
+        disk: 5120000,
+        gpus: planConfig.generation.includes('copy') ? 1 : 0,
+        id: `${planConfig.generation.toLowerCase().replace(' copy', '')}-dedicated-${planConfig.memory}-${planConfig.vcpus}${
+          planConfig.generation.includes('copy') ? '-copy' : ''
+        }`,
+        label: `${planConfig.generation.replace(' copy', '')} Dedicated ${planConfig.memory}x${planConfig.vcpus}${
+          planConfig.generation.includes('copy') ? '-copy' : ''
+        }`,
+        memory: planConfig.memory * 1024,
+        network_out: 11000,
+        price: {
+          hourly: 2.88,
+          monthly: 1920.0,
+        },
+        region_prices: [
+          {
+            hourly: 4.032,
+            id: 'br-gru',
+            monthly: 2688,
+          },
+          {
+            hourly: 3.436,
+            id: 'id-cgk',
+            monthly: 2304,
+          },
+        ],
+        successor: null,
+        transfer: 11000,
+        vcpus: planConfig.vcpus,
+      };
+    }),
+);
+
 export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   accelerated_devices: 0,
   addons: {
@@ -313,6 +416,41 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   successor: null,
   transfer: 11000,
   vcpus: 56,
+});
+
+export const gpuTypeRtxFactory = linodeTypeFactory.extend({
+  class: 'gpu',
+  gpus: Factory.each((i) => i + 1),
+  id: Factory.each((i) => `g1-gpu-rtx6000-${i}`),
+  label: Factory.each((i) => `Dedicated 32 GB + RTX6000 GPU -${i}`),
+  transfer: 0,
+});
+
+export const gpuTypeAdaFactory = linodeTypeFactory.extend({
+  class: 'gpu',
+  gpus: 1,
+  id: Factory.each((i) => `g2-gpu-rtx4000a${i}`),
+  label: Factory.each((i) => `RTX4000 Ada x${i}`),
+  transfer: 0,
+});
+
+export const gpuTypeRtxProFactory = linodeTypeFactory.extend({
+  class: 'gpu',
+  gpus: Factory.each((i) => i + 1),
+  id: Factory.each((i) => `g3-gpu-rtxpro6000-blackwell-${i}`),
+  label: Factory.each((i) => `RTX PRO 6000 Blackwell x${i}`),
+  transfer: 0,
+});
+
+export const premiumTypeFactory = linodeTypeFactory.extend({
+  class: 'premium',
+});
+
+export const acceleratedTypeFactory = linodeTypeFactory.extend({
+  accelerated_devices: 1,
+  class: 'accelerated',
+  label: 'Netint Quadra T1U X',
+  transfer: 0,
 });
 
 export const linodePlacementGroupPayloadFactory =

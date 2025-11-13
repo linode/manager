@@ -30,6 +30,7 @@ describe('StreamFormDelivery', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <StreamFormDelivery
+          mode="create"
           setDisableTestConnection={setDisableTestConnection}
         />
       ),
@@ -57,6 +58,7 @@ describe('StreamFormDelivery', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <StreamFormDelivery
+          mode="create"
           setDisableTestConnection={setDisableTestConnection}
         />
       ),
@@ -91,6 +93,7 @@ describe('StreamFormDelivery', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <StreamFormDelivery
+          mode="create"
           setDisableTestConnection={setDisableTestConnection}
         />
       ),

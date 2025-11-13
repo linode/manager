@@ -55,8 +55,13 @@ export const DeleteDestinationDialog = React.memo((props: Props) => {
         loading: isPending,
         disabled: false,
         onClick: handleDelete,
+        'data-pendo-id': 'Logs Delivery Destinations Delete-Delete',
       }}
-      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      secondaryButtonProps={{
+        label: 'Cancel',
+        onClick: onClose,
+        'data-pendo-id': 'Logs Delivery Destinations Delete-Cancel',
+      }}
       style={{ padding: 0 }}
     />
   );

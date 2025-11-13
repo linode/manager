@@ -23,6 +23,7 @@ export interface CloudPulseResources {
   label: string;
   region?: string;
   tags?: string[];
+  volumeLinodeId?: string;
 }
 
 export interface CloudPulseResourcesSelectProps {

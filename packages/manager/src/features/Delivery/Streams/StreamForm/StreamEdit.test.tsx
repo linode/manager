@@ -83,7 +83,7 @@ describe('StreamEdit', () => {
     { timeout: 10000 },
     () => {
       const testConnectionButtonText = 'Test Connection';
-      const editStreamButtonText = 'Edit Stream';
+      const saveStreamButtonText = 'Save';
 
       const fillOutNewDestinationForm = async () => {
         const destinationNameInput = screen.getByLabelText('Destination Name');
@@ -147,21 +147,21 @@ describe('StreamEdit', () => {
             const testConnectionButton = screen.getByRole('button', {
               name: testConnectionButtonText,
             });
-            const editStreamButton = screen.getByRole('button', {
-              name: editStreamButtonText,
+            const saveStreamButton = screen.getByRole('button', {
+              name: saveStreamButtonText,
             });
-            expect(editStreamButton).toBeDisabled();
+            expect(saveStreamButton).toBeDisabled();
 
             // Test connection
             await userEvent.click(testConnectionButton);
             expect(verifyDestinationSpy).toHaveBeenCalled();
 
             await waitFor(() => {
-              expect(editStreamButton).toBeEnabled();
+              expect(saveStreamButton).toBeEnabled();
             });
 
             // Edit stream
-            await userEvent.click(editStreamButton);
+            await userEvent.click(saveStreamButton);
 
             expect(createDestinationSpy).toHaveBeenCalled();
             await waitFor(() => {
@@ -206,7 +206,7 @@ describe('StreamEdit', () => {
               name: testConnectionButtonText,
             });
             const editStreamButton = screen.getByRole('button', {
-              name: editStreamButtonText,
+              name: saveStreamButtonText,
             });
 
             // Edit stream button should not be disabled with existing destination selected
@@ -253,18 +253,18 @@ describe('StreamEdit', () => {
           const testConnectionButton = screen.getByRole('button', {
             name: testConnectionButtonText,
           });
-          const editStreamButton = screen.getByRole('button', {
-            name: editStreamButtonText,
+          const saveStreamButton = screen.getByRole('button', {
+            name: saveStreamButtonText,
           });
 
           await fillOutNewDestinationForm();
 
-          expect(editStreamButton).toBeDisabled();
+          expect(saveStreamButton).toBeDisabled();
 
           await userEvent.click(testConnectionButton);
 
           expect(verifyDestinationSpy).toHaveBeenCalled();
-          expect(editStreamButton).toBeDisabled();
+          expect(saveStreamButton).toBeDisabled();
         });
       });
     }

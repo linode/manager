@@ -1,6 +1,8 @@
 import { truncateAndJoinList } from '@linode/utilities';
 import { capitalize } from '@linode/utilities';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import type { PORT_PRESETS } from './FirewallDetail/Rules/shared';
 import type {
   Firewall,
@@ -254,4 +256,21 @@ export const getFirewallDescription = (firewall: Firewall) => {
     `Services Assigned: ${firewall.entities.length}`,
   ];
   return description.join(', ');
+};
+
+/**
+ * Returns whether or not features related to the Firewall Rulesets & Prefixlists project
+ * should be enabled.
+ *
+ * Note: Currently, this just uses the `firewallRulesetsPrefixlists` feature flag as a source of truth,
+ * but will eventually also look at account capabilities if available.
+ */
+export const useIsFirewallRulesetsPrefixlistsEnabled = () => {
+  const flags = useFlags();
+
+  // @TODO: Firewall Rulesets & Prefixlists - check for customer tag/account capability when it exists
+  return {
+    isFirewallRulesetsPrefixlistsEnabled:
+      flags.firewallRulesetsPrefixlists ?? false,
+  };
 };

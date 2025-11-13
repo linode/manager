@@ -38,7 +38,7 @@ vi.mock('@linode/api-v4', async () => {
 
 beforeEach(() => {
   queryMocks.usePermissions.mockReturnValue({
-    data: { update_image: true },
+    data: { update_image: true, is_account_admin: true },
   });
   queryMocks.useQueryWithPermissions.mockReturnValue({
     data: [props.image],

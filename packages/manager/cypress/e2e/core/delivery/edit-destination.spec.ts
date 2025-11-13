@@ -21,7 +21,11 @@ import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 describe('Edit Destination', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
     cy.visitWithLogin(`/logs/delivery/destinations/${mockDestination.id}/edit`);
     mockGetDestination(mockDestination);
@@ -43,8 +47,8 @@ describe('Edit Destination', () => {
       mockDestinationPayload.details as AkamaiObjectStorageDetailsExtended
     );
 
-    // Create Destination should be disabled before test connection
-    cy.findByRole('button', { name: 'Edit Destination' }).should('be.disabled');
+    // Save button should be disabled before test connection
+    cy.findByRole('button', { name: 'Save' }).should('be.disabled');
     // Test connection of the destination form
     mockTestConnection(400);
     ui.button
@@ -57,8 +61,8 @@ describe('Edit Destination', () => {
       'Delivery connection test failed. Verify your delivery settings and try again.'
     );
 
-    // Create Destination should be disabled after test connection failed
-    cy.findByRole('button', { name: 'Edit Destination' }).should('be.disabled');
+    // Save button should be disabled after test connection failed
+    cy.findByRole('button', { name: 'Save' }).should('be.disabled');
   });
 
   it('edit destination with correct data', () => {
@@ -70,8 +74,8 @@ describe('Edit Destination', () => {
       mockDestinationPayload.details as AkamaiObjectStorageDetailsExtended
     );
 
-    // Create Destination should be disabled before test connection
-    cy.findByRole('button', { name: 'Edit Destination' }).should('be.disabled');
+    // Save button should be disabled before test connection
+    cy.findByRole('button', { name: 'Save' }).should('be.disabled');
     // Test connection of the destination form
     mockTestConnection();
     ui.button
@@ -88,7 +92,7 @@ describe('Edit Destination', () => {
     mockUpdateDestination(mockDestinationPayloadWithId, updatedDestination);
     mockGetDestinations([updatedDestination]);
     // Submit the destination edit form
-    cy.findByRole('button', { name: 'Edit Destination' })
+    cy.findByRole('button', { name: 'Save' })
       .should('be.enabled')
       .should('have.attr', 'type', 'button')
       .click();

@@ -23,7 +23,10 @@ export const DestinationTableRow = React.memo(
     return (
       <TableRow key={id}>
         <TableCell>
-          <Link to={`/logs/delivery/destinations/${id}/edit`}>
+          <Link
+            pendoId="Logs Delivery Destinations-Name"
+            to={`/logs/delivery/destinations/${id}/edit`}
+          >
             {destination.label}
           </Link>
         </TableCell>

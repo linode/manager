@@ -11,6 +11,7 @@ import type { ButtonProps } from '../Button';
 
 export interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;
+  'data-pendo-id'?: string;
   'data-qa-form-data-loading'?: boolean;
   'data-testid'?: string;
   label: string;

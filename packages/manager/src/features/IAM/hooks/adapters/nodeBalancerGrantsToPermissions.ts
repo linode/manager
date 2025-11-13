@@ -23,9 +23,10 @@ export const nodeBalancerGrantsToPermissions = (
     view_nodebalancer: unrestricted || grantLevel !== null,
     list_nodebalancer_firewalls: unrestricted || grantLevel !== null,
     view_nodebalancer_statistics: unrestricted || grantLevel !== null,
-    list_nodebalancer_configs: unrestricted || grantLevel !== null,
+    list_nodebalancer_vpc_configs: unrestricted || grantLevel !== null,
     view_nodebalancer_config: unrestricted || grantLevel !== null,
     list_nodebalancer_config_nodes: unrestricted || grantLevel !== null,
     view_nodebalancer_config_node: unrestricted || grantLevel !== null,
+    view_nodebalancer_vpc_config: unrestricted || grantLevel !== null,
   };
 };

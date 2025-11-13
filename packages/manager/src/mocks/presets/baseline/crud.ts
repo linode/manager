@@ -10,6 +10,7 @@ import { childAccountsCrudPreset } from '../crud/delegation';
 import { domainCrudPreset } from '../crud/domains';
 import { entityCrudPreset } from '../crud/entities';
 import { firewallCrudPreset } from '../crud/firewalls';
+import { imagesCrudPreset } from '../crud/images';
 import { kubernetesCrudPreset } from '../crud/kubernetes';
 import { nodeBalancerCrudPreset } from '../crud/nodebalancers';
 import { permissionsCrudPreset } from '../crud/permissions';
@@ -31,6 +32,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
     ...deliveryCrudPreset.handlers,
     ...entityCrudPreset.handlers,
     ...firewallCrudPreset.handlers,
+    ...imagesCrudPreset.handlers,
     ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,
     ...permissionsCrudPreset.handlers,

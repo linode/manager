@@ -39,6 +39,7 @@ import type {
   Dimension,
   Firewall,
   FirewallDeviceEntity,
+  KubernetesCluster,
   MonitoringCapabilities,
   ResourcePage,
   Service,
@@ -586,4 +587,16 @@ export const filterFirewallResources = (
       return entity.label && entity.type === entityType;
     })
   );
+};
+
+/**
+ * @param clusters The list of kubernetes clusters
+ * @returns The filtered kubernetes clusters based on the tier
+ */
+export const filterKubernetesClusters = (
+  clusters: KubernetesCluster[]
+): KubernetesCluster[] => {
+  return clusters
+    .filter(({ tier }) => tier === 'enterprise')
+    .sort((a, b) => a.label.localeCompare(b.label));
 };

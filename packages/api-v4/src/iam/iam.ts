@@ -3,10 +3,12 @@ import Request, { setData, setMethod, setURL } from '../request';
 
 import type {
   AccessType,
+  EntityByPermission,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
 } from './types';
+import type { EntityType } from 'src/entities/types';
 
 /**
  * getUserRoles
@@ -97,6 +99,29 @@ export const getUserEntityPermissions = (
       `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
         username,
       )}/permissions/${entityType}/${entityId}`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * getUserEntitiesByPermission
+ *
+ * Returns the available entities for a given permission.
+ */
+export interface GetEntitiesByPermissionParams {
+  entityType: EntityType;
+  permission: PermissionType;
+  username: string | undefined;
+}
+
+export const getUserEntitiesByPermission = ({
+  username,
+  entityType,
+  permission,
+}: GetEntitiesByPermissionParams) =>
+  Request<EntityByPermission[]>(
+    setURL(
+      `${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}?permission=${permission}`,
     ),
     setMethod('GET'),
   );

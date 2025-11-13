@@ -38,7 +38,7 @@ export const validateIPs = (
 ): ExtendedIP[] => {
   return ips.map(({ address }) => {
     if (!options?.allowEmptyAddress && !address) {
-      return { address, error: 'Please enter an IP address.' };
+      return { address, error: 'Enter an IP address.' };
     }
     // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
     // methods for each, so we check for a netmask to decide the method to use.

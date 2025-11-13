@@ -5,6 +5,10 @@ import {
   deleteFirewallDevice,
   getFirewall,
   getFirewallDevices,
+  getFirewallPrefixList,
+  getFirewallPrefixLists,
+  getFirewallRuleSet,
+  getFirewallRuleSets,
   getFirewalls,
   getFirewallSettings,
   getTemplate,
@@ -35,7 +39,9 @@ import type {
   Firewall,
   FirewallDevice,
   FirewallDevicePayload,
+  FirewallPrefixList,
   FirewallRules,
+  FirewallRuleSet,
   FirewallSettings,
   FirewallTemplate,
   FirewallTemplateSlug,
@@ -61,6 +67,28 @@ const getAllFirewallDevices = (
 
 const getAllFirewallTemplates = () =>
   getAll<FirewallTemplate>(getTemplates)().then((data) => data.data);
+
+export const getAllFirewallRuleSets = (
+  passedParams: Params = {},
+  passedFilter: Filter = {},
+) =>
+  getAll<FirewallRuleSet>((params, filter) =>
+    getFirewallRuleSets(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
+  )().then((data) => data.data);
+
+export const getAllFirewallPrefixLists = (
+  passedParams: Params = {},
+  passedFilter: Filter = {},
+) =>
+  getAll<FirewallPrefixList>((params, filter) =>
+    getFirewallPrefixLists(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
+  )().then((data) => data.data);
 
 const getAllFirewallsRequest = (
   passedParams: Params = {},
@@ -112,6 +140,40 @@ export const firewallQueries = createQueryKeys('firewalls', {
   }),
   templates: {
     queryFn: getAllFirewallTemplates,
+    queryKey: null,
+  },
+  ruleset: (id: number) => ({
+    queryFn: () => getFirewallRuleSet(id),
+    queryKey: [id],
+  }),
+  rulesets: {
+    contextQueries: {
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllFirewallRuleSets(params, filter),
+        queryKey: [params, filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getFirewallRuleSets(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+  prefixlist: (id: number) => ({
+    queryFn: () => getFirewallPrefixList(id),
+    queryKey: [id],
+  }),
+  prefixlists: {
+    contextQueries: {
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllFirewallPrefixLists(params, filter),
+        queryKey: [params, filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getFirewallPrefixLists(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
     queryKey: null,
   },
 });
@@ -302,6 +364,38 @@ export const useFirewallSettingsQuery = (
 export const useFirewallTemplatesQuery = () => {
   return useQuery<FirewallTemplate[], APIError[]>({
     ...firewallQueries.templates,
+  });
+};
+
+export const useFirewallRuleSetQuery = (
+  id: number,
+  enabled: boolean = true,
+) => {
+  return useQuery<FirewallRuleSet, APIError[]>({
+    ...firewallQueries.ruleset(id),
+    enabled,
+  });
+};
+
+export const useAllFirewallRuleSetsQuery = (
+  enabled: boolean = true,
+  params?: Params,
+  filter?: Filter,
+) => {
+  return useQuery<FirewallRuleSet[], APIError[]>({
+    ...firewallQueries.rulesets._ctx.all(params, filter),
+    enabled,
+  });
+};
+
+export const useAllFirewallPrefixListsQuery = (
+  enabled: boolean = true,
+  params?: Params,
+  filter?: Filter,
+) => {
+  return useQuery<FirewallPrefixList[], APIError[]>({
+    ...firewallQueries.prefixlists._ctx.all(params, filter),
+    enabled,
   });
 };
 

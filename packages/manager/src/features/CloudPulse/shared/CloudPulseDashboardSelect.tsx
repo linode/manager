@@ -28,9 +28,13 @@ export interface CloudPulseDashboardSelectProps {
     savePref?: boolean
   ) => void;
   /**
-   * flag value to identify whether this component is being used in service level integration or not
+   * The service type to be used for the dashboard select in service level integration
    */
-  isServiceIntegration?: boolean;
+  integrationServiceType?: CloudPulseServiceType;
+  /**
+   * boolean value to identify whether only dashboard id is provided by service owner
+   */
+  onlyServiceLevelDashboardIdAvailable?: boolean;
   /**
    * boolean value to identify whether changes to be saved on preferences or not
    */
@@ -42,23 +46,29 @@ export const CloudPulseDashboardSelect = React.memo(
     const {
       defaultValue,
       handleDashboardChange = () => {},
-      isServiceIntegration,
       savePreferences,
+      integrationServiceType,
+      onlyServiceLevelDashboardIdAvailable,
     } = props;
 
     const {
       data: serviceTypesList,
       error: serviceTypesError,
       isLoading: serviceTypesLoading,
-    } = useCloudPulseServiceTypes(true);
+    } = useCloudPulseServiceTypes(!!savePreferences);
 
     const { aclpServices } = useFlags();
+    // Check if the integration service type is enabled
+    const serviceType =
+      integrationServiceType &&
+      aclpServices?.[integrationServiceType]?.metrics?.enabled
+        ? integrationServiceType
+        : undefined;
 
     // Get formatted enabled service types based on the LD flag
-    const serviceTypes: CloudPulseServiceType[] = getEnabledServiceTypes(
-      serviceTypesList,
-      aclpServices
-    );
+    const serviceTypes: CloudPulseServiceType[] = serviceType
+      ? [serviceType]
+      : getEnabledServiceTypes(serviceTypesList, aclpServices);
 
     const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
       (serviceTypesList?.data || [])
@@ -104,7 +114,7 @@ export const CloudPulseDashboardSelect = React.memo(
     React.useEffect(() => {
       // only call this code when the component is rendered initially
       if (
-        (savePreferences || isServiceIntegration) &&
+        (savePreferences || !!serviceType) &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
@@ -112,7 +122,10 @@ export const CloudPulseDashboardSelect = React.memo(
           ? dashboardsList.find((obj: Dashboard) => obj.id === defaultValue)
           : undefined;
         setSelectedDashboard(dashboard);
-        handleDashboardChange(dashboard);
+        // If only dashboard id is provided by service owner, there is no need to call the handleDashboardChange function
+        if (!onlyServiceLevelDashboardIdAvailable) {
+          handleDashboardChange(dashboard);
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardsList]);
@@ -121,7 +134,12 @@ export const CloudPulseDashboardSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
-        disabled={isServiceIntegration || !dashboardsList}
+        disableClearable={!!serviceType}
+        disabled={
+          !dashboardsList.length ||
+          (!savePreferences && !!onlyServiceLevelDashboardIdAvailable) ||
+          (!savePreferences && dashboardsList.length === 1)
+        }
         errorText={dashboardsList?.length ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
@@ -143,11 +161,13 @@ export const CloudPulseDashboardSelect = React.memo(
                 sx={{ marginLeft: '3.5%' }}
                 variant="h3"
               >
-                {serviceTypeMap.get(params.group as CloudPulseServiceType) ||
-                  params.group}
+                {!serviceType &&
+                  (serviceTypeMap.get(params.group as CloudPulseServiceType) ||
+                    params.group)}
               </Typography>
-              {aclpServices?.[params.group as CloudPulseServiceType]?.metrics
-                ?.beta && <BetaChip />}
+              {!serviceType &&
+                aclpServices?.[params.group as CloudPulseServiceType]?.metrics
+                  ?.beta && <BetaChip />}
             </Box>
             {params.children}
           </Box>

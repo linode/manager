@@ -57,7 +57,7 @@ export const DevTools = (props: Props) => {
   };
 
   const handleGoToPreferences = () => {
-    window.location.assign('/profile/settings?preferenceEditor=true');
+    window.location.assign('/profile/preferences?preferenceEditor=true');
   };
 
   React.useEffect(() => {

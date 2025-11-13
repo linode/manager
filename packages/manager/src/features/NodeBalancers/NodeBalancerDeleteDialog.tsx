@@ -5,6 +5,9 @@ import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
+import { getRestrictedResourceText } from '../Account/utils';
+import { usePermissions } from '../IAM/hooks/usePermissions';
+
 import type { APIError, NodeBalancer } from '@linode/api-v4';
 
 interface Props {
@@ -28,6 +31,12 @@ export const NodeBalancerDeleteDialog = ({
     selectedNodeBalancer?.id ?? -1
   );
 
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    ['delete_nodebalancer'],
+    selectedNodeBalancer?.id,
+    open
+  );
   const label = selectedNodeBalancer?.label;
 
   const onDelete = async () => {
@@ -37,6 +46,8 @@ export const NodeBalancerDeleteDialog = ({
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={!permissions?.delete_nodebalancer}
+      disableTypeToConfirmSubmit={!permissions?.delete_nodebalancer}
       entity={{
         action: 'deletion',
         name: label,
@@ -62,6 +73,15 @@ export const NodeBalancerDeleteDialog = ({
       title={`Delete${label ? ` ${label}` : ''}?`}
       typographyStyle={{ marginTop: '20px' }}
     >
+      {!permissions.delete_nodebalancer && (
+        <Notice
+          text={getRestrictedResourceText({
+            resourceType: 'NodeBalancers',
+            action: 'delete',
+          })}
+          variant="error"
+        />
+      )}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           Deleting this NodeBalancer is permanent and can’t be undone.
