@@ -35,6 +35,7 @@ import {
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { type CloudPulseServiceTypeFilters } from '../Utils/models';
+import { clearChildPreferences } from '../Utils/UserPreference';
 
 import type {
   CloudPulseMetricsFilter,
@@ -174,11 +175,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           label.filter((l) => l !== ''),
           savePref,
           {
+            ...clearChildPreferences(dashboard.id, filterKey),
             [filterKey]: port,
           }
         );
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleNodeTypeChange = React.useCallback(
@@ -188,10 +190,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         savePref: boolean = false
       ) => {
         emitFilterChangeByFilterKey(NODE_TYPE, nodeTypeId, label, savePref, {
+          ...clearChildPreferences(dashboard.id, NODE_TYPE),
           [NODE_TYPE]: nodeTypeId,
         });
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleTagsChange = React.useCallback(
@@ -203,12 +206,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           selectedTags,
           savePref,
           {
-            [RESOURCE_ID]: undefined,
+            ...clearChildPreferences(dashboard.id, TAGS),
             [TAGS]: selectedTags,
           }
         );
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleResourceChange = React.useCallback(
@@ -219,15 +222,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           resourceId.map((resource) => resource.label),
           savePref,
           {
-            [NODE_TYPE]: undefined,
-            [PARENT_ENTITY_REGION]: undefined,
+            ...clearChildPreferences(dashboard.id, RESOURCE_ID),
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
               String(resource.id)
             ),
           }
         );
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleRegionChange = React.useCallback(
@@ -237,18 +239,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         labels: string[],
         savePref: boolean = false
       ) => {
-        const updatedPreferenceData =
-          filterKey === REGION
-            ? {
-                [filterKey]: region,
-                [ENDPOINT]: undefined,
-                [RESOURCES]: undefined,
-                [TAGS]: undefined,
-              }
-            : {
-                [filterKey]: region,
-                [NODEBALANCER_ID]: undefined,
-              };
+        const updatedPreferenceData: AclpConfig = {
+          ...clearChildPreferences(dashboard.id, filterKey),
+          [filterKey]: region,
+        };
         emitFilterChangeByFilterKey(
           filterKey,
           region,
@@ -257,17 +251,17 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           updatedPreferenceData
         );
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleEndpointsChange = React.useCallback(
       (endpoints: string[], savePref: boolean = false) => {
         emitFilterChangeByFilterKey(ENDPOINT, endpoints, endpoints, savePref, {
+          ...clearChildPreferences(dashboard.id, ENDPOINT),
           [ENDPOINT]: endpoints,
-          [RESOURCES]: undefined,
         });
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleFirewallNodebalancersChange = React.useCallback(
@@ -278,13 +272,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           nodebalancers.map((nodebalancer) => nodebalancer.label),
           savePref,
           {
+            ...clearChildPreferences(dashboard.id, NODEBALANCER_ID),
             [NODEBALANCER_ID]: nodebalancers.map(
               (nodebalancer) => nodebalancer.id
             ),
           }
         );
       },
-      [emitFilterChangeByFilterKey]
+      [dashboard.id, emitFilterChangeByFilterKey]
     );
 
     const handleCustomSelectChange = React.useCallback(
