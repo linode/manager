@@ -1,3 +1,5 @@
+import { clearChildPreferences } from '../Utils/UserPreference';
+
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
 import type { AclpConfig, FilterValue } from '@linode/api-v4';
@@ -104,6 +106,11 @@ interface CloudPulseCustomSelectionChangeProps
   clearSelections: string[];
 
   /**
+   * Id of the selected dashboard
+   */
+  dashboardId: number;
+
+  /**
    * The maximum number of selections that needs to be allowed
    */
   maxSelections?: number;
@@ -194,6 +201,7 @@ export const handleCustomSelectionChange = (
     handleSelectionChange,
     maxSelections,
     savePreferences,
+    dashboardId,
   } = selectionChangeProps;
 
   let { value } = selectionChangeProps;
@@ -218,7 +226,10 @@ export const handleCustomSelectionChange = (
 
   // update the preferences
   if (savePreferences) {
-    updatedPreferenceData = { [filterKey]: result };
+    updatedPreferenceData = {
+      ...clearChildPreferences(dashboardId, filterKey),
+      [filterKey]: result,
+    };
   }
 
   // update the clear selections in the preference
