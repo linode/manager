@@ -48,14 +48,16 @@ type EntityQueryResult<T extends FullEntityType> = UseQueryResult<
   APIError[]
 > & { filter: Filter };
 
-// Helper to call the right query hook based on entity type
+/**
+ * Helper to call the right query hook based on entity type
+ * Doing this here allows the consumer to not have to worry about the different query hooks for each entity type
+ */
 const useEntityQuery = <T extends FullEntityType>(
   entityType: EntityType,
   filter: Filter,
   params: Params,
   enabled: boolean
 ): EntityQueryResult<T> => {
-  // Call all hooks unconditionally (rules of hooks), enable the right one
   const linodeQuery = useAllLinodesQuery(
     params,
     filter,
@@ -86,7 +88,9 @@ const useEntityQuery = <T extends FullEntityType>(
     filter,
   });
 
-  // Return the appropriate query result based on entity type
+  /**
+   * Return the appropriate query result based on entity type
+   */
   switch (entityType) {
     case 'firewall':
       return firewallQuery as EntityQueryResult<T>;
@@ -115,7 +119,7 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
 }: UseGetEntitiesByPermissionProps) => {
   const { isIAMBeta, isIAMEnabled, profile } = useIsIAMEnabled();
 
-  // Get permission IDs for IAM users
+  // Get entities by permission (Restricted IAM users only)
   const {
     data: entitiesByPermission,
     isLoading: isEntitiesByPermissionLoading,
@@ -127,6 +131,9 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     enabled: enabled && isIAMEnabled,
   });
 
+  /**
+   * Determine if we should use IAM permissions or legacy permissions
+   */
   const useBetaPermissions =
     isIAMEnabled &&
     isIAMBeta &&
@@ -137,38 +144,51 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
   const useLAPermissions = isIAMEnabled && !isIAMBeta;
   const shouldUseIAMPermissions = useBetaPermissions || useLAPermissions;
 
-  // Build filter for IAM restricted users
+  /**
+   * Build API filter when fetching full entities
+   */
   const entityIds =
     shouldUseIAMPermissions && profile?.restricted
       ? entitiesByPermission?.map((e) => e.id)
       : undefined;
-
-  const iamFilter = entityIds
+  const apiFilter = entityIds
     ? { ...filter, '+or': entityIds.map((id) => ({ id })) }
     : filter;
 
-  // Don't enable IAM query if:
-  // 1. Still loading permission IDs for restricted users
-  // 2. Permission query had an error
+  /**
+   * Determine if we should enable the full entities query
+   * - The user is not using IAM permissions
+   * - The query is not enabled
+   * - The permission query had an error
+   * - The user is not restricted or the entity IDs are not defined
+   */
   const shouldEnableIamQuery =
     shouldUseIAMPermissions &&
     enabled &&
-    !isEntitiesByPermissionError && // 👈 Don't run if permission check failed
+    !isEntitiesByPermissionError &&
     (!profile?.restricted || entityIds !== undefined);
 
-  // Call entity query with appropriate filter
+  /**
+   *  Call entity query with appropriate filter
+   *  This allows us not to fetch all entities for restricted users
+   */
   const iamQuery = useEntityQuery<T>(
     entityType,
-    iamFilter,
+    apiFilter,
     params,
     Boolean(shouldEnableIamQuery)
   );
 
-  // Legacy grants path
+  /**
+   * Legacy grants for non-IAM users
+   */
   const { data: grants, isLoading: grantsLoading } = useGrants(
     !shouldUseIAMPermissions && profile?.restricted && enabled
   );
 
+  /**
+   * Call entity query without filtering. Legacy grants still need all entities for the client-side mapping.
+   */
   const legacyQuery = useEntityQuery<T>(
     entityType,
     filter,
@@ -176,18 +196,25 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     !shouldUseIAMPermissions && enabled
   );
 
-  // Return IAM path
+  /**
+   * Return IAM path
+   *
+   * We also return the API filter to be used for client-side filtering
+   * ex: we also pass this filter to the LinodeSelect to avoid caching two different queries (with and without filter)
+   */
   if (shouldUseIAMPermissions) {
     return {
       ...iamQuery,
-      filter: iamFilter,
-      data: shouldEnableIamQuery ? iamQuery.data : [], // 👈 Only return data if query was enabled
+      filter: apiFilter,
+      data: shouldEnableIamQuery ? iamQuery.data : [],
       isLoading: isEntitiesByPermissionLoading || iamQuery.isLoading,
       error: isEntitiesByPermissionError || iamQuery.error,
     };
   }
 
-  // Legacy path with client-side filtering
+  /**
+   * Legacy path with client-side filtering/mapping
+   */
   const entityPermissionsMap = profile?.restricted
     ? entityPermissionMapFrom(grants, entityType as GrantType, profile)
     : {};
