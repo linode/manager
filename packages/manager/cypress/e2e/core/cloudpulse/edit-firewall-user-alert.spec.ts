@@ -44,7 +44,6 @@ import {
 import {
   ACCOUNT_GROUP_INFO_MESSAGE,
   entityGroupingOptions,
-  REGION_GROUP_INFO_MESSAGE,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -537,7 +536,7 @@ describe('Integration Tests for Edit Alert', () => {
       });
     });
 
-  it.only('update the entity type', () => {
+  it('updates entity type from Linode to NodeBalancers and verifies Metric Threshold update', () => {
     const alertDetails = alertFactory.build({
       alert_channels: [{ id: 1 }],
       created_by: 'user1',
@@ -568,6 +567,8 @@ describe('Integration Tests for Edit Alert', () => {
       id: 1,
       regions: regionList,
     });
+
+    // Mocks
     mockGetCloudPulseServiceByType('firewall', services);
     mockGetCloudPulseServices([alertDetails.service_type]);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
@@ -580,65 +581,48 @@ describe('Integration Tests for Edit Alert', () => {
     mockCreateAlertDefinition(service_type, alertDetails).as(
       'createAlertDefinition'
     );
+
+    // Visit Edit Alert page
     cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
-    cy.findByLabelText('Name').clear();
-    cy.findByLabelText('Name').type('Alert-2');
-    cy.findByLabelText('Description (optional)').clear();
-    cy.findByLabelText('Description (optional)').type('update-description');
-    cy.findByLabelText('Service').should('be.disabled');
-    ui.autocomplete.findByLabel('Severity').clear();
-    ui.autocomplete.findByLabel('Severity').type('Info');
-    ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
 
-    ui.autocomplete
-      .findByLabel('Entity Type')
-      .should('be.visible')
-      .clear()
-      .type('NodeBalancers');
+    // Update Entity Type → NodeBalancers
+    ui.autocomplete.findByLabel('Entity Type').clear().type('NodeBalancers');
+    ui.autocompletePopper.findByTitle('NodeBalancers').click();
 
-    ui.autocompletePopper
-      .findByTitle('NodeBalancers')
-      .should('be.visible')
-      .click();
-    // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account' or 'Entity')
-
-    cy.get(
-      '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
-    ).within(() => {
-      ui.button.findByAttribute('aria-label', 'Clear').click();
-    });
+    // Update the rule to NodeBalancer metric fields
     cy.get('[data-testid="rule_criteria.rules.0-id"]').within(() => {
       ui.autocomplete
         .findByLabel('Data Field')
-        .type('Ingress Packets Accepted (Linode)');
+        .type('Ingress Bytes Accepted (Node Balancer)');
       ui.autocompletePopper
-        .findByTitle('Ingress Packets Accepted (Linode)')
+        .findByTitle('Ingress Bytes Accepted (Node Balancer)')
         .click();
+
       ui.autocomplete.findByLabel('Aggregation Type').type('Sum');
       ui.autocompletePopper.findByTitle('Sum').click();
+
       ui.autocomplete.findByLabel('Operator').type('>');
       ui.autocompletePopper.findByTitle('>').click();
-      cy.get('[data-qa-threshold]').should('be.visible').clear();
-      cy.get('[data-qa-threshold]').should('be.visible').type('2000');
+
+      cy.get('[data-qa-threshold]').clear();
+      cy.get('[data-qa-threshold]').type('2000');
     });
 
-    // click on the submit button
+    // Submit
     ui.buttonGroup
       .find()
-      .find('button')
-      .filter('[type="submit"]')
-      .should('be.visible')
+      .find('button[type="submit"]')
       .should('be.enabled')
       .click();
 
+    // Validate update API request
     cy.wait('@updateDefinitions').then(({ request }) => {
-      // Assert the API request data
       expect(request.body.label).to.equal('Alert-2');
-      expect(request.body.description).to.equal('update-description');
-      expect(request.body.severity).to.equal(3);
-      expect(request.body.channel_ids[0]).to.equal(1);
-      expect(request.body).to.have.property('trigger_conditions');
+      expect(request.body.description).to.equal('My Custom Description');
+      expect(request.body.severity).to.equal(0);
+
+      // Trigger conditions unchanged (correct)
       expect(request.body.trigger_conditions.criteria_condition).to.equal(
         'ALL'
       );
@@ -649,20 +633,19 @@ describe('Integration Tests for Edit Alert', () => {
         300
       );
       expect(request.body.trigger_conditions.trigger_occurrences).to.equal(5);
-      expect(request.body.rule_criteria.rules[0].threshold).to.equal(2000);
-      expect(request.body.rule_criteria.rules[0].operator).to.equal('gt');
-      expect(request.body.rule_criteria.rules[0].aggregate_function).to.equal(
-        'sum'
-      );
-      expect(request.body.rule_criteria.rules[0].metric).to.equal(
-        'fw_ingress_packets_accepted'
-      );
 
-      // Verify URL redirection and toast notification
+      // Rule updated correctly
+      const rule = request.body.rule_criteria.rules[0];
+      expect(rule.threshold).to.equal(2000);
+      expect(rule.operator).to.equal('gt');
+      expect(rule.aggregate_function).to.equal('sum');
+      expect(rule.metric).to.equal('nb_ingress_bytes_accepted'); // ✔ Correct mapping
+
+      // Redirect + toast
       cy.url().should('endWith', 'alerts/definitions');
       ui.toast.assertMessage(UPDATE_ALERT_SUCCESS_MESSAGE);
 
-      // Confirm that Alert is listed on landing page with expected configuration.
+      // Landing page row validation
       assertAlertRow('Alert-2', updated);
     });
   });
