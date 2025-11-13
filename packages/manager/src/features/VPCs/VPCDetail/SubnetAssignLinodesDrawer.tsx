@@ -28,7 +28,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
@@ -162,20 +162,27 @@ export const SubnetAssignLinodesDrawer = (
   };
 
   // TODO: change update_linode to create_linode_config_profile_interface once it's available
-  const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
-    useQueryWithPermissions<Linode>(query, 'linode', ['update_linode'], open);
+  const {
+    data: availableLinodes,
+    filter: availableLinodesFilter,
+    isLoading: availableLinodesLoading,
+  } = useGetUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: open,
+  });
 
-  const userCanAssignLinodes = filteredLinodes?.length > 0;
+  const userCanAssignLinodes = availableLinodes && availableLinodes.length > 0;
 
   const linodeOptionsToAssign = React.useMemo(() => {
     // We need to filter to the linodes from this region that are not already
     // assigned to this subnet
-    if (!filteredLinodes) return [];
+    if (!availableLinodes) return [];
 
-    return filteredLinodes?.filter((linode) => {
+    return availableLinodes?.filter((linode) => {
       return !subnet?.linodes.some((linodeInfo) => linodeInfo.id === linode.id);
     });
-  }, [subnet, filteredLinodes]);
+  }, [subnet, availableLinodes]);
 
   // Determine the configId based on the number of configurations
   function getConfigId(inputs: {
@@ -565,7 +572,7 @@ export const SubnetAssignLinodesDrawer = (
   return (
     <Drawer
       error={subnetError}
-      isFetching={isFetching || isLoadingFilteredLinodes}
+      isFetching={isFetching || availableLinodesLoading}
       onClose={handleOnClose}
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'}`}
@@ -579,6 +586,7 @@ export const SubnetAssignLinodesDrawer = (
         <LinodeSelect
           checkIsOptionEqualToValue
           disabled={!userCanAssignLinodes}
+          filter={availableLinodesFilter}
           label="Linode"
           onSelectionChange={(selected) => {
             setFieldValue('selectedLinode', selected);
