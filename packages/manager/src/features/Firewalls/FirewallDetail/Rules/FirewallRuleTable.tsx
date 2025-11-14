@@ -208,7 +208,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 >
                   Label
                 </TableCell>
-                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <Hidden smDown>
                   <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
                   <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
@@ -218,6 +217,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                     {capitalize(addressColumnLabel)}
                   </TableCell>
                 </Hidden>
+                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -407,9 +407,6 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               </LinkButton>
             )}
           </TableCell>
-          <TableCell aria-label={`Action: ${action}`}>
-            {capitalize(action?.toLocaleLowerCase() ?? '')}
-          </TableCell>
           <Hidden smDown>
             <TableCell aria-label={`Protocol: ${protocol}`}>
               {protocol}
@@ -426,6 +423,9 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               <ConditionalError errors={errors} formField="addresses" />
             </TableCell>
           </Hidden>
+          <TableCell aria-label={`Action: ${action}`}>
+            {capitalize(action?.toLocaleLowerCase() ?? '')}
+          </TableCell>
         </>
       )}
 
