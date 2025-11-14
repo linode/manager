@@ -225,7 +225,7 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
 
   return {
     ...legacyQuery,
-    data: filteredEntities,
+    data: filteredEntities ?? [],
     isLoading: legacyQuery.isLoading || grantsLoading,
     error: legacyQuery.error,
   };
