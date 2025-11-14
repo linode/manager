@@ -399,6 +399,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       filters, // any additional dimension filters will be constructed and passed here
     },
     {
+      isFiltersLoading: isLoadingFilters,
       authToken,
       isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
