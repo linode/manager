@@ -79,7 +79,6 @@ export const DatabaseBackups = () => {
   const [versionOption, setVersionOption] = React.useState<VersionOption>(
     isDatabasesV2GA ? 'newest' : 'dateTime'
   );
-  const [timePickerError, setTimePickerError] = React.useState<string>('');
 
   const {
     data: database,
@@ -114,24 +113,26 @@ export const DatabaseBackups = () => {
       );
 
       if (!isSelectedTimeInvalid) {
-        setTimePickerError('');
+        clearErrors('time');
       }
     }
   };
 
   const handleOnError = (error: TimeValidationError) => {
-    if (error) {
-      switch (error) {
-        case 'maxTime':
-          setTimePickerError(BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT);
-          break;
-        case 'minTime':
-          setTimePickerError(BACKUPS_MIN_TIME_EXCEEDED_VALIDATON_TEXT);
-          break;
-        case 'invalidDate':
-          setValue('time', null);
-          setTimePickerError(BACKUPS_INVALID_TIME_VALIDATON_TEXT);
-      }
+    switch (error) {
+      case 'maxTime':
+        setError('time', {
+          message: BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT,
+        });
+        break;
+      case 'minTime':
+        setError('time', {
+          message: BACKUPS_MIN_TIME_EXCEEDED_VALIDATON_TEXT,
+        });
+        break;
+      case 'invalidDate':
+        setValue('time', null);
+        setError('time', { message: BACKUPS_INVALID_TIME_VALIDATON_TEXT });
     }
   };
 
@@ -154,7 +155,7 @@ export const DatabaseBackups = () => {
     setVersionOption(value);
     setValue('date', null);
     setValue('time', null);
-    setTimePickerError('');
+    clearErrors('time');
   };
 
   const form = useForm<DatabaseBackupsValues>({
@@ -169,7 +170,13 @@ export const DatabaseBackups = () => {
     },
   });
 
-  const { control, setValue } = form;
+  const {
+    control,
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = form;
 
   const [date, time, region] = useWatch({
     control,
@@ -266,7 +273,7 @@ export const DatabaseBackups = () => {
                 <Controller
                   control={control}
                   name="time"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormControl style={{ marginTop: 0 }}>
                       <Typography variant="h3">Time (UTC)</Typography>
                       <TimePicker
@@ -275,7 +282,7 @@ export const DatabaseBackups = () => {
                         }
                         errorText={
                           versionOption === 'dateTime' && date
-                            ? timePickerError
+                            ? fieldState.error?.message
                             : undefined
                         }
                         format="HH:mm:ss"
@@ -329,7 +336,7 @@ export const DatabaseBackups = () => {
                   data-qa-settings-button="restore"
                   disabled={
                     versionOption === 'dateTime' &&
-                    (!date || !time || !!timePickerError)
+                    (!date || !time || !!errors.time)
                   }
                   onClick={onRestoreDatabase}
                 >
