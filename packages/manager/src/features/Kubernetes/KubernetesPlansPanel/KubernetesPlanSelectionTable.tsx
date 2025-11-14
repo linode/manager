@@ -13,6 +13,10 @@ import type { PlanSelectionFilterOptionsTable } from 'src/features/components/Pl
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 interface KubernetesPlanSelectionTableProps {
+  /**
+   * Optional message to display when filters result in no plans
+   */
+  filterEmptyStateMessage?: string;
   filterOptions?: PlanSelectionFilterOptionsTable;
   plans?: PlanWithAvailability[];
   renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
@@ -33,6 +37,7 @@ export const KubernetesPlanSelectionTable = (
   props: KubernetesPlanSelectionTableProps
 ) => {
   const {
+    filterEmptyStateMessage,
     filterOptions,
     plans,
     renderPlanSelection,
@@ -79,6 +84,8 @@ export const KubernetesPlanSelectionTable = (
             colSpan={9}
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
+        ) : filterEmptyStateMessage ? (
+          <TableRowEmpty colSpan={9} message={filterEmptyStateMessage} />
         ) : (
           ((plans && renderPlanSelection?.(plans)) ?? null)
         )}

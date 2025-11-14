@@ -41,3 +41,14 @@ export interface PlanSelectionAvailabilityTypes {
 export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {
   wholePanelIsDisabled?: boolean;
 }
+
+export type {
+  FilterDropdownConfig,
+  FilterOption,
+  FilterPlansByGenerationFn,
+  FilterPlansByTypeFn,
+  PlanFilterGeneration,
+  PlanFilterResult,
+  PlanFilterState,
+  PlanFilterType,
+} from './types/planFilters';

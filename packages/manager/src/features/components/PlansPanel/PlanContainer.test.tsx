@@ -5,9 +5,20 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { mockMatchMedia } from 'src/utilities/testHelpers';
 
-import { PlanContainer } from './PlanContainer';
+import { PLAN_FILTER_EMPTY_STATE_MESSAGE } from './constants';
+import { PlanContainer, type PlanFilterRenderArgs } from './PlanContainer';
 
 import type { PlanWithAvailability } from './types';
+
+const queryMocks = vi.hoisted(() => ({
+  useIsGenerationalPlansEnabled: vi.fn(() => ({
+    isGenerationalPlansEnabled: true,
+  })),
+}));
+
+vi.mock('src/utilities/linodes', () => ({
+  useIsGenerationalPlansEnabled: queryMocks.useIsGenerationalPlansEnabled,
+}));
 
 const mockPlans: PlanWithAvailability[] = planSelectionTypeFactory.buildList(2);
 
@@ -26,5 +37,36 @@ describe('PlanContainer', () => {
     );
 
     expect(getByText(PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE)).toBeVisible();
+  });
+
+  it('shows the plan filters empty state message when filters are not selected', async () => {
+    let hasSentResult = false;
+
+    const planFilters = ({ onResult }: PlanFilterRenderArgs) => {
+      if (!hasSentResult) {
+        hasSentResult = true;
+        onResult({
+          emptyState: { message: PLAN_FILTER_EMPTY_STATE_MESSAGE },
+          filteredPlans: [],
+          filterUI: null,
+          hasActiveFilters: false,
+        });
+      }
+
+      return null;
+    };
+
+    const { findByText } = renderWithTheme(
+      <PlanContainer
+        allDisabledPlans={[]}
+        hasMajorityOfPlansDisabled={false}
+        onSelect={() => {}}
+        planFilters={planFilters}
+        plans={mockPlans}
+        selectedRegionId="us-east"
+      />
+    );
+
+    expect(await findByText(PLAN_FILTER_EMPTY_STATE_MESSAGE)).toBeVisible();
   });
 });
