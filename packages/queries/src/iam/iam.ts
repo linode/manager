@@ -8,6 +8,8 @@ import { iamQueries } from './keys';
 import type {
   AccessType,
   APIError,
+  EntityByPermission,
+  GetEntitiesByPermissionParams,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
@@ -74,5 +76,20 @@ export const useUserEntityPermissions = (
       profile?.restricted &&
       Boolean(entityType && entityId) &&
       enabled,
+  });
+};
+
+export const useGetUserEntitiesByPermissionQuery = ({
+  username,
+  entityType,
+  permission,
+}: GetEntitiesByPermissionParams) => {
+  const { data: profile } = useProfile();
+  return useQuery<EntityByPermission[], APIError[]>({
+    ...iamQueries
+      .user(username ?? '')
+      ._ctx.getEntitiesByPermission(entityType, permission),
+    enabled:
+      Boolean(username && entityType && permission) && profile?.restricted,
   });
 };

@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
 import {
   Autocomplete,
@@ -6,64 +7,23 @@ import {
   Notice,
   Radio,
   RadioGroup,
+  Stack,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { updateMaintenanceSchema } from '@linode/validation';
+import { styled } from '@mui/material/styles';
 import { Button } from 'akamai-cds-react-components';
-import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
-import type { APIError } from '@linode/api-v4/lib/types';
 import type { SelectOption } from '@linode/ui';
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  formControlDropdown: {
-    '& label': {
-      overflow: 'visible',
-    },
-    marginRight: '3rem',
-    minWidth: '125px',
-  },
-  sectionButton: {
-    alignSelf: 'end',
-    marginBottom: '1rem',
-    marginTop: '1rem',
-    minWidth: 214,
-    [theme.breakpoints.down('md')]: {
-      alignSelf: 'flex-start',
-    },
-  },
-  sectionText: {
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '1rem',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    width: '65%',
-  },
-  sectionTitle: {
-    marginBottom: '0.25rem',
-  },
-  sectionTitleAndText: {
-    width: '100%',
-  },
-  topSection: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('lg')]: {
-      flexDirection: 'column',
-    },
-  },
-}));
 
 interface Props {
   database: Database;
@@ -74,17 +34,9 @@ interface Props {
 export const MaintenanceWindow = (props: Props) => {
   const { database, disabled, timezone } = props;
 
-  const [maintenanceUpdateError, setMaintenanceUpdateError] =
-    React.useState<APIError[]>();
-
-  // This will be set to `true` once a form field has been touched. This is used to disable the
-  // "Save Changes" button unless there have been changes to the form.
-  const [formTouched, setFormTouched] = React.useState<boolean>(false);
-
   const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
     React.useState<SelectOption<number>[]>([]);
 
-  const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(
@@ -116,32 +68,21 @@ export const MaintenanceWindow = (props: Props) => {
     weekSelectionModifier(dayOfWeek.label, weekSelectionMap);
   }, []);
 
-  const handleSaveMaintenanceWindow = (
-    values: Omit<UpdatesSchedule, 'duration'>,
-    {
-      setSubmitting,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void;
-    }
-  ) => {
+  const onSubmit = async (values: Partial<UpdatesSchedule>) => {
     // @TODO Update this to only send 'updates' and not 'allow_list' when the API supports it.
     // Additionally, at that time, enable the validationSchema which currently does not work
     // because allow_list is a required field in the schema.
-    updateDatabase({
-      allow_list: database.allow_list,
-      updates: values as UpdatesSchedule,
-    })
-      .then(() => {
-        setSubmitting(false);
-        enqueueSnackbar('Maintenance Window settings saved successfully.', {
-          variant: 'success',
-        });
-        setFormTouched(false);
-      })
-      .catch((e: APIError[]) => {
-        setMaintenanceUpdateError(e);
-        setSubmitting(false);
+    try {
+      await updateDatabase({
+        allow_list: database.allow_list,
+        updates: values as UpdatesSchedule,
       });
+      enqueueSnackbar('Maintenance Window settings saved successfully.', {
+        variant: 'success',
+      });
+    } catch (errors) {
+      setError('root', { message: errors[0].reason });
+    }
   };
 
   const utcOffsetInHours = timezone
@@ -155,17 +96,29 @@ export const MaintenanceWindow = (props: Props) => {
     return null;
   };
 
-  const { errors, handleSubmit, isSubmitting, setFieldValue, touched, values } =
-    useFormik({
-      initialValues: {
-        day_of_week: database.updates?.day_of_week ?? 1,
-        frequency: database.updates?.frequency ?? 'weekly',
-        hour_of_day: database.updates?.hour_of_day ?? 20,
-        week_of_month: getInitialWeekOfMonth(),
-      },
-      // validationSchema: updateDatabaseSchema,
-      onSubmit: handleSaveMaintenanceWindow,
-    });
+  const form = useForm<Partial<UpdatesSchedule>>({
+    defaultValues: {
+      day_of_week: database.updates?.day_of_week ?? 1,
+      frequency: database.updates?.frequency ?? 'weekly',
+      hour_of_day: database.updates?.hour_of_day ?? 20,
+      week_of_month: getInitialWeekOfMonth(),
+    },
+    mode: 'onBlur',
+    resolver: yupResolver(updateMaintenanceSchema),
+  });
+
+  const {
+    control,
+    formState: { isSubmitting, isDirty, errors },
+    handleSubmit,
+    setValue,
+    setError,
+  } = form;
+
+  const [dayOfWeek, hourOfDay, frequency, weekOfMonth] = useWatch({
+    control,
+    name: ['day_of_week', 'hour_of_day', 'frequency', 'week_of_month'],
+  });
 
   const isLegacy = database.platform === 'rdbms-legacy';
 
@@ -176,202 +129,215 @@ export const MaintenanceWindow = (props: Props) => {
     "OS and database engine updates will be performed on the schedule below. Select the frequency, day, and time you'd prefer maintenance to occur.";
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={classes.topSection}>
-        <div className={classes.sectionTitleAndText}>
-          <Typography className={classes.sectionTitle} variant="h3">
-            {isLegacy
-              ? 'Maintenance Window'
-              : 'Set a Weekly Maintenance Window'}
-          </Typography>
-          {maintenanceUpdateError ? (
-            <Notice spacingTop={8} variant="error">
-              {maintenanceUpdateError[0].reason}
-            </Notice>
-          ) : null}
-          <Typography className={classes.sectionText}>
-            {isLegacy ? typographyLegacyDatabase : typographyDatabase}{' '}
-            {database.cluster_size !== 3
-              ? 'For non-HA plans, expect downtime during this window.'
-              : null}
-          </Typography>
-          <div>
-            <FormControl className={classes.formControlDropdown}>
-              <Autocomplete
-                autoHighlight
-                disableClearable
-                disabled={disabled}
-                errorText={touched.day_of_week ? errors.day_of_week : undefined}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                label="Day of Week"
-                noMarginTop
-                onChange={(_, day) => {
-                  setFormTouched(true);
-                  setFieldValue('day_of_week', day.value);
-                  weekSelectionModifier(day.label, weekSelectionMap);
-                  // If week_of_month is not null (i.e., the user has selected a value for "Repeats on" already),
-                  // refresh the field value so that the selected option displays the chosen day.
-                  if (values.week_of_month) {
-                    setFieldValue('week_of_month', values.week_of_month);
-                  }
-                }}
-                options={daySelectionMap}
-                placeholder="Choose a day"
-                renderOption={(props, option) => (
-                  <li {...props}>{option.label}</li>
-                )}
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-weekday-select': true,
-                  },
-                }}
-                value={daySelectionMap.find(
-                  (thisOption) => thisOption.value === values.day_of_week
-                )}
-              />
-            </FormControl>
-            <FormControl className={classes.formControlDropdown}>
-              <div style={{ alignItems: 'center', display: 'flex' }}>
-                <Autocomplete
-                  autoHighlight
-                  defaultValue={hourSelectionMap.find(
-                    (option) => option.value === 20
-                  )}
-                  disableClearable
-                  disabled={disabled}
-                  errorText={
-                    touched.hour_of_day ? errors.hour_of_day : undefined
-                  }
-                  label="Time"
-                  noMarginTop
-                  onChange={(_, hour) => {
-                    setFormTouched(true);
-                    setFieldValue('hour_of_day', hour?.value);
-                  }}
-                  options={hourSelectionMap}
-                  placeholder="Choose a time"
-                  renderOption={(props, option) => (
-                    <li {...props}>{option.label}</li>
-                  )}
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-time-select': true,
-                    },
-                  }}
-                  value={hourSelectionMap.find(
-                    (thisOption) => thisOption.value === values.hour_of_day
-                  )}
-                />
-                <TooltipIcon
-                  status="info"
-                  sxTooltipIcon={{
-                    marginTop: '1.75rem',
-                    padding: '0px 8px',
-                  }}
-                  text={
-                    <Typography>
-                      UTC is {utcOffsetText(utcOffsetInHours)} hours compared to
-                      your local timezone. Click{' '}
-                      <Link to="/profile/display">here</Link> to view or change
-                      your timezone settings.
-                    </Typography>
-                  }
-                />
-              </div>
-            </FormControl>
-          </div>
-          {isLegacy && (
-            <FormControl
-              disabled={disabled}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormTouched(true);
-                setFieldValue('frequency', e.target.value);
-                if (e.target.value === 'weekly') {
-                  // If the frequency is weekly, set the 'week_of_month' field to null since that should only be specified for a monthly frequency.
-                  setFieldValue('week_of_month', null);
-                }
-
-                if (e.target.value === 'monthly') {
-                  const dayOfWeek =
-                    daySelectionMap.find(
-                      (option) => option.value === values.day_of_week
-                    ) ?? daySelectionMap[0];
-
-                  weekSelectionModifier(dayOfWeek.label, weekSelectionMap);
-                  setFieldValue(
-                    'week_of_month',
-                    modifiedWeekSelectionMap[0].value
-                  );
-                }
-              }}
-            >
-              <RadioGroup
-                style={{ marginBottom: 0, marginTop: 0 }}
-                value={values.frequency}
-              >
-                {maintenanceFrequencyMap.map((option) => (
-                  <FormControlLabel
-                    control={<Radio />}
-                    key={option.value}
-                    label={option.key}
-                    value={option.value}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          )}
-          <div>
-            {values.frequency === 'monthly' ? (
-              <FormControl
-                className={classes.formControlDropdown}
-                style={{ minWidth: '250px' }}
-              >
-                <Autocomplete
-                  autoHighlight
-                  defaultValue={modifiedWeekSelectionMap[0]}
-                  disableClearable
-                  errorText={
-                    touched.week_of_month ? errors.week_of_month : undefined
-                  }
-                  label="Repeats on"
-                  noMarginTop
-                  onChange={(_, week) => {
-                    setFormTouched(true);
-                    setFieldValue('week_of_month', week?.value);
-                  }}
-                  options={modifiedWeekSelectionMap}
-                  placeholder="Repeats on"
-                  renderOption={(props, option) => (
-                    <li {...props}>{option.label}</li>
-                  )}
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-week-in-month-select': true,
-                    },
-                  }}
-                  value={modifiedWeekSelectionMap.find(
-                    (thisOption) => thisOption.value === values.week_of_month
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <StyledStack direction="row">
+          <Stack>
+            <Typography mb={0.5} variant="h3">
+              {isLegacy
+                ? 'Maintenance Window'
+                : 'Set a Weekly Maintenance Window'}
+            </Typography>
+            {errors.root?.message && (
+              <Notice spacingTop={8} variant="error">
+                {errors.root?.message}
+              </Notice>
+            )}
+            <StyledTypography>
+              {isLegacy ? typographyLegacyDatabase : typographyDatabase}{' '}
+              {database.cluster_size !== 3 &&
+                'For non-HA plans, expect downtime during this window.'}
+            </StyledTypography>
+            <Stack direction="row" mt={2} spacing={6}>
+              <FormControl>
+                <Controller
+                  control={control}
+                  name="day_of_week"
+                  render={({ field, fieldState }) => (
+                    <Autocomplete
+                      autoHighlight
+                      disableClearable
+                      disabled={disabled}
+                      errorText={fieldState.error?.message}
+                      isOptionEqualToValue={(option, value) =>
+                        option.value === value.value
+                      }
+                      label="Day of Week"
+                      noMarginTop
+                      onChange={(_, day) => {
+                        field.onChange(day.value);
+                        weekSelectionModifier(day.label, weekSelectionMap);
+                      }}
+                      options={daySelectionMap}
+                      placeholder="Choose a day"
+                      renderOption={(props, option) => (
+                        <li {...props}>{option.label}</li>
+                      )}
+                      textFieldProps={{
+                        dataAttrs: {
+                          'data-qa-weekday-select': true,
+                        },
+                      }}
+                      value={daySelectionMap.find(
+                        (thisOption) => thisOption.value === dayOfWeek
+                      )}
+                    />
                   )}
                 />
               </FormControl>
-            ) : null}
-          </div>
-        </div>
-        <Button
-          className={classes.sectionButton}
-          data-testid="save-changes-button"
-          disabled={!formTouched || isSubmitting || disabled}
-          processing={isSubmitting}
-          title="Save Changes"
-          type="submit"
-          variant="primary"
-        >
-          Save Changes
-        </Button>
-      </div>
-    </form>
+              <FormControl>
+                <div style={{ alignItems: 'center', display: 'flex' }}>
+                  <Controller
+                    control={control}
+                    name="hour_of_day"
+                    render={({ field, fieldState }) => (
+                      <Autocomplete
+                        autoHighlight
+                        defaultValue={hourSelectionMap.find(
+                          (option) => option.value === 20
+                        )}
+                        disableClearable
+                        disabled={disabled}
+                        errorText={fieldState.error?.message}
+                        label="Time"
+                        noMarginTop
+                        onChange={(_, hour) => {
+                          field.onChange(hour?.value);
+                        }}
+                        options={hourSelectionMap}
+                        placeholder="Choose a time"
+                        renderOption={(props, option) => (
+                          <li {...props}>{option.label}</li>
+                        )}
+                        textFieldProps={{
+                          dataAttrs: {
+                            'data-qa-time-select': true,
+                          },
+                        }}
+                        value={hourSelectionMap.find(
+                          (thisOption) => thisOption.value === hourOfDay
+                        )}
+                      />
+                    )}
+                  />
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{
+                      marginTop: '1.75rem',
+                      padding: '0px 8px',
+                    }}
+                    text={
+                      <Typography>
+                        UTC is {utcOffsetText(utcOffsetInHours)} hours compared
+                        to your local timezone. Click{' '}
+                        <Link to="/profile/display">here</Link> to view or
+                        change your timezone settings.
+                      </Typography>
+                    }
+                  />
+                </div>
+              </FormControl>
+            </Stack>
+            {isLegacy && (
+              <Controller
+                control={control}
+                name="frequency"
+                render={({ field }) => (
+                  <FormControl
+                    disabled={disabled}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      field.onChange(e.target.value);
+                      if (e.target.value === 'weekly') {
+                        // If the frequency is weekly, set the 'week_of_month' field to null since that should only be specified for a monthly frequency.
+                        setValue('week_of_month', null);
+                      }
+
+                      if (e.target.value === 'monthly') {
+                        const _dayOfWeek =
+                          daySelectionMap.find(
+                            (option) => option.value === dayOfWeek
+                          ) ?? daySelectionMap[0];
+
+                        weekSelectionModifier(
+                          _dayOfWeek.label,
+                          weekSelectionMap
+                        );
+                        setValue(
+                          'week_of_month',
+                          modifiedWeekSelectionMap[0].value
+                        );
+                      }
+                    }}
+                  >
+                    <RadioGroup
+                      style={{ marginBottom: 0, marginTop: 0 }}
+                      value={frequency}
+                    >
+                      {maintenanceFrequencyMap.map((option) => (
+                        <FormControlLabel
+                          control={<Radio />}
+                          key={option.value}
+                          label={option.key}
+                          value={option.value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                )}
+              />
+            )}
+            <div>
+              {frequency === 'monthly' && (
+                <Controller
+                  control={control}
+                  name="week_of_month"
+                  render={({ field, fieldState }) => (
+                    <FormControl style={{ minWidth: '250px' }}>
+                      <Autocomplete
+                        autoHighlight
+                        defaultValue={modifiedWeekSelectionMap[0]}
+                        disableClearable
+                        errorText={fieldState.error?.message}
+                        label="Repeats on"
+                        noMarginTop
+                        onChange={(_, week) => {
+                          field.onChange(week.value);
+                        }}
+                        options={modifiedWeekSelectionMap}
+                        placeholder="Repeats on"
+                        renderOption={(props, option) => (
+                          <li {...props}>{option.label}</li>
+                        )}
+                        textFieldProps={{
+                          dataAttrs: {
+                            'data-qa-week-in-month-select': true,
+                          },
+                        }}
+                        value={modifiedWeekSelectionMap.find(
+                          (thisOption) => thisOption.value === weekOfMonth
+                        )}
+                      />
+                    </FormControl>
+                  )}
+                />
+              )}
+            </div>
+          </Stack>
+          <StyledButtonStack>
+            <Button
+              data-testid="save-changes-button"
+              disabled={!isDirty || isSubmitting || disabled}
+              processing={isSubmitting}
+              title="Save Changes"
+              type="submit"
+              variant="primary"
+            >
+              Save Changes
+            </Button>
+          </StyledButtonStack>
+        </StyledStack>
+      </form>
+    </FormProvider>
   );
 };
 
@@ -436,4 +402,35 @@ const utcOffsetText = (utcOffsetInHours: number) => {
     : `-${utcOffsetInHours}`;
 };
 
-export default MaintenanceWindow;
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    marginBottom: '1rem',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+  width: '65%',
+}));
+
+const StyledStack = styled(Stack, {
+  label: 'StyledStack',
+})(({ theme }) => ({
+  flexDirection: 'row',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
+
+const StyledButtonStack = styled(Stack, {
+  label: 'StyledButtonStack',
+})(({ theme }) => ({
+  alignSelf: 'end',
+  marginBottom: '1rem',
+  marginTop: '1rem',
+  minWidth: 214,
+  [theme.breakpoints.down('md')]: {
+    alignSelf: 'flex-start',
+  },
+}));
