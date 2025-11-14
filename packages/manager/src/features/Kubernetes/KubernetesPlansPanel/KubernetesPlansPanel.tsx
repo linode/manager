@@ -3,6 +3,8 @@ import * as React from 'react';
 import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { createDedicatedPlanFiltersRenderProp } from 'src/features/components/PlansPanel/DedicatedPlanFilters';
+import { PlanFilterProvider } from 'src/features/components/PlansPanel/PlanFilterContext';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -146,6 +148,13 @@ export const KubernetesPlansPanel = (props: Props) => {
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
+                planFilters={
+                  plan === 'dedicated'
+                    ? createDedicatedPlanFiltersRenderProp(
+                        `plan-panel-k8-${plan}`
+                      )
+                    : undefined
+                }
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 selectedId={selectedId}
@@ -171,15 +180,17 @@ export const KubernetesPlansPanel = (props: Props) => {
   );
 
   return (
-    <TabbedPanel
-      copy={copy}
-      error={error}
-      handleTabChange={() => resetValues()}
-      header={header || ' '}
-      initTab={initialTab >= 0 ? initialTab : 0}
-      notice={notice}
-      sx={{ padding: 0 }}
-      tabs={tabs}
-    />
+    <PlanFilterProvider>
+      <TabbedPanel
+        copy={copy}
+        error={error}
+        handleTabChange={() => resetValues()}
+        header={header || ' '}
+        initTab={initialTab >= 0 ? initialTab : 0}
+        notice={notice}
+        sx={{ padding: 0 }}
+        tabs={tabs}
+      />
+    </PlanFilterProvider>
   );
 };

@@ -18,6 +18,7 @@ import type { LinodeTypeClass } from '@linode/api-v4/';
 import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
+  filterEmptyStateMessage?: string;
   filterOptions?: PlanSelectionFilterOptionsTable;
   plans?: PlanWithAvailability[];
   planType?: LinodeTypeClass;
@@ -47,6 +48,7 @@ const tableCells = [
 
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
+    filterEmptyStateMessage,
     filterOptions,
     planType,
     plans,
@@ -163,6 +165,11 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
           <TableRowEmpty
             colSpan={tableCells.length}
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+          />
+        ) : filterEmptyStateMessage ? (
+          <TableRowEmpty
+            colSpan={tableCells.length}
+            message={filterEmptyStateMessage}
           />
         ) : (
           ((plans && renderPlanSelection?.(plans)) ?? null)

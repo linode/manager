@@ -15,8 +15,10 @@ import {
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { createDedicatedPlanFiltersRenderProp } from './DedicatedPlanFilters';
 import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
 import { PlanContainer } from './PlanContainer';
+import { PlanFilterProvider } from './PlanFilterContext';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -218,6 +220,11 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isCreate={isCreate}
                 linodeID={linodeID}
                 onSelect={onSelect}
+                planFilters={
+                  plan === 'dedicated'
+                    ? createDedicatedPlanFiltersRenderProp(`plan-panel-${plan}`)
+                    : undefined
+                }
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 selectedId={selectedId}
@@ -256,19 +263,21 @@ export const PlansPanel = (props: PlansPanelProps) => {
   }
 
   return (
-    <TabbedPanel
-      copy={copy}
-      data-qa-select-plan
-      docsLink={docsLink}
-      error={error}
-      handleTabChange={handleTabChange}
-      header={header || 'Linode Plan'}
-      initTab={initialTab >= 0 ? initialTab : 0}
-      innerClass={props.tabbedPanelInnerClass}
-      rootClass={`${className} tabbedPanel`}
-      sx={{ width: '100%' }}
-      tabDisabledMessage={props.tabDisabledMessage}
-      tabs={tabs}
-    />
+    <PlanFilterProvider>
+      <TabbedPanel
+        copy={copy}
+        data-qa-select-plan
+        docsLink={docsLink}
+        error={error}
+        handleTabChange={handleTabChange}
+        header={header || 'Linode Plan'}
+        initTab={initialTab >= 0 ? initialTab : 0}
+        innerClass={props.tabbedPanelInnerClass}
+        rootClass={`${className} tabbedPanel`}
+        sx={{ width: '100%' }}
+        tabDisabledMessage={props.tabDisabledMessage}
+        tabs={tabs}
+      />
+    </PlanFilterProvider>
   );
 };
