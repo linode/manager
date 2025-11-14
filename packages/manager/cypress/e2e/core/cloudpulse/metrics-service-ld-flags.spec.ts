@@ -160,7 +160,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       .click();
   });
 
-  it('should display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is true and enabled is false', () => {
+  it('should not display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is true and enabled is false', () => {
     // Mock the feature flags to disable metrics for Linode
 
     const mockflags = flagsFactory.build({
@@ -179,21 +179,12 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
 
     cy.visitWithLogin('/metrics');
 
-    ui.autocomplete.findByLabel('Dashboard').click();
+    // Verify the autocomplete is disabled and shows the placeholder text
 
-    // Verify the autocomplete dropdown is visible and contains the "no options" message
-
-    cy.get('[data-qa-autocomplete-popper]')
+    cy.findByPlaceholderText('Select a Dashboard')
       .should('be.visible')
-      .and('contain.text', 'You have no options to choose from')
-      .within(() => {
-        // Assert that "Linode" does not appear in the dropdown
-
-        cy.contains('Linode').should('not.exist');
-        // Assert that the beta chip is not rendered
-
-        cy.get('[data-testid="betaChip"]').should('not.exist');
-      });
+      .and('be.disabled')
+      .and('have.value', '');
   });
   // SKIPPED: The feature flag normalizer auto-enables Linode when `{ aclpServices: { linode: {} } }` is provided,
   // expanding to `aclpServices.linode.metrics = { beta: true, enabled: true }`. Expected: Linode hidden when the
@@ -215,16 +206,10 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
     cy.get('@dashboardInput').click();
 
     // Verify the dropdown is visible and shows "no options"
-    cy.get('[data-qa-autocomplete-popper]')
+    cy.findByPlaceholderText('Select a Dashboard')
       .should('be.visible')
-      .and('contain.text', 'You have no options to choose from')
-      .within(() => {
-        // Assert "Linode" is not shown
-        cy.contains('Linode').should('not.exist');
-
-        // Assert no beta chip is visible
-        cy.get('[data-testid="betaChip"]').should('not.exist');
-      });
+      .and('be.disabled')
+      .and('have.value', '');
   });
 
   it('should not display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is false and the service is not enabled', () => {
@@ -242,21 +227,12 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
 
     cy.visitWithLogin('/metrics');
 
-    ui.autocomplete.findByLabel('Dashboard').click();
+    // Verify the autocomplete is disabled and shows the placeholder text
 
-    // Verify the autocomplete dropdown is visible and contains the "no options" message
-
-    cy.get('[data-qa-autocomplete-popper]')
+    cy.findByPlaceholderText('Select a Dashboard')
       .should('be.visible')
-      .and('contain.text', 'You have no options to choose from')
-      .within(() => {
-        // Assert that "Linode" does not appear in the dropdown
-
-        cy.contains('Linode').should('not.exist');
-        // Assert that the beta chip is not rendered
-
-        cy.get('[data-testid="betaChip"]').should('not.exist');
-      });
+      .and('be.disabled')
+      .and('have.value', '');
   });
   // SKIPPED: If `aclpServices` is not passed, LaunchDarkly should treat it as null/false.
   // Currently, missing/partial flags are defaulted to `{ beta: true, enabled: true }`,
@@ -274,17 +250,11 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
     ui.autocomplete.findByLabel('Dashboard').as('dashboardInput');
     cy.get('@dashboardInput').click();
 
-    // Verify the dropdown is visible and shows "no options"
-    cy.get('[data-qa-autocomplete-popper]')
+    // Verify the dropdown is disabled and shows the placeholder text
+    cy.findByPlaceholderText('Select a Dashboard')
       .should('be.visible')
-      .and('contain.text', 'You have no options to choose from')
-      .within(() => {
-        // Assert "Linode" is not shown
-        cy.contains('Linode').should('not.exist');
-
-        // Assert no beta chip is visible
-        cy.get('[data-testid="betaChip"]').should('not.exist');
-      });
+      .and('be.disabled')
+      .and('have.value', '');
   });
 
   it('should not show Linode in Dashboard dropdown when metrics flags are missing and service is not enabled', () => {
@@ -306,20 +276,10 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
 
     cy.visitWithLogin('/metrics');
 
-    ui.autocomplete.findByLabel('Dashboard').click();
-
-    // Verify the autocomplete dropdown is visible and contains the "no options" message
-
-    cy.get('[data-qa-autocomplete-popper]')
+    // Verify the autocomplete is disabled and shows the placeholder text
+    cy.findByPlaceholderText('Select a Dashboard')
       .should('be.visible')
-      .and('contain.text', 'You have no options to choose from')
-      .within(() => {
-        // Assert that "Linode" does not appear in the dropdown
-
-        cy.contains('Linode').should('not.exist');
-        // Assert that the beta chip is not rendered
-
-        cy.get('[data-testid="betaChip"]').should('not.exist');
-      });
+      .and('be.disabled')
+      .and('have.value', '');
   });
 });
