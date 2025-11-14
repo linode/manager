@@ -19,12 +19,10 @@ const queryMocks = vi.hoisted(() => ({
 
 const iamMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { update_vpc: true } }),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
+  useGetUserEntitiesByPermission: vi.fn().mockReturnValue({
     data: [],
     isLoading: false,
     error: null,
-    isError: false,
-    hasFiltered: false,
   }),
 }));
 
@@ -38,7 +36,10 @@ vi.mock('@linode/queries', async () => {
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: iamMocks.usePermissions,
-  useQueryWithPermissions: iamMocks.useQueryWithPermissions,
+}));
+
+vi.mock('src/features/IAM/hooks/useGetUserEntitiesByPermission', () => ({
+  useGetUserEntitiesByPermission: iamMocks.useGetUserEntitiesByPermission,
 }));
 
 const props = {
@@ -66,12 +67,10 @@ describe('Subnet Assign Linodes Drawer', () => {
 
   beforeEach(() => {
     // Set up the default mock to return the linode
-    iamMocks.useQueryWithPermissions.mockReturnValue({
+    iamMocks.useGetUserEntitiesByPermission.mockReturnValue({
       data: [linode],
       isLoading: false,
       error: null,
-      isError: false,
-      hasFiltered: false,
     });
   });
 
