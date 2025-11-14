@@ -80,6 +80,8 @@ export const MaintenanceWindow = (props: Props) => {
       enqueueSnackbar('Maintenance Window settings saved successfully.', {
         variant: 'success',
       });
+      // reset dirty state to disable Save Changes button
+      reset(getValues(), { keepValues: true, keepDirty: false });
     } catch (errors) {
       setError('root', { message: errors[0].reason });
     }
@@ -110,7 +112,9 @@ export const MaintenanceWindow = (props: Props) => {
   const {
     control,
     formState: { isSubmitting, isDirty, errors },
+    getValues,
     handleSubmit,
+    reset,
     setValue,
     setError,
   } = form;
@@ -131,7 +135,7 @@ export const MaintenanceWindow = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <StyledStack direction="row">
+        <StyledStack>
           <Stack>
             <Typography mb={0.5} variant="h3">
               {isLegacy
@@ -417,6 +421,7 @@ const StyledTypography = styled(Typography, {
 const StyledStack = styled(Stack, {
   label: 'StyledStack',
 })(({ theme }) => ({
+  justifyContent: 'space-between',
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
