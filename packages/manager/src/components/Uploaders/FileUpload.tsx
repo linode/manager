@@ -96,7 +96,10 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
           </StyledFileSizeTypography>
           {props.percentCompleted === 100 ? (
             <FileUploadComplete
-              className={classes.iconRight}
+              className={cx({
+                [classes.iconRight]: true,
+                [classes.success]: true,
+              })}
               data-qa-file-upload-success
               height={22}
               width={22}

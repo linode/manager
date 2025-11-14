@@ -1,5 +1,6 @@
 import { Box, Divider, Notice, Paper, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
@@ -33,6 +34,7 @@ const linode = {
 
 export const TPAProviders = (props: Props) => {
   const flags = useFlags();
+  const theme = useTheme();
 
   // Get list of providers from LaunchDarkly
   const providers = flags.tpaProviders ?? [];
@@ -83,7 +85,15 @@ export const TPAProviders = (props: Props) => {
                 onClick={() => handleProviderChange(thisProvider.name)}
                 renderIcon={() => <ProviderIcon height={32} width={32} />}
                 renderVariant={
-                  isProviderEnabled ? () => <EnabledIcon /> : undefined
+                  isProviderEnabled
+                    ? () => (
+                        <EnabledIcon
+                          style={{
+                            color: theme.tokens.alias.Content.Icon.Positive,
+                          }}
+                        />
+                      )
+                    : undefined
                 }
                 subheadings={isProviderEnabled ? ['Enabled'] : []}
                 tooltip={

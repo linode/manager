@@ -69,10 +69,11 @@ export const AccessCell = React.memo((props: AccessCellProps) => {
 
 const StyledCheckIcon = styled('span', {
   label: 'StyledCheckIcon',
-})(() => ({
+})(({ theme }) => ({
   '& svg': {
     height: 25,
     width: 25,
+    color: theme.tokens.alias.Content.Icon.Positive,
   },
   alignItems: 'center',
   display: 'flex',

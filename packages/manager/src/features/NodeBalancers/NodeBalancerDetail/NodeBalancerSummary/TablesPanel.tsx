@@ -53,7 +53,11 @@ export const TablesPanel = () => {
     if (statsNotReadyError) {
       return (
         <ErrorState
-          CustomIcon={PendingIcon}
+          CustomIcon={() => (
+            <PendingIcon
+              style={{ color: theme.tokens.alias.Content.Icon.Positive }}
+            />
+          )}
           CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
