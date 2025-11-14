@@ -17,28 +17,31 @@ export const FirewallDimensionFilterAutocomplete = (
 ) => {
   const {
     dimensionLabel,
-    serviceType,
-    scope,
+    disabled,
     entities,
+    entityType,
+    errorText,
+    fieldOnBlur,
+    fieldOnChange,
+    fieldValue,
     multiple,
     name,
-    fieldOnChange,
-    disabled,
-    fieldOnBlur,
     placeholderText,
-    errorText,
-    fieldValue,
+    scope,
+    serviceType,
     type,
   } = props;
 
   const { data: regions } = useRegionsQuery();
+
   const { values, isLoading, isError } = useFirewallFetchOptions({
+    associatedEntityType: entityType,
     dimensionLabel,
-    regions,
     entities,
+    regions,
+    scope,
     serviceType,
     type,
-    scope,
   });
 
   useCleanupStaleValues({

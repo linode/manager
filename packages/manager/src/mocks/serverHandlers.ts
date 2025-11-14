@@ -66,6 +66,7 @@ import {
   firewallFactory,
   firewallMetricDefinitionsResponse,
   firewallMetricRulesFactory,
+  firewallNodebalancerMetricCriteria,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -1239,6 +1240,18 @@ export const handlers = [
           }),
         ],
       }),
+      firewallFactory.build({
+        label: 'Firewall - Nodebalancer',
+        id: 25,
+        entities: [
+          firewallEntityfactory.build({
+            type: 'nodebalancer',
+            label: 'Nodebalancer-test',
+            parent_entity: null,
+            id: 333,
+          }),
+        ],
+      }),
     ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
@@ -1274,6 +1287,13 @@ export const handlers = [
   }),
   http.get('*/v4/nodebalancers', () => {
     const nodeBalancers = nodeBalancerFactory.buildList(3);
+    nodeBalancers.push(
+      nodeBalancerFactory.build({
+        id: 333,
+        label: 'NodeBalancer-33',
+        region: 'ap-west',
+      })
+    );
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -3041,6 +3061,16 @@ export const handlers = [
           rules: [blockStorageMetricCriteria.build()],
         },
       }),
+      alertFactory.build({
+        id: 650,
+        label: 'Firewall - nodebalancer',
+        type: 'user',
+        service_type: 'firewall',
+        entity_ids: ['25'],
+        rule_criteria: {
+          rules: [firewallNodebalancerMetricCriteria.build()],
+        },
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3050,11 +3080,12 @@ export const handlers = [
       if (params.id === '999' && params.serviceType === 'firewall') {
         return HttpResponse.json(
           alertFactory.build({
+            scope: 'entity',
+            entity_ids: ['1', '2', '3'],
             id: 999,
             label: 'Firewall - testing',
             service_type: 'firewall',
             type: 'user',
-            scope: 'account',
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
@@ -3088,6 +3119,21 @@ export const handlers = [
             entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
             rule_criteria: {
               rules: [blockStorageMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '650' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 650,
+            label: 'Firewall - nodebalancer',
+            type: 'user',
+            scope: 'entity',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [firewallNodebalancerMetricCriteria.build()],
             },
           })
         );
@@ -3154,6 +3200,21 @@ export const handlers = [
             entity_ids: ['1', '2', '4', '3', '5', '6', '7', '8', '9', '10'],
             rule_criteria: {
               rules: [blockStorageMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '650' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 650,
+            label: 'Firewall - nodebalancer',
+            type: 'user',
+            scope: 'entity',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [firewallNodebalancerMetricCriteria.build()],
             },
           })
         );

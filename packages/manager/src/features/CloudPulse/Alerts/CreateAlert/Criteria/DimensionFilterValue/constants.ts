@@ -177,6 +177,26 @@ export const valueFieldConfig: ValueFieldConfigMap = {
       inputType: 'text',
     },
   },
+  nodebalancer_id: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: 'firewall',
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: 'firewall',
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+    },
+  },
   region_id: {
     eq_neq: {
       type: 'autocomplete',
@@ -388,6 +408,10 @@ export interface DimensionFilterAutocompleteProps {
    * List of entity IDs selected in the entity scope.
    */
   entities?: string[];
+  /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: AssociatedEntityType;
   /**
    * Optional error message to display beneath the input.
    */
