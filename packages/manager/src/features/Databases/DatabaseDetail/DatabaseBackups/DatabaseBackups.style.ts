@@ -49,6 +49,7 @@ export const StyledRegionStack = styled(Stack, { label: 'StyledRegionStack' })(
   ({ theme }) => ({
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacingFunction(24),
+      marginBottom: theme.spacingFunction(16),
     },
   })
 );

@@ -12,7 +12,6 @@ import {
 import {
   FormControl,
   FormControlLabel,
-  FormLabel,
   Radio,
   RadioGroup,
 } from '@mui/material';
@@ -23,6 +22,7 @@ import { useParams } from '@tanstack/react-router';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
@@ -46,6 +46,7 @@ import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import DatabaseBackupsDialog from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';
 
+import type { DatabaseBackupsPayload } from '@linode/api-v4';
 import type { TimeValidationError } from '@mui/x-date-pickers';
 
 export interface TimeOption {
@@ -54,6 +55,11 @@ export interface TimeOption {
 }
 
 export type VersionOption = 'dateTime' | 'newest';
+
+interface DatabaseBackupsValues extends DatabaseBackupsPayload {
+  date: DateTime | null;
+  time: DateTime | null;
+}
 
 export const DatabaseBackups = () => {
   const { disabled } = useDatabaseDetailContext();
@@ -70,8 +76,6 @@ export const DatabaseBackups = () => {
   const { data: regionsData } = useRegionsQuery();
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
-  const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(null);
-  const [selectedTime, setSelectedTime] = React.useState<DateTime | null>(null);
   const [versionOption, setVersionOption] = React.useState<VersionOption>(
     isDatabasesV2GA ? 'newest' : 'dateTime'
   );
@@ -82,13 +86,6 @@ export const DatabaseBackups = () => {
     error: databaseError,
     isLoading: isDatabaseLoading,
   } = useDatabaseQuery(engine, Number(databaseId));
-
-  const [restoreDestination, setRestoreDestination] = React.useState<
-    string | undefined
-  >(database?.region);
-  const [selectedRegion, setSelectedRegion] = React.useState<
-    string | undefined
-  >(undefined);
 
   const isDefaultDatabase = database?.platform === 'rdbms-default';
 
@@ -132,33 +129,21 @@ export const DatabaseBackups = () => {
           setTimePickerError(BACKUPS_MIN_TIME_EXCEEDED_VALIDATON_TEXT);
           break;
         case 'invalidDate':
-          setSelectedTime(null);
+          setValue('time', null);
           setTimePickerError(BACKUPS_INVALID_TIME_VALIDATON_TEXT);
       }
     }
   };
 
-  /** Stores changes to the year, month, and day of the DateTime object provided by the calendar */
-  const handleDateChange = (newDate: DateTime) => {
-    validateDateTime(newDate, selectedTime);
-    setSelectedDate(newDate);
-  };
-
-  /** Stores changes to the hours, minutes, and seconds of the DateTime object provided by the time picker */
-  const handleTimeChange = (newTime: DateTime | null) => {
-    validateDateTime(selectedDate, newTime);
-    setSelectedTime(newTime);
-  };
-
   const configureMinTime = () => {
-    const canApplyMinTime = !!oldestBackup && !!selectedDate;
-    const isOnMinDate = selectedDate?.day === oldestBackup?.day;
+    const canApplyMinTime = !!oldestBackup && !!date;
+    const isOnMinDate = date?.day === oldestBackup?.day;
     return canApplyMinTime && isOnMinDate ? oldestBackup : undefined;
   };
 
   const configureMaxTime = () => {
     const today = DateTime.utc();
-    const isOnMaxDate = today.day === selectedDate?.day;
+    const isOnMaxDate = today.day === date?.day;
     return isOnMaxDate ? today : undefined;
   };
 
@@ -167,17 +152,31 @@ export const DatabaseBackups = () => {
     value: VersionOption
   ) => {
     setVersionOption(value);
-    setSelectedDate(null);
-    // Resetting state used for time picker
-    setSelectedTime(null);
+    setValue('date', null);
+    setValue('time', null);
     setTimePickerError('');
   };
 
-  if (isDefaultDatabase) {
-    const currentRegion = regionsData?.find(
-      (region) => region.id === database.region
-    );
+  const form = useForm<DatabaseBackupsValues>({
+    defaultValues: {
+      fork: {
+        source: database?.id,
+        restore_time: undefined,
+      },
+      date: null,
+      time: null,
+      region: database?.region,
+    },
+  });
 
+  const { control, setValue } = form;
+
+  const [date, time, region] = useWatch({
+    control,
+    name: ['date', 'time', 'region'],
+  });
+
+  if (isDefaultDatabase) {
     return (
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h2">Summary</Typography>
@@ -206,147 +205,150 @@ export const DatabaseBackups = () => {
         {unableToRestoreCopy && (
           <Notice spacingTop={16} text={unableToRestoreCopy} variant="info" />
         )}
-        {isDatabasesV2GA && (
-          <RadioGroup
-            aria-label="type"
-            name="type"
-            onChange={handleOnVersionOptionChange}
-            value={versionOption}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-dbaas-radio="Newest"
-              disabled={disabled}
-              label="Newest full backup plus incremental"
-              value="newest"
-            />
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-dbaas-radio="DateTime"
-              disabled={disabled}
-              label="Specific date & time"
-              value="dateTime"
-            />
-          </RadioGroup>
-        )}
-        <GridLegacy
-          container
-          sx={{
-            justifyContent: 'flex-start',
-            mt: 2,
-          }}
-        >
-          <GridLegacy item lg={3} md={4} xs={12}>
-            <Typography variant="h3">Date</Typography>
-            <LocalizationProvider dateAdapter={AdapterLuxon}>
-              <StyledDateCalendar
-                disabled={disabled || versionOption === 'newest'}
-                onChange={handleDateChange}
-                shouldDisableDate={(date) =>
-                  isDateOutsideBackup(date, oldestBackup?.startOf('day'))
-                }
-                value={selectedDate}
-              />
-            </LocalizationProvider>
-          </GridLegacy>
-          <GridLegacy item lg={3} md={4} xs={12}>
-            <FormControl style={{ marginTop: 0 }}>
-              <Typography variant="h3">Time (UTC)</Typography>
-              <TimePicker
-                disabled={
-                  disabled || versionOption === 'newest' || !selectedDate
-                }
-                errorText={
-                  versionOption === 'dateTime' && selectedDate
-                    ? timePickerError
-                    : undefined
-                }
-                format="HH:mm:ss"
-                key={
-                  versionOption === 'dateTime'
-                    ? 'time-picker-active'
-                    : 'time-picker-disabled'
-                }
-                label=""
-                maxTime={configureMaxTime()}
-                minTime={configureMinTime()}
-                onChange={handleTimeChange}
-                onError={handleOnError}
-                sx={{
-                  width: '220px',
-                }}
-                timeSteps={{ hours: 1, minutes: 1, seconds: 1 }}
-                value={selectedTime}
-                views={['hours', 'minutes', 'seconds']}
-              />
-            </FormControl>
-          </GridLegacy>
-        </GridLegacy>
-        <StyledRegionStack>
-          <FormLabel id="region-radio-group">Restore destination</FormLabel>
-          <RadioGroup
-            aria-labelledby="region-radio-group"
-            name="region-radio-group"
-            onChange={(_, value) => {
-              setRestoreDestination(value);
-              if (value === 'current') {
-                setSelectedRegion(currentRegion?.id);
-              }
-            }}
-            style={{ marginBottom: 0 }}
-            value={restoreDestination}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-dbaas-radio="Current region"
-              disabled={disabled}
-              label={`Current region - ${currentRegion?.label}`}
-              value="current"
-            />
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-dbaas-radio="New region"
-              disabled={disabled}
-              label="New region"
-              value="new"
-            />
-          </RadioGroup>
-          <RegionSelect
-            currentCapability="Managed Databases"
-            disableClearable
-            disabled={disabled || restoreDestination !== 'new'}
-            // errorText={fieldState.error?.message}
-            isGeckoLAEnabled={isGeckoLAEnabled}
-            onChange={(e, region) => setSelectedRegion(region.id)}
-            regions={regionsData ?? []}
-            value={selectedRegion ?? null}
-          />
-        </StyledRegionStack>
-        <GridLegacy item xs={12}>
-          <Box display="flex" justifyContent="flex-end">
-            <Button
-              buttonType="primary"
-              data-qa-settings-button="restore"
-              disabled={
-                versionOption === 'dateTime' &&
-                (!selectedDate || !selectedTime || !!timePickerError)
-              }
-              onClick={onRestoreDatabase}
+        <FormProvider {...form}>
+          <form>
+            {isDatabasesV2GA && (
+              <RadioGroup
+                aria-label="type"
+                name="type"
+                onChange={handleOnVersionOptionChange}
+                value={versionOption}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  data-qa-dbaas-radio="Newest"
+                  disabled={disabled}
+                  label="Newest full backup plus incremental"
+                  value="newest"
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  data-qa-dbaas-radio="DateTime"
+                  disabled={disabled}
+                  label="Specific date & time"
+                  value="dateTime"
+                />
+              </RadioGroup>
+            )}
+            <GridLegacy
+              container
+              sx={{
+                justifyContent: 'flex-start',
+                mt: 2,
+              }}
             >
-              Restore
-            </Button>
-          </Box>
-        </GridLegacy>
-        {database && (
-          <DatabaseBackupsDialog
-            database={database}
-            onClose={() => setIsRestoreDialogOpen(false)}
-            open={isRestoreDialogOpen}
-            selectedDate={selectedDate}
-            selectedRegion={selectedRegion}
-            selectedTime={selectedTime}
-          />
-        )}
+              <GridLegacy item lg={3} md={4} xs={12}>
+                <Typography variant="h3">Date</Typography>
+                <Controller
+                  control={control}
+                  name="date"
+                  render={({ field }) => (
+                    <LocalizationProvider dateAdapter={AdapterLuxon}>
+                      <StyledDateCalendar
+                        disabled={disabled || versionOption === 'newest'}
+                        onChange={(newDate: DateTime) => {
+                          validateDateTime(newDate, time);
+                          field.onChange(newDate);
+                        }}
+                        shouldDisableDate={(date) =>
+                          isDateOutsideBackup(
+                            date,
+                            oldestBackup?.startOf('day')
+                          )
+                        }
+                        value={field.value}
+                      />
+                    </LocalizationProvider>
+                  )}
+                />
+              </GridLegacy>
+              <GridLegacy item lg={3} md={4} xs={12}>
+                <Controller
+                  control={control}
+                  name="time"
+                  render={({ field }) => (
+                    <FormControl style={{ marginTop: 0 }}>
+                      <Typography variant="h3">Time (UTC)</Typography>
+                      <TimePicker
+                        disabled={
+                          disabled || versionOption === 'newest' || !date
+                        }
+                        errorText={
+                          versionOption === 'dateTime' && date
+                            ? timePickerError
+                            : undefined
+                        }
+                        format="HH:mm:ss"
+                        key={
+                          versionOption === 'dateTime'
+                            ? 'time-picker-active'
+                            : 'time-picker-disabled'
+                        }
+                        label=""
+                        maxTime={configureMaxTime()}
+                        minTime={configureMinTime()}
+                        onChange={(newTime: DateTime) => {
+                          validateDateTime(date, newTime);
+                          field.onChange(newTime);
+                        }}
+                        onError={handleOnError}
+                        sx={{
+                          width: '220px',
+                        }}
+                        timeSteps={{ hours: 1, minutes: 1, seconds: 1 }}
+                        value={field.value}
+                        views={['hours', 'minutes', 'seconds']}
+                      />
+                    </FormControl>
+                  )}
+                />
+              </GridLegacy>
+            </GridLegacy>
+            <StyledRegionStack>
+              <Controller
+                control={control}
+                name="region"
+                render={({ field, fieldState }) => (
+                  <RegionSelect
+                    currentCapability="Managed Databases"
+                    disableClearable
+                    disabled={disabled}
+                    errorText={fieldState.error?.message}
+                    isGeckoLAEnabled={isGeckoLAEnabled}
+                    onChange={(e, region) => field.onChange(region.id)}
+                    regions={regionsData ?? []}
+                    value={region ?? null}
+                  />
+                )}
+              />
+            </StyledRegionStack>
+            <GridLegacy item xs={12}>
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  buttonType="primary"
+                  data-qa-settings-button="restore"
+                  disabled={
+                    versionOption === 'dateTime' &&
+                    (!date || !time || !!timePickerError)
+                  }
+                  onClick={onRestoreDatabase}
+                >
+                  Restore
+                </Button>
+              </Box>
+            </GridLegacy>
+            {database && (
+              <DatabaseBackupsDialog
+                database={database}
+                onClose={() => setIsRestoreDialogOpen(false)}
+                open={isRestoreDialogOpen}
+                selectedDate={date}
+                selectedRegion={region}
+                selectedTime={time}
+              />
+            )}
+          </form>
+        </FormProvider>
       </Paper>
     );
   }
