@@ -277,7 +277,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     });
   });
 
-  it.only('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
+  it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -304,7 +304,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .to.have.property('response')
               .with.property('statusCode', 200);
             cy.log(JSON.stringify(testData.title));
-              cy.log(JSON.stringify(interception.request.body));
+            cy.log(JSON.stringify(interception.request.body));
             expect(testData.expectedAggregation).to.equal(
               interception.request.body.metrics[0].aggregate_function
             );

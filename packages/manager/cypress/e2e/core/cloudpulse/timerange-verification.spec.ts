@@ -349,7 +349,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // --- Validate API requests ---
     cy.wait(Array(4).fill('@getMetrics'));
     cy.get('@getMetrics.all')
-      .should('have.length', 8)
+      .should('have.length', 4)
       .each((xhr: unknown) => {
         const {
           request: { body },
