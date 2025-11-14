@@ -6,6 +6,7 @@ import type {
   DatabaseInstance,
   DatabaseType,
   Firewall,
+  KubernetesCluster,
   Linode,
   NodeBalancer,
   ObjectStorageBucket,
@@ -59,11 +60,11 @@ export type QueryFunctionType =
   | DatabaseInstance[]
   | DatabaseType[]
   | Firewall[]
+  | KubernetesCluster[]
   | Linode[]
   | NodeBalancer[]
   | ObjectStorageBucket[]
   | Volume[];
-
 /**
  * The non array types of QueryFunctionType like DatabaseEngine|DatabaseType
  */
@@ -113,6 +114,10 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * This is an optional field, controls the associated entity type for the dashboard
    */
   associatedEntityType?: AssociatedEntityType;
+  /**
+   * This is an optional field, it is used to define the child filters for a parent filter
+   */
+  children?: string[];
 
   /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected

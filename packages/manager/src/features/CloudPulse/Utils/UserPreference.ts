@@ -2,6 +2,7 @@ import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useRef } from 'react';
 
 import { DASHBOARD_ID, WIDGETS } from './constants';
+import { FILTER_CONFIG } from './FilterConfig';
 
 import type { AclpConfig, AclpWidget } from '@linode/api-v4';
 import type { ManagerPreferences } from '@linode/utilities';
@@ -126,4 +127,50 @@ export const usePreferencesToggle = <K extends keyof ManagerPreferences>({
     preference,
     toggle,
   };
+};
+
+const preferenceToFilterKeyMap: Record<string, string> = {
+  resource_id: 'resources',
+};
+
+export const clearChildPreferences = (
+  dashboardId: number,
+  parentFilterKey: string
+): Record<string, undefined> => {
+  const filters = FILTER_CONFIG.get(dashboardId)?.filters;
+
+  if (!filters) {
+    return {};
+  }
+  // Create a mapping of filterKey to its children for quick lookup
+  const filterToChildrenMap: Record<string, string[]> = filters.reduce<
+    Record<string, string[]>
+  >((previousValue, filter) => {
+    const { filterKey: key, children } = filter.configuration;
+    if (children) {
+      previousValue[key] = children;
+    }
+    return previousValue;
+  }, {});
+  const clearedPreferences = new Set<string>([parentFilterKey]);
+  const filterKeyQueue = [parentFilterKey];
+  const response: Record<string, undefined> = {};
+
+  while (filterKeyQueue.length > 0) {
+    const currentFilterKey = filterKeyQueue.shift();
+    if (currentFilterKey === undefined) {
+      continue;
+    }
+    const children = filterToChildrenMap[currentFilterKey];
+
+    // Clear all the children which are not already cleared
+    children?.forEach((childKey) => {
+      if (!clearedPreferences.has(childKey)) {
+        clearedPreferences.add(childKey);
+        filterKeyQueue.push(childKey);
+        response[preferenceToFilterKeyMap[childKey] ?? childKey] = undefined;
+      }
+    });
+  }
+  return response;
 };

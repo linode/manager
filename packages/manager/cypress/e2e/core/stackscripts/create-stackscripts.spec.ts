@@ -11,6 +11,7 @@ import {
 import { ui } from 'support/ui';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
+import { chooseImage } from 'support/util/images';
 import { createTestLinode } from 'support/util/linodes';
 import {
   pollImageStatus,
@@ -185,8 +186,9 @@ describe('Create stackscripts', () => {
   it('creates a StackScript and deploys a Linode with it', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
-    const stackscriptImage = 'Alpine 3.19';
-
+    // use random image. can specify image w/ getImageByLabel, then set images option in chooseImage
+    const randomImage = chooseImage();
+    const stackscriptImage = randomImage.label;
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
 
