@@ -28,6 +28,13 @@ export const getDynamicDatabaseSchema = (isVPCSelected: boolean) => {
   });
 };
 
+export const updateMaintenanceSchema = object({
+  frequency: string().oneOf(['weekly', 'monthly']).optional(),
+  hour_of_day: number(),
+  day_of_week: number(),
+  week_of_month: number().nullable(),
+});
+
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
   allow_list: array().of(string()).notRequired(),

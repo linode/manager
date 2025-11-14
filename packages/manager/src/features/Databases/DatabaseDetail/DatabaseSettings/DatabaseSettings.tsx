@@ -27,7 +27,7 @@ import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
 import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
-import MaintenanceWindow from './MaintenanceWindow';
+import { MaintenanceWindow } from './MaintenanceWindow';
 
 export const DatabaseSettings = () => {
   const { database, disabled } = useDatabaseDetailContext();
