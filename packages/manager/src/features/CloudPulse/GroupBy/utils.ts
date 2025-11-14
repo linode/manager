@@ -184,7 +184,7 @@ export const getMetricDimensions = (
   return metricDefinition
     .filter(({ label }) =>
       associatedEntityType
-        ? label.includes(ASSOCIATED_ENTITY_METRIC_MAP[associatedEntityType])
+        ? label.includes(ASSOCIATED_ENTITY_METRIC_MAP[associatedEntityType]) // we need to filter metrics based on associated entity type for firewall dashboards, can be linode, nodebalancer, etc.
         : true
     )
     .reduce((acc, { metric, dimensions }) => {
