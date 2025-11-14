@@ -210,7 +210,42 @@ const maintenanceTemplates = {
   Canceled: () => accountMaintenanceFactory.build({ status: 'canceled' }),
   Completed: () => accountMaintenanceFactory.build({ status: 'completed' }),
   'In Progress': () =>
-    accountMaintenanceFactory.build({ status: 'in_progress' }),
+    accountMaintenanceFactory.build({
+      status: 'in_progress',
+      entity: {
+        type: 'linode',
+        id: 1,
+        label: 'linode-1',
+        url: '/v4/linode/instances/1',
+      },
+      type: 'migrate',
+    }),
+  'In Progress - Emergency Migration': () =>
+    accountMaintenanceFactory.build({
+      status: 'in_progress',
+      entity: {
+        type: 'linode',
+        id: 1,
+        label: 'linode-1',
+        url: '/v4/linode/instances/1',
+      },
+      type: 'migrate',
+      description: 'emergency',
+      reason: 'Emergency maintenance migration',
+    }),
+  'In Progress - Scheduled Migration': () =>
+    accountMaintenanceFactory.build({
+      status: 'in_progress',
+      entity: {
+        type: 'linode',
+        id: 1,
+        label: 'linode-1',
+        url: '/v4/linode/instances/1',
+      },
+      type: 'migrate',
+      description: 'scheduled',
+      reason: 'Scheduled maintenance migration',
+    }),
   Pending: () => accountMaintenanceFactory.build({ status: 'pending' }),
   Scheduled: () => accountMaintenanceFactory.build({ status: 'scheduled' }),
   Started: () => accountMaintenanceFactory.build({ status: 'started' }),
