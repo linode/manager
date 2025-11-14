@@ -43,7 +43,7 @@ import {
   BACKUPS_UNABLE_TO_RESTORE_TEXT,
 } from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
-import DatabaseBackupsDialog from './DatabaseBackupsDialog';
+import { DatabaseBackupsDialog } from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';
 
 import type { DatabaseBackupsPayload } from '@linode/api-v4';
@@ -56,7 +56,7 @@ export interface TimeOption {
 
 export type VersionOption = 'dateTime' | 'newest';
 
-interface DatabaseBackupsValues extends DatabaseBackupsPayload {
+export interface DatabaseBackupsValues extends DatabaseBackupsPayload {
   date: DateTime | null;
   time: DateTime | null;
 }
@@ -328,9 +328,6 @@ export const DatabaseBackups = () => {
                 database={database}
                 onClose={() => setIsRestoreDialogOpen(false)}
                 open={isRestoreDialogOpen}
-                selectedDate={date}
-                selectedRegion={region}
-                selectedTime={time}
               />
             )}
           </form>
