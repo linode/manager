@@ -16,6 +16,7 @@ import {
   mockGetChildAccounts,
   mockGetChildAccountsError,
   mockGetInvoices,
+  mockGetMaintenance,
   mockGetPaymentMethods,
   mockGetPayments,
   mockGetUser,
@@ -23,6 +24,10 @@ import {
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
+import {
+  mockGetRolePermissionsError,
+  mockGetUserAccountPermissionsError,
+} from 'support/intercepts/iam';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetProfile,
@@ -437,6 +442,9 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
+      mockGetMaintenance([], []);
       mockGetLinodes([]);
       mockGetRegions([]);
       mockGetEvents([]);
@@ -444,6 +452,7 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetProfile(mockParentProfile);
       mockGetUser(mockParentUser);
+      mockGetChildAccounts([]);
       mockGetPaymentMethods(paymentMethodFactory.buildList(1)).as(
         'getPaymentMethods'
       );
@@ -527,6 +536,8 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetLinodes([]);
       mockGetRegions([]);
       mockGetEvents([]);

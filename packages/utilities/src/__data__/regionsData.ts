@@ -37,6 +37,7 @@ export const regions: Region[] = [
         'Managed Databases',
         'Block Storage',
         'NodeBalancers',
+        'Kubernetes',
       ],
     },
   },
