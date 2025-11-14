@@ -15,7 +15,6 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { GridLegacy } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useParams } from '@tanstack/react-router';
@@ -27,6 +26,7 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
   StyledDateCalendar,
+  StyledDateTimeStack,
   StyledRegionStack,
   StyledTypography,
 } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups.style';
@@ -95,10 +95,6 @@ export const DatabaseBackups = () => {
   const unableToRestoreCopy = !oldestBackup
     ? BACKUPS_UNABLE_TO_RESTORE_TEXT
     : '';
-
-  const onRestoreDatabase = () => {
-    setIsRestoreDialogOpen(true);
-  };
 
   /**
    * Check whether date and time are within the valid range of available backups by providing the selected date and time.
@@ -237,80 +233,65 @@ export const DatabaseBackups = () => {
                 />
               </RadioGroup>
             )}
-            <GridLegacy
-              container
-              sx={{
-                justifyContent: 'flex-start',
-                mt: 2,
-              }}
-            >
-              <GridLegacy item lg={3} md={4} xs={12}>
-                <Typography variant="h3">Date</Typography>
-                <Controller
-                  control={control}
-                  name="date"
-                  render={({ field }) => (
-                    <LocalizationProvider dateAdapter={AdapterLuxon}>
-                      <StyledDateCalendar
-                        disabled={disabled || versionOption === 'newest'}
-                        onChange={(newDate: DateTime) => {
-                          validateDateTime(newDate, time);
-                          field.onChange(newDate);
-                        }}
-                        shouldDisableDate={(date) =>
-                          isDateOutsideBackup(
-                            date,
-                            oldestBackup?.startOf('day')
-                          )
-                        }
-                        value={field.value}
-                      />
-                    </LocalizationProvider>
-                  )}
-                />
-              </GridLegacy>
-              <GridLegacy item lg={3} md={4} xs={12}>
-                <Controller
-                  control={control}
-                  name="time"
-                  render={({ field, fieldState }) => (
-                    <FormControl style={{ marginTop: 0 }}>
-                      <Typography variant="h3">Time (UTC)</Typography>
-                      <TimePicker
-                        disabled={
-                          disabled || versionOption === 'newest' || !date
-                        }
-                        errorText={
-                          versionOption === 'dateTime' && date
-                            ? fieldState.error?.message
-                            : undefined
-                        }
-                        format="HH:mm:ss"
-                        key={
-                          versionOption === 'dateTime'
-                            ? 'time-picker-active'
-                            : 'time-picker-disabled'
-                        }
-                        label=""
-                        maxTime={configureMaxTime()}
-                        minTime={configureMinTime()}
-                        onChange={(newTime: DateTime) => {
-                          validateDateTime(date, newTime);
-                          field.onChange(newTime);
-                        }}
-                        onError={handleOnError}
-                        sx={{
-                          width: '220px',
-                        }}
-                        timeSteps={{ hours: 1, minutes: 1, seconds: 1 }}
-                        value={field.value}
-                        views={['hours', 'minutes', 'seconds']}
-                      />
-                    </FormControl>
-                  )}
-                />
-              </GridLegacy>
-            </GridLegacy>
+            <Typography variant="h3">Date</Typography>
+            <StyledDateTimeStack>
+              <Controller
+                control={control}
+                name="date"
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterLuxon}>
+                    <StyledDateCalendar
+                      disabled={disabled || versionOption === 'newest'}
+                      onChange={(newDate: DateTime) => {
+                        validateDateTime(newDate, time);
+                        field.onChange(newDate);
+                      }}
+                      shouldDisableDate={(date) =>
+                        isDateOutsideBackup(date, oldestBackup?.startOf('day'))
+                      }
+                      value={field.value}
+                    />
+                  </LocalizationProvider>
+                )}
+              />
+              <Controller
+                control={control}
+                name="time"
+                render={({ field, fieldState }) => (
+                  <FormControl style={{ marginTop: 0 }}>
+                    <Typography variant="h3">Time (UTC)</Typography>
+                    <TimePicker
+                      disabled={disabled || versionOption === 'newest' || !date}
+                      errorText={
+                        versionOption === 'dateTime' && date
+                          ? fieldState.error?.message
+                          : undefined
+                      }
+                      format="HH:mm:ss"
+                      key={
+                        versionOption === 'dateTime'
+                          ? 'time-picker-active'
+                          : 'time-picker-disabled'
+                      }
+                      label=""
+                      maxTime={configureMaxTime()}
+                      minTime={configureMinTime()}
+                      onChange={(newTime: DateTime) => {
+                        validateDateTime(date, newTime);
+                        field.onChange(newTime);
+                      }}
+                      onError={handleOnError}
+                      sx={{
+                        width: '220px',
+                      }}
+                      timeSteps={{ hours: 1, minutes: 1, seconds: 1 }}
+                      value={field.value}
+                      views={['hours', 'minutes', 'seconds']}
+                    />
+                  </FormControl>
+                )}
+              />
+            </StyledDateTimeStack>
             <StyledRegionStack>
               <Controller
                 control={control}
@@ -329,21 +310,19 @@ export const DatabaseBackups = () => {
                 )}
               />
             </StyledRegionStack>
-            <GridLegacy item xs={12}>
-              <Box display="flex" justifyContent="flex-end">
-                <Button
-                  buttonType="primary"
-                  data-qa-settings-button="restore"
-                  disabled={
-                    versionOption === 'dateTime' &&
-                    (!date || !time || !!errors.time)
-                  }
-                  onClick={onRestoreDatabase}
-                >
-                  Restore
-                </Button>
-              </Box>
-            </GridLegacy>
+            <Box display="flex" justifyContent="flex-end">
+              <Button
+                buttonType="primary"
+                data-qa-settings-button="restore"
+                disabled={
+                  versionOption === 'dateTime' &&
+                  (!date || !time || !!errors.time)
+                }
+                onClick={() => setIsRestoreDialogOpen(true)}
+              >
+                Restore
+              </Button>
+            </Box>
             {database && (
               <DatabaseBackupsDialog
                 database={database}
