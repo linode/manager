@@ -10,6 +10,16 @@ import { PlanContainer, type PlanFilterRenderArgs } from './PlanContainer';
 
 import type { PlanWithAvailability } from './types';
 
+const queryMocks = vi.hoisted(() => ({
+  useIsGenerationalPlansEnabled: vi.fn(() => ({
+    isGenerationalPlansEnabled: true,
+  })),
+}));
+
+vi.mock('src/utilities/linodes', () => ({
+  useIsGenerationalPlansEnabled: queryMocks.useIsGenerationalPlansEnabled,
+}));
+
 const mockPlans: PlanWithAvailability[] = planSelectionTypeFactory.buildList(2);
 
 beforeAll(() => mockMatchMedia());
