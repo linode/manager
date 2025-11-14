@@ -255,6 +255,41 @@ describe('getDimensionName method', () => {
     const result = getDimensionName(props);
     expect(result).toBe('linode-1 | test | primary-1');
   });
+
+  it('returns the linode label when key is linode_id and service type is firewall', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      metric: { linode_id: '123' },
+      serviceType: 'firewall',
+      resources: [
+        {
+          id: '123',
+          label: 'Firewall-1',
+          entities: { '123': 'linode-1' },
+        },
+      ],
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1');
+  });
+
+  it('returns the volume linode label when key is linode_id and service type is blockstorage', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      metric: { linode_id: '123' },
+      serviceType: 'blockstorage',
+      resources: [
+        {
+          id: '123',
+          label: 'Volume-1',
+          volumeLinodeId: '123',
+          volumeLinodeLabel: 'linode-1',
+        },
+      ],
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1');
+  });
 });
 
 it('test mapResourceIdToName method', () => {
