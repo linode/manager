@@ -95,20 +95,16 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'UTC',
+  timezone: 'GMT',
 });
 /**
- * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
- * hour, and minute. The function also provides individual date components such as day, hour,
+ * Generates a date in UTC based on a specified number of hours and minutes offset. The function also provides individual date components such as day, hour,
  * minute, month, and AM/PM.
- *
- * @param {number} daysOffset - The number of days to adjust from the current date. Positive
- *                               values give a future date, negative values give a past date.
  * @param {number} hour - The hour to set for the resulting date (0-23).
  * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
  *
  * @returns {Object} - Returns an object containing:
- *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
+ *   - `actualDate`: The formatted date and time in UTC (YYYY-MM-DD HH:mm).
  *   - `day`: The day of the month as a number.
  *   - `hour`: The hour in the 24-hour format as a number.
  *   - `minute`: The minute of the hour as a number.
@@ -324,8 +320,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Set timezone ---
-    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').clear();
-    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
+    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').click();
+    cy.get('@timezoneInput').clear();
+    cy.get('@timezoneInput')
+      .should('not.be.disabled')
+      .type('(GMT +0:00) Greenwich Mean Time{enter}');
 
     // --- Apply date/time range ---
     cy.get('[data-qa-buttons="apply"]')
