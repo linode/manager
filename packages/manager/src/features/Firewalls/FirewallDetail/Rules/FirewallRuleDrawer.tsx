@@ -20,7 +20,7 @@ import type { FirewallOptionItem } from '../../shared';
 import type {
   FirewallCreateEntityType,
   FirewallRuleDrawerProps,
-  FormRulSetState,
+  FormRuleSetState,
   FormState,
 } from './FirewallRuleDrawer.types';
 import type {
@@ -76,7 +76,7 @@ export const FirewallRuleDrawer = React.memo(
 
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-    const onValidate = (values: FormRulSetState | FormState) => {
+    const onValidate = (values: FormRuleSetState | FormState) => {
       // Case 1: user chose CREATE -> RULESET mode
       // If we're in add 'ruleset' mode, only validate the ruleset field
       if (mode === 'create' && createEntityType === 'ruleset') {
@@ -118,14 +118,14 @@ export const FirewallRuleDrawer = React.memo(
       };
     };
 
-    const onSubmit = (values: FormRulSetState | FormState) => {
+    const onSubmit = (values: FormRuleSetState | FormState) => {
       const isCreateRuleSetMode =
         mode === 'create' && createEntityType === 'ruleset';
 
       // Case 1: RULESET submission
       if (isCreateRuleSetMode) {
         const payload = {
-          ruleset: (values as FormRulSetState).ruleset,
+          ruleset: (values as FormRuleSetState).ruleset,
         };
         props.onSubmit(category, payload);
         onClose();
@@ -182,7 +182,7 @@ export const FirewallRuleDrawer = React.memo(
                 <FirewallRuleSetForm
                   category={category}
                   ruleErrors={ruleToModify?.errors}
-                  {...(formikProps as FormikProps<FormRulSetState>)}
+                  {...(formikProps as FormikProps<FormRuleSetState>)}
                 />
               )}
 

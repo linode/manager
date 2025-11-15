@@ -8,7 +8,7 @@ import { firewallRuleCreateOptions } from './shared';
 
 import type {
   FirewallCreateEntityType,
-  FormRulSetState,
+  FormRuleSetState,
   FormState,
 } from './FirewallRuleDrawer.types';
 
@@ -21,7 +21,7 @@ interface CreateEntitySelectionProps {
 export const CreateEntitySelection = (props: CreateEntitySelectionProps) => {
   const { createEntityType, setCreateEntityType, mode } = props;
 
-  const formik = useFormikContext<FormRulSetState | FormState>();
+  const formik = useFormikContext<FormRuleSetState | FormState>();
 
   // Reset form & erros when switching between "rule" and "ruleset"
   React.useEffect(() => {
