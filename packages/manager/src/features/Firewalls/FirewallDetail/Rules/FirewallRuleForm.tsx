@@ -2,7 +2,6 @@ import {
   ActionsPanel,
   Autocomplete,
   FormControlLabel,
-  Notice,
   Radio,
   RadioGroup,
   Select,
@@ -51,7 +50,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     setFieldValue,
     setIPs,
     setPresetPorts,
-    status,
     touched,
     values,
   } = props;
@@ -101,7 +99,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       if (!touched.label) {
         setFieldValue(
           'label',
-          `${values.action.toLocaleLowerCase()}-${category}-${item?.label}`
+          `${values.action?.toLocaleLowerCase()}-${category}-${item?.label}`
         );
       }
 
@@ -202,14 +200,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {status && (
-        <Notice
-          data-qa-error
-          key={status}
-          text={status.generalError}
-          variant="error"
-        />
-      )}
       <Autocomplete
         aria-label="Preset for firewall rule"
         autoHighlight
@@ -259,7 +249,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       />
       <Autocomplete
         autoHighlight
-        disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
+        disabled={['ICMP', 'IPENCAP'].includes(values.protocol ?? '')}
         disableSelectAll
         errorText={generalPortError}
         label="Ports"
@@ -275,7 +265,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           dataAttrs: {
             'data-qa-port-select': true,
           },
-          helperText: ['ICMP', 'IPENCAP'].includes(values.protocol)
+          helperText: ['ICMP', 'IPENCAP'].includes(values.protocol ?? '')
             ? `Ports are not allowed for ${values.protocol} protocols.`
             : undefined,
         }}
@@ -357,11 +347,11 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 });
 
 const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacingFunction(16),
 }));
 
 const StyledMultipleIPInput = styled(MultipleIPInput, {
   label: 'StyledMultipleIPInput',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacingFunction(16),
 }));

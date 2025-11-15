@@ -29,6 +29,12 @@ export interface FormState {
   type: string;
 }
 
+export interface FormRuleSetState {
+  ruleset: number;
+}
+
+export type FirewallCreateEntityType = 'rule' | 'ruleset';
+
 export interface FirewallRuleFormProps extends FormikProps<FormState> {
   addressesLabel: string;
   category: Category;
@@ -38,4 +44,10 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   ruleErrors?: FirewallRuleError[];
   setIPs: (ips: ExtendedIP[]) => void;
   setPresetPorts: (selected: FirewallOptionItem<string>[]) => void;
+}
+
+export interface FirewallRuleSetFormProps
+  extends FormikProps<FormRuleSetState> {
+  category: Category;
+  ruleErrors?: FirewallRuleError[];
 }

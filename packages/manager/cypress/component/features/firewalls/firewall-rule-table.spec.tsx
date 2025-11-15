@@ -120,15 +120,9 @@ const verifyFirewallWithRules = ({
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        if (isSmallViewport) {
-          // Column 'Protocol' is not visible for smaller screens.
-          cy.findByText(rule.protocol).should('not.exist');
-        } else {
-          cy.findByText(rule.protocol).should('be.visible');
-        }
-
+        cy.findByText(rule.protocol!).should('be.visible');
         cy.findByText(rule.ports!).should('be.visible');
-        cy.findByText(getRuleActionLabel(rule.action)).should('be.visible');
+        cy.findByText(getRuleActionLabel(rule.action!)).should('be.visible');
       });
   });
 };
