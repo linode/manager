@@ -1,5 +1,14 @@
 import { useAllFirewallRuleSetsQuery } from '@linode/queries';
-import { Autocomplete, Box, Chip, Paper, styled, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Chip,
+  Paper,
+  SelectedIcon,
+  Stack,
+  styled,
+  Typography,
+} from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -91,11 +100,6 @@ export const AssignRuleSetSection = React.memo(
       [ruleSets]
     );
 
-    // The dropdown's selected option can be derived from the selectedRuleSet itself
-    const selectedOption = selectedRuleSet
-      ? { label: selectedRuleSet.label, value: selectedRuleSet.id }
-      : null;
-
     return (
       <Box>
         <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
@@ -114,7 +118,29 @@ export const AssignRuleSetSection = React.memo(
           }}
           options={ruleSetDropdownOptions}
           placeholder="Select Rule Set"
-          value={selectedOption}
+          renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
+            return (
+              <li key={key} {...rest}>
+                <Stack
+                  alignItems="center"
+                  direction="row"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Stack direction="column">
+                    <b>{option.label}</b>
+                    <span>ID: {option.value}</span>
+                  </Stack>
+                  {selected && <SelectedIcon visible />}
+                </Stack>
+              </li>
+            );
+          }}
+          value={
+            ruleSetDropdownOptions.find((o) => o.value === selectedRuleSetId) ??
+            null
+          }
         />
 
         {selectedRuleSet && (
