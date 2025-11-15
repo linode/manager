@@ -1,8 +1,9 @@
-import { Drawer, Typography } from '@linode/ui';
+import { Drawer, Notice, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { CreateEntitySelection } from './CreateEntitySelection';
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -13,17 +14,20 @@ import {
   validateIPs,
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
+import { FirewallRuleSetForm } from './FirewallRuleSetForm';
 
 import type { FirewallOptionItem } from '../../shared';
 import type {
   FirewallCreateEntityType,
   FirewallRuleDrawerProps,
+  FormRulSetState,
   FormState,
 } from './FirewallRuleDrawer.types';
 import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import type { FormikProps } from 'formik';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // =============================================================================
@@ -37,11 +41,9 @@ export const FirewallRuleDrawer = React.memo(
      * State for the type of entity being created: either a firewall 'rule' or
      * referencing an existing 'ruleset' in the firewall.
      * Only relevant when `mode === 'create'`.
-     * Optional: undefined in edit or view flows.
      */
-    const [createEntityType, setCreateEntityType] = React.useState<
-      FirewallCreateEntityType | undefined
-    >(undefined);
+    const [createEntityType, setCreateEntityType] =
+      React.useState<FirewallCreateEntityType>('rule');
 
     // Custom IPs are tracked separately from the form. The <MultipleIPs />
     // component consumes this state. We use this on form submission if the
@@ -57,11 +59,6 @@ export const FirewallRuleDrawer = React.memo(
     >([]);
 
     React.useEffect(() => {
-      // If we're in CREATE mode, set 'rule' as a default create entity type
-      if (mode === 'create') {
-        setCreateEntityType('rule');
-      }
-
       // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
       // (along with any errors we may have).
       if (mode === 'edit' && ruleToModify) {
@@ -79,26 +76,24 @@ export const FirewallRuleDrawer = React.memo(
 
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-    const onValidate = ({
-      addresses,
-      description,
-      label,
-      ports,
-      protocol,
-      ruleset,
-    }: FormState) => {
+    const onValidate = (values: FormRulSetState | FormState) => {
+      // Case 1: user chose CREATE -> RULESET mode
       // If we're in add 'ruleset' mode, only validate the ruleset field
       if (mode === 'create' && createEntityType === 'ruleset') {
         const errors: Record<string, string> = {};
-        if (
-          ruleset === undefined ||
-          ruleset === null ||
-          typeof ruleset !== 'number'
-        ) {
+        if (!('ruleset' in values)) {
           errors.ruleset = 'Ruleset is required.';
+        }
+        if ('ruleset' in values && typeof values.ruleset !== 'number') {
+          errors.ruleset = 'Ruleset shloud be a number.';
         }
         return errors;
       }
+
+      // Case 2: RULE mode
+      if (!('action' in values)) return {}; // safety fallback
+
+      const { addresses, description, label, ports, protocol } = values;
 
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
@@ -123,34 +118,35 @@ export const FirewallRuleDrawer = React.memo(
       };
     };
 
-    const onSubmit = (values: FormState) => {
+    const onSubmit = (values: FormRulSetState | FormState) => {
       const isCreateRuleSetMode =
         mode === 'create' && createEntityType === 'ruleset';
 
+      // Case 1: RULESET submission
       if (isCreateRuleSetMode) {
-        const payload: Pick<FirewallRuleType, 'ruleset'> = {
-          ruleset: values.ruleset,
+        const payload = {
+          ruleset: (values as FormRulSetState).ruleset,
         };
         props.onSubmit(category, payload);
-      } else {
-        const ports = itemsToPortString(presetPorts, values.ports!);
-        const protocol = values.protocol as FirewallRuleProtocol;
-        const addresses = formValueToIPs(values.addresses!, ips);
-
-        const payload: FirewallRuleType = {
-          action: values.action,
-          addresses,
-          ports,
-          protocol,
-        };
-
-        payload.label = values.label === '' ? null : values.label;
-        payload.description =
-          values.description === '' ? null : values.description;
-
-        props.onSubmit(category, payload);
+        onClose();
+        return;
       }
 
+      // Case 2: RULE submission
+      const v = values as FormState;
+      const ports = itemsToPortString(presetPorts, v.ports!);
+      const protocol = v.protocol as FirewallRuleProtocol;
+      const addresses = formValueToIPs(v.addresses!, ips);
+
+      const payload: FirewallRuleType = {
+        action: v.action,
+        addresses,
+        ports,
+        protocol,
+        label: v.label || null,
+        description: v.description || null,
+      };
+      props.onSubmit(category, payload);
       onClose();
     };
 
@@ -163,30 +159,48 @@ export const FirewallRuleDrawer = React.memo(
           validateOnBlur={false}
           validateOnChange={false}
         >
-          {(formikProps) => {
-            return (
-              <FirewallRuleForm
-                addressesLabel={addressesLabel}
-                category={category}
-                createEntityType={createEntityType}
-                ips={ips}
-                mode={mode}
-                onCreateEntityTypeChange={(newType) => {
-                  setCreateEntityType(newType);
-                  // Clear Formik errors when createMode changes
-                  formikProps.setErrors({});
+          {(formikProps) => (
+            <>
+              {formikProps.status && (
+                <Notice
+                  data-qa-error
+                  key={formikProps.status}
+                  text={formikProps.status.generalError}
+                  variant="error"
+                />
+              )}
 
-                  // Reset form
-                  formikProps.resetForm();
-                }}
-                presetPorts={presetPorts}
-                ruleErrors={ruleToModify?.errors}
-                setIPs={setIPs}
-                setPresetPorts={setPresetPorts}
-                {...formikProps}
-              />
-            );
-          }}
+              {mode === 'create' && (
+                <CreateEntitySelection
+                  createEntityType={createEntityType}
+                  mode={mode}
+                  setCreateEntityType={setCreateEntityType}
+                />
+              )}
+
+              {createEntityType === 'ruleset' && (
+                <FirewallRuleSetForm
+                  category={category}
+                  ruleErrors={ruleToModify?.errors}
+                  {...(formikProps as FormikProps<FormRulSetState>)}
+                />
+              )}
+
+              {(mode === 'edit' || createEntityType === 'rule') && (
+                <FirewallRuleForm
+                  addressesLabel={addressesLabel}
+                  category={category}
+                  ips={ips}
+                  mode={mode}
+                  presetPorts={presetPorts}
+                  ruleErrors={ruleToModify?.errors}
+                  setIPs={setIPs}
+                  setPresetPorts={setPresetPorts}
+                  {...(formikProps as FormikProps<FormState>)}
+                />
+              )}
+            </>
+          )}
         </Formik>
         <Typography variant="body1">
           Rule changes don&rsquo;t take effect immediately. You can add or
