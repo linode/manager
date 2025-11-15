@@ -101,7 +101,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       if (!touched.label) {
         setFieldValue(
           'label',
-          `${values.action.toLocaleLowerCase()}-${category}-${item?.label}`
+          `${values.action?.toLocaleLowerCase()}-${category}-${item?.label}`
         );
       }
 
@@ -259,7 +259,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       />
       <Autocomplete
         autoHighlight
-        disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
+        disabled={['ICMP', 'IPENCAP'].includes(values.protocol ?? '')}
         disableSelectAll
         errorText={generalPortError}
         label="Ports"
@@ -275,7 +275,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           dataAttrs: {
             'data-qa-port-select': true,
           },
-          helperText: ['ICMP', 'IPENCAP'].includes(values.protocol)
+          helperText: ['ICMP', 'IPENCAP'].includes(values.protocol ?? '')
             ? `Ports are not allowed for ${values.protocol} protocols.`
             : undefined,
         }}
