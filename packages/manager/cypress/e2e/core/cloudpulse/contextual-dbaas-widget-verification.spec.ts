@@ -292,7 +292,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           ui.autocomplete
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .type(`Max {enter}`); // type expected granularity
+            .type(`${testData.expectedAggregation}{enter}`); // type expected granularity
 
           // Verify tooltip message for aggregation selection
 
@@ -303,8 +303,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             expect(interception)
               .to.have.property('response')
               .with.property('statusCode', 200);
-            cy.log(JSON.stringify(testData.title));
-            cy.log(JSON.stringify(interception.request.body));
             expect(testData.expectedAggregation).to.equal(
               interception.request.body.metrics[0].aggregate_function
             );
