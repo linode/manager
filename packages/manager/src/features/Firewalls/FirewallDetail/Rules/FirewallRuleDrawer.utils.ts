@@ -163,7 +163,7 @@ export const getInitialFormValues = (
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     type: predefinedFirewallFromRule(ruleToModify) || '',
-  };
+  } as FormState;
 };
 
 export const getInitialAddressFormValue = (
