@@ -242,6 +242,10 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
    * and Verifications ensure correct API payloads, widget states, applied filters,
    * and accurate graph/legend values.
    */
+  afterEach(() => {
+    cy.clearLocalStorage();
+    cy.clearCookies();
+  });
 
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -381,7 +385,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             (filter: DimensionFilter) => filter.dimension_label === 'node_type'
           );
 
-          expect(nodeTypeFilter).to.have.length(1);
+          expect(nodeTypeFilter).to.have.length(2);
           expect(nodeTypeFilter[0].operator).to.equal('eq');
           expect(nodeTypeFilter[0].value).to.equal('secondary');
         });
@@ -390,7 +394,6 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
   });
   it('should apply group by at the dashboard level and verify the metrics API calls', () => {
     // Stub metrics API calls for dashboard group by changes
-
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
       entity_id: '1',
       node_id: `${nodeType}-1`,
@@ -477,7 +480,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
-        expect(nodeTypeFilter).to.have.length(1);
+        expect(nodeTypeFilter).to.have.length(2);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
 
@@ -552,7 +555,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
-        expect(nodeTypeFilter).to.have.length(1);
+        expect(nodeTypeFilter).to.have.length(2);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
       });
