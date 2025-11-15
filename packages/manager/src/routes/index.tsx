@@ -30,6 +30,7 @@ import { longviewRouteTree } from './longview';
 import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
+import { networkLoadBalancersRouteTree } from './networkLoadBalancer';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
@@ -79,6 +80,7 @@ export const routeTree = rootRoute.addChildren([
   longviewRouteTree,
   maintenanceRouteTree,
   managedRouteTree,
+  networkLoadBalancersRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
