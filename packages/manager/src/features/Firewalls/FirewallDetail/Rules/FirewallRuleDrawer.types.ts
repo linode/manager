@@ -29,7 +29,7 @@ export interface FormState {
   type: string;
 }
 
-export interface FormRulSetState {
+export interface FormRuleSetState {
   ruleset: number;
 }
 
@@ -46,7 +46,8 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   setPresetPorts: (selected: FirewallOptionItem<string>[]) => void;
 }
 
-export interface FirewallRuleSetFormProps extends FormikProps<FormRulSetState> {
+export interface FirewallRuleSetFormProps
+  extends FormikProps<FormRuleSetState> {
   category: Category;
   ruleErrors?: FirewallRuleError[];
 }
