@@ -360,3 +360,222 @@ export const objectStorageMetricRules: MetricDefinition[] = [
     ],
   },
 ];
+
+export const blockStorageMetricRules: MetricDefinition[] = [
+  {
+    label: 'Volume Read Operations',
+    metric: 'volume_read_ops',
+    unit: 'Count',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Operations',
+    metric: 'volume_write_ops',
+    unit: 'Count',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Bytes',
+    metric: 'volume_read_bytes',
+    unit: 'KB',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Bytes',
+    metric: 'volume_write_bytes',
+    unit: 'KB',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p99',
+    metric: 'volume_read_latency_p99',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p95',
+    metric: 'volume_read_latency_p95',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p90',
+    metric: 'volume_read_latency_p90',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p50',
+    metric: 'volume_read_latency_p50',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p99',
+    metric: 'volume_write_latency_p99',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p95',
+    metric: 'volume_write_latency_p95',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p90',
+    metric: 'volume_write_latency_p90',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p50',
+    metric: 'volume_write_latency_p50',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+];
+
+export const blockStorageMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Volume Read Operations',
+    metric: 'volume_read_ops',
+    unit: 'Count',
+    aggregate_function: 'avg',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        operator: 'in',
+        value: '1,2,3',
+      },
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        operator: 'eq',
+        value: '5',
+      },
+    ],
+  });
