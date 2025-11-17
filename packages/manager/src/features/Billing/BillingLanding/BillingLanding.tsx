@@ -8,6 +8,7 @@ import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/Maintenanc
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -45,6 +46,8 @@ export const BillingLanding = () => {
     globalGrantType: 'child_account_access',
   });
 
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
   const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
   const isReadOnly = !permissions.make_billing_payment || isChildUser;
@@ -56,8 +59,9 @@ export const BillingLanding = () => {
     return <Navigate replace to="/account/billing" />;
   }
 
-  const canSwitchBetweenParentOrProxyAccount =
-    (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? isParentUser
+    : (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
