@@ -63,6 +63,7 @@ export const useResourcesQuery = (
           entities,
           clusterSize: resource.cluster_size,
           volumeLinodeId: String(resource.linode_id),
+          volumeLinodeLabel: resource.linode_label,
         };
       });
     },
