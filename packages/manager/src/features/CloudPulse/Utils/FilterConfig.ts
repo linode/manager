@@ -340,6 +340,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       {
         configuration: {
           filterKey: RESOURCE_ID,
+          children: [NODEBALANCER_ID],
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
