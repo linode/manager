@@ -57,7 +57,7 @@ export type NavEntity =
   | 'Marketplace'
   | 'Metrics'
   | 'Monitor'
-  | 'Network Load Balancers'
+  | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -206,7 +206,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/firewalls',
               },
               {
-                display: 'Network Load Balancers',
+                display: 'Network Load Balancer',
                 hide: !isNetworkLoadBalancerEnabled,
                 to: '/netloadbalancers',
               },

@@ -582,7 +582,7 @@ describe('PrimaryNav', () => {
     });
 
     const databaseNavItem = await findByTestId(
-      'menu-item-Network Load Balancers'
+      'menu-item-Network Load Balancer'
     );
 
     expect(databaseNavItem).toBeVisible();
