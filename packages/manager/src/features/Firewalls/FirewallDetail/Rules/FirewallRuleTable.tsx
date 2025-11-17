@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useFirewallRuleSetQuery } from '@linode/queries';
-import { Box, Chip, LinkButton, Typography } from '@linode/ui';
+import { Box, LinkButton, Typography } from '@linode/ui';
 import { Autocomplete } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
@@ -203,16 +203,16 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
               <TableRow>
                 <TableCell
                   sx={{
-                    width: smDown ? '65%' : lgDown ? '45%' : '30%',
+                    width: smDown ? '65%' : lgDown ? '32%' : '26%',
                   }}
                 >
                   Label
                 </TableCell>
-                <Hidden smDown>
-                  <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
-                  <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
-                </Hidden>
                 <Hidden lgDown>
+                  <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
                   <TableCell sx={{ width: '15%' }}>
                     {capitalize(addressColumnLabel)}
                   </TableCell>
@@ -407,17 +407,17 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               </LinkButton>
             )}
           </TableCell>
-          <Hidden smDown>
+          <Hidden lgDown>
             <TableCell aria-label={`Protocol: ${protocol}`}>
               {protocol}
               <ConditionalError errors={errors} formField="protocol" />
             </TableCell>
+          </Hidden>
+          <Hidden smDown>
             <TableCell aria-label={`Ports: ${ports}`}>
               {ports === '1-65535' ? 'All Ports' : ports}
               <ConditionalError errors={errors} formField="ports" />
             </TableCell>
-          </Hidden>
-          <Hidden lgDown>
             <TableCell aria-label={`Addresses: ${addresses}`}>
               <MaskableText text={addresses ?? ''} />
               <ConditionalError errors={errors} formField="addresses" />
@@ -442,23 +442,15 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
                   <Link onClick={() => {}}>{rulesetDetails?.label}</Link>
                 )}
               </Box>
-              <Chip
-                label="Rule Set"
-                sx={(theme) => ({
-                  background: theme.tokens.alias.Accent.Info.Secondary,
-                  color: theme.tokens.alias.Accent.Info.Primary,
-                  font: theme.font.bold,
-                })}
-              />
               <Hidden smDown>
                 <Box
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    whiteSpace: 'nowrap',
                   }}
                 >
-                  ID: {ruleset}
+                  <span>ID:&nbsp;</span>
+                  <span>{ruleset}</span>
                   <CopyTooltip
                     className={classes.copyIcon}
                     text={String(ruleset)}
