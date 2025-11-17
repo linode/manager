@@ -3,7 +3,6 @@ import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
@@ -260,11 +259,11 @@ describe('PrimaryNav', () => {
       capabilities: ['Akamai Cloud Pulse'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclp: {
@@ -300,11 +299,11 @@ describe('PrimaryNav', () => {
       capabilities: ['Akamai Cloud Pulse'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags = {
       aclp: {
@@ -334,6 +333,116 @@ describe('PrimaryNav', () => {
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeNull();
     expect(betaChip).toBeVisible();
+  });
+
+  it('should show Logs menu item if user has capability and aclpLogs flag is enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse Logs'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclpLogs: {
+        enabled: true,
+        beta: false,
+        bypassAccountCapabilities: false,
+      },
+    };
+
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      { flags }
+    );
+
+    const logsNavItem = await findByTestId('menu-item-Logs');
+    expect(logsNavItem).toBeVisible();
+    expect(queryByTestId('betaChip')).toBeNull();
+  });
+
+  it('should not show Logs menu item if aclpLogs flag is not enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse Logs'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclpLogs: {
+        enabled: false,
+        beta: false,
+        bypassAccountCapabilities: true,
+      },
+    };
+
+    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    expect(queryByTestId('menu-item-Logs')).toBeNull();
+  });
+
+  it('should show Logs menu item if user lacks capability, bypassAccountCapabilities is true and aclpLogs flag is enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const logsNavItem = await findByTestId('menu-item-Logs');
+    expect(logsNavItem).toBeVisible();
+    const betaChip = await findByTestId('betaChip');
+    expect(betaChip).toBeVisible();
+  });
+
+  it('should not show Logs menu item if user lacks capability, bypassAccountCapabilities is false and aclpLogs flag is enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclpLogs: {
+        enabled: true,
+        beta: false,
+        bypassAccountCapabilities: false,
+      },
+    };
+
+    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    expect(queryByTestId('menu-item-Logs')).toBeNull();
   });
 
   it('should show Administration links if iamRbacPrimaryNavChanges flag is enabled', async () => {
@@ -454,19 +563,15 @@ describe('PrimaryNav', () => {
   });
 
   it('should show Network Load Balancers menu item if the user has the account capability and the flag is enabled', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preference,
-    });
-
     const account = accountFactory.build({
       capabilities: ['Network LoadBalancer'],
     });
 
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const flags: Partial<Flags> = {
       networkLoadBalancer: true,
@@ -477,7 +582,7 @@ describe('PrimaryNav', () => {
     });
 
     const databaseNavItem = await findByTestId(
-      'menu-item-Network Load Balancers'
+      'menu-item-Network Load Balancer'
     );
 
     expect(databaseNavItem).toBeVisible();

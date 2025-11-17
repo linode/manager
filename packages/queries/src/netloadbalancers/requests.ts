@@ -44,10 +44,10 @@ export const getAllNetworkLoadBalancerNodes = (
   passedFilter: Filter = {},
 ) =>
   getAll<NetworkLoadBalancerNode>((params, filter) =>
-    getNetworkLoadBalancerNodes(
+    getNetworkLoadBalancerNodes({
       networkLoadBalancerId,
       listenerId,
-      { ...params, ...passedParams },
-      { ...filter, ...passedFilter },
-    ),
+      params: { ...params, ...passedParams },
+      filters: { ...filter, ...passedFilter },
+    }),
   )().then((data) => data.data);

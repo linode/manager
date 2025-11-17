@@ -20,7 +20,9 @@ import {
 } from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -55,7 +57,7 @@ export type NavEntity =
   | 'Marketplace'
   | 'Metrics'
   | 'Monitor'
-  | 'Network Load Balancers'
+  | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -101,6 +103,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
+  const { isACLPLogsEnabled, isACLPLogsBeta } = useIsACLPLogsEnabled();
 
   const isAlertsEnabled =
     isACLPEnabled &&
@@ -114,6 +117,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const {
     data: preferences,
@@ -202,8 +206,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/firewalls',
               },
               {
-                display: 'Network Load Balancers',
-                hide: !flags.networkLoadBalancer,
+                display: 'Network Load Balancer',
+                hide: !isNetworkLoadBalancerEnabled,
                 to: '/netloadbalancers',
               },
               {
@@ -250,9 +254,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Logs',
-                hide: !flags.aclpLogs?.enabled,
+                hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
-                isBeta: flags.aclpLogs?.beta,
+                isBeta: isACLPLogsBeta,
               },
             ],
             name: 'Monitor',
@@ -339,9 +343,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isManaged,
         isPlacementGroupsEnabled,
         isACLPEnabled,
+        isACLPLogsBeta,
+        isACLPLogsEnabled,
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
+        isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]
     );

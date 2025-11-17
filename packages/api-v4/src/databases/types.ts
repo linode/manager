@@ -163,12 +163,10 @@ interface ConnectionStrings {
   value: string;
 }
 
-export type UpdatesFrequency = 'monthly' | 'weekly';
-
 export interface UpdatesSchedule {
   day_of_week: number;
   duration: number;
-  frequency: UpdatesFrequency;
+  frequency: 'monthly' | 'weekly';
   hour_of_day: number;
   pending?: PendingUpdates[];
   week_of_month: null | number;

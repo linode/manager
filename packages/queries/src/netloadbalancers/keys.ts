@@ -22,7 +22,12 @@ export const networkLoadBalancerQueries = createQueryKeys('netloadbalancers', {
       listener: (listenerId: number) => ({
         contextQueries: {
           node: (nodeId: number) => ({
-            queryFn: () => getNetworkLoadBalancerNode(id, listenerId, nodeId),
+            queryFn: () =>
+              getNetworkLoadBalancerNode({
+                networkLoadBalancerId: id,
+                listenerId,
+                nodeId,
+              }),
             queryKey: [nodeId],
           }),
           nodes: {
@@ -39,7 +44,12 @@ export const networkLoadBalancerQueries = createQueryKeys('netloadbalancers', {
               }),
               paginated: (params: Params = {}, filter: Filter = {}) => ({
                 queryFn: () =>
-                  getNetworkLoadBalancerNodes(id, listenerId, params, filter),
+                  getNetworkLoadBalancerNodes({
+                    networkLoadBalancerId: id,
+                    listenerId,
+                    params,
+                    filters: filter,
+                  }),
                 queryKey: [params, filter],
               }),
             },

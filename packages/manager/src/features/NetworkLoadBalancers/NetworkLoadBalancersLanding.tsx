@@ -8,13 +8,13 @@ export const NetworkLoadBalancersLanding = () => {
     <>
       <LandingHeader
         breadcrumbProps={{
-          pathname: 'Network Load Balancers',
+          pathname: 'Network Load Balancer',
           removeCrumbX: 1,
         }}
         spacingBottom={16}
-        title="Network Load Balancers"
+        title="Network Load Balancer"
       />
-      <Notice variant="info">Network Load Balancers are coming soon...</Notice>
+      <Notice variant="info">Network Load Balancer is coming soon...</Notice>
     </>
   );
 };

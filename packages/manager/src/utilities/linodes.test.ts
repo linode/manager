@@ -82,7 +82,9 @@ describe('useIsLinodeCloneFirewallEnabled', () => {
 
 describe('useIsGenerationalPlansEnabled', () => {
   it('returns isGenerationalPlansEnabled: true if the feature is enabled', () => {
-    const options = { flags: { generationalPlans: true } };
+    const options = {
+      flags: { generationalPlansv2: { enabled: true, allowedPlans: [] } },
+    };
 
     const { result } = renderHook(() => useIsGenerationalPlansEnabled(), {
       wrapper: (ui) => wrapWithTheme(ui, options),
@@ -92,7 +94,9 @@ describe('useIsGenerationalPlansEnabled', () => {
   });
 
   it('returns isGenerationalPlansEnabled: false if the feature is NOT enabled', () => {
-    const options = { flags: { generationalPlans: false } };
+    const options = {
+      flags: { generationalPlansv2: { enabled: false, allowedPlans: [] } },
+    };
 
     const { result } = renderHook(() => useIsGenerationalPlansEnabled(), {
       wrapper: (ui) => wrapWithTheme(ui, options),

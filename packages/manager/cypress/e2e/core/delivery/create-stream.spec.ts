@@ -17,7 +17,11 @@ import { kubernetesClusterFactory } from 'src/factories';
 describe('Create Stream', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
   });
 

@@ -105,6 +105,13 @@ interface AclpFlag {
   showWidgetDimensionFilters?: boolean;
 }
 
+interface AclpLogsFlag extends BetaFeatureFlag {
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
+  bypassAccountCapabilities?: boolean;
+}
+
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
@@ -169,7 +176,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpLogs: BetaFeatureFlag;
+  aclpLogs: AclpLogsFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   aclpServices: Partial<AclpServices>;
@@ -195,7 +202,7 @@ export interface Flags {
   disableLargestGbPlans: boolean;
   firewallRulesetsPrefixlists: boolean;
   gecko2: GeckoFeatureFlag;
-  generationalPlans: boolean;
+  generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
@@ -381,3 +388,7 @@ export type AclpServices = {
     metrics?: AclpFlag;
   };
 };
+
+interface GenerationalPlansFlag extends BaseFeatureFlag {
+  allowedPlans: string[];
+}
