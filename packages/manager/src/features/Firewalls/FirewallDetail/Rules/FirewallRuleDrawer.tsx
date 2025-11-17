@@ -1,9 +1,10 @@
-import { Drawer, Notice, Radio, Typography } from '@linode/ui';
+import { Box, Drawer, Notice, Radio, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import {
@@ -40,7 +41,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 // =============================================================================
 export const FirewallRuleDrawer = React.memo(
   (props: FirewallRuleDrawerProps) => {
-    const { category, isOpen, mode, onClose, ruleToModify } = props;
+    const { category, isOpen, mode, onClose, ruleToModifyOrView } = props;
 
     const { isFirewallRulesetsPrefixlistsEnabled } =
       useIsFirewallRulesetsPrefixlistsEnabled();
@@ -69,9 +70,9 @@ export const FirewallRuleDrawer = React.memo(
     React.useEffect(() => {
       // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
       // (along with any errors we may have).
-      if (mode === 'edit' && ruleToModify) {
-        setIPs(getInitialIPs(ruleToModify));
-        setPresetPorts(portStringToItems(ruleToModify.ports)[0]);
+      if (mode === 'edit' && ruleToModifyOrView) {
+        setIPs(getInitialIPs(ruleToModifyOrView));
+        setPresetPorts(portStringToItems(ruleToModifyOrView.ports)[0]);
       } else if (isOpen) {
         setPresetPorts([]);
       } else {
@@ -87,10 +88,19 @@ export const FirewallRuleDrawer = React.memo(
       ) {
         setCreateEntityType('rule');
       }
-    }, [mode, isOpen, ruleToModify, isFirewallRulesetsPrefixlistsEnabled]);
+    }, [
+      mode,
+      isOpen,
+      ruleToModifyOrView,
+      isFirewallRulesetsPrefixlistsEnabled,
+    ]);
 
     const title =
-      mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
+      mode === 'create'
+        ? `Add an ${capitalize(category)} Rule`
+        : mode === 'edit'
+          ? 'Edit Rule'
+          : `${capitalize(category)} Rule Set details`;
 
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
@@ -164,6 +174,26 @@ export const FirewallRuleDrawer = React.memo(
       return errors;
     };
 
+    const RuleSetViewContainer = () => {
+      const prefixLists = ['pl:system:1', 'pl:system:2'];
+
+      return (
+        <>
+          Rule Set ID: {ruleToModifyOrView?.ruleset}
+          <Box marginTop={4}>
+            {prefixLists.map((pl) => (
+              <>
+                <Link key={pl} onClick={() => {}}>
+                  {pl}
+                </Link>
+                &nbsp;
+              </>
+            ))}
+          </Box>
+        </>
+      );
+    };
+
     return (
       <Drawer onClose={onClose} open={isOpen} title={title}>
         {mode === 'create' && isFirewallRulesetsPrefixlistsEnabled && (
@@ -197,9 +227,10 @@ export const FirewallRuleDrawer = React.memo(
           </Grid>
         )}
 
-        {(mode === 'edit' || createEntityType === 'rule') && (
+        {(mode === 'edit' ||
+          (mode === 'create' && createEntityType === 'rule')) && (
           <Formik<FormState>
-            initialValues={getInitialFormValues(ruleToModify)}
+            initialValues={getInitialFormValues(ruleToModifyOrView)}
             onSubmit={onSubmitRule}
             validate={onValidateRule}
             validateOnBlur={false}
@@ -221,7 +252,7 @@ export const FirewallRuleDrawer = React.memo(
                   ips={ips}
                   mode={mode}
                   presetPorts={presetPorts}
-                  ruleErrors={ruleToModify?.errors}
+                  ruleErrors={ruleToModifyOrView?.errors}
                   setIPs={setIPs}
                   setPresetPorts={setPresetPorts}
                   {...formikProps}
@@ -260,7 +291,7 @@ export const FirewallRuleDrawer = React.memo(
                       <FirewallRuleSetForm
                         category={category}
                         closeDrawer={onClose}
-                        ruleErrors={ruleToModify?.errors}
+                        ruleErrors={ruleToModifyOrView?.errors}
                         {...formikProps}
                       />
                     )}
@@ -268,10 +299,15 @@ export const FirewallRuleDrawer = React.memo(
               )}
             </Formik>
           )}
-        <Typography variant="body1">
-          Rule changes don&rsquo;t take effect immediately. You can add or
-          delete rules before saving all your changes to this Firewall.
-        </Typography>
+
+        {mode === 'view' && RuleSetViewContainer()}
+
+        {(mode === 'create' || mode === 'edit') && (
+          <Typography variant="body1">
+            Rule changes don&rsquo;t take effect immediately. You can add or
+            delete rules before saving all your changes to this Firewall.
+          </Typography>
+        )}
       </Drawer>
     );
   }
