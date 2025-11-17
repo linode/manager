@@ -17,7 +17,8 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
-  premiumTypeFactory,
+  premiumHTTypeFactory,
+  premiumNestedTypeFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
@@ -105,7 +106,10 @@ export const getLinodePlans = () => [
       const gpuTypesAda = gpuTypeAdaFactory.buildList(20);
       const gpuTypesRtx = gpuTypeRtxFactory.buildList(20);
       const gpuTypesRtxPro = gpuTypeRtxProFactory.buildList(20);
-      const premiumTypes = premiumTypeFactory.buildList(6);
+      const premiumTypes = [
+        premiumNestedTypeFactory.build(),
+        premiumHTTypeFactory.build(),
+      ];
       const acceleratedType = acceleratedTypeFactory.buildList(7);
       const mockPlans = [
         nanodeType,
