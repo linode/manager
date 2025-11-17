@@ -24,6 +24,7 @@ export interface CloudPulseResources {
   region?: string;
   tags?: string[];
   volumeLinodeId?: string;
+  volumeLinodeLabel?: null | string;
 }
 
 export interface CloudPulseResourcesSelectProps {

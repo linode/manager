@@ -444,6 +444,20 @@ export const gpuTypeRtxProFactory = linodeTypeFactory.extend({
 
 export const premiumTypeFactory = linodeTypeFactory.extend({
   class: 'premium',
+  id: Factory.each((i) => `g7-premium-${i}`),
+  label: Factory.each((i) => `Premium ${i}GB`),
+});
+
+export const premiumNestedTypeFactory = linodeTypeFactory.extend({
+  class: 'premium',
+  id: 'g7-premium-112',
+  label: 'Premium Nested 112GB',
+});
+
+export const premiumHTTypeFactory = linodeTypeFactory.extend({
+  class: 'premium',
+  id: 'g7-premium-ht-256',
+  label: 'Premium HT 256GB',
 });
 
 export const acceleratedTypeFactory = linodeTypeFactory.extend({
