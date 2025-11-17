@@ -37,17 +37,17 @@ export const CreateEntitySelection = (props: CreateEntitySelectionProps) => {
     <Grid container spacing={2}>
       {firewallRuleCreateOptions.map((option) => (
         <SelectionCard
-          checked={createEntityType === option.purpose}
+          checked={createEntityType === option.value}
           gridSize={{
             md: 6,
             sm: 12,
             xs: 12,
           }}
           heading={option.label}
-          key={option.purpose}
-          onClick={() => setCreateEntityType(option.purpose)}
+          key={option.value}
+          onClick={() => setCreateEntityType(option.value)}
           renderIcon={() => (
-            <Radio checked={createEntityType === option.purpose} />
+            <Radio checked={createEntityType === option.value} />
           )}
           subheadings={[]}
           sxCardBase={(theme) => ({
