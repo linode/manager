@@ -3,6 +3,10 @@ import { capitalize } from '@linode/utilities';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import {
+  type FirewallOptionItem,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 import { CreateEntitySelection } from './CreateEntitySelection';
 import {
   formValueToIPs,
@@ -16,7 +20,6 @@ import {
 import { FirewallRuleForm } from './FirewallRuleForm';
 import { FirewallRuleSetForm } from './FirewallRuleSetForm';
 
-import type { FirewallOptionItem } from '../../shared';
 import type {
   FirewallCreateEntityType,
   FirewallRuleDrawerProps,
@@ -36,6 +39,9 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 export const FirewallRuleDrawer = React.memo(
   (props: FirewallRuleDrawerProps) => {
     const { category, isOpen, mode, onClose, ruleToModify } = props;
+
+    const { isFirewallRulesetsPrefixlistsEnabled } =
+      useIsFirewallRulesetsPrefixlistsEnabled();
 
     /**
      * State for the type of entity being created: either a firewall 'rule' or
@@ -69,7 +75,17 @@ export const FirewallRuleDrawer = React.memo(
       } else {
         setIPs([{ address: '' }]);
       }
-    }, [mode, isOpen, ruleToModify]);
+
+      // Reset the Create entity selection to 'rule' in two cases:
+      // 1. The ruleset feature flag is disabled - 'ruleset' is not allowed.
+      // 2. The drawer is closed - ensures the next time it opens, it starts with the default 'rule' selection.
+      if (
+        mode === 'create' &&
+        (!isFirewallRulesetsPrefixlistsEnabled || !isOpen)
+      ) {
+        setCreateEntityType('rule');
+      }
+    }, [mode, isOpen, ruleToModify, isFirewallRulesetsPrefixlistsEnabled]);
 
     const title =
       mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
@@ -170,7 +186,7 @@ export const FirewallRuleDrawer = React.memo(
                 />
               )}
 
-              {mode === 'create' && (
+              {mode === 'create' && isFirewallRulesetsPrefixlistsEnabled && (
                 <CreateEntitySelection
                   createEntityType={createEntityType}
                   mode={mode}
@@ -178,14 +194,15 @@ export const FirewallRuleDrawer = React.memo(
                 />
               )}
 
-              {createEntityType === 'ruleset' && (
-                <FirewallRuleSetForm
-                  category={category}
-                  closeDrawer={onClose}
-                  ruleErrors={ruleToModify?.errors}
-                  {...(formikProps as FormikProps<FormRuleSetState>)}
-                />
-              )}
+              {createEntityType === 'ruleset' &&
+                isFirewallRulesetsPrefixlistsEnabled && (
+                  <FirewallRuleSetForm
+                    category={category}
+                    closeDrawer={onClose}
+                    ruleErrors={ruleToModify?.errors}
+                    {...(formikProps as FormikProps<FormRuleSetState>)}
+                  />
+                )}
 
               {(mode === 'edit' || createEntityType === 'rule') && (
                 <FirewallRuleForm
