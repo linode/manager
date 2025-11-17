@@ -74,16 +74,6 @@ export const AssignRuleSetSection = React.memo(
 
     const ruleSets = data ?? [];
 
-    // Auto-select the first rule set if none selected yet
-    React.useEffect(() => {
-      if (
-        ruleSets.length > 0 &&
-        (selectedRuleSetId === null || selectedRuleSetId === undefined)
-      ) {
-        handleRuleSetChange(ruleSets[0].id);
-      }
-    }, [ruleSets, selectedRuleSetId, handleRuleSetChange]);
-
     // Find the selected ruleset once
     const selectedRuleSet = React.useMemo(
       () => ruleSets.find((r) => r.id === selectedRuleSetId) ?? null,
@@ -117,7 +107,7 @@ export const AssignRuleSetSection = React.memo(
             handleRuleSetChange(selectedRuleSet?.value);
           }}
           options={ruleSetDropdownOptions}
-          placeholder="Select Rule Set"
+          placeholder="Select a Rule Set"
           renderOption={(props, option, { selected }) => {
             const { key, ...rest } = props;
             return (

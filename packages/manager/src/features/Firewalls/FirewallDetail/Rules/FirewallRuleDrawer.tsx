@@ -82,10 +82,10 @@ export const FirewallRuleDrawer = React.memo(
       if (mode === 'create' && createEntityType === 'ruleset') {
         const errors: Record<string, string> = {};
         if (!('ruleset' in values)) {
-          errors.ruleset = 'Ruleset is required.';
+          errors.ruleset = 'Rule Set is required.';
         }
         if ('ruleset' in values && typeof values.ruleset !== 'number') {
-          errors.ruleset = 'Ruleset shloud be a number.';
+          errors.ruleset = 'Rule Set should be a number.';
         }
         return errors;
       }
@@ -181,6 +181,7 @@ export const FirewallRuleDrawer = React.memo(
               {createEntityType === 'ruleset' && (
                 <FirewallRuleSetForm
                   category={category}
+                  closeDrawer={onClose}
                   ruleErrors={ruleToModify?.errors}
                   {...(formikProps as FormikProps<FormRuleSetState>)}
                 />
