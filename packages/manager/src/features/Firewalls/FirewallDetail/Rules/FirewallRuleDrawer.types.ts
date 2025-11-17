@@ -49,5 +49,6 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
 export interface FirewallRuleSetFormProps
   extends FormikProps<FormRuleSetState> {
   category: Category;
+  closeDrawer: () => void;
   ruleErrors?: FirewallRuleError[];
 }

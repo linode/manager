@@ -14,6 +14,7 @@ export const FirewallRuleSetForm = React.memo(
       ruleErrors,
       setFieldError,
       setFieldValue,
+      closeDrawer,
       values,
     } = props;
 
@@ -38,8 +39,12 @@ export const FirewallRuleSetForm = React.memo(
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            label: 'Add Rule',
+            label: 'Update Rules',
             type: 'submit',
+          }}
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: closeDrawer,
           }}
         />
       </form>
