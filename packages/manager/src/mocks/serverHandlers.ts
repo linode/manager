@@ -1285,7 +1285,7 @@ export const handlers = [
             // Ruleset with larger ID 123456789 & Longer label with 32 chars
             return firewallRuleSetFactory.build({
               id: 123456789,
-              label: 'firewallruleset-label-of-32-chr',
+              label: 'ruleset-with-a-longer-32ch-label',
             });
           default:
             return firewallRuleSetFactory.build();
@@ -1309,8 +1309,8 @@ export const handlers = [
                   addresses: {
                     ipv4: ['192.168.1.213', '172.31.255.255'],
                     ipv6: [
-                      '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e',
-                      '2001:0db8:0000:0000:0000:ff00:0042:8329',
+                      '2001:db8:85a3::8a2e:370:7334/128',
+                      '2001:db8:85a3::8a2e:371:7335/128',
                     ],
                   },
                   ports: '22, 53, 80, 100, 443, 3306',
