@@ -1,9 +1,56 @@
-import { ActionsPanel } from '@linode/ui';
+import { useAllFirewallRuleSetsQuery } from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Chip,
+  Paper,
+  SelectedIcon,
+  Stack,
+  styled,
+  Typography,
+} from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { AssignRuleSetSection } from './AssignRuleSetSection';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+
+import {
+  generateAddressesLabel,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 
 import type { FirewallRuleSetFormProps } from './FirewallRuleDrawer.types';
+import type { Theme } from '@linode/ui';
+
+const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    display: 'flex',
+    padding: `${theme.spacingFunction(4)} 0`,
+  })
+);
+
+export const StyledLabel = styled(Box, {
+  label: 'StyledLabelBox',
+})(({ theme }) => ({
+  font: theme.font.bold,
+  marginRight: theme.spacingFunction(4),
+}));
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  copyIcon: {
+    '& svg': {
+      height: '1em',
+      width: '1em',
+    },
+    color: theme.palette.primary.main,
+    display: 'inline-block',
+    position: 'relative',
+    marginTop: theme.spacingFunction(2),
+  },
+}));
 
 export const FirewallRuleSetForm = React.memo(
   (props: FirewallRuleSetFormProps) => {
@@ -11,30 +58,168 @@ export const FirewallRuleSetForm = React.memo(
       category,
       errors,
       handleSubmit,
-      ruleErrors,
-      setFieldError,
+      setFieldTouched,
       setFieldValue,
+      touched,
       closeDrawer,
       values,
     } = props;
 
-    // Set form field errors for each error
-    React.useEffect(() => {
-      ruleErrors?.forEach((thisError) => {
-        setFieldError(thisError.formField, thisError.reason);
-      });
-    }, [ruleErrors, setFieldError]);
+    const { classes } = useStyles();
+
+    const { isFirewallRulesetsPrefixlistsEnabled } =
+      useIsFirewallRulesetsPrefixlistsEnabled();
+
+    const { data, error, isLoading } = useAllFirewallRuleSetsQuery(
+      isFirewallRulesetsPrefixlistsEnabled
+    );
+
+    const ruleSets = data ?? [];
+
+    // Find the selected ruleset once
+    const selectedRuleSet = React.useMemo(
+      () => ruleSets.find((r) => r.id === values.ruleset) ?? null,
+      [ruleSets, values.ruleset]
+    );
+
+    // Build dropdown options
+    const ruleSetDropdownOptions = React.useMemo(
+      () =>
+        ruleSets.map((ruleSet) => ({
+          label: ruleSet.label,
+          value: ruleSet.id,
+        })),
+      [ruleSets]
+    );
+
+    const errorText =
+      error?.[0].reason ?? (touched.ruleset ? errors.ruleset : undefined);
 
     return (
       <form onSubmit={handleSubmit}>
-        <AssignRuleSetSection
-          category={category}
-          errorText={errors.ruleset}
-          handleRuleSetChange={(ruleSetId) =>
-            setFieldValue('ruleset', ruleSetId)
-          }
-          selectedRuleSetId={values.ruleset}
-        />
+        <Box>
+          <Typography
+            sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
+          >
+            RuleSets are reusable collections of Cloud Firewall rules that use
+            the same fields as individual rules. They let you manage and update
+            multiple rules as a group. You can then apply them across different
+            firewalls by reference.
+          </Typography>
+          <Autocomplete
+            disableClearable={ruleSets.length > 0}
+            errorText={errorText}
+            label="Rule Set"
+            loading={isLoading}
+            onBlur={() => setFieldTouched('ruleset')}
+            onChange={(_, selectedRuleSet) => {
+              setFieldValue('ruleset', selectedRuleSet?.value);
+            }}
+            options={ruleSetDropdownOptions}
+            placeholder="Select a Rule Set"
+            renderOption={(props, option, { selected }) => {
+              const { key, ...rest } = props;
+              return (
+                <li key={key} {...rest}>
+                  <Stack
+                    alignItems="center"
+                    direction="row"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Stack direction="column">
+                      <b>{option.label}</b>
+                      <span>ID: {option.value}</span>
+                    </Stack>
+                    {selected && <SelectedIcon visible />}
+                  </Stack>
+                </li>
+              );
+            }}
+            value={
+              ruleSetDropdownOptions.find((o) => o.value === values.ruleset) ??
+              null
+            }
+          />
+
+          {selectedRuleSet && (
+            <Box mt={2}>
+              <StyledListItem>
+                <StyledLabel component="span">Label: </StyledLabel>
+                {selectedRuleSet?.label}
+              </StyledListItem>
+              <StyledListItem>
+                <StyledLabel component="span">ID: </StyledLabel>
+                {selectedRuleSet?.id}
+                <CopyTooltip
+                  className={classes.copyIcon}
+                  text={String(selectedRuleSet?.id)}
+                />
+              </StyledListItem>
+              <StyledListItem>{selectedRuleSet?.description}</StyledListItem>
+              <StyledListItem>
+                <StyledLabel component="span">Service Defined: </StyledLabel>
+                {selectedRuleSet?.is_service_defined ? 'Yes' : 'No'}
+              </StyledListItem>
+              <StyledListItem>
+                <StyledLabel component="span">Version: </StyledLabel>
+                {selectedRuleSet?.version}
+              </StyledListItem>
+              <StyledListItem>
+                <StyledLabel component="span">Created: </StyledLabel>
+                {selectedRuleSet?.created}
+              </StyledListItem>
+              <StyledListItem>
+                <StyledLabel component="span">Updated: </StyledLabel>
+                {selectedRuleSet?.updated}
+              </StyledListItem>
+
+              <Paper
+                sx={(theme) => ({
+                  backgroundColor: theme.tokens.alias.Background.Neutral,
+                  padding: theme.spacingFunction(12),
+                  marginTop: theme.spacingFunction(8),
+                })}
+              >
+                <StyledLabel
+                  sx={(theme) => ({ marginBottom: theme.spacingFunction(4) })}
+                >
+                  {capitalize(category)} Rules
+                </StyledLabel>
+                {selectedRuleSet.rules.map((rule, idx) => (
+                  <StyledListItem
+                    component="span"
+                    key={`firewall-ruleset-rule-${idx}`}
+                    sx={(theme) => ({
+                      padding: `${theme.spacingFunction(4)} 0`,
+                    })}
+                  >
+                    <Chip
+                      label={rule.action}
+                      sx={(theme) => ({
+                        background:
+                          rule.action === 'ACCEPT'
+                            ? theme.tokens.alias.Background.Positivesubtle
+                            : theme.tokens.alias.Background.Negativesubtle,
+                        color:
+                          rule.action === 'ACCEPT'
+                            ? theme.tokens.alias.Content.Text.Positive
+                            : theme.tokens.alias.Content.Text.Negative,
+                        font: theme.font.bold,
+                        width: '58px',
+                        fontSize: theme.tokens.font.FontSize.Xxxs,
+                        marginRight: theme.spacingFunction(6),
+                        flexShrink: 0,
+                      })}
+                    />
+                    {rule.protocol};&nbsp;{rule.ports};&nbsp;
+                    {generateAddressesLabel(rule.addresses)}
+                  </StyledListItem>
+                ))}
+              </Paper>
+            </Box>
+          )}
+        </Box>
 
         <ActionsPanel
           primaryButtonProps={{
