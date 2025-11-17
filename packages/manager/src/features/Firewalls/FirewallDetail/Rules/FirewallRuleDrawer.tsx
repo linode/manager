@@ -254,16 +254,12 @@ export const FirewallRuleDrawer = React.memo(
                       variant="error"
                     />
                   )}
-
-                  {createEntityType === 'ruleset' &&
-                    isFirewallRulesetsPrefixlistsEnabled && (
-                      <FirewallRuleSetForm
-                        category={category}
-                        closeDrawer={onClose}
-                        ruleErrors={ruleToModify?.errors}
-                        {...formikProps}
-                      />
-                    )}
+                  <FirewallRuleSetForm
+                    category={category}
+                    closeDrawer={onClose}
+                    ruleErrors={ruleToModify?.errors}
+                    {...formikProps}
+                  />
                 </>
               )}
             </Formik>
