@@ -14,9 +14,13 @@ import { logsDestinationForm } from 'support/ui/pages/logs-destination-form';
 import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 
 describe('Create Destination', () => {
-  before(() => {
+  beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpLogs: { enabled: true, beta: true },
+      aclpLogs: {
+        enabled: true,
+        beta: true,
+        bypassAccountCapabilities: true,
+      },
     });
   });
 

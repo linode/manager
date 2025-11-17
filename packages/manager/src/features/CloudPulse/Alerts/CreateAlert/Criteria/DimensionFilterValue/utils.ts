@@ -218,8 +218,7 @@ interface ScopeBasedFilteredResourcesProps {
   selectedRegions?: null | string[];
 }
 
-/**
- * Filters a list of Resource objects based on the given alert definition scope.
+/* Filters a list of Resource objects based on the given alert definition scope.
  *
  * @param props - Object containing filter parameters.
  * @returns A filtered list of resources based on the provided scope.

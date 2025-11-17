@@ -14,6 +14,7 @@ import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { usePermissions } from '../hooks/usePermissions';
 import {
   DELEGATION_VALIDATION_ERROR,
   INTERNAL_ERROR_NO_CHANGES_SAVED,
@@ -49,6 +50,10 @@ export const UpdateDelegationsDrawer = ({
     enabled: open,
     filters: { user_type: 'parent' },
   });
+
+  const { data: permissions } = usePermissions('account', [
+    'update_delegate_users',
+  ]);
 
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
@@ -180,6 +185,10 @@ export const UpdateDelegationsDrawer = ({
               label: 'Update',
               loading: isSubmitting,
               type: 'submit',
+              disabled: !permissions?.update_delegate_users,
+              tooltipText: !permissions?.update_delegate_users
+                ? 'You do not have permission to update delegations.'
+                : undefined,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',

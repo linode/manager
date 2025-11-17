@@ -1,8 +1,13 @@
+import { renderHook, waitFor } from '@testing-library/react';
+
+import { wrapWithTheme } from 'src/utilities/testHelpers';
+
 import {
   allIPv4,
   allIPv6,
   generateAddressesLabel,
   predefinedFirewallFromRule,
+  useIsFirewallRulesetsPrefixlistsEnabled,
 } from './shared';
 
 import type { FirewallRuleType } from '@linode/api-v4/lib/firewalls/types';
@@ -142,5 +147,37 @@ describe('generateAddressLabel', () => {
     expect(generateAddressesLabel({ ipv4: undefined, ipv6: undefined })).toBe(
       'None'
     );
+  });
+});
+
+describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
+  it('returns true if the feature is enabled', async () => {
+    const options = { flags: { firewallRulesetsPrefixlists: true } };
+
+    const { result } = renderHook(
+      () => useIsFirewallRulesetsPrefixlistsEnabled(),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current.isFirewallRulesetsPrefixlistsEnabled).toBe(true);
+    });
+  });
+
+  it('returns false if the feature is NOT enabled', async () => {
+    const options = { flags: { firewallRulesetsPrefixlists: false } };
+
+    const { result } = renderHook(
+      () => useIsFirewallRulesetsPrefixlistsEnabled(),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current.isFirewallRulesetsPrefixlistsEnabled).toBe(false);
+    });
   });
 });
