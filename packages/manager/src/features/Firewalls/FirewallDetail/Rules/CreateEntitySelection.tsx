@@ -23,7 +23,7 @@ export const CreateEntitySelection = (props: CreateEntitySelectionProps) => {
 
   const formik = useFormikContext<FormRuleSetState | FormState>();
 
-  // Reset form & erros when switching between "rule" and "ruleset"
+  // Reset form & errors when switching between "rule" and "ruleset"
   React.useEffect(() => {
     if (mode !== 'create') return;
 
