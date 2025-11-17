@@ -39,7 +39,7 @@ export const FirewallRuleSetForm = React.memo(
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            label: 'Update Rules',
+            label: 'Add Rules',
             type: 'submit',
           }}
           secondaryButtonProps={{
