@@ -16,6 +16,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
+import { NO_PERMISSIONS_TOOLTIP_TEXT } from '../constants';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
@@ -96,6 +97,11 @@ export const NodeBalancerSettings = () => {
           loading={isUpdatingLabel}
           onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
+          tooltipText={
+            !permissions.update_nodebalancer
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : undefined
+          }
         >
           Save
         </Button>
@@ -148,6 +154,11 @@ export const NodeBalancerSettings = () => {
               params: { id: String(id) },
               to: '/nodebalancers/$id/settings/delete',
             })
+          }
+          tooltipText={
+            !permissions.delete_nodebalancer
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : undefined
           }
         >
           Delete

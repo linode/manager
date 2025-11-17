@@ -54,8 +54,13 @@ export const DeleteStreamDialog = React.memo((props: Props) => {
         loading: isPending,
         disabled: false,
         onClick: handleDelete,
+        'data-pendo-id': 'Logs Delivery Streams Delete-Delete',
       }}
-      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+      secondaryButtonProps={{
+        label: 'Cancel',
+        onClick: onClose,
+        'data-pendo-id': 'Logs Delivery Streams Delete-Cancel',
+      }}
       style={{ padding: 0 }}
     />
   );

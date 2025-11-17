@@ -459,7 +459,7 @@ export const mswDB = {
 
   get: async <T extends keyof MockState>(
     entity: T,
-    id: number
+    id: number | string
   ): Promise<
     (MockState[T] extends Array<infer U> ? U : MockState[T]) | undefined
   > => {

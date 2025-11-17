@@ -4,6 +4,7 @@ export * from './config';
 export * from './delegation';
 export * from './factoryProxy';
 export * from './grants';
+export * from './images';
 export * from './linodeConfigInterface';
 export * from './linodeInterface';
 export * from './linodes';

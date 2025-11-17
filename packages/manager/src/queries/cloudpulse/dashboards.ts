@@ -21,10 +21,11 @@ export const useCloudPulseDashboardsQuery = (serviceTypes: string[]) => {
 };
 
 export const useCloudPulseDashboardByIdQuery = (
-  dashboardId: number | undefined
+  dashboardId: number | undefined,
+  enabled: boolean = true
 ) => {
   return useQuery<Dashboard, APIError[]>({
     ...queryFactory.dashboardById(dashboardId!),
-    enabled: dashboardId !== undefined,
+    enabled: dashboardId !== undefined && enabled,
   });
 };

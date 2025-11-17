@@ -22,7 +22,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
     data: {
-      update_nodebalancer: false,
+      is_account_admin: false,
     },
   })),
 }));
@@ -212,7 +212,7 @@ describe('SummaryPanel', () => {
   it('should enable "Add a tag" if user has permission', () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_nodebalancer: true,
+        is_account_admin: true,
       },
     });
     const { getByText } = renderWithTheme(<SummaryPanel />, {

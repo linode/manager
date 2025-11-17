@@ -60,7 +60,7 @@ describe('DestinationEdit', () => {
 
   describe('given Test Connection and Edit Destination buttons', () => {
     const testConnectionButtonText = 'Test Connection';
-    const editDestinationButtonText = 'Edit Destination';
+    const saveDestinationButtonText = 'Save';
     const editDestinationSpy = vi.fn();
     const verifyDestinationSpy = vi.fn();
 
@@ -89,23 +89,23 @@ describe('DestinationEdit', () => {
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
         });
-        const editDestinationButton = screen.getByRole('button', {
-          name: editDestinationButtonText,
+        const saveDestinationButton = screen.getByRole('button', {
+          name: saveDestinationButtonText,
         });
 
         // Enter Secret Access Key
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
 
-        expect(editDestinationButton).toBeDisabled();
+        expect(saveDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
 
         await waitFor(() => {
-          expect(editDestinationButton).toBeEnabled();
+          expect(saveDestinationButton).toBeEnabled();
         });
 
-        await userEvent.click(editDestinationButton);
+        await userEvent.click(saveDestinationButton);
         expect(editDestinationSpy).toHaveBeenCalled();
       });
     });
@@ -131,20 +131,20 @@ describe('DestinationEdit', () => {
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
         });
-        const editDestinationButton = screen.getByRole('button', {
-          name: editDestinationButtonText,
+        const saveDestinationButton = screen.getByRole('button', {
+          name: saveDestinationButtonText,
         });
 
         // Enter Secret Access Key
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
 
-        expect(editDestinationButton).toBeDisabled();
+        expect(saveDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
 
         await waitFor(() => {
-          expect(editDestinationButton).toBeDisabled();
+          expect(saveDestinationButton).toBeDisabled();
         });
       });
     });

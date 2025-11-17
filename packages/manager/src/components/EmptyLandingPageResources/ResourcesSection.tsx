@@ -25,6 +25,7 @@ import type {
 
 interface ButtonProps {
   children: string;
+  'data-pendo-id'?: string;
   disabled?: boolean;
   onClick: () => void;
   tooltipText?: string;

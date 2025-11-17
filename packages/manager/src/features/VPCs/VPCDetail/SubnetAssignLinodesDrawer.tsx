@@ -28,10 +28,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
@@ -164,42 +161,21 @@ export const SubnetAssignLinodesDrawer = (
     csvRef.current.link.click();
   };
 
-  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
   // TODO: change update_linode to create_linode_config_profile_interface once it's available
-  // TODO: change delete_linode to delete_linode_config_profile_interface once it's available
-  // TODO: refactor useQueryWithPermissions once API filter is available
   const { data: filteredLinodes, isLoading: isLoadingFilteredLinodes } =
-    useQueryWithPermissions<Linode>(
-      query,
-      'linode',
-      ['update_linode', 'delete_linode'],
-      open
-    );
+    useQueryWithPermissions<Linode>(query, 'linode', ['update_linode'], open);
 
-  const userCanAssignLinodes =
-    permissions?.update_vpc && filteredLinodes?.length > 0;
-  // We need to filter to the linodes from this region that are not already
-  // assigned to this subnet
-  const findUnassignedLinodes = React.useCallback(() => {
+  const userCanAssignLinodes = filteredLinodes?.length > 0;
+
+  const linodeOptionsToAssign = React.useMemo(() => {
+    // We need to filter to the linodes from this region that are not already
+    // assigned to this subnet
     if (!filteredLinodes) return [];
 
     return filteredLinodes?.filter((linode) => {
       return !subnet?.linodes.some((linodeInfo) => linodeInfo.id === linode.id);
     });
   }, [subnet, filteredLinodes]);
-
-  const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState<
-    Linode[]
-  >([]);
-
-  // Moved the list of linodes that are currently assignable to a subnet into a state variable (linodeOptionsToAssign)
-  // and update that list whenever this subnet or the list of all linodes in this subnet's region changes. This takes
-  // care of the MUI invalid value warning that was occurring before in the Linodes autocomplete [M3-6752]
-  React.useEffect(() => {
-    if (filteredLinodes) {
-      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
-    }
-  }, [filteredLinodes, setLinodeOptionsToAssign, findUnassignedLinodes]);
 
   // Determine the configId based on the number of configurations
   function getConfigId(inputs: {
@@ -594,12 +570,6 @@ export const SubnetAssignLinodesDrawer = (
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'}`}
     >
-      {!userCanAssignLinodes && (
-        <Notice
-          text={`You don't have permissions to assign Linodes to ${subnet?.label}. Please contact an account administrator for details.`}
-          variant="error"
-        />
-      )}
       {assignLinodesErrors.none && (
         <Notice text={assignLinodesErrors.none} variant="error" />
       )}

@@ -3,6 +3,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { NO_ASSIGNED_DEFAULT_ENTITIES_TEXT } from '../../Shared/constants';
 import { DefaultEntityAccess } from './DefaultEntityAccess';
 
 const queryMocks = vi.hoisted(() => ({
@@ -48,6 +49,15 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('DefaultEntityAccess', () => {
   it('should render', async () => {
+    queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
+      data: {
+        entity_access: [
+          { id: 1, type: 'linode', label: 'Linode 1' },
+          { id: 2, type: 'volume', label: 'Volume 1' },
+        ],
+      },
+      isLoading: false,
+    });
     renderWithTheme(<DefaultEntityAccess />);
 
     expect(
@@ -56,5 +66,15 @@ describe('DefaultEntityAccess', () => {
     expect(screen.getByPlaceholderText('Search')).toBeVisible();
     expect(screen.getByPlaceholderText('All Entities')).toBeVisible();
     expect(screen.getByRole('table')).toBeVisible();
+  });
+  it('should render empty state', async () => {
+    queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
+      data: { entity_access: [] },
+      isLoading: false,
+    });
+
+    renderWithTheme(<DefaultEntityAccess />);
+
+    expect(screen.getByText(NO_ASSIGNED_DEFAULT_ENTITIES_TEXT)).toBeVisible();
   });
 });

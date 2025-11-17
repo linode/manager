@@ -44,7 +44,6 @@ describe('Volume action menu', () => {
     queryMocks.usePermissions.mockReturnValue({
       update_volume: true,
       attach_volume: true,
-      create_volume: true,
       delete_volume: true,
       resize_volume: true,
       clone_volume: true,
