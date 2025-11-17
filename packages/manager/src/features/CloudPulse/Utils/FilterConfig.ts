@@ -11,10 +11,10 @@ import {
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
-import { filterFirewallResources, filterKubernetesClusters } from './utils';
+import { filterKubernetesClusters } from './utils';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
-import type { Firewall, KubernetesCluster } from '@linode/api-v4';
+import type { KubernetesCluster } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -234,7 +234,6 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'resource_id',
-        children: [PARENT_ENTITY_REGION],
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,
@@ -244,14 +243,11 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         placeholder: 'Select Firewalls',
         priority: 1,
         associatedEntityType: 'linode',
-        filterFn: (resources: Firewall[]) =>
-          filterFirewallResources(resources, 'linode'),
       },
       name: 'Firewalls',
     },
     {
       configuration: {
-        dependency: ['resource_id'],
         filterKey: PARENT_ENTITY_REGION,
         filterType: 'string',
         isFilterable: true,
@@ -339,7 +335,6 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       {
         configuration: {
           filterKey: RESOURCE_ID,
-          children: [PARENT_ENTITY_REGION, NODEBALANCER_ID],
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
@@ -349,14 +344,11 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           placeholder: 'Select a Firewall',
           priority: 1,
           apiV4QueryKey: queryFactory.resources('firewall'),
-          filterFn: (resources: Firewall[]) =>
-            filterFirewallResources(resources, 'nodebalancer'),
         },
         name: 'Firewall',
       },
       {
         configuration: {
-          dependency: [RESOURCE_ID],
           children: [NODEBALANCER_ID],
           filterKey: PARENT_ENTITY_REGION,
           filterType: 'string',
