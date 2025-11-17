@@ -253,7 +253,17 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   // Pagination enabled: use new paginated rendering
   return (
-    <Paginate data={plans} key={paginationPrefix} shouldScroll={false}>
+    <Paginate
+      data={plans}
+      key={paginationPrefix}
+      // Prevent plans panel page size changes from being persisted to global PAGE_SIZE storage.
+      // Plans panel uses custom page size options (15, 25, 50) which should not override
+      // the standard page size preference (25, 50, 75, 100) used by other tables.
+      noPageSizeOverride={true}
+      // Set default page size to 15 (first option in PLAN_PANEL_PAGE_SIZE_OPTIONS)
+      pageSize={PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value}
+      shouldScroll={false}
+    >
       {({
         count,
         data: paginatedPlans,
