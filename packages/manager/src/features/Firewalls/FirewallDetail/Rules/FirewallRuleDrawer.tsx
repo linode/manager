@@ -1,13 +1,15 @@
-import { Drawer, Notice, Typography } from '@linode/ui';
+import { Drawer, Notice, Radio, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
+import { Grid } from '@mui/material';
 import { Formik } from 'formik';
 import * as React from 'react';
+
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import {
   type FirewallOptionItem,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
-import { CreateEntitySelection } from './CreateEntitySelection';
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -19,6 +21,7 @@ import {
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
 import { FirewallRuleSetForm } from './FirewallRuleSetForm';
+import { firewallRuleCreateOptions } from './shared';
 
 import type {
   FirewallCreateEntityType,
@@ -30,7 +33,6 @@ import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
-import type { FormikProps } from 'formik';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // =============================================================================
@@ -92,7 +94,7 @@ export const FirewallRuleDrawer = React.memo(
 
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-    const onValidate = (values: FormRuleSetState | FormState) => {
+    const onValidateRule = (values: FormRuleSetState | FormState) => {
       // Case 1: user chose CREATE -> RULESET mode
       // If we're in add 'ruleset' mode, only validate the ruleset field
       if (mode === 'create' && createEntityType === 'ruleset') {
@@ -134,77 +136,85 @@ export const FirewallRuleDrawer = React.memo(
       };
     };
 
-    const onSubmit = (values: FormRuleSetState | FormState) => {
-      const isCreateRuleSetMode =
-        mode === 'create' && createEntityType === 'ruleset';
-
-      // Case 1: RULESET submission
-      if (isCreateRuleSetMode) {
-        const payload = {
-          ruleset: (values as FormRuleSetState).ruleset,
-        };
-        props.onSubmit(category, payload);
-        onClose();
-        return;
-      }
-
-      // Case 2: RULE submission
-      const v = values as FormState;
-      const ports = itemsToPortString(presetPorts, v.ports!);
-      const protocol = v.protocol as FirewallRuleProtocol;
-      const addresses = formValueToIPs(v.addresses!, ips);
+    const onSubmitRule = (values: FormState) => {
+      const ports = itemsToPortString(presetPorts, values.ports!);
+      const protocol = values.protocol as FirewallRuleProtocol;
+      const addresses = formValueToIPs(values.addresses!, ips);
 
       const payload: FirewallRuleType = {
-        action: v.action,
+        action: values.action,
         addresses,
         ports,
         protocol,
-        label: v.label || null,
-        description: v.description || null,
+        label: values.label || null,
+        description: values.description || null,
       };
       props.onSubmit(category, payload);
       onClose();
     };
 
+    const onValidateRuleSet = (values: FormRuleSetState) => {
+      const errors: Record<string, string> = {};
+      if (!values.ruleset || values.ruleset === -1) {
+        errors.ruleset = 'Rule Set is required.';
+      }
+      if (typeof values.ruleset !== 'number') {
+        errors.ruleset = 'Rule Set should be a number.';
+      }
+      return errors;
+    };
+
     return (
       <Drawer onClose={onClose} open={isOpen} title={title}>
-        <Formik
-          initialValues={getInitialFormValues(ruleToModify)}
-          onSubmit={onSubmit}
-          validate={onValidate}
-          validateOnBlur={false}
-          validateOnChange={false}
-        >
-          {(formikProps) => (
-            <>
-              {formikProps.status && (
-                <Notice
-                  data-qa-error
-                  key={formikProps.status}
-                  text={formikProps.status.generalError}
-                  variant="error"
-                />
-              )}
+        {mode === 'create' && isFirewallRulesetsPrefixlistsEnabled && (
+          <Grid container spacing={2}>
+            {firewallRuleCreateOptions.map((option) => (
+              <SelectionCard
+                checked={createEntityType === option.value}
+                gridSize={{
+                  md: 6,
+                  sm: 12,
+                  xs: 12,
+                }}
+                heading={option.label}
+                key={option.value}
+                onClick={() => setCreateEntityType(option.value)}
+                renderIcon={() => (
+                  <Radio checked={createEntityType === option.value} />
+                )}
+                subheadings={[]}
+                sxCardBase={(theme) => ({
+                  gap: 0,
+                  '& .cardSubheadingTitle': {
+                    fontSize: theme.tokens.font.FontSize.Xs,
+                  },
+                })}
+                sxCardBaseIcon={(theme) => ({
+                  svg: { fontSize: theme.tokens.font.FontSize.L },
+                })}
+              />
+            ))}
+          </Grid>
+        )}
 
-              {mode === 'create' && isFirewallRulesetsPrefixlistsEnabled && (
-                <CreateEntitySelection
-                  createEntityType={createEntityType}
-                  mode={mode}
-                  setCreateEntityType={setCreateEntityType}
-                />
-              )}
-
-              {createEntityType === 'ruleset' &&
-                isFirewallRulesetsPrefixlistsEnabled && (
-                  <FirewallRuleSetForm
-                    category={category}
-                    closeDrawer={onClose}
-                    ruleErrors={ruleToModify?.errors}
-                    {...(formikProps as FormikProps<FormRuleSetState>)}
+        {(mode === 'edit' || createEntityType === 'rule') && (
+          <Formik<FormState>
+            initialValues={getInitialFormValues(ruleToModify)}
+            onSubmit={onSubmitRule}
+            validate={onValidateRule}
+            validateOnBlur={false}
+            validateOnChange={false}
+          >
+            {(formikProps) => (
+              <>
+                {formikProps.status && (
+                  <Notice
+                    data-qa-error
+                    key={formikProps.status}
+                    text={formikProps.status.generalError}
+                    variant="error"
                   />
                 )}
-
-              {(mode === 'edit' || createEntityType === 'rule') && (
                 <FirewallRuleForm
                   addressesLabel={addressesLabel}
                   category={category}
@@ -214,12 +224,50 @@ export const FirewallRuleDrawer = React.memo(
                   ruleErrors={ruleToModify?.errors}
                   setIPs={setIPs}
                   setPresetPorts={setPresetPorts}
-                  {...(formikProps as FormikProps<FormState>)}
+                  {...formikProps}
                 />
+              </>
+            )}
+          </Formik>
+        )}
+
+        {mode === 'create' &&
+          createEntityType === 'ruleset' &&
+          isFirewallRulesetsPrefixlistsEnabled && (
+            <Formik<FormRuleSetState>
+              initialValues={{ ruleset: -1 }}
+              onSubmit={(values) => {
+                props.onSubmit(category, values);
+                onClose();
+              }}
+              validate={onValidateRuleSet}
+              validateOnBlur={true}
+              validateOnChange={true}
+            >
+              {(formikProps) => (
+                <>
+                  {formikProps.status && (
+                    <Notice
+                      data-qa-error
+                      key={formikProps.status}
+                      text={formikProps.status.generalError}
+                      variant="error"
+                    />
+                  )}
+
+                  {createEntityType === 'ruleset' &&
+                    isFirewallRulesetsPrefixlistsEnabled && (
+                      <FirewallRuleSetForm
+                        category={category}
+                        closeDrawer={onClose}
+                        ruleErrors={ruleToModify?.errors}
+                        {...formikProps}
+                      />
+                    )}
+                </>
               )}
-            </>
+            </Formik>
           )}
-        </Formik>
         <Typography variant="body1">
           Rule changes don&rsquo;t take effect immediately. You can add or
           delete rules before saving all your changes to this Firewall.

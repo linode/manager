@@ -19,7 +19,7 @@ import { stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { PORT_PRESETS, sortString } from './shared';
 
-import type { FormRuleSetState, FormState } from './FirewallRuleDrawer.types';
+import type { FormState } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type {
   FirewallRuleProtocol,
@@ -150,13 +150,9 @@ const initialValues: FormState = {
 
 export const getInitialFormValues = (
   ruleToModify?: ExtendedFirewallRule
-): FormRuleSetState | FormState => {
+): FormState => {
   if (!ruleToModify) {
     return initialValues;
-  }
-
-  if (ruleToModify.ruleset) {
-    return { ruleset: -1 } as FormRuleSetState;
   }
 
   return {
