@@ -119,12 +119,10 @@ const stripHyphen = (str: string) => {
 export const firewallRuleCreateOptions = [
   {
     label: 'Create a Rule',
-    purpose: 'rule',
-    description: 'Create a new firewall rule',
+    value: 'rule',
   },
   {
-    label: 'Reference ruleset',
-    purpose: 'ruleset',
-    description: 'Reference a ruleset to the firewall',
+    label: 'Reference Rule Set',
+    value: 'ruleset',
   },
 ] as const;
