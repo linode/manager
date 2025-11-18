@@ -55,10 +55,12 @@ export const FirewallRuleSetForm = React.memo(
     // Build dropdown options
     const ruleSetDropdownOptions = React.useMemo(
       () =>
-        ruleSets.map((ruleSet) => ({
-          label: ruleSet.label,
-          value: ruleSet.id,
-        })),
+        ruleSets
+          .filter((ruleSet) => ruleSet.type === category) // Display only rule sets applicable to the given category
+          .map((ruleSet) => ({
+            label: ruleSet.label,
+            value: ruleSet.id,
+          })),
       [ruleSets]
     );
 
@@ -162,6 +164,7 @@ export const FirewallRuleSetForm = React.memo(
                     key={`firewall-ruleset-rule-${idx}`}
                     sx={(theme) => ({
                       padding: `${theme.spacingFunction(4)} 0`,
+                      alignItems: 'flex-start',
                     })}
                   >
                     <Chip
