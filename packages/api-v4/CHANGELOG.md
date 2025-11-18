@@ -1,22 +1,3 @@
-## [2025-11-18] - v0.153.0
-
-
-### Added:
-
-- IAM Parent/Child: delegate permissions ([#13033](https://github.com/linode/manager/pull/13033))
-- Added `Akamai Cloud Pulse Logs ` to the `AccountCapability` type ([#13062](https://github.com/linode/manager/pull/13062))
-
-### Changed:
-
-- IAM: cleanup for nodebalancer permissions ([#13017](https://github.com/linode/manager/pull/13017))
-
-### Upcoming Features:
-
-- Clean up Delivery Stream and Destination interfaces ([#13038](https://github.com/linode/manager/pull/13038))
-- Add new API endpoints, and types for Firewall RS & PL ([#13061](https://github.com/linode/manager/pull/13061))
-- CloudPulse-Metrics: Update `CloudPulseServiceType` and `CapabilityServiceTypeMapping` at types.ts for new service - lke ([#13064](https://github.com/linode/manager/pull/13064))
-- New IAM getUserEntitiesByPermission endpoint ([#13070](https://github.com/linode/manager/pull/13070))
-
 ## [2025-11-04] - v0.152.0
 
 
