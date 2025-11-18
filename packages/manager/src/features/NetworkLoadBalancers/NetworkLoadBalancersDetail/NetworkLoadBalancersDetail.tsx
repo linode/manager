@@ -62,6 +62,7 @@ const NetworkLoadBalancersDetail = () => {
           />
         }
         header={<NetworkLoadBalancerDetailHeader status={nlb.status} />}
+        noBodyBottomBorder={true}
       />
     </>
   );
