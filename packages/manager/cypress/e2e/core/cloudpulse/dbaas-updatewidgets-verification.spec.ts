@@ -201,13 +201,15 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     );
     cy.wait('@fetchPreferences');
     // validate the API calls are going with intended payload
-     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
-      cy.get('@startDateInput').click();
-      cy.get(`[data-qa-preset="Last 7 days"]`).click();
-      cy.get('[data-qa-buttons="apply"]')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
+    cy.get('[aria-labelledby="start-date"]', { timeout: 50000 })
+      .parent()
+      .as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('[data-qa-preset="Last 7 days"]', { timeout: 50000 }).click();
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')

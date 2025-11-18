@@ -72,7 +72,13 @@ const dashboard = dashboardFactory.build({
   id,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
-      filters: [...dimensions],
+      filters: [
+        {
+          operator: 'eq',
+          dimension_label: 'Protocol',
+          value: 'list protocols',
+        },
+      ],
       label: title,
       metric: name,
       unit,
@@ -86,12 +92,13 @@ const dashboard = dashboardFactory.build({
 // Metric definitions
 const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
-    label: title,
+    label: `${title} (Node Balancer)`,
     metric: name,
     unit,
     dimensions: [...dimensions, ...getFiltersForMetric(name)],
   })
 );
+
 const mockRegions = [
   regionFactory.build({
     capabilities: ['Linodes', 'Cloud Firewall'],
@@ -414,7 +421,6 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
         .should('be.visible')
         .click();
     });
-
     // Close the drawer using ESC
     cy.get('body').type('{esc}');
 
