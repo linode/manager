@@ -97,6 +97,7 @@ export const useIsGenerationalPlansEnabled = () => {
   const flags = useFlags();
 
   return {
-    isGenerationalPlansEnabled: Boolean(flags.generationalPlans),
+    isGenerationalPlansEnabled: Boolean(flags.generationalPlansv2?.enabled),
+    allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
   };
 };

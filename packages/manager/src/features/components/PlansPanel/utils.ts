@@ -2,6 +2,7 @@ import { useAccount } from '@linode/queries';
 import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
   DEDICATED_512_GB_PLAN,
@@ -23,6 +24,7 @@ import type {
 import type {
   BaseType,
   Capabilities,
+  LinodeType,
   LinodeTypeClass,
   Region,
   RegionAvailability,
@@ -494,4 +496,20 @@ export const getDisabledPlanReasonCopy = ({
   }
 
   return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
+};
+
+export const useShouldDisablePremiumPlansTab = ({
+  types,
+}: {
+  types: LinodeType[] | PlanSelectionType[] | undefined;
+}): boolean => {
+  const { isGenerationalPlansEnabled, allowedPlans } =
+    useIsGenerationalPlansEnabled();
+  // Check if any public premium plans are available.
+  // We can omit "Premium HT" and "Premium nested" plans as customers don't deploy them using cloud manager.
+  const arePublicPremiumPlansAvailable = types?.some(
+    (plan) => plan.class === 'premium' && allowedPlans.includes(plan.id)
+  );
+
+  return Boolean(isGenerationalPlansEnabled) && !arePublicPremiumPlansAvailable;
 };

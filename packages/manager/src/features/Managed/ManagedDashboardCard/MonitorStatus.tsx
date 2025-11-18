@@ -1,5 +1,6 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
@@ -19,6 +20,7 @@ export interface MonitorStatusProps {
 }
 
 export const MonitorStatus = (props: MonitorStatusProps) => {
+  const theme = useTheme();
   const { monitors } = props;
 
   const failedMonitors = getFailedMonitors(monitors);
@@ -34,9 +36,17 @@ export const MonitorStatus = (props: MonitorStatusProps) => {
       <Grid>
         <StyledIconGrid>
           {failedMonitors.length === 0 ? (
-            <MonitorOK height={iconSize} width={iconSize} />
+            <MonitorOK
+              color={theme.tokens.alias.Content.Icon.Positive}
+              height={iconSize}
+              width={iconSize}
+            />
           ) : (
-            <MonitorFailed height={iconSize} width={iconSize} />
+            <MonitorFailed
+              color={theme.tokens.alias.Content.Icon.Negative}
+              height={iconSize}
+              width={iconSize}
+            />
           )}
         </StyledIconGrid>
       </Grid>

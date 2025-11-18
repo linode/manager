@@ -28,6 +28,8 @@ export * from './longview';
 
 export * from './managed';
 
+export * from './netloadbalancers';
+
 export * from './network-transfer';
 
 export * from './networking';
