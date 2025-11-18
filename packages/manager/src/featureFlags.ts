@@ -202,7 +202,7 @@ export interface Flags {
   disableLargestGbPlans: boolean;
   firewallRulesetsPrefixlists: boolean;
   gecko2: GeckoFeatureFlag;
-  generationalPlans: boolean;
+  generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
@@ -218,6 +218,7 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc: MTC;
+  networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
@@ -341,6 +342,7 @@ export type ProductInformationBannerLocation =
   | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -386,3 +388,7 @@ export type AclpServices = {
     metrics?: AclpFlag;
   };
 };
+
+interface GenerationalPlansFlag extends BaseFeatureFlag {
+  allowedPlans: string[];
+}
