@@ -22,6 +22,7 @@ export const getStateSeederGroups = (
 };
 
 export const emptyStore: MockState = {
+  userEntitiesByPermission: [],
   childAccounts: [],
   cloudnats: [],
   configInterfaces: [],
@@ -33,6 +34,7 @@ export const emptyStore: MockState = {
   eventQueue: [],
   firewallDevices: [],
   firewalls: [],
+  images: [],
   ipAddresses: [],
   kubernetesClusters: [],
   kubernetesNodePools: [],
