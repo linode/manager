@@ -8,6 +8,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   DELETE_ALERT_SUCCESS_MESSAGE,
+  DISABLE_ALERT_SUCCESS_MESSAGE,
+  ENABLE_ALERT_SUCCESS_MESSAGE,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import { AlertsListTable } from './AlertListTable';
@@ -117,7 +119,7 @@ describe('Alert List Table test', () => {
 
     await userEvent.click(getByRole('button', { name: 'Enable' }));
 
-    expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
+    expect(getByText(ENABLE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show success snackbar when disabling alert succeeds', async () => {
@@ -140,7 +142,7 @@ describe('Alert List Table test', () => {
 
     await userEvent.click(getByRole('button', { name: 'Disable' }));
 
-    expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
+    expect(getByText(DISABLE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show error snackbar when enabling alert fails', async () => {
