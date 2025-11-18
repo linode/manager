@@ -84,6 +84,12 @@ export const EditAlertResources = (props: EditAlertProps) => {
     type,
   } = alertDetails;
 
+  const entityType =
+    serviceType === 'firewall'
+      ? alertDetails.rule_criteria.rules[0]?.label.includes('Node Balancer')
+        ? 'nodebalancer'
+        : 'linode'
+      : undefined;
   return (
     <>
       <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
@@ -99,6 +105,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
           alertLabel={label}
           alertResourceIds={entity_ids}
           alertType={type}
+          entityType={entityType}
           handleResourcesSelection={handleResourcesSelection}
           isSelectionsNeeded
           serviceType={service_type}
