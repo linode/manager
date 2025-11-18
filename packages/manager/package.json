@@ -171,7 +171,7 @@
     "cypress-vite": "^1.8.0",
     "dotenv": "^16.0.3",
     "factory.ts": "^0.5.1",
-    "glob": "^10.3.1",
+    "glob": "^11.1.0",
     "globals": "^16.0.0",
     "history": "4",
     "jsdom": "^24.1.1",
