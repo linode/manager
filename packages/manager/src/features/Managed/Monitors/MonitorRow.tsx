@@ -1,12 +1,13 @@
 import { Tooltip, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { TableCell } from 'src/components/TableCell';
 
 import { MonitorActionMenu } from './MonitorActionMenu';
-import { statusIconMap, statusTextMap } from './monitorMaps';
+import { getStatusColorMap, statusIconMap, statusTextMap } from './monitorMaps';
 import {
   StyledGrid,
   StyledLink,
@@ -25,8 +26,10 @@ interface MonitorRowProps {
 
 export const MonitorRow = (props: MonitorRowProps) => {
   const { issues, monitor } = props;
+  const theme = useTheme();
 
   const Icon = statusIconMap[monitor.status];
+  const statusColors = getStatusColorMap(theme);
 
   // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
   const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
@@ -50,7 +53,11 @@ export const MonitorRow = (props: MonitorRowProps) => {
           wrap="nowrap"
         >
           <StyledGrid>
-            <Icon height={30} width={30} />
+            <Icon
+              height={30}
+              style={{ color: statusColors[monitor.status] }}
+              width={30}
+            />
           </StyledGrid>
           <Grid>{monitor.label}</Grid>
         </Grid>
