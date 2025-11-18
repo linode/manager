@@ -200,6 +200,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       'getMetrics'
     );
     cy.wait('@fetchPreferences');
+    cy.wait(5000);
     // validate the API calls are going with intended payload
     cy.get('[aria-labelledby="start-date"]', { timeout: 50000 })
       .parent()
