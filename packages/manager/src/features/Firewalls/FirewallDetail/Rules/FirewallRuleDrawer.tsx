@@ -1,10 +1,9 @@
-import { Box, Drawer, Notice, Radio, Typography } from '@linode/ui';
+import { Drawer, Notice, Radio, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { Link } from 'src/components/Link';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import {
@@ -22,6 +21,7 @@ import {
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
 import { FirewallRuleSetForm } from './FirewallRuleSetForm';
+import { RuleSetDetailsView } from './RuleSetDetailsView';
 import { firewallRuleCreateOptions } from './shared';
 
 import type {
@@ -174,26 +174,6 @@ export const FirewallRuleDrawer = React.memo(
       return errors;
     };
 
-    const RuleSetViewContainer = () => {
-      const prefixLists = ['pl:system:1', 'pl:system:2'];
-
-      return (
-        <>
-          Rule Set ID: {ruleToModifyOrView?.ruleset}
-          <Box marginTop={4}>
-            {prefixLists.map((pl) => (
-              <>
-                <Link key={pl} onClick={() => {}}>
-                  {pl}
-                </Link>
-                &nbsp;
-              </>
-            ))}
-          </Box>
-        </>
-      );
-    };
-
     return (
       <Drawer onClose={onClose} open={isOpen} title={title}>
         {mode === 'create' && isFirewallRulesetsPrefixlistsEnabled && (
@@ -296,7 +276,9 @@ export const FirewallRuleDrawer = React.memo(
             </Formik>
           )}
 
-        {mode === 'view' && RuleSetViewContainer()}
+        {mode === 'view' && (
+          <RuleSetDetailsView ruleset={ruleToModifyOrView?.ruleset ?? -1} />
+        )}
 
         {(mode === 'create' || mode === 'edit') && (
           <Typography variant="body1">
