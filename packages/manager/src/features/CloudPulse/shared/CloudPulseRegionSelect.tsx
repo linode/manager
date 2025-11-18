@@ -165,7 +165,7 @@ export const CloudPulseRegionSelect = React.memo(
           (!resources && filterKey !== PARENT_ENTITY_REGION)
         }
         errorText={
-          isError || isResourcesError
+          isError || (isResourcesError && filterKey !== PARENT_ENTITY_REGION)
             ? `Failed to fetch ${label || 'Regions'}.`
             : ''
         }
