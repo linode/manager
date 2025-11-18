@@ -29,7 +29,7 @@ export const UsersActionMenu = (props: Props) => {
     useDelegationRole();
 
   const isAccountAdmin = permissions.is_account_admin;
-  const canDeleteUser = permissions.delete_user;
+  const canDeleteUser = isAccountAdmin || permissions.delete_user;
   const isDelegateUser = userType === 'delegate';
 
   // Determine if the current account is a child account with isIAMDelegationEnabled enabled
@@ -109,7 +109,7 @@ export const UsersActionMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for user ${profileUserName}`}
+      ariaLabel={`Action menu for user ${username}`}
     />
   );
 };

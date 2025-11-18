@@ -88,3 +88,16 @@ export const useIsLinodeCloneFirewallEnabled = () => {
     isLinodeCloneFirewallEnabled: Boolean(flags.linodeCloneFirewall),
   };
 };
+
+/**
+ * Returns whether or not features related to the Generational Compute Plans
+ * should be enabled.
+ */
+export const useIsGenerationalPlansEnabled = () => {
+  const flags = useFlags();
+
+  return {
+    isGenerationalPlansEnabled: Boolean(flags.generationalPlansv2?.enabled),
+    allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
+  };
+};
