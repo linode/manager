@@ -4,34 +4,42 @@ import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { toDatabaseFork, toFormattedDate } from '../../utilities';
 
+import type { DatabaseBackupsValues } from './DatabaseBackups';
 import type { Database } from '@linode/api-v4/lib/databases';
 import type { DialogProps } from '@linode/ui';
-import type { DateTime } from 'luxon';
 
 interface Props extends Omit<DialogProps, 'title'> {
   database: Database;
   onClose: () => void;
   open: boolean;
-  selectedDate?: DateTime | null;
-  selectedTime?: DateTime | null;
 }
 
-export const DatabaseBackupDialog = (props: Props) => {
-  const { database, onClose, open, selectedDate, selectedTime } = props;
+export const DatabaseBackupsDialog = (props: Props) => {
+  const { database, onClose, open } = props;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [isRestoring, setIsRestoring] = useState(false);
 
-  const formattedDate = toFormattedDate(selectedDate, selectedTime);
+  const { control } = useFormContext<DatabaseBackupsValues>();
+  const [date, time, region] = useWatch({
+    control,
+    name: ['date', 'time', 'region'],
+  });
+
+  const formattedDate = toFormattedDate(date, time);
 
   const { error, mutateAsync: restore } = useRestoreFromBackupMutation(
     database.engine,
-    toDatabaseFork(database.id, selectedDate, selectedTime)
+    {
+      fork: toDatabaseFork(database.id, date, time),
+      region,
+    }
   );
 
   const handleRestoreDatabase = () => {
@@ -94,5 +102,3 @@ export const DatabaseBackupDialog = (props: Props) => {
     </Dialog>
   );
 };
-
-export default DatabaseBackupDialog;
