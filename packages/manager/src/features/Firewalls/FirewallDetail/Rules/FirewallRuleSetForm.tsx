@@ -13,6 +13,7 @@ import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 import {
   generateAddressesLabel,
@@ -139,11 +140,15 @@ export const FirewallRuleSetForm = React.memo(
               </StyledListItem>
               <StyledListItem>
                 <StyledLabel component="span">Created: </StyledLabel>
-                {selectedRuleSet?.created}
+                {selectedRuleSet?.created && (
+                  <DateTimeDisplay value={selectedRuleSet.created} />
+                )}
               </StyledListItem>
               <StyledListItem>
                 <StyledLabel component="span">Updated: </StyledLabel>
-                {selectedRuleSet?.updated}
+                {selectedRuleSet?.updated && (
+                  <DateTimeDisplay value={selectedRuleSet.updated} />
+                )}
               </StyledListItem>
 
               <Paper
