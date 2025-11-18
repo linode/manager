@@ -164,9 +164,9 @@ describe('Integration Tests for Edit Alert', () => {
 
     cy.get('[data-qa-alert-table-body="true"]').within(() => {
       cy.get('[data-qa-alert-cell$="_entity"]').then(($cells) => {
-        expect($cells.toArray().map((el) => el.innerText.trim())).to.deep.equal(
-          ['firewall-linode-1', 'firewall-linode_interface-2']
-        );
+        expect(
+          $cells.toArray().map((cell) => cell.innerText.trim())
+        ).to.deep.equal(['firewall-linode-1', 'firewall-linode_interface-2']);
       });
       cy.get('input[type="checkbox"]')
         .should('have.length', 2)
