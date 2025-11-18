@@ -447,6 +447,9 @@ describe('Firewall alert configured successfully', () => {
             .findByTitle(entityType.title)
             .should('be.visible')
             .click();
+          ui.tooltip.findByText(
+            'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.'
+          );
 
           groupLabel !== 'Account' &&
             cy.get('[data-testid="select_all_notice"]').click();
