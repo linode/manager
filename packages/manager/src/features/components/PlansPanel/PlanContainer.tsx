@@ -4,9 +4,13 @@ import Grid from '@mui/material/Grid';
 import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
+import Paginate from 'src/components/Paginate';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
+import { PLAN_PANEL_PAGE_SIZE_OPTIONS } from './constants';
 import { PlanSelection } from './PlanSelection';
 import { PlanSelectionTable } from './PlanSelectionTable';
 
@@ -57,6 +61,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   } = props;
   const location = useLocation();
   const flags = useFlags();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
+
+  // Feature gate for pagination functionality
+  const isPlanPaginationEnabled = isGenerationalPlansEnabled;
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const showTransfer =
@@ -108,19 +116,15 @@ export const PlanContainer = (props: PlanContainerProps) => {
   ];
 
   const renderPlanSelection = React.useCallback(
-    (filterOptions?: PlanSelectionFilterOptionsTable) => {
-      const _plans = filterOptions?.planFilter
-        ? plans.filter(filterOptions.planFilter)
-        : plans;
-
-      return _plans.map((plan, id) => {
+    (planList: PlanWithAvailability[]) =>
+      planList.map((plan, id) => {
         return (
           <PlanSelection
             currentPlanHeading={currentPlanHeading}
             hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
             idx={id}
             isCreate={isCreate}
-            key={id}
+            key={plan.id}
             linodeID={linodeID}
             onSelect={onSelect}
             plan={plan}
@@ -131,10 +135,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
             wholePanelIsDisabled={wholePanelIsDisabled}
           />
         );
-      });
-    },
+      }),
     [
-      plans,
       currentPlanHeading,
       hasMajorityOfPlansDisabled,
       isCreate,
@@ -148,99 +150,237 @@ export const PlanContainer = (props: PlanContainerProps) => {
     ]
   );
 
-  return (
-    <Grid container spacing={2}>
-      <Hidden lgUp={isCreate} mdUp={!isCreate}>
-        {isCreate && isDatabaseGA && (
-          <Typography
-            sx={(theme: Theme) => ({
-              marginBottom: theme.spacing(2),
-              marginLeft: theme.spacing(1),
-              marginTop: theme.spacing(1),
-            })}
-          >
-            Usable storage is smaller than the actual plan storage due to the
-            overhead from the database platform.
-          </Typography>
-        )}
-        {shouldDisplayNoRegionSelectedMessage ? (
-          <Notice
-            spacingLeft={8}
-            spacingTop={8}
-            sx={{ '& p': { fontSize: '0.875rem' } }}
-            text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
-            variant="info"
-          />
-        ) : (
-          planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType
-              ? planSelectionDivider.tables.map((table) => {
+  const paginationPrefix = React.useMemo(
+    () => `plan-panel-${planType ?? 'all'}`,
+    [planType]
+  );
+
+  // Feature gate: if pagination is disabled, render the old way
+  if (!isPlanPaginationEnabled) {
+    return (
+      <Grid container spacing={2}>
+        <Hidden lgUp={isCreate} mdUp={!isCreate}>
+          {isCreate && isDatabaseGA && (
+            <Typography
+              sx={(theme: Theme) => ({
+                marginBottom: theme.spacingFunction(16),
+                marginLeft: theme.spacingFunction(8),
+                marginTop: theme.spacingFunction(8),
+              })}
+            >
+              Usable storage is smaller than the actual plan storage due to the
+              overhead from the database platform.
+            </Typography>
+          )}
+          {shouldDisplayNoRegionSelectedMessage ? (
+            <Notice
+              spacingLeft={8}
+              spacingTop={8}
+              sx={(theme) => ({
+                '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+              })}
+              text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+              variant="info"
+            />
+          ) : (
+            planSelectionDividers.map((planSelectionDivider) =>
+              planType === planSelectionDivider.planType
+                ? planSelectionDivider.tables.map((table) => {
+                    const filteredPlans = table.planFilter
+                      ? plans.filter(table.planFilter)
+                      : plans;
+                    return [
+                      filteredPlans.length > 0 && (
+                        <Grid key={table.header} size={12}>
+                          <Typography variant="h3">{table.header}</Typography>
+                        </Grid>
+                      ),
+                      renderPlanSelection(filteredPlans),
+                    ];
+                  })
+                : renderPlanSelection(plans)
+            )
+          )}
+        </Hidden>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
+          <Grid size={12}>
+            {planSelectionDividers.map((planSelectionDivider) =>
+              planType === planSelectionDivider.planType ? (
+                planSelectionDivider.tables.map((table, idx) => {
                   const filteredPlans = table.planFilter
                     ? plans.filter(table.planFilter)
                     : plans;
-                  return [
+                  return (
                     filteredPlans.length > 0 && (
-                      <Grid key={table.header} size={12}>
-                        <Typography variant="h3">{table.header}</Typography>
-                      </Grid>
-                    ),
-                    renderPlanSelection({
-                      planFilter: table.planFilter,
-                    }),
-                  ];
-                })
-              : renderPlanSelection()
-          )
-        )}
-      </Hidden>
-      <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <Grid size={12}>
-          {planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType ? (
-              planSelectionDivider.tables.map((table, idx) => {
-                const filteredPlans = table.planFilter
-                  ? plans.filter(table.planFilter)
-                  : plans;
-                return (
-                  filteredPlans.length > 0 && (
-                    <PlanSelectionTable
-                      filterOptions={{
-                        header: table.header,
-                      }}
-                      key={`plan-filter-${idx}`}
-                      plans={plans}
-                      renderPlanSelection={() =>
-                        renderPlanSelection({
+                      <PlanSelectionTable
+                        filterOptions={{
                           header: table.header,
-                          planFilter: table.planFilter,
+                        }}
+                        key={`plan-filter-${idx}`}
+                        plans={filteredPlans}
+                        renderPlanSelection={renderPlanSelection}
+                        shouldDisplayNoRegionSelectedMessage={
+                          shouldDisplayNoRegionSelectedMessage
+                        }
+                        showNetwork={showNetwork}
+                        showTransfer={showTransfer}
+                      />
+                    )
+                  );
+                })
+              ) : (
+                <PlanSelectionTable
+                  key={planType}
+                  plans={plans}
+                  planType={planType}
+                  renderPlanSelection={renderPlanSelection}
+                  shouldDisplayNoRegionSelectedMessage={
+                    shouldDisplayNoRegionSelectedMessage
+                  }
+                  showNetwork={showNetwork}
+                  showTransfer={showTransfer}
+                  showUsableStorage={
+                    isDatabaseCreateFlow || isDatabaseResizeFlow
+                  }
+                />
+              )
+            )}
+          </Grid>
+        </Hidden>
+      </Grid>
+    );
+  }
+
+  // Pagination enabled: use new paginated rendering
+  return (
+    <Paginate data={plans} key={paginationPrefix} shouldScroll={false}>
+      {({
+        count,
+        data: paginatedPlans,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize,
+      }) => {
+        const shouldDisplayPagination =
+          !shouldDisplayNoRegionSelectedMessage &&
+          count > PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value;
+
+        return (
+          <>
+            <Grid container spacing={2}>
+              <Hidden lgUp={isCreate} mdUp={!isCreate}>
+                {isCreate && isDatabaseGA && (
+                  <Typography
+                    sx={(theme: Theme) => ({
+                      marginBottom: theme.spacingFunction(16),
+                      marginLeft: theme.spacingFunction(8),
+                      marginTop: theme.spacingFunction(8),
+                    })}
+                  >
+                    Usable storage is smaller than the actual plan storage due
+                    to the overhead from the database platform.
+                  </Typography>
+                )}
+                {shouldDisplayNoRegionSelectedMessage ? (
+                  <Notice
+                    spacingLeft={8}
+                    spacingTop={8}
+                    sx={(theme) => ({
+                      '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+                    })}
+                    text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+                    variant="info"
+                  />
+                ) : (
+                  planSelectionDividers.map((planSelectionDivider) =>
+                    planType === planSelectionDivider.planType
+                      ? planSelectionDivider.tables.map((table) => {
+                          const filteredPlans = table.planFilter
+                            ? paginatedPlans.filter(table.planFilter)
+                            : paginatedPlans;
+                          const tableRows = renderPlanSelection(filteredPlans);
+
+                          return [
+                            filteredPlans.length > 0 && (
+                              <Grid key={table.header} size={12}>
+                                <Typography variant="h3">
+                                  {table.header}
+                                </Typography>
+                              </Grid>
+                            ),
+                            tableRows,
+                          ];
                         })
-                      }
-                      shouldDisplayNoRegionSelectedMessage={
-                        shouldDisplayNoRegionSelectedMessage
-                      }
-                      showNetwork={showNetwork}
-                      showTransfer={showTransfer}
-                    />
+                      : renderPlanSelection(paginatedPlans)
                   )
-                );
-              })
-            ) : (
-              <PlanSelectionTable
-                key={planType}
-                plans={plans}
-                planType={planType}
-                renderPlanSelection={renderPlanSelection}
-                shouldDisplayNoRegionSelectedMessage={
-                  shouldDisplayNoRegionSelectedMessage
-                }
-                showNetwork={showNetwork}
-                showTransfer={showTransfer}
-                showUsableStorage={isDatabaseCreateFlow || isDatabaseResizeFlow}
+                )}
+              </Hidden>
+              <Hidden lgDown={isCreate} mdDown={!isCreate}>
+                <Grid size={12}>
+                  {planSelectionDividers.map((planSelectionDivider) =>
+                    planType === planSelectionDivider.planType ? (
+                      planSelectionDivider.tables.map((table, idx) => {
+                        const filteredPlans = table.planFilter
+                          ? paginatedPlans.filter(table.planFilter)
+                          : paginatedPlans;
+                        if (filteredPlans.length === 0) {
+                          return null;
+                        }
+
+                        return (
+                          <PlanSelectionTable
+                            filterOptions={{
+                              header: table.header,
+                            }}
+                            key={`plan-filter-${idx}`}
+                            plans={filteredPlans}
+                            renderPlanSelection={renderPlanSelection}
+                            shouldDisplayNoRegionSelectedMessage={
+                              shouldDisplayNoRegionSelectedMessage
+                            }
+                            showNetwork={showNetwork}
+                            showTransfer={showTransfer}
+                          />
+                        );
+                      })
+                    ) : (
+                      <PlanSelectionTable
+                        key={planType}
+                        plans={paginatedPlans}
+                        planType={planType}
+                        renderPlanSelection={renderPlanSelection}
+                        shouldDisplayNoRegionSelectedMessage={
+                          shouldDisplayNoRegionSelectedMessage
+                        }
+                        showNetwork={showNetwork}
+                        showTransfer={showTransfer}
+                        showUsableStorage={
+                          isDatabaseCreateFlow || isDatabaseResizeFlow
+                        }
+                      />
+                    )
+                  )}
+                </Grid>
+              </Hidden>
+            </Grid>
+            {shouldDisplayPagination && (
+              <PaginationFooter
+                count={count}
+                customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                sx={{
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                }}
               />
-            )
-          )}
-        </Grid>
-      </Hidden>
-    </Grid>
+            )}
+          </>
+        );
+      }}
+    </Paginate>
   );
 };

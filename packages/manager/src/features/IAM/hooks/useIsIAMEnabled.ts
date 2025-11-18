@@ -1,4 +1,4 @@
-import { iamQueries, profileQueries } from '@linode/queries';
+import { iamQueries } from '@linode/queries';
 import {
   useAccountRoles,
   useProfile,
@@ -8,6 +8,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { useFlags } from 'src/hooks/useFlags';
 
+import type { Profile } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FlagSet } from 'src/featureFlags';
 
@@ -31,6 +32,7 @@ export const useIsIAMEnabled = () => {
     isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
     isLoading: isLoadingRoles || isLoadingPermissions,
     accountRoles: roles,
+    profile,
   };
 };
 
@@ -45,18 +47,15 @@ export const useIsIAMEnabled = () => {
  */
 export const checkIAMEnabled = async (
   queryClient: QueryClient,
-  flags: FlagSet
+  flags: FlagSet,
+  profile: Profile | undefined
 ): Promise<boolean> => {
   if (!flags?.iam?.enabled) {
     return false;
   }
 
   try {
-    const profile = await queryClient.ensureQueryData(
-      queryOptions(profileQueries.profile())
-    );
-
-    if (profile.restricted) {
+    if (profile?.username) {
       // For restricted users ONLY, get permissions
       const permissions = await queryClient.ensureQueryData(
         queryOptions(iamQueries.user(profile.username)._ctx.accountPermissions)

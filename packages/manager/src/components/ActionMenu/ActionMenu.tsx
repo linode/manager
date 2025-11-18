@@ -11,6 +11,7 @@ export interface Action {
   hidden?: boolean;
   id?: string;
   onClick: () => void;
+  pendoId?: string;
   title: string;
   tooltip?: string;
 }
@@ -33,6 +34,10 @@ export interface ActionMenuProps {
    */
   onOpen?: () => void;
   /**
+   * Pendo ID to be added to ActionMenu IconButton via data-pendo-id attribute
+   */
+  pendoId?: string;
+  /**
    * If true, stop event propagation when handling clicks
    * Ex: If the action menu is in an accordion, we don't want the click also opening/closing the accordion
    */
@@ -45,8 +50,14 @@ export interface ActionMenuProps {
  * No more than 8 items should be displayed within an action menu.
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
-  const { actionsList, ariaLabel, loading, onOpen, stopClickPropagation } =
-    props;
+  const {
+    actionsList,
+    ariaLabel,
+    loading,
+    onOpen,
+    pendoId,
+    stopClickPropagation,
+  } = props;
 
   const filteredActionsList = actionsList.filter((action) => !action.hidden);
 
@@ -102,6 +113,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
         aria-haspopup="true"
         aria-label={ariaLabel}
         color="inherit"
+        data-pendo-id={pendoId}
         id={buttonId}
         loading={loading}
         loadingIndicator={<CircleProgress noPadding size="xs" />}
@@ -159,6 +171,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
         >
           {filteredActionsList.map((a, idx) => (
             <MenuItem
+              data-pendo-id={a.pendoId}
               data-qa-action-menu-item={a.title}
               data-testid={a.title}
               disabled={a.disabled}

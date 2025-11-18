@@ -1,3 +1,5 @@
+import { useVolumeQuery } from '@linode/queries';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
@@ -7,15 +9,14 @@ import { VolumeEntityDetailBody } from './VolumeEntityDetailBody';
 import { VolumeEntityDetailFooter } from './VolumeEntityDetailFooter';
 import { VolumeEntityDetailHeader } from './VolumeEntityDetailHeader';
 
-import type { Volume } from '@linode/api-v4';
-
-interface Props {
-  volume: Volume;
-}
-export const VolumeEntityDetail = ({ volume }: Props) => {
+export const VolumeSummary = () => {
+  const { volumeId } = useParams({ from: '/volumes/$volumeId' });
+  const { data: volume } = useVolumeQuery(volumeId);
   const { getActionHandlers } = useVolumeActionHandlers(
     '/volumes/$volumeId/summary'
   );
+
+  if (!volume) return null;
 
   const handlers = getActionHandlers(volume.id);
 

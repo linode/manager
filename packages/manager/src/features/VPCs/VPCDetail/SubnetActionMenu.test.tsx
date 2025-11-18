@@ -10,8 +10,6 @@ import { SubnetActionMenu } from './SubnetActionMenu';
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
-      update_linode: true,
-      delete_linode: true,
       update_vpc: true,
       delete_vpc: true,
     },
@@ -128,45 +126,9 @@ describe('SubnetActionMenu', () => {
     expect(props.handleAssignLinodes).toHaveBeenCalled();
   });
 
-  it('should disable the Assign Linodes button if user does not have update_linode permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        update_linode: false,
-        delete_linode: false,
-        update_vpc: false,
-        delete_vpc: false,
-      },
-    });
-    const view = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
-    await userEvent.click(actionMenu);
-
-    const assignButton = view.getByRole('menuitem', { name: 'Assign Linodes' });
-    expect(assignButton).toHaveAttribute('aria-disabled', 'true');
-  });
-
-  it('should enable the Assign Linodes button if user has update_linode and update_vpc permissions', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        update_linode: true,
-        delete_linode: false,
-        update_vpc: true,
-        delete_vpc: false,
-      },
-    });
-    const view = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
-    await userEvent.click(actionMenu);
-
-    const assignButton = view.getByRole('menuitem', { name: 'Assign Linodes' });
-    expect(assignButton).not.toHaveAttribute('aria-disabled', 'true');
-  });
-
   it('should disable the Edit button if user does not have update_vpc permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_linode: false,
-        delete_linode: false,
         update_vpc: false,
         delete_vpc: false,
       },
@@ -182,8 +144,6 @@ describe('SubnetActionMenu', () => {
   it('should enable the Edit button if user has update_vpc permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_linode: false,
-        delete_linode: false,
         update_vpc: true,
         delete_vpc: false,
       },
