@@ -20,8 +20,8 @@ import {
   validateIPs,
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
+import { FirewallRuleSetDetailsView } from './FirewallRuleSetDetailsView';
 import { FirewallRuleSetForm } from './FirewallRuleSetForm';
-import { RuleSetDetailsView } from './RuleSetDetailsView';
 import { firewallRuleCreateOptions } from './shared';
 
 import type {
@@ -277,7 +277,10 @@ export const FirewallRuleDrawer = React.memo(
           )}
 
         {mode === 'view' && (
-          <RuleSetDetailsView ruleset={ruleToModifyOrView?.ruleset ?? -1} />
+          <FirewallRuleSetDetailsView
+            category={category}
+            ruleset={ruleToModifyOrView?.ruleset ?? -1}
+          />
         )}
 
         {(mode === 'create' || mode === 'edit') && (
