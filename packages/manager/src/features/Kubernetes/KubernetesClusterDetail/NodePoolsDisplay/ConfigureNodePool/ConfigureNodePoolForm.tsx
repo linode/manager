@@ -46,7 +46,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
       // @TODO allow users to edit Node Pool `label` and `tags` because the API supports it. (ECE-353)
       // label: nodePool.label,
       // tags: nodePool.tags,
-      firewall_id: nodePool.firewall_id,
+      firewall_id: nodePool.firewall_id ?? undefined,
       update_strategy: nodePool.update_strategy,
       k8s_version: nodePool.k8s_version,
     },
