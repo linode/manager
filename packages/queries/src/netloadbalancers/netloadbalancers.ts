@@ -19,7 +19,10 @@ import type {
  *
  * Returns a paginated list of Network Load Balancers
  */
-export const useNetworkLoadBalancersQuery = (params: Params, filter: Filter) =>
+export const useNetworkLoadBalancersQuery = (
+  params: Params = {},
+  filter: Filter = {},
+) =>
   useQuery<ResourcePage<NetworkLoadBalancer>, APIError[]>({
     ...networkLoadBalancerQueries.netloadbalancers._ctx.paginated(
       params,

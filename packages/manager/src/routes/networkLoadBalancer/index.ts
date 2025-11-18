@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { NetworkLoadBalancersRoute } from './networkLoadBalancersRoute';
@@ -18,5 +18,38 @@ const networkLoadBalancersIndexRoute = createRoute({
   ).then((m) => m.networkLoadBalancersLazyRoute)
 );
 
+const networkLoadBalancerDetailRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    throw redirect({
+      params: {
+        id: params.id,
+      },
+      search: () => ({}),
+      to: '/netloadbalancers/$id/listeners',
+    });
+  },
+  getParentRoute: () => networkLoadBalancersRoute,
+  path: '$id',
+}).lazy(() =>
+  import(
+    'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'
+  ).then((m) => m.networkLoadBalancerDetailLazyRoute)
+);
+
+const networkLoadBalancerListenersRoute = createRoute({
+  getParentRoute: () => networkLoadBalancersRoute,
+  path: '$id/listeners',
+  validateSearch: (search: { query?: string }) => search,
+}).lazy(() =>
+  import(
+    'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'
+  ).then((m) => m.networkLoadBalancerDetailLazyRoute)
+);
+
 export const networkLoadBalancersRouteTree =
-  networkLoadBalancersRoute.addChildren([networkLoadBalancersIndexRoute]);
+  networkLoadBalancersRoute.addChildren([
+    networkLoadBalancersIndexRoute,
+    networkLoadBalancerDetailRoute.addChildren([
+      networkLoadBalancerListenersRoute,
+    ]),
+  ]);

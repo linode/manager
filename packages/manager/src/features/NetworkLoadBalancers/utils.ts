@@ -25,3 +25,7 @@ export const useIsNetworkLoadBalancerEnabled = (): {
 
   return { isNetworkLoadBalancerEnabled };
 };
+
+//Links
+export const NLB_DOCS_LINK =
+  'https://techdocs.akamai.com/linode-api/changelog/network-load-balancers';
