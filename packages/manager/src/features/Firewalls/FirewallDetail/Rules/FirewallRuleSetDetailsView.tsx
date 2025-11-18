@@ -84,13 +84,22 @@ export const FirewallRuleSetDetailsView = (
       </StyledListItem>
 
       {ruleSetDetails?.deleted && (
-        <StyledListItem
-          paddingMultiplier={2}
-          sx={(theme) => ({ color: theme.tokens.alias.Content.Text.Negative })}
-        >
+        <StyledListItem paddingMultiplier={2}>
           <StyledWarningIcon />
-          <StyledLabel component="span">Marked for deletion: </StyledLabel>
-          {ruleSetDetails?.deleted}
+          <StyledLabel
+            component="span"
+            sx={(theme) => ({
+              color: theme.tokens.alias.Content.Text.Negative,
+            })}
+          >
+            Marked for deletion:
+          </StyledLabel>
+          <DateTimeDisplay
+            sx={(theme) => ({
+              color: theme.tokens.alias.Content.Text.Negative,
+            })}
+            value={ruleSetDetails.deleted}
+          />
           <TooltipIcon
             status="info"
             text="This rule set will be automatically deleted when it’s no longer referenced by other firewalls."
