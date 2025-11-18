@@ -4,6 +4,7 @@ import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 import {
   generateAddressesLabel,
@@ -71,11 +72,15 @@ export const FirewallRuleSetDetailsView = (
       </StyledListItem>
       <StyledListItem paddingMultiplier={2}>
         <StyledLabel component="span">Created: </StyledLabel>
-        {ruleSetDetails?.created}
+        {ruleSetDetails?.created && (
+          <DateTimeDisplay value={ruleSetDetails.created} />
+        )}
       </StyledListItem>
       <StyledListItem paddingMultiplier={2}>
         <StyledLabel component="span">Updated: </StyledLabel>
-        {ruleSetDetails?.updated}
+        {ruleSetDetails?.updated && (
+          <DateTimeDisplay value={ruleSetDetails.updated} />
+        )}
       </StyledListItem>
 
       {ruleSetDetails?.deleted && (
@@ -118,7 +123,7 @@ export const FirewallRuleSetDetailsView = (
               background: theme.tokens.alias.Background.Neutralsubtle,
               color: theme.tokens.alias.Content.Text.Negative,
               font: theme.font.bold,
-              width: '58px',
+              width: '51px',
               fontSize: theme.tokens.font.FontSize.Xxxs,
               marginRight: theme.spacingFunction(6),
               flexShrink: 0,
@@ -132,10 +137,11 @@ export const FirewallRuleSetDetailsView = (
             key={`firewall-ruleset-rule-${idx}`}
             sx={(theme) => ({
               padding: `${theme.spacingFunction(4)} 0`,
+              alignItems: 'flex-start',
             })}
           >
             <Chip
-              label={rule.action}
+              label={capitalize(rule.action?.toLowerCase() ?? '')}
               sx={(theme) => ({
                 background:
                   rule.action === 'ACCEPT'
@@ -146,7 +152,7 @@ export const FirewallRuleSetDetailsView = (
                     ? theme.tokens.alias.Content.Text.Positive
                     : theme.tokens.alias.Content.Text.Negative,
                 font: theme.font.bold,
-                width: '58px',
+                width: '51px',
                 fontSize: theme.tokens.font.FontSize.Xxxs,
                 marginRight: theme.spacingFunction(6),
                 flexShrink: 0,
