@@ -37,10 +37,7 @@ import {
   widgetFactory,
 } from 'src/factories';
 
-import type {
-  CloudPulseServiceType,
-  ObjectStorageEndpoint,
-} from '@linode/api-v4';
+import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 const timeDurationToSelect = 'Last 24 Hours';
 const { dashboardName, id, metrics, serviceType } = widgetDetails.objectstorage;
@@ -67,28 +64,34 @@ const getFiltersForMetric = (metricName: string) => {
 };
 
 // Dashboard creation
+// Dashboard creation
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   group_by: ['entity_id'],
-  service_type: serviceType as CloudPulseServiceType,
+  service_type: 'objectstorage',
   id,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
-      filters: [...dimensions],
+      filters: [
+        {
+          operator: 'eq',
+          dimension_label: 'Protocol',
+          value: 'list protocols',
+        },
+      ],
       label: title,
       metric: name,
       unit,
       y_label: yLabel,
       namespace_id: id,
-      service_type: serviceType as CloudPulseServiceType,
+      service_type: 'objectstorage',
     })
   ),
 });
-
 // Metric definitions
 const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
-    label: title,
+    label: `${title} (object_storage)`,
     metric: name,
     unit,
     dimensions: [...dimensions, ...getFiltersForMetric(name)],
@@ -420,8 +423,8 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
         dashboardId: 6,
         groupBy: ['entity_id', 'region', 'endpoint'],
         region: 'us-ord',
+        resources: [],
         endpoint: [],
-        resources: ['bucket-2.us-ord-2.linodeobjects.com'],
         widgets: {
           'Total Bucket Size': {
             label: 'Total Bucket Size',
@@ -429,10 +432,21 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
               unit: 'min',
               value: 5,
             },
+            filters: [
+              {
+                operator: 'eq',
+                dimension_label: 'Protocol',
+                value: 'list protocols',
+              },
+            ],
+          },
+          'Bytes Downloaded': {
+            label: 'Bytes Downloaded',
+            timeGranularity: { unit: 'min', value: 5 },
+            filters: [], // OR NO filters key (same result)
           },
         },
       };
-
       comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
       comparePreferences(expectedAclpPreference, request.body.aclpPreference);
     });
@@ -482,9 +496,22 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
               unit: 'min',
               value: 5,
             },
+            filters: [
+              {
+                operator: 'eq',
+                dimension_label: 'Protocol',
+                value: 'list protocols',
+              },
+            ],
+          },
+          'Bytes Downloaded': {
+            label: 'Bytes Downloaded',
+            timeGranularity: { unit: 'min', value: 5 },
+            filters: [], // OR NO filters key (same result)
           },
         },
       };
+
       comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
       comparePreferences(expectedAclpPreference, request.body.aclpPreference);
     });
