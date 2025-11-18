@@ -10,7 +10,10 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import {
+  useIsIAMDelegationEnabled,
+  useIsIAMEnabled,
+} from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -46,11 +49,14 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     globalGrantType: 'child_account_access',
   });
 
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const canSwitchBetweenParentOrProxyAccount =
-    (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
-    profile?.user_type === 'proxy';
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? profile?.user_type === 'parent'
+    : (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
+      profile?.user_type === 'proxy';
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
