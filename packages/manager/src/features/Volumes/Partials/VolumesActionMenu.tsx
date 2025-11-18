@@ -53,7 +53,7 @@ export const VolumesActionMenu = (props: Props) => {
 
   const { data: linodePermissions } = usePermissions(
     'linode',
-    ['delete_linode'],
+    ['update_linode'],
     volume.linode_id!,
     isOpen && isAttached
   );
@@ -121,12 +121,12 @@ export const VolumesActionMenu = (props: Props) => {
     },
     DETACH: {
       disabled: !(
-        volumePermissions?.detach_volume && linodePermissions?.delete_linode
+        volumePermissions?.detach_volume && linodePermissions?.update_linode
       ),
       onClick: handlers.handleDetach,
       title: 'Detach',
       tooltip: !(
-        volumePermissions?.detach_volume && linodePermissions?.delete_linode
+        volumePermissions?.detach_volume && linodePermissions?.update_linode
       )
         ? getRestrictedResourceText({
             action: 'detach',
