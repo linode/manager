@@ -127,7 +127,7 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
             onMouseDown={(e) => onResizeStart(e)}
             title="Resize"
           >
-            <ResizeWindow />
+            <ResizeWindow height={16} width={16} />
           </button>
         </>
       )}
