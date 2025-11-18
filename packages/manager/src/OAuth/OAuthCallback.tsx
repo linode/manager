@@ -7,6 +7,8 @@ import { SplashScreen } from 'src/components/SplashScreen';
 
 import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
 
+import type { LinkProps } from '@tanstack/react-router';
+
 /**
  * Login will redirect back to Cloud Manager with a URL like:
  * https://cloud.linode.com/oauth/callback?returnTo=%2F&state=066a6ad9-b19a-43bb-b99a-ef0b5d4fc58d&code=42ddf75dfa2cacbad897
@@ -38,22 +40,15 @@ export const OAuthCallback = () => {
         });
 
         // None of these paths are valid return destinations
-        const invalidReturnToPaths = [
+        const invalidReturnToPaths: LinkProps['to'][] = [
           '/logout',
+          '/admin/callback',
           '/oauth/callback',
-          '/oauth',
           '/cancel',
         ];
 
         const isInvalidReturnTo =
-          !returnTo ||
-          returnTo === '/' ||
-          invalidReturnToPaths.some(
-            (path) =>
-              returnTo === path ||
-              returnTo.startsWith(`${path}/`) ||
-              returnTo.startsWith(`${path}?`)
-          );
+          !returnTo || invalidReturnToPaths.some((path) => returnTo === path);
 
         if (isInvalidReturnTo) {
           navigate({ to: '/' });
