@@ -7,12 +7,10 @@ import {
   Paper,
   SelectedIcon,
   Stack,
-  styled,
   Typography,
 } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
@@ -20,37 +18,9 @@ import {
   generateAddressesLabel,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
+import { StyledLabel, StyledListItem, useStyles } from './shared.styles';
 
 import type { FirewallRuleSetFormProps } from './FirewallRuleDrawer.types';
-import type { Theme } from '@linode/ui';
-
-const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
-  ({ theme }) => ({
-    alignItems: 'center',
-    display: 'flex',
-    padding: `${theme.spacingFunction(4)} 0`,
-  })
-);
-
-export const StyledLabel = styled(Box, {
-  label: 'StyledLabelBox',
-})(({ theme }) => ({
-  font: theme.font.bold,
-  marginRight: theme.spacingFunction(4),
-}));
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  copyIcon: {
-    '& svg': {
-      height: '1em',
-      width: '1em',
-    },
-    color: theme.palette.primary.main,
-    display: 'inline-block',
-    position: 'relative',
-    marginTop: theme.spacingFunction(2),
-  },
-}));
 
 export const FirewallRuleSetForm = React.memo(
   (props: FirewallRuleSetFormProps) => {
@@ -85,10 +55,12 @@ export const FirewallRuleSetForm = React.memo(
     // Build dropdown options
     const ruleSetDropdownOptions = React.useMemo(
       () =>
-        ruleSets.map((ruleSet) => ({
-          label: ruleSet.label,
-          value: ruleSet.id,
-        })),
+        ruleSets
+          .filter((ruleSet) => ruleSet.type === category) // Display only rule sets applicable to the given category
+          .map((ruleSet) => ({
+            label: ruleSet.label,
+            value: ruleSet.id,
+          })),
       [ruleSets]
     );
 
@@ -192,6 +164,7 @@ export const FirewallRuleSetForm = React.memo(
                     key={`firewall-ruleset-rule-${idx}`}
                     sx={(theme) => ({
                       padding: `${theme.spacingFunction(4)} 0`,
+                      alignItems: 'flex-start',
                     })}
                   >
                     <Chip
