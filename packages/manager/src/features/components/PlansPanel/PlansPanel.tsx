@@ -28,6 +28,7 @@ import {
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
+  useShouldDisablePremiumPlansTab,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -113,6 +114,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
     Boolean(flags.soldOutChips) && Boolean(selectedRegionID)
   );
 
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
   const _types = types.filter((type) => {
     if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
       return false;
@@ -164,7 +169,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const isDatabaseResize = flow === 'database' && isResize;
 
-  const tabs = Object.keys(plans).map(
+  const tabs = Object.keys(plans)?.map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
       const plansMap: PlanSelectionType[] = plans[plan]!;
       const {
@@ -260,6 +265,19 @@ export const PlansPanel = (props: PlansPanelProps) => {
         sx={{ width: '100%' }}
       />
     );
+  }
+
+  // If there are no premium plans available, plans table will hide the premium tab.
+  // To override this behavior, we add the tab again and then disable it.
+  if (
+    shouldDisablePremiumPlansTab &&
+    !tabs.some((tab) => tab.title === planTabInfoContent.premium?.title)
+  ) {
+    tabs.push({
+      disabled: true,
+      render: () => <div />,
+      title: planTabInfoContent.premium?.title,
+    });
   }
 
   return (

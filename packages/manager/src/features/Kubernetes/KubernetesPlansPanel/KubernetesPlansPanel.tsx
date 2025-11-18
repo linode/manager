@@ -13,6 +13,7 @@ import {
   isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
+  useShouldDisablePremiumPlansTab,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -84,6 +85,10 @@ export const KubernetesPlansPanel = (props: Props) => {
     Boolean(flags.soldOutChips) && Boolean(selectedRegionId)
   );
 
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
   const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
     plan === 'shared' && Boolean(isAPLEnabled);
 
@@ -111,7 +116,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     { isLKE: true }
   );
 
-  const tabs = Object.keys(plans).map(
+  const tabs = Object.keys(plans)?.map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
       const plansMap: PlanSelectionType[] = plans[plan]!;
       const {
@@ -127,6 +132,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       });
 
       return {
+        disabled: false,
         render: () => {
           return (
             <>
@@ -179,6 +185,26 @@ export const KubernetesPlansPanel = (props: Props) => {
     currentPlanHeading
   );
 
+  // If there are no premium plans available, plans table will hide the premium tab.
+  // To override this behavior, we add the tab again and then disable it.
+  // If there are plans but they should be disabled, we disable the existing tab.
+  if (
+    shouldDisablePremiumPlansTab &&
+    !tabs.some((tab) => tab.title === planTabInfoContent.premium?.title)
+  ) {
+    tabs.push({
+      disabled: true,
+      render: () => <div />,
+      title: planTabInfoContent.premium?.title,
+    });
+  } else if (shouldDisablePremiumPlansTab) {
+    tabs.forEach((tab) => {
+      if (tab.title === planTabInfoContent.premium?.title) {
+        tab.disabled = true;
+      }
+    });
+  }
+
   return (
     <PlanFilterProvider>
       <TabbedPanel
@@ -189,6 +215,11 @@ export const KubernetesPlansPanel = (props: Props) => {
         initTab={initialTab >= 0 ? initialTab : 0}
         notice={notice}
         sx={{ padding: 0 }}
+        tabDisabledMessage={
+          shouldDisablePremiumPlansTab
+            ? 'Premium CPUs are now called Dedicated G7 Plans.'
+            : undefined
+        }
         tabs={tabs}
       />
     </PlanFilterProvider>
