@@ -186,7 +186,7 @@ export const FirewallRuleSetForm = React.memo(
                             ? theme.tokens.component.Badge.Positive.Subtle.Text
                             : theme.tokens.component.Badge.Negative.Subtle.Text,
                         font: theme.font.bold,
-                        width: '58px',
+                        width: '51px',
                         fontSize: theme.tokens.font.FontSize.Xxxs,
                         marginRight: theme.spacingFunction(6),
                         flexShrink: 0,
