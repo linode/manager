@@ -1,9 +1,10 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
   NetworkLoadBalancer,
   NetworkLoadBalancerListener,
   NetworkLoadBalancerNode,
 } from '@linode/api-v4';
-import { Factory } from '@linode/utilities';
 
 export const networkLoadBalancerFactory =
   Factory.Sync.makeFactory<NetworkLoadBalancer>({
