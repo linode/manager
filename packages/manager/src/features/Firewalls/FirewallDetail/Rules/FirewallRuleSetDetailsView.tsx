@@ -119,27 +119,6 @@ export const FirewallRuleSetDetailsView = (
         >
           {capitalize(category)} Rules
         </StyledLabel>
-        <StyledListItem
-          component="span"
-          sx={(theme) => ({
-            color: theme.tokens.alias.Content.Text.Negative,
-            marginBottom: theme.spacingFunction(12),
-          })}
-        >
-          <Chip
-            label="Action"
-            sx={(theme) => ({
-              background: theme.tokens.alias.Background.Neutralsubtle,
-              color: theme.tokens.alias.Content.Text.Negative,
-              font: theme.font.bold,
-              width: '51px',
-              fontSize: theme.tokens.font.FontSize.Xxxs,
-              marginRight: theme.spacingFunction(6),
-              flexShrink: 0,
-            })}
-          />
-          Protocol;&nbsp; Ports (if any);&nbsp; Sources (IPs, PLs)
-        </StyledListItem>
         {ruleSetDetails?.rules.map((rule, idx) => (
           <StyledListItem
             component="span"
