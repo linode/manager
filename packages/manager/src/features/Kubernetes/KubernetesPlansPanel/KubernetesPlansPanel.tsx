@@ -4,7 +4,6 @@ import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { createDedicatedPlanFiltersRenderProp } from 'src/features/components/PlansPanel/DedicatedPlanFilters';
-import { PlanFilterProvider } from 'src/features/components/PlansPanel/PlanFilterContext';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -156,9 +155,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 onSelect={onSelect}
                 planFilters={
                   plan === 'dedicated'
-                    ? createDedicatedPlanFiltersRenderProp(
-                        `plan-panel-k8-${plan}`
-                      )
+                    ? createDedicatedPlanFiltersRenderProp()
                     : undefined
                 }
                 plans={plansForThisLinodeTypeClass}
@@ -206,22 +203,20 @@ export const KubernetesPlansPanel = (props: Props) => {
   }
 
   return (
-    <PlanFilterProvider>
-      <TabbedPanel
-        copy={copy}
-        error={error}
-        handleTabChange={() => resetValues()}
-        header={header || ' '}
-        initTab={initialTab >= 0 ? initialTab : 0}
-        notice={notice}
-        sx={{ padding: 0 }}
-        tabDisabledMessage={
-          shouldDisablePremiumPlansTab
-            ? 'Premium CPUs are now called Dedicated G7 Plans.'
-            : undefined
-        }
-        tabs={tabs}
-      />
-    </PlanFilterProvider>
+    <TabbedPanel
+      copy={copy}
+      error={error}
+      handleTabChange={() => resetValues()}
+      header={header || ' '}
+      initTab={initialTab >= 0 ? initialTab : 0}
+      notice={notice}
+      sx={{ padding: 0 }}
+      tabDisabledMessage={
+        shouldDisablePremiumPlansTab
+          ? 'Premium CPUs are now called Dedicated G7 Plans.'
+          : undefined
+      }
+      tabs={tabs}
+    />
   );
 };
