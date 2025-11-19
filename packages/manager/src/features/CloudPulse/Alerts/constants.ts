@@ -127,11 +127,15 @@ export const severityMap: Record<AlertSeverityType, string> = {
   3: 'Info',
 };
 
+// TODO: remove in progress once api changes are ready
 export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
   failed: 'error',
   'in progress': 'other',
+  provisioning: 'other',
+  disabling: 'other',
+  enabling: 'other',
 };
 
 export const channelTypeOptions: Item<string, ChannelType>[] = [
@@ -166,11 +170,15 @@ export const dimensionOperatorTypeMap: Record<
   startswith: 'starts with',
 };
 
+// TODO: remove in progress once api changes are ready
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
   failed: 'Failed',
   'in progress': 'In Progress',
+  disabling: 'Disabling',
+  enabling: 'Enabling',
+  provisioning: 'Provisioning',
 };
 
 export const alertStatusOptions: Item<string, AlertStatusType>[] =

@@ -120,7 +120,15 @@ export const editAlertDefinitionSchema = object({
   trigger_conditions: triggerConditionValidation.optional().default(undefined),
   severity: number().oneOf([0, 1, 2, 3]).optional(),
   status: string()
-    .oneOf(['enabled', 'disabled', 'in progress', 'failed'])
+    .oneOf([
+      'enabled',
+      'disabled',
+      'in progress', // TODO: remove in progress once api changes are ready
+      'failed',
+      'provisioning',
+      'disabling',
+      'enabling',
+    ])
     .optional(),
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
   regions: array().of(string().defined()).optional(),
