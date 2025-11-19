@@ -385,7 +385,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             (filter: DimensionFilter) => filter.dimension_label === 'node_type'
           );
 
-          expect(nodeTypeFilter).to.have.length(2);
+          expect(nodeTypeFilter).to.have.length(1);
           expect(nodeTypeFilter[0].operator).to.equal('eq');
           expect(nodeTypeFilter[0].value).to.equal('secondary');
         });
@@ -480,7 +480,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
-        expect(nodeTypeFilter).to.have.length(2);
+        expect(nodeTypeFilter).to.have.length(1);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
 
@@ -555,7 +555,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         const nodeTypeFilter = filters.filter(
           (filter: DimensionFilter) => filter.dimension_label === 'node_type'
         );
-        expect(nodeTypeFilter).to.have.length(2);
+        expect(nodeTypeFilter).to.have.length(1);
         expect(nodeTypeFilter[0].operator).to.equal('eq');
         expect(nodeTypeFilter[0].value).to.equal('secondary');
       });

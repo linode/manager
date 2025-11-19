@@ -62,6 +62,7 @@ export type BillingSource = 'akamai' | 'linode';
 export const accountCapabilities = [
   'Akamai Cloud Load Balancer',
   'Akamai Cloud Pulse',
+  'Akamai Cloud Pulse Logs',
   'Block Storage',
   'Block Storage Encryption',
   'Cloud Firewall',
@@ -79,6 +80,7 @@ export const accountCapabilities = [
   'Managed Databases',
   'Managed Databases Beta',
   'NETINT Quadra T1U',
+  'Network LoadBalancer',
   'NodeBalancers',
   'Object Storage Access Key Regions',
   'Object Storage Endpoint Types',

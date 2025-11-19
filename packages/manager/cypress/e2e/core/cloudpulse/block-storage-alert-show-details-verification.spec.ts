@@ -384,7 +384,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
         // Validate Service field
         cy.findByText('Service:').should(BE_VISIBLE);
-        cy.findByText('BlockStorage').should(BE_VISIBLE);
+        cy.findByText('Volumes').should(BE_VISIBLE);
 
         // Validate Type field
         cy.findByText('Type:').should(BE_VISIBLE);

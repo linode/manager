@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
 import type { APIError, Volume } from '@linode/api-v4';
@@ -28,6 +29,20 @@ export const DetachVolumeDialog = (props: Props) => {
     volume?.linode_id !== null && volume?.linode_id !== undefined
   );
 
+  const { data: volumePermissions } = usePermissions(
+    'volume',
+    ['detach_volume'],
+    volume?.id,
+    open
+  );
+
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linode?.id,
+    open
+  );
+
   const {
     error,
     isPending,
@@ -48,6 +63,9 @@ export const DetachVolumeDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={
+        !(volumePermissions?.detach_volume && linodePermissions?.update_linode)
+      }
       entity={{
         action: 'detachment',
         name: volume?.label,

@@ -174,13 +174,13 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Select a time duration
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
-      cy.get('@startDateInput').click();
-      cy.get(`[data-qa-preset="Last day"]`).click();
-      cy.get('[data-qa-buttons="apply"]')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-        
+    cy.get('@startDateInput').click();
+    cy.get('[data-qa-preset="Last day"]').click();
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
     // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
