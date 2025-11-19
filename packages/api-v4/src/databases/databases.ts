@@ -17,10 +17,10 @@ import type {
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
+  DatabaseBackupsPayload,
   DatabaseCredentials,
   DatabaseEngine,
   DatabaseEngineConfig,
-  DatabaseFork,
   DatabaseInstance,
   DatabaseType,
   Engine,
@@ -267,11 +267,14 @@ export const legacyRestoreWithBackup = (
  *
  * Fully restore a backup to the cluster
  */
-export const restoreWithBackup = (engine: Engine, fork: DatabaseFork) =>
+export const restoreWithBackup = (
+  engine: Engine,
+  data: DatabaseBackupsPayload,
+) =>
   Request<Database>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
-    setData({ fork }),
+    setData(data),
   );
 
 /**
