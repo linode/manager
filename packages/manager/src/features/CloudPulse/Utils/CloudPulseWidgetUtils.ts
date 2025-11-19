@@ -456,9 +456,17 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
     }
 
     if (key === 'linode_id') {
-      const linodeLabel =
-        resources.find((resource) => resource.entities?.[value] !== undefined)
-          ?.entities?.[value] ?? value;
+      let linodeLabel = value;
+      if (serviceType === 'firewall') {
+        linodeLabel =
+          resources.find((resource) => resource.entities?.[value] !== undefined)
+            ?.entities?.[value] ?? linodeLabel;
+      }
+      if (serviceType === 'blockstorage') {
+        linodeLabel =
+          resources.find((resource) => resource.volumeLinodeId === value)
+            ?.volumeLinodeLabel ?? linodeLabel;
+      }
       const index = groupBy.indexOf('linode_id');
       if (index !== -1) {
         labels[index] = linodeLabel;
