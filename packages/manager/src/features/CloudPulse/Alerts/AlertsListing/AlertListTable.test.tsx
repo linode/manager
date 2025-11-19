@@ -10,7 +10,6 @@ import {
   DELETE_ALERT_SUCCESS_MESSAGE,
   DISABLE_ALERT_SUCCESS_MESSAGE,
   ENABLE_ALERT_SUCCESS_MESSAGE,
-  UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import { AlertsListTable } from './AlertListTable';
 

@@ -203,7 +203,7 @@ export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert updated. It may take up to 5 minutes for changes to be applied.';
 
 export const DISABLE_ALERT_SUCCESS_MESSAGE =
-  'Alert disabled.  It may take up to 5 minutes for your changes to take effect.';
+  'Alert disabled. It may take up to 5 minutes for your changes to take effect.';
 
 export const ENABLE_ALERT_SUCCESS_MESSAGE =
   'Alert enabled. It may take up to 5 minutes for your changes to take effect.';
