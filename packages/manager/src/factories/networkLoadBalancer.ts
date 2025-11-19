@@ -1,9 +1,10 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
   NetworkLoadBalancer,
   NetworkLoadBalancerListener,
   NetworkLoadBalancerNode,
 } from '@linode/api-v4';
-import { Factory } from '@linode/utilities';
 
 export const networkLoadBalancerFactory =
   Factory.Sync.makeFactory<NetworkLoadBalancer>({
@@ -11,7 +12,7 @@ export const networkLoadBalancerFactory =
     label: Factory.each((id) => `nlb-${id}`),
     region: 'us-east',
     address_v4: '192.168.1.1',
-    address_v6: '::1',
+    address_v6: '2001:db8:85a3::8a2e:370:7334',
     created: '2023-01-01T00:00:00Z',
     updated: '2023-01-02T00:00:00Z',
     status: 'active',
@@ -31,7 +32,7 @@ export const networkLoadBalancerListenerFactory =
 
 export const networkLoadBalancerNodeFactory =
   Factory.Sync.makeFactory<NetworkLoadBalancerNode>({
-    address_v6: '2001:db8:3333:4444:5555:6666:7777:8888',
+    address_v6: '2001:db8:85a3::8a2e:370:7334',
     created: '2023-01-01T00:00:00Z',
     id: Factory.each((id) => id),
     label: Factory.each((id) => `nlb-node-${id}`),
