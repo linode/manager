@@ -48,6 +48,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Managed Databases',
     'Managed Databases Beta',
     'NETINT Quadra T1U',
+    'Network LoadBalancer',
     'NodeBalancers',
     'Object Storage Access Key Regions',
     'Object Storage Endpoint Types',

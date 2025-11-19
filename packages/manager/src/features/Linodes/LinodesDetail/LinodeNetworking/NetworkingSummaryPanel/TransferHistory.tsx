@@ -138,7 +138,15 @@ export const TransferHistory = React.memo((props: Props) => {
       return (
         <ErrorState
           compact
-          CustomIcon={areStatsNotReady ? PendingIcon : undefined}
+          CustomIcon={
+            areStatsNotReady
+              ? () => (
+                  <PendingIcon
+                    style={{ color: theme.tokens.alias.Content.Icon.Positive }}
+                  />
+                )
+              : undefined
+          }
           errorText={
             areStatsNotReady ? STATS_NOT_READY_MESSAGE : statsErrorString
           }

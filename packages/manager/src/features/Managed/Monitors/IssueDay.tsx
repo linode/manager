@@ -1,5 +1,6 @@
 import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import type { JSX } from 'react';
 
@@ -64,18 +65,31 @@ const iconStyles = {
 
 export const IssueDay = (props: IssueDayProps) => {
   const { day, issues } = props;
+  const theme = useTheme();
 
   const issueLinks = issues.map((thisIssue) => thisIssue.entity.id);
 
   if (issues.length === 0) {
     // No issues for today
-    return <DayDisplay day={day} icon={<Good {...iconStyles} />} />;
+    return (
+      <DayDisplay
+        day={day}
+        icon={
+          <Good
+            style={{
+              ...iconStyles,
+              color: theme.tokens.alias.Content.Icon.Positive,
+            }}
+          />
+        }
+      />
+    );
   }
 
   return (
     <DayDisplay
       day={day}
-      icon={<Bad {...iconStyles} />}
+      icon={<Bad style={{ ...iconStyles, color: theme.palette.error.main }} />}
       // For now, not worrying about the possibility of multiple tickets opened in a single day
       ticketUrl={`/support/tickets/${issueLinks[0]}`}
     />
