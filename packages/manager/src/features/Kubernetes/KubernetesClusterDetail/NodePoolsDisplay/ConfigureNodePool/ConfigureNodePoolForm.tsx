@@ -53,6 +53,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
        * preventing unexpected validation errors when the initial value is null.
        */
       firewall_id: nodePool.firewall_id ?? undefined,
+      update_strategy: nodePool.update_strategy,
       k8s_version: nodePool.k8s_version,
     },
   });
