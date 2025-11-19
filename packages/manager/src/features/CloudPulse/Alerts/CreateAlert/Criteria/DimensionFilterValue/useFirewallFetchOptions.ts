@@ -112,10 +112,10 @@ export function useFirewallFetchOptions(
 
   // Fetch all linodes with the combined filter
   const {
-    values: linodeRegions,
+    values: firewallLinodesOrRegions,
     isError: isLinodesError,
     isLoading: isLinodesLoading,
-  } = useFetchLinodeRegions(
+  } = useFetchFirewallLinodesOrRegions(
     enableLinodeNodebalancerRegions && associatedEntityType === 'linode',
     {
       '+and': [idFilter, regionFilter].filter(Boolean),
@@ -126,16 +126,17 @@ export function useFirewallFetchOptions(
 
   // Fetch all nodebalancers with the combined filter
   const {
-    values: nodebalancerRegions,
+    values: firewallNodebalancersOrRegions,
     isError: isNodebalancersError,
     isLoading: isNodebalancersLoading,
-  } = useFetchNodebalancerRegions(
+  } = useFetchFirewallNodebalancersOrRegions(
     enableLinodeNodebalancerRegions && associatedEntityType === 'nodebalancer',
     {
       '+and': [labelFilter, regionFilter].filter(Boolean),
     },
     {},
-    dimensionLabel === 'associated_entity_region'
+    dimensionLabel === 'associated_entity_region' ||
+      dimensionLabel === 'region_id'
   );
 
   // Fetch VPC Subnet options
@@ -153,9 +154,9 @@ export function useFirewallFetchOptions(
       return {
         values:
           associatedEntityType === 'linode'
-            ? linodeRegions
+            ? firewallLinodesOrRegions
             : associatedEntityType === 'nodebalancer'
-              ? nodebalancerRegions
+              ? firewallNodebalancersOrRegions
               : [],
         isError: isLinodesError || isResourcesError || isNodebalancersError,
         isLoading:
@@ -164,13 +165,13 @@ export function useFirewallFetchOptions(
     case 'linode_id':
     case 'region_id':
       return {
-        values: linodeRegions,
+        values: firewallLinodesOrRegions,
         isError: isLinodesError || isResourcesError,
         isLoading: isLinodesLoading || isResourcesLoading,
       };
     case 'nodebalancer_id':
       return {
-        values: nodebalancerRegions,
+        values: firewallNodebalancersOrRegions,
         isError: isNodebalancersError || isResourcesError,
         isLoading: isNodebalancersLoading || isResourcesLoading,
       };
@@ -186,7 +187,7 @@ export function useFirewallFetchOptions(
   }
 }
 
-const useFetchLinodeRegions = (
+const useFetchFirewallLinodesOrRegions = (
   enabled: boolean = true,
   filter: Filter = {},
   params: Params = {},
@@ -211,7 +212,7 @@ const useFetchLinodeRegions = (
   };
 };
 
-const useFetchNodebalancerRegions = (
+const useFetchFirewallNodebalancersOrRegions = (
   enabled: boolean = true,
   filter: Filter = {},
   params: Params = {},
