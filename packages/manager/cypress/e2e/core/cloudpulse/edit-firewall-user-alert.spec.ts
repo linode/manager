@@ -459,6 +459,11 @@ describe('Integration Tests for Edit Alert', () => {
         cy.findByLabelText('Description (optional)').clear();
         cy.findByLabelText('Description (optional)').type('update-description');
         cy.findByLabelText('Service').should('be.disabled');
+        ui.tooltip
+          .findByText(
+            'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.'
+          )
+          .should('be.visible');
         ui.autocomplete.findByLabel('Severity').clear();
         ui.autocomplete.findByLabel('Severity').type('Info');
         ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
