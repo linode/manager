@@ -89,7 +89,7 @@ export const FirewallRuleSetForm = React.memo(
               setFieldValue('ruleset', selectedRuleSet?.value);
             }}
             options={ruleSetDropdownOptions}
-            placeholder="Select a Rule Set"
+            placeholder="Type to search or select a Rule Set"
             renderOption={(props, option, { selected }) => {
               const { key, ...rest } = props;
               return (
