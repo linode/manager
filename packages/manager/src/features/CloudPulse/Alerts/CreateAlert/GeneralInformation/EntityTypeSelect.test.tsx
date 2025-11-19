@@ -129,4 +129,29 @@ describe('EntityTypeSelect component tests', () => {
       within(entityTypeDropdown).queryByRole('button', { name: 'Clear' })
     ).not.toBeInTheDocument();
   });
+
+  it('should display tooltip text on hover of the help icon', async () => {
+    renderWithThemeAndHookFormContext({
+      component: (
+        <EntityTypeSelect
+          name="entity_type"
+          onEntityTypeChange={onEntityChange}
+        />
+      ),
+    });
+
+    const entityTypeContainer = screen.getByTestId(ENTITY_TYPE_SELECT_TEST_ID);
+    const helpButton =
+      within(entityTypeContainer).getByTestId('tooltip-info-icon');
+
+    await userEvent.hover(helpButton);
+
+    expect(
+      await screen.findByText(
+        'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.'
+      )
+    ).toBeVisible();
+
+    await userEvent.unhover(helpButton);
+  });
 });

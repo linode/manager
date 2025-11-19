@@ -55,6 +55,10 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
           options={entityTypeOptions}
           placeholder="Select an Entity Type"
           sx={{ marginTop: '5px' }}
+          textFieldProps={{
+            labelTooltipText:
+              'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.',
+          }}
           value={
             entityTypeOptions.find((option) => option.value === field.value) ??
             undefined
