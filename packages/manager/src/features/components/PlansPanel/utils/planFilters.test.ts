@@ -10,7 +10,6 @@ import {
   filterPlansByGeneration,
   filterPlansByType,
   getAvailableTypes,
-  shouldShowEmptyState,
   supportsTypeFiltering,
 } from './planFilters';
 
@@ -76,6 +75,21 @@ describe('planFilters utilities', () => {
 
       expect(result).toEqual([g6Plan]);
     });
+
+    it('returns all dedicated plans (G6, G7, G8) when generation is "all"', () => {
+      const result = filterPlansByGeneration(
+        [g8ComputePlan, g8GeneralPlan, g7DedicatedPlan, g7PremiumPlan, g6Plan],
+        'all'
+      );
+
+      expect(result).toEqual([
+        g8ComputePlan,
+        g8GeneralPlan,
+        g7DedicatedPlan,
+        g7PremiumPlan,
+        g6Plan,
+      ]);
+    });
   });
 
   describe('filterPlansByType', () => {
@@ -109,7 +123,7 @@ describe('planFilters utilities', () => {
       expect(result).toEqual([g8GeneralPlan]);
     });
 
-    it('ignores type filtering for G7 and G6', () => {
+    it('ignores type filtering for G7, G6, and "all" generation', () => {
       const resultG7 = filterPlansByType(
         [g7DedicatedPlan],
         'g7',
@@ -120,9 +134,15 @@ describe('planFilters utilities', () => {
         'g6',
         PLAN_FILTER_TYPE_GENERAL_PURPOSE
       );
+      const resultAll = filterPlansByType(
+        [g8ComputePlan, g8GeneralPlan],
+        'all',
+        PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED
+      );
 
       expect(resultG7).toEqual([g7DedicatedPlan]);
       expect(resultG6).toEqual([g6Plan]);
+      expect(resultAll).toEqual([g8ComputePlan, g8GeneralPlan]);
     });
   });
 
@@ -146,6 +166,22 @@ describe('planFilters utilities', () => {
 
       expect(result).toEqual([g8GeneralPlan]);
     });
+
+    it('returns all dedicated plans when generation is "all"', () => {
+      const result = applyPlanFilters(
+        [g8ComputePlan, g8GeneralPlan, g7DedicatedPlan, g7PremiumPlan, g6Plan],
+        'all',
+        PLAN_FILTER_TYPE_ALL
+      );
+
+      expect(result).toEqual([
+        g8ComputePlan,
+        g8GeneralPlan,
+        g7DedicatedPlan,
+        g7PremiumPlan,
+        g6Plan,
+      ]);
+    });
   });
 
   describe('supportsTypeFiltering', () => {
@@ -153,6 +189,7 @@ describe('planFilters utilities', () => {
       expect(supportsTypeFiltering('g8')).toBe(true);
       expect(supportsTypeFiltering('g7')).toBe(false);
       expect(supportsTypeFiltering('g6')).toBe(false);
+      expect(supportsTypeFiltering('all')).toBe(false);
     });
   });
 
@@ -165,19 +202,10 @@ describe('planFilters utilities', () => {
       ]);
     });
 
-    it('returns only the "all" option for G7 and G6', () => {
+    it('returns only the "all" option for G7, G6, and "all" generation', () => {
       expect(getAvailableTypes('g7')).toEqual([PLAN_FILTER_TYPE_ALL]);
       expect(getAvailableTypes('g6')).toEqual([PLAN_FILTER_TYPE_ALL]);
-    });
-  });
-
-  describe('shouldShowEmptyState', () => {
-    it('returns true when no generation is selected', () => {
-      expect(shouldShowEmptyState(undefined)).toBe(true);
-    });
-
-    it('returns false when a generation is selected', () => {
-      expect(shouldShowEmptyState('g8')).toBe(false);
+      expect(getAvailableTypes('all')).toEqual([PLAN_FILTER_TYPE_ALL]);
     });
   });
 });

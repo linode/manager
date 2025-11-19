@@ -9,7 +9,7 @@ import { Select } from '@linode/ui';
 import * as React from 'react';
 
 import {
-  PLAN_FILTER_EMPTY_STATE_MESSAGE,
+  PLAN_FILTER_GENERATION_ALL,
   PLAN_FILTER_GENERATION_G6,
   PLAN_FILTER_GENERATION_G7,
   PLAN_FILTER_GENERATION_G8,
@@ -18,11 +18,7 @@ import {
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from './constants';
 import { usePlanFilters } from './hooks/usePlanFilters';
-import {
-  applyPlanFilters,
-  shouldShowEmptyState,
-  supportsTypeFiltering,
-} from './utils/planFilters';
+import { applyPlanFilters, supportsTypeFiltering } from './utils/planFilters';
 
 import type {
   PlanFilterRenderArgs,
@@ -35,6 +31,7 @@ import type { SelectOption } from '@linode/ui';
 type DedicatedFilterKey = 'generation' | 'type';
 
 const GENERATION_OPTIONS: SelectOption<PlanFilterGeneration>[] = [
+  { label: 'All', value: PLAN_FILTER_GENERATION_ALL },
   { label: 'G8 Dedicated', value: PLAN_FILTER_GENERATION_G8 },
   { label: 'G7 Dedicated', value: PLAN_FILTER_GENERATION_G7 },
   { label: 'G6 Dedicated', value: PLAN_FILTER_GENERATION_G6 },
@@ -72,6 +69,7 @@ const DedicatedPlanFiltersComponent = React.memo(
       () => ({
         generation: {
           clearsOnClear: ['type'] as DedicatedFilterKey[],
+          defaultValue: PLAN_FILTER_GENERATION_ALL,
           resetsToDefaultOnChange: ['type'] as DedicatedFilterKey[],
         },
         type: {
@@ -174,15 +172,12 @@ const DedicatedPlanFiltersComponent = React.memo(
     }, [type, typeFilteringSupported, typeOptions]);
 
     const result = React.useMemo<PlanFilterRenderResult>(() => {
-      const emptyState = shouldShowEmptyState(generation)
-        ? { message: PLAN_FILTER_EMPTY_STATE_MESSAGE }
-        : null;
-
       const filterUI = (
         <div
           style={{
             alignItems: 'flex-end',
             display: 'flex',
+            flexWrap: 'wrap',
             gap: '19px',
             marginBottom: 16,
           }}
@@ -217,10 +212,10 @@ const DedicatedPlanFiltersComponent = React.memo(
       );
 
       return {
-        emptyState,
         filteredPlans,
         filterUI,
-        hasActiveFilters: !!generation,
+        hasActiveFilters:
+          !!generation && generation !== PLAN_FILTER_GENERATION_ALL,
       };
     }, [
       disabled,

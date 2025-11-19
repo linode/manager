@@ -14,7 +14,7 @@ import type { PlanWithAvailability } from '../types';
 /**
  * Available plan generations for Dedicated CPU filtering
  */
-export type PlanFilterGeneration = 'g6' | 'g7' | 'g8';
+export type PlanFilterGeneration = 'all' | 'g6' | 'g7' | 'g8';
 
 /**
  * Available plan types for filtering within a generation

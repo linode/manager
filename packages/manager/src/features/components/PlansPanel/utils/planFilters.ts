@@ -25,22 +25,31 @@ import type {
 // ============================================================================
 
 /**
- * Filter plans by generation (G8, G7, or G6)
+ * Filter plans by generation (G8, G7, G6, or All)
  *
- * @param plans - Array of all plans
- * @param generation - The generation to filter by ('g8', 'g7', or 'g6')
+ * @param plans - Array of all plans (mostly pre-filtered by plan type/class)
+ * @param generation - The generation to filter by ('all', 'g8', 'g7', or 'g6')
  * @returns Filtered array of plans matching the generation
  *
  * @example
  * ```ts
  * const g8Plans = filterPlansByGeneration(allPlans, 'g8');
  * // Returns all plans with IDs starting with 'g8-dedicated-'
+ *
+ * const allDedicatedPlans = filterPlansByGeneration(allPlans, 'all');
+ * // Returns all plans as-is (already filtered by plan type in parent)
  * ```
  */
 export const filterPlansByGeneration = (
   plans: PlanWithAvailability[],
   generation: PlanFilterGeneration
 ): PlanWithAvailability[] => {
+  // For "All", return all plans as-is
+  // The plans array is already filtered to only dedicated plans by the parent component
+  if (generation === 'all') {
+    return plans;
+  }
+
   // For G8, use explicit slug list for precise filtering
   if (generation === 'g8') {
     const g8Slugs = new Set<string>(G8_DEDICATED_ALL_SLUGS);
@@ -62,7 +71,7 @@ export const filterPlansByGeneration = (
  * Filter plans by type within a generation
  *
  * @param plans - Array of plans (should be pre-filtered by generation)
- * @param generation - The generation context ('g8', 'g7', or 'g6')
+ * @param generation - The generation context ('all', 'g8', 'g7', or 'g6')
  * @param type - The type to filter by ('all', 'compute-optimized', 'general-purpose')
  * @returns Filtered array of plans matching the type
  *
@@ -83,8 +92,8 @@ export const filterPlansByType = (
     return plans;
   }
 
-  // G7 and G6 only have "All" option (no sub-types)
-  if (generation === 'g7' || generation === 'g6') {
+  // G7, G6, and "All" generation only have "All" option (no sub-types)
+  if (generation === 'g7' || generation === 'g6' || generation === 'all') {
     return plans;
   }
 
@@ -129,8 +138,11 @@ export const filterPlansByType = (
  * // Get all G7 plans
  * const g7All = applyPlanFilters(allPlans, 'g7', 'all');
  *
- * // No filters - return all plans
- * const all = applyPlanFilters(allPlans);
+ * // Get all dedicated plans (G6, G7, G8)
+ * const allDedicated = applyPlanFilters(allPlans, 'all', 'all');
+ *
+ * // No filters - return empty array
+ * const none = applyPlanFilters(allPlans);
  * ```
  */
 export const applyPlanFilters = (
@@ -138,7 +150,7 @@ export const applyPlanFilters = (
   generation?: PlanFilterGeneration,
   type: PlanFilterType = PLAN_FILTER_TYPE_ALL
 ): PlanWithAvailability[] => {
-  // No filters - return all plans
+  // No filters - return empty array
   if (!generation) {
     return [];
   }
@@ -176,6 +188,7 @@ export const supportsTypeFiltering = (
  * ```ts
  * getAvailableTypes('g8'); // ['all', 'compute-optimized', 'general-purpose']
  * getAvailableTypes('g7'); // ['all']
+ * getAvailableTypes('all'); // ['all']
  * ```
  */
 export const getAvailableTypes = (
@@ -189,19 +202,6 @@ export const getAvailableTypes = (
     ];
   }
 
-  // G7 and G6 only have "All"
+  // G7, G6, and "All" only have "All" type option
   return [PLAN_FILTER_TYPE_ALL];
-};
-
-/**
- * Check if filters should show empty state
- *
- * @param generation - Current generation filter
- * @returns True if empty state should be shown
- */
-export const shouldShowEmptyState = (
-  generation: PlanFilterGeneration | undefined
-): boolean => {
-  // Show empty state if no generation is selected
-  return !generation;
 };
