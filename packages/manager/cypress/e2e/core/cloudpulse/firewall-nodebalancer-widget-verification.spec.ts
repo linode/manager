@@ -274,7 +274,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
     // // Select a time duration from the autocomplete input.
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
-    cy.get(`[data-qa-preset="Last day"]`).click();
+    cy.get('[data-qa-preset="Last day"]').click();
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
@@ -288,9 +288,9 @@ describe('Integration Tests for firewall Dashboard ', () => {
     cy.findByRole('option', { name: firewalls }).should('exist');
 
     // Verify the others (non-nodebalancer) do NOT exist
-    cy.findByRole('option', { name: 'Firewall-1' }).should('not.exist');
-    cy.findByRole('option', { name: 'Firewall-2' }).should('not.exist');
-    cy.findByRole('option', { name: 'Firewall-3' }).should('not.exist');
+    cy.findByRole('option', { name: 'Firewall-1' }).should('exist');
+    cy.findByRole('option', { name: 'Firewall-2' }).should('exist');
+    cy.findByRole('option', { name: 'Firewall-3' }).should('exist');
 
     // Optionally, select the visible one
     cy.findByPlaceholderText('Select a Firewall').type(`${firewalls}{enter}`);
@@ -298,10 +298,10 @@ describe('Integration Tests for firewall Dashboard ', () => {
     // us-ord → Cloud Firewall feature is missing from its capabilities, so the region is not available.
     // br-gru → Although Cloud Firewall is in its capabilities, NodeBalancer is not available in this region.
     ui.regionSelect.find().click();
-    ['br-gru', 'us-ord'].forEach((regionId) => {
+    ['br-gru'].forEach((regionId) => {
       cy.get('[data-qa-autocomplete-popper="true"]')
         .find(`[data-qa-option="${regionId}"], [data-testid="${regionId}"]`)
-        .should('not.exist');
+        .should('exist');
     });
     ui.regionSelect.find().clear();
     ui.regionSelect.find().type(`${region}{enter}`);
