@@ -66,6 +66,10 @@ import {
   firewallFactory,
   firewallMetricDefinitionsResponse,
   firewallMetricRulesFactory,
+  firewallPrefixListFactory,
+  firewallRuleFactory,
+  firewallRuleSetFactory,
+  firewallRulesFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -1300,6 +1304,18 @@ export const handlers = [
           }),
         ],
       }),
+      // Firewall with the Rule and RuleSet Reference
+      firewallFactory.build({
+        id: 1001,
+        label: 'firewall with rule and ruleset reference',
+        rules: firewallRulesFactory.build({
+          inbound: [
+            firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
+            firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+            ...firewallRuleFactory.buildList(2),
+          ],
+        }),
+      }),
     ];
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
@@ -1308,8 +1324,64 @@ export const handlers = [
     const devices = firewallDeviceFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(devices));
   }),
-  http.get('*/v4beta/networking/firewalls/:firewallId', () => {
-    const firewall = firewallFactory.build();
+  http.get('*/v4beta/networking/firewalls/rulesets', () => {
+    const rulesets = firewallRuleSetFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(rulesets));
+  }),
+  http.get('*/v4beta/networking/prefixlists', () => {
+    const prefixlists = firewallPrefixListFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(prefixlists));
+  }),
+  http.get(
+    '*/v4beta/networking/firewalls/rulesets/:rulesetId',
+    ({ params }) => {
+      const getRuleSetDetailById = (rulesetId: number) => {
+        switch (rulesetId) {
+          case 123:
+            // Ruleset with 123 Id
+            return firewallRuleSetFactory.build({
+              id: 123,
+            });
+          case 123456789:
+            // Ruleset with larger ID 123456789 & Longer label with 32 chars
+            return firewallRuleSetFactory.build({
+              id: 123456789,
+              label: 'ruleset-with-a-longer-32ch-label',
+            });
+          default:
+            return firewallRuleSetFactory.build();
+        }
+      };
+      const firewallRuleSet = getRuleSetDetailById(Number(params.rulesetId));
+      return HttpResponse.json(firewallRuleSet);
+    }
+  ),
+  http.get('*/v4beta/networking/firewalls/:firewallId', ({ params }) => {
+    const firewall =
+      params.firewallId === '1001'
+        ? firewallFactory.build({
+            id: 1001,
+            label: 'firewall with rule and ruleset reference',
+            rules: firewallRulesFactory.build({
+              inbound: [
+                firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
+                firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+                ...firewallRuleFactory.buildList(1, {
+                  addresses: {
+                    ipv4: ['192.168.1.213', '172.31.255.255'],
+                    ipv6: [
+                      '2001:db8:85a3::8a2e:370:7334/128',
+                      '2001:db8:85a3::8a2e:371:7335/128',
+                    ],
+                  },
+                  ports: '22, 53, 80, 100, 443, 3306',
+                  protocol: 'IPENCAP',
+                  action: 'ACCEPT',
+                }),
+              ],
+            }),
+          })
+        : firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
   http.put<{}, { status: FirewallStatus }>(
