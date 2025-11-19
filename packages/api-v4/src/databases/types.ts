@@ -79,6 +79,11 @@ export interface DatabaseFork {
   source: number;
 }
 
+export interface DatabaseBackupsPayload {
+  fork: DatabaseFork;
+  region?: string;
+}
+
 export interface DatabaseCredentials {
   password: string;
   username: string;

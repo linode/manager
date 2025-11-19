@@ -40,8 +40,11 @@ export const AvatarForProxy = ({ height = 34, width = 34 }: Props) => {
 
 const StyledProxyUserIcon = styled(ProxyUserIcon, {
   label: 'styledProxyUserIcon',
-})(() => ({
+})(({ theme }) => ({
   bottom: 0,
   left: 0,
   position: 'absolute',
+  '& path': {
+    fill: theme.tokens.alias.Content.Icon.Secondary.Default,
+  },
 }));
