@@ -1,4 +1,3 @@
-import { LKEClusterInfo } from '@linode/api-v4';
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Box, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
@@ -8,6 +7,8 @@ import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { StyledBodyGrid } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { formatDate } from 'src/utilities/formatDate';
+
+import type { LKEClusterInfo } from '@linode/api-v4';
 
 interface NetworkLoadBalancerDetailBodyInterface {
   addressV4: string;

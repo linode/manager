@@ -1,9 +1,10 @@
-import { NetworkLoadBalancerStatus } from '@linode/api-v4';
 import { Box, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+
+import type { NetworkLoadBalancerStatus } from '@linode/api-v4';
 
 export const NetworkLoadBalancerDetailHeader = (props: {
   status: NetworkLoadBalancerStatus;
