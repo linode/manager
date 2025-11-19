@@ -110,7 +110,7 @@ export function useFirewallFetchOptions(
     filteredFirewallParentEntityIds.length > 0 &&
     supportedRegionIds?.length > 0;
 
-  // Fetch all linodes with the combined filter
+  // Fetch all linodes or regions with the combined filter
   const {
     values: firewallLinodesOrRegions,
     isError: isLinodesError,
@@ -124,7 +124,7 @@ export function useFirewallFetchOptions(
     dimensionLabel === 'associated_entity_region'
   );
 
-  // Fetch all nodebalancers with the combined filter
+  // Fetch all nodebalancers or regions with the combined filter
   const {
     values: firewallNodebalancersOrRegions,
     isError: isNodebalancersError,
