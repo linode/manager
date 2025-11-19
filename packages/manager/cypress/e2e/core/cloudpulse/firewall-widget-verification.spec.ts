@@ -247,11 +247,9 @@ describe('Integration Tests for firewall Dashboard ', () => {
     cy.findByRole('option', { name: 'firewall-linode_interface-2' }).should(
       'exist'
     );
-    cy.findByRole('option', { name: 'firewall-no-entities-3' }).should(
-      'not.exist'
-    );
+    cy.findByRole('option', { name: 'firewall-no-entities-3' }).should('exist');
     cy.findByRole('option', { name: 'firewall-nodebalancer-4' }).should(
-      'not.exist'
+      'exist'
     );
 
     // Optionally, select the visible one
