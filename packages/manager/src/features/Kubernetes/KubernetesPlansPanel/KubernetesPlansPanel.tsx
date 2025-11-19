@@ -3,6 +3,7 @@ import * as React from 'react';
 import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { createDedicatedPlanFiltersRenderProp } from 'src/features/components/PlansPanel/DedicatedPlanFilters';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -152,6 +153,11 @@ export const KubernetesPlansPanel = (props: Props) => {
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
+                planFilters={
+                  plan === 'dedicated'
+                    ? createDedicatedPlanFiltersRenderProp()
+                    : undefined
+                }
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 selectedId={selectedId}
