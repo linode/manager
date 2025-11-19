@@ -279,7 +279,10 @@ export const filterAlerts = (props: FilterAlertsProps): Alert[] => {
   return (
     alerts?.filter(({ label, status, type, scope, regions }) => {
       return (
-        (status === 'enabled' || status === 'in progress') &&
+        (status === 'enabled' ||
+          status === 'in progress' || // TODO: remove in progress once api changes are ready
+          status === 'provisioning' ||
+          status === 'enabling') &&
         (!selectedType || type === selectedType) &&
         (!searchText ||
           label.toLowerCase().includes(searchText.toLowerCase())) &&

@@ -3219,6 +3219,31 @@ export const handlers = [
           rules: [firewallNodebalancerMetricCriteria.build()],
         },
       }),
+      alertFactory.build({
+        id: 340,
+        label: 'Firewall-nodebalancer-system',
+        type: 'system',
+        service_type: 'firewall',
+        entity_ids: ['25'],
+        rule_criteria: {
+          rules: [
+            firewallNodebalancerMetricCriteria.build({ dimension_filters: [] }),
+          ],
+        },
+      }),
+      alertFactory.build({
+        id: 123,
+        label: 'Firewall-linode-system',
+        type: 'system',
+        service_type: 'firewall',
+        entity_ids: ['1', '4'],
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
+      ...alertFactory.buildList(3, { status: 'enabling' }),
+      ...alertFactory.buildList(3, { status: 'disabling' }),
+      ...alertFactory.buildList(3, { status: 'provisioning' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
