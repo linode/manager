@@ -160,12 +160,10 @@ describe('linode storage tab', () => {
   });
 
   /*
-   * - Confirms UI flow end-to-end when a user attempts to delete a Linode disk with encryption enabled.
-   * - Confirms that disk deletion fails and toast notification appears.
+   * - Confirms UI flow end-to-end when a user deletes a Linode disk with encryption enabled.
+   * - Confirms that disk deletion succeeds and toast notification appears.
    */
-  // TODO: Disk cannot be deleted if disk_encryption is 'enabled'
-  // TODO: edit result of this test if/when behavior of backend is updated. uncertain what expected behavior is for this disk config
-  it('delete disk fails when Linode uses disk encryption', () => {
+  it('deletes a disk when Linode Disk Encryption is enabled', () => {
     const diskName = randomLabel();
     cy.defer(() =>
       createTestLinode({
@@ -195,19 +193,17 @@ describe('linode storage tab', () => {
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.findByText('Deleting', { exact: false }).should('be.visible');
       ui.button.findByTitle('Add a Disk').should('be.enabled');
-      //   ui.toast.assertMessage(
-      //     `Disk ${diskName} on Linode ${linode.label} has been deleted.`
-      //   );
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been deleted.`
+      );
       ui.toast
         .findByMessage(
           `Disk ${diskName} on Linode ${linode.label} has been deleted.`
         )
         .should('not.exist');
-      //   cy.findByLabelText('List of Disks').within(() => {
-      //     cy.contains(diskName).should('not.exist');
-      //   });
+
       cy.findByLabelText('List of Disks').within(() => {
-        cy.contains(diskName).should('be.visible');
+        cy.contains(diskName).should('not.exist');
       });
     });
   });
