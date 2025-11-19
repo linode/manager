@@ -10,7 +10,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
-import { PLAN_PANEL_PAGE_SIZE_OPTIONS } from './constants';
+import {
+  PLAN_FILTER_NO_RESULTS_MESSAGE,
+  PLAN_PANEL_PAGE_SIZE_OPTIONS,
+} from './constants';
 import { PlanSelection } from './PlanSelection';
 import { PlanSelectionTable } from './PlanSelectionTable';
 
@@ -57,13 +60,6 @@ export interface PlanFilterRenderArgs {
 }
 
 export interface PlanFilterRenderResult {
-  /**
-   * Optional empty state configuration for the table body
-   */
-  emptyState?: null | {
-    message: string;
-  };
-
   /**
    * Filtered plans after applying filters
    */
@@ -272,9 +268,13 @@ export const PlanContainer = (props: PlanContainerProps) => {
     ? filterResult
     : null;
   const plansToDisplay = effectiveFilterResult?.filteredPlans ?? plans;
+
+  // Automatically show empty state message when filters return no results
   const tableEmptyState = shouldDisplayNoRegionSelectedMessage
     ? null
-    : (effectiveFilterResult?.emptyState ?? null);
+    : plansToDisplay.length === 0
+      ? { message: PLAN_FILTER_NO_RESULTS_MESSAGE }
+      : null;
 
   // Feature gate: if pagination is disabled, render the old way
   if (!isGenerationalPlansEnabled) {

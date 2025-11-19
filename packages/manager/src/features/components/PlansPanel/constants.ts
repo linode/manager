@@ -45,8 +45,7 @@ export const MTC_AVAILABLE_PLAN_TYPES = ['g8-premium-128-ht'];
 // Plan Filter Constants
 // ============================================================================
 
-export const PLAN_FILTER_EMPTY_STATE_MESSAGE =
-  'Select a generation and type to view plans and prices.';
+export const PLAN_FILTER_NO_RESULTS_MESSAGE = 'No plans found.';
 
 // G8 Dedicated CPU Plans - Compute Optimized (1:2 RAM:CPU ratio)
 export const G8_DEDICATED_COMPUTE_OPTIMIZED_SLUGS = [
@@ -80,13 +79,14 @@ export const G8_DEDICATED_ALL_SLUGS = [
 ] as const;
 
 // Filter option values
-export const PLAN_FILTER_GENERATION_G8 = 'g8' as const;
-export const PLAN_FILTER_GENERATION_G7 = 'g7' as const;
-export const PLAN_FILTER_GENERATION_G6 = 'g6' as const;
+export const PLAN_FILTER_GENERATION_ALL = 'all';
+export const PLAN_FILTER_GENERATION_G8 = 'g8';
+export const PLAN_FILTER_GENERATION_G7 = 'g7';
+export const PLAN_FILTER_GENERATION_G6 = 'g6';
 
-export const PLAN_FILTER_TYPE_ALL = 'all' as const;
-export const PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED = 'compute-optimized' as const;
-export const PLAN_FILTER_TYPE_GENERAL_PURPOSE = 'general-purpose' as const;
+export const PLAN_FILTER_TYPE_ALL = 'all';
+export const PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED = 'compute-optimized';
+export const PLAN_FILTER_TYPE_GENERAL_PURPOSE = 'general-purpose';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,
