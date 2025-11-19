@@ -177,12 +177,14 @@ export const FirewallRuleSetForm = React.memo(
                       sx={(theme) => ({
                         background:
                           rule.action === 'ACCEPT'
-                            ? theme.tokens.alias.Background.Positivesubtle
-                            : theme.tokens.alias.Background.Negativesubtle,
+                            ? theme.tokens.component.Badge.Positive.Subtle
+                                .Background
+                            : theme.tokens.component.Badge.Negative.Subtle
+                                .Background,
                         color:
                           rule.action === 'ACCEPT'
-                            ? theme.tokens.alias.Content.Text.Positive
-                            : theme.tokens.alias.Content.Text.Negative,
+                            ? theme.tokens.component.Badge.Positive.Subtle.Text
+                            : theme.tokens.component.Badge.Negative.Subtle.Text,
                         font: theme.font.bold,
                         width: '58px',
                         fontSize: theme.tokens.font.FontSize.Xxxs,
