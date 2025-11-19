@@ -46,8 +46,13 @@ export const ConfigureNodePoolForm = (props: Props) => {
       // @TODO allow users to edit Node Pool `label` and `tags` because the API supports it. (ECE-353)
       // label: nodePool.label,
       // tags: nodePool.tags,
+
+      /**
+       * We set the default value of the form field to `undefined` if `nodePool.firewall_id` is null.
+       * This ensures the field remains controlled in React Hook Form and is properly initialized,
+       * preventing unexpected validation errors when the initial value is null.
+       */
       firewall_id: nodePool.firewall_id ?? undefined,
-      update_strategy: nodePool.update_strategy,
       k8s_version: nodePool.k8s_version,
     },
   });
@@ -87,7 +92,7 @@ export const ConfigureNodePoolForm = (props: Props) => {
             clusterTier={clusterTier ?? 'standard'}
             firewallSelectOptions={{
               allowFirewallRemoval: clusterTier === 'standard',
-              ...(nodePool.firewall_id !== 0 && {
+              ...(nodePool.firewall_id !== null && {
                 disableDefaultFirewallRadio: true,
                 defaultFirewallRadioTooltip:
                   "You can't use this option once an existing Firewall has been selected.",
