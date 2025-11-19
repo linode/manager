@@ -233,7 +233,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
   }, []);
 
   // Create filter state manager component if planFilters render prop is provided
-  // This component returns null but manages filter state via hooks (usePlanFilters)
+  // This component returns null but manages filter state via local React state
+  // State persists when switching tabs because Reach UI TabPanels stay mounted
   // and communicates filtered results back to parent via the onResult callback
   const filterStateManager = React.useMemo(() => {
     if (isGenerationalPlansEnabled && planFilters) {

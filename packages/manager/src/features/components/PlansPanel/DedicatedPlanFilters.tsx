@@ -2,7 +2,10 @@
  * DedicatedPlanFilters Component
  *
  * Filter component for Dedicated CPU plans. Composes Select dropdowns and
- * uses the generic usePlanFilters hook to sync state with context provider.
+ * uses local React state to manage filter selections.
+ *
+ * Note: State persists when switching between plan tabs because Reach UI
+ * TabPanels keep all tabs mounted in the DOM (only visibility changes).
  */
 
 import { Select } from '@linode/ui';
@@ -17,7 +20,6 @@ import {
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from './constants';
-import { usePlanFilters } from './hooks/usePlanFilters';
 import { applyPlanFilters, supportsTypeFiltering } from './utils/planFilters';
 
 import type {
@@ -27,8 +29,6 @@ import type {
 import type { PlanWithAvailability } from './types';
 import type { PlanFilterGeneration, PlanFilterType } from './types/planFilters';
 import type { SelectOption } from '@linode/ui';
-
-type DedicatedFilterKey = 'generation' | 'type';
 
 const GENERATION_OPTIONS: SelectOption<PlanFilterGeneration>[] = [
   { label: 'All', value: PLAN_FILTER_GENERATION_ALL },
@@ -51,49 +51,22 @@ interface DedicatedPlanFiltersComponentProps {
   disabled?: boolean;
   onResult: (result: PlanFilterRenderResult) => void;
   plans: PlanWithAvailability[];
-  preferenceKey: string;
   resetPagination: () => void;
 }
 
 const DedicatedPlanFiltersComponent = React.memo(
   (props: DedicatedPlanFiltersComponentProps) => {
-    const {
-      disabled = false,
-      onResult,
-      plans,
-      preferenceKey,
-      resetPagination,
-    } = props;
+    const { disabled = false, onResult, plans, resetPagination } = props;
 
-    const filterDefinitions = React.useMemo(
-      () => ({
-        generation: {
-          clearsOnClear: ['type'] as DedicatedFilterKey[],
-          defaultValue: PLAN_FILTER_GENERATION_ALL,
-          resetsToDefaultOnChange: ['type'] as DedicatedFilterKey[],
-        },
-        type: {
-          defaultValue: PLAN_FILTER_TYPE_ALL,
-        },
-      }),
-      []
+    // Local state - persists automatically because component stays mounted
+    const [generation, setGeneration] = React.useState<PlanFilterGeneration>(
+      PLAN_FILTER_GENERATION_ALL
     );
 
-    const { filterState, setFilterValue } = usePlanFilters<DedicatedFilterKey>({
-      filters: filterDefinitions,
-      preferenceKey,
-    });
+    const [type, setType] =
+      React.useState<PlanFilterType>(PLAN_FILTER_TYPE_ALL);
 
-    const generation = filterState.generation as
-      | PlanFilterGeneration
-      | undefined;
-
-    const type =
-      (filterState.type as PlanFilterType | undefined) ?? PLAN_FILTER_TYPE_ALL;
-
-    const typeFilteringSupported = generation
-      ? supportsTypeFiltering(generation)
-      : false;
+    const typeFilteringSupported = supportsTypeFiltering(generation);
 
     const typeOptions = typeFilteringSupported
       ? TYPE_OPTIONS_WITH_SUBTYPES
@@ -101,28 +74,27 @@ const DedicatedPlanFiltersComponent = React.memo(
 
     // Disable type filter if:
     // 1. Panel is disabled, OR
-    // 2. No generation selected, OR
-    // 3. Selected generation doesn't support type filtering (G7, G6)
-    const isTypeSelectDisabled =
-      disabled || !generation || !typeFilteringSupported;
+    // 2. Selected generation doesn't support type filtering (G7, G6, All)
+    const isTypeSelectDisabled = disabled || !typeFilteringSupported;
 
-    const previousFilters = React.useRef<{
-      generation?: PlanFilterGeneration;
-      type?: PlanFilterType;
-    }>({ generation, type });
+    // Track previous filters to detect changes for pagination reset
+    const previousFilters = React.useRef<null | {
+      generation: PlanFilterGeneration;
+      type: PlanFilterType;
+    }>(null);
 
+    // Reset pagination when filters change (but not on initial mount)
     React.useEffect(() => {
+      // Skip pagination reset on initial mount
+      if (previousFilters.current === null) {
+        previousFilters.current = { generation, type };
+        return;
+      }
+
       const { generation: prevGeneration, type: prevType } =
         previousFilters.current;
 
-      // Skip pagination reset on initial mount when filters are loaded from URL
-      const isInitialMount =
-        prevGeneration === undefined && prevType === undefined;
-
-      if (
-        !isInitialMount &&
-        (prevGeneration !== generation || prevType !== type)
-      ) {
+      if (prevGeneration !== generation || prevType !== type) {
         resetPagination();
       }
 
@@ -134,12 +106,16 @@ const DedicatedPlanFiltersComponent = React.memo(
         _event: React.SyntheticEvent,
         option: null | SelectOption<number | string>
       ) => {
-        setFilterValue(
-          'generation',
-          option?.value as PlanFilterGeneration | undefined
-        );
+        // When clearing, default to "All" instead of undefined
+        const newGeneration =
+          (option?.value as PlanFilterGeneration | undefined) ??
+          PLAN_FILTER_GENERATION_ALL;
+        setGeneration(newGeneration);
+
+        // Reset type filter when generation changes
+        setType(PLAN_FILTER_TYPE_ALL);
       },
-      [setFilterValue]
+      []
     );
 
     const handleTypeChange = React.useCallback(
@@ -147,12 +123,11 @@ const DedicatedPlanFiltersComponent = React.memo(
         _event: React.SyntheticEvent,
         option: null | SelectOption<number | string>
       ) => {
-        setFilterValue(
-          'type',
+        setType(
           (option?.value as PlanFilterType | undefined) ?? PLAN_FILTER_TYPE_ALL
         );
       },
-      [setFilterValue]
+      []
     );
 
     const filteredPlans = React.useMemo(() => {
@@ -214,8 +189,7 @@ const DedicatedPlanFiltersComponent = React.memo(
       return {
         filteredPlans,
         filterUI,
-        hasActiveFilters:
-          !!generation && generation !== PLAN_FILTER_GENERATION_ALL,
+        hasActiveFilters: generation !== PLAN_FILTER_GENERATION_ALL,
       };
     }, [
       disabled,
@@ -230,7 +204,6 @@ const DedicatedPlanFiltersComponent = React.memo(
     ]);
 
     // Notify parent component whenever filter result changes
-    // onResult is stable (created with useCallback in parent), so this is safe
     React.useEffect(() => {
       onResult(result);
     }, [onResult, result]);
@@ -241,7 +214,7 @@ const DedicatedPlanFiltersComponent = React.memo(
 
 DedicatedPlanFiltersComponent.displayName = 'DedicatedPlanFiltersComponent';
 
-export const createDedicatedPlanFiltersRenderProp = (preferenceKey: string) => {
+export const createDedicatedPlanFiltersRenderProp = () => {
   return ({
     onResult,
     plans,
@@ -250,10 +223,8 @@ export const createDedicatedPlanFiltersRenderProp = (preferenceKey: string) => {
   }: PlanFilterRenderArgs): React.ReactNode => (
     <DedicatedPlanFiltersComponent
       disabled={shouldDisableFilters}
-      key={preferenceKey}
       onResult={onResult}
       plans={plans}
-      preferenceKey={preferenceKey}
       resetPagination={resetPagination}
     />
   );
