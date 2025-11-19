@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers';
 
@@ -36,7 +36,9 @@ export const StyledDateCalendar = styled(DateCalendar, {
   '.MuiYearCalendar-root': {
     width: '260px',
   },
-  marginLeft: '0px',
+  height: 'auto',
+  margin: 0,
+  marginRight: theme.spacingFunction(40),
   width: '260px',
 }));
 
@@ -44,3 +46,23 @@ export const StyledTypography = styled(Typography)(() => ({
   lineHeight: '20px',
   marginTop: '4px',
 }));
+
+export const StyledDateTimeStack = styled(Stack, {
+  label: 'StyledDateTimeStack',
+})(({ theme }) => ({
+  flexDirection: 'row',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+    marginTop: theme.spacingFunction(24),
+    marginBottom: theme.spacingFunction(16),
+  },
+}));
+
+export const StyledRegionStack = styled(Stack, { label: 'StyledRegionStack' })(
+  ({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacingFunction(24),
+      marginBottom: theme.spacingFunction(16),
+    },
+  })
+);
