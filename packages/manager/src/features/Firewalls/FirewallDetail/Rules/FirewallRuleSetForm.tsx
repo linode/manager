@@ -173,7 +173,7 @@ export const FirewallRuleSetForm = React.memo(
                     })}
                   >
                     <Chip
-                      label={rule.action}
+                      label={capitalize(rule.action?.toLowerCase() ?? '')}
                       sx={(theme) => ({
                         background:
                           rule.action === 'ACCEPT'
