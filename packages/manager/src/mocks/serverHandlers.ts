@@ -3831,6 +3831,30 @@ export const handlers = [
     } else if (id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
+      widgets = [
+        {
+          metric: 'fw_active_connections',
+          unit: 'Count',
+          label: 'Current Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'fw_active_connections',
+          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'fw_available_connections',
+          unit: 'Count',
+          label: 'Available Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'fw_available_connections',
+          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          aggregate_function: 'avg',
+        },
+      ];
     } else if (id === '9') {
       serviceType = 'lke';
       dashboardLabel = 'Kubernetes Enterprise Dashboard';

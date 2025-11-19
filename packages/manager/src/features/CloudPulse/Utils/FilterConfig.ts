@@ -149,6 +149,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
         isMultiSelect: false,
         name: 'Node Type',
+        dimensionKey: 'node_type',
         neededInViews: [
           CloudPulseAvailableViews.service,
           CloudPulseAvailableViews.central,
@@ -201,6 +202,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false,
         isOptional: true,
         name: 'Ports',
+        dimensionKey: 'port',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -258,6 +260,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: true,
         isMultiSelect: false,
         name: 'Linode Region',
+        dimensionKey: 'region_id',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -276,6 +279,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMultiSelect: true,
         name: 'Interface Types',
         isOptional: true,
+        dimensionKey: 'interface_type',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -304,6 +308,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false,
         isOptional: true,
         name: 'Interface IDs',
+        dimensionKey: 'interface_id',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -364,6 +369,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           isMetricsFilter: true,
           name: 'NodeBalancer Region',
           priority: 2,
+          dimensionKey: 'region_id',
           neededInViews: [
             CloudPulseAvailableViews.central,
             CloudPulseAvailableViews.service,
@@ -382,6 +388,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           isMultiSelect: true,
           isOptional: true,
           name: 'NodeBalancers',
+          dimensionKey: 'nodebalancer_id',
           neededInViews: [
             CloudPulseAvailableViews.central,
             CloudPulseAvailableViews.service,
@@ -424,6 +431,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           isMultiSelect: true,
           name: 'Endpoints',
           priority: 2,
+          dimensionKey: 'endpoint',
           neededInViews: [CloudPulseAvailableViews.central],
         },
         name: 'Endpoints',

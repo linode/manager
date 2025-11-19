@@ -1,4 +1,4 @@
-import { useProfile } from '@linode/queries';
+import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Box, Paper, Typography } from '@linode/ui';
 import { GridLegacy, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
@@ -7,6 +7,8 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
+import { useBlockStorageFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useBlockStorageFetchOptions';
+import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
 import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
@@ -18,10 +20,17 @@ import {
   SIZE,
   TIME_GRANULARITY,
 } from '../Utils/constants';
-import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
+import {
+  constructAdditionalRequestFilters,
+  constructWidgetDimensionFilters,
+} from '../Utils/FilterBuilder';
+import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
-import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
+import {
+  convertStringToCamelCasesWithSpaces,
+  getFilteredDimensions,
+} from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
@@ -30,6 +39,7 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { MetricsDimensionFilter } from './components/DimensionFilters/types';
 import type {
   CloudPulseServiceType,
   DateTimeWithPreset,
@@ -183,6 +193,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     dashboardId,
     region,
   } = props;
+  const [dimensionFilters, setDimensionFilters] = React.useState<
+    MetricsDimensionFilter[] | undefined
+  >(widget.filters);
 
   const timezone =
     duration.timeZone ?? profile?.timezone ?? DateTime.local().zoneName;
@@ -191,13 +204,91 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
-  const filters: Filters[] | undefined =
-    additionalFilters?.length || widget?.filters?.length
+  const { data: regions } = useRegionsQuery();
+  const linodesFetch = useFirewallFetchOptions({
+    dimensionLabel: 'linode_id',
+    type: 'metrics',
+    entities: entityIds,
+    regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
+    scope: 'entity',
+    serviceType,
+    associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
+  });
+  const vpcFetch = useFirewallFetchOptions({
+    dimensionLabel: 'vpc_subnet_id',
+    type: 'metrics',
+    entities: entityIds,
+    regions: regions?.filter((region) => region.id === linodeRegion) ?? [],
+    scope: 'entity',
+    serviceType,
+    associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
+  });
+  const linodeFromVolumes = useBlockStorageFetchOptions({
+    entities: entityIds,
+    dimensionLabel: 'linode_id',
+    regions: regions?.filter(({ id }) => id === region) ?? [],
+    type: 'metrics',
+    scope: 'entity',
+    serviceType,
+  });
+  // Determine which fetch object is relevant for linodes
+  const activeLinodeFetch =
+    serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch;
+
+  // Combine loading states
+  const isLoadingFilters = activeLinodeFetch.isLoading || vpcFetch.isLoading;
+
+  const filteredSelections = React.useMemo(() => {
+    if (isLoadingFilters) {
+      return dimensionFilters ?? [];
+    }
+
+    return getFilteredDimensions({
+      dimensions: availableMetrics?.dimensions ?? [],
+      linodes: activeLinodeFetch,
+      vpcs: vpcFetch,
+      dimensionFilters,
+    });
+  }, [
+    activeLinodeFetch,
+    availableMetrics?.dimensions,
+    dimensionFilters,
+    isLoadingFilters,
+    vpcFetch,
+  ]);
+
+  const convertToFilters = (
+    selectedFilters: MetricsDimensionFilter[]
+  ): Filters[] => {
+    const dimensionFilters: Filters[] = [];
+    for (const filter of selectedFilters) {
+      if (filter.value && filter.dimension_label && filter.operator) {
+        dimensionFilters.push({
+          dimension_label: filter.dimension_label,
+          operator: filter.operator,
+          value: filter.value,
+        });
+      }
+    }
+
+    return dimensionFilters;
+  };
+
+  const filters: Filters[] | undefined = React.useMemo(() => {
+    return additionalFilters?.length ||
+      widget?.filters?.length ||
+      dimensionFilters?.length
       ? [
           ...constructAdditionalRequestFilters(additionalFilters ?? []),
-          ...(widget.filters ?? []),
+          ...(constructWidgetDimensionFilters(filteredSelections) ?? []), // dashboard level filters followed by widget filters
         ]
       : undefined;
+  }, [
+    additionalFilters,
+    widget?.filters?.length,
+    dimensionFilters?.length,
+    filteredSelections,
+  ]);
 
   /**
    *
@@ -274,6 +365,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
+
+  const handleDimensionFiltersChange = React.useCallback(
+    (selectedFilters: MetricsDimensionFilter[]) => {
+      if (savePref) {
+        updatePreferences(widget.label, {
+          filters: convertToFilters(selectedFilters),
+        });
+      }
+      setDimensionFilters(selectedFilters);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   const {
     data: metricsList,
     error,
@@ -295,6 +399,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       filters, // any additional dimension filters will be constructed and passed here
     },
     {
+      isFiltersLoading: isLoadingFilters,
       authToken,
       isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
@@ -332,6 +437,39 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const end = DateTime.fromISO(duration.end, { zone: 'GMT' });
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
+  const excludeDimensionFilters = React.useMemo(() => {
+    return (
+      FILTER_CONFIG.get(dashboardId)
+        ?.filters.filter(
+          ({ configuration }) => configuration.dimensionKey !== undefined
+        )
+        .map(({ configuration }) => configuration.dimensionKey) ?? []
+    );
+  }, [dashboardId]);
+  const filteredDimensions = React.useMemo(() => {
+    return availableMetrics?.dimensions.filter(
+      ({ dimension_label: dimensionLabel }) =>
+        !excludeDimensionFilters.includes(dimensionLabel)
+    );
+  }, [availableMetrics?.dimensions, excludeDimensionFilters]);
+
+  React.useEffect(() => {
+    if (
+      filteredSelections.length !== (dimensionFilters?.length ?? 0) &&
+      !linodesFetch.isLoading &&
+      !vpcFetch.isLoading &&
+      !linodeFromVolumes.isLoading
+    ) {
+      handleDimensionFiltersChange(filteredSelections);
+    }
+  }, [
+    filteredSelections,
+    dimensionFilters,
+    handleDimensionFiltersChange,
+    linodesFetch.isLoading,
+    vpcFetch.isLoading,
+    linodeFromVolumes.isLoading,
+  ]);
   return (
     <GridLegacy container item lg={widget.size} xs={12}>
       <Stack
@@ -394,11 +532,11 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               )}
               <Box sx={{ display: 'flex', gap: 2 }}>
                 {flags.aclp?.showWidgetDimensionFilters && (
-                  <CloudPulseDimensionFiltersSelect // upcoming: Need to pass selected dimensions from widget in upcoming PR
-                    dimensionOptions={availableMetrics?.dimensions ?? []}
+                  <CloudPulseDimensionFiltersSelect
+                    dimensionOptions={filteredDimensions ?? []}
                     drawerLabel={availableMetrics?.label ?? ''}
-                    handleSelectionChange={() => {}}
-                    selectedDimensions={[]}
+                    handleSelectionChange={handleDimensionFiltersChange}
+                    selectedDimensions={filteredSelections}
                     selectedEntities={entityIds}
                     selectedRegions={linodeRegion ? [linodeRegion] : undefined}
                     serviceType={serviceType}

@@ -31,6 +31,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
     interface_type: TRANSFORMS.uppercase,
     linode_id: TRANSFORMS.original,
     nodebalancer_id: TRANSFORMS.original,
+    protocol: TRANSFORMS.uppercase,
   },
   nodebalancer: {
     protocol: TRANSFORMS.uppercase,
