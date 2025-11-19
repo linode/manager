@@ -90,6 +90,9 @@ import {
   managedStatsFactory,
   monitorFactory,
   mysqlConfigResponse,
+  networkLoadBalancerFactory,
+  networkLoadBalancerListenerFactory,
+  networkLoadBalancerNodeFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationChannelFactory,
@@ -533,6 +536,64 @@ const entities = [
     const entities = [...entity1, entity2, entity3];
 
     return HttpResponse.json(makeResourcePage(entities));
+  }),
+];
+
+const netLoadBalancers = [
+  http.get('*/v4beta/netloadbalancers', () => {
+    const nlbWithListener1 = networkLoadBalancerFactory.buildList(5, {
+      listeners: networkLoadBalancerListenerFactory.buildList(
+        Math.floor(Math.random() * 10) + 1
+      ),
+    });
+    const nlbWithListener2 = networkLoadBalancerFactory.buildList(5, {
+      region: 'eu-west',
+      lke_cluster: {
+        id: 1,
+        label: 'lke-e-123',
+        type: 'lkecluster',
+        url: 'v4/lke/clusters/1',
+      },
+      listeners: networkLoadBalancerListenerFactory.buildList(
+        Math.floor(Math.random() * 20) + 1
+      ),
+    });
+    const nlbWithoutListener = networkLoadBalancerFactory.buildList(20);
+    return HttpResponse.json(
+      makeResourcePage([
+        ...nlbWithListener1,
+        ...nlbWithListener2,
+        ...nlbWithoutListener,
+      ])
+    );
+  }),
+  http.get('*/v4beta/netloadbalancers/:id', () => {
+    return HttpResponse.json(
+      networkLoadBalancerFactory.build({
+        lke_cluster: {
+          id: 1,
+          label: 'lke-e-123',
+          type: 'lkecluster',
+          url: 'v4/lke/clusters/1',
+        },
+        listeners: networkLoadBalancerListenerFactory.buildList(
+          Math.floor(Math.random() * 10) + 1
+        ),
+      })
+    );
+  }),
+  http.get('*/v4beta/netloadbalancers/:id/listeners', () => {
+    return HttpResponse.json(
+      makeResourcePage(networkLoadBalancerListenerFactory.buildList(30))
+    );
+  }),
+  http.get('*/v4beta/netloadbalancers/:id/listeners/:listenerId', () => {
+    return HttpResponse.json(networkLoadBalancerListenerFactory.build());
+  }),
+  http.get('*/v4beta/netloadbalancers/:id/listeners/:listenerId/nodes', () => {
+    return HttpResponse.json(
+      makeResourcePage(networkLoadBalancerNodeFactory.buildList(30))
+    );
   }),
 ];
 
@@ -3999,6 +4060,7 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...entities,
+  ...netLoadBalancers,
   http.get('*/v4beta/maintenance/policies', () => {
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))
