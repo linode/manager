@@ -39,9 +39,13 @@ export const aggregationTypeMap: Record<MetricAggregationType, string> = {
   sum: 'Sum',
 };
 
+// TODO: remove in progress once api changes are ready
 export const statusMap: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
   failed: 'Failed',
   'in progress': 'In Progress',
+  disabling: 'Disabling',
+  enabling: 'Enabling',
+  provisioning: 'Provisioning',
 };
