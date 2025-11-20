@@ -45,6 +45,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     color: theme.palette.primary.main,
     display: 'inline-block',
     position: 'relative',
-    marginTop: theme.spacingFunction(2),
+    marginTop: theme.spacingFunction(4),
   },
 }));
