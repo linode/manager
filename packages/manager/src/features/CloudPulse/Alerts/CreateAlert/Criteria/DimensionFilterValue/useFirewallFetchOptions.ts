@@ -19,7 +19,7 @@ import {
 } from './utils';
 
 import type { FetchOptions, FetchOptionsProps } from './constants';
-import type { Filter, Firewall } from '@linode/api-v4';
+import type { Filter, Firewall, Params } from '@linode/api-v4';
 
 /**
  * Custom hook to return selectable options based on the dimension type.
@@ -51,8 +51,8 @@ export function useFirewallFetchOptions(
     '+or':
       supportedRegionIds && supportedRegionIds.length > 0
         ? supportedRegionIds.map((regionId) => ({
-            region: regionId,
-          }))
+          region: regionId,
+        }))
         : undefined,
   };
 
@@ -76,7 +76,7 @@ export function useFirewallFetchOptions(
     associatedEntityType,
     associatedEntityType
       ? (resources: Firewall[]) =>
-          filterFirewallResources(resources, associatedEntityType)
+        filterFirewallResources(resources, associatedEntityType)
       : undefined
     // To avoid fetching resources for which the associated entity type is not supported
   );
@@ -104,82 +104,48 @@ export function useFirewallFetchOptions(
       : undefined,
   };
 
-  const combinedFilterLinode: Filter = {
-    '+and': [idFilter, regionFilter].filter(Boolean),
-  };
+  const enableLinodeNodebalancerRegions =
+    serviceType === 'firewall' &&
+    filterLabels.includes(dimensionLabel ?? '') &&
+    filteredFirewallParentEntityIds.length > 0 &&
+    supportedRegionIds?.length > 0;
 
-  const combinedFilterNodebalancer: Filter = {
-    '+and': [labelFilter, regionFilter].filter(Boolean),
-  };
-
-  // Fetch all linodes with the combined filter
+  // Fetch all linodes or regions with the combined filter
   const {
-    data: linodes,
+    values: firewallLinodesOrRegions,
     isError: isLinodesError,
     isLoading: isLinodesLoading,
-  } = useAllLinodesQuery(
+  } = useFetchFirewallLinodesOrRegions(
+    enableLinodeNodebalancerRegions && associatedEntityType === 'linode',
+    {
+      '+and': [idFilter, regionFilter].filter(Boolean),
+    },
     {},
-    combinedFilterLinode,
-    serviceType === 'firewall' &&
-      filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds.length > 0 &&
-      associatedEntityType === 'linode' &&
-      supportedRegionIds?.length > 0
+    dimensionLabel === 'associated_entity_region'
   );
 
-  // Fetch all nodebalancers with the combined filter
+  // Fetch all nodebalancers or regions with the combined filter
   const {
-    data: nodebalancers,
+    values: firewallNodebalancersOrRegions,
     isError: isNodebalancersError,
     isLoading: isNodebalancersLoading,
-  } = useAllNodeBalancersQuery(
-    serviceType === 'firewall' &&
-      filterLabels.includes(dimensionLabel ?? '') &&
-      filteredFirewallParentEntityIds.length > 0 &&
-      associatedEntityType === 'nodebalancer' &&
-      supportedRegionIds?.length > 0,
+  } = useFetchFirewallNodebalancersOrRegions(
+    enableLinodeNodebalancerRegions && associatedEntityType === 'nodebalancer',
+    {
+      '+and': [labelFilter, regionFilter].filter(Boolean),
+    },
     {},
-    combinedFilterNodebalancer
+    dimensionLabel === 'associated_entity_region'
   );
 
-  // Extract linodes from filtered firewall resources
-  const firewallLinodes = useMemo(
-    () => getFirewallLinodes(linodes ?? []),
-    [linodes]
-  );
-
-  // Extract nodebalancers from filtered firewall resources
-  const firewallNodebalancers = useMemo(
-    () => getFirewallNodebalancers(nodebalancers ?? []),
-    [nodebalancers]
-  );
-
-  // Extract unique regions from linodes
-  const linodeRegions = useMemo(
-    () => getLinodeRegions(linodes ?? []),
-    [linodes]
-  );
-
-  // Extract unique regions from nodebalancers
-  const nodebalancerRegions = useMemo(
-    () => getNodebalancerRegions(nodebalancers ?? []),
-    [nodebalancers]
-  );
-
-  const allRegions = useMemo(
-    () => Array.from(new Set([...linodeRegions, ...nodebalancerRegions])),
-    [linodeRegions, nodebalancerRegions]
-  );
-
+  // Fetch VPC Subnet options
   const {
-    data: vpcs,
+    values: vpcs,
     isLoading: isVPCsLoading,
     isError: isVPCsError,
-  } = useAllVPCsQuery({
-    enabled: serviceType === 'firewall' && dimensionLabel === 'vpc_subnet_id',
-  });
-
-  const vpcSubnets = useMemo(() => getVPCSubnets(vpcs ?? []), [vpcs]);
+  } = useFetchVpcSubnets(
+    serviceType === 'firewall' && dimensionLabel === 'vpc_subnet_id'
+  );
 
   // Determine what options to return based on the dimension label
   switch (dimensionLabel) {
@@ -187,35 +153,31 @@ export function useFirewallFetchOptions(
       return {
         values:
           associatedEntityType === 'linode'
-            ? linodeRegions
+            ? firewallLinodesOrRegions
             : associatedEntityType === 'nodebalancer'
-              ? nodebalancerRegions
-              : allRegions,
+              ? firewallNodebalancersOrRegions
+              : [],
         isError: isLinodesError || isResourcesError || isNodebalancersError,
         isLoading:
           isLinodesLoading || isResourcesLoading || isNodebalancersLoading,
       };
     case 'linode_id':
+    case 'region_id':
       return {
-        values: firewallLinodes,
+        values: firewallLinodesOrRegions,
         isError: isLinodesError || isResourcesError,
         isLoading: isLinodesLoading || isResourcesLoading,
       };
     case 'nodebalancer_id':
       return {
-        values: firewallNodebalancers,
+        values: firewallNodebalancersOrRegions,
         isError: isNodebalancersError || isResourcesError,
         isLoading: isNodebalancersLoading || isResourcesLoading,
       };
-    case 'region_id':
-      return {
-        values: linodeRegions,
-        isError: isLinodesError || isResourcesError,
-        isLoading: isLinodesLoading || isResourcesLoading,
-      };
+
     case 'vpc_subnet_id':
       return {
-        values: vpcSubnets,
+        values: vpcs,
         isError: isVPCsError,
         isLoading: isVPCsLoading,
       };
@@ -223,3 +185,73 @@ export function useFirewallFetchOptions(
       return { values: [], isLoading: false, isError: false };
   }
 }
+
+const useFetchFirewallLinodesOrRegions = (
+  enabled: boolean = true,
+  filter: Filter = {},
+  params: Params = {},
+  isAssociateEntityRegion: boolean = false
+) => {
+  const { data, isLoading, isError } = useAllLinodesQuery(
+    params,
+    filter,
+    enabled
+  );
+
+  // Extract linodes from filtered firewall resources
+  const firewallLinodes = useMemo(() => getFirewallLinodes(data ?? []), [data]);
+
+  // Extract unique regions from linodes
+  const linodeRegions = useMemo(() => getLinodeRegions(data ?? []), [data]);
+
+  return {
+    values: isAssociateEntityRegion ? linodeRegions : firewallLinodes,
+    isError,
+    isLoading,
+  };
+};
+
+const useFetchFirewallNodebalancersOrRegions = (
+  enabled: boolean = true,
+  filter: Filter = {},
+  params: Params = {},
+  isAssociateEntityRegion: boolean = false
+): FetchOptions => {
+  const { data, isError, isLoading } = useAllNodeBalancersQuery(
+    enabled,
+    params,
+    filter
+  );
+
+  // Extract nodebalancers from filtered firewall resources
+  const firewallNodebalancers = useMemo(
+    () => getFirewallNodebalancers(data ?? []),
+    [data]
+  );
+
+  // Extract unique regions from nodebalancers
+  const nodebalancerRegions = useMemo(
+    () => getNodebalancerRegions(data ?? []),
+    [data]
+  );
+
+  return {
+    values: isAssociateEntityRegion
+      ? nodebalancerRegions
+      : firewallNodebalancers,
+    isError,
+    isLoading,
+  };
+};
+
+const useFetchVpcSubnets = (enabled: boolean = true): FetchOptions => {
+  const { data, isLoading, isError } = useAllVPCsQuery({ enabled });
+
+  const vpcSubnets = useMemo(() => getVPCSubnets(data ?? []), [data]);
+
+  return {
+    isLoading,
+    isError,
+    values: vpcSubnets,
+  };
+};
