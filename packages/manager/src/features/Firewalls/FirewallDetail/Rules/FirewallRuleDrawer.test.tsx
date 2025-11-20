@@ -5,6 +5,7 @@ import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import * as shared from '../../shared';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import {
   classifyIPs,
@@ -37,11 +38,14 @@ const props: FirewallRuleDrawerProps = {
   onSubmit: mockOnSubmit,
 };
 
+const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: false });
+
     const { getByText } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="create" />,
-      { flags: { firewallRulesetsPrefixlists: false } }
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     getByText('Add an Inbound Rule');
   });
@@ -68,10 +72,13 @@ describe('AddRuleDrawer', () => {
 });
 
 describe('AddRuleSetDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+  });
+
   it('renders the drawer title', () => {
     const { getByText } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="create" />,
-      { flags: { firewallRulesetsPrefixlists: true } }
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
 
     expect(getByText('Add an Inbound Rule or Rule Set')).toBeVisible();
@@ -79,8 +86,7 @@ describe('AddRuleSetDrawer', () => {
 
   it('renders the selection cards', () => {
     const { getByText } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="create" />,
-      { flags: { firewallRulesetsPrefixlists: true } }
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
 
     expect(getByText(/Create a Rule/i)).toBeVisible();
@@ -89,8 +95,7 @@ describe('AddRuleSetDrawer', () => {
 
   it('renders the Rule Set form and its elements when selection card is clicked', async () => {
     const { getByText, getByPlaceholderText, getByRole } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="create" />,
-      { flags: { firewallRulesetsPrefixlists: true } }
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
 
     const ruleSetCard = getByText(/Reference Rule Set/i);
@@ -123,8 +128,7 @@ describe('AddRuleSetDrawer', () => {
 
   it('shows validation message when Rule Set form is submitted without selecting a value', async () => {
     const { getByText, getByRole } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="create" />,
-      { flags: { firewallRulesetsPrefixlists: true } }
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
 
     // Click the Rule Set Selection card to open the Rule Set form
