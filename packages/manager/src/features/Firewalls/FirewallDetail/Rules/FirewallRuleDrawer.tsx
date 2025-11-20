@@ -91,7 +91,7 @@ export const FirewallRuleDrawer = React.memo(
 
     const title =
       mode === 'create'
-        ? `Add an ${capitalize(category)} Rule ${
+        ? `Add an ${capitalize(category)} Rule${
             isFirewallRulesetsPrefixlistsEnabled ? ' or Rule Set' : ''
           }`
         : 'Edit Rule';
