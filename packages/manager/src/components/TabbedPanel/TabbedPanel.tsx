@@ -99,12 +99,14 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
         <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
-              <StyledTab
-                data-pendo-id={tab.title}
-                disabled={tab.disabled}
-                key={`tabs-${tab.title}-${idx}`}
-              >
-                {tab.title}
+              <>
+                <StyledTab
+                  data-pendo-id={tab.title}
+                  disabled={tab.disabled}
+                  key={`tabs-${tab.title}-${idx}`}
+                >
+                  {tab.title}
+                </StyledTab>
                 {tab.disabled && props.tabDisabledMessage && (
                   <Tooltip title={props.tabDisabledMessage}>
                     <span>
@@ -112,7 +114,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
                     </span>
                   </Tooltip>
                 )}
-              </StyledTab>
+              </>
             ))}
           </StyledTabList>
           <TabPanels>
