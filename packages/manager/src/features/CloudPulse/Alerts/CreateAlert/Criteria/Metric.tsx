@@ -88,9 +88,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     // Filter firewall metrics based on entity type
     if (serviceType === 'firewall' && entityType) {
       const entityLabel = entityLabelMap[entityType];
-      filteredData = data.filter((metric) =>
-        metric.label.includes(entityLabel)
-      );
+      filteredData = data.filter(({ label }) => label.includes(entityLabel));
     }
 
     return filteredData

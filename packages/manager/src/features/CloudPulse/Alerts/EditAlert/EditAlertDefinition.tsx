@@ -14,6 +14,7 @@ import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/servic
 
 import {
   CREATE_ALERT_ERROR_FIELD_MAP as EDIT_ALERT_ERROR_FIELD_MAP,
+  entityLabelMap,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
   UPDATE_ALERT_SUCCESS_MESSAGE,
@@ -68,7 +69,9 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
 
   const entityType =
     serviceType === 'firewall'
-      ? alertDetails.rule_criteria.rules[0]?.label.includes('Node Balancer')
+      ? alertDetails.rule_criteria.rules[0]?.label.includes(
+          entityLabelMap['nodebalancer']
+        )
         ? 'nodebalancer'
         : 'linode'
       : undefined;
@@ -210,7 +213,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
               />
             )}
           />
-          <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
+          <CloudPulseServiceSelect isDisabled name="serviceType" />
           {serviceType === 'firewall' && (
             <EntityTypeSelect
               name="entity_type"
