@@ -134,7 +134,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
             <Stack gap={1.25}>
               {fields?.length > 0 &&
                 fields.map((field, index) => (
-                  <>
+                  <React.Fragment key={field.id}>
                     <CloudPulseDimensionFilterFields
                       dimensionOptions={dimensionOptions}
                       key={field.id}
@@ -154,7 +154,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                         },
                       })}
                     />
-                  </>
+                  </React.Fragment>
                 ))}
             </Stack>
             <Button
