@@ -1,6 +1,6 @@
-import { useProfile, useRegionsQuery } from '@linode/queries';
+import { useProfile, useRegionQuery } from '@linode/queries';
 import { Box, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -34,9 +34,9 @@ export const NetworkLoadBalancerDetailBody = (
   } = props;
 
   const { data: profile } = useProfile();
-  const { data: regions } = useRegionsQuery();
+  const { data: regionData } = useRegionQuery(region);
 
-  const regionLabel = regions?.find((r) => r.id === region)?.label ?? region;
+  const regionLabel = regionData?.label ?? region;
 
   return (
     <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
@@ -55,23 +55,11 @@ export const NetworkLoadBalancerDetailBody = (
         >
           <Stack spacing={2}>
             <Box>
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
-                Region
-              </Typography>
+              <StyledTypography>Region</StyledTypography>
               {regionLabel}
             </Box>
             <Box>
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
-                LKE-E Cluster
-              </Typography>
+              <StyledTypography>LKE-E Cluster</StyledTypography>
               {lkeCluster ? (
                 <>
                   <Link
@@ -88,13 +76,7 @@ export const NetworkLoadBalancerDetailBody = (
               )}
             </Box>
             <Box>
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
-                Network Load Balancer ID
-              </Typography>
+              <StyledTypography>Network Load Balancer ID</StyledTypography>
               {nlbId}
             </Box>
           </Stack>
@@ -106,25 +88,13 @@ export const NetworkLoadBalancerDetailBody = (
         >
           <Stack spacing={2}>
             <Box>
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
-                Created
-              </Typography>
+              <StyledTypography>Created</StyledTypography>
               {formatDate(createdDate, {
                 timezone: profile?.timezone,
               })}
             </Box>
             <Box>
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
-                Updated
-              </Typography>
+              <StyledTypography>Updated</StyledTypography>
               {formatDate(updatedDate, {
                 timezone: profile?.timezone,
               })}
@@ -163,3 +133,7 @@ export const NetworkLoadBalancerDetailBody = (
     </StyledBodyGrid>
   );
 };
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  font: theme.font.bold,
+}));

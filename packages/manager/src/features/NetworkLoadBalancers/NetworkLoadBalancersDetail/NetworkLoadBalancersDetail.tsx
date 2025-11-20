@@ -7,7 +7,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { LandingHeader } from 'src/components/LandingHeader';
 
-import { NLB_DOCS_LINK } from '../utils';
 import { NetworkLoadBalancerDetailBody } from './NetworkLoadBalancerDetailBody';
 import { NetworkLoadBalancerDetailHeader } from './NetworkLoadBalancerDetailHeader';
 
@@ -33,7 +32,7 @@ const NetworkLoadBalancersDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment={'Network Load Balancers'} />
+      <DocumentTitleSegment segment="Network Load Balancers" />
       <LandingHeader
         breadcrumbProps={{
           labelOptions: { noCap: true },
@@ -46,7 +45,9 @@ const NetworkLoadBalancersDetail = () => {
           pathname: `/netloadbalancers/${nlb.id}`,
         }}
         docsLabel="Docs"
-        docsLink={NLB_DOCS_LINK}
+        docsLink={
+          'https://techdocs.akamai.com/linode-api/changelog/network-load-balancers'
+        }
         title={nlb.label}
       />
       <EntityDetail
