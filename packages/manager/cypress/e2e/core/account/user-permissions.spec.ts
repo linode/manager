@@ -173,6 +173,9 @@ describe('User permission management', () => {
     // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
     mockAppendFeatureFlags({
       iamRbacPrimaryNavChanges: true,
+      iam: {
+        enabled: false,
+      },
     }).as('getFeatureFlags');
   });
 

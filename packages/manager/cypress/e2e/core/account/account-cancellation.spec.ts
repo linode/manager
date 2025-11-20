@@ -13,6 +13,7 @@ import {
   mockCancelAccountError,
   mockGetAccount,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockWebpageUrl } from 'support/intercepts/general';
 import {
   mockGetProfile,
@@ -35,6 +36,14 @@ import {
 import type { CancelAccount } from '@linode/api-v4';
 
 describe('Account cancellation', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Confirms that a user can cancel their account from the Account Settings page.
    * - Confirms that user is warned that account cancellation is destructive.
