@@ -394,6 +394,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         groupBy: [...globalFilterGroupBy, ...(groupBy ?? [])],
         linodeRegion,
         region,
+        dashboardId,
         serviceType,
       }),
       filters, // any additional dimension filters will be constructed and passed here

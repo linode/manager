@@ -323,19 +323,29 @@ describe('getTimeDurationFromPreset method', () => {
         [{ id: '123', label: 'linode-1' }],
         ['123'],
         widgetFactory.build(),
-        'linode'
+        2
       );
       expect(result).toEqual([123]);
     });
 
-    it('should return entity ids for objectstorage service type', () => {
+    it('should return entity ids for objectstorage buckets dashboard', () => {
       const result = getEntityIds(
         [{ id: 'bucket-1', label: 'bucket-name-1' }],
         ['bucket-1'],
         widgetFactory.build(),
-        'objectstorage'
+        6
       );
       expect(result).toEqual(['bucket-1']);
+    });
+
+    it('should return undefined for objectsorage endpoints dashboard', () => {
+      const result = getEntityIds(
+        [{ id: 'endpoint-1', label: 'endpoint-1' }],
+        ['us-east-1.linodeobjects.com'],
+        widgetFactory.build(),
+        10
+      );
+      expect(result).toEqual(undefined);
     });
   });
 });

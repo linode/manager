@@ -9,6 +9,7 @@ import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilter
 import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
+  ENDPOINT,
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,
@@ -26,6 +27,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from '../shared/types';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
@@ -41,6 +43,7 @@ import type {
   FirewallDeviceEntity,
   KubernetesCluster,
   MonitoringCapabilities,
+  ObjectStorageBucket,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -543,6 +546,11 @@ export const getResourcesFilterConfig = (
   }
   // Get the associated entity type for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (dashboardId === 10) {
+    return filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === ENDPOINT
+    )?.configuration;
+  }
   return filterConfig?.filters.find(
     (filter) => filter.configuration.filterKey === RESOURCE_ID
   )?.configuration;
@@ -596,4 +604,27 @@ export const filterKubernetesClusters = (
   return clusters
     .filter(({ tier }) => tier === 'enterprise')
     .sort((a, b) => a.label.localeCompare(b.label));
+};
+
+/**
+ * @param buckets The list of buckets
+ * @returns The valid sorted endpoints
+ */
+export const getValidSortedEndpoints = (
+  buckets: ObjectStorageBucket[] | undefined
+): CloudPulseResources[] => {
+  if (!buckets) return [];
+
+  const visitedEndpoints = new Set<string>();
+  const uniqueEndpoints: CloudPulseResources[] = [];
+
+  buckets.forEach(({ s3_endpoint, region }) => {
+    if (s3_endpoint && region && !visitedEndpoints.has(s3_endpoint)) {
+      visitedEndpoints.add(s3_endpoint);
+      uniqueEndpoints.push({ id: s3_endpoint, label: s3_endpoint, region });
+    }
+  });
+
+  uniqueEndpoints.sort((a, b) => a.label.localeCompare(b.label));
+  return uniqueEndpoints;
 };

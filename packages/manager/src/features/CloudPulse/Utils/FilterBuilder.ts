@@ -16,7 +16,6 @@ import type {
 } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseEndpointsSelectProps } from '../shared/CloudPulseEndpointsSelect';
-import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type {
   CloudPulseFirewallNodebalancersSelectProps,
   CloudPulseNodebalancers,
@@ -406,12 +405,14 @@ export const getEndpointsProperties = (
         preferences
       ),
     handleEndpointsSelection: handleEndpointsChange,
+    dashboardId: dashboard.id,
     label,
     placeholder,
     serviceType: dashboard.service_type,
     region: dependentFilters?.[REGION],
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
+    hasRestrictedSelections: config.configuration.hasRestrictedSelections,
   };
 };
 
@@ -801,9 +802,9 @@ export const filterUsingDependentFilters = (
  * @returns The filtered endpoints
  */
 export const filterEndpointsUsingRegion = (
-  data?: CloudPulseEndpoints[],
+  data?: CloudPulseResources[],
   regionFilter?: CloudPulseMetricsFilter
-): CloudPulseEndpoints[] | undefined => {
+): CloudPulseResources[] | undefined => {
   if (!data) {
     return data;
   }

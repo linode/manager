@@ -34,7 +34,6 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
-import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
 
@@ -692,13 +691,15 @@ describe('filterUsingDependentFilters', () => {
 });
 
 describe('filterEndpointsUsingRegion', () => {
-  const mockData: CloudPulseEndpoints[] = [
+  const mockData: CloudPulseResources[] = [
     {
       ...objectStorageEndpointsFactory.build({ region: 'us-east' }),
+      id: 'us-east-1.linodeobjects.com',
       label: 'us-east-1.linodeobjects.com',
     },
     {
       ...objectStorageEndpointsFactory.build({ region: 'us-west' }),
+      id: 'us-west-1.linodeobjects.com',
       label: 'us-west-1.linodeobjects.com',
     },
   ];

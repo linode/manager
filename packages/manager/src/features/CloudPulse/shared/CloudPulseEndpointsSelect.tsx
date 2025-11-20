@@ -1,31 +1,28 @@
 import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
 import { Box } from '@mui/material';
-import React, { useMemo } from 'react';
+import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
+import { getResourcesFilterConfig } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type {
   CloudPulseMetricsFilter,
   FilterValueType,
 } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
-
-export interface CloudPulseEndpoints {
-  /**
-   * The label of the endpoint which is 's3_endpoint' in the response from the API
-   */
-  label: string;
-  /**
-   * The region of the endpoint
-   */
-  region: string;
-}
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseEndpointsSelectProps {
+  /**
+   * The dashboard id for the endpoints filter
+   */
+  dashboardId: number;
   /**
    * The default value of the endpoints filter
    */
@@ -38,6 +35,10 @@ export interface CloudPulseEndpointsSelectProps {
    * The function to handle the endpoints selection
    */
   handleEndpointsSelection: (endpoints: string[], savePref?: boolean) => void;
+  /**
+   * Whether to restrict the selections
+   */
+  hasRestrictedSelections?: boolean;
   /**
    * The label of the endpoints filter
    */
@@ -69,6 +70,7 @@ export const CloudPulseEndpointsSelect = React.memo(
     const {
       defaultValue,
       disabled,
+      dashboardId,
       handleEndpointsSelection,
       label,
       placeholder,
@@ -76,39 +78,30 @@ export const CloudPulseEndpointsSelect = React.memo(
       serviceType,
       savePreferences,
       xFilter,
+      hasRestrictedSelections,
     } = props;
 
+    const flags = useFlags();
+
+    // Get the resources filter configuration for the dashboard
+    const resourcesFilterConfig = getResourcesFilterConfig(dashboardId);
+    const filterFn = resourcesFilterConfig?.filterFn;
+
     const {
-      data: buckets,
+      data: validSortedEndpoints,
       isError,
       isLoading,
     } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && serviceType),
       serviceType,
       {},
-
-      RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}
+      RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {},
+      undefined,
+      filterFn
     );
 
-    const validSortedEndpoints = useMemo(() => {
-      if (!buckets) return [];
-
-      const visitedEndpoints = new Set<string>();
-      const uniqueEndpoints: CloudPulseEndpoints[] = [];
-
-      buckets.forEach(({ endpoint, region }) => {
-        if (endpoint && region && !visitedEndpoints.has(endpoint)) {
-          visitedEndpoints.add(endpoint);
-          uniqueEndpoints.push({ label: endpoint, region });
-        }
-      });
-
-      uniqueEndpoints.sort((a, b) => a.label.localeCompare(b.label));
-      return uniqueEndpoints;
-    }, [buckets]);
-
     const [selectedEndpoints, setSelectedEndpoints] =
-      React.useState<CloudPulseEndpoints[]>();
+      React.useState<CloudPulseResources[]>();
 
     /**
      * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
@@ -117,9 +110,22 @@ export const CloudPulseEndpointsSelect = React.memo(
      */
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
-    const getEndpointsList = React.useMemo<CloudPulseEndpoints[]>(() => {
+    const getEndpointsList = React.useMemo<CloudPulseResources[]>(() => {
       return filterEndpointsUsingRegion(validSortedEndpoints, xFilter) ?? [];
     }, [validSortedEndpoints, xFilter]);
+
+    // Maximum endpoints selection limit is fetched from launchdarkly
+    const maxEndpointsSelectionLimit = React.useMemo(() => {
+      const obj = flags.aclpResourceTypeMap?.find(
+        (item: CloudPulseResourceTypeMapFlag) =>
+          item.serviceType === serviceType
+      );
+      return obj?.maxResourceSelections || 10;
+    }, [serviceType, flags.aclpResourceTypeMap]);
+
+    const endpointsLimitReached = React.useMemo(() => {
+      return getEndpointsList.length > maxEndpointsSelectionLimit;
+    }, [getEndpointsList.length, maxEndpointsSelectionLimit]);
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
@@ -127,7 +133,7 @@ export const CloudPulseEndpointsSelect = React.memo(
         return;
       }
       // To save default values, go through side effects if disabled is false
-      if (!buckets || !savePreferences || selectedEndpoints) {
+      if (!validSortedEndpoints || !savePreferences || selectedEndpoints) {
         if (selectedEndpoints) {
           setSelectedEndpoints([]);
           handleEndpointsSelection([]);
@@ -145,7 +151,7 @@ export const CloudPulseEndpointsSelect = React.memo(
         setSelectedEndpoints(endpoints);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [buckets, region, xFilter, serviceType]);
+    }, [validSortedEndpoints, region, xFilter, serviceType]);
 
     return (
       <Autocomplete
@@ -153,7 +159,15 @@ export const CloudPulseEndpointsSelect = React.memo(
         clearOnBlur
         data-testid="endpoint-select"
         disabled={disabled}
+        disableSelectAll={
+          hasRestrictedSelections ? endpointsLimitReached : false
+        }
         errorText={isError ? `Failed to fetch ${label || 'Endpoints'}.` : ''}
+        helperText={
+          !isError && hasRestrictedSelections
+            ? `Select up to ${maxEndpointsSelectionLimit} ${label}`
+            : ''
+        }
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label={label || 'Endpoints'}
         limitTags={1}
@@ -197,8 +211,21 @@ export const CloudPulseEndpointsSelect = React.memo(
             ? StyledListItem
             : 'li';
 
+          const isMaxSelectionsReached =
+            selectedEndpoints &&
+            selectedEndpoints.length >= maxEndpointsSelectionLimit &&
+            !isEndpointSelected &&
+            !isSelectAllORDeslectAllOption;
+
           return (
-            <ListItem {...rest} data-qa-option key={key}>
+            <ListItem
+              {...rest}
+              aria-disabled={
+                hasRestrictedSelections ? isMaxSelectionsReached : false
+              }
+              data-qa-option
+              key={key}
+            >
               <>
                 <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
                 <SelectedIcon visible={isEndpointSelected || false} />

@@ -1,3 +1,4 @@
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from '../shared/types';
 import type {
   Capabilities,
@@ -56,6 +57,7 @@ export interface CloudPulseServiceTypeFilters {
  * As of now, the list of possible custom filters are engine, database type, this union type will be expanded if we start enhancing our custom select config
  */
 export type QueryFunctionType =
+  | CloudPulseResources[]
   | DatabaseEngine[]
   | DatabaseInstance[]
   | DatabaseType[]
@@ -145,9 +147,15 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   filterType: string;
 
   /**
+   * If this is true, we will only allow users to select a certain threshold
+   */
+  hasRestrictedSelections?: boolean;
+
+  /**
    * If this is true, we will pass the filter in the metrics api otherwise, we don't
    */
   isFilterable: boolean;
+
   /**
    * If this is true, we will pass the filter as a explicit key in the request else inside the filters object of metrics request
    */
@@ -157,15 +165,16 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * If this is true, multiselect will be enabled for the filter, only applicable for static and dynamic, not for predefined ones
    */
   isMultiSelect?: boolean;
-
   /**
    * If this is true, we will pass filter as an optional filter
    */
   isOptional?: boolean;
+
   /**
    * If this is true, we will only allow users to select a certain threshold, only applicable for static and dynamic, not for predefined ones
    */
   maxSelections?: number;
+
   /**
    * The name of the filter
    */
