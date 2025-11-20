@@ -215,6 +215,7 @@ export const FirewallRuleDrawer = React.memo(
                 <FirewallRuleForm
                   addressesLabel={addressesLabel}
                   category={category}
+                  closeDrawer={onClose}
                   ips={ips}
                   mode={mode}
                   presetPorts={presetPorts}

@@ -101,8 +101,22 @@ export const FirewallRuleSetForm = React.memo(
                     width="100%"
                   >
                     <Stack direction="column">
-                      <b>{option.label}</b>
-                      <span>ID: {option.value}</span>
+                      <Box
+                        sx={(theme) => ({
+                          // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+                          fontWeight: theme.tokens.font.FontWeight.Semibold,
+                        })}
+                      >
+                        {option.label}
+                      </Box>
+                      <Box
+                        sx={(theme) => ({
+                          color:
+                            theme.tokens.component.Dropdown.Text.Description,
+                        })}
+                      >
+                        ID: {option.value}
+                      </Box>
                     </Stack>
                     {selected && <SelectedIcon visible />}
                   </Stack>
