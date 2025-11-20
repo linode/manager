@@ -106,6 +106,9 @@ importers:
       '@linode/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@types/node':
+        specifier: ^22.13.14
+        version: 22.18.1
       axios-mock-adapter:
         specifier: ^1.22.0
         version: 1.22.0(axios@1.12.0)
