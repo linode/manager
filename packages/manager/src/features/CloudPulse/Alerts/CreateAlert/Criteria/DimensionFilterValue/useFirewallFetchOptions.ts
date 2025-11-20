@@ -5,19 +5,21 @@ import {
 } from '@linode/queries';
 import { useMemo } from 'react';
 
+import { filterFirewallResources } from 'src/features/CloudPulse/Utils/utils';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { filterRegionByServiceType } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
+  getFirewallNodebalancers,
   getLinodeRegions,
   getNodebalancerRegions,
   getVPCSubnets,
 } from './utils';
 
 import type { FetchOptions, FetchOptionsProps } from './constants';
-import type { Filter } from '@linode/api-v4';
+import type { Filter, Firewall } from '@linode/api-v4';
 
 /**
  * Custom hook to return selectable options based on the dimension type.
@@ -58,6 +60,7 @@ export function useFirewallFetchOptions(
     'linode_id',
     'region_id',
     'associated_entity_region',
+    'nodebalancer_id',
   ];
 
   // Fetch all firewall resources when dimension requires it
@@ -70,7 +73,12 @@ export function useFirewallFetchOptions(
     'firewall',
     {},
     {},
-    associatedEntityType // To avoid fetching resources for which the associated entity type is not supported
+    associatedEntityType,
+    associatedEntityType
+      ? (resources: Firewall[]) =>
+          filterFirewallResources(resources, associatedEntityType)
+      : undefined
+    // To avoid fetching resources for which the associated entity type is not supported
   );
   // Decide firewall resource IDs based on scope
   const filteredFirewallParentEntityIds = useMemo(() => {
@@ -140,6 +148,12 @@ export function useFirewallFetchOptions(
     [linodes]
   );
 
+  // Extract nodebalancers from filtered firewall resources
+  const firewallNodebalancers = useMemo(
+    () => getFirewallNodebalancers(nodebalancers ?? []),
+    [nodebalancers]
+  );
+
   // Extract unique regions from linodes
   const linodeRegions = useMemo(
     () => getLinodeRegions(linodes ?? []),
@@ -186,6 +200,12 @@ export function useFirewallFetchOptions(
         values: firewallLinodes,
         isError: isLinodesError || isResourcesError,
         isLoading: isLinodesLoading || isResourcesLoading,
+      };
+    case 'nodebalancer_id':
+      return {
+        values: firewallNodebalancers,
+        isError: isNodebalancersError || isResourcesError,
+        isLoading: isNodebalancersLoading || isResourcesLoading,
       };
     case 'region_id':
       return {
