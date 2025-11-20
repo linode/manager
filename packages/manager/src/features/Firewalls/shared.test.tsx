@@ -1,11 +1,15 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { renderHook, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   allIPv4,
   allIPv6,
   generateAddressesLabel,
+  generateAddressesLabelV2,
   predefinedFirewallFromRule,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from './shared';
@@ -147,6 +151,132 @@ describe('generateAddressLabel', () => {
     expect(generateAddressesLabel({ ipv4: undefined, ipv6: undefined })).toBe(
       'None'
     );
+  });
+});
+
+describe('generateAddressesLabelV2', () => {
+  const onPrefixListClick = vi.fn();
+
+  const addresses: FirewallRuleType['addresses'] = {
+    ipv4: [
+      'pl:system:test-1', // PL attached to both IPv4/IPv6
+      'pl::test-2', // PL attached to IPv4 only
+      '192.168.1.1', // individual IP
+    ],
+    ipv6: [
+      'pl:system:test-1', // same system PL
+      'pl::test-3', // PL attached to IPv6 only
+      '2001:db8:85a3::8a2e:370:7334/128', // individual IP
+    ],
+  };
+
+  it('renders PLs with correct Firewall IP reference labels', () => {
+    const result = generateAddressesLabelV2({
+      addresses,
+      onPrefixListClick,
+      showTruncateChip: false,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+
+    // Check PLs with proper suffixes
+    expect(getByText(/pl:system:test-1 \(IPv4, IPv6\)/)).toBeVisible();
+    expect(getByText(/pl::test-2 \(IPv4\)/)).toBeVisible();
+    expect(getByText(/pl::test-3 \(IPv6\)/)).toBeVisible();
+  });
+
+  it('renders individual IP addresses correctly', () => {
+    const result = generateAddressesLabelV2({
+      addresses,
+      showTruncateChip: false,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+
+    expect(getByText('192.168.1.1')).toBeVisible();
+    expect(getByText('2001:db8:85a3::8a2e:370:7334/128')).toBeVisible();
+  });
+
+  it('triggers onPrefixListClick when PL is clicked', async () => {
+    const result = generateAddressesLabelV2({
+      addresses,
+      onPrefixListClick,
+      showTruncateChip: false,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+
+    await userEvent.click(getByText(/pl:system:test-1/));
+    expect(onPrefixListClick).toHaveBeenCalledWith(
+      'pl:system:test-1',
+      '(IPv4, IPv6)'
+    );
+
+    await userEvent.click(getByText(/pl::test-2/));
+    expect(onPrefixListClick).toHaveBeenCalledWith('pl::test-2', '(IPv4)');
+
+    await userEvent.click(getByText(/pl::test-3/));
+    expect(onPrefixListClick).toHaveBeenCalledWith('pl::test-3', '(IPv6)');
+  });
+
+  it('renders None if no addresses are provided', () => {
+    const result = generateAddressesLabelV2({
+      addresses: { ipv4: [], ipv6: [] },
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+    expect(getByText('None')).toBeVisible();
+  });
+
+  it('renders "All IPv4, All IPv6" when allowAll type is present in addresses', () => {
+    const addressesAll = { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] };
+    const result = generateAddressesLabelV2({ addresses: addressesAll });
+    const { getByText } = renderWithTheme(<>{result}</>);
+    expect(getByText('All IPv4, All IPv6')).toBeVisible();
+  });
+
+  it('handles truncation and shows Chip for hidden items', () => {
+    const addressesMany = {
+      ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3'],
+      ipv6: ['::1', '::2'],
+    };
+    const result = generateAddressesLabelV2({
+      addresses: addressesMany,
+      showTruncateChip: true,
+      truncateAt: 2,
+    });
+    const { container } = renderWithTheme(<>{result}</>);
+    expect(container.textContent).toContain('+3'); // 5 total items (2 visible and 3 hidden)
+  });
+
+  it('renders only 1 visible item and shows Chip when showTruncateChip is true and truncateAt is 1', () => {
+    const result = generateAddressesLabelV2({
+      addresses,
+      showTruncateChip: true,
+      truncateAt: 1,
+    });
+    const { getByText, queryByText } = renderWithTheme(<>{result}</>);
+
+    expect(getByText(/pl:system:test-1 \(IPv4, IPv6\)/)).toBeVisible();
+
+    expect(getByText('+4')).toBeVisible(); // 5 total elements (1 shown + 4 hidden)
+
+    // Hidden items are not rendered outside tooltip
+    expect(queryByText(/pl::test-2 \(IPv4\)/)).toBeNull();
+    expect(queryByText(/pl::test-3 \(IPv6\)/)).toBeNull();
+    expect(queryByText('192.168.1.1')).toBeNull();
+    expect(queryByText('2001:db8:85a3::8a2e:370:7334/128')).toBeNull();
+  });
+
+  it('renders all items if showTruncateChip is false', () => {
+    const result = generateAddressesLabelV2({
+      addresses,
+      showTruncateChip: false,
+      truncateAt: 1, // should be ignored
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+
+    expect(getByText(/pl:system:test-1 \(IPv4, IPv6\)/)).toBeVisible();
+    expect(getByText(/pl::test-2 \(IPv4\)/)).toBeVisible();
+    expect(getByText(/pl::test-3 \(IPv6\)/)).toBeVisible();
+    expect(getByText('192.168.1.1')).toBeVisible();
+    expect(getByText('2001:db8:85a3::8a2e:370:7334/128')).toBeVisible();
   });
 });
 
