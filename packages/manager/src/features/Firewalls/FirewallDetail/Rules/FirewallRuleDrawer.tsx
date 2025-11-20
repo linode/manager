@@ -90,7 +90,11 @@ export const FirewallRuleDrawer = React.memo(
     }, [mode, isOpen, ruleToModify, isFirewallRulesetsPrefixlistsEnabled]);
 
     const title =
-      mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
+      mode === 'create'
+        ? `Add an ${capitalize(category)} Rule ${
+            isFirewallRulesetsPrefixlistsEnabled ? ' or Rule Set' : ''
+          }`
+        : 'Edit Rule';
 
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
