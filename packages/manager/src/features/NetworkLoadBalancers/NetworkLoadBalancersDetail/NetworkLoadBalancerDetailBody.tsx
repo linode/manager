@@ -50,7 +50,7 @@ export const NetworkLoadBalancerDetailBody = (
       >
         <Grid
           size={{
-            xs: 6,
+            sm: 6,
           }}
         >
           <Stack spacing={2}>
@@ -83,7 +83,7 @@ export const NetworkLoadBalancerDetailBody = (
         </Grid>
         <Grid
           size={{
-            xs: 6,
+            sm: 6,
           }}
         >
           <Stack spacing={2}>
