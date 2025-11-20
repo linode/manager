@@ -115,6 +115,10 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
                           m: 0.5,
                           width: 20,
                           color: theme.tokens.component.Tab.Disabled.Icon,
+                          '&:hover': {
+                            color: theme.tokens.component.Tab.Hover.Icon,
+                            cursor: 'pointer',
+                          },
                         })}
                       />
                     </Box>
