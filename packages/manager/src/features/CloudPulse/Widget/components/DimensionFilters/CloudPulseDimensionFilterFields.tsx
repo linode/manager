@@ -17,7 +17,6 @@ import type {
   Dimension,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
-import { getAssociatedEntityType } from 'src/features/CloudPulse/Utils/utils';
 
 interface CloudPulseDimensionFilterFieldsProps {
   /**
@@ -195,6 +194,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
                 dimensionLabel={dimensionFieldWatcher}
                 disabled={!dimensionFieldWatcher}
                 entities={selectedEntities}
+                entityType={serviceType === 'firewall' ? 'linode' : undefined}
                 errorText={fieldState.error?.message}
                 name={name}
                 onBlur={field.onBlur}
