@@ -32,7 +32,7 @@ const NetworkLoadBalancersDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Network Load Balancers" />
+      <DocumentTitleSegment segment="Network Load Balancer" />
       <LandingHeader
         breadcrumbProps={{
           labelOptions: { noCap: true },
@@ -45,9 +45,7 @@ const NetworkLoadBalancersDetail = () => {
           pathname: `/netloadbalancers/${nlb.id}`,
         }}
         docsLabel="Docs"
-        docsLink={
-          'https://techdocs.akamai.com/linode-api/changelog/network-load-balancers'
-        }
+        docsLink="https://techdocs.akamai.com/linode-api/changelog/network-load-balancers"
         title={nlb.label}
       />
       <EntityDetail

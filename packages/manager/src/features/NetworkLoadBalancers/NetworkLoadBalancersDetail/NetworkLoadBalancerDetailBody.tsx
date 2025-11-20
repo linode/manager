@@ -117,12 +117,12 @@ export const NetworkLoadBalancerDetailBody = (
               {
                 heading: 'Virtual IP (IPv4)',
                 isMasked: false,
-                text: `${addressV4}`,
+                text: addressV4,
               },
               {
                 heading: 'Virtual IP (IPv6)',
                 isMasked: false,
-                text: `${addressV6}`,
+                text: addressV6,
               },
             ]}
             sx={{ padding: 0 }}
