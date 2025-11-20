@@ -257,23 +257,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     vpcFetch,
   ]);
 
-  const convertToFilters = (
-    selectedFilters: MetricsDimensionFilter[]
-  ): Filters[] => {
-    const dimensionFilters: Filters[] = [];
-    for (const filter of selectedFilters) {
-      if (filter.value && filter.dimension_label && filter.operator) {
-        dimensionFilters.push({
-          dimension_label: filter.dimension_label,
-          operator: filter.operator,
-          value: filter.value,
-        });
-      }
-    }
-
-    return dimensionFilters;
-  };
-
   const filters: Filters[] | undefined = React.useMemo(() => {
     return additionalFilters?.length ||
       widget?.filters?.length ||
@@ -370,13 +353,28 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     (selectedFilters: MetricsDimensionFilter[]) => {
       if (savePref) {
         updatePreferences(widget.label, {
-          filters: convertToFilters(selectedFilters),
+          filters: selectedFilters
+            .map((filter) => {
+              if (
+                filter.value !== null &&
+                filter.dimension_label !== null &&
+                filter.operator !== null
+              ) {
+                return {
+                  dimension_label: filter.dimension_label,
+                  operator: filter.operator,
+                  value: filter.value,
+                };
+              } else {
+                return undefined;
+              }
+            })
+            .filter((filter) => filter !== undefined),
         });
       }
       setDimensionFilters(selectedFilters);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [savePref, updatePreferences, widget.label]
   );
   const {
     data: metricsList,
@@ -447,10 +445,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     );
   }, [dashboardId]);
   const filteredDimensions = React.useMemo(() => {
-    return availableMetrics?.dimensions.filter(
-      ({ dimension_label: dimensionLabel }) =>
-        !excludeDimensionFilters.includes(dimensionLabel)
-    );
+    return excludeDimensionFilters && excludeDimensionFilters.length > 0
+      ? availableMetrics?.dimensions.filter(
+          ({ dimension_label: dimensionLabel }) =>
+            !excludeDimensionFilters.includes(dimensionLabel)
+        )
+      : availableMetrics?.dimensions;
   }, [availableMetrics?.dimensions, excludeDimensionFilters]);
 
   React.useEffect(() => {
