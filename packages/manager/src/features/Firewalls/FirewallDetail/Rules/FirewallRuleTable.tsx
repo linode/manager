@@ -27,7 +27,7 @@ import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
+// import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -37,6 +37,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import {
   generateAddressesLabel,
+  generateAddressesLabelV2,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
   useIsFirewallRulesetsPrefixlistsEnabled,
@@ -65,7 +66,7 @@ import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: null | string;
-  addresses?: null | string;
+  addresses?: null | React.ReactNode | string;
   description?: null | string;
   errors?: FirewallRuleError[];
   id: number;
@@ -124,10 +125,16 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
 
+  const { isFirewallRulesetsPrefixlistsEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
 
-  const rowData = firewallRuleToRowData(rulesWithStatus);
+  const rowData = firewallRuleToRowData(
+    rulesWithStatus,
+    isFirewallRulesetsPrefixlistsEnabled
+  );
 
   const openDrawerForCreating = React.useCallback(() => {
     openRuleDrawer(category, 'create');
@@ -412,7 +419,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               <ConditionalError errors={errors} formField="ports" />
             </TableCell>
             <TableCell aria-label={`Addresses: ${addresses}`}>
-              <MaskableText text={addresses ?? ''} />
+              {/* <MaskableText text={addresses ?? ''} /> */}
+              {addresses}
               <ConditionalError errors={errors} formField="addresses" />
             </TableCell>
           </Hidden>
@@ -624,14 +632,17 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
  * of data. This also allows us to sort each column of the RuleTable.
  */
 export const firewallRuleToRowData = (
-  firewallRules: ExtendedFirewallRule[]
+  firewallRules: ExtendedFirewallRule[],
+  isFirewallRulesetsPrefixlistsEnabled?: boolean
 ): RuleRow[] => {
   return firewallRules.map((thisRule, idx) => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
 
     return {
       ...thisRule,
-      addresses: generateAddressesLabel(thisRule.addresses),
+      addresses: isFirewallRulesetsPrefixlistsEnabled
+        ? generateAddressesLabelV2({ addresses: thisRule.addresses })
+        : generateAddressesLabel(thisRule.addresses),
       id: idx + 1, // ids are 1-indexed, as id given to the useSortable hook cannot be 0
       index: idx,
       ports: sortPortString(thisRule.ports || ''),
