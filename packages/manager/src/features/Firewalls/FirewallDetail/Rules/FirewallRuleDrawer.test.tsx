@@ -121,7 +121,7 @@ describe('AddRuleSetDrawer', () => {
     ).toBeVisible();
   });
 
-  it('shows validation message when Rule Set field is blurred without a value', async () => {
+  it('shows validation message when Rule Set form is submitted without selecting a value', async () => {
     const { getByText, getByRole } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />,
       { flags: { firewallRulesetsPrefixlists: true } }
