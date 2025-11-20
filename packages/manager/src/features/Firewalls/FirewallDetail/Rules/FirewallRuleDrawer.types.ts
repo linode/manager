@@ -38,6 +38,7 @@ export type FirewallCreateEntityType = 'rule' | 'ruleset';
 export interface FirewallRuleFormProps extends FormikProps<FormState> {
   addressesLabel: string;
   category: Category;
+  closeDrawer: () => void;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
   presetPorts: FirewallOptionItem<string>[];
