@@ -65,7 +65,7 @@ export const NetworkLoadBalancerDetailBody = (
                   <Link
                     accessibleAriaLabel={`LKE-E Cluster ${lkeCluster.label}`}
                     className="secondaryLink"
-                    to={`/lke/clusters/${lkeCluster.id}`}
+                    to={`/kubernetes/clusters/${lkeCluster.id}`}
                   >
                     {lkeCluster.label}
                   </Link>
