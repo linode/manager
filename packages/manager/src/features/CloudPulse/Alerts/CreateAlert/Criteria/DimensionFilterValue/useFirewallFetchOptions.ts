@@ -51,8 +51,8 @@ export function useFirewallFetchOptions(
     '+or':
       supportedRegionIds && supportedRegionIds.length > 0
         ? supportedRegionIds.map((regionId) => ({
-            region: regionId,
-          }))
+          region: regionId,
+        }))
         : undefined,
   };
 
@@ -76,7 +76,7 @@ export function useFirewallFetchOptions(
     associatedEntityType,
     associatedEntityType
       ? (resources: Firewall[]) =>
-          filterFirewallResources(resources, associatedEntityType)
+        filterFirewallResources(resources, associatedEntityType)
       : undefined
     // To avoid fetching resources for which the associated entity type is not supported
   );
@@ -135,8 +135,7 @@ export function useFirewallFetchOptions(
       '+and': [labelFilter, regionFilter].filter(Boolean),
     },
     {},
-    dimensionLabel === 'associated_entity_region' ||
-      dimensionLabel === 'region_id'
+    dimensionLabel === 'associated_entity_region'
   );
 
   // Fetch VPC Subnet options
