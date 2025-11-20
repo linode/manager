@@ -97,30 +97,16 @@ export const FirewallRuleDrawer = React.memo(
 
     const title =
       mode === 'create'
-        ? `Add an ${capitalize(category)} Rule`
+        ? `Add an ${capitalize(category)} Rule${
+            isFirewallRulesetsPrefixlistsEnabled ? ' or Rule Set' : ''
+          }`
         : mode === 'edit'
           ? 'Edit Rule'
           : `${capitalize(category)} Rule Set details`;
 
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-    const onValidateRule = (values: FormRuleSetState | FormState) => {
-      // Case 1: user chose CREATE -> RULESET mode
-      // If we're in add 'ruleset' mode, only validate the ruleset field
-      if (mode === 'create' && createEntityType === 'ruleset') {
-        const errors: Record<string, string> = {};
-        if (!('ruleset' in values)) {
-          errors.ruleset = 'Rule Set is required.';
-        }
-        if ('ruleset' in values && typeof values.ruleset !== 'number') {
-          errors.ruleset = 'Rule Set should be a number.';
-        }
-        return errors;
-      }
-
-      // Case 2: RULE mode
-      if (!('action' in values)) return {}; // safety fallback
-
+    const onValidateRule = (values: FormState) => {
       const { addresses, description, label, ports, protocol } = values;
 
       // The validated IPs may have errors, so set them to state so we see the errors.
