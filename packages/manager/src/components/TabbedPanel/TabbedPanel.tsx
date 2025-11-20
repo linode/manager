@@ -54,13 +54,6 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
 
   const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
 
-  const sxHelpIcon = {
-    height: 20,
-    m: 0.5,
-    verticalAlign: 'sub',
-    width: 20,
-  };
-
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
     if (handleTabChange) {
@@ -108,10 +101,23 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
                   {tab.title}
                 </StyledTab>
                 {tab.disabled && props.tabDisabledMessage && (
-                  <Tooltip title={props.tabDisabledMessage}>
-                    <span>
-                      <HelpOutline fontSize="small" sx={sxHelpIcon} />
-                    </span>
+                  <Tooltip tabIndex={0} title={props.tabDisabledMessage}>
+                    <Box
+                      sx={(theme) => ({
+                        marginLeft: `-${theme.spacingFunction(12)}`,
+                        marginTop: theme.spacingFunction(10),
+                      })}
+                    >
+                      <HelpOutline
+                        fontSize="small"
+                        sx={(theme) => ({
+                          height: 20,
+                          m: 0.5,
+                          width: 20,
+                          color: theme.tokens.component.Tab.Disabled.Icon,
+                        })}
+                      />
+                    </Box>
                   </Tooltip>
                 )}
               </>
