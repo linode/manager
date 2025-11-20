@@ -14,6 +14,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
       '&:hover': {
         backgroundColor: theme.color.grey7,
       },
+      '&:disabled': {
+        opacity: 1,
+        color: theme.tokens.component.Tab.Disabled.Text,
+      },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
       color: theme.textColors.linkActiveLight,
