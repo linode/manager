@@ -17,6 +17,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
       '&:disabled': {
         opacity: 1,
         color: theme.tokens.component.Tab.Disabled.Text,
+        cursor: 'not-allowed',
+        pointerEvents: 'none',
       },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
