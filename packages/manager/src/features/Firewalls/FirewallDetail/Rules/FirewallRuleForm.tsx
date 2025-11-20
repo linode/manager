@@ -38,6 +38,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   const {
     addressesLabel,
     category,
+    closeDrawer,
     errors,
     handleBlur,
     handleChange,
@@ -340,6 +341,10 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           'data-testid': 'submit',
           label: mode === 'create' ? 'Add Rule' : 'Add Changes',
           onClick: () => handleSubmit(),
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: closeDrawer,
         }}
       />
     </form>
