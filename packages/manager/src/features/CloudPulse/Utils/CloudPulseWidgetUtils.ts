@@ -113,6 +113,11 @@ interface GraphDataOptionsProps {
 
 interface MetricRequestProps {
   /**
+   * dashboard id of the widget
+   */
+  dashboardId: number;
+
+  /**
    * time duration for the metrics data
    */
   duration: DateTimeWithPreset;
@@ -345,6 +350,7 @@ export const getCloudPulseMetricRequest = (
     groupBy,
     linodeRegion,
     region,
+    dashboardId,
     serviceType,
   } = props;
   const preset = duration.preset;
@@ -354,7 +360,7 @@ export const getCloudPulseMetricRequest = (
       presetDuration === undefined
         ? { end: duration.end, start: duration.start }
         : undefined,
-    entity_ids: getEntityIds(resources, entityIds, widget, serviceType),
+    entity_ids: getEntityIds(resources, entityIds, widget, dashboardId),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: presetDuration,
@@ -387,9 +393,12 @@ export const getEntityIds = (
   resources: CloudPulseResources[],
   entityIds: string[],
   widget: Widgets,
-  serviceType: CloudPulseServiceType
+  dashboardId: number
 ) => {
-  if (serviceType === 'objectstorage') {
+  if (dashboardId === 10) {
+    return undefined;
+  }
+  if (dashboardId === 6) {
     return entityIds;
   }
   return resources
