@@ -3113,6 +3113,9 @@ export const handlers = [
           rules: [firewallMetricRulesFactory.build()],
         },
       }),
+      ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
