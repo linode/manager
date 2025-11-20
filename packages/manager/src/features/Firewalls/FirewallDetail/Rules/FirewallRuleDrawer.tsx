@@ -266,6 +266,7 @@ export const FirewallRuleDrawer = React.memo(
         {mode === 'view' && (
           <FirewallRuleSetDetailsView
             category={category}
+            closeDrawer={onClose}
             ruleset={ruleToModifyOrView?.ruleset ?? -1}
           />
         )}

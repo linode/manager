@@ -1,5 +1,5 @@
 import { useFirewallRuleSetQuery } from '@linode/queries';
-import { Box, Chip, Paper, TooltipIcon } from '@linode/ui';
+import { ActionsPanel, Box, Chip, Paper, TooltipIcon } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -21,13 +21,14 @@ import type { Category } from './shared';
 
 interface FirewallRuleSetDetailsViewProps {
   category: Category;
+  closeDrawer: () => void;
   ruleset: number;
 }
 
 export const FirewallRuleSetDetailsView = (
   props: FirewallRuleSetDetailsViewProps
 ) => {
-  const { category, ruleset } = props;
+  const { category, closeDrawer, ruleset } = props;
 
   const { isFirewallRulesetsPrefixlistsEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
@@ -97,11 +98,16 @@ export const FirewallRuleSetDetailsView = (
           <DateTimeDisplay
             sx={(theme) => ({
               color: theme.tokens.alias.Content.Text.Negative,
+              marginRight: theme.spacingFunction(4),
             })}
             value={ruleSetDetails.deleted}
           />
           <TooltipIcon
             status="info"
+            sxTooltipIcon={{
+              '& svg': { width: '16px', height: '16px' },
+              padding: 0,
+            }}
             text="This rule set will be automatically deleted when it’s no longer referenced by other firewalls."
           />
         </StyledListItem>
@@ -151,6 +157,13 @@ export const FirewallRuleSetDetailsView = (
           </StyledListItem>
         ))}
       </Paper>
+
+      <ActionsPanel
+        primaryButtonProps={{
+          label: 'Cancel',
+          onClick: closeDrawer,
+        }}
+      />
     </Box>
   );
 };
