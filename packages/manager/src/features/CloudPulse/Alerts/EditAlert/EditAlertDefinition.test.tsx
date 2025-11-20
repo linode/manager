@@ -1,8 +1,13 @@
-import { waitFor } from '@testing-library/react';
+import { waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { alertFactory, notificationChannelFactory } from 'src/factories';
+import {
+  alertFactory,
+  firewallMetricRulesFactory,
+  firewallNodebalancerMetricCriteria,
+  notificationChannelFactory,
+} from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
@@ -48,6 +53,9 @@ const alertDetails = alertFactory.build({
   service_type: 'linode',
   scope: 'entity',
 });
+
+const ENTITY_TYPE_SELECT_TEST_ID = 'entity-type-select';
+
 describe('EditAlertDefinition component', () => {
   it(
     'renders the components of the form',
@@ -117,4 +125,60 @@ describe('EditAlertDefinition component', () => {
     },
     { timeout: 10000 }
   );
+
+  it('should render EntityTypeSelect for firewall with Linode entity type', () => {
+    const linodeFirewallAlertDetails = alertFactory.build({
+      id: 1,
+      rule_criteria: {
+        rules: [firewallMetricRulesFactory.build()],
+      },
+      scope: 'entity',
+      service_type: 'firewall',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <EditAlertDefinition
+        alertDetails={linodeFirewallAlertDetails}
+        serviceType="firewall"
+      />
+    );
+
+    const entityTypeSelect = getByTestId(ENTITY_TYPE_SELECT_TEST_ID);
+    expect(entityTypeSelect).toBeVisible();
+
+    const combobox = within(entityTypeSelect).getByRole('combobox');
+    expect(combobox).toHaveAttribute('value', 'Linodes');
+  });
+
+  it('should render EntityTypeSelect for firewall with NodeBalancer entity type', () => {
+    const nodebalancerFirewallAlertDetails = alertFactory.build({
+      id: 2,
+      rule_criteria: {
+        rules: [firewallNodebalancerMetricCriteria.build()],
+      },
+      scope: 'entity',
+      service_type: 'firewall',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <EditAlertDefinition
+        alertDetails={nodebalancerFirewallAlertDetails}
+        serviceType="firewall"
+      />
+    );
+
+    const entityTypeSelect = getByTestId(ENTITY_TYPE_SELECT_TEST_ID);
+    expect(entityTypeSelect).toBeVisible();
+
+    const combobox = within(entityTypeSelect).getByRole('combobox');
+    expect(combobox).toHaveAttribute('value', 'NodeBalancers');
+  });
+
+  it('should not render EntityTypeSelect for non-firewall service types', () => {
+    const { queryByTestId } = renderWithTheme(
+      <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
+    );
+
+    expect(queryByTestId(ENTITY_TYPE_SELECT_TEST_ID)).not.toBeInTheDocument();
+  });
 });

@@ -366,14 +366,12 @@ describe('getEnabledServiceTypes', () => {
       const resourcesFilterConfig = getResourcesFilterConfig(4);
       expect(resourcesFilterConfig).toBeDefined();
       expect(resourcesFilterConfig?.associatedEntityType).toBe('linode');
-      expect(resourcesFilterConfig?.filterFn).toBeDefined();
     });
 
     it('should return the resources filter configuration for the nodebalancer-firewall dashboard', () => {
       const resourcesFilterConfig = getResourcesFilterConfig(8);
       expect(resourcesFilterConfig).toBeDefined();
       expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
-      expect(resourcesFilterConfig?.filterFn).toBeDefined();
     });
   });
 

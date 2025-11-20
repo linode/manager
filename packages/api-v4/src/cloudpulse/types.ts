@@ -20,7 +20,15 @@ export type DimensionFilterOperatorType =
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertDefinitionScope = 'account' | 'entity' | 'region';
-export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
+// TODO: remove in progress once api changes are ready
+export type AlertStatusType =
+  | 'disabled'
+  | 'disabling'
+  | 'enabled'
+  | 'enabling'
+  | 'failed'
+  | 'in progress'
+  | 'provisioning';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
