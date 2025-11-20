@@ -24,7 +24,6 @@ const networkLoadBalancerDetailRoute = createRoute({
       params: {
         id: params.id,
       },
-      search: () => ({}),
       to: '/netloadbalancers/$id/listeners',
     });
   },
@@ -39,7 +38,6 @@ const networkLoadBalancerDetailRoute = createRoute({
 const networkLoadBalancerListenersRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
   path: '$id/listeners',
-  validateSearch: (search: { query?: string }) => search,
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'

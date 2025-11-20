@@ -11,7 +11,7 @@ const queryMocks = vi.hoisted(() => ({
   useNetworkLoadBalancerQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
-  useRegionsQuery: vi.fn().mockReturnValue({}),
+  useRegionQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -19,7 +19,7 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
-    useRegionsQuery: queryMocks.useRegionsQuery,
+    useRegionQuery: queryMocks.useRegionQuery,
     useNetworkLoadBalancerQuery: queryMocks.useNetworkLoadBalancerQuery,
   };
 });
@@ -34,20 +34,18 @@ vi.mock('@tanstack/react-router', async () => {
 
 beforeAll(() => mockMatchMedia());
 
+const mockRegion = regionFactory.build({
+  id: 'us-east',
+  capabilities: ['Network LoadBalancer'],
+  label: 'US, Newark, NJ',
+});
+
 describe('NetworkLoadBalancersDetail', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
       id: 1,
     });
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: [
-        regionFactory.build({
-          id: 'us-east',
-          capabilities: ['Network LoadBalancer'],
-          label: 'US, Newark, NJ',
-        }),
-      ],
-    });
+    queryMocks.useRegionQuery.mockReturnValue({ data: mockRegion });
   });
 
   it('renders a loading state', () => {
