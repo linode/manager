@@ -149,10 +149,10 @@ const PortsDisplay = React.memo(({ ports }: { ports: string[] }) => {
           chipProps={{
             sx: {
               backgroundColor: theme.tokens.alias.Background.Neutralsubtle,
-              color: theme.tokens.color.Neutrals[80],
+              color: theme.tokens.alias.Content.Text.Primary.Default,
               '&:hover, &:focus': {
                 backgroundColor: theme.tokens.alias.Background.Neutralsubtle,
-                color: theme.tokens.color.Neutrals[80],
+                color: theme.tokens.alias.Content.Text.Primary.Default,
               },
             },
           }}
