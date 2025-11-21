@@ -9,7 +9,7 @@ import type {
 export const networkLoadBalancerFactory =
   Factory.Sync.makeFactory<NetworkLoadBalancer>({
     id: Factory.each((id) => id),
-    label: Factory.each((id) => `nlb-${id}`),
+    label: Factory.each((id) => `netloadbalancer-${id}-test${id}`),
     region: 'us-east',
     address_v4: '192.168.1.1',
     address_v6: '2001:db8:85a3::8a2e:370:7334',
@@ -26,7 +26,7 @@ export const networkLoadBalancerListenerFactory =
     id: Factory.each((id) => id),
     label: Factory.each((id) => `nlb-listener-${id}`),
     updated: '2023-01-01T00:00:00Z',
-    port: 80,
+    port: Factory.each((id) => 80 + id),
     protocol: 'tcp',
   });
 
