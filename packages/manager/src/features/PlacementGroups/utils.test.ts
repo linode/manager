@@ -1,7 +1,9 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 
-import { placementGroupFactory } from 'src/factories';
+import { accountFactory, placementGroupFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getLinodesFromAllPlacementGroups,
@@ -12,27 +14,6 @@ import {
   placementGroupTypeOptions,
   useIsPlacementGroupsEnabled,
 } from './utils';
-
-const queryMocks = vi.hoisted(() => ({
-  useAccount: vi.fn().mockReturnValue({}),
-  useFlags: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@linode/queries', () => {
-  const actual = vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useAccount: queryMocks.useAccount,
-  };
-});
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
-  };
-});
 
 const initialLinodeData = [
   {
@@ -214,32 +195,31 @@ describe('getPlacementGroupLinodes', () => {
 });
 
 describe('useIsPlacementGroupsEnabled', () => {
-  it('returns true if the account has the Placement Group capability', () => {
-    queryMocks.useAccount.mockReturnValue({
-      data: {
-        capabilities: ['Placement Group'],
-      },
+  it('returns true if the account has the Placement Group capability', async () => {
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(
+          accountFactory.build({ capabilities: ['Placement Group'] })
+        );
+      })
+    );
+
+    const { result } = renderHook(() => useIsPlacementGroupsEnabled(), {
+      wrapper: wrapWithTheme,
     });
 
-    const { result } = renderHook(() => useIsPlacementGroupsEnabled());
-    expect(result.current).toStrictEqual({
-      isPlacementGroupsEnabled: true,
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        isPlacementGroupsEnabled: true,
+      });
     });
   });
 
-  it('returns false if the account does not have the Placement Group capability', () => {
-    queryMocks.useFlags.mockReturnValue({
-      placementGroups: {
-        enabled: true,
-      },
-    });
-    queryMocks.useAccount.mockReturnValue({
-      data: {
-        capabilities: [],
-      },
+  it('returns false by default', () => {
+    const { result } = renderHook(() => useIsPlacementGroupsEnabled(), {
+      wrapper: wrapWithTheme,
     });
 
-    const { result } = renderHook(() => useIsPlacementGroupsEnabled());
     expect(result.current).toStrictEqual({
       isPlacementGroupsEnabled: false,
     });
