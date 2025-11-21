@@ -1,6 +1,5 @@
 import { Chip, Tooltip } from '@linode/ui';
-import { truncateAndJoinList } from '@linode/utilities';
-import { capitalize } from '@linode/utilities';
+import { capitalize, truncateAndJoinList } from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
