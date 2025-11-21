@@ -131,39 +131,42 @@ export const FirewallRuleSetForm = React.memo(
 
           {selectedRuleSet && (
             <Box mt={2}>
-              <StyledListItem>
-                <StyledLabel component="span">Label: </StyledLabel>
-                {selectedRuleSet?.label}
-              </StyledListItem>
-              <StyledListItem>
-                <StyledLabel component="span">ID: </StyledLabel>
-                {selectedRuleSet?.id}
-                <CopyTooltip
-                  className={classes.copyIcon}
-                  text={String(selectedRuleSet?.id)}
-                />
-              </StyledListItem>
-              <StyledListItem>{selectedRuleSet?.description}</StyledListItem>
-              <StyledListItem>
-                <StyledLabel component="span">Service Defined: </StyledLabel>
-                {selectedRuleSet?.is_service_defined ? 'Yes' : 'No'}
-              </StyledListItem>
-              <StyledListItem>
-                <StyledLabel component="span">Version: </StyledLabel>
-                {selectedRuleSet?.version}
-              </StyledListItem>
-              <StyledListItem>
-                <StyledLabel component="span">Created: </StyledLabel>
-                {selectedRuleSet?.created && (
-                  <DateTimeDisplay value={selectedRuleSet.created} />
-                )}
-              </StyledListItem>
-              <StyledListItem>
-                <StyledLabel component="span">Updated: </StyledLabel>
-                {selectedRuleSet?.updated && (
-                  <DateTimeDisplay value={selectedRuleSet.updated} />
-                )}
-              </StyledListItem>
+              {[
+                { label: 'Label', value: selectedRuleSet.label },
+                { label: 'ID', value: selectedRuleSet.id, copy: true },
+                { label: null, value: selectedRuleSet.description },
+                {
+                  label: 'Service Defined',
+                  value: selectedRuleSet.is_service_defined ? 'Yes' : 'No',
+                },
+                { label: 'Version', value: selectedRuleSet.version },
+                {
+                  label: 'Created',
+                  value: selectedRuleSet.created && (
+                    <DateTimeDisplay value={selectedRuleSet.created} />
+                  ),
+                },
+                {
+                  label: 'Updated',
+                  value: selectedRuleSet.updated && (
+                    <DateTimeDisplay value={selectedRuleSet.updated} />
+                  ),
+                },
+              ].map((item, idx) => (
+                <StyledListItem key={`item-${idx}`}>
+                  {item.label && (
+                    <StyledLabel component="span">{item.label}: </StyledLabel>
+                  )}
+                  {item.value}
+
+                  {item.copy && (
+                    <CopyTooltip
+                      className={classes.copyIcon}
+                      text={String(selectedRuleSet.id)}
+                    />
+                  )}
+                </StyledListItem>
+              ))}
 
               <Paper
                 sx={(theme) => ({
@@ -183,7 +186,6 @@ export const FirewallRuleSetForm = React.memo(
                     key={`firewall-ruleset-rule-${idx}`}
                     sx={(theme) => ({
                       padding: `${theme.spacingFunction(4)} 0`,
-                      alignItems: 'flex-start',
                     })}
                   >
                     <Chip
@@ -204,13 +206,16 @@ export const FirewallRuleSetForm = React.memo(
                         fontSize: theme.tokens.font.FontSize.Xxxs,
                         marginRight: theme.spacingFunction(6),
                         flexShrink: 0,
+                        alignSelf: 'flex-start',
                       })}
                     />
-                    {rule.protocol};&nbsp;{rule.ports};&nbsp;
-                    {generateAddressesLabelV2({
-                      addresses: rule.addresses,
-                      showTruncateChip: false,
-                    })}
+                    <Box>
+                      {rule.protocol};&nbsp;{rule.ports};&nbsp;
+                      {generateAddressesLabelV2({
+                        addresses: rule.addresses,
+                        showTruncateChip: false,
+                      })}
+                    </Box>
                   </StyledListItem>
                 ))}
               </Paper>
