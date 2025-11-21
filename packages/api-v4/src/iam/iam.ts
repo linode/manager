@@ -109,6 +109,7 @@ export const getUserEntityPermissions = (
  * Returns the available entities for a given permission.
  */
 export interface GetEntitiesByPermissionParams {
+  enabled?: boolean;
   entityType: EntityType;
   permission: PermissionType;
   username: string | undefined;

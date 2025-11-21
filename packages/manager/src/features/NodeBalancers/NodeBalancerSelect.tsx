@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import { useQueryWithPermissions } from '../IAM/hooks/usePermissions';
+import { useGetUserEntitiesByPermission } from '../IAM/hooks/useGetUserEntitiesByPermission';
 
 import type { APIError, NodeBalancer } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -101,15 +101,14 @@ export const NodeBalancerSelect = (
     data: availableNodebalancers,
     error: availableNodebalancersError,
     isLoading: availableNodebalancersLoading,
-  } = useQueryWithPermissions<NodeBalancer>(
-    useAllNodeBalancersQuery(Boolean(optionsFilter)),
-    'nodebalancer',
-    ['update_nodebalancer'],
-    Boolean(optionsFilter)
-  );
+  } = useGetUserEntitiesByPermission<NodeBalancer>({
+    entityType: 'nodebalancer',
+    permission: 'update_nodebalancer',
+    enabled: Boolean(optionsFilter),
+  });
 
   const nodebalancers = optionsFilter
-    ? availableNodebalancers.filter(optionsFilter)
+    ? availableNodebalancers?.filter(optionsFilter)
     : data;
 
   React.useEffect(() => {
