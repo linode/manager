@@ -5,9 +5,9 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { RESOURCE_FILTER_MAP } from '../Utils/constants';
+import { ENDPOINT, RESOURCE_FILTER_MAP } from '../Utils/constants';
 import { deepEqual, filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
-import { getResourcesFilterConfig } from '../Utils/utils';
+import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type {
@@ -83,9 +83,11 @@ export const CloudPulseEndpointsSelect = React.memo(
 
     const flags = useFlags();
 
-    // Get the resources filter configuration for the dashboard
-    const resourcesFilterConfig = getResourcesFilterConfig(dashboardId);
-    const filterFn = resourcesFilterConfig?.filterFn;
+    // Get the endpoints filter configuration for the dashboard
+    const endpointsFilterConfig = FILTER_CONFIG.get(dashboardId)?.filters.find(
+      (filter) => filter.configuration.filterKey === ENDPOINT
+    );
+    const filterFn = endpointsFilterConfig?.configuration.filterFn;
 
     const {
       data: validSortedEndpoints,

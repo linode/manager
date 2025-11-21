@@ -426,6 +426,8 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           name: 'Endpoints',
           priority: 2,
           neededInViews: [CloudPulseAvailableViews.central],
+          filterFn: (resources: ObjectStorageBucket[]) =>
+            getValidSortedEndpoints(resources),
         },
         name: 'Endpoints',
       },
