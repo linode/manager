@@ -2,7 +2,10 @@ import { regionAvailabilityFactory } from '@linode/utilities';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { accountFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
 import {
@@ -17,9 +20,6 @@ import {
 } from './utils';
 
 import type { PlanSelectionType } from './types';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { accountFactory } from 'src/factories';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
