@@ -1,4 +1,3 @@
-import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Box,
   Checkbox,
@@ -9,19 +8,22 @@ import {
   Typography,
 } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import React, { useEffect, useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { sortData } from 'src/components/OrderBy';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { Table } from 'src/components/Table';
-import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTable';
-import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
+import type { KubernetesCluster } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
-import type { OrderByKeys } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTable';
+import type { OrderByKeys } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 const controlPaths = {
@@ -45,44 +47,68 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const [pageSize, setPageSize] = useState<number>(MIN_PAGE_SIZE);
   const [searchText, setSearchText] = useState<string>('');
 
-  const { error: searchParseError, filter: searchFilter } =
-    getAPIFilterFromQuery(searchText, {
-      searchableFieldsWithoutOperator: ['label', 'region'],
-    });
-
-  const filter = {
-    ['+order']: order,
-    ['+order_by']: orderBy,
-    ...searchFilter,
-  };
-
   const {
-    data: clusters,
+    data: clusters = [],
     isLoading,
     error,
-  } = useKubernetesClustersQuery({
-    filter,
-    params: {
-      page,
-      page_size: pageSize,
-    },
-  });
+  } = useAllKubernetesClustersQuery({ enabled: true });
 
-  const idsWithLogsEnabled = clusters?.data
-    .filter((cluster) => cluster.control_plane.audit_logs_enabled)
-    .map(({ id }) => id);
+  const clusterIdsWithLogsEnabled = useMemo(
+    () =>
+      clusters
+        ?.filter((cluster) => cluster.control_plane.audit_logs_enabled)
+        .map(({ id }) => id),
+    [clusters]
+  );
 
   const [isAutoAddAllClustersEnabled, clusterIds] = useWatch({
     control,
     name: [controlPaths.isAutoAddAllClustersEnabled, controlPaths.clusterIds],
   });
 
+  const areArraysDifferent = (a: number[], b: number[]) => {
+    if (a.length !== b.length) {
+      return true;
+    }
+
+    const setB = new Set(b);
+
+    return !a.every((element) => setB.has(element));
+  };
+
+  // Check for clusters that no longer have log generation enabled and remove them from cluster_ids
   useEffect(() => {
-    setValue(
-      controlPaths.clusterIds,
-      isAutoAddAllClustersEnabled ? idsWithLogsEnabled : clusterIds || []
-    );
-  }, [isLoading]);
+    if (!isLoading) {
+      const selectedClusterIds = clusterIds ?? [];
+      const filteredClusterIds = selectedClusterIds.filter((id) =>
+        clusterIdsWithLogsEnabled.includes(id)
+      );
+
+      const nextValue =
+        (isAutoAddAllClustersEnabled
+          ? clusterIdsWithLogsEnabled
+          : filteredClusterIds) || [];
+
+      if (
+        !isAutoAddAllClustersEnabled &&
+        areArraysDifferent(selectedClusterIds, filteredClusterIds)
+      ) {
+        enqueueSnackbar(
+          'One or more clusters were removed from the selection because Log Generation is no longer enabled on them.',
+          { variant: 'info' }
+        );
+      }
+      if (areArraysDifferent(selectedClusterIds, nextValue)) {
+        setValue(controlPaths.clusterIds, nextValue);
+      }
+    }
+  }, [
+    isLoading,
+    clusterIds,
+    isAutoAddAllClustersEnabled,
+    setValue,
+    clusterIdsWithLogsEnabled,
+  ]);
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -92,6 +118,46 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
       setOrder('asc');
     }
   };
+
+  const filteredClusters = !searchText
+    ? clusters
+    : clusters.filter((cluster) => {
+        const lowerSearch = searchText.toLowerCase();
+
+        return (
+          cluster.label.toLowerCase().includes(lowerSearch) ||
+          cluster.region.toLowerCase().includes(lowerSearch) ||
+          (cluster.control_plane.audit_logs_enabled
+            ? 'enabled'
+            : 'disabled'
+          ).includes(lowerSearch)
+        );
+      });
+
+  const sortedAndFilteredClusters = sortData<KubernetesCluster>(
+    orderBy,
+    order
+  )(filteredClusters);
+
+  // Paginate clusters
+  const indexOfFirstClusterInPage = (page - 1) * pageSize;
+  const indexOfLastClusterInPage = indexOfFirstClusterInPage + pageSize;
+  const paginatedClusters = sortedAndFilteredClusters.slice(
+    indexOfFirstClusterInPage,
+    indexOfLastClusterInPage
+  );
+
+  // If the current page is out of range after filtering, change to the last available page
+  useEffect(() => {
+    if (indexOfFirstClusterInPage >= sortedAndFilteredClusters.length) {
+      const lastPage = Math.max(
+        1,
+        Math.ceil(sortedAndFilteredClusters.length / pageSize)
+      );
+
+      setPage(lastPage);
+    }
+  }, [sortedAndFilteredClusters, indexOfFirstClusterInPage, pageSize]);
 
   return (
     <Paper>
@@ -120,7 +186,10 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                   onChange={async (_, checked) => {
                     field.onChange(checked);
                     if (checked) {
-                      setValue(controlPaths.clusterIds, idsWithLogsEnabled);
+                      setValue(
+                        controlPaths.clusterIds,
+                        clusterIdsWithLogsEnabled
+                      );
                     } else {
                       setValue(controlPaths.clusterIds, []);
                     }
@@ -141,7 +210,6 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               },
             }}
             debounceTime={250}
-            errorText={searchParseError?.message}
             hideLabel
             inputProps={{
               'data-pendo-id': `Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`,
@@ -165,9 +233,9 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                 name={controlPaths.clusterIds}
                 render={({ field }) => (
                   <StreamFormClusterTableContent
-                    clusters={clusters}
+                    clusters={paginatedClusters}
                     field={field}
-                    idsWithLogsEnabled={idsWithLogsEnabled}
+                    idsWithLogsEnabled={clusterIdsWithLogsEnabled}
                     isAutoAddAllClustersEnabled={isAutoAddAllClustersEnabled}
                     onOrderChange={handleOrderChange}
                     order={order}
@@ -177,7 +245,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               />
             </Table>
             <PaginationFooter
-              count={clusters?.results || 0}
+              count={sortedAndFilteredClusters.length || 0}
               eventCategory="Clusters Table"
               handlePageChange={setPage}
               handleSizeChange={setPageSize}
