@@ -13,9 +13,12 @@ import {
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import { filterFirewallResources, filterKubernetesClusters } from './utils';
 
-import type { CloudPulseServiceTypeFilterMap, CloudPulseServiceTypeFiltersConfiguration } from './models';
+import type { AssociatedEntityType } from '../shared/types';
+import type {
+  CloudPulseServiceTypeFilterMap,
+  CloudPulseServiceTypeFiltersConfiguration,
+} from './models';
 import type { Firewall, KubernetesCluster } from '@linode/api-v4';
-import { AssociatedEntityType } from '../shared/types';
 
 const TIME_DURATION = 'Time Range';
 
@@ -529,7 +532,6 @@ export const FILTER_CONFIG: Readonly<
   [8, FIREWALL_NODEBALANCER_CONFIG],
   [9, LKE_CONFIG],
 ]);
-
 
 /**
  * @param dashboardId The id of the dashboard
