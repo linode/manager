@@ -238,21 +238,39 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   // Combine loading states
   const isLoadingFilters = activeLinodeFetch.isLoading || vpcFetch.isLoading;
 
+  const excludeDimensionFilters = React.useMemo(() => {
+    return (
+      FILTER_CONFIG.get(dashboardId)
+        ?.filters.filter(
+          ({ configuration }) => configuration.dimensionKey !== undefined
+        )
+        .map(({ configuration }) => configuration.dimensionKey) ?? []
+    );
+  }, [dashboardId]);
+  const filteredDimensions = React.useMemo(() => {
+    return excludeDimensionFilters && excludeDimensionFilters.length > 0
+      ? availableMetrics?.dimensions.filter(
+          ({ dimension_label: dimensionLabel }) =>
+            !excludeDimensionFilters.includes(dimensionLabel)
+        )
+      : availableMetrics?.dimensions;
+  }, [availableMetrics?.dimensions, excludeDimensionFilters]);
+
   const filteredSelections = React.useMemo(() => {
     if (isLoadingFilters || !flags.aclp?.showWidgetDimensionFilters) {
       return dimensionFilters ?? [];
     }
 
     return getFilteredDimensions({
-      dimensions: availableMetrics?.dimensions ?? [],
+      dimensions: filteredDimensions ?? [],
       linodes: activeLinodeFetch,
       vpcs: vpcFetch,
       dimensionFilters,
     });
   }, [
     activeLinodeFetch,
-    availableMetrics?.dimensions,
     dimensionFilters,
+    filteredDimensions,
     flags.aclp?.showWidgetDimensionFilters,
     isLoadingFilters,
     vpcFetch,
@@ -436,23 +454,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const end = DateTime.fromISO(duration.end, { zone: 'GMT' });
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
-  const excludeDimensionFilters = React.useMemo(() => {
-    return (
-      FILTER_CONFIG.get(dashboardId)
-        ?.filters.filter(
-          ({ configuration }) => configuration.dimensionKey !== undefined
-        )
-        .map(({ configuration }) => configuration.dimensionKey) ?? []
-    );
-  }, [dashboardId]);
-  const filteredDimensions = React.useMemo(() => {
-    return excludeDimensionFilters && excludeDimensionFilters.length > 0
-      ? availableMetrics?.dimensions.filter(
-          ({ dimension_label: dimensionLabel }) =>
-            !excludeDimensionFilters.includes(dimensionLabel)
-        )
-      : availableMetrics?.dimensions;
-  }, [availableMetrics?.dimensions, excludeDimensionFilters]);
 
   React.useEffect(() => {
     if (
