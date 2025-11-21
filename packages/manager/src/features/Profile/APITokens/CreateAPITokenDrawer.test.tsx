@@ -57,6 +57,7 @@ describe('Create API Token Drawer', () => {
 
   it(
     'Should see secret modal with secret when you type a label and submit the form successfully',
+    { timeout: 15000 },
     async () => {
       server.use(
         http.post('*/profile/tokens', () => {
@@ -85,8 +86,7 @@ describe('Create API Token Drawer', () => {
       await waitFor(() =>
         expect(props.showSecret).toBeCalledWith('secret-value')
       );
-    },
-    { timeout: 15000 }
+    }
   );
 
   it('Should default to no selection for all scopes', () => {

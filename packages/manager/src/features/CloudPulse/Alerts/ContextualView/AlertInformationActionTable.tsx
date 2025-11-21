@@ -21,11 +21,10 @@ import {
 } from 'src/queries/cloudpulse/useAlertsMutation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { useContextualAlertsState } from '../../Utils/utils';
+import { arraysEqual, useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
-import { arraysEqual } from '../Utils/utils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type {

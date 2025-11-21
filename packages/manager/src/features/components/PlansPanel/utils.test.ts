@@ -3,6 +3,7 @@ import { renderHook } from '@testing-library/react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
 import {
@@ -20,22 +21,13 @@ import type { PlanSelectionType } from './types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
-  useFlags: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', () => {
-  const actual = vi.importActual('@linode/queries');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
-  };
-});
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
   };
 });
 
@@ -563,14 +555,18 @@ describe('useIsAcceleratedPlansEnabled', () => {
         capabilities: [],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      acceleratedPlans: {
-        linodePlans: false,
-        lkePlans: false,
-      },
-    });
 
-    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: false,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: false,
@@ -583,14 +579,18 @@ describe('useIsAcceleratedPlansEnabled', () => {
         capabilities: [],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      acceleratedPlans: {
-        linodePlans: true,
-        lkePlans: true,
-      },
-    });
 
-    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: true,
+            },
+          },
+        }),
+    });
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: false,
@@ -603,14 +603,18 @@ describe('useIsAcceleratedPlansEnabled', () => {
         capabilities: ['NETINT Quadra T1U'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      acceleratedPlans: {
-        linodePlans: false,
-        lkePlans: false,
-      },
-    });
 
-    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: false,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: false,
@@ -623,14 +627,18 @@ describe('useIsAcceleratedPlansEnabled', () => {
         capabilities: ['NETINT Quadra T1U'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      acceleratedPlans: {
-        linodePlans: true,
-        lkePlans: true,
-      },
-    });
 
-    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: true,
+            },
+          },
+        }),
+    });
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: true,
       isAcceleratedLinodePlansEnabled: true,
@@ -644,14 +652,18 @@ describe('useIsAcceleratedPlansEnabled', () => {
         capabilities: ['NETINT Quadra T1U'],
       },
     });
-    queryMocks.useFlags.mockReturnValue({
-      acceleratedPlans: {
-        linodePlans: true,
-        lkePlans: false,
-      },
-    });
 
-    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: true,

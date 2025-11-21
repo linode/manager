@@ -3,6 +3,7 @@ import { renderHook } from '@testing-library/react';
 
 import { kubeLinodeFactory, nodePoolFactory } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   compareByKubernetesVersion,
@@ -22,25 +23,16 @@ const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
   useGrants: vi.fn().mockReturnValue({}),
   useAccountBetaQuery: vi.fn().mockReturnValue({}),
-  useFlags: vi.fn().mockReturnValue({}),
   useKubernetesTieredVersionsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', () => {
-  const actual = vi.importActual('@linode/queries');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
     useGrants: queryMocks.useGrants,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,
-  };
-});
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
   };
 });
 
@@ -225,11 +217,10 @@ describe('helper functions', () => {
       queryMocks.useAccountBetaQuery.mockReturnValue({
         data: accountBeta,
       });
-      queryMocks.useFlags.mockReturnValue({
-        apl: true,
-      });
 
-      const { result } = renderHook(() => useAPLAvailability());
+      const { result } = renderHook(() => useAPLAvailability(), {
+        wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
+      });
       expect(result.current.showAPL).toBe(true);
     });
   });
@@ -352,17 +343,21 @@ describe('hooks', () => {
           capabilities: [],
         },
       });
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise2: {
-          enabled: true,
-          ga: true,
-          la: true,
-          phase2Mtc: { byoVPC: true, dualStack: true },
-          postLa: true,
-        },
-      });
 
-      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: true,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: true,
+              },
+            },
+          }),
+      });
       expect(result.current).toStrictEqual({
         isLkeEnterpriseGAFeatureEnabled: false,
         isLkeEnterpriseGAFlagEnabled: true,
@@ -380,17 +375,21 @@ describe('hooks', () => {
           capabilities: ['Kubernetes Enterprise'],
         },
       });
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise2: {
-          enabled: true,
-          ga: false,
-          la: true,
-          phase2Mtc: { byoVPC: false, dualStack: false },
-          postLa: false,
-        },
-      });
 
-      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: false,
+                la: true,
+                phase2Mtc: { byoVPC: false, dualStack: false },
+                postLa: false,
+              },
+            },
+          }),
+      });
       expect(result.current).toStrictEqual({
         isLkeEnterpriseGAFeatureEnabled: false,
         isLkeEnterpriseGAFlagEnabled: false,
@@ -412,17 +411,21 @@ describe('hooks', () => {
           ],
         },
       });
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise2: {
-          enabled: true,
-          ga: false,
-          la: true,
-          phase2Mtc: { byoVPC: true, dualStack: true },
-          postLa: false,
-        },
-      });
 
-      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: false,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: false,
+              },
+            },
+          }),
+      });
       expect(result.current).toStrictEqual({
         isLkeEnterpriseGAFeatureEnabled: false,
         isLkeEnterpriseGAFlagEnabled: false,
@@ -440,17 +443,20 @@ describe('hooks', () => {
           capabilities: ['Kubernetes Enterprise'],
         },
       });
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise2: {
-          enabled: true,
-          ga: false,
-          la: true,
-          phase2Mtc: { byoVPC: true, dualStack: true },
-          postLa: false,
-        },
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: false,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: false,
+              },
+            },
+          }),
       });
-
-      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
       expect(result.current).toStrictEqual({
         isLkeEnterpriseGAFeatureEnabled: false,
         isLkeEnterpriseGAFlagEnabled: false,
@@ -472,17 +478,21 @@ describe('hooks', () => {
           ],
         },
       });
-      queryMocks.useFlags.mockReturnValue({
-        lkeEnterprise2: {
-          enabled: true,
-          ga: true,
-          la: true,
-          phase2Mtc: { byoVPC: true, dualStack: true },
-          postLa: true,
-        },
-      });
 
-      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: true,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: true,
+              },
+            },
+          }),
+      });
       expect(result.current).toStrictEqual({
         isLkeEnterpriseGAFeatureEnabled: true,
         isLkeEnterpriseGAFlagEnabled: true,

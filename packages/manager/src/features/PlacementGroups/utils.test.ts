@@ -15,22 +15,13 @@ import {
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
-  useFlags: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', () => {
-  const actual = vi.importActual('@linode/queries');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
-  };
-});
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
   };
 });
 
@@ -228,11 +219,6 @@ describe('useIsPlacementGroupsEnabled', () => {
   });
 
   it('returns false if the account does not have the Placement Group capability', () => {
-    queryMocks.useFlags.mockReturnValue({
-      placementGroups: {
-        enabled: true,
-      },
-    });
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: [],

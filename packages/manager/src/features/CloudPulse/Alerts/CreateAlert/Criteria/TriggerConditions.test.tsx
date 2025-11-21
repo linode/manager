@@ -35,8 +35,6 @@ const pollingIntervalOptions =
   }));
 
 describe('Trigger Conditions', () => {
-  const user = userEvent.setup();
-
   it('should render all the components and names', () => {
     renderWithThemeAndHookFormContext({
       component: (
@@ -120,7 +118,7 @@ describe('Trigger Conditions', () => {
       { name: 'Open' }
     );
 
-    user.click(evaluationPeriodInput);
+    await userEvent.click(evaluationPeriodInput);
 
     expect(
       await screen.findByRole('option', {
@@ -133,7 +131,7 @@ describe('Trigger Conditions', () => {
       })
     ).toBeVisible();
 
-    await user.click(
+    await userEvent.click(
       screen.getByRole('option', {
         name: evaluationPeriodOptions[0].label,
       })
@@ -167,7 +165,7 @@ describe('Trigger Conditions', () => {
       { name: 'Open' }
     );
 
-    user.click(pollingIntervalInput);
+    await userEvent.click(pollingIntervalInput);
 
     expect(
       await screen.findByRole('option', {
@@ -181,7 +179,7 @@ describe('Trigger Conditions', () => {
       })
     ).toBeVisible();
 
-    await user.click(
+    await userEvent.click(
       screen.getByRole('option', {
         name: pollingIntervalOptions[0].label,
       })
@@ -191,7 +189,7 @@ describe('Trigger Conditions', () => {
     ).toHaveAttribute('value', pollingIntervalOptions[0].label);
   });
 
-  it('should be able to show the options that are greater than or equal to max scraping Interval', () => {
+  it('should be able to show the options that are greater than or equal to max scraping Interval', async () => {
     renderWithThemeAndHookFormContext({
       component: (
         <TriggerConditions
@@ -216,7 +214,7 @@ describe('Trigger Conditions', () => {
       { name: 'Open' }
     );
 
-    user.click(evaluationPeriodInput);
+    await userEvent.click(evaluationPeriodInput);
 
     expect(
       screen.queryByText(evaluationPeriodOptions[0].label)
@@ -227,7 +225,7 @@ describe('Trigger Conditions', () => {
       'button',
       { name: 'Open' }
     );
-    user.click(pollingIntervalInput);
+    await userEvent.click(pollingIntervalInput);
     expect(
       screen.queryByText(pollingIntervalOptions[0].label)
     ).not.toBeInTheDocument();

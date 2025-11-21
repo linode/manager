@@ -24,12 +24,11 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  arraysEqual,
   filterFirewallResources,
   filterKubernetesClusters,
-  getAssociatedEntityType,
   getEnabledServiceTypes,
   getFilteredDimensions,
-  getResourcesFilterConfig,
   isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -352,39 +351,6 @@ describe('getEnabledServiceTypes', () => {
     expect(result).not.toContain('linode');
   });
 
-  describe('getResourcesFilterConfig', () => {
-    it('should return undefined if the dashboard id is not provided', () => {
-      expect(getResourcesFilterConfig(undefined)).toBeUndefined();
-    });
-
-    it('should return the resources filter configuration for the linode-firewalldashboard', () => {
-      const resourcesFilterConfig = getResourcesFilterConfig(4);
-      expect(resourcesFilterConfig).toBeDefined();
-      expect(resourcesFilterConfig?.associatedEntityType).toBe('linode');
-      expect(resourcesFilterConfig?.filterFn).toBeDefined();
-    });
-
-    it('should return the resources filter configuration for the nodebalancer-firewall dashboard', () => {
-      const resourcesFilterConfig = getResourcesFilterConfig(8);
-      expect(resourcesFilterConfig).toBeDefined();
-      expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
-      expect(resourcesFilterConfig?.filterFn).toBeDefined();
-    });
-  });
-
-  describe('getAssociatedEntityType', () => {
-    it('should return undefined if the dashboard id is not provided', () => {
-      expect(getAssociatedEntityType(undefined)).toBeUndefined();
-    });
-
-    it('should return the associated entity type for the linode-firewall dashboard', () => {
-      expect(getAssociatedEntityType(4)).toBe('linode');
-    });
-
-    it('should return the associated entity type for the nodebalancer-firewall dashboard', () => {
-      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
-    });
-  });
 
   describe('filterFirewallResources', () => {
     it('should return the filtered firewall resources for linode', () => {
@@ -718,5 +684,29 @@ describe('getFilteredDimensions', () => {
 
     // with no metric definitions, mergedDimensions is undefined and filters should not pass validation
     expect(result).toEqual([]);
+  });
+});
+
+describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are undefined', () => {
+    expect(arraysEqual(undefined, undefined)).toBe(true);
+  });
+  it('should return false when one of the arrays is undefined', () => {
+    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+  });
+  it('should return false when arrays are not equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
+  });
+  it('should return true when arrays have same elements but in different order', () => {
+    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
   });
 });

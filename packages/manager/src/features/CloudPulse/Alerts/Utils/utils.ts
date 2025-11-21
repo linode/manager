@@ -13,11 +13,6 @@ import {
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
-import {
-  DIMENSION_TRANSFORM_CONFIG,
-  TRANSFORMS,
-} from '../../shared/DimensionTransform';
-import { compareArrays } from '../../Utils/FilterBuilder';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
@@ -598,44 +593,5 @@ export const alertsFromEnabledServices = (
   // Return the alerts whose service type is enabled in the aclpServices flag
   return allAlerts?.filter(
     (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
-  );
-};
-
-/**
- * Transform a dimension value using the appropriate transform function
- * @param serviceType - The cloud pulse service type
- * @param dimensionLabel - The dimension label
- * @param value - The value to transform
- * @returns Transformed value
- */
-export const transformDimensionValue = (
-  serviceType: CloudPulseServiceType | null,
-  dimensionLabel: string,
-  value: string
-): string => {
-  return (
-    (
-      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
-    )?.(value) ?? TRANSFORMS.capitalize(value)
-  );
-};
-
-/**
- * Checks if two arrays are equal, ignores the order of the elements
- * @param a The first array
- * @param b The second array
- * @returns True if the arrays are equal, false otherwise
- */
-export const arraysEqual = (
-  a: number[] | undefined,
-  b: number[] | undefined
-) => {
-  if (a === undefined && b === undefined) return true;
-  if (a === undefined || b === undefined) return false;
-  if (a.length !== b.length) return false;
-
-  return compareArrays(
-    [...a].sort((x, y) => x - y),
-    [...b].sort((x, y) => x - y)
   );
 };

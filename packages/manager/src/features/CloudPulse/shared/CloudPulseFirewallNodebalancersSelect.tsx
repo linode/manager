@@ -6,8 +6,9 @@ import React from 'react';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { PARENT_ENTITY_REGION, RESOURCE_FILTER_MAP } from '../Utils/constants';
-import { deepEqual, filterFirewallNodebalancers } from '../Utils/FilterBuilder';
-import { getAssociatedEntityType } from '../Utils/utils';
+import { filterFirewallNodebalancers } from '../Utils/FilterBuilder';
+import { getAssociatedEntityType } from '../Utils/FilterConfig';
+import { deepEqual } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
