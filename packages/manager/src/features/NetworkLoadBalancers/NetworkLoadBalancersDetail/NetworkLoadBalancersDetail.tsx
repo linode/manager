@@ -9,6 +9,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 
 import { NetworkLoadBalancerDetailBody } from './NetworkLoadBalancerDetailBody';
 import { NetworkLoadBalancerDetailHeader } from './NetworkLoadBalancerDetailHeader';
+import { NetworkLoadBalancersListenerTable } from './NetworkLoadBalancersListenerTable';
 
 const NetworkLoadBalancersDetail = () => {
   const params = useParams({ strict: false });
@@ -32,7 +33,7 @@ const NetworkLoadBalancersDetail = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Network Load Balancer" />
+      <DocumentTitleSegment segment={`${nlb.label} | Network Load Balancer`} />
       <LandingHeader
         breadcrumbProps={{
           labelOptions: { noCap: true },
@@ -63,6 +64,7 @@ const NetworkLoadBalancersDetail = () => {
         header={<NetworkLoadBalancerDetailHeader status={nlb.status} />}
         noBodyBottomBorder={true}
       />
+      <NetworkLoadBalancersListenerTable nlbId={nlb.id} />
     </>
   );
 };
