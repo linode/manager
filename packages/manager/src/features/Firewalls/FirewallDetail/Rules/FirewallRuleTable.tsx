@@ -27,7 +27,7 @@ import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-// import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -216,16 +216,14 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 >
                   Label
                 </TableCell>
+                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <Hidden lgDown>
                   <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
                 </Hidden>
                 <Hidden smDown>
                   <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
-                  <TableCell sx={{ width: '15%' }}>
-                    {capitalize(addressColumnLabel)}
-                  </TableCell>
+                  <TableCell>{capitalize(addressColumnLabel)}</TableCell>
                 </Hidden>
-                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -407,6 +405,9 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               </LinkButton>
             )}
           </TableCell>
+          <TableCell aria-label={`Action: ${action}`}>
+            {capitalize(action?.toLocaleLowerCase() ?? '')}
+          </TableCell>
           <Hidden lgDown>
             <TableCell aria-label={`Protocol: ${protocol}`}>
               {protocol}
@@ -419,14 +420,10 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               <ConditionalError errors={errors} formField="ports" />
             </TableCell>
             <TableCell aria-label={`Addresses: ${addresses}`}>
-              {/* <MaskableText text={addresses ?? ''} /> */}
-              {addresses}
+              <MaskableText length="ipv6" text={addresses} />
               <ConditionalError errors={errors} formField="addresses" />
             </TableCell>
           </Hidden>
-          <TableCell aria-label={`Action: ${action}`}>
-            {capitalize(action?.toLocaleLowerCase() ?? '')}
-          </TableCell>
         </>
       )}
 

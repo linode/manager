@@ -9,15 +9,20 @@ export const MASKABLE_TEXT_LENGTH_MAP: Map<MaskableTextLength, number> =
   ]);
 
 export const createMaskedText = (
-  plainText: string,
+  plainText: React.ReactNode | string,
   length?: MaskableTextLength | number
 ) => {
+  const textLength =
+    typeof plainText === 'string'
+      ? plainText.length
+      : DEFAULT_MASKED_TEXT_LENGTH; // JSX fallback
+
   // Mask a default of 12 dots, unless the prop specifies a different default or the plaintext length.
   const MASKED_TEXT_LENGTH = !length
     ? DEFAULT_MASKED_TEXT_LENGTH
     : typeof length === 'number'
       ? length
-      : (MASKABLE_TEXT_LENGTH_MAP.get(length) ?? plainText.length);
+      : (MASKABLE_TEXT_LENGTH_MAP.get(length) ?? textLength);
 
   return '•'.repeat(MASKED_TEXT_LENGTH);
 };
