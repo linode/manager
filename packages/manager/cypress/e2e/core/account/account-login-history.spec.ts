@@ -8,6 +8,7 @@ import {
   loginHelperText,
 } from 'support/constants/account';
 import { mockGetAccountLogins } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetProfile,
   mockGetProfileGrants,
@@ -18,6 +19,14 @@ import { PARENT_USER } from 'src/features/Account/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 describe('Account login history', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Confirms that a user can navigate to and view the login history page.
    * - Confirms that login table displays the expected column headers.
