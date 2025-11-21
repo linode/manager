@@ -21,6 +21,15 @@ export type PlanFilterGeneration = 'all' | 'g6' | 'g7' | 'g8';
  */
 export type PlanFilterType = 'all' | 'compute-optimized' | 'general-purpose';
 
+/**
+ * Available plans for GPU
+ */
+export type PlanFilterGPU =
+  | 'all'
+  | 'gpu-rtx4000'
+  | 'gpu-rtx6000'
+  | 'gpu-rtxpro6000';
+
 // ============================================================================
 // Filter State
 // ============================================================================

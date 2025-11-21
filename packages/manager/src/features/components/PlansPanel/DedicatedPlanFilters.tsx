@@ -12,15 +12,17 @@ import { Select } from '@linode/ui';
 import * as React from 'react';
 
 import {
-  PLAN_FILTER_GENERATION_ALL,
+  PLAN_FILTER_ALL,
   PLAN_FILTER_GENERATION_G6,
   PLAN_FILTER_GENERATION_G7,
   PLAN_FILTER_GENERATION_G8,
-  PLAN_FILTER_TYPE_ALL,
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from './constants';
-import { applyPlanFilters, supportsTypeFiltering } from './utils/planFilters';
+import {
+  applyDedicatedPlanFilters,
+  supportsTypeFiltering,
+} from './utils/planFilters';
 
 import type {
   PlanFilterRenderArgs,
@@ -31,20 +33,20 @@ import type { PlanFilterGeneration, PlanFilterType } from './types/planFilters';
 import type { SelectOption } from '@linode/ui';
 
 const GENERATION_OPTIONS: SelectOption<PlanFilterGeneration>[] = [
-  { label: 'All', value: PLAN_FILTER_GENERATION_ALL },
+  { label: 'All', value: PLAN_FILTER_ALL },
   { label: 'G8 Dedicated', value: PLAN_FILTER_GENERATION_G8 },
   { label: 'G7 Dedicated', value: PLAN_FILTER_GENERATION_G7 },
   { label: 'G6 Dedicated', value: PLAN_FILTER_GENERATION_G6 },
 ];
 
 const TYPE_OPTIONS_WITH_SUBTYPES: SelectOption<PlanFilterType>[] = [
-  { label: 'All', value: PLAN_FILTER_TYPE_ALL },
+  { label: 'All', value: PLAN_FILTER_ALL },
   { label: 'Compute Optimized', value: PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED },
   { label: 'General Purpose', value: PLAN_FILTER_TYPE_GENERAL_PURPOSE },
 ];
 
 const TYPE_OPTIONS_ALL_ONLY: SelectOption<PlanFilterType>[] = [
-  { label: 'All', value: PLAN_FILTER_TYPE_ALL },
+  { label: 'All', value: PLAN_FILTER_ALL },
 ];
 
 interface DedicatedPlanFiltersComponentProps {
@@ -59,12 +61,10 @@ const DedicatedPlanFiltersComponent = React.memo(
     const { disabled = false, onResult, plans, resetPagination } = props;
 
     // Local state - persists automatically because component stays mounted
-    const [generation, setGeneration] = React.useState<PlanFilterGeneration>(
-      PLAN_FILTER_GENERATION_ALL
-    );
+    const [generation, setGeneration] =
+      React.useState<PlanFilterGeneration>(PLAN_FILTER_ALL);
 
-    const [type, setType] =
-      React.useState<PlanFilterType>(PLAN_FILTER_TYPE_ALL);
+    const [type, setType] = React.useState<PlanFilterType>(PLAN_FILTER_ALL);
 
     const typeFilteringSupported = supportsTypeFiltering(generation);
 
@@ -109,11 +109,11 @@ const DedicatedPlanFiltersComponent = React.memo(
         // When clearing, default to "All" instead of undefined
         const newGeneration =
           (option?.value as PlanFilterGeneration | undefined) ??
-          PLAN_FILTER_GENERATION_ALL;
+          PLAN_FILTER_ALL;
         setGeneration(newGeneration);
 
         // Reset type filter when generation changes
-        setType(PLAN_FILTER_TYPE_ALL);
+        setType(PLAN_FILTER_ALL);
       },
       []
     );
@@ -124,17 +124,15 @@ const DedicatedPlanFiltersComponent = React.memo(
         option: null | SelectOption<number | string>
       ) => {
         setType(
-          (option?.value as PlanFilterType | undefined) ?? PLAN_FILTER_TYPE_ALL
+          (option?.value as PlanFilterType | undefined) ?? PLAN_FILTER_ALL
         );
       },
       []
     );
 
     const filteredPlans = React.useMemo(() => {
-      const normalizedType = typeFilteringSupported
-        ? type
-        : PLAN_FILTER_TYPE_ALL;
-      return applyPlanFilters(plans, generation, normalizedType);
+      const normalizedType = typeFilteringSupported ? type : PLAN_FILTER_ALL;
+      return applyDedicatedPlanFilters(plans, generation, normalizedType);
     }, [generation, plans, type, typeFilteringSupported]);
 
     const selectedGenerationOption = React.useMemo(() => {
@@ -142,7 +140,7 @@ const DedicatedPlanFiltersComponent = React.memo(
     }, [generation]);
 
     const selectedTypeOption = React.useMemo(() => {
-      const displayType = typeFilteringSupported ? type : PLAN_FILTER_TYPE_ALL;
+      const displayType = typeFilteringSupported ? type : PLAN_FILTER_ALL;
       return typeOptions.find((opt) => opt.value === displayType) ?? null;
     }, [type, typeFilteringSupported, typeOptions]);
 
@@ -155,6 +153,7 @@ const DedicatedPlanFiltersComponent = React.memo(
             flexWrap: 'wrap',
             gap: '19px',
             marginBottom: 16,
+            marginTop: -16,
           }}
         >
           <Select
@@ -189,7 +188,7 @@ const DedicatedPlanFiltersComponent = React.memo(
       return {
         filteredPlans,
         filterUI,
-        hasActiveFilters: generation !== PLAN_FILTER_GENERATION_ALL,
+        hasActiveFilters: generation !== PLAN_FILTER_ALL,
       };
     }, [
       disabled,

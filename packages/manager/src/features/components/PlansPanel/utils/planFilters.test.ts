@@ -1,13 +1,14 @@
 import { planSelectionTypeFactory } from 'src/factories/types';
 
 import {
-  PLAN_FILTER_TYPE_ALL,
+  PLAN_FILTER_ALL,
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from '../constants';
 import {
-  applyPlanFilters,
+  applyDedicatedPlanFilters,
   filterPlansByGeneration,
+  filterPlansByGpuType,
   filterPlansByType,
   getAvailableTypes,
   supportsTypeFiltering,
@@ -47,6 +48,23 @@ describe('planFilters utilities', () => {
     id: 'g8-dedicated-99-999',
     label: 'Unlisted G8 Plan',
   });
+
+  const rtx4000Plan = createPlan({
+    id: 'g2-gpu-rtx4000a1-s',
+    label: 'RTX4000 Ada x1 Small',
+  });
+
+  const rtx6000Plan = createPlan({
+    id: 'g8-gpu-rtx6000-1',
+    label: 'Dedicated 32GB + RTX6000 GPU x1',
+  });
+
+  const rtxPro6000Plan = createPlan({
+    id: 'g3-gpu-rtxpro6000-blackwell-1',
+    label: 'RTX PRO 6000 Blackwell x1',
+  });
+
+  const gpuPlans = [rtx4000Plan, rtx6000Plan, rtxPro6000Plan];
 
   describe('filterPlansByGeneration', () => {
     it('returns only G8 plans that exist in the allow-list', () => {
@@ -97,7 +115,7 @@ describe('planFilters utilities', () => {
       const result = filterPlansByType(
         [g8ComputePlan, g8GeneralPlan],
         'g8',
-        PLAN_FILTER_TYPE_ALL
+        PLAN_FILTER_ALL
       );
 
       expect(result).toEqual([g8ComputePlan, g8GeneralPlan]);
@@ -146,19 +164,19 @@ describe('planFilters utilities', () => {
     });
   });
 
-  describe('applyPlanFilters', () => {
+  describe('applyDedicatedPlanFilters', () => {
     it('returns an empty array when no generation is selected', () => {
-      const result = applyPlanFilters(
+      const result = applyDedicatedPlanFilters(
         [g8ComputePlan, g8GeneralPlan],
         undefined,
-        PLAN_FILTER_TYPE_ALL
+        PLAN_FILTER_ALL
       );
 
       expect(result).toEqual([]);
     });
 
     it('applies both generation and type filters', () => {
-      const result = applyPlanFilters(
+      const result = applyDedicatedPlanFilters(
         [g8ComputePlan, g8GeneralPlan, g7DedicatedPlan, g7PremiumPlan, g6Plan],
         'g8',
         PLAN_FILTER_TYPE_GENERAL_PURPOSE
@@ -168,10 +186,10 @@ describe('planFilters utilities', () => {
     });
 
     it('returns all dedicated plans when generation is "all"', () => {
-      const result = applyPlanFilters(
+      const result = applyDedicatedPlanFilters(
         [g8ComputePlan, g8GeneralPlan, g7DedicatedPlan, g7PremiumPlan, g6Plan],
         'all',
-        PLAN_FILTER_TYPE_ALL
+        PLAN_FILTER_ALL
       );
 
       expect(result).toEqual([
@@ -196,16 +214,30 @@ describe('planFilters utilities', () => {
   describe('getAvailableTypes', () => {
     it('returns all type options for G8', () => {
       expect(getAvailableTypes('g8')).toEqual([
-        PLAN_FILTER_TYPE_ALL,
+        PLAN_FILTER_ALL,
         PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
         PLAN_FILTER_TYPE_GENERAL_PURPOSE,
       ]);
     });
 
     it('returns only the "all" option for G7, G6, and "all" generation', () => {
-      expect(getAvailableTypes('g7')).toEqual([PLAN_FILTER_TYPE_ALL]);
-      expect(getAvailableTypes('g6')).toEqual([PLAN_FILTER_TYPE_ALL]);
-      expect(getAvailableTypes('all')).toEqual([PLAN_FILTER_TYPE_ALL]);
+      expect(getAvailableTypes('g7')).toEqual([PLAN_FILTER_ALL]);
+      expect(getAvailableTypes('g6')).toEqual([PLAN_FILTER_ALL]);
+      expect(getAvailableTypes('all')).toEqual([PLAN_FILTER_ALL]);
+    });
+  });
+
+  describe('filterPlansByGpuType', () => {
+    it('returns only RTX4000 plans that exist in the allow-list', () => {
+      const result = filterPlansByGpuType(gpuPlans, 'gpu-rtx4000');
+
+      expect(result).toEqual([rtx4000Plan]);
+    });
+
+    it('returns all GPU plans when type is "all"', () => {
+      const result = filterPlansByGpuType(gpuPlans, 'all');
+
+      expect(result).toEqual(gpuPlans);
     });
   });
 });
