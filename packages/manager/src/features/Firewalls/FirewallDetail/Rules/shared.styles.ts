@@ -1,4 +1,4 @@
-import { Box, styled, Typography, WarningIcon } from '@linode/ui';
+import { Box, omittedProps, styled, Typography, WarningIcon } from '@linode/ui';
 import { makeStyles } from 'tss-react/mui';
 
 import type { Theme } from '@linode/ui';
@@ -9,6 +9,7 @@ interface StyledListItemProps {
 
 export const StyledListItem = styled(Typography, {
   label: 'StyledTypography',
+  shouldForwardProp: omittedProps(['paddingMultiplier']),
 })<StyledListItemProps>(({ theme, paddingMultiplier = 1 }) => ({
   alignItems: 'center',
   display: 'flex',
