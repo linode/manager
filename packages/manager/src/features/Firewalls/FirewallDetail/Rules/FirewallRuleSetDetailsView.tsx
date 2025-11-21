@@ -41,48 +41,53 @@ export const FirewallRuleSetDetailsView = (
 
   return (
     <Box mt={2}>
-      <StyledListItem paddingMultiplier={2}>
-        <StyledLabel component="span">Label: </StyledLabel>
-        {ruleSetDetails?.label}
-      </StyledListItem>
-      <StyledListItem paddingMultiplier={2}>
-        <StyledLabel component="span">ID: </StyledLabel>
-        {ruleSetDetails?.id}
-        <CopyTooltip
-          className={classes.copyIcon}
-          text={String(ruleSetDetails?.id)}
-        />
-      </StyledListItem>
-      <StyledListItem
-        paddingMultiplier={2}
-        sx={{
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-        }}
-      >
-        <StyledLabel component="span">Description</StyledLabel>
-        {ruleSetDetails?.description}
-      </StyledListItem>
-      <StyledListItem paddingMultiplier={2}>
-        <StyledLabel component="span">Service Defined: </StyledLabel>
-        {ruleSetDetails?.is_service_defined ? 'Yes' : 'No'}
-      </StyledListItem>
-      <StyledListItem paddingMultiplier={2}>
-        <StyledLabel component="span">Version: </StyledLabel>
-        {ruleSetDetails?.version}
-      </StyledListItem>
-      <StyledListItem paddingMultiplier={2}>
-        <StyledLabel component="span">Created: </StyledLabel>
-        {ruleSetDetails?.created && (
-          <DateTimeDisplay value={ruleSetDetails.created} />
-        )}
-      </StyledListItem>
-      <StyledListItem paddingMultiplier={2}>
-        <StyledLabel component="span">Updated: </StyledLabel>
-        {ruleSetDetails?.updated && (
-          <DateTimeDisplay value={ruleSetDetails.updated} />
-        )}
-      </StyledListItem>
+      {[
+        { label: 'Label', value: ruleSetDetails?.label },
+        { label: 'ID', value: ruleSetDetails?.id, copy: true },
+        {
+          label: 'Description',
+          value: ruleSetDetails?.description,
+          column: true,
+        },
+        {
+          label: 'Service Defined',
+          value: ruleSetDetails?.is_service_defined ? 'Yes' : 'No',
+        },
+        { label: 'Version', value: ruleSetDetails?.version },
+        {
+          label: 'Created',
+          value: ruleSetDetails?.created && (
+            <DateTimeDisplay value={ruleSetDetails.created} />
+          ),
+        },
+        {
+          label: 'Updated',
+          value: ruleSetDetails?.updated && (
+            <DateTimeDisplay value={ruleSetDetails.updated} />
+          ),
+        },
+      ].map((item, idx) => (
+        <StyledListItem
+          key={`item-${idx}`}
+          paddingMultiplier={2}
+          sx={
+            item.column
+              ? { flexDirection: 'column', alignItems: 'flex-start' }
+              : {}
+          }
+        >
+          {item.label && (
+            <StyledLabel component="span">{item.label}:</StyledLabel>
+          )}
+          {item.value}
+          {item.copy && (
+            <CopyTooltip
+              className={classes.copyIcon}
+              text={String(ruleSetDetails?.id)}
+            />
+          )}
+        </StyledListItem>
+      ))}
 
       {ruleSetDetails?.deleted && (
         <StyledListItem paddingMultiplier={2}>
@@ -107,6 +112,7 @@ export const FirewallRuleSetDetailsView = (
             sxTooltipIcon={{
               '& svg': { width: '16px', height: '16px' },
               padding: 0,
+              mb: 0.1,
             }}
             text="This rule set will be automatically deleted when it’s no longer referenced by other firewalls."
           />
