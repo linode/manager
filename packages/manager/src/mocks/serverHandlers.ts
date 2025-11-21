@@ -1325,7 +1325,27 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(devices));
   }),
   http.get('*/v4beta/networking/firewalls/rulesets', () => {
-    const rulesets = firewallRuleSetFactory.buildList(10);
+    const rulesetWithPrefixLists = firewallRuleSetFactory.build({
+      rules: firewallRuleFactory.buildList(1, {
+        addresses: {
+          ipv4: [
+            'pl:system:resolvers:test',
+            'pl:system:test',
+            '192.168.1.200',
+            '192.168.1.201',
+          ],
+          ipv6: [
+            '2001:db8:85a3::8a2e:371:7335/128',
+            'pl:system:test',
+            'pl::vpcs:test',
+          ],
+        },
+      }),
+    });
+    const rulesets = [
+      rulesetWithPrefixLists,
+      ...firewallRuleSetFactory.buildList(9),
+    ];
     return HttpResponse.json(makeResourcePage(rulesets));
   }),
   http.get('*/v4beta/networking/prefixlists', () => {
@@ -1343,12 +1363,27 @@ export const handlers = [
               id: 123,
             });
           case 123456789:
-            // Ruleset with larger ID 123456789, Longer label with 32 chars, and
+            // Ruleset with larger ID 123456789, Longer label with 32 chars, PrefixLists, and
             // Marked for deletion status
             return firewallRuleSetFactory.build({
               id: 123456789,
               label: 'ruleset-with-a-longer-32ch-label',
               deleted: '2025-11-18T18:51:11',
+              rules: firewallRuleFactory.buildList(1, {
+                addresses: {
+                  ipv4: [
+                    'pl:system:resolvers:test',
+                    'pl:system:test',
+                    '192.168.1.200',
+                    '192.168.1.201',
+                  ],
+                  ipv6: [
+                    '2001:db8:85a3::8a2e:371:7335/128',
+                    'pl:system:test',
+                    'pl::vpcs:test',
+                  ],
+                },
+              }),
             });
           default:
             return firewallRuleSetFactory.build();
@@ -1370,8 +1405,15 @@ export const handlers = [
                 firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
                 ...firewallRuleFactory.buildList(1, {
                   addresses: {
-                    ipv4: ['192.168.1.213', '172.31.255.255'],
+                    ipv4: [
+                      'pl:system:test-1',
+                      'pl::vpcs:test-1',
+                      '192.168.1.213',
+                      '172.31.255.255',
+                    ],
                     ipv6: [
+                      'pl:system:test-1',
+                      'pl::vpcs:test-2',
                       '2001:db8:85a3::8a2e:370:7334/128',
                       '2001:db8:85a3::8a2e:371:7335/128',
                     ],
