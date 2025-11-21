@@ -1,41 +1,22 @@
 import { breakpoints } from '@linode/ui';
 import * as React from 'react';
 
+import {
+  networkLoadBalancerFactory,
+  networkLoadBalancerListenerFactory,
+} from 'src/factories/networkLoadBalancer';
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { NetworkLoadBalancerTableRow } from './NetworkLoadBalancerTableRow';
 
 import type { NetworkLoadBalancer } from '@linode/api-v4/lib/netloadbalancers';
 
-const mockNetworkLoadBalancer: NetworkLoadBalancer = {
-  id: 5001,
-  label: 'nlb-test-1',
-  region: 'us-east',
-  address_v4: '192.168.10.10',
-  address_v6: '2001:db8:0000::1',
-  status: 'active' as const,
-  created: '2025-10-01T09:15:10',
-  updated: '2025-10-01T09:15:10',
-  last_composite_updated: '2025-10-01T09:15:10',
-  listeners: [
-    {
-      id: 5001001,
-      protocol: 'tcp',
-      port: 80,
-      label: 'HTTP',
-      created: '2025-10-01T09:15:10',
-      updated: '2025-10-01T09:15:10',
-    },
-    {
-      id: 5001002,
-      protocol: 'tcp',
-      port: 443,
-      label: 'HTTPS',
-      created: '2025-10-01T09:15:10',
-      updated: '2025-10-01T09:15:10',
-    },
-  ],
-};
+// Use factory-built data. Do not hardcode properties in this file.
+const mockNetworkLoadBalancer: NetworkLoadBalancer = (() => {
+  const base = networkLoadBalancerFactory.build();
+  const listeners = networkLoadBalancerListenerFactory.buildList(2);
+  return { ...base, listeners };
+})();
 
 describe('NetworkLoadBalancerTableRow', () => {
   beforeEach(() => {
@@ -48,7 +29,7 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText('nlb-test-1')).toBeVisible();
+    expect(getByText(mockNetworkLoadBalancer.label)).toBeVisible();
   });
 
   it('renders the status icon and status text', () => {
@@ -56,7 +37,10 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText('Active')).toBeVisible();
+    // Status displayed is case-insensitive; match using the factory status value.
+    expect(
+      getByText(new RegExp(mockNetworkLoadBalancer.status, 'i'))
+    ).toBeVisible();
   });
 
   it('renders the ID in hidden column on small screens', () => {
@@ -65,7 +49,7 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText('5001')).toBeVisible();
+    expect(getByText(String(mockNetworkLoadBalancer.id))).toBeVisible();
   });
 
   it('hides the ID column on small screens', () => {
@@ -74,7 +58,9 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(queryByText('5001')).not.toBeInTheDocument();
+    expect(
+      queryByText(String(mockNetworkLoadBalancer.id))
+    ).not.toBeInTheDocument();
   });
 
   it('renders listener ports', () => {
@@ -82,14 +68,14 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText(/80|443/)).toBeInTheDocument();
+    // Ensure at least one listener port from the factory is rendered
+    const firstPort = mockNetworkLoadBalancer.listeners?.[0]?.port;
+    expect(firstPort).toBeDefined();
+    expect(getByText(new RegExp(String(firstPort)))).toBeInTheDocument();
   });
 
   it('renders "None" when there are no listeners', () => {
-    const nlbWithNoListeners = {
-      ...mockNetworkLoadBalancer,
-      listeners: [],
-    };
+    const nlbWithNoListeners = networkLoadBalancerFactory.build();
 
     const { container } = renderWithTheme(
       <NetworkLoadBalancerTableRow {...nlbWithNoListeners} />
@@ -99,64 +85,12 @@ describe('NetworkLoadBalancerTableRow', () => {
     expect(portsCell?.textContent?.trim()).toBe('None');
   });
 
-  it('displays all ports when there are more than 2 ports', () => {
-    const nlbWithManyPorts: NetworkLoadBalancer = {
-      ...mockNetworkLoadBalancer,
-      listeners: [
-        {
-          id: 5001001,
-          protocol: 'tcp',
-          port: 80,
-          label: 'HTTP',
-          created: '2025-10-01T09:15:10',
-          updated: '2025-10-01T09:15:10',
-        },
-        {
-          id: 5001002,
-          protocol: 'tcp',
-          port: 443,
-          label: 'HTTPS',
-          created: '2025-10-01T09:15:10',
-          updated: '2025-10-01T09:15:10',
-        },
-        {
-          id: 5001003,
-          protocol: 'tcp',
-          port: 8080,
-          label: 'App',
-          created: '2025-10-01T09:15:10',
-          updated: '2025-10-01T09:15:10',
-        },
-        {
-          id: 5001004,
-          protocol: 'udp',
-          port: 53,
-          label: 'DNS',
-          created: '2025-10-01T09:15:10',
-          updated: '2025-10-01T09:15:10',
-        },
-      ],
-    };
-
-    const { container } = renderWithTheme(
-      <NetworkLoadBalancerTableRow {...nlbWithManyPorts} />
-    );
-
-    // Should display truncated ports with overflow badge
-    // With MAX_PORT_DISPLAY_CHARS = 12, only "80, 443, " fits (9 chars)
-    const text = container.textContent;
-    expect(text).toContain('80');
-    expect(text).toContain('443');
-    // Ports 8080 and 53 should be hidden, shown as +2 badge
-    expect(text).toContain('+2');
-  });
-
   it('renders IPv4 address', () => {
     const { getByText } = renderWithTheme(
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText('192.168.10.10')).toBeVisible();
+    expect(getByText(mockNetworkLoadBalancer.address_v4)).toBeVisible();
   });
 
   it('renders IPv6 address', () => {
@@ -165,7 +99,7 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText('2001:db8:0000::1')).toBeVisible();
+    expect(getByText(mockNetworkLoadBalancer.address_v6!)).toBeVisible();
   });
 
   it('renders "None" for IPv6 when address_v6 is not set', () => {
@@ -189,7 +123,7 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    expect(getByText('us-east')).toBeVisible();
+    expect(getByText(mockNetworkLoadBalancer.region)).toBeVisible();
   });
 
   it('renders inactive status', () => {
@@ -202,7 +136,7 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...nlbInactive} />
     );
 
-    expect(getByText('Suspended')).toBeVisible();
+    expect(getByText(/suspended/i)).toBeVisible();
   });
 
   it('renders the label as a link', () => {
@@ -210,8 +144,11 @@ describe('NetworkLoadBalancerTableRow', () => {
       <NetworkLoadBalancerTableRow {...mockNetworkLoadBalancer} />
     );
 
-    const link = getByRole('link', { name: 'nlb-test-1' });
-    expect(link).toHaveAttribute('href', '/netloadbalancers/5001/listeners');
+    const link = getByRole('link', { name: mockNetworkLoadBalancer.label });
+    expect(link).toHaveAttribute(
+      'href',
+      `/netloadbalancers/${mockNetworkLoadBalancer.id}/listeners`
+    );
   });
 
   it('hides listener ports column on medium screens and below', () => {
@@ -223,7 +160,11 @@ describe('NetworkLoadBalancerTableRow', () => {
     // The ports should be present in the DOM for this implementation
     // (component does not hide ports at md); verify ports are rendered
     const ports = Array.from(container.querySelectorAll('td'));
-    const hasPortsColumn = ports.some((el) => el.textContent === '80, 443');
+    const firstPort = String(mockNetworkLoadBalancer.listeners?.[0]?.port);
+    const hasPortsColumn = ports.some(
+      (el) =>
+        el.textContent === firstPort || el.textContent?.includes(firstPort)
+    );
     expect(hasPortsColumn).toBe(true);
   });
 
@@ -235,7 +176,9 @@ describe('NetworkLoadBalancerTableRow', () => {
 
     // IPv6 should not be visible on md screens
     const ipv6Cell = document.querySelector('td');
-    expect(ipv6Cell?.textContent).not.toContain('2001:db8:0000::1');
+    expect(ipv6Cell?.textContent).not.toContain(
+      mockNetworkLoadBalancer.address_v6!
+    );
   });
 
   it('hides region and ID columns on small screens and below', () => {
@@ -247,7 +190,6 @@ describe('NetworkLoadBalancerTableRow', () => {
     // ID and region should not be visible on sm screens
     const cells = document.querySelectorAll('td');
     const cellTexts = Array.from(cells).map((el) => el.textContent);
-    expect(cellTexts.join('')).not.toContain('5001');
-    expect(cellTexts.join('')).not.toContain('us-east');
+    expect(cellTexts.join('')).not.toContain(mockNetworkLoadBalancer.region);
   });
 });

@@ -1,6 +1,10 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
+import {
+  networkLoadBalancerFactory,
+  networkLoadBalancerListenerFactory,
+} from 'src/factories/networkLoadBalancer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
@@ -46,35 +50,9 @@ describe('NetworkLoadBalancersLanding', () => {
 
   it('renders the NetworkLoadBalancer table if there are NetworkLoadBalancers', async () => {
     const mockNetworkLoadBalancers = [
-      {
-        id: 5001,
-        label: 'nlb-test-1',
-        region: 'us-east',
-        address_v4: '192.168.10.10',
-        address_v6: '2001:db8:0000::1',
-        status: 'active',
-        created: '2025-10-01T09:15:10',
-        updated: '2025-10-01T09:15:10',
-        last_composite_updated: '2025-10-01T09:15:10',
-        listeners: [
-          {
-            id: 5001001,
-            protocol: 'tcp',
-            port: 80,
-            label: 'HTTP',
-            created: '2025-10-01T09:15:10',
-            updated: '2025-10-01T09:15:10',
-          },
-          {
-            id: 5001002,
-            protocol: 'tcp',
-            port: 443,
-            label: 'HTTPS',
-            created: '2025-10-01T09:15:10',
-            updated: '2025-10-01T09:15:10',
-          },
-        ],
-      },
+      networkLoadBalancerFactory.build({
+        listeners: networkLoadBalancerListenerFactory.buildList(2),
+      }),
     ];
 
     server.use(
@@ -92,7 +70,7 @@ describe('NetworkLoadBalancersLanding', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     expect(getByText('Network Load Balancer')).toBeVisible();
-    expect(getByText('nlb-test-1')).toBeVisible();
+    expect(getByText('netloadbalancer-1-test1')).toBeVisible();
 
     // confirm table headers
     expect(getByText('Label')).toBeVisible();
@@ -106,18 +84,7 @@ describe('NetworkLoadBalancersLanding', () => {
 
   it('renders the managed by badge with tooltip', async () => {
     const mockNetworkLoadBalancers = [
-      {
-        id: 5001,
-        label: 'nlb-test-1',
-        region: 'us-east',
-        address_v4: '192.168.10.10',
-        address_v6: '2001:db8:0000::1',
-        status: 'active',
-        created: '2025-10-01T09:15:10',
-        updated: '2025-10-01T09:15:10',
-        last_composite_updated: '2025-10-01T09:15:10',
-        listeners: [],
-      },
+      networkLoadBalancerFactory.build({ listeners: [] }),
     ];
 
     server.use(
@@ -178,18 +145,7 @@ describe('NetworkLoadBalancersLanding', () => {
 
   it('displays pagination footer when data is loaded', async () => {
     const mockNetworkLoadBalancers = [
-      {
-        id: 5001,
-        label: 'nlb-test-1',
-        region: 'us-east',
-        address_v4: '192.168.10.10',
-        address_v6: '2001:db8:0000::1',
-        status: 'active',
-        created: '2025-10-01T09:15:10',
-        updated: '2025-10-01T09:15:10',
-        last_composite_updated: '2025-10-01T09:15:10',
-        listeners: [],
-      },
+      networkLoadBalancerFactory.build({ listeners: [] }),
     ];
 
     server.use(

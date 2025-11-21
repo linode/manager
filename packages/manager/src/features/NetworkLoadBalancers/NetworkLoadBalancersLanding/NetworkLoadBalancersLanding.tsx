@@ -12,6 +12,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { NLB_API_DOCS_LINK } from '../constants';
 import {
   StyledLockIcon,
   StyledManagedChip,
@@ -40,7 +41,7 @@ export const NetworkLoadBalancersLanding = () => {
     return (
       <ErrorState
         errorText={
-          error?.[0]?.reason ?? 'Unable to load your Network Load Balancer'
+          error?.[0]?.reason ?? 'Unable to load your Network Load Balancers.'
         }
       />
     );
@@ -61,7 +62,7 @@ export const NetworkLoadBalancersLanding = () => {
         breadcrumbProps={{
           pathname: '/netloadbalancers',
         }}
-        docsLink="https://techdocs.akamai.com/linode-api/changelog/network-load-balancers"
+        docsLink={NLB_API_DOCS_LINK}
         entity="Network Load Balancer"
         extraActions={
           <StyledManagedChip
