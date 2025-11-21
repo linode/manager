@@ -420,6 +420,8 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           name: 'Endpoints',
           priority: 2,
           neededInViews: [CloudPulseAvailableViews.central],
+          filterFn: (resources: ObjectStorageBucket[]) =>
+            getValidSortedEndpoints(resources),
         },
         name: 'Endpoints',
       },
@@ -573,7 +575,7 @@ export const getResourcesFilterConfig = (
   if (!dashboardId) {
     return undefined;
   }
-  // Get the associated entity type for the dashboard
+  // Get the resources filter configuration for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
   if (dashboardId === 10) {
     return filterConfig?.filters.find(
