@@ -205,7 +205,6 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  firewallRulesetsPrefixlists: boolean;
   fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
   gecko2: GeckoFeatureFlag;
   generationalPlansv2: GenerationalPlansFlag;

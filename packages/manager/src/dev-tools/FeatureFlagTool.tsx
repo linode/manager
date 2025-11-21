@@ -34,10 +34,6 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'fwRulesetsPrefixLists',
     label: 'Firewall RuleSets and Prefix Lists (JSON-based)',
   },
-  {
-    flag: 'firewallRulesetsPrefixlists',
-    label: 'Firewall Rulesets & Prefixlists',
-  },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'generationalPlansv2', label: 'Generational compute plans' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
