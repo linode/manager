@@ -17,12 +17,18 @@ import type {
   Dimension,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface CloudPulseDimensionFilterFieldsProps {
+  /**
+   * The entity type associated with the service type
+   */
+  associatedEntityType?: AssociatedEntityType;
   /**
    * The dimension filter data options to list in the Autocomplete component
    */
   dimensionOptions: Dimension[];
+
   /**
    * The name (with the index) used for the component to set in form
    */
@@ -58,6 +64,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
       selectedEntities,
       serviceType,
       selectedRegions,
+      associatedEntityType,
     } = props;
 
     const { control, setValue } = useFormContext<MetricsDimensionFilterForm>();
@@ -194,7 +201,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
                 dimensionLabel={dimensionFieldWatcher}
                 disabled={!dimensionFieldWatcher}
                 entities={selectedEntities}
-                entityType={serviceType === 'firewall' ? 'linode' : undefined}
+                entityType={associatedEntityType}
                 errorText={fieldState.error?.message}
                 name={name}
                 onBlur={field.onBlur}

@@ -3966,25 +3966,25 @@ export const handlers = [
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
       widgets = [
         {
-          metric: 'fw_active_connections',
+          metric: 'nb_ingress_bytes_accepted',
           unit: 'Count',
           label: 'Current Connections',
           color: 'default',
           size: 12,
           chart_type: 'line',
-          y_label: 'fw_active_connections',
-          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          y_label: 'nb_ingress_bytes_accepted',
+          group_by: ['entity_id'],
           aggregate_function: 'avg',
         },
         {
-          metric: 'fw_available_connections',
+          metric: 'nb_ingress_bytes_dropped',
           unit: 'Count',
           label: 'Available Connections',
           color: 'default',
           size: 12,
           chart_type: 'line',
-          y_label: 'fw_available_connections',
-          group_by: ['entity_id', 'linode_id', 'interface_id'],
+          y_label: 'nb_ingress_bytes_dropped',
+          group_by: ['entity_id'],
           aggregate_function: 'avg',
         },
       ];

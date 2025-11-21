@@ -239,7 +239,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const isLoadingFilters = activeLinodeFetch.isLoading || vpcFetch.isLoading;
 
   const filteredSelections = React.useMemo(() => {
-    if (isLoadingFilters) {
+    if (isLoadingFilters || !flags.aclp?.showWidgetDimensionFilters) {
       return dimensionFilters ?? [];
     }
 
@@ -253,6 +253,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     activeLinodeFetch,
     availableMetrics?.dimensions,
     dimensionFilters,
+    flags.aclp?.showWidgetDimensionFilters,
     isLoadingFilters,
     vpcFetch,
   ]);
@@ -263,7 +264,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       dimensionFilters?.length
       ? [
           ...constructAdditionalRequestFilters(additionalFilters ?? []),
-          ...(constructWidgetDimensionFilters(filteredSelections) ?? []), // dashboard level filters followed by widget filters
+          ...[...(constructWidgetDimensionFilters(filteredSelections) ?? [])], // dashboard level filters followed by widget filters
         ]
       : undefined;
   }, [
@@ -533,6 +534,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               <Box sx={{ display: 'flex', gap: 2 }}>
                 {flags.aclp?.showWidgetDimensionFilters && (
                   <CloudPulseDimensionFiltersSelect
+                    dashboardId={dashboardId}
                     dimensionOptions={filteredDimensions ?? []}
                     drawerLabel={availableMetrics?.label ?? ''}
                     handleSelectionChange={handleDimensionFiltersChange}
