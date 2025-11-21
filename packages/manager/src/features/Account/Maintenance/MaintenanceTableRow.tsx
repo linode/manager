@@ -77,9 +77,9 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const eventProgress = recentEvent && formatProgressEvent(recentEvent);
 
-  const truncatedReason = truncate(reason, 93);
+  const truncatedReason = reason ? truncate(reason, 93) : '';
 
-  const isTruncated = reason !== truncatedReason;
+  const isTruncated = reason ? reason !== truncatedReason : false;
 
   const dateField = getMaintenanceDateField(tableType);
   const dateValue = props.maintenance[dateField];
