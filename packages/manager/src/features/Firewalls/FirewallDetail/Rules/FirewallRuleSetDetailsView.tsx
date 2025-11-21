@@ -152,11 +152,13 @@ export const FirewallRuleSetDetailsView = (
                 flexShrink: 0,
               })}
             />
-            {rule.protocol};&nbsp;{rule.ports};&nbsp;
-            {generateAddressesLabelV2({
-              addresses: rule.addresses,
-              showTruncateChip: false,
-            })}
+            <Box>
+              {rule.protocol};&nbsp;{rule.ports};&nbsp;
+              {generateAddressesLabelV2({
+                addresses: rule.addresses,
+                showTruncateChip: false,
+              })}
+            </Box>
           </StyledListItem>
         ))}
       </Paper>
