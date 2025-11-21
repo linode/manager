@@ -54,13 +54,6 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
 
   const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
 
-  const sxHelpIcon = {
-    height: 20,
-    m: 0.5,
-    verticalAlign: 'sub',
-    width: 20,
-  };
-
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
     if (handleTabChange) {
@@ -99,20 +92,39 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
         <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
-              <StyledTab
-                data-pendo-id={tab.title}
-                disabled={tab.disabled}
-                key={`tabs-${tab.title}-${idx}`}
-              >
-                {tab.title}
+              <>
+                <StyledTab
+                  data-pendo-id={tab.title}
+                  disabled={tab.disabled}
+                  key={`tabs-${tab.title}-${idx}`}
+                >
+                  {tab.title}
+                </StyledTab>
                 {tab.disabled && props.tabDisabledMessage && (
-                  <Tooltip title={props.tabDisabledMessage}>
-                    <span>
-                      <HelpOutline fontSize="small" sx={sxHelpIcon} />
-                    </span>
+                  <Tooltip tabIndex={0} title={props.tabDisabledMessage}>
+                    <Box
+                      sx={(theme) => ({
+                        marginLeft: `-${theme.spacingFunction(12)}`,
+                        marginTop: theme.spacingFunction(10),
+                      })}
+                    >
+                      <HelpOutline
+                        fontSize="small"
+                        sx={(theme) => ({
+                          height: 20,
+                          m: 0.5,
+                          width: 20,
+                          color: theme.tokens.component.Tab.Disabled.Icon,
+                          '&:hover': {
+                            color: theme.tokens.component.Tab.Hover.Icon,
+                            cursor: 'pointer',
+                          },
+                        })}
+                      />
+                    </Box>
                   </Tooltip>
                 )}
-              </StyledTab>
+              </>
             ))}
           </StyledTabList>
           <TabPanels>
