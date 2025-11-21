@@ -137,7 +137,6 @@ export const FirewallRuleSetDetailsView = (
             key={`firewall-ruleset-rule-${idx}`}
             sx={(theme) => ({
               padding: `${theme.spacingFunction(4)} 0`,
-              alignItems: 'flex-start',
             })}
           >
             <Chip
@@ -156,6 +155,7 @@ export const FirewallRuleSetDetailsView = (
                 fontSize: theme.tokens.font.FontSize.Xxxs,
                 marginRight: theme.spacingFunction(6),
                 flexShrink: 0,
+                alignSelf: 'flex-start',
               })}
             />
             <Box>
