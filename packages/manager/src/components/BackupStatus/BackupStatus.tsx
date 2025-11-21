@@ -12,11 +12,13 @@ const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({
     backupLink: {
       '&:hover': {
+        textDecoration: 'none',
         [`& .${classes.icon}`]: {
           fill: theme.palette.primary.main,
         },
       },
       display: 'flex',
+      alignItems: 'center',
     },
     backupNotApplicable: {
       marginRight: theme.spacing(),
@@ -30,6 +32,8 @@ const useStyles = makeStyles<void, 'icon'>()(
     icon: {
       fill: theme.color.grey1,
       fontSize: 18,
+      top: -1,
+      position: 'relative',
     },
     tooltip: {
       maxWidth: 275,

@@ -409,6 +409,10 @@ export interface DimensionFilterAutocompleteProps {
    */
   entities?: string[];
   /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: AssociatedEntityType;
+  /**
    * Optional error message to display beneath the input.
    */
   errorText?: string;
