@@ -46,14 +46,16 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
   });
 
   const {
-    formState: { isDirty, isValid },
+    formState: { isDirty, isValid, errors },
     handleSubmit,
     reset,
+    setError,
     watch,
   } = form;
 
-  const onSubmit = (values: ManageNetworkingFormValues) => {
-    updateDatabase(values).then(() => {
+  const onSubmit = async (values: ManageNetworkingFormValues) => {
+    try {
+      await updateDatabase(values);
       enqueueSnackbar('Changes are being applied.', {
         variant: 'info',
       });
@@ -65,7 +67,11 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
           databaseId: database.id,
         },
       });
-    });
+    } catch (errors) {
+      for (const error of errors) {
+        setError(error?.field ?? 'root', { message: error.reason });
+      }
+    }
   };
 
   const [publicAccess, subnetId, vpcId] = watch([
@@ -84,7 +90,6 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
   const isSaveDisabled = !isDirty || !isValid || !hasValidSelection;
 
   const {
-    error: manageNetworkingError,
     isPending: submitInProgress,
     mutateAsync: updateDatabase,
     reset: resetMutation,
@@ -105,8 +110,8 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={handleOnClose} open={open} title="Manage Networking">
-      {manageNetworkingError && (
-        <Notice text={manageNetworkingError[0].reason} variant="error" />
+      {errors.root?.message && (
+        <Notice text={errors.root.message} variant="error" />
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
