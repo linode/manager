@@ -37,6 +37,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import {
   generateAddressesLabel,
+  generateAddressesLabelV2,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
   useIsFirewallRulesetsPrefixlistsEnabled,
@@ -65,7 +66,7 @@ import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: null | string;
-  addresses?: null | string;
+  addresses?: null | React.ReactNode | string;
   description?: null | string;
   errors?: FirewallRuleError[];
   id: number;
@@ -87,6 +88,7 @@ interface RowActionHandlers {
   handleCloneFirewallRule: (idx: number) => void;
   handleDeleteFirewallRule: (idx: number) => void;
   handleOpenRuleDrawerForEditing: (idx: number) => void;
+  handleOpenRuleSetDrawerForViewing?: (idx: number) => void;
   handleReorder: (startIdx: number, endIdx: number) => void;
   handleUndo: (idx: number) => void;
 }
@@ -110,6 +112,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     handleCloneFirewallRule,
     handleDeleteFirewallRule,
     handleOpenRuleDrawerForEditing,
+    handleOpenRuleSetDrawerForViewing,
     handlePolicyChange,
     handleReorder,
     handleUndo,
@@ -122,10 +125,16 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
 
+  const { isFirewallRulesetsPrefixlistsEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
 
-  const rowData = firewallRuleToRowData(rulesWithStatus);
+  const rowData = firewallRuleToRowData(
+    rulesWithStatus,
+    isFirewallRulesetsPrefixlistsEnabled
+  );
 
   const openDrawerForCreating = React.useCallback(() => {
     openRuleDrawer(category, 'create');
@@ -207,16 +216,14 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 >
                   Label
                 </TableCell>
+                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <Hidden lgDown>
                   <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
                 </Hidden>
                 <Hidden smDown>
                   <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
-                  <TableCell sx={{ width: '15%' }}>
-                    {capitalize(addressColumnLabel)}
-                  </TableCell>
+                  <TableCell>{capitalize(addressColumnLabel)}</TableCell>
                 </Hidden>
-                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -244,6 +251,9 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                       handleDeleteFirewallRule={handleDeleteFirewallRule}
                       handleOpenRuleDrawerForEditing={
                         handleOpenRuleDrawerForEditing
+                      }
+                      handleOpenRuleSetDrawerForViewing={
+                        handleOpenRuleSetDrawerForViewing
                       }
                       handleUndo={handleUndo}
                       key={thisRuleRow.id}
@@ -280,6 +290,7 @@ export interface FirewallRuleTableRowProps extends RuleRow {
   handleCloneFirewallRule: RowActionHandlersWithDisabled['handleCloneFirewallRule'];
   handleDeleteFirewallRule: RowActionHandlersWithDisabled['handleDeleteFirewallRule'];
   handleOpenRuleDrawerForEditing: RowActionHandlersWithDisabled['handleOpenRuleDrawerForEditing'];
+  handleOpenRuleSetDrawerForViewing?: RowActionHandlersWithDisabled['handleOpenRuleSetDrawerForViewing'];
   handleUndo: RowActionHandlersWithDisabled['handleUndo'];
 }
 
@@ -292,6 +303,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     handleCloneFirewallRule,
     handleDeleteFirewallRule,
     handleOpenRuleDrawerForEditing,
+    handleOpenRuleSetDrawerForViewing,
     handleUndo,
     id,
     index,
@@ -393,6 +405,9 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               </LinkButton>
             )}
           </TableCell>
+          <TableCell aria-label={`Action: ${action}`}>
+            {capitalize(action?.toLocaleLowerCase() ?? '')}
+          </TableCell>
           <Hidden lgDown>
             <TableCell aria-label={`Protocol: ${protocol}`}>
               {protocol}
@@ -405,13 +420,10 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               <ConditionalError errors={errors} formField="ports" />
             </TableCell>
             <TableCell aria-label={`Addresses: ${addresses}`}>
-              <MaskableText text={addresses ?? ''} />
+              <MaskableText length="ipv6" text={addresses} />
               <ConditionalError errors={errors} formField="addresses" />
             </TableCell>
           </Hidden>
-          <TableCell aria-label={`Action: ${action}`}>
-            {capitalize(action?.toLocaleLowerCase() ?? '')}
-          </TableCell>
         </>
       )}
 
@@ -425,7 +437,11 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
                   sx={{ flexShrink: 0 }}
                 />
                 {rulesetDetails && (
-                  <Link onClick={() => {}}>{rulesetDetails?.label}</Link>
+                  <Link
+                    onClick={() => handleOpenRuleSetDrawerForViewing?.(index)}
+                  >
+                    {rulesetDetails?.label}
+                  </Link>
                 )}
               </Box>
               <Hidden smDown>
@@ -613,14 +629,17 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
  * of data. This also allows us to sort each column of the RuleTable.
  */
 export const firewallRuleToRowData = (
-  firewallRules: ExtendedFirewallRule[]
+  firewallRules: ExtendedFirewallRule[],
+  isFirewallRulesetsPrefixlistsEnabled?: boolean
 ): RuleRow[] => {
   return firewallRules.map((thisRule, idx) => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
 
     return {
       ...thisRule,
-      addresses: generateAddressesLabel(thisRule.addresses),
+      addresses: isFirewallRulesetsPrefixlistsEnabled
+        ? generateAddressesLabelV2({ addresses: thisRule.addresses })
+        : generateAddressesLabel(thisRule.addresses),
       id: idx + 1, // ids are 1-indexed, as id given to the useSortable hook cannot be 0
       index: idx,
       ports: sortPortString(thisRule.ports || ''),

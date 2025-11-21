@@ -105,16 +105,22 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       mode,
       ruleIdx: idx,
     });
+
+    let path: string;
+
+    if (mode === 'create') {
+      path = `/firewalls/$id/rules/add/${category}`;
+    } else if (mode === 'edit') {
+      path = `/firewalls/$id/rules/${mode}/${category}/$ruleId`;
+    } else if (mode === 'view') {
+      path = `/firewalls/$id/rules/${mode}/${category}/ruleset/$ruleId`;
+    } else {
+      throw new Error(`Unknown mode: ${mode}`);
+    }
+
     navigate({
       params: { id: String(firewallID), ruleId: String(idx) },
-      to:
-        category === 'inbound' && mode === 'create'
-          ? '/firewalls/$id/rules/add/inbound'
-          : category === 'inbound' && mode === 'edit'
-            ? `/firewalls/$id/rules/edit/inbound/$ruleId`
-            : category === 'outbound' && mode === 'create'
-              ? '/firewalls/$id/rules/add/outbound'
-              : `/firewalls/$id/rules/edit/outbound/$ruleId`,
+      to: path,
     });
   };
 
@@ -293,7 +299,8 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         next.routeId === '/firewalls/$id/rules/add/inbound' ||
         next.routeId === '/firewalls/$id/rules/add/outbound' ||
         next.routeId === '/firewalls/$id/rules/edit/inbound/$ruleId' ||
-        next.routeId === '/firewalls/$id/rules/edit/outbound/$ruleId';
+        next.routeId === '/firewalls/$id/rules/edit/outbound/$ruleId' ||
+        next.routeId === '/firewalls/$id/rules/view/$category/ruleset/$ruleId';
 
       return !isNavigatingToAllowedRoute;
     },
@@ -325,7 +332,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
 
   // This is for the Rule Drawer. If there is a rule to modify,
   // we need to pass it to the drawer to pre-populate the form fields.
-  const ruleToModify =
+  const ruleToModifyOrView =
     ruleDrawer.ruleIdx !== undefined
       ? ruleDrawer.category === 'inbound'
         ? inboundRules[ruleDrawer.ruleIdx]
@@ -383,6 +390,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
+          handleOpenRuleSetDrawerForViewing={(idx: number) =>
+            openRuleDrawer('inbound', 'view', idx)
+          }
           handlePolicyChange={handlePolicyChange}
           handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('inbound', startIdx, endIdx)
@@ -404,6 +414,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
+          handleOpenRuleSetDrawerForViewing={(idx: number) =>
+            openRuleDrawer('outbound', 'view', idx)
+          }
           handlePolicyChange={handlePolicyChange}
           handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('outbound', startIdx, endIdx)
@@ -420,12 +433,18 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           location.pathname.endsWith('add/inbound') ||
           location.pathname.endsWith('add/outbound') ||
           location.pathname.endsWith(`edit/inbound/${ruleDrawer.ruleIdx}`) ||
-          location.pathname.endsWith(`edit/outbound/${ruleDrawer.ruleIdx}`)
+          location.pathname.endsWith(`edit/outbound/${ruleDrawer.ruleIdx}`) ||
+          location.pathname.endsWith(
+            `view/inbound/ruleset/${ruleDrawer.ruleIdx}`
+          ) ||
+          location.pathname.endsWith(
+            `view/outbound/ruleset/${ruleDrawer.ruleIdx}`
+          )
         }
         mode={ruleDrawer.mode}
         onClose={closeRuleDrawer}
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
-        ruleToModify={ruleToModify}
+        ruleToModifyOrView={ruleToModifyOrView}
       />
       <StyledActionsPanel
         primaryButtonProps={{
