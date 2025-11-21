@@ -1,10 +1,8 @@
 import { regionAvailabilityFactory } from '@linode/utilities';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { accountFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
@@ -20,6 +18,18 @@ import {
 } from './utils';
 
 import type { PlanSelectionType } from './types';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+  };
+});
 
 const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
@@ -539,14 +549,36 @@ describe('extractPlansInformation', () => {
 });
 
 describe('useIsAcceleratedPlansEnabled', () => {
-  it('should return true for linode and lke plans', async () => {
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(
-          accountFactory.build({ capabilities: ['NETINT Quadra T1U'] })
-        );
-      })
-    );
+  it('should return false for linode and lke plans: account capability DNE and feature flag false', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: false,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return false for linode and lke plans: account capability DNE and feature flag true', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
 
     const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
       wrapper: (ui) =>
@@ -559,12 +591,82 @@ describe('useIsAcceleratedPlansEnabled', () => {
           },
         }),
     });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
 
-    await waitFor(() => {
-      expect(result.current).toStrictEqual({
-        isAcceleratedLKEPlansEnabled: true,
-        isAcceleratedLinodePlansEnabled: true,
-      });
+  it('should return false for linode and lke plans: account capability exists and feature flag false', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: false,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return true for linode and lke plans', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: true,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: true,
+      isAcceleratedLinodePlansEnabled: true,
+    });
+  });
+
+  // just adding this test since I matched the feature flag values in all previous tests
+  it('linodePlans and lkePlans status can have different values depending on the feature flag', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: true,
     });
   });
 });
