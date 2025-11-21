@@ -31,6 +31,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   {
+    flag: 'fwRulesetsPrefixLists',
+    label: 'Firewall RuleSets and Prefix Lists (JSON-based)',
+  },
+  {
     flag: 'firewallRulesetsPrefixlists',
     label: 'Firewall Rulesets & Prefixlists',
   },

@@ -171,6 +171,11 @@ interface MTC {
   supportedRegions: Region['id'][];
 }
 
+interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -201,6 +206,7 @@ export interface Flags {
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   firewallRulesetsPrefixlists: boolean;
+  fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
   gecko2: GeckoFeatureFlag;
   generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;

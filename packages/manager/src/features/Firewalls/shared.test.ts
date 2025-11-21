@@ -162,7 +162,9 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isFirewallRulesetsPrefixlistsEnabled).toBe(true);
+      expect(result.current.isFirewallRulesetsPrefixlistsFeatureEnabled).toBe(
+        true
+      );
     });
   });
 
@@ -177,7 +179,9 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isFirewallRulesetsPrefixlistsEnabled).toBe(false);
+      expect(result.current.isFirewallRulesetsPrefixlistsFeatureEnabled).toBe(
+        false
+      );
     });
   });
 });
