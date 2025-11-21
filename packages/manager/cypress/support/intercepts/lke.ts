@@ -10,7 +10,7 @@ import {
   latestEnterpriseTierKubernetesVersion,
   latestStandardTierKubernetesVersion,
 } from 'support/constants/lke';
-import { makeErrorResponse } from 'support/util/errors';
+import { APIErrorContents, makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { randomDomainName } from 'support/util/random';
@@ -185,7 +185,9 @@ export const mockCreateCluster = (
  * @returns Cypress chainable.
  */
 export const mockCreateClusterError = (
-  errorMessage: string = 'An unknown error occurred.',
+  errorMessage:
+    | APIErrorContents
+    | APIErrorContents[] = 'An unknown error occurred.',
   statusCode: number = 500
 ): Cypress.Chainable<null> => {
   return cy.intercept(

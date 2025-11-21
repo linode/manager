@@ -6,10 +6,7 @@ import * as React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-import {
-  type FirewallOptionItem,
-  useIsFirewallRulesetsPrefixlistsEnabled,
-} from '../../shared';
+import { useIsFirewallRulesetsPrefixlistsEnabled } from '../../shared';
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -24,6 +21,7 @@ import { FirewallRuleSetDetailsView } from './FirewallRuleSetDetailsView';
 import { FirewallRuleSetForm } from './FirewallRuleSetForm';
 import { firewallRuleCreateOptions } from './shared';
 
+import type { FirewallOptionItem } from '../../shared';
 import type {
   FirewallCreateEntityType,
   FirewallRuleDrawerProps,
