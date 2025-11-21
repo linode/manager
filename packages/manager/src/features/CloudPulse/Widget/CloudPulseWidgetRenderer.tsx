@@ -124,6 +124,7 @@ export const RenderWidgets = React.memo(
             ...(pref.timeGranularity ?? autoIntervalOption),
           },
           group_by: pref.groupBy,
+          filters: pref.filters ?? widgetObj.filters,
         };
       } else {
         return {
