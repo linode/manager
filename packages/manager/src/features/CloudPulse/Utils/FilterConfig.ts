@@ -13,8 +13,9 @@ import {
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import { filterFirewallResources, filterKubernetesClusters } from './utils';
 
-import type { CloudPulseServiceTypeFilterMap } from './models';
+import type { CloudPulseServiceTypeFilterMap, CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type { Firewall, KubernetesCluster } from '@linode/api-v4';
+import { AssociatedEntityType } from '../shared/types';
 
 const TIME_DURATION = 'Time Range';
 
@@ -528,3 +529,34 @@ export const FILTER_CONFIG: Readonly<
   [8, FIREWALL_NODEBALANCER_CONFIG],
   [9, LKE_CONFIG],
 ]);
+
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The resources filter configuration for the dashboard
+ */
+export const getResourcesFilterConfig = (
+  dashboardId: number | undefined
+): CloudPulseServiceTypeFiltersConfiguration | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  // Get the associated entity type for the dashboard
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  return filterConfig?.filters.find(
+    (filter) => filter.configuration.filterKey === RESOURCE_ID
+  )?.configuration;
+};
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The associated entity type for the dashboard
+ */
+export const getAssociatedEntityType = (
+  dashboardId: number | undefined
+): AssociatedEntityType | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
+};

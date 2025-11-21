@@ -1,0 +1,245 @@
+{
+	"../utilities/src/factories/accountAvailability.ts": [
+		[
+			"../utilities/src/factories/accountAvailability.ts",
+			"../utilities/src/factories/index.ts",
+			"../utilities/src/helpers/index.ts",
+			"../utilities/src/helpers/initWindows.ts",
+			"../utilities/src/index.ts"
+		]
+	],
+	"../utilities/src/helpers/index.ts": [
+		[
+			"../utilities/src/helpers/index.ts",
+			"../utilities/src/helpers/mapIdsToDevices.ts"
+		]
+	],
+	"../queries/src/databases/databases.ts": [
+		[
+			"../queries/src/databases/databases.ts",
+			"../queries/src/databases/index.ts",
+			"../queries/src/index.ts"
+		]
+	],
+	"../queries/src/delivery/delivery.ts": [
+		[
+			"../queries/src/delivery/delivery.ts",
+			"../queries/src/delivery/index.ts",
+			"../queries/src/index.ts"
+		]
+	],
+	"../queries/src/domains/domains.ts": [
+		[
+			"../queries/src/domains/domains.ts",
+			"../queries/src/domains/index.ts",
+			"../queries/src/index.ts"
+		]
+	],
+	"../queries/src/firewalls/firewalls.ts": [
+		[
+			"../queries/src/firewalls/firewalls.ts",
+			"../queries/src/firewalls/index.ts",
+			"../queries/src/linodes/actions.ts",
+			"../queries/src/linodes/index.ts",
+			"../queries/src/linodes/linodes.ts"
+		],
+		[
+			"../queries/src/firewalls/firewalls.ts",
+			"../queries/src/firewalls/index.ts",
+			"../queries/src/linodes/index.ts",
+			"../queries/src/linodes/interfaces.ts"
+		],
+		[
+			"../queries/src/firewalls/firewalls.ts",
+			"../queries/src/firewalls/index.ts",
+			"../queries/src/nodebalancers/index.ts",
+			"../queries/src/nodebalancers/nodebalancers.ts"
+		]
+	],
+	"../queries/src/images/images.ts": [
+		[
+			"../queries/src/images/images.ts",
+			"../queries/src/images/index.ts",
+			"../queries/src/index.ts"
+		]
+	],
+	"../queries/src/index.ts": [
+		[
+			"../queries/src/index.ts",
+			"../queries/src/networktransfer/index.ts",
+			"../queries/src/networktransfer/networkTransfer.ts"
+		],
+		[
+			"../queries/src/index.ts",
+			"../queries/src/stackscripts/index.ts",
+			"../queries/src/stackscripts/stackscripts.ts"
+		],
+		[
+			"../queries/src/index.ts",
+			"../queries/src/statusPage/index.ts",
+			"../queries/src/statusPage/statusPage.ts"
+		]
+	],
+	"../ui/src/components/ActionsPanel/ActionsPanel.tsx": [
+		[
+			"../ui/src/components/ActionsPanel/ActionsPanel.tsx",
+			"../ui/src/components/ActionsPanel/index.ts",
+			"../ui/src/components/Button/LinkButton.tsx",
+			"../ui/src/components/Button/index.ts",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"../ui/src/components/Autocomplete/Autocomplete.tsx": [
+		[
+			"../ui/src/components/Autocomplete/Autocomplete.tsx",
+			"../ui/src/components/Autocomplete/index.ts",
+			"../ui/src/components/TextField/TextField.tsx",
+			"../ui/src/components/TextField/TextField.utils.ts",
+			"../ui/src/components/TextField/index.ts",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"../ui/src/components/DatePicker/DateTimeField.tsx": [
+		[
+			"../ui/src/components/DatePicker/DateTimeField.tsx",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"../ui/src/components/DatePicker/DateTimeRangePicker/DateTimeRangePicker.tsx": [
+		[
+			"../ui/src/components/DatePicker/DateTimeRangePicker/DateTimeRangePicker.tsx",
+			"../ui/src/components/DatePicker/DateTimeRangePicker/index.ts",
+			"../ui/src/components/DatePicker/TimeZoneSelect.tsx",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"../ui/src/components/Dialog/Dialog.tsx": [
+		[
+			"../ui/src/components/Dialog/Dialog.tsx",
+			"../ui/src/components/Dialog/index.ts",
+			"../ui/src/components/DialogTitle/DialogTitle.tsx",
+			"../ui/src/components/DialogTitle/index.ts",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"../ui/src/components/Drawer/Drawer.tsx": [
+		[
+			"../ui/src/components/Drawer/Drawer.tsx",
+			"../ui/src/components/Drawer/index.ts",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"../ui/src/components/EditableText/EditableText.tsx": [
+		[
+			"../ui/src/components/EditableText/EditableText.tsx",
+			"../ui/src/components/EditableText/index.ts",
+			"../ui/src/components/index.ts",
+			"../ui/src/index.ts"
+		]
+	],
+	"src/queries/object-storage/queries.ts": [
+		[
+			"src/queries/object-storage/queries.ts",
+			"src/queries/object-storage/utilities.ts"
+		]
+	],
+	"src/features/Billing/BillingDetail.tsx": [
+		[
+			"src/features/Billing/BillingDetail.tsx",
+			"src/features/Billing/BillingPanels/BillingSummary/BillingSummary.tsx",
+			"src/features/Billing/BillingPanels/BillingSummary/index.tsx"
+		],
+		[
+			"src/features/Billing/BillingDetail.tsx",
+			"src/features/Billing/BillingPanels/ContactInfoPanel/ContactInformation.tsx"
+		],
+		[
+			"src/features/Billing/BillingDetail.tsx",
+			"src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentInformation.tsx",
+			"src/features/Billing/BillingPanels/PaymentInfoPanel/index.ts"
+		]
+	],
+	"src/queries/cloudpulse/metrics.ts": [
+		[
+			"src/queries/cloudpulse/metrics.ts",
+			"src/queries/cloudpulse/queries.ts"
+		]
+	],
+	"src/features/CloudPulse/Alerts/AlertsDetail/AlertDetail.tsx": [
+		[
+			"src/features/CloudPulse/Alerts/AlertsDetail/AlertDetail.tsx",
+			"src/features/CloudPulse/Alerts/AlertsDetail/AlertDetailCriteria.tsx"
+		],
+		[
+			"src/features/CloudPulse/Alerts/AlertsDetail/AlertDetail.tsx",
+			"src/features/CloudPulse/Alerts/AlertsDetail/AlertDetailNotification.tsx"
+		],
+		[
+			"src/features/CloudPulse/Alerts/AlertsDetail/AlertDetail.tsx",
+			"src/features/CloudPulse/Alerts/AlertsDetail/ScopeContentRenderer.tsx",
+			"src/features/CloudPulse/Alerts/AlertsResources/AlertsResources.tsx"
+		]
+	],
+	"src/components/ErrorMessage.tsx": [
+		[
+			"src/components/ErrorMessage.tsx",
+			"src/components/SupportTicketGeneralError.tsx"
+		]
+	],
+	"src/components/AreaChart/AreaChart.tsx": [
+		[
+			"src/components/AreaChart/AreaChart.tsx",
+			"src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel.tsx"
+		]
+	],
+	"src/components/TagCell/TagCell.tsx": [
+		[
+			"src/components/TagCell/TagCell.tsx",
+			"src/components/TagCell/TagDrawer.tsx"
+		]
+	],
+	"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/DialogContents/ConfigSelectDialogContent.tsx": [
+		[
+			"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/DialogContents/ConfigSelectDialogContent.tsx",
+			"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog.tsx"
+		]
+	],
+	"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/DialogContents/ErrorDialogContent.tsx": [
+		[
+			"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/DialogContents/ErrorDialogContent.tsx",
+			"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog.tsx"
+		]
+	],
+	"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/DialogContents/SuccessDialogContent.tsx": [
+		[
+			"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/DialogContents/SuccessDialogContent.tsx",
+			"src/features/Linodes/LinodesDetail/LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog.tsx"
+		]
+	],
+	"src/features/Lish/Lish.tsx": [
+		[
+			"src/features/Lish/Lish.tsx",
+			"src/features/Lish/Weblish.tsx"
+		]
+	],
+	"src/dev-tools/load.ts": [
+		[
+			"src/dev-tools/load.ts",
+			"src/mocks/indexedDB.ts",
+			"src/mocks/presets/crud/seeds/utils.ts"
+		]
+	],
+	"src/dev-tools/utils.ts": [
+		[
+			"src/dev-tools/utils.ts",
+			"src/mocks/presets/extra/api/api.ts",
+			"src/mocks/presets/index.ts"
+		]
+	]
+}

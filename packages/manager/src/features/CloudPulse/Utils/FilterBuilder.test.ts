@@ -10,7 +10,6 @@ import {
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
-  deepEqual,
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
   filterFirewallNodebalancers,
@@ -37,6 +36,7 @@ import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
+import { deepEqual } from './utils';
 
 const mockDashboard = dashboardFactory.build();
 

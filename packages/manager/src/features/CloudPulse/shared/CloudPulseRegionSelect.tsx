@@ -13,12 +13,13 @@ import {
   PARENT_ENTITY_REGION,
   RESOURCE_FILTER_MAP,
 } from '../Utils/constants';
-import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
-import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import {
+  FILTER_CONFIG,
   getAssociatedEntityType,
   getResourcesFilterConfig,
-} from '../Utils/utils';
+} from '../Utils/FilterConfig';
+import { deepEqual } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { Item } from '../Alerts/constants';

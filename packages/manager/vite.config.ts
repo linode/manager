@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react-swc';
 import { URL } from 'url';
+// import circleDependency from 'vite-plugin-circular-dependency';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
 
@@ -16,6 +17,9 @@ export default defineConfig({
   plugins: [
     react(),
     svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
+    // circleDependency({
+    //   outputFilePath: "./circleDep",
+    // }),
     urlCanParsePolyfill(),
   ],
   resolve: {
