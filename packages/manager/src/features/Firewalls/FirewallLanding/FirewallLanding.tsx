@@ -75,7 +75,7 @@ const FirewallLanding = () => {
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
-  const { isFirewallRulesetsPrefixlistsEnabled } =
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
 
   const rulesColumnTooltipText =
@@ -208,7 +208,7 @@ const FirewallLanding = () => {
             <Hidden smDown>
               <TableCell sx={{ width: '15%' }}>
                 Rules
-                {isFirewallRulesetsPrefixlistsEnabled && (
+                {isFirewallRulesetsPrefixlistsFeatureEnabled && (
                   <TooltipIcon
                     status="info"
                     sxTooltipIcon={{
