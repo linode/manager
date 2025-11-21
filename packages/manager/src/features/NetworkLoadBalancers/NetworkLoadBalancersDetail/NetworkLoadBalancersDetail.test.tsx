@@ -1,7 +1,10 @@
 import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { networkLoadBalancerFactory } from 'src/factories/networkLoadBalancer';
+import {
+  networkLoadBalancerFactory,
+  networkLoadBalancerListenerFactory,
+} from 'src/factories/networkLoadBalancer';
 import { formatDate } from 'src/utilities/formatDate';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -12,6 +15,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
   useRegionQuery: vi.fn().mockReturnValue({}),
+  useNetworkLoadBalancerListenersQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -21,6 +25,8 @@ vi.mock('@linode/queries', async () => {
     useProfile: queryMocks.useProfile,
     useRegionQuery: queryMocks.useRegionQuery,
     useNetworkLoadBalancerQuery: queryMocks.useNetworkLoadBalancerQuery,
+    useNetworkLoadBalancerListenersQuery:
+      queryMocks.useNetworkLoadBalancerListenersQuery,
   };
 });
 
@@ -121,6 +127,62 @@ describe('NetworkLoadBalancersDetail', () => {
       getByText(`(ID: ${nlbFactory.lke_cluster!.id})`, {
         exact: false,
       })
+    ).toBeInTheDocument();
+  });
+
+  it('renders a Listeners table', () => {
+    const listenerFactory = networkLoadBalancerListenerFactory.build();
+    const nlbFactory = networkLoadBalancerFactory.build({
+      listeners: [listenerFactory],
+    });
+    queryMocks.useNetworkLoadBalancerQuery.mockReturnValue({
+      isLoading: false,
+      data: nlbFactory,
+    });
+
+    queryMocks.useNetworkLoadBalancerListenersQuery.mockReturnValue({
+      isLoading: false,
+      data: { data: [listenerFactory], results: 1, page: 1, page_size: 25 },
+    });
+
+    const { getByText, getByTestId, getByRole } = renderWithTheme(
+      <NetworkLoadBalancersDetail />
+    );
+
+    const link = getByRole('link', { name: `${listenerFactory.label}` });
+    expect(link).toHaveAttribute(
+      'href',
+      `/netloadbalancers/${nlbFactory.id}/listeners/${listenerFactory.id}`
+    );
+    expect(getByText('Listeners (1)')).toBeInTheDocument();
+    expect(getByTestId('nlb-listeners-table')).toBeInTheDocument();
+    expect(getByText(listenerFactory.label)).toBeInTheDocument();
+    expect(getByText(listenerFactory.port)).toBeInTheDocument();
+    expect(getByText(listenerFactory.protocol)).toBeInTheDocument();
+    expect(getByText(listenerFactory.id)).toBeInTheDocument();
+  });
+
+  it('renders an empty Listeners table if there are no listeners', () => {
+    const nlbFactory = networkLoadBalancerFactory.build({
+      listeners: [],
+    });
+    queryMocks.useNetworkLoadBalancerQuery.mockReturnValue({
+      isLoading: false,
+      data: nlbFactory,
+    });
+    queryMocks.useNetworkLoadBalancerListenersQuery.mockReturnValue({
+      isLoading: false,
+      data: { data: [], results: 0 },
+    });
+
+    const { getByText, getByTestId } = renderWithTheme(
+      <NetworkLoadBalancersDetail />
+    );
+
+    expect(getByText('Listeners (0)')).toBeInTheDocument();
+    expect(getByTestId('nlb-listeners-table')).toBeInTheDocument();
+    expect(
+      getByText('No Listeners are defined for this Network Load Balancer')
     ).toBeInTheDocument();
   });
 });
