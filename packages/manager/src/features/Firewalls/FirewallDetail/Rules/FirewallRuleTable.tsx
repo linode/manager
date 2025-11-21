@@ -87,6 +87,7 @@ interface RowActionHandlers {
   handleCloneFirewallRule: (idx: number) => void;
   handleDeleteFirewallRule: (idx: number) => void;
   handleOpenRuleDrawerForEditing: (idx: number) => void;
+  handleOpenRuleSetDrawerForViewing?: (idx: number) => void;
   handleReorder: (startIdx: number, endIdx: number) => void;
   handleUndo: (idx: number) => void;
 }
@@ -110,6 +111,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     handleCloneFirewallRule,
     handleDeleteFirewallRule,
     handleOpenRuleDrawerForEditing,
+    handleOpenRuleSetDrawerForViewing,
     handlePolicyChange,
     handleReorder,
     handleUndo,
@@ -245,6 +247,9 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                       handleOpenRuleDrawerForEditing={
                         handleOpenRuleDrawerForEditing
                       }
+                      handleOpenRuleSetDrawerForViewing={
+                        handleOpenRuleSetDrawerForViewing
+                      }
                       handleUndo={handleUndo}
                       key={thisRuleRow.id}
                       {...thisRuleRow}
@@ -280,6 +285,7 @@ export interface FirewallRuleTableRowProps extends RuleRow {
   handleCloneFirewallRule: RowActionHandlersWithDisabled['handleCloneFirewallRule'];
   handleDeleteFirewallRule: RowActionHandlersWithDisabled['handleDeleteFirewallRule'];
   handleOpenRuleDrawerForEditing: RowActionHandlersWithDisabled['handleOpenRuleDrawerForEditing'];
+  handleOpenRuleSetDrawerForViewing?: RowActionHandlersWithDisabled['handleOpenRuleSetDrawerForViewing'];
   handleUndo: RowActionHandlersWithDisabled['handleUndo'];
 }
 
@@ -292,6 +298,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     handleCloneFirewallRule,
     handleDeleteFirewallRule,
     handleOpenRuleDrawerForEditing,
+    handleOpenRuleSetDrawerForViewing,
     handleUndo,
     id,
     index,
@@ -425,7 +432,11 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
                   sx={{ flexShrink: 0 }}
                 />
                 {rulesetDetails && (
-                  <Link onClick={() => {}}>{rulesetDetails?.label}</Link>
+                  <Link
+                    onClick={() => handleOpenRuleSetDrawerForViewing?.(index)}
+                  >
+                    {rulesetDetails?.label}
+                  </Link>
                 )}
               </Box>
               <Hidden smDown>
