@@ -1,6 +1,7 @@
 import { transformDimensionValue } from '../Utils/utils';
 import {
   LINODE_DIMENSION_LABEL,
+  NODEBALANCER_DIMENSION_LABEL,
   transformationAllowedOperators,
   VPC_SUBNET_DIMENSION_LABEL,
 } from './constants';
@@ -83,6 +84,10 @@ export interface ResolvedDimensionValueProps {
    */
   linodeMap: Record<string, string>;
   /**
+   * nodebalancer id to label map.
+   */
+  nodebalancersMap: Record<string, string>;
+  /**
    * Service type of the alert.
    */
   serviceType: CloudPulseServiceType;
@@ -108,6 +113,7 @@ export const getResolvedDimensionValue = (
     serviceType,
     value,
     vpcSubnetMap,
+    nodebalancersMap,
   } = props;
   if (!value) return '';
 
@@ -125,6 +131,13 @@ export const getResolvedDimensionValue = (
     transformationAllowedOperators.includes(dimensionOperator)
   ) {
     resolvedValue = resolveIds(value, vpcSubnetMap);
+  }
+
+  if (
+    dimensionFilterKey === NODEBALANCER_DIMENSION_LABEL &&
+    transformationAllowedOperators.includes(dimensionOperator)
+  ) {
+    resolvedValue = resolveIds(value, nodebalancersMap);
   }
 
   return transformationAllowedOperators.includes(dimensionOperator)
