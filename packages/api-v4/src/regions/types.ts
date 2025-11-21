@@ -19,6 +19,7 @@ export type Capabilities =
   | 'Managed Databases'
   | 'Metadata'
   | 'NETINT Quadra T1U'
+  | 'Network LoadBalancer'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Group'
