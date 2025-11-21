@@ -343,9 +343,6 @@ importers:
       typescript-fsa-reducers:
         specifier: ^1.2.0
         version: 1.2.2(typescript-fsa@3.0.0)
-      vite-plugin-circular-dependency:
-        specifier: ^0.5.0
-        version: 0.5.0(rollup@4.53.3)
       yup:
         specifier: ^1.4.0
         version: 1.5.0
@@ -6333,9 +6330,6 @@ packages:
 
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
-
-  vite-plugin-circular-dependency@0.5.0:
-    resolution: {integrity: sha512-7SQX1IZbf5to/S3A3/syfntRNg20Cth6KgTCwHpNZIcuDCtPclV2Bwvdd9HWG+alKZ04mmdlchNOPQgBl7/vQQ==}
 
   vite-plugin-svgr@4.5.0:
     resolution: {integrity: sha512-W+uoSpmVkSmNOGPSsDCWVW/DDAyv+9fap9AZXBvWiQqrboJ08j2vh0tFxTD/LjwqwAd3yYSVJgm54S/1GhbdnA==}
@@ -12498,13 +12492,6 @@ snapshots:
       d3-shape: 3.2.0
       d3-time: 3.1.0
       d3-timer: 3.0.1
-
-  vite-plugin-circular-dependency@0.5.0(rollup@4.53.3):
-    dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.53.3)
-      chalk: 4.1.2
-    transitivePeerDependencies:
-      - rollup
 
   vite-plugin-svgr@4.5.0(rollup@4.53.3)(typescript@5.7.3)(vite@7.2.2(@types/node@22.18.1)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1)):
     dependencies:
