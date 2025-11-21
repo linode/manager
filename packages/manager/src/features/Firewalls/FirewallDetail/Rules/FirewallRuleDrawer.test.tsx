@@ -144,6 +144,44 @@ describe('AddRuleSetDrawer', () => {
   });
 });
 
+describe('ViewRuleSetDetailsDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+  });
+
+  it('renders the drawer title', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="view" />
+    );
+
+    expect(getByText('Inbound Rule Set details')).toBeVisible();
+  });
+
+  it('renders Rule Set details Drawer labels and cancel button', () => {
+    const { getByText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="view" />
+    );
+
+    const labels = [
+      'Label',
+      'ID',
+      'Description',
+      'Service Defined',
+      'Version',
+      'Created',
+      'Updated',
+    ];
+
+    labels.map((label) => expect(getByText(`${label}:`)).toBeVisible());
+
+    // Rule Set rules section label
+    expect(getByText(`Inbound Rules`)).toBeVisible();
+
+    // Cancel button
+    expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+  });
+});
+
 describe('utilities', () => {
   describe('formValueToIPs', () => {
     it('returns a complete set of IPs given a string form value', () => {
