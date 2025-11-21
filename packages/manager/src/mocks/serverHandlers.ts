@@ -1325,7 +1325,7 @@ export const handlers = [
           inbound: [
             firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
             firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
-            ...firewallRuleFactory.buildList(2),
+            ...firewallRuleFactory.buildList(1),
           ],
         }),
       }),
