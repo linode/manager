@@ -262,26 +262,18 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   it('should verify action menu items for enabling and disabling alerts', () => {
     const mockAlerts = [
       alertFactory.build({
-        created_by: 'user1',
         id: 1,
         label: 'Alert-1',
         service_type: 'dbaas',
-        severity: 1,
         status: 'enabling',
         type: 'user',
-        updated: new Date(now.getTime() - 86400).toISOString(),
-        updated_by: 'updated1',
       }),
       alertFactory.build({
-        created_by: 'user4',
         id: 2,
         label: 'Alert-2',
         service_type: 'dbaas',
-        severity: 0,
         status: 'disabling',
         type: 'user',
-        updated: new Date(now.getTime() - 10 * 86400).toISOString(),
-        updated_by: 'updated4',
       }),
     ];
 
