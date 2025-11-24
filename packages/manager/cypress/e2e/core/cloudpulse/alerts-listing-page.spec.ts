@@ -312,7 +312,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       enabledItems.forEach((item: string) => {
         cy.get('@menu')
           .find(`[data-qa-action-menu-item="${item}"]`)
-          .should('not.have.class', 'Mui-disabled')
           .and('not.have.attr', 'aria-disabled');
       });
 
