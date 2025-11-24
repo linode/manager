@@ -13,23 +13,6 @@ import type {
 } from '@linode/api-v4/lib/firewalls/types';
 
 export type FirewallPreset = 'dns' | 'http' | 'https' | 'mysql' | 'ssh';
-
-/**
- * Represents the Firewall IP families to which a Prefix List (PL) is attached or referenced.
- *
- * Used for display and logic purposes, e.g., appending to a PL label in the UI as:
- * "pl:system:example (IPv4)", "pl:system:example (IPv6)", or "pl:system:example (IPv4, IPv6)".
- *
- * The value indicates which firewall IPs the PL applies to:
- * - "(IPv4)" -> PL is attached to Firewall IPv4 only
- * - "(IPv6)" -> PL is attached to Firewall IPv6 only
- * - "(IPv4, IPv6)" -> PL is attached to both Firewall IPv4 and IPv6
- */
-export type FirewallIPPrefixListReference =
-  | '(IPv4)'
-  | '(IPv4, IPv6)'
-  | '(IPv6)';
-
 export interface FirewallOptionItem<T = number | string, L = string> {
   label: L;
   value: T;
@@ -268,6 +251,58 @@ export const generateAddressesLabel = (
   return 'None';
 };
 
+export type PrefixListPresence = { ipv4: boolean; ipv6: boolean };
+export type PrefixListMap = Record<string, PrefixListPresence>;
+
+const isPrefixList = (ip: string) => ip.startsWith('pl:');
+
+export const buildPrefixListMap = (options: {
+  ipv4?: string[];
+  ipv6?: string[];
+}): PrefixListMap => {
+  const { ipv4 = [], ipv6 = [] } = options;
+
+  const prefixListMap: PrefixListMap = {};
+
+  // Handle IPv4
+  ipv4.forEach((ip) => {
+    if (isPrefixList(ip)) {
+      if (!prefixListMap[ip]) {
+        prefixListMap[ip] = { ipv4: false, ipv6: false };
+      }
+      prefixListMap[ip].ipv4 = true;
+    }
+  });
+
+  // Handle IPv6
+  ipv6.forEach((ip) => {
+    if (isPrefixList(ip)) {
+      if (!prefixListMap[ip]) {
+        prefixListMap[ip] = { ipv4: false, ipv6: false };
+      }
+      prefixListMap[ip].ipv6 = true;
+    }
+  });
+
+  return prefixListMap;
+};
+
+/**
+ * Represents the Firewall IP families to which a Prefix List (PL) is attached or referenced.
+ *
+ * Used for display and logic purposes, e.g., appending to a PL label in the UI as:
+ * "pl:system:example (IPv4)", "pl:system:example (IPv6)", or "pl:system:example (IPv4, IPv6)".
+ *
+ * The value indicates which firewall IPs the PL applies to:
+ * - "(IPv4)" -> PL is attached to Firewall IPv4 only
+ * - "(IPv6)" -> PL is attached to Firewall IPv6 only
+ * - "(IPv4, IPv6)" -> PL is attached to both Firewall IPv4 and IPv6
+ */
+export type FirewallIPPrefixListReference =
+  | '(IPv4)'
+  | '(IPv4, IPv6)'
+  | '(IPv6)';
+
 interface GenerateAddressesLabelV2Options {
   addresses: FirewallRuleType['addresses'];
   onPrefixListClick?: (
@@ -278,6 +313,21 @@ interface GenerateAddressesLabelV2Options {
   truncateAt?: number; // default 1
 }
 
+/**
+ * Generates IP addresses and clickable prefix lists (PLs) if available.
+ * Can render either a full list of elements or a truncated list with a "+N" chip and a full list tooltip.
+ *
+ * - Detects prefix lists (`pl::` or `pl:system:`) and renders them as clickable links.
+ * - Labels PLs across IPv4/IPv6 with rules reference suffixes:
+ *     - Example PL: `pl:system:test`
+ *     - Reference suffix: `(IPv4, IPv6)`, `(IPv4)`, or `(IPv6)`
+ *     - Result: `pl:system:test (IPv4, IPv6)` or `pl:system:test (IPv4)` or `pl:system:test (IPv6)`
+ * - Supports optional truncation with a "+N" chip and a full list tooltip.
+ * - Reusable across components with configurable behavior.
+ *
+ * @param options - Configuration object including addresses, click handler, and truncation options.
+ * @returns React elements representing addresses and clickable PLs, or `'None'` if empty.
+ */
 export const generateAddressesLabelV2 = (
   options: GenerateAddressesLabelV2Options
 ) => {
@@ -301,32 +351,11 @@ export const generateAddressesLabelV2 = (
     elements.push('All IPv6');
   }
 
-  const isPrefixList = (ip: string) => ip.startsWith('pl:');
-
   // Build a map of prefix lists
-  const prefixMap: Record<string, { ipv4: boolean; ipv6: boolean }> = {};
-
-  if (!allowedAllIPv4) {
-    addresses?.ipv4?.forEach((ip) => {
-      if (isPrefixList(ip)) {
-        if (!prefixMap[ip]) {
-          prefixMap[ip] = { ipv4: false, ipv6: false };
-        }
-        prefixMap[ip].ipv4 = true;
-      }
-    });
-  }
-
-  if (!allowedAllIPv6) {
-    addresses?.ipv6?.forEach((ip) => {
-      if (isPrefixList(ip)) {
-        if (!prefixMap[ip]) {
-          prefixMap[ip] = { ipv4: false, ipv6: false };
-        }
-        prefixMap[ip].ipv6 = true;
-      }
-    });
-  }
+  const prefixMap = buildPrefixListMap({
+    ipv4: allowedAllIPv4 ? [] : (addresses?.ipv4 ?? []),
+    ipv6: allowedAllIPv6 ? [] : (addresses?.ipv6 ?? []),
+  });
 
   // Add prefix list links with merged labels (eg., "pl:system:test (IPv4, IPv6)")
   Object.entries(prefixMap).forEach(([pl, presence]) => {
