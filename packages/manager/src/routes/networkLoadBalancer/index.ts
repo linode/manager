@@ -44,10 +44,19 @@ const networkLoadBalancerListenersRoute = createRoute({
   ).then((m) => m.networkLoadBalancerDetailLazyRoute)
 );
 
+const networkLoadBalancerListenerRoute = createRoute({
+  getParentRoute: () => networkLoadBalancersRoute,
+  path: '$id/listeners/$listenerId',
+}).lazy(() =>
+  import(
+    'src/features/NetworkLoadBalancers/NetworkLoadBalancersListener/networkLoadBalancersListenerDetailLazyRoute'
+  ).then((m) => m.networkLoadBalancersListenerDetailLazyRoute)
+);
+
 export const networkLoadBalancersRouteTree =
   networkLoadBalancersRoute.addChildren([
     networkLoadBalancersIndexRoute,
-    networkLoadBalancerDetailRoute.addChildren([
-      networkLoadBalancerListenersRoute,
-    ]),
+    networkLoadBalancerDetailRoute,
+    networkLoadBalancerListenersRoute,
+    networkLoadBalancerListenerRoute,
   ]);
