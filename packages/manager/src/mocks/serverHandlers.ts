@@ -595,11 +595,15 @@ const netLoadBalancers = [
   http.get('*/v4beta/netloadbalancers/:id/listeners/:listenerId', () => {
     return HttpResponse.json(networkLoadBalancerListenerFactory.build());
   }),
-  http.get('*/v4beta/netloadbalancers/:id/listeners/:listenerId/nodes', () => {
-    return HttpResponse.json(
-      makeResourcePage(networkLoadBalancerNodeFactory.buildList(30))
-    );
-  }),
+  http.get(
+    '*/v4beta/netloadbalancers/:id/listeners/:listenerId/nodes',
+    async () => {
+      await sleep(1000);
+      return HttpResponse.json(
+        makeResourcePage(networkLoadBalancerNodeFactory.buildList(30))
+      );
+    }
+  ),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
