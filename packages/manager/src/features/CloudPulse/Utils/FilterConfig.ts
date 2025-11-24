@@ -469,6 +469,7 @@ export const ENDPOINT_DASHBOARD_CONFIG: Readonly<CloudPulseServiceTypeFilterMap>
       },
       {
         configuration: {
+          dimensionKey: 'endpoint',
           dependency: [REGION],
           filterKey: ENDPOINT,
           filterType: 'string',
