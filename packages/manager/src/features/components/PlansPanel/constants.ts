@@ -78,15 +78,18 @@ export const G8_DEDICATED_ALL_SLUGS = [
   ...G8_DEDICATED_GENERAL_PURPOSE_SLUGS,
 ] as const;
 
+export const PLAN_FILTER_ALL = 'all';
 // Filter option values
-export const PLAN_FILTER_GENERATION_ALL = 'all';
 export const PLAN_FILTER_GENERATION_G8 = 'g8';
 export const PLAN_FILTER_GENERATION_G7 = 'g7';
 export const PLAN_FILTER_GENERATION_G6 = 'g6';
 
-export const PLAN_FILTER_TYPE_ALL = 'all';
 export const PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED = 'compute-optimized';
 export const PLAN_FILTER_TYPE_GENERAL_PURPOSE = 'general-purpose';
+
+export const PLAN_FILTER_GPU_RTX_PRO_6000 = 'gpu-rtxpro6000';
+export const PLAN_FILTER_GPU_RTX_6000 = 'gpu-rtx6000';
+export const PLAN_FILTER_GPU_RTX_4000_ADA = 'gpu-rtx4000';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,

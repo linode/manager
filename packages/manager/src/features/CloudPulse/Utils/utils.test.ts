@@ -351,7 +351,6 @@ describe('getEnabledServiceTypes', () => {
     expect(result).not.toContain('linode');
   });
 
-
   describe('filterFirewallResources', () => {
     it('should return the filtered firewall resources for linode', () => {
       const resources = [
