@@ -147,26 +147,20 @@ it('test getResourceSelectionProperties method for linode-firewall', () => {
   expect(resourceSelectionConfig).toBeDefined();
 
   if (resourceSelectionConfig) {
-    const {
-      disabled,
-      handleResourcesSelection,
-      label,
-      savePreferences,
-      filterFn,
-    } = getResourcesProperties(
-      {
-        config: resourceSelectionConfig,
-        dashboard: { ...mockDashboard, id: 4 },
-        isServiceAnalyticsIntegration: true,
-      },
-      vi.fn()
-    );
+    const { disabled, handleResourcesSelection, label, savePreferences } =
+      getResourcesProperties(
+        {
+          config: resourceSelectionConfig,
+          dashboard: { ...mockDashboard, id: 4 },
+          isServiceAnalyticsIntegration: true,
+        },
+        vi.fn()
+      );
     const { name } = resourceSelectionConfig.configuration;
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
     expect(label).toEqual(name);
-    expect(filterFn).toBeDefined();
   }
 });
 

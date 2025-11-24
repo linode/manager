@@ -143,7 +143,6 @@ export const getRegionProperties = (
         dashboard
       ),
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
-    selectedEntities: (dependentFilters?.[RESOURCE_ID] ?? []) as string[],
   };
 };
 
