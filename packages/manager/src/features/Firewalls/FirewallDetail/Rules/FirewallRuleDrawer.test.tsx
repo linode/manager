@@ -42,6 +42,14 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    getUserTimezone: vi.fn().mockReturnValue('utc'),
+  };
+});
+
 const mockOnClose = vi.fn();
 const mockOnSubmit = vi.fn();
 
@@ -169,7 +177,7 @@ describe('ViewRuleSetDetailsDrawer', () => {
   const activeRuleSet = firewallRuleSetFactory.build({ id: 123 });
   const deletedRuleSet = firewallRuleSetFactory.build({
     id: 456,
-    deleted: '2025-11-18T18:51:11',
+    deleted: '2025-07-24T04:23:17',
   });
 
   it.each([
@@ -223,7 +231,7 @@ describe('ViewRuleSetDetailsDrawer', () => {
       if (mockData.deleted) {
         // Marked for deletion status section
         expect(getByText('Marked for deletion:')).toBeVisible();
-        expect(getByText('2025-11-19 00:21')).toBeVisible();
+        expect(getByText('2025-07-24 04:23')).toBeVisible();
         // Tooltip icon should exist
         const tooltipIcon = getByTestId('tooltip-info-icon');
         expect(tooltipIcon).toBeInTheDocument();
