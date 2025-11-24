@@ -67,13 +67,17 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const defaultDrawerModeFromPathName = location.pathname.includes('/edit')
-    ? 'edit'
-    : location.pathname.includes('/view')
-      ? 'view'
-      : 'create';
+  const getCategoryFromPath = (pathname: string): Category =>
+    pathname.includes('inbound') ? 'inbound' : 'outbound';
+
+  const getDrawerEntityTypeFromPath = (
+    pathname: string
+  ): RulesDrawerEntityType =>
+    pathname.includes('/ruleset') ? 'ruleset' : 'rule';
 
   const params = useParams({ strict: false });
+  const category = getCategoryFromPath(location.pathname);
+  const entityType = getDrawerEntityTypeFromPath(location.pathname);
 
   /**
    * inbound and outbound policy aren't part of any particular rule
@@ -99,11 +103,19 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   /**
    * Component state and handlers
    */
-  const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>({
-    category: (params.category ?? 'inbound') as Category,
-    mode: defaultDrawerModeFromPathName,
-    ruleIdx: Number(params.ruleId ?? -1),
-  });
+
+  // - Initialize the drawer state based on the current route.
+  // - Drawers can be accessed via the route ONLY for viewing rulesets or adding rules/rulesets.
+  // - Accessing the Edit Rule drawer via the route is not allowed (for now),
+  //   since individual rules don't have unique IDs and are part of drag-and-drop feature.
+  const initialDrawer: Drawer = {
+    category,
+    mode: entityType === 'ruleset' ? 'view' : 'create',
+    entityType: entityType === 'ruleset' ? entityType : undefined,
+    ruleIdx: entityType === 'ruleset' ? Number(params.ruleId) : undefined,
+  };
+
+  const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>(initialDrawer);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
   const [generalErrors, setGeneralErrors] = React.useState<
@@ -358,9 +370,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   // we need to pass it to the drawer to pre-populate the form fields.
   const ruleToModifyOrView =
     ruleDrawer.ruleIdx !== undefined
-      ? ruleDrawer.entityType === 'rule'
-        ? rulesByCategory[ruleDrawer.ruleIdx] // find rule by rule index
-        : rulesByCategory.find((r) => r.ruleset === ruleDrawer.ruleIdx) // Find ruleset by ruleset id
+      ? ruleDrawer.entityType === 'ruleset'
+        ? rulesByCategory.find((r) => r.ruleset === ruleDrawer.ruleIdx) // Find ruleset by ruleset id
+        : rulesByCategory[ruleDrawer.ruleIdx] // find rule by rule index
       : undefined;
 
   return (
