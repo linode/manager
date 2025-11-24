@@ -129,6 +129,25 @@ export const CloudPulseEndpointsSelect = React.memo(
       return getEndpointsList.length > maxEndpointsSelectionLimit;
     }, [getEndpointsList.length, maxEndpointsSelectionLimit]);
 
+    // Disable Select All option if the number of available endpoints are greater than the limit
+    const disableSelectAll = hasRestrictedSelections
+      ? endpointsLimitReached
+      : false;
+
+    const errorText = isError ? `Failed to fetch ${label || 'Endpoints'}.` : '';
+    const helperText =
+      !isError && hasRestrictedSelections
+        ? `Select up to ${maxEndpointsSelectionLimit} ${label}`
+        : '';
+
+    // Check if the number of selected endpoints are greater than or equal to the limit
+    const maxSelectionsReached = React.useMemo(() => {
+      return (
+        selectedEndpoints &&
+        selectedEndpoints.length >= maxEndpointsSelectionLimit
+      );
+    }, [selectedEndpoints, maxEndpointsSelectionLimit]);
+
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       if (disabled && !selectedEndpoints) {
@@ -161,15 +180,9 @@ export const CloudPulseEndpointsSelect = React.memo(
         clearOnBlur
         data-testid="endpoint-select"
         disabled={disabled}
-        disableSelectAll={
-          hasRestrictedSelections ? endpointsLimitReached : false
-        }
-        errorText={isError ? `Failed to fetch ${label || 'Endpoints'}.` : ''}
-        helperText={
-          !isError && hasRestrictedSelections
-            ? `Select up to ${maxEndpointsSelectionLimit} ${label}`
-            : ''
-        }
+        disableSelectAll={disableSelectAll}
+        errorText={errorText}
+        helperText={helperText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label={label || 'Endpoints'}
         limitTags={1}
@@ -214,8 +227,7 @@ export const CloudPulseEndpointsSelect = React.memo(
             : 'li';
 
           const isMaxSelectionsReached =
-            selectedEndpoints &&
-            selectedEndpoints.length >= maxEndpointsSelectionLimit &&
+            maxSelectionsReached &&
             !isEndpointSelected &&
             !isSelectAllORDeslectAllOption;
 
