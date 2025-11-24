@@ -114,11 +114,6 @@ interface GraphDataOptionsProps {
 
 interface MetricRequestProps {
   /**
-   * dashboard id of the widget
-   */
-  dashboardId: number;
-
-  /**
    * time duration for the metrics data
    */
   duration: DateTimeWithPreset;
@@ -352,7 +347,6 @@ export const getCloudPulseMetricRequest = (
     linodeRegion,
     region,
     serviceType,
-    dashboardId,
   } = props;
   const preset = duration.preset;
   const presetDuration = getTimeDurationFromPreset(preset);
@@ -361,7 +355,7 @@ export const getCloudPulseMetricRequest = (
       presetDuration === undefined
         ? { end: duration.end, start: duration.start }
         : undefined,
-    entity_ids: isEndpointsOnlyDashboard(dashboardId)
+    entity_ids: !entityIds.length
       ? undefined
       : getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
