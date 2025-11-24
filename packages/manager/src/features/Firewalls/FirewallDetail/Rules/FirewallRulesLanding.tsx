@@ -351,11 +351,11 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     [outboundState]
   );
 
-  // This is for the Rule Drawer. If there is a rule to modify or view,
-  // we need to pass it to the drawer to pre-populate the form fields.
   const rulesByCategory =
     ruleDrawer.category === 'inbound' ? inboundRules : outboundRules;
 
+  // This is for the Rule Drawer. If there is a rule to modify or view,
+  // we need to pass it to the drawer to pre-populate the form fields.
   const ruleToModifyOrView =
     ruleDrawer.ruleIdx !== undefined
       ? ruleDrawer.entityType === 'rule'
