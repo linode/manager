@@ -1,7 +1,4 @@
-import {
-  useAccountMaintenancePoliciesQuery,
-  useProfile,
-} from '@linode/queries';
+import { useProfile } from '@linode/queries';
 import { Stack, Tooltip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize, getFormattedStatus, truncate } from '@linode/utilities';
@@ -88,22 +85,18 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
   const dateField = getMaintenanceDateField(tableType);
   const dateValue = props.maintenance[dateField];
 
-  // Fetch policies to derive a start time when the API doesn't provide one
-  const { data: policies } = useAccountMaintenancePoliciesQuery();
-
   // Precompute for potential use; currently used via getUpcomingRelativeLabel
   React.useMemo(
-    () => deriveMaintenanceStartISO(props.maintenance, policies),
-    [policies, props.maintenance]
+    () => deriveMaintenanceStartISO(props.maintenance),
+    [props.maintenance]
   );
 
-  const upcomingRelativeLabel = React.useMemo(
-    () =>
-      tableType === 'upcoming'
-        ? getUpcomingRelativeLabel(props.maintenance, policies)
-        : undefined,
-    [policies, props.maintenance, tableType]
-  );
+  const upcomingRelativeLabel = React.useMemo(() => {
+    if (tableType !== 'upcoming') {
+      return undefined;
+    }
+    return getUpcomingRelativeLabel(props.maintenance);
+  }, [props.maintenance, tableType]);
 
   return (
     <TableRow key={entity.id}>

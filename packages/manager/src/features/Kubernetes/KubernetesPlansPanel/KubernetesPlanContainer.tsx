@@ -17,6 +17,57 @@ import type { KubernetesTier, LinodeTypeClass } from '@linode/api-v4';
 import type { PlanSelectionDividers } from 'src/features/components/PlansPanel/PlanContainer';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
+export interface PlanFilterRenderArgs {
+  /**
+   * Callback to notify parent of filter result
+   */
+  onResult: (result: PlanFilterRenderResult) => void;
+
+  /**
+   * All available plans (unfiltered)
+   */
+  plans: PlanWithAvailability[];
+
+  /**
+   * Plan type/class (e.g., 'dedicated', 'gpu')
+   */
+  planType: LinodeTypeClass | undefined;
+
+  /**
+   * Reset pagination back to the first page
+   */
+  resetPagination: () => void;
+
+  /**
+   * Whether filters should be disabled (e.g., no region selected)
+   */
+  shouldDisableFilters?: boolean;
+}
+
+export interface PlanFilterRenderResult {
+  /**
+   * Optional empty state configuration for the table body
+   */
+  emptyState?: null | {
+    message: string;
+  };
+
+  /**
+   * Filtered plans after applying filters
+   */
+  filteredPlans: PlanWithAvailability[];
+
+  /**
+   * The filter UI component
+   */
+  filterUI: React.ReactNode;
+
+  /**
+   * Whether any filters are currently active
+   */
+  hasActiveFilters: boolean;
+}
+
 export interface KubernetesPlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
   getTypeCount: (planId: string) => number;
@@ -24,6 +75,13 @@ export interface KubernetesPlanContainerProps {
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
+
+  /**
+   * Render prop for custom filter UI per tab
+   * Receives plan data and pagination helpers, returns a React element
+   */
+  planFilters?: (args: PlanFilterRenderArgs) => React.ReactNode;
+
   plans: PlanWithAvailability[];
   planType?: LinodeTypeClass;
   selectedId?: string;
@@ -42,6 +100,7 @@ export const KubernetesPlanContainer = (
     onAdd,
     handleConfigurePool,
     onSelect,
+    planFilters,
     planType,
     plans,
     selectedId,
@@ -52,9 +111,6 @@ export const KubernetesPlanContainer = (
   } = props;
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
   const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
-
-  // Feature gate for pagination functionality
-  const isK8PlanPaginationEnabled = isGenerationalPlansEnabled;
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -121,8 +177,74 @@ export const KubernetesPlanContainer = (
     [planType]
   );
 
+  // State to hold filter result from the filter component
+  const [filterResult, setFilterResult] =
+    React.useState<null | PlanFilterRenderResult>(null);
+
+  // Ref to store the pagination handler from Paginate component
+  // This allows us to reset pagination when filters change
+  const handlePageChangeRef = React.useRef<((page: number) => void) | null>(
+    null
+  );
+
+  // Callback for filter component to update result
+  const handleFilterResult = React.useCallback(
+    (result: PlanFilterRenderResult) => {
+      setFilterResult(result);
+    },
+    []
+  );
+
+  // Callback to reset pagination to page 1
+  // Used by filter components when filters change
+  const resetPagination = React.useCallback(() => {
+    // Call the pagination handler to go to page 1
+    handlePageChangeRef.current?.(1);
+  }, []);
+
+  // Create filter state manager component if planFilters render prop is provided
+  // This component returns null but manages filter state via local React state
+  // State persists when switching tabs because Reach UI TabPanels stay mounted
+  // and communicates filtered results back to parent via the onResult callback
+  const filterStateManager = React.useMemo(() => {
+    if (isGenerationalPlansEnabled && planFilters) {
+      return planFilters({
+        onResult: handleFilterResult,
+        planType,
+        plans,
+        resetPagination,
+        shouldDisableFilters: shouldDisplayNoRegionSelectedMessage,
+      });
+    }
+    return null;
+  }, [
+    isGenerationalPlansEnabled,
+    planFilters,
+    planType,
+    plans,
+    handleFilterResult,
+    resetPagination,
+    shouldDisplayNoRegionSelectedMessage,
+  ]);
+
+  // Clear filter result when filters are disabled or removed
+  React.useEffect(() => {
+    if (!planFilters || !isGenerationalPlansEnabled) {
+      setFilterResult(null);
+    }
+  }, [isGenerationalPlansEnabled, planFilters]);
+
+  // Use filtered plans if available, otherwise use all plans
+  const effectiveFilterResult = isGenerationalPlansEnabled
+    ? filterResult
+    : null;
+  const plansToDisplay = effectiveFilterResult?.filteredPlans ?? plans;
+  const tableEmptyState = shouldDisplayNoRegionSelectedMessage
+    ? null
+    : (effectiveFilterResult?.emptyState ?? null);
+
   // Feature gate: if pagination is disabled, render the old way
-  if (!isK8PlanPaginationEnabled) {
+  if (!isGenerationalPlansEnabled) {
     return (
       <Grid container spacing={2}>
         <Hidden mdUp>
@@ -202,7 +324,17 @@ export const KubernetesPlanContainer = (
 
   // Pagination enabled: use new paginated rendering
   return (
-    <Paginate data={plans} key={paginationPrefix} shouldScroll={false}>
+    <Paginate
+      data={plansToDisplay}
+      key={paginationPrefix}
+      // Prevent Kubernetes plans panel page size changes from being persisted to global PAGE_SIZE storage.
+      // Kubernetes plans panel uses custom page size options (15, 25, 50) which should not override
+      // the standard page size preference (25, 50, 75, 100) used by other tables.
+      noPageSizeOverride={true}
+      // Set default page size to 15 (first option in PLAN_PANEL_PAGE_SIZE_OPTIONS)
+      pageSize={PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value}
+      shouldScroll={false}
+    >
       {({
         count,
         data: paginatedPlans,
@@ -211,9 +343,10 @@ export const KubernetesPlanContainer = (
         pageSize,
         page,
       }) => {
-        const shouldDisplayPagination =
-          !shouldDisplayNoRegionSelectedMessage &&
-          count > PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value;
+        // Store the handlePageChange function in ref so filters can call it
+        handlePageChangeRef.current = handlePageChange;
+
+        const shouldDisplayPagination = !shouldDisplayNoRegionSelectedMessage;
 
         const dividerTables = planSelectionDividers
           .map((divider) => ({
@@ -238,6 +371,13 @@ export const KubernetesPlanContainer = (
         return (
           <>
             <Grid container spacing={2}>
+              {filterStateManager}
+
+              {/* Render filter UI that was passed via callback */}
+              {effectiveFilterResult?.filterUI && (
+                <Grid size={12}>{effectiveFilterResult.filterUI}</Grid>
+              )}
+
               <Hidden mdUp>
                 {shouldDisplayNoRegionSelectedMessage ? (
                   <Notice
@@ -247,6 +387,16 @@ export const KubernetesPlanContainer = (
                       '& p': { fontSize: theme.tokens.font.FontSize.Xs },
                     })}
                     text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+                    variant="info"
+                  />
+                ) : tableEmptyState ? (
+                  <Notice
+                    spacingLeft={8}
+                    spacingTop={8}
+                    sx={(theme) => ({
+                      '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+                    })}
+                    text={tableEmptyState.message}
                     variant="info"
                   />
                 ) : hasActiveGpuDivider ? (
@@ -291,6 +441,7 @@ export const KubernetesPlanContainer = (
                     )
                   ) : (
                     <KubernetesPlanSelectionTable
+                      filterEmptyStateMessage={tableEmptyState?.message}
                       key={planType ?? 'all'}
                       plans={paginatedPlans}
                       renderPlanSelection={renderPlanSelection}

@@ -5,6 +5,7 @@ import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import * as shared from '../../shared';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import {
   classifyIPs,
@@ -37,8 +38,12 @@ const props: FirewallRuleDrawerProps = {
   onSubmit: mockOnSubmit,
 };
 
+const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: false });
+
     const { getByText } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
@@ -63,6 +68,79 @@ describe('AddRuleDrawer', () => {
     await userEvent.click(getByPlaceholderText('Select a protocol...'));
     await userEvent.click(getByText('IPENCAP'));
     expect(getByPlaceholderText('Select a port...')).toBeDisabled();
+  });
+});
+
+describe('AddRuleSetDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+  });
+
+  it('renders the drawer title', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    expect(getByText('Add an Inbound Rule or Rule Set')).toBeVisible();
+  });
+
+  it('renders the selection cards', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    expect(getByText(/Create a Rule/i)).toBeVisible();
+    expect(getByText(/Reference Rule Set/i)).toBeVisible();
+  });
+
+  it('renders the Rule Set form and its elements when selection card is clicked', async () => {
+    const { getByText, getByPlaceholderText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    const ruleSetCard = getByText(/Reference Rule Set/i);
+    await userEvent.click(ruleSetCard);
+
+    // Description
+    expect(
+      getByText(
+        'RuleSets are reusable collections of Cloud Firewall rules that use the same fields as individual rules. They let you manage and update multiple rules as a group. You can then apply them across different firewalls by reference.'
+      )
+    ).toBeVisible();
+
+    // Autocomplete field
+    expect(getByText('Rule Set')).toBeVisible();
+    expect(
+      getByPlaceholderText('Type to search or select a Rule Set')
+    ).toBeVisible();
+
+    // Action buttons
+    expect(getByRole('button', { name: 'Add Rule' })).toBeVisible();
+    expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+
+    // Footer text
+    expect(
+      getByText(
+        'Rule changes don’t take effect immediately. You can add or delete rules before saving all your changes to this Firewall.'
+      )
+    ).toBeVisible();
+  });
+
+  it('shows validation message when Rule Set form is submitted without selecting a value', async () => {
+    const { getByText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    // Click the Rule Set Selection card to open the Rule Set form
+    const ruleSetCard = getByText(/Reference Rule Set/i);
+    await userEvent.click(ruleSetCard);
+
+    // Click the "Add Rule" button without selecting the Autocomplete field
+    const addRuleButton = getByRole('button', { name: 'Add Rule' });
+    await userEvent.click(addRuleButton);
+
+    // Expect the validation message to appear
+    getByText('Rule Set is required.');
   });
 });
 
