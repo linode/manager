@@ -129,7 +129,6 @@ export const severityMap: Record<AlertSeverityType, string> = {
   3: 'Info',
 };
 
-// TODO: remove in progress once api changes are ready
 export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',

@@ -41,7 +41,7 @@ export const getAlertTypeToActionsList = (
     },
     {
       disabled:
-        alertStatus === 'in progress' || // TODO: remove in progress once api changes are ready
+        alertStatus === 'in progress' ||
         alertStatus === 'failed' ||
         alertStatus === 'provisioning' ||
         alertStatus === 'enabling' ||

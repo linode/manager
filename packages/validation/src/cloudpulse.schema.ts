@@ -123,7 +123,7 @@ export const editAlertDefinitionSchema = object({
     .oneOf([
       'enabled',
       'disabled',
-      'in progress', // TODO: remove in progress once api changes are ready
+      'in progress',
       'failed',
       'provisioning',
       'disabling',
