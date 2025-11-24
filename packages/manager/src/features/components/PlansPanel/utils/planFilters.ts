@@ -9,7 +9,7 @@ import {
   G8_DEDICATED_ALL_SLUGS,
   G8_DEDICATED_COMPUTE_OPTIMIZED_SLUGS,
   G8_DEDICATED_GENERAL_PURPOSE_SLUGS,
-  PLAN_FILTER_TYPE_ALL,
+  PLAN_FILTER_ALL,
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from '../constants';
@@ -19,6 +19,7 @@ import type {
   PlanFilterType,
   PlanWithAvailability,
 } from '../types';
+import type { PlanFilterGPU } from '../types/planFilters';
 
 // ============================================================================
 // Generation Filtering
@@ -88,7 +89,7 @@ export const filterPlansByType = (
   type: PlanFilterType
 ): PlanWithAvailability[] => {
   // "All" returns all plans unchanged
-  if (type === PLAN_FILTER_TYPE_ALL) {
+  if (type === PLAN_FILTER_ALL) {
     return plans;
   }
 
@@ -133,22 +134,22 @@ export const filterPlansByType = (
  * @example
  * ```ts
  * // Get G8 Compute Optimized plans
- * const filtered = applyPlanFilters(allPlans, 'g8', 'compute-optimized');
+ * const filtered = applyDedicatedPlanFilters(allPlans, 'g8', 'compute-optimized');
  *
  * // Get all G7 plans
- * const g7All = applyPlanFilters(allPlans, 'g7', 'all');
+ * const g7All = applyDedicatedPlanFilters(allPlans, 'g7', 'all');
  *
  * // Get all dedicated plans (G6, G7, G8)
- * const allDedicated = applyPlanFilters(allPlans, 'all', 'all');
+ * const allDedicated = applyDedicatedPlanFilters(allPlans, 'all', 'all');
  *
  * // No filters - return empty array
- * const none = applyPlanFilters(allPlans);
+ * const none = applyDedicatedPlanFilters(allPlans);
  * ```
  */
-export const applyPlanFilters = (
+export const applyDedicatedPlanFilters = (
   plans: PlanWithAvailability[],
   generation?: PlanFilterGeneration,
-  type: PlanFilterType = PLAN_FILTER_TYPE_ALL
+  type: PlanFilterType = PLAN_FILTER_ALL
 ): PlanWithAvailability[] => {
   // No filters - return empty array
   if (!generation) {
@@ -160,6 +161,38 @@ export const applyPlanFilters = (
 
   // Then apply type filter
   return filterPlansByType(generationFiltered, generation, type);
+};
+
+// ============================================================================
+// GPU Filtering
+// ============================================================================
+
+/**
+ * Filter plans by gpu type
+ *
+ * @param plans - Array of all plans (mostly pre-filtered by plan type/class)
+ * @param gpuType - The GPU type to filter by
+ * @returns Filtered array of plans matching the generation
+ *
+ * @example
+ * ```ts
+ * const rtx4000Plans = filterPlansByGpuType(allPlans, 'gpu-rtx4000');
+ * // Returns all plans with GPU type 'gpu-rtx4000'
+ *
+ * const allDedicatedPlans = filterPlansByGpuType(allPlans, 'all');
+ * // Returns all plans as-is (already filtered by plan type in parent)
+ * ```
+ */
+export const filterPlansByGpuType = (
+  plans: PlanWithAvailability[],
+  gpuType?: PlanFilterGPU
+): PlanWithAvailability[] => {
+  // For "All", return all plans as-is
+  // The plans array is already filtered to only GPU plans by the parent component
+  if (!gpuType || gpuType === PLAN_FILTER_ALL) {
+    return plans;
+  }
+  return plans.filter((plan) => plan.id.includes(gpuType));
 };
 
 // ============================================================================
@@ -196,12 +229,12 @@ export const getAvailableTypes = (
 ): PlanFilterType[] => {
   if (generation === 'g8') {
     return [
-      PLAN_FILTER_TYPE_ALL,
+      PLAN_FILTER_ALL,
       PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
       PLAN_FILTER_TYPE_GENERAL_PURPOSE,
     ];
   }
 
   // G7, G6, and "All" only have "All" type option
-  return [PLAN_FILTER_TYPE_ALL];
+  return [PLAN_FILTER_ALL];
 };

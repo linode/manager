@@ -2,7 +2,6 @@ import {
   ActionsPanel,
   Autocomplete,
   FormControlLabel,
-  Notice,
   Radio,
   RadioGroup,
   Select,
@@ -39,6 +38,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   const {
     addressesLabel,
     category,
+    closeDrawer,
     errors,
     handleBlur,
     handleChange,
@@ -51,7 +51,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     setFieldValue,
     setIPs,
     setPresetPorts,
-    status,
     touched,
     values,
   } = props;
@@ -202,14 +201,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {status && (
-        <Notice
-          data-qa-error
-          key={status}
-          text={status.generalError}
-          variant="error"
-        />
-      )}
       <Autocomplete
         aria-label="Preset for firewall rule"
         autoHighlight
@@ -351,17 +342,21 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           label: mode === 'create' ? 'Add Rule' : 'Add Changes',
           onClick: () => handleSubmit(),
         }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: closeDrawer,
+        }}
       />
     </form>
   );
 });
 
 const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacingFunction(16),
 }));
 
 const StyledMultipleIPInput = styled(MultipleIPInput, {
   label: 'StyledMultipleIPInput',
 })(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacingFunction(16),
 }));
