@@ -50,6 +50,8 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   scheduled: 'active',
 };
 
+const MAX_REASON_DISPLAY_LENGTH = 93;
+
 interface MaintenanceTableRowProps {
   maintenance: AccountMaintenance;
   tableType: MaintenanceTableType;
@@ -77,7 +79,9 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const eventProgress = recentEvent && formatProgressEvent(recentEvent);
 
-  const truncatedReason = reason ? truncate(reason, 93) : '';
+  const truncatedReason = reason
+    ? truncate(reason, MAX_REASON_DISPLAY_LENGTH)
+    : '';
 
   const isTruncated = reason ? reason !== truncatedReason : false;
 
