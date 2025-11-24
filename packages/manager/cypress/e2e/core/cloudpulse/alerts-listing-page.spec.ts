@@ -29,6 +29,8 @@ import {
 import {
   alertStatuses,
   DELETE_ALERT_SUCCESS_MESSAGE,
+  DISABLE_ALERT_SUCCESS_MESSAGE,
+  ENABLE_ALERT_SUCCESS_MESSAGE,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -426,7 +428,10 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         alertName,
         alias,
         confirmationText: `Are you sure you want to ${action.toLowerCase()} this alert definition?`,
-        successMessage: UPDATE_ALERT_SUCCESS_MESSAGE,
+        successMessage:
+          action === 'Disable'
+            ? DISABLE_ALERT_SUCCESS_MESSAGE
+            : ENABLE_ALERT_SUCCESS_MESSAGE,
       });
     });
   });
