@@ -152,14 +152,14 @@ describe('ViewRuleSetDetailsDrawer', () => {
 
   it.each(['inbound', 'outbound'] as Category[])(
     'renders the %s view ruleset drawer',
-    (catergory) => {
+    (category) => {
       const { getByText, getByRole } = renderWithTheme(
-        <FirewallRuleDrawer {...props} category={catergory} mode="view" />
+        <FirewallRuleDrawer {...props} category={category} mode="view" />
       );
 
       // Renders the drawer title
       expect(
-        getByText(`${capitalize(catergory)} Rule Set details`)
+        getByText(`${capitalize(category)} Rule Set details`)
       ).toBeVisible();
 
       // Renders Rule Set details Drawer labels and cancel button
@@ -176,7 +176,7 @@ describe('ViewRuleSetDetailsDrawer', () => {
       labels.map((label) => expect(getByText(`${label}:`)).toBeVisible());
 
       // Rule Set rules section label
-      expect(getByText(`${capitalize(catergory)} Rules`)).toBeVisible();
+      expect(getByText(`${capitalize(category)} Rules`)).toBeVisible();
 
       // Cancel button
       expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
