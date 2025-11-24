@@ -3,6 +3,7 @@ import {
   ActionsPanel,
   Box,
   CircleProgress,
+  ErrorState,
   Paper,
   TooltipIcon,
 } from '@linode/ui';
@@ -43,7 +44,12 @@ export const FirewallRuleSetDetailsView = (
     useIsFirewallRulesetsPrefixlistsEnabled();
   const { classes } = useStyles();
 
-  const { data: ruleSetDetails, isFetching } = useFirewallRuleSetQuery(
+  const {
+    data: ruleSetDetails,
+    isFetching,
+    isError,
+    error,
+  } = useFirewallRuleSetQuery(
     ruleset ?? -1,
     ruleset !== undefined &&
       ruleset !== null &&
@@ -56,6 +62,10 @@ export const FirewallRuleSetDetailsView = (
         <CircleProgress size="md" />
       </Box>
     );
+  }
+
+  if (isError) {
+    return <ErrorState errorText={error[0].reason} />;
   }
 
   return (
