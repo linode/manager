@@ -25,10 +25,10 @@ import type {
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
+  DatabaseBackupsPayload,
   DatabaseCredentials,
   DatabaseEngine,
   DatabaseEngineConfig,
-  DatabaseFork,
   DatabaseInstance,
   DatabaseType,
   Engine,
@@ -267,11 +267,11 @@ export const useLegacyRestoreFromBackupMutation = (
 
 export const useRestoreFromBackupMutation = (
   engine: Engine,
-  fork: DatabaseFork,
+  data: DatabaseBackupsPayload,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[]>({
-    mutationFn: () => restoreWithBackup(engine, fork),
+    mutationFn: () => restoreWithBackup(engine, data),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.databases.queryKey,

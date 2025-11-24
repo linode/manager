@@ -30,7 +30,11 @@ export const deleteAllTestLinodes = async (): Promise<void> => {
   );
 
   const deletePromises = linodes
-    .filter((linode: Linode) => isTestLabel(linode.label))
+    .filter(
+      (linode: Linode) =>
+        isTestLabel(linode.label) &&
+        ['offline', 'running'].includes(linode.status)
+    )
     .map((linode: Linode) => deleteLinode(linode.id));
 
   await Promise.all(deletePromises);

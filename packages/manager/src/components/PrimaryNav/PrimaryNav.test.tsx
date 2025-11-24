@@ -561,4 +561,30 @@ describe('PrimaryNav', () => {
       ).toBeNull();
     });
   });
+
+  it('should show Network Load Balancers menu item if the user has the account capability and the flag is enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Network LoadBalancer'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags: Partial<Flags> = {
+      networkLoadBalancer: true,
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const databaseNavItem = await findByTestId(
+      'menu-item-Network Load Balancer'
+    );
+
+    expect(databaseNavItem).toBeVisible();
+  });
 });

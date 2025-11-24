@@ -38,7 +38,7 @@ export const DetachVolumeDialog = (props: Props) => {
 
   const { data: linodePermissions } = usePermissions(
     'linode',
-    ['delete_linode'],
+    ['update_linode'],
     linode?.id,
     open
   );
@@ -64,7 +64,7 @@ export const DetachVolumeDialog = (props: Props) => {
   return (
     <TypeToConfirmDialog
       disableTypeToConfirmInput={
-        !(volumePermissions?.detach_volume && linodePermissions?.delete_linode)
+        !(volumePermissions?.detach_volume && linodePermissions?.update_linode)
       }
       entity={{
         action: 'detachment',

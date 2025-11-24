@@ -15,7 +15,9 @@ import {
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { createDedicatedPlanFiltersRenderProp } from './DedicatedPlanFilters';
 import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
+import { createGPUPlanFilterRenderProp } from './GpuFilters';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
@@ -223,6 +225,16 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isCreate={isCreate}
                 linodeID={linodeID}
                 onSelect={onSelect}
+                planFilters={(() => {
+                  switch (plan) {
+                    case 'dedicated':
+                      return createDedicatedPlanFiltersRenderProp();
+                    case 'gpu':
+                      return createGPUPlanFilterRenderProp();
+                    default:
+                      return undefined;
+                  }
+                })()}
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 selectedId={selectedId}

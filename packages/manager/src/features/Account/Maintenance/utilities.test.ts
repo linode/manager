@@ -5,31 +5,12 @@ import {
   getUpcomingRelativeLabel,
 } from './utilities';
 
-import type { AccountMaintenance, MaintenancePolicy } from '@linode/api-v4';
+import type { AccountMaintenance } from '@linode/api-v4';
 
 // Freeze time to a stable reference so relative labels are deterministic
 const NOW_ISO = '2025-10-27T12:00:00.000Z';
 
 describe('Account Maintenance utilities', () => {
-  const policies: MaintenancePolicy[] = [
-    {
-      description: 'Migrate',
-      is_default: true,
-      label: 'Migrate',
-      notification_period_sec: 3 * 60 * 60, // 3 hours
-      slug: 'linode/migrate',
-      type: 'linode_migrate',
-    },
-    {
-      description: 'Power Off / On',
-      is_default: false,
-      label: 'Power Off / Power On',
-      notification_period_sec: 72 * 60 * 60, // 72 hours
-      slug: 'linode/power_off_on',
-      type: 'linode_power_off_on',
-    },
-  ];
-
   const baseMaintenance: Omit<AccountMaintenance, 'when'> & { when: string } = {
     complete_time: null,
     description: 'scheduled',
@@ -60,33 +41,29 @@ describe('Account Maintenance utilities', () => {
         ...baseMaintenance,
         start_time: '2025-10-27T12:00:00.000Z',
       };
-      expect(deriveMaintenanceStartISO(m, policies)).toBe(
-        '2025-10-27T12:00:00.000Z'
-      );
+      expect(deriveMaintenanceStartISO(m)).toBe('2025-10-27T12:00:00.000Z');
     });
 
-    it('derives start_time from when + policy seconds when missing', () => {
+    it('uses when directly as start time (when already accounts for notification period)', () => {
       const m: AccountMaintenance = {
         ...baseMaintenance,
         start_time: null,
-        when: '2025-10-27T09:00:00.000Z', // +3h -> 12:00Z
+        when: '2025-10-27T09:00:00.000Z',
       };
-      expect(deriveMaintenanceStartISO(m, policies)).toBe(
-        '2025-10-27T12:00:00.000Z'
-      );
+      // `when` already accounts for notification_period_sec, so it IS the start time
+      expect(deriveMaintenanceStartISO(m)).toBe('2025-10-27T09:00:00.000Z');
     });
 
-    it('returns undefined when policy cannot be found', () => {
+    it('uses when directly for all statuses without needing policies', () => {
       const m: AccountMaintenance = {
         ...baseMaintenance,
         start_time: null,
-        // Use an intentionally unknown slug to exercise the no-policy fallback path.
-        // Even though the API default is typically 'linode/migrate', the client may
-        // not have policies loaded yet or could encounter a fetch error; this ensures
-        // we verify the graceful fallback behavior.
+        status: 'pending',
+        // Policies not needed - when IS the start time
         maintenance_policy_set: 'unknown/policy' as any,
+        when: '2025-10-27T09:00:00.000Z',
       };
-      expect(deriveMaintenanceStartISO(m, policies)).toBeUndefined();
+      expect(deriveMaintenanceStartISO(m)).toBe('2025-10-27T09:00:00.000Z');
     });
   });
 
@@ -100,7 +77,7 @@ describe('Account Maintenance utilities', () => {
         when: '2025-10-27T10:00:00.000Z',
       };
       // NOW=12:00Z, when=10:00Z => "2 hours ago"
-      expect(getUpcomingRelativeLabel(m, policies)).toContain('hour');
+      expect(getUpcomingRelativeLabel(m)).toContain('hour');
     });
 
     it('uses derived start to express time until maintenance (hours when <1 day)', () => {
@@ -110,16 +87,15 @@ describe('Account Maintenance utilities', () => {
         when: '2025-10-27T09:00:00.000Z',
       };
       // Allow any non-empty string; exact phrasing depends on Luxon locale
-      expect(getUpcomingRelativeLabel(m, policies)).toBeTypeOf('string');
+      expect(getUpcomingRelativeLabel(m)).toBeTypeOf('string');
     });
 
     it('shows days+hours when >= 1 day away (avoids day-only rounding)', () => {
       const m: AccountMaintenance = {
         ...baseMaintenance,
-        maintenance_policy_set: 'linode/power_off_on', // 72h
-        when: '2025-10-25T20:00:00.000Z', // +72h => 2025-10-28T20:00Z; from NOW (27 12:00Z) => 1 day 8 hours
+        when: '2025-10-28T20:00:00.000Z', // from NOW (27 12:00Z) => 1 day 8 hours
       };
-      const label = getUpcomingRelativeLabel(m, policies);
+      const label = getUpcomingRelativeLabel(m);
       expect(label).toBe('in 1 day 8 hours');
     });
 
@@ -129,7 +105,7 @@ describe('Account Maintenance utilities', () => {
         ...baseMaintenance,
         start_time: '2025-10-30T04:00:00.000Z',
       };
-      const label = getUpcomingRelativeLabel(m, policies);
+      const label = getUpcomingRelativeLabel(m);
       expect(label).toBe('in 2 days 16 hours');
     });
 
@@ -139,7 +115,7 @@ describe('Account Maintenance utilities', () => {
         // NOW is 12:00Z; start in 37 minutes
         start_time: '2025-10-27T12:37:00.000Z',
       };
-      const label = getUpcomingRelativeLabel(m, policies);
+      const label = getUpcomingRelativeLabel(m);
       expect(label).toBe('in 37 minutes');
     });
 
@@ -149,8 +125,59 @@ describe('Account Maintenance utilities', () => {
         // NOW is 12:00Z; start in 30 seconds
         start_time: '2025-10-27T12:00:30.000Z',
       };
-      const label = getUpcomingRelativeLabel(m, policies);
+      const label = getUpcomingRelativeLabel(m);
       expect(label).toBe('in 30 seconds');
+    });
+
+    it('uses when directly as start time (when already accounts for notification period)', () => {
+      // Real-world scenario: API returns when=2025-11-06T16:12:41
+      // `when` already accounts for notification_period_sec, so it IS the start time
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        start_time: null,
+        when: '2025-11-06T16:12:41', // No timezone indicator, should be parsed as UTC
+      };
+
+      const derivedStart = deriveMaintenanceStartISO(m);
+      // `when` equals start time (no addition needed)
+      expect(derivedStart).toBe('2025-11-06T16:12:41.000Z');
+    });
+
+    it('shows correct relative time (when equals start)', () => {
+      // Scenario: when=2025-11-06T16:12:41 (when IS the start time)
+      // If now is 2025-11-06T16:14:41 (2 minutes after when), should show "2 minutes ago"
+      // Save original Date.now
+      const originalDateNow = Date.now;
+
+      // Mock "now" to be 2 minutes after when (which is the start time)
+      const mockNow = '2025-11-06T16:14:41.000Z';
+      Date.now = vi.fn(() => new Date(mockNow).getTime());
+
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        start_time: null,
+        when: '2025-11-06T16:12:41',
+      };
+
+      const label = getUpcomingRelativeLabel(m);
+      // when=start=16:12:41, now=16:14:41, difference is 2 minutes in the past
+      expect(label).toContain('minute'); // Should show "2 minutes ago" or similar
+
+      // Restore original Date.now
+      Date.now = originalDateNow;
+    });
+
+    it('handles date without timezone indicator correctly (parsed as UTC)', () => {
+      // Verify that dates without timezone are parsed as UTC
+      const m: AccountMaintenance = {
+        ...baseMaintenance,
+        start_time: null,
+        when: '2025-11-06T16:12:41', // No Z suffix or timezone
+      };
+
+      const derivedStart = deriveMaintenanceStartISO(m);
+      // `when` equals start time (no addition needed)
+      expect(derivedStart).toBe('2025-11-06T16:12:41.000Z');
     });
   });
 });

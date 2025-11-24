@@ -269,3 +269,8 @@ export const HELPER_TEXT_MAP: Record<string, Record<string, string>> = {
     default: CONFIG_ERROR_MESSAGE,
   },
 };
+
+export const entityLabelMap = {
+  linode: 'Linode',
+  nodebalancer: 'Node Balancer',
+};

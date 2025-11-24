@@ -1,5 +1,12 @@
 import { useFirewallsQuery } from '@linode/queries';
-import { Button, CircleProgress, ErrorState, Hidden } from '@linode/ui';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Hidden,
+  TooltipIcon,
+  useTheme,
+} from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -21,6 +28,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsFirewallRulesetsPrefixlistsEnabled } from '../shared';
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 import { FirewallDialog } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
@@ -48,6 +56,7 @@ const FirewallLanding = () => {
     },
     preferenceKey,
   });
+  const theme = useTheme();
 
   const filter = {
     ['+order']: order,
@@ -66,7 +75,11 @@ const FirewallLanding = () => {
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+  const { isFirewallRulesetsPrefixlistsEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
 
+  const rulesColumnTooltipText =
+    'Includes both rules and Rule Sets in the count. Each Rule Set is counted as one rule, regardless of how many rules it contains.';
   const flags = useFlags();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
 
@@ -193,7 +206,18 @@ const FirewallLanding = () => {
               Status
             </TableSortCell>
             <Hidden smDown>
-              <TableCell sx={{ width: '15%' }}>Rules</TableCell>
+              <TableCell sx={{ width: '15%' }}>
+                Rules
+                {isFirewallRulesetsPrefixlistsEnabled && (
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{
+                      padding: `0 ${theme.spacingFunction(8)} ${theme.spacingFunction(2)} ${theme.spacingFunction(8)}`,
+                    }}
+                    text={rulesColumnTooltipText}
+                  />
+                )}
+              </TableCell>
               <TableCell sx={{ width: '45%' }}>Services</TableCell>
             </Hidden>
             <TableCell sx={{ width: '10%' }} />
