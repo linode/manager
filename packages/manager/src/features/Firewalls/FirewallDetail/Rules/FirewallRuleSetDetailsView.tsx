@@ -1,5 +1,12 @@
 import { useFirewallRuleSetQuery } from '@linode/queries';
-import { ActionsPanel, Box, Paper, TooltipIcon } from '@linode/ui';
+import {
+  ActionsPanel,
+  Box,
+  CircleProgress,
+  ErrorState,
+  Paper,
+  TooltipIcon,
+} from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -20,11 +27,12 @@ import {
 } from './shared.styles';
 
 import type { Category } from './shared';
+import type { FirewallRuleType } from '@linode/api-v4';
 
 interface FirewallRuleSetDetailsViewProps {
   category: Category;
   closeDrawer: () => void;
-  ruleset: number;
+  ruleset: FirewallRuleType['ruleset'];
 }
 
 export const FirewallRuleSetDetailsView = (
@@ -36,10 +44,29 @@ export const FirewallRuleSetDetailsView = (
     useIsFirewallRulesetsPrefixlistsEnabled();
   const { classes } = useStyles();
 
-  const { data: ruleSetDetails } = useFirewallRuleSetQuery(
-    ruleset,
-    isFirewallRulesetsPrefixlistsEnabled
+  const {
+    data: ruleSetDetails,
+    isFetching,
+    isError,
+    error,
+  } = useFirewallRuleSetQuery(
+    ruleset ?? -1,
+    ruleset !== undefined &&
+      ruleset !== null &&
+      isFirewallRulesetsPrefixlistsEnabled
   );
+
+  if (isFetching) {
+    return (
+      <Box display="flex" justifyContent="center" mt={12}>
+        <CircleProgress size="md" />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
 
   return (
     <Box mt={2}>

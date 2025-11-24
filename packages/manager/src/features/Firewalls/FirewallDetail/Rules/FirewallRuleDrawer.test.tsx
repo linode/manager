@@ -2,6 +2,7 @@ import { capitalize } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { firewallRuleSetFactory } from 'src/factories';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -19,12 +20,27 @@ import {
   validateForm,
   validateIPs,
 } from './FirewallRuleDrawer.utils';
-import { PORT_PRESETS } from './shared';
+import { PORT_PRESETS, RULESET_MARKED_FOR_DELETION_TEXT } from './shared';
 
 import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
-import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import type {
+  FirewallPolicyType,
+  FirewallRuleSet,
+} from '@linode/api-v4/lib/firewalls/types';
+
+const queryMocks = vi.hoisted(() => ({
+  useFirewallRuleSetQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useFirewallRuleSetQuery: queryMocks.useFirewallRuleSetQuery,
+  };
+});
 
 const mockOnClose = vi.fn();
 const mockOnSubmit = vi.fn();
@@ -150,19 +166,46 @@ describe('ViewRuleSetDetailsDrawer', () => {
     spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
   });
 
-  it.each(['inbound', 'outbound'] as Category[])(
-    'renders the %s view ruleset drawer',
-    (category) => {
-      const { getByText, getByRole } = renderWithTheme(
-        <FirewallRuleDrawer {...props} category={category} mode="view" />
-      );
+  const activeRuleSet = firewallRuleSetFactory.build({ id: 123 });
+  const deletedRuleSet = firewallRuleSetFactory.build({
+    id: 456,
+    deleted: '2025-11-18T18:51:11',
+  });
 
-      // Renders the drawer title
+  it.each([
+    ['inbound', activeRuleSet],
+    ['outbound', activeRuleSet],
+    ['inbound', deletedRuleSet],
+    ['outbound', deletedRuleSet],
+  ] as [Category, FirewallRuleSet][])(
+    'renders %s ruleset drawer (%s)',
+    async (category, mockData) => {
+      queryMocks.useFirewallRuleSetQuery.mockReturnValue({
+        data: mockData,
+        isFetching: false,
+        error: null,
+      });
+
+      const { getByText, getByRole, getByTestId, findByText, queryByText } =
+        renderWithTheme(
+          <FirewallRuleDrawer
+            {...props}
+            category={category}
+            mode="view"
+            ruleToModifyOrView={{
+              ruleset: mockData.id,
+              originalIndex: 0,
+              status: 'NEW',
+            }}
+          />
+        );
+
+      // Drawer title
       expect(
         getByText(`${capitalize(category)} Rule Set details`)
       ).toBeVisible();
 
-      // Renders Rule Set details Drawer labels and cancel button
+      // Labels
       const labels = [
         'Label',
         'ID',
@@ -172,10 +215,30 @@ describe('ViewRuleSetDetailsDrawer', () => {
         'Created',
         'Updated',
       ];
+      labels.forEach((label) => expect(getByText(`${label}:`)).toBeVisible());
 
-      labels.map((label) => expect(getByText(`${label}:`)).toBeVisible());
+      // Check ID value
+      expect(getByText(`${mockData.id}`)).toBeVisible();
 
-      // Rule Set rules section label
+      if (mockData.deleted) {
+        // Marked for deletion status section
+        expect(getByText('Marked for deletion:')).toBeVisible();
+        expect(getByText('2025-11-19 00:21')).toBeVisible();
+        // Tooltip icon should exist
+        const tooltipIcon = getByTestId('tooltip-info-icon');
+        expect(tooltipIcon).toBeInTheDocument();
+
+        // Tooltip text should exist
+        await userEvent.hover(tooltipIcon);
+        expect(
+          await findByText(RULESET_MARKED_FOR_DELETION_TEXT)
+        ).toBeVisible();
+      } else {
+        // Marked for deletion status section should not exist
+        expect(queryByText('Marked for deletion:')).not.toBeInTheDocument();
+      }
+
+      // Rules section
       expect(getByText(`${capitalize(category)} Rules`)).toBeVisible();
 
       // Cancel button
