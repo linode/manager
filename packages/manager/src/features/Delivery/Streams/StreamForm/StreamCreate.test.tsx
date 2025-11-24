@@ -56,9 +56,9 @@ describe('StreamCreate', () => {
         await waitFor(() => {
           expect(hostInput).toBeDefined();
         });
-        await userEvent.type(hostInput, 'Test');
+        await userEvent.type(hostInput, 'test');
         const bucketInput = screen.getByLabelText('Bucket');
-        await userEvent.type(bucketInput, 'Test');
+        await userEvent.type(bucketInput, 'test');
         const accessKeyIDInput = screen.getByLabelText('Access Key ID');
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
