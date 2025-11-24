@@ -115,3 +115,14 @@ export const sortString = (_a: string, _b: string) => {
 const stripHyphen = (str: string) => {
   return str.match(/-/) ? str.split('-')[0] : str;
 };
+
+export const firewallRuleCreateOptions = [
+  {
+    label: 'Create a Rule',
+    value: 'rule',
+  },
+  {
+    label: 'Reference Rule Set',
+    value: 'ruleset',
+  },
+] as const;
