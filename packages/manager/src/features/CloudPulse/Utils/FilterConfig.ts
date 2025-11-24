@@ -14,11 +14,9 @@ import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import { filterKubernetesClusters } from './utils';
 
 import type { AssociatedEntityType } from '../shared/types';
-import type {
-  CloudPulseServiceTypeFiltersConfiguration,
-} from './models';
-import type { KubernetesCluster } from '@linode/api-v4';
+import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type { CloudPulseServiceTypeFilterMap } from './models';
+import type { KubernetesCluster } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
