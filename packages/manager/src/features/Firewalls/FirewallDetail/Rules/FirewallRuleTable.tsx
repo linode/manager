@@ -23,7 +23,6 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import Undo from 'src/assets/icons/undo.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -55,13 +54,13 @@ import {
   StyledTableRow,
 } from './FirewallRuleTable.styles';
 import { sortPortString } from './shared';
+import { useStyles } from './shared.styles';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import type { Theme } from '@linode/ui';
 import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
@@ -361,19 +360,6 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     transition: isActive ? transition : 'none',
     zIndex: isDragging ? 9999 : 0,
   } as const;
-
-  const useStyles = makeStyles()((theme: Theme) => ({
-    copyIcon: {
-      '& svg': {
-        height: '1em',
-        width: '1em',
-      },
-      color: theme.palette.primary.main,
-      display: 'inline-block',
-      position: 'relative',
-      marginTop: theme.spacingFunction(2),
-    },
-  }));
 
   const { classes } = useStyles();
 

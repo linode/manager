@@ -348,26 +348,6 @@ export const KubernetesPlanContainer = (
 
         const shouldDisplayPagination = !shouldDisplayNoRegionSelectedMessage;
 
-        const dividerTables = planSelectionDividers
-          .map((divider) => ({
-            planType: divider.planType,
-            tables: divider.tables
-              .map((table) => ({
-                filterOptions: table,
-                plans: table.planFilter
-                  ? paginatedPlans.filter(table.planFilter)
-                  : paginatedPlans,
-              }))
-              .filter((table) => table.plans.length > 0),
-          }))
-          .filter((divider) => divider.tables.length > 0);
-
-        const activeDivider = dividerTables.find(
-          (divider) => divider.planType === planType
-        );
-
-        const hasActiveGpuDivider = planType === 'gpu' && activeDivider;
-
         return (
           <>
             <Grid container spacing={2}>
@@ -399,21 +379,6 @@ export const KubernetesPlanContainer = (
                     text={tableEmptyState.message}
                     variant="info"
                   />
-                ) : hasActiveGpuDivider ? (
-                  activeDivider.tables.map(({ filterOptions, plans }, idx) => (
-                    <React.Fragment
-                      key={`k8-mobile-${filterOptions.header ?? idx}`}
-                    >
-                      {filterOptions.header ? (
-                        <Grid size={12}>
-                          <Typography variant="h3">
-                            {filterOptions.header}
-                          </Typography>
-                        </Grid>
-                      ) : null}
-                      {renderPlanSelection(plans)}
-                    </React.Fragment>
-                  ))
                 ) : (
                   renderPlanSelection(paginatedPlans)
                 )}
@@ -425,31 +390,15 @@ export const KubernetesPlanContainer = (
                     xs: 12,
                   }}
                 >
-                  {hasActiveGpuDivider ? (
-                    activeDivider.tables.map(
-                      ({ filterOptions, plans }, idx) => (
-                        <KubernetesPlanSelectionTable
-                          filterOptions={filterOptions}
-                          key={`k8-plan-filter-${idx}`}
-                          plans={plans}
-                          renderPlanSelection={renderPlanSelection}
-                          shouldDisplayNoRegionSelectedMessage={
-                            shouldDisplayNoRegionSelectedMessage
-                          }
-                        />
-                      )
-                    )
-                  ) : (
-                    <KubernetesPlanSelectionTable
-                      filterEmptyStateMessage={tableEmptyState?.message}
-                      key={planType ?? 'all'}
-                      plans={paginatedPlans}
-                      renderPlanSelection={renderPlanSelection}
-                      shouldDisplayNoRegionSelectedMessage={
-                        shouldDisplayNoRegionSelectedMessage
-                      }
-                    />
-                  )}
+                  <KubernetesPlanSelectionTable
+                    filterEmptyStateMessage={tableEmptyState?.message}
+                    key={planType ?? 'all'}
+                    plans={paginatedPlans}
+                    renderPlanSelection={renderPlanSelection}
+                    shouldDisplayNoRegionSelectedMessage={
+                      shouldDisplayNoRegionSelectedMessage
+                    }
+                  />
                 </Grid>
               </Hidden>
             </Grid>
@@ -459,6 +408,7 @@ export const KubernetesPlanContainer = (
                 customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
+                minPageSize={PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value}
                 page={page}
                 pageSize={pageSize}
                 sx={{
