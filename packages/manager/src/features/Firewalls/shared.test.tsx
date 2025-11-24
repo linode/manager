@@ -8,9 +8,11 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   allIPv4,
   allIPv6,
+  buildPrefixListMap,
   generateAddressesLabel,
   generateAddressesLabelV2,
   predefinedFirewallFromRule,
+  PrefixListMap,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from './shared';
 
@@ -151,6 +153,61 @@ describe('generateAddressLabel', () => {
     expect(generateAddressesLabel({ ipv4: undefined, ipv6: undefined })).toBe(
       'None'
     );
+  });
+});
+
+describe('buildPrefixListMap', () => {
+  it('returns empty map if no input', () => {
+    const result = buildPrefixListMap({});
+    expect(result).toEqual({});
+  });
+
+  it('maps IPv4 prefix lists correctly', () => {
+    const ipv4 = ['pl:example1', '192.168.0.1', 'pl:example2'];
+    const result: PrefixListMap = buildPrefixListMap({ ipv4 });
+
+    expect(result).toEqual({
+      'pl:example1': { ipv4: true, ipv6: false },
+      'pl:example2': { ipv4: true, ipv6: false },
+    });
+  });
+
+  it('maps IPv6 prefix lists correctly', () => {
+    const ipv6 = ['pl:example1', 'fe80::1', 'pl:example2'];
+    const result: PrefixListMap = buildPrefixListMap({ ipv6 });
+
+    expect(result).toEqual({
+      'pl:example1': { ipv4: false, ipv6: true },
+      'pl:example2': { ipv4: false, ipv6: true },
+    });
+  });
+
+  it('maps both IPv4 and IPv6 for the same prefix list', () => {
+    const ipv4 = ['pl:example1'];
+    const ipv6 = ['pl:example1'];
+    const result: PrefixListMap = buildPrefixListMap({ ipv4, ipv6 });
+
+    expect(result).toEqual({
+      'pl:example1': { ipv4: true, ipv6: true },
+    });
+  });
+
+  it('ignores non-prefix list IPs', () => {
+    const ipv4 = ['192.168.0.1'];
+    const ipv6 = ['fe80::1'];
+    const result: PrefixListMap = buildPrefixListMap({ ipv4, ipv6 });
+
+    expect(result).toEqual({});
+  });
+
+  it('handles duplicates correctly', () => {
+    const ipv4 = ['pl:duplicate-example', 'pl:duplicate-example'];
+    const ipv6 = ['pl:duplicate-example'];
+    const result: PrefixListMap = buildPrefixListMap({ ipv4, ipv6 });
+
+    expect(result).toEqual({
+      'pl:duplicate-example': { ipv4: true, ipv6: true },
+    });
   });
 });
 
