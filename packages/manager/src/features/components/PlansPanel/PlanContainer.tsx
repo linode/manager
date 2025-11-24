@@ -443,75 +443,26 @@ export const PlanContainer = (props: PlanContainerProps) => {
                     variant="info"
                   />
                 ) : (
-                  planSelectionDividers.map((planSelectionDivider) =>
-                    planType === planSelectionDivider.planType
-                      ? planSelectionDivider.tables.map((table) => {
-                          const filteredPlans = table.planFilter
-                            ? paginatedPlans.filter(table.planFilter)
-                            : paginatedPlans;
-                          const tableRows = renderPlanSelection(filteredPlans);
-
-                          return [
-                            filteredPlans.length > 0 && (
-                              <Grid key={table.header} size={12}>
-                                <Typography variant="h3">
-                                  {table.header}
-                                </Typography>
-                              </Grid>
-                            ),
-                            tableRows,
-                          ];
-                        })
-                      : renderPlanSelection(paginatedPlans)
-                  )
+                  renderPlanSelection(paginatedPlans)
                 )}
               </Hidden>
               <Hidden lgDown={isCreate} mdDown={!isCreate}>
                 <Grid size={12}>
-                  {planSelectionDividers.map((planSelectionDivider) =>
-                    planType === planSelectionDivider.planType ? (
-                      planSelectionDivider.tables.map((table, idx) => {
-                        const filteredPlans = table.planFilter
-                          ? paginatedPlans.filter(table.planFilter)
-                          : paginatedPlans;
-                        if (filteredPlans.length === 0) {
-                          return null;
-                        }
-
-                        return (
-                          <PlanSelectionTable
-                            filterOptions={{
-                              header: table.header,
-                            }}
-                            key={`plan-filter-${idx}`}
-                            plans={filteredPlans}
-                            renderPlanSelection={renderPlanSelection}
-                            shouldDisplayNoRegionSelectedMessage={
-                              shouldDisplayNoRegionSelectedMessage
-                            }
-                            showNetwork={showNetwork}
-                            showTransfer={showTransfer}
-                          />
-                        );
-                      })
-                    ) : (
-                      <PlanSelectionTable
-                        filterEmptyStateMessage={tableEmptyState?.message}
-                        key={planType}
-                        plans={paginatedPlans}
-                        planType={planType}
-                        renderPlanSelection={renderPlanSelection}
-                        shouldDisplayNoRegionSelectedMessage={
-                          shouldDisplayNoRegionSelectedMessage
-                        }
-                        showNetwork={showNetwork}
-                        showTransfer={showTransfer}
-                        showUsableStorage={
-                          isDatabaseCreateFlow || isDatabaseResizeFlow
-                        }
-                      />
-                    )
-                  )}
+                  <PlanSelectionTable
+                    filterEmptyStateMessage={tableEmptyState?.message}
+                    key={planType}
+                    plans={paginatedPlans}
+                    planType={planType}
+                    renderPlanSelection={renderPlanSelection}
+                    shouldDisplayNoRegionSelectedMessage={
+                      shouldDisplayNoRegionSelectedMessage
+                    }
+                    showNetwork={showNetwork}
+                    showTransfer={showTransfer}
+                    showUsableStorage={
+                      isDatabaseCreateFlow || isDatabaseResizeFlow
+                    }
+                  />
                 </Grid>
               </Hidden>
             </Grid>
