@@ -5,7 +5,8 @@ import React, { useMemo } from 'react';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
-import { deepEqual, filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
+import { filterEndpointsUsingRegion } from '../Utils/FilterBuilder';
+import { deepEqual } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type {
