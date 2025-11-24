@@ -2,7 +2,6 @@ import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import {
-  ENDPOINT,
   PARENT_ENTITY_REGION,
   REFRESH,
   REGION,
@@ -58,21 +57,6 @@ export const CloudPulseDashboardRenderer = React.memo(
       );
     }
 
-    const getResources = () => {
-      if (dashboard.id === 10) {
-        return Array.isArray(filterValue[ENDPOINT])
-          ? filterValue[ENDPOINT].map(String)
-          : [];
-      }
-      if (Array.isArray(filterValue[RESOURCE_ID])) {
-        return filterValue[RESOURCE_ID].map(String);
-      }
-      if (typeof filterValue[RESOURCE_ID] === 'string') {
-        return [filterValue[RESOURCE_ID]];
-      }
-      return [];
-    };
-
     return (
       <CloudPulseDashboard
         additionalFilters={getMetricsCall}
@@ -95,7 +79,13 @@ export const CloudPulseDashboardRenderer = React.memo(
             ? (filterValue[REGION] as string)
             : undefined
         }
-        resources={getResources()}
+        resources={
+          Array.isArray(filterValue[RESOURCE_ID])
+            ? filterValue[RESOURCE_ID].map(String)
+            : typeof filterValue[RESOURCE_ID] === 'string'
+              ? [filterValue[RESOURCE_ID]]
+              : []
+        }
         savePref={true}
         serviceType={dashboard.service_type}
         tags={

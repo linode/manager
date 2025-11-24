@@ -1,6 +1,8 @@
 import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
+import { ENDPOINT } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews } from './models';
+import { isEndpointsOnlyDashboard } from './utils';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
@@ -55,7 +57,9 @@ export const getDashboardProperties = (
     }),
     dashboardId: dashboardObj.id,
     duration: timeDuration ?? defaultTimeDuration(),
-    resources: [String(resource)],
+    resources: isEndpointsOnlyDashboard(dashboardObj.id)
+      ? []
+      : [String(resource)],
     serviceType: dashboardObj.service_type,
     savePref: false,
     groupBy,
@@ -148,13 +152,20 @@ export const checkIfFilterNeededInMetricsCall = (
 export const constructDimensionFilters = (
   props: ReusableDashboardFilterUtilProps
 ): CloudPulseMetricsAdditionalFilters[] => {
-  const { dashboardObj, filterValue } = props;
-  return Object.keys(filterValue)
+  const { dashboardObj, filterValue, resource } = props;
+  const filters = Object.keys(filterValue)
     .filter((key) => checkIfFilterNeededInMetricsCall(key, dashboardObj.id))
     .map((key) => ({
       filterKey: key,
       filterValue: filterValue[key],
     }));
+  if (isEndpointsOnlyDashboard(dashboardObj.id)) {
+    filters.push({
+      filterKey: ENDPOINT,
+      filterValue: [String(resource)],
+    });
+  }
+  return filters;
 };
 
 /**

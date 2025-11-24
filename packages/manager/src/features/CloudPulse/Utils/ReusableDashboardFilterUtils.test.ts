@@ -135,6 +135,18 @@ it('test constructDimensionFilters method', () => {
   expect(result[0].filterValue).toEqual('primary');
 });
 
+it('test constructDimensionFilters method for endpoints only dashboard', () => {
+  const result = constructDimensionFilters({
+    dashboardObj: { ...mockDashboard, id: 10, service_type: 'objectstorage' },
+    filterValue: {},
+    resource: 'us-east-1.linodeobjects.com',
+    groupBy: [],
+  });
+  expect(result.length).toEqual(1);
+  expect(result[0].filterKey).toEqual('endpoint');
+  expect(result[0].filterValue).toEqual(['us-east-1.linodeobjects.com']);
+});
+
 it('test checkIfFilterNeededInMetricsCall method', () => {
   let result = checkIfFilterNeededInMetricsCall('region', 2);
   expect(result).toEqual(false);

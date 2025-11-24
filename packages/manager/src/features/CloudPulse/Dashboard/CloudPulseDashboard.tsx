@@ -150,7 +150,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
-    Boolean(resources) && !isDashboardLoading && !isDashboardApiError
+    !isDashboardLoading && !isDashboardApiError
   );
 
   if (isDashboardApiError) {
