@@ -8,3 +8,4 @@ export const transformationAllowedOperators: DimensionFilterOperatorType[] = [
 
 export const LINODE_DIMENSION_LABEL = 'linode_id';
 export const VPC_SUBNET_DIMENSION_LABEL = 'vpc_subnet_id';
+export const NODEBALANCER_DIMENSION_LABEL = 'nodebalancer_id';
