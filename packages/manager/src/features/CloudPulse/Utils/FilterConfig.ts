@@ -578,7 +578,7 @@ export const getResourcesFilterConfig = (
   }
   // Get the resources filter configuration for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
-  if (dashboardId === 10) {
+  if (isEndpointsOnlyDashboard(dashboardId)) {
     return filterConfig?.filters.find(
       (filter) => filter.configuration.filterKey === ENDPOINT
     )?.configuration;

@@ -581,10 +581,10 @@ export const getValidSortedEndpoints = (
   const visitedEndpoints = new Set<string>();
   const uniqueEndpoints: CloudPulseResources[] = [];
 
-  buckets.forEach(({ s3_endpoint, region }) => {
-    if (s3_endpoint && region && !visitedEndpoints.has(s3_endpoint)) {
-      visitedEndpoints.add(s3_endpoint);
-      uniqueEndpoints.push({ id: s3_endpoint, label: s3_endpoint, region });
+  buckets.forEach(({ s3_endpoint: s3Endpoint, region }) => {
+    if (s3Endpoint && region && !visitedEndpoints.has(s3Endpoint)) {
+      visitedEndpoints.add(s3Endpoint);
+      uniqueEndpoints.push({ id: s3Endpoint, label: s3Endpoint, region });
     }
   });
 
