@@ -1,5 +1,5 @@
 import { useFirewallRuleSetQuery } from '@linode/queries';
-import { ActionsPanel, Box, Chip, Paper, TooltipIcon } from '@linode/ui';
+import { ActionsPanel, Box, Paper, TooltipIcon } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -10,7 +10,9 @@ import {
   generateAddressesLabelV2,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
+import { RULESET_MARKED_FOR_DELETION_TEXT } from './shared';
 import {
+  StyledChip,
   StyledLabel,
   StyledListItem,
   StyledWarningIcon,
@@ -114,7 +116,7 @@ export const FirewallRuleSetDetailsView = (
               padding: 0,
               mb: 0.1,
             }}
-            text="This rule set will be automatically deleted when it’s no longer referenced by other firewalls."
+            text={RULESET_MARKED_FOR_DELETION_TEXT}
           />
         </StyledListItem>
       )}
@@ -139,24 +141,9 @@ export const FirewallRuleSetDetailsView = (
               padding: `${theme.spacingFunction(4)} 0`,
             })}
           >
-            <Chip
+            <StyledChip
+              action={rule.action}
               label={capitalize(rule.action?.toLowerCase() ?? '')}
-              sx={(theme) => ({
-                background:
-                  rule.action === 'ACCEPT'
-                    ? theme.tokens.component.Badge.Positive.Subtle.Background
-                    : theme.tokens.component.Badge.Negative.Subtle.Background,
-                color:
-                  rule.action === 'ACCEPT'
-                    ? theme.tokens.component.Badge.Positive.Subtle.Text
-                    : theme.tokens.component.Badge.Negative.Subtle.Text,
-                font: theme.font.bold,
-                width: '51px',
-                fontSize: theme.tokens.font.FontSize.Xxxs,
-                marginRight: theme.spacingFunction(6),
-                flexShrink: 0,
-                alignSelf: 'flex-start',
-              })}
             />
             <Box>
               {rule.protocol};&nbsp;{rule.ports};&nbsp;

@@ -1,3 +1,4 @@
+import { capitalize } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -22,7 +23,7 @@ import { PORT_PRESETS } from './shared';
 
 import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
-import type { FirewallRuleError } from './shared';
+import type { Category, FirewallRuleError } from './shared';
 import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 
 const mockOnClose = vi.fn();
@@ -149,37 +150,38 @@ describe('ViewRuleSetDetailsDrawer', () => {
     spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
   });
 
-  it('renders the drawer title', () => {
-    const { getByText } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="view" />
-    );
+  it.each(['inbound', 'outbound'] as Category[])(
+    'renders the %s view ruleset drawer',
+    (category) => {
+      const { getByText, getByRole } = renderWithTheme(
+        <FirewallRuleDrawer {...props} category={category} mode="view" />
+      );
 
-    expect(getByText('Inbound Rule Set details')).toBeVisible();
-  });
+      // Renders the drawer title
+      expect(
+        getByText(`${capitalize(category)} Rule Set details`)
+      ).toBeVisible();
 
-  it('renders Rule Set details Drawer labels and cancel button', () => {
-    const { getByText, getByRole } = renderWithTheme(
-      <FirewallRuleDrawer {...props} category="inbound" mode="view" />
-    );
+      // Renders Rule Set details Drawer labels and cancel button
+      const labels = [
+        'Label',
+        'ID',
+        'Description',
+        'Service Defined',
+        'Version',
+        'Created',
+        'Updated',
+      ];
 
-    const labels = [
-      'Label',
-      'ID',
-      'Description',
-      'Service Defined',
-      'Version',
-      'Created',
-      'Updated',
-    ];
+      labels.map((label) => expect(getByText(`${label}:`)).toBeVisible());
 
-    labels.map((label) => expect(getByText(`${label}:`)).toBeVisible());
+      // Rule Set rules section label
+      expect(getByText(`${capitalize(category)} Rules`)).toBeVisible();
 
-    // Rule Set rules section label
-    expect(getByText(`Inbound Rules`)).toBeVisible();
-
-    // Cancel button
-    expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
-  });
+      // Cancel button
+      expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+    }
+  );
 });
 
 describe('utilities', () => {
