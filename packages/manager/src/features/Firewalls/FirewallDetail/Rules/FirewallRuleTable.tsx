@@ -317,10 +317,12 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   const isRuleSetRowEnabled =
     isRuleSetRow && isFirewallRulesetsPrefixlistsEnabled;
 
+  const isValidRuleSetId = ruleset !== undefined && ruleset !== null;
+
   const { data: rulesetDetails, isLoading: isRuleSetLoading } =
     useFirewallRuleSetQuery(
       ruleset ?? -1,
-      ruleset !== undefined && ruleset !== null && isRuleSetRowEnabled
+      isValidRuleSetId && isRuleSetRowEnabled
     );
 
   const actionMenuProps = {
