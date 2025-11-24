@@ -11,10 +11,10 @@ import {
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
-import { filterKubernetesClusters } from './utils';
+import { filterKubernetesClusters, getValidSortedEndpoints } from './utils';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
-import type { KubernetesCluster } from '@linode/api-v4';
+import type { KubernetesCluster, ObjectStorageBucket } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -426,6 +426,8 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           name: 'Endpoints',
           priority: 2,
           neededInViews: [CloudPulseAvailableViews.central],
+          filterFn: (resources: ObjectStorageBucket[]) =>
+            getValidSortedEndpoints(resources),
         },
         name: 'Endpoints',
       },
@@ -443,6 +445,45 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           priority: 3,
         },
         name: 'Buckets',
+      },
+    ],
+    serviceType: 'objectstorage',
+  };
+
+export const ENDPOINT_DASHBOARD_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['objectstorage'],
+    filters: [
+      {
+        configuration: {
+          filterKey: REGION,
+          children: [ENDPOINT],
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'Region',
+          priority: 1,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Region',
+      },
+      {
+        configuration: {
+          dimensionKey: 'endpoint',
+          dependency: [REGION],
+          filterKey: ENDPOINT,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: false,
+          isMultiSelect: true,
+          hasRestrictedSelections: true,
+          name: 'Endpoints',
+          priority: 2,
+          neededInViews: [CloudPulseAvailableViews.central],
+          filterFn: (resources: ObjectStorageBucket[]) =>
+            getValidSortedEndpoints(resources),
+        },
+        name: 'Endpoints',
       },
     ],
     serviceType: 'objectstorage',
@@ -529,4 +570,5 @@ export const FILTER_CONFIG: Readonly<
   [7, BLOCKSTORAGE_CONFIG],
   [8, FIREWALL_NODEBALANCER_CONFIG],
   [9, LKE_CONFIG],
+  [10, ENDPOINT_DASHBOARD_CONFIG],
 ]);

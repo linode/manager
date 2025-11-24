@@ -2,7 +2,10 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
 import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
-import { getAssociatedEntityType } from '../Utils/utils';
+import {
+  getAssociatedEntityType,
+  isEndpointsOnlyDashboard,
+} from '../Utils/utils';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
@@ -62,9 +65,12 @@ export const useGlobalDimensions = (
     metricDefinition?.data ?? [],
     dashboard
   );
+  const baseDimensions = getCommonDimensions(metricDimensions);
+  const shouldIncludeDefault = !isEndpointsOnlyDashboard(dashboardId ?? 0);
+
   const commonDimensions = [
-    defaultOption,
-    ...getCommonDimensions(metricDimensions),
+    ...(shouldIncludeDefault ? [defaultOption] : []),
+    ...baseDimensions,
   ];
 
   const commonGroups = getCommonGroups(

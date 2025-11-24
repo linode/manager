@@ -1,7 +1,11 @@
 import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
-import { kubernetesClusterFactory, serviceTypesFactory } from 'src/factories';
+import {
+  kubernetesClusterFactory,
+  objectStorageBucketFactoryGen2,
+  serviceTypesFactory,
+} from 'src/factories';
 import {
   firewallEntityfactory,
   firewallFactory,
@@ -30,6 +34,8 @@ import {
   getEnabledServiceTypes,
   getFilteredDimensions,
   getResourcesFilterConfig,
+  getValidSortedEndpoints,
+  isEndpointsOnlyDashboard,
   isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -716,5 +722,51 @@ describe('getFilteredDimensions', () => {
 
     // with no metric definitions, mergedDimensions is undefined and filters should not pass validation
     expect(result).toEqual([]);
+  });
+});
+
+describe('getValidSortedEndpoints', () => {
+  it('should return an empty array when buckets are undefined', () => {
+    expect(getValidSortedEndpoints(undefined)).toEqual([]);
+  });
+  it('should return the valid and unique sorted endpoints', () => {
+    const buckets = [
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'a',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'b',
+        region: undefined,
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: undefined,
+        region: 'us-east',
+      }),
+    ];
+    // Only a and c are valid, so they are sorted and returned
+    expect(getValidSortedEndpoints(buckets)).toEqual([
+      { id: 'a', label: 'a', region: 'us-east' },
+      { id: 'c', label: 'c', region: 'us-east' },
+    ]);
+  });
+});
+
+describe('isEndpointsOnlyDashboard', () => {
+  it('should return true when the dashboard is an endpoints only dashboard', () => {
+    // Dashboard ID 10 is an endpoints only dashboard
+    expect(isEndpointsOnlyDashboard(10)).toBe(true);
+  });
+  it('should return false when the dashboard is not an endpoints only dashboard', () => {
+    // Dashboard ID 6 is not an endpoints only dashboard, rather a buckets dashboard
+    expect(isEndpointsOnlyDashboard(6)).toBe(false);
   });
 });
