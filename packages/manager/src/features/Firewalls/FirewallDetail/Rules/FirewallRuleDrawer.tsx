@@ -158,18 +158,8 @@ export const FirewallRuleDrawer = React.memo(
       return errors;
     };
 
-    const drawerViewOrEditNotFoundError =
-      mode !== 'create' && ruleToModifyOrView === undefined
-        ? 'Not Found'
-        : null;
-
     return (
-      <Drawer
-        error={drawerViewOrEditNotFoundError}
-        onClose={onClose}
-        open={isOpen}
-        title={title}
-      >
+      <Drawer onClose={onClose} open={isOpen} title={title}>
         {mode === 'create' && isFirewallRulesetsPrefixlistsEnabled && (
           <Grid container spacing={2}>
             {firewallRuleCreateOptions.map((option) => (
