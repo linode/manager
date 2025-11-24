@@ -599,3 +599,23 @@ export const getAssociatedEntityType = (
   }
   return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
 };
+
+/**
+ * @param dashboardId id of the dashboard
+ * @returns whether dashboard is an endpoints only dashboard
+ */
+export const isEndpointsOnlyDashboard = (dashboardId: number): boolean => {
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (!filterConfig) {
+    return false;
+  }
+  const endpointsFilter = filterConfig?.filters.find(
+    (filter) => filter.name === 'Endpoints'
+  );
+  if (endpointsFilter) {
+    // Verify if the dashboard has buckets filter, if not then it is an endpoints only dashboard
+    return !filterConfig.filters.some((filter) => filter.name === 'Buckets');
+  }
+
+  return false;
+};

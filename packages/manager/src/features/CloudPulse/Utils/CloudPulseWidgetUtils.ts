@@ -3,6 +3,7 @@ import { DateTimeRangePicker } from '@linode/ui';
 import { getMetrics } from '@linode/utilities';
 
 import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
+import { isEndpointsOnlyDashboard } from './FilterConfig';
 import {
   convertValueToUnit,
   formatToolTip,
@@ -350,8 +351,8 @@ export const getCloudPulseMetricRequest = (
     groupBy,
     linodeRegion,
     region,
-    dashboardId,
     serviceType,
+    dashboardId,
   } = props;
   const preset = duration.preset;
   const presetDuration = getTimeDurationFromPreset(preset);
@@ -360,7 +361,9 @@ export const getCloudPulseMetricRequest = (
       presetDuration === undefined
         ? { end: duration.end, start: duration.start }
         : undefined,
-    entity_ids: getEntityIds(resources, entityIds, widget, dashboardId),
+    entity_ids: isEndpointsOnlyDashboard(dashboardId)
+      ? undefined
+      : getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: presetDuration,
@@ -393,12 +396,9 @@ export const getEntityIds = (
   resources: CloudPulseResources[],
   entityIds: string[],
   widget: Widgets,
-  dashboardId: number
+  serviceType: CloudPulseServiceType
 ) => {
-  if (dashboardId === 10) {
-    return undefined;
-  }
-  if (dashboardId === 6) {
+  if (serviceType === 'objectstorage') {
     return entityIds;
   }
   return resources

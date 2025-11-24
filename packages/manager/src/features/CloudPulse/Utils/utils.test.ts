@@ -25,6 +25,7 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
+import { isEndpointsOnlyDashboard } from './FilterConfig';
 import {
   arePortsValid,
   areValidInterfaceIds,
@@ -747,5 +748,16 @@ describe('getValidSortedEndpoints', () => {
       { id: 'a', label: 'a', region: 'us-east' },
       { id: 'c', label: 'c', region: 'us-east' },
     ]);
+  });
+});
+
+describe('isEndpointsOnlyDashboard', () => {
+  it('should return true when the dashboard is an endpoints only dashboard', () => {
+    // Dashboard ID 10 is an endpoints only dashboard
+    expect(isEndpointsOnlyDashboard(10)).toBe(true);
+  });
+  it('should return false when the dashboard is not an endpoints only dashboard', () => {
+    // Dashboard ID 6 is not an endpoints only dashboard, rather a buckets dashboard
+    expect(isEndpointsOnlyDashboard(6)).toBe(false);
   });
 });

@@ -142,8 +142,6 @@ export const RenderWidgets = React.memo(
 
     if (
       !dashboard.service_type ||
-      // eslint-disable-next-line sonarjs/no-inverted-boolean-check
-      !(resources.length > 0) ||
       (!isJweTokenFetching && !jweToken?.token) ||
       !resourceList?.length
     ) {
