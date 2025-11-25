@@ -2,7 +2,7 @@ import { IconButton } from '@linode/ui';
 import React from 'react';
 
 import { CloudPulseTooltip } from 'src/features/CloudPulse/shared/CloudPulseTooltip';
-import { getAssociatedEntityType } from 'src/features/CloudPulse/Utils/utils';
+import { getAssociatedEntityType } from 'src/features/CloudPulse/Utils/FilterConfig';
 
 import { CloudPulseDimensionFilterDrawer } from './CloudPulseDimensionFilterDrawer';
 import { CloudPulseDimensionFilterIconWithBadge } from './CloudPulseFilterIconWithBadge';
