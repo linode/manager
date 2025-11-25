@@ -68,7 +68,6 @@ export const NetworkLoadBalancersListenerDetailBody = ({
   );
 };
 
-const LabelTypography = styled(Typography)(() => ({
-  fontWeight: 'bold',
-  fontSize: '0.875rem',
+const LabelTypography = styled(Typography)(({ theme }) => ({
+  font: theme.font.bold,
 }));
