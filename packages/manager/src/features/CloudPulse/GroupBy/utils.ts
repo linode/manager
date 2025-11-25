@@ -68,10 +68,9 @@ export const useGlobalDimensions = (
   const baseDimensions = getCommonDimensions(metricDimensions);
   const shouldIncludeDefault = !isEndpointsOnlyDashboard(dashboardId ?? 0);
 
-  const commonDimensions = [
-    ...(shouldIncludeDefault ? [defaultOption] : []),
-    ...baseDimensions,
-  ];
+  const commonDimensions = shouldIncludeDefault
+    ? [defaultOption, ...baseDimensions]
+    : baseDimensions;
 
   const commonGroups = getCommonGroups(
     preference ? preference : (dashboard?.group_by ?? []),
