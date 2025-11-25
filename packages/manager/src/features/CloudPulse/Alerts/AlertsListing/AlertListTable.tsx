@@ -23,7 +23,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import {
   DELETE_ALERT_SUCCESS_MESSAGE,
-  UPDATE_ALERT_SUCCESS_MESSAGE,
+  DISABLE_ALERT_FAILED_MESSAGE,
+  DISABLE_ALERT_SUCCESS_MESSAGE,
+  ENABLE_ALERT_FAILED_MESSAGE,
+  ENABLE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import { AlertsTable } from './AlertsTable';
 import { AlertListingTableLabelMap } from './constants';
@@ -126,7 +129,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleConfirm = React.useCallback(
     (alert: Alert, currentStatus: boolean) => {
       const toggleStatus = currentStatus ? 'disabled' : 'enabled';
-      const errorStatus = currentStatus ? 'Disabling' : 'Enabling';
       setIsUpdating(true);
       editAlertDefinition({
         alertId: alert.id,
@@ -135,15 +137,22 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       })
         .then(() => {
           // Handle success
-          enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
-            variant: 'success',
-          });
+          enqueueSnackbar(
+            currentStatus
+              ? DISABLE_ALERT_SUCCESS_MESSAGE
+              : ENABLE_ALERT_SUCCESS_MESSAGE,
+            {
+              variant: 'success',
+            }
+          );
         })
         .catch((updateError: APIError[]) => {
           // Handle error
           const errorResponse = getAPIErrorOrDefault(
             updateError,
-            `${errorStatus} alert failed`
+            currentStatus
+              ? DISABLE_ALERT_FAILED_MESSAGE
+              : ENABLE_ALERT_FAILED_MESSAGE
           );
           enqueueSnackbar(errorResponse[0].reason, {
             variant: 'error',

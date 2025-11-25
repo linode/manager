@@ -134,6 +134,9 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   enabled: 'active',
   failed: 'error',
   'in progress': 'other',
+  provisioning: 'other',
+  disabling: 'other',
+  enabling: 'other',
 };
 
 export const channelTypeOptions: Item<string, ChannelType>[] = [
@@ -167,11 +170,15 @@ export const dimensionOperatorTypeMap: Record<
   startswith: 'starts with',
   in: 'in',
 };
+
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
   failed: 'Failed',
   'in progress': 'In Progress',
+  disabling: 'Disabling',
+  enabling: 'Enabling',
+  provisioning: 'Provisioning',
 };
 
 export const alertStatusOptions: Item<string, AlertStatusType>[] =
@@ -198,10 +205,20 @@ export const MULTILINE_ERROR_SEPARATOR = '|';
 export const SINGLELINE_ERROR_SEPARATOR = '\t';
 
 export const CREATE_ALERT_SUCCESS_MESSAGE =
-  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+  'Alert created. It may take up to 5 minutes for your alert to be enabled.';
 
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
-  'Alert successfully updated. It may take a few minutes for your changes to take effect.';
+  'Alert updated. It may take up to 5 minutes for changes to be applied.';
+
+export const DISABLE_ALERT_SUCCESS_MESSAGE =
+  'Alert disabled. It may take up to 5 minutes for your changes to take effect.';
+
+export const ENABLE_ALERT_SUCCESS_MESSAGE =
+  'Alert enabled. It may take up to 5 minutes for your changes to take effect.';
+
+export const DISABLE_ALERT_FAILED_MESSAGE = 'Failed to disable an Alert.';
+
+export const ENABLE_ALERT_FAILED_MESSAGE = 'Failed to enable an Alert.';
 
 export const ACCOUNT_GROUP_INFO_MESSAGE =
   'This alert applies to all entities associated with your account, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
