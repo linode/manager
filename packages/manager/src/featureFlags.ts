@@ -191,6 +191,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;

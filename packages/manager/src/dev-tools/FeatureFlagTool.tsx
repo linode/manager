@@ -50,6 +50,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
+  { flag: 'databasePgBouncer', label: 'Database PgBouncer' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },
