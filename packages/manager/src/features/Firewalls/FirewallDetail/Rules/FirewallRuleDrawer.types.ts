@@ -8,7 +8,7 @@ import type {
 import type { FormikProps } from 'formik';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-export type FirewallRuleDrawerMode = 'create' | 'edit';
+export type FirewallRuleDrawerMode = 'create' | 'edit' | 'view';
 
 export interface FirewallRuleDrawerProps {
   category: Category;
@@ -16,7 +16,7 @@ export interface FirewallRuleDrawerProps {
   mode: FirewallRuleDrawerMode;
   onClose: () => void;
   onSubmit: (category: 'inbound' | 'outbound', rule: FirewallRuleType) => void;
-  ruleToModify?: ExtendedFirewallRule;
+  ruleToModifyOrView?: ExtendedFirewallRule;
 }
 
 export interface FormState {

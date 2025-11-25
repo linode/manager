@@ -1356,10 +1356,14 @@ export const handlers = [
               id: 123,
             });
           case 123456789:
-            // Ruleset with larger ID 123456789 & Longer label with 32 chars
+            // Ruleset with larger ID 123456789, Longer label with 32 chars, and
+            // Marked for deletion status
             return firewallRuleSetFactory.build({
               id: 123456789,
               label: 'ruleset-with-a-longer-32ch-label',
+              deleted: '2025-11-18T18:51:11',
+              description:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a fermentum quam. Mauris posuere dapibus aliquet. Ut id dictum magna, vitae congue turpis. Curabitur sollicitudin odio vel lacus vehicula maximus.',
             });
           default:
             return firewallRuleSetFactory.build();
