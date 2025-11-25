@@ -7,7 +7,6 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
-import { arraysEqual } from '../Alerts/Utils/utils';
 import {
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -21,14 +20,11 @@ import {
   PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
-  RESOURCE_ID,
 } from './constants';
-import { FILTER_CONFIG } from './FilterConfig';
 
 import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import type { AssociatedEntityType } from '../shared/types';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
-import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type {
   Alert,
   APIError,
@@ -534,36 +530,6 @@ export const getFilteredDimensions = (
 };
 
 /**
- * @param dashboardId The id of the dashboard
- * @returns The resources filter configuration for the dashboard
- */
-export const getResourcesFilterConfig = (
-  dashboardId: number | undefined
-): CloudPulseServiceTypeFiltersConfiguration | undefined => {
-  if (!dashboardId) {
-    return undefined;
-  }
-  // Get the associated entity type for the dashboard
-  const filterConfig = FILTER_CONFIG.get(dashboardId);
-  return filterConfig?.filters.find(
-    (filter) => filter.configuration.filterKey === RESOURCE_ID
-  )?.configuration;
-};
-
-/**
- * @param dashboardId The id of the dashboard
- * @returns The associated entity type for the dashboard
- */
-export const getAssociatedEntityType = (
-  dashboardId: number | undefined
-): AssociatedEntityType | undefined => {
-  if (!dashboardId) {
-    return undefined;
-  }
-  return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
-};
-
-/**
  *
  * @param resources Firewall resources
  * @param entityType Associated entity type
@@ -598,4 +564,90 @@ export const filterKubernetesClusters = (
   return clusters
     .filter(({ tier }) => tier === 'enterprise')
     .sort((a, b) => a.label.localeCompare(b.label));
+};
+
+/**
+ * @param obj1 The first object to be compared
+ * @param obj2 The second object to be compared
+ * @returns True if, both are equal else false
+ */
+export const deepEqual = <T>(obj1: T, obj2: T): boolean => {
+  if (obj1 === obj2) {
+    return true; // Identical references or values
+  }
+
+  // If either is null or undefined, or they are not of object type, return false
+  if (
+    obj1 === null ||
+    obj2 === null ||
+    typeof obj1 !== 'object' ||
+    typeof obj2 !== 'object'
+  ) {
+    return false;
+  }
+
+  // Handle array comparison separately
+  if (Array.isArray(obj1) && Array.isArray(obj2)) {
+    return compareArrays(obj1, obj2);
+  }
+
+  // Ensure both objects have the same number of keys
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  // Recursively check each key
+  for (const key of keys1) {
+    if (!(key in obj2)) {
+      return false;
+    }
+    // Recursive deep equal check
+    if (!deepEqual((obj1 as any)[key], (obj2 as any)[key])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
+ * @param arr1 Array for comparison
+ * @param arr2 Array for comparison
+ * @returns True if, both the arrays are equal, else false
+ */
+export const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (!deepEqual(arr1[i], arr2[i])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Checks if two arrays are equal, ignores the order of the elements
+ * @param a The first array
+ * @param b The second array
+ * @returns True if the arrays are equal, false otherwise
+ */
+export const arraysEqual = (
+  a: number[] | undefined,
+  b: number[] | undefined
+) => {
+  if (a === undefined && b === undefined) return true;
+  if (a === undefined || b === undefined) return false;
+  if (a.length !== b.length) return false;
+
+  return compareArrays(
+    [...a].sort((x, y) => x - y),
+    [...b].sort((x, y) => x - y)
+  );
 };

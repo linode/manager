@@ -11,10 +11,12 @@ import {
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
-import { filterFirewallResources, filterKubernetesClusters } from './utils';
+import { filterKubernetesClusters } from './utils';
 
+import type { AssociatedEntityType } from '../shared/types';
+import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type { CloudPulseServiceTypeFilterMap } from './models';
-import type { Firewall, KubernetesCluster } from '@linode/api-v4';
+import type { KubernetesCluster } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -236,7 +238,6 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         filterKey: 'resource_id',
-        children: [PARENT_ENTITY_REGION],
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,
@@ -246,14 +247,11 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         placeholder: 'Select Firewalls',
         priority: 1,
         associatedEntityType: 'linode',
-        filterFn: (resources: Firewall[]) =>
-          filterFirewallResources(resources, 'linode'),
       },
       name: 'Firewalls',
     },
     {
       configuration: {
-        dependency: ['resource_id'],
         filterKey: PARENT_ENTITY_REGION,
         filterType: 'string',
         isFilterable: true,
@@ -344,7 +342,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       {
         configuration: {
           filterKey: RESOURCE_ID,
-          children: [PARENT_ENTITY_REGION, NODEBALANCER_ID],
+          children: [NODEBALANCER_ID],
           filterType: 'string',
           isFilterable: true,
           isMetricsFilter: true,
@@ -354,14 +352,11 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           placeholder: 'Select a Firewall',
           priority: 1,
           apiV4QueryKey: queryFactory.resources('firewall'),
-          filterFn: (resources: Firewall[]) =>
-            filterFirewallResources(resources, 'nodebalancer'),
         },
         name: 'Firewall',
       },
       {
         configuration: {
-          dependency: [RESOURCE_ID],
           children: [NODEBALANCER_ID],
           filterKey: PARENT_ENTITY_REGION,
           filterType: 'string',
@@ -536,3 +531,33 @@ export const FILTER_CONFIG: Readonly<
   [8, FIREWALL_NODEBALANCER_CONFIG],
   [9, LKE_CONFIG],
 ]);
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The resources filter configuration for the dashboard
+ */
+export const getResourcesFilterConfig = (
+  dashboardId: number | undefined
+): CloudPulseServiceTypeFiltersConfiguration | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  // Get the associated entity type for the dashboard
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  return filterConfig?.filters.find(
+    (filter) => filter.configuration.filterKey === RESOURCE_ID
+  )?.configuration;
+};
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The associated entity type for the dashboard
+ */
+export const getAssociatedEntityType = (
+  dashboardId: number | undefined
+): AssociatedEntityType | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
+};

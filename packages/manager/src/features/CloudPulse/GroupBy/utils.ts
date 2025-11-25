@@ -2,7 +2,7 @@ import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboar
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
 import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
-import { getAssociatedEntityType } from '../Utils/utils';
+import { getAssociatedEntityType } from '../Utils/FilterConfig';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
