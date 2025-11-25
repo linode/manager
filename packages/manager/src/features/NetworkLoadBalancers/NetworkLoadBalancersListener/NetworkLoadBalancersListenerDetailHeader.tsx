@@ -14,8 +14,7 @@ export const NetworkLoadBalancersListenerDetailHeader = ({ label }: Props) => {
         <Typography
           sx={(theme) => ({
             font: theme.font.bold,
-            fontSize: '0.875rem',
-            padding: '12px 16px',
+            padding: '13px 16px',
           })}
         >
           Listener: {label}
