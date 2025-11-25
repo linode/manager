@@ -18,16 +18,13 @@ const NetworkLoadBalancersListenerDetail = () => {
     from: '/netloadbalancers/$id/listeners/$listenerId',
   });
 
-  const nlbId = Number(id);
-  const listenerIdNum = Number(listenerId);
-
-  const { data: nlb, error, isLoading } = useNetworkLoadBalancerQuery(nlbId);
+  const { data: nlb, error, isLoading } = useNetworkLoadBalancerQuery(id);
 
   // Fetch nodes for this listener
   const { data: nodesData, isLoading: nodesLoading } =
-    useNetworkLoadBalancerNodesQuery(nlbId, listenerIdNum);
+    useNetworkLoadBalancerNodesQuery(id, listenerId);
 
-  const listener = nlb?.listeners?.find((l) => l.id === listenerIdNum);
+  const listener = nlb?.listeners?.find((l) => l.id == listenerId);
 
   if (isLoading) {
     return <CircleProgress />;
