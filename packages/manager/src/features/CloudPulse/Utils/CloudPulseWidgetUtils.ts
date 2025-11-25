@@ -3,7 +3,6 @@ import { DateTimeRangePicker } from '@linode/ui';
 import { getMetrics } from '@linode/utilities';
 
 import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
-import { isEndpointsOnlyDashboard } from './FilterConfig';
 import {
   convertValueToUnit,
   formatToolTip,
