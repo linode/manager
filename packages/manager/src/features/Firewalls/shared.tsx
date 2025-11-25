@@ -389,10 +389,15 @@ export const generateAddressesLabelV2 = (
     elements.push('All IPv6');
   }
 
-  // Build a map of prefix lists
+  // Build a map of prefix lists.
+  // NOTE: If "allowedAllIPv4" or "allowedAllIPv6" is true, we skip those IPs entirely
+  // because "All IPvX" is already represented, and there are no specific addresses to map.
+  const ipv4ForPLMapping = allowedAllIPv4 ? [] : (addresses?.ipv4 ?? []);
+  const ipv6ForPLMapping = allowedAllIPv6 ? [] : (addresses?.ipv6 ?? []);
+
   const prefixListReferenceMap = buildPrefixListReferenceMap({
-    ipv4: allowedAllIPv4 ? [] : (addresses?.ipv4 ?? []),
-    ipv6: allowedAllIPv6 ? [] : (addresses?.ipv6 ?? []),
+    ipv4: ipv4ForPLMapping,
+    ipv6: ipv6ForPLMapping,
   });
 
   // Add prefix list links with merged labels (eg., "pl:system:test (IPv4, IPv6)")
