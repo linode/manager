@@ -59,7 +59,8 @@
     "@linode/tsconfig": "workspace:*",
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
-    "tsup": "^8.4.0"
+    "tsup": "^8.4.0",
+    "@types/node": "^22.13.14"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

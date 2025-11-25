@@ -269,6 +269,7 @@ describe('VPC Subnets table', () => {
 
   it(
     'should show Nodebalancer table head data when table is expanded',
+    { timeout: 15_000 },
     async () => {
       const subnet = subnetFactory.build();
 
@@ -293,8 +294,7 @@ describe('VPC Subnets table', () => {
       await findByText('NodeBalancer');
       await findByText('Backend Status');
       await findByText('VPC IPv4 Range');
-    },
-    { timeout: 15_000 }
+    }
   );
 
   it('should disable "Create Subnet" button when user does not have create_vpc_subnet permission', async () => {

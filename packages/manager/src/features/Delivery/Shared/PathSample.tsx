@@ -1,5 +1,5 @@
 import { streamType, type StreamType } from '@linode/api-v4';
-import { useProfile } from '@linode/queries';
+import { useAccount } from '@linode/queries';
 import { Box, InputLabel, Stack, TooltipIcon, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -15,8 +15,8 @@ const sxTooltipIcon = {
 };
 
 const logType = {
-  [streamType.LKEAuditLogs]: 'com.akamai.audit.k8s',
-  [streamType.AuditLogs]: 'com.akamai.audit.login',
+  [streamType.LKEAuditLogs]: 'k8s',
+  [streamType.AuditLogs]: 'login',
 };
 
 interface PathSampleProps {
@@ -25,10 +25,9 @@ interface PathSampleProps {
 
 export const PathSample = (props: PathSampleProps) => {
   const { value } = props;
-  const fileName = 'akamai_log-000166-1756015362-319597.gz';
   const sampleClusterId = useMemo(
     // eslint-disable-next-line sonarjs/pseudo-random
-    () => Math.floor(Math.random() * 90000) + 10000,
+    () => `lke${Math.floor(Math.random() * 90000) + 10000}`,
     []
   );
 
@@ -43,7 +42,7 @@ export const PathSample = (props: PathSampleProps) => {
     name: 'stream.details.cluster_ids[0]',
   });
 
-  const { data: profile } = useProfile();
+  const { data: account } = useAccount();
   const [month, day, year] = new Date().toLocaleDateString('en-US').split('/');
 
   const setStreamType = (): StreamType => {
@@ -51,6 +50,7 @@ export const PathSample = (props: PathSampleProps) => {
   };
 
   const streamTypeValue = useMemo(setStreamType, [streamTypeFormValue]);
+  const fileName = `akamai_log-000166-1756015362-319597-${logType[streamTypeValue]}.gz`;
 
   const createSamplePath = (): string => {
     let partition = '';
@@ -59,11 +59,11 @@ export const PathSample = (props: PathSampleProps) => {
       partition = `${clusterId ?? sampleClusterId}/`;
     }
 
-    return `/${streamTypeValue}/${logType[streamTypeValue]}/${profile?.uid}/${partition}${year}/${month}/${day}`;
+    return `/${streamTypeValue}/com.akamai.audit/${account?.euuid}/${partition}${year}/${month}/${day}`;
   };
 
   const defaultPath = useMemo(createSamplePath, [
-    profile,
+    account,
     streamTypeValue,
     clusterId,
   ]);
@@ -110,4 +110,5 @@ const StyledValue = styled('span', { label: 'StyledValue' })(({ theme }) => ({
   minHeight: 34,
   padding: theme.spacingFunction(8),
   overflowWrap: 'anywhere',
+  wordBreak: 'break-all',
 }));

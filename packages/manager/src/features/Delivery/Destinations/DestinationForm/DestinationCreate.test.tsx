@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
+import { accountFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
@@ -66,11 +67,11 @@ describe('DestinationCreate', () => {
   );
 
   it('should render Sample Destination Object Name and change its value according to Log Path Prefix input', async () => {
-    const profileUid = 123;
+    const accountEuuid = 'XYZ-123';
     const [month, day, year] = new Date().toLocaleDateString().split('/');
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ uid: profileUid }));
+      http.get('*/account', () => {
+        return HttpResponse.json(accountFactory.build({ euuid: accountEuuid }));
       })
     );
 
@@ -79,7 +80,7 @@ describe('DestinationCreate', () => {
     let samplePath;
     await waitFor(() => {
       samplePath = screen.getByText(
-        `/audit_logs/com.akamai.audit.login/${profileUid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597.gz`
+        `/audit_logs/com.akamai.audit/${accountEuuid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597-login.gz`
       );
       expect(samplePath).toBeInTheDocument();
     });
@@ -89,19 +90,19 @@ describe('DestinationCreate', () => {
     await userEvent.type(logPathPrefixInput, 'test');
     // sample path should be created based on *log path* value
     expect(samplePath!.textContent).toEqual(
-      '/test/akamai_log-000166-1756015362-319597.gz'
+      '/test/akamai_log-000166-1756015362-319597-login.gz'
     );
 
     await userEvent.clear(logPathPrefixInput);
     await userEvent.type(logPathPrefixInput, '/test');
     expect(samplePath!.textContent).toEqual(
-      '/test/akamai_log-000166-1756015362-319597.gz'
+      '/test/akamai_log-000166-1756015362-319597-login.gz'
     );
 
     await userEvent.clear(logPathPrefixInput);
     await userEvent.type(logPathPrefixInput, '/');
     expect(samplePath!.textContent).toEqual(
-      '/akamai_log-000166-1756015362-319597.gz'
+      '/akamai_log-000166-1756015362-319597-login.gz'
     );
   });
 
