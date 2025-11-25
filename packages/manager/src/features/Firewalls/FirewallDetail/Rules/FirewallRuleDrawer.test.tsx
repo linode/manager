@@ -1,10 +1,13 @@
+import { capitalize } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { firewallRuleSetFactory } from 'src/factories';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import * as shared from '../../shared';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import {
   classifyIPs,
@@ -17,12 +20,35 @@ import {
   validateForm,
   validateIPs,
 } from './FirewallRuleDrawer.utils';
-import { PORT_PRESETS } from './shared';
+import { PORT_PRESETS, RULESET_MARKED_FOR_DELETION_TEXT } from './shared';
 
 import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
-import type { FirewallRuleError } from './shared';
-import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import type { Category, FirewallRuleError } from './shared';
+import type {
+  FirewallPolicyType,
+  FirewallRuleSet,
+} from '@linode/api-v4/lib/firewalls/types';
+
+const queryMocks = vi.hoisted(() => ({
+  useFirewallRuleSetQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useFirewallRuleSetQuery: queryMocks.useFirewallRuleSetQuery,
+  };
+});
+
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    getUserTimezone: vi.fn().mockReturnValue('utc'),
+  };
+});
 
 const mockOnClose = vi.fn();
 const mockOnSubmit = vi.fn();
@@ -37,8 +63,12 @@ const props: FirewallRuleDrawerProps = {
   onSubmit: mockOnSubmit,
 };
 
+const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: false });
+
     const { getByText } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
@@ -64,6 +94,165 @@ describe('AddRuleDrawer', () => {
     await userEvent.click(getByText('IPENCAP'));
     expect(getByPlaceholderText('Select a port...')).toBeDisabled();
   });
+});
+
+describe('AddRuleSetDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+  });
+
+  it('renders the drawer title', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    expect(getByText('Add an Inbound Rule or Rule Set')).toBeVisible();
+  });
+
+  it('renders the selection cards', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    expect(getByText(/Create a Rule/i)).toBeVisible();
+    expect(getByText(/Reference Rule Set/i)).toBeVisible();
+  });
+
+  it('renders the Rule Set form and its elements when selection card is clicked', async () => {
+    const { getByText, getByPlaceholderText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    const ruleSetCard = getByText(/Reference Rule Set/i);
+    await userEvent.click(ruleSetCard);
+
+    // Description
+    expect(
+      getByText(
+        'RuleSets are reusable collections of Cloud Firewall rules that use the same fields as individual rules. They let you manage and update multiple rules as a group. You can then apply them across different firewalls by reference.'
+      )
+    ).toBeVisible();
+
+    // Autocomplete field
+    expect(getByText('Rule Set')).toBeVisible();
+    expect(
+      getByPlaceholderText('Type to search or select a Rule Set')
+    ).toBeVisible();
+
+    // Action buttons
+    expect(getByRole('button', { name: 'Add Rule' })).toBeVisible();
+    expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+
+    // Footer text
+    expect(
+      getByText(
+        'Rule changes don’t take effect immediately. You can add or delete rules before saving all your changes to this Firewall.'
+      )
+    ).toBeVisible();
+  });
+
+  it('shows validation message when Rule Set form is submitted without selecting a value', async () => {
+    const { getByText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    // Click the Rule Set Selection card to open the Rule Set form
+    const ruleSetCard = getByText(/Reference Rule Set/i);
+    await userEvent.click(ruleSetCard);
+
+    // Click the "Add Rule" button without selecting the Autocomplete field
+    const addRuleButton = getByRole('button', { name: 'Add Rule' });
+    await userEvent.click(addRuleButton);
+
+    // Expect the validation message to appear
+    getByText('Rule Set is required.');
+  });
+});
+
+describe('ViewRuleSetDetailsDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+  });
+
+  const activeRuleSet = firewallRuleSetFactory.build({ id: 123 });
+  const deletedRuleSet = firewallRuleSetFactory.build({
+    id: 456,
+    deleted: '2025-07-24T04:23:17',
+  });
+
+  it.each([
+    ['inbound', activeRuleSet],
+    ['outbound', activeRuleSet],
+    ['inbound', deletedRuleSet],
+    ['outbound', deletedRuleSet],
+  ] as [Category, FirewallRuleSet][])(
+    'renders %s ruleset drawer (%s)',
+    async (category, mockData) => {
+      queryMocks.useFirewallRuleSetQuery.mockReturnValue({
+        data: mockData,
+        isFetching: false,
+        error: null,
+      });
+
+      const { getByText, getByRole, getByTestId, findByText, queryByText } =
+        renderWithTheme(
+          <FirewallRuleDrawer
+            {...props}
+            category={category}
+            mode="view"
+            ruleToModifyOrView={{
+              ruleset: mockData.id,
+              originalIndex: 0,
+              status: 'NEW',
+            }}
+          />
+        );
+
+      // Drawer title
+      expect(
+        getByText(`${capitalize(category)} Rule Set details`)
+      ).toBeVisible();
+
+      // Labels
+      const labels = [
+        'Label',
+        'ID',
+        'Description',
+        'Service Defined',
+        'Version',
+        'Created',
+        'Updated',
+      ];
+      labels.forEach((label) => expect(getByText(`${label}:`)).toBeVisible());
+
+      // Check ID value
+      expect(getByText(`${mockData.id}`)).toBeVisible();
+
+      if (mockData.deleted) {
+        // Marked for deletion status section
+        expect(getByText('Marked for deletion:')).toBeVisible();
+        expect(getByText('2025-07-24 04:23')).toBeVisible();
+        // Tooltip icon should exist
+        const tooltipIcon = getByTestId('tooltip-info-icon');
+        expect(tooltipIcon).toBeInTheDocument();
+
+        // Tooltip text should exist
+        await userEvent.hover(tooltipIcon);
+        expect(
+          await findByText(RULESET_MARKED_FOR_DELETION_TEXT)
+        ).toBeVisible();
+      } else {
+        // Marked for deletion status section should not exist
+        expect(queryByText('Marked for deletion:')).not.toBeInTheDocument();
+      }
+
+      // Rules section
+      expect(getByText(`${capitalize(category)} Rules`)).toBeVisible();
+
+      // Cancel button
+      expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+    }
+  );
 });
 
 describe('utilities', () => {

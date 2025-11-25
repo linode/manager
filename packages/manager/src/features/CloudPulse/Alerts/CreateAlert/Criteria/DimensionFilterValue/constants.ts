@@ -102,7 +102,7 @@ export interface AutocompleteConfig extends BaseConfig {
   /**
    * Flag to use a custom fetch function instead of the static options.
    */
-  useCustomFetch?: string;
+  useCustomFetch?: string | string[];
 }
 
 /**
@@ -158,6 +158,26 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     },
   },
   linode_id: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: ['firewall', 'blockstorage'],
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: ['firewall', 'blockstorage'],
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+    },
+  },
+  nodebalancer_id: {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
@@ -388,6 +408,10 @@ export interface DimensionFilterAutocompleteProps {
    * List of entity IDs selected in the entity scope.
    */
   entities?: string[];
+  /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: AssociatedEntityType;
   /**
    * Optional error message to display beneath the input.
    */

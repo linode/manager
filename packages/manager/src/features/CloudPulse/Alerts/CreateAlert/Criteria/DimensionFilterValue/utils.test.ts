@@ -1,6 +1,5 @@
 import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 
-import { transformDimensionValue } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
@@ -10,7 +9,8 @@ import {
   getStaticOptions,
   handleValueChange,
   resolveSelectedValues,
-  scopeBasedFilteredBuckets,
+  scopeBasedFilteredResources,
+  transformDimensionValue,
 } from './utils';
 
 import type { Linode } from '@linode/api-v4';
@@ -243,17 +243,17 @@ describe('Utils', () => {
     ];
 
     it('returns all buckets for account scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'account',
-        buckets,
+        resources: buckets,
       });
       expect(result).toEqual(buckets);
     });
 
     it('filters buckets by entity IDs for entity scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'entity',
-        buckets,
+        resources: buckets,
         entities: ['bucket-1', 'bucket-3'],
       });
       expect(result).toEqual([
@@ -263,26 +263,26 @@ describe('Utils', () => {
     });
 
     it('returns empty array if no entities match for entity scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'entity',
-        buckets,
+        resources: buckets,
         entities: ['bucket-99'],
       });
       expect(result).toEqual([]);
     });
 
     it('returns empty array if entities is undefined for entity scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'entity',
-        buckets,
+        resources: buckets,
       });
       expect(result).toEqual([]);
     });
 
     it('filters buckets by region IDs for region scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'region',
-        buckets,
+        resources: buckets,
         selectedRegions: ['us-east', 'eu-central'],
       });
       expect(result).toEqual([
@@ -292,34 +292,34 @@ describe('Utils', () => {
     });
 
     it('returns empty array if no regions match for region scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'region',
-        buckets,
+        resources: buckets,
         selectedRegions: ['ap-south'],
       });
       expect(result).toEqual([]);
     });
 
     it('returns empty array if selectedRegions is undefined for region scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: 'region',
-        buckets,
+        resources: buckets,
       });
       expect(result).toEqual([]);
     });
 
     it('returns all buckets for null scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: null,
-        buckets,
+        resources: buckets,
       });
       expect(result).toEqual(buckets);
     });
 
     it('returns all buckets for unrecognized scope', () => {
-      const result = scopeBasedFilteredBuckets({
+      const result = scopeBasedFilteredResources({
         scope: null,
-        buckets,
+        resources: buckets,
       });
       expect(result).toEqual(buckets);
     });

@@ -32,8 +32,64 @@ export const TRANSFER_COSTS_LINK =
 export const ACCELERATED_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
 
+export const PLAN_PANEL_PAGE_SIZE_OPTIONS = [
+  { label: 'Show 15', value: 15 },
+  { label: 'Show 25', value: 25 },
+  { label: 'Show 50', value: 50 },
+];
+
 // List of plan types that belong to the MTC plan group.
 export const MTC_AVAILABLE_PLAN_TYPES = ['g8-premium-128-ht'];
+
+// ============================================================================
+// Plan Filter Constants
+// ============================================================================
+
+export const PLAN_FILTER_NO_RESULTS_MESSAGE = 'No plans found.';
+
+// G8 Dedicated CPU Plans - Compute Optimized (1:2 RAM:CPU ratio)
+export const G8_DEDICATED_COMPUTE_OPTIMIZED_SLUGS = [
+  'g8-dedicated-4-2', // 4 GB RAM, 2 CPUs
+  'g8-dedicated-8-4', // 8 GB RAM, 4 CPUs
+  'g8-dedicated-16-8', // 16 GB RAM, 8 CPUs
+  'g8-dedicated-32-16', // 32 GB RAM, 16 CPUs
+  'g8-dedicated-64-32', // 64 GB RAM, 32 CPUs
+  'g8-dedicated-96-48', // 96 GB RAM, 48 CPUs
+  'g8-dedicated-128-64', // 128 GB RAM, 64 CPUs
+  'g8-dedicated-256-128', // 256 GB RAM, 128 CPUs
+  'g8-dedicated-512-256', // 512 GB RAM, 256 CPUs
+] as const;
+
+// G8 Dedicated CPU Plans - General Purpose (1:4 RAM:CPU ratio)
+export const G8_DEDICATED_GENERAL_PURPOSE_SLUGS = [
+  'g8-dedicated-8-2', // 8 GB RAM, 2 CPUs
+  'g8-dedicated-16-4', // 16 GB RAM, 4 CPUs
+  'g8-dedicated-32-8', // 32 GB RAM, 8 CPUs
+  'g8-dedicated-64-16', // 64 GB RAM, 16 CPUs
+  'g8-dedicated-96-24', // 96 GB RAM, 24 CPUs
+  'g8-dedicated-128-32', // 128 GB RAM, 32 CPUs
+  'g8-dedicated-256-64', // 256 GB RAM, 64 CPUs
+  'g8-dedicated-512-128', // 512 GB RAM, 128 CPUs
+] as const;
+
+// Combined G8 plans (All)
+export const G8_DEDICATED_ALL_SLUGS = [
+  ...G8_DEDICATED_COMPUTE_OPTIMIZED_SLUGS,
+  ...G8_DEDICATED_GENERAL_PURPOSE_SLUGS,
+] as const;
+
+export const PLAN_FILTER_ALL = 'all';
+// Filter option values
+export const PLAN_FILTER_GENERATION_G8 = 'g8';
+export const PLAN_FILTER_GENERATION_G7 = 'g7';
+export const PLAN_FILTER_GENERATION_G6 = 'g6';
+
+export const PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED = 'compute-optimized';
+export const PLAN_FILTER_TYPE_GENERAL_PURPOSE = 'general-purpose';
+
+export const PLAN_FILTER_GPU_RTX_PRO_6000 = 'gpu-rtxpro6000';
+export const PLAN_FILTER_GPU_RTX_6000 = 'gpu-rtx6000';
+export const PLAN_FILTER_GPU_RTX_4000_ADA = 'gpu-rtx4000';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,

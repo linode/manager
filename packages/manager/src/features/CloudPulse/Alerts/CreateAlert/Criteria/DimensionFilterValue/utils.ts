@@ -1,4 +1,7 @@
-import { transformDimensionValue } from '../../../Utils/utils';
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from 'src/features/CloudPulse/shared/DimensionTransform';
 
 import type { Item } from '../../../constants';
 import type { OperatorGroup } from './constants';
@@ -12,6 +15,25 @@ import type {
 } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 import type { FirewallEntity } from 'src/features/CloudPulse/shared/types';
+
+/**
+ * Transform a dimension value using the appropriate transform function
+ * @param serviceType - The cloud pulse service type
+ * @param dimensionLabel - The dimension label
+ * @param value - The value to transform
+ * @returns Transformed value
+ */
+export const transformDimensionValue = (
+  serviceType: CloudPulseServiceType | null,
+  dimensionLabel: string,
+  value: string
+): string => {
+  return (
+    (
+      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
+    )?.(value) ?? TRANSFORMS.capitalize(value)
+  );
+};
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.
@@ -133,6 +155,25 @@ export const getFirewallLinodes = (
 };
 
 /**
+ * Extracts nodebalancer items from firewall resources.
+ * @param nodebalancers - List of nodebalancers.
+ * @returns - Flattened list of nodebalancer ID/label pairs as options.
+ */
+export const getFirewallNodebalancers = (
+  nodebalancers: NodeBalancer[]
+): Item<string, string>[] => {
+  if (!nodebalancers) return [];
+  return nodebalancers.map((nodebalancer) => ({
+    label: transformDimensionValue(
+      'firewall',
+      'nodebalancer_id',
+      nodebalancer.label
+    ),
+    value: String(nodebalancer.id),
+  }));
+};
+
+/**
  * Extracts unique region values from a list of linodes.
  * @param linodes - Linode objects with region information.
  * @returns - Deduplicated list of regions as options.
@@ -180,15 +221,15 @@ export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
   );
 };
 
-interface ScopeBasedFilteredBucketsProps {
+interface ScopeBasedFilteredResourcesProps {
   /**
-   * The full list of available CloudPulse resources (buckets).
-   */
-  buckets: CloudPulseResources[];
-  /**
-   * A list of entity IDs (bucket IDs) to filter by when scope is `entity`.
+   * A list of entity IDs to filter by when scope is `entity`.
    */
   entities?: string[];
+  /**
+   * The full list of available CloudPulse resources.
+   */
+  resources: CloudPulseResources[];
   /**
    * The scope of the alert definition (`account`, `entity`, `region`, or `null`).
    */
@@ -199,31 +240,45 @@ interface ScopeBasedFilteredBucketsProps {
   selectedRegions?: null | string[];
 }
 
-/**
- * Filters a list of Object Storage buckets based on the given alert definition scope.
+/* Filters a list of Resource objects based on the given alert definition scope.
  *
  * @param props - Object containing filter parameters.
- * @returns A filtered list of buckets based on the provided scope.
+ * @returns A filtered list of resources based on the provided scope.
  */
-export const scopeBasedFilteredBuckets = (
-  props: ScopeBasedFilteredBucketsProps
+export const scopeBasedFilteredResources = (
+  props: ScopeBasedFilteredResourcesProps
 ): CloudPulseResources[] => {
-  const { scope, buckets, selectedRegions, entities } = props;
+  const { scope, resources, selectedRegions, entities } = props;
 
   switch (scope) {
     case 'account':
-      return buckets;
+      return resources;
     case 'entity':
       return entities
-        ? buckets.filter((bucket) => entities.includes(bucket.id))
+        ? resources.filter((resource) => entities.includes(resource.id))
         : [];
     case 'region':
       return selectedRegions
-        ? buckets.filter((bucket) =>
-            selectedRegions.includes(bucket.region ?? '')
+        ? resources.filter((resource) =>
+            selectedRegions.includes(resource.region ?? '')
           )
         : [];
     default:
-      return buckets;
+      return resources;
   }
+};
+
+/**
+ * Extracts linode items from firewall resources by merging entities.
+ * @param resources - List of firewall resources with entity mappings.
+ * @returns - Flattened list of linode ID/label pairs as options.
+ */
+export const getBlockStorageLinodes = (
+  linodes: Linode[]
+): Item<string, string>[] => {
+  if (!linodes) return [];
+  return linodes.map((linode) => ({
+    label: transformDimensionValue('blockstorage', 'linode_id', linode.label),
+    value: String(linode.id),
+  }));
 };

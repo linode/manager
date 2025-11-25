@@ -10,7 +10,6 @@ import {
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
-  deepEqual,
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
   filterFirewallNodebalancers,
@@ -33,6 +32,7 @@ import {
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { deepEqual } from './utils';
 
 import type { CloudPulseEndpoints } from '../shared/CloudPulseEndpointsSelect';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
@@ -147,26 +147,20 @@ it('test getResourceSelectionProperties method for linode-firewall', () => {
   expect(resourceSelectionConfig).toBeDefined();
 
   if (resourceSelectionConfig) {
-    const {
-      disabled,
-      handleResourcesSelection,
-      label,
-      savePreferences,
-      filterFn,
-    } = getResourcesProperties(
-      {
-        config: resourceSelectionConfig,
-        dashboard: { ...mockDashboard, id: 4 },
-        isServiceAnalyticsIntegration: true,
-      },
-      vi.fn()
-    );
+    const { disabled, handleResourcesSelection, label, savePreferences } =
+      getResourcesProperties(
+        {
+          config: resourceSelectionConfig,
+          dashboard: { ...mockDashboard, id: 4 },
+          isServiceAnalyticsIntegration: true,
+        },
+        vi.fn()
+      );
     const { name } = resourceSelectionConfig.configuration;
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
     expect(label).toEqual(name);
-    expect(filterFn).toBeDefined();
   }
 });
 
