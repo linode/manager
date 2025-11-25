@@ -9,6 +9,7 @@ import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilter
 import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import { arraysEqual } from '../Alerts/Utils/utils';
 import {
+  ENDPOINT,
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,
@@ -26,6 +27,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from '../shared/types';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
@@ -41,6 +43,7 @@ import type {
   FirewallDeviceEntity,
   KubernetesCluster,
   MonitoringCapabilities,
+  ObjectStorageBucket,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -541,8 +544,13 @@ export const getResourcesFilterConfig = (
   if (!dashboardId) {
     return undefined;
   }
-  // Get the associated entity type for the dashboard
+  // Get the resources filter configuration for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (isEndpointsOnlyDashboard(dashboardId)) {
+    return filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === ENDPOINT
+    )?.configuration;
+  }
   return filterConfig?.filters.find(
     (filter) => filter.configuration.filterKey === RESOURCE_ID
   )?.configuration;
@@ -596,4 +604,47 @@ export const filterKubernetesClusters = (
   return clusters
     .filter(({ tier }) => tier === 'enterprise')
     .sort((a, b) => a.label.localeCompare(b.label));
+};
+
+/**
+ * @param buckets The list of buckets
+ * @returns The valid sorted endpoints
+ */
+export const getValidSortedEndpoints = (
+  buckets: ObjectStorageBucket[] | undefined
+): CloudPulseResources[] => {
+  if (!buckets) return [];
+
+  const visitedEndpoints = new Set<string>();
+  const uniqueEndpoints: CloudPulseResources[] = [];
+
+  buckets.forEach(({ s3_endpoint: s3Endpoint, region }) => {
+    if (s3Endpoint && region && !visitedEndpoints.has(s3Endpoint)) {
+      visitedEndpoints.add(s3Endpoint);
+      uniqueEndpoints.push({ id: s3Endpoint, label: s3Endpoint, region });
+    }
+  });
+
+  uniqueEndpoints.sort((a, b) => a.label.localeCompare(b.label));
+  return uniqueEndpoints;
+};
+
+/**
+ * @param dashboardId id of the dashboard
+ * @returns whether dashboard is an endpoints only dashboard
+ */
+export const isEndpointsOnlyDashboard = (dashboardId: number): boolean => {
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (!filterConfig) {
+    return false;
+  }
+  const endpointsFilter = filterConfig?.filters.find(
+    (filter) => filter.name === 'Endpoints'
+  );
+  if (endpointsFilter) {
+    // Verify if the dashboard has buckets filter, if not then it is an endpoints only dashboard
+    return !filterConfig.filters.some((filter) => filter.name === 'Buckets');
+  }
+
+  return false;
 };

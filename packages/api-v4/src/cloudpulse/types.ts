@@ -160,7 +160,7 @@ export interface Metric {
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   associated_entity_region?: string;
-  entity_ids: number[] | string[];
+  entity_ids: number[] | string[] | undefined;
   entity_region?: string;
   filters?: Filters[];
   group_by?: string[];
