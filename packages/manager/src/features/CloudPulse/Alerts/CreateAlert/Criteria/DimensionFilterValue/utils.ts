@@ -1,4 +1,7 @@
-import { transformDimensionValue } from '../../../Utils/utils';
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from 'src/features/CloudPulse/shared/DimensionTransform';
 
 import type { Item } from '../../../constants';
 import type { OperatorGroup } from './constants';
@@ -12,6 +15,25 @@ import type {
 } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 import type { FirewallEntity } from 'src/features/CloudPulse/shared/types';
+
+/**
+ * Transform a dimension value using the appropriate transform function
+ * @param serviceType - The cloud pulse service type
+ * @param dimensionLabel - The dimension label
+ * @param value - The value to transform
+ * @returns Transformed value
+ */
+export const transformDimensionValue = (
+  serviceType: CloudPulseServiceType | null,
+  dimensionLabel: string,
+  value: string
+): string => {
+  return (
+    (
+      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
+    )?.(value) ?? TRANSFORMS.capitalize(value)
+  );
+};
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.

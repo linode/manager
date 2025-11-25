@@ -11,7 +11,6 @@ import type { AccountMaintenance } from '@linode/api-v4';
 const NOW_ISO = '2025-10-27T12:00:00.000Z';
 
 describe('Account Maintenance utilities', () => {
-
   const baseMaintenance: Omit<AccountMaintenance, 'when'> & { when: string } = {
     complete_time: null,
     description: 'scheduled',
@@ -42,9 +41,7 @@ describe('Account Maintenance utilities', () => {
         ...baseMaintenance,
         start_time: '2025-10-27T12:00:00.000Z',
       };
-      expect(deriveMaintenanceStartISO(m)).toBe(
-        '2025-10-27T12:00:00.000Z'
-      );
+      expect(deriveMaintenanceStartISO(m)).toBe('2025-10-27T12:00:00.000Z');
     });
 
     it('uses when directly as start time (when already accounts for notification period)', () => {
@@ -54,9 +51,7 @@ describe('Account Maintenance utilities', () => {
         when: '2025-10-27T09:00:00.000Z',
       };
       // `when` already accounts for notification_period_sec, so it IS the start time
-      expect(deriveMaintenanceStartISO(m)).toBe(
-        '2025-10-27T09:00:00.000Z'
-      );
+      expect(deriveMaintenanceStartISO(m)).toBe('2025-10-27T09:00:00.000Z');
     });
 
     it('uses when directly for all statuses without needing policies', () => {
