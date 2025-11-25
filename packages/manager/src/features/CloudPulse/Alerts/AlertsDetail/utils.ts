@@ -1,4 +1,4 @@
-import { transformDimensionValue } from '../Utils/utils';
+import { transformDimensionValue } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
 import {
   LINODE_DIMENSION_LABEL,
   NODEBALANCER_DIMENSION_LABEL,
