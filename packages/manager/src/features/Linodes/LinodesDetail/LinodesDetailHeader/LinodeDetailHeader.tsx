@@ -56,7 +56,7 @@ export const LinodeDetailHeader = () => {
   const { mutateAsync: updateLinode } =
     useLinodeUpdateMutation(matchedLinodeId);
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
     'linode',
     ['update_linode'],
     linodeId
@@ -163,7 +163,7 @@ export const LinodeDetailHeader = () => {
     onOpenResizeDialog,
   };
 
-  if (isLoading) {
+  if (isLoading || isPermissionsLoading) {
     return <CircleProgress />;
   }
 

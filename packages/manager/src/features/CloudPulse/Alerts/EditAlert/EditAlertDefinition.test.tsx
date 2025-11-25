@@ -56,62 +56,53 @@ const alertDetails = alertFactory.build({
 const ENTITY_TYPE_SELECT_TEST_ID = 'entity-type-select';
 
 describe('EditAlertDefinition component', () => {
-  it(
-    'renders the components of the form',
-    async () => {
-      const { findByPlaceholderText, getByLabelText, getByText } =
-        renderWithTheme(
-          <EditAlertDefinition
-            alertDetails={alertDetails}
-            serviceType="linode"
-          />
-        );
-      expect(getByText('1. General Information')).toBeVisible();
-      expect(getByLabelText('Name')).toBeVisible();
-      expect(getByLabelText('Description (optional)')).toBeVisible();
-      expect(getByLabelText('Severity')).toBeVisible();
-      expect(getByLabelText('Service')).toBeVisible();
-      expect(getByText('2. Entities')).toBeVisible();
-      expect(
-        await findByPlaceholderText('Search for a Region or Entity')
-      ).toBeInTheDocument();
-      expect(await findByPlaceholderText('Select Regions')).toBeInTheDocument();
-      expect(getByText('3. Criteria')).toBeVisible();
-      expect(getByText('Metric Threshold')).toBeVisible();
-      expect(getByLabelText('Data Field')).toBeVisible();
-      expect(getByLabelText('Aggregation Type')).toBeVisible();
-      expect(getByLabelText('Operator')).toBeVisible();
-      expect(getByLabelText('Threshold')).toBeVisible();
-      expect(getByLabelText('Evaluation Period')).toBeVisible();
-      expect(getByLabelText('Polling Interval')).toBeVisible();
-      expect(getByText('4. Notification Channels')).toBeVisible();
-    },
-    { timeout: 20000 }
-  );
-
-  it(
-    'should submit form data correctly',
-    async () => {
-      navigate({
-        to: '/alerts/definitions/edit/linode/1',
-      });
-      const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
-      const { getByPlaceholderText, getByText } = renderWithTheme(
+  it('renders the components of the form', { timeout: 20000 }, async () => {
+    const { findByPlaceholderText, getByLabelText, getByText } =
+      renderWithTheme(
         <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
       );
-      const descriptionValue = 'Updated Description';
-      const nameValue = 'Updated Label';
-      const nameInput = getByPlaceholderText('Enter a Name');
-      const descriptionInput = getByPlaceholderText('Enter a Description');
-      await userEvent.clear(nameInput);
-      await userEvent.clear(descriptionInput);
-      await userEvent.type(nameInput, nameValue);
+    expect(getByText('1. General Information')).toBeVisible();
+    expect(getByLabelText('Name')).toBeVisible();
+    expect(getByLabelText('Description (optional)')).toBeVisible();
+    expect(getByLabelText('Severity')).toBeVisible();
+    expect(getByLabelText('Service')).toBeVisible();
+    expect(getByText('2. Entities')).toBeVisible();
+    expect(
+      await findByPlaceholderText('Search for a Region or Entity')
+    ).toBeInTheDocument();
+    expect(await findByPlaceholderText('Select Regions')).toBeInTheDocument();
+    expect(getByText('3. Criteria')).toBeVisible();
+    expect(getByText('Metric Threshold')).toBeVisible();
+    expect(getByLabelText('Data Field')).toBeVisible();
+    expect(getByLabelText('Aggregation Type')).toBeVisible();
+    expect(getByLabelText('Operator')).toBeVisible();
+    expect(getByLabelText('Threshold')).toBeVisible();
+    expect(getByLabelText('Evaluation Period')).toBeVisible();
+    expect(getByLabelText('Polling Interval')).toBeVisible();
+    expect(getByText('4. Notification Channels')).toBeVisible();
+  });
 
-      await userEvent.type(descriptionInput, descriptionValue);
+  it('should submit form data correctly', { timeout: 10000 }, async () => {
+    navigate({
+      to: '/alerts/definitions/edit/linode/1',
+    });
+    const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
+    const { getByPlaceholderText, getByText } = renderWithTheme(
+      <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
+    );
+    const descriptionValue = 'Updated Description';
+    const nameValue = 'Updated Label';
+    const nameInput = getByPlaceholderText('Enter a Name');
+    const descriptionInput = getByPlaceholderText('Enter a Description');
+    await userEvent.clear(nameInput);
+    await userEvent.clear(descriptionInput);
+    await userEvent.type(nameInput, nameValue);
 
-      await userEvent.click(getByText('Submit'));
+    await userEvent.type(descriptionInput, descriptionValue);
 
-      await waitFor(() => expect(mutateAsyncSpy).toHaveBeenCalledTimes(1));
+    await userEvent.click(getByText('Submit'));
+
+    await waitFor(() => expect(mutateAsyncSpy).toHaveBeenCalledTimes(1));
 
       expect(navigate).toHaveBeenLastCalledWith({
         to: '/alerts/definitions',
@@ -121,9 +112,7 @@ describe('EditAlertDefinition component', () => {
           getByText(UPDATE_ALERT_SUCCESS_MESSAGE) // validate whether snackbar is displayed properly
         ).toBeInTheDocument();
       });
-    },
-    { timeout: 10000 }
-  );
+    });
 
   it('should render EntityTypeSelect for firewall with Linode entity type', () => {
     const linodeFirewallAlertDetails = alertFactory.build({
