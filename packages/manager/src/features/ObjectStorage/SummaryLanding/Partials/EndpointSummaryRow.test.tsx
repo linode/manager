@@ -108,14 +108,15 @@ describe('EndpointSummaryRow', () => {
       isFetching: false,
     });
 
-    const { findByText } = renderWithTheme(
+    const { findByText, findAllByText } = renderWithTheme(
       <EndpointSummaryRow endpoint={testEndpoint} />
     );
 
-    expect(await findByText(testEndpoint)).toBeVisible();
-    expect(await findByText('Number of Buckets')).toBeVisible();
-    expect(await findByText('Total Capacity')).toBeVisible();
-    expect(await findByText('Number of Objects')).toBeVisible();
+    const cellEndpoints = await findAllByText(testEndpoint);
+    expect(cellEndpoints.length).toBe(3);
+    cellEndpoints.forEach((endpoint) => {
+      expect(endpoint).toBeVisible();
+    });
     expect(await findByText('3 of 10 Buckets used')).toBeVisible();
     expect(await findByText('1 of 2 KB used')).toBeVisible();
     expect(await findByText('5 of 10 Objects used')).toBeVisible();
