@@ -328,7 +328,7 @@ describe('getTimeDurationFromPreset method', () => {
       expect(result).toEqual([123]);
     });
 
-    it('should return entity ids for objectstorage service type', () => {
+    it('should return entity ids for objectstorage buckets dashboard', () => {
       const result = getEntityIds(
         [{ id: 'bucket-1', label: 'bucket-name-1' }],
         ['bucket-1'],
