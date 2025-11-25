@@ -44,4 +44,7 @@ export const statusMap: Record<AlertStatusType, string> = {
   enabled: 'Enabled',
   failed: 'Failed',
   'in progress': 'In Progress',
+  disabling: 'Disabling',
+  enabling: 'Enabling',
+  provisioning: 'Provisioning',
 };

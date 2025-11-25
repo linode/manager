@@ -3223,6 +3223,10 @@ export const handlers = [
           rules: [firewallNodebalancerMetricCriteria.build()],
         },
       }),
+      ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'in progress', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3305,6 +3309,14 @@ export const handlers = [
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
             scope: pickRandom(['account', 'region', 'entity']),
+            status: pickRandom([
+              'enabled',
+              'disabled',
+              'in progress',
+              'enabling',
+              'disabling',
+              'provisioning',
+            ]),
           })
         );
       }
