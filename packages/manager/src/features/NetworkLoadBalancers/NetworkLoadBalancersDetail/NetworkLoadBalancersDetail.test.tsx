@@ -61,7 +61,7 @@ describe('NetworkLoadBalancersDetail', () => {
 
     const { getByTestId } = renderWithTheme(<NetworkLoadBalancersDetail />);
 
-    expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(getByTestId('circle-progress')).toBeVisible();
   });
 
   it('renders an error state', () => {
@@ -74,7 +74,7 @@ describe('NetworkLoadBalancersDetail', () => {
 
     expect(
       getByText('There was a problem retrieving your NLB. Please try again.')
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders the NLB details', () => {
@@ -86,28 +86,28 @@ describe('NetworkLoadBalancersDetail', () => {
 
     const { getByText } = renderWithTheme(<NetworkLoadBalancersDetail />);
 
-    expect(getByText('ACTIVE')).toBeInTheDocument();
+    expect(getByText('ACTIVE')).toBeVisible();
 
-    expect(getByText('Virtual IP (IPv4)')).toBeInTheDocument();
-    expect(getByText(nlbFactory.address_v4)).toBeInTheDocument();
+    expect(getByText('Virtual IP (IPv4)')).toBeVisible();
+    expect(getByText(nlbFactory.address_v4)).toBeVisible();
 
-    expect(getByText('Virtual IP (IPv6)')).toBeInTheDocument();
-    expect(getByText(nlbFactory.address_v6)).toBeInTheDocument();
+    expect(getByText('Virtual IP (IPv6)')).toBeVisible();
+    expect(getByText(nlbFactory.address_v6)).toBeVisible();
 
-    expect(getByText('Region')).toBeInTheDocument();
-    expect(getByText('US, Newark, NJ')).toBeInTheDocument();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('US, Newark, NJ')).toBeVisible();
 
-    expect(getByText('LKE-E Cluster')).toBeInTheDocument();
-    expect(getByText('N/A')).toBeInTheDocument();
+    expect(getByText('LKE-E Cluster')).toBeVisible();
+    expect(getByText('N/A')).toBeVisible();
 
-    expect(getByText('Network Load Balancer ID')).toBeInTheDocument();
-    expect(getByText(nlbFactory.id)).toBeInTheDocument();
+    expect(getByText('Network Load Balancer ID')).toBeVisible();
+    expect(getByText(nlbFactory.id)).toBeVisible();
 
-    expect(getByText('Created')).toBeInTheDocument();
-    expect(getByText(formatDate(nlbFactory.created))).toBeInTheDocument();
+    expect(getByText('Created')).toBeVisible();
+    expect(getByText(formatDate(nlbFactory.created))).toBeVisible();
 
-    expect(getByText('Updated')).toBeInTheDocument();
-    expect(getByText(formatDate(nlbFactory.updated))).toBeInTheDocument();
+    expect(getByText('Updated')).toBeVisible();
+    expect(getByText(formatDate(nlbFactory.updated))).toBeVisible();
   });
 
   it('renders LKE Details if the NLB is associated with an LKE cluster', () => {
@@ -121,13 +121,13 @@ describe('NetworkLoadBalancersDetail', () => {
 
     const { getByText } = renderWithTheme(<NetworkLoadBalancersDetail />);
 
-    expect(getByText('LKE-E Cluster')).toBeInTheDocument();
-    expect(getByText(nlbFactory.lke_cluster!.label)).toBeInTheDocument();
+    expect(getByText('LKE-E Cluster')).toBeVisible();
+    expect(getByText(nlbFactory.lke_cluster!.label)).toBeVisible();
     expect(
       getByText(`(ID: ${nlbFactory.lke_cluster!.id})`, {
         exact: false,
       })
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders a Listeners table', () => {
@@ -154,12 +154,12 @@ describe('NetworkLoadBalancersDetail', () => {
       'href',
       `/netloadbalancers/${nlbFactory.id}/listeners/${listenerFactory.id}`
     );
-    expect(getByText('Listeners (1)')).toBeInTheDocument();
-    expect(getByTestId('nlb-listeners-table')).toBeInTheDocument();
-    expect(getByText(listenerFactory.label)).toBeInTheDocument();
-    expect(getByText(listenerFactory.port)).toBeInTheDocument();
-    expect(getByText(listenerFactory.protocol)).toBeInTheDocument();
-    expect(getByText(listenerFactory.id)).toBeInTheDocument();
+    expect(getByText('Listeners (1)')).toBeVisible();
+    expect(getByTestId('nlb-listeners-table')).toBeVisible();
+    expect(getByText(listenerFactory.label)).toBeVisible();
+    expect(getByText(listenerFactory.port)).toBeVisible();
+    expect(getByText(listenerFactory.protocol.toUpperCase())).toBeVisible();
+    expect(getByText(listenerFactory.id)).toBeVisible();
   });
 
   it('renders an empty Listeners table if there are no listeners', () => {
@@ -179,10 +179,10 @@ describe('NetworkLoadBalancersDetail', () => {
       <NetworkLoadBalancersDetail />
     );
 
-    expect(getByText('Listeners (0)')).toBeInTheDocument();
-    expect(getByTestId('nlb-listeners-table')).toBeInTheDocument();
+    expect(getByText('Listeners (0)')).toBeVisible();
+    expect(getByTestId('nlb-listeners-table')).toBeVisible();
     expect(
       getByText('No Listeners are defined for this Network Load Balancer')
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 });

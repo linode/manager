@@ -25,7 +25,7 @@ export const NetworkLoadBalancersListenerTable = (
 
   const pagination = usePaginationV2({
     currentRoute: '/netloadbalancers/$id/listeners',
-    preferenceKey: 'NetworkLoadBalancerListeners',
+    preferenceKey: 'netloadbalancers-listeners',
   });
 
   const {
@@ -92,7 +92,7 @@ export const NetworkLoadBalancersListenerTable = (
                 </Link>
               </TableCell>
               <TableCell>{port}</TableCell>
-              <TableCell>{protocol}</TableCell>
+              <TableCell>{protocol.toUpperCase()}</TableCell>
               <TableCell>{id}</TableCell>
             </TableRow>
           ))}
