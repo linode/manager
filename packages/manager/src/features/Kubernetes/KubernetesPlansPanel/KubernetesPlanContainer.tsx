@@ -408,6 +408,7 @@ export const KubernetesPlanContainer = (
                 customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
+                minPageSize={PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value}
                 page={page}
                 pageSize={pageSize}
                 sx={{
