@@ -3,7 +3,8 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { ControllerRenderProps, FieldPathByValue } from 'react-hook-form';
 
-import type { Item } from '../../constants';
+import { entityTypeTooltipText, type Item } from '../../constants';
+
 import type { CreateAlertDefinitionForm } from '../types';
 
 interface EntityTypeSelectProps {
@@ -56,8 +57,8 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
           placeholder="Select an Entity Type"
           sx={{ marginTop: '5px' }}
           textFieldProps={{
-            labelTooltipText:
-              'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.',
+            labelTooltipText: entityTypeTooltipText,
+            tooltipPosition: 'right',
           }}
           value={
             entityTypeOptions.find((option) => option.value === field.value) ??
