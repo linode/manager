@@ -37,14 +37,15 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
         data-qa-show-more-chip
         label={`+${items.length}`}
         onClick={handleClick}
-        sx={
-          anchorEl
+        sx={{
+          ...(anchorEl
             ? {
                 backgroundColor: theme.palette.primary.main,
                 color: theme.tokens.color.Neutrals.White,
               }
-            : null
-        }
+            : {}),
+          ...(chipProps?.sx || {}), // caller-provided `chipProps.sx` takes precedence and will override the default active styling.
+        }}
       />
 
       <StyledPopover
