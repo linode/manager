@@ -8,14 +8,14 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   allIPv4,
   allIPv6,
-  buildPrefixListMap,
+  buildPrefixListReferenceMap,
   generateAddressesLabel,
   generateAddressesLabelV2,
   predefinedFirewallFromRule,
-  PrefixListMap,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from './shared';
 
+import type { PrefixListReferenceMap } from './shared';
 import type { FirewallRuleType } from '@linode/api-v4/lib/firewalls/types';
 
 const addresses = {
@@ -158,44 +158,54 @@ describe('generateAddressLabel', () => {
 
 describe('buildPrefixListMap', () => {
   it('returns empty map if no input', () => {
-    const result = buildPrefixListMap({});
+    const result = buildPrefixListReferenceMap({});
     expect(result).toEqual({});
   });
 
   it('maps IPv4 prefix lists correctly', () => {
     const ipv4 = ['pl:example1', '192.168.0.1', 'pl:example2'];
-    const result: PrefixListMap = buildPrefixListMap({ ipv4 });
+    const result: PrefixListReferenceMap = buildPrefixListReferenceMap({
+      ipv4,
+    });
 
     expect(result).toEqual({
-      'pl:example1': { ipv4: true, ipv6: false },
-      'pl:example2': { ipv4: true, ipv6: false },
+      'pl:example1': { inIPv4Rule: true, inIPv6Rule: false },
+      'pl:example2': { inIPv4Rule: true, inIPv6Rule: false },
     });
   });
 
   it('maps IPv6 prefix lists correctly', () => {
     const ipv6 = ['pl:example1', 'fe80::1', 'pl:example2'];
-    const result: PrefixListMap = buildPrefixListMap({ ipv6 });
+    const result: PrefixListReferenceMap = buildPrefixListReferenceMap({
+      ipv6,
+    });
 
     expect(result).toEqual({
-      'pl:example1': { ipv4: false, ipv6: true },
-      'pl:example2': { ipv4: false, ipv6: true },
+      'pl:example1': { inIPv4Rule: false, inIPv6Rule: true },
+      'pl:example2': { inIPv4Rule: false, inIPv6Rule: true },
     });
   });
 
   it('maps both IPv4 and IPv6 for the same prefix list', () => {
     const ipv4 = ['pl:example1'];
     const ipv6 = ['pl:example1'];
-    const result: PrefixListMap = buildPrefixListMap({ ipv4, ipv6 });
+    const result: PrefixListReferenceMap = buildPrefixListReferenceMap({
+      ipv4,
+      ipv6,
+    });
 
     expect(result).toEqual({
-      'pl:example1': { ipv4: true, ipv6: true },
+      'pl:example1': { inIPv4Rule: true, inIPv6Rule: true },
     });
   });
 
   it('ignores non-prefix list IPs', () => {
     const ipv4 = ['192.168.0.1'];
     const ipv6 = ['fe80::1'];
-    const result: PrefixListMap = buildPrefixListMap({ ipv4, ipv6 });
+    const result: PrefixListReferenceMap = buildPrefixListReferenceMap({
+      ipv4,
+      ipv6,
+    });
 
     expect(result).toEqual({});
   });
@@ -203,10 +213,13 @@ describe('buildPrefixListMap', () => {
   it('handles duplicates correctly', () => {
     const ipv4 = ['pl:duplicate-example', 'pl:duplicate-example'];
     const ipv6 = ['pl:duplicate-example'];
-    const result: PrefixListMap = buildPrefixListMap({ ipv4, ipv6 });
+    const result: PrefixListReferenceMap = buildPrefixListReferenceMap({
+      ipv4,
+      ipv6,
+    });
 
     expect(result).toEqual({
-      'pl:duplicate-example': { ipv4: true, ipv6: true },
+      'pl:duplicate-example': { inIPv4Rule: true, inIPv6Rule: true },
     });
   });
 });
