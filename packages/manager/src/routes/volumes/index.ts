@@ -59,6 +59,7 @@ const volumeDetailsMetricsRoute = createRoute({
     'src/features/Volumes/VolumeDetails/VolumeMetrics/volumeMetricsLazyRoute'
   ).then((m) => m.volumeMetricsLazyRoute)
 );
+
 const volumeDetailsSummaryActionRoute = createRoute({
   path: 'summary/$action',
   getParentRoute: () => volumeDetailsRoute,
@@ -81,7 +82,11 @@ const volumeDetailsSummaryActionRoute = createRoute({
     }),
   },
   validateSearch: (search: VolumesSearchParams) => search,
-});
+}).lazy(() =>
+  import(
+    'src/features/Volumes/VolumeDetails/VolumeSummary/volumeSummaryLazyRoute'
+  ).then((m) => m.volumeSummaryLazyRoute)
+);
 
 const volumesIndexRoute = createRoute({
   getParentRoute: () => volumesRoute,
