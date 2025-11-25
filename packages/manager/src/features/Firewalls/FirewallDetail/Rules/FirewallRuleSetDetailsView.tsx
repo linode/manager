@@ -189,7 +189,7 @@ export const FirewallRuleSetDetailsView = (
       </Paper>
 
       <ActionsPanel
-        primaryButtonProps={{
+        secondaryButtonProps={{
           label: 'Cancel',
           onClick: closeDrawer,
         }}
