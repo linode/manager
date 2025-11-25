@@ -251,26 +251,45 @@ export const generateAddressesLabel = (
   return 'None';
 };
 
-export type PrefixListPresence = { ipv4: boolean; ipv6: boolean };
-export type PrefixListMap = Record<string, PrefixListPresence>;
+export type PrefixListReference = { inIPv4Rule: boolean; inIPv6Rule: boolean };
+export type PrefixListReferenceMap = Record<string, PrefixListReference>;
 
 const isPrefixList = (ip: string) => ip.startsWith('pl:');
 
-export const buildPrefixListMap = (options: {
+/**
+ * Builds a map of Prefix List (PL) labels to their firewall rule references.
+ *
+ * @param addresses - Object containing optional arrays of IPv4 and IPv6 addresses.
+ *                    Only addresses that are prefix lists (starting with 'pl:') are considered.
+ * @returns A map where each key is a PL label, and the value indicates whether
+ *          the PL is referenced in the IPv4 and/or IPv6 firewall rule.
+ *
+ * @example
+ * const map = buildPrefixListReferenceMap({
+ *   ipv4: ['pl:system:test1', '1.2.3.4'],
+ *   ipv6: ['pl:system:test1', '::1']
+ * });
+ *
+ * // Result:
+ * // {
+ * //   'pl:system:test1': { inIPv4Rule: true, inIPv6Rule: true }
+ * // }
+ */
+export const buildPrefixListReferenceMap = (addresses: {
   ipv4?: string[];
   ipv6?: string[];
-}): PrefixListMap => {
-  const { ipv4 = [], ipv6 = [] } = options;
+}): PrefixListReferenceMap => {
+  const { ipv4 = [], ipv6 = [] } = addresses;
 
-  const prefixListMap: PrefixListMap = {};
+  const prefixListMap: PrefixListReferenceMap = {};
 
   // Handle IPv4
   ipv4.forEach((ip) => {
     if (isPrefixList(ip)) {
       if (!prefixListMap[ip]) {
-        prefixListMap[ip] = { ipv4: false, ipv6: false };
+        prefixListMap[ip] = { inIPv4Rule: false, inIPv6Rule: false };
       }
-      prefixListMap[ip].ipv4 = true;
+      prefixListMap[ip].inIPv4Rule = true;
     }
   });
 
@@ -278,9 +297,9 @@ export const buildPrefixListMap = (options: {
   ipv6.forEach((ip) => {
     if (isPrefixList(ip)) {
       if (!prefixListMap[ip]) {
-        prefixListMap[ip] = { ipv4: false, ipv6: false };
+        prefixListMap[ip] = { inIPv4Rule: false, inIPv6Rule: false };
       }
-      prefixListMap[ip].ipv6 = true;
+      prefixListMap[ip].inIPv6Rule = true;
     }
   });
 
@@ -288,29 +307,48 @@ export const buildPrefixListMap = (options: {
 };
 
 /**
- * Represents the Firewall IP families to which a Prefix List (PL) is attached or referenced.
+ * Represents the Firewall Rule IP families to which a Prefix List (PL) is attached or referenced.
  *
  * Used for display and logic purposes, e.g., appending to a PL label in the UI as:
  * "pl:system:example (IPv4)", "pl:system:example (IPv6)", or "pl:system:example (IPv4, IPv6)".
  *
  * The value indicates which firewall IPs the PL applies to:
- * - "(IPv4)" -> PL is attached to Firewall IPv4 only
- * - "(IPv6)" -> PL is attached to Firewall IPv6 only
- * - "(IPv4, IPv6)" -> PL is attached to both Firewall IPv4 and IPv6
+ * - "(IPv4)" -> PL is attached to Firewall Rule IPv4 only
+ * - "(IPv6)" -> PL is attached to Firewall Rule IPv6 only
+ * - "(IPv4, IPv6)" -> PL is attached to both Firewall Rule IPv4 and IPv6
  */
-export type FirewallIPPrefixListReference =
+export type FirewallRulePrefixListReferenceTag =
   | '(IPv4)'
   | '(IPv4, IPv6)'
   | '(IPv6)';
 
 interface GenerateAddressesLabelV2Options {
+  /**
+   * The list of addresses associated with a firewall rule.
+   */
   addresses: FirewallRuleType['addresses'];
+  /**
+   * Optional callback invoked when a prefix list label is clicked.
+   *
+   * @param prefixListLabel - The label of the clicked prefix list (e.g., "pl:system:test")
+   * @param plRuleRefTag - Indicates which firewall rule IP family(s) this PL belongs to: `(IPv4)`, `(IPv6)`, or `(IPv4, IPv6)`
+   */
   onPrefixListClick?: (
     prefixListLabel: string,
-    plFirewallIPRef: FirewallIPPrefixListReference
+    plRuleRefTag: FirewallRulePrefixListReferenceTag
   ) => void;
-  showTruncateChip?: boolean; // default true
-  truncateAt?: number; // default 1
+  /**
+   * Whether to show the truncation "+N" chip with a scrollable tooltip
+   * when there are more addresses than `truncateAt`.
+   * @default true
+   */
+  showTruncateChip?: boolean;
+  /**
+   * Maximum number of addresses to show before truncation.
+   * Ignored if `showTruncateChip` is false.
+   * @default 1
+   */
+  truncateAt?: number;
 }
 
 /**
@@ -352,20 +390,20 @@ export const generateAddressesLabelV2 = (
   }
 
   // Build a map of prefix lists
-  const prefixMap = buildPrefixListMap({
+  const prefixListReferenceMap = buildPrefixListReferenceMap({
     ipv4: allowedAllIPv4 ? [] : (addresses?.ipv4 ?? []),
     ipv6: allowedAllIPv6 ? [] : (addresses?.ipv6 ?? []),
   });
 
   // Add prefix list links with merged labels (eg., "pl:system:test (IPv4, IPv6)")
-  Object.entries(prefixMap).forEach(([pl, presence]) => {
-    let plFirewallIPRef = '' as FirewallIPPrefixListReference;
-    if (presence.ipv4 && presence.ipv6) {
-      plFirewallIPRef = '(IPv4, IPv6)';
-    } else if (presence.ipv4) {
-      plFirewallIPRef = '(IPv4)';
-    } else if (presence.ipv6) {
-      plFirewallIPRef = '(IPv6)';
+  Object.entries(prefixListReferenceMap).forEach(([pl, reference]) => {
+    let plRuleRefTag = '' as FirewallRulePrefixListReferenceTag;
+    if (reference.inIPv4Rule && reference.inIPv6Rule) {
+      plRuleRefTag = '(IPv4, IPv6)';
+    } else if (reference.inIPv4Rule) {
+      plRuleRefTag = '(IPv4)';
+    } else if (reference.inIPv6Rule) {
+      plRuleRefTag = '(IPv6)';
     }
 
     elements.push(
@@ -373,10 +411,10 @@ export const generateAddressesLabelV2 = (
         key={pl}
         onClick={(e) => {
           e.preventDefault();
-          onPrefixListClick?.(pl, plFirewallIPRef);
+          onPrefixListClick?.(pl, plRuleRefTag);
         }}
       >
-        {`${pl} ${plFirewallIPRef}`}
+        {`${pl} ${plRuleRefTag}`}
       </Link>
     );
   });
