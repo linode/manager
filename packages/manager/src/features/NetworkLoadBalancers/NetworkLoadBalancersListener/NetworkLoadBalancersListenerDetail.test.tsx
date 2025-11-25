@@ -11,7 +11,6 @@ import NetworkLoadBalancersListenerDetail from './NetworkLoadBalancersListenerDe
 const queryMocks = vi.hoisted(() => ({
   useNetworkLoadBalancerQuery: vi.fn().mockReturnValue({}),
   useNetworkLoadBalancerNodesQuery: vi.fn().mockReturnValue({}),
-  useParams: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -24,34 +23,22 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
-  };
-});
-
 beforeAll(() => mockMatchMedia());
 
 describe('NetworkLoadBalancersListenerDetail', () => {
-  beforeEach(() => {
-    queryMocks.useParams.mockReturnValue({
-      id: '1',
-      listenerId: '1',
-    });
-  });
-
   it('renders a loading state', () => {
     queryMocks.useNetworkLoadBalancerQuery.mockReturnValue({
       isLoading: true,
     });
 
     const { getByTestId } = renderWithTheme(
-      <NetworkLoadBalancersListenerDetail />
+      <NetworkLoadBalancersListenerDetail />,
+      {
+        initialRoute: '/netloadbalancers/$id/listeners/$listenerId',
+        initialEntries: ['/netloadbalancers/1/listeners/1'],
+      }
     );
-
-    expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(getByTestId('circle-progress')).toBeVisible();
   });
 
   it('renders an error state when NLB is not found', () => {
@@ -61,14 +48,18 @@ describe('NetworkLoadBalancersListenerDetail', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <NetworkLoadBalancersListenerDetail />
+      <NetworkLoadBalancersListenerDetail />,
+      {
+        initialRoute: '/netloadbalancers/$id/listeners/$listenerId',
+        initialEntries: ['/netloadbalancers/1/listeners/1'],
+      }
     );
 
     expect(
       getByText(
         'There was a problem retrieving your listener. Please try again.'
       )
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders an error state when there is an error', () => {
@@ -78,14 +69,18 @@ describe('NetworkLoadBalancersListenerDetail', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <NetworkLoadBalancersListenerDetail />
+      <NetworkLoadBalancersListenerDetail />,
+      {
+        initialRoute: '/netloadbalancers/$id/listeners/$listenerId',
+        initialEntries: ['/netloadbalancers/1/listeners/1'],
+      }
     );
 
     expect(
       getByText(
         'There was a problem retrieving your listener. Please try again.'
       )
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders an error state when listener is not found', () => {
@@ -98,19 +93,22 @@ describe('NetworkLoadBalancersListenerDetail', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <NetworkLoadBalancersListenerDetail />
+      <NetworkLoadBalancersListenerDetail />,
+      {
+        initialRoute: '/netloadbalancers/$id/listeners/$listenerId',
+        initialEntries: ['/netloadbalancers/1/listeners/1'],
+      }
     );
-
     expect(
       getByText(
         'There was a problem retrieving your listener. Please try again.'
       )
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders the listener details', () => {
     // Build NLB with a listener that has ID 1 to match the route param
-    const listener = networkLoadBalancerListenerFactory.build({ id: 1 });
+    const listener = networkLoadBalancerListenerFactory.build();
     const nlbFactory = networkLoadBalancerFactory.build({
       listeners: [listener],
     });
@@ -125,16 +123,20 @@ describe('NetworkLoadBalancersListenerDetail', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <NetworkLoadBalancersListenerDetail />
+      <NetworkLoadBalancersListenerDetail />,
+      {
+        initialRoute: '/netloadbalancers/$id/listeners/$listenerId',
+        initialEntries: ['/netloadbalancers/2/listeners/1'],
+      }
     );
 
-    expect(getByText('Port')).toBeInTheDocument();
-    expect(getByText(listener.port.toString())).toBeInTheDocument();
-    expect(getByText('Protocol')).toBeInTheDocument();
+    expect(getByText('Port')).toBeVisible();
+    expect(getByText(listener.port.toString())).toBeVisible();
+    expect(getByText('Protocol')).toBeVisible();
     // Protocol is rendered with CSS textTransform; the DOM text may be the original value.
     // Use a case-insensitive regex to avoid relying on presentation-only transforms.
-    expect(getByText(new RegExp(listener.protocol, 'i'))).toBeInTheDocument();
-    expect(getByText('Nodes')).toBeInTheDocument();
-    expect(getByText('5')).toBeInTheDocument();
+    expect(getByText(new RegExp(listener.protocol, 'i'))).toBeVisible();
+    expect(getByText('Nodes')).toBeVisible();
+    expect(getByText('5')).toBeVisible();
   });
 });
