@@ -481,7 +481,10 @@ export const isValidFilter = (
   if (!dimension) return false;
 
   const dimensionConfig =
-    valueFieldConfig[filter.dimension_label] ?? valueFieldConfig['*'];
+    valueFieldConfig[filter.dimension_label] ??
+    valueFieldConfig[
+      !dimension.values || dimension.values.length === 0 ? 'emptyValue' : '*'
+    ];
 
   const dimensionFieldConfig = dimensionConfig[operatorGroup];
 
@@ -493,11 +496,7 @@ export const isValidFilter = (
       String(filter.value ?? ''),
       dimensionFieldConfig
     );
-  } else if (
-    dimensionFieldConfig.type === 'textfield' ||
-    !dimension.values ||
-    !dimension.values.length
-  ) {
+  } else if (dimensionFieldConfig.type === 'textfield') {
     return true;
   }
 

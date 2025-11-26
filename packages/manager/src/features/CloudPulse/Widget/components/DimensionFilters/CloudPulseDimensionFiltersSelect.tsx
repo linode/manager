@@ -2,6 +2,7 @@ import { IconButton } from '@linode/ui';
 import React from 'react';
 
 import { CloudPulseTooltip } from 'src/features/CloudPulse/shared/CloudPulseTooltip';
+import { getAssociatedEntityType } from 'src/features/CloudPulse/Utils/FilterConfig';
 
 import { CloudPulseDimensionFilterDrawer } from './CloudPulseDimensionFilterDrawer';
 import { CloudPulseDimensionFilterIconWithBadge } from './CloudPulseFilterIconWithBadge';
@@ -10,6 +11,10 @@ import type { MetricsDimensionFilter } from './types';
 import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
 
 interface CloudPulseDimensionFiltersSelectProps {
+  /**
+   * The dashboardId for which the widget and dimension filters are being rendered
+   */
+  dashboardId: number;
   /**
    * The list of available dimensions for the selected metric
    */
@@ -22,6 +27,7 @@ interface CloudPulseDimensionFiltersSelectProps {
    * @param selectedDimensions The list of selected dimension filters
    */
   handleSelectionChange: (selectedDimensions: MetricsDimensionFilter[]) => void;
+
   /**
    * The selected dimension filters for the metric
    */
@@ -53,6 +59,7 @@ export const CloudPulseDimensionFiltersSelect = React.memo(
       selectedEntities,
       serviceType,
       selectedRegions,
+      dashboardId,
     } = props;
     const [open, setOpen] = React.useState(false);
 
@@ -91,6 +98,7 @@ export const CloudPulseDimensionFiltersSelect = React.memo(
           </IconButton>
         </CloudPulseTooltip>
         <CloudPulseDimensionFilterDrawer
+          associatedEntityType={getAssociatedEntityType(dashboardId)}
           dimensionOptions={dimensionOptions}
           drawerLabel={drawerLabel}
           handleSelectionChange={handleChangeInSelection}

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ActionsPanel, Box, Button } from '@linode/ui';
+import { ActionsPanel, Box, Button, Divider, Stack } from '@linode/ui';
 import React from 'react';
 import {
   FormProvider,
@@ -8,6 +8,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 
+import { CloudPulseDimensionFilterFields } from './CloudPulseDimensionFilterFields';
 import { metricDimensionFiltersSchema } from './schema';
 
 import type {
@@ -15,37 +16,43 @@ import type {
   MetricsDimensionFilterForm,
 } from './types';
 import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface CloudPulseDimensionFilterRendererProps {
+  /**
+   * The entity type associated with the service type
+   */
+  associatedEntityType?: AssociatedEntityType;
+
   /**
    * The clear all trigger to reset the form
    */
   clearAllTrigger: number;
-
   /**
    * The list of dimensions associated with the selected metric
    */
   dimensionOptions: Dimension[];
+
   /**
    * Callback triggered to close the drawer
    */
   onClose: () => void;
-
   /**
    * Callback to publish any change in form
    * @param isDirty indicated the changes
    */
   onDimensionChange: (isDirty: boolean) => void;
+
   /**
    * Callback triggered on form submission
    * @param data The form data on submission
    */
   onSubmit: (data: MetricsDimensionFilterForm) => void;
-
   /**
    * The selected dimension filters for the metric
    */
   selectedDimensions?: MetricsDimensionFilter[];
+
   /**
    * The selected entities for the dimension filter
    */
@@ -69,6 +76,11 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       clearAllTrigger,
       onClose,
       onDimensionChange,
+      dimensionOptions,
+      selectedEntities = [],
+      serviceType,
+      selectedRegions,
+      associatedEntityType,
     } = props;
 
     const formMethods = useForm<MetricsDimensionFilterForm>({
@@ -93,7 +105,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       });
     });
 
-    const { append, fields } = useFieldArray({
+    const { append, fields, remove } = useFieldArray({
       control,
       name: 'dimension_filters',
     });
@@ -126,7 +138,33 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       <FormProvider {...formMethods}>
         <form onSubmit={handleFormSubmit} ref={formRef}>
           <Box display="flex" flexDirection="column" gap={1}>
-            {/* upcoming: Integrate with dimension filter row component */}
+            <Stack gap={1.25}>
+              {fields?.length > 0 &&
+                fields.map((field, index) => (
+                  <React.Fragment key={field.id}>
+                    <CloudPulseDimensionFilterFields
+                      associatedEntityType={associatedEntityType}
+                      dimensionOptions={dimensionOptions}
+                      key={field.id}
+                      name={`dimension_filters.${index}`}
+                      onFilterDelete={() => remove(index)}
+                      selectedEntities={selectedEntities}
+                      selectedRegions={selectedRegions}
+                      serviceType={serviceType}
+                    />
+                    <Divider
+                      sx={(theme) => ({
+                        display: 'none',
+                        [theme.breakpoints.down('md')]: {
+                          // only show the divider for smaller screens
+                          display:
+                            index === fields.length - 1 ? 'none' : 'flex',
+                        },
+                      })}
+                    />
+                  </React.Fragment>
+                ))}
+            </Stack>
             <Button
               compactX
               data-qa-buttons="true"
