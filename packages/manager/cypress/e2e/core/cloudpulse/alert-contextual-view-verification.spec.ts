@@ -40,7 +40,7 @@ const alertConfigs = [
     metric: 'CPU Usage',
     threshold: 55,
     type: 'system',
-    status: 'enabled',
+    status: 'provisioning',
     scope: 'account',
     id: 1,
   },
@@ -50,8 +50,9 @@ const alertConfigs = [
     metric: 'Memory Usage',
     threshold: 100,
     type: 'user',
-    status: 'in progress',
+    status: 'enabling',
     scope: 'account',
+    id: 2,
   },
   {
     aggregate_function: 'sum' as RecPartial<MetricAggregationType>,
@@ -59,8 +60,9 @@ const alertConfigs = [
     metric: 'Disk Usage',
     threshold: 75,
     type: 'user',
-    status: 'in progress',
+    status: 'enabling',
     scope: 'entity',
+    id: 3,
   },
   {
     aggregate_function: 'max' as RecPartial<MetricAggregationType>,
@@ -68,8 +70,9 @@ const alertConfigs = [
     metric: 'Network Usage',
     threshold: 90,
     type: 'system',
-    status: 'enabled',
+    status: 'in progress',
     scope: 'entity',
+    id: 4,
   },
   // below are the additional alert configurations and should show up in the table
   {

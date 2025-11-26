@@ -109,6 +109,7 @@ const mockProfile = profileFactory.build({
 });
 const mockAlerts = alertFactory.build({
   label: 'Alert-1',
+  status: 'provisioning',
 });
 const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
 /**
@@ -249,6 +250,7 @@ describe('Create Firewall Alert Successfully', () => {
         service_type: 'dbaas',
         severity: 0,
         tags: [''],
+        status: 'provisioning',
         trigger_conditions: triggerConditionFactory.build(),
         scope: value,
         ...(value === 'region' ? { regions: regionList } : {}),
