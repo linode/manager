@@ -314,7 +314,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         }}
         value={addressesValue}
       />
-      {/* Show this field only if "IP / Netmask has been selected." */}
+      {/* Show this field only if "IP / Netmask / Prefix List has been selected." */}
       {values.addresses === 'ip/netmask/prefixlist' && (
         <>
           <StyledMultipleIPInput
