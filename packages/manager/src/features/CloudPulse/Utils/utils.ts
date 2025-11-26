@@ -23,6 +23,7 @@ import {
 } from './constants';
 
 import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from '../shared/types';
 import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
@@ -37,6 +38,7 @@ import type {
   FirewallDeviceEntity,
   KubernetesCluster,
   MonitoringCapabilities,
+  ObjectStorageBucket,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -564,6 +566,29 @@ export const filterKubernetesClusters = (
   return clusters
     .filter(({ tier }) => tier === 'enterprise')
     .sort((a, b) => a.label.localeCompare(b.label));
+};
+
+/**
+ * @param buckets The list of buckets
+ * @returns The valid sorted endpoints
+ */
+export const getValidSortedEndpoints = (
+  buckets: ObjectStorageBucket[] | undefined
+): CloudPulseResources[] => {
+  if (!buckets) return [];
+
+  const visitedEndpoints = new Set<string>();
+  const uniqueEndpoints: CloudPulseResources[] = [];
+
+  buckets.forEach(({ s3_endpoint: s3Endpoint, region }) => {
+    if (s3Endpoint && region && !visitedEndpoints.has(s3Endpoint)) {
+      visitedEndpoints.add(s3Endpoint);
+      uniqueEndpoints.push({ id: s3Endpoint, label: s3Endpoint, region });
+    }
+  });
+
+  uniqueEndpoints.sort((a, b) => a.label.localeCompare(b.label));
+  return uniqueEndpoints;
 };
 
 /**

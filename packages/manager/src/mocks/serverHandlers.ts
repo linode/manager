@@ -3563,6 +3563,13 @@ export const handlers = [
           service_type: 'objectstorage',
         })
       );
+      response.data.push(
+        dashboardFactory.build({
+          id: 10,
+          label: 'Endpoint Dashboard',
+          service_type: 'objectstorage',
+        })
+      );
     }
 
     if (params.serviceType === 'blockstorage') {
@@ -4007,6 +4014,9 @@ export const handlers = [
     } else if (id === '9') {
       serviceType = 'lke';
       dashboardLabel = 'Kubernetes Enterprise Dashboard';
+    } else if (id === '10') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Endpoint Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
