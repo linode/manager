@@ -14,10 +14,11 @@ import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
-  addressOptions,
   firewallOptionItemsShort,
   portPresets,
   protocolOptions,
+  useAddressOptions,
+  useIsFirewallRulesetsPrefixlistsEnabled,
 } from 'src/features/Firewalls/shared';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
@@ -57,6 +58,11 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     touched,
     values,
   } = props;
+
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  const addressOptions = useAddressOptions();
 
   const hasCustomInput = presetPorts.some(
     (thisPort) => thisPort.value === PORT_PRESETS['CUSTOM'].value
@@ -150,10 +156,16 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     (item: string) => {
       setFieldValue('addresses', item);
       // Reset custom IPs & PLs
-      setIPs([]);
-      setPLs([]);
+      if (isFirewallRulesetsPrefixlistsFeatureEnabled) {
+        // For "IP / Netmask / Prefix List": reset both custom IPs and PLs
+        setIPs([]);
+        setPLs([]);
+      } else {
+        // For "IP / Netmask": reset IPs to at least one empty input
+        setIPs([{ address: '' }]);
+      }
     },
-    [setFieldValue, setIPs, setPLs]
+    [setFieldValue, setIPs, setPLs, isFirewallRulesetsPrefixlistsFeatureEnabled]
   );
 
   const handleActionChange = React.useCallback(
@@ -320,7 +332,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         <>
           <StyledMultipleIPInput
             aria-label="IP / Netmask for Firewall rule"
-            canRemoveFirstInput
+            canRemoveFirstInput={isFirewallRulesetsPrefixlistsFeatureEnabled}
             ips={ips}
             onBlur={handleIPBlur}
             onChange={handleIPChange}
@@ -328,14 +340,15 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
             title={ips.length > 0 ? 'IP / Netmask' : ''}
             tooltip={ipNetmaskTooltipText}
           />
-
-          <MultiplePrefixListInput
-            aria-label="Prefix List for Firewall rule"
-            buttonText="Add a Prefix List"
-            onChange={handlePrefixListChange}
-            pls={pls}
-            title={pls.length > 0 ? 'Prefix List' : ''}
-          />
+          {isFirewallRulesetsPrefixlistsFeatureEnabled && (
+            <MultiplePrefixListInput
+              aria-label="Prefix List for Firewall rule"
+              buttonText="Add a Prefix List"
+              onChange={handlePrefixListChange}
+              pls={pls}
+              title={pls.length > 0 ? 'Prefix List' : ''}
+            />
+          )}
         </>
       )}
       <StyledDiv>

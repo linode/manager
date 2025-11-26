@@ -72,12 +72,26 @@ export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'IPENCAP', value: 'IPENCAP' },
 ];
 
-export const addressOptions = [
-  { label: 'All IPv4, All IPv6', value: 'all' },
-  { label: 'All IPv4', value: 'allIPv4' },
-  { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask / Prefix List', value: 'ip/netmask/prefixlist' },
-];
+export const useAddressOptions = () => {
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  const addressOptions = [
+    { label: 'All IPv4, All IPv6', value: 'all' },
+    { label: 'All IPv4', value: 'allIPv4' },
+    { label: 'All IPv6', value: 'allIPv6' },
+    {
+      label: isFirewallRulesetsPrefixlistsFeatureEnabled
+        ? 'IP / Netmask / Prefix List'
+        : 'IP / Netmask',
+      value: 'ip/netmask/prefixlist', // keep the same value
+    },
+  ];
+
+  return React.useMemo(() => {
+    return addressOptions;
+  }, [isFirewallRulesetsPrefixlistsFeatureEnabled]);
+};
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
   dns: '53',
