@@ -23,6 +23,7 @@ import { useIsFirewallRulesetsPrefixlistsEnabled } from 'src/features/Firewalls/
 
 import { getPrefixListType } from './shared';
 
+import type { FirewallPrefixList } from '@linode/api-v4';
 import type { InputBaseProps } from '@mui/material/InputBase';
 import type { Theme } from '@mui/material/styles';
 import type { ExtendedPL } from 'src/utilities/ipUtils';
@@ -167,41 +168,25 @@ export const MultiplePrefixListInput = React.memo(
 
     const prefixLists = data ?? [];
 
-    // const prefixLists: Partial<FirewallPrefixList>[] = [
-    //   { id: 1, name: 'pl::subnets:325584', ipv6: ['asdas'] },
-    //   { id: 2, name: 'pl::vpcs:298694', ipv4: [], ipv6: [] },
-    //   {
-    //     id: 3,
-    //     name: 'pl:system:test-3',
-    //     ipv4: ['192.168.0'],
-    //     ipv6: null,
-    //   },
-    //   { id: 4, name: 'pl:system:test-4', ipv4: null, ipv6: ['124.4124.124'] },
-    //   { id: 5, name: 'pl:system:test-5', ipv4: null, ipv6: null },
-    // ];
+    const isPrefixListSupported = (pl: FirewallPrefixList) =>
+      (pl.ipv4 !== null && pl.ipv4 !== undefined) ||
+      (pl.ipv6 !== null && pl.ipv6 !== undefined);
 
-    const prefixListDropdownOptions = React.useMemo(
+    const supportedPrefixListOptions = React.useMemo(
       () =>
-        prefixLists
-          .filter((pl) => {
-            const isUnsupported =
-              (pl.ipv4 === null || pl.ipv4 === undefined) &&
-              (pl.ipv6 === null || pl.ipv6 === undefined);
-            return !isUnsupported;
-          })
-          .map((pl) => ({
-            label: pl.name,
-            value: pl.id,
-            notSupportedDetails: {
-              isPLIPv4NotSupported: pl.ipv4 === null || pl.ipv4 === undefined,
-              isPLIPv6NotSupported: pl.ipv6 === null || pl.ipv6 === undefined,
-            },
-          })),
+        prefixLists.filter(isPrefixListSupported).map((pl) => ({
+          label: pl.name,
+          value: pl.id,
+          notSupportedDetails: {
+            isPLIPv4NotSupported: pl.ipv4 === null || pl.ipv4 === undefined,
+            isPLIPv6NotSupported: pl.ipv6 === null || pl.ipv6 === undefined,
+          },
+        })),
       [prefixLists]
     );
 
     const getAvailableOptions = (idx: number, address: string) =>
-      prefixListDropdownOptions.filter(
+      supportedPrefixListOptions.filter(
         (o) =>
           o.label === address || // allow current
           !pls.some((p, i) => i !== idx && p.address === o.label)
@@ -212,7 +197,7 @@ export const MultiplePrefixListInput = React.memo(
 
       newPLs[idx].address = pl;
 
-      const plNotSupportedDetails = prefixListDropdownOptions.find(
+      const plNotSupportedDetails = supportedPrefixListOptions.find(
         (o) => o.label === newPLs[idx].address
       )?.notSupportedDetails;
 
@@ -244,7 +229,7 @@ export const MultiplePrefixListInput = React.memo(
     const handleChangeIPv4 = (hasIPv4: boolean, idx: number) => {
       const newPLs = [...pls];
 
-      const details = prefixListDropdownOptions.find(
+      const details = supportedPrefixListOptions.find(
         (o) => o.label === newPLs[idx].address
       )?.notSupportedDetails;
 
@@ -264,7 +249,7 @@ export const MultiplePrefixListInput = React.memo(
     const handleChangeIPv6 = (hasIPv6: boolean, idx: number) => {
       const newPLs = [...pls];
 
-      const details = prefixListDropdownOptions.find(
+      const details = supportedPrefixListOptions.find(
         (o) => o.label === newPLs[idx].address
       )?.notSupportedDetails;
 
