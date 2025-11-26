@@ -24,6 +24,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
     accountAlertLimit: 10,
     accountMetricLimit: 10,
     alertDefinitions: true,
+    beta: true,
     recentActivity: false,
     notificationChannels: false,
     editDisabledStatuses: [

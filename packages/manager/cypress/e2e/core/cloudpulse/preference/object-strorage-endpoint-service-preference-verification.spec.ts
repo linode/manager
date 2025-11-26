@@ -1,5 +1,5 @@
 /**
- * @file Integration Tests for CloudPulse Object Storage Dashboard.
+ * @file Integration Tests for CloudPulse Object Storage Endpoint Dashboard.
  */
 import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
@@ -40,8 +40,9 @@ import {
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, serviceType } = widgetDetails.objectstorage;
-
+const {metrics, serviceType } = widgetDetails.objectstorage;
+const id=10;
+const dashboardName='object storageby endpoint dashboard';
 // Build a shared dimension object
 const dimensions = [
   {
@@ -66,7 +67,7 @@ const getFiltersForMetric = (metricName: string) => {
 // Dashboard creation
 const dashboard = dashboardFactory.build({
   label: dashboardName,
-  group_by: ['entity_id'],
+  group_by: ['endpoint'],
   service_type: 'objectstorage',
   id,
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
@@ -110,7 +111,7 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-describe('Integration Tests for Object Storage Dashboard ', () => {
+describe('Integration Tests for Object Storage Endpoint Dashboard ', () => {
   const bucketMock = [
     objectStorageBucketFactory.build({
       cluster: 'us-ord-1',
@@ -200,8 +201,8 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     mockGetRegions([mockRegion]);
     mockGetUserPreferences({
       aclpPreference: {
-        dashboardId: 6,
-        groupBy: ['entity_id', 'region', 'endpoint'],
+        dashboardId: 10,
+        groupBy: ['region', 'endpoint'],
         widgets: {
           'Total Bucket Size': {
             label: 'Total Bucket Size',
@@ -213,7 +214,6 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
         },
         region: 'us-ord',
         endpoint: ['endpoint_type-E2-us-sea-2.linodeobjects.com'],
-        resources: ['bucket-2.us-ord-2.linodeobjects.com'],
       },
     }).as('fetchPreferences');
 
@@ -239,9 +239,6 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
           .should('be.visible')
           .should('have.text', 'endpoint_type-E2-us-sea-2.linodeobjects.com');
 
-        cy.get('[data-qa-value="Buckets bucket-2.us-ord-2.linodeobjects.com"]')
-          .should('be.visible')
-          .should('have.text', 'bucket-2.us-ord-2.linodeobjects.com');
       });
 
     ui.button.findByTitle('Filters').click();
@@ -278,13 +275,6 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
         .parent() // wrapper containing chips
         .find('[role="button"][data-tag-index="0"]') // select the inner span only
         .should('have.text', 'endpoint_type-E2-us-sea-2.linodeobjects.com');
-
-      // Buckets
-      ui.autocomplete
-        .findByLabel('Buckets')
-        .parent()
-        .find('[role="button"][data-tag-index="0"]')
-        .should('have.text', 'bucket-2.us-ord-2.linodeobjects.com');
 
       // Refresh button (tooltip)
       cy.get('[data-qa-tooltip="Refresh"]').should('exist');
@@ -355,9 +345,6 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
           '[data-qa-value="Endpoints endpoint_type-E2-us-sea-2.linodeobjects.com"]'
         ).should('not.exist');
 
-        cy.get(
-          '[data-qa-value="Buckets bucket-2.us-ord-2.linodeobjects.com"]'
-        ).should('not.exist');
       });
 
     cy.wait('@updatePreference').then(({ request, response }) => {
@@ -368,8 +355,8 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
           : response.body);
 
       const expectedAclpPreference = {
-        dashboardId: 6,
-        groupBy: ['entity_id', 'region', 'endpoint'],
+        dashboardId: 10,
+        groupBy: ['region', 'endpoint'],
         widgets: {
           'Total Bucket Size': {
             label: 'Total Bucket Size',
@@ -405,10 +392,6 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
         cy.get(
           '[data-qa-value="Endpoints endpoint_type-E2-us-sea-2.linodeobjects.com"]'
         ).should('not.exist');
-
-        cy.get(
-          '[data-qa-value="Buckets bucket-2.us-ord-2.linodeobjects.com"]'
-        ).should('not.exist');
       });
 
     cy.wait('@updatePreference').then(({ request, response }) => {
@@ -419,8 +402,8 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
           : response.body);
 
       const expectedAclpPreference = {
-        dashboardId: 6,
-        groupBy: ['entity_id', 'region', 'endpoint'],
+        dashboardId: 10,
+        groupBy: ['region', 'endpoint'],
         region: 'us-ord',
         resources: [],
         endpoint: [],
@@ -451,68 +434,4 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     });
   });
 
-  it('clears the Bucket Filter and verifies updated user preferences', () => {
-    cy.intercept('PUT', apiMatcher('profile/preferences')).as(
-      'updatePreference'
-    );
-    // clear the Region filter
-    cy.get('[data-qa-autocomplete="Buckets"]')
-      .find('button[aria-label="Clear"]')
-      .click();
-
-    ui.button.findByTitle('Filters').should('be.visible').click();
-
-    cy.get('[data-qa-applied-filter-id="applied-filter"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-qa-value="Region US, Chicago, IL"]').should('be.visible');
-
-        cy.get(
-          '[data-qa-value="Endpoints endpoint_type-E2-us-sea-2.linodeobjects.com"]'
-        ).should('be.visible');
-
-        cy.get(
-          '[data-qa-value="Buckets bucket-2.us-ord-2.linodeobjects.com"]'
-        ).should('not.exist');
-      });
-    cy.wait('@updatePreference').then(({ request, response }) => {
-      const responseBody =
-        response?.body &&
-        (typeof response.body === 'string'
-          ? JSON.parse(response.body)
-          : response.body);
-
-      const expectedAclpPreference = {
-        dashboardId: 6,
-        groupBy: ['entity_id', 'region', 'endpoint'],
-        region: 'us-ord',
-        endpoint: ['endpoint_type-E2-us-sea-2.linodeobjects.com'],
-        resources: [],
-        widgets: {
-          'Total Bucket Size': {
-            label: 'Total Bucket Size',
-            timeGranularity: {
-              unit: 'min',
-              value: 5,
-            },
-            filters: [
-              {
-                operator: 'eq',
-                dimension_label: 'Protocol',
-                value: 'list protocols',
-              },
-            ],
-          },
-          'Bytes Downloaded': {
-            label: 'Bytes Downloaded',
-            timeGranularity: { unit: 'min', value: 5 },
-            filters: [], // OR NO filters key (same result)
-          },
-        },
-      };
-
-      comparePreferences(expectedAclpPreference, responseBody?.aclpPreference);
-      comparePreferences(expectedAclpPreference, request.body.aclpPreference);
-    });
-  });
 });
