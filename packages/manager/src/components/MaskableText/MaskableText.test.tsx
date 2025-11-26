@@ -98,4 +98,66 @@ describe('MaskableText', () => {
     // Original text should be unmasked
     expect(getByText(plainText)).toBeVisible();
   });
+
+  it.each<[MaskableTextProps['length'], number]>([
+    // length prop     expected masked length
+    [undefined, 12], // default fallback
+    ['plaintext', 12], // DEFAULT_MASKED_TEXT_LENGTH for JSX
+    ['ipv4', 15], // from MASKABLE_TEXT_LENGTH_MAP
+    ['ipv6', 30], // from MASKABLE_TEXT_LENGTH_MAP
+    [8, 8], // custom numeric value
+  ])(
+    'should mask JSX list correctly when masking is enabled (length=%s)',
+    (lengthProp, expectedLength) => {
+      queryMocks.usePreferences.mockReturnValue({ data: preference });
+
+      const jsxList = (
+        <ul>
+          <li>item1</li>
+          <li>item2</li>
+          <li>secret-value</li>
+        </ul>
+      );
+
+      const expectedMasked = '•'.repeat(expectedLength);
+
+      const { getByText, queryByText } = renderWithTheme(
+        <MaskableText length={lengthProp} text={jsxList} />
+      );
+
+      // Masking works
+      expect(getByText(expectedMasked)).toBeVisible();
+
+      // The JSX list content must NOT show
+      expect(queryByText('item1')).not.toBeInTheDocument();
+      expect(queryByText('item2')).not.toBeInTheDocument();
+      expect(queryByText('secret-value')).not.toBeInTheDocument();
+    }
+  );
+
+  it('should render JSX list unmasked when masking preference is disabled', () => {
+    queryMocks.usePreferences.mockReturnValue({ data: false });
+
+    const jsxList = (
+      <ul>
+        <li>item1</li>
+        <li>item2</li>
+        <li>secret-value</li>
+      </ul>
+    );
+
+    const { getByText, queryByText } = renderWithTheme(
+      <MaskableText length={8} text={jsxList} />
+    );
+
+    const maskedText = '•'.repeat(8);
+
+    // Original JSX content should be visible
+    expect(getByText('item1')).toBeVisible();
+    expect(getByText('item2')).toBeVisible();
+    expect(getByText('secret-value')).toBeVisible();
+
+    // Masked text should NOT appear
+    expect(queryByText(maskedText)).not.toBeInTheDocument();
+  });
 });
