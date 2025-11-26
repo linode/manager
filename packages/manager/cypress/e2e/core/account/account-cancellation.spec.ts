@@ -236,6 +236,13 @@ describe('Account cancellation', () => {
 });
 
 describe('Parent/Child account cancellation', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
   /*
    * - Confirms that a child user cannot close the account.
    */
