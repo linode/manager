@@ -1362,7 +1362,13 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(rulesets));
   }),
   http.get('*/v4beta/networking/prefixlists', () => {
-    const prefixlists = firewallPrefixListFactory.buildList(10);
+    const prefixlists = [
+      firewallPrefixListFactory.build({ name: 'pl:system:test-1' }),
+      ...Array.from({ length: 5 }, (_, i) =>
+        firewallPrefixListFactory.build({ name: `pl::vpcs:test-${i + 1}` })
+      ),
+      ...firewallPrefixListFactory.buildList(10),
+    ];
     return HttpResponse.json(makeResourcePage(prefixlists));
   }),
   http.get(
