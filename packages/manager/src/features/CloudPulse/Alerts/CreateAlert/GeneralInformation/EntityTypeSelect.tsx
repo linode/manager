@@ -3,7 +3,8 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { ControllerRenderProps, FieldPathByValue } from 'react-hook-form';
 
-import type { Item } from '../../constants';
+import { entityTypeTooltipText, type Item } from '../../constants';
+
 import type { CreateAlertDefinitionForm } from '../types';
 
 interface EntityTypeSelectProps {
@@ -55,6 +56,10 @@ export const EntityTypeSelect = (props: EntityTypeSelectProps) => {
           options={entityTypeOptions}
           placeholder="Select an Entity Type"
           sx={{ marginTop: '5px' }}
+          textFieldProps={{
+            labelTooltipText: entityTypeTooltipText,
+            tooltipPosition: 'right',
+          }}
           value={
             entityTypeOptions.find((option) => option.value === field.value) ??
             undefined

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
+import { entityTypeTooltipText } from '../../constants';
 import { EntityTypeSelect } from './EntityTypeSelect';
 
 describe('EntityTypeSelect component tests', () => {
@@ -128,5 +129,26 @@ describe('EntityTypeSelect component tests', () => {
     expect(
       within(entityTypeDropdown).queryByRole('button', { name: 'Clear' })
     ).not.toBeInTheDocument();
+  });
+
+  it('should display tooltip text on hover of the help icon', async () => {
+    renderWithThemeAndHookFormContext({
+      component: (
+        <EntityTypeSelect
+          name="entity_type"
+          onEntityTypeChange={onEntityChange}
+        />
+      ),
+    });
+
+    const entityTypeContainer = screen.getByTestId(ENTITY_TYPE_SELECT_TEST_ID);
+    const helpButton =
+      within(entityTypeContainer).getByTestId('tooltip-info-icon');
+
+    await userEvent.hover(helpButton);
+
+    expect(await screen.findByText(entityTypeTooltipText)).toBeVisible();
+
+    await userEvent.unhover(helpButton);
   });
 });
