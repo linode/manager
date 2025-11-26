@@ -76,7 +76,7 @@ export const addressOptions = [
   { label: 'All IPv4, All IPv6', value: 'all' },
   { label: 'All IPv4', value: 'allIPv4' },
   { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask', value: 'ip/netmask' },
+  { label: 'IP / Netmask / Prefix List', value: 'ip/netmask/prefixlist' },
 ];
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {

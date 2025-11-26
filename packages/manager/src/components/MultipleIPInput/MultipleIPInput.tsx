@@ -71,6 +71,12 @@ export interface MultipeIPInputProps {
   buttonText?: string;
 
   /**
+   * Whether the first input field can be removed.
+   * @default false
+   */
+  canRemoveFirstInput?: boolean;
+
+  /**
    * Custom CSS class for additional styling.
    */
   className?: string;
@@ -155,6 +161,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const {
     adjustSpacingForVPCDualStack,
     buttonText,
+    canRemoveFirstInput,
     className,
     disabled,
     error,
@@ -304,7 +311,10 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
              * used in DBaaS or for Linode VPC interfaces
              */}
             <Grid size={1}>
-              {(idx > 0 || forDatabaseAccessControls || forVPCIPRanges) && (
+              {(idx > 0 ||
+                forDatabaseAccessControls ||
+                forVPCIPRanges ||
+                canRemoveFirstInput) && (
                 <IconButton
                   aria-disabled={disabled}
                   className={classes.button}
