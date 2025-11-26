@@ -1356,10 +1356,14 @@ export const handlers = [
               id: 123,
             });
           case 123456789:
-            // Ruleset with larger ID 123456789 & Longer label with 32 chars
+            // Ruleset with larger ID 123456789, Longer label with 32 chars, and
+            // Marked for deletion status
             return firewallRuleSetFactory.build({
               id: 123456789,
               label: 'ruleset-with-a-longer-32ch-label',
+              deleted: '2025-11-18T18:51:11',
+              description:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a fermentum quam. Mauris posuere dapibus aliquet. Ut id dictum magna, vitae congue turpis. Curabitur sollicitudin odio vel lacus vehicula maximus.',
             });
           default:
             return firewallRuleSetFactory.build();
@@ -3219,6 +3223,10 @@ export const handlers = [
           rules: [firewallNodebalancerMetricCriteria.build()],
         },
       }),
+      ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'in progress', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3301,6 +3309,14 @@ export const handlers = [
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
             scope: pickRandom(['account', 'region', 'entity']),
+            status: pickRandom([
+              'enabled',
+              'disabled',
+              'in progress',
+              'enabling',
+              'disabling',
+              'provisioning',
+            ]),
           })
         );
       }
