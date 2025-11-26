@@ -92,9 +92,12 @@ describe('useIsGenerationalPlansEnabled', () => {
       flags: { generationalPlansv2: { enabled: true, allowedPlans: [] } },
     };
 
-    const { result } = renderHook(() => useIsGenerationalPlansEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
+    const { result } = renderHook(
+      () => useIsGenerationalPlansEnabled(undefined, undefined),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
 
     expect(result.current?.isGenerationalPlansEnabled).toBe(true);
   });
@@ -104,9 +107,12 @@ describe('useIsGenerationalPlansEnabled', () => {
       flags: { generationalPlansv2: { enabled: false, allowedPlans: [] } },
     };
 
-    const { result } = renderHook(() => useIsGenerationalPlansEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
+    const { result } = renderHook(
+      () => useIsGenerationalPlansEnabled(undefined, undefined),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
 
     expect(result.current?.isGenerationalPlansEnabled).toBe(false);
   });
@@ -188,9 +194,12 @@ describe('useIsGenerationalPlansEnabled', () => {
       flags: { generationalPlansv2: { enabled: true, allowedPlans: [] } },
     };
 
-    const { result } = renderHook(() => useIsGenerationalPlansEnabled([]), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
+    const { result } = renderHook(
+      () => useIsGenerationalPlansEnabled([], 'dedicated'),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
 
     expect(result.current?.isGenerationalPlansEnabled).toBe(true);
   });

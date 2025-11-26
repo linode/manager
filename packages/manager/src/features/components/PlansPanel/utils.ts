@@ -504,7 +504,7 @@ export const useShouldDisablePremiumPlansTab = ({
   types: LinodeType[] | PlanSelectionType[] | undefined;
 }): boolean => {
   const { isGenerationalPlansEnabled, allowedPlans } =
-    useIsGenerationalPlansEnabled();
+    useIsGenerationalPlansEnabled(types, 'premium');
   // Check if any public premium plans are available.
   // We can omit "Premium HT" and "Premium nested" plans as customers don't deploy them using cloud manager.
   const arePublicPremiumPlansAvailable = types?.some(

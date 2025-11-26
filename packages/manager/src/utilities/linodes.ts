@@ -101,12 +101,12 @@ export const useIsLinodeCloneFirewallEnabled = () => {
  * For plan classes other than 'dedicated' and 'premium' (e.g., 'gpu', 'highmem', 'standard'),
  * the feature is controlled solely by the feature flag, regardless of G7/G8 plan availability.
  *
- * @param plans - Optional array of plans to check for G7/G8 dedicated availability
- * @param planType - Optional plan class type (e.g., 'dedicated', 'gpu', 'premium')
+ * @param plans - Array of plans to check for G7/G8 dedicated availability
+ * @param planType - Plan class type (e.g., 'dedicated', 'gpu', 'premium')
  */
 export const useIsGenerationalPlansEnabled = (
-  plans?: Array<{ id: string }>,
-  planType?: LinodeTypeClass
+  plans: Array<{ id: string }> | undefined,
+  planType: LinodeTypeClass | undefined
 ) => {
   const flags = useFlags();
 
@@ -120,21 +120,12 @@ export const useIsGenerationalPlansEnabled = (
     };
   }
 
-  // If no plans provided, return flag value
-  if (!plans || plans.length === 0) {
-    return {
-      isGenerationalPlansEnabled: isFlagEnabled,
-      allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
-    };
-  }
-
-  // We need to check planType because from PlanContainer the plans passed are already filtered by planType
-  // Only check G7/G8 availability for 'dedicated' and 'premium' plan classes
-  // Other plan classes (gpu, highmem, standard, etc.) rely solely on the feature flag
+  // For plans other then dedicated/premium, or when no plans are provided,
+  // rely solely on the feature flag without checking G7/G8 availability
   const shouldCheckG7G8Availability =
     planType === 'dedicated' || planType === 'premium';
 
-  if (!shouldCheckG7G8Availability) {
+  if (!plans || plans.length === 0 || !shouldCheckG7G8Availability) {
     return {
       isGenerationalPlansEnabled: isFlagEnabled,
       allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
