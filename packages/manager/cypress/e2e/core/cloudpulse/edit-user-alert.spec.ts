@@ -187,7 +187,7 @@ describe('Integration Tests for Edit Alert', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(label).should('be.visible');
-        cy.findByText('Enabled').should('be.visible');
+        cy.findByText('Provisioning').should('be.visible');
         cy.findByText('Databases').should('be.visible');
         cy.findByText('user1').should('be.visible');
         cy.findByText(formattedDate).should('be.visible');
@@ -443,6 +443,7 @@ describe('Integration Tests for Edit Alert', () => {
         scope: value,
         id: 1,
         regions: regionList,
+        status: 'provisioning',
       });
       mockGetRegions(regions);
       mockGetCloudPulseServiceByType('dbaas', services);
