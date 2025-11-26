@@ -154,23 +154,24 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         >
           <Grid>
             {isFetching ? null : (
-              <Typography
-                data-qa-drawer-title={lastTitleRef.current}
-                data-testid="drawer-title"
-                id={titleID}
-                sx={(theme) => ({
-                  marginRight: theme.spacing(2),
-                  wordBreak: 'break-word',
-                })}
-                variant="h2"
-              >
-                {lastTitleRef.current}
+              <Box display="flex">
+                <Typography
+                  data-qa-drawer-title={lastTitleRef.current}
+                  data-testid="drawer-title"
+                  id={titleID}
+                  sx={{
+                    wordBreak: 'break-word',
+                  }}
+                  variant="h2"
+                >
+                  {lastTitleRef.current}
+                </Typography>
                 {isDrawerBeta && (
                   <span>
                     <BetaChip />
                   </span>
                 )}
-              </Typography>
+              </Box>
             )}
           </Grid>
           <Grid>
