@@ -1,7 +1,11 @@
 import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
-import { kubernetesClusterFactory, serviceTypesFactory } from 'src/factories';
+import {
+  kubernetesClusterFactory,
+  objectStorageBucketFactoryGen2,
+  serviceTypesFactory,
+} from 'src/factories';
 import {
   firewallEntityfactory,
   firewallFactory,
@@ -29,6 +33,7 @@ import {
   filterKubernetesClusters,
   getEnabledServiceTypes,
   getFilteredDimensions,
+  getValidSortedEndpoints,
   isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -707,5 +712,40 @@ describe('arraysEqual', () => {
   });
   it('should return true when arrays have same elements but in different order', () => {
     expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
+  });
+});
+
+describe('getValidSortedEndpoints', () => {
+  it('should return an empty array when buckets are undefined', () => {
+    expect(getValidSortedEndpoints(undefined)).toEqual([]);
+  });
+  it('should return the valid and unique sorted endpoints', () => {
+    const buckets = [
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'a',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'b',
+        region: undefined,
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: undefined,
+        region: 'us-east',
+      }),
+    ];
+    // Only a and c are valid, so they are sorted and returned
+    expect(getValidSortedEndpoints(buckets)).toEqual([
+      { id: 'a', label: 'a', region: 'us-east' },
+      { id: 'c', label: 'c', region: 'us-east' },
+    ]);
   });
 });

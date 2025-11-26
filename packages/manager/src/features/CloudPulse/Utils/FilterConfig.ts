@@ -11,12 +11,12 @@ import {
   RESOURCE_ID,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
-import { filterKubernetesClusters } from './utils';
+import { filterKubernetesClusters, getValidSortedEndpoints } from './utils';
 
 import type { AssociatedEntityType } from '../shared/types';
 import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type { CloudPulseServiceTypeFilterMap } from './models';
-import type { KubernetesCluster } from '@linode/api-v4';
+import type { KubernetesCluster, ObjectStorageBucket } from '@linode/api-v4';
 
 const TIME_DURATION = 'Time Range';
 
@@ -420,6 +420,8 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           name: 'Endpoints',
           priority: 2,
           neededInViews: [CloudPulseAvailableViews.central],
+          filterFn: (resources: ObjectStorageBucket[]) =>
+            getValidSortedEndpoints(resources),
         },
         name: 'Endpoints',
       },
@@ -437,6 +439,45 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           priority: 3,
         },
         name: 'Buckets',
+      },
+    ],
+    serviceType: 'objectstorage',
+  };
+
+export const ENDPOINT_DASHBOARD_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['objectstorage'],
+    filters: [
+      {
+        configuration: {
+          filterKey: REGION,
+          children: [ENDPOINT],
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          name: 'Region',
+          priority: 1,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Region',
+      },
+      {
+        configuration: {
+          dimensionKey: 'endpoint',
+          dependency: [REGION],
+          filterKey: ENDPOINT,
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: false,
+          isMultiSelect: true,
+          hasRestrictedSelections: true,
+          name: 'Endpoints',
+          priority: 2,
+          neededInViews: [CloudPulseAvailableViews.central],
+          filterFn: (resources: ObjectStorageBucket[]) =>
+            getValidSortedEndpoints(resources),
+        },
+        name: 'Endpoints',
       },
     ],
     serviceType: 'objectstorage',
@@ -522,6 +563,7 @@ export const FILTER_CONFIG: Readonly<
   [7, BLOCKSTORAGE_CONFIG],
   [8, FIREWALL_NODEBALANCER_CONFIG],
   [9, LKE_CONFIG],
+  [10, ENDPOINT_DASHBOARD_CONFIG],
 ]);
 
 /**
@@ -534,8 +576,13 @@ export const getResourcesFilterConfig = (
   if (!dashboardId) {
     return undefined;
   }
-  // Get the associated entity type for the dashboard
+  // Get the resources filter configuration for the dashboard
   const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (isEndpointsOnlyDashboard(dashboardId)) {
+    return filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === ENDPOINT
+    )?.configuration;
+  }
   return filterConfig?.filters.find(
     (filter) => filter.configuration.filterKey === RESOURCE_ID
   )?.configuration;
@@ -552,4 +599,24 @@ export const getAssociatedEntityType = (
     return undefined;
   }
   return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
+};
+
+/**
+ * @param dashboardId id of the dashboard
+ * @returns whether dashboard is an endpoints only dashboard
+ */
+export const isEndpointsOnlyDashboard = (dashboardId: number): boolean => {
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (!filterConfig) {
+    return false;
+  }
+  const endpointsFilter = filterConfig?.filters.find(
+    (filter) => filter.name === 'Endpoints'
+  );
+  if (endpointsFilter) {
+    // Verify if the dashboard has buckets filter, if not then it is an endpoints only dashboard
+    return !filterConfig.filters.some((filter) => filter.name === 'Buckets');
+  }
+
+  return false;
 };
