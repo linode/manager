@@ -207,6 +207,7 @@ describe('Alert Row', () => {
             editDisabledStatuses: ['failed', 'in progress'],
             accountAlertLimit: 10,
             accountMetricLimit: 100,
+            beta: true,
             alertDefinitions: true,
             notificationChannels: false,
             recentActivity: false,
