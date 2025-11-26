@@ -26,6 +26,7 @@ describe('Tests for CloudPulse Dimension Filters Select', () => {
     const handleSubmit = vi.fn();
     renderWithTheme(
       <CloudPulseDimensionFiltersSelect
+        dashboardId={1}
         dimensionOptions={dimensionOptions}
         drawerLabel="Test Metric"
         handleSelectionChange={handleSubmit}
