@@ -1356,10 +1356,14 @@ export const handlers = [
               id: 123,
             });
           case 123456789:
-            // Ruleset with larger ID 123456789 & Longer label with 32 chars
+            // Ruleset with larger ID 123456789, Longer label with 32 chars, and
+            // Marked for deletion status
             return firewallRuleSetFactory.build({
               id: 123456789,
               label: 'ruleset-with-a-longer-32ch-label',
+              deleted: '2025-11-18T18:51:11',
+              description:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a fermentum quam. Mauris posuere dapibus aliquet. Ut id dictum magna, vitae congue turpis. Curabitur sollicitudin odio vel lacus vehicula maximus.',
             });
           default:
             return firewallRuleSetFactory.build();
@@ -3219,6 +3223,10 @@ export const handlers = [
           rules: [firewallNodebalancerMetricCriteria.build()],
         },
       }),
+      ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
+      ...alertFactory.buildList(3, { status: 'in progress', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3301,6 +3309,14 @@ export const handlers = [
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
             scope: pickRandom(['account', 'region', 'entity']),
+            status: pickRandom([
+              'enabled',
+              'disabled',
+              'in progress',
+              'enabling',
+              'disabling',
+              'provisioning',
+            ]),
           })
         );
       }
@@ -3544,6 +3560,13 @@ export const handlers = [
         dashboardFactory.build({
           id: 6,
           label: 'Object Storage Dashboard',
+          service_type: 'objectstorage',
+        })
+      );
+      response.data.push(
+        dashboardFactory.build({
+          id: 10,
+          label: 'Endpoint Dashboard',
           service_type: 'objectstorage',
         })
       );
@@ -3964,9 +3987,36 @@ export const handlers = [
     } else if (id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
+      widgets = [
+        {
+          metric: 'nb_ingress_bytes_accepted',
+          unit: 'Count',
+          label: 'Current Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nb_ingress_bytes_accepted',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'nb_ingress_bytes_dropped',
+          unit: 'Count',
+          label: 'Available Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nb_ingress_bytes_dropped',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+      ];
     } else if (id === '9') {
       serviceType = 'lke';
       dashboardLabel = 'Kubernetes Enterprise Dashboard';
+    } else if (id === '10') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Endpoint Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';

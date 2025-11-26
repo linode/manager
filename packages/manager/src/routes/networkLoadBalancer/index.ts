@@ -14,7 +14,7 @@ const networkLoadBalancersIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import(
-    'src/features/NetworkLoadBalancers/networkLoadBalancersLazyRoute'
+    'src/features/NetworkLoadBalancers/NetworkLoadBalancersLanding/networkLoadBalancersLazyRoute'
   ).then((m) => m.networkLoadBalancersLazyRoute)
 );
 
