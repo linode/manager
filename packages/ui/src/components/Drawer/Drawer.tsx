@@ -1,4 +1,4 @@
-import { CloseIcon } from '@linode/ui';
+import { BetaChip, CloseIcon } from '@linode/ui';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -23,6 +23,12 @@ export interface DrawerProps extends _DrawerProps {
    * It prevents the drawer from showing broken content.
    */
   error?: APIError[] | null | string;
+  /**
+   * Whether the drawer is in beta phase.
+   *
+   * If true, the drawer will feature a beta chip in the title.
+   */
+  isDrawerBeta?: boolean;
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -56,6 +62,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const {
       children,
       error,
+      isDrawerBeta,
       isFetching,
       onClose,
       open,
@@ -158,6 +165,11 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
                 variant="h2"
               >
                 {lastTitleRef.current}
+                {isDrawerBeta && (
+                  <span>
+                    <BetaChip />
+                  </span>
+                )}
               </Typography>
             )}
           </Grid>
