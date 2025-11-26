@@ -167,7 +167,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="nodebalancer-select"
-        disabled={disabled || isLoading}
+        disabled={disabled}
         errorText={
           isError ? `Failed to fetch ${label || 'NodeBalancers'}.` : ''
         }
