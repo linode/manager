@@ -15,7 +15,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 import {
-  generateAddressesLabel,
+  generateAddressesLabelV2,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
 import { RULESET_MARKED_FOR_DELETION_TEXT } from './shared';
@@ -179,14 +179,17 @@ export const FirewallRuleSetDetailsView = (
             />
             <Box>
               {rule.protocol};&nbsp;{rule.ports};&nbsp;
-              {generateAddressesLabel(rule.addresses)}
+              {generateAddressesLabelV2({
+                addresses: rule.addresses,
+                showTruncateChip: false,
+              })}
             </Box>
           </StyledListItem>
         ))}
       </Paper>
 
       <ActionsPanel
-        primaryButtonProps={{
+        secondaryButtonProps={{
           label: 'Cancel',
           onClick: closeDrawer,
         }}
