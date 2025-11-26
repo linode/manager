@@ -310,12 +310,12 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     ruleset,
   } = props;
 
-  const { isFirewallRulesetsPrefixlistsEnabled } =
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
 
   const isRuleSetRow = Boolean(ruleset);
   const isRuleSetRowEnabled =
-    isRuleSetRow && isFirewallRulesetsPrefixlistsEnabled;
+    isRuleSetRow && isFirewallRulesetsPrefixlistsFeatureEnabled;
 
   const isValidRuleSetId = ruleset !== undefined && ruleset !== null;
 

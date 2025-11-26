@@ -152,7 +152,16 @@ describe('generateAddressLabel', () => {
 
 describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
   it('returns true if the feature is enabled', async () => {
-    const options = { flags: { firewallRulesetsPrefixlists: true } };
+    const options = {
+      flags: {
+        fwRulesetsPrefixLists: {
+          enabled: true,
+          beta: false,
+          la: false,
+          ga: false,
+        },
+      },
+    };
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
@@ -162,12 +171,23 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isFirewallRulesetsPrefixlistsEnabled).toBe(true);
+      expect(result.current.isFirewallRulesetsPrefixlistsFeatureEnabled).toBe(
+        true
+      );
     });
   });
 
   it('returns false if the feature is NOT enabled', async () => {
-    const options = { flags: { firewallRulesetsPrefixlists: false } };
+    const options = {
+      flags: {
+        fwRulesetsPrefixLists: {
+          enabled: false,
+          beta: false,
+          la: false,
+          ga: false,
+        },
+      },
+    };
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
@@ -177,7 +197,9 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isFirewallRulesetsPrefixlistsEnabled).toBe(false);
+      expect(result.current.isFirewallRulesetsPrefixlistsFeatureEnabled).toBe(
+        false
+      );
     });
   });
 });

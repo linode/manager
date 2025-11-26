@@ -41,7 +41,7 @@ export const FirewallRuleSetDetailsView = (
 ) => {
   const { category, closeDrawer, ruleset } = props;
 
-  const { isFirewallRulesetsPrefixlistsEnabled } =
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
   const { classes } = useStyles();
 
@@ -54,7 +54,7 @@ export const FirewallRuleSetDetailsView = (
     error,
   } = useFirewallRuleSetQuery(
     ruleset ?? -1,
-    isValidRuleSetId && isFirewallRulesetsPrefixlistsEnabled
+    isValidRuleSetId && isFirewallRulesetsPrefixlistsFeatureEnabled
   );
 
   if (!isValidRuleSetId) {
