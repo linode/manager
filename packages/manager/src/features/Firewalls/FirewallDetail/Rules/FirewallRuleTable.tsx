@@ -125,7 +125,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
 
-  const { isFirewallRulesetsPrefixlistsEnabled } =
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
 
   const addressColumnLabel =
@@ -133,7 +133,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 
   const rowData = firewallRuleToRowData(
     rulesWithStatus,
-    isFirewallRulesetsPrefixlistsEnabled
+    isFirewallRulesetsPrefixlistsFeatureEnabled
   );
 
   const openDrawerForCreating = React.useCallback(() => {
@@ -315,12 +315,12 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     ruleset,
   } = props;
 
-  const { isFirewallRulesetsPrefixlistsEnabled } =
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
 
   const isRuleSetRow = Boolean(ruleset);
   const isRuleSetRowEnabled =
-    isRuleSetRow && isFirewallRulesetsPrefixlistsEnabled;
+    isRuleSetRow && isFirewallRulesetsPrefixlistsFeatureEnabled;
 
   const isValidRuleSetId = ruleset !== undefined && ruleset !== null;
 

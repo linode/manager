@@ -3613,6 +3613,13 @@ export const handlers = [
           service_type: 'objectstorage',
         })
       );
+      response.data.push(
+        dashboardFactory.build({
+          id: 10,
+          label: 'Endpoint Dashboard',
+          service_type: 'objectstorage',
+        })
+      );
     }
 
     if (params.serviceType === 'blockstorage') {
@@ -4030,9 +4037,36 @@ export const handlers = [
     } else if (id === '8') {
       serviceType = 'firewall';
       dashboardLabel = 'Firewall Nodebalancer Dashboard';
+      widgets = [
+        {
+          metric: 'nb_ingress_bytes_accepted',
+          unit: 'Count',
+          label: 'Current Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nb_ingress_bytes_accepted',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+        {
+          metric: 'nb_ingress_bytes_dropped',
+          unit: 'Count',
+          label: 'Available Connections',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nb_ingress_bytes_dropped',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+        },
+      ];
     } else if (id === '9') {
       serviceType = 'lke';
       dashboardLabel = 'Kubernetes Enterprise Dashboard';
+    } else if (id === '10') {
+      serviceType = 'objectstorage';
+      dashboardLabel = 'Endpoint Dashboard';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
