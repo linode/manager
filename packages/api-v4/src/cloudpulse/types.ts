@@ -19,8 +19,15 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type AlertDefinitionScope = 'account' | 'entity' | 'region';
+export type AlertStatusType =
+  | 'disabled'
+  | 'disabling'
+  | 'enabled'
+  | 'enabling'
+  | 'failed'
+  | 'in progress'
+  | 'provisioning';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -152,7 +159,7 @@ export interface Metric {
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   associated_entity_region?: string;
-  entity_ids: number[] | string[];
+  entity_ids: number[] | string[] | undefined;
   entity_region?: string;
   filters?: Filters[];
   group_by?: string[];
