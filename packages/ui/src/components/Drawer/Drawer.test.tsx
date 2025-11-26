@@ -74,4 +74,12 @@ describe('Drawer', () => {
 
     expect(getByRole('progressbar')).toBeVisible();
   });
+
+  it('should render a Dailog with beta chip if isDrawerBeta is true', () => {
+    const { getByText } = renderWithTheme(
+      <Drawer {...defaultArgs} isDrawerBeta open={true} />,
+    );
+
+    expect(getByText('beta')).toBeVisible();
+  });
 });
