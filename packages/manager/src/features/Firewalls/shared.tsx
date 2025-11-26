@@ -76,7 +76,7 @@ export const useAddressOptions = () => {
   const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
 
-  const addressOptions = [
+  return [
     { label: 'All IPv4, All IPv6', value: 'all' },
     { label: 'All IPv4', value: 'allIPv4' },
     { label: 'All IPv6', value: 'allIPv6' },
@@ -84,13 +84,11 @@ export const useAddressOptions = () => {
       label: isFirewallRulesetsPrefixlistsFeatureEnabled
         ? 'IP / Netmask / Prefix List'
         : 'IP / Netmask',
-      value: 'ip/netmask/prefixlist', // keep the same value
+      // We can keep this entire value even if the option is feature-flagged.
+      // Feature-flagging the label (without the "Prefix List" text) is sufficient.
+      value: 'ip/netmask/prefixlist',
     },
   ];
-
-  return React.useMemo(() => {
-    return addressOptions;
-  }, [isFirewallRulesetsPrefixlistsFeatureEnabled]);
 };
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
