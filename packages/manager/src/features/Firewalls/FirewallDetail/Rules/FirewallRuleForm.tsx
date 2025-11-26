@@ -149,10 +149,11 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   const handleAddressesChange = React.useCallback(
     (item: string) => {
       setFieldValue('addresses', item);
-      // Reset custom IPs
+      // Reset custom IPs & PLs
       setIPs([]);
+      setPLs([]);
     },
-    [setFieldValue, setIPs]
+    [setFieldValue, setIPs, setPLs]
   );
 
   const handleActionChange = React.useCallback(
