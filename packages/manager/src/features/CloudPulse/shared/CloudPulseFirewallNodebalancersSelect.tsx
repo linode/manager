@@ -138,7 +138,11 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
         return;
       }
       // To save default values, go through side effects
-      if (!getNodebalancersList || !savePreferences || selectedNodebalancers) {
+      if (
+        !getNodebalancersList.length ||
+        !savePreferences ||
+        selectedNodebalancers
+      ) {
         if (selectedNodebalancers) {
           setSelectedNodebalancers([]);
           handleNodebalancersSelection([]);
@@ -164,7 +168,7 @@ export const CloudPulseFirewallNodebalancersSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="nodebalancer-select"
-        disabled={disabled}
+        disabled={disabled || isLoading}
         errorText={
           isError ? `Failed to fetch ${label || 'NodeBalancers'}.` : ''
         }
