@@ -403,10 +403,19 @@ export const portStringToItems = (
   return [items, customInput.join(', ')];
 };
 
+export interface ValidateFormOptions {
+  isFirewallRulesetsPrefixlistsFeatureEnabled: boolean;
+  validatedIPs: ExtendedIP[];
+  validatedPLs: ExtendedPL[];
+}
+
 export const validateForm = (
   { addresses, description, label, ports, protocol }: Partial<FormState>,
-  validatedIPs: ExtendedIP[],
-  validatedPLs: ExtendedPL[]
+  {
+    validatedIPs,
+    validatedPLs,
+    isFirewallRulesetsPrefixlistsFeatureEnabled,
+  }: ValidateFormOptions
 ) => {
   const errors: Partial<FormState> = {};
 
@@ -434,6 +443,7 @@ export const validateForm = (
   if (!addresses) {
     errors.addresses = 'Sources is a required field.';
   } else if (
+    isFirewallRulesetsPrefixlistsFeatureEnabled &&
     addresses === 'ip/netmask/prefixlist' &&
     validatedIPs.length === 0 &&
     validatedPLs.length === 0

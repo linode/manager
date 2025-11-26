@@ -311,20 +311,47 @@ describe('utilities', () => {
 
   describe('validateForm', () => {
     it('validates protocol', () => {
-      expect(validateForm({}, [], [])).toHaveProperty(
-        'protocol',
-        'Protocol is required.'
-      );
+      expect(
+        validateForm(
+          {},
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
+      ).toHaveProperty('protocol', 'Protocol is required.');
     });
     it('validates ports', () => {
       expect(
-        validateForm({ ports: '80', protocol: 'ICMP' }, [], [])
+        validateForm(
+          { ports: '80', protocol: 'ICMP' },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports', 'Ports are not allowed for ICMP protocols.');
       expect(
-        validateForm({ ports: '443', protocol: 'IPENCAP' }, [], [])
+        validateForm(
+          { ports: '443', protocol: 'IPENCAP' },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports', 'Ports are not allowed for IPENCAP protocols.');
       expect(
-        validateForm({ ports: 'invalid-port', protocol: 'TCP' }, [], [])
+        validateForm(
+          { ports: 'invalid-port', protocol: 'TCP' },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports');
     });
     it('validates custom ports', () => {
@@ -334,20 +361,44 @@ describe('utilities', () => {
       };
       // SUCCESS CASES
       expect(
-        validateForm({ ports: '1234', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1234', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toEqual({});
       expect(
-        validateForm({ ports: '1,2,3,4,5', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1,2,3,4,5', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toEqual({});
       expect(
         validateForm(
           { ports: '1, 2, 3, 4, 5', protocol: 'TCP', ...rest },
-          [],
-          []
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
         )
       ).toEqual({});
       expect(
-        validateForm({ ports: '1-20', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1-20', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toEqual({});
       expect(
         validateForm(
@@ -356,34 +407,86 @@ describe('utilities', () => {
             protocol: 'TCP',
             ...rest,
           },
-          [],
-          []
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
         )
       ).toEqual({});
       expect(
-        validateForm({ ports: '1-2,3-4', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1-2,3-4', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toEqual({});
       expect(
-        validateForm({ ports: '1,5-12', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1,5-12', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toEqual({});
       // FAILURE CASES
       expect(
-        validateForm({ ports: '1,21-12', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1,21-12', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty(
         'ports',
         'Range must start with a smaller number and end with a larger number'
       );
       expect(
-        validateForm({ ports: '1-21-45', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1-21-45', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports', 'Ranges must have 2 values');
       expect(
-        validateForm({ ports: 'abc', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: 'abc', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports', 'Must be 1-65535');
       expect(
-        validateForm({ ports: '1--20', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '1--20', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports', 'Must be 1-65535');
       expect(
-        validateForm({ ports: '-20', protocol: 'TCP', ...rest }, [], [])
+        validateForm(
+          { ports: '-20', protocol: 'TCP', ...rest },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
       ).toHaveProperty('ports', 'Must be 1-65535');
       expect(
         validateForm(
@@ -392,8 +495,11 @@ describe('utilities', () => {
             protocol: 'TCP',
             ...rest,
           },
-          [],
-          []
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
         )
       ).toHaveProperty(
         'ports',
@@ -449,19 +555,41 @@ describe('utilities', () => {
           ports: '80',
           protocol: 'TCP',
         };
-        expect(validateForm({ label: value, ...rest }, [], [])).toEqual(result);
+        expect(
+          validateForm(
+            { label: value, ...rest },
+            {
+              validatedIPs: [],
+              validatedPLs: [],
+              isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+            }
+          )
+        ).toEqual(result);
       });
     });
 
-    it('handles addresses field', () => {
+    it('handles addresses field when isFirewallRulesetsPrefixlistsFeatureEnabled is true', () => {
       // Invalid cases
-      expect(validateForm({}, [], [])).toHaveProperty(
-        'addresses',
-        'Sources is a required field.'
-      );
+      expect(
+        validateForm(
+          {},
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
+      ).toHaveProperty('addresses', 'Sources is a required field.');
 
       expect(
-        validateForm({ addresses: 'ip/netmask/prefixlist' }, [], [])
+        validateForm(
+          { addresses: 'ip/netmask/prefixlist' },
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
       ).toHaveProperty(
         'addresses',
         'Add an IP address in IP/mask format, or reference a Prefix List name.'
@@ -471,28 +599,53 @@ describe('utilities', () => {
       expect(
         validateForm(
           { addresses: 'ip/netmask/prefixlist' },
-          [{ address: '192.268.0.0' }, { address: '192.268.0.1' }],
-          [{ address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: true }]
+          {
+            validatedIPs: [
+              { address: '192.268.0.0' },
+              { address: '192.268.0.1' },
+            ],
+            validatedPLs: [
+              { address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: true },
+            ],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
         )
       ).not.toHaveProperty('addresses');
       expect(
         validateForm(
           { addresses: 'ip/netmask/prefixlist' },
-          [{ address: '192.268.0.0' }],
-          []
+          {
+            validatedIPs: [{ address: '192.268.0.0' }],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
         )
       ).not.toHaveProperty('addresses');
       expect(
         validateForm(
           { addresses: 'ip/netmask/prefixlist' },
-          [],
-          [{ address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: true }]
+          {
+            validatedIPs: [],
+            validatedPLs: [
+              { address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: true },
+            ],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
         )
       ).not.toHaveProperty('addresses');
     });
 
     it('handles required fields', () => {
-      expect(validateForm({}, [], [])).toEqual({
+      expect(
+        validateForm(
+          {},
+          {
+            validatedIPs: [],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+          }
+        )
+      ).toEqual({
         addresses: 'Sources is a required field.',
         label: 'Label is required.',
         ports: 'Ports is a required field.',

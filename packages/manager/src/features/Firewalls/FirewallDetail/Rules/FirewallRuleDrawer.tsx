@@ -14,6 +14,7 @@ import {
   itemsToPortString,
   portStringToItems,
   validateForm,
+  ValidateFormOptions,
   validateIPs,
   validatePrefixLists,
 } from './FirewallRuleDrawer.utils';
@@ -127,6 +128,12 @@ export const FirewallRuleDrawer = React.memo(
 
       const _ports = itemsToPortString(presetPorts, ports!);
 
+      const validateFormOptions: ValidateFormOptions = {
+        validatedIPs,
+        validatedPLs,
+        isFirewallRulesetsPrefixlistsFeatureEnabled,
+      };
+
       return {
         ...validateForm(
           {
@@ -136,8 +143,7 @@ export const FirewallRuleDrawer = React.memo(
             ports: _ports,
             protocol,
           },
-          validatedIPs,
-          validatedPLs
+          validateFormOptions
         ),
         // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
         // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
