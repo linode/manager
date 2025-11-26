@@ -259,18 +259,24 @@ export const getFirewallDescription = (firewall: Firewall) => {
 };
 
 /**
- * Returns whether or not features related to the Firewall Rulesets & Prefixlists project
- * should be enabled.
+ * Returns whether or not features related to the Firewall Rulesets & Prefix Lists project
+ * should be enabled, and whether they are in beta, LA, or GA.
  *
- * Note: Currently, this just uses the `firewallRulesetsPrefixlists` feature flag as a source of truth,
+ * Note: Currently, this just uses the `fwRulesetsPrefixlists` feature flag as a source of truth,
  * but will eventually also look at account capabilities if available.
  */
 export const useIsFirewallRulesetsPrefixlistsEnabled = () => {
   const flags = useFlags();
 
-  // @TODO: Firewall Rulesets & Prefixlists - check for customer tag/account capability when it exists
+  // @TODO: Firewall Rulesets & Prefix Lists - check for customer tag/account capability when it exists
   return {
-    isFirewallRulesetsPrefixlistsEnabled:
-      flags.firewallRulesetsPrefixlists ?? false,
+    isFirewallRulesetsPrefixlistsFeatureEnabled:
+      flags.fwRulesetsPrefixLists?.enabled ?? false,
+    isFirewallRulesetsPrefixListsBetaEnabled:
+      flags.fwRulesetsPrefixLists?.beta ?? false,
+    isFirewallRulesetsPrefixListsLAEnabled:
+      flags.fwRulesetsPrefixLists?.la ?? false,
+    isFirewallRulesetsPrefixListsGAEnabled:
+      flags.fwRulesetsPrefixLists?.ga ?? false,
   };
 };

@@ -67,7 +67,12 @@ const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
 
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
-    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: false });
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
 
     const { getByText } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
@@ -98,7 +103,12 @@ describe('AddRuleDrawer', () => {
 
 describe('AddRuleSetDrawer', () => {
   beforeEach(() => {
-    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
   });
 
   it('renders the drawer title', () => {
@@ -171,7 +181,12 @@ describe('AddRuleSetDrawer', () => {
 
 describe('ViewRuleSetDetailsDrawer', () => {
   beforeEach(() => {
-    spy.mockReturnValue({ isFirewallRulesetsPrefixlistsEnabled: true });
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
   });
 
   const activeRuleSet = firewallRuleSetFactory.build({ id: 123 });
