@@ -14,7 +14,6 @@ import {
   itemsToPortString,
   portStringToItems,
   validateForm,
-  ValidateFormOptions,
   validateIPs,
   validatePrefixLists,
 } from './FirewallRuleDrawer.utils';
@@ -30,6 +29,7 @@ import type {
   FormRuleSetState,
   FormState,
 } from './FirewallRuleDrawer.types';
+import type { ValidateFormOptions } from './FirewallRuleDrawer.utils';
 import type {
   FirewallRuleProtocol,
   FirewallRuleType,
