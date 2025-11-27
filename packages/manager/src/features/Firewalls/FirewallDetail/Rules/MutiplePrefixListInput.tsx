@@ -1,77 +1,52 @@
 import { useAllFirewallPrefixListsQuery } from '@linode/queries';
 import {
   Autocomplete,
+  BetaChip,
   Box,
   Button,
   Checkbox,
   CloseIcon,
   IconButton,
   InputLabel,
-  LinkButton,
-  Notice,
   Stack,
-  TooltipIcon,
-  Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { useIsFirewallRulesetsPrefixlistsEnabled } from 'src/features/Firewalls/shared';
 
 import { getPrefixListType } from './shared';
 
 import type { FirewallPrefixList } from '@linode/api-v4';
-import type { InputBaseProps } from '@mui/material/InputBase';
 import type { Theme } from '@mui/material/styles';
 import type { ExtendedPL } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  addIP: {
+  addPL: {
     '& span:first-of-type': {
       justifyContent: 'flex-start',
     },
     paddingLeft: 0,
-    paddingTop: theme.spacing(1.5),
+    paddingTop: theme.spacingFunction(12),
   },
   button: {
     '& > span': {
       padding: 2,
     },
-    marginLeft: `-${theme.spacing()}`,
+    marginLeft: `-${theme.spacingFunction(8)}`,
     marginTop: 4,
     minHeight: 'auto',
     minWidth: 'auto',
     padding: 0,
   },
-  helperText: {
-    marginBottom: theme.spacing(),
-  },
-  input: {
-    'nth-child(n+2)': {
-      marginTop: theme.spacing(),
-    },
-  },
-  ipNetmaskTooltipSection: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  required: {
-    font: theme.font.normal,
-  },
   root: {
-    marginTop: theme.spacing(),
+    marginTop: theme.spacingFunction(8),
   },
 }));
 
 export interface MultiplePrefixListInputProps {
-  /**
-   * Text displayed on the button.
-   */
-  buttonText?: string;
-
   /**
    * Custom CSS class for additional styling.
    */
@@ -82,32 +57,6 @@ export interface MultiplePrefixListInputProps {
    * @default false
    */
   disabled?: boolean;
-
-  /**
-   * Error message for invalid input.
-   */
-  error?: string;
-
-  /**
-   * Helper text for additional guidance.
-   */
-  helperText?: string;
-
-  /**
-   * Custom input properties passed to the underlying input component.
-   */
-  inputProps?: InputBaseProps;
-
-  /**
-   * Styles the button as a link.
-   * @default false
-   */
-  isLinkStyled?: boolean;
-
-  //   /**
-  //    * Callback triggered when the input loses focus, passing updated `ips`.
-  //    */
-  //   onBlur?: (ips: ExtendedIP[]) => void;
 
   /**
    * Callback triggered when IPs change, passing updated `ips`.
@@ -125,43 +74,19 @@ export interface MultiplePrefixListInputProps {
   pls: ExtendedPL[];
 
   /**
-   * Indicates if the input is required for form submission.
-   * @default false
-   */
-  required?: boolean;
-
-  /**
    * Title or label for the input field.
    */
   title: string;
-
-  /**
-   * Tooltip text for extra info on hover.
-   */
-  tooltip?: string;
 }
 
 export const MultiplePrefixListInput = React.memo(
   (props: MultiplePrefixListInputProps) => {
-    const {
-      buttonText,
-      className,
-      disabled,
-      error,
-      //   forPLs,
-      helperText,
-      pls,
-      isLinkStyled,
-      //   onBlur,
-      onChange,
-      //   placeholder,
-      required,
-      title,
-      tooltip,
-    } = props;
+    const { className, disabled, pls, onChange, title } = props;
     const { classes, cx } = useStyles();
-    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
-      useIsFirewallRulesetsPrefixlistsEnabled();
+    const {
+      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      isFirewallRulesetsPrefixListsBetaEnabled,
+    } = useIsFirewallRulesetsPrefixlistsEnabled();
     const { data, isLoading } = useAllFirewallPrefixListsQuery(
       isFirewallRulesetsPrefixlistsFeatureEnabled
     );
@@ -280,28 +205,6 @@ export const MultiplePrefixListInput = React.memo(
       return null;
     }
 
-    const addPrefixListButton = isLinkStyled ? (
-      <StyledLinkButtonBox
-        sx={{
-          marginTop: isLinkStyled ? '8px' : '12px',
-        }}
-      >
-        <LinkButton disabled={disabled} onClick={addNewInput}>
-          {buttonText}
-        </LinkButton>
-      </StyledLinkButtonBox>
-    ) : (
-      <Button
-        buttonType="secondary"
-        className={classes.addIP}
-        compactX
-        disabled={disabled}
-        onClick={addNewInput}
-      >
-        {buttonText ?? 'Add a Prefix List'}
-      </Button>
-    );
-
     const renderRow = (thisPL: ExtendedPL, idx: number) => {
       const availableOptions = getAvailableOptions(idx, thisPL.address);
 
@@ -326,9 +229,7 @@ export const MultiplePrefixListInput = React.memo(
       return (
         <Grid
           container
-          data-testid="domain-transfer-input"
           direction="row"
-          key={`domain-transfer-ip-${idx}`}
           spacing={2}
           sx={{
             justifyContent: 'center',
@@ -401,39 +302,24 @@ export const MultiplePrefixListInput = React.memo(
 
     return (
       <div className={cx(classes.root, className)}>
-        {tooltip && title ? (
-          <div className={classes.ipNetmaskTooltipSection}>
-            <InputLabel>{title}</InputLabel>
-            <TooltipIcon
-              status="info"
-              sxTooltipIcon={{
-                marginLeft: '-4px',
-                marginTop: '-15px',
-              }}
-              text={tooltip}
-              tooltipPosition="right"
-            />
-          </div>
-        ) : (
-          // There are a couple of instances in the codebase where an empty string is passed as the title so a title isn't displayed.
-          // Having this check ensures we don't render an empty label element (which can still impact spacing) in those cases.
-          title && (
-            <InputLabel sx={{ margin: 0 }}>
-              {title}
-              {required ? (
-                <span className={classes.required}> (required)</span>
-              ) : null}
-            </InputLabel>
-          )
+        {title && (
+          <Box display="flex">
+            <InputLabel sx={{ margin: 0 }}>{title}</InputLabel>
+            {isFirewallRulesetsPrefixListsBetaEnabled && <BetaChip />}
+          </Box>
         )}
-        {helperText && (
-          <Typography className={classes.helperText}>{helperText}</Typography>
-        )}
-        {error && <Notice spacingTop={8} text={error} variant="error" />}
         <Stack spacing={1}>
           {pls.map((thisPL, idx) => renderRow(thisPL, idx))}
         </Stack>
-        {addPrefixListButton}
+        <Button
+          buttonType="secondary"
+          className={classes.addPL}
+          compactX
+          disabled={disabled}
+          onClick={addNewInput}
+        >
+          Add a Prefix List
+        </Button>
       </div>
     );
   }
