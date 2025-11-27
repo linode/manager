@@ -114,13 +114,13 @@ export const NodeBalancerDetail = () => {
             <SafeTabPanel index={2}>
               <NodeBalancerSettings />
             </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <CloudPulseDashboardWithFilters
+                resource={nodebalancer.id}
+                serviceType={'nodebalancer'}
+              />
+            </SafeTabPanel>
           </TabPanels>
-          <SafeTabPanel index={3}>
-            <CloudPulseDashboardWithFilters
-              dashboardId={3}
-              resource={nodebalancer.id}
-            />
-          </SafeTabPanel>
         </React.Suspense>
       </Tabs>
     </React.Fragment>
