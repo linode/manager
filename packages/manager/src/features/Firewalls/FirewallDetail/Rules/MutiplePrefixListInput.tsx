@@ -46,6 +46,36 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
+const isPrefixListSupported = (pl: FirewallPrefixList) =>
+  (pl.ipv4 !== null && pl.ipv4 !== undefined) ||
+  (pl.ipv6 !== null && pl.ipv6 !== undefined);
+
+const getSupportDetails = (pl: FirewallPrefixList) => ({
+  isPLIPv4Unsupported: pl.ipv4 === null || pl.ipv4 === undefined,
+  isPLIPv6Unsupported: pl.ipv6 === null || pl.ipv6 === undefined,
+});
+
+/**
+ * Default selection state for a newly chosen Prefix List
+ */
+const getDefaultPLReferenceState = (
+  support: ReturnType<typeof getSupportDetails>
+): { inIPv4Rule: boolean; inIPv6Rule: boolean } => {
+  const { isPLIPv4Unsupported, isPLIPv6Unsupported } = support;
+
+  if (!isPLIPv4Unsupported && !isPLIPv6Unsupported)
+    return { inIPv4Rule: true, inIPv6Rule: false };
+
+  if (!isPLIPv4Unsupported && isPLIPv6Unsupported)
+    return { inIPv4Rule: true, inIPv6Rule: false };
+
+  if (isPLIPv4Unsupported && !isPLIPv6Unsupported)
+    return { inIPv4Rule: false, inIPv6Rule: true };
+
+  // Should not happen but safe fallback
+  return { inIPv4Rule: false, inIPv6Rule: false };
+};
+
 export interface MultiplePrefixListInputProps {
   /**
    * Custom CSS class for additional styling.
@@ -59,9 +89,9 @@ export interface MultiplePrefixListInputProps {
   disabled?: boolean;
 
   /**
-   * Callback triggered when IPs change, passing updated `ips`.
+   * Callback triggered when PLs change, passing updated `pls`.
    */
-  onChange: (ips: ExtendedPL[]) => void;
+  onChange: (pls: ExtendedPL[]) => void;
 
   /**
    * Placeholder text for an empty input field.
@@ -92,103 +122,70 @@ export const MultiplePrefixListInput = React.memo(
     );
 
     const prefixLists = data ?? [];
+    // const prefixLists: Partial<FirewallPrefixList>[] = [
+    //   { id: 1, name: 'pl::subnets:325584', ipv6: ['asdas'] },
+    //   { id: 2, name: 'pl::vpcs:298694', ipv4: [], ipv6: [] },
+    //   {
+    //     id: 3,
+    //     name: 'pl:system:test-3',
+    //     ipv4: ['192.168.0'],
+    //     ipv6: null,
+    //   },
+    //   { id: 4, name: 'pl:system:test-4', ipv4: null, ipv6: ['124.4124.124'] },
+    //   { id: 5, name: 'pl:system:test-5', ipv4: null, ipv6: null },
+    // ];
 
-    const isPrefixListSupported = (pl: FirewallPrefixList) =>
-      (pl.ipv4 !== null && pl.ipv4 !== undefined) ||
-      (pl.ipv6 !== null && pl.ipv6 !== undefined);
-
-    const supportedPrefixListOptions = React.useMemo(
+    const supportedOptions = React.useMemo(
       () =>
         prefixLists.filter(isPrefixListSupported).map((pl) => ({
           label: pl.name,
           value: pl.id,
-          notSupportedDetails: {
-            isPLIPv4NotSupported: pl.ipv4 === null || pl.ipv4 === undefined,
-            isPLIPv6NotSupported: pl.ipv6 === null || pl.ipv6 === undefined,
-          },
+          support: getSupportDetails(pl),
         })),
       [prefixLists]
     );
 
-    const getAvailableOptions = (idx: number, address: string) =>
-      supportedPrefixListOptions.filter(
-        (o) =>
-          o.label === address || // allow current
-          !pls.some((p, i) => i !== idx && p.address === o.label)
-      );
+    /**
+     * Returns available prefix list options for a PL selection row.
+     * Includes the current selection and excludes options used in other PL rows.
+     */
+    const getAvailableOptions = React.useCallback(
+      (idx: number, address: string) =>
+        supportedOptions.filter(
+          (o) =>
+            o.label === address || // allow current
+            !pls.some((p, i) => i !== idx && p.address === o.label)
+        ),
+      [supportedOptions, pls]
+    );
 
-    const handleChange = (pl: string, idx: number) => {
+    const updatePL = (idx: number, updated: Partial<ExtendedPL>) => {
       const newPLs = [...pls];
-
-      newPLs[idx].address = pl;
-
-      const plNotSupportedDetails = supportedPrefixListOptions.find(
-        (o) => o.label === newPLs[idx].address
-      )?.notSupportedDetails;
-
-      const bothIPv4AndIPv6Supported =
-        !plNotSupportedDetails?.isPLIPv4NotSupported &&
-        !plNotSupportedDetails?.isPLIPv6NotSupported;
-
-      const onlyIPv4Supported =
-        !plNotSupportedDetails?.isPLIPv4NotSupported &&
-        plNotSupportedDetails?.isPLIPv6NotSupported;
-
-      const onlyIPv6Supported =
-        !plNotSupportedDetails?.isPLIPv6NotSupported &&
-        plNotSupportedDetails?.isPLIPv4NotSupported;
-
-      if (bothIPv4AndIPv6Supported || onlyIPv4Supported) {
-        newPLs[idx].inIPv4Rule = true;
-        newPLs[idx].inIPv6Rule = false;
-      }
-
-      if (onlyIPv6Supported) {
-        newPLs[idx].inIPv4Rule = false;
-        newPLs[idx].inIPv6Rule = true;
-      }
-
+      newPLs[idx] = { ...newPLs[idx], ...updated };
       onChange(newPLs);
     };
 
-    const handleChangeIPv4 = (hasIPv4: boolean, idx: number) => {
-      const newPLs = [...pls];
+    // Handlers
+    const handleSelectPL = (label: string, idx: number) => {
+      const match = supportedOptions.find((o) => o.label === label);
+      if (!match) return;
 
-      const details = supportedPrefixListOptions.find(
-        (o) => o.label === newPLs[idx].address
-      )?.notSupportedDetails;
-
-      const plSupportsIPv6 = details && !details.isPLIPv6NotSupported;
-
-      newPLs[idx].inIPv4Rule = hasIPv4;
-
-      // If Ipv4 is unchecked then check IpV6 by default if IPv6 is supported by this PL.
-      if (!hasIPv4 && !newPLs[idx].inIPv6Rule) {
-        if (plSupportsIPv6) {
-          newPLs[idx].inIPv6Rule = true;
-        }
-      }
-      onChange(newPLs);
+      updatePL(idx, {
+        address: label,
+        ...getDefaultPLReferenceState(match.support),
+      });
     };
 
-    const handleChangeIPv6 = (hasIPv6: boolean, idx: number) => {
-      const newPLs = [...pls];
+    const handleToggleIPv4 = (checked: boolean, idx: number) => {
+      updatePL(idx, {
+        inIPv4Rule: checked,
+      });
+    };
 
-      const details = supportedPrefixListOptions.find(
-        (o) => o.label === newPLs[idx].address
-      )?.notSupportedDetails;
-
-      const plSupportsIPv4 = details && !details.isPLIPv4NotSupported;
-
-      newPLs[idx].inIPv6Rule = hasIPv6;
-
-      // If Ipv6 is unchecked then check IpV4 by default if IPv4 is supported by this PL.
-      if (!hasIPv6 && !newPLs[idx].inIPv4Rule) {
-        if (plSupportsIPv4) {
-          newPLs[idx].inIPv4Rule = true;
-        }
-      }
-      onChange(newPLs);
+    const handleToggleIPv6 = (checked: boolean, idx: number) => {
+      updatePL(idx, {
+        inIPv6Rule: checked,
+      });
     };
 
     const addNewInput = () => {
@@ -213,18 +210,17 @@ export const MultiplePrefixListInput = React.memo(
       );
 
       const ipv4Unsupported =
-        selectedOption?.notSupportedDetails.isPLIPv4NotSupported === true;
+        selectedOption?.support.isPLIPv4Unsupported === true;
       const ipv6Unsupported =
-        selectedOption?.notSupportedDetails.isPLIPv6NotSupported === true;
+        selectedOption?.support.isPLIPv6Unsupported === true;
 
-      // Prevent both being unchecked
       const ipv4Forced =
         thisPL.inIPv4Rule === true && thisPL.inIPv6Rule === false;
       const ipv6Forced =
         thisPL.inIPv6Rule === true && thisPL.inIPv4Rule === false;
 
-      const disableIPv4 = ipv4Unsupported === true || ipv4Forced === true;
-      const disableIPv6 = ipv6Unsupported === true || ipv6Forced === true;
+      const disableIPv4 = ipv4Unsupported || ipv4Forced;
+      const disableIPv6 = ipv6Unsupported || ipv6Forced;
 
       return (
         <Grid
@@ -246,7 +242,7 @@ export const MultiplePrefixListInput = React.memo(
               loading={isLoading}
               noMarginTop
               onChange={(_, selectedPrefixList) => {
-                handleChange(selectedPrefixList?.label ?? '', idx);
+                handleSelectPL(selectedPrefixList?.label ?? '', idx);
               }}
               options={availableOptions}
               placeholder="Type to search or select a Rule Set"
@@ -263,14 +259,14 @@ export const MultiplePrefixListInput = React.memo(
                 <Box display="flex" gap={2}>
                   <Checkbox
                     checked={thisPL.inIPv4Rule === true}
-                    disabled={disableIPv4 === true || disabled}
-                    onChange={() => handleChangeIPv4(!thisPL.inIPv4Rule, idx)}
+                    disabled={disableIPv4 || disabled}
+                    onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
                     text="IPv4"
                   />
                   <Checkbox
                     checked={thisPL.inIPv6Rule === true}
-                    disabled={disableIPv6 === true || disabled}
-                    onChange={() => handleChangeIPv6(!thisPL.inIPv6Rule, idx)}
+                    disabled={disableIPv6 || disabled}
+                    onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
                     text="IPv6"
                   />
                 </Box>
