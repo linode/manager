@@ -110,9 +110,9 @@ describe('MultiplePrefixListSelect', () => {
     );
 
     const input = getByRole('combobox');
-    await userEvent.type(input, 'pl:supports-both');
+    await userEvent.type(input, 'pl:system:not-supported');
 
-    expect(queryByText('pl:supports-both')).not.toBeInTheDocument();
+    expect(queryByText('pl:system:not-supported')).not.toBeInTheDocument();
   });
 
   it('prevents duplicate selection of PLs', async () => {
