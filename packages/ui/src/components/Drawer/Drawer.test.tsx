@@ -3,6 +3,7 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithTheme } from '../../utilities/testHelpers';
+import { BetaChip } from '../BetaChip';
 import { Button } from '../Button';
 import { Drawer } from './Drawer';
 
@@ -75,9 +76,9 @@ describe('Drawer', () => {
     expect(getByRole('progressbar')).toBeVisible();
   });
 
-  it('should render a Dailog with beta chip if isDrawerBeta is true', () => {
+  it('should render a Dailog with beta chip if titleSuffix is set to betaChip', () => {
     const { getByText } = renderWithTheme(
-      <Drawer {...defaultArgs} isDrawerBeta open={true} />,
+      <Drawer {...defaultArgs} open={true} titleSuffix={<BetaChip />} />,
     );
 
     expect(getByText('beta')).toBeVisible();

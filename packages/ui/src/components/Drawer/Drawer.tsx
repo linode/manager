@@ -1,4 +1,4 @@
-import { BetaChip, CloseIcon } from '@linode/ui';
+import { CloseIcon } from '@linode/ui';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -24,12 +24,6 @@ export interface DrawerProps extends _DrawerProps {
    */
   error?: APIError[] | null | string;
   /**
-   * Whether the drawer is in beta phase.
-   *
-   * If true, the drawer will feature a beta chip in the title.
-   */
-  isDrawerBeta?: boolean;
-  /**
    * Whether the drawer is fetching the entity's data.
    *
    * If true, the drawer will feature a loading spinner for its content.
@@ -39,6 +33,12 @@ export interface DrawerProps extends _DrawerProps {
    * Title that appears at the top of the drawer
    */
   title: string;
+  /**
+   * Adds a suffix element to the drawer.
+   *
+   * If set, the drawer will feature a suffix element in the title.
+   */
+  titleSuffix?: React.JSX.Element;
   /**
    * Increases the Drawers width from 480px to 700px on desktop-sized viewports
    * @default false
@@ -62,7 +62,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const {
       children,
       error,
-      isDrawerBeta,
+      titleSuffix,
       isFetching,
       onClose,
       open,
@@ -166,11 +166,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
                 >
                   {lastTitleRef.current}
                 </Typography>
-                {isDrawerBeta && (
-                  <span>
-                    <BetaChip />
-                  </span>
-                )}
+                {titleSuffix && <span>{titleSuffix}</span>}
               </Box>
             )}
           </Grid>
