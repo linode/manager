@@ -133,8 +133,10 @@ export const MultiplePrefixListInput = React.memo(
     );
 
     /**
-     * Returns available prefix list options for a PL selection row.
-     * Includes the current selection and excludes options used in other PL rows.
+     * Returns the list of prefix list options available for a specific row.
+     * Always includes the currently selected option, and excludes any options
+     * that are already selected in other rows. This prevents duplicate prefix
+     * list selection across rows.
      */
     const getAvailableOptions = React.useCallback(
       (idx: number, address: string) =>
