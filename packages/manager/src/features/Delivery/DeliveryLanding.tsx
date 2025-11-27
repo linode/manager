@@ -50,7 +50,7 @@ export const DeliveryLanding = React.memo(() => {
     <>
       <ProductInformationBanner bannerLocation="Logs" />
       <DocumentTitleSegment segment="Logs" />
-      <LandingHeader {...landingHeaderProps} spacingBottom={4} />
+      <LandingHeader {...landingHeaderProps} spacingBottom={24} />
 
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
