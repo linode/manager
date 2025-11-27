@@ -4,6 +4,7 @@ import { useArgs } from 'storybook/preview-api';
 
 import { ActionsPanel } from '../ActionsPanel';
 import { Button } from '../Button';
+import { Chip } from '../Chip';
 import { TextField } from '../TextField';
 import { Typography } from '../Typography';
 import { Drawer } from './Drawer';
@@ -182,42 +183,30 @@ export const WithError: Story = {
   },
 };
 
-export const WithBetaChip: Story = {
+export const WithTitleSuffix: Story = {
   args: {
-    isFetching: true,
+    isFetching: false,
     open: false,
     title: 'My Drawer',
   },
   render: (args) => {
     const DrawerExampleWrapper = () => {
-      const [{ isDrawerBeta, open }, updateArgs] = useArgs();
-
-      React.useEffect(() => {
-        if (open) {
-          setTimeout(() => {
-            updateArgs({ isDrawerBeta: false, onClose: action('onClose') });
-          }, 1500);
-        } else {
-          setTimeout(() => {
-            updateArgs({ isDrawerBeta: true, onClose: action('onClose') });
-          }, 300);
-        }
-      }, [isDrawerBeta, open, updateArgs]);
+      const [open, setOpen] = React.useState(args.open);
 
       return (
         <>
           <Button
             buttonType="primary"
-            onClick={() => updateArgs({ open: true })}
+            onClick={() => setOpen(true)}
             sx={{ m: 4 }}
           >
             Click to open Drawer
           </Button>
           <Drawer
             {...args}
-            isDrawerBeta={isDrawerBeta}
-            onClose={() => updateArgs({ open: false })}
+            onClose={() => setOpen(true)}
             open={open}
+            titleSuffix={<Chip label="suffix" />}
           >
             <Typography sx={{ mb: 2 }}>
               I smirked at their Kale chips banh-mi fingerstache brunch in
@@ -246,7 +235,7 @@ export const WithBetaChip: Story = {
               primaryButtonProps={{ label: 'Save' }}
               secondaryButtonProps={{
                 label: 'Cancel',
-                onClick: () => updateArgs({ open: false }),
+                onClick: () => setOpen(false),
               }}
             />
           </Drawer>
