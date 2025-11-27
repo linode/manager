@@ -1,6 +1,7 @@
 import {
   ActionsPanel,
   Autocomplete,
+  Box,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -317,10 +318,8 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         }}
         options={addressOptions}
         placeholder={`Select ${addressesLabel}s...`}
+        required
         textFieldProps={{
-          InputProps: {
-            required: true,
-          },
           dataAttrs: {
             'data-qa-address-source-select': true,
           },
@@ -329,7 +328,13 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
       />
       {/* Show this field only if "IP / Netmask / Prefix List has been selected." */}
       {values.addresses === 'ip/netmask/prefixlist' && (
-        <>
+        <Box
+          marginLeft={(theme) =>
+            isFirewallRulesetsPrefixlistsFeatureEnabled
+              ? theme.spacingFunction(24)
+              : 0
+          }
+        >
           <StyledMultipleIPInput
             aria-label="IP / Netmask for Firewall rule"
             canRemoveFirstInput={isFirewallRulesetsPrefixlistsFeatureEnabled}
@@ -347,7 +352,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
               pls={pls}
             />
           )}
-        </>
+        </Box>
       )}
       <StyledDiv>
         <Typography>
