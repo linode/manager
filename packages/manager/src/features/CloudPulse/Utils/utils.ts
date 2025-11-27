@@ -8,7 +8,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
 import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import {
-  ENDPOINT,
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,

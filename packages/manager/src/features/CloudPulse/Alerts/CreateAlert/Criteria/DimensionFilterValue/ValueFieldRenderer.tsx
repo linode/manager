@@ -193,7 +193,6 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             entities={entities}
             entityType={entityType}
             placeholderText={config.placeholder ?? autocompletePlaceholder}
-            entityType={entityType}
             scope={scope}
             selectedRegions={selectedRegions}
           />
