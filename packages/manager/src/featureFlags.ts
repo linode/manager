@@ -149,6 +149,7 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  beta: boolean;
   editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
@@ -196,6 +197,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
