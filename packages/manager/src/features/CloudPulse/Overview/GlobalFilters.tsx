@@ -165,7 +165,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               handleChange={onGroupByChange}
               preferenceGroupBy={preferences?.[GROUP_BY]}
               savePreferences
-              selectedDashboard={selectedDashboard}
+              selectedDashboard={
+                preferences?.[DASHBOARD_ID] === selectedDashboard?.id
+                  ? selectedDashboard
+                  : undefined
+              }
             />
           </Box>
         </Box>
