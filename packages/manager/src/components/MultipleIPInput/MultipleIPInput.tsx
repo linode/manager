@@ -26,7 +26,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       justifyContent: 'flex-start',
     },
     paddingLeft: 0,
-    paddingTop: theme.spacing(1.5),
+    paddingTop: theme.spacingFunction(12),
   },
   button: {
     '& > span': {
@@ -251,8 +251,8 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           <TooltipIcon
             status="info"
             sxTooltipIcon={{
-              marginLeft: '-4px',
-              marginTop: '-15px',
+              marginTop: '-8px',
+              padding: '4px',
             }}
             text={tooltip}
             tooltipPosition="right"

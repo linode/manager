@@ -343,7 +343,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           {isFirewallRulesetsPrefixlistsFeatureEnabled && (
             <MultiplePrefixListInput
               aria-label="Prefix List for Firewall rule"
-              buttonText="Add a Prefix List"
               onChange={handlePrefixListChange}
               pls={pls}
               title={pls.length > 0 ? 'Prefix List' : ''}
@@ -392,6 +391,6 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
 
 const StyledMultipleIPInput = styled(MultipleIPInput, {
   label: 'StyledMultipleIPInput',
-})(({ theme }) => ({
-  marginTop: theme.spacingFunction(16),
+})(({ theme, ips }) => ({
+  ...(ips.length !== 0 ? { marginTop: theme.spacingFunction(16) } : {}),
 }));
