@@ -345,7 +345,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
               aria-label="Prefix List for Firewall rule"
               onChange={handlePrefixListChange}
               pls={pls}
-              title={pls.length > 0 ? 'Prefix List' : ''}
             />
           )}
         </>
