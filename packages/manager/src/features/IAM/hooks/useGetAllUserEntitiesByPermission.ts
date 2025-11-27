@@ -143,7 +143,7 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
   const shouldUseIAMPermissions = useBetaPermissions || useLAPermissions;
 
   /**
-   * Build API filter when fetching full entities
+   * Extract entity IDs from the entities by permission data
    */
   const entityIds =
     shouldUseIAMPermissions && profile?.restricted

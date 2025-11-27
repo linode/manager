@@ -71,6 +71,12 @@ export const getAllUserEntitiesByPermission = ({
   entityType,
   permission,
 }: GetEntitiesByPermissionParams) =>
-  getAll<EntityByPermission>(() =>
-    getUserEntitiesByPermission({ username, entityType, permission }),
+  getAll<EntityByPermission>((params, filter) =>
+    getUserEntitiesByPermission({
+      username,
+      entityType,
+      permission,
+      params,
+      filter,
+    }),
   )();
