@@ -132,44 +132,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
         );
 
         await waitFor(() => {
-          expect(result.current.data).toHaveLength(3); // Returns all from query
-          expect(result.current.filter).toEqual({
-            '+or': [{ id: 1 }, { id: 2 }],
-          });
-        });
-      });
-
-      it('should call entity query with filtered IDs', async () => {
-        const mockEntitiesByPermission = [
-          { id: 1, label: 'linode-1', type: 'linode' },
-          { id: 2, label: 'linode-2', type: 'linode' },
-        ];
-
-        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
-          data: mockEntitiesByPermission,
-          isLoading: false,
-          error: null,
-        });
-
-        const flags = { iam: { beta: false, enabled: true } };
-
-        renderHook(
-          () =>
-            useGetAllUserEntitiesByPermission({
-              entityType: 'linode',
-              permission: 'view_linode',
-            }),
-          {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
-          }
-        );
-
-        await waitFor(() => {
-          expect(queryMocks.useAllLinodesQuery).toHaveBeenCalledWith(
-            {},
-            { '+or': [{ id: 1 }, { id: 2 }] },
-            true
-          );
+          expect(result.current.data).toHaveLength(2);
         });
       });
 
@@ -199,38 +162,6 @@ describe('useGetAllUserEntitiesByPermission', () => {
         );
 
         await waitFor(() => {
-          expect(result.current.data).toEqual([]);
-        });
-      });
-
-      it('should not enable entity query while waiting for permission IDs', async () => {
-        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
-          data: undefined, // Still loading
-          isLoading: true,
-          error: null,
-        });
-
-        const flags = { iam: { beta: false, enabled: true } };
-
-        const { result } = renderHook(
-          () =>
-            useGetAllUserEntitiesByPermission({
-              entityType: 'linode',
-              permission: 'view_linode',
-            }),
-          {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
-          }
-        );
-
-        await waitFor(() => {
-          // Query should be called with enabled=false
-          expect(queryMocks.useAllLinodesQuery).toHaveBeenCalledWith(
-            {},
-            {},
-            false
-          );
-          // Data should be empty array, not cached data
           expect(result.current.data).toEqual([]);
         });
       });
@@ -779,47 +710,6 @@ describe('useGetAllUserEntitiesByPermission', () => {
   });
 
   describe('Custom Filter and Params', () => {
-    it('should merge custom filter with entity ID filter', async () => {
-      const customFilter = { region: 'us-east' };
-      const mockEntitiesByPermission = [
-        { id: 1, label: 'linode-1', type: 'linode' },
-      ];
-
-      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
-        data: mockEntitiesByPermission,
-        isLoading: false,
-        error: null,
-      });
-
-      queryMocks.useIsIAMEnabled.mockReturnValue({
-        isIAMEnabled: true,
-        isIAMBeta: false,
-        profile: { restricted: true, username: 'test-user' } as Profile,
-      });
-
-      const flags = { iam: { beta: false, enabled: true } };
-
-      renderHook(
-        () =>
-          useGetAllUserEntitiesByPermission({
-            entityType: 'linode',
-            permission: 'view_linode',
-            filter: customFilter,
-          }),
-        {
-          wrapper: (ui) => wrapWithTheme(ui, { flags }),
-        }
-      );
-
-      await waitFor(() => {
-        expect(queryMocks.useAllLinodesQuery).toHaveBeenCalledWith(
-          {},
-          { region: 'us-east', '+or': [{ id: 1 }] },
-          true
-        );
-      });
-    });
-
     it('should pass custom params to entity query', async () => {
       const customParams = { page: 1, page_size: 50 };
 

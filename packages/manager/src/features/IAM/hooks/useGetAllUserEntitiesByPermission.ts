@@ -149,33 +149,11 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
     shouldUseIAMPermissions && profile?.restricted
       ? entitiesByPermission?.map((e) => e.id)
       : undefined;
-  const apiFilter = entityIds
-    ? { ...filter, '+or': entityIds.map((id) => ({ id })) }
-    : filter;
 
   /**
-   * Determine if we should enable the full entities query
-   * - The user is not using IAM permissions
-   * - The query is not enabled
-   * - The permission query had an error
-   * - The user is not restricted or the entity IDs are not defined
+   *  Call entity query
    */
-  const shouldEnableIamQuery =
-    shouldUseIAMPermissions &&
-    enabled &&
-    !isEntitiesByPermissionError &&
-    (!profile?.restricted || entityIds !== undefined);
-
-  /**
-   *  Call entity query with appropriate filter
-   *  This allows us not to fetch all entities for restricted users
-   */
-  const iamQuery = useEntityQuery<T>(
-    entityType,
-    apiFilter,
-    params,
-    Boolean(shouldEnableIamQuery)
-  );
+  const entityQuery = useEntityQuery<T>(entityType, filter, params, enabled);
 
   /**
    * Legacy grants for non-IAM users
@@ -185,28 +163,20 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
   );
 
   /**
-   * Call entity query without filtering. Legacy grants still need all entities for the client-side mapping.
-   */
-  const legacyQuery = useEntityQuery<T>(
-    entityType,
-    filter,
-    params,
-    !shouldUseIAMPermissions && enabled
-  );
-
-  /**
    * Return IAM path
    *
-   * We also return the API filter to be used for client-side filtering
+   * In case a filter was used, we also return it to be used for client-side filtering
    * ex: we also pass this filter to the LinodeSelect to avoid caching two different queries (with and without filter)
    */
   if (shouldUseIAMPermissions) {
     return {
-      ...iamQuery,
-      filter: apiFilter,
-      data: shouldEnableIamQuery ? iamQuery.data : [],
-      isLoading: isEntitiesByPermissionLoading || iamQuery.isLoading,
-      error: isEntitiesByPermissionError || iamQuery.error,
+      ...entityQuery,
+      filter,
+      data: profile?.restricted
+        ? entityQuery.data?.filter((entity) => entityIds?.includes(entity.id))
+        : entityQuery.data,
+      isLoading: isEntitiesByPermissionLoading || entityQuery.isLoading,
+      error: isEntitiesByPermissionError || entityQuery.error,
     };
   }
 
@@ -218,15 +188,15 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
     : {};
 
   const filteredEntities = profile?.restricted
-    ? legacyQuery.data?.filter(
+    ? entityQuery.data?.filter(
         (entity: T) => entityPermissionsMap[entity.id]?.[permission]
       )
-    : legacyQuery.data;
+    : entityQuery.data;
 
   return {
-    ...legacyQuery,
+    ...entityQuery,
     data: filteredEntities ?? [],
-    isLoading: legacyQuery.isLoading || grantsLoading,
-    error: legacyQuery.error,
+    isLoading: entityQuery.isLoading || grantsLoading,
+    error: entityQuery.error,
   };
 };
