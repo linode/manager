@@ -237,7 +237,7 @@ export const MultiplePrefixListSelect = React.memo(
                 handleSelectPL(selectedPrefixList?.label ?? '', idx);
               }}
               options={availableOptions}
-              placeholder="Type to search or select a Rule Set"
+              placeholder="Type to search or select Prefix List"
               value={
                 availableOptions.find((o) => o.label === thisPL.address) ?? null
               }

@@ -20,6 +20,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+
 describe('MultiplePrefixListSelect', () => {
   beforeEach(() => {
     spy.mockReturnValue({
