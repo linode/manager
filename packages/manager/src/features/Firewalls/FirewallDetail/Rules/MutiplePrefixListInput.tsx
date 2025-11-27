@@ -102,16 +102,11 @@ export interface MultiplePrefixListInputProps {
    * Array of `ExtendedPL` objects representing managed PLs.
    */
   pls: ExtendedPL[];
-
-  /**
-   * Title or label for the input field.
-   */
-  title: string;
 }
 
 export const MultiplePrefixListInput = React.memo(
   (props: MultiplePrefixListInputProps) => {
-    const { className, disabled, pls, onChange, title } = props;
+    const { className, disabled, pls, onChange } = props;
     const { classes, cx } = useStyles();
     const {
       isFirewallRulesetsPrefixlistsFeatureEnabled,
@@ -201,6 +196,7 @@ export const MultiplePrefixListInput = React.memo(
         (o) => o.label === thisPL.address
       );
 
+      // Disabling a checkbox ensures that at least one option (IPv4 or IPv6) remains checked
       const ipv4Unsupported =
         selectedOption?.support.isPLIPv4Unsupported === true;
       const ipv6Unsupported =
@@ -217,7 +213,7 @@ export const MultiplePrefixListInput = React.memo(
       return (
         <Grid
           container
-          data-testid="prefixlist-input"
+          data-testid="prefixlist-select"
           direction="row"
           key={`prefixlist-${idx}`}
           spacing={2}
@@ -253,12 +249,14 @@ export const MultiplePrefixListInput = React.memo(
                 <Box display="flex" gap={2}>
                   <Checkbox
                     checked={thisPL.inIPv4Rule === true}
+                    data-testid={`ipv4-checkbox-${idx}`}
                     disabled={disableIPv4 || disabled}
                     onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
                     text="IPv4"
                   />
                   <Checkbox
                     checked={thisPL.inIPv6Rule === true}
+                    data-testid={`ipv6-checkbox-${idx}`}
                     disabled={disableIPv6 || disabled}
                     onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
                     text="IPv6"
@@ -292,9 +290,10 @@ export const MultiplePrefixListInput = React.memo(
 
     return (
       <div className={cx(classes.root, className)}>
-        {title && (
+        {/* Display the title only when pls.length > 0 (i.e., at least one PL row is added) */}
+        {pls.length > 0 && (
           <Box display="flex">
-            <InputLabel sx={{ margin: 0 }}>{title}</InputLabel>
+            <InputLabel sx={{ margin: 0 }}>Prefix List</InputLabel>
             {isFirewallRulesetsPrefixListsBetaEnabled && <BetaChip />}
           </Box>
         )}
