@@ -10,7 +10,6 @@ import {
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
-  deepEqual,
   filterBasedOnConfig,
   filterEndpointsUsingRegion,
   filterFirewallNodebalancers,
@@ -33,6 +32,7 @@ import {
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { deepEqual } from './utils';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';

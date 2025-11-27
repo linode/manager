@@ -5,7 +5,7 @@ import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
 import {
   getAssociatedEntityType,
   isEndpointsOnlyDashboard,
-} from '../Utils/utils';
+} from '../Utils/FilterConfig';
 
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
@@ -68,10 +68,9 @@ export const useGlobalDimensions = (
   const baseDimensions = getCommonDimensions(metricDimensions);
   const shouldIncludeDefault = !isEndpointsOnlyDashboard(dashboardId ?? 0);
 
-  const commonDimensions = [
-    ...(shouldIncludeDefault ? [defaultOption] : []),
-    ...baseDimensions,
-  ];
+  const commonDimensions = shouldIncludeDefault
+    ? [defaultOption, ...baseDimensions]
+    : baseDimensions;
 
   const commonGroups = getCommonGroups(
     preference ? preference : (dashboard?.group_by ?? []),
@@ -190,7 +189,7 @@ export const getMetricDimensions = (
   return metricDefinition
     .filter(({ label }) =>
       associatedEntityType
-        ? label.includes(ASSOCIATED_ENTITY_METRIC_MAP[associatedEntityType])
+        ? label.includes(ASSOCIATED_ENTITY_METRIC_MAP[associatedEntityType]) // we need to filter metrics based on associated entity type for firewall dashboards, can be linode, nodebalancer, etc.
         : true
     )
     .reduce((acc, { metric, dimensions }) => {

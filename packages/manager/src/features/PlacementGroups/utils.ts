@@ -1,8 +1,6 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4/lib/placement-groups';
 import { useAccount } from '@linode/queries';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import type {
   CreatePlacementGroupPayload,
   Linode,
@@ -125,12 +123,7 @@ export const getLinodesFromAllPlacementGroups = (
 export const useIsPlacementGroupsEnabled = (): {
   isPlacementGroupsEnabled: boolean;
 } => {
-  const { data: account, error } = useAccount();
-  const flags = useFlags();
-
-  if (error || !flags) {
-    return { isPlacementGroupsEnabled: false };
-  }
+  const { data: account } = useAccount();
 
   const isPlacementGroupsEnabled = Boolean(
     account?.capabilities?.includes('Placement Group')

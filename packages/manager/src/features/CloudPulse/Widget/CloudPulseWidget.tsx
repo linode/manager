@@ -238,41 +238,43 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   // Combine loading states
   const isLoadingFilters = activeLinodeFetch.isLoading || vpcFetch.isLoading;
 
+  const excludeDimensionFilters = React.useMemo(() => {
+    return (
+      FILTER_CONFIG.get(dashboardId)
+        ?.filters.filter(
+          ({ configuration }) => configuration.dimensionKey !== undefined
+        )
+        .map(({ configuration }) => configuration.dimensionKey) ?? []
+    );
+  }, [dashboardId]);
+  const filteredDimensions = React.useMemo(() => {
+    return excludeDimensionFilters && excludeDimensionFilters.length > 0
+      ? availableMetrics?.dimensions.filter(
+          ({ dimension_label: dimensionLabel }) =>
+            !excludeDimensionFilters.includes(dimensionLabel)
+        )
+      : availableMetrics?.dimensions;
+  }, [availableMetrics?.dimensions, excludeDimensionFilters]);
+
   const filteredSelections = React.useMemo(() => {
-    if (isLoadingFilters) {
+    if (isLoadingFilters || !flags.aclp?.showWidgetDimensionFilters) {
       return dimensionFilters ?? [];
     }
 
     return getFilteredDimensions({
-      dimensions: availableMetrics?.dimensions ?? [],
+      dimensions: filteredDimensions ?? [],
       linodes: activeLinodeFetch,
       vpcs: vpcFetch,
       dimensionFilters,
     });
   }, [
     activeLinodeFetch,
-    availableMetrics?.dimensions,
     dimensionFilters,
+    filteredDimensions,
+    flags.aclp?.showWidgetDimensionFilters,
     isLoadingFilters,
     vpcFetch,
   ]);
-
-  const convertToFilters = (
-    selectedFilters: MetricsDimensionFilter[]
-  ): Filters[] => {
-    const dimensionFilters: Filters[] = [];
-    for (const filter of selectedFilters) {
-      if (filter.value && filter.dimension_label && filter.operator) {
-        dimensionFilters.push({
-          dimension_label: filter.dimension_label,
-          operator: filter.operator,
-          value: filter.value,
-        });
-      }
-    }
-
-    return dimensionFilters;
-  };
 
   const filters: Filters[] | undefined = React.useMemo(() => {
     return additionalFilters?.length ||
@@ -280,7 +282,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       dimensionFilters?.length
       ? [
           ...constructAdditionalRequestFilters(additionalFilters ?? []),
-          ...(constructWidgetDimensionFilters(filteredSelections) ?? []), // dashboard level filters followed by widget filters
+          ...[...(constructWidgetDimensionFilters(filteredSelections) ?? [])], // dashboard level filters followed by widget filters
         ]
       : undefined;
   }, [
@@ -370,13 +372,28 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     (selectedFilters: MetricsDimensionFilter[]) => {
       if (savePref) {
         updatePreferences(widget.label, {
-          filters: convertToFilters(selectedFilters),
+          filters: selectedFilters
+            .map((filter) => {
+              if (
+                filter.value !== null &&
+                filter.dimension_label !== null &&
+                filter.operator !== null
+              ) {
+                return {
+                  dimension_label: filter.dimension_label,
+                  operator: filter.operator,
+                  value: filter.value,
+                };
+              } else {
+                return undefined;
+              }
+            })
+            .filter((filter) => filter !== undefined),
         });
       }
       setDimensionFilters(selectedFilters);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [savePref, updatePreferences, widget.label]
   );
   const {
     data: metricsList,
@@ -437,21 +454,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const end = DateTime.fromISO(duration.end, { zone: 'GMT' });
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
-  const excludeDimensionFilters = React.useMemo(() => {
-    return (
-      FILTER_CONFIG.get(dashboardId)
-        ?.filters.filter(
-          ({ configuration }) => configuration.dimensionKey !== undefined
-        )
-        .map(({ configuration }) => configuration.dimensionKey) ?? []
-    );
-  }, [dashboardId]);
-  const filteredDimensions = React.useMemo(() => {
-    return availableMetrics?.dimensions.filter(
-      ({ dimension_label: dimensionLabel }) =>
-        !excludeDimensionFilters.includes(dimensionLabel)
-    );
-  }, [availableMetrics?.dimensions, excludeDimensionFilters]);
 
   React.useEffect(() => {
     if (
@@ -533,6 +535,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               <Box sx={{ display: 'flex', gap: 2 }}>
                 {flags.aclp?.showWidgetDimensionFilters && (
                   <CloudPulseDimensionFiltersSelect
+                    dashboardId={dashboardId}
                     dimensionOptions={filteredDimensions ?? []}
                     drawerLabel={availableMetrics?.label ?? ''}
                     handleSelectionChange={handleDimensionFiltersChange}

@@ -16,37 +16,43 @@ import type {
   MetricsDimensionFilterForm,
 } from './types';
 import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface CloudPulseDimensionFilterRendererProps {
+  /**
+   * The entity type associated with the service type
+   */
+  associatedEntityType?: AssociatedEntityType;
+
   /**
    * The clear all trigger to reset the form
    */
   clearAllTrigger: number;
-
   /**
    * The list of dimensions associated with the selected metric
    */
   dimensionOptions: Dimension[];
+
   /**
    * Callback triggered to close the drawer
    */
   onClose: () => void;
-
   /**
    * Callback to publish any change in form
    * @param isDirty indicated the changes
    */
   onDimensionChange: (isDirty: boolean) => void;
+
   /**
    * Callback triggered on form submission
    * @param data The form data on submission
    */
   onSubmit: (data: MetricsDimensionFilterForm) => void;
-
   /**
    * The selected dimension filters for the metric
    */
   selectedDimensions?: MetricsDimensionFilter[];
+
   /**
    * The selected entities for the dimension filter
    */
@@ -65,15 +71,16 @@ interface CloudPulseDimensionFilterRendererProps {
 export const CloudPulseDimensionFilterRenderer = React.memo(
   (props: CloudPulseDimensionFilterRendererProps) => {
     const {
-      dimensionOptions,
-      selectedEntities = [],
       selectedDimensions,
       onSubmit,
       clearAllTrigger,
       onClose,
-      serviceType,
       onDimensionChange,
+      dimensionOptions,
+      selectedEntities = [],
+      serviceType,
       selectedRegions,
+      associatedEntityType,
     } = props;
 
     const formMethods = useForm<MetricsDimensionFilterForm>({
@@ -134,8 +141,9 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
             <Stack gap={1.25}>
               {fields?.length > 0 &&
                 fields.map((field, index) => (
-                  <>
+                  <React.Fragment key={field.id}>
                     <CloudPulseDimensionFilterFields
+                      associatedEntityType={associatedEntityType}
                       dimensionOptions={dimensionOptions}
                       key={field.id}
                       name={`dimension_filters.${index}`}
@@ -154,7 +162,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
                         },
                       })}
                     />
-                  </>
+                  </React.Fragment>
                 ))}
             </Stack>
             <Button
