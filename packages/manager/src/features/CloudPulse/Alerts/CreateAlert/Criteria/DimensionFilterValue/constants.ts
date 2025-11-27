@@ -181,7 +181,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
-      useCustomFetch: ['firewall'],
+      useCustomFetch: 'firewall',
     },
     startswith_endswith: {
       type: 'textfield',
@@ -190,7 +190,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
-      useCustomFetch: ['firewall'],
+      useCustomFetch: 'firewall',
     },
     '*': {
       type: 'textfield',

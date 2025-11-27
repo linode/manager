@@ -28,14 +28,12 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  arraysEqual,
   filterFirewallResources,
   filterKubernetesClusters,
-  getAssociatedEntityType,
   getEnabledServiceTypes,
   getFilteredDimensions,
-  getResourcesFilterConfig,
   getValidSortedEndpoints,
-  isEndpointsOnlyDashboard,
   isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -356,38 +354,6 @@ describe('getEnabledServiceTypes', () => {
     };
     const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
     expect(result).not.toContain('linode');
-  });
-
-  describe('getResourcesFilterConfig', () => {
-    it('should return undefined if the dashboard id is not provided', () => {
-      expect(getResourcesFilterConfig(undefined)).toBeUndefined();
-    });
-
-    it('should return the resources filter configuration for the linode-firewalldashboard', () => {
-      const resourcesFilterConfig = getResourcesFilterConfig(4);
-      expect(resourcesFilterConfig).toBeDefined();
-      expect(resourcesFilterConfig?.associatedEntityType).toBe('linode');
-    });
-
-    it('should return the resources filter configuration for the nodebalancer-firewall dashboard', () => {
-      const resourcesFilterConfig = getResourcesFilterConfig(8);
-      expect(resourcesFilterConfig).toBeDefined();
-      expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
-    });
-  });
-
-  describe('getAssociatedEntityType', () => {
-    it('should return undefined if the dashboard id is not provided', () => {
-      expect(getAssociatedEntityType(undefined)).toBeUndefined();
-    });
-
-    it('should return the associated entity type for the linode-firewall dashboard', () => {
-      expect(getAssociatedEntityType(4)).toBe('linode');
-    });
-
-    it('should return the associated entity type for the nodebalancer-firewall dashboard', () => {
-      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
-    });
   });
 
   describe('filterFirewallResources', () => {
@@ -725,6 +691,30 @@ describe('getFilteredDimensions', () => {
   });
 });
 
+describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are undefined', () => {
+    expect(arraysEqual(undefined, undefined)).toBe(true);
+  });
+  it('should return false when one of the arrays is undefined', () => {
+    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+  });
+  it('should return false when arrays are not equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
+  });
+  it('should return true when arrays have same elements but in different order', () => {
+    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
+  });
+});
+
 describe('getValidSortedEndpoints', () => {
   it('should return an empty array when buckets are undefined', () => {
     expect(getValidSortedEndpoints(undefined)).toEqual([]);
@@ -757,16 +747,5 @@ describe('getValidSortedEndpoints', () => {
       { id: 'a', label: 'a', region: 'us-east' },
       { id: 'c', label: 'c', region: 'us-east' },
     ]);
-  });
-});
-
-describe('isEndpointsOnlyDashboard', () => {
-  it('should return true when the dashboard is an endpoints only dashboard', () => {
-    // Dashboard ID 10 is an endpoints only dashboard
-    expect(isEndpointsOnlyDashboard(10)).toBe(true);
-  });
-  it('should return false when the dashboard is not an endpoints only dashboard', () => {
-    // Dashboard ID 6 is not an endpoints only dashboard, rather a buckets dashboard
-    expect(isEndpointsOnlyDashboard(6)).toBe(false);
   });
 });

@@ -3,6 +3,8 @@ import * as React from 'react';
 import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { createDedicatedPlanFiltersRenderProp } from 'src/features/components/PlansPanel/DedicatedPlanFilters';
+import { createGPUPlanFilterRenderProp } from 'src/features/components/PlansPanel/GpuFilters';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -152,6 +154,16 @@ export const KubernetesPlansPanel = (props: Props) => {
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
+                planFilters={(() => {
+                  switch (plan) {
+                    case 'dedicated':
+                      return createDedicatedPlanFiltersRenderProp();
+                    case 'gpu':
+                      return createGPUPlanFilterRenderProp();
+                    default:
+                      return undefined;
+                  }
+                })()}
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 selectedId={selectedId}

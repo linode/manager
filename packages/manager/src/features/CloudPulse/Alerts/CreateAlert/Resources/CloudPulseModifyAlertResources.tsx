@@ -23,7 +23,6 @@ export const CloudPulseModifyAlertResources = React.memo(
     const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
     const entityTypeWatcher = useWatch({ control, name: 'entity_type' });
-
     const flags = useFlags();
 
     const maxSelectionCount = React.useMemo(() => {

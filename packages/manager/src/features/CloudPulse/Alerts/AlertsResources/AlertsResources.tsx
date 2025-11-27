@@ -69,7 +69,7 @@ export interface AlertResourcesProp {
   /**
    * The entity type for firewall filtering (linode or nodebalancer)
    */
-  entityType?: 'linode' | 'nodebalancer' | null;
+  entityType?: 'linode' | 'nodebalancer';
 
   /**
    * The error text that needs to displayed incase needed

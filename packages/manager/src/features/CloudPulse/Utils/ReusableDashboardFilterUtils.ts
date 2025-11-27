@@ -1,8 +1,7 @@
 import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
 import { ENDPOINT } from './constants';
-import { FILTER_CONFIG } from './FilterConfig';
+import { FILTER_CONFIG, isEndpointsOnlyDashboard } from './FilterConfig';
 import { CloudPulseAvailableViews } from './models';
-import { isEndpointsOnlyDashboard } from './utils';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
