@@ -22,7 +22,7 @@ const networkLoadBalancerDetailRoute = createRoute({
   beforeLoad: async ({ params }) => {
     throw redirect({
       params: {
-        id: params.id,
+        id: Number(params.id),
       },
       to: '/netloadbalancers/$id/listeners',
     });
@@ -38,6 +38,11 @@ const networkLoadBalancerDetailRoute = createRoute({
 const networkLoadBalancerListenersRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
   path: '$id/listeners',
+  params: {
+    parse: ({ id }) => ({
+      id: Number(id),
+    }),
+  },
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'
@@ -48,8 +53,8 @@ const networkLoadBalancerListenerDetailRoute = createRoute({
   beforeLoad: async ({ params }) => {
     throw redirect({
       params: {
-        id: params.id,
-        listenerId: params.listenerId,
+        id: Number(params.id),
+        listenerId: Number(params.listenerId),
       },
       to: '/netloadbalancers/$id/listeners/$listenerId/nodes',
     });
@@ -64,6 +69,12 @@ const networkLoadBalancerListenerDetailRoute = createRoute({
 
 const networkLoadBalancerNodesRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
+  params: {
+    parse: ({ id, listenerId }) => ({
+      id: Number(id),
+      listenerId: Number(listenerId),
+    }),
+  },
   path: '/$id/listeners/$listenerId/nodes',
 }).lazy(() =>
   import(

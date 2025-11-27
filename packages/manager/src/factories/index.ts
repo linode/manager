@@ -34,7 +34,6 @@ export * from './longviewTopProcesses';
 export * from './managed';
 export * from './networking';
 export * from './networkLoadBalancer';
-export * from './networkLoadBalancer';
 export * from './notification';
 export * from './oauth';
 export * from './objectStorage';
