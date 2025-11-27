@@ -42,7 +42,7 @@ export const iamQueries = createQueryKeys('iam', {
             username,
             entityType,
             permission,
-          }).then((res) => res.data),
+          }).then((res) => res.data ?? []),
         queryKey: [entityType, permission],
       }),
       getAllEntitiesByPermission: (
@@ -54,7 +54,7 @@ export const iamQueries = createQueryKeys('iam', {
             username,
             entityType,
             permission,
-          }).then((res) => res.data),
+          }).then((res) => res.data ?? []),
         queryKey: [entityType, permission],
       }),
     },

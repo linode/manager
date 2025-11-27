@@ -131,7 +131,7 @@ export const NodeBalancerSelect = (
       disabled={disabled}
       disablePortal={true}
       errorText={
-        (error?.[0].reason || availableNodebalancersError?.[0].reason) ??
+        (error?.[0].reason || availableNodebalancersError?.[0]?.reason) ??
         errorText
       }
       getOptionLabel={(nodebalancer: NodeBalancer) =>
