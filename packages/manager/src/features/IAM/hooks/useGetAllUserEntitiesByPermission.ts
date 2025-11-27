@@ -108,7 +108,7 @@ const useEntityQuery = <T extends FullEntityType>(
   }
 };
 
-export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
+export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
   entityType,
   permission,
   enabled = true,

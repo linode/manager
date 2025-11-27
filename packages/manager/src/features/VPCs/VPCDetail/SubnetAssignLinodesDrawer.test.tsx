@@ -19,7 +19,7 @@ const queryMocks = vi.hoisted(() => ({
 
 const iamMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { update_vpc: true } }),
-  useGetUserEntitiesByPermission: vi.fn().mockReturnValue({
+  useGetAllUserEntitiesByPermission: vi.fn().mockReturnValue({
     data: [],
     isLoading: false,
     error: null,
@@ -38,8 +38,8 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: iamMocks.usePermissions,
 }));
 
-vi.mock('src/features/IAM/hooks/useGetUserEntitiesByPermission', () => ({
-  useGetUserEntitiesByPermission: iamMocks.useGetUserEntitiesByPermission,
+vi.mock('src/features/IAM/hooks/useGetAllUserEntitiesByPermission', () => ({
+  useGetAllUserEntitiesByPermission: iamMocks.useGetAllUserEntitiesByPermission,
 }));
 
 const props = {
@@ -67,7 +67,7 @@ describe('Subnet Assign Linodes Drawer', () => {
 
   beforeEach(() => {
     // Set up the default mock to return the linode
-    iamMocks.useGetUserEntitiesByPermission.mockReturnValue({
+    iamMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
       data: [linode],
       isLoading: false,
       error: null,

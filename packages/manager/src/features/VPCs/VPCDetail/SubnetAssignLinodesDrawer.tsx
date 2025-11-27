@@ -28,7 +28,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
@@ -166,7 +166,7 @@ export const SubnetAssignLinodesDrawer = (
     data: availableLinodes,
     filter: availableLinodesFilter,
     isLoading: availableLinodesLoading,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'update_linode',
     enabled: open,

@@ -3,7 +3,7 @@ import { Autocomplete, Notice } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 
 import type { Volume } from '@linode/api-v4';
 
@@ -29,7 +29,7 @@ export const VolumeSelect = (props: Props) => {
     data: availableVolumes,
     isLoading: isAvailableVolumesLoading,
     error: availableVolumesError,
-  } = useGetUserEntitiesByPermission<Volume>({
+  } = useGetAllUserEntitiesByPermission<Volume>({
     entityType: 'volume',
     filter: regionFilter,
     permission: 'attach_volume',

@@ -16,7 +16,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -43,7 +43,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
     data: availableLinodes,
     isLoading: availableLinodesLoading,
     error: availableLinodesError,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'update_linode',
     enabled: open,

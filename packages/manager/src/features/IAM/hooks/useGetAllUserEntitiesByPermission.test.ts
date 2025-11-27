@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { useGetUserEntitiesByPermission } from './useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from './useGetAllUserEntitiesByPermission';
 
 import type { Grants, Linode, Profile } from '@linode/api-v4';
 
@@ -13,7 +13,7 @@ const queryMocks = vi.hoisted(() => ({
   useAllNodeBalancersQuery: vi.fn(),
   useAllVolumesQuery: vi.fn(),
   useAllVPCsQuery: vi.fn(),
-  useGetUserEntitiesByPermissionQuery: vi.fn(),
+  useGetAllUserEntitiesByPermissionQuery: vi.fn(),
   useGrants: vi.fn(),
   useIsIAMEnabled: vi.fn(),
   entityPermissionMapFrom: vi.fn(),
@@ -29,8 +29,8 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
     useAllNodeBalancersQuery: queryMocks.useAllNodeBalancersQuery,
     useAllVolumesQuery: queryMocks.useAllVolumesQuery,
     useAllVPCsQuery: queryMocks.useAllVPCsQuery,
-    useGetUserEntitiesByPermissionQuery:
-      queryMocks.useGetUserEntitiesByPermissionQuery,
+    useGetAllUserEntitiesByPermissionQuery:
+      queryMocks.useGetAllUserEntitiesByPermissionQuery,
     useGrants: queryMocks.useGrants,
   };
 });
@@ -43,7 +43,7 @@ vi.mock('./adapters/permissionAdapters', () => ({
   entityPermissionMapFrom: queryMocks.entityPermissionMapFrom,
 }));
 
-describe('useGetUserEntitiesByPermission', () => {
+describe('useGetAllUserEntitiesByPermission', () => {
   const mockLinodes: Linode[] = [
     {
       id: 1,
@@ -85,7 +85,7 @@ describe('useGetUserEntitiesByPermission', () => {
     queryMocks.useAllImagesQuery.mockReturnValue(mockLinodeQueryResult);
     queryMocks.useAllVPCsQuery.mockReturnValue(mockLinodeQueryResult);
 
-    queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+    queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
       data: undefined,
       isLoading: false,
       error: null,
@@ -112,7 +112,7 @@ describe('useGetUserEntitiesByPermission', () => {
           { id: 2, label: 'linode-2', type: 'linode' },
         ];
 
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: mockEntitiesByPermission,
           isLoading: false,
           error: null,
@@ -122,7 +122,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -145,7 +145,7 @@ describe('useGetUserEntitiesByPermission', () => {
           { id: 2, label: 'linode-2', type: 'linode' },
         ];
 
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: mockEntitiesByPermission,
           isLoading: false,
           error: null,
@@ -155,7 +155,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -174,7 +174,7 @@ describe('useGetUserEntitiesByPermission', () => {
       });
 
       it('should return empty array when user has no permissions', async () => {
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: [],
           isLoading: false,
           error: null,
@@ -189,7 +189,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -204,7 +204,7 @@ describe('useGetUserEntitiesByPermission', () => {
       });
 
       it('should not enable entity query while waiting for permission IDs', async () => {
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: undefined, // Still loading
           isLoading: true,
           error: null,
@@ -214,7 +214,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -238,7 +238,7 @@ describe('useGetUserEntitiesByPermission', () => {
       it('should return empty array and error when permission query fails', async () => {
         const mockError = [{ reason: 'Permission denied' }];
 
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: undefined,
           isLoading: false,
           error: mockError,
@@ -248,7 +248,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -277,7 +277,7 @@ describe('useGetUserEntitiesByPermission', () => {
       });
 
       it('should return all entities without filtering', async () => {
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: [],
           isLoading: false,
           error: null,
@@ -287,7 +287,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -304,7 +304,7 @@ describe('useGetUserEntitiesByPermission', () => {
       });
 
       it('should call entity query without filter', async () => {
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: [],
           isLoading: false,
           error: null,
@@ -314,7 +314,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -352,7 +352,7 @@ describe('useGetUserEntitiesByPermission', () => {
           { id: 1, label: 'linode-1', type: 'linode' },
         ];
 
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: mockEntitiesByPermission,
           isLoading: false,
           error: null,
@@ -367,7 +367,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -396,7 +396,7 @@ describe('useGetUserEntitiesByPermission', () => {
       });
 
       it('should return all entities for unrestricted beta users', async () => {
-        queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+        queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
           data: [],
           isLoading: false,
           error: null,
@@ -406,7 +406,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -460,7 +460,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -500,7 +500,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -527,7 +527,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -551,7 +551,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -593,7 +593,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         const { result } = renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -618,7 +618,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
         renderHook(
           () =>
-            useGetUserEntitiesByPermission({
+            useGetAllUserEntitiesByPermission({
               entityType: 'linode',
               permission: 'view_linode',
             }),
@@ -636,7 +636,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
   describe('Loading States', () => {
     it('should combine loading states from permission and entity queries', async () => {
-      queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
         data: undefined,
         isLoading: true,
         error: null,
@@ -657,7 +657,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
       const { result } = renderHook(
         () =>
-          useGetUserEntitiesByPermission({
+          useGetAllUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
           }),
@@ -670,7 +670,7 @@ describe('useGetUserEntitiesByPermission', () => {
     });
 
     it('should return isLoading false when all queries are complete', async () => {
-      queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
         data: [],
         isLoading: false,
         error: null,
@@ -691,7 +691,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
       const { result } = renderHook(
         () =>
-          useGetUserEntitiesByPermission({
+          useGetAllUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
           }),
@@ -710,7 +710,7 @@ describe('useGetUserEntitiesByPermission', () => {
     it('should return permission query error and empty data', async () => {
       const mockError = [{ reason: 'Permission query error' }];
 
-      queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
         data: undefined,
         isLoading: false,
         error: mockError,
@@ -726,7 +726,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
       const { result } = renderHook(
         () =>
-          useGetUserEntitiesByPermission({
+          useGetAllUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
           }),
@@ -744,7 +744,7 @@ describe('useGetUserEntitiesByPermission', () => {
     it('should handle entity query errors', async () => {
       const mockError = [{ reason: 'Entity query error' }];
 
-      queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
         data: [{ id: 1, label: 'linode-1', type: 'linode' }],
         isLoading: false,
         error: null,
@@ -765,7 +765,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
       const { result } = renderHook(
         () =>
-          useGetUserEntitiesByPermission({
+          useGetAllUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
           }),
@@ -785,7 +785,7 @@ describe('useGetUserEntitiesByPermission', () => {
         { id: 1, label: 'linode-1', type: 'linode' },
       ];
 
-      queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
         data: mockEntitiesByPermission,
         isLoading: false,
         error: null,
@@ -801,7 +801,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
       renderHook(
         () =>
-          useGetUserEntitiesByPermission({
+          useGetAllUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
             filter: customFilter,
@@ -823,7 +823,7 @@ describe('useGetUserEntitiesByPermission', () => {
     it('should pass custom params to entity query', async () => {
       const customParams = { page: 1, page_size: 50 };
 
-      queryMocks.useGetUserEntitiesByPermissionQuery.mockReturnValue({
+      queryMocks.useGetAllUserEntitiesByPermissionQuery.mockReturnValue({
         data: [],
         isLoading: false,
         error: null,
@@ -839,7 +839,7 @@ describe('useGetUserEntitiesByPermission', () => {
 
       renderHook(
         () =>
-          useGetUserEntitiesByPermission({
+          useGetAllUserEntitiesByPermission({
             entityType: 'linode',
             permission: 'view_linode',
             params: customParams,

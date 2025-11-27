@@ -21,7 +21,7 @@ const mockNavigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
   useNavigate: vi.fn(() => mockNavigate),
-  useGetUserEntitiesByPermission: vi.fn().mockReturnValue({}),
+  useGetAllUserEntitiesByPermission: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -40,13 +40,14 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/useGetUserEntitiesByPermission', () => ({
-  useGetUserEntitiesByPermission: queryMocks.useGetUserEntitiesByPermission,
+vi.mock('src/features/IAM/hooks/useGetAllUserEntitiesByPermission', () => ({
+  useGetAllUserEntitiesByPermission:
+    queryMocks.useGetAllUserEntitiesByPermission,
 }));
 
 describe('RebuildImageDrawer', () => {
   beforeEach(() => {
-    queryMocks.useGetUserEntitiesByPermission.mockReturnValue({
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
       isLoading: false,
     });
   });

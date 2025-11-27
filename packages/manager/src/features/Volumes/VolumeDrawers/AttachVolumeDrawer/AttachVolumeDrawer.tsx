@@ -16,7 +16,7 @@ import { number, object } from 'yup';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -62,7 +62,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     data: availableLinodes,
     filter: availableLinodesFilter,
     isLoading: availableLinodesLoading,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'update_linode',
     enabled: open,

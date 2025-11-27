@@ -27,7 +27,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
@@ -109,7 +109,7 @@ export const CreateImageTab = () => {
     data: linodes,
     isLoading,
     filter: linodeFilter,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'update_linode',
     enabled: Boolean(imagePermissions.create_image),

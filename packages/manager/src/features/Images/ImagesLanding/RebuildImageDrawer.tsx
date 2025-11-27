@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
 import type { APIError, Image, Linode } from '@linode/api-v4';
@@ -27,7 +27,7 @@ export const RebuildImageDrawer = (props: Props) => {
     filter: linodeFilter,
     isLoading,
     error: linodeError,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'rebuild_linode',
     enabled: open,

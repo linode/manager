@@ -13,7 +13,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -62,7 +62,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
     data: availableLinodes,
     filter: availableLinodesFilter,
     isLoading: availableLinodesLoading,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'apply_linode_firewalls',
     enabled: open,

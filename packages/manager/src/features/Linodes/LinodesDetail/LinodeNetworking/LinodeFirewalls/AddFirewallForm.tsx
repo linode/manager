@@ -10,7 +10,7 @@ import { number, object } from 'yup';
 import { Link } from 'src/components/Link';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 
@@ -37,7 +37,7 @@ export const AddFirewallForm = (props: Props) => {
   const { mutateAsync } = useAddFirewallDeviceMutation();
 
   const { data: availableFirewalls, isLoading: availableFirewallsLoading } =
-    useGetUserEntitiesByPermission<Firewall>({
+    useGetAllUserEntitiesByPermission<Firewall>({
       entityType: 'firewall',
       permission: 'create_firewall_device',
     });

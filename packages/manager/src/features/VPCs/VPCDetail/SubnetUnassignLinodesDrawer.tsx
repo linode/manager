@@ -15,7 +15,7 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -107,7 +107,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       isLoading: availableLinodesLoading,
       error: availableLinodesError,
       refetch: getCSVData,
-    } = useGetUserEntitiesByPermission<Linode>({
+    } = useGetAllUserEntitiesByPermission<Linode>({
       entityType: 'linode',
       permission: 'delete_linode',
       enabled: open,

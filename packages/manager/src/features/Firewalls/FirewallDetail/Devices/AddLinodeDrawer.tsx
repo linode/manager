@@ -20,7 +20,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useGetUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetUserEntitiesByPermission';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -63,7 +63,7 @@ export const AddLinodeDrawer = (props: Props) => {
     filter: availableLinodesFilter,
     isLoading: availableLinodesLoading,
     error: availableLinodesError,
-  } = useGetUserEntitiesByPermission<Linode>({
+  } = useGetAllUserEntitiesByPermission<Linode>({
     entityType: 'linode',
     permission: 'update_linode',
     enabled: open,
