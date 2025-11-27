@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { CLUSTERS_TOOLTIP_TEXT } from '../Utils/constants';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 
 const queryMocks = vi.hoisted(() => ({
@@ -30,18 +31,21 @@ describe('CloudPulseResourcesSelect component tests', () => {
     linodeFactory.resetSequenceNumber();
   });
 
-  it('renders with the correct label and placeholder', () => {
+  it('renders with the correct label, placeholder, and tooltip-text', async () => {
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
-        resourceType={'linode'}
+        resourceType={'lke'}
       />
     );
 
     expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Select Resources')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: CLUSTERS_TOOLTIP_TEXT })
+    ).toBeVisible();
   });
 
   it('should render disabled component if the props are undefined or regions and service type does not have any resources', () => {
