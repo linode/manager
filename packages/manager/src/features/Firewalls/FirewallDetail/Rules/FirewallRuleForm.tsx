@@ -218,7 +218,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     return (
       addressOptions.find(
         (thisOption) => thisOption.value === values.addresses
-      ) || undefined
+      ) ?? null
     );
   }, [values]);
 
