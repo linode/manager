@@ -1,6 +1,7 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 
+import type { ResourcePage } from '../types';
 import type {
   AccessType,
   EntityByPermission,
@@ -9,7 +10,6 @@ import type {
   PermissionType,
 } from './types';
 import type { EntityType } from 'src/entities/types';
-
 /**
  * getUserRoles
  *
@@ -120,7 +120,7 @@ export const getUserEntitiesByPermission = ({
   entityType,
   permission,
 }: GetEntitiesByPermissionParams) =>
-  Request<EntityByPermission[]>(
+  Request<ResourcePage<EntityByPermission>>(
     setURL(
       `${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}?permission=${permission}`,
     ),

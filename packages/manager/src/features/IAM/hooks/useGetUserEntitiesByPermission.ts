@@ -5,7 +5,7 @@ import {
   useAllNodeBalancersQuery,
   useAllVolumesQuery,
   useAllVPCsQuery,
-  useGetUserEntitiesByPermissionQuery,
+  useGetAllUserEntitiesByPermissionQuery,
   useGrants,
 } from '@linode/queries';
 
@@ -122,7 +122,7 @@ export const useGetUserEntitiesByPermission = <T extends FullEntityType>({
     data: entitiesByPermission,
     isLoading: isEntitiesByPermissionLoading,
     error: isEntitiesByPermissionError,
-  } = useGetUserEntitiesByPermissionQuery({
+  } = useGetAllUserEntitiesByPermissionQuery({
     username: profile?.username,
     entityType,
     permission,
