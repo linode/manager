@@ -12,9 +12,9 @@ import {
   PARENT_ENTITY_REGION,
   RESOURCE_FILTER_MAP,
 } from '../Utils/constants';
-import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
-import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { getResourcesFilterConfig } from '../Utils/utils';
+import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import { FILTER_CONFIG, getResourcesFilterConfig } from '../Utils/FilterConfig';
+import { deepEqual } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';

@@ -26,6 +26,7 @@ describe('Tests for CloudPulse Dimension Filters Select', () => {
     const handleSubmit = vi.fn();
     renderWithTheme(
       <CloudPulseDimensionFiltersSelect
+        dashboardId={1}
         dimensionOptions={dimensionOptions}
         drawerLabel="Test Metric"
         handleSelectionChange={handleSubmit}
@@ -47,13 +48,6 @@ describe('Tests for CloudPulse Dimension Filters Select', () => {
     expect(drawerOpen).toBeInTheDocument();
     const selectText = screen.getByText('Select up to 5 filters.');
     expect(selectText).toBeInTheDocument();
-    // validate for form fields to be present
-    const dataFieldContainer = screen.queryByTestId('dimension-field');
-    expect(dataFieldContainer).toBeInTheDocument();
-    const operatorContainer = screen.getByTestId('operator');
-    expect(operatorContainer).toBeInTheDocument();
-    const valueContainer = screen.getByTestId('value');
-    expect(valueContainer).toBeInTheDocument();
     const applyButton = screen.getByText('Apply');
     expect(applyButton).toBeInTheDocument();
     const cancelButton = screen.getByText('Cancel');

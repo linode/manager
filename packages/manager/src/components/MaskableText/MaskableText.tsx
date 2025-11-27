@@ -37,9 +37,10 @@ export interface MaskableTextProps {
    */
   sxVisibilityTooltip?: SxProps<Theme>;
   /**
-   * The original, maskable text; if the text is not masked, render this text or the styled text via children.
+   * The original, maskable content; can be a string or any JSX/ReactNode.
+   * If the text is not masked, render this text or the styled text via children.
    */
-  text: string | undefined;
+  text: React.ReactNode | string | undefined;
 }
 
 export const MaskableText = (props: MaskableTextProps) => {
@@ -59,11 +60,13 @@ export const MaskableText = (props: MaskableTextProps) => {
 
   const [isMasked, setIsMasked] = React.useState(maskedPreferenceSetting);
 
-  const unmaskedText = children ? (
-    children
-  ) : (
-    <Typography sx={sxTypography}>{text}</Typography>
-  );
+  const unmaskedText =
+    children ??
+    (typeof text === 'string' ? (
+      <Typography sx={sxTypography}>{text}</Typography>
+    ) : (
+      text // JSX (ReactNode)
+    ));
 
   // Return early based on the preference setting and the original text.
 
@@ -74,6 +77,8 @@ export const MaskableText = (props: MaskableTextProps) => {
   if (!maskedPreferenceSetting) {
     return unmaskedText;
   }
+
+  const maskedText = createMaskedText(text, length);
 
   return (
     <Stack
@@ -95,7 +100,7 @@ export const MaskableText = (props: MaskableTextProps) => {
       )}
       {isMasked ? (
         <Typography sx={{ overflowWrap: 'anywhere', ...sxTypography }}>
-          {createMaskedText(text, length)}
+          {maskedText}
         </Typography>
       ) : (
         unmaskedText

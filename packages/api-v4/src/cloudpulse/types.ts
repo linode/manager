@@ -20,7 +20,6 @@ export type DimensionFilterOperatorType =
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertDefinitionScope = 'account' | 'entity' | 'region';
-// TODO: remove in progress once api changes are ready
 export type AlertStatusType =
   | 'disabled'
   | 'disabling'

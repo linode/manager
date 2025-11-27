@@ -192,7 +192,10 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
             {...commonAutocompleteProps}
             entities={entities}
             entityType={entityType}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            entityType={entityType}
             scope={scope}
+            selectedRegions={selectedRegions}
           />
         );
       case 'objectstorage':
