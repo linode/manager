@@ -75,7 +75,7 @@ export const AddFirewallForm = (props: Props) => {
               label="Firewall"
               loading={availableFirewallsLoading}
               onChange={(e, value) => field.onChange(value?.id)}
-              options={availableFirewalls}
+              options={availableFirewalls ?? []}
               placeholder="Select a Firewall"
               textFieldProps={{
                 inputRef: field.ref,
