@@ -31,18 +31,30 @@ describe('CloudPulseResourcesSelect component tests', () => {
     linodeFactory.resetSequenceNumber();
   });
 
-  it('renders with the correct label, placeholder, and tooltip-text', async () => {
+  it('renders with the correct label and placeholder', () => {
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
-        resourceType={'lke'}
+        resourceType={'linode'}
       />
     );
 
     expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Select Resources')).toBeInTheDocument();
+  });
+
+  it('renders with the tooltip-text for lke service', async () => {
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="Clusters"
+        region={'us-east'}
+        resourceType={'lke'}
+      />
+    );
+
     expect(
       screen.getByRole('button', { name: CLUSTERS_TOOLTIP_TEXT })
     ).toBeVisible();
