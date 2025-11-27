@@ -5,7 +5,7 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as shared from '../../shared';
-import { MultiplePrefixListInput } from './MutiplePrefixListInput';
+import { MultiplePrefixListSelect } from './MutiplePrefixListSelect';
 
 const queryMocks = vi.hoisted(() => ({
   useAllFirewallPrefixListsQuery: vi.fn().mockReturnValue({}),
@@ -20,7 +20,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
-describe('MultiplePrefixListInput', () => {
+describe('MultiplePrefixListSelect', () => {
   beforeEach(() => {
     spy.mockReturnValue({
       isFirewallRulesetsPrefixlistsFeatureEnabled: true,
@@ -60,7 +60,7 @@ describe('MultiplePrefixListInput', () => {
 
   it('should render the title only when at least one PL row is added', () => {
     const { getByText } = renderWithTheme(
-      <MultiplePrefixListInput
+      <MultiplePrefixListSelect
         onChange={vi.fn()}
         pls={[{ address: '', inIPv4Rule: false, inIPv6Rule: false }]}
       />
@@ -70,14 +70,14 @@ describe('MultiplePrefixListInput', () => {
 
   it('should not render the title when no PL row is added', () => {
     const { queryByText } = renderWithTheme(
-      <MultiplePrefixListInput onChange={vi.fn()} pls={[]} />
+      <MultiplePrefixListSelect onChange={vi.fn()} pls={[]} />
     );
     expect(queryByText('Prefix List')).not.toBeInTheDocument();
   });
 
   it('should add a new PL row (empty state) when clicking "Add a Prefix List"', async () => {
     const { getByText } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={[]} />
+      <MultiplePrefixListSelect onChange={onChange} pls={[]} />
     );
 
     await userEvent.click(getByText('Add a Prefix List'));
@@ -96,7 +96,7 @@ describe('MultiplePrefixListInput', () => {
       },
     ];
     const { getByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     await userEvent.click(getByTestId('delete-pl-0'));
@@ -106,7 +106,7 @@ describe('MultiplePrefixListInput', () => {
   it('filters out unsupported PLs from dropdown', async () => {
     const pls = [{ address: '', inIPv4Rule: false, inIPv6Rule: false }];
     const { getByRole, queryByText } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const input = getByRole('combobox');
@@ -130,7 +130,7 @@ describe('MultiplePrefixListInput', () => {
       { address: '', inIPv4Rule: false, inIPv6Rule: false },
     ];
     const { getAllByRole, findByText } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={selectedPLs} />
+      <MultiplePrefixListSelect onChange={onChange} pls={selectedPLs} />
     );
 
     const inputs = getAllByRole('combobox');
@@ -165,7 +165,7 @@ describe('MultiplePrefixListInput', () => {
       },
     ];
     const { getByDisplayValue, queryAllByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     expect(queryAllByTestId('prefixlist-select')).toHaveLength(3);
@@ -177,7 +177,7 @@ describe('MultiplePrefixListInput', () => {
   it('defaults to IPv4 selected and IPv6 unselected when choosing a PL that supports both', async () => {
     const pls = [{ address: '', inIPv4Rule: false, inIPv6Rule: false }];
     const { findByText, getByRole } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const input = getByRole('combobox');
@@ -201,7 +201,7 @@ describe('MultiplePrefixListInput', () => {
   it('defaults to IPv4 selected and IPv6 unselected when choosing a PL that supports only IPv4', async () => {
     const pls = [{ address: '', inIPv4Rule: false, inIPv6Rule: false }];
     const { findByText, getByRole } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const input = getByRole('combobox');
@@ -225,7 +225,7 @@ describe('MultiplePrefixListInput', () => {
   it('defaults to IPv4 unselected and IPv6 selected when choosing a PL that supports only IPv6', async () => {
     const pls = [{ address: '', inIPv4Rule: false, inIPv6Rule: false }];
     const { findByText, getByRole } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const input = getByRole('combobox');
@@ -251,7 +251,7 @@ describe('MultiplePrefixListInput', () => {
       { address: 'pl::supports-both', inIPv4Rule: true, inIPv6Rule: false },
     ];
     const { findByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const ipv4CheckboxWrapper = await findByTestId('ipv4-checkbox-0');
@@ -274,7 +274,7 @@ describe('MultiplePrefixListInput', () => {
       { address: 'pl::supports-both', inIPv4Rule: false, inIPv6Rule: true },
     ];
     const { findByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const ipv4CheckboxWrapper = await findByTestId('ipv4-checkbox-0');
@@ -297,7 +297,7 @@ describe('MultiplePrefixListInput', () => {
       { address: 'pl::supports-both', inIPv4Rule: true, inIPv6Rule: true },
     ];
     const { findByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const ipv4CheckboxWrapper = await findByTestId('ipv4-checkbox-0');
@@ -324,7 +324,7 @@ describe('MultiplePrefixListInput', () => {
       },
     ];
     const { findByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const ipv4CheckboxWrapper = await findByTestId('ipv4-checkbox-0');
@@ -351,7 +351,7 @@ describe('MultiplePrefixListInput', () => {
       },
     ];
     const { findByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const ipv4CheckboxWrapper = await findByTestId('ipv4-checkbox-0');
@@ -375,7 +375,7 @@ describe('MultiplePrefixListInput', () => {
       { address: 'pl::supports-both', inIPv4Rule: true, inIPv6Rule: false },
     ];
     const { findByTestId } = renderWithTheme(
-      <MultiplePrefixListInput onChange={onChange} pls={pls} />
+      <MultiplePrefixListSelect onChange={onChange} pls={pls} />
     );
 
     const ipv6Checkbox = await findByTestId('ipv6-checkbox-0');

@@ -76,7 +76,7 @@ const getDefaultPLReferenceState = (
   return { inIPv4Rule: false, inIPv6Rule: false };
 };
 
-export interface MultiplePrefixListInputProps {
+export interface MultiplePrefixListSelectProps {
   /**
    * Custom CSS class for additional styling.
    */
@@ -104,8 +104,8 @@ export interface MultiplePrefixListInputProps {
   pls: ExtendedPL[];
 }
 
-export const MultiplePrefixListInput = React.memo(
-  (props: MultiplePrefixListInputProps) => {
+export const MultiplePrefixListSelect = React.memo(
+  (props: MultiplePrefixListSelectProps) => {
     const { className, disabled, pls, onChange } = props;
     const { classes, cx } = useStyles();
     const {
