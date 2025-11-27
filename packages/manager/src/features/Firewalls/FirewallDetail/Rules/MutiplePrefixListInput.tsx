@@ -217,7 +217,9 @@ export const MultiplePrefixListInput = React.memo(
       return (
         <Grid
           container
+          data-testid="prefixlist-input"
           direction="row"
+          key={`prefixlist-${idx}`}
           spacing={2}
           sx={{
             justifyContent: 'center',
