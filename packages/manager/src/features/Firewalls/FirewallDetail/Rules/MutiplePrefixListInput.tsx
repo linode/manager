@@ -122,19 +122,11 @@ export const MultiplePrefixListInput = React.memo(
     );
 
     const prefixLists = data ?? [];
-    // const prefixLists: Partial<FirewallPrefixList>[] = [
-    //   { id: 1, name: 'pl::subnets:325584', ipv6: ['asdas'] },
-    //   { id: 2, name: 'pl::vpcs:298694', ipv4: [], ipv6: [] },
-    //   {
-    //     id: 3,
-    //     name: 'pl:system:test-3',
-    //     ipv4: ['192.168.0'],
-    //     ipv6: null,
-    //   },
-    //   { id: 4, name: 'pl:system:test-4', ipv4: null, ipv6: ['124.4124.124'] },
-    //   { id: 5, name: 'pl:system:test-5', ipv4: null, ipv6: null },
-    // ];
 
+    /**
+     * Filter prefix lists to include those that support IPv4, IPv6, or both,
+     * and map them to options with label, value, and PL IP support details.
+     */
     const supportedOptions = React.useMemo(
       () =>
         prefixLists.filter(isPrefixListSupported).map((pl) => ({
