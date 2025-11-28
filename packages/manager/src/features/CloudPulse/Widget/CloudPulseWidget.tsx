@@ -209,7 +209,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     dimensionLabel: 'linode_id',
     type: 'metrics',
     entities: entityIds,
-    regions: region // if linode region is selected, filter regions to only that region else pass all regions
+    regions: linodeRegion // if linode region is selected, filter regions to only that region else pass all regions
       ? (regions?.filter(({ id }) => id === linodeRegion) ?? [])
       : regions,
     scope: 'entity',
@@ -220,7 +220,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     dimensionLabel: 'vpc_subnet_id',
     type: 'metrics',
     entities: entityIds,
-    regions: region // if linode region is selected, filter regions to only that region else pass all regions
+    regions: linodeRegion // if linode region is selected, filter regions to only that region else pass all regions
       ? (regions?.filter(({ id }) => id === linodeRegion) ?? [])
       : regions,
     scope: 'entity',
