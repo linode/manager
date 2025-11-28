@@ -1323,8 +1323,8 @@ export const handlers = [
         label: 'firewall with rule and ruleset reference',
         rules: firewallRulesFactory.build({
           inbound: [
-            firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
-            firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+            { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+            { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
             ...firewallRuleFactory.buildList(1),
           ],
         }),
@@ -1363,10 +1363,25 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/prefixlists', () => {
     const prefixlists = [
-      ...Array.from({ length: 5 }, (_, i) =>
-        firewallPrefixListFactory.build({ name: `pl::vpcs:test-${i + 1}` })
+      ...Array.from({ length: 3 }, (_, i) =>
+        firewallPrefixListFactory.build({
+          name: `pl::vpcs:supports-both-${i + 1}`,
+        })
       ),
-      firewallPrefixListFactory.build({ name: 'pl:system:test-1' }),
+      firewallPrefixListFactory.build({
+        name: 'pl::supports-only-ipv4',
+        ipv6: null,
+      }),
+      firewallPrefixListFactory.build({
+        name: 'pl::supports-only-ipv6',
+        ipv4: null,
+      }),
+      firewallPrefixListFactory.build({
+        name: 'pl::not-supported',
+        ipv4: null,
+        ipv6: null,
+      }),
+      firewallPrefixListFactory.build({ name: 'pl:system:supports-both' }),
       ...firewallPrefixListFactory.buildList(10),
     ];
     return HttpResponse.json(makeResourcePage(prefixlists));
@@ -1422,28 +1437,30 @@ export const handlers = [
             label: 'firewall with rule and ruleset reference',
             rules: firewallRulesFactory.build({
               inbound: [
-                firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
-                firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+                { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+                { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
                 ...firewallRuleFactory.buildList(1, {
                   addresses: {
                     ipv4: [
-                      'pl:system:test-1',
-                      'pl::vpcs:test-1',
+                      'pl:system:supports-both',
+                      'pl::supports-only-ipv4',
                       '192.168.1.213',
                       '192.168.1.214',
                       '192.168.1.215',
                       '192.168.1.216',
-                      'pl::vpcs:test-2',
+                      'pl::vpcs:supports-both-1',
+                      'pl::vpcs:supports-both-2',
                       '172.31.255.255',
                     ],
                     ipv6: [
-                      'pl:system:test-1',
-                      'pl::vpcs:test-3',
+                      'pl:system:supports-both',
+                      'pl::supports-only-ipv6',
+                      'pl::vpcs:supports-both-3',
                       '2001:db8:85a3::8a2e:370:7334/128',
                       '2001:db8:85a3::8a2e:371:7335/128',
-                      'pl::vpcs:test-3',
-                      'pl::vpcs:test-4',
-                      'pl::vpcs:test-5',
+                      // Duplicate PrefixList entries like the below one, may not appear, but if they do,
+                      // our logic will treat them as a single entity within the ipv4 or ipv6 array.
+                      'pl::vpcs:supports-both-3',
                       '2001:db8:85a3::8a2e:372:7336/128',
                     ],
                   },
