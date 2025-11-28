@@ -149,6 +149,7 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  beta: boolean;
   editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
@@ -171,6 +172,11 @@ interface MTC {
   supportedRegions: Region['id'][];
 }
 
+interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -191,6 +197,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
@@ -200,7 +207,7 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  firewallRulesetsPrefixlists: boolean;
+  fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
   gecko2: GeckoFeatureFlag;
   generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
