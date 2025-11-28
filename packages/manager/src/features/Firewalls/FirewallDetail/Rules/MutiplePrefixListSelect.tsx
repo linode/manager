@@ -17,7 +17,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Link } from 'src/components/Link';
 import { useIsFirewallRulesetsPrefixlistsEnabled } from 'src/features/Firewalls/shared';
 
-import { getPrefixListType } from './shared';
+import { getPrefixListType, groupPriority } from './shared';
 
 import type { FirewallPrefixList } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
@@ -124,11 +124,22 @@ export const MultiplePrefixListSelect = React.memo(
      */
     const supportedOptions = React.useMemo(
       () =>
-        prefixLists.filter(isPrefixListSupported).map((pl) => ({
-          label: pl.name,
-          value: pl.id,
-          support: getSupportDetails(pl),
-        })),
+        prefixLists
+          .filter(isPrefixListSupported)
+          .map((pl) => ({
+            label: pl.name,
+            value: pl.id,
+            support: getSupportDetails(pl),
+          }))
+          // The API does not seem to have the capability to sort prefix lists by "name" to prioritize certain types.
+          // This sort ensures that Autocomplete's groupBy displays groups correctly without duplicates
+          // and that the dropdown shows groups in the desired order.
+          .sort((a, b) => {
+            const groupA = getPrefixListType(a.label);
+            const groupB = getPrefixListType(b.label);
+
+            return groupPriority[groupA] - groupPriority[groupB];
+          }),
       [prefixLists]
     );
 

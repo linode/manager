@@ -1363,6 +1363,8 @@ export const handlers = [
   }),
   http.get('*/v4beta/networking/prefixlists', () => {
     const prefixlists = [
+      firewallPrefixListFactory.build({ name: 'pl:system:supports-both' }),
+      ...firewallPrefixListFactory.buildList(10),
       ...Array.from({ length: 3 }, (_, i) =>
         firewallPrefixListFactory.build({
           name: `pl::vpcs:supports-both-${i + 1}`,
@@ -1381,8 +1383,6 @@ export const handlers = [
         ipv4: null,
         ipv6: null,
       }),
-      firewallPrefixListFactory.build({ name: 'pl:system:supports-both' }),
-      ...firewallPrefixListFactory.buildList(10),
     ];
     return HttpResponse.json(makeResourcePage(prefixlists));
   }),

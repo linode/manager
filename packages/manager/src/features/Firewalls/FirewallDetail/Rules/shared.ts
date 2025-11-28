@@ -130,12 +130,20 @@ export const firewallRuleCreateOptions = [
   },
 ] as const;
 
-export const getPrefixListType = (name: string) => {
+type PrefixListGroup = 'Account' | 'Other' | 'System';
+
+export const groupPriority: Record<PrefixListGroup, number> = {
+  Account: 1,
+  System: 2,
+  Other: 3,
+};
+
+export const getPrefixListType = (name: string): PrefixListGroup => {
   if (name.startsWith('pl::')) {
     return 'Account';
   }
   if (name.startsWith('pl:system:')) {
     return 'System';
   }
-  return 'Other';
+  return 'Other'; // Safe fallback
 };
