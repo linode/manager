@@ -3296,6 +3296,28 @@ export const handlers = [
           rules: [firewallNodebalancerMetricCriteria.build()],
         },
       }),
+      alertFactory.build({
+        id: 340,
+        label: 'Firewall-nodebalancer-system',
+        type: 'system',
+        service_type: 'firewall',
+        entity_ids: ['25'],
+        rule_criteria: {
+          rules: [
+            firewallNodebalancerMetricCriteria.build({ dimension_filters: [] }),
+          ],
+        },
+      }),
+      alertFactory.build({
+        id: 123,
+        label: 'Firewall-linode-system',
+        type: 'system',
+        service_type: 'firewall',
+        entity_ids: ['1', '4'],
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
       ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
@@ -3363,6 +3385,38 @@ export const handlers = [
             entity_ids: ['25'],
             rule_criteria: {
               rules: [firewallNodebalancerMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '340' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 340,
+            label: 'Firewall - nodebalancer - system',
+            type: 'system',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [
+                firewallNodebalancerMetricCriteria.build({
+                  dimension_filters: [],
+                }),
+              ],
+            },
+          })
+        );
+      }
+      if (params.id === '123' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 123,
+            label: 'Firewall-linode-system',
+            type: 'system',
+            service_type: 'firewall',
+            entity_ids: ['1', '4'],
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
             },
           })
         );
