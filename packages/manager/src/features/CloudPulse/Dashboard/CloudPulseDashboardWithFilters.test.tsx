@@ -248,11 +248,4 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       screen.getByPlaceholderText('Select a NodeBalancer Region')
     ).toBeVisible();
   });
-  // it('renders a CloudPulseDashboardWithFilters component successfully with group by enabled', async () => {
-  //   queryMocks.useGlobalDimensions.mockReturnValue({
-  //     isLoading: false,
-  //     options: mockGroupByOptions,
-  //     defaultValue: [],
-  //   });
-  // });
 });
