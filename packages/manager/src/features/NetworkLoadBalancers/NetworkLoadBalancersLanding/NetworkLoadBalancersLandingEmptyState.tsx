@@ -21,8 +21,7 @@ export const NetworkLoadBalancersLandingEmptyState = () => {
             href: NLB_API_DOCS_LINK,
             target: '_blank',
             sx: {
-              textDecoration: 'none',
-              '&:hover, &:focus, &:focus-visible': {
+              '&:hover, &:focus': {
                 textDecoration: 'none',
               },
             },
@@ -34,7 +33,7 @@ export const NetworkLoadBalancersLandingEmptyState = () => {
         subtitle="High Capacity load balancing service"
         title="Network Load Balancer"
       >
-        <Typography variant="h3">
+        <Typography variant="subtitle1">
           Deliver real-time, high-volume traffic management for your most
           demanding workloads.
         </Typography>
