@@ -33,6 +33,10 @@ export const LinodeSelectTableRow = (props: Props) => {
 
   const region = regions?.find((r) => r.id === linode.region);
 
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+
   const { data: permissions } = usePermissions(
     'linode',
     ['shutdown_linode', 'clone_linode'],
@@ -45,7 +49,9 @@ export const LinodeSelectTableRow = (props: Props) => {
         <FormControlLabel
           checked={selected}
           control={<Radio />}
-          disabled={!permissions.clone_linode}
+          disabled={
+            !permissions.clone_linode || !accountPermissions?.create_linode
+          }
           label={linode.label}
           onChange={onSelect}
           sx={{ gap: 2 }}
