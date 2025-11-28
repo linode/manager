@@ -91,6 +91,8 @@ export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
 
+export const CLUSTERS_TOOLTIP_TEXT = 'It includes enterprise Clusters only.';
+
 export const NO_REGION_MESSAGE: Record<number, string> = {
   1: 'No database clusters configured in any regions.',
   2: 'No Linodes configured in any regions.',
