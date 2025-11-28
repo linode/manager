@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Radio, Stack, Typography } from '@linode/ui';
 import { truncate } from '@linode/utilities';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { isLKEStackScript } from 'src/features/StackScripts/stackScriptUtils';
 
 import type { StackScript } from '@linode/api-v4';
@@ -21,6 +23,13 @@ interface Props {
 export const StackScriptSelectionRow = (props: Props) => {
   const { disabled, isSelected, onOpenDetails, onSelect, stackscript } = props;
 
+  const location = useLocation();
+  const { data: permissions } = usePermissions('account', ['create_linode']);
+
+  const rowIsDisabled =
+    disabled ||
+    (!permissions?.create_linode &&
+      location.pathname.includes('/linodes/create'));
   // Never show LKE StackScripts. We try to hide these from the user even though they
   // are returned by the API.
   if (isLKEStackScript(stackscript)) {
@@ -32,7 +41,7 @@ export const StackScriptSelectionRow = (props: Props) => {
       <TableCell>
         <Radio
           checked={isSelected}
-          disabled={disabled}
+          disabled={rowIsDisabled}
           id={`stackscript-${stackscript.id}`}
           onChange={onSelect}
         />
@@ -61,7 +70,11 @@ export const StackScriptSelectionRow = (props: Props) => {
         </label>
       </TableCell>
       <TableCell actionCell>
-        <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
+        <InlineMenuAction
+          actionText="Show Details"
+          disabled={rowIsDisabled}
+          onClick={onOpenDetails}
+        />
       </TableCell>
     </TableRow>
   );

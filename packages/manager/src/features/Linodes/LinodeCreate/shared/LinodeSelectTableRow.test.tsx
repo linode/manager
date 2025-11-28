@@ -17,6 +17,7 @@ const queryMocks = vi.hoisted(() => ({
     data: {
       shutdown_linode: false,
       clone_linode: false,
+      create_linode: false,
     },
   })),
 }));
@@ -71,6 +72,7 @@ describe('LinodeSelectTableRow', () => {
       data: {
         shutdown_linode: false,
         clone_linode: true,
+        create_linode: true,
       },
     });
     const linode = linodeFactory.build();
@@ -182,6 +184,7 @@ describe('LinodeSelectTableRow', () => {
       data: {
         shutdown_linode: true,
         clone_linode: true,
+        create_linode: true,
       },
     });
 

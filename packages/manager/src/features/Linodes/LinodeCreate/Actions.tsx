@@ -83,7 +83,11 @@ export const Actions = ({ isAlertsBetaMode }: ActionProps) => {
 
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-      <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
+      <Button
+        buttonType="outlined"
+        disabled={isDisabled}
+        onClick={onOpenAPIAwareness}
+      >
         View Code Snippets
       </Button>
       <Button
