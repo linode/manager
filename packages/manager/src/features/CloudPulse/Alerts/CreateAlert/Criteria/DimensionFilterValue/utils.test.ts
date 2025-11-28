@@ -1,6 +1,5 @@
 import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 
-import { transformDimensionValue } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
@@ -12,6 +11,7 @@ import {
   handleValueChange,
   resolveSelectedValues,
   scopeBasedFilteredResources,
+  transformDimensionValue,
 } from './utils';
 
 import type { Linode, NodeBalancer } from '@linode/api-v4';

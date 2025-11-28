@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
+import { entityTypeTooltipText } from '../../constants';
 import { EntityTypeSelect } from './EntityTypeSelect';
 
 describe('EntityTypeSelect component tests', () => {
@@ -146,11 +147,7 @@ describe('EntityTypeSelect component tests', () => {
 
     await userEvent.hover(helpButton);
 
-    expect(
-      await screen.findByText(
-        'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.'
-      )
-    ).toBeVisible();
+    expect(await screen.findByText(entityTypeTooltipText)).toBeVisible();
 
     await userEvent.unhover(helpButton);
   });

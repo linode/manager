@@ -87,10 +87,7 @@ describe('useGlobalDimensions method test', () => {
 
   it('should return non-empty options and defaultValue if no common dimensions', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build({
-        id: 1,
-        widgets: [{ metric: 'Metric 1' }, { metric: 'Metric 2' }],
-      }),
+      data: dashboardFactory.build({ id: 1 }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
@@ -109,10 +106,7 @@ describe('useGlobalDimensions method test', () => {
 
   it('should return non-empty options and defaultValue from preferences', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build({
-        id: 1,
-        widgets: [{ metric: 'Metric 1' }, { metric: 'Metric 2' }],
-      }),
+      data: dashboardFactory.build({ id: 1 }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
@@ -132,10 +126,7 @@ describe('useGlobalDimensions method test', () => {
 
   it('should not return default option in case of endpoints-only dashboard', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build({
-        id: 10,
-        widgets: [{ metric: 'Metric 1' }, { metric: 'Metric 2' }],
-      }),
+      data: dashboardFactory.build({ id: 10 }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({

@@ -4,10 +4,10 @@ import { act, renderHook } from '@testing-library/react';
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import { useContextualAlertsState } from '../../Utils/utils';
+import { transformDimensionValue } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   alertsFromEnabledServices,
-  arraysEqual,
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
@@ -17,7 +17,6 @@ import {
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
-  transformDimensionValue,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -440,29 +439,5 @@ describe('transformDimensionValue', () => {
     expect(
       transformDimensionValue('linode', 'unknown_dimension', 'test_value')
     ).toBe('Test_value');
-  });
-});
-
-describe('arraysEqual', () => {
-  it('should return true when both arrays are empty', () => {
-    expect(arraysEqual([], [])).toBe(true);
-  });
-  it('should return false when one array is empty and the other is not', () => {
-    expect(arraysEqual([], [1, 2, 3])).toBe(false);
-  });
-  it('should return true when arrays are undefined', () => {
-    expect(arraysEqual(undefined, undefined)).toBe(true);
-  });
-  it('should return false when one of the arrays is undefined', () => {
-    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
-  });
-  it('should return true when arrays are equal', () => {
-    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
-  });
-  it('should return false when arrays are not equal', () => {
-    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
-  });
-  it('should return true when arrays have same elements but in different order', () => {
-    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
   });
 });

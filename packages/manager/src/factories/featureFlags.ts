@@ -33,7 +33,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       'provisioning',
       'enabling',
       'disabling',
-    ], // TODO: remove in progress once api changes are ready
+    ],
   },
   aclpServices: {
     linode: {

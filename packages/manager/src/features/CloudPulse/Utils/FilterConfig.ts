@@ -13,6 +13,8 @@ import {
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import { filterKubernetesClusters, getValidSortedEndpoints } from './utils';
 
+import type { AssociatedEntityType } from '../shared/types';
+import type { CloudPulseServiceTypeFiltersConfiguration } from './models';
 import type { CloudPulseServiceTypeFilterMap } from './models';
 import type { KubernetesCluster, ObjectStorageBucket } from '@linode/api-v4';
 
@@ -149,13 +151,13 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
         isMultiSelect: false,
         name: 'Node Type',
+        dimensionKey: 'node_type',
         neededInViews: [
           CloudPulseAvailableViews.service,
           CloudPulseAvailableViews.central,
         ],
         placeholder: 'Select a Node Type',
         priority: 5,
-        dimensionKey: 'node_type',
       },
       name: 'Node Type',
     },
@@ -250,13 +252,13 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dimensionKey: 'region_id',
         filterKey: PARENT_ENTITY_REGION,
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: false,
         name: 'Linode Region',
+        dimensionKey: 'region_id',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -268,7 +270,6 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dimensionKey: 'interface_type',
         filterKey: 'interface_type',
         filterType: 'string',
         isFilterable: true,
@@ -276,6 +277,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMultiSelect: true,
         name: 'Interface Types',
         isOptional: true,
+        dimensionKey: 'interface_type',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -355,7 +357,6 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
       },
       {
         configuration: {
-          dimensionKey: 'region_id',
           children: [NODEBALANCER_ID],
           filterKey: PARENT_ENTITY_REGION,
           filterType: 'string',
@@ -363,6 +364,7 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           isMetricsFilter: true,
           name: 'NodeBalancer Region',
           priority: 2,
+          dimensionKey: 'region_id',
           neededInViews: [
             CloudPulseAvailableViews.central,
             CloudPulseAvailableViews.service,
@@ -381,13 +383,13 @@ export const FIREWALL_NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterM
           isMultiSelect: true,
           isOptional: true,
           name: 'NodeBalancers',
+          dimensionKey: 'nodebalancer_id',
           neededInViews: [
             CloudPulseAvailableViews.central,
             CloudPulseAvailableViews.service,
           ],
           placeholder: 'Select NodeBalancers',
           priority: 3,
-          dimensionKey: 'nodebalancer_id',
         },
         name: 'NodeBalancers',
       },
@@ -415,7 +417,6 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
       },
       {
         configuration: {
-          dimensionKey: 'endpoint',
           dependency: [REGION],
           children: [RESOURCE_ID],
           filterKey: ENDPOINT,
@@ -425,6 +426,7 @@ export const OBJECTSTORAGE_CONFIG_BUCKET: Readonly<CloudPulseServiceTypeFilterMa
           isMultiSelect: true,
           name: 'Endpoints',
           priority: 2,
+          dimensionKey: 'endpoint',
           neededInViews: [CloudPulseAvailableViews.central],
           filterFn: (resources: ObjectStorageBucket[]) =>
             getValidSortedEndpoints(resources),
@@ -572,3 +574,58 @@ export const FILTER_CONFIG: Readonly<
   [9, LKE_CONFIG],
   [10, ENDPOINT_DASHBOARD_CONFIG],
 ]);
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The resources filter configuration for the dashboard
+ */
+export const getResourcesFilterConfig = (
+  dashboardId: number | undefined
+): CloudPulseServiceTypeFiltersConfiguration | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  // Get the resources filter configuration for the dashboard
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (isEndpointsOnlyDashboard(dashboardId)) {
+    return filterConfig?.filters.find(
+      (filter) => filter.configuration.filterKey === ENDPOINT
+    )?.configuration;
+  }
+  return filterConfig?.filters.find(
+    (filter) => filter.configuration.filterKey === RESOURCE_ID
+  )?.configuration;
+};
+
+/**
+ * @param dashboardId The id of the dashboard
+ * @returns The associated entity type for the dashboard
+ */
+export const getAssociatedEntityType = (
+  dashboardId: number | undefined
+): AssociatedEntityType | undefined => {
+  if (!dashboardId) {
+    return undefined;
+  }
+  return FILTER_CONFIG.get(dashboardId)?.associatedEntityType;
+};
+
+/**
+ * @param dashboardId id of the dashboard
+ * @returns whether dashboard is an endpoints only dashboard
+ */
+export const isEndpointsOnlyDashboard = (dashboardId: number): boolean => {
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
+  if (!filterConfig) {
+    return false;
+  }
+  const endpointsFilter = filterConfig?.filters.find(
+    (filter) => filter.name === 'Endpoints'
+  );
+  if (endpointsFilter) {
+    // Verify if the dashboard has buckets filter, if not then it is an endpoints only dashboard
+    return !filterConfig.filters.some((filter) => filter.name === 'Buckets');
+  }
+
+  return false;
+};
