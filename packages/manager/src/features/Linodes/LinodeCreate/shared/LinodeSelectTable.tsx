@@ -19,6 +19,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import {
   linodesCreateTypesMap,
   useGetLinodeCreateType,
@@ -55,6 +57,27 @@ export const LinodeSelectTable = (props: Props) => {
   const matchesMdUp = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('md')
   );
+
+  const { data: accountPermissions } = usePermissions('account', [
+    'create_linode',
+  ]);
+
+  const {
+    data: shutdownableLinodes = [],
+    isLoading: isLoadingShutdownableLinodes,
+    error: shutdownableLinodesError,
+  } = useGetAllUserEntitiesByPermission({
+    entityType: 'linode',
+    permission: 'shutdown_linode',
+  });
+  const {
+    data: cloneableLinodes = [],
+    isLoading: isLoadingCloneableLinodes,
+    error: cloneableLinodesError,
+  } = useGetAllUserEntitiesByPermission({
+    entityType: 'linode',
+    permission: 'clone_linode',
+  });
 
   const {
     control,
@@ -102,7 +125,12 @@ export const LinodeSelectTable = (props: Props) => {
 
   const { filter, filterError } = getLinodeXFilter(query, order, orderBy);
 
-  const { data, error, isFetching, isLoading } = useLinodesQuery(
+  const {
+    data,
+    error: linodesError,
+    isFetching,
+    isLoading: isLoadingLinodes,
+  } = useLinodesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -143,6 +171,13 @@ export const LinodeSelectTable = (props: Props) => {
   };
 
   const columns = enablePowerOff ? 6 : 5;
+
+  const isLoading =
+    isLoadingShutdownableLinodes ||
+    isLoadingCloneableLinodes ||
+    isLoadingLinodes;
+  const error =
+    shutdownableLinodesError || cloneableLinodesError || linodesError;
 
   return (
     <Stack pt={1} spacing={2}>
@@ -195,27 +230,38 @@ export const LinodeSelectTable = (props: Props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {isLoading && <TableRowLoading columns={columns} rows={10} />}
+              {isLoading && (
+                <TableRowLoading columns={columns} rows={pagination.pageSize} />
+              )}
               {error && (
                 <TableRowError colSpan={columns} message={error[0].reason} />
               )}
               {data?.results === 0 && <TableRowEmpty colSpan={columns} />}
-              {data?.data.map((linode) => (
-                <LinodeSelectTableRow
-                  key={linode.id}
-                  linode={linode}
-                  onPowerOff={
-                    enablePowerOff
-                      ? () => {
-                          setLinodeToPowerOff(linode);
-                          sendLinodePowerOffEvent('Clone Linode');
-                        }
-                      : undefined
-                  }
-                  onSelect={() => handleSelect(linode)}
-                  selected={linode.id === field.value?.id}
-                />
-              ))}
+              {!isLoading &&
+                !error &&
+                data?.data.map((linode) => (
+                  <LinodeSelectTableRow
+                    disabled={!accountPermissions?.create_linode}
+                    isCloneable={cloneableLinodes?.some(
+                      (l) => l.id === linode.id
+                    )}
+                    isShutdownable={shutdownableLinodes?.some(
+                      (l) => l.id === linode.id
+                    )}
+                    key={linode.id}
+                    linode={linode}
+                    onPowerOff={
+                      enablePowerOff
+                        ? () => {
+                            setLinodeToPowerOff(linode);
+                            sendLinodePowerOffEvent('Clone Linode');
+                          }
+                        : undefined
+                    }
+                    onSelect={() => handleSelect(linode)}
+                    selected={linode.id === field.value?.id}
+                  />
+                ))}
             </TableBody>
           </Table>
         ) : (
