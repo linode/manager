@@ -17,16 +17,10 @@ const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn(() => ({
     data: { delete_firewall: true, update_firewall: true },
   })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
-    isLoading: false,
-    isError: false,
-  }),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 describe('SelectFirewallPanel', () => {

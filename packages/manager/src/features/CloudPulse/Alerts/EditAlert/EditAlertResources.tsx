@@ -8,6 +8,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { AlertResources } from '../AlertsResources/AlertsResources';
+import { entityLabelMap } from '../constants';
 import { isResourcesEqual } from '../Utils/AlertResourceUtils';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { EditAlertResourcesConfirmDialog } from './EditAlertResourcesConfirmationDialog';
@@ -85,6 +86,14 @@ export const EditAlertResources = (props: EditAlertProps) => {
     type,
   } = alertDetails;
 
+  const entityType =
+    serviceType === 'firewall'
+      ? alertDetails.rule_criteria.rules[0]?.label.includes(
+          entityLabelMap['nodebalancer']
+        )
+        ? 'nodebalancer'
+        : 'linode'
+      : undefined;
   return (
     <>
       <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
@@ -100,6 +109,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
           alertLabel={label}
           alertResourceIds={entity_ids}
           alertType={type}
+          entityType={entityType}
           handleResourcesSelection={handleResourcesSelection}
           isSelectionsNeeded
           serviceType={service_type}
