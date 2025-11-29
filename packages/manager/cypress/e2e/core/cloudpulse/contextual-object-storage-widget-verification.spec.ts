@@ -261,7 +261,7 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
 
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
-    cy.get(`[data-qa-preset="Last day"]`).click();
+    cy.get('[data-qa-preset="Last day"]').click();
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
