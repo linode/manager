@@ -311,7 +311,7 @@ describe('generateAddressesLabelV2', () => {
     expect(container.textContent).toContain('+3'); // 5 total items (2 visible and 3 hidden)
   });
 
-  it('renders only 1 visible item and shows Chip when showTruncateChip is true and truncateAt is 1', () => {
+  it('renders only 1 visible item and shows a Chip for the remaining when showTruncateChip is true and truncateAt is 1', () => {
     const result = generateAddressesLabelV2({
       addresses,
       showTruncateChip: true,
