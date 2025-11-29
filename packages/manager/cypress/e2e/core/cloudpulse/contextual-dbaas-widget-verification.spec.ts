@@ -39,16 +39,6 @@ import type {
 } from '@linode/api-v4';
 import type { Interception } from 'cypress/types/net-stubbing';
 
-/**
- * This test ensures that widget titles are displayed correctly on the dashboard.
- * This test suite is dedicated to verifying the functionality and display of widgets on the Cloudpulse dashboard.
- *  It includes:
- * Validating that widgets are correctly loaded and displayed.
- * Ensuring that widget titles and data match the expected values.
- * Verifying that widget settings, such as granularity and aggregation, are applied correctly.
- * Testing widget interactions, including zooming and filtering, to ensure proper behavior.
- * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
- */
 const expectedGranularityArray = ['1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
@@ -116,19 +106,6 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-/**
- * Generates graph data from a given CloudPulse metrics response and
- * extracts average, last, and maximum metric values from the first
- * legend row. The values are rounded to two decimal places for
- * better readability.
- *
- * @param responsePayload - The metrics response object containing
- *                          the necessary data for graph generation.
- * @param label - The label for the graph, used for display purposes.
- *
- * @returns An object containing rounded values for max average, last,
- *
- */
 
 const getWidgetLegendRowValuesFromResponse = (
   responsePayload: CloudPulseMetricsResponse,

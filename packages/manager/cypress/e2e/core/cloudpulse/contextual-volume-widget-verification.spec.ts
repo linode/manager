@@ -34,10 +34,6 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 import type { Interception } from 'support/cypress-exports';
 
-/* ------------------------------------------------------------
-   CONSTANTS
-------------------------------------------------------------- */
-
 const expectedGranularityArray = ['Auto', '1 day', '1 hr'];
 const timeDurationToSelect = 'Last 24 Hours';
 const { dashboardName, id, metrics } = widgetDetails.blockstorage;
@@ -108,10 +104,6 @@ const mockVolumesEncrypted = [
     region: 'us-ord',
   }),
 ];
-
-/* ------------------------------------------------------------
-   HELPERS
-------------------------------------------------------------- */
 
 /** Extract expected Avg/Max/Last for comparison */
 const getExpectedLegendValues = (
@@ -192,10 +184,6 @@ const clearGroupBy = () => {
     .click();
 };
 
-/* ------------------------------------------------------------
-   TEST SUITE
-------------------------------------------------------------- */
-
 describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -223,10 +211,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
     cy.wait('@initialMetrics').its('response.statusCode').should('eq', 200);
   });
 
-  /* ------------------------------------------------------------
-     TEST 1 — Global Group-By
-  ------------------------------------------------------------- */
-
   it('applies Group By at dashboard level and validates API', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
       entity_id: '1',
@@ -249,11 +233,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
         ]);
       });
   });
-
-  /* ------------------------------------------------------------
-     TEST 2 — Clear Group-By
-  ------------------------------------------------------------- */
-
   it('clears all Group By selections', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
@@ -272,9 +251,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
     });
   });
 
-  /* ------------------------------------------------------------
-     TEST 3 — Widget-level Group-By
-  ------------------------------------------------------------- */
 
   it('applies widget-level Group By and validates API payload', () => {
     const widgetSelector = '[data-qa-widget="Volume Read Operations"]';
@@ -311,10 +287,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
     });
   });
 
-  /* ------------------------------------------------------------
-     TEST 4 — Granularity
-  ------------------------------------------------------------- */
-
   it('updates graph values when granularity changes', () => {
     metrics.forEach((testData) => {
       mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
@@ -339,10 +311,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
     });
   });
 
-  /* ------------------------------------------------------------
-     TEST 5 — Aggregation
-  ------------------------------------------------------------- */
-
   it('updates graph values when aggregation changes', () => {
     metrics.forEach((testData) => {
       mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
@@ -366,10 +334,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
       });
     });
   });
-
-  /* ------------------------------------------------------------
-     TEST 6 — Zoom
-  ------------------------------------------------------------- */
 
   it('zooms in and out on all widgets', () => {
     metrics.forEach((testData) => {
