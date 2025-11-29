@@ -352,8 +352,8 @@ describe('generateAddressesLabelV2', () => {
       truncateAt: 2,
     });
 
-    const { findByText, getByText, queryByText } = renderWithTheme(
-      <>{result}</>
+    const { findAllByTestId, getByText, queryByText } = renderWithTheme(
+      <>{result}</> // 5 total elements (2 shown + 3 hidden)
     );
 
     // Only the first 2 elements are visible outside tooltip
@@ -370,10 +370,16 @@ describe('generateAddressesLabelV2', () => {
     // Hover on chip
     await userEvent.hover(chip);
 
-    // Only hidden items should be visible in tooltip
-    expect(await findByText('pl::test-3 (IPv6)')).toBeVisible();
-    expect(await findByText('192.168.1.1')).toBeVisible();
-    expect(await findByText('2001:db8:85a3::8a2e:370:7334/128')).toBeVisible();
+    // Query all items in the tooltip
+    const tooltipItems = await findAllByTestId('tooltip-item');
+
+    // Check that only hidden items are present in tooltip
+    expect(tooltipItems).toHaveLength(3);
+    expect(tooltipItems.map((item) => item.textContent)).toEqual([
+      'pl::test-3 (IPv6)',
+      '192.168.1.1',
+      '2001:db8:85a3::8a2e:370:7334/128',
+    ]);
   });
 });
 

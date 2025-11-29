@@ -470,7 +470,11 @@ export const generateAddressesLabelV2 = (
         }}
       >
         {hiddenElements.map((el, i) => (
-          <li key={i} style={{ listStyleType: 'disc' }}>
+          <li
+            data-testid="tooltip-item"
+            key={i}
+            style={{ listStyleType: 'disc' }}
+          >
             {el}
           </li>
         ))}
