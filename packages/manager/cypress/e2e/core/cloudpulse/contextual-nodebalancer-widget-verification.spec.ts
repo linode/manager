@@ -52,8 +52,7 @@ import type { Interception } from 'support/cypress-exports';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const { dashboardName, id, metrics, resource } =
-  widgetDetails.nodebalancer;
+const { dashboardName, id, metrics, resource } = widgetDetails.nodebalancer;
 const serviceType = 'nodebalancer';
 const dashboard = dashboardFactory.build({
   label: dashboardName,

@@ -101,6 +101,7 @@ const dashboard = dashboardFactory.build({
       y_label: yLabel,
       namespace_id: id,
       service_type: serviceType as CloudPulseServiceType,
+      group_by: ['entity_id'],
     })
   ),
 });
@@ -256,6 +257,7 @@ describe('Integration Tests for Object Storage Dashboard ', () => {
     cy.visitWithLogin(
       `/object-storage/buckets/${mockRegion.label}/${bucketMock[0].label}/metrics`
     );
+    cy.wait('@fetchDashboard');
 
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();

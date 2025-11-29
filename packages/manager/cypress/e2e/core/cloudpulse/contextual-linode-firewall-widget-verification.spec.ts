@@ -86,6 +86,7 @@ const dashboard = dashboardFactory.build({
       unit,
       y_label: yLabel,
       service_type: serviceType,
+      group_by: ['entity_id'],
     })
   ),
 });
@@ -226,9 +227,9 @@ describe('Integration Tests for firewall Dashboard ', () => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseDashboards(serviceType, [dashboard]);
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
-    mockGetCloudPulseDashboard(id, dashboard);
+    mockGetCloudPulseDashboard(id, dashboard).as('fetchDashboard');
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
@@ -240,6 +241,7 @@ describe('Integration Tests for firewall Dashboard ', () => {
 
     // navigate to the metrics page
     cy.visitWithLogin(`/firewalls/${mockFirewalls[0].id}/metrics`);
+    cy.wait(['@fetchDashboard']);
 
     // Wait for the services and dashboard API calls to complete before proceeding
 
