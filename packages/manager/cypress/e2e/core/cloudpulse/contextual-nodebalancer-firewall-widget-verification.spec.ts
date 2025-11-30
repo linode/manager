@@ -19,7 +19,6 @@ import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { randomNumber } from 'support/util/random';
 
 import {
   accountFactory,
