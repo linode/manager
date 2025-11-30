@@ -13,10 +13,17 @@ import {
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetLinode, mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockGetLinode,
+  mockGetLinodes,
+  mockGetLinodeStats,
+} from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
+import {
+  generateMockLegacyStats,
+  generateRandomMetricsData,
+} from 'support/util/cloudpulse';
 
 import {
   accountFactory,
@@ -30,7 +37,7 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type { CloudPulseMetricsResponse } from '@linode/api-v4';
+import type { CloudPulseMetricsResponse, Stats } from '@linode/api-v4';
 
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
@@ -130,12 +137,21 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
+    const mockLegacyStats: Stats = generateMockLegacyStats();
+
+    mockGetLinodeStats(mockLinode.id, mockLegacyStats);
+
     // navigate to the metrics page
     cy.visitWithLogin(`/linodes/${mockLinode.id}/metrics`);
 
-    cy.get('button[data-testid="button"]').then(($btn) => {
-      if ($btn.text().trim() === 'Switch to legacy Metrics') {
-        cy.wrap($btn).click();
+    cy.get('button[data-testid="button"]').then(($btns) => {
+      const match = $btns
+        .toArray()
+        .find((btn) => btn.textContent?.trim() === 'Switch to legacy Metrics');
+      if (match) {
+        cy.wrap(match).click();
+      } else {
+        cy.log('No "Switch to legacy Metrics" button found');
       }
     });
     cy.get('[role="tablist"]').within(() => {
