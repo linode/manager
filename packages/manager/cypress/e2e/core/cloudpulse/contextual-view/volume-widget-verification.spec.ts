@@ -233,7 +233,7 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
         ]);
       });
   });
-  it('clears all Group By selections', () => {
+  it('should clear all Group By selections', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
