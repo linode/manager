@@ -151,7 +151,7 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
-describe('Integration Tests for Object Storage Dashboard ', () => {
+describe('Integration Tests for Object Storage Dashboard', () => {
 
   const bucketMock = [
     objectStorageBucketFactory.build({
