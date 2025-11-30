@@ -198,7 +198,7 @@ const mockFirewalls = [
     ],
   }),
 ];
-describe('Integration Tests for firewall Dashboard ', () => {
+describe('Integration Tests for Firewall Dashboard', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({}));
