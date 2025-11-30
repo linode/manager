@@ -118,7 +118,6 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-
 const getWidgetLegendRowValuesFromResponse = (
   responsePayload: CloudPulseMetricsResponse,
   label: string,
