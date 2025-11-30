@@ -251,7 +251,6 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
     });
   });
 
-
   it('applies widget-level Group By and validates API payload', () => {
     const widgetSelector = '[data-qa-widget="Volume Read Operations"]';
 
