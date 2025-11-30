@@ -166,7 +166,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetDatabase(databaseMock).as('getDatabase');
     mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
-    // navigate to the linodes page
+    // navigate to the databases page
     cy.visitWithLogin('/databases');
 
     // navigate to the Databases
