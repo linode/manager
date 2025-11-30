@@ -8,8 +8,13 @@ import type {
   MetricsDimensionFilterForm,
 } from './types';
 import type { CloudPulseServiceType, Dimension } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface CloudPulseDimensionFilterDrawerProps {
+  /**
+   * The entity type associated with the serviceType
+   */
+  associatedEntityType?: AssociatedEntityType;
   /**
    * The list of dimensions associated with the selected metric
    */
@@ -34,6 +39,7 @@ interface CloudPulseDimensionFilterDrawerProps {
    * The boolean value to control the drawer open state
    */
   open: boolean;
+
   /**
    * The selected dimension filters for the metric
    */
@@ -67,6 +73,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
       selectedEntities,
       serviceType,
       selectedRegions,
+      associatedEntityType,
     } = props;
 
     const [clearAllTrigger, setClearAllTrigger] = React.useState(0);
@@ -135,6 +142,7 @@ export const CloudPulseDimensionFilterDrawer = React.memo(
             </Button>
           </Stack>
           <CloudPulseDimensionFilterRenderer
+            associatedEntityType={associatedEntityType}
             clearAllTrigger={clearAllTrigger}
             dimensionOptions={dimensionOptions}
             onClose={handleClose}

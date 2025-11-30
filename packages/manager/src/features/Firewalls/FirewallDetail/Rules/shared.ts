@@ -32,6 +32,9 @@ export const PORT_PRESETS_ITEMS = sortBy(
   Object.values(PORT_PRESETS)
 );
 
+export const RULESET_MARKED_FOR_DELETION_TEXT =
+  'This rule set will be automatically deleted when it’s no longer referenced by other firewalls.';
+
 /**
  * The API returns very good Firewall error messages that look like this:
  *
@@ -115,3 +118,14 @@ export const sortString = (_a: string, _b: string) => {
 const stripHyphen = (str: string) => {
   return str.match(/-/) ? str.split('-')[0] : str;
 };
+
+export const firewallRuleCreateOptions = [
+  {
+    label: 'Create a Rule',
+    value: 'rule',
+  },
+  {
+    label: 'Reference Rule Set',
+    value: 'ruleset',
+  },
+] as const;

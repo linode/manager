@@ -52,7 +52,7 @@ export const deriveTypeFromValuesAndIPs = (
 
   const predefinedFirewall = predefinedFirewallFromRule({
     action: 'ACCEPT',
-    addresses: formValueToIPs(values.addresses, ips),
+    addresses: formValueToIPs(values.addresses!, ips),
     ports: values.ports,
     protocol,
   });
@@ -60,9 +60,9 @@ export const deriveTypeFromValuesAndIPs = (
   if (predefinedFirewall) {
     return predefinedFirewall;
   } else if (
-    values.protocol?.length > 0 ||
+    (values.protocol && values.protocol?.length > 0) ||
     (values.ports && values.ports?.length > 0) ||
-    values.addresses?.length > 0
+    (values.addresses && values.addresses?.length > 0)
   ) {
     return 'custom';
   }
@@ -163,7 +163,7 @@ export const getInitialFormValues = (
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     type: predefinedFirewallFromRule(ruleToModify) || '',
-  };
+  } as FormState;
 };
 
 export const getInitialAddressFormValue = (
@@ -264,7 +264,7 @@ export const itemsToPortString = (
  * and converts it to FirewallOptionItem<string>[] and a custom input string.
  */
 export const portStringToItems = (
-  portString?: string
+  portString?: null | string
 ): [FirewallOptionItem<string>[], string] => {
   // Handle empty input
   if (!portString) {

@@ -104,7 +104,7 @@ const dashboard = dashboardFactory.build({
   widgets: metrics.map(({ name, title, unit, yLabel }) =>
     widgetFactory.build({
       entity_ids: [String(id)],
-      filters: [...dimensions],
+      filters: [],
       label: title,
       metric: name,
       unit,

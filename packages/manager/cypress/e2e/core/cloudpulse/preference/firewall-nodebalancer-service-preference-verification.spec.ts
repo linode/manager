@@ -321,7 +321,7 @@ describe('Integration Tests for firewall nodebalancer Dashboard ', () => {
 
         // Check NodeBalancer Region
         cy.get('[data-qa-value="NodeBalancer Region US, Newark, NJ"]').should(
-          'not.exist'
+          'be.visible'
         );
       });
     cy.wait('@updateRegionPreference').then(({ request, response }) => {
