@@ -37,7 +37,7 @@ import type {
   CloudPulseServiceType,
   Database,
 } from '@linode/api-v4';
-import type { Interception } from 'cypress/types/net-stubbing';
+import type { Interception } from 'support/cypress-exports';
 
 const expectedGranularityArray = ['1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
