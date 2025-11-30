@@ -139,7 +139,7 @@ const mockFirewalls = [
     ],
   }),
 ];
-// ✅ Define mockNodeBalancers first
+// Define mockNodeBalancers before the describe block
 const mockNodeBalancers = Array.from({ length: 11 }, (_, i) =>
   nodeBalancerFactory.build({
     label: `mockNodeBalancer-resource-${i + 1}`,
