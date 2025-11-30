@@ -251,7 +251,7 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
-  it('should apply group by at the dashboard level and verify the metrics API calls', () => {
+  it('should apply Group By at the dashboard level and verify the metrics API calls', () => {
     // Stub metrics API calls for dashboard group by changes
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
       entity_id: '1',
