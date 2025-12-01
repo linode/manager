@@ -8,6 +8,8 @@ import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 
+import { NodesTable } from './NodesTable/NodesTable';
+
 export const NetworkLoadBalancersListenerDetail = () => {
   const params = useParams({ strict: false });
   const { id: nlbId, listenerId } = params;
@@ -64,6 +66,7 @@ export const NetworkLoadBalancersListenerDetail = () => {
         title={listener.label}
       />
       <Notice variant="info">Listener Detail is coming soon...</Notice>
+      <NodesTable listenerId={listener.id} nlbId={nlb.id} />
     </>
   );
 };
