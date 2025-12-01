@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import ChevronLeftIcon from '../../assets/icons/chevron-left.svg';
 import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
@@ -23,6 +24,7 @@ export interface DrawerProps extends _DrawerProps {
    * It prevents the drawer from showing broken content.
    */
   error?: APIError[] | null | string;
+  handleBackNavigation?: () => void;
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -62,12 +64,13 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const {
       children,
       error,
-      titleSuffix,
+      handleBackNavigation,
       isFetching,
       onClose,
       open,
       sx,
       title,
+      titleSuffix,
       wide,
       ...rest
     } = props;
@@ -153,22 +156,40 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           wrap="nowrap"
         >
           <Grid>
-            {isFetching ? null : (
-              <Box alignItems="center" display="flex">
-                <Typography
-                  data-qa-drawer-title={lastTitleRef.current}
-                  data-testid="drawer-title"
-                  id={titleID}
-                  sx={{
-                    wordBreak: 'break-word',
-                  }}
-                  variant="h2"
+            <Box alignItems="center" display="flex">
+              {handleBackNavigation! && (
+                <IconButton
+                  aria-label="back navigation"
+                  data-qa-back-navigation
+                  disableRipple
+                  onClick={handleBackNavigation}
+                  size="small"
+                  sx={(theme) => ({
+                    color: theme.palette.text.primary,
+                    padding: 0,
+                    marginRight: theme.spacing(1),
+                  })}
                 >
-                  {lastTitleRef.current}
-                </Typography>
-                {titleSuffix && <span>{titleSuffix}</span>}
-              </Box>
-            )}
+                  <ChevronLeftIcon />
+                </IconButton>
+              )}
+              {isFetching ? null : (
+                <React.Fragment>
+                  <Typography
+                    data-qa-drawer-title={lastTitleRef.current}
+                    data-testid="drawer-title"
+                    id={titleID}
+                    sx={{
+                      wordBreak: 'break-word',
+                    }}
+                    variant="h2"
+                  >
+                    {lastTitleRef.current}
+                  </Typography>
+                  {titleSuffix && <span>{titleSuffix}</span>}
+                </React.Fragment>
+              )}
+            </Box>
           </Grid>
           <Grid>
             <IconButton
