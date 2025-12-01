@@ -458,9 +458,10 @@ export const generateAddressesLabelV2 = (
   if (elements.length === 0) return 'None';
 
   //  Truncation / Chip logic
-  const truncated = showTruncateChip ? elements.slice(0, truncateAt) : elements;
-  const hidden = elements.length - truncateAt;
   const hasMore = showTruncateChip && elements.length > truncateAt;
+  const truncated = hasMore ? elements.slice(0, truncateAt) : elements;
+  const hiddenElements = hasMore ? elements.slice(truncateAt) : [];
+  const hiddenCount = hiddenElements.length;
 
   const fullTooltip = (
     <Box
@@ -480,8 +481,12 @@ export const generateAddressesLabelV2 = (
           margin: 0,
         }}
       >
-        {elements.map((el, i) => (
-          <li key={i} style={{ listStyleType: 'disc' }}>
+        {hiddenElements.map((el, i) => (
+          <li
+            data-testid="tooltip-item"
+            key={i}
+            style={{ listStyleType: 'disc' }}
+          >
             {el}
           </li>
         ))}
@@ -520,7 +525,7 @@ export const generateAddressesLabelV2 = (
           title={fullTooltip}
         >
           <Chip
-            label={`+${hidden}`}
+            label={`+${hiddenCount}`}
             sx={(theme) => ({
               cursor: 'pointer',
               borderRadius: '12px',
