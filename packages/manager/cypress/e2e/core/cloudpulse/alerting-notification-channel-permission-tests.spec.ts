@@ -66,7 +66,6 @@ describe('Notification Channel Listing Page — Access Control', () => {
     ui.tabList.findTabByTitle('Notification Channels').should('not.exist');
   });
 
-
   it('blocks all access when CloudPulse is disabled', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: false }, // CloudPulse OFF
