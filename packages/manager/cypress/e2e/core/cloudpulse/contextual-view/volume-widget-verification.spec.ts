@@ -1,5 +1,5 @@
 /**
- * @file Integration Tests for CloudPulse Volume(Blockstorage) Dashboard – Refactored & Stable
+ * @file Integration Tests for CloudPulse Volume Dashboard – Refactored & Stable
  */
 
 import { regionFactory } from '@linode/utilities';
