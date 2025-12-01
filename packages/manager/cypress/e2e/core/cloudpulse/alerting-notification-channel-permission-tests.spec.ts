@@ -43,7 +43,6 @@ describe('Notification Channel Listing Page — Access Control', () => {
     cy.url().should('endWith', 'alerts/notification-channels');
   });
 
- 
   it('hides the Notification Channels tab when notificationChannels is disabled', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },
