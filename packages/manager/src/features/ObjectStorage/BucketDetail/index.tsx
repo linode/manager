@@ -39,7 +39,7 @@ export const BucketDetailLanding = React.memo(() => {
 
   const { endpoint_type } = bucket ?? {};
 
- // const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
+  const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -51,7 +51,7 @@ export const BucketDetailLanding = React.memo(() => {
       to: `/object-storage/buckets/$clusterId/$bucketName/access`,
     },
     {
-      hide: !bucketsData,
+      hide: !bucketsData || isGen2Endpoint,
       title: 'SSL/TLS',
       to: `/object-storage/buckets/$clusterId/$bucketName/ssl`,
     },
@@ -96,10 +96,12 @@ export const BucketDetailLanding = React.memo(() => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <BucketSSL bucketName={bucketName} clusterId={clusterId} />
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
+            {!isGen2Endpoint && (
+              <SafeTabPanel index={2}>
+                <BucketSSL bucketName={bucketName} clusterId={clusterId} />
+              </SafeTabPanel>
+            )}
+            <SafeTabPanel index={isGen2Endpoint ? 2 : 3}>
               <CloudPulseDashboardWithFilters
                 region={bucket?.region}
                 // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
@@ -115,3 +117,5 @@ export const BucketDetailLanding = React.memo(() => {
 });
 
 export default BucketDetailLanding;
+
+BucketDetailLanding.displayName = 'BucketDetailLanding';
