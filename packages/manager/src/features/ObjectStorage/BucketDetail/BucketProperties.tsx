@@ -2,12 +2,12 @@ import { useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { BucketRateLimitTable } from '../BucketLanding/BucketRateLimitTable';
-import { BucketBreadcrumb } from './BucketBreadcrumb';
 import {
   StyledActionsPanel,
   StyledRootContainer,
   StyledText,
 } from './BucketProperties.styles';
+import { BucketBreadcrumb } from './ObjectsTab/BucketBreadcrumb';
 
 import type { ObjectStorageBucket } from '@linode/api-v4';
 
