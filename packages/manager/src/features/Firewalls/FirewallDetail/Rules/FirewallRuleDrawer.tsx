@@ -262,11 +262,11 @@ export const FirewallRuleDrawer = React.memo(
                     closeDrawer={onClose}
                     handleOpenPrefixListDrawer={(
                       prefixListLabel,
-                      plRuleRefTag
+                      plRuleRef
                     ) => {
                       handleOpenPrefixListDrawer(
                         prefixListLabel,
-                        plRuleRefTag,
+                        plRuleRef,
                         'ruleset'
                       );
                     }}

@@ -319,7 +319,7 @@ describe('PrefixListDrawer', () => {
   ];
 
   it.each(ipSectionTestCases)(
-    'renders correct chip status and IP addresses for Prefix List $prefixList.name with reference $reference.plRuleRefTag',
+    'renders correct chip and IP addresses for Prefix List $prefixList.name with reference $reference.plRuleRef',
     ({ prefixList, reference, expectedIPv4, expectedIPv6 }) => {
       const selectedPrefixList = prefixList.name;
 
