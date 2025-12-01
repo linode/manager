@@ -6,7 +6,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 
-import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
+import { displayName, isEmptyObjectForFolder, isFolder } from '../../utilities';
 import { FolderTableRow } from './FolderTableRow';
 import { ObjectTableRow } from './ObjectTableRow';
 

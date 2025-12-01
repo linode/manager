@@ -20,7 +20,7 @@ import {
 } from 'src/queries/object-storage/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { bucketACLOptions, objectACLOptions } from '../utilities';
+import { bucketACLOptions, objectACLOptions } from '../../utilities';
 import { copy } from './AccessSelect.data';
 
 import type {
