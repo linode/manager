@@ -166,7 +166,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               preferenceGroupBy={preferences?.[GROUP_BY]}
               savePreferences
               selectedDashboard={
-                preferences?.[DASHBOARD_ID] === selectedDashboard?.id // wait for preference to match selected dashboard
+                preferences?.[DASHBOARD_ID] === selectedDashboard?.id // wait for dashboard id in preference to match selected dashboard id
                   ? selectedDashboard
                   : undefined
               }
