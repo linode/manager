@@ -15,7 +15,7 @@ import { NetworkLoadBalancersListenerDetailHeader } from './NetworkLoadBalancers
 
 const NetworkLoadBalancersListenerDetail = () => {
   const { id, listenerId } = useParams({
-    from: '/netloadbalancers/$id/listeners/$listenerId',
+    from: '/netloadbalancers/$id/listeners/$listenerId/nodes',
   });
 
   const { data: nlb, error, isLoading } = useNetworkLoadBalancerQuery(id);

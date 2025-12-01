@@ -45,7 +45,7 @@ export const useResourcesQuery = (
         }
         const id =
           resourceType === 'objectstorage'
-            ? resource.hostname
+            ? resource.hostname || resource.id
             : String(resource.id);
         return {
           engineType: resource.engine,

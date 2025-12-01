@@ -246,7 +246,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Alerts',
                 hide: !isAlertsEnabled,
                 to: '/alerts',
-                isBeta: flags.aclp?.beta,
+                isBeta: flags.aclpAlerting?.beta,
               },
               {
                 display: 'Longview',

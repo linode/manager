@@ -100,9 +100,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
   };
 
   const filteredRows = React.useMemo(() => {
-    if (!query) return roles;
-
-    return getFilteredRows(query, filterableEntityType?.value);
+    return getFilteredRows(query ?? '', filterableEntityType?.value);
   }, [roles, query, filterableEntityType]);
 
   // Get just the list of entity types from this list of roles, to be used in the selection filter

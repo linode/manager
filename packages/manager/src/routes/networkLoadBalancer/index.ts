@@ -29,27 +29,37 @@ const networkLoadBalancerDetailRoute = createRoute({
   },
   getParentRoute: () => networkLoadBalancersRoute,
   path: '$id',
-}).lazy(() =>
-  import(
-    'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'
-  ).then((m) => m.networkLoadBalancerDetailLazyRoute)
-);
+});
 
 const networkLoadBalancerListenersRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
+  path: '$id/listeners',
   params: {
     parse: ({ id }) => ({
       id: Number(id),
     }),
   },
-  path: '$id/listeners',
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'
   ).then((m) => m.networkLoadBalancerDetailLazyRoute)
 );
 
-const networkLoadBalancerListenerRoute = createRoute({
+const networkLoadBalancerListenerDetailRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    throw redirect({
+      params: {
+        id: Number(params.id),
+        listenerId: Number(params.listenerId),
+      },
+      to: '/netloadbalancers/$id/listeners/$listenerId/nodes',
+    });
+  },
+  getParentRoute: () => networkLoadBalancersRoute,
+  path: '$id/listeners/$listenerId',
+});
+
+const networkLoadBalancerNodesRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
   params: {
     parse: ({ id, listenerId }) => ({
@@ -57,10 +67,10 @@ const networkLoadBalancerListenerRoute = createRoute({
       listenerId: Number(listenerId),
     }),
   },
-  path: '$id/listeners/$listenerId',
+  path: '$id/listeners/$listenerId/nodes',
 }).lazy(() =>
   import(
-    'src/features/NetworkLoadBalancers/NetworkLoadBalancersListener/networkLoadBalancersListenerDetailLazyRoute'
+    'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancersListenerDetail/NetworkLoadBalancersListenerDetailLazyRoutes'
   ).then((m) => m.networkLoadBalancersListenerDetailLazyRoute)
 );
 
@@ -69,5 +79,6 @@ export const networkLoadBalancersRouteTree =
     networkLoadBalancersIndexRoute,
     networkLoadBalancerDetailRoute,
     networkLoadBalancerListenersRoute,
-    networkLoadBalancerListenerRoute,
+    networkLoadBalancerListenerDetailRoute,
+    networkLoadBalancerNodesRoute,
   ]);
