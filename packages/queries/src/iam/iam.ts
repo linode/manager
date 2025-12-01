@@ -83,13 +83,34 @@ export const useGetUserEntitiesByPermissionQuery = ({
   username,
   entityType,
   permission,
+  enabled = true,
 }: GetEntitiesByPermissionParams) => {
   const { data: profile } = useProfile();
   return useQuery<EntityByPermission[], APIError[]>({
     ...iamQueries
       .user(username ?? '')
-      ._ctx.getEntitiesByPermission(entityType, permission),
+      ._ctx.getPaginatedEntitiesByPermission(entityType, permission),
     enabled:
-      Boolean(username && entityType && permission) && profile?.restricted,
+      Boolean(username && entityType && permission) &&
+      profile?.restricted &&
+      enabled,
+  });
+};
+
+export const useGetAllUserEntitiesByPermissionQuery = ({
+  username,
+  entityType,
+  permission,
+  enabled = true,
+}: GetEntitiesByPermissionParams) => {
+  const { data: profile } = useProfile();
+  return useQuery<EntityByPermission[], APIError[]>({
+    ...iamQueries
+      .user(username ?? '')
+      ._ctx.getAllEntitiesByPermission(entityType, permission),
+    enabled:
+      Boolean(username && entityType && permission) &&
+      profile?.restricted &&
+      enabled,
   });
 };
