@@ -23,11 +23,6 @@ const queryMocks = vi.hoisted(() => ({
       create_firewall_device: false,
     },
   })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
-    isLoading: false,
-    isError: false,
-  }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -51,7 +46,6 @@ vi.mock('src/hooks/useOrderV2', async () => {
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 const baseProps = (

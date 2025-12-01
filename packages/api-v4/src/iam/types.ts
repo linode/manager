@@ -457,7 +457,7 @@ export interface Roles {
   permissions: PermissionType[];
 }
 export interface EntityByPermission {
-  id: number;
+  id: number | string;
   label: string;
   type: EntityType;
 }

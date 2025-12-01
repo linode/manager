@@ -16,13 +16,14 @@ import { number, object } from 'yup';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
 
-import type { Volume } from '@linode/api-v4';
+import type { Linode, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
@@ -52,6 +53,21 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
     ['attach_volume'],
     volume?.id
   );
+
+  const regionFilter = {
+    region: volume?.region,
+  };
+
+  const {
+    data: availableLinodes,
+    filter: availableLinodesFilter,
+    isLoading: availableLinodesLoading,
+  } = useGetAllUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: open,
+    filter: regionFilter,
+  });
 
   const canAttachVolume = permissions?.attach_volume;
 
@@ -124,13 +140,15 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
               ? formik.errors.linode_id
               : linodeError
           }
-          filter={{ region: volume?.region }}
+          filter={availableLinodesFilter}
+          loading={availableLinodesLoading}
           noMarginTop
           onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);
             }
           }}
+          options={availableLinodes ?? []}
           value={formik.values.linode_id}
         />
         {!linodeError && (

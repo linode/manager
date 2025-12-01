@@ -10,11 +10,11 @@ import {
 } from 'src/queries/cloudpulse/services';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
-import { useAclpPreference } from '../Utils/UserPreference';
 import {
   getAssociatedEntityType,
   getResourcesFilterConfig,
-} from '../Utils/utils';
+} from '../Utils/FilterConfig';
+import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
   RenderWidgets,
@@ -150,7 +150,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
-    Boolean(resources) && !isDashboardLoading && !isDashboardApiError
+    !isDashboardLoading && !isDashboardApiError
   );
 
   if (isDashboardApiError) {

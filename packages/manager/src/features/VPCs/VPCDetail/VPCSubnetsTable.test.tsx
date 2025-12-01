@@ -23,11 +23,6 @@ const queryMocks = vi.hoisted(() => ({
       create_vpc_subnet: true,
     },
   })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
-    isLoading: false,
-    isError: false,
-  }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -48,8 +43,8 @@ vi.mock('@linode/queries', async () => {
 });
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
+
 const loadingTestId = 'circle-progress';
 
 describe('VPC Subnets table', () => {
@@ -269,6 +264,7 @@ describe('VPC Subnets table', () => {
 
   it(
     'should show Nodebalancer table head data when table is expanded',
+    { timeout: 15_000 },
     async () => {
       const subnet = subnetFactory.build();
 
@@ -293,8 +289,7 @@ describe('VPC Subnets table', () => {
       await findByText('NodeBalancer');
       await findByText('Backend Status');
       await findByText('VPC IPv4 Range');
-    },
-    { timeout: 15_000 }
+    }
   );
 
   it('should disable "Create Subnet" button when user does not have create_vpc_subnet permission', async () => {

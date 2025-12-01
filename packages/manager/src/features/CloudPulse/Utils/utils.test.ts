@@ -1,7 +1,11 @@
 import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
-import { kubernetesClusterFactory, serviceTypesFactory } from 'src/factories';
+import {
+  kubernetesClusterFactory,
+  objectStorageBucketFactoryGen2,
+  serviceTypesFactory,
+} from 'src/factories';
 import {
   firewallEntityfactory,
   firewallFactory,
@@ -24,12 +28,12 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  arraysEqual,
   filterFirewallResources,
   filterKubernetesClusters,
-  getAssociatedEntityType,
   getEnabledServiceTypes,
   getFilteredDimensions,
-  getResourcesFilterConfig,
+  getValidSortedEndpoints,
   isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
@@ -350,38 +354,6 @@ describe('getEnabledServiceTypes', () => {
     };
     const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
     expect(result).not.toContain('linode');
-  });
-
-  describe('getResourcesFilterConfig', () => {
-    it('should return undefined if the dashboard id is not provided', () => {
-      expect(getResourcesFilterConfig(undefined)).toBeUndefined();
-    });
-
-    it('should return the resources filter configuration for the linode-firewalldashboard', () => {
-      const resourcesFilterConfig = getResourcesFilterConfig(4);
-      expect(resourcesFilterConfig).toBeDefined();
-      expect(resourcesFilterConfig?.associatedEntityType).toBe('linode');
-    });
-
-    it('should return the resources filter configuration for the nodebalancer-firewall dashboard', () => {
-      const resourcesFilterConfig = getResourcesFilterConfig(8);
-      expect(resourcesFilterConfig).toBeDefined();
-      expect(resourcesFilterConfig?.associatedEntityType).toBe('nodebalancer');
-    });
-  });
-
-  describe('getAssociatedEntityType', () => {
-    it('should return undefined if the dashboard id is not provided', () => {
-      expect(getAssociatedEntityType(undefined)).toBeUndefined();
-    });
-
-    it('should return the associated entity type for the linode-firewall dashboard', () => {
-      expect(getAssociatedEntityType(4)).toBe('linode');
-    });
-
-    it('should return the associated entity type for the nodebalancer-firewall dashboard', () => {
-      expect(getAssociatedEntityType(8)).toBe('nodebalancer');
-    });
   });
 
   describe('filterFirewallResources', () => {
@@ -716,5 +688,64 @@ describe('getFilteredDimensions', () => {
 
     // with no metric definitions, mergedDimensions is undefined and filters should not pass validation
     expect(result).toEqual([]);
+  });
+});
+
+describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are undefined', () => {
+    expect(arraysEqual(undefined, undefined)).toBe(true);
+  });
+  it('should return false when one of the arrays is undefined', () => {
+    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+  });
+  it('should return false when arrays are not equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
+  });
+  it('should return true when arrays have same elements but in different order', () => {
+    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
+  });
+});
+
+describe('getValidSortedEndpoints', () => {
+  it('should return an empty array when buckets are undefined', () => {
+    expect(getValidSortedEndpoints(undefined)).toEqual([]);
+  });
+  it('should return the valid and unique sorted endpoints', () => {
+    const buckets = [
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'a',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'b',
+        region: undefined,
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: undefined,
+        region: 'us-east',
+      }),
+    ];
+    // Only a and c are valid, so they are sorted and returned
+    expect(getValidSortedEndpoints(buckets)).toEqual([
+      { id: 'a', label: 'a', region: 'us-east' },
+      { id: 'c', label: 'c', region: 'us-east' },
+    ]);
   });
 });
