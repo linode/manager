@@ -134,6 +134,7 @@ export type FirewallPrefixListVisibility = 'private' | 'public' | 'restricted';
 
 export interface FirewallPrefixList {
   created: string;
+  deleted: null | string;
   description: string;
   id: number;
   ipv4?: null | string[];
