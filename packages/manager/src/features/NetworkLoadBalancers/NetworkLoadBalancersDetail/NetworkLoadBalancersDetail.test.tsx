@@ -98,7 +98,7 @@ describe('NetworkLoadBalancersDetail', () => {
     expect(getByText('US, Newark, NJ')).toBeVisible();
 
     expect(getByText('LKE-E Cluster')).toBeVisible();
-    expect(getByText('N/A')).toBeVisible();
+    expect(getByText('None')).toBeVisible();
 
     expect(getByText('Network Load Balancer ID')).toBeVisible();
     expect(getByText(nlbFactory.id)).toBeVisible();
