@@ -72,7 +72,7 @@ export const NetworkLoadBalancerDetailBody = (
                   {` (ID: ${lkeCluster.id})`}
                 </>
               ) : (
-                'N/A'
+                'None'
               )}
             </Box>
             <Box>
