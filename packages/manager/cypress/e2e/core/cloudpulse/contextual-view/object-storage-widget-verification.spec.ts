@@ -310,7 +310,7 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     // Validate all intercepted metrics API calls contain correct filters and group_by values
     cy.get('@refreshMetrics.all')
       .should('have.length', 4)
-      .each((xhr: unknown) => {
+      .each((xhr: Interception) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
 
@@ -369,7 +369,7 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     // Validate all intercepted metrics API calls contain no group_by values
     cy.get('@refreshMetrics.all')
       .should('have.length', 4)
-      .each((xhr: unknown) => {
+      .each((xhr: Interception) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
 
