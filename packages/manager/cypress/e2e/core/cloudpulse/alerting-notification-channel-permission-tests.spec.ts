@@ -89,7 +89,6 @@ describe('Notification Channel Listing Page — Access Control', () => {
   it('blocks direct URL access to /alerts/notification-channels when notificationChannels is disabled', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },
-
       aclpAlerting: {
         accountAlertLimit: 10,
         accountMetricLimit: 10,
