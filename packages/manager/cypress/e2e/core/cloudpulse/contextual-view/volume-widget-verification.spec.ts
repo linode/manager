@@ -208,6 +208,20 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
     cy.get('[data-qa-preset="Last day"]').click();
     cy.get('[data-qa-buttons="apply"]').should('be.visible').click();
 
+    ui.button
+    .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+    .should('be.visible')
+    .first()
+    .as('dashboardGroupByBtn');
+
+  // Ensure the button is scrolled into view
+  cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    ui.tooltip.findByText('Group By');
+    cy.get('@dashboardGroupByBtn')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
     cy.wait('@initialMetrics').its('response.statusCode').should('eq', 200);
   });
 

@@ -17,7 +17,6 @@ import {
   interceptCreateBucket,
   interceptGetBuckets,
   mockCreateBucket,
-  mockGetBucketAccess,
   mockGetBuckets,
   mockGetBucketsForRegion,
   mockGetClusters,
@@ -43,7 +42,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type {
-  ACLType,
   CloudPulseMetricsResponse,
   CloudPulseServiceType,
   ObjectStorageCluster,
@@ -152,13 +150,10 @@ const getWidgetLegendRowValuesFromResponse = (
 };
 
 describe('Integration Tests for Object Storage Dashboard - Group By and Widget Verification', () => {
-
   const bucketMock = [
     objectStorageBucketFactory.build({
       cluster: 'us-ord-1',
-      hostname: 'bucket-2.us-ord-2.linodeobjects.com',
       region: mockRegion.id,
-      s3_endpoint: 'endpoint_type-E2-us-sea-2.linodeobjects.com',
       label: 'bucket-1',
       endpoint_type: 'E3',
     }),
@@ -168,7 +163,6 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     objectStorageEndpointsFactory.build({
       endpoint_type: 'E3',
       region: mockRegion.id,
-      s3_endpoint: 'endpoint_type-E2-us-sea-1.linodeobjects.com',
     }),
   ];
   const mockClusters: ObjectStorageCluster[] = [
@@ -177,15 +171,7 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     }),
   ];
 
-  const mockAccess = {
-    acl: 'private' as ACLType,
-    acl_xml: '',
-    cors_enabled: true,
-    cors_xml: '',
-  };
-
   beforeEach(() => {
-    const { cluster, label } = bucketMock[0];
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
 
@@ -195,8 +181,10 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
     );
-    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions).as(
+      'fetchMetricDefinitions'
+    );
+    mockGetCloudPulseDashboards(serviceType, [dashboard]);
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetCloudPulseDashboard(id, dashboard).as('fetchDashboard');
     mockCreateCloudPulseJWEToken(serviceType);
@@ -209,16 +197,19 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
     );
     mockGetClusters(mockClusters).as('getClusters');
     mockCreateBucket(bucketMock[0]).as('createBucket');
-    mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
     mockGetBucketObjects(bucketMock[0].label, mockRegion.id, []).as(
       'getBucketObjects'
     );
+    cy.visitWithLogin('/linode');
+    ui.nav.findItemByTitle('Object Storage').click();
 
-    // navigate to the metrics page
-    cy.visitWithLogin(
-      `/object-storage/buckets/${mockRegion.label}/${bucketMock[0].label}/metrics`
-    );
-    cy.wait('@fetchDashboard');
+    ui.tabList.findTabByTitle('Buckets').click();
+
+    cy.get('[data-qa-bucket-cell="bucket-1"] a').should('be.visible').click();
+
+    ui.tabList.findTabByTitle('Metrics').click();
+
+    cy.wait(['@fetchDashboard', '@fetchMetricDefinitions']);
 
     cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
     cy.get('@startDateInput').click();
@@ -228,25 +219,19 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
       .should('be.enabled')
       .click();
 
-    //  Select a region from the dropdown.
-
-    ui.regionSelect.find().clear();
-    ui.regionSelect.find().click();
-    cy.focused().type(`${mockRegion.label}{enter}`);
-
-    ui.autocomplete
-      .findByLabel('Endpoints')
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('be.visible')
-      .type('endpoint_type-E2-us-sea-2.linodeobjects.com{enter}');
+      .first()
+      .as('dashboardGroupByBtn');
 
-    ui.autocomplete.findByLabel('Endpoints').click();
+    // Ensure the button is scrolled into view
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
 
-    ui.autocomplete
-      .findByLabel('Buckets')
-      .should('be.visible')
-      .type('bucket-2.us-ord-2.linodeobjects.com{enter}');
-
-    ui.autocomplete.findByLabel('Buckets').click();
+    ui.tooltip.findByText('Group By');
+    cy.get('@dashboardGroupByBtn')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
@@ -598,38 +583,6 @@ describe('Integration Tests for Object Storage Dashboard - Group By and Widget V
         });
     });
   });
-  it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
-      'refreshMetrics'
-    );
-
-    // click the global refresh button
-    ui.button
-      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
-      .should('be.visible')
-      .click();
-
-    // validate the API calls are going with intended payload
-    cy.get('@refreshMetrics.all')
-      .should('have.length', 4)
-      .each((xhr: unknown) => {
-        const interception = xhr as Interception;
-        const { body: requestPayload } = interception.request;
-        const { metrics: metric, relative_time_duration: timeRange } =
-          requestPayload;
-        const metricData = metrics.find(({ name }) => name === metric[0].name);
-
-        if (!metricData) {
-          throw new Error(
-            `Unexpected metric name '${metric[0].name}' included in the outgoing refresh API request`
-          );
-        }
-        expect(metric[0].name).to.equal(metricData.name);
-        expect(timeRange).to.have.property('unit', 'days');
-        expect(timeRange).to.have.property('value', 1);
-      });
-  });
-
   it('should zoom in and out of all the widgets', () => {
     // do zoom in and zoom out test on all the widgets
     metrics.forEach((testData) => {

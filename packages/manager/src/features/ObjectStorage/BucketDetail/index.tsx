@@ -39,7 +39,7 @@ export const BucketDetailLanding = React.memo(() => {
 
   const { endpoint_type } = bucket ?? {};
 
-  const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
+ // const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -51,7 +51,7 @@ export const BucketDetailLanding = React.memo(() => {
       to: `/object-storage/buckets/$clusterId/$bucketName/access`,
     },
     {
-      hide: !bucketsData || isGen2Endpoint,
+      hide: !bucketsData,
       title: 'SSL/TLS',
       to: `/object-storage/buckets/$clusterId/$bucketName/ssl`,
     },
