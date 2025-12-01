@@ -212,6 +212,7 @@ describe('CloudPulse Blockstorage Dashboard – Refactored', () => {
   });
 
   it('applies Group By at dashboard level and validates API', () => {
+    // The third parameter is an entity filter for the metrics API request.
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload, {
       entity_id: '1',
     }).as('refreshMetrics');
