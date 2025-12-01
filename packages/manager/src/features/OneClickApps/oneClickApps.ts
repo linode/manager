@@ -2152,4 +2152,50 @@ export const oneClickApps: Record<number, OCA> = {
     summary: `All-in-one distributed tracing platform with integrated UI, collector, and storage for monitoring microservices.`,
     website: 'https://www.jaegertracing.io/',
   },
+  1966222: {
+    alt_description:
+      'Unified observability platform that brings together search, data processing, and visualization through Elasticsearch, Logstash, and Kibana.',
+    alt_name: 'Log aggregation platform.',
+    categories: ['Monitoring', 'Security'],
+    colors: {
+      end: '0077cc',
+      start: 'f04e98',
+    },
+    description:
+      'The Elastic Stack (known as ELK) is well-suited for log aggregation, application monitoring, infrastructure observability, and security analytics. Its open architecture and extensive ecosystem make it adaptable to a wide range of use cases including distributed system debugging, SIEM workflows, API performance monitoring, and centralized logging across cloud and hybrid environments.',
+    isNew: true,
+    logo_url: 'elasticstack.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/elastic-stack/',
+        title: 'Deploy An Elastic Stack through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'Log aggregation platform that brings together search, data processing, and visualization.',
+    website: 'https://www.elastic.co/',
+  },
+  1966231: {
+    alt_description:
+      'Weaviate is an open-source vector database designed to store and index both data objects and their vector embeddings.',
+    alt_name: 'Open-source vector database.',
+    categories: ['Databases'],
+    colors: {
+      end: 'c4d132',
+      start: '53b83d',
+    },
+    description:
+      'Weaviate is an open-source AI-native vector database designed for building advanced AI applications. It stores and indexes both data objects and their vector embeddings, enabling semantic search, hybrid search, and Retrieval Augmented Generation (RAG) workflows. This deployment includes GPU acceleration for transformer models and comes pre-configured with the sentence-transformers model for high-performance semantic search capabilities.',
+    isNew: true,
+    logo_url: 'weaviate.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/weaviate/',
+        title: 'Deploy Weaviate through the Linode Marketplace',
+      },
+    ],
+    summary:
+      'AI-native vector database designed for building advanced AI applications.',
+    website: 'https://docs.weaviate.io/weaviate',
+  },
 };
