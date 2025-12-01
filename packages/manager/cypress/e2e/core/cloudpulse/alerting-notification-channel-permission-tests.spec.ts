@@ -1,7 +1,7 @@
 /**
  * @file Integration Tests for CloudPulse Alerting — Notification Channel Listing Page
  *
- * Covers three access-control behaviors:
+ * Covers four access-control behaviors:
  * 1. Access is allowed when `notificationChannels` is true.
  * 2. Navigation/tab visibility is blocked when `notificationChannels` is false.
  * 3. Direct URL access is blocked when `notificationChannels` is false.
