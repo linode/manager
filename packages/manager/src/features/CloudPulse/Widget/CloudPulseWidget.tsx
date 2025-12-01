@@ -209,8 +209,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     dimensionLabel: 'linode_id',
     type: 'metrics',
     entities: entityIds,
-    regions: region
-      ? (regions?.filter((region) => region.id === linodeRegion) ?? [])
+    regions: linodeRegion // if linode region is selected, filter regions to only that region else pass all regions
+      ? (regions?.filter(({ id }) => id === linodeRegion) ?? [])
       : regions,
     scope: 'entity',
     serviceType,
@@ -220,8 +220,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     dimensionLabel: 'vpc_subnet_id',
     type: 'metrics',
     entities: entityIds,
-    regions: region
-      ? (regions?.filter((region) => region.id === linodeRegion) ?? [])
+    regions: linodeRegion // if linode region is selected, filter regions to only that region else pass all regions
+      ? (regions?.filter(({ id }) => id === linodeRegion) ?? [])
       : regions,
     scope: 'entity',
     serviceType,
@@ -230,7 +230,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const linodeFromVolumes = useBlockStorageFetchOptions({
     entities: entityIds,
     dimensionLabel: 'linode_id',
-    regions: region
+    regions: region // if region is selected, filter regions to only that region else pass all regions
       ? (regions?.filter(({ id }) => id === region) ?? [])
       : regions,
     type: 'metrics',

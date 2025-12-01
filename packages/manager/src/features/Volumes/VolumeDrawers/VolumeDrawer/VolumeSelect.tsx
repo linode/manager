@@ -1,9 +1,9 @@
-import { useAllVolumesQuery, useVolumeQuery } from '@linode/queries';
-import { Autocomplete } from '@linode/ui';
+import { useVolumeQuery } from '@linode/queries';
+import { Autocomplete, Notice } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 
 import type { Volume } from '@linode/api-v4';
 
@@ -11,7 +11,7 @@ interface Props {
   disabled?: boolean;
   error?: string;
   name: string;
-  onBlur: (e: any) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   onChange: (volumeId: null | number) => void;
   region?: string;
   value: number;
@@ -19,18 +19,21 @@ interface Props {
 
 export const VolumeSelect = (props: Props) => {
   const { disabled, error, name, onBlur, onChange, region, value } = props;
-
   const [inputValue, setInputValue] = React.useState<string>('');
 
-  const query = useAllVolumesQuery(
-    {},
-    {
-      ...(region ? { region } : {}),
-    }
-  );
+  const regionFilter = {
+    region: region ?? undefined,
+  };
 
-  const { data: availableVolumes, isLoading: isAvailableVolumesLoading } =
-    useQueryWithPermissions<Volume>(query, 'volume', ['attach_volume']);
+  const {
+    data: availableVolumes,
+    isLoading: isAvailableVolumesLoading,
+    error: availableVolumesError,
+  } = useGetAllUserEntitiesByPermission<Volume>({
+    entityType: 'volume',
+    filter: regionFilter,
+    permission: 'attach_volume',
+  });
 
   const debouncedInputValue = useDebouncedValue(inputValue);
 
@@ -72,33 +75,38 @@ export const VolumeSelect = (props: Props) => {
     filteredVolumes?.find((option) => option.id === value) ?? null;
 
   return (
-    <Autocomplete
-      disabled={disabled || isAvailableVolumesLoading}
-      errorText={error}
-      filterOptions={(filteredVolumes) => filteredVolumes}
-      helperText={
-        region && "Only volumes in this Linode's region are attachable."
-      }
-      id={name}
-      inputValue={selectedVolume ? selectedVolume.label : inputValue}
-      isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
-      label="Volume"
-      loading={isLoadingSelected || isAvailableVolumesLoading}
-      onBlur={onBlur}
-      onChange={(_, value) => {
-        setInputValue('');
-        onChange(value?.id ?? -1);
-      }}
-      onInputChange={(_, value, reason) => {
-        if (reason === 'input') {
-          setInputValue(value);
-        } else {
-          setInputValue('');
+    <>
+      {availableVolumesError && (
+        <Notice text={availableVolumesError[0].reason} variant="error" />
+      )}
+      <Autocomplete
+        disabled={disabled || isAvailableVolumesLoading}
+        errorText={error}
+        filterOptions={(filteredVolumes) => filteredVolumes}
+        helperText={
+          region && "Only volumes in this Linode's region are attachable."
         }
-      }}
-      options={filteredVolumes ?? []}
-      placeholder="Select a Volume"
-      value={selectedVolume}
-    />
+        id={name}
+        inputValue={selectedVolume ? selectedVolume.label : inputValue}
+        isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
+        label="Volume"
+        loading={isLoadingSelected || isAvailableVolumesLoading}
+        onBlur={onBlur}
+        onChange={(_, value) => {
+          setInputValue('');
+          onChange(value?.id ?? -1);
+        }}
+        onInputChange={(_, value, reason) => {
+          if (reason === 'input') {
+            setInputValue(value);
+          } else {
+            setInputValue('');
+          }
+        }}
+        options={filteredVolumes ?? []}
+        placeholder="Select a Volume"
+        value={selectedVolume}
+      />
+    </>
   );
 };
