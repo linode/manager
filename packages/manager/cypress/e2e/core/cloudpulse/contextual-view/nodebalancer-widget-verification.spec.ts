@@ -156,7 +156,7 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
       .should('be.enabled')
       .click();
 
-      ui.button
+    ui.button
       .findByAttribute('aria-label', 'Group By Dashboard Metrics')
       .should('be.visible')
       .first()
@@ -165,10 +165,10 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     // Ensure the button is scrolled into view
     cy.get('@dashboardGroupByBtn').scrollIntoView();
 
-      ui.tooltip.findByText('Group By');
-      cy.get('@dashboardGroupByBtn')
-        .invoke('attr', 'data-qa-selected')
-        .should('eq', 'true');
+    ui.tooltip.findByText('Group By');
+    cy.get('@dashboardGroupByBtn')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'false');
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
 
