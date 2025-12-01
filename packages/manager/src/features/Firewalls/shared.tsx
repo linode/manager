@@ -312,7 +312,7 @@ export const buildPrefixListReferenceMap = (addresses: {
 /**
  * Represents the Firewall Rule IP families to which a Prefix List (PL) is attached or referenced.
  *
- * Used for display and logic purposes, e.g., appending to a PL label in the UI as:
+ * Used to display a suffix next to the Prefix List label in the UI, e.g.,:
  * "pl:system:example (IPv4)", "pl:system:example (IPv6)", or "pl:system:example (IPv4, IPv6)".
  *
  * The value indicates which firewall IPs the PL applies to:
