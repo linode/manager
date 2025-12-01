@@ -50,6 +50,7 @@ vi.mock('@linode/utilities', async () => {
   };
 });
 
+const mockHandleOpenPrefixListDrawer = vi.fn();
 const mockOnClose = vi.fn();
 const mockOnSubmit = vi.fn();
 
@@ -59,6 +60,7 @@ const props: FirewallRuleDrawerProps = {
   category: 'inbound',
   isOpen: true,
   mode: 'create',
+  handleOpenPrefixListDrawer: mockHandleOpenPrefixListDrawer,
   onClose: mockOnClose,
   onSubmit: mockOnSubmit,
 };

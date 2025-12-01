@@ -1,4 +1,5 @@
-import type { FirewallOptionItem } from '../../shared';
+import type { FirewallOptionItem, PrefixListRuleReference } from '../../shared';
+import type { PrefixListDrawerReference } from './FirewallPrefixListDrawer';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type {
@@ -12,6 +13,11 @@ export type FirewallRuleDrawerMode = 'create' | 'edit' | 'view';
 
 export interface FirewallRuleDrawerProps {
   category: Category;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference,
+    referenceType: PrefixListDrawerReference['type']
+  ) => void;
   isOpen: boolean;
   mode: FirewallRuleDrawerMode;
   onClose: () => void;
@@ -51,5 +57,9 @@ export interface FirewallRuleSetFormProps
   extends FormikProps<FormRuleSetState> {
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   ruleErrors?: FirewallRuleError[];
 }
