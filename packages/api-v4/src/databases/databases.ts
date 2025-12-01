@@ -1,5 +1,7 @@
 import {
+  createDatabaseConnectionPoolSchema,
   createDatabaseSchema,
+  updateDatabaseConnectionPoolSchema,
   updateDatabaseSchema,
 } from '@linode/validation/lib/databases.schema';
 
@@ -386,7 +388,7 @@ export const getDatabaseConnectionPool = (
 ) =>
   Request<ConnectionPool>(
     setURL(
-      `${API_ROOT}/databases/instances/${encodeURIComponent(databaseID)}/connection-pools/${poolName}`,
+      `${API_ROOT}/databases/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
     ),
     setMethod('GET'),
   );
@@ -403,7 +405,7 @@ export const createDatabaseConnectionPool = (
       `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools`,
     ),
     setMethod('POST'),
-    setData(data),
+    setData(data, createDatabaseConnectionPoolSchema),
   );
 
 /**
@@ -416,10 +418,10 @@ export const updateDatabaseConnectionPool = (
 ) =>
   Request<ConnectionPool>(
     setURL(
-      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools/${poolName}`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools/${encodeURIComponent(poolName)}`,
     ),
     setMethod('PUT'),
-    setData(data, updateDatabaseSchema),
+    setData(data, updateDatabaseConnectionPoolSchema),
   );
 
 /**
@@ -431,7 +433,7 @@ export const deleteDatabaseConnectionPool = (
 ) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools/${poolName}`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools/${encodeURIComponent(poolName)}`,
     ),
     setMethod('DELETE'),
   );
