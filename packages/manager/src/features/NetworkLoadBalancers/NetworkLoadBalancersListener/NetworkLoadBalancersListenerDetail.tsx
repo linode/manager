@@ -24,7 +24,7 @@ const NetworkLoadBalancersListenerDetail = () => {
   const { data: nodesData, isLoading: nodesLoading } =
     useNetworkLoadBalancerNodesQuery(id, listenerId);
 
-  const listener = nlb?.listeners?.find((l) => l.id == listenerId);
+  const listener = nlb?.listeners?.find((l) => l.id === listenerId);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -57,7 +57,7 @@ const NetworkLoadBalancersListenerDetail = () => {
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/linode-api/changelog/network-load-balancers"
         removeCrumbX={2}
-        title={`Listener: ${listener.label}`}
+        title={`${listener.label}`}
       />
       <EntityDetail
         body={

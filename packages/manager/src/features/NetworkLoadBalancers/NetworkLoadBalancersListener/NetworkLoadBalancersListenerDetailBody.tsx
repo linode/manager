@@ -30,19 +30,19 @@ export const NetworkLoadBalancersListenerDetailBody = ({
         <Paper>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Stack spacing={1}>
+              <Stack>
                 <LabelTypography>Port</LabelTypography>
                 <Typography>{port}</Typography>
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Stack spacing={1}>
+              <Stack>
                 <LabelTypography>Created</LabelTypography>
                 <DateTimeDisplay value={created} />
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Stack spacing={1}>
+              <Stack>
                 <LabelTypography>Protocol</LabelTypography>
                 <Typography sx={{ textTransform: 'uppercase' }}>
                   {protocol}
@@ -50,13 +50,13 @@ export const NetworkLoadBalancersListenerDetailBody = ({
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Stack spacing={1}>
+              <Stack>
                 <LabelTypography>Updated</LabelTypography>
                 <DateTimeDisplay value={updated} />
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Stack spacing={1}>
+              <Stack>
                 <LabelTypography>Nodes</LabelTypography>
                 <Typography>{nodesLoading ? <Skeleton /> : nodes}</Typography>
               </Stack>
