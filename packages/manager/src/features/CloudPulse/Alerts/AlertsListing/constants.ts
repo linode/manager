@@ -35,6 +35,9 @@ export const statusToActionMap: Record<AlertStatusType, AlertStatusUpdateType> =
     enabled: 'Disable',
     failed: 'Disable',
     'in progress': 'Disable',
+    provisioning: 'Disable',
+    disabling: 'Enable',
+    enabling: 'Disable',
   };
 
 export const AlertContextualViewTableHeaderMap: TableColumnHeader[] = [
