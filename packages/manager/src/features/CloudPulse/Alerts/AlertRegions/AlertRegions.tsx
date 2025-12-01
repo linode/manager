@@ -7,6 +7,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { RESOURCE_FILTER_MAP } from '../../Utils/constants';
+import { getFilterFn } from '../../Utils/utils';
 import {
   type AlertFormMode,
   REGION_GROUP_INFO_MESSAGE,
@@ -65,7 +66,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
-    { ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}) }
+    { ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}) },
+    undefined,
+    getFilterFn(serviceType)
   );
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.

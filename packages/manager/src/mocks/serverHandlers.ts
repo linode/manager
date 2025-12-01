@@ -815,6 +815,13 @@ export const handlers = [
     const linodesWithFirewalls = linodeFactory.buildList(10, {
       region: 'ap-west',
     });
+    const linodesWithAclpAlerts = linodeFactory.buildList(10, {
+      region: 'ap-west',
+      alerts: {
+        system_alerts: [1, 2, 3, 4, 5],
+        user_alerts: [6, 7, 8, 9, 10],
+      },
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -902,6 +909,7 @@ export const handlers = [
     });
     const linodes = [
       ...linodesWithFirewalls,
+      ...linodesWithAclpAlerts,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
