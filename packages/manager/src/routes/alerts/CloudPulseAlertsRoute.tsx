@@ -23,6 +23,11 @@ export const CloudPulseAlertsRoute = () => {
       title: 'Definitions',
       disabled: !flags.aclpAlerting?.alertDefinitions,
     },
+    {
+      to: '/alerts/notification-channels',
+      title: 'Notification Channels',
+      disabled: !flags.aclpAlerting?.notificationChannels,
+    },
   ]);
 
   if (!isACLPEnabled) {
@@ -43,6 +48,11 @@ export const CloudPulseAlertsRoute = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
+              <Paper>
+                <Outlet />
+              </Paper>
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
               <Paper>
                 <Outlet />
               </Paper>
