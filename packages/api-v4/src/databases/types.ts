@@ -105,6 +105,7 @@ type MemberType = 'failover' | 'primary';
 export interface DatabaseInstance {
   allow_list: string[];
   cluster_size: ClusterSize;
+  connection_pool_port: null | number;
   connection_strings: ConnectionStrings[];
   created: string;
   /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
@@ -248,4 +249,12 @@ export interface UpdateDatabasePayload {
   type?: string;
   updates?: UpdatesSchedule;
   version?: string;
+}
+
+export interface ConnectionPool {
+  database: string;
+  label: string;
+  mode: 'session' | 'statement' | 'transaction';
+  size: number;
+  username: null | string;
 }
