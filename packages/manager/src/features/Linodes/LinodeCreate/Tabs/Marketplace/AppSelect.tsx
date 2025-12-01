@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { AppsList } from './AppsList';
 import { categoryOptions } from './utilities';
@@ -37,6 +38,8 @@ export const AppSelect = (props: Props) => {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<AppCategory>();
 
+  const { data: permissions } = usePermissions('account', ['create_linode']);
+
   return (
     <Paper>
       <Stack spacing={2}>
@@ -47,7 +50,7 @@ export const AppSelect = (props: Props) => {
         <Stack direction="row" flexWrap="wrap" gap={1}>
           <DebouncedSearchTextField
             containerProps={{ flexGrow: 1 }}
-            disabled={isLoading}
+            disabled={isLoading || !permissions?.create_linode}
             fullWidth
             hideLabel
             inputSlotProps={{ sx: { maxWidth: 'unset !important' } }}
@@ -59,7 +62,7 @@ export const AppSelect = (props: Props) => {
             value={query}
           />
           <Autocomplete
-            disabled={isLoading}
+            disabled={isLoading || !permissions?.create_linode}
             label="Select category"
             onChange={(e, value) => setCategory(value?.label)}
             options={categoryOptions}
