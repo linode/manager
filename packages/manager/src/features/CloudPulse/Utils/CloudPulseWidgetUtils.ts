@@ -354,7 +354,9 @@ export const getCloudPulseMetricRequest = (
       presetDuration === undefined
         ? { end: duration.end, start: duration.start }
         : undefined,
-    entity_ids: getEntityIds(resources, entityIds, widget, serviceType),
+    entity_ids: !entityIds.length
+      ? undefined
+      : getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
     relative_time_duration: presetDuration,

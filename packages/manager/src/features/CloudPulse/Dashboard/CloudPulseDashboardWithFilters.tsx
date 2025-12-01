@@ -202,7 +202,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   />
                   <GlobalFilterGroupByRenderer
                     handleChange={handleGroupByChange}
-                    selectedDashboard={dashboard}
+                    selectedDashboard={currentDashboard}
                   />
                 </Box>
               </Box>

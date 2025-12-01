@@ -1,6 +1,8 @@
 import { GridLegacy, Paper } from '@mui/material';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
@@ -75,6 +77,8 @@ export const RenderWidgets = React.memo(
       region,
     } = props;
 
+    const flags = useFlags();
+
     const getCloudPulseGraphProperties = (
       widget: Widgets
     ): CloudPulseWidgetProperties => {
@@ -124,6 +128,9 @@ export const RenderWidgets = React.memo(
             ...(pref.timeGranularity ?? autoIntervalOption),
           },
           group_by: pref.groupBy,
+          filters: flags.aclp?.showWidgetDimensionFilters
+            ? (pref.filters ?? widgetObj.filters)
+            : widgetObj.filters,
         };
       } else {
         return {
@@ -142,8 +149,6 @@ export const RenderWidgets = React.memo(
 
     if (
       !dashboard.service_type ||
-      // eslint-disable-next-line sonarjs/no-inverted-boolean-check
-      !(resources.length > 0) ||
       (!isJweTokenFetching && !jweToken?.token) ||
       !resourceList?.length
     ) {
