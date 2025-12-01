@@ -21,7 +21,6 @@ describe('Notification Channel Listing Page — Access Control', () => {
     mockGetAccount(accountFactory.build());
   });
 
- 
   it('allows access when notificationChannels is enabled', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },
