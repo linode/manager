@@ -12,13 +12,20 @@ import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/
 import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
-import { BucketAccess } from './BucketAccess';
-
 const ObjectList = React.lazy(() =>
-  import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))
+  import('./ObjectsTab/BucketDetail').then((module) => ({
+    default: module.BucketDetail,
+  }))
 );
+
+const BucketAccess = React.lazy(() =>
+  import('./AccessTab/BucketAccess').then((module) => ({
+    default: module.BucketAccess,
+  }))
+);
+
 const BucketSSL = React.lazy(() =>
-  import('./BucketSSL').then((module) => ({
+  import('./CertificatesTab/BucketSSL').then((module) => ({
     default: module.BucketSSL,
   }))
 );

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 
-import { prefixArrayToString } from '../utilities';
+import { prefixArrayToString } from '../../utilities';
 import {
   StyledCopyTooltip,
   StyledLink,
