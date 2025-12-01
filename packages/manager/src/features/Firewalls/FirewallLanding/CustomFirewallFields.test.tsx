@@ -6,19 +6,6 @@ import { CustomFirewallFields } from './CustomFirewallFields';
 
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
-const queryMocks = vi.hoisted(() => ({
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
-    isLoading: false,
-    isError: false,
-  }),
-}));
-
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  ...vi.importActual('src/features/IAM/hooks/usePermissions'),
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
-}));
-
 const props = {
   createFlow: undefined,
   firewallFormEventOptions: {

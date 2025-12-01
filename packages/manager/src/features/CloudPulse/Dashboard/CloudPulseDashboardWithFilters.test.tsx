@@ -8,18 +8,34 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardWithFilters } from './CloudPulseDashboardWithFilters';
 
+import type { GroupByOption } from '../GroupBy/CloudPulseGroupByDrawer';
+
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
+  useGlobalDimensions: vi.fn().mockReturnValue({}),
 }));
 
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Select filters to visualize metrics.';
+const mockGroupByOptions: GroupByOption[] = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' },
+];
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
   return {
     ...actual,
     useCloudPulseDashboardsQuery: queryMocks.useCloudPulseDashboardsQuery,
+  };
+});
+vi.mock('../GroupBy/utils', async () => {
+  const actual = await vi.importActual('../GroupBy/utils');
+
+  return {
+    ...actual,
+    useGlobalDimensions: queryMocks.useGlobalDimensions,
   };
 });
 const mockDashboard = dashboardFactory.build();
@@ -61,9 +77,18 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       isLoading: false,
     });
 
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
+
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="dbaas" />
     );
+
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
 
     const startDate = screen.getByText('Start Date');
     const nodeTypeSelect = screen.getByTestId('node-type-select');
@@ -217,7 +242,6 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
     const startDate = screen.getByText('Start Date');
     expect(startDate).toBeInTheDocument();
-
     await userEvent.click(screen.getByPlaceholderText('Select a Dashboard'));
     await userEvent.click(screen.getByText('nodebalancer_firewall_dashbaord'));
     expect(
