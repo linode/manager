@@ -36,7 +36,7 @@ export interface DrawerProps extends _DrawerProps {
   /**
    * Adds a suffix element to the drawer.
    *
-   * If set, the drawer will feature a suffix element in the title.
+   * Can be used to indicate special states, such as `BetaChip`, `NewFeatureChip`, or other UI elements next to the title.
    */
   titleSuffix?: React.JSX.Element;
   /**
@@ -154,7 +154,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         >
           <Grid>
             {isFetching ? null : (
-              <Box display="flex">
+              <Box alignItems="center" display="flex">
                 <Typography
                   data-qa-drawer-title={lastTitleRef.current}
                   data-testid="drawer-title"
