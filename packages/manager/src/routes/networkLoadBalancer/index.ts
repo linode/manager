@@ -29,11 +29,7 @@ const networkLoadBalancerDetailRoute = createRoute({
   },
   getParentRoute: () => networkLoadBalancersRoute,
   path: '$id',
-}).lazy(() =>
-  import(
-    'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancerDetailLazyRoute'
-  ).then((m) => m.networkLoadBalancerDetailLazyRoute)
-);
+});
 
 const networkLoadBalancerListenersRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
@@ -60,12 +56,8 @@ const networkLoadBalancerListenerDetailRoute = createRoute({
     });
   },
   getParentRoute: () => networkLoadBalancersRoute,
-  path: '/$id/listeners/$listenerId',
-}).lazy(() =>
-  import(
-    'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancersListenerDetail/NetworkLoadBalancersListenerDetailLazyRoutes'
-  ).then((m) => m.NetworkLoadBalancersListenerDetailLazyRoute)
-);
+  path: '$id/listeners/$listenerId',
+});
 
 const networkLoadBalancerNodesRoute = createRoute({
   getParentRoute: () => networkLoadBalancersRoute,
@@ -75,7 +67,7 @@ const networkLoadBalancerNodesRoute = createRoute({
       listenerId: Number(listenerId),
     }),
   },
-  path: '/$id/listeners/$listenerId/nodes',
+  path: '$id/listeners/$listenerId/nodes',
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancersListenerDetail/NetworkLoadBalancersListenerDetailLazyRoutes'
