@@ -58,9 +58,8 @@ export const LinodeSelectTable = (props: Props) => {
     theme.breakpoints.up('md')
   );
 
-  const { data: accountPermissions } = usePermissions('account', [
-    'create_linode',
-  ]);
+  const { data: accountPermissions, isLoading: isLoadingAccountPermissions } =
+    usePermissions('account', ['create_linode']);
 
   const {
     data: shutdownableLinodes = [],
@@ -173,6 +172,7 @@ export const LinodeSelectTable = (props: Props) => {
   const columns = enablePowerOff ? 6 : 5;
 
   const isLoading =
+    isLoadingAccountPermissions ||
     isLoadingShutdownableLinodes ||
     isLoadingCloneableLinodes ||
     isLoadingLinodes;
