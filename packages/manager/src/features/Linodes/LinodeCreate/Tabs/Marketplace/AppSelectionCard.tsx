@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import Info from 'src/assets/icons/info.svg';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { getMarketplaceAppLabel } from './utilities';
 
@@ -33,6 +34,8 @@ interface Props {
 
 export const AppSelectionCard = (props: Props) => {
   const { checked, iconUrl, label, onOpenDetailsDrawer, onSelect } = props;
+
+  const { data: permissions } = usePermissions('account', ['create_linode']);
 
   const handleInfoClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -73,6 +76,7 @@ export const AppSelectionCard = (props: Props) => {
   return (
     <SelectionCard
       checked={checked}
+      disabled={!permissions?.create_linode}
       heading={displayLabel}
       headingDecoration={headingDecoration}
       onClick={onSelect}
