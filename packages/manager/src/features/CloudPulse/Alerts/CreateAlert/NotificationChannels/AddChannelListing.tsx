@@ -64,8 +64,8 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
     return notificationData.filter(({ id, type }) => {
       if (notificationChannelWatcher.includes(id)) return false; // id already selected
 
-      const systemSupportedTypes =
-        flags.aclpAlerting?.systemAlertSupportedServiceTypes;
+      const systemSupportedTypes = flags.aclpAlerting
+        ?.systemAlertSupportedServiceTypes ?? ['linode', 'dbaas']; // TODO: this fallback is intentional for testing purpose, will be removed if PR merges
 
       if (serviceType && systemSupportedTypes?.includes(serviceType)) {
         return true; // show all types of channels if serviceType is supported
