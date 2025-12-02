@@ -667,8 +667,8 @@ describe('object storage alert configured successfully', () => {
                   )
                     ? matchingReqFilter.value
                     : (matchingReqFilter.value as string)
-                      .split(',')
-                      .map((v) => v.trim());
+                        .split(',')
+                        .map((v) => v.trim());
 
                   reqValues.forEach((v: string) => {
                     expect(
