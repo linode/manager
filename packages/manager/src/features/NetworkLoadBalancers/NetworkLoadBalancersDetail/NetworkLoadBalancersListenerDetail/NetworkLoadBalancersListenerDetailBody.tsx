@@ -5,15 +5,15 @@ import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Skeleton } from 'src/components/Skeleton';
 
-import type { NetworkLoadBalancerListenerProtocol } from '@linode/api-v4';
+import type { NetworkLoadBalancerListener } from '@linode/api-v4';
 
-interface Props {
-  created: string;
+interface Props
+  extends Pick<
+    NetworkLoadBalancerListener,
+    'created' | 'port' | 'protocol' | 'updated'
+  > {
   nodes: number;
   nodesLoading?: boolean;
-  port: number;
-  protocol: NetworkLoadBalancerListenerProtocol;
-  updated: string;
 }
 
 export const NetworkLoadBalancersListenerDetailBody = ({
