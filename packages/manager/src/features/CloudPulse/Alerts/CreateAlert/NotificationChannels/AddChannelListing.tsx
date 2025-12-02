@@ -65,7 +65,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
       if (notificationChannelWatcher.includes(id)) return false; // id already selected
 
       const systemSupportedTypes =
-        flags.aclpAlerting?.systemAlertSupportedServiceTypes;
+        flags.aclpAlerting?.systemChannelSupportedServices;
 
       if (serviceType && systemSupportedTypes?.includes(serviceType)) {
         return true; // show all types of channels if serviceType is supported
@@ -79,7 +79,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
       return true;
     });
   }, [
-    flags.aclpAlerting?.systemAlertSupportedServiceTypes,
+    flags.aclpAlerting?.systemChannelSupportedServices,
     notificationChannelWatcher,
     notificationData,
     serviceType,
