@@ -76,7 +76,7 @@ const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
   id: 1,
   label: 'channel-1',
-  type: 'custom',
+  type: 'user',
 });
 const mockRegion = regionFactory.build({
   capabilities: ['Object Storage'],
@@ -667,8 +667,8 @@ describe('object storage alert configured successfully', () => {
                   )
                     ? matchingReqFilter.value
                     : (matchingReqFilter.value as string)
-                        .split(',')
-                        .map((v) => v.trim());
+                      .split(',')
+                      .map((v) => v.trim());
 
                   reqValues.forEach((v: string) => {
                     expect(

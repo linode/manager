@@ -63,7 +63,7 @@ const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
   id: 1,
   label: 'channel-1',
-  type: 'custom',
+  type: 'user',
 });
 
 const customAlertDefinition = alertDefinitionFactory.build({
