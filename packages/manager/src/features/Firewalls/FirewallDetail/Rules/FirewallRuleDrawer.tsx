@@ -41,7 +41,14 @@ import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 // =============================================================================
 export const FirewallRuleDrawer = React.memo(
   (props: FirewallRuleDrawerProps) => {
-    const { category, isOpen, mode, onClose, ruleToModifyOrView } = props;
+    const {
+      category,
+      handleOpenPrefixListDrawer,
+      isOpen,
+      mode,
+      onClose,
+      ruleToModifyOrView,
+    } = props;
 
     const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
       useIsFirewallRulesetsPrefixlistsEnabled();
@@ -279,6 +286,16 @@ export const FirewallRuleDrawer = React.memo(
                   <FirewallRuleSetForm
                     category={category}
                     closeDrawer={onClose}
+                    handleOpenPrefixListDrawer={(
+                      prefixListLabel,
+                      plRuleRef
+                    ) => {
+                      handleOpenPrefixListDrawer(
+                        prefixListLabel,
+                        plRuleRef,
+                        'ruleset'
+                      );
+                    }}
                     ruleErrors={ruleToModifyOrView?.errors}
                     {...formikProps}
                   />
@@ -291,6 +308,9 @@ export const FirewallRuleDrawer = React.memo(
           <FirewallRuleSetDetailsView
             category={category}
             closeDrawer={onClose}
+            handleOpenPrefixListDrawer={(prefixListLabel, plRuleRef) => {
+              handleOpenPrefixListDrawer(prefixListLabel, plRuleRef, 'ruleset');
+            }}
             ruleset={ruleToModifyOrView?.ruleset}
           />
         )}

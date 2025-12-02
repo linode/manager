@@ -1,7 +1,7 @@
 import { PRIVATE_IPV4_REGEX } from '@linode/validation';
 import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 
-import type { PrefixListReference } from 'src/features/Firewalls/shared';
+import type { PrefixListRuleReference } from 'src/features/Firewalls/shared';
 
 /**
  * Removes the prefix length from the end of an IPv6 address.
@@ -23,7 +23,7 @@ export interface ExtendedIP {
   error?: string;
 }
 
-export interface ExtendedPL extends ExtendedIP, PrefixListReference {}
+export interface ExtendedPL extends ExtendedIP, PrefixListRuleReference {}
 
 export const stringToExtendedIP = (ip: string): ExtendedIP => ({ address: ip });
 export const extendedIPToString = (ip: ExtendedIP): string => ip.address;

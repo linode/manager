@@ -1361,7 +1361,7 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(rulesets));
   }),
-  http.get('*/v4beta/networking/prefixlists', () => {
+  http.get('*/v4beta/networking/prefixlists', ({ request }) => {
     const prefixlists = [
       ...firewallPrefixListFactory.buildList(10),
       ...Array.from({ length: 2 }, (_, i) =>
@@ -1377,6 +1377,7 @@ export const handlers = [
         { name: 'pl::supports-only-ipv6', ipv4: null },
         { name: 'pl::supports-both-but-ipv6-empty', ipv6: [] },
         { name: 'pl::supports-both-but-empty-both', ipv4: [], ipv6: [] },
+        { name: 'pl::marked-for-deletion', deleted: '2025-11-18T18:51:11' },
         { name: 'pl::not-supported', ipv4: null, ipv6: null },
       ].map((variant) =>
         firewallPrefixListFactory.build({
@@ -1385,6 +1386,21 @@ export const handlers = [
         })
       ),
     ];
+
+    if (request.headers.get('x-filter')) {
+      const filter = JSON.parse(request.headers.get('x-filter') || '{}');
+
+      if (filter['name']) {
+        const match =
+          prefixlists.find((pl) => pl.name === filter.name) ??
+          firewallPrefixListFactory.build({
+            name: filter['name'],
+            description: `${filter['name']} description`,
+          }); // fallback if not found
+
+        return HttpResponse.json(makeResourcePage([match]));
+      }
+    }
     return HttpResponse.json(makeResourcePage(prefixlists));
   }),
   http.get(
@@ -1450,6 +1466,7 @@ export const handlers = [
                       'pl::vpcs:supports-both-1',
                       'pl::supports-both-but-empty-both',
                       '172.31.255.255',
+                      'pl::marked-for-deletion',
                     ],
                     ipv6: [
                       'pl::supports-both',
