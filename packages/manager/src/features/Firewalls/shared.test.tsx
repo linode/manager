@@ -249,9 +249,9 @@ describe('generateAddressesLabelV2', () => {
     const { getByText } = renderWithTheme(<>{result}</>);
 
     // Check PLs with proper suffixes
-    expect(getByText(/pl:system:test-1 \(IPv4, IPv6\)/)).toBeVisible();
-    expect(getByText(/pl::test-2 \(IPv4\)/)).toBeVisible();
-    expect(getByText(/pl::test-3 \(IPv6\)/)).toBeVisible();
+    expect(getByText('pl:system:test-1 (IPv4, IPv6)')).toBeVisible();
+    expect(getByText('pl::test-2 (IPv4)')).toBeVisible();
+    expect(getByText('pl::test-3 (IPv6)')).toBeVisible();
   });
 
   it('renders individual IP addresses correctly', () => {
@@ -302,12 +302,8 @@ describe('generateAddressesLabelV2', () => {
   });
 
   it('handles truncation and shows Chip for hidden items', () => {
-    const addressesMany = {
-      ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3'],
-      ipv6: ['::1', '::2'],
-    };
     const result = generateAddressesLabelV2({
-      addresses: addressesMany,
+      addresses,
       showTruncateChip: true,
       truncateAt: 2,
     });
@@ -315,7 +311,7 @@ describe('generateAddressesLabelV2', () => {
     expect(container.textContent).toContain('+3'); // 5 total items (2 visible and 3 hidden)
   });
 
-  it('renders only 1 visible item and shows Chip when showTruncateChip is true and truncateAt is 1', () => {
+  it('renders only 1 visible item and shows a Chip for the remaining when showTruncateChip is true and truncateAt is 1', () => {
     const result = generateAddressesLabelV2({
       addresses,
       showTruncateChip: true,
@@ -323,13 +319,13 @@ describe('generateAddressesLabelV2', () => {
     });
     const { getByText, queryByText } = renderWithTheme(<>{result}</>);
 
-    expect(getByText(/pl:system:test-1 \(IPv4, IPv6\)/)).toBeVisible();
+    expect(getByText('pl:system:test-1 (IPv4, IPv6)')).toBeVisible();
 
     expect(getByText('+4')).toBeVisible(); // 5 total elements (1 shown + 4 hidden)
 
     // Hidden items are not rendered outside tooltip
-    expect(queryByText(/pl::test-2 \(IPv4\)/)).toBeNull();
-    expect(queryByText(/pl::test-3 \(IPv6\)/)).toBeNull();
+    expect(queryByText('pl::test-2 (IPv4)')).toBeNull();
+    expect(queryByText('pl::test-3 (IPv6)')).toBeNull();
     expect(queryByText('192.168.1.1')).toBeNull();
     expect(queryByText('2001:db8:85a3::8a2e:370:7334/128')).toBeNull();
   });
@@ -342,11 +338,48 @@ describe('generateAddressesLabelV2', () => {
     });
     const { getByText } = renderWithTheme(<>{result}</>);
 
-    expect(getByText(/pl:system:test-1 \(IPv4, IPv6\)/)).toBeVisible();
-    expect(getByText(/pl::test-2 \(IPv4\)/)).toBeVisible();
-    expect(getByText(/pl::test-3 \(IPv6\)/)).toBeVisible();
+    expect(getByText('pl:system:test-1 (IPv4, IPv6)')).toBeVisible();
+    expect(getByText('pl::test-2 (IPv4)')).toBeVisible();
+    expect(getByText('pl::test-3 (IPv6)')).toBeVisible();
     expect(getByText('192.168.1.1')).toBeVisible();
     expect(getByText('2001:db8:85a3::8a2e:370:7334/128')).toBeVisible();
+  });
+
+  it('tooltip shows only hidden elements when showTruncateChip is true', async () => {
+    const result = generateAddressesLabelV2({
+      addresses,
+      showTruncateChip: true,
+      truncateAt: 2,
+    });
+
+    const { findAllByTestId, getByText, queryByText } = renderWithTheme(
+      <>{result}</> // 5 total elements (2 shown + 3 hidden)
+    );
+
+    // Only the first 2 elements are visible outside tooltip
+    expect(getByText('pl:system:test-1 (IPv4, IPv6)')).toBeVisible();
+    expect(getByText('pl::test-2 (IPv4)')).toBeVisible();
+    expect(queryByText('pl::test-3 (IPv6)')).toBeNull();
+    expect(queryByText('192.168.1.1')).toBeNull();
+    expect(queryByText('2001:db8:85a3::8a2e:370:7334/128')).toBeNull();
+
+    // Chip shows correct hidden count
+    const chip = getByText('+3');
+    expect(chip).toBeVisible();
+
+    // Hover on chip
+    await userEvent.hover(chip);
+
+    // Query all items in the tooltip
+    const tooltipItems = await findAllByTestId('tooltip-item');
+
+    // Check that only hidden items are present in tooltip
+    expect(tooltipItems).toHaveLength(3);
+    expect(tooltipItems.map((item) => item.textContent)).toEqual([
+      'pl::test-3 (IPv6)',
+      '192.168.1.1',
+      '2001:db8:85a3::8a2e:370:7334/128',
+    ]);
   });
 });
 

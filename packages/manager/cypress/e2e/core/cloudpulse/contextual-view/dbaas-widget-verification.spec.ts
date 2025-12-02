@@ -32,44 +32,70 @@ import {
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
+import type {
+  CloudPulseMetricsResponse,
+  CloudPulseServiceType,
+  Database,
+} from '@linode/api-v4';
+import type { Interception } from 'support/cypress-exports';
 
-/**
- * This test ensures that widget titles are displayed correctly on the dashboard.
- * This test suite is dedicated to verifying the functionality and display of widgets on the Cloudpulse dashboard.
- *  It includes:
- * Validating that widgets are correctly loaded and displayed.
- * Ensuring that widget titles and data match the expected values.
- * Verifying that widget settings, such as granularity and aggregation, are applied correctly.
- * Testing widget interactions, including zooming and filtering, to ensure proper behavior.
- * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
- */
 const expectedGranularityArray = ['1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
 const { clusterName, dashboardName, engine, metrics, region } =
   widgetDetails.dbaas;
 const serviceType = 'dbaas';
+const dimensions = [
+  {
+    label: 'Node Type',
+    dimension_label: 'node_type',
+    value: 'secondary',
+  },
+  {
+    label: 'Region',
+    dimension_label: 'region',
+    value: 'us-ord',
+  },
+  {
+    label: 'Engine',
+    dimension_label: 'engine',
+    value: 'mysql',
+  },
+];
+
 const dashboard = dashboardFactory.build({
-  id: 1,
   label: dashboardName,
-  service_type: serviceType,
-  widgets: metrics.map(({ name, title, unit, yLabel }) => {
-    return widgetFactory.build({
+  group_by: ['entity_id'],
+  service_type: serviceType as CloudPulseServiceType,
+  widgets: metrics.map(({ name, title, unit, yLabel }) =>
+    widgetFactory.build({
+      entity_ids: ['1'],
+      filters: [...dimensions],
       label: title,
       metric: name,
       unit,
       y_label: yLabel,
-    });
-  }),
+      service_type: serviceType as CloudPulseServiceType,
+    })
+  ),
 });
+const getFiltersForMetric = (metricName: string) => {
+  const metric = metrics.find((m) => m.name === metricName);
+  if (!metric) return [];
 
+  return metric.filters.map((f) => ({
+    dimension_label: f.dimension_label,
+    label: f.dimension_label,
+    values: f.value ? [f.value] : undefined,
+  }));
+};
 const metricDefinitions = {
   data: metrics.map(({ name, title, unit }) =>
     dashboardMetricFactory.build({
       label: title,
       metric: name,
       unit,
+      dimensions: [...dimensions, ...getFiltersForMetric(name)],
     })
   ),
 };
@@ -80,19 +106,6 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-/**
- * Generates graph data from a given CloudPulse metrics response and
- * extracts average, last, and maximum metric values from the first
- * legend row. The values are rounded to two decimal places for
- * better readability.
- *
- * @param responsePayload - The metrics response object containing
- *                          the necessary data for graph generation.
- * @param label - The label for the graph, used for display purposes.
- *
- * @returns An object containing rounded values for max average, last,
- *
- */
 
 const getWidgetLegendRowValuesFromResponse = (
   responsePayload: CloudPulseMetricsResponse,
@@ -112,7 +125,7 @@ const getWidgetLegendRowValuesFromResponse = (
     ],
     status: 'success',
     unit,
-    serviceType,
+    serviceType: serviceType as CloudPulseServiceType,
     groupBy: ['entity_id'],
   });
 
@@ -153,8 +166,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetDatabase(databaseMock).as('getDatabase');
     mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
 
-    // navigate to the linodes page
-    cy.visitWithLogin('/linodes');
+    // navigate to the databases page
+    cy.visitWithLogin('/databases');
 
     // navigate to the Databases
     cy.get('[data-testid="menu-item-Databases"]').should('be.visible').click();
@@ -196,8 +209,68 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('have.text', 'Primary');
     });
 
+    // Locate the Dashboard Group By button and alias it
+    ui.button
+      .findByAttribute('aria-label', 'Group By Dashboard Metrics')
+      .should('be.visible')
+      .first()
+      .as('dashboardGroupByBtn');
+
+    // Ensure the button is scrolled into view
+    cy.get('@dashboardGroupByBtn').scrollIntoView();
+
+    // Verify tooltip "Group By" is present
+    ui.tooltip.findByText('Group By');
+
+    // Assert that the button has attribute data-qa-selected="true"
+    cy.get('@dashboardGroupByBtn')
+      .invoke('attr', 'data-qa-selected')
+      .should('eq', 'true');
+
+    cy.get('@dashboardGroupByBtn').should('be.visible').click();
+
+    // Verify the drawer title is "Global Group By"
+    cy.get('[data-testid="drawer-title"]')
+      .should('be.visible')
+      .and('have.text', 'Global Group By');
+
+    // Verify the drawer body contains "Dbaas Dashboard"
+    cy.get('[data-testid="drawer"]')
+      .find('p')
+      .first()
+      .and('have.text', 'Dbaas Dashboard');
+
+    // Type "Node Type" in Dimensions autocomplete field
+    ui.autocomplete
+      .findByLabel('Dimensions')
+      .should('be.visible')
+      .type('Node Type');
+
+    // Select "Node Type" from the popper options
+    ui.autocompletePopper.findByTitle('Node Type').should('be.visible').click();
+    // Close the drawer using ESC
+    cy.get('body').type('{esc}');
+
+    // Click Apply to confirm the Group By selection
+    cy.findByTestId('apply').should('be.visible').and('be.enabled').click();
+
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+    cy.get('@getMetrics.all').then((calls) => {
+      const lastFour = (calls as unknown as Interception[]).slice(-4);
+
+      expect(lastFour).to.have.length(4);
+
+      lastFour.forEach((interception) => {
+        const { body: requestPayload } = interception.request;
+
+        // group_by validation
+        expect(requestPayload.group_by).to.have.ordered.members([
+          'entity_id',
+          'node_type',
+        ]);
+      });
+    });
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {

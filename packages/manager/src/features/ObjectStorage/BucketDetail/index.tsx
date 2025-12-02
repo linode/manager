@@ -96,10 +96,12 @@ export const BucketDetailLanding = React.memo(() => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <BucketSSL bucketName={bucketName} clusterId={clusterId} />
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
+            {!isGen2Endpoint && (
+              <SafeTabPanel index={2}>
+                <BucketSSL bucketName={bucketName} clusterId={clusterId} />
+              </SafeTabPanel>
+            )}
+            <SafeTabPanel index={isGen2Endpoint ? 2 : 3}>
               <CloudPulseDashboardWithFilters
                 region={bucket?.region}
                 // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
@@ -115,3 +117,5 @@ export const BucketDetailLanding = React.memo(() => {
 });
 
 export default BucketDetailLanding;
+
+BucketDetailLanding.displayName = 'BucketDetailLanding';
