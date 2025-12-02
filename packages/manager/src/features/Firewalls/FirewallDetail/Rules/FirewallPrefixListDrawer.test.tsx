@@ -40,31 +40,31 @@ const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
 //
 const computeExpectedElements = (
   category: 'inbound' | 'outbound',
-  reference: FirewallPrefixListDrawerProps['reference']
+  context: FirewallPrefixListDrawerProps['context']
 ) => {
   let title = 'Prefix List details';
   let button = 'Close';
   let label = 'Name:';
 
-  if (reference?.type === 'ruleset' && reference.modeViewedFrom === 'create') {
+  if (context?.type === 'ruleset' && context.modeViewedFrom === 'create') {
     title = `Add an ${capitalize(category)} Rule or Rule Set`;
     button = `Back to ${capitalize(category)} Rule Set`;
     label = 'Prefix List Name:';
   }
 
-  if (reference?.type === 'ruleset' && reference.modeViewedFrom === 'view') {
+  if (context?.type === 'ruleset' && context.modeViewedFrom === 'view') {
     title = `${capitalize(category)} Rule Set details`;
     button = 'Back to the Rule Set';
     label = 'Prefix List Name:';
   }
 
-  if (reference?.type === 'rule' && reference.modeViewedFrom === 'edit') {
+  if (context?.type === 'rule' && context.modeViewedFrom === 'edit') {
     title = 'Edit Rule';
     button = 'Back to Rule';
     label = 'Prefix List Name:';
   }
 
-  // Default values when there is no specific drawer reference
+  // Default values when there is no specific drawer context
   // (e.g., type === 'rule' and modeViewedFrom === undefined,
   // meaning the drawer is opened directly from the Firewall Table row)
   return { title, button, label };
@@ -81,20 +81,18 @@ describe('PrefixListDrawer', () => {
   });
 
   // Default/base props
-  const baseProps: Omit<
-    FirewallPrefixListDrawerProps,
-    'category' | 'reference'
-  > = {
-    isOpen: true,
-    onClose: () => {},
-    selectedPrefixListLabel: 'pl-test',
-  };
+  const baseProps: Omit<FirewallPrefixListDrawerProps, 'category' | 'context'> =
+    {
+      isOpen: true,
+      onClose: () => {},
+      selectedPrefixListLabel: 'pl-test',
+    };
 
   const drawerProps: FirewallPrefixListDrawerProps[] = [
     {
       ...baseProps,
       category: 'inbound',
-      reference: {
+      context: {
         type: 'ruleset',
         modeViewedFrom: 'create',
         plRuleRef: { inIPv4Rule: true, inIPv6Rule: true },
@@ -103,7 +101,7 @@ describe('PrefixListDrawer', () => {
     {
       ...baseProps,
       category: 'outbound',
-      reference: {
+      context: {
         type: 'ruleset',
         modeViewedFrom: 'view',
         plRuleRef: { inIPv4Rule: true, inIPv6Rule: false },
@@ -112,7 +110,7 @@ describe('PrefixListDrawer', () => {
     {
       ...baseProps,
       category: 'inbound',
-      reference: {
+      context: {
         type: 'rule',
         modeViewedFrom: 'edit',
         plRuleRef: { inIPv4Rule: false, inIPv6Rule: true },
@@ -121,7 +119,7 @@ describe('PrefixListDrawer', () => {
     {
       ...baseProps,
       category: 'outbound',
-      reference: {
+      context: {
         type: 'rule',
         plRuleRef: { inIPv4Rule: true, inIPv6Rule: true },
       },
@@ -129,8 +127,8 @@ describe('PrefixListDrawer', () => {
   ];
 
   it.each(drawerProps)(
-    'renders correct UI for category:$category, referenceType:$reference.type and modeViewedFrom:$reference.modeViewedFrom',
-    ({ category, reference }) => {
+    'renders correct UI for category:$category, contextType:$context.type and modeViewedFrom:$context.modeViewedFrom',
+    ({ category, context }) => {
       queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
         data: [firewallPrefixListFactory.build()],
       });
@@ -138,9 +136,9 @@ describe('PrefixListDrawer', () => {
       const { getByText, getByRole } = renderWithTheme(
         <FirewallPrefixListDrawer
           category={category}
+          context={context}
           isOpen={true}
           onClose={vi.fn()}
-          reference={reference}
           selectedPrefixListLabel="pl-test"
         />
       );
@@ -148,7 +146,7 @@ describe('PrefixListDrawer', () => {
       // Compute expectations
       const { title, button, label } = computeExpectedElements(
         category,
-        reference
+        context
       );
 
       // Title
@@ -197,12 +195,12 @@ describe('PrefixListDrawer', () => {
     const { getByText, getByTestId, findByText, queryByText } = renderWithTheme(
       <FirewallPrefixListDrawer
         category="inbound"
-        isOpen={true}
-        onClose={vi.fn()}
-        reference={{
+        context={{
           type: 'rule',
           plRuleRef: { inIPv4Rule: false, inIPv6Rule: true },
         }}
+        isOpen={true}
+        onClose={vi.fn()}
         selectedPrefixListLabel="pl-test"
       />
     );
@@ -232,7 +230,7 @@ describe('PrefixListDrawer', () => {
     { name: 'pl::supports-both-but-both-empty', ipv4: [], ipv6: [] },
   ];
 
-  const ruleReferences: FirewallPrefixListDrawerProps['reference'][] = [
+  const ruleReferences: FirewallPrefixListDrawerProps['context'][] = [
     { plRuleRef: { inIPv4Rule: true, inIPv6Rule: false }, type: 'rule' },
     { plRuleRef: { inIPv4Rule: false, inIPv6Rule: true }, type: 'rule' },
     { plRuleRef: { inIPv4Rule: true, inIPv6Rule: true }, type: 'rule' },
@@ -243,84 +241,84 @@ describe('PrefixListDrawer', () => {
     // PL supports both
     {
       prefixList: prefixListVariants[0],
-      reference: ruleReferences[0],
+      context: ruleReferences[0],
       expectedIPv4: 'in use',
       expectedIPv6: 'not in use',
     },
     {
       prefixList: prefixListVariants[0],
-      reference: ruleReferences[1],
+      context: ruleReferences[1],
       expectedIPv4: 'not in use',
       expectedIPv6: 'in use',
     },
     {
       prefixList: prefixListVariants[0],
-      reference: ruleReferences[2],
+      context: ruleReferences[2],
       expectedIPv4: 'in use',
       expectedIPv6: 'in use',
     },
     {
       prefixList: prefixListVariants[0],
-      reference: ruleReferences[3],
+      context: ruleReferences[3],
       expectedIPv4: 'in use',
       expectedIPv6: 'in use',
     },
     // PL supports only IPv4
     {
       prefixList: prefixListVariants[1],
-      reference: ruleReferences[0],
+      context: ruleReferences[0],
       expectedIPv4: 'in use',
     },
     // PL supports only IPv6
     {
       prefixList: prefixListVariants[2],
-      reference: ruleReferences[1],
+      context: ruleReferences[1],
       expectedIPv6: 'in use',
     },
     // PL IPv4 empty
     {
       prefixList: prefixListVariants[3],
-      reference: ruleReferences[0],
+      context: ruleReferences[0],
       expectedIPv4: 'in use',
       expectedIPv6: 'not in use',
     },
     {
       prefixList: prefixListVariants[3],
-      reference: ruleReferences[1],
+      context: ruleReferences[1],
       expectedIPv4: 'not in use',
       expectedIPv6: 'in use',
     },
     // PL IPv6 empty
     {
       prefixList: prefixListVariants[4],
-      reference: ruleReferences[0],
+      context: ruleReferences[0],
       expectedIPv4: 'in use',
       expectedIPv6: 'not in use',
     },
     {
       prefixList: prefixListVariants[4],
-      reference: ruleReferences[1],
+      context: ruleReferences[1],
       expectedIPv4: 'not in use',
       expectedIPv6: 'in use',
     },
     // PL both empty
     {
       prefixList: prefixListVariants[5],
-      reference: ruleReferences[0],
+      context: ruleReferences[0],
       expectedIPv4: 'in use',
       expectedIPv6: 'not in use',
     },
     {
       prefixList: prefixListVariants[5],
-      reference: ruleReferences[1],
+      context: ruleReferences[1],
       expectedIPv4: 'not in use',
       expectedIPv6: 'in use',
     },
   ];
 
   it.each(ipSectionTestCases)(
-    'renders correct chip and IP addresses for Prefix List $prefixList.name with reference $reference.plRuleRef',
-    ({ prefixList, reference, expectedIPv4, expectedIPv6 }) => {
+    'renders correct chip and IP addresses for Prefix List $prefixList.name with reference $context.plRuleRef',
+    ({ prefixList, context, expectedIPv4, expectedIPv6 }) => {
       const selectedPrefixList = prefixList.name;
 
       const mockPrefixList = firewallPrefixListFactory.build({ ...prefixList });
@@ -331,9 +329,9 @@ describe('PrefixListDrawer', () => {
       const { getByTestId } = renderWithTheme(
         <FirewallPrefixListDrawer
           category="inbound"
+          context={context}
           isOpen={true}
           onClose={vi.fn()}
-          reference={reference}
           selectedPrefixListLabel={selectedPrefixList}
         />
       );

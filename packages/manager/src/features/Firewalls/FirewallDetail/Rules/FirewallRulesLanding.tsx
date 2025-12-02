@@ -32,7 +32,7 @@ import {
 import { FirewallRuleTable } from './FirewallRuleTable';
 import { parseFirewallRuleError } from './shared';
 
-import type { PrefixListDrawerReference } from './FirewallPrefixListDrawer';
+import type { PrefixListDrawerContext } from './FirewallPrefixListDrawer';
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { Category } from './shared';
 import type {
@@ -120,12 +120,12 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>(initialDrawer);
   const [prefixListDrawer, setPrefixListDrawer] = React.useState<{
     category: Category;
-    reference: PrefixListDrawerReference | undefined;
+    context: PrefixListDrawerContext | undefined;
     selectedPrefixListLabel: string | undefined;
   }>({
     category: 'inbound',
     selectedPrefixListLabel: undefined,
-    reference: undefined,
+    context: undefined,
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
@@ -179,19 +179,19 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const openPrefixListDrawer = (
     category: Category,
     prefixListLabel: string,
-    reference: PrefixListDrawerReference
+    context: PrefixListDrawerContext
   ) => {
     setPrefixListDrawer({
       category,
       selectedPrefixListLabel: prefixListLabel,
-      reference,
+      context,
     });
   };
 
   const closePrefixListDrawer = (options?: { closeAll?: boolean }) => {
     setPrefixListDrawer({
       selectedPrefixListLabel: undefined,
-      reference: undefined,
+      context: undefined,
       category: prefixListDrawer.category,
     });
 
@@ -539,11 +539,11 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         handleOpenPrefixListDrawer={(
           prefixListLabel,
           plRuleRef,
-          referenceType
+          contextType
         ) => {
           openPrefixListDrawer(ruleDrawer.category, prefixListLabel, {
             plRuleRef,
-            type: referenceType,
+            type: contextType,
             modeViewedFrom: ruleDrawer.mode,
           });
         }}
@@ -566,9 +566,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       />
       <FirewallPrefixListDrawer
         category={prefixListDrawer.category}
+        context={prefixListDrawer.context}
         isOpen={Boolean(prefixListDrawer.selectedPrefixListLabel?.length)}
         onClose={closePrefixListDrawer}
-        reference={prefixListDrawer.reference}
         selectedPrefixListLabel={prefixListDrawer.selectedPrefixListLabel}
       />
       <StyledActionsPanel

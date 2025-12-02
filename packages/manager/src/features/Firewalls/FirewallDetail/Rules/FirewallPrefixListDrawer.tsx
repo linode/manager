@@ -23,7 +23,7 @@ import type { PrefixListRuleReference } from '../../shared';
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { Category } from './shared';
 
-export interface PrefixListDrawerReference {
+export interface PrefixListDrawerContext {
   modeViewedFrom?: FirewallRuleDrawerMode; // Optional in the case of normal rules
   plRuleRef: PrefixListRuleReference;
   type: 'rule' | 'ruleset';
@@ -31,15 +31,15 @@ export interface PrefixListDrawerReference {
 
 export interface FirewallPrefixListDrawerProps {
   category: Category;
+  context: PrefixListDrawerContext | undefined;
   isOpen: boolean;
   onClose: (options?: { closeAll: boolean }) => void;
-  reference: PrefixListDrawerReference | undefined;
   selectedPrefixListLabel: string | undefined;
 }
 
 export const FirewallPrefixListDrawer = React.memo(
   (props: FirewallPrefixListDrawerProps) => {
-    const { category, onClose, reference, isOpen, selectedPrefixListLabel } =
+    const { category, context, onClose, isOpen, selectedPrefixListLabel } =
       props;
 
     const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
@@ -59,19 +59,19 @@ export const FirewallPrefixListDrawer = React.memo(
     const isIPv6Supported =
       prefixListDetails?.ipv6 !== null && prefixListDetails?.ipv6 !== undefined;
 
-    const isIPv4InUse = reference?.plRuleRef.inIPv4Rule;
-    const isIPv6InUse = reference?.plRuleRef.inIPv6Rule;
+    const isIPv4InUse = context?.plRuleRef.inIPv4Rule;
+    const isIPv6InUse = context?.plRuleRef.inIPv6Rule;
 
     // Returns Prefix List drawer title and back button text based on category and reference
     const getDrawerTexts = (
       category: Category,
-      reference?: PrefixListDrawerReference
+      context?: PrefixListDrawerContext
     ) => {
       const defaultTexts = { title: 'Prefix List details', backButton: null };
 
-      if (!reference) return defaultTexts;
+      if (!context) return defaultTexts;
 
-      const { type, modeViewedFrom } = reference;
+      const { type, modeViewedFrom } = context;
 
       if (type === 'ruleset' && modeViewedFrom === 'create') {
         return {
@@ -96,11 +96,11 @@ export const FirewallPrefixListDrawer = React.memo(
 
     const { title: titleText, backButton: backButtonText } = getDrawerTexts(
       category,
-      reference
+      context
     );
 
     const plFieldLabel =
-      reference?.type === 'rule' && reference.modeViewedFrom === undefined
+      context?.type === 'rule' && context.modeViewedFrom === undefined
         ? 'Name'
         : 'Prefix List Name';
 

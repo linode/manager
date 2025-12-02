@@ -1,5 +1,5 @@
 import type { FirewallOptionItem, PrefixListRuleReference } from '../../shared';
-import type { PrefixListDrawerReference } from './FirewallPrefixListDrawer';
+import type { PrefixListDrawerContext } from './FirewallPrefixListDrawer';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type {
@@ -16,7 +16,7 @@ export interface FirewallRuleDrawerProps {
   handleOpenPrefixListDrawer: (
     prefixListLabel: string,
     plRuleRef: PrefixListRuleReference,
-    referenceType: PrefixListDrawerReference['type']
+    contextType: PrefixListDrawerContext['type']
   ) => void;
   isOpen: boolean;
   mode: FirewallRuleDrawerMode;
