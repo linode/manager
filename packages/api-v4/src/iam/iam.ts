@@ -142,3 +142,16 @@ export const getUserEntitiesByPermission = ({
     setParams(params),
     setXFilter(filter),
   );
+
+export const getUserEntities = (
+  username: string,
+  entityType: string,
+  params?: Params,
+  filter?: Filter,
+) =>
+  Request<ResourcePage<EntityByPermission>>(
+    setURL(`${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  );

@@ -1,6 +1,8 @@
 import {
+  iamQueries,
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
+  useQueries,
   useUserRoles,
 } from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
@@ -19,7 +21,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
@@ -168,9 +169,29 @@ export const AssignedRolesTable = () => {
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
-  const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
-    {}
-  );
+
+  const entityTypes = React.useMemo(() => {
+    return userRolesData?.entity_access.map((entity) => entity.type) ?? [];
+  }, [userRolesData]);
+  const entityQueries = useQueries({
+    queries: entityTypes.map((type) => ({
+      ...iamQueries.user(username ?? '')._ctx.allUserEntities(type),
+      enabled: !!username,
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
+
+  const { entities, isLoading: entitiesLoading } = React.useMemo(() => {
+    const isLoading = entityQueries.some((q) => q.isLoading);
+
+    if (isLoading) {
+      return { entities: undefined, isLoading: true };
+    }
+
+    const entities = entityQueries.map((q) => q.data || []).flat();
+
+    return { entities, isLoading: false };
+  }, [entityQueries]);
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
@@ -187,7 +208,6 @@ export const AssignedRolesTable = () => {
 
     if (entities) {
       const transformedEntities = groupAccountEntitiesByType(entities);
-
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
 
