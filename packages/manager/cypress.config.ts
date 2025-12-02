@@ -9,6 +9,7 @@ import { configureMultiReporters } from './cypress/support/plugins/configure-mul
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { fetchAccount } from './cypress/support/plugins/fetch-account';
+import { fetchInitialEvents } from './cypress/support/plugins/fetch-events';
 import { fetchLinodeClusters } from './cypress/support/plugins/fetch-linode-clusters';
 import { fetchLinodeImages } from './cypress/support/plugins/fetch-linode-images';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
@@ -101,6 +102,7 @@ export default defineConfig({
         vitePreprocess,
         discardPassedTestRecordings,
         fetchAccount,
+        fetchInitialEvents,
         fetchLinodeRegions,
         fetchLinodeClusters,
         fetchLinodeImages,

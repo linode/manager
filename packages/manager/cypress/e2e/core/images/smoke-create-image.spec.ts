@@ -103,16 +103,15 @@ describe('create image (using mocks)', () => {
       .click();
 
     // Verify the POST /v4/images request happens
+    mockGetEvents([
+      eventFactory.build({ action: 'disk_imagize', status: 'finished' }),
+    ]).as('getEvents');
     cy.wait('@createImage');
 
     ui.toast.assertMessage('Image scheduled for creation.');
 
     // Verify we redirect to the images landing page upon successful creation
     cy.url().should('endWith', 'images');
-
-    mockGetEvents([
-      eventFactory.build({ action: 'disk_imagize', status: 'finished' }),
-    ]).as('getEvents');
 
     // Wait for the next events polling request
     cy.wait('@getEvents');

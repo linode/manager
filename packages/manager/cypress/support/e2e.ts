@@ -65,11 +65,13 @@ import { blockAnalytics } from './setup/block-analytics';
 import { deleteInternalHeader } from './setup/delete-internal-header';
 import { mockFeatureFlagClientstream } from './setup/feature-flag-clientstream';
 import { mockAccountRequest } from './setup/mock-account-request';
+import { mockInitialEventsRequest } from './setup/mock-events-request';
 import { mockFeatureFlagRequests } from './setup/mock-feature-flags-request';
 import { trackApiRequests } from './setup/request-tracking';
 
 trackApiRequests();
 mockAccountRequest();
+mockInitialEventsRequest();
 mockFeatureFlagRequests();
 mockFeatureFlagClientstream();
 deleteInternalHeader();
