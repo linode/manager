@@ -1,6 +1,6 @@
 import { streamStatus } from '@linode/api-v4';
 import { useStreamsQuery, useUpdateStreamMutation } from '@linode/queries';
-import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
+import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -177,7 +177,7 @@ export const StreamsLanding = () => {
   };
 
   return (
-    <>
+    <Paper>
       <DeliveryTabHeader
         entity="Stream"
         isSearching={isFetching}
@@ -234,12 +234,22 @@ export const StreamsLanding = () => {
                 </Hidden>
                 <Hidden lgDown>
                   <TableSortCell
-                    active={orderBy === 'created'}
+                    active={orderBy === 'updated'}
                     direction={order}
                     handleClick={handleOrderChange}
-                    label="created"
+                    label="updated"
                   >
-                    Creation Time
+                    Last Modified
+                  </TableSortCell>
+                </Hidden>
+                <Hidden lgDown>
+                  <TableSortCell
+                    active={orderBy === 'updated_by'}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="updated_by"
+                  >
+                    Last Modified By
                   </TableSortCell>
                 </Hidden>
                 <TableCell sx={{ width: '5%' }} />
@@ -249,7 +259,7 @@ export const StreamsLanding = () => {
               {streams?.data.map((stream) => (
                 <StreamTableRow key={stream.id} stream={stream} {...handlers} />
               ))}
-              {streams?.results === 0 && <TableRowEmpty colSpan={7} />}
+              {streams?.results === 0 && <TableRowEmpty colSpan={8} />}
             </TableBody>
           </Table>
           <PaginationFooter
@@ -267,6 +277,6 @@ export const StreamsLanding = () => {
           />
         </>
       )}
-    </>
+    </Paper>
   );
 };
