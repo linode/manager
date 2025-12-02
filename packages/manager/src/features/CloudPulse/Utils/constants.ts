@@ -91,7 +91,8 @@ export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
 
-export const CLUSTERS_TOOLTIP_TEXT = 'This list includes only LKE Enterprise clusters.';
+export const CLUSTERS_TOOLTIP_TEXT =
+  'This list includes only LKE Enterprise clusters.';
 
 export const NO_REGION_MESSAGE: Record<number, string> = {
   1: 'No database clusters configured in any regions.',
