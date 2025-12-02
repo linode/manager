@@ -330,23 +330,18 @@ export const FirewallPrefixListDrawer = React.memo(
               justifyContent: backButtonText ? 'flex-start' : 'flex-end',
             })}
           >
-            {backButtonText ? (
-              <Button
-                buttonType="outlined"
-                onClick={() => onClose({ closeAll: false })}
-                startIcon={<ArrowLeftIcon />}
-                sx={{ textTransform: 'none' }}
-              >
-                {backButtonText}
-              </Button>
-            ) : (
-              <Button
-                buttonType="secondary"
-                onClick={() => onClose({ closeAll: false })}
-              >
-                Cancel
-              </Button>
-            )}
+            <Button
+              buttonType={backButtonText ? 'outlined' : 'secondary'}
+              onClick={() => onClose({ closeAll: false })}
+              startIcon={backButtonText ? <ArrowLeftIcon /> : undefined}
+              sx={{
+                ...(backButtonText && {
+                  textTransform: 'none',
+                }),
+              }}
+            >
+              {backButtonText ?? 'Cancel'}
+            </Button>
           </Box>
         </Box>
       </Drawer>
