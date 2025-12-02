@@ -1323,8 +1323,8 @@ export const handlers = [
         label: 'firewall with rule and ruleset reference',
         rules: firewallRulesFactory.build({
           inbound: [
-            firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
-            firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+            { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+            { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
             ...firewallRuleFactory.buildList(1),
           ],
         }),
@@ -1361,8 +1361,46 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(rulesets));
   }),
-  http.get('*/v4beta/networking/prefixlists', () => {
-    const prefixlists = firewallPrefixListFactory.buildList(10);
+  http.get('*/v4beta/networking/prefixlists', ({ request }) => {
+    const prefixlists = [
+      ...firewallPrefixListFactory.buildList(10),
+      ...Array.from({ length: 2 }, (_, i) =>
+        firewallPrefixListFactory.build({
+          name: `pl::vpcs:supports-both-${i + 1}`,
+          description: `pl::vpcs:supports-both-${i + 1} description`,
+        })
+      ),
+      // Prefix List variants / cases
+      ...[
+        { name: 'pl::supports-both' },
+        { name: 'pl:system:supports-only-ipv4', ipv6: null },
+        { name: 'pl::supports-only-ipv6', ipv4: null },
+        { name: 'pl::supports-both-but-ipv6-empty', ipv6: [] },
+        { name: 'pl::supports-both-but-empty-both', ipv4: [], ipv6: [] },
+        { name: 'pl::marked-for-deletion', deleted: '2025-11-18T18:51:11' },
+        { name: 'pl::not-supported', ipv4: null, ipv6: null },
+      ].map((variant) =>
+        firewallPrefixListFactory.build({
+          ...variant,
+          description: `${variant.name} description`,
+        })
+      ),
+    ];
+
+    if (request.headers.get('x-filter')) {
+      const filter = JSON.parse(request.headers.get('x-filter') || '{}');
+
+      if (filter['name']) {
+        const match =
+          prefixlists.find((pl) => pl.name === filter.name) ??
+          firewallPrefixListFactory.build({
+            name: filter['name'],
+            description: `${filter['name']} description`,
+          }); // fallback if not found
+
+        return HttpResponse.json(makeResourcePage([match]));
+      }
+    }
     return HttpResponse.json(makeResourcePage(prefixlists));
   }),
   http.get(
@@ -1416,28 +1454,30 @@ export const handlers = [
             label: 'firewall with rule and ruleset reference',
             rules: firewallRulesFactory.build({
               inbound: [
-                firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
-                firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+                { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+                { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
                 ...firewallRuleFactory.buildList(1, {
                   addresses: {
                     ipv4: [
-                      'pl:system:test-1',
-                      'pl::vpcs:test-1',
+                      'pl::supports-both',
+                      'pl:system:supports-only-ipv4',
                       '192.168.1.213',
                       '192.168.1.214',
-                      '192.168.1.215',
-                      '192.168.1.216',
-                      'pl::vpcs:test-2',
+                      'pl::vpcs:supports-both-1',
+                      'pl::supports-both-but-empty-both',
                       '172.31.255.255',
+                      'pl::marked-for-deletion',
                     ],
                     ipv6: [
-                      'pl:system:test-1',
-                      'pl::vpcs:test-3',
+                      'pl::supports-both',
+                      'pl::supports-only-ipv6',
+                      'pl::supports-both-but-ipv6-empty',
+                      'pl::vpcs:supports-both-2',
                       '2001:db8:85a3::8a2e:370:7334/128',
                       '2001:db8:85a3::8a2e:371:7335/128',
-                      'pl::vpcs:test-3',
-                      'pl::vpcs:test-4',
-                      'pl::vpcs:test-5',
+                      // Duplicate PrefixList entries like the below one, may not appear, but if they do,
+                      // our logic will treat them as a single entity within the ipv4 or ipv6 array.
+                      'pl::vpcs:supports-both-2',
                       '2001:db8:85a3::8a2e:372:7336/128',
                     ],
                   },
