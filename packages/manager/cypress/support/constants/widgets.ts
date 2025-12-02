@@ -566,6 +566,7 @@ export const widgetDetails = {
         filters: [
           { dimension_label: 'linode_id', operator: 'eq', value: null },
           { dimension_label: 'percentile', operator: 'eq', value: null },
+          { dimension_label: 'entity_id', operator: 'eq', value: null },
         ],
       },
       {
@@ -578,6 +579,7 @@ export const widgetDetails = {
         yLabel: 'volume_write_latency',
         filters: [
           { dimension_label: 'percentile', operator: 'eq', value: null },
+          { dimension_label: 'entity_id', operator: 'eq', value: null },
         ],
       },
     ],

@@ -16,6 +16,7 @@ export const CloudPulseDimensionFilterIconWithBadge = React.memo(
       <Badge
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         badgeContent={count}
+        data-qa-badge="dimension-filter-badge-content"
         invisible={count === 0}
         slotProps={{
           badge: {
