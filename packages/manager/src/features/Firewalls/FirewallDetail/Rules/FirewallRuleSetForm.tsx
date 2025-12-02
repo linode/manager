@@ -58,6 +58,7 @@ export const FirewallRuleSetForm = React.memo(
     const ruleSetDropdownOptions = React.useMemo(
       () =>
         ruleSets
+          // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
           .filter((ruleSet) => ruleSet.type === category) // Display only rule sets applicable to the given category
           .map((ruleSet) => ({
             label: ruleSet.label,

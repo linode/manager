@@ -131,7 +131,7 @@ export const MultiplePrefixListSelect = React.memo(
             value: pl.id,
             support: getSupportDetails(pl),
           }))
-          // The API does not seem to have the capability to sort prefix lists by "name" to prioritize certain types.
+          // The API does not seem to sort prefix lists by "name" to prioritize certain types.
           // This sort ensures that Autocomplete's groupBy displays groups correctly without duplicates
           // and that the dropdown shows groups in the desired order.
           .sort((a, b) => {
