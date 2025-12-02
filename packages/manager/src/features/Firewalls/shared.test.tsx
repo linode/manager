@@ -273,17 +273,23 @@ describe('generateAddressesLabelV2', () => {
     });
     const { getByText } = renderWithTheme(<>{result}</>);
 
-    await userEvent.click(getByText(/pl:system:test-1/));
-    expect(onPrefixListClick).toHaveBeenCalledWith(
-      'pl:system:test-1',
-      '(IPv4, IPv6)'
-    );
+    await userEvent.click(getByText('pl:system:test-1 (IPv4, IPv6)'));
+    expect(onPrefixListClick).toHaveBeenCalledWith('pl:system:test-1', {
+      inIPv4Rule: true,
+      inIPv6Rule: true,
+    });
 
-    await userEvent.click(getByText(/pl::test-2/));
-    expect(onPrefixListClick).toHaveBeenCalledWith('pl::test-2', '(IPv4)');
+    await userEvent.click(getByText('pl::test-2 (IPv4)'));
+    expect(onPrefixListClick).toHaveBeenCalledWith('pl::test-2', {
+      inIPv4Rule: true,
+      inIPv6Rule: false,
+    });
 
-    await userEvent.click(getByText(/pl::test-3/));
-    expect(onPrefixListClick).toHaveBeenCalledWith('pl::test-3', '(IPv6)');
+    await userEvent.click(getByText('pl::test-3 (IPv6)'));
+    expect(onPrefixListClick).toHaveBeenCalledWith('pl::test-3', {
+      inIPv4Rule: false,
+      inIPv6Rule: true,
+    });
   });
 
   it('renders None if no addresses are provided', () => {

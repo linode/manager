@@ -35,6 +35,9 @@ export const PORT_PRESETS_ITEMS = sortBy(
 export const RULESET_MARKED_FOR_DELETION_TEXT =
   'This rule set will be automatically deleted when it’s no longer referenced by other firewalls.';
 
+export const PREFIXLIST_MARKED_FOR_DELETION_TEXT =
+  'This Prefix List will be automatically deleted when it’s no longer referenced by other firewalls.';
+
 /**
  * The API returns very good Firewall error messages that look like this:
  *
@@ -129,3 +132,15 @@ export const firewallRuleCreateOptions = [
     value: 'ruleset',
   },
 ] as const;
+
+type PrefixListGroup = 'Account' | 'Other' | 'System';
+
+export const getPrefixListType = (name: string): PrefixListGroup => {
+  if (name.startsWith('pl::')) {
+    return 'Account';
+  }
+  if (name.startsWith('pl:system:')) {
+    return 'System';
+  }
+  return 'Other'; // Safe fallback
+};

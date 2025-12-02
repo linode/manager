@@ -62,7 +62,10 @@ import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
+import type {
+  FirewallOptionItem,
+  PrefixListRuleReference,
+} from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: null | string;
@@ -96,6 +99,10 @@ interface RowActionHandlers {
 interface FirewallRuleTableProps extends RowActionHandlers {
   category: Category;
   disabled: boolean;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   handlePolicyChange: (
     category: Category,
     newPolicy: FirewallPolicyType
@@ -113,6 +120,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     handleDeleteFirewallRule,
     handleOpenRuleDrawerForEditing,
     handleOpenRuleSetDrawerForViewing,
+    handleOpenPrefixListDrawer,
     handlePolicyChange,
     handleReorder,
     handleUndo,
@@ -133,7 +141,8 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 
   const rowData = firewallRuleToRowData(
     rulesWithStatus,
-    isFirewallRulesetsPrefixlistsFeatureEnabled
+    isFirewallRulesetsPrefixlistsFeatureEnabled,
+    handleOpenPrefixListDrawer
   );
 
   const openDrawerForCreating = React.useCallback(() => {
@@ -638,7 +647,11 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
  */
 export const firewallRuleToRowData = (
   firewallRules: ExtendedFirewallRule[],
-  isFirewallRulesetsPrefixlistsEnabled?: boolean
+  isFirewallRulesetsPrefixlistsEnabled?: boolean,
+  handleOpenPrefixListDrawer?: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void
 ): RuleRow[] => {
   return firewallRules.map((thisRule, idx) => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
@@ -646,7 +659,10 @@ export const firewallRuleToRowData = (
     return {
       ...thisRule,
       addresses: isFirewallRulesetsPrefixlistsEnabled
-        ? generateAddressesLabelV2({ addresses: thisRule.addresses })
+        ? generateAddressesLabelV2({
+            addresses: thisRule.addresses,
+            onPrefixListClick: handleOpenPrefixListDrawer,
+          })
         : generateAddressesLabel(thisRule.addresses),
       id: idx + 1, // ids are 1-indexed, as id given to the useSortable hook cannot be 0
       index: idx,
