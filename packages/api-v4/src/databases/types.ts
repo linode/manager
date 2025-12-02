@@ -251,10 +251,12 @@ export interface UpdateDatabasePayload {
   version?: string;
 }
 
+export type PoolMode = 'session' | 'statement' | 'transaction';
+
 export interface ConnectionPool {
   database: string;
   label: string;
-  mode: 'session' | 'statement' | 'transaction';
+  mode: PoolMode;
   size: number;
   username: null | string;
 }

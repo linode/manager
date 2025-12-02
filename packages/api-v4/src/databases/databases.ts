@@ -374,7 +374,7 @@ export const getDatabaseEngineConfig = (engine: Engine) =>
 export const getDatabaseConnectionPools = (databaseID: number) =>
   Request<Page<ConnectionPool>>(
     setURL(
-      `${API_ROOT}/databases/instances/${encodeURIComponent(databaseID)}/connection-pools`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
     ),
     setMethod('GET'),
   );
@@ -388,7 +388,7 @@ export const getDatabaseConnectionPool = (
 ) =>
   Request<ConnectionPool>(
     setURL(
-      `${API_ROOT}/databases/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
     ),
     setMethod('GET'),
   );
@@ -397,12 +397,12 @@ export const getDatabaseConnectionPool = (
  * Create a new connection pool for a database. Connection pools can only be created on active clusters
  */
 export const createDatabaseConnectionPool = (
-  databaseId: number,
+  databaseID: number,
   data: ConnectionPool,
 ) =>
   Request<ConnectionPool>(
     setURL(
-      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
     ),
     setMethod('POST'),
     setData(data, createDatabaseConnectionPoolSchema),
@@ -412,13 +412,13 @@ export const createDatabaseConnectionPool = (
  * Update an existing connection pool. This may cause sudden closure of an in-use connection pool
  */
 export const updateDatabaseConnectionPool = (
-  databaseId: number,
+  databaseID: number,
   poolName: string,
   data: Omit<ConnectionPool, 'label'>,
 ) =>
   Request<ConnectionPool>(
     setURL(
-      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools/${encodeURIComponent(poolName)}`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
     ),
     setMethod('PUT'),
     setData(data, updateDatabaseConnectionPoolSchema),
@@ -428,12 +428,12 @@ export const updateDatabaseConnectionPool = (
  * Delete an existing connection pool. This may cause sudden closure of an in-use connection pool
  */
 export const deleteDatabaseConnectionPool = (
-  databaseId: number,
+  databaseID: number,
   poolName: string,
 ) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseId)}/connection-pools/${encodeURIComponent(poolName)}`,
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
     ),
     setMethod('DELETE'),
   );
