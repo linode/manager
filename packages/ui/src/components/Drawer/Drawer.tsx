@@ -34,6 +34,12 @@ export interface DrawerProps extends _DrawerProps {
    */
   title: string;
   /**
+   * Adds a suffix element to the drawer.
+   *
+   * Can be used to indicate special states, such as `BetaChip`, `NewFeatureChip`, or other UI elements next to the title.
+   */
+  titleSuffix?: React.JSX.Element;
+  /**
    * Increases the Drawers width from 480px to 700px on desktop-sized viewports
    * @default false
    */
@@ -56,6 +62,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const {
       children,
       error,
+      titleSuffix,
       isFetching,
       onClose,
       open,
@@ -147,18 +154,20 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         >
           <Grid>
             {isFetching ? null : (
-              <Typography
-                data-qa-drawer-title={lastTitleRef.current}
-                data-testid="drawer-title"
-                id={titleID}
-                sx={(theme) => ({
-                  marginRight: theme.spacing(2),
-                  wordBreak: 'break-word',
-                })}
-                variant="h2"
-              >
-                {lastTitleRef.current}
-              </Typography>
+              <Box alignItems="center" display="flex">
+                <Typography
+                  data-qa-drawer-title={lastTitleRef.current}
+                  data-testid="drawer-title"
+                  id={titleID}
+                  sx={{
+                    wordBreak: 'break-word',
+                  }}
+                  variant="h2"
+                >
+                  {lastTitleRef.current}
+                </Typography>
+                {titleSuffix && <span>{titleSuffix}</span>}
+              </Box>
             )}
           </Grid>
           <Grid>
