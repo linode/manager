@@ -241,7 +241,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
             serviceMetadataError={serviceMetadataError}
             serviceMetadataLoading={serviceMetadataLoading}
           />
-          <AddChannelListing name="channel_ids" />
+          <AddChannelListing
+            name="channel_ids"
+            serviceType={alertDetails.service_type}
+          />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
