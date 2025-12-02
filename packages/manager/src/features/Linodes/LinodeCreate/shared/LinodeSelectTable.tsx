@@ -270,6 +270,10 @@ export const LinodeSelectTable = (props: Props) => {
               <SelectLinodeCard
                 handlePowerOff={() => handlePowerOff(linode)}
                 handleSelection={() => handleSelect(linode)}
+                isCloneable={cloneableLinodes?.some((l) => l.id === linode.id)}
+                isShutdownable={shutdownableLinodes?.some(
+                  (l) => l.id === linode.id
+                )}
                 key={linode.id}
                 linode={linode}
                 selected={linode.id === field.value?.id}
