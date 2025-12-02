@@ -43,7 +43,7 @@ const computeExpectedElements = (
   reference: FirewallPrefixListDrawerProps['reference']
 ) => {
   let title = 'Prefix List details';
-  let button = 'Cancel';
+  let button = 'Close';
   let label = 'Name:';
 
   if (reference?.type === 'ruleset' && reference.modeViewedFrom === 'create') {

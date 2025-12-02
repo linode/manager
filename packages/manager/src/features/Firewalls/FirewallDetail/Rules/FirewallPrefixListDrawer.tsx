@@ -62,23 +62,42 @@ export const FirewallPrefixListDrawer = React.memo(
     const isIPv4InUse = reference?.plRuleRef.inIPv4Rule;
     const isIPv6InUse = reference?.plRuleRef.inIPv6Rule;
 
-    const titleText =
-      reference?.type === 'ruleset' && reference.modeViewedFrom === 'create'
-        ? `Add an ${capitalize(category)} Rule or Rule Set`
-        : reference?.type === 'ruleset' && reference.modeViewedFrom === 'view'
-          ? `${capitalize(category)} Rule Set details`
-          : reference?.type === 'rule' && reference.modeViewedFrom === 'edit'
-            ? 'Edit Rule'
-            : 'Prefix List details';
+    // Returns Prefix List drawer title and back button text based on category and reference
+    const getDrawerTexts = (
+      category: Category,
+      reference?: PrefixListDrawerReference
+    ) => {
+      const defaultTexts = { title: 'Prefix List details', backButton: null };
 
-    const backButtonText =
-      reference?.type === 'ruleset' && reference.modeViewedFrom === 'create'
-        ? `Back to ${capitalize(category)} Rule Set`
-        : reference?.type === 'ruleset' && reference.modeViewedFrom === 'view'
-          ? 'Back to the Rule Set'
-          : reference?.type === 'rule' && reference.modeViewedFrom === 'edit'
-            ? 'Back to Rule'
-            : null;
+      if (!reference) return defaultTexts;
+
+      const { type, modeViewedFrom } = reference;
+
+      if (type === 'ruleset' && modeViewedFrom === 'create') {
+        return {
+          title: `Add an ${capitalize(category)} Rule or Rule Set`,
+          backButton: `Back to ${capitalize(category)} Rule Set`,
+        };
+      }
+
+      if (type === 'ruleset' && modeViewedFrom === 'view') {
+        return {
+          title: `${capitalize(category)} Rule Set details`,
+          backButton: 'Back to the Rule Set',
+        };
+      }
+
+      if (type === 'rule' && modeViewedFrom === 'edit') {
+        return { title: 'Edit Rule', backButton: 'Back to Rule' };
+      }
+
+      return defaultTexts;
+    };
+
+    const { title: titleText, backButton: backButtonText } = getDrawerTexts(
+      category,
+      reference
+    );
 
     const plFieldLabel =
       reference?.type === 'rule' && reference.modeViewedFrom === undefined
@@ -340,7 +359,7 @@ export const FirewallPrefixListDrawer = React.memo(
                 }),
               }}
             >
-              {backButtonText ?? 'Cancel'}
+              {backButtonText ?? 'Close'}
             </Button>
           </Box>
         </Box>
