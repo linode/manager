@@ -1,5 +1,5 @@
 import { useDestinationsQuery } from '@linode/queries';
-import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
+import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
 import { TableBody, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -119,7 +119,7 @@ export const DestinationsLanding = () => {
   };
 
   return (
-    <>
+    <Paper>
       <DeliveryTabHeader
         entity="Destination"
         isSearching={isFetching}
@@ -177,6 +177,16 @@ export const DestinationsLanding = () => {
                 >
                   Last Modified
                 </TableSortCell>
+                <Hidden lgDown>
+                  <TableSortCell
+                    active={orderBy === 'updated_by'}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="updated_by"
+                  >
+                    Last Modified By
+                  </TableSortCell>
+                </Hidden>
                 <TableCell sx={{ width: '5%' }} />
               </TableRow>
             </TableHead>
@@ -188,7 +198,7 @@ export const DestinationsLanding = () => {
                   {...handlers}
                 />
               ))}
-              {destinations?.results === 0 && <TableRowEmpty colSpan={6} />}
+              {destinations?.results === 0 && <TableRowEmpty colSpan={7} />}
             </TableBody>
           </Table>
           <PaginationFooter
@@ -206,6 +216,6 @@ export const DestinationsLanding = () => {
           />
         </>
       )}
-    </>
+    </Paper>
   );
 };

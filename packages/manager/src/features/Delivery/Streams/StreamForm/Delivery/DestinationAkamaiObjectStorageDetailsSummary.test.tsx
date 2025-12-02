@@ -37,7 +37,7 @@ describe('DestinationAkamaiObjectStorageDetailsSummary', () => {
     );
   });
 
-  it('renders info icon next to path when it is empty', async () => {
+  it('does not render log path when it is empty', async () => {
     const details = {
       bucket_name: 'test bucket',
       host: 'test host',
@@ -49,6 +49,6 @@ describe('DestinationAkamaiObjectStorageDetailsSummary', () => {
     );
 
     // Log Path info icon:
-    expect(screen.getByTestId('tooltip-info-icon')).toBeVisible();
+    expect(screen.queryByText('tooltip-info-icon')).not.toBeInTheDocument();
   });
 });
