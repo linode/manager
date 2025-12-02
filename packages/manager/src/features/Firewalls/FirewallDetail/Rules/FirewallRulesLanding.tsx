@@ -176,6 +176,30 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     });
   };
 
+  const openPrefixListDrawer = (
+    category: Category,
+    prefixListLabel: string,
+    reference: PrefixListDrawerReference
+  ) => {
+    setPrefixListDrawer({
+      category,
+      selectedPrefixListLabel: prefixListLabel,
+      reference,
+    });
+  };
+
+  const closePrefixListDrawer = (options?: { closeAll?: boolean }) => {
+    setPrefixListDrawer({
+      selectedPrefixListLabel: undefined,
+      reference: undefined,
+      category: prefixListDrawer.category,
+    });
+
+    if (options?.closeAll) {
+      closeRuleDrawer();
+    }
+  };
+
   /**
    * Rule Editor state hand handlers
    */
@@ -435,13 +459,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           }
           handleDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           handleOpenPrefixListDrawer={(prefixListLabel, plRuleRef) => {
-            setPrefixListDrawer({
-              category: 'inbound',
-              reference: {
-                type: 'rule',
-                plRuleRef,
-              },
-              selectedPrefixListLabel: prefixListLabel,
+            openPrefixListDrawer('inbound', prefixListLabel, {
+              type: 'rule',
+              plRuleRef,
             });
           }}
           handleOpenRuleDrawerForEditing={(idx: number) =>
@@ -481,13 +501,9 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           }
           handleDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           handleOpenPrefixListDrawer={(prefixListLabel, plRuleRef) => {
-            setPrefixListDrawer({
-              category: 'outbound',
-              reference: {
-                type: 'rule',
-                plRuleRef,
-              },
-              selectedPrefixListLabel: prefixListLabel,
+            openPrefixListDrawer('outbound', prefixListLabel, {
+              type: 'rule',
+              plRuleRef,
             });
           }}
           handleOpenRuleDrawerForEditing={(idx: number) =>
@@ -525,14 +541,10 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           plRuleRef,
           referenceType
         ) => {
-          setPrefixListDrawer({
-            category: ruleDrawer.category,
-            reference: {
-              plRuleRef,
-              type: referenceType,
-              modeViewedFrom: ruleDrawer.mode,
-            },
-            selectedPrefixListLabel: prefixListLabel,
+          openPrefixListDrawer(ruleDrawer.category, prefixListLabel, {
+            plRuleRef,
+            type: referenceType,
+            modeViewedFrom: ruleDrawer.mode,
           });
         }}
         isOpen={
@@ -555,16 +567,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       <FirewallPrefixListDrawer
         category={prefixListDrawer.category}
         isOpen={Boolean(prefixListDrawer.selectedPrefixListLabel?.length)}
-        onClose={(options) => {
-          setPrefixListDrawer({
-            selectedPrefixListLabel: undefined,
-            reference: undefined,
-            category: 'inbound',
-          });
-          if (options?.closeAll) {
-            closeRuleDrawer();
-          }
-        }}
+        onClose={closePrefixListDrawer}
         reference={prefixListDrawer.reference}
         selectedPrefixListLabel={prefixListDrawer.selectedPrefixListLabel}
       />
