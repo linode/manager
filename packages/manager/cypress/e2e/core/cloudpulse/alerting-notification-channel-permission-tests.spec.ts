@@ -21,7 +21,6 @@ describe('Notification Channel Listing Page — Access Control', () => {
     mockGetAccount(accountFactory.build());
   });
 
- 
   it('allows access when notificationChannels is enabled', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },
@@ -39,12 +38,14 @@ describe('Notification Channel Listing Page — Access Control', () => {
     cy.visitWithLogin('/linodes');
 
     ui.nav.findItemByTitle('Alerts').should('be.visible').click();
-    ui.tabList.findTabByTitle('Notification Channels').should('be.visible').click();
+    ui.tabList
+      .findTabByTitle('Notification Channels')
+      .should('be.visible')
+      .click();
 
     cy.url().should('endWith', 'alerts/notification-channels');
   });
 
- 
   it('hides the Notification Channels tab when notificationChannels is disabled', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },
@@ -66,7 +67,6 @@ describe('Notification Channel Listing Page — Access Control', () => {
     // Tab should not render at all
     ui.tabList.findTabByTitle('Notification Channels').should('not.exist');
   });
-
 
   it('blocks all access when CloudPulse is disabled', () => {
     const flags: Partial<Flags> = {
