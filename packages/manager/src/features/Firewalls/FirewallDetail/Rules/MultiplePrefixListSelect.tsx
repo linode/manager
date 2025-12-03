@@ -8,13 +8,13 @@ import {
   CloseIcon,
   IconButton,
   InputLabel,
+  LinkButton,
   Stack,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Link } from 'src/components/Link';
 import { useIsFirewallRulesetsPrefixlistsEnabled } from 'src/features/Firewalls/shared';
 
 import { getPrefixListType, groupPriority } from './shared';
@@ -286,10 +286,8 @@ export const MultiplePrefixListSelect = React.memo(
                   />
                 </Box>
                 <Box alignItems="center" display="flex">
-                  <Link
-                    onClick={(e) => {
-                      e.preventDefault();
-
+                  <LinkButton
+                    onClick={() => {
                       handleOpenPrefixListDrawer(thisPL.address, {
                         inIPv4Rule: thisPL.inIPv4Rule,
                         inIPv6Rule: thisPL.inIPv6Rule,
@@ -297,7 +295,7 @@ export const MultiplePrefixListSelect = React.memo(
                     }}
                   >
                     View Details
-                  </Link>
+                  </LinkButton>
                 </Box>
               </Box>
             )}
