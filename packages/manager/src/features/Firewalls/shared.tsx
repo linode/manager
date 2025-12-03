@@ -72,12 +72,24 @@ export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'IPENCAP', value: 'IPENCAP' },
 ];
 
-export const addressOptions = [
-  { label: 'All IPv4, All IPv6', value: 'all' },
-  { label: 'All IPv4', value: 'allIPv4' },
-  { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask', value: 'ip/netmask' },
-];
+export const useAddressOptions = () => {
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  return [
+    { label: 'All IPv4, All IPv6', value: 'all' },
+    { label: 'All IPv4', value: 'allIPv4' },
+    { label: 'All IPv6', value: 'allIPv6' },
+    {
+      label: isFirewallRulesetsPrefixlistsFeatureEnabled
+        ? 'IP / Netmask / Prefix List'
+        : 'IP / Netmask',
+      // We can keep this entire value even if the option is feature-flagged.
+      // Feature-flagging the label (without the "Prefix List" text) is sufficient.
+      value: 'ip/netmask/prefixlist',
+    },
+  ];
+};
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
   dns: '53',

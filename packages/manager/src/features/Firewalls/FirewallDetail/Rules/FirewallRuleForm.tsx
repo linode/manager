@@ -1,6 +1,7 @@
 import {
   ActionsPanel,
   Autocomplete,
+  Box,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -14,14 +15,16 @@ import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
-  addressOptions,
   firewallOptionItemsShort,
   portPresets,
   protocolOptions,
+  useAddressOptions,
+  useIsFirewallRulesetsPrefixlistsEnabled,
 } from 'src/features/Firewalls/shared';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
+import { MultiplePrefixListSelect } from './MutiplePrefixListSelect';
 import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
 
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
@@ -29,7 +32,7 @@ import type {
   FirewallOptionItem,
   FirewallPreset,
 } from 'src/features/Firewalls/shared';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 
 const ipNetmaskTooltipText =
   'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';
@@ -44,16 +47,23 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     handleChange,
     handleSubmit,
     ips,
+    pls,
     mode,
     presetPorts,
     ruleErrors,
     setFieldError,
     setFieldValue,
     setIPs,
+    setPLs,
     setPresetPorts,
     touched,
     values,
   } = props;
+
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  const addressOptions = useAddressOptions();
 
   const hasCustomInput = presetPorts.some(
     (thisPort) => thisPort.value === PORT_PRESETS['CUSTOM'].value
@@ -146,10 +156,17 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   const handleAddressesChange = React.useCallback(
     (item: string) => {
       setFieldValue('addresses', item);
-      // Reset custom IPs
-      setIPs([{ address: '' }]);
+      // Reset custom IPs & PLs
+      if (isFirewallRulesetsPrefixlistsFeatureEnabled) {
+        // For "IP / Netmask / Prefix List": reset both custom IPs and PLs
+        setIPs([]);
+        setPLs([]);
+      } else {
+        // For "IP / Netmask": reset IPs to at least one empty input
+        setIPs([{ address: '' }]);
+      }
     },
-    [setFieldValue, setIPs]
+    [setFieldValue, setIPs, setPLs, isFirewallRulesetsPrefixlistsFeatureEnabled]
   );
 
   const handleActionChange = React.useCallback(
@@ -171,6 +188,13 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 
     setIPs(_ipsWithMasks);
   };
+
+  const handlePrefixListChange = React.useCallback(
+    (_pls: ExtendedPL[]) => {
+      setPLs(_pls);
+    },
+    [setPLs]
+  );
 
   const handlePortPresetChange = React.useCallback(
     (items: FirewallOptionItem<string>[]) => {
@@ -195,7 +219,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     return (
       addressOptions.find(
         (thisOption) => thisOption.value === values.addresses
-      ) || undefined
+      ) ?? null
     );
   }, [values]);
 
@@ -294,27 +318,41 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         }}
         options={addressOptions}
         placeholder={`Select ${addressesLabel}s...`}
+        required
         textFieldProps={{
-          InputProps: {
-            required: true,
-          },
           dataAttrs: {
             'data-qa-address-source-select': true,
           },
         }}
         value={addressesValue}
       />
-      {/* Show this field only if "IP / Netmask has been selected." */}
-      {values.addresses === 'ip/netmask' && (
-        <StyledMultipleIPInput
-          aria-label="IP / Netmask for Firewall rule"
-          ips={ips}
-          onBlur={handleIPBlur}
-          onChange={handleIPChange}
-          placeholder={ipFieldPlaceholder}
-          title="IP / Netmask"
-          tooltip={ipNetmaskTooltipText}
-        />
+      {/* Show this field only if "IP / Netmask / Prefix List has been selected." */}
+      {values.addresses === 'ip/netmask/prefixlist' && (
+        <Box
+          marginLeft={(theme) =>
+            isFirewallRulesetsPrefixlistsFeatureEnabled
+              ? theme.spacingFunction(24)
+              : 0
+          }
+        >
+          <StyledMultipleIPInput
+            aria-label="IP / Netmask for Firewall rule"
+            canRemoveFirstInput={isFirewallRulesetsPrefixlistsFeatureEnabled}
+            ips={ips}
+            onBlur={handleIPBlur}
+            onChange={handleIPChange}
+            placeholder={ipFieldPlaceholder}
+            title={ips.length > 0 ? 'IP / Netmask' : ''}
+            tooltip={ipNetmaskTooltipText}
+          />
+          {isFirewallRulesetsPrefixlistsFeatureEnabled && (
+            <MultiplePrefixListSelect
+              aria-label="Prefix List for Firewall rule"
+              onChange={handlePrefixListChange}
+              pls={pls}
+            />
+          )}
+        </Box>
       )}
       <StyledDiv>
         <Typography>
@@ -357,6 +395,6 @@ const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
 
 const StyledMultipleIPInput = styled(MultipleIPInput, {
   label: 'StyledMultipleIPInput',
-})(({ theme }) => ({
-  marginTop: theme.spacingFunction(16),
+})(({ theme, ips }) => ({
+  ...(ips.length !== 0 ? { marginTop: theme.spacingFunction(16) } : {}),
 }));
