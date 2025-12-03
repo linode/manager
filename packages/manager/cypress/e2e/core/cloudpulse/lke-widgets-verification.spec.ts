@@ -250,6 +250,9 @@ describe('Integration Tests for LKE Enterprise Dashboard ', () => {
 
     cy.get('@clusterDropdown').click();
 
+    // Validate tooltip immediately after opening the dropdown
+    ui.tooltip.findByText(CLUSTERS_TOOLTIP_TEXT).should('be.visible');
+
     cy.get('[data-testid="autocomplete-popper"] li')
       .should('have.length', 3)
       .then(($items) => {
@@ -275,8 +278,6 @@ describe('Integration Tests for LKE Enterprise Dashboard ', () => {
 
     // Reopen the dropdown if needed
     cy.get('@clusterDropdown').click();
-
-    ui.tooltip.findByText(CLUSTERS_TOOLTIP_TEXT).should('be.visible');
 
     cy.findByText(resource).should('be.visible');
 
