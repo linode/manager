@@ -80,9 +80,15 @@ const fillOutStackscriptForm = (
     cy.findByLabelText('Description').should('be.visible').click();
     cy.focused().type(description);
   }
-
-  ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
-  ui.autocompletePopper.findByTitle(targetImage).should('be.visible').click();
+  ui.autocomplete
+    .findByLabel('Target Images')
+    .should('be.visible')
+    .type(targetImage);
+  // need selector in case item label is same as category label
+  ui.autocompletePopper
+    .findByTitle(targetImage, { selector: 'li div p' })
+    .should('be.visible')
+    .click();
   ui.autocomplete.findByLabel('Target Images').click(); // Close autocomplete popper
 
   // Insert a script.
@@ -187,7 +193,9 @@ describe('Create stackscripts', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     // use random image. can specify image w/ getImageByLabel, then set images option in chooseImage
-    const randomImage = chooseImage();
+    const randomImage = chooseImage({
+      capabilities: ['cloud-init', 'distributed-sites'],
+    });
     const stackscriptImage = randomImage.label;
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
