@@ -388,4 +388,21 @@ describe('MultiplePrefixListSelect', () => {
       { address: 'pl::supports-both', inIPv4Rule: true, inIPv6Rule: true },
     ]);
   });
+
+  it('calls handleOpenPrefixListDrawer with correct arguments when clicking "View Details"', async () => {
+    const pls = [
+      { address: 'pl::supports-both', inIPv4Rule: true, inIPv6Rule: false },
+    ];
+
+    const { getByText } = renderWithTheme(
+      <MultiplePrefixListSelect {...baseProps} pls={pls} />
+    );
+
+    await userEvent.click(getByText('View Details'));
+
+    expect(baseProps.handleOpenPrefixListDrawer).toHaveBeenCalledWith(
+      'pl::supports-both',
+      { inIPv4Rule: true, inIPv6Rule: false }
+    );
+  });
 });
