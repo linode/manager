@@ -198,7 +198,7 @@ export const useDatabaseBackupsQuery = (
     enabled,
   });
 
-export const useDatabaseConnectionPool = (
+export const useDatabaseConnectionPoolQuery = (
   databaseId: number,
   poolName: string,
   enabled: boolean = false,
@@ -208,15 +208,18 @@ export const useDatabaseConnectionPool = (
       .database('postgresql', databaseId)
       ._ctx.connectionPools._ctx.pool(poolName),
     enabled,
+    refetchInterval: 20000,
   });
 
-export const useDatabaseConnectionPools = (
+export const useDatabaseConnectionPoolsQuery = (
   databaseId: number,
   enabled: boolean = false,
+  params: Params,
 ) =>
   useQuery<ResourcePage<ConnectionPool>, APIError[]>({
-    ...databaseQueries.database('postgresql', databaseId)._ctx.connectionPools
-      ._ctx.pools,
+    ...databaseQueries
+      .database('postgresql', databaseId)
+      ._ctx.connectionPools._ctx.paginated(params),
     enabled,
   });
 
