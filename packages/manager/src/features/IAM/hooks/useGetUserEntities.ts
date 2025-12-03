@@ -21,7 +21,7 @@ export const useGetUserEntities = (props: UseGetUserEntitiesProps) => {
    * This is used to determine which entity types to query for.
    */
   const entityTypes = React.useMemo(() => {
-    return userRoles?.entity_access.map((entity) => entity.type) ?? [];
+    return userRoles?.entity_access?.map((entity) => entity.type) ?? [];
   }, [userRoles]);
 
   /**

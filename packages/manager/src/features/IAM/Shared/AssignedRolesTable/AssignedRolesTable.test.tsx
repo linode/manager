@@ -10,7 +10,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AssignedRolesTable } from './AssignedRolesTable';
 
 const queryMocks = vi.hoisted(() => ({
-  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
@@ -18,6 +17,7 @@ const queryMocks = vi.hoisted(() => ({
   useIsDefaultDelegationRolesForChildAccount: vi.fn().mockReturnValue({
     isDefaultDelegationRolesForChildAccount: false,
   }),
+  useGetUserEntities: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -28,14 +28,6 @@ vi.mock('@linode/queries', async () => {
     useUserRoles: queryMocks.useUserRoles,
     useGetDefaultDelegationAccessQuery:
       queryMocks.useGetDefaultDelegationAccessQuery,
-  };
-});
-
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
-  return {
-    ...actual,
-    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -50,6 +42,10 @@ vi.mock('@tanstack/react-router', async () => {
 vi.mock('../../hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
+}));
+
+vi.mock('../../hooks/useGetUserEntities', () => ({
+  useGetUserEntities: queryMocks.useGetUserEntities,
 }));
 
 const mockEntities = [
@@ -72,6 +68,11 @@ describe('AssignedRolesTable', () => {
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
     });
+    queryMocks.useGetUserEntities.mockReturnValue({
+      userEntities: mockEntities,
+      isLoading: false,
+      error: null,
+    });
   });
 
   it('should display no roles text if there are no roles assigned to user', async () => {
@@ -91,10 +92,6 @@ describe('AssignedRolesTable', () => {
 
     queryMocks.useAccountRoles.mockReturnValue({
       data: mockAccountRoles,
-    });
-
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
     });
 
     renderWithTheme(<AssignedRolesTable />);
@@ -121,10 +118,6 @@ describe('AssignedRolesTable', () => {
       data: mockAccountRoles,
     });
 
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
-    });
-
     renderWithTheme(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
@@ -144,10 +137,6 @@ describe('AssignedRolesTable', () => {
       data: mockAccountRoles,
     });
 
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
-    });
-
     renderWithTheme(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
@@ -165,10 +154,6 @@ describe('AssignedRolesTable', () => {
 
     queryMocks.useAccountRoles.mockReturnValue({
       data: mockAccountRoles,
-    });
-
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
     });
 
     renderWithTheme(<AssignedRolesTable />);
@@ -192,10 +177,6 @@ describe('AssignedRolesTable', () => {
 
     queryMocks.useAccountRoles.mockReturnValue({
       data: mockAccountRoles,
-    });
-
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
     });
 
     renderWithTheme(<AssignedRolesTable />);
