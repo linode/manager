@@ -1,9 +1,9 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
-import { NetworkLoadBalancersListenerDetail } from './NetworkLoadBalancersListenerDetail';
+import NetworkLoadBalancersListenerDetail from './NetworkLoadBalancersListenerDetail';
 
-export const NetworkLoadBalancersListenerDetailLazyRoute = createLazyRoute(
-  '/netloadbalancers/$id/listeners/$listenerId'
+export const networkLoadBalancersListenerDetailLazyRoute = createLazyRoute(
+  '/netloadbalancers/$id/listeners/$listenerId/nodes'
 )({
   component: NetworkLoadBalancersListenerDetail,
 });
