@@ -267,7 +267,7 @@ describe('ViewRuleSetDetailsDrawer', () => {
       expect(getByText(`${capitalize(category)} Rules`)).toBeVisible();
 
       // Cancel button
-      expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+      expect(getByRole('button', { name: 'Close' })).toBeVisible();
     }
   );
 });
