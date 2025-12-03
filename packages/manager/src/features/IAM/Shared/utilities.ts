@@ -325,7 +325,7 @@ export const groupAccountEntitiesByType = (
 
 export const changeRoleForEntity = (
   entityRoles: EntityAccess[],
-  entityId: number,
+  entityId: EntityId,
   entityType: AccessType,
   initialRole: EntityRoleType,
   newRole: EntityRoleType
@@ -392,7 +392,7 @@ export const toEntityAccess = (
 export const deleteUserEntity = (
   entityRoles: EntityAccess[],
   roleName: EntityRoleType,
-  entityId: number,
+  entityId: EntityId,
   entityType: AccessType
 ): EntityAccess[] => {
   return entityRoles

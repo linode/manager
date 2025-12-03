@@ -1,5 +1,7 @@
 import {
+  iamQueries,
   useGetDefaultDelegationAccessQuery,
+  useQueries,
   useUserRoles,
 } from '@linode/queries';
 import { Select, Typography, useTheme } from '@linode/ui';
@@ -21,7 +23,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
@@ -103,12 +104,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const [selectedRole, setSelectedRole] = React.useState<EntitiesRole>();
 
   const {
-    data: entities,
-    error: entitiesError,
-    isLoading: entitiesLoading,
-  } = useAllAccountEntities({});
-
-  const {
     data: assignedUserRoles,
     error: assignedUserRolesError,
     isLoading: assignedUserRolesLoading,
@@ -137,6 +132,34 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const permissionToCheck = isDefaultDelegationRolesForChildAccount
     ? permissions?.update_default_delegate_access
     : permissions?.is_account_admin;
+
+  const entityTypes = React.useMemo(() => {
+    return assignedUserRoles?.entity_access.map((entity) => entity.type) ?? [];
+  }, [assignedUserRoles]);
+  const entityQueries = useQueries({
+    queries: entityTypes.map((type) => ({
+      ...iamQueries.user(username ?? '')._ctx.allUserEntities(type),
+      enabled: !!username,
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
+
+  const {
+    entities,
+    isLoading: entitiesLoading,
+    error: entitiesError,
+  } = React.useMemo(() => {
+    const isLoading = entityQueries.some((q) => q.isLoading);
+    const error = entityQueries.some((q) => q.error);
+
+    if (isLoading) {
+      return { entities: undefined, isLoading: true };
+    }
+
+    const entities = entityQueries.map((q) => q.data || []).flat();
+
+    return { entities, error, isLoading: false };
+  }, [entityQueries]);
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
