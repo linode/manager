@@ -52,6 +52,12 @@ const computeExpectedElements = (
     label = 'Prefix List Name:';
   }
 
+  if (context?.type === 'rule' && context.modeViewedFrom === 'create') {
+    title = `Add an ${capitalize(category)} Rule or Rule Set`;
+    button = `Back to ${capitalize(category)} Rule`;
+    label = 'Prefix List Name:';
+  }
+
   if (context?.type === 'ruleset' && context.modeViewedFrom === 'view') {
     title = `${capitalize(category)} Rule Set details`;
     button = 'Back to the Rule Set';
@@ -94,6 +100,15 @@ describe('PrefixListDrawer', () => {
       category: 'inbound',
       context: {
         type: 'ruleset',
+        modeViewedFrom: 'create',
+        plRuleRef: { inIPv4Rule: true, inIPv6Rule: true },
+      },
+    },
+    {
+      ...baseProps,
+      category: 'inbound',
+      context: {
+        type: 'rule',
         modeViewedFrom: 'create',
         plRuleRef: { inIPv4Rule: true, inIPv6Rule: true },
       },
