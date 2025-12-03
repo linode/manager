@@ -21,6 +21,7 @@ import { getPrefixListType, groupPriority } from './shared';
 
 import type { FirewallPrefixList } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+import type { PrefixListRuleReference } from 'src/features/Firewalls/shared';
 import type { ExtendedPL } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -89,6 +90,14 @@ export interface MultiplePrefixListSelectProps {
   disabled?: boolean;
 
   /**
+   * Opens the Prefix List details drawer for the given Prefix List.
+   */
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
+
+  /**
    * Callback triggered when PLs change, passing updated `pls`.
    */
   onChange: (pls: ExtendedPL[]) => void;
@@ -106,7 +115,8 @@ export interface MultiplePrefixListSelectProps {
 
 export const MultiplePrefixListSelect = React.memo(
   (props: MultiplePrefixListSelectProps) => {
-    const { className, disabled, pls, onChange } = props;
+    const { className, disabled, handleOpenPrefixListDrawer, onChange, pls } =
+      props;
     const { classes, cx } = useStyles();
     const {
       isFirewallRulesetsPrefixlistsFeatureEnabled,
@@ -276,7 +286,18 @@ export const MultiplePrefixListSelect = React.memo(
                   />
                 </Box>
                 <Box alignItems="center" display="flex">
-                  <Link onClick={() => {}}>View Details</Link>
+                  <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      handleOpenPrefixListDrawer(thisPL.address, {
+                        inIPv4Rule: thisPL.inIPv4Rule,
+                        inIPv6Rule: thisPL.inIPv6Rule,
+                      });
+                    }}
+                  >
+                    View Details
+                  </Link>
                 </Box>
               </Box>
             )}
