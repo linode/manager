@@ -10,7 +10,6 @@ import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
 
@@ -20,6 +19,8 @@ interface Props {
   disabled?: boolean;
   handlePowerOff: () => void;
   handleSelection: () => void;
+  isCloneable: boolean;
+  isShutdownable: boolean;
   linode: Linode;
   selected?: boolean;
   showPowerActions: boolean;
@@ -29,6 +30,8 @@ export const SelectLinodeCard = ({
   disabled,
   handlePowerOff,
   handleSelection,
+  isCloneable,
+  isShutdownable,
   linode,
   selected,
   showPowerActions,
@@ -43,12 +46,6 @@ export const SelectLinodeCard = ({
   const { data: linodeImage } = useImageQuery(
     linode?.image ?? '',
     Boolean(linode?.image)
-  );
-
-  const { data: permissions } = usePermissions(
-    'linode',
-    ['shutdown_linode', 'clone_linode'],
-    linode.id
   );
 
   const iconStatus = getLinodeIconStatus(linode?.status);
@@ -79,7 +76,7 @@ export const SelectLinodeCard = ({
         {shouldShowPowerButton && (
           <Button
             buttonType="outlined"
-            disabled={!permissions.shutdown_linode}
+            disabled={!isShutdownable}
             onClick={handlePowerOff}
           >
             Power Off
@@ -92,7 +89,7 @@ export const SelectLinodeCard = ({
   return (
     <SelectionCard
       checked={selected}
-      disabled={!permissions.clone_linode || disabled}
+      disabled={!isCloneable || disabled}
       heading={linode.label}
       key={`selection-card-${linode.id}`}
       onClick={handleSelection}
