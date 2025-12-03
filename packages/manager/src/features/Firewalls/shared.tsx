@@ -72,12 +72,24 @@ export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'IPENCAP', value: 'IPENCAP' },
 ];
 
-export const addressOptions = [
-  { label: 'All IPv4, All IPv6', value: 'all' },
-  { label: 'All IPv4', value: 'allIPv4' },
-  { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask', value: 'ip/netmask' },
-];
+export const useAddressOptions = () => {
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  return [
+    { label: 'All IPv4, All IPv6', value: 'all' },
+    { label: 'All IPv4', value: 'allIPv4' },
+    { label: 'All IPv6', value: 'allIPv6' },
+    {
+      label: isFirewallRulesetsPrefixlistsFeatureEnabled
+        ? 'IP / Netmask / Prefix List'
+        : 'IP / Netmask',
+      // We can keep this entire value even if the option is feature-flagged.
+      // Feature-flagging the label (without the "Prefix List" text) is sufficient.
+      value: 'ip/netmask/prefixlist',
+    },
+  ];
+};
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
   dns: '53',
@@ -251,8 +263,11 @@ export const generateAddressesLabel = (
   return 'None';
 };
 
-export type PrefixListReference = { inIPv4Rule: boolean; inIPv6Rule: boolean };
-export type PrefixListReferenceMap = Record<string, PrefixListReference>;
+export type PrefixListRuleReference = {
+  inIPv4Rule: boolean;
+  inIPv6Rule: boolean;
+};
+export type PrefixListReferenceMap = Record<string, PrefixListRuleReference>;
 
 const isPrefixList = (ip: string) => ip.startsWith('pl:');
 
@@ -309,7 +324,7 @@ export const buildPrefixListReferenceMap = (addresses: {
 /**
  * Represents the Firewall Rule IP families to which a Prefix List (PL) is attached or referenced.
  *
- * Used for display and logic purposes, e.g., appending to a PL label in the UI as:
+ * Used to display a suffix next to the Prefix List label in the UI, e.g.,:
  * "pl:system:example (IPv4)", "pl:system:example (IPv6)", or "pl:system:example (IPv4, IPv6)".
  *
  * The value indicates which firewall IPs the PL applies to:
@@ -331,11 +346,11 @@ interface GenerateAddressesLabelV2Options {
    * Optional callback invoked when a prefix list label is clicked.
    *
    * @param prefixListLabel - The label of the clicked prefix list (e.g., "pl:system:test")
-   * @param plRuleRefTag - Indicates which firewall rule IP family(s) this PL belongs to: `(IPv4)`, `(IPv6)`, or `(IPv4, IPv6)`
+   * @param plRuleRef - Indicates whether the PL is referenced in the IPv4 and/or IPv6 firewall rule
    */
   onPrefixListClick?: (
     prefixListLabel: string,
-    plRuleRefTag: FirewallRulePrefixListReferenceTag
+    plRuleRef: PrefixListRuleReference
   ) => void;
   /**
    * Whether to show the truncation "+N" chip with a scrollable tooltip
@@ -416,7 +431,7 @@ export const generateAddressesLabelV2 = (
         key={pl}
         onClick={(e) => {
           e.preventDefault();
-          onPrefixListClick?.(pl, plRuleRefTag);
+          onPrefixListClick?.(pl, reference);
         }}
       >
         {`${pl} ${plRuleRefTag}`}
