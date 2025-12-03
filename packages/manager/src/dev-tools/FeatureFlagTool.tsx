@@ -31,8 +31,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   {
-    flag: 'firewallRulesetsPrefixlists',
-    label: 'Firewall Rulesets & Prefixlists',
+    flag: 'fwRulesetsPrefixLists',
+    label: 'Firewall RuleSets and Prefix Lists (JSON-based)',
   },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'generationalPlansv2', label: 'Generational compute plans' },
@@ -50,6 +50,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
+  { flag: 'databasePgBouncer', label: 'Database PgBouncer' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'databaseVpc', label: 'Database VPC' },

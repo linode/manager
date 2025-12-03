@@ -46,8 +46,11 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
       </Hidden>
       <Hidden lgDown>
         <TableCell>
-          <DateTimeDisplay value={stream.created} />
+          <DateTimeDisplay value={stream.updated} />
         </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>{stream.updated_by}</TableCell>
       </Hidden>
       <TableCell actionCell>
         <StreamActionMenu

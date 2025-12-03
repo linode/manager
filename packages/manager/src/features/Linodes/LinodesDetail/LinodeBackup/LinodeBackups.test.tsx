@@ -10,7 +10,7 @@ import type { LinodeBackupsResponse } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
-  userPermissions: vi.fn(() => ({
+  usePermissions: vi.fn(() => ({
     data: {
       list_linode_backups: true,
       create_linode_backup_snapshot: true,
@@ -19,11 +19,6 @@ const queryMocks = vi.hoisted(() => ({
       restore_linode_backup: true,
     },
   })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
-    isLoading: false,
-    isError: false,
-  }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -35,8 +30,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+  usePermissions: queryMocks.usePermissions,
 }));
 
 describe('LinodeBackups', () => {

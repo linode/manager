@@ -3,25 +3,29 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
 const queryMocks = vi.hoisted(() => ({
-  userPermissions: vi.fn(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({
     data: { create_firewall: true },
-  })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
     isLoading: false,
-    isError: false,
+    error: null,
   }),
 }));
 
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+  };
+});
+
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
+  usePermissions: queryMocks.usePermissions,
 }));
 
 const props = {
@@ -80,11 +84,13 @@ describe('Create Firewall Drawer', () => {
   });
 
   it('shows custom firewall radio group if Linode Interfaces is enabled and can toggle radio group', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Linode Interfaces'],
+    queryMocks.useAccount.mockReturnValue({
+      data: accountFactory.build({
+        capabilities: ['Linode Interfaces'],
+      }),
+      isLoading: false,
+      error: null,
     });
-
-    server.use(http.get('*/v4*/account', () => HttpResponse.json(account)));
 
     const { getByLabelText, findByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />,
@@ -119,8 +125,10 @@ describe('Create Firewall Drawer', () => {
   });
 
   it('enables the submit button if the user has create_firewall permission', () => {
-    queryMocks.userPermissions.mockReturnValue({
+    queryMocks.usePermissions.mockReturnValue({
       data: { create_firewall: true },
+      isLoading: false,
+      error: null,
     });
 
     renderWithTheme(<CreateFirewallDrawer {...props} />);
@@ -129,8 +137,10 @@ describe('Create Firewall Drawer', () => {
   });
 
   it('disables the submit button if the user does not have create_firewall permission', () => {
-    queryMocks.userPermissions.mockReturnValue({
+    queryMocks.usePermissions.mockReturnValue({
       data: { create_firewall: false },
+      isLoading: false,
+      error: null,
     });
 
     renderWithTheme(<CreateFirewallDrawer {...props} />);

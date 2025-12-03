@@ -14,18 +14,9 @@ const queryMocks = vi.hoisted(() => ({
       delete_vpc: true,
     },
   })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [
-      { id: 1, label: 'linode-1' },
-      { id: 2, label: 'linode-2' },
-    ],
-    isLoading: false,
-    isError: false,
-  }),
 }));
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 afterEach(() => {
   vi.clearAllMocks();

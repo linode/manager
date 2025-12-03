@@ -1,3 +1,5 @@
+import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Box,
   Checkbox,
@@ -8,6 +10,10 @@ import {
   Typography,
 } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
+import { styled, type Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
@@ -17,6 +23,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { sortData } from 'src/components/OrderBy';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Table } from 'src/components/Table';
 import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -41,11 +48,17 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const { control, setValue, formState, trigger } =
     useFormContext<StreamAndDestinationFormType>();
 
+  const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const { gecko2 } = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
+  const { data: regions } = useRegionsQuery();
+
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(MIN_PAGE_SIZE);
   const [searchText, setSearchText] = useState<string>('');
+  const [regionFilter, setRegionFilter] = useState<string>('');
 
   const {
     data: clusters = [],
@@ -119,20 +132,30 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
     }
   };
 
-  const filteredClusters = !searchText
-    ? clusters
-    : clusters.filter((cluster) => {
-        const lowerSearch = searchText.toLowerCase();
+  const filteredClusters =
+    !searchText && !regionFilter
+      ? clusters
+      : clusters.filter((cluster) => {
+          const lowerSearch = searchText.toLowerCase();
 
-        return (
-          cluster.label.toLowerCase().includes(lowerSearch) ||
-          cluster.region.toLowerCase().includes(lowerSearch) ||
-          (cluster.control_plane.audit_logs_enabled
-            ? 'enabled'
-            : 'disabled'
-          ).includes(lowerSearch)
-        );
-      });
+          let result = true;
+
+          if (searchText) {
+            result =
+              cluster.label.toLowerCase().includes(lowerSearch) ||
+              cluster.region.toLowerCase().includes(lowerSearch) ||
+              (cluster.control_plane.audit_logs_enabled
+                ? 'enabled'
+                : 'disabled'
+              ).includes(lowerSearch);
+          }
+
+          if (result && regionFilter) {
+            return cluster.region === regionFilter;
+          }
+
+          return result;
+        });
 
   const sortedAndFilteredClusters = sortData<KubernetesCluster>(
     orderBy,
@@ -201,24 +224,49 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               )}
             />
           </div>
-          <DebouncedSearchTextField
-            clearable
-            containerProps={{
-              sx: {
-                width: '40%',
-                mt: 2,
-              },
+          <StyledGrid
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flexWrap: xsDown ? 'wrap' : 'nowrap',
+              gap: 3,
+              justifyContent: 'space-between',
+              flex: '1 1 auto',
+              mt: 2,
             }}
-            debounceTime={250}
-            hideLabel
-            inputProps={{
-              'data-pendo-id': `Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`,
-            }}
-            label="Search"
-            onSearch={(value) => setSearchText(value)}
-            placeholder="Search"
-            value={searchText}
-          />
+          >
+            <DebouncedSearchTextField
+              clearable
+              containerProps={{
+                sx: {
+                  width: '40%',
+                },
+              }}
+              debounceTime={250}
+              hideLabel
+              inputProps={{
+                'data-pendo-id': `Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`,
+              }}
+              label="Search"
+              onSearch={(value) => setSearchText(value)}
+              placeholder="Search"
+              value={searchText}
+            />
+            <RegionSelect
+              currentCapability="Object Storage"
+              isGeckoLAEnabled={isGeckoLAEnabled}
+              label="Region"
+              onChange={(_, region) => {
+                setRegionFilter(region?.id ?? '');
+              }}
+              regionFilter="core"
+              regions={regions ?? []}
+              sx={{
+                width: '280px !important',
+              }}
+              value={regionFilter}
+            />
+          </StyledGrid>
           <Box sx={{ mt: 2 }}>
             {!isAutoAddAllClustersEnabled &&
               formState.errors.stream?.details?.cluster_ids?.message && (
@@ -258,3 +306,18 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
     </Paper>
   );
 };
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+  '& .MuiAutocomplete-root > .MuiBox-root': {
+    display: 'flex',
+
+    '& > .MuiBox-root': {
+      margin: '0',
+
+      '& > .MuiInputLabel-root': {
+        margin: 0,
+        marginRight: theme.spacingFunction(12),
+      },
+    },
+  },
+}));

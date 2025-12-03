@@ -16,7 +16,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 import {
-  generateAddressesLabel,
+  generateAddressesLabelV2,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
 import { StyledLabel, StyledListItem, useStyles } from './shared.styles';
@@ -28,6 +28,7 @@ export const FirewallRuleSetForm = React.memo(
     const {
       category,
       errors,
+      handleOpenPrefixListDrawer,
       handleSubmit,
       setFieldTouched,
       setFieldValue,
@@ -38,11 +39,11 @@ export const FirewallRuleSetForm = React.memo(
 
     const { classes } = useStyles();
 
-    const { isFirewallRulesetsPrefixlistsEnabled } =
+    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
       useIsFirewallRulesetsPrefixlistsEnabled();
 
     const { data, error, isLoading } = useAllFirewallRuleSetsQuery(
-      isFirewallRulesetsPrefixlistsEnabled
+      isFirewallRulesetsPrefixlistsFeatureEnabled
     );
 
     const ruleSets = data ?? [];
@@ -57,6 +58,7 @@ export const FirewallRuleSetForm = React.memo(
     const ruleSetDropdownOptions = React.useMemo(
       () =>
         ruleSets
+          // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
           .filter((ruleSet) => ruleSet.type === category) // Display only rule sets applicable to the given category
           .map((ruleSet) => ({
             label: ruleSet.label,
@@ -211,7 +213,11 @@ export const FirewallRuleSetForm = React.memo(
                     />
                     <Box>
                       {rule.protocol};&nbsp;{rule.ports};&nbsp;
-                      {generateAddressesLabel(rule.addresses)}
+                      {generateAddressesLabelV2({
+                        addresses: rule.addresses,
+                        onPrefixListClick: handleOpenPrefixListDrawer,
+                        showTruncateChip: false,
+                      })}
                     </Box>
                   </StyledListItem>
                 ))}

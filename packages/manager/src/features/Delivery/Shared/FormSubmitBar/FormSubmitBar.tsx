@@ -1,5 +1,6 @@
 import { Box, Button, Divider, Paper, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
+import { Link } from '@mui/material';
 import * as React from 'react';
 import { useMemo } from 'react';
 
@@ -64,9 +65,11 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
           </>
         )}
         <Divider dark spacingBottom={0} spacingTop={16} />
-        <Typography mb={1}>
-          Stream provisioning may take up to 45 minutes.
-        </Typography>
+        {formType === 'stream' && (
+          <Typography mb={1}>
+            Stream provisioning may take up to 45 minutes.
+          </Typography>
+        )}
         <Button
           buttonType="outlined"
           data-pendo-id={`${pagePendoId}-Test Connection`}
@@ -96,6 +99,22 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
         >
           {buttonLabel}
         </Button>
+        {formType === 'stream' && (
+          <Typography mb={1}>
+            By using this service, you acknowledge your obligations under the
+            United States Department of Justice Bulk Sensitive Data Transaction
+            Rule (&#34;BSD Rule&#34;). You also agree that you will not use the
+            service to transfer, onward transfer, or otherwise make accessible
+            any United States government-related data or bulk United States
+            sensitive personal data to countries of concern or a covered person,
+            as each of those terms and concepts are defined in the{' '}
+            <Link href="https://www.federalregister.gov/documents/2024/03/01/2024-04573/preventing-access-to-americans-bulk-sensitive-personal-data-and-united-states-government-related">
+              BSD Rule
+            </Link>
+            . Anyone using the service is solely responsible for compliance with
+            the BSD Rule.
+          </Typography>
+        )}
       </Stack>
     </Paper>
   );

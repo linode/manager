@@ -90,7 +90,6 @@ describe('Drawer', () => {
     );
     const iconButton = getByLabelText('back navigation');
 
-    // Assert that the IconButton is in the document
     expect(iconButton).toBeVisible();
   });
 });

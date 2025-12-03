@@ -26,7 +26,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       justifyContent: 'flex-start',
     },
     paddingLeft: 0,
-    paddingTop: theme.spacing(1.5),
+    paddingTop: theme.spacingFunction(12),
   },
   button: {
     '& > span': {
@@ -69,6 +69,12 @@ export interface MultipeIPInputProps {
    * Text displayed on the button.
    */
   buttonText?: string;
+
+  /**
+   * Whether the first input field can be removed.
+   * @default false
+   */
+  canRemoveFirstInput?: boolean;
 
   /**
    * Custom CSS class for additional styling.
@@ -155,6 +161,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const {
     adjustSpacingForVPCDualStack,
     buttonText,
+    canRemoveFirstInput,
     className,
     disabled,
     error,
@@ -244,8 +251,8 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           <TooltipIcon
             status="info"
             sxTooltipIcon={{
-              marginLeft: '-4px',
-              marginTop: '-15px',
+              marginTop: '-8px',
+              padding: '4px',
             }}
             text={tooltip}
             tooltipPosition="right"
@@ -304,7 +311,10 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
              * used in DBaaS or for Linode VPC interfaces
              */}
             <Grid size={1}>
-              {(idx > 0 || forDatabaseAccessControls || forVPCIPRanges) && (
+              {(idx > 0 ||
+                forDatabaseAccessControls ||
+                forVPCIPRanges ||
+                canRemoveFirstInput) && (
                 <IconButton
                   aria-disabled={disabled}
                   className={classes.button}
