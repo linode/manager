@@ -179,7 +179,7 @@ describe('NodesTable', () => {
     );
 
     const searchField = getByPlaceholderText(
-      'Search ID, Linode ID or IP Address'
+      'Search Node ID, Linode ID or IP address'
     );
     expect(searchField).toBeVisible();
   });
