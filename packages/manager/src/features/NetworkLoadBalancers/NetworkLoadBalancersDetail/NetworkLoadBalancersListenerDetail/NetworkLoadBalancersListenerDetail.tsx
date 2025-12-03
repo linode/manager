@@ -1,45 +1,44 @@
 import {
-  useNetworkLoadBalancerListenerQuery,
+  useNetworkLoadBalancerNodesQuery,
   useNetworkLoadBalancerQuery,
 } from '@linode/queries';
-import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { LandingHeader } from 'src/components/LandingHeader';
 
-export const NetworkLoadBalancersListenerDetail = () => {
-  const params = useParams({ strict: false });
-  const { id: nlbId, listenerId } = params;
+import { NetworkLoadBalancersListenerDetailBody } from './NetworkLoadBalancersListenerDetailBody';
+import { NetworkLoadBalancersListenerDetailHeader } from './NetworkLoadBalancersListenerDetailHeader';
 
-  const {
-    data: nlb,
-    error,
-    isLoading,
-  } = useNetworkLoadBalancerQuery(Number(nlbId) || -1, true);
+const NetworkLoadBalancersListenerDetail = () => {
+  const { id, listenerId } = useParams({
+    from: '/netloadbalancers/$id/listeners/$listenerId/nodes',
+  });
 
-  const {
-    data: listener,
-    error: listenerError,
-    isLoading: listenerLoading,
-  } = useNetworkLoadBalancerListenerQuery(
-    Number(nlbId) || -1,
-    Number(listenerId) || -1,
-    true
-  );
+  const { data: nlb, error, isLoading } = useNetworkLoadBalancerQuery(id);
 
-  if (isLoading || listenerLoading) {
+  // Fetch nodes for this listener
+  const { data: nodesData, isLoading: nodesLoading } =
+    useNetworkLoadBalancerNodesQuery(id, listenerId);
+
+  const listener = nlb?.listeners?.find((l) => l.id === listenerId);
+
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!nlb || error || !listener || listenerError) {
+  if (!nlb || error || !listener) {
     return (
-      <ErrorState errorText="There was a problem retrieving your NLB. Please try again." />
+      <ErrorState errorText="There was a problem retrieving your listener. Please try again." />
     );
   }
 
   return (
     <>
+      <DocumentTitleSegment segment={`Listener ${listener.label}`} />
       <LandingHeader
         breadcrumbProps={{
           labelOptions: { noCap: true },
@@ -51,19 +50,33 @@ export const NetworkLoadBalancersListenerDetail = () => {
             {
               label: nlb.label,
               position: 2,
-              linkTo: `/netloadbalancers/$id/listeners`,
-              noCap: true,
             },
           ],
-          pathname: `/netloadbalancers/${nlbId}/${listenerId}`,
+          pathname: `/netloadbalancers/${id}/listeners/${listenerId}`,
         }}
         docsLabel="Docs"
-        docsLink={
-          'https://techdocs.akamai.com/linode-api/changelog/network-load-balancers'
-        }
-        title={listener.label}
+        docsLink="https://techdocs.akamai.com/linode-api/changelog/network-load-balancers"
+        removeCrumbX={2}
+        title={`${listener.label}`}
       />
-      <Notice variant="info">Listener Detail is coming soon...</Notice>
+      <EntityDetail
+        body={
+          <NetworkLoadBalancersListenerDetailBody
+            created={listener.created}
+            nodes={nodesData?.results ?? 0}
+            nodesLoading={nodesLoading}
+            port={listener.port}
+            protocol={listener.protocol}
+            updated={listener.updated}
+          />
+        }
+        header={
+          <NetworkLoadBalancersListenerDetailHeader label={listener.label} />
+        }
+        noBodyBottomBorder={true}
+      />
     </>
   );
 };
+
+export default NetworkLoadBalancersListenerDetail;

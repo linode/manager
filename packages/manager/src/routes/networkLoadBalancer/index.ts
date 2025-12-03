@@ -71,7 +71,7 @@ const networkLoadBalancerNodesRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancersListenerDetail/NetworkLoadBalancersListenerDetailLazyRoutes'
-  ).then((m) => m.NetworkLoadBalancersListenerDetailLazyRoute)
+  ).then((m) => m.networkLoadBalancersListenerDetailLazyRoute)
 );
 
 export const networkLoadBalancersRouteTree =
