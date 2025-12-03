@@ -119,3 +119,12 @@ export const isTestEntity = (entity: {
 export const isTestLabel = (label: string) => {
   return label.startsWith(entityPrefix);
 };
+
+/**
+ * Determines whether or not the test environment is DevCloud.
+
+ * @returns True if environment is DevCloud, false otherwise.
+ */
+export const isDevCloudEnv = () => {
+  return apiroot.includes('devcloud');
+};
