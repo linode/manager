@@ -16,6 +16,8 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
+import { getActionMenuWrapperStyles } from '../shared.styles';
+
 import type { Event } from '@linode/api-v4';
 import type {
   DatabaseInstance,
@@ -36,21 +38,7 @@ interface Props {
 
 const DatabaseActionMenuStyledWrapper = styled(TableCell, {
   label: 'DatabaseActionMenuStyledWrapper',
-})(({ theme }) => ({
-  justifyContent: 'flex-end',
-  display: 'flex',
-  alignItems: 'center',
-  maxWidth: 40,
-  '& button': {
-    padding: 0,
-    color: theme.tokens.alias.Content.Icon.Primary.Default,
-    backgroundColor: 'transparent',
-  },
-  '& button:hover': {
-    backgroundColor: 'transparent',
-    color: theme.tokens.alias.Content.Icon.Primary.Hover,
-  },
-}));
+})(({ theme }) => getActionMenuWrapperStyles(theme));
 
 export const DatabaseRow = ({
   database,

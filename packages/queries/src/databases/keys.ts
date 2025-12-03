@@ -42,6 +42,10 @@ export const databaseQueries = createQueryKeys('databases', {
             queryFn: () => getDatabaseConnectionPools(id),
             queryKey: null,
           },
+          paginated: (params: Params) => ({
+            queryFn: () => getDatabaseConnectionPools(id, params),
+            queryKey: [params],
+          }),
         },
         queryKey: null,
       },
