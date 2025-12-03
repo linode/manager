@@ -10,8 +10,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { LandingHeader } from 'src/components/LandingHeader';
 
+import { NLB_API_DOCS_LINK } from '../../constants';
 import { NetworkLoadBalancersListenerDetailBody } from './NetworkLoadBalancersListenerDetailBody';
 import { NetworkLoadBalancersListenerDetailHeader } from './NetworkLoadBalancersListenerDetailHeader';
+import { NodesTable } from './NodesTable/NodesTable';
 
 const NetworkLoadBalancersListenerDetail = () => {
   const { id, listenerId } = useParams({
@@ -50,12 +52,13 @@ const NetworkLoadBalancersListenerDetail = () => {
             {
               label: nlb.label,
               position: 2,
+              linkTo: '/netloadbalancers/$id/listeners',
             },
           ],
           pathname: `/netloadbalancers/${id}/listeners/${listenerId}`,
         }}
         docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/linode-api/changelog/network-load-balancers"
+        docsLink={NLB_API_DOCS_LINK}
         removeCrumbX={2}
         title={`${listener.label}`}
       />
@@ -75,6 +78,7 @@ const NetworkLoadBalancersListenerDetail = () => {
         }
         noBodyBottomBorder={true}
       />
+      <NodesTable listenerId={listener.id} nlbId={nlb.id} />
     </>
   );
 };
