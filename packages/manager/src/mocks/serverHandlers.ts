@@ -1486,7 +1486,7 @@ export const handlers = [
                     ],
                   },
                   ports: '22, 53, 80, 100, 443, 3306',
-                  protocol: 'IPENCAP',
+                  protocol: 'UDP',
                   action: 'ACCEPT',
                 }),
               ],
