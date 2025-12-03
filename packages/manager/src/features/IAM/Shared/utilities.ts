@@ -19,6 +19,7 @@ import type {
   AccountRoleType,
   APIError,
   EntityAccess,
+  EntityId,
   EntityRoleType,
   EntityType,
   IamAccess,
@@ -349,7 +350,7 @@ export const changeRoleForEntity = (
 
 export const toEntityAccess = (
   entityRoles: EntityAccess[],
-  entityIds: number[],
+  entityIds: EntityId[],
   roleName: EntityRoleType,
   roleType: AccessType
 ): EntityAccess[] => {

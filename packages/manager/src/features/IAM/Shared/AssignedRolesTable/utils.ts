@@ -4,6 +4,7 @@ import type { ExtendedRoleView, RoleView } from '../types';
 import type {
   AccountEntity,
   AccountRoleType,
+  EntityId,
   EntityRoleType,
   EntityType,
   IamAccountRoles,
@@ -11,7 +12,7 @@ import type {
 } from '@linode/api-v4';
 
 export interface CombinedRoles {
-  id: null | number[];
+  id: EntityId[] | null;
   name: AccountRoleType | EntityRoleType;
 }
 
@@ -71,7 +72,7 @@ export const addEntitiesNamesToRoles = (
  */
 export const combineRoles = (data: IamUserRoles): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
-  const roleMap: Map<AccountRoleType | EntityRoleType, null | number[]> =
+  const roleMap: Map<AccountRoleType | EntityRoleType, EntityId[] | null> =
     new Map();
 
   // Add account access roles with resource_id set to null
@@ -83,7 +84,7 @@ export const combineRoles = (data: IamUserRoles): CombinedRoles[] => {
 
   // Add resource access roles with their respective resource_id
   data.entity_access.forEach(
-    (resource: { id: number; roles: EntityRoleType[] }) => {
+    (resource: { id: EntityId; roles: EntityRoleType[] }) => {
       resource.roles?.forEach((role: EntityRoleType) => {
         if (roleMap.has(role)) {
           const existingResourceIds = roleMap.get(role);
@@ -114,7 +115,7 @@ export const mapRolesToPermissions = (
 ): RoleView[] => {
   const allRoles = mapAccountPermissionsToRoles(accountPermissions);
 
-  const userRolesLookup = new Map<string, null | number[]>();
+  const userRolesLookup = new Map<string, EntityId[] | null>();
   userRoles.forEach(({ id, name }) => {
     userRolesLookup.set(name, id);
   });
