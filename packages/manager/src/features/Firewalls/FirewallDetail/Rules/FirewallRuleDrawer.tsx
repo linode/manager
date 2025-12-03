@@ -245,6 +245,13 @@ export const FirewallRuleDrawer = React.memo(
                   addressesLabel={addressesLabel}
                   category={category}
                   closeDrawer={onClose}
+                  handleOpenPrefixListDrawer={(prefixListLabel, plRuleRef) => {
+                    handleOpenPrefixListDrawer(
+                      prefixListLabel,
+                      plRuleRef,
+                      'rule'
+                    );
+                  }}
                   ips={ips}
                   mode={mode}
                   pls={pls}

@@ -80,6 +80,13 @@ export const FirewallPrefixListDrawer = React.memo(
         };
       }
 
+      if (type === 'rule' && modeViewedFrom === 'create') {
+        return {
+          title: `Add an ${capitalize(category)} Rule or Rule Set`,
+          backButton: `Back to ${capitalize(category)} Rule`,
+        };
+      }
+
       if (type === 'ruleset' && modeViewedFrom === 'view') {
         return {
           title: `${capitalize(category)} Rule Set details`,

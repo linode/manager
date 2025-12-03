@@ -24,7 +24,7 @@ import {
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
-import { MultiplePrefixListSelect } from './MutiplePrefixListSelect';
+import { MultiplePrefixListSelect } from './MultiplePrefixListSelect';
 import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
 
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
@@ -45,6 +45,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     errors,
     handleBlur,
     handleChange,
+    handleOpenPrefixListDrawer,
     handleSubmit,
     ips,
     pls,
@@ -348,6 +349,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           {isFirewallRulesetsPrefixlistsFeatureEnabled && (
             <MultiplePrefixListSelect
               aria-label="Prefix List for Firewall rule"
+              handleOpenPrefixListDrawer={handleOpenPrefixListDrawer}
               onChange={handlePrefixListChange}
               pls={pls}
             />

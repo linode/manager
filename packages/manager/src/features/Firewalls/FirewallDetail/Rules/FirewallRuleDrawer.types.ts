@@ -45,6 +45,10 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   addressesLabel: string;
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
   pls: ExtendedPL[];
