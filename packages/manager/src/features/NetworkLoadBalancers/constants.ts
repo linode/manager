@@ -7,3 +7,6 @@ export const NLB_API_DOCS_LINK =
 export const NLB_NODES_TABLE_DEFAULT_ORDER = 'asc';
 export const NLB_NODES_TABLE_DEFAULT_ORDER_BY = 'id';
 export const NLB_NODES_TABLE_PREFERENCE_KEY = 'netloadbalancers-listener-nodes';
+
+export const NLB_NODES_ROUTE =
+  '/netloadbalancers/$id/listeners/$listenerId/nodes';

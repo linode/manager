@@ -24,6 +24,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import {
+  NLB_NODES_ROUTE,
   NLB_NODES_TABLE_DEFAULT_ORDER,
   NLB_NODES_TABLE_DEFAULT_ORDER_BY,
   NLB_NODES_TABLE_PREFERENCE_KEY,
@@ -43,12 +44,12 @@ export const NodesTable = (props: NodesTableProps) => {
   const theme = useTheme();
 
   const search = useSearch({
-    from: '/netloadbalancers/$id/listeners/$listenerId/nodes',
+    from: NLB_NODES_ROUTE,
     shouldThrow: false,
   });
 
   const pagination = usePaginationV2({
-    currentRoute: '/netloadbalancers/$id/listeners/$listenerId/nodes',
+    currentRoute: NLB_NODES_ROUTE,
     preferenceKey,
     searchParams: (prev) => ({
       ...prev,
@@ -62,7 +63,7 @@ export const NodesTable = (props: NodesTableProps) => {
         order: NLB_NODES_TABLE_DEFAULT_ORDER,
         orderBy: NLB_NODES_TABLE_DEFAULT_ORDER_BY,
       },
-      from: '/netloadbalancers/$id/listeners/$listenerId/nodes',
+      from: NLB_NODES_ROUTE,
     },
     preferenceKey,
   });
@@ -86,8 +87,8 @@ export const NodesTable = (props: NodesTableProps) => {
     isFetching,
     isLoading,
   } = useNetworkLoadBalancerNodesQuery(
-    listenerId,
     nlbId,
+    listenerId,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -134,13 +135,19 @@ export const NodesTable = (props: NodesTableProps) => {
         </Typography>
         <DebouncedSearchTextField
           clearable
+          debounceTime={250}
           errorText={searchError?.message}
           hideLabel
           isSearching={isFetching}
           label="Search"
           onSearch={onSearch}
-          placeholder="Search ID, Linode ID or IP Address"
-          sx={{ width: theme.spacing(50) }}
+          placeholder="Search Node ID, Linode ID or IP address"
+          sx={{
+            [theme.breakpoints.up('sm')]: {
+              width: '350px',
+            },
+            width: '250px',
+          }}
           value={search?.query ?? ''}
         />
       </Stack>
