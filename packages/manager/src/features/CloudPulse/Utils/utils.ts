@@ -592,7 +592,7 @@ export const getFilterFn = (
 
 /**
  * @param linodes The list of linodes
- * @returns True if there are any linodes with aclp alerts, false otherwise
+ * @returns The filtered list of linodes that have ACLP alerts
  */
 export const filterLinodeResources = (linodes: Linode[]): Linode[] => {
   return linodes.filter((linode) => {
