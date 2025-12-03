@@ -1,8 +1,6 @@
 import {
-  iamQueries,
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
-  useQueries,
   useUserRoles,
 } from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
@@ -23,6 +21,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { useGetUserEntities } from '../../hooks/useGetUserEntities';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -170,28 +169,10 @@ export const AssignedRolesTable = () => {
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
-  const entityTypes = React.useMemo(() => {
-    return userRolesData?.entity_access.map((entity) => entity.type) ?? [];
-  }, [userRolesData]);
-  const entityQueries = useQueries({
-    queries: entityTypes.map((type) => ({
-      ...iamQueries.user(username ?? '')._ctx.allUserEntities(type),
-      enabled: !!username,
-      staleTime: 5 * 60 * 1000,
-    })),
+  const { userEntities, isLoading: entitiesLoading } = useGetUserEntities({
+    username: username ?? '',
+    userRoles: assignedRoles,
   });
-
-  const { entities, isLoading: entitiesLoading } = React.useMemo(() => {
-    const isLoading = entityQueries.some((q) => q.isLoading);
-
-    if (isLoading) {
-      return { entities: undefined, isLoading: true };
-    }
-
-    const entities = entityQueries.map((q) => q.data || []).flat();
-
-    return { entities, isLoading: false };
-  }, [entityQueries]);
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
@@ -206,13 +187,13 @@ export const AssignedRolesTable = () => {
       ...mapEntityTypesForSelect(roles, ' Roles'),
     ];
 
-    if (entities) {
-      const transformedEntities = groupAccountEntitiesByType(entities);
+    if (userEntities) {
+      const transformedEntities = groupAccountEntitiesByType(userEntities);
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
 
     return { filterableOptions, roles };
-  }, [assignedRoles, accountRoles, entities]);
+  }, [assignedRoles, accountRoles, userEntities]);
 
   const [query, setQuery] = React.useState('');
 

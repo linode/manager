@@ -1,7 +1,5 @@
 import {
-  iamQueries,
   useGetDefaultDelegationAccessQuery,
-  useQueries,
   useUserRoles,
 } from '@linode/queries';
 import { Select, Typography, useTheme } from '@linode/ui';
@@ -25,6 +23,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { useGetUserEntities } from '../../hooks/useGetUserEntities';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   addEntityNamesToRoles,
@@ -133,39 +132,20 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     ? permissions?.update_default_delegate_access
     : permissions?.is_account_admin;
 
-  const entityTypes = React.useMemo(() => {
-    return assignedUserRoles?.entity_access.map((entity) => entity.type) ?? [];
-  }, [assignedUserRoles]);
-  const entityQueries = useQueries({
-    queries: entityTypes.map((type) => ({
-      ...iamQueries.user(username ?? '')._ctx.allUserEntities(type),
-      enabled: !!username,
-      staleTime: 5 * 60 * 1000,
-    })),
-  });
-
   const {
-    entities,
+    userEntities,
     isLoading: entitiesLoading,
     error: entitiesError,
-  } = React.useMemo(() => {
-    const isLoading = entityQueries.some((q) => q.isLoading);
-    const error = entityQueries.some((q) => q.error);
-
-    if (isLoading) {
-      return { entities: undefined, isLoading: true };
-    }
-
-    const entities = entityQueries.map((q) => q.data || []).flat();
-
-    return { entities, error, isLoading: false };
-  }, [entityQueries]);
+  } = useGetUserEntities({
+    username: username ?? '',
+    userRoles: assignedUserRoles,
+  });
 
   const { filterableOptions, roles } = React.useMemo(() => {
-    if (!assignedRoles || !entities) {
+    if (!assignedRoles || !userEntities) {
       return { filterableOptions: [], roles: [] };
     }
-    const transformedEntities = groupAccountEntitiesByType(entities);
+    const transformedEntities = groupAccountEntitiesByType(userEntities);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
@@ -175,7 +155,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     ];
 
     return { filterableOptions, roles };
-  }, [assignedRoles, entities]);
+  }, [assignedRoles, userEntities]);
 
   const handleChangeRole = (role: EntitiesRole, mode: DrawerModes) => {
     setIsChangeRoleForEntityDrawerOpen(true);
@@ -234,11 +214,11 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       );
     }
 
-    if (!entities || !assignedRoles || filteredRoles.length === 0) {
+    if (!userEntities || !assignedRoles || filteredRoles.length === 0) {
       return <TableRowEmpty colSpan={3} message={'No items to display.'} />;
     }
 
-    if (assignedRoles && entities) {
+    if (assignedRoles && userEntities) {
       return (
         <>
           {filteredAndSortedRoles
