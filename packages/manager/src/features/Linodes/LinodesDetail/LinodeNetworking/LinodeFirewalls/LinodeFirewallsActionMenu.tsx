@@ -7,23 +7,22 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface LinodeFirewallsActionMenuProps {
-  firewallID: number;
+  linodeID: number;
   onUnassign: () => void;
 }
 
 export const LinodeFirewallsActionMenu = (
   props: LinodeFirewallsActionMenuProps
 ) => {
-  const { firewallID, onUnassign } = props;
+  const { onUnassign, linodeID } = props;
 
   const { data: permissions } = usePermissions(
-    'firewall',
-    ['delete_firewall_device'],
-    firewallID,
-    true
+    'linode',
+    ['update_linode'],
+    linodeID
   );
 
-  const disabledProps = !permissions.delete_firewall_device
+  const disabledProps = !permissions.update_linode
     ? {
         disabled: true,
         tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,

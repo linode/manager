@@ -49,7 +49,7 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       <TableCell data-qa-firewall-rules>{getRuleString(count)}</TableCell>
       <TableCell actionCell>
         <LinodeFirewallsActionMenu
-          firewallID={firewallID}
+          linodeID={linodeID}
           onUnassign={() => onClickUnassign(firewallDevice, firewall)}
         />
       </TableCell>
