@@ -165,6 +165,14 @@ describe('rebuild linode', () => {
   let almaLinuxImageLabel: string = 'AlmaLinux';
   const rootPassword = randomString(16);
 
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'stackscripts', 'images']);
 

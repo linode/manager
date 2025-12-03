@@ -45,6 +45,7 @@ describe('Create Linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
+      iam: { enabled: false },
     });
   });
 

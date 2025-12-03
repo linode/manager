@@ -72,6 +72,9 @@ describe('linode landing checks', () => {
     // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
     mockAppendFeatureFlags({
       iamRbacPrimaryNavChanges: true,
+      iam: {
+        enabled: false,
+      },
     });
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
