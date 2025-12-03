@@ -1,4 +1,4 @@
-import { Box, Chip, Tooltip } from '@linode/ui';
+import { BetaChip, Box, Chip, NewFeatureChip, Tooltip } from '@linode/ui';
 import { capitalize, truncateAndJoinList } from '@linode/utilities';
 import React from 'react';
 
@@ -579,4 +579,25 @@ export const useIsFirewallRulesetsPrefixlistsEnabled = () => {
     isFirewallRulesetsPrefixListsGAEnabled:
       flags.fwRulesetsPrefixLists?.ga ?? false,
   };
+};
+
+/**
+ * Returns the feature chip for Firewall Rulesets & Prefix Lists.
+ *
+ * - Shows `<BetaChip />` if the feature is in Beta.
+ * - Shows `<NewFeatureChip />` if the feature is in GA.
+ * - Returns `null` if the feature is disabled OR if the feature is enabled but no chip applies.
+ */
+export const getFeatureChip = ({
+  isFirewallRulesetsPrefixlistsFeatureEnabled,
+  isFirewallRulesetsPrefixListsBetaEnabled,
+  isFirewallRulesetsPrefixListsGAEnabled,
+}: Omit<
+  ReturnType<typeof useIsFirewallRulesetsPrefixlistsEnabled>,
+  'isFirewallRulesetsPrefixListsLAEnabled'
+>) => {
+  if (!isFirewallRulesetsPrefixlistsFeatureEnabled) return null;
+  if (isFirewallRulesetsPrefixListsBetaEnabled) return <BetaChip />;
+  if (isFirewallRulesetsPrefixListsGAEnabled) return <NewFeatureChip />;
+  return null;
 };

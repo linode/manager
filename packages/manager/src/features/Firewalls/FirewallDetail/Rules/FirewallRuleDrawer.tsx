@@ -6,7 +6,10 @@ import * as React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-import { useIsFirewallRulesetsPrefixlistsEnabled } from '../../shared';
+import {
+  getFeatureChip,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -50,8 +53,11 @@ export const FirewallRuleDrawer = React.memo(
       ruleToModifyOrView,
     } = props;
 
-    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
-      useIsFirewallRulesetsPrefixlistsEnabled();
+    const {
+      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      isFirewallRulesetsPrefixListsBetaEnabled,
+      isFirewallRulesetsPrefixListsGAEnabled,
+    } = useIsFirewallRulesetsPrefixlistsEnabled();
 
     /**
      * State for the type of entity being created: either a firewall 'rule' or
@@ -190,7 +196,18 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     return (
-      <Drawer onClose={onClose} open={isOpen} title={title}>
+      <Drawer
+        onClose={onClose}
+        open={isOpen}
+        title={title}
+        titleSuffix={
+          getFeatureChip({
+            isFirewallRulesetsPrefixlistsFeatureEnabled,
+            isFirewallRulesetsPrefixListsBetaEnabled,
+            isFirewallRulesetsPrefixListsGAEnabled,
+          }) ?? undefined
+        }
+      >
         {mode === 'create' && isFirewallRulesetsPrefixlistsFeatureEnabled && (
           <Grid container spacing={2}>
             {firewallRuleCreateOptions.map((option) => (
