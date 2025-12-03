@@ -595,11 +595,15 @@ const netLoadBalancers = [
   http.get('*/v4beta/netloadbalancers/:id/listeners/:listenerId', () => {
     return HttpResponse.json(networkLoadBalancerListenerFactory.build());
   }),
-  http.get('*/v4beta/netloadbalancers/:id/listeners/:listenerId/nodes', () => {
-    return HttpResponse.json(
-      makeResourcePage(networkLoadBalancerNodeFactory.buildList(30))
-    );
-  }),
+  http.get(
+    '*/v4beta/netloadbalancers/:id/listeners/:listenerId/nodes',
+    async () => {
+      await sleep(1000);
+      return HttpResponse.json(
+        makeResourcePage(networkLoadBalancerNodeFactory.buildList(30))
+      );
+    }
+  ),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
@@ -1323,8 +1327,8 @@ export const handlers = [
         label: 'firewall with rule and ruleset reference',
         rules: firewallRulesFactory.build({
           inbound: [
-            firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
-            firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+            { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+            { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
             ...firewallRuleFactory.buildList(1),
           ],
         }),
@@ -1338,11 +1342,69 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(devices));
   }),
   http.get('*/v4beta/networking/firewalls/rulesets', () => {
-    const rulesets = firewallRuleSetFactory.buildList(10);
+    const rulesetWithPrefixLists = firewallRuleSetFactory.build({
+      rules: firewallRuleFactory.buildList(1, {
+        addresses: {
+          ipv4: [
+            'pl:system:resolvers:test',
+            'pl:system:test',
+            '192.168.1.200',
+            '192.168.1.201',
+          ],
+          ipv6: [
+            '2001:db8:85a3::8a2e:371:7335/128',
+            'pl:system:test',
+            'pl::vpcs:test',
+          ],
+        },
+      }),
+    });
+    const rulesets = [
+      rulesetWithPrefixLists,
+      ...firewallRuleSetFactory.buildList(9),
+    ];
     return HttpResponse.json(makeResourcePage(rulesets));
   }),
-  http.get('*/v4beta/networking/prefixlists', () => {
-    const prefixlists = firewallPrefixListFactory.buildList(10);
+  http.get('*/v4beta/networking/prefixlists', ({ request }) => {
+    const prefixlists = [
+      ...firewallPrefixListFactory.buildList(10),
+      ...Array.from({ length: 2 }, (_, i) =>
+        firewallPrefixListFactory.build({
+          name: `pl::vpcs:supports-both-${i + 1}`,
+          description: `pl::vpcs:supports-both-${i + 1} description`,
+        })
+      ),
+      // Prefix List variants / cases
+      ...[
+        { name: 'pl::supports-both' },
+        { name: 'pl:system:supports-only-ipv4', ipv6: null },
+        { name: 'pl::supports-only-ipv6', ipv4: null },
+        { name: 'pl::supports-both-but-ipv6-empty', ipv6: [] },
+        { name: 'pl::supports-both-but-empty-both', ipv4: [], ipv6: [] },
+        { name: 'pl::marked-for-deletion', deleted: '2025-11-18T18:51:11' },
+        { name: 'pl::not-supported', ipv4: null, ipv6: null },
+      ].map((variant) =>
+        firewallPrefixListFactory.build({
+          ...variant,
+          description: `${variant.name} description`,
+        })
+      ),
+    ];
+
+    if (request.headers.get('x-filter')) {
+      const filter = JSON.parse(request.headers.get('x-filter') || '{}');
+
+      if (filter['name']) {
+        const match =
+          prefixlists.find((pl) => pl.name === filter.name) ??
+          firewallPrefixListFactory.build({
+            name: filter['name'],
+            description: `${filter['name']} description`,
+          }); // fallback if not found
+
+        return HttpResponse.json(makeResourcePage([match]));
+      }
+    }
     return HttpResponse.json(makeResourcePage(prefixlists));
   }),
   http.get(
@@ -1356,7 +1418,7 @@ export const handlers = [
               id: 123,
             });
           case 123456789:
-            // Ruleset with larger ID 123456789, Longer label with 32 chars, and
+            // Ruleset with larger ID 123456789, Longer label with 32 chars, PrefixLists, and
             // Marked for deletion status
             return firewallRuleSetFactory.build({
               id: 123456789,
@@ -1364,6 +1426,21 @@ export const handlers = [
               deleted: '2025-11-18T18:51:11',
               description:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a fermentum quam. Mauris posuere dapibus aliquet. Ut id dictum magna, vitae congue turpis. Curabitur sollicitudin odio vel lacus vehicula maximus.',
+              rules: firewallRuleFactory.buildList(1, {
+                addresses: {
+                  ipv4: [
+                    'pl:system:resolvers:test',
+                    'pl:system:test',
+                    '192.168.1.200',
+                    '192.168.1.201',
+                  ],
+                  ipv6: [
+                    '2001:db8:85a3::8a2e:371:7335/128',
+                    'pl:system:test',
+                    'pl::vpcs:test',
+                  ],
+                },
+              }),
             });
           default:
             return firewallRuleSetFactory.build();
@@ -1381,14 +1458,31 @@ export const handlers = [
             label: 'firewall with rule and ruleset reference',
             rules: firewallRulesFactory.build({
               inbound: [
-                firewallRuleFactory.build({ ruleset: 123 }), // Referenced Ruleset to the Firewall (ID 123)
-                firewallRuleFactory.build({ ruleset: 123456789 }), // Referenced Ruleset to the Firewall (ID 123456789)
+                { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+                { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
                 ...firewallRuleFactory.buildList(1, {
                   addresses: {
-                    ipv4: ['192.168.1.213', '172.31.255.255'],
+                    ipv4: [
+                      'pl::supports-both',
+                      'pl:system:supports-only-ipv4',
+                      '192.168.1.213',
+                      '192.168.1.214',
+                      'pl::vpcs:supports-both-1',
+                      'pl::supports-both-but-empty-both',
+                      '172.31.255.255',
+                      'pl::marked-for-deletion',
+                    ],
                     ipv6: [
+                      'pl::supports-both',
+                      'pl::supports-only-ipv6',
+                      'pl::supports-both-but-ipv6-empty',
+                      'pl::vpcs:supports-both-2',
                       '2001:db8:85a3::8a2e:370:7334/128',
                       '2001:db8:85a3::8a2e:371:7335/128',
+                      // Duplicate PrefixList entries like the below one, may not appear, but if they do,
+                      // our logic will treat them as a single entity within the ipv4 or ipv6 array.
+                      'pl::vpcs:supports-both-2',
+                      '2001:db8:85a3::8a2e:372:7336/128',
                     ],
                   },
                   ports: '22, 53, 80, 100, 443, 3306',
@@ -3223,6 +3317,28 @@ export const handlers = [
           rules: [firewallNodebalancerMetricCriteria.build()],
         },
       }),
+      alertFactory.build({
+        id: 340,
+        label: 'Firewall-nodebalancer-system',
+        type: 'system',
+        service_type: 'firewall',
+        entity_ids: ['25'],
+        rule_criteria: {
+          rules: [
+            firewallNodebalancerMetricCriteria.build({ dimension_filters: [] }),
+          ],
+        },
+      }),
+      alertFactory.build({
+        id: 123,
+        label: 'Firewall-linode-system',
+        type: 'system',
+        service_type: 'firewall',
+        entity_ids: ['1', '4'],
+        rule_criteria: {
+          rules: [firewallMetricRulesFactory.build()],
+        },
+      }),
       ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
@@ -3290,6 +3406,38 @@ export const handlers = [
             entity_ids: ['25'],
             rule_criteria: {
               rules: [firewallNodebalancerMetricCriteria.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '340' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 340,
+            label: 'Firewall - nodebalancer - system',
+            type: 'system',
+            service_type: 'firewall',
+            entity_ids: ['25'],
+            rule_criteria: {
+              rules: [
+                firewallNodebalancerMetricCriteria.build({
+                  dimension_filters: [],
+                }),
+              ],
+            },
+          })
+        );
+      }
+      if (params.id === '123' && params.serviceType === 'firewall') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 123,
+            label: 'Firewall-linode-system',
+            type: 'system',
+            service_type: 'firewall',
+            entity_ids: ['1', '4'],
+            rule_criteria: {
+              rules: [firewallMetricRulesFactory.build()],
             },
           })
         );

@@ -1,5 +1,6 @@
-import { Box, Typography } from '@linode/ui';
+import { Box, Tooltip, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 interface LabelValueProps {
@@ -7,6 +8,7 @@ interface LabelValueProps {
   compact?: boolean;
   'data-testid'?: string;
   label: string;
+  smHideTooltip?: boolean;
   value: string;
 }
 
@@ -17,8 +19,10 @@ export const LabelValue = (props: LabelValueProps) => {
     value,
     'data-testid': dataTestId,
     children,
+    smHideTooltip,
   } = props;
   const theme = useTheme();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box
@@ -35,13 +39,18 @@ export const LabelValue = (props: LabelValueProps) => {
       >
         {label}:
       </Typography>
-      <StyledValue data-testid={dataTestId}>{value}</StyledValue>
+      <StyledValue
+        data-testid={dataTestId}
+        title={!smHideTooltip && matchesSmDown ? value : undefined}
+      >
+        <Typography>{value}</Typography>
+      </StyledValue>
       {children}
     </Box>
   );
 };
 
-const StyledValue = styled(Box, {
+const StyledValue = styled(Tooltip, {
   label: 'StyledValue',
 })(({ theme }) => ({
   alignItems: 'center',
@@ -51,4 +60,12 @@ const StyledValue = styled(Box, {
   display: 'flex',
   height: theme.spacingFunction(24),
   padding: theme.spacingFunction(4, 8),
+  [theme.breakpoints.down('sm')]: {
+    display: 'block',
+    maxWidth: '174px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    padding: theme.spacingFunction(1, 8),
+  },
 }));

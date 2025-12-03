@@ -15,7 +15,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 import {
-  generateAddressesLabel,
+  generateAddressesLabelV2,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
 import { RULESET_MARKED_FOR_DELETION_TEXT } from './shared';
@@ -27,21 +27,26 @@ import {
   useStyles,
 } from './shared.styles';
 
+import type { PrefixListRuleReference } from '../../shared';
 import type { Category } from './shared';
 import type { FirewallRuleType } from '@linode/api-v4';
 
 interface FirewallRuleSetDetailsViewProps {
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   ruleset: FirewallRuleType['ruleset'];
 }
 
 export const FirewallRuleSetDetailsView = (
   props: FirewallRuleSetDetailsViewProps
 ) => {
-  const { category, closeDrawer, ruleset } = props;
+  const { category, closeDrawer, handleOpenPrefixListDrawer, ruleset } = props;
 
-  const { isFirewallRulesetsPrefixlistsEnabled } =
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
   const { classes } = useStyles();
 
@@ -54,7 +59,7 @@ export const FirewallRuleSetDetailsView = (
     error,
   } = useFirewallRuleSetQuery(
     ruleset ?? -1,
-    isValidRuleSetId && isFirewallRulesetsPrefixlistsEnabled
+    isValidRuleSetId && isFirewallRulesetsPrefixlistsFeatureEnabled
   );
 
   if (!isValidRuleSetId) {
@@ -179,14 +184,18 @@ export const FirewallRuleSetDetailsView = (
             />
             <Box>
               {rule.protocol};&nbsp;{rule.ports};&nbsp;
-              {generateAddressesLabel(rule.addresses)}
+              {generateAddressesLabelV2({
+                addresses: rule.addresses,
+                onPrefixListClick: handleOpenPrefixListDrawer,
+                showTruncateChip: false,
+              })}
             </Box>
           </StyledListItem>
         ))}
       </Paper>
 
       <ActionsPanel
-        primaryButtonProps={{
+        secondaryButtonProps={{
           label: 'Cancel',
           onClick: closeDrawer,
         }}
