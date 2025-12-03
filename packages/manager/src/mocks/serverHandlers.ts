@@ -1431,6 +1431,7 @@ export const handlers = [
                   ipv4: [
                     'pl:system:resolvers:test',
                     'pl:system:test',
+                    'pl::vpcs:<current>', // special prefixlist
                     '192.168.1.200',
                     '192.168.1.201',
                   ],
@@ -1471,6 +1472,7 @@ export const handlers = [
                       'pl::supports-both-but-empty-both',
                       '172.31.255.255',
                       'pl::marked-for-deletion',
+                      'pl::vpcs:<current>', // special prefixlist
                     ],
                     ipv6: [
                       'pl::supports-both',
@@ -1483,6 +1485,7 @@ export const handlers = [
                       // our logic will treat them as a single entity within the ipv4 or ipv6 array.
                       'pl::vpcs:supports-both-2',
                       '2001:db8:85a3::8a2e:372:7336/128',
+                      'pl::subnets:<current>', // special prefixlist
                     ],
                   },
                   ports: '22, 53, 80, 100, 443, 3306',

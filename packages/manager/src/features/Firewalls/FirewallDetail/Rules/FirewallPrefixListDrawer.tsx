@@ -37,6 +37,12 @@ export interface FirewallPrefixListDrawerProps {
   selectedPrefixListLabel: string | undefined;
 }
 
+const isPrefixListSpecial = (pl: string | undefined) =>
+  pl?.includes('<current>');
+
+const SPECIAL_PREFIX_LIST_DESCRIPTION =
+  'System-defined PrefixLists, such as pl::vpcs:<current> and pl::subnets:<current>, for VPC interface firewalls are dynamic and update automatically. They manage access to and from the interface for addresses within the interface’s VPC or VPC subnet.';
+
 export const FirewallPrefixListDrawer = React.memo(
   (props: FirewallPrefixListDrawerProps) => {
     const { category, context, onClose, isOpen, selectedPrefixListLabel } =
@@ -47,7 +53,8 @@ export const FirewallPrefixListDrawer = React.memo(
     const { classes } = useStyles();
 
     const { data, error, isFetching } = useAllFirewallPrefixListsQuery(
-      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      isFirewallRulesetsPrefixlistsFeatureEnabled &&
+        !isPrefixListSpecial(selectedPrefixListLabel),
       {},
       { name: selectedPrefixListLabel }
     );
@@ -110,6 +117,46 @@ export const FirewallPrefixListDrawer = React.memo(
       context?.type === 'rule' && context.modeViewedFrom === undefined
         ? 'Name'
         : 'Prefix List Name';
+
+    if (isPrefixListSpecial(selectedPrefixListLabel)) {
+      return (
+        <Drawer
+          onClose={() => onClose({ closeAll: true })}
+          open={isOpen}
+          title={titleText}
+        >
+          <Box mt={2}>
+            {[
+              {
+                label: plFieldLabel,
+                value: selectedPrefixListLabel,
+              },
+
+              {
+                label: 'Description',
+                value: SPECIAL_PREFIX_LIST_DESCRIPTION,
+                column: true,
+              },
+            ].map((item, idx) => (
+              <StyledListItem
+                key={`item-${idx}`}
+                paddingMultiplier={2}
+                sx={
+                  item.column
+                    ? { flexDirection: 'column', alignItems: 'flex-start' }
+                    : {}
+                }
+              >
+                {item.label && (
+                  <StyledLabel component="span">{item.label}: </StyledLabel>
+                )}
+                {item.value}
+              </StyledListItem>
+            ))}
+          </Box>
+        </Drawer>
+      );
+    }
 
     return (
       <Drawer
