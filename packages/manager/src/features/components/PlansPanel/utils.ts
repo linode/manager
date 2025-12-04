@@ -237,7 +237,7 @@ export const planTabInfoContent = {
     key: 'dedicated',
     title: 'Dedicated CPU',
     typography:
-      'Dedicated CPU instances are good for full-duty workloads where consistent performance is important.',
+      'Dedicated CPU instances are built for full-duty workloads needing consistent performance. Choose from different hardware generations — newer plans feature the latest hardware. Select Compute Optimized (1:2) for CPU-heavy tasks or General Purpose (1:4) for balanced workloads.',
   },
   gpu: {
     dataId: 'data-qa-gpu',
