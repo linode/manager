@@ -138,7 +138,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     error: entitiesError,
   } = useGetUserEntities({
     username: username ?? '',
-    userRoles: assignedUserRoles,
+    userRoles: assignedRoles,
   });
 
   const { filterableOptions, roles } = React.useMemo(() => {
