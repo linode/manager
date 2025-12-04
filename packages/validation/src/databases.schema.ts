@@ -217,3 +217,22 @@ export const createDynamicAdvancedConfigSchema = (allConfigurations: any[]) => {
     ),
   });
 };
+
+export const createDatabaseConnectionPoolSchema = object({
+  database: string().required('Database is required'),
+  mode: string()
+    .oneOf(['transaction', 'session', 'statement'], 'Pool mode is required')
+    .required('Pool mode is required'),
+  label: string()
+    .required('Name is required')
+    .max(63, 'Name must not exceed 63 characters'),
+  size: number().required('Size is required'),
+  username: string().nullable().required('Username is required'),
+});
+
+export const updateDatabaseConnectionPoolSchema = object({
+  database: string().optional(),
+  mode: string().oneOf(['transaction', 'session', 'statement']).optional(),
+  size: number().optional(),
+  username: string().nullable().optional(),
+});
