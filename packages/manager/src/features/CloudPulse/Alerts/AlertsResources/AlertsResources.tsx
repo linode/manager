@@ -7,7 +7,6 @@ import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { getFilterFn } from '../../Utils/utils';
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { MULTILINE_ERROR_SEPARATOR } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
@@ -22,6 +21,7 @@ import {
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
 import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
+import { getFilterFn } from '../Utils/utils';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import {
   databaseTypeClassMap,

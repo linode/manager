@@ -1,8 +1,4 @@
-import {
-  linodeAlertsFactory,
-  linodeFactory,
-  regionFactory,
-} from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -35,7 +31,6 @@ import {
   arraysEqual,
   filterFirewallResources,
   filterKubernetesClusters,
-  filterLinodeResources,
   getEnabledServiceTypes,
   getFilteredDimensions,
   getValidSortedEndpoints,
@@ -752,20 +747,5 @@ describe('getValidSortedEndpoints', () => {
       { id: 'a', label: 'a', region: 'us-east' },
       { id: 'c', label: 'c', region: 'us-east' },
     ]);
-  });
-});
-
-describe('filterLinodeResources', () => {
-  it('should return the filtered linode resources', () => {
-    const linodes = [
-      linodeFactory.build({
-        alerts: {
-          system_alerts: [1, 2, 3, 4, 5],
-          user_alerts: [6, 7, 8, 9, 10],
-        },
-      }),
-      linodeFactory.build({ alerts: linodeAlertsFactory.build() }),
-    ];
-    expect(filterLinodeResources(linodes)).toEqual([linodes[0]]);
   });
 });
