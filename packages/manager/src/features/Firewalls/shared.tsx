@@ -523,9 +523,6 @@ export const generateAddressesLabelV2 = (
                 minWidth: '248px',
                 paddingX: `0 !important`,
                 paddingY: `${theme.spacingFunction(16)} !important`,
-                '& .MuiTooltip-arrow': {
-                  color: theme.tokens.component.Popover.Background,
-                },
               }),
             },
           }}
