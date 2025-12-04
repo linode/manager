@@ -256,7 +256,10 @@ export const CreateAlertDefinition = () => {
               serviceMetadataError={serviceMetadataError}
               serviceMetadataLoading={serviceMetadataLoading}
             />
-            <AddChannelListing name="channel_ids" />
+            <AddChannelListing
+              name="channel_ids"
+              serviceType={serviceTypeWatcher}
+            />
             <ActionsPanel
               primaryButtonProps={{
                 label: 'Submit',

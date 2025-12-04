@@ -153,6 +153,7 @@ interface AclpAlerting {
   editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
+  systemChannelSupportedServices?: CloudPulseServiceType[]; //linode, dbaas, etc. 
 }
 
 interface LimitsEvolution {

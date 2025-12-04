@@ -41,7 +41,7 @@ export type MetricUnitType =
   | 'second';
 export type NotificationStatus = 'Disabled' | 'Enabled';
 export type ChannelType = 'email' | 'pagerduty' | 'slack' | 'webhook';
-export type AlertNotificationType = 'custom' | 'default';
+export type AlertNotificationType = 'system' | 'user';
 type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
