@@ -279,6 +279,3 @@ export const entityLabelMap = {
 
 export const entityTypeTooltipText =
   'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.';
-
-export const NotificationChannelTableAlertTooltipText =
-  'The number of alert definitions associated with the notification channel.';
