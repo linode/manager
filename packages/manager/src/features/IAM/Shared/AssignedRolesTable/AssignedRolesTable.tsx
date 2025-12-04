@@ -19,9 +19,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
-import { useGetUserEntities } from '../../hooks/useGetUserEntities';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -168,11 +168,9 @@ export const AssignedRolesTable = () => {
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
-
-  const { userEntities, isLoading: entitiesLoading } = useGetUserEntities({
-    username: username ?? '',
-    userRoles: assignedRoles,
-  });
+  const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
+    {}
+  );
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
@@ -187,13 +185,14 @@ export const AssignedRolesTable = () => {
       ...mapEntityTypesForSelect(roles, ' Roles'),
     ];
 
-    if (userEntities) {
-      const transformedEntities = groupAccountEntitiesByType(userEntities);
+    if (entities) {
+      const transformedEntities = groupAccountEntitiesByType(entities);
+
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
 
     return { filterableOptions, roles };
-  }, [assignedRoles, accountRoles, userEntities]);
+  }, [assignedRoles, accountRoles, entities]);
 
   const [query, setQuery] = React.useState('');
 

@@ -21,12 +21,12 @@ const mockEntities = [
 ];
 
 const queryMocks = vi.hoisted(() => ({
+  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
-  useGetUserEntities: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -38,9 +38,13 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('../../hooks/useGetUserEntities', () => ({
-  useGetUserEntities: queryMocks.useGetUserEntities,
-}));
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual('src/queries/entities/entities');
+  return {
+    ...actual,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -71,11 +75,6 @@ describe('UserRoles', () => {
       data: {
         is_account_admin: true,
       },
-    });
-    queryMocks.useGetUserEntities.mockReturnValue({
-      userEntities: mockEntities,
-      isLoading: false,
-      error: null,
     });
   });
 
@@ -108,6 +107,10 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
+    });
+
     renderWithTheme(<UserRoles />);
 
     expect(
@@ -136,6 +139,10 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
+    });
+
     renderWithTheme(<UserRoles />);
 
     expect(screen.getByText('firewall_admin')).toBeVisible();
@@ -159,6 +166,10 @@ describe('UserRoles', () => {
       data: accountRolesFactory.build(),
     });
 
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
+    });
+
     renderWithTheme(<UserRoles />);
 
     expect(screen.getByText('account_admin')).toBeVisible();
@@ -171,6 +182,10 @@ describe('UserRoles', () => {
 
     queryMocks.useAccountRoles.mockReturnValue({
       data: accountRolesFactory.build(),
+    });
+
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
     });
 
     renderWithTheme(<UserRoles />);
