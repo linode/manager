@@ -183,6 +183,70 @@ export const WithError: Story = {
   },
 };
 
+export const WithBackNavigation: Story = {
+  args: {
+    isFetching: false,
+    open: false,
+    title: 'My Drawer',
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [open, setOpen] = React.useState(args.open);
+
+      return (
+        <>
+          <Button
+            buttonType="primary"
+            onClick={() => setOpen(true)}
+            sx={{ m: 4 }}
+          >
+            Click to open Drawer
+          </Button>
+          <Drawer
+            {...args}
+            handleBackNavigation={() => {}}
+            onClose={() => setOpen(true)}
+            open={open}
+          >
+            <Typography sx={{ mb: 2 }}>
+              I smirked at their Kale chips banh-mi fingerstache brunch in
+              Williamsburg.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>
+              Meanwhile in my closet-style flat in Red-Hook, my pour-over coffee
+              glitched on my vinyl record player while I styled the bottom left
+              corner of my beard. Those artisan tacos I ordered were infused
+              with turmeric and locally sourced honey, a true farm-to-table
+              vibe. Pabst Blue Ribbon in hand, I sat on my reclaimed wood bench
+              next to the macramé plant holder.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>
+              Narwhal selfies dominated my Instagram feed, hashtagged with "slow
+              living" and "normcore aesthetics". My kombucha brewing kit arrived
+              just in time for me to ferment my own chai-infused blend. As I
+              adjusted my vintage round glasses, a tiny house documentary
+              started playing softly in the background. The retro typewriter
+              clacked as I typed out my minimalist poetry on sustainably sourced
+              paper. The sun glowed through the window, shining light on the
+              delightful cracks of my Apple watch.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>It was Saturday.</Typography>
+            <ActionsPanel
+              primaryButtonProps={{ label: 'Save' }}
+              secondaryButtonProps={{
+                label: 'Cancel',
+                onClick: () => setOpen(false),
+              }}
+            />
+          </Drawer>
+        </>
+      );
+    };
+
+    return DrawerExampleWrapper();
+  },
+};
+
 export const WithTitleSuffix: Story = {
   args: {
     isFetching: false,

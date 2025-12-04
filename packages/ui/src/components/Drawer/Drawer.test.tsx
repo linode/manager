@@ -83,4 +83,13 @@ describe('Drawer', () => {
 
     expect(getByText('beta')).toBeVisible();
   });
+
+  it('should render a Dailog with back button if handleBackNavigation is provided', () => {
+    const { getByLabelText } = renderWithTheme(
+      <Drawer {...defaultArgs} handleBackNavigation={() => {}} open={true} />,
+    );
+    const iconButton = getByLabelText('back navigation');
+
+    expect(iconButton).toBeVisible();
+  });
 });
