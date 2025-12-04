@@ -1,5 +1,13 @@
 import { useAllFirewallPrefixListsQuery } from '@linode/queries';
-import { Box, Button, Chip, Drawer, Paper, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Chip,
+  Drawer,
+  Paper,
+  Stack,
+  TooltipIcon,
+} from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -212,140 +220,144 @@ export const FirewallPrefixListDrawer = React.memo(
                 </StyledListItem>
               )}
 
-              {isIPv4Supported && (
-                <Paper
-                  data-testid="ipv4-section"
-                  sx={(theme) => ({
-                    backgroundColor: theme.tokens.alias.Background.Neutral,
-                    padding: theme.spacingFunction(12),
-                    marginTop: theme.spacingFunction(8),
-                    ...(isIPv4InUse
-                      ? {
-                          border: `1px solid ${theme.tokens.alias.Border.Positive}`,
-                        }
-                      : {}),
-                  })}
-                >
-                  <StyledLabel
+              <Stack gap={2} marginTop={1}>
+                {isIPv4Supported && (
+                  <Paper
+                    data-testid="ipv4-section"
                     sx={(theme) => ({
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      marginBottom: theme.spacingFunction(4),
-                      ...(!isIPv4InUse
+                      backgroundColor: theme.tokens.alias.Background.Neutral,
+                      padding: theme.spacingFunction(12),
+                      ...(isIPv4InUse
                         ? {
-                            color:
-                              theme.tokens.alias.Content.Text.Primary.Disabled,
+                            border: `1px solid ${theme.tokens.alias.Border.Positive}`,
                           }
                         : {}),
                     })}
                   >
-                    IPv4
-                    <Chip
-                      data-testid="ipv4-chip"
-                      label={isIPv4InUse ? 'in use' : 'not in use'}
+                    <StyledLabel
                       sx={(theme) => ({
-                        background: isIPv4InUse
-                          ? theme.tokens.component.Badge.Positive.Subtle
-                              .Background
-                          : theme.tokens.component.Badge.Neutral.Subtle
-                              .Background,
-                        color: isIPv4InUse
-                          ? theme.tokens.component.Badge.Positive.Subtle.Text
-                          : theme.tokens.component.Badge.Neutral.Subtle.Text,
-                        font: theme.font.bold,
-                        fontSize: theme.tokens.font.FontSize.Xxxs,
-                        marginRight: theme.spacingFunction(6),
-                        flexShrink: 0,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: theme.spacingFunction(4),
+                        ...(!isIPv4InUse
+                          ? {
+                              color:
+                                theme.tokens.alias.Content.Text.Primary
+                                  .Disabled,
+                            }
+                          : {}),
                       })}
-                    />
-                  </StyledLabel>
+                    >
+                      IPv4
+                      <Chip
+                        data-testid="ipv4-chip"
+                        label={isIPv4InUse ? 'in use' : 'not in use'}
+                        sx={(theme) => ({
+                          background: isIPv4InUse
+                            ? theme.tokens.component.Badge.Positive.Subtle
+                                .Background
+                            : theme.tokens.component.Badge.Neutral.Subtle
+                                .Background,
+                          color: isIPv4InUse
+                            ? theme.tokens.component.Badge.Positive.Subtle.Text
+                            : theme.tokens.component.Badge.Neutral.Subtle.Text,
+                          font: theme.font.bold,
+                          fontSize: theme.tokens.font.FontSize.Xxxs,
+                          marginRight: theme.spacingFunction(6),
+                          flexShrink: 0,
+                        })}
+                      />
+                    </StyledLabel>
 
-                  <StyledListItem
-                    component="span"
-                    sx={(theme) => ({
-                      ...(!isIPv4InUse
-                        ? {
-                            color:
-                              theme.tokens.alias.Content.Text.Primary.Disabled,
-                          }
-                        : {}),
-                    })}
-                  >
-                    {prefixListDetails.ipv4!.length > 0 ? (
-                      prefixListDetails.ipv4!.join(', ')
-                    ) : (
-                      <i>no IP addresses</i>
-                    )}
-                  </StyledListItem>
-                </Paper>
-              )}
-
-              {isIPv6Supported && (
-                <Paper
-                  data-testid="ipv6-section"
-                  sx={(theme) => ({
-                    backgroundColor: theme.tokens.alias.Background.Neutral,
-                    padding: theme.spacingFunction(12),
-                    marginTop: theme.spacingFunction(8),
-                    ...(isIPv6InUse
-                      ? {
-                          border: `1px solid ${theme.tokens.alias.Border.Positive}`,
-                        }
-                      : {}),
-                  })}
-                >
-                  <StyledLabel
-                    sx={(theme) => ({
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      marginBottom: theme.spacingFunction(4),
-                      ...(!isIPv6InUse
-                        ? {
-                            color:
-                              theme.tokens.alias.Content.Text.Primary.Disabled,
-                          }
-                        : {}),
-                    })}
-                  >
-                    IPv6
-                    <Chip
-                      data-testid="ipv6-chip"
-                      label={isIPv6InUse ? 'in use' : 'not in use'}
+                    <StyledListItem
+                      component="span"
                       sx={(theme) => ({
-                        background: isIPv6InUse
-                          ? theme.tokens.component.Badge.Positive.Subtle
-                              .Background
-                          : theme.tokens.component.Badge.Neutral.Subtle
-                              .Background,
-                        color: isIPv6InUse
-                          ? theme.tokens.component.Badge.Positive.Subtle.Text
-                          : theme.tokens.component.Badge.Neutral.Subtle.Text,
-                        font: theme.font.bold,
-                        fontSize: theme.tokens.font.FontSize.Xxxs,
-                        marginRight: theme.spacingFunction(6),
-                        flexShrink: 0,
+                        ...(!isIPv4InUse
+                          ? {
+                              color:
+                                theme.tokens.alias.Content.Text.Primary
+                                  .Disabled,
+                            }
+                          : {}),
                       })}
-                    />
-                  </StyledLabel>
-                  <StyledListItem
-                    component="span"
+                    >
+                      {prefixListDetails.ipv4!.length > 0 ? (
+                        prefixListDetails.ipv4!.join(', ')
+                      ) : (
+                        <i>no IP addresses</i>
+                      )}
+                    </StyledListItem>
+                  </Paper>
+                )}
+
+                {isIPv6Supported && (
+                  <Paper
+                    data-testid="ipv6-section"
                     sx={(theme) => ({
-                      ...(!isIPv6InUse
+                      backgroundColor: theme.tokens.alias.Background.Neutral,
+                      padding: theme.spacingFunction(12),
+                      ...(isIPv6InUse
                         ? {
-                            color:
-                              theme.tokens.alias.Content.Text.Primary.Disabled,
+                            border: `1px solid ${theme.tokens.alias.Border.Positive}`,
                           }
                         : {}),
                     })}
                   >
-                    {prefixListDetails.ipv6!.length > 0 ? (
-                      prefixListDetails.ipv6!.join(', ')
-                    ) : (
-                      <i>no IP addresses</i>
-                    )}
-                  </StyledListItem>
-                </Paper>
-              )}
+                    <StyledLabel
+                      sx={(theme) => ({
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: theme.spacingFunction(4),
+                        ...(!isIPv6InUse
+                          ? {
+                              color:
+                                theme.tokens.alias.Content.Text.Primary
+                                  .Disabled,
+                            }
+                          : {}),
+                      })}
+                    >
+                      IPv6
+                      <Chip
+                        data-testid="ipv6-chip"
+                        label={isIPv6InUse ? 'in use' : 'not in use'}
+                        sx={(theme) => ({
+                          background: isIPv6InUse
+                            ? theme.tokens.component.Badge.Positive.Subtle
+                                .Background
+                            : theme.tokens.component.Badge.Neutral.Subtle
+                                .Background,
+                          color: isIPv6InUse
+                            ? theme.tokens.component.Badge.Positive.Subtle.Text
+                            : theme.tokens.component.Badge.Neutral.Subtle.Text,
+                          font: theme.font.bold,
+                          fontSize: theme.tokens.font.FontSize.Xxxs,
+                          marginRight: theme.spacingFunction(6),
+                          flexShrink: 0,
+                        })}
+                      />
+                    </StyledLabel>
+                    <StyledListItem
+                      component="span"
+                      sx={(theme) => ({
+                        ...(!isIPv6InUse
+                          ? {
+                              color:
+                                theme.tokens.alias.Content.Text.Primary
+                                  .Disabled,
+                            }
+                          : {}),
+                      })}
+                    >
+                      {prefixListDetails.ipv6!.length > 0 ? (
+                        prefixListDetails.ipv6!.join(', ')
+                      ) : (
+                        <i>no IP addresses</i>
+                      )}
+                    </StyledListItem>
+                  </Paper>
+                )}
+              </Stack>
             </>
           )}
 
