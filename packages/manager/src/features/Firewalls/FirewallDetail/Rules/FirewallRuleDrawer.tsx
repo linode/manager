@@ -195,18 +195,22 @@ export const FirewallRuleDrawer = React.memo(
       return errors;
     };
 
+    const featureChip =
+      getFeatureChip({
+        isFirewallRulesetsPrefixlistsFeatureEnabled,
+        isFirewallRulesetsPrefixListsBetaEnabled,
+        isFirewallRulesetsPrefixListsGAEnabled,
+      }) ?? undefined;
+
+    // Do not show the Firewall RS & PL feature chip in Edit mode drawer title
+    const titleSuffix = mode === 'edit' ? undefined : featureChip;
+
     return (
       <Drawer
         onClose={onClose}
         open={isOpen}
         title={title}
-        titleSuffix={
-          getFeatureChip({
-            isFirewallRulesetsPrefixlistsFeatureEnabled,
-            isFirewallRulesetsPrefixListsBetaEnabled,
-            isFirewallRulesetsPrefixListsGAEnabled,
-          }) ?? undefined
-        }
+        titleSuffix={titleSuffix}
       >
         {mode === 'create' && isFirewallRulesetsPrefixlistsFeatureEnabled && (
           <Grid container spacing={2}>
