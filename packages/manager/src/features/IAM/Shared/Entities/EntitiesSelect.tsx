@@ -26,7 +26,7 @@ interface Props {
   value: EntitiesOption[];
 }
 
-export const Entities = ({
+export const EntitiesSelect = ({
   access,
   errorText,
   mode,
@@ -34,8 +34,10 @@ export const Entities = ({
   type,
   value,
 }: Props) => {
-  const { data: entities } = useAllAccountEntities({});
+  const { data: entities, isLoading } = useAllAccountEntities({});
   const theme = useTheme();
+
+  const [displayCount, setDisplayCount] = React.useState(100);
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
@@ -75,12 +77,13 @@ export const Entities = ({
         getOptionLabel={(option) => option.label}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Entities"
+        loading={isLoading}
         multiple
         noMarginTop
         onChange={(_, newValue) => {
           onChange(newValue || []);
         }}
-        options={memoizedEntities}
+        options={memoizedEntities.slice(0, displayCount)}
         placeholder={getPlaceholder(
           type,
           value.length,
@@ -101,6 +104,22 @@ export const Entities = ({
             )}
           />
         )}
+        slotProps={{
+          listbox: {
+            sx: {
+              contentVisibility: 'auto',
+              containIntrinsicSize: `0 32px`,
+            },
+            onScroll: (e) => {
+              const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+              if (scrollHeight - scrollTop <= clientHeight * 1.5) {
+                setDisplayCount((prev) =>
+                  Math.min(prev + 200, memoizedEntities.length)
+                );
+              }
+            },
+          },
+        }}
         sx={{
           marginTop: 0,
           '& .MuiChip-root': {
