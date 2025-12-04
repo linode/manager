@@ -78,6 +78,7 @@ const mockLinode = linodeFactory.buildList(10).map((linode, index) => ({
   label: `${resource}-${index + 1}`,
   region: 'us-ord',
   tags: ['tag-2', 'tag-3'],
+  alerts: { user_alerts: [1], system_alerts: [] },
 }));
 
 const notificationChannels = notificationChannelFactory.build({
