@@ -23,11 +23,6 @@ const queryMocks = vi.hoisted(() => ({
       create_vpc_subnet: true,
     },
   })),
-  useQueryWithPermissions: vi.fn().mockReturnValue({
-    data: [],
-    isLoading: false,
-    isError: false,
-  }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -48,8 +43,8 @@ vi.mock('@linode/queries', async () => {
 });
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
+
 const loadingTestId = 'circle-progress';
 
 describe('VPC Subnets table', () => {

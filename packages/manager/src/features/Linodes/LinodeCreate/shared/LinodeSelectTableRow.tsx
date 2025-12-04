@@ -7,12 +7,14 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
+  disabled: boolean;
+  isCloneable: boolean;
+  isShutdownable: boolean;
   linode: Linode;
   onPowerOff?: () => void;
   onSelect: () => void;
@@ -20,7 +22,15 @@ interface Props {
 }
 
 export const LinodeSelectTableRow = (props: Props) => {
-  const { linode, onPowerOff, onSelect, selected } = props;
+  const {
+    disabled,
+    isCloneable,
+    isShutdownable,
+    linode,
+    onPowerOff,
+    onSelect,
+    selected,
+  } = props;
 
   const { data: image } = useImageQuery(
     linode.image ?? '',
@@ -33,19 +43,13 @@ export const LinodeSelectTableRow = (props: Props) => {
 
   const region = regions?.find((r) => r.id === linode.region);
 
-  const { data: permissions } = usePermissions(
-    'linode',
-    ['shutdown_linode', 'clone_linode'],
-    linode.id
-  );
-
   return (
-    <TableRow disabled={!permissions.clone_linode} key={linode.label}>
+    <TableRow disabled={!isCloneable} key={linode.label}>
       <TableCell>
         <FormControlLabel
           checked={selected}
           control={<Radio />}
-          disabled={!permissions.clone_linode}
+          disabled={!isCloneable || disabled}
           label={linode.label}
           onChange={onSelect}
           sx={{ gap: 2 }}
@@ -66,7 +70,7 @@ export const LinodeSelectTableRow = (props: Props) => {
             <InlineMenuAction
               actionText="Power Off"
               buttonHeight={43}
-              disabled={!permissions.shutdown_linode}
+              disabled={!isShutdownable}
               onClick={onPowerOff}
             />
           )}

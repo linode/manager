@@ -2,8 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
 import {
   Autocomplete,
+  Box,
   FormControl,
   FormControlLabel,
+  InputLabel,
   Notice,
   Radio,
   RadioGroup,
@@ -13,7 +15,7 @@ import {
 } from '@linode/ui';
 import { updateMaintenanceSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
-import { Button } from 'akamai-cds-react-components';
+import { Button, Select } from 'akamai-cds-react-components';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -157,89 +159,107 @@ export const MaintenanceWindow = (props: Props) => {
                 <Controller
                   control={control}
                   name="day_of_week"
-                  render={({ field, fieldState }) => (
-                    <Autocomplete
-                      autoHighlight
-                      disableClearable
-                      disabled={disabled}
-                      errorText={fieldState.error?.message}
-                      isOptionEqualToValue={(option, value) =>
-                        option.value === value.value
-                      }
-                      label="Day of Week"
-                      noMarginTop
-                      onChange={(_, day) => {
-                        field.onChange(day.value);
-                        weekSelectionModifier(day.label, weekSelectionMap);
-                      }}
-                      options={daySelectionMap}
-                      placeholder="Choose a day"
-                      renderOption={(props, option) => (
-                        <li {...props}>{option.label}</li>
-                      )}
-                      textFieldProps={{
-                        dataAttrs: {
-                          'data-qa-weekday-select': true,
-                        },
-                      }}
-                      value={daySelectionMap.find(
-                        (thisOption) => thisOption.value === dayOfWeek
-                      )}
-                    />
+                  render={({ field }) => (
+                    <Box>
+                      <InputLabel
+                        data-qa-dropdown-label="day-of-week-select"
+                        data-qa-textfield-label="Day of Week"
+                        sx={{
+                          marginBottom: '8px',
+                          transform: 'none',
+                        }}
+                      >
+                        Day of Week
+                      </InputLabel>
+                      <Box
+                        data-qa-autocomplete="Day of Week"
+                        sx={{ width: '125px' }}
+                      >
+                        <Select
+                          autocomplete
+                          id="dayOfWeek"
+                          items={daySelectionMap}
+                          onChange={(e: CustomEvent) => {
+                            const day: { label: string; value: number } =
+                              e.detail;
+                            field.onChange(day.value);
+                            weekSelectionModifier(day.label, weekSelectionMap);
+                          }}
+                          placeholder="Choose a day"
+                          selected={daySelectionMap.find(
+                            (thisOption) => thisOption.value === dayOfWeek
+                          )}
+                          valueFn={(day: { label: string; value: number }) =>
+                            `${day.label}`
+                          }
+                        />
+                      </Box>
+                    </Box>
                   )}
                 />
               </FormControl>
               <FormControl>
-                <div style={{ alignItems: 'center', display: 'flex' }}>
-                  <Controller
-                    control={control}
-                    name="hour_of_day"
-                    render={({ field, fieldState }) => (
-                      <Autocomplete
-                        autoHighlight
-                        defaultValue={hourSelectionMap.find(
-                          (option) => option.value === 20
-                        )}
-                        disableClearable
-                        disabled={disabled}
-                        errorText={fieldState.error?.message}
-                        label="Time"
-                        noMarginTop
-                        onChange={(_, hour) => {
-                          field.onChange(hour?.value);
+                <Controller
+                  control={control}
+                  name="hour_of_day"
+                  render={({ field }) => (
+                    <Box data-qa-autocomplete="Time">
+                      <Box>
+                        <InputLabel
+                          data-qa-dropdown-label="time-select"
+                          data-qa-textfield-label="Time"
+                          htmlFor="time"
+                          sx={{
+                            marginBottom: '8px',
+                            transform: 'none',
+                          }}
+                        >
+                          Time
+                        </InputLabel>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
                         }}
-                        options={hourSelectionMap}
-                        placeholder="Choose a time"
-                        renderOption={(props, option) => (
-                          <li {...props}>{option.label}</li>
-                        )}
-                        textFieldProps={{
-                          dataAttrs: {
-                            'data-qa-time-select': true,
-                          },
-                        }}
-                        value={hourSelectionMap.find(
-                          (thisOption) => thisOption.value === hourOfDay
-                        )}
-                      />
-                    )}
-                  />
-                  <TooltipIcon
-                    status="info"
-                    sxTooltipIcon={{
-                      marginTop: '1.75rem',
-                      padding: '0px 8px',
-                    }}
-                    text={
-                      <Typography>
-                        UTC is {utcOffsetText(utcOffsetInHours)} hours compared
-                        to your local timezone. Click{' '}
-                        <Link to="/profile/display">here</Link> to view or
-                        change your timezone settings.
-                      </Typography>
-                    }
-                  />
-                </div>
+                      >
+                        <Box sx={{ width: '120px' }}>
+                          <Select
+                            autocomplete
+                            disabled={disabled}
+                            id="time"
+                            items={hourSelectionMap}
+                            onChange={(e: CustomEvent) => {
+                              const hour: { label: string; value: number } =
+                                e.detail;
+                              field.onChange(hour?.value);
+                            }}
+                            placeholder="Choose a time"
+                            selected={hourSelectionMap.find(
+                              (thisOption) => thisOption.value === hourOfDay
+                            )}
+                            valueFn={(time: { label: string }) =>
+                              `${time.label}`
+                            }
+                          />
+                        </Box>
+                        <TooltipIcon
+                          status="info"
+                          sxTooltipIcon={{
+                            padding: '0px 8px',
+                          }}
+                          text={
+                            <Typography>
+                              UTC is {utcOffsetText(utcOffsetInHours)} hours
+                              compared to your local timezone. Click{' '}
+                              <Link to="/profile/display">here</Link> to view or
+                              change your timezone settings.
+                            </Typography>
+                          }
+                        />
+                      </Box>
+                    </Box>
+                  )}
+                />
               </FormControl>
             </Stack>
             {isLegacy && (
