@@ -12,10 +12,8 @@ export type EntityType =
   | 'volume'
   | 'vpc';
 
-export type EntityId = number | string;
-
 export interface AccountEntity {
-  id: EntityId;
+  id: number;
   label: string;
   type: EntityType;
 }

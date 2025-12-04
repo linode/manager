@@ -142,30 +142,3 @@ export const getUserEntitiesByPermission = ({
     setParams(params),
     setXFilter(filter),
   );
-
-/**
- * getUserEntities
- *
- * Returns the available entities for a given user.
- * It is using the getUserEntitiesByPermission method, but without the permission parameter.
- * This is used to get all entities for a given user, per entity type.
- */
-export interface GetUserEntitiesParams {
-  entityType: EntityType;
-  filter?: Filter;
-  params?: Params;
-  username: string;
-}
-
-export const getUserEntities = ({
-  username,
-  entityType,
-  params,
-  filter,
-}: GetUserEntitiesParams) =>
-  Request<ResourcePage<EntityByPermission>>(
-    setURL(`${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}`),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filter),
-  );

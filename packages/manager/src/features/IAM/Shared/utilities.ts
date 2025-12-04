@@ -19,7 +19,6 @@ import type {
   AccountRoleType,
   APIError,
   EntityAccess,
-  EntityId,
   EntityRoleType,
   EntityType,
   IamAccess,
@@ -325,7 +324,7 @@ export const groupAccountEntitiesByType = (
 
 export const changeRoleForEntity = (
   entityRoles: EntityAccess[],
-  entityId: EntityId,
+  entityId: number,
   entityType: AccessType,
   initialRole: EntityRoleType,
   newRole: EntityRoleType
@@ -350,7 +349,7 @@ export const changeRoleForEntity = (
 
 export const toEntityAccess = (
   entityRoles: EntityAccess[],
-  entityIds: EntityId[],
+  entityIds: number[],
   roleName: EntityRoleType,
   roleType: AccessType
 ): EntityAccess[] => {
@@ -392,7 +391,7 @@ export const toEntityAccess = (
 export const deleteUserEntity = (
   entityRoles: EntityAccess[],
   roleName: EntityRoleType,
-  entityId: EntityId,
+  entityId: number,
   entityType: AccessType
 ): EntityAccess[] => {
   return entityRoles
