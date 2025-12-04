@@ -42,6 +42,9 @@ export const DestinationTableRow = React.memo(
         <TableCell>
           <DateTimeDisplay value={destination.updated} />
         </TableCell>
+        <Hidden lgDown>
+          <TableCell>{destination.updated_by}</TableCell>
+        </Hidden>
         <TableCell actionCell>
           <DestinationActionMenu
             destination={destination}
