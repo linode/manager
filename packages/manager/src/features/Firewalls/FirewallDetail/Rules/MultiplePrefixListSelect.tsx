@@ -32,6 +32,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingLeft: 0,
     paddingTop: theme.spacingFunction(12),
   },
+  autocomplete: {
+    "& [data-testid='inputLabelWrapper']": {
+      display: 'none',
+    },
+  },
   button: {
     '& > span': {
       padding: 2,
@@ -246,6 +251,7 @@ export const MultiplePrefixListSelect = React.memo(
         >
           <Grid size={11}>
             <Autocomplete
+              className={classes.autocomplete}
               disableClearable={prefixLists.length > 0}
               disabled={disabled}
               errorText={thisPL.error}
@@ -310,7 +316,7 @@ export const MultiplePrefixListSelect = React.memo(
               sx={(theme) => ({
                 height: 20,
                 width: 20,
-                marginTop: `${theme.spacingFunction(16)} !important`,
+                marginTop: `${theme.spacingFunction(8)} !important`,
               })}
             >
               <CloseIcon data-testid={`delete-pl-${idx}`} />
@@ -325,7 +331,7 @@ export const MultiplePrefixListSelect = React.memo(
         {/* Display the title only when pls.length > 0 (i.e., at least one PL row is added) */}
         {pls.length > 0 && (
           <Box display="flex">
-            <InputLabel sx={{ margin: 0 }}>Prefix List</InputLabel>
+            <InputLabel>Prefix List</InputLabel>
             {isFirewallRulesetsPrefixListsBetaEnabled && <BetaChip />}
           </Box>
         )}

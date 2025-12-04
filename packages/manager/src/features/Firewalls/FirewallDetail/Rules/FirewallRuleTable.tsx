@@ -439,47 +439,41 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       )}
 
       {isRuleSetRowEnabled && (
-        <>
-          <TableCell aria-label={`Label: ${label}`}>
-            <Box
-              alignItems="center"
-              display="flex"
-              gap={rulesetDetails ? 1 : 0}
-            >
-              <Box alignItems="center" display="flex">
-                <StyledDragIndicator
-                  aria-label="Drag indicator icon"
-                  sx={{ flexShrink: 0 }}
-                />
-                {rulesetDetails && (
-                  <Link
-                    onClick={() =>
-                      handleOpenRuleSetDrawerForViewing?.(rulesetDetails.id)
-                    }
-                  >
-                    {rulesetDetails?.label}
-                  </Link>
-                )}
-              </Box>
-              <Hidden smDown={!!rulesetDetails}>
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                  }}
+        <TableCell
+          aria-label={`Label: ${label}`}
+          colSpan={smDown ? 2 : lgDown ? 4 : 5}
+        >
+          <Box alignItems="center" display="flex" gap={rulesetDetails ? 1 : 0}>
+            <Box alignItems="center" display="flex">
+              <StyledDragIndicator
+                aria-label="Drag indicator icon"
+                sx={{ flexShrink: 0 }}
+              />
+              {rulesetDetails && (
+                <Link
+                  onClick={() =>
+                    handleOpenRuleSetDrawerForViewing?.(rulesetDetails.id)
+                  }
                 >
-                  <span>{rulesetDetails ? 'ID:' : 'Rule Set ID:'}&nbsp;</span>
-                  <span>{ruleset}</span>
-                  <CopyTooltip
-                    className={classes.copyIcon}
-                    text={String(ruleset)}
-                  />
-                </Box>
-              </Hidden>
+                  {rulesetDetails?.label}
+                </Link>
+              )}
             </Box>
-          </TableCell>
-          <TableCell colSpan={smDown ? 0 : lgDown ? 3 : 4} />
-        </>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
+              <span>{rulesetDetails ? 'ID:' : 'Ruleset ID:'}&nbsp;</span>
+              <span>{ruleset}</span>
+              <CopyTooltip
+                className={classes.copyIcon}
+                text={String(ruleset)}
+              />
+            </Box>
+          </Box>
+        </TableCell>
       )}
 
       <TableCell>
