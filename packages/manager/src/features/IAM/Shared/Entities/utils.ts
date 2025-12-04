@@ -55,7 +55,7 @@ export const getPlaceholder = (
 };
 
 export const mapEntitiesToOptions = (
-  entities: Pick<AccountEntity, 'id' | 'label'>[]
+  entities: { id: number; label: string }[]
 ): EntitiesOption[] => {
   return entities.map((entity) => ({
     label: entity.label,
