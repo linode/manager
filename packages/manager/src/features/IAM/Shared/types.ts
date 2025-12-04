@@ -1,6 +1,7 @@
 import type {
   AccessType,
   AccountRoleType,
+  EntityId,
   EntityRoleType,
   IamAccessType,
   PermissionType,
@@ -8,13 +9,13 @@ import type {
 
 export interface EntitiesOption {
   label: string;
-  value: number;
+  value: EntityId;
 }
 
 export interface RoleView {
   access: 'account_access' | 'entity_access';
   description: string;
-  entity_ids: null | number[];
+  entity_ids: EntityId[] | null;
   entity_type: AccessType;
   id: AccountRoleType | EntityRoleType;
   name: AccountRoleType | EntityRoleType;
@@ -26,7 +27,7 @@ export interface ExtendedRoleView extends RoleView {
 
 export interface EntitiesRole {
   access: IamAccessType;
-  entity_id: number;
+  entity_id: EntityId;
   entity_name: string;
   entity_type: AccessType;
   id: string;
@@ -34,7 +35,7 @@ export interface EntitiesRole {
 }
 
 export interface CombinedEntity {
-  id: number;
+  id: EntityId;
   name: string;
 }
 

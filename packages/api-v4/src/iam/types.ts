@@ -1,4 +1,4 @@
-import type { EntityType } from '../entities/types';
+import type { EntityId, EntityType } from '../entities/types';
 
 export type AccountType = 'account';
 
@@ -436,7 +436,7 @@ export interface IamUserRoles {
 }
 
 export interface EntityAccess {
-  id: number;
+  id: EntityId;
   roles: EntityRoleType[];
   type: AccessType;
 }
@@ -457,7 +457,7 @@ export interface Roles {
   permissions: PermissionType[];
 }
 export interface EntityByPermission {
-  id: number | string;
+  id: EntityId;
   label: string;
   type: EntityType;
 }
