@@ -61,13 +61,15 @@ export const iamQueries = createQueryKeys('iam', {
       }),
       userEntities: (entityType: AccessType, params: Params = {}) => ({
         queryFn: () =>
-          getUserEntities(username, entityType, params).then((res) => res.data),
+          getUserEntities({ username, entityType, params }).then(
+            (res) => res.data,
+          ),
         queryKey: [entityType, params],
       }),
       allUserEntities: (entityType: AccessType) => ({
         queryFn: () =>
           getAll<EntityByPermission>((params) =>
-            getUserEntities(username, entityType, params),
+            getUserEntities({ username, entityType, params }),
           )().then((data) => data.data),
         queryKey: [entityType, 'all'],
       }),
