@@ -77,12 +77,20 @@ const databaseMock = regionList.map((region) =>
   })
 );
 
-const notificationChannels = notificationChannelFactory.build({
-  channel_type: 'email',
-  id: 1,
-  label: 'channel-1',
-  type: 'user',
-});
+const notificationChannels = [
+  notificationChannelFactory.build({
+    id: 1,
+    label: 'user-channel-1',
+    type: 'user',
+    channel_type: 'email',
+  }),
+  notificationChannelFactory.build({
+    id: 2,
+    label: 'system-channel-1',
+    type: 'system',
+    channel_type: 'email',
+  }),
+];
 
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
@@ -195,6 +203,39 @@ const verifyAlertRow = (
       });
     });
 };
+/**
+ * Creates a notification channel through the UI.
+ * Opens the Add Notification Channel dialog, selects Email as the type,
+ * picks the channel matching the given label, and submits the form.
+ *
+ * @param channelLabel - The label of the channel to select in the autocomplete.
+ */
+const createNotificationChannel = (channelLabel: string) => {
+  // Open dialog
+  ui.buttonGroup.find().contains('Add notification channel').click();
+
+  // Select Type = Email
+  ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
+  ui.autocompletePopper.findByTitle('Email').should('be.visible').click();
+
+  // Select Channel
+  ui.autocomplete
+    .findByLabel('Channel')
+    .should('be.visible')
+    .type(channelLabel);
+  ui.autocompletePopper.findByTitle(channelLabel).should('be.visible').click();
+
+  // Submit
+  ui.drawer
+    .findByTitle('Add Notification Channel')
+    .should('be.visible')
+    .within(() => {
+      ui.buttonGroup
+        .findButtonByTitle('Add channel')
+        .should('be.visible')
+        .click();
+    });
+};
 
 describe('Create Firewall Alert Successfully', () => {
   /*
@@ -214,7 +255,7 @@ describe('Create Firewall Alert Successfully', () => {
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetDatabases(databaseMock);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
-    mockGetAlertChannels([notificationChannels]);
+    mockGetAlertChannels(notificationChannels);
   });
 
   it('should navigate to the Create Alert page from the Alert Listings page', () => {
@@ -385,31 +426,9 @@ describe('Create Firewall Alert Successfully', () => {
       cy.get('[data-qa-trigger-occurrences]').should('be.visible').type('5');
 
       // Add notification channel
-      ui.buttonGroup.find().contains('Add notification channel').click();
+      createNotificationChannel('user-channel-1');
+      createNotificationChannel('system-channel-1');
 
-      ui.autocomplete.findByLabel('Type').should('be.visible').type('Email');
-      ui.autocompletePopper.findByTitle('Email').should('be.visible').click();
-
-      ui.autocomplete
-        .findByLabel('Channel')
-        .should('be.visible')
-        .type('channel-1');
-
-      ui.autocompletePopper
-        .findByTitle('channel-1')
-        .should('be.visible')
-        .click();
-
-      // Add channel
-      ui.drawer
-        .findByTitle('Add Notification Channel')
-        .should('be.visible')
-        .within(() => {
-          ui.buttonGroup
-            .findButtonByTitle('Add channel')
-            .should('be.visible')
-            .click();
-        });
       // Click on submit button
       ui.buttonGroup
         .find()

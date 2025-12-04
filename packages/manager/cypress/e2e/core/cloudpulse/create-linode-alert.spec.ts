@@ -81,10 +81,11 @@ const mockLinode = linodeFactory.buildList(10).map((linode, index) => ({
   alerts: { user_alerts: [1], system_alerts: [] },
 }));
 
+const channelLabel = 'user-channel-1';
 const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
   id: 1,
-  label: 'channel-1',
+  label: channelLabel,
   type: 'user',
 });
 
@@ -405,10 +406,18 @@ describe('Create Alert', () => {
       ui.autocomplete
         .findByLabel('Channel')
         .should('be.visible')
-        .type('channel-1');
+        .as('channelField');
 
+      cy.get('@channelField').parent().find('button[title="Open"]').click();
+
+      cy.get('[data-qa-autocomplete-popper="true"] li[role="option"]')
+        .should('have.length', 1)
+        .first()
+        .should('contain.text', channelLabel);
+
+      cy.get('@channelField').type(channelLabel);
       ui.autocompletePopper
-        .findByTitle('channel-1')
+        .findByTitle(channelLabel)
         .should('be.visible')
         .click();
 
