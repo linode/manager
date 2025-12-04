@@ -11,7 +11,7 @@ export const addEntityNamesToRoles = (
   assignedRoles: IamUserRoles,
   entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): EntitiesRole[] => {
-  const entitiesRoles = assignedRoles.entity_access;
+  const entitiesRoles = assignedRoles.entity_access ?? [];
 
   return entitiesRoles.flatMap((entityRole: EntityAccess) => {
     const entityByType = entities.get(entityRole.type as EntityType);

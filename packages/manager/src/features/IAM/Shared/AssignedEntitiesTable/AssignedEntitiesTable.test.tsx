@@ -9,27 +9,23 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
 
 const queryMocks = vi.hoisted(() => ({
-  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useGetUserEntities: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useUserRoles: queryMocks.useUserRoles,
   };
 });
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
-  return {
-    ...actual,
-    useAllAccountEntities: queryMocks.useAllAccountEntities,
-  };
-});
+vi.mock('../../hooks/useGetUserEntities', () => ({
+  useGetUserEntities: queryMocks.useGetUserEntities,
+}));
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -56,6 +52,11 @@ describe('AssignedEntitiesTable', () => {
     queryMocks.useSearch.mockReturnValue({
       query: '',
     });
+    queryMocks.useGetUserEntities.mockReturnValue({
+      userEntities: mockEntities,
+      isLoading: false,
+      error: null,
+    });
   });
 
   it('should display no roles text if there are no roles assigned to user', async () => {
@@ -71,10 +72,6 @@ describe('AssignedEntitiesTable', () => {
   it('should display roles and menu when data is available', async () => {
     queryMocks.useUserRoles.mockReturnValue({
       data: userRolesFactory.build(),
-    });
-
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
     });
 
     renderWithTheme(<AssignedEntitiesTable />);
@@ -98,10 +95,6 @@ describe('AssignedEntitiesTable', () => {
       data: userRolesFactory.build(),
     });
 
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
-    });
-
     renderWithTheme(<AssignedEntitiesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
@@ -117,10 +110,6 @@ describe('AssignedEntitiesTable', () => {
       data: userRolesFactory.build(),
     });
 
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
-    });
-
     renderWithTheme(<AssignedEntitiesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
@@ -134,10 +123,6 @@ describe('AssignedEntitiesTable', () => {
   it('should filter roles based on selected resource type', async () => {
     queryMocks.useUserRoles.mockReturnValue({
       data: userRolesFactory.build(),
-    });
-
-    queryMocks.useAllAccountEntities.mockReturnValue({
-      data: mockEntities,
     });
 
     renderWithTheme(<AssignedEntitiesTable />);
