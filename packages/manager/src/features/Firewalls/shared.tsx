@@ -404,6 +404,24 @@ export const generateAddressesLabelV2 = (
     elements.push('All IPv6');
   }
 
+  // Add remaining IPv4 addresses that are not prefix lists
+  if (!allowedAllIPv4) {
+    addresses?.ipv4?.forEach((ip) => {
+      if (!isPrefixList(ip)) {
+        elements.push(<span key={ip}>{ip}</span>);
+      }
+    });
+  }
+
+  // Add remaining IPv6 addresses that are not prefix lists
+  if (!allowedAllIPv6) {
+    addresses?.ipv6?.forEach((ip) => {
+      if (!isPrefixList(ip)) {
+        elements.push(<span key={ip}>{ip}</span>);
+      }
+    });
+  }
+
   // Build a map of prefix lists.
   // NOTE: If "allowedAllIPv4" or "allowedAllIPv6" is true, we skip those IPs entirely
   // because "All IPvX" is already represented, and there are no specific addresses to map.
@@ -438,24 +456,6 @@ export const generateAddressesLabelV2 = (
       </Link>
     );
   });
-
-  // Add remaining IPv4 addresses that are not prefix lists
-  if (!allowedAllIPv4) {
-    addresses?.ipv4?.forEach((ip) => {
-      if (!isPrefixList(ip)) {
-        elements.push(<span key={ip}>{ip}</span>);
-      }
-    });
-  }
-
-  // Add remaining IPv6 addresses that are not prefix lists
-  if (!allowedAllIPv6) {
-    addresses?.ipv6?.forEach((ip) => {
-      if (!isPrefixList(ip)) {
-        elements.push(<span key={ip}>{ip}</span>);
-      }
-    });
-  }
 
   // If no IPs are allowed
   if (elements.length === 0) return 'None';
