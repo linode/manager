@@ -471,18 +471,18 @@ export const generateAddressesLabelV2 = (
       sx={(theme) => ({
         maxHeight: '40vh',
         overflowY: 'auto',
-        // Extra space on the right to prevent scrollbar from overlapping content
-        paddingRight: theme.spacingFunction(8),
+        px: theme.spacingFunction(16),
       })}
     >
-      <ul
-        style={{
+      <Box
+        component="ul"
+        sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
-          gap: 4,
-          paddingLeft: 20,
+          gap: 0.5,
+          px: theme.spacingFunction(20),
           margin: 0,
-        }}
+        })}
       >
         {hiddenElements.map((el, i) => (
           <li
@@ -493,7 +493,7 @@ export const generateAddressesLabelV2 = (
             {el}
           </li>
         ))}
-      </ul>
+      </Box>
     </Box>
   );
 
@@ -521,7 +521,11 @@ export const generateAddressesLabelV2 = (
             tooltip: {
               sx: (theme) => ({
                 minWidth: '248px',
-                padding: `${theme.spacingFunction(16)} !important`,
+                paddingX: `0 !important`,
+                paddingY: `${theme.spacingFunction(16)} !important`,
+                '& .MuiTooltip-arrow': {
+                  color: theme.tokens.component.Popover.Background,
+                },
               }),
             },
           }}
