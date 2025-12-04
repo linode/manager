@@ -41,7 +41,6 @@ export const RegionSelect = <
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
-    forcefullyShownRegionIds,
     helperText,
     isGeckoLAEnabled,
     label,
@@ -62,7 +61,6 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    forcefullyShownRegionIds,
     regionFilter,
     regions,
   });
