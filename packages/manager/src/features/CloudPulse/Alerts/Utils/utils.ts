@@ -628,10 +628,9 @@ export const getFilterFn = (
  * @returns The filtered list of linodes that have ACLP alerts
  */
 export const filterLinodeResources = (linodes: Linode[]): Linode[] => {
-  return linodes.filter((linode) => {
-    return (
+  return linodes.filter(
+    (linode) =>
       (linode.alerts.system_alerts?.length ?? 0) > 0 ||
       (linode.alerts.user_alerts?.length ?? 0) > 0
-    );
-  });
+  );
 };
