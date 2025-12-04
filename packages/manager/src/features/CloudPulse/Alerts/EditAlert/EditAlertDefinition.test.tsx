@@ -105,15 +105,15 @@ describe('EditAlertDefinition component', () => {
 
     await waitFor(() => expect(mutateAsyncSpy).toHaveBeenCalledTimes(1));
 
-      expect(navigate).toHaveBeenLastCalledWith({
-        to: '/alerts/definitions',
-      });
-      await waitFor(() => {
-        expect(
-          getByText(UPDATE_ALERT_SUCCESS_MESSAGE) // validate whether snackbar is displayed properly
-        ).toBeInTheDocument();
-      });
+    expect(navigate).toHaveBeenLastCalledWith({
+      to: '/alerts/definitions',
     });
+    await waitFor(() => {
+      expect(
+        getByText(UPDATE_ALERT_SUCCESS_MESSAGE) // validate whether snackbar is displayed properly
+      ).toBeInTheDocument();
+    });
+  });
 
   it('should render EntityTypeSelect for firewall with Linode entity type', () => {
     const linodeFirewallAlertDetails = alertFactory.build({
