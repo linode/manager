@@ -12,17 +12,32 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { NotificationChannelTableAlertTooltipText } from '../../constants';
-import { AlertNotificationChannelListingTableLabelMap } from './constants';
+import {
+  ChannelAlertsTooltipText,
+  ChannelListingTableLabelMap,
+} from './constants';
 import { NotificationChannelTableRow } from './NotificationChannelTableRow';
 
 import type { APIError, NotificationChannel } from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface NotificationChannelListTableProps {
+  /**
+   * The error returned from the API call to fetch notification channels
+   */
   error?: APIError[];
+  /**
+   * Indicates if the data is loading
+   */
   isLoading: boolean;
+  /**
+   * The list of notification channels to display in the table
+   */
   notificationChannels: NotificationChannel[];
+  /**
+   * Function to scroll to a specific element on the page
+   * @returns void
+   */
   scrollToElement: () => void;
 }
 
@@ -111,27 +126,25 @@ export const NotificationChannelListTable = React.memo(
                 >
                   <TableHead>
                     <TableRow>
-                      {AlertNotificationChannelListingTableLabelMap.map(
-                        (value) => (
-                          <TableSortCell
-                            active={orderBy === value.label}
-                            direction={order}
-                            handleClick={handleTableSort}
-                            key={value.label}
-                            label={value.label}
-                            noWrap
-                          >
-                            {value.colName}
-                            {value.colName === 'Alerts' && (
-                              <TooltipIcon
-                                status="info"
-                                sxTooltipIcon={{ margin: 0, padding: 0 }}
-                                text={NotificationChannelTableAlertTooltipText}
-                              />
-                            )}
-                          </TableSortCell>
-                        )
-                      )}
+                      {ChannelListingTableLabelMap.map((value) => (
+                        <TableSortCell
+                          active={orderBy === value.label}
+                          direction={order}
+                          handleClick={handleTableSort}
+                          key={value.label}
+                          label={value.label}
+                          noWrap
+                        >
+                          {value.colName}
+                          {value.colName === 'Alerts' && (
+                            <TooltipIcon
+                              status="info"
+                              sxTooltipIcon={{ margin: 0, padding: 0 }}
+                              text={ChannelAlertsTooltipText}
+                            />
+                          )}
+                        </TableSortCell>
+                      ))}
                       <TableCell />
                     </TableRow>
                   </TableHead>
@@ -140,7 +153,7 @@ export const NotificationChannelListTable = React.memo(
                       error={_error}
                       length={paginatedAndOrderedNotificationChannels.length}
                       loading={isLoading}
-                      loadingProps={{ columns: 6 }}
+                      loadingProps={{ columns: 7 }}
                     />
                   </TableBody>
                   <TableBody>

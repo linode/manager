@@ -3584,16 +3584,6 @@ export const handlers = [
         created_by: 'admin',
       })
     );
-    notificationChannels.push(
-      notificationChannelFactory.build({
-        channel_type: 'webhook',
-        label: 'Webhook Channel',
-        alerts: [{ id: 3 }, { id: 5 }],
-        updated: '2021-10-16T04:00:00',
-        updated_by: 'user2',
-        created_by: 'user5',
-      })
-    );
     notificationChannels.push(...notificationChannelFactory.buildList(75));
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),

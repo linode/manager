@@ -1,4 +1,11 @@
-export const AlertNotificationChannelListingTableLabelMap = [
+import type { NotificationChannel } from '@linode/api-v4';
+
+type ChannelListingTableLabel = {
+  colName: string;
+  label: keyof NotificationChannel;
+};
+
+export const ChannelListingTableLabelMap: ChannelListingTableLabel[] = [
   {
     colName: 'Channel Name',
     label: 'label',
@@ -24,3 +31,6 @@ export const AlertNotificationChannelListingTableLabelMap = [
     label: 'updated_by',
   },
 ];
+
+export const ChannelAlertsTooltipText =
+  'The number of alert definitions associated with the notification channel.';

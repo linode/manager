@@ -23,8 +23,8 @@ export const NotificationChannelListing = () => {
       return [];
     }
     if (searchText) {
-      return notificationChannels.filter((channel) =>
-        channel.label.toLowerCase().includes(searchText.toLowerCase())
+      return notificationChannels.filter(({ label }) =>
+        label.toLowerCase().includes(searchText.toLowerCase())
       );
     }
     return notificationChannels;
@@ -33,7 +33,7 @@ export const NotificationChannelListing = () => {
   return (
     <Stack spacing={3}>
       <Box
-        alignItems="flex"
+        alignItems="flex-start"
         display="flex"
         justifyContent="space-between"
         ref={topRef}
