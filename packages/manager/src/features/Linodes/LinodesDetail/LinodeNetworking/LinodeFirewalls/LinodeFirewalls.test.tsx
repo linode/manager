@@ -27,6 +27,7 @@ const queryMocks = vi.hoisted(() => ({
     data: {
       apply_linode_firewalls: false,
       update_linode: false,
+      delete_firewall_device: false,
     },
   })),
   useNavigate: vi.fn(() => navigate),
@@ -96,11 +97,12 @@ describe('LinodeFirewalls', () => {
     expect(addFirewallBtn).toBeDisabled();
   });
 
-  it("should enable 'Unassign' button if the user has update_linode permission", async () => {
+  it("should enable 'Unassign' button if the user has update_linode and delete_firewall_device permission", async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         ...queryMocks.userPermissions().data,
         update_linode: true,
+        delete_firewall_device: true,
       },
     });
 
@@ -120,11 +122,12 @@ describe('LinodeFirewalls', () => {
     expect(unassignFirewallBtn).toBeEnabled();
   });
 
-  it("should disable 'Unassign' button if the user doesn't have update_linode permission", async () => {
+  it("should disable 'Unassign' button if the user doesn't have update_linode and delete_firewall_device permission", async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         ...queryMocks.userPermissions().data,
         update_linode: false,
+        delete_firewall_device: false,
       },
     });
 
