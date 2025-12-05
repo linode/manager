@@ -210,7 +210,7 @@ const verifyAlertRow = (
  *
  * @param channelLabel - The label of the channel to select in the autocomplete.
  */
-const createNotificationChannel = (channelLabel: string) => {
+const addNotificationChannel = (channelLabel: string) => {
   // Open dialog
   ui.buttonGroup.find().contains('Add notification channel').click();
 
@@ -237,7 +237,7 @@ const createNotificationChannel = (channelLabel: string) => {
     });
 };
 
-describe('Create Firewall Alert Successfully', () => {
+describe('Create Dbaas Alert Successfully', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
    * - Confirms that users can enter alert details, select entities, and configure conditions.
@@ -426,8 +426,8 @@ describe('Create Firewall Alert Successfully', () => {
       cy.get('[data-qa-trigger-occurrences]').should('be.visible').type('5');
 
       // Add notification channel
-      createNotificationChannel('user-channel-1');
-      createNotificationChannel('system-channel-1');
+      addNotificationChannel('user-channel-1');
+      addNotificationChannel('system-channel-1');
 
       // Click on submit button
       ui.buttonGroup
