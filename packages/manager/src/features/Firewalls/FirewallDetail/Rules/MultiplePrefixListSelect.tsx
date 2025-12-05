@@ -238,6 +238,19 @@ export const MultiplePrefixListSelect = React.memo(
       const disableIPv4 = ipv4Unsupported || ipv4Forced;
       const disableIPv6 = ipv6Unsupported || ipv6Forced;
 
+      const getCheckboxTooltipText = (
+        ipUnsupported?: boolean,
+        ipForced?: boolean
+      ) => {
+        if (ipUnsupported) {
+          return 'Not supported by this PrefixList';
+        }
+        if (ipForced) {
+          return 'At least one array must be selected';
+        }
+        return undefined;
+      };
+
       return (
         <Grid
           container
@@ -282,6 +295,10 @@ export const MultiplePrefixListSelect = React.memo(
                     disabled={disableIPv4 || disabled}
                     onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
                     text="IPv4"
+                    toolTipText={getCheckboxTooltipText(
+                      ipv4Unsupported,
+                      ipv4Forced
+                    )}
                   />
                   <Checkbox
                     checked={thisPL.inIPv6Rule === true}
@@ -289,6 +306,10 @@ export const MultiplePrefixListSelect = React.memo(
                     disabled={disableIPv6 || disabled}
                     onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
                     text="IPv6"
+                    toolTipText={getCheckboxTooltipText(
+                      ipv6Unsupported,
+                      ipv6Forced
+                    )}
                   />
                 </Box>
                 <Box alignItems="center" display="flex">
