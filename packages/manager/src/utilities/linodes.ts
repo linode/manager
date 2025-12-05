@@ -6,6 +6,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import type {
   AccountMaintenance,
   Linode,
+  LinodeTypeClass,
   MaintenancePolicySlug,
 } from '@linode/api-v4';
 
@@ -92,12 +93,62 @@ export const useIsLinodeCloneFirewallEnabled = () => {
 /**
  * Returns whether or not features related to the Generational Compute Plans
  * should be enabled.
+ *
+ * The feature is disabled if:
+ * 1. The feature flag is disabled, OR
+ * 2. Both G7-dedicated and G8-dedicated plans are unavailable (ONLY for dedicated/premium plan classes)
+ *
+ * For plan classes other than 'dedicated' and 'premium' (e.g., 'gpu', 'highmem', 'standard'),
+ * the feature is controlled solely by the feature flag, regardless of G7/G8 plan availability.
+ *
+ * @param plans - Array of plans to check for G7/G8 dedicated availability
+ * @param planType - Plan class type (e.g., 'dedicated', 'gpu', 'premium')
  */
-export const useIsGenerationalPlansEnabled = () => {
+export const useIsGenerationalPlansEnabled = (
+  plans: Array<{ id: string }> | undefined,
+  planType: LinodeTypeClass | undefined
+) => {
   const flags = useFlags();
 
+  const isFlagEnabled = Boolean(flags.generationalPlansv2?.enabled);
+
+  // If feature flag is disabled, return early
+  if (!isFlagEnabled) {
+    return {
+      isGenerationalPlansEnabled: false,
+      allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
+    };
+  }
+
+  // For plans other then dedicated/premium, or when no plans are provided,
+  // rely solely on the feature flag without checking G7/G8 availability
+  const shouldCheckG7G8Availability =
+    planType === 'dedicated' || planType === 'premium';
+
+  if (!plans || plans.length === 0 || !shouldCheckG7G8Availability) {
+    return {
+      isGenerationalPlansEnabled: isFlagEnabled,
+      allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
+    };
+  }
+
+  // Check if G7-dedicated plans are available
+  const hasG7DedicatedPlans = plans.some((plan) =>
+    plan.id.startsWith('g7-dedicated-')
+  );
+
+  // Check if G8-dedicated plans are available
+  const hasG8DedicatedPlans = plans.some((plan) =>
+    plan.id.startsWith('g8-dedicated-')
+  );
+
+  // Disable generational plans feature if BOTH G7 and G8 dedicated plans are unavailable
+  const shouldDisableDueToUnavailability =
+    !hasG7DedicatedPlans && !hasG8DedicatedPlans;
+
   return {
-    isGenerationalPlansEnabled: Boolean(flags.generationalPlansv2?.enabled),
+    isGenerationalPlansEnabled:
+      isFlagEnabled && !shouldDisableDueToUnavailability,
     allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
   };
 };

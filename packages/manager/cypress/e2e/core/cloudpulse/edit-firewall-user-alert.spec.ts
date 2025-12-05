@@ -110,7 +110,7 @@ const notificationChannels = notificationChannelFactory.build({
   channel_type: 'email',
   id: 1,
   label: 'Channel-1',
-  type: 'custom',
+  type: 'user',
 });
 const mockProfile = profileFactory.build({
   timezone: 'gmt',

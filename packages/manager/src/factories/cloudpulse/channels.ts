@@ -25,7 +25,7 @@ export const notificationChannelFactory =
     id: Factory.each((i) => i),
     label: Factory.each((id) => `Channel-${id}`),
     status: 'Enabled',
-    type: 'custom',
+    type: 'user',
     updated: new Date().toISOString(),
     updated_by: 'user1',
   });

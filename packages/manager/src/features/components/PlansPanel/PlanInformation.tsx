@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import { APLNotice } from './APLNotice';
 import {
@@ -19,6 +20,7 @@ import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 import { PlanNoticeTypography } from './PlansAvailabilityNotice.styles';
 import { planTabInfoContent } from './utils';
 
+import type { PlanSelectionType } from './types';
 import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
@@ -37,6 +39,10 @@ export interface PlanInformationProps extends ExtendedPlanType {
   isAPLEnabled?: boolean;
   isResize?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
+  /**
+   * Array of plans for this plan type class.
+   */
+  plans?: PlanSelectionType[];
   regionsData?: Region[];
 }
 
@@ -51,6 +57,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     isAPLEnabled,
     isResize,
     isSelectedRegionEligibleForPlan,
+    plans,
     planType,
     regionsData,
   } = props;
@@ -142,10 +149,10 @@ export const PlanInformation = (props: PlanInformationProps) => {
         <Notice
           dataTestId={limitedAvailabilityBannerTestId}
           sx={(theme: Theme) => ({
-            marginBottom: theme.spacing(3),
+            marginBottom: theme.spacingFunction(24),
             marginLeft: 0,
             marginTop: 0,
-            padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(16)}`,
           })}
           variant="warning"
         >
@@ -158,15 +165,30 @@ export const PlanInformation = (props: PlanInformationProps) => {
         additionalBanners.map((banner, index) => (
           <React.Fragment key={index}>{banner}</React.Fragment>
         ))}
-      <ClassDescriptionCopy planType={planType} />
+      <ClassDescriptionCopy plans={plans} planType={planType} />
     </>
   );
 };
 
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
 
-export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
-  const { planType } = props;
+interface ClassDescriptionCopyProps extends ExtendedPlanType {
+  /**
+   * Array of plans for this plan type class.
+   */
+  plans?: PlanSelectionType[];
+}
+
+export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
+  const { plans, planType } = props;
+
+  // Only check generational plans feature for dedicated plans
+  // Other plan types don't have different legacy descriptions
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    plans,
+    planType === 'dedicated' ? 'dedicated' : undefined
+  );
+
   let planTypeLabel: null | string;
   let docLink: null | string;
 
@@ -200,18 +222,31 @@ export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
       docLink = null;
   }
 
+  // Determine which typography to display
+  let typography: string | undefined;
+
+  if (planType === 'dedicated') {
+    // For dedicated plans, use typographyOld if generational plans are disabled
+    typography = isGenerationalPlansEnabled
+      ? planTabInfoContent.dedicated?.typography
+      : planTabInfoContent.dedicated?.typographyOld ||
+        planTabInfoContent.dedicated?.typography;
+  } else {
+    // For all other plan types, just use typography
+    typography =
+      planTabInfoContent[planType as keyof typeof planTabInfoContent]
+        ?.typography;
+  }
+
   return planTypeLabel && docLink ? (
     <Typography
       sx={(theme: Theme) => ({
-        marginBottom: theme.spacing(3),
-        marginTop: theme.spacing(1),
+        marginBottom: theme.spacingFunction(24),
+        marginTop: theme.spacingFunction(8),
       })}
     >
-      {
-        planTabInfoContent[planType as keyof typeof planTabInfoContent]
-          ?.typography
-      }{' '}
-      <Link to={docLink}>Learn more</Link> about our {planTypeLabel} plans.
+      {typography} <Link to={docLink}>Learn more</Link> about our{' '}
+      {planTypeLabel} plans.
     </Typography>
   ) : null;
 };

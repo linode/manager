@@ -46,7 +46,9 @@ describe('Channel Listing component', () => {
 
     const { getByText } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
+        component: (
+          <AddChannelListing name="channel_ids" serviceType="linode" />
+        ),
         useFormOptions: {
           defaultValues: {
             channel_ids: [mockNotificationData[0].id],
@@ -62,7 +64,9 @@ describe('Channel Listing component', () => {
   it('should remove the fields', async () => {
     const { getByTestId } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
+        component: (
+          <AddChannelListing name="channel_ids" serviceType="linode" />
+        ),
         useFormOptions: {
           defaultValues: {
             channel_ids: [mockNotificationData[0].id],
@@ -82,7 +86,9 @@ describe('Channel Listing component', () => {
     const mockMaxLimit = 5;
     const { getByRole, findByText } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
+        component: (
+          <AddChannelListing name="channel_ids" serviceType="linode" />
+        ),
         useFormOptions: {
           defaultValues: {
             channel_ids: Array(mockMaxLimit).fill(mockNotificationData[0].id), // simulate 5 channels
