@@ -25,7 +25,6 @@ import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 
 import Undo from 'src/assets/icons/undo.svg';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
@@ -42,6 +41,7 @@ import {
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from 'src/features/Firewalls/shared';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { CustomKeyboardSensor } from 'src/utilities/CustomKeyboardSensor';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
@@ -55,7 +55,6 @@ import {
   StyledTableRow,
 } from './FirewallRuleTable.styles';
 import { sortPortString } from './shared';
-import { useStyles } from './shared.styles';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
@@ -384,17 +383,29 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     zIndex: isDragging ? 9999 : 0,
   } as const;
 
-  const { classes } = useStyles();
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const handleMouseEnter = React.useCallback(() => {
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseLeave = React.useCallback(() => {
+    setIsHovered(false);
+  }, []);
 
   if (isRuleSetLoading) {
     return <TableRowLoading columns={smDown ? 3 : lgDown ? 5 : 6} />;
   }
+
+  const ruleSetCopyableId = `${rulesetDetails ? 'ID:' : 'Ruleset ID:'} ${ruleset}`;
 
   return (
     <StyledTableRow
       aria-label={label ?? `firewall rule ${id}`}
       disabled={disabled}
       key={id}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       originalIndex={originalIndex}
       ref={setNodeRef}
       ruleIndex={index}
@@ -443,7 +454,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
           aria-label={`Label: ${label}`}
           colSpan={smDown ? 2 : lgDown ? 4 : 5}
         >
-          <Box alignItems="center" display="flex" gap={rulesetDetails ? 1 : 0}>
+          <Box alignItems="center" display="flex" gap={rulesetDetails ? 3 : 0}>
             <Box alignItems="center" display="flex">
               <StyledDragIndicator
                 aria-label="Drag indicator icon"
@@ -459,18 +470,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
                 </Link>
               )}
             </Box>
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-              }}
-            >
-              <span>{rulesetDetails ? 'ID:' : 'Ruleset ID:'}&nbsp;</span>
-              <span>{ruleset}</span>
-              <CopyTooltip
-                className={classes.copyIcon}
-                text={String(ruleset)}
-              />
+            <Box sx={{ whiteSpace: 'nowrap' }}>
+              <IPAddress ips={[ruleSetCopyableId]} isHovered={isHovered} />
             </Box>
           </Box>
         </TableCell>
