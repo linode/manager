@@ -61,6 +61,7 @@ const props: FirewallRuleDrawerProps = {
   category: 'inbound',
   isOpen: true,
   mode: 'create',
+  inboundAndOutboundRules: [],
   handleOpenPrefixListDrawer: mockHandleOpenPrefixListDrawer,
   onClose: mockOnClose,
   onSubmit: mockOnSubmit,

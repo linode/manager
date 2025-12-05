@@ -50,6 +50,7 @@ export const FirewallRuleDrawer = React.memo(
       isOpen,
       mode,
       onClose,
+      inboundAndOutboundRules,
       ruleToModifyOrView,
     } = props;
 
@@ -324,6 +325,7 @@ export const FirewallRuleDrawer = React.memo(
                         'ruleset'
                       );
                     }}
+                    inboundAndOutboundRules={inboundAndOutboundRules}
                     ruleErrors={ruleToModifyOrView?.errors}
                     {...formikProps}
                   />
