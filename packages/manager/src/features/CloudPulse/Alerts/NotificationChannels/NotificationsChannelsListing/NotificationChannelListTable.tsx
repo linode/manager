@@ -48,7 +48,7 @@ export const NotificationChannelListTable = React.memo(
     const _error = error
       ? getAPIErrorOrDefault(
           error,
-          'Error in fetching the notification channels'
+          'Error in fetching the notification channels.'
         )
       : undefined;
 
