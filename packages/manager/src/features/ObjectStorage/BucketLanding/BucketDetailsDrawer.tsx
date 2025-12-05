@@ -10,7 +10,7 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { AccessSelect } from '../BucketDetail/AccessSelect';
+import { AccessSelect } from '../BucketDetail/AccessTab/AccessSelect';
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 
 import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
