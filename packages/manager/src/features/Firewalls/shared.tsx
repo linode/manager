@@ -515,7 +515,6 @@ export const generateAddressesLabelV2 = (
       </Box>
       {hasMore && (
         <Tooltip
-          arrow
           placement="bottom"
           slotProps={{
             tooltip: {
