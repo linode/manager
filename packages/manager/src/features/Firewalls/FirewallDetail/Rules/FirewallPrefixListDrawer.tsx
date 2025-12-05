@@ -7,7 +7,10 @@ import ArrowLeftIcon from 'src/assets/icons/arrow-left.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
-import { useIsFirewallRulesetsPrefixlistsEnabled } from '../../shared';
+import {
+  getFeatureChip,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 import { PrefixListIPSection } from './FirewallPrefixListIPSection';
 import {
   combinePrefixLists,
@@ -45,8 +48,11 @@ export const FirewallPrefixListDrawer = React.memo(
     const { category, context, onClose, isOpen, selectedPrefixListLabel } =
       props;
 
-    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
-      useIsFirewallRulesetsPrefixlistsEnabled();
+    const {
+      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      isFirewallRulesetsPrefixListsBetaEnabled,
+      isFirewallRulesetsPrefixListsGAEnabled,
+    } = useIsFirewallRulesetsPrefixlistsEnabled();
 
     const isPrefixListSpecial = isSpecialPrefixList(selectedPrefixListLabel);
 
@@ -206,6 +212,13 @@ export const FirewallPrefixListDrawer = React.memo(
         onClose={() => onClose({ closeAll: true })}
         open={isOpen}
         title={titleText}
+        titleSuffix={
+          getFeatureChip({
+            isFirewallRulesetsPrefixlistsFeatureEnabled,
+            isFirewallRulesetsPrefixListsBetaEnabled,
+            isFirewallRulesetsPrefixListsGAEnabled,
+          }) ?? undefined
+        }
       >
         <Box mt={2}>
           {prefixListDetails && (
