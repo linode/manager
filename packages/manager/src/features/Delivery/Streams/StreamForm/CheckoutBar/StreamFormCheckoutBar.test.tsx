@@ -87,10 +87,10 @@ describe.skip('StreamFormCheckoutBar', () => {
 
     // change form type value
     await userEvent.click(streamTypesAutocomplete);
-    const kubernetesAuditLogs = await screen.findByText(
-      'Kubernetes Audit Logs'
+    const kubernetesApiAuditLogs = await screen.findByText(
+      'Kubernetes API Audit Logs'
     );
-    await userEvent.click(kubernetesAuditLogs);
+    await userEvent.click(kubernetesApiAuditLogs);
 
     expect(getDeliveryPriceContext()).not.toEqual(initialPrice);
   });
