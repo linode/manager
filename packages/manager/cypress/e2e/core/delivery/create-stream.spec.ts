@@ -1,5 +1,6 @@
 import { streamType } from '@linode/api-v4';
 import { mockDestination } from 'support/constants/delivery';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateDestination,
   mockCreateStream,
@@ -12,9 +13,11 @@ import { ui } from 'support/ui';
 import { logsStreamForm } from 'support/ui/pages/logs-stream-form';
 import { randomLabel } from 'support/util/random';
 
-import { kubernetesClusterFactory } from 'src/factories';
+import { accountFactory, kubernetesClusterFactory } from 'src/factories';
 
 describe('Create Stream', () => {
+  const account = accountFactory.build();
+
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpLogs: {
@@ -22,6 +25,14 @@ describe('Create Stream', () => {
         beta: true,
         bypassAccountCapabilities: true,
       },
+    });
+
+    mockGetAccount({
+      ...account,
+      capabilities: [
+        ...account.capabilities,
+        'Akamai Cloud Pulse Logs LKE-E Audit',
+      ],
     });
   });
 
