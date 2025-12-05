@@ -204,7 +204,7 @@ const verifyAlertRow = (
     });
 };
 /**
- * Creates a notification channel through the UI.
+ * Adds a notification channel through the UI.
  * Opens the Add Notification Channel dialog, selects Email as the type,
  * picks the channel matching the given label, and submits the form.
  *
