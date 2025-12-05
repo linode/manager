@@ -454,7 +454,11 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
           aria-label={`Label: ${label}`}
           colSpan={smDown ? 2 : lgDown ? 4 : 5}
         >
-          <Box alignItems="center" display="flex" gap={rulesetDetails ? 3 : 0}>
+          <Box
+            alignItems="center"
+            display="flex"
+            gap={rulesetDetails ? 1.5 : 0}
+          >
             <Box alignItems="center" display="flex">
               <StyledDragIndicator
                 aria-label="Drag indicator icon"
