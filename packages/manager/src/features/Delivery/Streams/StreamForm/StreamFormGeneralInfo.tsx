@@ -60,7 +60,10 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
 
   const updateStreamDetails = (value: string) => {
     if (value === streamType.LKEAuditLogs) {
-      setValue('stream.details.is_auto_add_all_clusters_enabled', false);
+      setValue('stream.details', {
+        cluster_ids: [],
+        is_auto_add_all_clusters_enabled: false,
+      });
     } else {
       setValue('stream.details', null);
     }
@@ -135,7 +138,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
       <Typography
         sx={{
           mt: theme.spacingFunction(16),
-          maxWidth: 480,
+          maxWidth: 440,
           whiteSpace: 'preserve-spaces',
         }}
       >

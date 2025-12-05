@@ -1,7 +1,12 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
+import { TableSearchParams } from '../types';
 import { NetworkLoadBalancersRoute } from './networkLoadBalancersRoute';
+
+export interface NodesSearchParams extends TableSearchParams {
+  query?: string;
+}
 
 const networkLoadBalancersRoute = createRoute({
   component: NetworkLoadBalancersRoute,
@@ -19,14 +24,6 @@ const networkLoadBalancersIndexRoute = createRoute({
 );
 
 const networkLoadBalancerDetailRoute = createRoute({
-  beforeLoad: async ({ params }) => {
-    throw redirect({
-      params: {
-        id: Number(params.id),
-      },
-      to: '/netloadbalancers/$id/listeners',
-    });
-  },
   getParentRoute: () => networkLoadBalancersRoute,
   path: '$id',
 });
@@ -68,10 +65,11 @@ const networkLoadBalancerNodesRoute = createRoute({
     }),
   },
   path: '$id/listeners/$listenerId/nodes',
+  validateSearch: (search: NodesSearchParams) => search,
 }).lazy(() =>
   import(
     'src/features/NetworkLoadBalancers/NetworkLoadBalancersDetail/NetworkLoadBalancersListenerDetail/NetworkLoadBalancersListenerDetailLazyRoutes'
-  ).then((m) => m.NetworkLoadBalancersListenerDetailLazyRoute)
+  ).then((m) => m.networkLoadBalancersListenerDetailLazyRoute)
 );
 
 export const networkLoadBalancersRouteTree =

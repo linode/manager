@@ -154,7 +154,11 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         >
           <Grid>
             {isFetching ? null : (
-              <Box alignItems="center" display="flex">
+              <Box
+                alignItems="center"
+                data-testid="drawer-title-container"
+                display="flex"
+              >
                 <Typography
                   data-qa-drawer-title={lastTitleRef.current}
                   data-testid="drawer-title"

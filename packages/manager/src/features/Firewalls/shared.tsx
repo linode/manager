@@ -1,5 +1,5 @@
 import { useAccount } from '@linode/queries';
-import { Box, Chip, Tooltip } from '@linode/ui';
+import { BetaChip, Box, Chip, NewFeatureChip, Tooltip } from '@linode/ui';
 import {
   capitalize,
   isFeatureEnabledV2,
@@ -77,12 +77,24 @@ export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'IPENCAP', value: 'IPENCAP' },
 ];
 
-export const addressOptions = [
-  { label: 'All IPv4, All IPv6', value: 'all' },
-  { label: 'All IPv4', value: 'allIPv4' },
-  { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask', value: 'ip/netmask' },
-];
+export const useAddressOptions = () => {
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  return [
+    { label: 'All IPv4, All IPv6', value: 'all' },
+    { label: 'All IPv4', value: 'allIPv4' },
+    { label: 'All IPv6', value: 'allIPv6' },
+    {
+      label: isFirewallRulesetsPrefixlistsFeatureEnabled
+        ? 'IP / Netmask / Prefix List'
+        : 'IP / Netmask',
+      // We can keep this entire value even if the option is feature-flagged.
+      // Feature-flagging the label (without the "Prefix List" text) is sufficient.
+      value: 'ip/netmask/prefixlist',
+    },
+  ];
+};
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
   dns: '53',
@@ -596,4 +608,25 @@ export const useIsFirewallRulesetsPrefixlistsEnabled = () => {
       account?.capabilities ?? []
     ),
   };
+};
+
+/**
+ * Returns the feature chip for Firewall Rulesets & Prefix Lists.
+ *
+ * - Shows `<BetaChip />` if the feature is in Beta.
+ * - Shows `<NewFeatureChip />` if the feature is in GA.
+ * - Returns `null` if the feature is disabled OR if the feature is enabled but no chip applies.
+ */
+export const getFeatureChip = ({
+  isFirewallRulesetsPrefixlistsFeatureEnabled,
+  isFirewallRulesetsPrefixListsBetaEnabled,
+  isFirewallRulesetsPrefixListsGAEnabled,
+}: Omit<
+  ReturnType<typeof useIsFirewallRulesetsPrefixlistsEnabled>,
+  'isFirewallRulesetsPrefixListsLAEnabled'
+>) => {
+  if (!isFirewallRulesetsPrefixlistsFeatureEnabled) return null;
+  if (isFirewallRulesetsPrefixListsBetaEnabled) return <BetaChip />;
+  if (isFirewallRulesetsPrefixListsGAEnabled) return <NewFeatureChip />;
+  return null;
 };

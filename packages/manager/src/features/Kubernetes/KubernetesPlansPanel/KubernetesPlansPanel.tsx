@@ -144,6 +144,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
+                plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 regionsData={regionsData}
               />

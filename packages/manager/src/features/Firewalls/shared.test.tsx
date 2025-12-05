@@ -11,6 +11,7 @@ import {
   buildPrefixListReferenceMap,
   generateAddressesLabel,
   generateAddressesLabelV2,
+  getFeatureChip,
   predefinedFirewallFromRule,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from './shared';
@@ -440,5 +441,45 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
         false
       );
     });
+  });
+});
+
+describe('getFeatureChip', () => {
+  it('returns null if RS & PL feature is disabled', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+    expect(result).toBeNull();
+  });
+
+  it('returns BetaChip if Firewall RS & PL feature is enabled and Beta is true', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: true,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+    expect(getByText('beta')).toBeVisible();
+  });
+
+  it('returns NewFeatureChip if Firewall RS & PL feature is enabled, GA is true, and Beta is false', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: true,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+    expect(getByText('new')).toBeVisible();
+  });
+
+  it('returns null if feature is enabled but neither Beta nor GA', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+    expect(result).toBeNull();
   });
 });

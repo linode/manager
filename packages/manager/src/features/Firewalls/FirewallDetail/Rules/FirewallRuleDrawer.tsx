@@ -6,15 +6,19 @@ import * as React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-import { useIsFirewallRulesetsPrefixlistsEnabled } from '../../shared';
+import {
+  getFeatureChip,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 import {
   formValueToIPs,
   getInitialFormValues,
-  getInitialIPs,
+  getInitialIPsOrPLs,
   itemsToPortString,
   portStringToItems,
   validateForm,
   validateIPs,
+  validatePrefixLists,
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
 import { FirewallRuleSetDetailsView } from './FirewallRuleSetDetailsView';
@@ -28,11 +32,12 @@ import type {
   FormRuleSetState,
   FormState,
 } from './FirewallRuleDrawer.types';
+import type { ValidateFormOptions } from './FirewallRuleDrawer.utils';
 import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 
 // =============================================================================
 // <FirewallRuleDrawer />
@@ -45,11 +50,15 @@ export const FirewallRuleDrawer = React.memo(
       isOpen,
       mode,
       onClose,
+      inboundAndOutboundRules,
       ruleToModifyOrView,
     } = props;
 
-    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
-      useIsFirewallRulesetsPrefixlistsEnabled();
+    const {
+      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      isFirewallRulesetsPrefixListsBetaEnabled,
+      isFirewallRulesetsPrefixListsGAEnabled,
+    } = useIsFirewallRulesetsPrefixlistsEnabled();
 
     /**
      * State for the type of entity being created: either a firewall 'rule' or
@@ -59,11 +68,15 @@ export const FirewallRuleDrawer = React.memo(
     const [createEntityType, setCreateEntityType] =
       React.useState<FirewallCreateEntityType>('rule');
 
-    // Custom IPs are tracked separately from the form. The <MultipleIPs />
+    // Custom IPs or PLs are tracked separately from the form. The <MultipleIPs /> or <MutiplePLs />
     // component consumes this state. We use this on form submission if the
-    // `addresses` form value is "ip/netmask", which indicates the user has
-    // intended to specify custom IPs.
+    // `addresses` form value is "ip/netmask/prefixlist", which indicates the user has
+    // intended to specify custom IPs or PLs.
     const [ips, setIPs] = React.useState<ExtendedIP[]>([{ address: '' }]);
+
+    const [pls, setPLs] = React.useState<ExtendedPL[]>([
+      { address: '', inIPv4Rule: false, inIPv6Rule: false },
+    ]);
 
     // Firewall Ports, like IPs, are tracked separately. The form.values state value
     // tracks the custom user input; the FirewallOptionItem[] array of port presets in the multi-select
@@ -76,12 +89,15 @@ export const FirewallRuleDrawer = React.memo(
       // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
       // (along with any errors we may have).
       if (mode === 'edit' && ruleToModifyOrView) {
-        setIPs(getInitialIPs(ruleToModifyOrView));
+        const { ips, pls } = getInitialIPsOrPLs(ruleToModifyOrView);
+        setIPs(ips);
+        setPLs(pls);
         setPresetPorts(portStringToItems(ruleToModifyOrView.ports)[0]);
       } else if (isOpen) {
         setPresetPorts([]);
       } else {
         setIPs([{ address: '' }]);
+        setPLs([]);
       }
 
       // Reset the Create entity selection to 'rule' in two cases:
@@ -116,31 +132,46 @@ export const FirewallRuleDrawer = React.memo(
 
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
-        allowEmptyAddress: addresses !== 'ip/netmask',
+        allowEmptyAddress: addresses !== 'ip/netmask/prefixlist',
       });
       setIPs(validatedIPs);
 
+      // The validated PLs may have errors, so set them to state so we see the errors.
+      const validatedPLs = validatePrefixLists(pls);
+      setPLs(validatedPLs);
+
       const _ports = itemsToPortString(presetPorts, ports!);
 
+      const validateFormOptions: ValidateFormOptions = {
+        validatedIPs,
+        validatedPLs,
+        isFirewallRulesetsPrefixlistsFeatureEnabled,
+      };
+
       return {
-        ...validateForm({
-          addresses,
-          description,
-          label,
-          ports: _ports,
-          protocol,
-        }),
+        ...validateForm(
+          {
+            addresses,
+            description,
+            label,
+            ports: _ports,
+            protocol,
+          },
+          validateFormOptions
+        ),
         // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
         // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
         // is an issue with the form.
         ...validatedIPs.filter((thisIP) => Boolean(thisIP.error)),
+        // For PrefixLists
+        ...validatedPLs.filter((thisPL) => Boolean(thisPL.error)),
       };
     };
 
     const onSubmitRule = (values: FormState) => {
       const ports = itemsToPortString(presetPorts, values.ports!);
       const protocol = values.protocol as FirewallRuleProtocol;
-      const addresses = formValueToIPs(values.addresses!, ips);
+      const addresses = formValueToIPs(values.addresses!, ips, pls);
 
       const payload: FirewallRuleType = {
         action: values.action,
@@ -165,8 +196,23 @@ export const FirewallRuleDrawer = React.memo(
       return errors;
     };
 
+    const featureChip =
+      getFeatureChip({
+        isFirewallRulesetsPrefixlistsFeatureEnabled,
+        isFirewallRulesetsPrefixListsBetaEnabled,
+        isFirewallRulesetsPrefixListsGAEnabled,
+      }) ?? undefined;
+
+    // Do not show the Firewall RS & PL feature chip in Edit mode drawer title
+    const titleSuffix = mode === 'edit' ? undefined : featureChip;
+
     return (
-      <Drawer onClose={onClose} open={isOpen} title={title}>
+      <Drawer
+        onClose={onClose}
+        open={isOpen}
+        title={title}
+        titleSuffix={titleSuffix}
+      >
         {mode === 'create' && isFirewallRulesetsPrefixlistsFeatureEnabled && (
           <Grid container spacing={2}>
             {firewallRuleCreateOptions.map((option) => (
@@ -221,11 +267,20 @@ export const FirewallRuleDrawer = React.memo(
                   addressesLabel={addressesLabel}
                   category={category}
                   closeDrawer={onClose}
+                  handleOpenPrefixListDrawer={(prefixListLabel, plRuleRef) => {
+                    handleOpenPrefixListDrawer(
+                      prefixListLabel,
+                      plRuleRef,
+                      'rule'
+                    );
+                  }}
                   ips={ips}
                   mode={mode}
+                  pls={pls}
                   presetPorts={presetPorts}
                   ruleErrors={ruleToModifyOrView?.errors}
                   setIPs={setIPs}
+                  setPLs={setPLs}
                   setPresetPorts={setPresetPorts}
                   {...formikProps}
                 />
@@ -270,6 +325,7 @@ export const FirewallRuleDrawer = React.memo(
                         'ruleset'
                       );
                     }}
+                    inboundAndOutboundRules={inboundAndOutboundRules}
                     ruleErrors={ruleToModifyOrView?.errors}
                     {...formikProps}
                   />

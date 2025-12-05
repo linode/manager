@@ -196,7 +196,7 @@ export const FirewallRuleSetDetailsView = (
 
       <ActionsPanel
         secondaryButtonProps={{
-          label: 'Cancel',
+          label: 'Close',
           onClick: closeDrawer,
         }}
       />
