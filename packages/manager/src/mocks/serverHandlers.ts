@@ -150,6 +150,7 @@ import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
+import { SPECIAL_PREFIX_LIST_NAMES } from 'src/features/Firewalls/FirewallDetail/Rules/shared';
 
 import type {
   AccountMaintenance,
@@ -1395,14 +1396,25 @@ export const handlers = [
       const filter = JSON.parse(request.headers.get('x-filter') || '{}');
 
       if (filter['name']) {
-        const match =
-          prefixlists.find((pl) => pl.name === filter.name) ??
-          firewallPrefixListFactory.build({
-            name: filter['name'],
-            description: `${filter['name']} description`,
-          }); // fallback if not found
+        const existingPrefixList = prefixlists.find(
+          (pl) => pl.name === filter.name
+        );
 
-        return HttpResponse.json(makeResourcePage([match]));
+        // SPECIAL_PREFIX_LIST_NAMES may expand in the future if returned by the API
+        const isPrefixListSpecial = SPECIAL_PREFIX_LIST_NAMES.includes(
+          filter.name
+        );
+
+        const match = isPrefixListSpecial
+          ? [] // Special PLs: API currently returns empty; @TODO: update with actual response once API supports them
+          : [
+              existingPrefixList ??
+                firewallPrefixListFactory.build({
+                  name: filter.name,
+                  description: `${filter.name} description`,
+                }),
+            ];
+        return HttpResponse.json(makeResourcePage(match));
       }
     }
     return HttpResponse.json(makeResourcePage(prefixlists));

@@ -8,6 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as shared from '../../shared';
 import { FirewallPrefixListDrawer } from './FirewallPrefixListDrawer';
+import * as rulesShared from './shared';
 import { PREFIXLIST_MARKED_FOR_DELETION_TEXT } from './shared';
 
 import type { FirewallPrefixListDrawerProps } from './FirewallPrefixListDrawer';
@@ -34,6 +35,7 @@ vi.mock('@linode/utilities', async () => {
 });
 
 const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+const combineSpy = vi.spyOn(rulesShared, 'combinePrefixLists');
 
 //
 // Helper to compute expected UI values/text
@@ -76,7 +78,7 @@ const computeExpectedElements = (
   return { title, button, label };
 };
 
-describe('PrefixListDrawer', () => {
+describe('FirewallPrefixListDrawer', () => {
   beforeEach(() => {
     spy.mockReturnValue({
       isFirewallRulesetsPrefixlistsFeatureEnabled: true,
@@ -143,10 +145,18 @@ describe('PrefixListDrawer', () => {
 
   it.each(drawerProps)(
     'renders correct UI for category:$category, contextType:$context.type and modeViewedFrom:$context.modeViewedFrom',
-    ({ category, context }) => {
-      queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
-        data: [firewallPrefixListFactory.build()],
+    ({ category, context, selectedPrefixListLabel }) => {
+      const mockData = firewallPrefixListFactory.build({
+        name: selectedPrefixListLabel,
       });
+      queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
+        data: [mockData],
+      });
+
+      combineSpy.mockReturnValue([
+        ...rulesShared.SPECIAL_PREFIX_LISTS,
+        mockData,
+      ]);
 
       const { getByText, getByRole } = renderWithTheme(
         <FirewallPrefixListDrawer
@@ -154,7 +164,7 @@ describe('PrefixListDrawer', () => {
           context={context}
           isOpen={true}
           onClose={vi.fn()}
-          selectedPrefixListLabel="pl-test"
+          selectedPrefixListLabel={selectedPrefixListLabel}
         />
       );
 
@@ -200,12 +210,17 @@ describe('PrefixListDrawer', () => {
 
   it.each(deletionTestCases)('%s', async (_, deletedTimeStamp) => {
     const mockPrefixList = firewallPrefixListFactory.build({
+      name: 'pl-test',
       deleted: deletedTimeStamp,
     });
 
     queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
       data: [mockPrefixList],
     });
+    combineSpy.mockReturnValue([
+      ...rulesShared.SPECIAL_PREFIX_LISTS,
+      mockPrefixList,
+    ]);
 
     const { getByText, getByTestId, findByText, queryByText } = renderWithTheme(
       <FirewallPrefixListDrawer
@@ -340,6 +355,10 @@ describe('PrefixListDrawer', () => {
       queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
         data: [mockPrefixList],
       });
+      combineSpy.mockReturnValue([
+        ...rulesShared.SPECIAL_PREFIX_LISTS,
+        mockPrefixList,
+      ]);
 
       const { getByTestId } = renderWithTheme(
         <FirewallPrefixListDrawer
@@ -376,6 +395,91 @@ describe('PrefixListDrawer', () => {
           : 'no IP addresses';
         expect(within(ipv6Section).getByText(ipv6Content)).toBeVisible();
       }
+    }
+  );
+});
+
+describe('FirewallPrefixListDrawer - Special "<current>" Prefix Lists', () => {
+  const specialPrefixListDescription =
+    'System-defined PrefixLists, such as pl::vpcs:<current> and pl::subnets:<current>, for VPC interface firewalls are dynamic and update automatically. They manage access to and from the interface for addresses within the interface’s VPC or VPC subnet.';
+  const plRuleRef = { inIPv4Rule: true, inIPv6Rule: true };
+  const context: FirewallPrefixListDrawerProps['context'][] = [
+    {
+      type: 'rule',
+      plRuleRef,
+    },
+    {
+      modeViewedFrom: 'create',
+      type: 'ruleset',
+      plRuleRef,
+    },
+    { modeViewedFrom: 'edit', type: 'rule', plRuleRef },
+    { modeViewedFrom: 'view', type: 'ruleset', plRuleRef },
+  ];
+  const specialPLsTestCases = [
+    {
+      name: 'pl::vpcs:<current>',
+      description: specialPrefixListDescription,
+      context: context[0],
+    },
+    {
+      name: 'pl::subnets:<current>',
+      description: specialPrefixListDescription,
+      context: context[1],
+    },
+    {
+      name: 'pl::vpcs:<current>',
+      description: specialPrefixListDescription,
+      context: context[2],
+    },
+    {
+      name: 'pl::subnets:<current>',
+      description: specialPrefixListDescription,
+      context: context[3],
+    },
+  ];
+
+  it.each(specialPLsTestCases)(
+    'renders only Name and Description for special PL: $name, contextType: $context.type and modeViewedFrom: $context.modeViewedFrom',
+    ({ name, description, context }) => {
+      // API returns no matches, special PL logic must handle it
+      queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
+        data: [],
+      });
+      combineSpy.mockReturnValue([...rulesShared.SPECIAL_PREFIX_LISTS]);
+
+      const { getByText, queryByText } = renderWithTheme(
+        <FirewallPrefixListDrawer
+          category="inbound"
+          context={context}
+          isOpen={true}
+          onClose={vi.fn()}
+          selectedPrefixListLabel={name}
+        />
+      );
+
+      const { label } = computeExpectedElements('inbound', context);
+
+      // Name and Description should be visible
+      expect(getByText(label)).toBeVisible(); // First label (Prefix List Name: OR Name:)
+      expect(getByText(name)).toBeVisible();
+
+      expect(getByText('Description:')).toBeVisible();
+      expect(getByText(description)).toBeVisible();
+
+      // All other fields must be hidden
+      const hiddenFields = [
+        'ID:',
+        'Type:',
+        'Visibility:',
+        'Version:',
+        'Created:',
+        'Updated:',
+      ];
+
+      hiddenFields.forEach((label) => {
+        expect(queryByText(label)).not.toBeInTheDocument();
+      });
     }
   );
 });
