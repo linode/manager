@@ -55,6 +55,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const isPrefixListSupported = (pl: FirewallPrefixList) => {
+  // Whitelisting all the Special PrefixLists as supported ones.
   if (isSpecialPrefixList(pl.name)) {
     return true;
   }
