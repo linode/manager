@@ -400,6 +400,14 @@ describe('FirewallPrefixListDrawer', () => {
 });
 
 describe('FirewallPrefixListDrawer - Special "<current>" Prefix Lists', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+  });
   const specialPrefixListDescription =
     'System-defined PrefixLists, such as pl::vpcs:<current> and pl::subnets:<current>, for VPC interface firewalls are dynamic and update automatically. They manage access to and from the interface for addresses within the interface’s VPC or VPC subnet.';
   const plRuleRef = { inIPv4Rule: true, inIPv6Rule: true };

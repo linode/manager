@@ -248,7 +248,7 @@ export const FirewallPrefixListDrawer = React.memo(
                 </StyledListItem>
               ))}
 
-              {prefixListDetails.deleted && (
+              {!isPrefixListSpecial && prefixListDetails.deleted && (
                 <StyledListItem paddingMultiplier={2}>
                   <StyledWarningIcon />
                   <StyledLabel
@@ -277,23 +277,24 @@ export const FirewallPrefixListDrawer = React.memo(
                   />
                 </StyledListItem>
               )}
-
-              <Stack gap={2} marginTop={1}>
-                {isIPv4Supported && (
-                  <PrefixListIPSection
-                    addresses={prefixListDetails.ipv4!}
-                    inUse={Boolean(isIPv4InUse)}
-                    type="IPv4"
-                  />
-                )}
-                {isIPv6Supported && (
-                  <PrefixListIPSection
-                    addresses={prefixListDetails.ipv6!}
-                    inUse={Boolean(isIPv6InUse)}
-                    type="IPv6"
-                  />
-                )}
-              </Stack>
+              {!isPrefixListSpecial && (
+                <Stack gap={2} marginTop={1}>
+                  {isIPv4Supported && (
+                    <PrefixListIPSection
+                      addresses={prefixListDetails.ipv4!}
+                      inUse={Boolean(isIPv4InUse)}
+                      type="IPv4"
+                    />
+                  )}
+                  {isIPv6Supported && (
+                    <PrefixListIPSection
+                      addresses={prefixListDetails.ipv6!}
+                      inUse={Boolean(isIPv6InUse)}
+                      type="IPv6"
+                    />
+                  )}
+                </Stack>
+              )}
             </>
           )}
 
