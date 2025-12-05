@@ -1,7 +1,6 @@
 import { useAllFirewallPrefixListsQuery } from '@linode/queries';
 import {
   Autocomplete,
-  BetaChip,
   Box,
   Button,
   Checkbox,
@@ -15,7 +14,10 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { useIsFirewallRulesetsPrefixlistsEnabled } from 'src/features/Firewalls/shared';
+import {
+  getFeatureChip,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from 'src/features/Firewalls/shared';
 
 import { getPrefixListType, groupPriority } from './shared';
 
@@ -121,7 +123,9 @@ export const MultiplePrefixListSelect = React.memo(
     const {
       isFirewallRulesetsPrefixlistsFeatureEnabled,
       isFirewallRulesetsPrefixListsBetaEnabled,
+      isFirewallRulesetsPrefixListsGAEnabled,
     } = useIsFirewallRulesetsPrefixlistsEnabled();
+
     const { data, isLoading } = useAllFirewallPrefixListsQuery(
       isFirewallRulesetsPrefixlistsFeatureEnabled
     );
@@ -326,7 +330,11 @@ export const MultiplePrefixListSelect = React.memo(
         {pls.length > 0 && (
           <Box display="flex">
             <InputLabel sx={{ margin: 0 }}>Prefix List</InputLabel>
-            {isFirewallRulesetsPrefixListsBetaEnabled && <BetaChip />}
+            {getFeatureChip({
+              isFirewallRulesetsPrefixlistsFeatureEnabled,
+              isFirewallRulesetsPrefixListsBetaEnabled,
+              isFirewallRulesetsPrefixListsGAEnabled,
+            })}
           </Box>
         )}
         <Stack spacing={1}>
