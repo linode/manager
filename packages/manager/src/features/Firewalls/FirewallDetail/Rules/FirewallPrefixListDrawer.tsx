@@ -159,6 +159,8 @@ export const FirewallPrefixListDrawer = React.memo(
       </Box>
     );
 
+    // For normal Prefix Lists: display all fields.
+    // For special Prefix Lists: display only 'Name' or 'Prefix List Name' and 'Description'.
     const fields = [
       {
         label: plFieldLabel,
