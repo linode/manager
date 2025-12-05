@@ -57,7 +57,10 @@ export const FirewallPrefixListDrawer = React.memo(
       error,
       isFetching,
     } = useAllFirewallPrefixListsQuery(
-      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      // @TODO: Temporarily disabling this API call for `isPrefixListSpecial`
+      // since the API doesn't yet support special Prefix Lists.
+      // Remove this check and refactor related logic once API support is added.
+      isFirewallRulesetsPrefixlistsFeatureEnabled && !isPrefixListSpecial,
       {},
       { name: selectedPrefixListLabel }
     );
