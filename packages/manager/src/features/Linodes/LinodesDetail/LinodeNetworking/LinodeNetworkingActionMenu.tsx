@@ -49,7 +49,9 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     'Reserved IPv4 (private)',
     'Reserved IPv4 (public)',
     'VPC – IPv4',
-    'VPC NAT – IPv4',
+    'VPC – IPv6',
+    'VPC – Range – IPv4',
+    'VPC – Range – IPv6',
   ].includes(ipType);
 
   const deletableIPTypes = ['Private – IPv4', 'Public – IPv4', 'Range – IPv6'];

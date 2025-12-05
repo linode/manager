@@ -138,6 +138,25 @@ export const ipToDisplay = (ip: IPAddress, key: IPKey): IPDisplay => {
   };
 };
 
+const ipAdressForVPC = (
+  ip: VPCIP,
+  ipAdress: string,
+  ipType: string
+): IPAddress => {
+  return {
+    address: ipAdress,
+    gateway: ip.gateway,
+    interface_id: ip.interface_id,
+    linode_id: ip.linode_id!,
+    prefix: ip.prefix!,
+    public: false,
+    rdns: null,
+    region: ip.region,
+    subnet_mask: ip.subnet_mask,
+    type: ipType,
+  };
+};
+
 export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
   const emptyProps = {
     gateway: '',
@@ -163,6 +182,7 @@ export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
     }
     if (ip.nat_1_1) {
       vpcIPDisplay.push({
+        _ip: ipAdressForVPC(ip, ip.nat_1_1, 'VPC NAT – IPv4'),
         address: ip.nat_1_1,
         type: 'VPC NAT – IPv4',
         ...emptyProps,

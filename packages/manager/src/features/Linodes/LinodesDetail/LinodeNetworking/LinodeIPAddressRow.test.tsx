@@ -16,7 +16,9 @@ const ipDisplay = ipResponseToDisplayRows({
   ipResponse: ips,
   isLinodeInterface: false,
 })[0];
-const ipDisplayVPC = createVPCIPv4Display([vpcIPv4Factory.build()])[0];
+const [ipDisplayVPC, ipDisplayVPCNAT] = createVPCIPv4Display([
+  vpcIPv4Factory.build(),
+]);
 
 const handlers: IPAddressRowHandlers = {
   handleOpenEditRDNS: vi.fn(),
@@ -70,6 +72,26 @@ describe('LinodeIPAddressRow', () => {
     // No actions should be rendered
     expect(queryByText('Delete')).not.toBeInTheDocument();
     expect(queryByText('Edit RDNS')).not.toBeInTheDocument();
+  });
+
+  it('should render a VPC NAT IPv4 Address row', () => {
+    const { getAllByText } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplayVPCNAT}
+        />
+      )
+    );
+
+    getAllByText(ipDisplayVPCNAT.address);
+    getAllByText(ipDisplayVPCNAT.type);
+    // Check if actions were rendered
+    getAllByText('Edit RDNS');
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {
