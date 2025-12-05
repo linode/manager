@@ -520,7 +520,7 @@ export const generateAddressesLabelV2 = (
             tooltip: {
               sx: (theme) => ({
                 minWidth: '248px',
-                paddingX: `0 !important`,
+                paddingX: '0 !important',
                 paddingY: `${theme.spacingFunction(16)} !important`,
               }),
             },
