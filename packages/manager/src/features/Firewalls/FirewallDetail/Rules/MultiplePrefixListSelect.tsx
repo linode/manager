@@ -247,7 +247,7 @@ export const MultiplePrefixListSelect = React.memo(
         ipForced?: boolean
       ) => {
         if (ipUnsupported) {
-          return 'Not supported by this PrefixList';
+          return 'Not supported by this Prefix List';
         }
         if (ipForced) {
           return 'At least one array must be selected';
