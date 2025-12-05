@@ -18,6 +18,7 @@ import {
   mockGetCloudPulseServiceByType,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -245,13 +246,24 @@ describe('Create Alert', () => {
         regions: 'us-ord,us-east',
       });
       mockGetCloudPulseServiceByType(serviceType, services);
-      cy.intercept('GET', /sdk\/evalx\/.*\/contexts\/.*/, (req) => {
-        req.continue((res) => {
-          const alerting = res.body.aclpAlerting;
-          if (alerting?.value) {
-            alerting.value.systemChannelSupportedServices = ['dbaas'];
-          }
-        });
+      mockAppendFeatureFlags({
+        aclpAlerting: {
+          value: {
+            accountAlertLimit: 10,
+            accountMetricLimit: 10,
+            alertDefinitions: true,
+            beta: true,
+            systemChannelSupportedServices: ['dbaas'],
+          },
+        },
+
+        aclpServices: {
+          value: {
+            linode: {
+              alerts: { beta: true, enabled: true },
+            },
+          },
+        },
       });
 
       mockGetAccount(mockAccount);
