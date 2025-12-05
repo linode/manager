@@ -34,6 +34,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingLeft: 0,
     paddingTop: theme.spacingFunction(12),
   },
+  autocomplete: {
+    "& [data-testid='inputLabelWrapper']": {
+      display: 'none',
+    },
+  },
   button: {
     '& > span': {
       padding: 2,
@@ -237,6 +242,19 @@ export const MultiplePrefixListSelect = React.memo(
       const disableIPv4 = ipv4Unsupported || ipv4Forced;
       const disableIPv6 = ipv6Unsupported || ipv6Forced;
 
+      const getCheckboxTooltipText = (
+        ipUnsupported?: boolean,
+        ipForced?: boolean
+      ) => {
+        if (ipUnsupported) {
+          return 'Not supported by this Prefix List';
+        }
+        if (ipForced) {
+          return 'At least one array must be selected';
+        }
+        return undefined;
+      };
+
       return (
         <Grid
           container
@@ -250,6 +268,7 @@ export const MultiplePrefixListSelect = React.memo(
         >
           <Grid size={11}>
             <Autocomplete
+              className={classes.autocomplete}
               disableClearable={prefixLists.length > 0}
               disabled={disabled}
               errorText={thisPL.error}
@@ -274,20 +293,32 @@ export const MultiplePrefixListSelect = React.memo(
                 sx={{ ml: 0.4 }}
               >
                 <Box display="flex" gap={2}>
-                  <Checkbox
-                    checked={thisPL.inIPv4Rule === true}
-                    data-testid={`ipv4-checkbox-${idx}`}
-                    disabled={disableIPv4 || disabled}
-                    onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
-                    text="IPv4"
-                  />
-                  <Checkbox
-                    checked={thisPL.inIPv6Rule === true}
-                    data-testid={`ipv6-checkbox-${idx}`}
-                    disabled={disableIPv6 || disabled}
-                    onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
-                    text="IPv6"
-                  />
+                  <Stack direction="row">
+                    <Checkbox
+                      checked={thisPL.inIPv4Rule === true}
+                      data-testid={`ipv4-checkbox-${idx}`}
+                      disabled={disableIPv4 || disabled}
+                      onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
+                      text="IPv4"
+                      toolTipText={getCheckboxTooltipText(
+                        ipv4Unsupported,
+                        ipv4Forced
+                      )}
+                    />
+                  </Stack>
+                  <Stack direction="row">
+                    <Checkbox
+                      checked={thisPL.inIPv6Rule === true}
+                      data-testid={`ipv6-checkbox-${idx}`}
+                      disabled={disableIPv6 || disabled}
+                      onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
+                      text="IPv6"
+                      toolTipText={getCheckboxTooltipText(
+                        ipv6Unsupported,
+                        ipv6Forced
+                      )}
+                    />
+                  </Stack>
                 </Box>
                 <Box alignItems="center" display="flex">
                   <LinkButton
@@ -314,7 +345,7 @@ export const MultiplePrefixListSelect = React.memo(
               sx={(theme) => ({
                 height: 20,
                 width: 20,
-                marginTop: `${theme.spacingFunction(16)} !important`,
+                marginTop: `${theme.spacingFunction(8)} !important`,
               })}
             >
               <CloseIcon data-testid={`delete-pl-${idx}`} />
@@ -329,7 +360,7 @@ export const MultiplePrefixListSelect = React.memo(
         {/* Display the title only when pls.length > 0 (i.e., at least one PL row is added) */}
         {pls.length > 0 && (
           <Box display="flex">
-            <InputLabel sx={{ margin: 0 }}>Prefix List</InputLabel>
+            <InputLabel>Prefix List</InputLabel>
             {getFeatureChip({
               isFirewallRulesetsPrefixlistsFeatureEnabled,
               isFirewallRulesetsPrefixListsBetaEnabled,

@@ -411,6 +411,24 @@ export const generateAddressesLabelV2 = (
     elements.push('All IPv6');
   }
 
+  // Add remaining IPv4 addresses that are not prefix lists
+  if (!allowedAllIPv4) {
+    addresses?.ipv4?.forEach((ip) => {
+      if (!isPrefixList(ip)) {
+        elements.push(<span key={ip}>{ip}</span>);
+      }
+    });
+  }
+
+  // Add remaining IPv6 addresses that are not prefix lists
+  if (!allowedAllIPv6) {
+    addresses?.ipv6?.forEach((ip) => {
+      if (!isPrefixList(ip)) {
+        elements.push(<span key={ip}>{ip}</span>);
+      }
+    });
+  }
+
   // Build a map of prefix lists.
   // NOTE: If "allowedAllIPv4" or "allowedAllIPv6" is true, we skip those IPs entirely
   // because "All IPvX" is already represented, and there are no specific addresses to map.
@@ -446,24 +464,6 @@ export const generateAddressesLabelV2 = (
     );
   });
 
-  // Add remaining IPv4 addresses that are not prefix lists
-  if (!allowedAllIPv4) {
-    addresses?.ipv4?.forEach((ip) => {
-      if (!isPrefixList(ip)) {
-        elements.push(<span key={ip}>{ip}</span>);
-      }
-    });
-  }
-
-  // Add remaining IPv6 addresses that are not prefix lists
-  if (!allowedAllIPv6) {
-    addresses?.ipv6?.forEach((ip) => {
-      if (!isPrefixList(ip)) {
-        elements.push(<span key={ip}>{ip}</span>);
-      }
-    });
-  }
-
   // If no IPs are allowed
   if (elements.length === 0) return 'None';
 
@@ -478,18 +478,18 @@ export const generateAddressesLabelV2 = (
       sx={(theme) => ({
         maxHeight: '40vh',
         overflowY: 'auto',
-        // Extra space on the right to prevent scrollbar from overlapping content
-        paddingRight: theme.spacingFunction(8),
+        px: theme.spacingFunction(16),
       })}
     >
-      <ul
-        style={{
+      <Box
+        component="ul"
+        sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
-          gap: 4,
-          paddingLeft: 20,
+          gap: 0.5,
+          px: theme.spacingFunction(20),
           margin: 0,
-        }}
+        })}
       >
         {hiddenElements.map((el, i) => (
           <li
@@ -500,7 +500,7 @@ export const generateAddressesLabelV2 = (
             {el}
           </li>
         ))}
-      </ul>
+      </Box>
     </Box>
   );
 
@@ -522,13 +522,13 @@ export const generateAddressesLabelV2 = (
       </Box>
       {hasMore && (
         <Tooltip
-          arrow
           placement="bottom"
           slotProps={{
             tooltip: {
               sx: (theme) => ({
                 minWidth: '248px',
-                padding: `${theme.spacingFunction(16)} !important`,
+                paddingX: '0 !important',
+                paddingY: `${theme.spacingFunction(16)} !important`,
               }),
             },
           }}
