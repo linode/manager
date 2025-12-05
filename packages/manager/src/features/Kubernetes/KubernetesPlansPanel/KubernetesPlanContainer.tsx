@@ -110,7 +110,10 @@ export const KubernetesPlanContainer = (
     wholePanelIsDisabled,
   } = props;
   const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
-  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    plans,
+    planType
+  );
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -297,6 +300,7 @@ export const KubernetesPlanContainer = (
                         filterOptions={table}
                         key={`k8-plan-filter-${idx}`}
                         plans={filteredPlans}
+                        planType={planType}
                         renderPlanSelection={renderPlanSelection}
                         shouldDisplayNoRegionSelectedMessage={
                           shouldDisplayNoRegionSelectedMessage
@@ -309,6 +313,7 @@ export const KubernetesPlanContainer = (
                 <KubernetesPlanSelectionTable
                   key={planType}
                   plans={plans}
+                  planType={planType}
                   renderPlanSelection={renderPlanSelection}
                   shouldDisplayNoRegionSelectedMessage={
                     shouldDisplayNoRegionSelectedMessage
@@ -394,6 +399,7 @@ export const KubernetesPlanContainer = (
                     filterEmptyStateMessage={tableEmptyState?.message}
                     key={planType ?? 'all'}
                     plans={paginatedPlans}
+                    planType={planType}
                     renderPlanSelection={renderPlanSelection}
                     shouldDisplayNoRegionSelectedMessage={
                       shouldDisplayNoRegionSelectedMessage

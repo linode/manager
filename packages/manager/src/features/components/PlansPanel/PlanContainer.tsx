@@ -116,7 +116,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   } = props;
   const location = useLocation();
   const flags = useFlags();
-  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    plans,
+    planType
+  );
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const showTransfer =

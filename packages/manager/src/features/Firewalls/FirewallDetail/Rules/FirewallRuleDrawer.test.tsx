@@ -1,4 +1,5 @@
 import { capitalize } from '@linode/utilities';
+import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -270,6 +271,26 @@ describe('ViewRuleSetDetailsDrawer', () => {
       expect(getByRole('button', { name: 'Close' })).toBeVisible();
     }
   );
+});
+
+describe('EditRuleDrawer', () => {
+  it('should not show the Firewall RS & PL feature chip in the title in Edit mode', () => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: true,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <FirewallRuleDrawer {...props} mode="edit" />
+    );
+
+    const titleContainer = getByTestId('drawer-title-container');
+
+    // The beta (chip) should NOT be in the title area
+    expect(within(titleContainer).queryByText('beta')).not.toBeInTheDocument();
+  });
 });
 
 describe('utilities', () => {
