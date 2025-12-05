@@ -1,4 +1,5 @@
 import { streamType } from '@linode/api-v4';
+import { useAccount } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -35,6 +36,10 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
 
   const theme = useTheme();
   const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
+  const { data: account } = useAccount();
+  const isLkeEAuditLogsTypeSelectionDisabled = !account?.capabilities?.includes(
+    'Akamai Cloud Pulse Logs LKE-E Audit'
+  );
 
   const capitalizedMode = capitalize(mode);
   const description = {
@@ -47,8 +52,13 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
     audit_logs: `Logs Delivery Streams ${capitalizedMode}-Audit Logs`,
     lke_audit_logs: `Logs Delivery Streams ${capitalizedMode}-Kubernetes Audit Logs`,
   };
+
+  const filteredStreamTypeOptions = isLkeEAuditLogsTypeSelectionDisabled
+    ? streamTypeOptions.filter(({ value }) => value !== streamType.LKEAuditLogs)
+    : streamTypeOptions;
+
   const streamTypeOptionsWithPendo: AutocompleteOption[] =
-    streamTypeOptions.map((option) => ({
+    filteredStreamTypeOptions.map((option) => ({
       ...option,
       pendoId: pendoIds[option.value as StreamType],
     }));
@@ -98,7 +108,9 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
         render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
-            disabled={isFormInEditMode(mode)}
+            disabled={
+              isFormInEditMode(mode) || isLkeEAuditLogsTypeSelectionDisabled
+            }
             errorText={fieldState.error?.message}
             label="Stream Type"
             onBlur={field.onBlur}
