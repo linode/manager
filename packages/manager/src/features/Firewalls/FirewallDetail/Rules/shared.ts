@@ -1,6 +1,6 @@
 import { prop, sortBy } from 'ramda';
 
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, FirewallPrefixList } from '@linode/api-v4/lib/types';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {
@@ -149,4 +149,54 @@ export const getPrefixListType = (name: string): PrefixListGroup => {
     return 'System';
   }
   return 'Other'; // Safe fallback
+};
+
+export type SpecialPrefixList = Partial<FirewallPrefixList>;
+
+const SPECIAL_PREFIX_LISTS_DESCRIPTION =
+  'System-defined PrefixLists, such as pl::vpcs:<current> and pl::subnets:<current>, for VPC interface firewalls are dynamic and update automatically. They manage access to and from the interface for addresses within the interface’s VPC or VPC subnet.';
+
+export const SPECIAL_PREFIX_LISTS: SpecialPrefixList[] = [
+  { name: 'pl::vpcs:<current>', description: SPECIAL_PREFIX_LISTS_DESCRIPTION },
+  {
+    name: 'pl::subnets:<current>',
+    description: SPECIAL_PREFIX_LISTS_DESCRIPTION,
+  },
+];
+
+export const SPECIAL_PREFIX_LIST_NAMES = SPECIAL_PREFIX_LISTS.map(
+  (pl) => pl.name
+);
+
+export const isSpecialPrefixList = (name: string | undefined) => {
+  if (!name) return false;
+  return SPECIAL_PREFIX_LIST_NAMES.includes(name);
+};
+
+/**
+ * Combine API prefix lists with hardcoded special prefix lists.
+ * API results override special PLs if names collide.
+ * Ensures no duplicate prefix lists when combining hardcoded and API values.
+ * @TODO: Remove hardcoded special PLs once API supports them.
+ */
+export const combinePrefixLists = (
+  apiPLs: (FirewallPrefixList | SpecialPrefixList)[] | undefined
+): (FirewallPrefixList | SpecialPrefixList)[] => {
+  const map = new Map<string, FirewallPrefixList | SpecialPrefixList>();
+
+  // Add hardcoded special PLs first
+  SPECIAL_PREFIX_LISTS.forEach((pl) => {
+    if (pl.name) {
+      map.set(pl.name, pl);
+    }
+  });
+
+  // Add API results (override if name matches with hardcoded special PLs)
+  (apiPLs ?? []).forEach((pl) => {
+    if (pl.name) {
+      map.set(pl.name, pl);
+    }
+  });
+
+  return Array.from(map.values());
 };
