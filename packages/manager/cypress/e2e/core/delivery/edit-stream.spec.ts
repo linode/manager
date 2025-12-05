@@ -143,7 +143,7 @@ describe('Edit Stream', () => {
     });
   });
 
-  describe('given Kubernetes Audit Logs Stream Type', () => {
+  describe('given Kubernetes API Audit Logs Stream Type', () => {
     it('edits stream label and clusters and saves', () => {
       // Mock API responses
       mockGetDestinations([mockDestination]);
@@ -192,7 +192,7 @@ describe('Edit Stream', () => {
       cy.findByLabelText('Stream Type')
         .should('be.visible')
         .should('be.disabled')
-        .should('have.attr', 'value', 'Kubernetes Audit Logs');
+        .should('have.attr', 'value', 'Kubernetes API Audit Logs');
 
       // Clusters table should be visible
       cy.findByText('Clusters').should('be.visible');

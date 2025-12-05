@@ -60,8 +60,18 @@ const customHTTPsDetailsSchema = object({
 const akamaiObjectStorageDetailsBaseSchema = object({
   host: string().max(maxLength, maxLengthMessage).required('Host is required.'),
   bucket_name: string()
-    .max(maxLength, maxLengthMessage)
-    .required('Bucket name is required.'),
+    .required('Bucket name is required.')
+    .min(3, 'Bucket name must be between 3 and 63 characters.')
+    .matches(/^\S*$/, 'Bucket name must not contain spaces.')
+    .matches(
+      /^[a-z0-9].*[a-z0-9]$/,
+      'Bucket name must start and end with a lowercase letter or number.',
+    )
+    .matches(
+      /^(?!.*[.-]{2})[a-z0-9.-]+$/,
+      'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.',
+    )
+    .max(63, 'Bucket name must be between 3 and 63 characters.'),
   path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)
@@ -135,11 +145,16 @@ export const updateDestinationSchema = createDestinationSchema
   });
 
 // Logs Delivery Stream
+const clusterRequiredMessage = 'At least one cluster must be selected.';
 
 const streamDetailsBase = object({
   cluster_ids: array()
-    .of(number().defined())
-    .min(1, 'At least one cluster must be selected.'),
+    .of(number().defined(clusterRequiredMessage))
+    .when('is_auto_add_all_clusters_enabled', {
+      is: false,
+      then: (schema) =>
+        schema.min(1, clusterRequiredMessage).required(clusterRequiredMessage),
+    }),
   is_auto_add_all_clusters_enabled: boolean(),
 });
 

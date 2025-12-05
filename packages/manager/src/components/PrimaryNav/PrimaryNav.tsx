@@ -249,14 +249,14 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 isBeta: flags.aclpAlerting?.beta,
               },
               {
-                display: 'Longview',
-                to: '/longview',
-              },
-              {
                 display: 'Logs',
                 hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
                 isBeta: isACLPLogsBeta,
+              },
+              {
+                display: 'Longview',
+                to: '/longview',
               },
             ],
             name: 'Monitor',
