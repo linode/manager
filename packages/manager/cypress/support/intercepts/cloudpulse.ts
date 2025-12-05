@@ -393,6 +393,23 @@ export const mockGetAlertChannels = (
     paginateResponse(channel)
   );
 };
+
+/**
+ * Mocks an error response for the GET request to retrieve alert channels in CloudPulse.
+ *
+ * Intercepts the GET request to CloudPulse alert channels and simulates a 404 error.
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object indicating the interception.
+ */
+export const mockGetAlertChannelsTypeError = (
+  errorMessage: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/monitor/alert-channels*'),
+    makeErrorResponse(errorMessage, 400)
+  );
+};
 /**
  * Mocks the API response for creating a new alert definition in the monitoring service.
  * This function intercepts a POST request to create alert definitions and returns a mock
