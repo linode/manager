@@ -129,6 +129,8 @@ export const NotificationChannelListTable = React.memo(
                       {ChannelListingTableLabelMap.map((value) => (
                         <TableSortCell
                           active={orderBy === value.label}
+                          data-qa-header={value.colName}
+                          data-qa-sorting={value.colName}
                           direction={order}
                           handleClick={handleTableSort}
                           key={value.label}
