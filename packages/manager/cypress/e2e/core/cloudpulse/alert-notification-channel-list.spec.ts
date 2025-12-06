@@ -18,9 +18,7 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import type { NotificationChannel } from '@linode/api-v4';
 
-let notificationChannels = notificationChannelFactory.buildList(26);
-
-notificationChannels = notificationChannels.map((ch, i) => {
+const notificationChannels = notificationChannelFactory.buildList(26).map((ch, i) => {
   const alertCount = i % 2 === 0 ? 5 : 3;
   const channelType = i % 2 === 0 ? 'user' : 'system';
 
