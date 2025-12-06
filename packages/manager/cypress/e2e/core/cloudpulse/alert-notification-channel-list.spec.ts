@@ -123,10 +123,6 @@ const verifyChannelSorting = (
         .map((row) =>
           Number(row.getAttribute('data-qa-notification-channel-cell'))
         );
-
-      cy.log(`Actual order: ${actualOrder.join(', ')}`);
-      cy.log(`Expected order: ${expected.join(', ')}`);
-
       expect(actualOrder).to.deep.equal(expected);
     }
   );
