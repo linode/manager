@@ -632,27 +632,3 @@ export const mockGetCloudPulseServiceByType = (
     makeResponse(service)
   );
 };
-/**
- * Mocks the API response for fetching CloudPulse notification (alert) channels.
- *
- * Intercepts the GET request to `monitor/alert-channels` and returns
- * the provided list of notification channels. This endpoint is not paginated,
- * so the mock must return a simple array of channel objects.
- *
- * @param {NotificationChannel[]} channels
- *   An array of notification channel objects to return in the API response.
- *   Each object must match the NotificationChannel model, including:
- *
- * @returns {Cypress.Chainable}
- *   A Cypress chainable that continues the test flow after registering the intercept.
- */
-
-export const mockGetNotificationChannels = (
-  channels: NotificationChannel[]
-): Cypress.Chainable => {
-  return cy.intercept(
-    'GET',
-    apiMatcher('monitor/alert-channels*'),
-    paginateResponse(channels)
-  );
-};
