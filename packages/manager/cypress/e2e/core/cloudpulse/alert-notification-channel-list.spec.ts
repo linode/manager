@@ -21,23 +21,58 @@ import type { NotificationChannel } from '@linode/api-v4';
 let notificationChannels = notificationChannelFactory.buildList(26);
 
 notificationChannels = notificationChannels.map((ch, i) => {
-  const alertCount = i % 2 === 0 ? 5 : 3;
-  const channelType = i % 2 === 0 ? 'user' : 'system';
+  const isEmail = i % 2 === 0;
 
-  return {
-    ...ch,
-    type: channelType,
-    created_by: channelType,
-    updated_by: channelType,
-    updated: new Date().toISOString(),
+  const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
+    id: idx + 1,
+    label: `Alert-${idx + 1}`,
+    type: 'alerts-definitions',
+    url: 'Sample',
+  }));
 
-    alerts: Array.from({ length: alertCount }).map((_, idx) => ({
-      id: idx + 1,
-      label: `Alert-${idx + 1}`,
-      type: 'alerts-definitions',
-      url: 'Sample',
-    })),
-  };
+  if (isEmail) {
+    return {
+      ...ch,
+      id: i + 1,
+      label: `Channel-${i + 1}`,
+      type: 'user',
+      created_by: 'user',
+      updated_by: 'user',
+      channel_type: 'email',
+      updated: new Date(2024, 0, i + 1).toISOString(),
+      alerts,
+      content: {
+        email: {
+          email_addresses: [`test-${i + 1}@example.com`],
+          subject: 'Test Subject',
+          message: 'Test message',
+        },
+      },
+    } as NotificationChannel;
+  } else {
+    return {
+      ...ch,
+      id: i + 1,
+      label: `Channel-${i + 1}`,
+      type: 'system',
+      created_by: 'system',
+      updated_by: 'system',
+      channel_type: 'webhook',
+      updated: new Date(2024, 0, i + 1).toISOString(),
+      alerts,
+      content: {
+        webhook: {
+          webhook_url: `https://example.com/webhook/${i + 1}`,
+          http_headers: [
+            {
+              header_key: 'Authorization',
+              header_value: 'Bearer secret-token',
+            },
+          ],
+        },
+      },
+    } as NotificationChannel;
+  }
 });
 
 const isEmailContent = (
@@ -55,7 +90,6 @@ const mockProfile = profileFactory.build({
 
 /**
  * Verifies sorting of a column in the alerts table.
- * @param {string} header - The `data-qa-header` attribute of the column to sort.
  * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
  * @param {number[]} expectedValues - Expected values in sorted order.
  */
@@ -64,7 +98,6 @@ const verifyChannelSorting = (
   sortOrder: 'ascending' | 'descending',
   expected: number[]
 ) => {
-  // Initial click
   cy.get(`[data-qa-header="${columnLabel}"]`).click({ force: true });
 
   // Wait for DOM update, then check and correct
@@ -77,14 +110,12 @@ const verifyChannelSorting = (
       }
     });
 
-  // Now assert stable final state (Cypress auto-retries this)
   cy.get(`[data-qa-header="${columnLabel}"]`).should(
     'have.attr',
     'aria-sort',
     sortOrder
   );
 
-  // Validate row order
   cy.get('[data-qa="notification-channels-table"] tbody:last-of-type tr').then(
     ($rows) => {
       const actualOrder = $rows
@@ -102,6 +133,11 @@ const verifyChannelSorting = (
 };
 
 describe('Notification Channel Listing Page', () => {
+  /**
+   * Validates the listing page for CloudPulse notification channels.
+   * Confirms channel data rendering, search behavior, and table sorting
+   * across all columns using a controlled 26-item mock dataset.
+   */
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetProfile(mockProfile);
@@ -110,6 +146,10 @@ describe('Notification Channel Listing Page', () => {
       'getAlertNotificationChannels'
     );
     cy.visitWithLogin('/alerts/notification-channels');
+    ui.pagination.findPageSizeSelect().click();
+    cy.get('[data-qa-pagination-page-size-option="100"]')
+      .should('exist')
+      .click();
   });
 
   it('displays notification channel data correctly', () => {
@@ -166,13 +206,7 @@ describe('Notification Channel Listing Page', () => {
     cy.findByPlaceholderText('Search for Notification Channels').as(
       'searchInput'
     );
-    // Change pagination size selection from "Show 25" to "Show 100".
-    ui.pagination.findPageSizeSelect().click();
-    cy.get('[data-qa-pagination-page-size-option="100"]')
-      .should('exist')
-      .click();
 
-    // Before clearing the search input, verify the table shows all rows
     cy.get('[data-qa="notification-channels-table"]')
       .find('tbody')
       .last()
@@ -181,7 +215,7 @@ describe('Notification Channel Listing Page', () => {
       });
 
     cy.get('@searchInput').clear();
-    cy.get('@searchInput').type('Channel-10');
+    cy.get('@searchInput').type('Channel-9');
     cy.get('[data-qa="notification-channels-table"]')
       .find('tbody')
       .last()
@@ -189,7 +223,7 @@ describe('Notification Channel Listing Page', () => {
         cy.get('tr').should('have.length', 1);
 
         cy.get('tr').each(($row) => {
-          const expected = notificationChannels[9];
+          const expected = notificationChannels[8];
 
           cy.wrap($row).within(() => {
             cy.findByText(expected.label).should('be.visible');
@@ -209,108 +243,75 @@ describe('Notification Channel Listing Page', () => {
   });
 
   it('sorting and validates notification channel details', () => {
-    const fixedDates = [
-      '2024-01-01T10:00:00Z',
-      '2024-01-01T11:15:00Z',
-      '2024-01-01T12:30:00Z',
-      '2024-01-01T13:45:00Z',
-      '2024-01-01T15:00:00Z',
-    ];
-
     const sortColumns = [
       {
         column: 'Channel Name',
-        ascending: [1, 2, 3, 4, 5],
-        descending: [5, 4, 3, 2, 1],
+        ascending: [
+          1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 2, 20, 21, 22, 23, 24, 25,
+          26, 3, 4, 5, 6, 7, 8, 9,
+        ],
+        descending: [
+          9, 8, 7, 6, 5, 4, 3, 26, 25, 24, 23, 22, 21, 20, 2, 19, 18, 17, 16,
+          15, 14, 13, 12, 11, 10, 1,
+        ],
       },
       {
         column: 'Alerts',
-        ascending: [2, 4, 1, 3, 5],
-        descending: [1, 3, 5, 2, 4],
+        ascending: [
+          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
+          15, 17, 19, 21, 23, 25,
+        ],
+        descending: [
+          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
+          16, 18, 20, 22, 24, 26,
+        ],
       },
       {
         column: 'Channel Type',
-        ascending: [1, 3, 5, 2, 4],
-        descending: [2, 4, 1, 3, 5],
+        ascending: [
+          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
+          16, 18, 20, 22, 24, 26,
+        ],
+        descending: [
+          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
+          15, 17, 19, 21, 23, 25,
+        ],
       },
       {
         column: 'Created By',
-        ascending: [2, 4, 1, 3, 5],
-        descending: [1, 3, 5, 2, 4],
+        ascending: [
+          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
+          15, 17, 19, 21, 23, 25,
+        ],
+        descending: [
+          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
+          16, 18, 20, 22, 24, 26,
+        ],
       },
       {
         column: 'Last Modified',
-        ascending: [1, 2, 3, 4, 5],
-        descending: [5, 4, 3, 2, 1],
+        ascending: [
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+          21, 22, 23, 24, 25, 26,
+        ],
+        descending: [
+          26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9,
+          8, 7, 6, 5, 4, 3, 2, 1,
+        ],
       },
       {
         column: 'Last Modified By',
-        ascending: [2, 4, 1, 3, 5],
-        descending: [1, 3, 5, 2, 4],
+        ascending: [
+          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
+          15, 17, 19, 21, 23, 25,
+        ],
+        descending: [
+          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
+          16, 18, 20, 22, 24, 26,
+        ],
       },
     ];
 
-    let notificationChannels = notificationChannelFactory.buildList(5);
-
-    notificationChannels = notificationChannels.map((ch, i) => {
-      const isEmail = i % 2 === 0;
-
-      const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
-        id: idx + 1,
-        label: `Alert-${idx + 1}`,
-        type: 'alerts-definitions',
-        url: 'Sample',
-      }));
-
-      if (isEmail) {
-        return {
-          ...ch,
-          id: i + 1,
-          label: `Channel-${i + 1}`,
-          type: 'user',
-          created_by: 'user',
-          updated_by: 'user',
-          updated: fixedDates[i],
-          channel_type: 'email',
-          alerts,
-          content: {
-            email: {
-              email_addresses: [`test-${i + 1}@example.com`],
-              subject: 'Test Subject',
-              message: 'Test message',
-            },
-          },
-        } as NotificationChannel;
-      } else {
-        return {
-          ...ch,
-          id: i + 1,
-          label: `Channel-${i + 1}`,
-          type: 'system',
-          created_by: 'system',
-          updated_by: 'system',
-          updated: fixedDates[i],
-          channel_type: 'webhook',
-          alerts,
-          content: {
-            webhook: {
-              webhook_url: `https://example.com/webhook/${i + 1}`,
-              http_headers: [
-                {
-                  header_key: 'Authorization',
-                  header_value: 'Bearer secret-token',
-                },
-              ],
-            },
-          },
-        } as NotificationChannel;
-      }
-    });
-
-    mockGetAlertChannels(notificationChannels).as('getNotificationChannels');
-
-    cy.visitWithLogin('/alerts/notification-channels');
-    cy.wait('@getNotificationChannels');
     cy.get('[data-qa="notification-channels-table"] thead th').as('headers');
 
     cy.get('@headers').then(($headers) => {
