@@ -34,6 +34,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
       'enabling',
       'disabling',
     ],
+    systemChannelSupportedServices: ['dbaas'],
   },
   aclpServices: {
     linode: {
