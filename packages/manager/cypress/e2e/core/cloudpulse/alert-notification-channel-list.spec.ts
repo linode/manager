@@ -1,6 +1,7 @@
 /**
  * @file Integration Tests for CloudPulse Alerting — Notification Channel Listing Page
  */
+
 import { profileFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetAlertChannels } from 'support/intercepts/cloudpulse';
@@ -51,6 +52,13 @@ const isEmailContent = (
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
+
+/**
+ * Verifies sorting of a column in the alerts table.
+ * @param {string} header - The `data-qa-header` attribute of the column to sort.
+ * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
+ * @param {number[]} expectedValues - Expected values in sorted order.
+ */
 const verifyChannelSorting = (
   columnLabel: string,
   sortOrder: 'ascending' | 'descending',
@@ -92,6 +100,7 @@ const verifyChannelSorting = (
     }
   );
 };
+
 describe('Notification Channel Listing Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flagsFactory.build());
@@ -101,7 +110,6 @@ describe('Notification Channel Listing Page', () => {
       'getAlertNotificationChannels'
     );
     cy.visitWithLogin('/alerts/notification-channels');
-    cy.wait('@getAlertNotificationChannels');
   });
 
   it('displays notification channel data correctly', () => {
