@@ -30,7 +30,6 @@ import {
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
-  flagsFactory,
   memoryRulesFactory,
   notificationChannelFactory,
   serviceAlertFactory,
@@ -81,12 +80,22 @@ const mockLinode = linodeFactory.buildList(10).map((linode, index) => ({
   alerts: { user_alerts: [1], system_alerts: [] },
 }));
 
-const notificationChannels = notificationChannelFactory.build({
-  channel_type: 'email',
-  id: 1,
-  label: 'channel-1',
-  type: 'user',
-});
+const channelLabel = 'user-channel-1';
+
+const notificationChannels = [
+  notificationChannelFactory.build({
+    id: 1,
+    label: 'user-channel-1',
+    type: 'user',
+    channel_type: 'email',
+  }),
+  notificationChannelFactory.build({
+    id: 2,
+    label: 'system-channel-1',
+    type: 'system',
+    channel_type: 'email',
+  }),
+];
 
 const customAlertDefinition = alertDefinitionFactory.build({
   channel_ids: [1],
@@ -237,7 +246,26 @@ describe('Create Alert', () => {
         regions: 'us-ord,us-east',
       });
       mockGetCloudPulseServiceByType(serviceType, services);
-      mockAppendFeatureFlags(flagsFactory.build());
+      mockAppendFeatureFlags({
+        aclpAlerting: {
+          value: {
+            accountAlertLimit: 10,
+            accountMetricLimit: 10,
+            alertDefinitions: true,
+            beta: true,
+            systemChannelSupportedServices: ['dbaas'],
+          },
+        },
+
+        aclpServices: {
+          value: {
+            linode: {
+              alerts: { beta: true, enabled: true },
+            },
+          },
+        },
+      });
+
       mockGetAccount(mockAccount);
       mockGetProfile(mockProfile);
       mockGetCloudPulseServices([serviceType]);
@@ -245,7 +273,7 @@ describe('Create Alert', () => {
       mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
       mockGetLinodes(mockLinode);
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
-      mockGetAlertChannels([notificationChannels]);
+      mockGetAlertChannels(notificationChannels);
       mockCreateAlertDefinition(serviceType, alerts).as(
         'createAlertDefinition'
       );
@@ -405,10 +433,20 @@ describe('Create Alert', () => {
       ui.autocomplete
         .findByLabel('Channel')
         .should('be.visible')
-        .type('channel-1');
+        .as('channelField')
+        .parent()
+        .find('button[title="Open"]')
+        .click();
+
+      cy.get('[data-qa-autocomplete-popper="true"]').within(() => {
+        cy.findByText(channelLabel).should('exist');
+        cy.findByText('system-channel-1').should('not.exist');
+      });
+
+      cy.get('@channelField').type(channelLabel);
 
       ui.autocompletePopper
-        .findByTitle('channel-1')
+        .findByTitle(channelLabel)
         .should('be.visible')
         .click();
 
