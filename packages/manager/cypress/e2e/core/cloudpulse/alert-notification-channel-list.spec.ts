@@ -1,7 +1,6 @@
 /**
  * @file Integration Tests for CloudPulse Alerting — Notification Channel Listing Page
  */
-
 import { profileFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetAlertChannels } from 'support/intercepts/cloudpulse';
@@ -18,7 +17,9 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import type { NotificationChannel } from '@linode/api-v4';
 
-const notificationChannels = notificationChannelFactory.buildList(26).map((ch, i) => {
+let notificationChannels = notificationChannelFactory.buildList(26);
+
+notificationChannels = notificationChannels.map((ch, i) => {
   const alertCount = i % 2 === 0 ? 5 : 3;
   const channelType = i % 2 === 0 ? 'user' : 'system';
 
