@@ -14,9 +14,15 @@ import {
   flagsFactory,
   notificationChannelFactory,
 } from 'src/factories';
+import { ChannelAlertsTooltipText,ChannelListingTableLabelMap } from 'src/features/CloudPulse/Alerts/NotificationChannels/NotificationsChannelsListing/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { NotificationChannel } from '@linode/api-v4';
+
+const sortOrderMap = {
+  ascending: 'asc',
+  descending: 'desc',
+};
 
 let notificationChannels = notificationChannelFactory.buildList(26);
 
@@ -126,6 +132,17 @@ const verifyChannelSorting = (
       expect(actualOrder).to.deep.equal(expected);
     }
   );
+  const order = sortOrderMap[sortOrder];
+  const orderBy =
+  Object.fromEntries(
+    ChannelListingTableLabelMap.map(mapping => [mapping.colName, mapping.label])
+  )[columnLabel];
+
+
+  cy.url().should(
+    'endWith',
+    `/alerts/notification-channels?order=${order}&orderBy=${orderBy}`
+  );
 };
 
 describe('Notification Channel Listing Page', () => {
@@ -141,14 +158,17 @@ describe('Notification Channel Listing Page', () => {
     mockGetAlertChannels(notificationChannels).as(
       'getAlertNotificationChannels'
     );
+
     cy.visitWithLogin('/alerts/notification-channels');
+
     ui.pagination.findPageSizeSelect().click();
+
     cy.get('[data-qa-pagination-page-size-option="100"]')
       .should('exist')
       .click();
-  });
 
-  it('displays notification channel data correctly', () => {
+    ui.tooltip.findByText(ChannelAlertsTooltipText).should('be.visible');
+
     cy.wait('@getAlertNotificationChannels').then(({ response }) => {
       const body = response?.body;
       const data = body?.data;
@@ -198,6 +218,7 @@ describe('Notification Channel Listing Page', () => {
       });
     });
   });
+
   it('searches and validates notification channel details', () => {
     cy.findByPlaceholderText('Search for Notification Channels').as(
       'searchInput'
