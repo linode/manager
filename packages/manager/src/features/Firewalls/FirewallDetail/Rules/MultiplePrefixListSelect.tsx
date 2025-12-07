@@ -43,14 +43,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& > span': {
       padding: 2,
     },
-    marginLeft: `-${theme.spacingFunction(8)}`,
-    marginTop: 4,
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-  },
-  root: {
     marginTop: theme.spacingFunction(8),
+    marginLeft: `-${theme.spacingFunction(8)}`,
+    height: 20,
+    width: 20,
+    padding: 0,
   },
 }));
 
@@ -342,11 +339,6 @@ export const MultiplePrefixListSelect = React.memo(
               data-testid="button"
               disabled={disabled}
               onClick={() => removeInput(idx)}
-              sx={(theme) => ({
-                height: 20,
-                width: 20,
-                marginTop: `${theme.spacingFunction(8)} !important`,
-              })}
             >
               <CloseIcon data-testid={`delete-pl-${idx}`} />
             </IconButton>
@@ -356,7 +348,7 @@ export const MultiplePrefixListSelect = React.memo(
     };
 
     return (
-      <div className={cx(classes.root, className)}>
+      <div className={cx(className)}>
         {/* Display the title only when pls.length > 0 (i.e., at least one PL row is added) */}
         {pls.length > 0 && (
           <Box display="flex">
