@@ -1,7 +1,6 @@
 /**
  * @file Integration Tests for CloudPulse Alerting — Notification Channel Listing Page
  */
-
 import { profileFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetAlertChannels } from 'support/intercepts/cloudpulse';
@@ -26,6 +25,9 @@ const sortOrderMap = {
   ascending: 'asc',
   descending: 'desc',
 };
+const LabelLookup = Object.fromEntries(
+  ChannelListingTableLabelMap.map((item) => [item.colName, item.label])
+);
 
 let notificationChannels = notificationChannelFactory.buildList(26);
 
@@ -136,13 +138,7 @@ const verifyChannelSorting = (
     }
   );
   const order = sortOrderMap[sortOrder];
-  const orderBy = Object.fromEntries(
-    ChannelListingTableLabelMap.map((mapping) => [
-      mapping.colName,
-      mapping.label,
-    ])
-  )[columnLabel];
-
+  const orderBy = LabelLookup[columnLabel];
   cy.url().should(
     'endWith',
     `/alerts/notification-channels?order=${order}&orderBy=${orderBy}`
