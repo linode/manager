@@ -25,15 +25,14 @@ const sortOrderMap = {
   ascending: 'asc',
   descending: 'desc',
 };
+
 const LabelLookup = Object.fromEntries(
   ChannelListingTableLabelMap.map((item) => [item.colName, item.label])
 );
 
 let notificationChannels = notificationChannelFactory.buildList(26);
-
 notificationChannels = notificationChannels.map((ch, i) => {
   const isEmail = i % 2 === 0;
-
   const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
     id: idx + 1,
     label: `Alert-${idx + 1}`,
