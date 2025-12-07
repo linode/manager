@@ -30,60 +30,61 @@ const LabelLookup = Object.fromEntries(
   ChannelListingTableLabelMap.map((item) => [item.colName, item.label])
 );
 
-let notificationChannels = notificationChannelFactory.buildList(26);
-notificationChannels = notificationChannels.map((ch, i) => {
-  const isEmail = i % 2 === 0;
-  const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
-    id: idx + 1,
-    label: `Alert-${idx + 1}`,
-    type: 'alerts-definitions',
-    url: 'Sample',
-  }));
+const notificationChannels = notificationChannelFactory
+  .buildList(26)
+  .map((ch, i) => {
+    const isEmail = i % 2 === 0;
+    const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
+      id: idx + 1,
+      label: `Alert-${idx + 1}`,
+      type: 'alerts-definitions',
+      url: 'Sample',
+    }));
 
-  if (isEmail) {
-    return {
-      ...ch,
-      id: i + 1,
-      label: `Channel-${i + 1}`,
-      type: 'user',
-      created_by: 'user',
-      updated_by: 'user',
-      channel_type: 'email',
-      updated: new Date(2024, 0, i + 1).toISOString(),
-      alerts,
-      content: {
-        email: {
-          email_addresses: [`test-${i + 1}@example.com`],
-          subject: 'Test Subject',
-          message: 'Test message',
+    if (isEmail) {
+      return {
+        ...ch,
+        id: i + 1,
+        label: `Channel-${i + 1}`,
+        type: 'user',
+        created_by: 'user',
+        updated_by: 'user',
+        channel_type: 'email',
+        updated: new Date(2024, 0, i + 1).toISOString(),
+        alerts,
+        content: {
+          email: {
+            email_addresses: [`test-${i + 1}@example.com`],
+            subject: 'Test Subject',
+            message: 'Test message',
+          },
         },
-      },
-    } as NotificationChannel;
-  } else {
-    return {
-      ...ch,
-      id: i + 1,
-      label: `Channel-${i + 1}`,
-      type: 'system',
-      created_by: 'system',
-      updated_by: 'system',
-      channel_type: 'webhook',
-      updated: new Date(2024, 0, i + 1).toISOString(),
-      alerts,
-      content: {
-        webhook: {
-          webhook_url: `https://example.com/webhook/${i + 1}`,
-          http_headers: [
-            {
-              header_key: 'Authorization',
-              header_value: 'Bearer secret-token',
-            },
-          ],
+      } as NotificationChannel;
+    } else {
+      return {
+        ...ch,
+        id: i + 1,
+        label: `Channel-${i + 1}`,
+        type: 'system',
+        created_by: 'system',
+        updated_by: 'system',
+        channel_type: 'webhook',
+        updated: new Date(2024, 0, i + 1).toISOString(),
+        alerts,
+        content: {
+          webhook: {
+            webhook_url: `https://example.com/webhook/${i + 1}`,
+            http_headers: [
+              {
+                header_key: 'Authorization',
+                header_value: 'Bearer secret-token',
+              },
+            ],
+          },
         },
-      },
-    } as NotificationChannel;
-  }
-});
+      } as NotificationChannel;
+    }
+  });
 
 const isEmailContent = (
   content: NotificationChannel['content']
