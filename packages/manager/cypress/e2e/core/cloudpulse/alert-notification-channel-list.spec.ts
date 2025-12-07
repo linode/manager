@@ -14,7 +14,10 @@ import {
   flagsFactory,
   notificationChannelFactory,
 } from 'src/factories';
-import { ChannelAlertsTooltipText,ChannelListingTableLabelMap } from 'src/features/CloudPulse/Alerts/NotificationChannels/NotificationsChannelsListing/constants';
+import {
+  ChannelAlertsTooltipText,
+  ChannelListingTableLabelMap,
+} from 'src/features/CloudPulse/Alerts/NotificationChannels/NotificationsChannelsListing/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { NotificationChannel } from '@linode/api-v4';
@@ -133,11 +136,12 @@ const verifyChannelSorting = (
     }
   );
   const order = sortOrderMap[sortOrder];
-  const orderBy =
-  Object.fromEntries(
-    ChannelListingTableLabelMap.map(mapping => [mapping.colName, mapping.label])
+  const orderBy = Object.fromEntries(
+    ChannelListingTableLabelMap.map((mapping) => [
+      mapping.colName,
+      mapping.label,
+    ])
   )[columnLabel];
-
 
   cy.url().should(
     'endWith',
