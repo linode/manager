@@ -1,4 +1,4 @@
-import { Chip, styled } from '@linode/ui';
+import { Chip, NewFeatureChip, styled } from '@linode/ui';
 import { Outlet, useLoaderData, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -7,6 +7,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';
@@ -18,6 +19,8 @@ import {
 } from '../Shared/constants';
 
 export const UserDetailsLanding = () => {
+  const flags = useFlags();
+  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { isParentAccount } = useDelegationRole();
@@ -55,7 +58,14 @@ export const UserDetailsLanding = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: IAM_LABEL,
+              label: (
+                <>
+                  {IAM_LABEL}
+                  {showLimitedAvailabilityBadges ? (
+                    <NewFeatureChip sx={{ position: 'relative', top: -1 }} />
+                  ) : null}
+                </>
+              ),
               position: 1,
             },
           ],

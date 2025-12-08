@@ -117,6 +117,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
+
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const {
@@ -274,6 +276,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
                 to: '/iam',
                 isBeta: isIAMBeta,
+                isNew: showLimitedAvailabilityBadges,
               },
               {
                 display: 'Account',
@@ -307,6 +310,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled,
                 to: '/iam',
                 isBeta: isIAMBeta,
+                isNew: showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',
