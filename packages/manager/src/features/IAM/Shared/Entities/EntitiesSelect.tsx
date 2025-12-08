@@ -26,7 +26,10 @@ interface Props {
   value: EntitiesOption[];
 }
 
-export const Entities = ({
+// For large entity lists, we want to display the initial 100 results and then load more as the user scrolls.
+const INITIAL_DISPLAY_COUNT = 100;
+
+export const EntitiesSelect = ({
   access,
   errorText,
   mode,
@@ -34,8 +37,11 @@ export const Entities = ({
   type,
   value,
 }: Props) => {
-  const { data: entities } = useAllAccountEntities({});
+  const { data: entities, isLoading } = useAllAccountEntities({});
   const theme = useTheme();
+
+  const [displayCount, setDisplayCount] = React.useState(INITIAL_DISPLAY_COUNT);
+  const [inputValue, setInputValue] = React.useState('');
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
@@ -45,6 +51,30 @@ export const Entities = ({
 
     return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
   }, [entities, access, type]);
+
+  const filteredEntities = React.useMemo(() => {
+    if (!inputValue) {
+      return memoizedEntities;
+    }
+
+    return memoizedEntities.filter((option) =>
+      option.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  }, [memoizedEntities, inputValue]);
+
+  const visibleOptions = React.useMemo(() => {
+    const slice = filteredEntities.slice(0, displayCount);
+
+    const selectedNotVisible = value.filter(
+      (selected) => !slice.some((opt) => opt.value === selected.value)
+    );
+
+    return [...slice, ...selectedNotVisible];
+  }, [filteredEntities, displayCount, value]);
+
+  React.useEffect(() => {
+    setDisplayCount(INITIAL_DISPLAY_COUNT);
+  }, [filteredEntities]);
 
   if (access === 'account_access') {
     return (
@@ -75,16 +105,28 @@ export const Entities = ({
         getOptionLabel={(option) => option.label}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Entities"
+        loading={isLoading}
         multiple
         noMarginTop
-        onChange={(_, newValue) => {
-          onChange(newValue || []);
+        onChange={(_, newValue, reason) => {
+          if (
+            reason === 'selectOption' &&
+            newValue.length === displayCount &&
+            filteredEntities.length > displayCount
+          ) {
+            onChange(filteredEntities);
+          } else {
+            onChange(newValue || []);
+          }
         }}
-        options={memoizedEntities}
+        onInputChange={(_, value) => {
+          setInputValue(value);
+        }}
+        options={visibleOptions}
         placeholder={getPlaceholder(
           type,
           value.length,
-          memoizedEntities.length
+          filteredEntities.length
         )}
         readOnly={mode === 'change-role'}
         renderInput={(params) => (
@@ -97,10 +139,22 @@ export const Entities = ({
             placeholder={getPlaceholder(
               type,
               value.length,
-              memoizedEntities.length
+              filteredEntities.length
             )}
           />
         )}
+        slotProps={{
+          listbox: {
+            onScroll: (e) => {
+              const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+              if (scrollHeight - scrollTop <= clientHeight * 1.5) {
+                setDisplayCount((prev) =>
+                  Math.min(prev + 200, filteredEntities.length)
+                );
+              }
+            },
+          },
+        }}
         sx={{
           marginTop: 0,
           '& .MuiChip-root': {
