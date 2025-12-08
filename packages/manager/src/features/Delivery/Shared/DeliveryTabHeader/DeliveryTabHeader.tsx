@@ -31,7 +31,7 @@ export const DeliveryTabHeader = ({
   entity,
   onButtonClick,
   spacingBottom = 24,
-  isSearching,
+  isSearching = false,
   selectList,
   onSelect,
   selectValue,
