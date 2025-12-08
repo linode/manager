@@ -397,6 +397,43 @@ describe('FirewallPrefixListDrawer', () => {
       }
     }
   );
+
+  /**
+   * This scenario occurs when viewing a new Prefix List Details from the Add Rule drawer
+   * or the Edit Rule drawer, where both IPv4 and IPv6 references are false.
+   * In this case, no IPv4 or IPv6 "in use"/"not in use" chips should be rendered.
+   */
+  it('renders no IPv4 or IPv6 chips when both references are false', () => {
+    const prefixList = prefixListVariants[0]; // PL with both IPv4 & IPv6 supported
+
+    // Both references false
+    const context: FirewallPrefixListDrawerProps['context'] = {
+      plRuleRef: { inIPv4Rule: false, inIPv6Rule: false },
+      type: 'rule',
+    };
+
+    const mockPrefixList = firewallPrefixListFactory.build({ ...prefixList });
+    queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
+      data: [mockPrefixList],
+    });
+    combineSpy.mockReturnValue([
+      ...rulesShared.SPECIAL_PREFIX_LISTS,
+      mockPrefixList,
+    ]);
+
+    const { queryByTestId } = renderWithTheme(
+      <FirewallPrefixListDrawer
+        category="inbound"
+        context={context}
+        isOpen={true}
+        onClose={vi.fn()}
+        selectedPrefixListLabel={prefixList.name}
+      />
+    );
+
+    expect(queryByTestId('ipv4-chip')).not.toBeInTheDocument();
+    expect(queryByTestId('ipv6-chip')).not.toBeInTheDocument();
+  });
 });
 
 describe('FirewallPrefixListDrawer - Special "<current>" Prefix Lists', () => {

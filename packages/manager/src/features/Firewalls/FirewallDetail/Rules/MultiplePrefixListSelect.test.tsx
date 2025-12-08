@@ -32,6 +32,7 @@ describe('MultiplePrefixListSelect', () => {
   });
 
   const baseProps = {
+    originalPLs: [],
     handleOpenPrefixListDrawer: vi.fn(),
     onChange: vi.fn(),
   };
@@ -389,20 +390,31 @@ describe('MultiplePrefixListSelect', () => {
     ]);
   });
 
-  it('calls handleOpenPrefixListDrawer with correct arguments when clicking "View Details"', async () => {
+  it('calls handleOpenPrefixListDrawer with original immutable values when clicking "View Details"', async () => {
+    // The immutable original values (source of truth)
+    const originalPLs = [
+      { address: 'pl::supports-both', inIPv4Rule: false, inIPv6Rule: true },
+    ];
+
+    // The mutable, user-edited values (should NOT be used for View Details)
+    // Example: the user changed the rule from { IPv4: false, IPv6: true } to { IPv4: true, IPv6: false }
     const pls = [
       { address: 'pl::supports-both', inIPv4Rule: true, inIPv6Rule: false },
     ];
-
     const { getByText } = renderWithTheme(
-      <MultiplePrefixListSelect {...baseProps} pls={pls} />
+      <MultiplePrefixListSelect
+        {...baseProps}
+        originalPLs={originalPLs}
+        pls={pls}
+      />
     );
 
     await userEvent.click(getByText('View Details'));
 
+    // The drawer must receive the ORIGINAL, immutable values — not the edited ones
     expect(baseProps.handleOpenPrefixListDrawer).toHaveBeenCalledWith(
       'pl::supports-both',
-      { inIPv4Rule: true, inIPv6Rule: false }
+      { inIPv4Rule: false, inIPv6Rule: true }
     );
   });
 });

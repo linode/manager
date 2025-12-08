@@ -52,6 +52,7 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   ) => void;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
+  originalPLs: ExtendedPL[];
   pls: ExtendedPL[];
   presetPorts: FirewallOptionItem<string>[];
   ruleErrors?: FirewallRuleError[];

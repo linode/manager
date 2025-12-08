@@ -5,6 +5,7 @@ import { StyledLabel, StyledListItem } from './shared.styles';
 
 interface PrefixListIPSectionProps {
   addresses: string[];
+  hideUsageIndicator: boolean;
   inUse: boolean;
   type: 'IPv4' | 'IPv6';
 }
@@ -16,14 +17,23 @@ export const PrefixListIPSection = ({
   type,
   inUse,
   addresses,
+  hideUsageIndicator,
 }: PrefixListIPSectionProps) => {
+  const showUsageIndicator = !hideUsageIndicator;
+
+  // Apply the active state (adds green border when in use and visible)
+  const active = showUsageIndicator && inUse;
+
+  // Apply disabled text styling if not in use but the chip/section is visible
+  const disabledText = showUsageIndicator && !inUse;
+
   return (
     <Paper
       data-testid={`${type.toLowerCase()}-section`}
       sx={(theme) => ({
         backgroundColor: theme.tokens.alias.Background.Neutral,
         padding: theme.spacingFunction(12),
-        ...(inUse && {
+        ...(active && {
           border: `1px solid ${theme.tokens.alias.Border.Positive}`,
         }),
       })}
@@ -33,34 +43,36 @@ export const PrefixListIPSection = ({
           display: 'flex',
           justifyContent: 'space-between',
           marginBottom: theme.spacingFunction(4),
-          ...(!inUse && {
+          ...(disabledText && {
             color: theme.tokens.alias.Content.Text.Primary.Disabled,
           }),
         })}
       >
         {type}
-        <Chip
-          data-testid={`${type.toLowerCase()}-chip`}
-          label={inUse ? 'in use' : 'not in use'}
-          sx={(theme) => ({
-            background: inUse
-              ? theme.tokens.component.Badge.Positive.Subtle.Background
-              : theme.tokens.component.Badge.Neutral.Subtle.Background,
-            color: inUse
-              ? theme.tokens.component.Badge.Positive.Subtle.Text
-              : theme.tokens.component.Badge.Neutral.Subtle.Text,
-            font: theme.font.bold,
-            fontSize: theme.tokens.font.FontSize.Xxxs,
-            marginRight: theme.spacingFunction(6),
-            flexShrink: 0,
-          })}
-        />
+        {showUsageIndicator && (
+          <Chip
+            data-testid={`${type.toLowerCase()}-chip`}
+            label={inUse ? 'in use' : 'not in use'}
+            sx={(theme) => ({
+              background: inUse
+                ? theme.tokens.component.Badge.Positive.Subtle.Background
+                : theme.tokens.component.Badge.Neutral.Subtle.Background,
+              color: inUse
+                ? theme.tokens.component.Badge.Positive.Subtle.Text
+                : theme.tokens.component.Badge.Neutral.Subtle.Text,
+              font: theme.font.bold,
+              fontSize: theme.tokens.font.FontSize.Xxxs,
+              marginRight: theme.spacingFunction(6),
+              flexShrink: 0,
+            })}
+          />
+        )}
       </StyledLabel>
 
       <StyledListItem
         component="span"
         sx={(theme) => ({
-          ...(!inUse && {
+          ...(disabledText && {
             color: theme.tokens.alias.Content.Text.Primary.Disabled,
           }),
         })}

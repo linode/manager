@@ -128,20 +128,33 @@ export interface MultiplePrefixListSelectProps {
   onChange: (pls: ExtendedPL[]) => void;
 
   /**
+   * Original (immutable) PL values.
+   * This is the source of truth and should not be mutated.
+   */
+  originalPLs: ExtendedPL[];
+
+  /**
    * Placeholder text for an empty input field.
    */
   placeholder?: string;
 
   /**
    * Array of `ExtendedPL` objects representing managed PLs.
+   * Editable PLs state.
    */
   pls: ExtendedPL[];
 }
 
 export const MultiplePrefixListSelect = React.memo(
   (props: MultiplePrefixListSelectProps) => {
-    const { className, disabled, handleOpenPrefixListDrawer, onChange, pls } =
-      props;
+    const {
+      className,
+      disabled,
+      handleOpenPrefixListDrawer,
+      onChange,
+      originalPLs,
+      pls,
+    } = props;
     const { classes, cx } = useStyles();
     const {
       isFirewallRulesetsPrefixlistsFeatureEnabled,
@@ -251,6 +264,11 @@ export const MultiplePrefixListSelect = React.memo(
         (o) => o.label === thisPL.address
       );
 
+      // Use the immutable originalPLs to reference the original values
+      const originalThisPL = originalPLs.find(
+        (pl) => pl.address === thisPL.address
+      );
+
       // Disabling a checkbox ensures that at least one option (IPv4 or IPv6) remains checked
       const ipv4Unsupported =
         selectedOption?.support?.isPLIPv4Unsupported === true;
@@ -348,9 +366,11 @@ export const MultiplePrefixListSelect = React.memo(
                 <Box alignItems="center" display="flex">
                   <LinkButton
                     onClick={() => {
+                      // Pass an immutable version of this row to the drawer
+                      // so it displays the original values and ignores any ongoing, non-submitted edits.
                       handleOpenPrefixListDrawer(thisPL.address, {
-                        inIPv4Rule: thisPL.inIPv4Rule,
-                        inIPv6Rule: thisPL.inIPv6Rule,
+                        inIPv4Rule: originalThisPL?.inIPv4Rule ?? false,
+                        inIPv6Rule: originalThisPL?.inIPv6Rule ?? false,
                       });
                     }}
                   >

@@ -456,6 +456,7 @@ export const generateAddressesLabelV2 = (
         key={pl}
         onClick={(e) => {
           e.preventDefault();
+          // `reference` is a fresh object for this render and should be treated as read-only/immutable.
           onPrefixListClick?.(pl, reference);
         }}
       >

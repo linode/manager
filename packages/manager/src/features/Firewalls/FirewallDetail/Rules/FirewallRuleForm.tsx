@@ -49,6 +49,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     handleSubmit,
     ips,
     pls,
+    originalPLs,
     mode,
     presetPorts,
     ruleErrors,
@@ -351,6 +352,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
               aria-label="Prefix List for Firewall rule"
               handleOpenPrefixListDrawer={handleOpenPrefixListDrawer}
               onChange={handlePrefixListChange}
+              originalPLs={originalPLs}
               pls={pls}
             />
           )}

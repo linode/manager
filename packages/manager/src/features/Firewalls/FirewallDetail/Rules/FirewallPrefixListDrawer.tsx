@@ -87,6 +87,8 @@ export const FirewallPrefixListDrawer = React.memo(
     const isIPv4InUse = context?.plRuleRef.inIPv4Rule;
     const isIPv6InUse = context?.plRuleRef.inIPv6Rule;
 
+    const bothIPsUnused = !isIPv4InUse && !isIPv6InUse;
+
     // Returns Prefix List drawer title and back button text based on category and reference
     const getDrawerTexts = (
       category: Category,
@@ -279,11 +281,13 @@ export const FirewallPrefixListDrawer = React.memo(
                   />
                 </StyledListItem>
               )}
+
               {!isPrefixListSpecial && (
                 <Stack gap={2} marginTop={1}>
                   {isIPv4Supported && (
                     <PrefixListIPSection
                       addresses={prefixListDetails.ipv4!}
+                      hideUsageIndicator={bothIPsUnused} // only hide if both IPv4 & IPv6 are not in use
                       inUse={Boolean(isIPv4InUse)}
                       type="IPv4"
                     />
@@ -291,6 +295,7 @@ export const FirewallPrefixListDrawer = React.memo(
                   {isIPv6Supported && (
                     <PrefixListIPSection
                       addresses={prefixListDetails.ipv6!}
+                      hideUsageIndicator={bothIPsUnused} // only hide if both IPv4 & IPv6 are not in use
                       inUse={Boolean(isIPv6InUse)}
                       type="IPv6"
                     />

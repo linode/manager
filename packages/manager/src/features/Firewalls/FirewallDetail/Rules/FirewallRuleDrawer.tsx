@@ -78,6 +78,8 @@ export const FirewallRuleDrawer = React.memo(
       { address: '', inIPv4Rule: false, inIPv6Rule: false },
     ]);
 
+    const [originalPLs, setOriginalPLs] = React.useState<ExtendedPL[]>([]);
+
     // Firewall Ports, like IPs, are tracked separately. The form.values state value
     // tracks the custom user input; the FirewallOptionItem[] array of port presets in the multi-select
     // is stored here.
@@ -92,12 +94,24 @@ export const FirewallRuleDrawer = React.memo(
         const { ips, pls } = getInitialIPsOrPLs(ruleToModifyOrView);
         setIPs(ips);
         setPLs(pls);
+
+        // - Store a read-only snapshot of the original PLs (immutable)
+        // - Only include the essential fields; the error state is omitted since it's not needed for the original snapshot.
+        setOriginalPLs(
+          pls.map(({ address, inIPv4Rule, inIPv6Rule }) => ({
+            address,
+            inIPv4Rule,
+            inIPv6Rule,
+          }))
+        );
+
         setPresetPorts(portStringToItems(ruleToModifyOrView.ports)[0]);
       } else if (isOpen) {
         setPresetPorts([]);
       } else {
         setIPs([{ address: '' }]);
         setPLs([]);
+        setOriginalPLs([]);
       }
 
       // Reset the Create entity selection to 'rule' in two cases:
@@ -276,6 +290,7 @@ export const FirewallRuleDrawer = React.memo(
                   }}
                   ips={ips}
                   mode={mode}
+                  originalPLs={originalPLs}
                   pls={pls}
                   presetPorts={presetPorts}
                   ruleErrors={ruleToModifyOrView?.errors}
