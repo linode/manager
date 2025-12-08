@@ -1,4 +1,4 @@
-import { API_ROOT, BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 
 import type { Filter, Params, ResourcePage } from '../types';
@@ -12,7 +12,7 @@ import type { Event, Notification } from './types';
  */
 export const getEvents = (params: Params = {}, filter: Filter = {}) =>
   Request<ResourcePage<Event>>(
-    setURL(`${BETA_API_ROOT}/account/events`),
+    setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params),
@@ -26,7 +26,7 @@ export const getEvents = (params: Params = {}, filter: Filter = {}) =>
  */
 export const getEvent = (eventId: number) =>
   Request<Event>(
-    setURL(`${BETA_API_ROOT}/account/events/${encodeURIComponent(eventId)}`),
+    setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}`),
     setMethod('GET'),
   );
 
