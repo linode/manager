@@ -1,13 +1,5 @@
 import { useAllFirewallPrefixListsQuery } from '@linode/queries';
-import {
-  Box,
-  Button,
-  Chip,
-  Drawer,
-  Paper,
-  Stack,
-  TooltipIcon,
-} from '@linode/ui';
+import { Box, Button, Drawer, Stack, TooltipIcon } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -19,8 +11,11 @@ import {
   getFeatureChip,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
+import { PrefixListIPSection } from './FirewallPrefixListIPSection';
 import {
+  combinePrefixLists,
   getPrefixListType,
+  isSpecialPrefixList,
   PREFIXLIST_MARKED_FOR_DELETION_TEXT,
 } from './shared';
 import {
@@ -58,15 +53,31 @@ export const FirewallPrefixListDrawer = React.memo(
       isFirewallRulesetsPrefixListsBetaEnabled,
       isFirewallRulesetsPrefixListsGAEnabled,
     } = useIsFirewallRulesetsPrefixlistsEnabled();
+
+    const isPrefixListSpecial = isSpecialPrefixList(selectedPrefixListLabel);
+
     const { classes } = useStyles();
 
-    const { data, error, isFetching } = useAllFirewallPrefixListsQuery(
-      isFirewallRulesetsPrefixlistsFeatureEnabled,
+    const {
+      data: apiPL,
+      error,
+      isFetching,
+    } = useAllFirewallPrefixListsQuery(
+      // @TODO: Temporarily disabling this API call for `isPrefixListSpecial`
+      // since the API doesn't yet support special Prefix Lists.
+      // Remove this check and refactor related logic once API support is added.
+      isFirewallRulesetsPrefixlistsFeatureEnabled && !isPrefixListSpecial,
       {},
       { name: selectedPrefixListLabel }
     );
 
-    const prefixListDetails = data?.[0];
+    // Merge with hardcoded special PLs
+    const prefixLists = React.useMemo(() => combinePrefixLists(apiPL), [apiPL]);
+
+    // Get the actual prefix list by name (name is unique)
+    const prefixListDetails = prefixLists.find(
+      (pl) => pl.name === selectedPrefixListLabel
+    );
 
     const isIPv4Supported =
       prefixListDetails?.ipv4 !== null && prefixListDetails?.ipv4 !== undefined;
@@ -125,6 +136,77 @@ export const FirewallPrefixListDrawer = React.memo(
         ? 'Name'
         : 'Prefix List Name';
 
+    const drawerFooter = (
+      <Box
+        sx={(theme) => ({
+          marginTop: theme.spacingFunction(16),
+          display: 'flex',
+          justifyContent: backButtonText ? 'flex-start' : 'flex-end',
+        })}
+      >
+        <Button
+          buttonType={backButtonText ? 'outlined' : 'secondary'}
+          onClick={() => onClose({ closeAll: false })}
+          startIcon={backButtonText ? <ArrowLeftIcon /> : undefined}
+          sx={{
+            ...(backButtonText && {
+              textTransform: 'none',
+            }),
+          }}
+        >
+          {backButtonText ?? 'Close'}
+        </Button>
+      </Box>
+    );
+
+    // For normal Prefix Lists: display all fields.
+    // For special Prefix Lists: display only 'Name' or 'Prefix List Name' and 'Description'.
+    const fields = [
+      {
+        label: plFieldLabel,
+        value: prefixListDetails?.name ?? selectedPrefixListLabel,
+      },
+      !isPrefixListSpecial && {
+        label: 'ID',
+        value: prefixListDetails?.id,
+        copy: true,
+      },
+      {
+        label: 'Description',
+        value: prefixListDetails?.description,
+        column: true,
+      },
+      !isPrefixListSpecial &&
+        prefixListDetails?.name && {
+          label: 'Type',
+          value: getPrefixListType(prefixListDetails.name),
+        },
+      !isPrefixListSpecial &&
+        prefixListDetails?.visibility && {
+          label: 'Visibility',
+          value: capitalize(prefixListDetails.visibility),
+        },
+      !isPrefixListSpecial && {
+        label: 'Version',
+        value: prefixListDetails?.version,
+      },
+      !isPrefixListSpecial &&
+        prefixListDetails?.created && {
+          label: 'Created',
+          value: <DateTimeDisplay value={prefixListDetails.created} />,
+        },
+      !isPrefixListSpecial &&
+        prefixListDetails?.updated && {
+          label: 'Updated',
+          value: <DateTimeDisplay value={prefixListDetails.updated} />,
+        },
+    ].filter(Boolean) as {
+      column?: boolean;
+      copy?: boolean;
+      label: string;
+      value: React.ReactNode | string;
+    }[];
+
     return (
       <Drawer
         error={error}
@@ -143,42 +225,7 @@ export const FirewallPrefixListDrawer = React.memo(
         <Box mt={2}>
           {prefixListDetails && (
             <>
-              {[
-                {
-                  label: plFieldLabel,
-                  value: prefixListDetails.name,
-                },
-                {
-                  label: 'ID',
-                  value: prefixListDetails.id,
-                  copy: true,
-                },
-                {
-                  label: 'Description',
-                  value: prefixListDetails.description,
-                  column: true,
-                },
-                {
-                  label: 'Type',
-                  value: getPrefixListType(prefixListDetails.name),
-                },
-                {
-                  label: 'Visibility',
-                  value: capitalize(prefixListDetails.visibility),
-                },
-                {
-                  label: 'Version',
-                  value: prefixListDetails.version,
-                },
-                {
-                  label: 'Created',
-                  value: <DateTimeDisplay value={prefixListDetails.created} />,
-                },
-                {
-                  label: 'Updated',
-                  value: <DateTimeDisplay value={prefixListDetails.updated} />,
-                },
-              ].map((item, idx) => (
+              {fields.map((item, idx) => (
                 <StyledListItem
                   key={`item-${idx}`}
                   paddingMultiplier={2}
@@ -189,7 +236,7 @@ export const FirewallPrefixListDrawer = React.memo(
                   }
                 >
                   {item.label && (
-                    <StyledLabel component="span">{item.label}: </StyledLabel>
+                    <StyledLabel component="span">{item.label}:</StyledLabel>
                   )}
 
                   {item.value}
@@ -203,7 +250,7 @@ export const FirewallPrefixListDrawer = React.memo(
                 </StyledListItem>
               ))}
 
-              {prefixListDetails.deleted && (
+              {!isPrefixListSpecial && prefixListDetails.deleted && (
                 <StyledListItem paddingMultiplier={2}>
                   <StyledWarningIcon />
                   <StyledLabel
@@ -232,168 +279,28 @@ export const FirewallPrefixListDrawer = React.memo(
                   />
                 </StyledListItem>
               )}
-
-              <Stack gap={2} marginTop={1}>
-                {isIPv4Supported && (
-                  <Paper
-                    data-testid="ipv4-section"
-                    sx={(theme) => ({
-                      backgroundColor: theme.tokens.alias.Background.Neutral,
-                      padding: theme.spacingFunction(12),
-                      ...(isIPv4InUse
-                        ? {
-                            border: `1px solid ${theme.tokens.alias.Border.Positive}`,
-                          }
-                        : {}),
-                    })}
-                  >
-                    <StyledLabel
-                      sx={(theme) => ({
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginBottom: theme.spacingFunction(4),
-                        ...(!isIPv4InUse
-                          ? {
-                              color:
-                                theme.tokens.alias.Content.Text.Primary
-                                  .Disabled,
-                            }
-                          : {}),
-                      })}
-                    >
-                      IPv4
-                      <Chip
-                        data-testid="ipv4-chip"
-                        label={isIPv4InUse ? 'in use' : 'not in use'}
-                        sx={(theme) => ({
-                          background: isIPv4InUse
-                            ? theme.tokens.component.Badge.Positive.Subtle
-                                .Background
-                            : theme.tokens.component.Badge.Neutral.Subtle
-                                .Background,
-                          color: isIPv4InUse
-                            ? theme.tokens.component.Badge.Positive.Subtle.Text
-                            : theme.tokens.component.Badge.Neutral.Subtle.Text,
-                          font: theme.font.bold,
-                          fontSize: theme.tokens.font.FontSize.Xxxs,
-                          marginRight: theme.spacingFunction(6),
-                          flexShrink: 0,
-                        })}
-                      />
-                    </StyledLabel>
-
-                    <StyledListItem
-                      component="span"
-                      sx={(theme) => ({
-                        ...(!isIPv4InUse
-                          ? {
-                              color:
-                                theme.tokens.alias.Content.Text.Primary
-                                  .Disabled,
-                            }
-                          : {}),
-                      })}
-                    >
-                      {prefixListDetails.ipv4!.length > 0 ? (
-                        prefixListDetails.ipv4!.join(', ')
-                      ) : (
-                        <i>no IP addresses</i>
-                      )}
-                    </StyledListItem>
-                  </Paper>
-                )}
-
-                {isIPv6Supported && (
-                  <Paper
-                    data-testid="ipv6-section"
-                    sx={(theme) => ({
-                      backgroundColor: theme.tokens.alias.Background.Neutral,
-                      padding: theme.spacingFunction(12),
-                      ...(isIPv6InUse
-                        ? {
-                            border: `1px solid ${theme.tokens.alias.Border.Positive}`,
-                          }
-                        : {}),
-                    })}
-                  >
-                    <StyledLabel
-                      sx={(theme) => ({
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginBottom: theme.spacingFunction(4),
-                        ...(!isIPv6InUse
-                          ? {
-                              color:
-                                theme.tokens.alias.Content.Text.Primary
-                                  .Disabled,
-                            }
-                          : {}),
-                      })}
-                    >
-                      IPv6
-                      <Chip
-                        data-testid="ipv6-chip"
-                        label={isIPv6InUse ? 'in use' : 'not in use'}
-                        sx={(theme) => ({
-                          background: isIPv6InUse
-                            ? theme.tokens.component.Badge.Positive.Subtle
-                                .Background
-                            : theme.tokens.component.Badge.Neutral.Subtle
-                                .Background,
-                          color: isIPv6InUse
-                            ? theme.tokens.component.Badge.Positive.Subtle.Text
-                            : theme.tokens.component.Badge.Neutral.Subtle.Text,
-                          font: theme.font.bold,
-                          fontSize: theme.tokens.font.FontSize.Xxxs,
-                          marginRight: theme.spacingFunction(6),
-                          flexShrink: 0,
-                        })}
-                      />
-                    </StyledLabel>
-                    <StyledListItem
-                      component="span"
-                      sx={(theme) => ({
-                        ...(!isIPv6InUse
-                          ? {
-                              color:
-                                theme.tokens.alias.Content.Text.Primary
-                                  .Disabled,
-                            }
-                          : {}),
-                      })}
-                    >
-                      {prefixListDetails.ipv6!.length > 0 ? (
-                        prefixListDetails.ipv6!.join(', ')
-                      ) : (
-                        <i>no IP addresses</i>
-                      )}
-                    </StyledListItem>
-                  </Paper>
-                )}
-              </Stack>
+              {!isPrefixListSpecial && (
+                <Stack gap={2} marginTop={1}>
+                  {isIPv4Supported && (
+                    <PrefixListIPSection
+                      addresses={prefixListDetails.ipv4!}
+                      inUse={Boolean(isIPv4InUse)}
+                      type="IPv4"
+                    />
+                  )}
+                  {isIPv6Supported && (
+                    <PrefixListIPSection
+                      addresses={prefixListDetails.ipv6!}
+                      inUse={Boolean(isIPv6InUse)}
+                      type="IPv6"
+                    />
+                  )}
+                </Stack>
+              )}
             </>
           )}
 
-          <Box
-            sx={(theme) => ({
-              marginTop: theme.spacingFunction(16),
-              display: 'flex',
-              justifyContent: backButtonText ? 'flex-start' : 'flex-end',
-            })}
-          >
-            <Button
-              buttonType={backButtonText ? 'outlined' : 'secondary'}
-              onClick={() => onClose({ closeAll: false })}
-              startIcon={backButtonText ? <ArrowLeftIcon /> : undefined}
-              sx={{
-                ...(backButtonText && {
-                  textTransform: 'none',
-                }),
-              }}
-            >
-              {backButtonText ?? 'Close'}
-            </Button>
-          </Box>
+          {drawerFooter}
         </Box>
       </Drawer>
     );
