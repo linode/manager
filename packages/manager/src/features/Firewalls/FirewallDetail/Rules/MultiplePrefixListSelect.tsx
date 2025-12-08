@@ -49,6 +49,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: 20,
     padding: 0,
   },
+  noPaddingTop: {
+    paddingTop: 0,
+  },
 }));
 
 const isPrefixListSupported = (pl: FirewallPrefixList) =>
@@ -218,6 +221,9 @@ export const MultiplePrefixListSelect = React.memo(
       return null;
     }
 
+    const lastRowSelected =
+      pls.length > 0 && pls[pls.length - 1].address !== '';
+
     const renderRow = (thisPL: ExtendedPL, idx: number) => {
       const availableOptions = getAvailableOptions(idx, thisPL.address);
 
@@ -365,7 +371,10 @@ export const MultiplePrefixListSelect = React.memo(
         </Stack>
         <Button
           buttonType="secondary"
-          className={classes.addPL}
+          className={cx(
+            classes.addPL,
+            lastRowSelected && classes.noPaddingTop // Remove top padding when last PL selected
+          )}
           compactX
           disabled={disabled}
           onClick={addNewInput}

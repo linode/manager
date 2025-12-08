@@ -404,7 +404,5 @@ const StyledMultipleIPInput = styled(MultipleIPInput, {
 const StyledMultiplePrefixListSelect = styled(MultiplePrefixListSelect, {
   label: 'StyledMultipleIPInput',
 })(({ theme, pls }) => ({
-  ...(pls.length !== 0
-    ? { marginTop: theme.spacingFunction(16) }
-    : { marginTop: theme.spacingFunction(0) }),
+  ...(pls.length !== 0 ? { marginTop: theme.spacingFunction(16) } : {}),
 }));
