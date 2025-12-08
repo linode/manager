@@ -163,7 +163,13 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           : '/account/settings',
       },
     ],
-    [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
+    [
+      isIAMEnabled,
+      iamRbacPrimaryNavChanges,
+      limitsEvolution,
+      iamLimitedAvailabilityBadges,
+      isIAMBeta,
+    ]
   );
 
   const renderLink = (link: MenuLink) => {
