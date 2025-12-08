@@ -1,5 +1,12 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Divider,
+  NewFeatureChip,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -32,6 +39,7 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   isBeta?: boolean;
+  isNew?: boolean;
   to: string;
 }
 
@@ -286,6 +294,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                 >
                   {menuLink.display}
                   {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                  {menuLink?.isNew ? <NewFeatureChip component="span" /> : null}
                 </Link>
               )
             )}
