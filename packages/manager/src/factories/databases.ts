@@ -161,7 +161,7 @@ export const databaseInstanceFactory =
         ? ([1, 3][i % 2] as ClusterSize)
         : ([1, 2, 3][i % 3] as ClusterSize)
     ),
-    connection_pool_port: null,
+    connection_pool_port: 100,
     connection_strings: [],
     created: '2021-12-09T17:15:12',
     encrypted: false,
@@ -213,7 +213,7 @@ export const databaseInstanceFactory =
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   allow_list: [...IPv4List],
   cluster_size: Factory.each(() => pickRandom([1, 3])),
-  connection_pool_port: null,
+  connection_pool_port: 100,
   connection_strings: [
     {
       driver: 'python',

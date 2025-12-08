@@ -2,6 +2,8 @@ import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
+import { ServiceURI } from 'src/features/Databases/DatabaseDetail/ServiceURI';
+
 import { ACCESS_CONTROLS_IN_SETTINGS_TEXT } from '../../constants';
 import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
@@ -35,6 +37,7 @@ export const DatabaseNetworking = () => {
           description={accessControlCopy}
           disabled={disabled}
         />
+        {database.connection_pool_port && <ServiceURI database={database} />}
         <DatabaseManageNetworking database={database} />
       </Stack>
     </Paper>

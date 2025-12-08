@@ -1,4 +1,4 @@
-import { omittedProps, Tooltip, VisibilityTooltip } from '@linode/ui';
+import { Button, omittedProps, Tooltip, VisibilityTooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
@@ -30,14 +30,18 @@ export interface CopyTooltipProps {
    */
   isMaskingControlled?: boolean;
   /**
-   * If true, the text will be masked with dots when displayed. It will still be copyable.
-   * @default false
+   * If true, display a loading circle spinner
    */
-  masked?: boolean;
+  loading?: boolean;
   /**
    * Callback to be executed when the icon is clicked.
    */
 
+  /**
+   * If true, the text will be masked with dots when displayed. It will still be copyable.
+   * @default false
+   */
+  masked?: boolean;
   /**
    * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
    */
@@ -65,6 +69,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     copyableText,
     disabled,
     isMaskingControlled,
+    loading,
     masked,
     maskedTextLength,
     onClickCallback,
@@ -105,6 +110,14 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       {copyableText ? displayText : <FileCopy />}
     </StyledIconButton>
   );
+
+  if (loading) {
+    return (
+      <Button loading={loading} sx={{ paddingLeft: 2 }}>
+        {' '}
+      </Button>
+    );
+  }
 
   if (disabled) {
     return CopyButton;
