@@ -321,6 +321,7 @@ export const MultiplePrefixListSelect = React.memo(
                       checked={thisPL.inIPv4Rule === true}
                       data-testid={`ipv4-checkbox-${idx}`}
                       disabled={disableIPv4 || disabled}
+                      id={`ipv4-checkbox-${idx}`}
                       onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
                       text="IPv4"
                       toolTipText={getCheckboxTooltipText(
@@ -334,6 +335,7 @@ export const MultiplePrefixListSelect = React.memo(
                       checked={thisPL.inIPv6Rule === true}
                       data-testid={`ipv6-checkbox-${idx}`}
                       disabled={disableIPv6 || disabled}
+                      id={`ipv6-checkbox-${idx}`}
                       onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
                       text="IPv6"
                       toolTipText={getCheckboxTooltipText(
