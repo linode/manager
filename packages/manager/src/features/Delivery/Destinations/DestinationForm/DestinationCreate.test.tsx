@@ -47,9 +47,9 @@ describe('DestinationCreate', () => {
       const destinationNameInput = screen.getByLabelText('Destination Name');
       await userEvent.type(destinationNameInput, 'Test');
       const hostInput = screen.getByLabelText('Host');
-      await userEvent.type(hostInput, 'Test');
+      await userEvent.type(hostInput, 'test');
       const bucketInput = screen.getByLabelText('Bucket');
-      await userEvent.type(bucketInput, 'Test');
+      await userEvent.type(bucketInput, 'test');
       const accessKeyIDInput = screen.getByLabelText('Access Key ID');
       await userEvent.type(accessKeyIDInput, 'Test');
       const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
@@ -58,8 +58,8 @@ describe('DestinationCreate', () => {
       await userEvent.type(logPathPrefixInput, 'Test');
 
       expect(destinationNameInput).toHaveValue('Test');
-      expect(hostInput).toHaveValue('Test');
-      expect(bucketInput).toHaveValue('Test');
+      expect(hostInput).toHaveValue('test');
+      expect(bucketInput).toHaveValue('test');
       expect(accessKeyIDInput).toHaveValue('Test');
       expect(secretAccessKeyInput).toHaveValue('Test');
       expect(logPathPrefixInput).toHaveValue('Test');
@@ -114,9 +114,9 @@ describe('DestinationCreate', () => {
       const destinationNameInput = screen.getByLabelText('Destination Name');
       await userEvent.type(destinationNameInput, 'Test');
       const hostInput = screen.getByLabelText('Host');
-      await userEvent.type(hostInput, 'Test');
+      await userEvent.type(hostInput, 'test');
       const bucketInput = screen.getByLabelText('Bucket');
-      await userEvent.type(bucketInput, 'Test');
+      await userEvent.type(bucketInput, 'test');
       const accessKeyIDInput = screen.getByLabelText('Access Key ID');
       await userEvent.type(accessKeyIDInput, 'Test');
       const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');

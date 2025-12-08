@@ -46,6 +46,7 @@ export const DestinationEdit = () => {
         },
       ],
     },
+    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: [1, 2],
     title: `Edit Destination ${destinationId}`,
   };

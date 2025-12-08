@@ -81,6 +81,7 @@ export interface DatabaseFork {
 
 export interface DatabaseBackupsPayload {
   fork: DatabaseFork;
+  private_network?: null | PrivateNetwork;
   region?: string;
 }
 
