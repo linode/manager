@@ -1,3 +1,25 @@
+## [2025-12-10] - v0.154.0
+
+
+### Changed:
+
+- Update database restoreWithBackup data to include region ([#13097](https://github.com/linode/manager/pull/13097))
+- Add private_network to `DatabaseBackupsPayload` ([#13174](https://github.com/linode/manager/pull/13174))
+
+### Tech Stories:
+
+- Add `@types/node` as a devDependency ([#13119](https://github.com/linode/manager/pull/13119))
+
+### Upcoming Features:
+
+- Add new API endpoints and types for Network Load Balancers ([#13078](https://github.com/linode/manager/pull/13078))
+- Update FirewallRuleType to support ruleset ([#13079](https://github.com/linode/manager/pull/13079))
+- Add additional status types `enabling`, `disabling`, `provisioning` in CloudPulse alerts ([#13127](https://github.com/linode/manager/pull/13127))
+- CloudPulse-Metrics: Update `entity_ids` type in `CloudPulseMetricsRequest` for metrics api in endpoints dahsboard ([#13133](https://github.com/linode/manager/pull/13133))
+- Add `deleted` property to `FirewallPrefixList` type after API update ([#13146](https://github.com/linode/manager/pull/13146))
+- Added Database Connection Pool types and endpoints ([#13148](https://github.com/linode/manager/pull/13148))
+- Add 'Cloud Firewall Rule Set' to AccountCapability type ([#13156](https://github.com/linode/manager/pull/13156))
+
 ## [2025-11-18] - v0.153.0
 
 
