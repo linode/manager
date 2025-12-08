@@ -26,7 +26,7 @@ export const flagsFactory = Factory.Sync.makeFactory<Partial<Flags>>({
     alertDefinitions: true,
     beta: true,
     recentActivity: false,
-    notificationChannels: false,
+    notificationChannels: true,
     editDisabledStatuses: [
       'in progress',
       'failed',

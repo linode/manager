@@ -38,7 +38,10 @@ describe('Notification Channel Listing Page — Access Control', () => {
     cy.visitWithLogin('/linodes');
 
     ui.nav.findItemByTitle('Alerts').should('be.visible').click();
-    ui.tabList.findTabByTitle('Notification Channels').should('be.visible').click();
+    ui.tabList
+      .findTabByTitle('Notification Channels')
+      .should('be.visible')
+      .click();
 
     cy.url().should('endWith', 'alerts/notification-channels');
   });
