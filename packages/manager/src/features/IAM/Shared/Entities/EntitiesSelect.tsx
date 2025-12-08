@@ -106,10 +106,6 @@ export const EntitiesSelect = ({
         )}
         slotProps={{
           listbox: {
-            sx: {
-              contentVisibility: 'auto',
-              containIntrinsicSize: `0 32px`,
-            },
             onScroll: (e) => {
               const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
               if (scrollHeight - scrollTop <= clientHeight * 1.5) {
