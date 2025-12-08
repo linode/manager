@@ -1,9 +1,16 @@
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
+import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
+import {
+  getAssociatedEntityType,
+  isEndpointsOnlyDashboard,
+} from '../Utils/FilterConfig';
+
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
   CloudPulseServiceType,
+  Dashboard,
   Dimension,
   MetricDefinition,
 } from '@linode/api-v4';
@@ -54,11 +61,16 @@ export const useGlobalDimensions = (
   if (metricLoading || dashboardLoading) {
     return { options: [], defaultValue: [], isLoading: true };
   }
-  const metricDimensions = getMetricDimensions(metricDefinition?.data ?? []);
-  const commonDimensions = [
-    defaultOption,
-    ...getCommonDimensions(metricDimensions),
-  ];
+  const metricDimensions = getMetricDimensions(
+    metricDefinition?.data ?? [],
+    dashboard
+  );
+  const baseDimensions = getCommonDimensions(metricDimensions);
+  const shouldIncludeDefault = !isEndpointsOnlyDashboard(dashboardId ?? 0);
+
+  const commonDimensions = shouldIncludeDefault
+    ? [defaultOption, ...baseDimensions]
+    : baseDimensions;
 
   const commonGroups = getCommonGroups(
     preference ? preference : (dashboard?.group_by ?? []),
@@ -167,14 +179,25 @@ export const useWidgetDimension = (
  * @returns transform dimension object with metric as key and dimensions as value
  */
 export const getMetricDimensions = (
-  metricDefinition: MetricDefinition[]
+  metricDefinition: MetricDefinition[],
+  dashboard?: Dashboard
 ): MetricDimension => {
-  return metricDefinition.reduce((acc, { metric, dimensions }) => {
-    return {
-      ...acc,
-      [metric]: dimensions,
-    };
-  }, {});
+  if (!dashboard) {
+    return {};
+  }
+  const associatedEntityType = getAssociatedEntityType(dashboard.id);
+  return metricDefinition
+    .filter(({ label }) =>
+      associatedEntityType
+        ? label.includes(ASSOCIATED_ENTITY_METRIC_MAP[associatedEntityType]) // we need to filter metrics based on associated entity type for firewall dashboards, can be linode, nodebalancer, etc.
+        : true
+    )
+    .reduce((acc, { metric, dimensions }) => {
+      return {
+        ...acc,
+        [metric]: dimensions,
+      };
+    }, {});
 };
 
 /**

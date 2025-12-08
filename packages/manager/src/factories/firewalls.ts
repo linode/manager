@@ -10,7 +10,11 @@ import {
 } from '@linode/api-v4/lib/firewalls/types';
 import { Factory } from '@linode/utilities';
 
-import type { FirewallDeviceEntity } from '@linode/api-v4/lib/firewalls/types';
+import type {
+  FirewallDeviceEntity,
+  FirewallPrefixList,
+  FirewallRuleSet,
+} from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   action: 'DROP',
@@ -96,4 +100,37 @@ export const firewallSettingsFactory =
       public_interface: 1,
       vpc_interface: 1,
     },
+  });
+
+export const firewallRuleSetFactory = Factory.Sync.makeFactory<FirewallRuleSet>(
+  {
+    created: '2025-11-05T00:00:00',
+    deleted: null,
+    description: Factory.each((i) => `firewall-ruleset-${i} description`),
+    id: Factory.each((i) => i),
+    is_service_defined: false,
+    label: Factory.each((i) => `firewall-ruleset-${i}`),
+    rules: firewallRuleFactory.buildList(3),
+    type: 'inbound',
+    updated: '2025-11-05T00:00:00',
+    version: 1,
+  }
+);
+
+export const firewallPrefixListFactory =
+  Factory.Sync.makeFactory<FirewallPrefixList>({
+    created: '2025-11-05T00:00:00',
+    deleted: null,
+    description: Factory.each((i) => `firewall-prefixlist-${i} description`),
+    id: Factory.each((i) => i),
+    ipv4: Factory.each((i) =>
+      Array.from({ length: 5 }, (_, j) => `139.144.${i}.${j}`)
+    ),
+    ipv6: Factory.each((i) =>
+      Array.from({ length: 5 }, (_, j) => `2600:3c05:e001:bc::${i}${j}`)
+    ),
+    name: Factory.each((i) => `pl:system:resolvers:test-${i}`),
+    updated: '2025-11-05T00:00:00',
+    version: 1,
+    visibility: 'public',
   });
