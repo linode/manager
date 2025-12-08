@@ -1,5 +1,10 @@
+import { useAccount } from '@linode/queries';
 import { BetaChip, Box, Chip, NewFeatureChip, Tooltip } from '@linode/ui';
-import { capitalize, truncateAndJoinList } from '@linode/utilities';
+import {
+  capitalize,
+  isFeatureEnabledV2,
+  truncateAndJoinList,
+} from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -106,6 +111,8 @@ export const allIPs = {
   ipv4: [allIPv4],
   ipv6: [allIPv6],
 };
+
+export const FW_RULESET_CAPABILITY = 'Cloud Firewall Rule Set';
 
 export interface PredefinedFirewall {
   inbound: FirewallRuleType[];
@@ -566,18 +573,40 @@ export const getFirewallDescription = (firewall: Firewall) => {
  * but will eventually also look at account capabilities if available.
  */
 export const useIsFirewallRulesetsPrefixlistsEnabled = () => {
+  const { data: account } = useAccount();
   const flags = useFlags();
+
+  if (!flags) {
+    return {
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    };
+  }
 
   // @TODO: Firewall Rulesets & Prefix Lists - check for customer tag/account capability when it exists
   return {
-    isFirewallRulesetsPrefixlistsFeatureEnabled:
-      flags.fwRulesetsPrefixLists?.enabled ?? false,
-    isFirewallRulesetsPrefixListsBetaEnabled:
-      flags.fwRulesetsPrefixLists?.beta ?? false,
-    isFirewallRulesetsPrefixListsLAEnabled:
-      flags.fwRulesetsPrefixLists?.la ?? false,
-    isFirewallRulesetsPrefixListsGAEnabled:
-      flags.fwRulesetsPrefixLists?.ga ?? false,
+    isFirewallRulesetsPrefixlistsFeatureEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.enabled),
+      account?.capabilities ?? []
+    ),
+    isFirewallRulesetsPrefixListsBetaEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.beta),
+      account?.capabilities ?? []
+    ),
+    isFirewallRulesetsPrefixListsLAEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.la),
+      account?.capabilities ?? []
+    ),
+    isFirewallRulesetsPrefixListsGAEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.ga),
+      account?.capabilities ?? []
+    ),
   };
 };
 

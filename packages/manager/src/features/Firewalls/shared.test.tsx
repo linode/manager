@@ -3,6 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { accountFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -399,7 +401,7 @@ describe('generateAddressesLabelV2', () => {
 });
 
 describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
-  it('returns true if the feature is enabled', async () => {
+  it('returns true if the feature is enabled AND the account has the capability', async () => {
     const options = {
       flags: {
         fwRulesetsPrefixLists: {
@@ -410,6 +412,16 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
         },
       },
     };
+
+    const account = accountFactory.build({
+      capabilities: ['Cloud Firewall Rule Set'],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
@@ -425,7 +437,7 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
     });
   });
 
-  it('returns false if the feature is NOT enabled', async () => {
+  it('returns false if the feature is NOT enabled but the account has the capability', async () => {
     const options = {
       flags: {
         fwRulesetsPrefixLists: {
@@ -436,6 +448,52 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
         },
       },
     };
+
+    const account = accountFactory.build({
+      capabilities: ['Cloud Firewall Rule Set'],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { result } = renderHook(
+      () => useIsFirewallRulesetsPrefixlistsEnabled(),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current.isFirewallRulesetsPrefixlistsFeatureEnabled).toBe(
+        false
+      );
+    });
+  });
+
+  it('returns false if the feature is enabled but the account DOES NOT have the capability', async () => {
+    const options = {
+      flags: {
+        fwRulesetsPrefixLists: {
+          enabled: true,
+          beta: false,
+          la: false,
+          ga: false,
+        },
+      },
+    };
+
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
