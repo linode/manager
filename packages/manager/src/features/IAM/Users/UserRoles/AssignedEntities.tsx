@@ -83,7 +83,9 @@ export const AssignedEntities = ({
         addEllipsis
         customOverflowButton={(numHiddenByTruncate) => {
           const numHiddenItems =
-            totalCount - MAX_ITEMS_TO_RENDER + numHiddenByTruncate;
+            totalCount <= MAX_ITEMS_TO_RENDER
+              ? numHiddenByTruncate
+              : totalCount - MAX_ITEMS_TO_RENDER + numHiddenByTruncate;
 
           return (
             <Box
