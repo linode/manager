@@ -1,3 +1,15 @@
+## [2025-12-10] - v0.79.0
+
+
+### Changed:
+
+- Validate Bucket name in Destination Form for forbidden characters ([#13166](https://github.com/linode/manager/pull/13166))
+
+### Upcoming Features:
+
+- Update FirewallRuleTypeSchema to support ruleset ([#13079](https://github.com/linode/manager/pull/13079))
+- Added Database Connection Pool schemas ([#13148](https://github.com/linode/manager/pull/13148))
+
 ## [2025-11-04] - v0.78.0
 
 ### Upcoming Features:
