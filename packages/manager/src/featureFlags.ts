@@ -213,6 +213,7 @@ export interface Flags {
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
+  iamLimitedAvailabilityBadges: boolean;
   iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;

@@ -1,5 +1,12 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Divider,
+  NewFeatureChip,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -32,13 +39,18 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   isBeta?: boolean;
+  isNew?: boolean;
   to: string;
 }
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
+  const {
+    iamRbacPrimaryNavChanges,
+    limitsEvolution,
+    iamLimitedAvailabilityBadges,
+  } = useFlags();
   const theme = useTheme();
 
   const { data: account } = useAccount();
@@ -121,6 +133,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               ? '/users'
               : '/account/users',
         isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
+        isNew: isIAMEnabled && !isIAMBeta && iamLimitedAvailabilityBadges,
       },
       {
         display: 'Quotas',
@@ -150,7 +163,13 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           : '/account/settings',
       },
     ],
-    [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
+    [
+      isIAMEnabled,
+      iamRbacPrimaryNavChanges,
+      limitsEvolution,
+      iamLimitedAvailabilityBadges,
+      isIAMBeta,
+    ]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -281,6 +300,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                 >
                   {menuLink.display}
                   {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                  {menuLink?.isNew ? <NewFeatureChip component="span" /> : null}
                 </Link>
               )
             )}
