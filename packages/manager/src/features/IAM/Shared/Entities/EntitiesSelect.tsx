@@ -62,6 +62,16 @@ export const EntitiesSelect = ({
     );
   }, [memoizedEntities, inputValue]);
 
+  const visibleOptions = React.useMemo(() => {
+    const slice = filteredEntities.slice(0, displayCount);
+
+    const selectedNotVisible = value.filter(
+      (selected) => !slice.some((opt) => opt.value === selected.value)
+    );
+
+    return [...slice, ...selectedNotVisible];
+  }, [filteredEntities, displayCount, value]);
+
   React.useEffect(() => {
     setDisplayCount(INITIAL_DISPLAY_COUNT);
   }, [filteredEntities]);
@@ -112,7 +122,7 @@ export const EntitiesSelect = ({
         onInputChange={(_, value) => {
           setInputValue(value);
         }}
-        options={filteredEntities.slice(0, displayCount)}
+        options={visibleOptions}
         placeholder={getPlaceholder(
           type,
           value.length,
