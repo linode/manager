@@ -26,6 +26,9 @@ interface Props {
   value: EntitiesOption[];
 }
 
+// For large entity lists, we want to display the initial 100 results and then load more as the user scrolls.
+const INITIAL_DISPLAY_COUNT = 100;
+
 export const EntitiesSelect = ({
   access,
   errorText,
@@ -37,7 +40,7 @@ export const EntitiesSelect = ({
   const { data: entities, isLoading } = useAllAccountEntities({});
   const theme = useTheme();
 
-  const [displayCount, setDisplayCount] = React.useState(100);
+  const [displayCount, setDisplayCount] = React.useState(INITIAL_DISPLAY_COUNT);
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
@@ -82,6 +85,14 @@ export const EntitiesSelect = ({
         noMarginTop
         onChange={(_, newValue) => {
           onChange(newValue || []);
+        }}
+        onInputChange={(_, value, reason) => {
+          // When the user is searching, include all results
+          if (value) {
+            setDisplayCount(memoizedEntities.length);
+          } else if (reason === 'clear') {
+            setDisplayCount(INITIAL_DISPLAY_COUNT);
+          }
         }}
         options={memoizedEntities.slice(0, displayCount)}
         placeholder={getPlaceholder(
