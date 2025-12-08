@@ -16,7 +16,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';
-import { getQuotasFilters } from './utils';
+import { getQuotasFilters, getQuotaVisibilityFilter } from './utils';
 
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -52,6 +52,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
     location: selectedLocation,
     service: selectedService,
   });
+  const visiblityFilter = getQuotaVisibilityFilter(selectedService);
 
   const {
     data: quotas,
@@ -68,22 +69,28 @@ export const QuotasTable = (props: QuotasTableProps) => {
   );
 
   // Quota Usage Queries
-  // For each quota, fetch the usage in parallel
+  // For each quota with has_usage == true,
+  // fetch the usage in parallel
   // This will only fetch for the paginated set
-  const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
+  const quotaIdsHavingUsage =
+    quotas?.data
+      .filter((quota) => quota.has_usage)
+      .map((quota) => quota.quota_id) ?? [];
   const quotaUsageQueries = useQueries({
-    queries: quotaIds.map((quotaId) =>
+    queries: quotaIdsHavingUsage.map((quotaId) =>
       quotaQueries.service(selectedService.value)._ctx.usage(quotaId)
     ),
   });
 
   // Combine the quotas with their usage
-  const quotasWithUsage = React.useMemo(
+  const filteredQuotasWithUsage = React.useMemo(
     () =>
-      quotas?.data.map((quota, index) => ({
-        ...quota,
-        usage: quotaUsageQueries?.[index]?.data,
-      })) ?? [],
+      quotas?.data
+        .filter((quota) => visiblityFilter.isVisible(quota))
+        .map((quota, index) => ({
+          ...quota,
+          usage: quotaUsageQueries?.[index]?.data,
+        })) ?? [],
     [quotas, quotaUsageQueries]
   );
 
@@ -135,20 +142,19 @@ export const QuotasTable = (props: QuotasTableProps) => {
               message="Apply filters above to see quotas and current usage."
               sx={{ height: quotaRowMinHeight }}
             />
-          ) : quotasWithUsage.length === 0 ? (
+          ) : filteredQuotasWithUsage.length === 0 ? (
             <TableRowEmpty
               colSpan={4}
               message="There is no data available for this service and region."
               sx={{ height: quotaRowMinHeight }}
             />
           ) : (
-            quotasWithUsage.map((quota, index) => {
-              const hasQuotaUsage = quota.usage?.usage !== null;
-
+            filteredQuotasWithUsage.map((quota, index) => {
               return (
                 <QuotasTableRow
-                  hasQuotaUsage={hasQuotaUsage}
+                  hasUsage={quota.has_usage}
                   index={index}
+                  isDataPresent={quota.usage?.usage !== null}
                   key={quota.quota_id}
                   quota={quota}
                   quotaUsageQueries={quotaUsageQueries}
