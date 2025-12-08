@@ -32,7 +32,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
       justifyContent: 'flex-start',
     },
     paddingLeft: 0,
-    paddingTop: theme.spacingFunction(12),
+    paddingTop: theme.spacingFunction(12), // default when empty
+  },
+  addPLReducedPadding: {
+    paddingTop: theme.spacingFunction(4), // when last row is selected
   },
   autocomplete: {
     "& [data-testid='inputLabelWrapper']": {
@@ -48,9 +51,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     height: 20,
     width: 20,
     padding: 0,
-  },
-  noPaddingTop: {
-    paddingTop: 0,
   },
 }));
 
@@ -373,7 +373,7 @@ export const MultiplePrefixListSelect = React.memo(
           buttonType="secondary"
           className={cx(
             classes.addPL,
-            lastRowSelected && classes.noPaddingTop // Remove top padding when last PL selected
+            lastRowSelected && classes.addPLReducedPadding // Reduce top padding when last PL selected
           )}
           compactX
           disabled={disabled}
