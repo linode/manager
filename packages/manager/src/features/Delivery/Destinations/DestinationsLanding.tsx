@@ -63,7 +63,6 @@ export const DestinationsLanding = () => {
   const {
     data: destinations,
     isLoading,
-    isFetching,
     error,
   } = useDestinationsQuery(
     {
@@ -122,7 +121,6 @@ export const DestinationsLanding = () => {
     <Paper>
       <DeliveryTabHeader
         entity="Destination"
-        isSearching={isFetching}
         onButtonClick={navigateToCreate}
         onSearch={onSearch}
         searchValue={search?.label ?? ''}
@@ -159,7 +157,7 @@ export const DestinationsLanding = () => {
                 >
                   ID
                 </TableSortCell>
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableSortCell
                     active={orderBy === 'created'}
                     direction={order}

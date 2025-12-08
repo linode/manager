@@ -27,6 +27,7 @@ export const VolumeDetails = () => {
     {
       to: '/volumes/$volumeId/metrics',
       title: 'Metrics',
+      hide: !aclpServices?.blockstorage?.metrics?.enabled,
       chip: aclpServices?.blockstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);

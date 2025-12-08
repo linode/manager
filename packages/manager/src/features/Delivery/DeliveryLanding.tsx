@@ -30,6 +30,7 @@ export const DeliveryLanding = React.memo(() => {
     breadcrumbProps: {
       pathname: '/logs/delivery',
     },
+    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: 1,
     entity: 'Delivery',
     title: 'Logs', // TODO: Change to "Delivery" all "Logs" occurrences after adding LogsLanding page
