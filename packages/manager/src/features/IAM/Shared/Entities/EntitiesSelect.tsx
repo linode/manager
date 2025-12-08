@@ -98,8 +98,16 @@ export const EntitiesSelect = ({
         loading={isLoading}
         multiple
         noMarginTop
-        onChange={(_, newValue) => {
-          onChange(newValue || []);
+        onChange={(_, newValue, reason) => {
+          if (
+            reason === 'selectOption' &&
+            newValue.length === displayCount &&
+            filteredEntities.length > displayCount
+          ) {
+            onChange(filteredEntities);
+          } else {
+            onChange(newValue || []);
+          }
         }}
         onInputChange={(_, value) => {
           setInputValue(value);
