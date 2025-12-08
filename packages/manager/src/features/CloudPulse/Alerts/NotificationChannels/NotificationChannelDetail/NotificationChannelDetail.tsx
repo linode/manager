@@ -7,5 +7,5 @@ export const NotificationChannelDetail = () => {
     from: '/alerts/notification-channels/detail/$channelId',
   });
   // Placeholder content for Notification Channel Detail
-  return <Paper>Notification Channel Details - id: {channelId} </Paper>;
+  return <Paper>Notification Channel Details - id: {channelId}</Paper>;
 };

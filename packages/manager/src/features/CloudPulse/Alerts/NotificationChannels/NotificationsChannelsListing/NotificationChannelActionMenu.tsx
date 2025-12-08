@@ -15,7 +15,7 @@ export interface NotificationChannelActionHandlers {
 
 export interface NotificationChannelActionMenuProps {
   /**
-   * The label of the alert
+   * The label of the Notification Channel
    */
   channelLabel: string;
   /**
