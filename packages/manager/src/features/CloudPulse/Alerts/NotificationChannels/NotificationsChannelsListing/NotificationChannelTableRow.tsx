@@ -1,15 +1,22 @@
 import { useProfile } from '@linode/queries';
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { channelTypeMap } from '../../constants';
+import { NotificationChannelActionMenu } from './NotificationChannelActionMenu';
 
+import type { NotificationChannelActionHandlers } from './NotificationChannelActionMenu';
 import type { NotificationChannel } from '@linode/api-v4';
 
 interface NotificationChannelTableRowProps {
+  /**
+   * The callback handlers for clicking an action menu item
+   */
+  handlers: NotificationChannelActionHandlers;
   /**
    * The notification channel details used by the component to fill the row details
    */
@@ -19,16 +26,31 @@ interface NotificationChannelTableRowProps {
 export const NotificationChannelTableRow = (
   props: NotificationChannelTableRowProps
 ) => {
-  const { notificationChannel } = props;
+  const { handlers, notificationChannel } = props;
   const { data: profile } = useProfile();
-  const { id, label, channel_type, created_by, updated, updated_by, alerts } =
-    notificationChannel;
+  const {
+    id,
+    label,
+    channel_type,
+    created_by,
+    updated,
+    updated_by,
+    alerts,
+    type,
+  } = notificationChannel;
   return (
     <TableRow
       data-qa-notification-channel-cell={id}
       key={`notification-channel-row-${id}`}
     >
-      <TableCell>{label}</TableCell>
+      <TableCell>
+        <Link
+          data-qa-alert-link
+          to={`/alerts/notification-channels/detail/${id}`}
+        >
+          {label}
+        </Link>
+      </TableCell>
       <TableCell>{alerts.length}</TableCell>
       <TableCell>{channelTypeMap[channel_type]}</TableCell>
       <TableCell>{created_by}</TableCell>
@@ -39,7 +61,16 @@ export const NotificationChannelTableRow = (
         })}
       </TableCell>
       <TableCell>{updated_by}</TableCell>
-      <TableCell actionCell />
+      <TableCell
+        actionCell
+        data-qa-notification-channel-action-cell={`notification-channel-${id}`}
+      >
+        <NotificationChannelActionMenu
+          channelLabel={label}
+          handlers={handlers}
+          notificationType={type}
+        />
+      </TableCell>
     </TableRow>
   );
 };
