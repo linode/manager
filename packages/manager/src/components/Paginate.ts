@@ -39,6 +39,20 @@ interface State {
 interface Props<T> {
   children: (p: PaginationProps<T>) => React.ReactNode;
   data: T[];
+  /**
+   * When true, prevents page size changes from being persisted to the global PAGE_SIZE
+   * localStorage key. This is critical for components with custom page size options
+   * (e.g., plans panel with 15, 25, 50) to ensure they don't override the standard
+   * page size preference (25, 50, 75, 100) used by other tables across the application.
+   *
+   * Use this flag when:
+   * - Component has non-standard page size options (anything other than 25, 50, 75, 100)
+   * - Page size should be ephemeral (not persisted across sessions)
+   * - Component uses customOptions prop in PaginationFooter
+   *
+   * @default false
+   */
+  noPageSizeOverride?: boolean;
   page?: number;
   pageSize?: number;
   pageSizeSetter?: (v: number) => void;
@@ -69,9 +83,13 @@ export default class Paginate<T> extends React.Component<Props<T>, State> {
     // Use the custom setter if one has been supplied.
     if (this.props.pageSizeSetter) {
       this.props.pageSizeSetter(pageSize);
-    } else {
+    } else if (!this.props.noPageSizeOverride) {
+      // Only persist to global PAGE_SIZE storage if noPageSizeOverride is not set.
+      // This ensures components with non-standard page sizes (e.g., 15, 25, 50)
+      // don't override the standard preference (25, 50, 75, 100) used across the app.
       storage.pageSize.set(pageSize);
     }
+    // If noPageSizeOverride is true, page size change is kept in local state only
   };
 
   render() {

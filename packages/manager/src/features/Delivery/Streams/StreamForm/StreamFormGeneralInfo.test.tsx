@@ -43,14 +43,16 @@ describe('StreamFormGeneralInfo', () => {
       // Open the dropdown
       await userEvent.click(streamTypesAutocomplete);
 
-      // Select the "Kubernetes Audit Logs" option
-      const kubernetesAuditLogs = await screen.findByText(
-        'Kubernetes Audit Logs'
+      // Select the "Kubernetes API Audit Logs" option
+      const kubernetesApiAuditLogs = await screen.findByText(
+        'Kubernetes API Audit Logs'
       );
-      await userEvent.click(kubernetesAuditLogs);
+      await userEvent.click(kubernetesApiAuditLogs);
 
       await waitFor(() => {
-        expect(streamTypesAutocomplete).toHaveValue('Kubernetes Audit Logs');
+        expect(streamTypesAutocomplete).toHaveValue(
+          'Kubernetes API Audit Logs'
+        );
       });
     });
   });

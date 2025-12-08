@@ -39,9 +39,9 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
   const capitalizedMode = capitalize(mode);
   const description = {
     audit_logs:
-      'Configuration and authentication audit logs that capture state-changing operations (mutations) on Linode cloud infrastructure resources and IAM authentication events. Delivered in cloudevents.io JSON format.',
+      'Audit logs record state-changing operations on cloud resources and authentication events, delivered in CloudEvents JSON format.',
     lke_audit_logs:
-      'Kubernetes API server audit logs that capture state-changing operations (mutations) on LKE-E cluster resources.',
+      'Kubernetes API server audit logs capture state-changing operations on LKE-E cluster resources.',
   };
   const pendoIds = {
     audit_logs: `Logs Delivery Streams ${capitalizedMode}-Audit Logs`,
@@ -60,7 +60,10 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
 
   const updateStreamDetails = (value: string) => {
     if (value === streamType.LKEAuditLogs) {
-      setValue('stream.details.is_auto_add_all_clusters_enabled', false);
+      setValue('stream.details', {
+        cluster_ids: [],
+        is_auto_add_all_clusters_enabled: false,
+      });
     } else {
       setValue('stream.details', null);
     }
@@ -135,7 +138,8 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
       <Typography
         sx={{
           mt: theme.spacingFunction(16),
-          maxWidth: 480,
+          maxWidth: 440,
+          whiteSpace: 'preserve-spaces',
         }}
       >
         {description[selectedStreamType]}

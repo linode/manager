@@ -1,5 +1,7 @@
 import {
   getDatabaseBackups,
+  getDatabaseConnectionPool,
+  getDatabaseConnectionPools,
   getDatabaseCredentials,
   getDatabaseEngineConfig,
   getDatabases,
@@ -28,6 +30,19 @@ export const databaseQueries = createQueryKeys('databases', {
       },
       credentials: {
         queryFn: () => getDatabaseCredentials(engine, id),
+        queryKey: null,
+      },
+      connectionPools: {
+        contextQueries: {
+          pool: (poolName: string) => ({
+            queryFn: () => getDatabaseConnectionPool(id, poolName),
+            queryKey: [poolName],
+          }),
+          pools: {
+            queryFn: () => getDatabaseConnectionPools(id),
+            queryKey: null,
+          },
+        },
         queryKey: null,
       },
     },

@@ -254,6 +254,7 @@ export const CloudPulseCustomSelect = React.memo(
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label={label || 'Select a Value'}
+        loading={isLoading}
         multiple={isMultiSelect}
         noMarginTop
         onChange={handleChange}

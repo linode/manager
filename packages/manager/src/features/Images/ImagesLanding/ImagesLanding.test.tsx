@@ -1,4 +1,3 @@
-import { linodeFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -12,22 +11,11 @@ import ImagesLanding from './ImagesLanding';
 
 const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
-  useQueryWithPermissions: vi.fn().mockReturnValue({}),
-  useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
-
-vi.mock('../utils.ts', async () => {
-  const actual = await vi.importActual('../utils');
-  return {
-    ...actual,
-    useLinodesPermissionsCheck: queryMocks.useLinodesPermissionsCheck,
-  };
-});
 
 beforeAll(() => mockMatchMedia());
 
@@ -202,9 +190,6 @@ describe('Images Landing Table', () => {
 
   it('should allow deploying to a new Linode', async () => {
     const image = imageFactory.build();
-    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
-      availableLinodes: [linodeFactory.build()],
-    });
 
     server.use(
       http.get('*/images', ({ request }) => {
@@ -301,9 +286,6 @@ describe('Images Landing Table', () => {
     const image = imageFactory.build({
       id: 'private/99999',
       label: 'vi-test-image',
-    });
-    queryMocks.useLinodesPermissionsCheck.mockReturnValue({
-      availableLinodes: [],
     });
 
     server.use(

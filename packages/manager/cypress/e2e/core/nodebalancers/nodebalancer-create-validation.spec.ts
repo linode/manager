@@ -1,3 +1,5 @@
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+
 describe('NodeBalancer create page validation', () => {
   /**
    * This test ensures that the user sees a uniqueness error when
@@ -5,6 +7,9 @@ describe('NodeBalancer create page validation', () => {
    * - they configure many UDP configs to use the same port
    */
   it('renders a port uniqueness errors when you try to create a nodebalancer with configs using the same port and protocol', () => {
+    mockAppendFeatureFlags({
+      udp: true,
+    });
     cy.visitWithLogin('/nodebalancers/create');
 
     // Configure the first config to use TCP on port 8080

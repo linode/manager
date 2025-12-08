@@ -1,3 +1,15 @@
+## [2025-12-09] - v0.18.0
+
+
+### Changed:
+
+- Update database useRestoreFromBackupMutation data to include region ([#13097](https://github.com/linode/manager/pull/13097))
+
+### Upcoming Features:
+
+- Add new queries for Network Load Balancers ([#13078](https://github.com/linode/manager/pull/13078))
+- Added Database Connection Pool queries ([#13148](https://github.com/linode/manager/pull/13148))
+
 ## [2025-11-18] - v0.17.0
 
 

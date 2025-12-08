@@ -1,6 +1,6 @@
 import { streamStatus } from '@linode/api-v4';
 import { useStreamsQuery, useUpdateStreamMutation } from '@linode/queries';
-import { CircleProgress, ErrorState, Hidden } from '@linode/ui';
+import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -73,7 +73,6 @@ export const StreamsLanding = () => {
   const {
     data: streams,
     isLoading,
-    isFetching,
     error,
   } = useStreamsQuery(
     {
@@ -177,10 +176,9 @@ export const StreamsLanding = () => {
   };
 
   return (
-    <>
+    <Paper>
       <DeliveryTabHeader
         entity="Stream"
-        isSearching={isFetching}
         onButtonClick={navigateToCreate}
         onSearch={onSearch}
         onSelect={onSelect}
@@ -188,7 +186,6 @@ export const StreamsLanding = () => {
         selectList={streamStatusOptions}
         selectValue={search?.status}
       />
-
       {isLoading ? (
         <CircleProgress />
       ) : (
@@ -201,7 +198,10 @@ export const StreamsLanding = () => {
                   direction={order}
                   handleClick={handleOrderChange}
                   label="label"
-                  sx={{ width: '30%' }}
+                  sx={{
+                    width: '30%',
+                    maxWidth: '30%',
+                  }}
                 >
                   Name
                 </TableSortCell>
@@ -229,17 +229,27 @@ export const StreamsLanding = () => {
                 >
                   ID
                 </TableSortCell>
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableCell>Destination Type</TableCell>
                 </Hidden>
                 <Hidden lgDown>
                   <TableSortCell
-                    active={orderBy === 'created'}
+                    active={orderBy === 'updated'}
                     direction={order}
                     handleClick={handleOrderChange}
-                    label="created"
+                    label="updated"
                   >
-                    Creation Time
+                    Last Modified
+                  </TableSortCell>
+                </Hidden>
+                <Hidden lgDown>
+                  <TableSortCell
+                    active={orderBy === 'updated_by'}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="updated_by"
+                  >
+                    Last Modified By
                   </TableSortCell>
                 </Hidden>
                 <TableCell sx={{ width: '5%' }} />
@@ -249,7 +259,7 @@ export const StreamsLanding = () => {
               {streams?.data.map((stream) => (
                 <StreamTableRow key={stream.id} stream={stream} {...handlers} />
               ))}
-              {streams?.results === 0 && <TableRowEmpty colSpan={7} />}
+              {streams?.results === 0 && <TableRowEmpty colSpan={8} />}
             </TableBody>
           </Table>
           <PaginationFooter
@@ -267,6 +277,6 @@ export const StreamsLanding = () => {
           />
         </>
       )}
-    </>
+    </Paper>
   );
 };

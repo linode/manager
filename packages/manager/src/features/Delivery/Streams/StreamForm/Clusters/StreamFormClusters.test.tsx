@@ -1,5 +1,6 @@
 import {
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -13,10 +14,6 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamFormClusters } from './StreamFormClusters';
-
-const queryMocks = vi.hoisted(() => ({
-  useOrderV2: vi.fn().mockReturnValue({}),
-}));
 
 const loadingTestId = 'circle-progress';
 const testClustersDetails = [
@@ -118,6 +115,48 @@ describe('StreamFormClusters', () => {
     ]);
   });
 
+  it('should filter clusters by name', async () => {
+    await renderComponentWithoutSelectedClusters();
+    const input = screen.getByPlaceholderText('Search');
+
+    // Type test value inside the search
+    await userEvent.click(input);
+    await userEvent.type(input, 'metrics');
+
+    await waitFor(() =>
+      expect(getColumnsValuesFromTable()).toEqual(['metrics-stream-cluster'])
+    );
+  });
+
+  it('should filter clusters by region', async () => {
+    await renderComponentWithoutSelectedClusters();
+    const input = screen.getByPlaceholderText('Search');
+
+    // Type test value inside the search
+    await userEvent.click(input);
+    await userEvent.type(input, 'US,');
+
+    await waitFor(() =>
+      expect(getColumnsValuesFromTable(2)).toEqual([
+        'US, Atalanta, GA',
+        'US, Chicago, IL',
+      ])
+    );
+  });
+
+  it('should filter clusters by log generation status', async () => {
+    await renderComponentWithoutSelectedClusters();
+    const input = screen.getByPlaceholderText('Search');
+
+    // Type test value inside the search
+    await userEvent.click(input);
+    await userEvent.type(input, 'enabled');
+
+    await waitFor(() =>
+      expect(getColumnsValuesFromTable(3)).toEqual(['Enabled', 'Enabled'])
+    );
+  });
+
   it('should toggle clusters checkboxes and header checkbox', async () => {
     await renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
@@ -211,6 +250,56 @@ describe('StreamFormClusters', () => {
       expect(metricsStreamCheckbox).toBeChecked();
       expect(prodClusterCheckbox).not.toBeChecked();
     });
+
+    describe('and some of them are no longer eligible for log delivery', () => {
+      it('should remove non-eligible clusters and render table with properly selected clusters', async () => {
+        const modifiedClusters = clusters.map((cluster) =>
+          cluster.id === 3
+            ? { ...cluster, control_plane: { audit_logs_enabled: false } }
+            : cluster
+        );
+        server.use(
+          http.get('*/lke/clusters', () => {
+            return HttpResponse.json(makeResourcePage(modifiedClusters));
+          })
+        );
+
+        renderWithThemeAndHookFormContext({
+          component: <StreamFormClusters mode="edit" />,
+          useFormOptions: {
+            defaultValues: {
+              stream: {
+                details: {
+                  cluster_ids: [2, 3],
+                  is_auto_add_all_clusters_enabled: false,
+                },
+              },
+            },
+          },
+        });
+
+        const loadingElement = screen.queryByTestId(loadingTestId);
+        expect(loadingElement).toBeInTheDocument();
+        await waitForElementToBeRemoved(loadingElement);
+
+        const table = screen.getByRole('table');
+        const headerCheckbox = within(table).getAllByRole('checkbox')[0];
+        const gkeProdCheckbox = getCheckboxByClusterName(
+          'gke-prod-europe-west1'
+        );
+        const metricsStreamCheckbox = getCheckboxByClusterName(
+          'metrics-stream-cluster'
+        );
+        const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
+
+        await waitFor(() => {
+          expectCheckboxStateToBe(headerCheckbox, 'checked');
+        });
+        expect(gkeProdCheckbox).not.toBeChecked();
+        expect(metricsStreamCheckbox).toBeChecked();
+        expect(prodClusterCheckbox).not.toBeChecked();
+      });
+    });
   });
 
   it('should disable all table checkboxes if "Automatically include all" checkbox is selected', async () => {
@@ -284,13 +373,6 @@ describe('StreamFormClusters', () => {
     expect(gkeProdCheckbox).not.toBeChecked();
     expect(metricsStreamCheckbox).not.toBeChecked();
     expect(prodClusterCheckbox).toBeChecked();
-
-    // Sort by Cluster Name descending
-    queryMocks.useOrderV2.mockReturnValue({
-      order: 'desc',
-      orderBy: 'label',
-      sortedData: clusters.reverse(),
-    });
 
     await userEvent.click(sortHeader);
     expect(gkeProdCheckbox).not.toBeChecked();

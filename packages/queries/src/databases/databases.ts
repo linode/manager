@@ -1,6 +1,8 @@
 import {
   createDatabase,
+  createDatabaseConnectionPool,
   deleteDatabase,
+  deleteDatabaseConnectionPool,
   legacyRestoreWithBackup,
   patchDatabase,
   resetDatabaseCredentials,
@@ -8,6 +10,7 @@ import {
   resumeDatabase,
   suspendDatabase,
   updateDatabase,
+  updateDatabaseConnectionPool,
 } from '@linode/api-v4/lib/databases';
 import { profileQueries, queryPresets } from '@linode/queries';
 import {
@@ -22,13 +25,14 @@ import { databaseQueries } from './keys';
 
 import type {
   APIError,
+  ConnectionPool,
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
+  DatabaseBackupsPayload,
   DatabaseCredentials,
   DatabaseEngine,
   DatabaseEngineConfig,
-  DatabaseFork,
   DatabaseInstance,
   DatabaseType,
   Engine,
@@ -194,6 +198,80 @@ export const useDatabaseBackupsQuery = (
     enabled,
   });
 
+export const useDatabaseConnectionPool = (
+  databaseId: number,
+  poolName: string,
+  enabled: boolean = false,
+) =>
+  useQuery<ConnectionPool, APIError[]>({
+    ...databaseQueries
+      .database('postgresql', databaseId)
+      ._ctx.connectionPools._ctx.pool(poolName),
+    enabled,
+  });
+
+export const useDatabaseConnectionPools = (
+  databaseId: number,
+  enabled: boolean = false,
+) =>
+  useQuery<ResourcePage<ConnectionPool>, APIError[]>({
+    ...databaseQueries.database('postgresql', databaseId)._ctx.connectionPools
+      ._ctx.pools,
+    enabled,
+  });
+
+export const useCreateDatabaseConnectionPoolMutation = (databaseId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<ConnectionPool, APIError[], ConnectionPool>({
+    mutationFn: (data) => createDatabaseConnectionPool(databaseId, data),
+    onSuccess() {
+      queryClient.invalidateQueries(
+        databaseQueries.database('postgresql', databaseId)._ctx.connectionPools,
+      );
+    },
+  });
+};
+
+export const useUpdateDatabaseConnectionPoolMutation = (
+  databaseId: number,
+  poolName: string,
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<ConnectionPool, APIError[], Omit<ConnectionPool, 'label'>>(
+    {
+      mutationFn: (data) =>
+        updateDatabaseConnectionPool(databaseId, poolName, data),
+      onSuccess(connectionPool) {
+        queryClient.setQueryData<ConnectionPool>(
+          databaseQueries
+            .database('postgresql', databaseId)
+            ._ctx.connectionPools._ctx.pool(connectionPool.label).queryKey,
+          connectionPool,
+        );
+      },
+    },
+  );
+};
+
+export const useDeleteDatabaseConnectionPoolMutation = (
+  databaseId: number,
+  poolName: string,
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteDatabaseConnectionPool(databaseId, poolName),
+    onSuccess() {
+      queryClient.invalidateQueries(
+        databaseQueries.database('postgresql', databaseId)._ctx.connectionPools,
+      );
+      queryClient.removeQueries({
+        queryKey: databaseQueries.database('postgresql', databaseId)._ctx
+          .connectionPools.queryKey,
+      });
+    },
+  });
+};
+
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>({
     ...databaseQueries.engines,
@@ -267,11 +345,11 @@ export const useLegacyRestoreFromBackupMutation = (
 
 export const useRestoreFromBackupMutation = (
   engine: Engine,
-  fork: DatabaseFork,
+  data: DatabaseBackupsPayload,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[]>({
-    mutationFn: () => restoreWithBackup(engine, fork),
+    mutationFn: () => restoreWithBackup(engine, data),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.databases.queryKey,

@@ -10,13 +10,13 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { KubernetesCluster, ResourcePage } from '@linode/api-v4';
+import type { KubernetesCluster } from '@linode/api-v4';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 export type OrderByKeys = 'label' | 'region';
 
 interface StreamFormClusterTableContentProps {
-  clusters: ResourcePage<KubernetesCluster> | undefined;
+  clusters: KubernetesCluster[] | undefined;
   field: ControllerRenderProps<
     StreamAndDestinationFormType,
     'stream.details.cluster_ids'
@@ -40,7 +40,7 @@ export const StreamFormClusterTableContent = ({
   const selectedIds = field.value || [];
 
   const isAllSelected =
-    selectedIds.length === (idsWithLogsEnabled?.length ?? 0);
+    selectedIds.length > 0 && selectedIds.length === idsWithLogsEnabled?.length;
   const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
 
   const toggleAllClusters = () => {
@@ -62,11 +62,13 @@ export const StreamFormClusterTableContent = ({
       <TableHead>
         <TableRow>
           <TableCell sx={{ width: '5%' }}>
-            {!!clusters?.results && (
+            {!!clusters && (
               <Checkbox
                 aria-label="Toggle all clusters"
                 checked={isAllSelected}
-                disabled={isAutoAddAllClustersEnabled}
+                disabled={
+                  isAutoAddAllClustersEnabled || !idsWithLogsEnabled?.length
+                }
                 indeterminate={isIndeterminate}
                 onChange={toggleAllClusters}
                 sx={{ m: 0 }}
@@ -95,8 +97,8 @@ export const StreamFormClusterTableContent = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {clusters?.results ? (
-          clusters.data.map(
+        {clusters?.length ? (
+          clusters.map(
             ({
               label,
               region,

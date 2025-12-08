@@ -24,6 +24,7 @@ import { useTabs } from 'src/hooks/useTabs';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
+import { useIsIAMDelegationEnabled } from '../IAM/hooks/useIsIAMEnabled';
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
@@ -59,6 +60,8 @@ export const AccountLanding = () => {
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
+
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
@@ -124,8 +127,9 @@ export const AccountLanding = () => {
   };
 
   const isBillingTabSelected = getTabIndex('/account/billing') === tabIndex;
-  const canSwitchBetweenParentOrProxyAccount =
-    (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? isParentUser
+    : (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {

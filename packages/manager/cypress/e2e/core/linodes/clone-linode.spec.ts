@@ -70,6 +70,7 @@ describe('clone linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
+      generationalPlansv2: { enabled: false, allowedPlans: [] },
     });
   });
 

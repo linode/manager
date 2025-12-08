@@ -33,7 +33,7 @@ export const streamTypeOptions: AutocompleteOption[] = [
   },
   {
     value: streamType.LKEAuditLogs,
-    label: 'Kubernetes Audit Logs',
+    label: 'Kubernetes API Audit Logs',
   },
 ];
 

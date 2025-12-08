@@ -4,6 +4,7 @@ import { mockGetNotifications } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinode, mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -34,6 +35,8 @@ const mockMaintenanceScheduled = accountMaintenanceFactory.build({
   type: 'reboot',
   description: 'scheduled',
   maintenance_policy_set: 'linode/power_off_on',
+  reason:
+    "Your Linode's host has reached the end of its life cycle and will be retired.",
   status: 'scheduled',
   start_time: '2022-01-17T23:45:46.960',
 });
@@ -48,6 +51,7 @@ const mockMaintenanceEmergency = accountMaintenanceFactory.build({
   type: 'cold_migration',
   description: 'emergency',
   maintenance_policy_set: 'linode/power_off_on',
+  reason: "We must upgrade the OS of your Linode's host.",
   status: 'scheduled',
 });
 
@@ -105,6 +109,38 @@ describe('Host & VM maintenance notification banner', () => {
         cy.findByText('Account Maintenance').click();
         cy.url().should('endWith', '/maintenance');
       });
+  });
+
+  it('maintenance notification banner does not display platform maintenance messages', function () {
+    const mockPlatformMaintenance = accountMaintenanceFactory.build({
+      entity: {
+        id: mockLinodes[1].id,
+        label: mockLinodes[1].label,
+        type: 'linode',
+        url: `/v4/linode/instances/${mockLinodes[1].id}`,
+      },
+      type: 'reboot',
+      description: 'emergency',
+      maintenance_policy_set: 'linode/power_off_on',
+      // 'critical security update' in reason prevents message from displaying
+      reason: "We must apply a critical security update to your Linode's host.",
+      status: 'scheduled',
+    });
+    mockGetMaintenance([mockPlatformMaintenance], []).as('getMaintenances');
+    cy.visitWithLogin('/linodes');
+    cy.wait([
+      '@getLinodes',
+      '@getFeatureFlags',
+      '@getNotifications',
+      '@getMaintenances',
+    ]);
+    cy.get('#main-content').within(() => {
+      ui.button
+        .findByTitle('Create Linode')
+        .should('be.visible')
+        .should('be.enabled');
+      cy.get('[data-testid="maintenance-banner').should('not.exist');
+    });
   });
 
   it('banner present on details page when linode has pending maintenance', function () {

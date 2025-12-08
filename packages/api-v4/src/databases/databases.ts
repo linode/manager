@@ -1,5 +1,7 @@
 import {
+  createDatabaseConnectionPoolSchema,
   createDatabaseSchema,
+  updateDatabaseConnectionPoolSchema,
   updateDatabaseSchema,
 } from '@linode/validation/lib/databases.schema';
 
@@ -14,13 +16,14 @@ import Request, {
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
+  ConnectionPool,
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
+  DatabaseBackupsPayload,
   DatabaseCredentials,
   DatabaseEngine,
   DatabaseEngineConfig,
-  DatabaseFork,
   DatabaseInstance,
   DatabaseType,
   Engine,
@@ -267,11 +270,14 @@ export const legacyRestoreWithBackup = (
  *
  * Fully restore a backup to the cluster
  */
-export const restoreWithBackup = (engine: Engine, fork: DatabaseFork) =>
+export const restoreWithBackup = (
+  engine: Engine,
+  data: DatabaseBackupsPayload,
+) =>
   Request<Database>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
-    setData({ fork }),
+    setData(data),
   );
 
 /**
@@ -360,4 +366,74 @@ export const getDatabaseEngineConfig = (engine: Engine) =>
   Request<DatabaseEngineConfig>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/config`),
     setMethod('GET'),
+  );
+
+/**
+ * Get a paginated list of connection pools for a database
+ */
+export const getDatabaseConnectionPools = (databaseID: number) =>
+  Request<Page<ConnectionPool>>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * Get a connection pool for a database
+ */
+export const getDatabaseConnectionPool = (
+  databaseID: number,
+  poolName: string,
+) =>
+  Request<ConnectionPool>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * Create a new connection pool for a database. Connection pools can only be created on active clusters
+ */
+export const createDatabaseConnectionPool = (
+  databaseID: number,
+  data: ConnectionPool,
+) =>
+  Request<ConnectionPool>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
+    ),
+    setMethod('POST'),
+    setData(data, createDatabaseConnectionPoolSchema),
+  );
+
+/**
+ * Update an existing connection pool. This may cause sudden closure of an in-use connection pool
+ */
+export const updateDatabaseConnectionPool = (
+  databaseID: number,
+  poolName: string,
+  data: Omit<ConnectionPool, 'label'>,
+) =>
+  Request<ConnectionPool>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+    ),
+    setMethod('PUT'),
+    setData(data, updateDatabaseConnectionPoolSchema),
+  );
+
+/**
+ * Delete an existing connection pool. This may cause sudden closure of an in-use connection pool
+ */
+export const deleteDatabaseConnectionPool = (
+  databaseID: number,
+  poolName: string,
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+    ),
+    setMethod('DELETE'),
   );

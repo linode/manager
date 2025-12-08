@@ -289,21 +289,19 @@ describe('LKE Cluster Creation with LKE-E', () => {
      */
     it('surfaces field-level errors on VPC fields', () => {
       // Intercept the create cluster request and force an error response
-      cy.intercept('POST', '/v4beta/lke/clusters', {
-        statusCode: 400,
-        body: {
-          errors: [
-            {
-              reason: 'There is an error configuring this VPC.',
-              field: 'vpc_id',
-            },
-            {
-              reason: 'There is an error configuring this subnet.',
-              field: 'subnet_id',
-            },
-          ],
-        },
-      }).as('createClusterError');
+      mockCreateClusterError(
+        [
+          {
+            reason: 'There is an error configuring this VPC.',
+            field: 'vpc_id',
+          },
+          {
+            reason: 'There is an error configuring this subnet.',
+            field: 'subnet_id',
+          },
+        ],
+        400
+      ).as('createClusterError');
 
       cy.findByLabelText('Cluster Label').type(clusterLabel);
       cy.findByText('LKE Enterprise').click();
