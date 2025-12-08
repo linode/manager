@@ -70,35 +70,48 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
             Stream provisioning may take up to 45 minutes.
           </Typography>
         )}
-        <Button
-          buttonType="outlined"
-          data-pendo-id={`${pagePendoId}-Test Connection`}
-          disabled={disableTestConnection}
-          loading={isTesting}
-          onClick={onTestConnection}
-          sx={(theme) => ({
-            mt: `${theme.spacingFunction(24)} !important`,
-            [theme.breakpoints.down('lg')]: {
-              alignSelf: 'flex-end',
-            },
-          })}
+        <Stack
+          direction={{
+            base: 'column',
+            lg: 'column',
+            md: 'row',
+            sm: 'row',
+            xs: 'row',
+          }}
+          justifyContent={{ md: 'flex-end', sm: 'flex-end', xs: 'flex-end' }}
+          spacing={2}
+          sx={{ mt: '0 !important' }}
         >
-          Test Connection
-        </Button>
-        <Button
-          buttonType="primary"
-          data-pendo-id={`${pagePendoId}-${buttonLabel}`}
-          disabled={!enableSubmit}
-          loading={isSubmitting}
-          onClick={onSubmit}
-          sx={(theme) => ({
-            [theme.breakpoints.down('lg')]: {
-              alignSelf: 'flex-end',
-            },
-          })}
-        >
-          {buttonLabel}
-        </Button>
+          <Button
+            buttonType="outlined"
+            data-pendo-id={`${pagePendoId}-Test Connection`}
+            disabled={disableTestConnection}
+            loading={isTesting}
+            onClick={onTestConnection}
+            sx={(theme) => ({
+              mt: `${theme.spacingFunction(24)} !important`,
+              [theme.breakpoints.down('lg')]: {
+                alignSelf: 'flex-end',
+              },
+            })}
+          >
+            Test Connection
+          </Button>
+          <Button
+            buttonType="primary"
+            data-pendo-id={`${pagePendoId}-${buttonLabel}`}
+            disabled={!enableSubmit}
+            loading={isSubmitting}
+            onClick={onSubmit}
+            sx={(theme) => ({
+              [theme.breakpoints.down('lg')]: {
+                alignSelf: 'flex-end',
+              },
+            })}
+          >
+            {buttonLabel}
+          </Button>
+        </Stack>
         {formType === 'stream' && (
           <Typography mb={1}>
             By using this service, you acknowledge your obligations under the

@@ -18,6 +18,7 @@ export interface FirewallRuleDrawerProps {
     plRuleRef: PrefixListRuleReference,
     contextType: PrefixListDrawerContext['type']
   ) => void;
+  inboundAndOutboundRules: FirewallRuleType[];
   isOpen: boolean;
   mode: FirewallRuleDrawerMode;
   onClose: () => void;
@@ -67,5 +68,6 @@ export interface FirewallRuleSetFormProps
     prefixListLabel: string,
     plRuleRef: PrefixListRuleReference
   ) => void;
+  inboundAndOutboundRules: FirewallRuleType[];
   ruleErrors?: FirewallRuleError[];
 }
