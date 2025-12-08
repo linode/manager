@@ -62,7 +62,6 @@ export const EntitiesSelect = ({
     );
   }, [memoizedEntities, inputValue]);
 
-  // Reset display count when filter changes
   React.useEffect(() => {
     setDisplayCount(INITIAL_DISPLAY_COUNT);
   }, [filteredEntities]);
@@ -109,7 +108,7 @@ export const EntitiesSelect = ({
         placeholder={getPlaceholder(
           type,
           value.length,
-          memoizedEntities.length
+          filteredEntities.length
         )}
         readOnly={mode === 'change-role'}
         renderInput={(params) => (
@@ -122,7 +121,7 @@ export const EntitiesSelect = ({
             placeholder={getPlaceholder(
               type,
               value.length,
-              memoizedEntities.length
+              filteredEntities.length
             )}
           />
         )}
@@ -132,7 +131,7 @@ export const EntitiesSelect = ({
               const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
               if (scrollHeight - scrollTop <= clientHeight * 1.5) {
                 setDisplayCount((prev) =>
-                  Math.min(prev + 200, memoizedEntities.length)
+                  Math.min(prev + 200, filteredEntities.length)
                 );
               }
             },
