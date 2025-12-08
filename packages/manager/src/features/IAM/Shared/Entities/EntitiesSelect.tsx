@@ -41,6 +41,7 @@ export const EntitiesSelect = ({
   const theme = useTheme();
 
   const [displayCount, setDisplayCount] = React.useState(INITIAL_DISPLAY_COUNT);
+  const [inputValue, setInputValue] = React.useState('');
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
@@ -50,6 +51,21 @@ export const EntitiesSelect = ({
 
     return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
   }, [entities, access, type]);
+
+  const filteredEntities = React.useMemo(() => {
+    if (!inputValue) {
+      return memoizedEntities;
+    }
+
+    return memoizedEntities.filter((option) =>
+      option.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  }, [memoizedEntities, inputValue]);
+
+  // Reset display count when filter changes
+  React.useEffect(() => {
+    setDisplayCount(INITIAL_DISPLAY_COUNT);
+  }, [filteredEntities]);
 
   if (access === 'account_access') {
     return (
@@ -86,15 +102,10 @@ export const EntitiesSelect = ({
         onChange={(_, newValue) => {
           onChange(newValue || []);
         }}
-        onInputChange={(_, value, reason) => {
-          // When the user is searching, include all results
-          if (value) {
-            setDisplayCount(memoizedEntities.length);
-          } else if (reason === 'clear') {
-            setDisplayCount(INITIAL_DISPLAY_COUNT);
-          }
+        onInputChange={(_, value) => {
+          setInputValue(value);
         }}
-        options={memoizedEntities.slice(0, displayCount)}
+        options={filteredEntities.slice(0, displayCount)}
         placeholder={getPlaceholder(
           type,
           value.length,
