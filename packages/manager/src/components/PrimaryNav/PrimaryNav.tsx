@@ -276,7 +276,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
                 to: '/iam',
                 isBeta: isIAMBeta,
-                isNew: showLimitedAvailabilityBadges,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Account',
@@ -310,7 +310,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled,
                 to: '/iam',
                 isBeta: isIAMBeta,
-                isNew: showLimitedAvailabilityBadges,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',

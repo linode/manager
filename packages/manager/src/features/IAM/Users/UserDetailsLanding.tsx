@@ -6,7 +6,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import {
+  useIsIAMDelegationEnabled,
+  useIsIAMEnabled,
+} from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
@@ -20,7 +23,9 @@ import {
 
 export const UserDetailsLanding = () => {
   const flags = useFlags();
-  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const showLimitedAvailabilityBadges =
+    flags.iamLimitedAvailabilityBadges && isIAMEnabled && !isIAMBeta;
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { isParentAccount } = useDelegationRole();

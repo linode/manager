@@ -38,7 +38,11 @@ interface MenuLink {
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
+  const {
+    iamRbacPrimaryNavChanges,
+    limitsEvolution,
+    iamLimitedAvailabilityBadges,
+  } = useFlags();
   const theme = useTheme();
 
   const { data: account } = useAccount();
@@ -121,6 +125,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               ? '/users'
               : '/account/users',
         isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
+        isNew: isIAMEnabled && !isIAMBeta && iamLimitedAvailabilityBadges,
       },
       {
         display: 'Quotas',
