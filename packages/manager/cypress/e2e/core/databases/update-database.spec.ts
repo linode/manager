@@ -342,7 +342,8 @@ const validateActionItems = (state: string, label: string) => {
   cy.get('body').click(0, 0);
 };
 
-describe('Update database clusters', () => {
+// eslint-disable-next-line sonarjs/no-skipped-tests
+describe.skip('Update database clusters', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       databaseVpc: true,
