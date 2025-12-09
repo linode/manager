@@ -9,6 +9,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -47,6 +48,26 @@ export const FirewallDeviceTable = React.memo(
       isLoading,
     } = useAllFirewallDevicesQuery(firewallId);
 
+    const {
+      data: updatableLinodes = [],
+      isLoading: isLinodePermissionsLoading,
+      error: linodePermissionsError,
+    } = useGetAllUserEntitiesByPermission({
+      entityType: 'linode',
+      permission: 'update_linode',
+      enabled: type === 'linode',
+    });
+
+    const {
+      data: updatableNodebalancers = [],
+      isLoading: isNodebalancerPermissionsLoading,
+      error: nodebalancerPermissionsError,
+    } = useGetAllUserEntitiesByPermission({
+      entityType: 'nodebalancer',
+      permission: 'update_nodebalancer',
+      enabled: type === 'nodebalancer',
+    });
+
     const devices =
       allDevices?.filter((device) =>
         type === 'linode' && isLinodeInterfacesEnabled
@@ -82,12 +103,20 @@ export const FirewallDeviceTable = React.memo(
 
     const isLinodeRelatedDevice = type === 'linode';
 
+    const permissionsError =
+      linodePermissionsError || nodebalancerPermissionsError;
+
     const _error = error
       ? getAPIErrorOrDefault(
           error,
           `Unable to retrieve ${formattedTypes[deviceType]}s`
         )
-      : undefined;
+      : permissionsError
+        ? getAPIErrorOrDefault(
+            permissionsError,
+            `Unable to retrieve ${formattedTypes[deviceType]}s`
+          )
+        : undefined;
 
     const ariaLabel = `List of ${formattedTypes[deviceType]}s attached to this firewall`;
 
@@ -152,6 +181,16 @@ export const FirewallDeviceTable = React.memo(
                   disabled={disabled}
                   handleRemoveDevice={handleRemoveDevice}
                   isLinodeRelatedDevice={isLinodeRelatedDevice}
+                  isLinodeUpdatable={updatableLinodes?.some(
+                    (linode) => linode.id === thisDevice.entity.id
+                  )}
+                  isNodebalancerUpdatable={updatableNodebalancers?.some(
+                    (nodebalancer) => nodebalancer.id === thisDevice.entity.id
+                  )}
+                  isPermissionsLoading={
+                    isLinodePermissionsLoading ||
+                    isNodebalancerPermissionsLoading
+                  }
                   key={`device-row-${thisDevice.id}`}
                 />
               ))}

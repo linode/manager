@@ -9,7 +9,7 @@ import {
   useWidgetDimension,
 } from './utils';
 
-import type { MetricDefinition } from '@linode/api-v4';
+import type { Dashboard, MetricDefinition } from '@linode/api-v4';
 
 const metricDefinitions: MetricDefinition[] = [
   {
@@ -87,7 +87,7 @@ describe('useGlobalDimensions method test', () => {
 
   it('should return non-empty options and defaultValue if no common dimensions', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build(),
+      data: dashboardFactory.build({ id: 1 }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
@@ -106,7 +106,7 @@ describe('useGlobalDimensions method test', () => {
 
   it('should return non-empty options and defaultValue from preferences', () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: dashboardFactory.build(),
+      data: dashboardFactory.build({ id: 1 }),
       isLoading: false,
     });
     queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
@@ -122,6 +122,22 @@ describe('useGlobalDimensions method test', () => {
       defaultValue: [{ label: 'Dim 2', value: 'Dim 2' }],
       isLoading: false,
     });
+  });
+
+  it('should not return default option in case of endpoints-only dashboard', () => {
+    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
+      data: dashboardFactory.build({ id: 10 }),
+      isLoading: false,
+    });
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: {
+        data: metricDefinitions,
+      },
+      isLoading: false,
+    });
+    const result = useGlobalDimensions(10, 'objectstorage');
+    // Verify if options contain the default option - 'entityId' or not
+    expect(result.options).toEqual([{ label: 'Dim 2', value: 'Dim 2' }]);
   });
 });
 
@@ -228,13 +244,26 @@ describe('getCommonGroups method test', () => {
 });
 
 describe('getMetricDimensions method test', () => {
+  const dashboard: Dashboard = dashboardFactory.build({
+    widgets: [
+      {
+        metric: 'Metric 1',
+      },
+      {
+        metric: 'Metric 2',
+      },
+      {
+        metric: 'Metric 3',
+      },
+    ],
+  });
   it('should return empty object if metric definitions are empty', () => {
     const result = getMetricDimensions([]);
     expect(result).toEqual({});
   });
 
   it('should return unique dimensions from metric definitions', () => {
-    const result = getMetricDimensions(metricDefinitions);
+    const result = getMetricDimensions(metricDefinitions, dashboard);
     expect(result).toEqual({
       'Metric 1': [
         { label: 'Dim 1', dimension_label: 'Dim 1', values: [] },

@@ -1,4 +1,4 @@
-import { linodeQueries, useAllLinodesQuery } from '@linode/queries';
+import { linodeQueries } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -15,7 +15,7 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -103,28 +103,28 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     // 1. We need to get all the linodes.
     // TODO: change to 'delete_linode_config_profile_interface' once it's available
     const {
-      data: filteredLinodes,
-      error: linodesError,
-      isLoading: isLoadingFilteredLinodes,
+      data: availableLinodes,
+      isLoading: availableLinodesLoading,
+      error: availableLinodesError,
       refetch: getCSVData,
-    } = useQueryWithPermissions<Linode>(
-      useAllLinodesQuery({}, {}, open),
-      'linode',
-      ['delete_linode'],
-      open
-    );
-    const userCanUnassignLinodes = filteredLinodes?.length > 0;
+    } = useGetAllUserEntitiesByPermission<Linode>({
+      entityType: 'linode',
+      permission: 'delete_linode',
+      enabled: open,
+    });
+
+    const userCanUnassignLinodes =
+      availableLinodes && availableLinodes?.length > 0;
 
     const linodeOptionsToUnassign = React.useMemo(() => {
       // 2. We need to filter only the linodes that are assigned to the subnet.
-      if (!filteredLinodes) return [];
-
-      return filteredLinodes?.filter((linode) => {
+      if (!availableLinodes) return [];
+      return availableLinodes?.filter((linode) => {
         return subnetLinodeIds?.some(
           (linodeInfo) => linodeInfo.id === linode.id
         );
       });
-    }, [subnetLinodeIds, filteredLinodes]);
+    }, [subnetLinodeIds, availableLinodes]);
 
     // 3. When a linode is selected, we need to get the VPC interface to unassign.
     const getVPCInterface = React.useCallback(
@@ -342,9 +342,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
                 disabled={!userCanUnassignLinodes}
-                errorText={linodesError ? linodesError[0].reason : undefined}
+                errorText={
+                  availableLinodesError
+                    ? availableLinodesError[0].reason
+                    : undefined
+                }
                 label="Linodes"
-                loading={isLoadingFilteredLinodes}
+                loading={availableLinodesLoading}
                 multiple
                 onChange={(_, value) => {
                   setSelectedLinodes(value);

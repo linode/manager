@@ -7,6 +7,12 @@ import { OAuthCallback } from 'src/OAuth/OAuthCallback';
 
 import { rootRoute } from '../root';
 
+interface OAuthCallbackSearch {
+  code?: string;
+  returnTo?: string;
+  state?: string;
+}
+
 interface CancelLandingSearch {
   survey_link?: string;
 }
@@ -34,6 +40,7 @@ const oauthCallbackRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'oauth/callback',
   component: OAuthCallback,
+  validateSearch: (search: OAuthCallbackSearch) => search,
 });
 
 export {

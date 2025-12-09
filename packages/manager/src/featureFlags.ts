@@ -149,6 +149,7 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  beta: boolean;
   editDisabledStatuses?: AlertStatusType[];
   notificationChannels: boolean;
   recentActivity: boolean;
@@ -171,6 +172,11 @@ interface MTC {
   supportedRegions: Region['id'][];
 }
 
+interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -191,6 +197,7 @@ export interface Flags {
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
@@ -200,12 +207,13 @@ export interface Flags {
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  firewallRulesetsPrefixlists: boolean;
+  fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
   gecko2: GeckoFeatureFlag;
-  generationalPlans: boolean;
+  generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
+  iamLimitedAvailabilityBadges: boolean;
   iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
@@ -218,6 +226,7 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc: MTC;
+  networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
@@ -341,6 +350,7 @@ export type ProductInformationBannerLocation =
   | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -386,3 +396,7 @@ export type AclpServices = {
     metrics?: AclpFlag;
   };
 };
+
+interface GenerationalPlansFlag extends BaseFeatureFlag {
+  allowedPlans: string[];
+}

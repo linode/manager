@@ -1,5 +1,12 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Divider,
+  NewFeatureChip,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -10,7 +17,10 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import {
+  useIsIAMDelegationEnabled,
+  useIsIAMEnabled,
+} from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -29,13 +39,18 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   isBeta?: boolean;
+  isNew?: boolean;
   to: string;
 }
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
+  const {
+    iamRbacPrimaryNavChanges,
+    limitsEvolution,
+    iamLimitedAvailabilityBadges,
+  } = useFlags();
   const theme = useTheme();
 
   const { data: account } = useAccount();
@@ -46,11 +61,14 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     globalGrantType: 'child_account_access',
   });
 
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const canSwitchBetweenParentOrProxyAccount =
-    (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
-    profile?.user_type === 'proxy';
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? profile?.user_type === 'parent'
+    : (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
+      profile?.user_type === 'proxy';
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
@@ -115,6 +133,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               ? '/users'
               : '/account/users',
         isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
+        isNew: isIAMEnabled && !isIAMBeta && iamLimitedAvailabilityBadges,
       },
       {
         display: 'Quotas',
@@ -144,7 +163,13 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           : '/account/settings',
       },
     ],
-    [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
+    [
+      isIAMEnabled,
+      iamRbacPrimaryNavChanges,
+      limitsEvolution,
+      iamLimitedAvailabilityBadges,
+      isIAMBeta,
+    ]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -275,6 +300,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                 >
                   {menuLink.display}
                   {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                  {menuLink?.isNew ? <NewFeatureChip component="span" /> : null}
                 </Link>
               )
             )}

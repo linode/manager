@@ -79,6 +79,12 @@ export interface DatabaseFork {
   source: number;
 }
 
+export interface DatabaseBackupsPayload {
+  fork: DatabaseFork;
+  private_network?: null | PrivateNetwork;
+  region?: string;
+}
+
 export interface DatabaseCredentials {
   password: string;
   username: string;
@@ -100,6 +106,7 @@ type MemberType = 'failover' | 'primary';
 export interface DatabaseInstance {
   allow_list: string[];
   cluster_size: ClusterSize;
+  connection_pool_port: null | number;
   connection_strings: ConnectionStrings[];
   created: string;
   /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
@@ -163,12 +170,10 @@ interface ConnectionStrings {
   value: string;
 }
 
-export type UpdatesFrequency = 'monthly' | 'weekly';
-
 export interface UpdatesSchedule {
   day_of_week: number;
   duration: number;
-  frequency: UpdatesFrequency;
+  frequency: 'monthly' | 'weekly';
   hour_of_day: number;
   pending?: PendingUpdates[];
   week_of_month: null | number;
@@ -245,4 +250,14 @@ export interface UpdateDatabasePayload {
   type?: string;
   updates?: UpdatesSchedule;
   version?: string;
+}
+
+export type PoolMode = 'session' | 'statement' | 'transaction';
+
+export interface ConnectionPool {
+  database: string;
+  label: string;
+  mode: PoolMode;
+  size: number;
+  username: null | string;
 }

@@ -6,48 +6,31 @@ export interface ActionHandlers {
   handleRemoveDevice: (device: FirewallDevice) => void;
 }
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-
 import type { FirewallDevice } from '@linode/api-v4';
 
 export interface FirewallDeviceActionMenuProps extends ActionHandlers {
   device: FirewallDevice;
   disabled: boolean;
+  isLinodeUpdatable: boolean;
+  isNodebalancerUpdatable: boolean;
+  isPermissionsLoading: boolean;
 }
 
 export const FirewallDeviceActionMenu = React.memo(
   (props: FirewallDeviceActionMenuProps) => {
-    const { device, disabled, handleRemoveDevice } = props;
+    const {
+      device,
+      disabled,
+      handleRemoveDevice,
+      isLinodeUpdatable,
+      isNodebalancerUpdatable,
+      isPermissionsLoading,
+    } = props;
 
     const { type } = device.entity;
 
-    const { data: linodePermissions, isLoading: isLinodePermissionsLoading } =
-      usePermissions(
-        'linode',
-        ['update_linode'],
-        device?.entity.id,
-        type !== 'nodebalancer'
-      );
-
-    const {
-      data: nodebalancerPermissions,
-      isLoading: isNodebalancerPermissionsLoading,
-    } = usePermissions(
-      'nodebalancer',
-      ['update_nodebalancer'],
-      device?.entity.id,
-      type === 'nodebalancer'
-    );
-
     const disabledDueToPermissions =
-      type === 'nodebalancer'
-        ? !nodebalancerPermissions?.update_nodebalancer
-        : !linodePermissions?.update_linode;
-
-    const isPermissionsLoading =
-      type === 'nodebalancer'
-        ? isNodebalancerPermissionsLoading
-        : isLinodePermissionsLoading;
+      type === 'nodebalancer' ? !isNodebalancerUpdatable : !isLinodeUpdatable;
 
     return (
       <InlineMenuAction
@@ -59,7 +42,9 @@ export const FirewallDeviceActionMenu = React.memo(
         tooltip={
           disabledDueToPermissions
             ? `You do not have permission to modify this ${type === 'nodebalancer' ? 'NodeBalancer' : 'Linode'}.`
-            : undefined
+            : disabled
+              ? 'You do not have permission to remove the device from this firewall.'
+              : undefined
         }
       />
     );

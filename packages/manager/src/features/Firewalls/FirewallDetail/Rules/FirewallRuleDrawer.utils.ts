@@ -13,6 +13,7 @@ import {
   allowNoneIPv4,
   allowNoneIPv6,
   allowsAllIPs,
+  buildPrefixListReferenceMap,
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
@@ -26,7 +27,7 @@ import type {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
@@ -42,7 +43,8 @@ export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
  */
 export const deriveTypeFromValuesAndIPs = (
   values: FormState,
-  ips: ExtendedIP[]
+  ips: ExtendedIP[],
+  pls: ExtendedPL[]
 ) => {
   if (values.type === 'custom') {
     return 'custom';
@@ -52,7 +54,7 @@ export const deriveTypeFromValuesAndIPs = (
 
   const predefinedFirewall = predefinedFirewallFromRule({
     action: 'ACCEPT',
-    addresses: formValueToIPs(values.addresses, ips),
+    addresses: formValueToIPs(values.addresses!, ips, pls),
     ports: values.ports,
     protocol,
   });
@@ -60,9 +62,9 @@ export const deriveTypeFromValuesAndIPs = (
   if (predefinedFirewall) {
     return predefinedFirewall;
   } else if (
-    values.protocol?.length > 0 ||
+    (values.protocol && values.protocol?.length > 0) ||
     (values.ports && values.ports?.length > 0) ||
-    values.addresses?.length > 0
+    (values.addresses && values.addresses?.length > 0)
   ) {
     return 'custom';
   }
@@ -74,7 +76,8 @@ export const deriveTypeFromValuesAndIPs = (
  */
 export const formValueToIPs = (
   formValue: string,
-  ips: ExtendedIP[]
+  ips: ExtendedIP[],
+  pls: ExtendedPL[]
 ): FirewallRuleType['addresses'] => {
   switch (formValue) {
     case 'all':
@@ -83,10 +86,34 @@ export const formValueToIPs = (
       return { ipv4: [allIPv4] };
     case 'allIPv6':
       return { ipv6: [allIPv6] };
-    default:
-      // The user has selected "IP / Netmask" and entered custom IPs, so we need
+    default: {
+      // The user has selected "IP / Netmask / Prefix List" and entered custom IPs or selected PLs, so we need
       // to separate those into v4 and v6 addresses.
-      return classifyIPs(ips);
+      const classifiedIPs = classifyIPs(ips);
+      const classifiedPLs = classifyPLs(pls);
+
+      const ruleIPv4 = [
+        ...(classifiedIPs.ipv4 ?? []),
+        ...(classifiedPLs.ipv4 ?? []),
+      ];
+
+      const ruleIPv6 = [
+        ...(classifiedIPs.ipv6 ?? []),
+        ...(classifiedPLs.ipv6 ?? []),
+      ];
+
+      const result: FirewallRuleType['addresses'] = {};
+
+      if (ruleIPv4.length > 0) {
+        result.ipv4 = ruleIPv4;
+      }
+
+      if (ruleIPv6.length > 0) {
+        result.ipv6 = ruleIPv6;
+      }
+
+      return result;
+    }
   }
 };
 
@@ -109,6 +136,34 @@ export const validateIPs = (
       }
     }
     return { address };
+  });
+};
+
+export const validatePrefixLists = (pls: ExtendedPL[]): ExtendedPL[] => {
+  const seen = new Set<string>();
+  return pls.map((pl) => {
+    const { address, inIPv4Rule, inIPv6Rule } = pl;
+
+    if (!pl.address) {
+      return { ...pl, error: 'Please select the Prefix List.' };
+    }
+
+    if (pl.inIPv4Rule === false && pl.inIPv6Rule === false) {
+      return {
+        ...pl,
+        error: 'At least one IPv4 or IPv6 option must be selected.',
+      };
+    }
+
+    if (seen.has(pl.address)) {
+      return {
+        ...pl,
+        error: 'This Prefix List is already selected.',
+      };
+    }
+
+    seen.add(pl.address);
+    return { address, inIPv4Rule, inIPv6Rule };
   });
 };
 
@@ -138,6 +193,28 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
   );
 };
 
+/**
+ * Given an array of Firewall Rule IP addresses, categorize
+ * Prefix List by "ipv4" and "ipv6."
+ */
+export const classifyPLs = (pls: ExtendedPL[]) => {
+  return pls.reduce<{ ipv4?: string[]; ipv6?: string[] }>((acc, pl) => {
+    if (pl.inIPv4Rule) {
+      if (!acc.ipv4) {
+        acc.ipv4 = [];
+      }
+      acc.ipv4.push(pl.address);
+    }
+    if (pl.inIPv6Rule) {
+      if (!acc.ipv6) {
+        acc.ipv6 = [];
+      }
+      acc.ipv6.push(pl.address);
+    }
+    return acc;
+  }, {});
+};
+
 const initialValues: FormState = {
   action: 'ACCEPT',
   addresses: '',
@@ -163,7 +240,7 @@ export const getInitialFormValues = (
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     type: predefinedFirewallFromRule(ruleToModify) || '',
-  };
+  } as FormState;
 };
 
 export const getInitialAddressFormValue = (
@@ -181,21 +258,42 @@ export const getInitialAddressFormValue = (
     return 'allIPv6';
   }
 
-  return 'ip/netmask';
+  return 'ip/netmask/prefixlist';
 };
 
-// Get a list of Extended IP from an existing Firewall rule. This is necessary when opening the
+// Get a list of Extended IP or Extended PL from an existing Firewall rule. This is necessary when opening the
 // drawer/form to modify an existing rule.
-export const getInitialIPs = (
+export const getInitialIPsOrPLs = (
   ruleToModify: ExtendedFirewallRule
-): ExtendedIP[] => {
+): {
+  ips: ExtendedIP[];
+  pls: ExtendedPL[];
+} => {
   const { addresses } = ruleToModify;
 
-  const extendedIPv4 = (addresses?.ipv4 ?? []).map(stringToExtendedIP);
-  const extendedIPv6 = (addresses?.ipv6 ?? []).map(stringToExtendedIP);
+  // Exclude all prefix list entries (pl:*) from the FW Rule addresses when building extendedIPv4/extendedIPv6
+  const extendedIPv4 = (addresses?.ipv4 ?? [])
+    .filter((ip) => !ip.startsWith('pl:'))
+    .map(stringToExtendedIP);
+  const extendedIPv6 = (addresses?.ipv6 ?? [])
+    .filter((ip) => !ip.startsWith('pl:'))
+    .map(stringToExtendedIP);
 
   const ips: ExtendedIP[] = [...extendedIPv4, ...extendedIPv6];
 
+  // Build ExtendedPL from the FW Rule addresses
+  const prefixListMap = buildPrefixListReferenceMap({
+    ipv4: addresses?.ipv4 ?? [],
+    ipv6: addresses?.ipv6 ?? [],
+  });
+  const extendedPL = Object.entries(prefixListMap).map(([pl, reference]) => ({
+    address: pl,
+    inIPv4Rule: reference.inIPv4Rule,
+    inIPv6Rule: reference.inIPv6Rule,
+  }));
+  const pls: ExtendedPL[] = extendedPL;
+
+  // Errors
   ruleToModify.errors?.forEach((thisError) => {
     const { formField, ip } = thisError;
 
@@ -223,7 +321,7 @@ export const getInitialIPs = (
     ips[index].error = IP_ERROR_MESSAGE;
   });
 
-  return ips;
+  return { ips, pls };
 };
 
 /**
@@ -264,7 +362,7 @@ export const itemsToPortString = (
  * and converts it to FirewallOptionItem<string>[] and a custom input string.
  */
 export const portStringToItems = (
-  portString?: string
+  portString?: null | string
 ): [FirewallOptionItem<string>[], string] => {
   // Handle empty input
   if (!portString) {
@@ -305,13 +403,20 @@ export const portStringToItems = (
   return [items, customInput.join(', ')];
 };
 
-export const validateForm = ({
-  addresses,
-  description,
-  label,
-  ports,
-  protocol,
-}: Partial<FormState>) => {
+export interface ValidateFormOptions {
+  isFirewallRulesetsPrefixlistsFeatureEnabled: boolean;
+  validatedIPs: ExtendedIP[];
+  validatedPLs: ExtendedPL[];
+}
+
+export const validateForm = (
+  { addresses, description, label, ports, protocol }: Partial<FormState>,
+  {
+    validatedIPs,
+    validatedPLs,
+    isFirewallRulesetsPrefixlistsFeatureEnabled,
+  }: ValidateFormOptions
+) => {
   const errors: Partial<FormState> = {};
 
   if (label) {
@@ -337,6 +442,14 @@ export const validateForm = ({
 
   if (!addresses) {
     errors.addresses = 'Sources is a required field.';
+  } else if (
+    isFirewallRulesetsPrefixlistsFeatureEnabled &&
+    addresses === 'ip/netmask/prefixlist' &&
+    validatedIPs.length === 0 &&
+    validatedPLs.length === 0
+  ) {
+    errors.addresses =
+      'Add an IP address in IP/mask format, or reference a Prefix List name.';
   }
 
   if (!ports && protocol !== 'ICMP' && protocol !== 'IPENCAP') {
