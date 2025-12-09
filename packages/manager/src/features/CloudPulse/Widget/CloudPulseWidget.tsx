@@ -1,39 +1,60 @@
-import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
+import { useProfile, useRegionsQuery } from '@linode/queries';
+import { Box, Paper, Typography } from '@linode/ui';
+import { GridLegacy, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
-import { useProfile } from 'src/queries/profile/profile';
 
+import { useBlockStorageFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useBlockStorageFetchOptions';
+import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
+import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
-import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
-import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
-import { convertValueToUnit, formatToolTip } from '../Utils/unitConversion';
 import {
-  getUserPreferenceObject,
-  updateWidgetPreference,
-} from '../Utils/UserPreference';
-import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
+  AGGREGATE_FUNCTION,
+  GROUP_BY,
+  SIZE,
+  TIME_GRANULARITY,
+} from '../Utils/constants';
+import {
+  constructAdditionalRequestFilters,
+  constructWidgetDimensionFilters,
+} from '../Utils/FilterBuilder';
+import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { generateCurrentUnit } from '../Utils/unitConversion';
+import { useAclpPreference } from '../Utils/UserPreference';
+import {
+  convertStringToCamelCasesWithSpaces,
+  getFilteredDimensions,
+} from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
+import { CloudPulseDimensionFiltersSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { Widgets } from '@linode/api-v4';
+import type { MetricsDimensionFilter } from './components/DimensionFilters/types';
 import type {
-  AvailableMetrics,
-  TimeDuration,
+  CloudPulseServiceType,
+  DateTimeWithPreset,
+  Filters,
+  MetricDefinition,
   TimeGranularity,
+  Widgets,
 } from '@linode/api-v4';
-import type { DataSet } from 'src/components/LineGraph/LineGraph';
-import type { Metrics } from 'src/utilities/statMetrics';
+import type { Metrics } from '@linode/utilities';
+import type {
+  AreaProps,
+  ChartVariant,
+  DataSet,
+} from 'src/components/AreaChart/AreaChart';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -49,17 +70,27 @@ export interface CloudPulseWidgetProperties {
   /**
    * token to fetch metrics data
    */
-  authToken: string;
+  authToken?: string;
 
   /**
    * metrics defined of this widget
    */
-  availableMetrics: AvailableMetrics | undefined;
+  availableMetrics: MetricDefinition | undefined;
+
+  /**
+   * ID of the selected dashboard
+   */
+  dashboardId: number;
 
   /**
    * time duration to fetch the metrics data in this widget
    */
-  duration: TimeDuration;
+  duration: DateTimeWithPreset;
+
+  /**
+   * entity ids selected by user to show metrics for
+   */
+  entityIds: string[];
 
   /**
    * Any error to be shown in this widget
@@ -67,9 +98,24 @@ export interface CloudPulseWidgetProperties {
   errorLabel?: string;
 
   /**
-   * resources ids selected by user to show metrics for
+   * Group by selected on global filter
    */
-  resourceIds: string[];
+  globalFilterGroupBy: string[];
+
+  /**
+   * Jwe token fetching status check
+   */
+  isJweTokenFetching: boolean;
+
+  /**
+   * Selected linode region for the widget
+   */
+  linodeRegion?: string;
+
+  /**
+   * Selected region for the widget
+   */
+  region?: string;
 
   /**
    * List of resources available of selected service type
@@ -84,7 +130,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * Service type selected by user
    */
-  serviceType: string;
+  serviceType: CloudPulseServiceType;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
@@ -95,7 +141,6 @@ export interface CloudPulseWidgetProperties {
    * this should come from dashboard, which maintains map for service types in a separate API call
    */
   unit: string;
-
   /**
    * color index to be selected from available them if not theme is provided by user
    */
@@ -120,29 +165,138 @@ export interface LegendRow {
 }
 
 export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
+  const { updateWidgetPreference: updatePreferences } = useAclpPreference();
   const { data: profile } = useProfile();
 
-  const timezone = profile?.timezone ?? DateTime.local().zoneName;
-
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
+  const [groupBy, setGroupBy] = React.useState<string[] | undefined>(
+    props.widget.group_by
+  );
+  const theme = useTheme();
 
   const {
+    globalFilterGroupBy,
     additionalFilters,
     ariaLabel,
     authToken,
     availableMetrics,
     duration,
-    resourceIds,
+    entityIds,
+    isJweTokenFetching,
     resources,
     savePref,
     serviceType,
     timeStamp,
     unit,
+    widget: widgetProp,
+    linodeRegion,
+    dashboardId,
+    region,
   } = props;
+  const [dimensionFilters, setDimensionFilters] = React.useState<
+    MetricsDimensionFilter[] | undefined
+  >(widget.filters);
+
+  const timezone =
+    duration.timeZone ?? profile?.timezone ?? DateTime.local().zoneName;
 
   const flags = useFlags();
+  const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
+  const { data: regions } = useRegionsQuery();
+  const linodesFetch = useFirewallFetchOptions({
+    dimensionLabel: 'linode_id',
+    type: 'metrics',
+    entities: entityIds,
+    regions: linodeRegion // if linode region is selected, filter regions to only that region else pass all regions
+      ? (regions?.filter(({ id }) => id === linodeRegion) ?? [])
+      : regions,
+    scope: 'entity',
+    serviceType,
+    associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
+  });
+  const vpcFetch = useFirewallFetchOptions({
+    dimensionLabel: 'vpc_subnet_id',
+    type: 'metrics',
+    entities: entityIds,
+    regions: linodeRegion // if linode region is selected, filter regions to only that region else pass all regions
+      ? (regions?.filter(({ id }) => id === linodeRegion) ?? [])
+      : regions,
+    scope: 'entity',
+    serviceType,
+    associatedEntityType: FILTER_CONFIG.get(dashboardId)?.associatedEntityType,
+  });
+  const linodeFromVolumes = useBlockStorageFetchOptions({
+    entities: entityIds,
+    dimensionLabel: 'linode_id',
+    regions: region // if region is selected, filter regions to only that region else pass all regions
+      ? (regions?.filter(({ id }) => id === region) ?? [])
+      : regions,
+    type: 'metrics',
+    scope: 'entity',
+    serviceType,
+  });
+  // Determine which fetch object is relevant for linodes
+  const activeLinodeFetch =
+    serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch;
+
+  // Combine loading states
+  const isLoadingFilters = activeLinodeFetch.isLoading || vpcFetch.isLoading;
+
+  const excludeDimensionFilters = React.useMemo(() => {
+    return (
+      FILTER_CONFIG.get(dashboardId)
+        ?.filters.filter(
+          ({ configuration }) => configuration.dimensionKey !== undefined
+        )
+        .map(({ configuration }) => configuration.dimensionKey) ?? []
+    );
+  }, [dashboardId]);
+  const filteredDimensions = React.useMemo(() => {
+    return excludeDimensionFilters && excludeDimensionFilters.length > 0
+      ? availableMetrics?.dimensions.filter(
+          ({ dimension_label: dimensionLabel }) =>
+            !excludeDimensionFilters.includes(dimensionLabel)
+        )
+      : availableMetrics?.dimensions;
+  }, [availableMetrics?.dimensions, excludeDimensionFilters]);
+
+  const filteredSelections = React.useMemo(() => {
+    if (isLoadingFilters || !flags.aclp?.showWidgetDimensionFilters) {
+      return dimensionFilters ?? [];
+    }
+
+    return getFilteredDimensions({
+      dimensions: filteredDimensions ?? [],
+      linodes: activeLinodeFetch,
+      vpcs: vpcFetch,
+      dimensionFilters,
+    });
+  }, [
+    activeLinodeFetch,
+    dimensionFilters,
+    filteredDimensions,
+    flags.aclp?.showWidgetDimensionFilters,
+    isLoadingFilters,
+    vpcFetch,
+  ]);
+
+  const filters: Filters[] | undefined = React.useMemo(() => {
+    return additionalFilters?.length ||
+      widget?.filters?.length ||
+      dimensionFilters?.length
+      ? [
+          ...constructAdditionalRequestFilters(additionalFilters ?? []),
+          ...[...(constructWidgetDimensionFilters(filteredSelections) ?? [])], // dashboard level filters followed by widget filters
+        ]
+      : undefined;
+  }, [
+    additionalFilters,
+    widget?.filters?.length,
+    dimensionFilters?.length,
+    filteredSelections,
+  ]);
 
   /**
    *
@@ -150,7 +304,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
    */
   const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
     if (savePref) {
-      updateWidgetPreference(widget.label, {
+      updatePreferences(widget.label, {
         [SIZE]: zoomInValue ? 12 : 6,
       });
     }
@@ -170,20 +324,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const handleAggregateFunctionChange = React.useCallback(
     (aggregateValue: string) => {
       // To avoid updation if user again selected the currently selected value from drop down.
-      if (aggregateValue !== widget.aggregate_function) {
-        if (savePref) {
-          updateWidgetPreference(widget.label, {
-            [AGGREGATE_FUNCTION]: aggregateValue,
-          });
-        }
 
-        setWidget((currentWidget: Widgets) => {
-          return {
-            ...currentWidget,
-            aggregate_function: aggregateValue,
-          };
+      if (savePref) {
+        updatePreferences(widget.label, {
+          [AGGREGATE_FUNCTION]: aggregateValue,
         });
       }
+
+      setWidget((currentWidget: Widgets) => {
+        return {
+          ...currentWidget,
+          aggregate_function: aggregateValue,
+        };
+      });
     },
     []
   );
@@ -194,48 +347,60 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
    */
   const handleIntervalChange = React.useCallback(
     (intervalValue: TimeGranularity) => {
-      if (
-        !widget.time_granularity ||
-        intervalValue.unit !== widget.time_granularity.unit ||
-        intervalValue.value !== widget.time_granularity.value
-      ) {
-        if (savePref) {
-          updateWidgetPreference(widget.label, {
-            [TIME_GRANULARITY]: { ...intervalValue },
-          });
-        }
-
-        setWidget((currentWidget: Widgets) => {
-          return {
-            ...currentWidget,
-            time_granularity: { ...intervalValue },
-          };
+      if (savePref) {
+        updatePreferences(widget.label, {
+          [TIME_GRANULARITY]: { ...intervalValue },
         });
       }
+
+      setWidget((currentWidget: Widgets) => {
+        return {
+          ...currentWidget,
+          time_granularity: { ...intervalValue },
+        };
+      });
     },
     []
   );
-  // Update the widget preference if already not present in the preferences
-  React.useEffect(() => {
-    if (savePref) {
-      const widgets = getUserPreferenceObject()?.widgets;
-      if (!widgets || !widgets[widget.label]) {
-        updateWidgetPreference(widget.label, {
-          [AGGREGATE_FUNCTION]: widget.aggregate_function,
-          [SIZE]: widget.size,
-          [TIME_GRANULARITY]: widget.time_granularity,
+  const handleGroupByChange = React.useCallback(
+    (selectedGroupBy: string[], savePreferences?: boolean) => {
+      if (savePreferences) {
+        updatePreferences(widget.label, {
+          [GROUP_BY]: selectedGroupBy,
         });
       }
-    }
-  }, []);
+      setGroupBy(selectedGroupBy);
+    },
+    []
+  );
 
-  /**
-   *
-   * @param value number value for the tool tip
-   * @param unit string unit for the tool tip
-   * @returns formatted string using @value & @unit
-   */
-
+  const handleDimensionFiltersChange = React.useCallback(
+    (selectedFilters: MetricsDimensionFilter[]) => {
+      if (savePref) {
+        updatePreferences(widget.label, {
+          filters: selectedFilters
+            .map((filter) => {
+              if (
+                filter.value !== null &&
+                filter.dimension_label !== null &&
+                filter.operator !== null
+              ) {
+                return {
+                  dimension_label: filter.dimension_label,
+                  operator: filter.operator,
+                  value: filter.value,
+                };
+              } else {
+                return undefined;
+              }
+            })
+            .filter((filter) => filter !== undefined),
+        });
+      }
+      setDimensionFilters(selectedFilters);
+    },
+    [savePref, updatePreferences, widget.label]
+  );
   const {
     data: metricsList,
     error,
@@ -246,78 +411,120 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     {
       ...getCloudPulseMetricRequest({
         duration,
-        resourceIds,
+        entityIds,
         resources,
         widget,
+        groupBy: [...globalFilterGroupBy, ...(groupBy ?? [])],
+        linodeRegion,
+        region,
+        serviceType,
       }),
-      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      filters, // any additional dimension filters will be constructed and passed here
     },
     {
+      isFiltersLoading: isLoadingFilters,
       authToken,
-      isFlags: Boolean(flags),
+      isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
     }
   );
-
   let data: DataSet[] = [];
 
-  let legendRows: LegendRow[] = [];
-  let today: boolean = false;
-
+  let legendRows: MetricsDisplayRow[] = [];
   let currentUnit = unit;
+  let areas: AreaProps[] = [];
+  const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
-      flags,
       label: widget.label,
       metricsList,
       resources,
-      serviceType,
       status,
       unit,
-      widgetChartType: widget.chart_type,
-      widgetColor: widget.color,
+      serviceType,
+      groupBy: [...globalFilterGroupBy, ...(groupBy ?? [])],
+      metricLabel: availableMetrics?.label,
     });
 
     data = generatedData.dimensions;
     legendRows = generatedData.legendRowsData;
-    today = generatedData.today;
+    scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
     currentUnit = generatedData.unit;
+    areas = generatedData.areas;
   }
 
   const metricsApiCallError = error?.[0]?.reason;
+  const start = DateTime.fromISO(duration.start, { zone: 'GMT' });
+  const end = DateTime.fromISO(duration.end, { zone: 'GMT' });
+  const hours = end.diff(start, 'hours').hours;
+  const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
+
+  React.useEffect(() => {
+    if (
+      filteredSelections.length !== (dimensionFilters?.length ?? 0) &&
+      !linodesFetch.isLoading &&
+      !vpcFetch.isLoading &&
+      !linodeFromVolumes.isLoading
+    ) {
+      handleDimensionFiltersChange(filteredSelections);
+    }
+  }, [
+    filteredSelections,
+    dimensionFilters,
+    handleDimensionFiltersChange,
+    linodesFetch.isLoading,
+    vpcFetch.isLoading,
+    linodeFromVolumes.isLoading,
+  ]);
   return (
-    <Grid item lg={widget.size} xs={12}>
-      <Paper>
-        <Stack spacing={2}>
+    <GridLegacy container item lg={widget.size} xs={12}>
+      <Stack
+        spacing={2}
+        sx={{
+          flexGrow: 1,
+        }}
+      >
+        <Paper
+          data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}
+          sx={{ flexGrow: 1 }}
+        >
           <Stack
-            alignItems={'center'}
             direction={{ sm: 'row' }}
-            gap={{ sm: 0, xs: 2 }}
-            justifyContent={{ sm: 'space-between' }}
-            padding={1}
+            sx={{
+              alignItems: 'center',
+              gap: { sm: 0, xs: 2 },
+              justifyContent: { sm: 'space-between' },
+              marginBottom: 1,
+              padding: 1,
+            }}
           >
-            <Typography
-              fontSize={{ sm: '1.5rem', xs: '2rem' }}
-              marginLeft={1}
-              variant="h1"
-            >
-              {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
-              {!isLoading &&
-                `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}
+            <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
+              {convertStringToCamelCasesWithSpaces(widget.label)} (
+              {scaledWidgetUnit.current}
+              {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
+                ? '/s'
+                : ''}
+              )
             </Typography>
             <Stack
-              alignItems={'center'}
               direction={{ sm: 'row' }}
-              gap={1}
-              width={{ sm: 'inherit', xs: '100%' }}
+              sx={{
+                flex: { sm: 3, xs: 0 },
+                justifyContent: 'end',
+                alignItems: 'center',
+                gap: 2,
+                maxHeight: `calc(${theme.spacing(10)} + 5px)`,
+                overflow: 'auto',
+                width: { sm: 'inherit', xs: '100%' },
+              }}
             >
               {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
-                  default_interval={widget?.time_granularity}
+                  defaultInterval={widgetProp?.time_granularity}
                   onIntervalChange={handleIntervalChange}
-                  scrape_interval={availableMetrics.scrape_interval}
+                  scrapeInterval={availableMetrics.scrape_interval}
                 />
               )}
               {Boolean(
@@ -327,11 +534,32 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   availableAggregateFunctions={
                     availableMetrics!.available_aggregate_functions
                   }
-                  defaultAggregateFunction={widget?.aggregate_function}
+                  defaultAggregateFunction={widgetProp?.aggregate_function}
                   onAggregateFuncChange={handleAggregateFunctionChange}
                 />
               )}
-              <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                {flags.aclp?.showWidgetDimensionFilters && (
+                  <CloudPulseDimensionFiltersSelect
+                    dashboardId={dashboardId}
+                    dimensionOptions={filteredDimensions ?? []}
+                    drawerLabel={availableMetrics?.label ?? ''}
+                    handleSelectionChange={handleDimensionFiltersChange}
+                    selectedDimensions={filteredSelections}
+                    selectedEntities={entityIds}
+                    selectedRegions={linodeRegion ? [linodeRegion] : undefined}
+                    serviceType={serviceType}
+                  />
+                )}
+                <WidgetFilterGroupByRenderer
+                  dashboardId={dashboardId}
+                  handleChange={handleGroupByChange}
+                  label={widget.label}
+                  metric={widget.metric}
+                  preferenceGroupBy={groupBy}
+                  savePreferences={savePref}
+                  serviceType={serviceType}
+                />
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
                   zoomIn={widget?.size === 12}
@@ -339,30 +567,32 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               </Box>
             </Stack>
           </Stack>
-          <Divider />
-
           <CloudPulseLineGraph
-            error={
-              status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
-                ? metricsApiCallError ?? 'Error while rendering graph'
-                : undefined
-            }
-            legendRows={
-              legendRows && legendRows.length > 0 ? legendRows : undefined
-            }
+            areas={areas}
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
-            formatData={(data: number) => convertValueToUnit(data, currentUnit)}
-            formatTooltip={(value: number) => formatToolTip(value, unit)}
-            gridSize={widget.size}
-            loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
-            nativeLegend
-            showToday={today}
+            dotRadius={1.5}
+            error={
+              status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
+                ? (metricsApiCallError ?? 'Error while rendering graph')
+                : undefined
+            }
+            height={424}
+            legendRows={legendRows}
+            loading={
+              isLoading ||
+              metricsApiCallError === jweTokenExpiryError ||
+              isJweTokenFetching
+            } // keep loading until we are trying to fetch the refresh token
+            showDot
+            showLegend={data.length !== 0}
             timezone={timezone}
-            title={widget.label}
+            unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
+            variant={variant}
+            xAxis={{ tickFormat, tickGap: 60 }}
           />
-        </Stack>
-      </Paper>
-    </Grid>
+        </Paper>
+      </Stack>
+    </GridLegacy>
   );
 };

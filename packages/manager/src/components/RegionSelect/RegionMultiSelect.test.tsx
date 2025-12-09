@@ -1,11 +1,13 @@
-import { Region } from '@linode/api-v4';
+import { regionFactory } from '@linode/utilities';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { regionFactory } from 'src/factories/regions';
+// @todo: modularization - Replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
+
+import type { Region } from '@linode/api-v4';
 
 const regionNewark = regionFactory.build({
   id: 'us-east',
@@ -42,6 +44,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
+        isGeckoLAEnabled={false}
         onChange={mockHandleSelection}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[]}
@@ -56,6 +59,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
+        isGeckoLAEnabled={false}
         onChange={onChange}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[]}
@@ -75,6 +79,7 @@ describe('RegionMultiSelect', () => {
     renderWithTheme(
       <RegionMultiSelect
         currentCapability="Block Storage"
+        isGeckoLAEnabled={false}
         onChange={onChange}
         regions={[regionNewark, regionAtlanta]}
         selectedIds={[regionAtlanta.id, regionNewark.id]}
@@ -92,23 +97,24 @@ describe('RegionMultiSelect', () => {
   it('should render selected regions correctly', () => {
     renderWithTheme(
       <RegionMultiSelect
+        currentCapability="Block Storage"
+        isGeckoLAEnabled={false}
+        onChange={mockHandleSelection}
+        regions={[regionNewark, regionAtlanta]}
+        selectedIds={[regionNewark.id]}
         SelectedRegionsList={({ onRemove, selectedRegions }) => (
           <SelectedRegionsList
             onRemove={onRemove}
             selectedRegions={selectedRegions}
           />
         )}
-        currentCapability="Block Storage"
-        onChange={mockHandleSelection}
-        regions={[regionNewark, regionAtlanta]}
-        selectedIds={[regionNewark.id]}
       />
     );
 
     // Open the dropdown
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
 
-    // Check Newark chip shows becaused it is selected
+    // Check Newark chip shows because it is selected
     expect(
       screen.getByRole('listitem', {
         name: 'Newark, NJ',

@@ -22,15 +22,45 @@ export const getStateSeederGroups = (
 };
 
 export const emptyStore: MockState = {
+  userEntitiesByPermission: [],
+  childAccounts: [],
+  cloudnats: [],
+  configInterfaces: [],
+  delegations: [],
+  destinations: [],
+  domainRecords: [],
+  domains: [],
+  entities: [],
   eventQueue: [],
+  firewallDevices: [],
   firewalls: [],
+  images: [],
+  ipAddresses: [],
+  kubernetesClusters: [],
+  kubernetesNodePools: [],
   linodeConfigs: [],
+  linodeInterfaces: [],
+  linodeIps: [],
   linodes: [],
+  nodeBalancerConfigNodes: [],
+  nodeBalancerConfigs: [],
+  nodeBalancers: [],
   notificationQueue: [],
+  accountRoles: [],
+  userRoles: [],
+  userAccountPermissions: [],
+  userEntityPermissions: [],
   placementGroups: [],
   regionAvailability: [],
   regions: [],
+  streams: [],
+  subnets: [],
+  supportReplies: [],
+  supportTickets: [],
+  users: [],
   volumes: [],
+  vpcs: [],
+  vpcsIps: [],
 };
 
 /**
@@ -42,7 +72,14 @@ export const createInitialMockStore = async (): Promise<MockState> => {
   const mockState = await mswDB.getStore('mockState');
 
   if (mockState) {
-    return mockState;
+    const mockStateKeys = Object.keys(mockState);
+    const emptyStoreKeys = Object.keys(emptyStore);
+
+    // Return the existing mockState if it includes all keys from the empty store;
+    // else, discard the existing mockState because we've introduced new values.
+    if (emptyStoreKeys.every((key) => mockStateKeys.includes(key))) {
+      return mockState;
+    }
   }
 
   return emptyStore;

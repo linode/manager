@@ -7,8 +7,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -22,16 +22,15 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Create a Compute Instance',
-      to: 'https://www.linode.com/docs/guides/creating-a-compute-instance/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/create-a-compute-instance',
     },
     {
       text: 'Getting Started with Linode Compute Instances',
-      to: 'https://www.linode.com/docs/guides/getting-started/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started',
     },
     {
       text: 'Understanding Billing and Payment',
-      to:
-        'https://www.linode.com/docs/guides/understanding-billing-and-payments/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works',
     },
     {
       text: 'Hosting a Website or Application on Linode',
@@ -65,8 +64,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
     {
       external: true,
       text: 'How to use SSH',
-      to:
-        'https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2',
+      to: 'https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2',
     },
   ],
   moreInfo: {

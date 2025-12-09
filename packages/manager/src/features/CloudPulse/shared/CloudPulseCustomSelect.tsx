@@ -1,7 +1,6 @@
-import deepEqual from 'fast-deep-equal';
+import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {
@@ -13,7 +12,9 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
+  QueryFunctionType,
 } from '../Utils/models';
+import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -41,6 +42,16 @@ export interface CloudPulseCustomSelectProps {
   clearDependentSelections?: string[];
 
   /**
+   * The dashboard id where this filter is being used
+   */
+  dashboardId: number;
+
+  /**
+   * Last selected values from user preferences
+   */
+  defaultValue?: FilterValue;
+
+  /**
    * This property says, whether or not to disable the selection component
    */
   disabled?: boolean;
@@ -51,10 +62,13 @@ export interface CloudPulseCustomSelectProps {
   errorText?: string;
 
   /**
+   * The filter function to apply to the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
+  /**
    * The filterKey that needs to be used
    */
   filterKey: string;
-
   /**
    * The type of the filter like string, number etc.,
    */
@@ -64,12 +78,30 @@ export interface CloudPulseCustomSelectProps {
    * The callback function , that will be called on a filter change
    * @param filterKey - The filterKey of the component
    * @param value - The selected filter value
+   * @param labels - Labels of the selected filter value
    */
-  handleSelectionChange: (filterKey: string, value: FilterValueType) => void;
+  handleSelectionChange: (
+    filterKey: string,
+    value: FilterValueType,
+    labels: string[],
+    savePref?: boolean,
+    updatedPreferenceData?: AclpConfig
+  ) => void;
+
   /**
    * If true, multiselect is allowed, otherwise false
    */
   isMultiSelect?: boolean;
+
+  /**
+   * This property controls whether the filter is optional or not
+   */
+  isOptional?: boolean;
+
+  /**
+   * The label that needs to be displayed for the select component
+   */
+  label: string;
 
   /**
    * The maximum selections that the user can make incase of multiselect
@@ -87,6 +119,11 @@ export interface CloudPulseCustomSelectProps {
   placeholder?: string;
 
   /**
+   * The user preferences object to get the last selected values
+   */
+  preferences?: AclpConfig;
+
+  /**
    * This property controls whether to save the preferences or not
    */
   savePreferences?: boolean;
@@ -99,6 +136,7 @@ export interface CloudPulseCustomSelectProps {
 
 export enum CloudPulseSelectTypes {
   dynamic,
+  // eslint-disable-next-line sonarjs/future-reserved-words
   static,
 }
 
@@ -109,15 +147,21 @@ export const CloudPulseCustomSelect = React.memo(
       apiResponseLabelField,
       apiV4QueryKey,
       clearDependentSelections,
+      defaultValue,
       disabled,
       filterKey,
       handleSelectionChange,
       isMultiSelect,
+      label,
       maxSelections,
       options,
       placeholder,
+      preferences,
+      dashboardId,
       savePreferences,
       type,
+      isOptional,
+      filterFn,
     } = props;
 
     const [selectedResource, setResource] = React.useState<
@@ -136,22 +180,26 @@ export const CloudPulseCustomSelect = React.memo(
       filter: {},
       idField: apiResponseIdField ?? 'id',
       labelField: apiResponseLabelField ?? 'label',
+      filterFn,
     });
 
     React.useEffect(() => {
-      if (!selectedResource) {
+      if (!selectedResource && !disabled) {
         setResource(
           getInitialDefaultSelections({
+            defaultValue,
             filterKey,
             handleSelectionChange,
             isMultiSelect: isMultiSelect ?? false,
             options: options || queriedResources || [],
+            preferences,
             savePreferences: savePreferences ?? false,
+            isOptional,
           })
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savePreferences, options, apiV4QueryKey, queriedResources]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
+    }, [savePreferences, options, apiV4QueryKey, queriedResources, disabled]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
 
     const handleChange = (
       _: React.SyntheticEvent,
@@ -165,17 +213,18 @@ export const CloudPulseCustomSelect = React.memo(
         filterKey,
         handleSelectionChange,
         maxSelections,
+        savePreferences,
         value,
+        dashboardId,
       });
       setResource(
         Array.isArray(filteredValue)
           ? [...filteredValue]
-          : filteredValue ?? undefined
+          : (filteredValue ?? undefined)
       );
     };
 
     let staticErrorText = '';
-
     // check for input prop errors
     if (
       (CloudPulseSelectTypes.static === type &&
@@ -195,26 +244,37 @@ export const CloudPulseCustomSelect = React.memo(
       staticErrorText.length > 0
         ? staticErrorText
         : isError
-        ? 'Error while loading from API'
-        : '';
+          ? 'Error while loading from API'
+          : '';
 
     return (
       <Autocomplete
-        options={
-          type === CloudPulseSelectTypes.static
-            ? options ?? []
-            : queriedResources ?? []
-        }
-        textFieldProps={{
-          hideLabel: true,
-        }}
+        autoHighlight
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
-        label="Select a Value"
+        label={label || 'Select a Value'}
+        loading={isLoading}
         multiple={isMultiSelect}
+        noMarginTop
         onChange={handleChange}
-        placeholder={placeholder ?? 'Select a Value'}
+        options={
+          type === CloudPulseSelectTypes.static
+            ? (options ?? [])
+            : (queriedResources ?? [])
+        }
+        placeholder={
+          selectedResource &&
+          (!Array.isArray(selectedResource) || selectedResource.length)
+            ? ''
+            : placeholder || 'Select a Value'
+        }
+        slotProps={{
+          popper: {
+            placement: 'bottom',
+          },
+        }}
+        textFieldProps={{ optional: isOptional }}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
       />
     );
@@ -236,11 +296,6 @@ function compareProps(
     if (prevProps[key] !== nextProps[key]) {
       return false;
     }
-  }
-
-  // Deep comparison for options
-  if (!deepEqual(prevProps.options, nextProps.options)) {
-    return false;
   }
 
   // Ignore function props in comparison

@@ -1,24 +1,32 @@
+import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
+import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
+
+interface IntervalOptions {
+  label: string;
+  unit: string;
+  value: number;
+}
 
 export interface IntervalSelectProperties {
   /**
    * Default time granularity to be selected
    */
-  default_interval?: TimeGranularity | undefined;
+  defaultInterval?: TimeGranularity | undefined;
 
   /**
    * Function to be triggered on aggregate function changed from dropdown
    */
-  onIntervalChange: any;
+  onIntervalChange: (intervalValue: TimeGranularity) => void;
 
   /**
    * scrape intervalto filter out minimum time granularity
    */
-  scrape_interval: string;
+  scrapeInterval: string;
 }
 
 export const getInSeconds = (interval: string) => {
@@ -39,7 +47,7 @@ export const getInSeconds = (interval: string) => {
 };
 
 // Intervals must be in ascending order here
-export const all_interval_options = [
+export const allIntervalOptions: IntervalOptions[] = [
   {
     label: '1 min',
     unit: 'min',
@@ -62,14 +70,14 @@ export const all_interval_options = [
   },
 ];
 
-const autoIntervalOption = {
+export const autoIntervalOption: IntervalOptions = {
   label: 'Auto',
   unit: 'Auto',
   value: -1,
 };
 
 export const getIntervalIndex = (scrapeIntervalValue: number) => {
-  return all_interval_options.findIndex(
+  return allIntervalOptions.findIndex(
     (interval) =>
       scrapeIntervalValue <=
       getInSeconds(String(interval.value) + interval.unit.slice(0, 1))
@@ -78,58 +86,66 @@ export const getIntervalIndex = (scrapeIntervalValue: number) => {
 
 export const CloudPulseIntervalSelect = React.memo(
   (props: IntervalSelectProperties) => {
-    const scrapeIntervalValue = getInSeconds(props.scrape_interval);
+    const { defaultInterval, onIntervalChange, scrapeInterval } = props;
+    const scrapeIntervalValue = getInSeconds(scrapeInterval);
 
     const firstIntervalIndex = getIntervalIndex(scrapeIntervalValue);
 
     // all intervals displayed if srape interval > highest available interval. Error handling done by api
-    const available_interval_options =
+    const availableIntervalOptions =
       firstIntervalIndex < 0
-        ? all_interval_options.slice()
-        : all_interval_options.slice(
+        ? allIntervalOptions.slice()
+        : allIntervalOptions.slice(
             firstIntervalIndex,
-            all_interval_options.length
+            allIntervalOptions.length
           );
 
-    let default_interval =
-      props.default_interval?.unit === 'Auto'
+    let defaultValue =
+      defaultInterval?.unit === 'Auto'
         ? autoIntervalOption
-        : available_interval_options.find(
+        : availableIntervalOptions.find(
             (obj) =>
-              obj.value === props.default_interval?.value &&
-              obj.unit === props.default_interval?.unit
+              obj.value === defaultInterval?.value &&
+              obj.unit === defaultInterval?.unit
           );
 
-    if (!default_interval) {
-      default_interval = autoIntervalOption;
-      props.onIntervalChange({
-        unit: default_interval.unit,
-        value: default_interval.value,
+    if (!defaultValue) {
+      defaultValue = autoIntervalOption;
+      onIntervalChange({
+        unit: defaultValue.unit,
+        value: defaultValue.value,
       });
     }
+    const [selectedInterval, setSelectedInterval] =
+      React.useState(defaultValue);
 
     return (
-      <Autocomplete
-        isOptionEqualToValue={(option, value) => {
-          return option?.value === value?.value && option?.unit === value?.unit;
-        }}
-        onChange={(_: any, selectedInterval: any) => {
-          props.onIntervalChange({
-            unit: selectedInterval?.unit,
-            value: selectedInterval?.value,
-          });
-        }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        defaultValue={{ ...default_interval }}
-        disableClearable
-        fullWidth={false}
-        label="Select an Interval"
-        noMarginTop={true}
-        options={[autoIntervalOption, ...available_interval_options]}
-        sx={{ width: { xs: '100%' } }}
-      />
+      <CloudPulseTooltip title={'Data aggregation interval'}>
+        <Autocomplete
+          autoHighlight
+          disableClearable
+          isOptionEqualToValue={(option, value) => {
+            return (
+              option?.value === value?.value && option?.unit === value?.unit
+            );
+          }}
+          label="Select an Interval"
+          noMarginTop={true}
+          onChange={(e, selectedInterval) => {
+            setSelectedInterval(selectedInterval);
+            onIntervalChange({
+              unit: selectedInterval?.unit,
+              value: selectedInterval?.value,
+            });
+          }}
+          options={[autoIntervalOption, ...availableIntervalOptions]}
+          sx={getAutocompleteWidgetStyles}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          value={selectedInterval}
+        />
+      </CloudPulseTooltip>
     );
   }
 );

@@ -1,12 +1,15 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { entityTransfersQueryKey, useCreateTransfer } from '@linode/queries';
+import { Notice } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
-import { curry } from 'ramda';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendEntityTransferCreateEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -21,14 +24,19 @@ import { TransferCheckoutBar } from './TransferCheckoutBar';
 import { TransferHeader } from './TransferHeader';
 import { defaultTransferState, transferReducer } from './transferReducer';
 
-import type { TransferableEntity } from './transferReducer';
+import type { Entity, TransferableEntity } from './transferReducer';
 import type { CreateTransferPayload } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 export const EntityTransfersCreate = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
+  const flags = useFlags();
   const { error, isPending, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
+
+  const { data: permissions } = usePermissions('account', [
+    'create_service_transfer',
+  ]);
 
   /**
    * Reducer and helpers for working with the payload/selection process
@@ -39,21 +47,19 @@ export const EntityTransfersCreate = () => {
     defaultTransferState
   );
 
-  const addEntitiesToTransfer = curry(
-    (entityType: TransferableEntity, entitiesToAdd: any[]) => {
+  const addEntitiesToTransfer =
+    (entityType: TransferableEntity) => (entitiesToAdd: Entity[]) => {
       dispatch({ entitiesToAdd, entityType, type: 'ADD' });
-    }
-  );
+    };
 
-  const removeEntitiesFromTransfer = curry(
-    (entityType: TransferableEntity, entitiesToRemove: any[]) => {
+  const removeEntitiesFromTransfer =
+    (entityType: TransferableEntity) => (entitiesToRemove: string[]) => {
       dispatch({ entitiesToRemove, entityType, type: 'REMOVE' });
-    }
-  );
+    };
 
-  const toggleEntity = curry((entityType: TransferableEntity, entity: any) => {
+  const toggleEntity = (entityType: TransferableEntity) => (entity: Entity) => {
     dispatch({ entity, entityType, type: 'TOGGLE' });
-  });
+  };
 
   /**
    * Helper functions
@@ -70,9 +76,14 @@ export const EntityTransfersCreate = () => {
         sendEntityTransferCreateEvent(entityCount);
 
         queryClient.invalidateQueries({
-          queryKey: [queryKey],
+          queryKey: [entityTransfersQueryKey],
         });
-        push({ pathname: '/account/service-transfers', state: { transfer } });
+        navigate({
+          to: flags?.iamRbacPrimaryNavChanges
+            ? '/service-transfers'
+            : '/account/service-transfers',
+          state: (prev) => ({ ...prev, transfer }),
+        });
       },
     }).catch((_) => null);
   };
@@ -85,7 +96,7 @@ export const EntityTransfersCreate = () => {
           crumbOverrides: [
             {
               label: 'Service Transfers',
-              position: 2,
+              position: flags?.iamRbacPrimaryNavChanges ? 1 : 2,
             },
           ],
           labelOptions: { noCap: true },
@@ -100,17 +111,34 @@ export const EntityTransfersCreate = () => {
         />
       ) : null}
       <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
-        <Grid lg={9} md={8} xs={12}>
+        <Grid
+          size={{
+            lg: 9,
+            md: 8,
+            xs: 12,
+          }}
+        >
+          {!permissions.create_service_transfer && (
+            <Notice
+              text={getRestrictedResourceText({
+                resourceType: 'Account',
+              })}
+              variant="error"
+            />
+          )}
+
           <TransferHeader />
           <LinodeTransferTable
+            disabled={!permissions.create_service_transfer}
             handleRemove={removeEntitiesFromTransfer('linodes')}
             handleSelect={addEntitiesToTransfer('linodes')}
             handleToggle={toggleEntity('linodes')}
             selectedLinodes={state.linodes}
           />
         </Grid>
-        <StyledSidebarGrid lg={3} md={4} xs={12}>
+        <StyledSidebarGrid size={{ lg: 3, md: 4, xs: 12 }}>
           <TransferCheckoutBar
+            disabled={!permissions.create_service_transfer}
             handleSubmit={(payload) =>
               handleCreateTransfer(payload, queryClient)
             }

@@ -1,9 +1,15 @@
 import 'cypress-file-upload';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+  closableMessage,
+  closeButtonText,
+} from 'support/constants/help-and-support';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockCloseSupportTicket,
+  mockGetSupportTicket,
+  mockGetSupportTicketReplies,
+  mockGetSupportTickets,
+} from 'support/intercepts/support';
 import { ui } from 'support/ui';
 import {
   randomItem,
@@ -11,18 +17,9 @@ import {
   randomNumber,
   randomPhrase,
 } from 'support/util/random';
+
 import { supportTicketFactory } from 'src/factories';
-import {
-  mockGetSupportTicket,
-  mockGetSupportTickets,
-  mockGetSupportTicketReplies,
-  mockCloseSupportTicket,
-} from 'support/intercepts/support';
 import { SEVERITY_LABEL_MAP } from 'src/features/Support/SupportTickets/constants';
-import {
-  closableMessage,
-  closeButtonText,
-} from 'support/constants/help-and-support';
 
 describe('close support tickets', () => {
   /*
@@ -31,11 +28,11 @@ describe('close support tickets', () => {
    */
   it('cannot close a default support ticket by customers', () => {
     const mockTicket = supportTicketFactory.build({
-      id: randomNumber(),
-      summary: randomLabel(),
       description: randomPhrase(),
+      id: randomNumber(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
+      summary: randomLabel(),
     });
 
     // Get severity label for numeric severity level.
@@ -48,9 +45,8 @@ describe('close support tickets', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: makeFeatureFlagData(true),
+      supportTicketSeverity: true,
     });
-    mockGetFeatureFlagClientstream();
     mockGetSupportTickets([mockTicket]);
     mockGetSupportTicket(mockTicket).as('getSupportTicket');
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');
@@ -83,18 +79,18 @@ describe('close support tickets', () => {
    */
   it('can close a closable support ticket', () => {
     const mockTicket = supportTicketFactory.build({
-      id: randomNumber(),
-      summary: randomLabel(),
+      closable: true,
       description: randomPhrase(),
+      id: randomNumber(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      closable: true,
+      summary: randomLabel(),
     });
 
     const mockClosedTicket = supportTicketFactory.build({
       ...mockTicket,
-      status: 'closed',
       closed: 'close by customers',
+      status: 'closed',
     });
 
     // Get severity label for numeric severity level.
@@ -107,9 +103,8 @@ describe('close support tickets', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: makeFeatureFlagData(true),
+      supportTicketSeverity: true,
     });
-    mockGetFeatureFlagClientstream();
     mockGetSupportTickets([mockTicket]);
     mockGetSupportTicket(mockTicket).as('getSupportTicket');
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');

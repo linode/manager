@@ -6,8 +6,15 @@ import { BillingDetail } from './BillingDetail';
 
 describe('Account Landing', () => {
   it('should render', async () => {
-    const { findByTestId } = renderWithTheme(<BillingDetail />);
+    const { findByTestId, findByText } = renderWithTheme(<BillingDetail />, {
+      initialRoute: '/account/billing',
+    });
     await findByTestId('billing-detail');
-    // Todo: add some get-by-texts once the correct text is available
+    await findByText('Account Balance');
+    await findByText('Promotions');
+    await findByText('Accrued Charges');
+    await findByText('Billing Contact');
+    await findByText('Payment Methods');
+    await findByText('Billing & Payment History');
   });
 });

@@ -1,4 +1,4 @@
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import type { MockPresetBaseline } from 'src/mocks/types';
 

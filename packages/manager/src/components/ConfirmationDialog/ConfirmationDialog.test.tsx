@@ -1,9 +1,9 @@
+import { ActionsPanel } from '@linode/ui';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from './ConfirmationDialog';
 
 import type { ConfirmationDialogProps } from './ConfirmationDialog';

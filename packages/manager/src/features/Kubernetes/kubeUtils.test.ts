@@ -1,18 +1,157 @@
-import {
-  kubeLinodeFactory,
-  linodeTypeFactory,
-  nodePoolFactory,
-} from 'src/factories';
+import { accountBetaFactory, linodeTypeFactory } from '@linode/utilities';
+import { renderHook } from '@testing-library/react';
+
+import { kubeLinodeFactory, nodePoolFactory } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
+  compareByKubernetesVersion,
   getLatestVersion,
+  getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
+  useAPLAvailability,
+  useIsLkeEnterpriseEnabled,
 } from './kubeUtils';
+
+import type {
+  KubernetesTieredVersion,
+  KubernetesVersion,
+} from '@linode/api-v4';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+  useGrants: vi.fn().mockReturnValue({}),
+  useAccountBetaQuery: vi.fn().mockReturnValue({}),
+  useKubernetesTieredVersionsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+    useGrants: queryMocks.useGrants,
+    useAccountBetaQuery: queryMocks.useAccountBetaQuery,
+  };
+});
+
+vi.mock('src/queries/kubernetes', () => {
+  const actual = vi.importActual('src/queries/kubernetes');
+  return {
+    ...actual,
+    useKubernetesTieredVersionsQuery:
+      queryMocks.useKubernetesTieredVersionsQuery,
+  };
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
     type: 'not-a-real-type',
+  });
+
+  describe('compareByKubernetesVersion', () => {
+    it('should identify the later standard tier major version as greater', () => {
+      const result = compareByKubernetesVersion('2.0.0', '1.0.0', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later standard tier minor version as greater', () => {
+      const result = compareByKubernetesVersion('1.2.0', '1.1.0', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later standard tier patch version as greater', () => {
+      const result = compareByKubernetesVersion('1.1.2', '1.1.1', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later enterprise tier major version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v2.0.0+lke1',
+        'v1.0.0+lke2',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later enterprise tier minor version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v1.2.0+lke1',
+        'v1.1.0+lke2',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later enterprise tier patch version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v1.1.2+lke1',
+        'v1.1.1+lke1',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the enterprise tier patch version with the later enterprise release version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v1.1.1+lke2',
+        'v1.1.1+lke1',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later standard tier minor version with differing number of digits', () => {
+      const result = compareByKubernetesVersion('1.30', '1.3', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should return negative when the first version is earlier in ascending order with standard tier versions', () => {
+      const result = compareByKubernetesVersion('1.0.0', '2.0.0', 'asc');
+      expect(result).toBeLessThan(0);
+    });
+
+    it('should return positive when the first version is earlier in descending order with standard tier versions', () => {
+      const result = compareByKubernetesVersion('1.0.0', '2.0.0', 'desc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should return negative when the first version is earlier in ascending order with enterprise tier versions', () => {
+      const result = compareByKubernetesVersion(
+        'v1.0.0+lke1',
+        'v2.0.0+lke1',
+        'asc'
+      );
+      expect(result).toBeLessThan(0);
+    });
+
+    it('should return positive when the first version is earlier in descending order with enterprise tier versions', () => {
+      const result = compareByKubernetesVersion(
+        'v1.0.0+lke1',
+        'v2.0.0+lke1',
+        'desc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should return zero when standard tier versions are equal', () => {
+      const result = compareByKubernetesVersion('1.2.3', '1.2.3', 'asc');
+      expect(result).toEqual(0);
+    });
+
+    it('should return zero when enterprise tier versions are equal', () => {
+      const result = compareByKubernetesVersion(
+        'v1.2.3+lke1',
+        'v1.2.3+lke1',
+        'asc'
+      );
+      expect(result).toEqual(0);
+    });
   });
 
   describe('Get total cluster memory/CPUs', () => {
@@ -67,8 +206,27 @@ describe('helper functions', () => {
       });
     });
   });
+
+  describe('APL availability', () => {
+    it('should return true if the apl flag is true and beta is active', async () => {
+      const accountBeta = accountBetaFactory.build({
+        enrolled: '2023-01-15T00:00:00Z',
+        id: 'apl',
+      });
+
+      queryMocks.useAccountBetaQuery.mockReturnValue({
+        data: accountBeta,
+      });
+
+      const { result } = renderHook(() => useAPLAvailability(), {
+        wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
+      });
+      expect(result.current.showAPL).toBe(true);
+    });
+  });
+
   describe('getLatestVersion', () => {
-    it('should return the correct latest version from a list of versions', () => {
+    it('should return the correct latest version from a list of versions in asc order', () => {
       const versions = [
         { label: '1.00', value: '1.00' },
         { label: '1.10', value: '1.10' },
@@ -76,6 +234,38 @@ describe('helper functions', () => {
       ];
       const result = getLatestVersion(versions);
       expect(result).toEqual({ label: '2.00', value: '2.00' });
+    });
+
+    it('should return the correct latest version from a list of versions in desc order', () => {
+      const versions = [
+        { label: '2.00', value: '2.00' },
+        { label: '1.10', value: '1.10' },
+        { label: '1.00', value: '1.00' },
+      ];
+      const result = getLatestVersion(versions);
+      expect(result).toEqual({ label: '2.00', value: '2.00' });
+    });
+
+    it('should return the correct latest version from a list of enterprise versions in asc order', () => {
+      const enterpriseVersions = [
+        { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
+        { label: 'v1.31.6+lke2', value: 'v1.31.6+lke2' },
+        { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
+        { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
+      ];
+      const result = getLatestVersion(enterpriseVersions);
+      expect(result).toEqual({ label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' });
+    });
+
+    it('should return the correct latest version from a list of enterprise versions in desc order', () => {
+      const enterpriseVersions = [
+        { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
+        { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
+        { label: 'v1.31.6+lke2', value: 'v1.31.6+lke2' },
+        { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
+      ];
+      const result = getLatestVersion(enterpriseVersions);
+      expect(result).toEqual({ label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' });
     });
 
     it('should handle latest version minor version correctly', () => {
@@ -87,6 +277,7 @@ describe('helper functions', () => {
       const result = getLatestVersion(versions);
       expect(result).toEqual({ label: '1.30', value: '1.30' });
     });
+
     it('should handle latest patch version correctly', () => {
       const versions = [
         { label: '1.22', value: '1.30' },
@@ -97,9 +288,220 @@ describe('helper functions', () => {
       const result = getLatestVersion(versions);
       expect(result).toEqual({ label: '1.50.1', value: '1.50.1' });
     });
+
     it('should return default fallback value when called with empty versions', () => {
       const result = getLatestVersion([]);
       expect(result).toEqual({ label: '', value: '' });
+    });
+  });
+
+  describe('getNextVersion', () => {
+    it('should get the next version when given a current standard version', () => {
+      const versions: KubernetesVersion[] = [
+        { id: '1.00' },
+        { id: '1.10' },
+        { id: '2.00' },
+      ];
+      const currentVersion = '1.10';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('2.00');
+    });
+  });
+
+  it('should get the next version when given a current enterprise version', () => {
+    const versions: KubernetesTieredVersion[] = [
+      { id: 'v1.31.1+lke4', tier: 'enterprise' },
+      { id: 'v1.31.6+lke2', tier: 'enterprise' },
+      { id: 'v1.31.6+lke3', tier: 'enterprise' },
+      { id: 'v1.31.8+lke1', tier: 'enterprise' },
+    ];
+    const currentVersion = 'v1.31.6+lke2';
+
+    const result = getNextVersion(currentVersion, versions);
+    expect(result).toEqual('v1.31.6+lke3');
+  });
+
+  it('should get the next version when given an obsolete current version', () => {
+    const versions: KubernetesVersion[] = [
+      { id: '1.16' },
+      { id: '1.17' },
+      { id: '1.18' },
+    ];
+    const currentVersion = '1.15';
+
+    const result = getNextVersion(currentVersion, versions);
+    expect(result).toEqual('1.16');
+  });
+});
+
+describe('hooks', () => {
+  describe('useIsLkeEnterpriseEnabled', () => {
+    it('returns false for feature enablement (except post-LA) if the account does not have the capability', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: [],
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: true,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: true,
+              },
+            },
+          }),
+      });
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: true,
+        isLkeEnterpriseLAFeatureEnabled: false,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: true, // This is okay, because the *LA* feature is gated by the account capability.
+      });
+    });
+
+    it('returns true for LA feature enablement if the account has the capability + enabled LA feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: ['Kubernetes Enterprise'],
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: false,
+                la: true,
+                phase2Mtc: { byoVPC: false, dualStack: false },
+                postLa: false,
+              },
+            },
+          }),
+      });
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: false,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: false,
+      });
+    });
+
+    it('returns true for Phase 2/MTC feature enablement if the account has the capability + enabled Phase 2 feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: [
+            'Kubernetes Enterprise',
+            'Kubernetes Enterprise BYO VPC',
+            'Kubernetes Enterprise Dual Stack',
+          ],
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: false,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: false,
+              },
+            },
+          }),
+      });
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: false,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: false,
+      });
+    });
+
+    it('returns true for Post-LA feature enablement if the account has the capability + enabled Post-LA feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: ['Kubernetes Enterprise'],
+        },
+      });
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: false,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: false,
+              },
+            },
+          }),
+      });
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: false,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: false,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: false,
+        isLkeEnterprisePostLAFeatureEnabled: false,
+      });
+    });
+
+    it('returns true for GA feature enablement if the account has the capabilities + enabled GA feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: [
+            'Kubernetes Enterprise',
+            'Kubernetes Enterprise BYO VPC',
+            'Kubernetes Enterprise Dual Stack',
+          ],
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, {
+            flags: {
+              lkeEnterprise2: {
+                enabled: true,
+                ga: true,
+                la: true,
+                phase2Mtc: { byoVPC: true, dualStack: true },
+                postLa: true,
+              },
+            },
+          }),
+      });
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: true,
+        isLkeEnterpriseGAFlagEnabled: true,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2BYOVPCFeatureEnabled: true,
+        isLkeEnterprisePhase2DualStackFeatureEnabled: true,
+        isLkeEnterprisePostLAFeatureEnabled: true,
+      });
     });
   });
 });

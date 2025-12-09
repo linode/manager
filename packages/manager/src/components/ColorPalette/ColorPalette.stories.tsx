@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ColorPalette } from './ColorPalette';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof ColorPalette> = {
   render: () => <ColorPalette />,

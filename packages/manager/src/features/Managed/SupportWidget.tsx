@@ -1,23 +1,27 @@
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-import { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
+import type { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
 
 export const SupportWidget = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [open, setOpen] = React.useState<boolean>(false);
   const onTicketCreated = (
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors },
+    navigate({
+      to: '/support/tickets/$ticketId',
+      params: { ticketId },
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
   };
 

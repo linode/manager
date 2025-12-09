@@ -1,9 +1,8 @@
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import React, { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import ResizeWindow from 'src/assets/icons/ResizeWindow.svg';
-
-import type { ReactNode } from 'react';
 
 interface DraggableProps {
   children?: ReactNode;
@@ -17,11 +16,11 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
     x: 40,
     y: window.innerHeight - 400,
   });
-  const [size, setSize] = useState({ height: 400, width: 600 });
-  const [rel, setRel] = useState<{ x: number; y: number } | null>(null);
+  const [size, setSize] = useState({ height: 400, width: 380 });
+  const [rel, setRel] = useState<null | { x: number; y: number }>(null);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const minWidth = 400;
-  const minHeight = 300;
+  const minWidth = 380;
+  const minHeight = 400;
 
   const onMouseDown = (e: React.MouseEvent) => {
     if (!draggable || e.button !== 0) {
@@ -95,36 +94,40 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
     <div
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          onMouseDown((e as unknown) as React.MouseEvent);
+          onMouseDown(e as unknown as React.MouseEvent);
         }
-      }}
-      style={{
-        height: `${size.height}px`,
-        left: `${position.x}px`,
-        position: 'absolute',
-        top: `${position.y}px`,
-        width: `${size.width}px`,
       }}
       ref={nodeRef}
       role="button"
+      style={
+        draggable
+          ? {
+              height: `${size.height}px`,
+              left: `${position.x}px`,
+              position: 'absolute',
+              top: `${position.y}px`,
+              width: `${size.width}px`,
+            }
+          : {}
+      }
       tabIndex={0}
     >
       {children}
       {draggable && (
         <>
           <button
-            className="dev-tools__draggable-handle"
+            className="dev-tools-button dev-tools__draggable-handle"
             onMouseDown={(e) => onMouseDown(e)}
             title="Drag to move"
           >
             <DragIndicatorIcon />
           </button>
           <button
-            className="dev-tools__resize-handle"
+            className="dev-tools-button dev-tools__resize-handle"
             onMouseDown={(e) => onResizeStart(e)}
             title="Resize"
           >
-            <ResizeWindow />
+            <ResizeWindow height={16} width={16} />
           </button>
         </>
       )}

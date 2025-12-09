@@ -1,113 +1,100 @@
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button, CircleProgress, Notice, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { styled, useTheme } from '@mui/material/styles';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
+import { formattedTypes } from './constants';
 import { FirewallDeviceTable } from './FirewallDeviceTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
 import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceLandingProps {
-  disabled: boolean;
   firewallId: number;
   firewallLabel: string;
   type: FirewallDeviceEntityType;
 }
 
-export const formattedTypes = {
-  linode: 'Linode',
-  nodebalancer: 'NodeBalancer',
-};
-
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
-    const { disabled, firewallId, firewallLabel, type } = props;
-
-    const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
-      firewallId
-    );
-
+    const { firewallId, firewallLabel, type } = props;
     const theme = useTheme();
-
-    const history = useHistory();
-    const routeMatch = useRouteMatch();
+    const navigate = useNavigate();
     const location = useLocation();
-
+    const { data: permissions, isLoading: isPermissionsLoading } =
+      usePermissions(
+        'firewall',
+        ['create_firewall_device', 'delete_firewall_device'],
+        firewallId
+      );
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
-    React.useEffect(() => {
-      if (location.pathname.endsWith('add')) {
-        setDeviceDrawerOpen(true);
-      }
-    }, [location.pathname]);
-
-    const devices =
-      allDevices?.filter((device) => device.entity.type === type) || [];
-
-    const [filteredDevices, setFilteredDevices] = React.useState<
-      FirewallDevice[]
-    >([]);
-
-    React.useEffect(() => {
-      setFilteredDevices(devices);
-    }, [allDevices]);
-
-    const [
-      isRemoveDeviceDialogOpen,
-      setIsRemoveDeviceDialogOpen,
-    ] = React.useState<boolean>(false);
-
-    const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(-1);
-
-    const selectedDevice = filteredDevices?.find(
-      (device) => device.id === selectedDeviceId
-    );
-
-    const [addDeviceDrawerOpen, setDeviceDrawerOpen] = React.useState<boolean>(
-      false
-    );
-
     const handleClose = () => {
-      setDeviceDrawerOpen(false);
-      history.push(routeMatch.url);
+      navigate({
+        params: { id: String(firewallId) },
+        to:
+          type === 'linode'
+            ? '/firewalls/$id/linodes'
+            : '/firewalls/$id/nodebalancers',
+      });
     };
 
     const handleOpen = () => {
-      setDeviceDrawerOpen(true);
-      history.push(routeMatch.url + '/add');
+      navigate({
+        params: { id: String(firewallId) },
+        to:
+          type === 'linode'
+            ? '/firewalls/$id/linodes/add'
+            : '/firewalls/$id/nodebalancers/add',
+      });
     };
 
     const [searchText, setSearchText] = React.useState('');
 
     const filter = (value: string) => {
       setSearchText(value);
-      const filtered = devices?.filter((device) => {
-        return device.entity.label.toLowerCase().includes(value.toLowerCase());
-      });
-      setFilteredDevices(filtered ?? []);
     };
+    const [device, setDevice] = React.useState<FirewallDevice | undefined>(
+      undefined
+    );
 
     const formattedType = formattedTypes[type];
+    const isCreateDeviceDisabled = !permissions.create_firewall_device;
+    const isRemoveDeviceDisabled = !permissions.delete_firewall_device;
+
+    // If the user initiates a history -/+ to a /remove route and the device is not found,
+    // push navigation to the appropriate /linodes or /nodebalancers route.
+    React.useEffect(() => {
+      if (!device && location.pathname.endsWith('remove')) {
+        navigate({
+          params: { id: String(firewallId) },
+          to:
+            type === 'linode'
+              ? '/firewalls/$id/linodes'
+              : '/firewalls/$id/nodebalancers',
+        });
+      }
+    }, [device, location.pathname, firewallId, type, navigate]);
+
+    if (isPermissionsLoading) {
+      return <CircleProgress />;
+    }
 
     return (
+      // TODO: Matching old behavior. Do we want separate messages for when the user can't create or remove devices?
       <>
-        {disabled ? (
+        {permissions && isCreateDeviceDisabled && isRemoveDeviceDisabled ? (
           <Notice
             text={
               "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
             }
-            important
             variant="error"
           />
         ) : null}
@@ -121,20 +108,22 @@ export const FirewallDeviceLanding = React.memo(
             A {formattedType} can only be assigned to a single Firewall.
           </StyledTypography>
           <Grid
-            alignItems="center"
             container
             direction="row"
-            justifyContent="space-between"
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField
-                onSearch={(val) => {
-                  filter(val);
-                }}
                 debounceTime={250}
                 expand={true}
                 hideLabel
                 label=""
+                onSearch={(val) => {
+                  filter(val);
+                }}
                 placeholder={`Search ${formattedType}s`}
                 value={searchText}
               />
@@ -143,7 +132,7 @@ export const FirewallDeviceLanding = React.memo(
               <Button
                 buttonType="primary"
                 data-testid="add-device-button"
-                disabled={disabled}
+                disabled={isCreateDeviceDisabled}
                 onClick={handleOpen}
               >
                 Add {formattedType}s to Firewall
@@ -152,36 +141,52 @@ export const FirewallDeviceLanding = React.memo(
           </Grid>
         </Grid>
         <FirewallDeviceTable
-          triggerRemoveDevice={(id) => {
-            setSelectedDeviceId(id);
-            setIsRemoveDeviceDialogOpen(true);
-          }}
           deviceType={type}
-          devices={filteredDevices ?? []}
-          disabled={disabled}
-          error={error ?? undefined}
-          loading={isLoading}
+          disabled={isRemoveDeviceDisabled}
+          firewallId={firewallId}
+          handleRemoveDevice={(device) => {
+            setDevice(device);
+            navigate({
+              params: { id: String(firewallId) },
+              to:
+                type === 'linode'
+                  ? '/firewalls/$id/linodes/remove'
+                  : '/firewalls/$id/nodebalancers/remove',
+            });
+          }}
+          searchText={searchText.trim().toLowerCase()}
+          type={type}
         />
         {type === 'linode' ? (
           <AddLinodeDrawer
+            disabled={isCreateDeviceDisabled}
             helperText={helperText}
             onClose={handleClose}
-            open={addDeviceDrawerOpen}
+            open={location.pathname.endsWith('add')}
           />
         ) : (
           <AddNodebalancerDrawer
+            disabled={isCreateDeviceDisabled}
             helperText={helperText}
             onClose={handleClose}
-            open={addDeviceDrawerOpen}
+            open={location.pathname.endsWith('add')}
           />
         )}
         <RemoveDeviceDialog
-          device={selectedDevice}
+          device={device}
           firewallId={firewallId}
           firewallLabel={firewallLabel}
-          onClose={() => setIsRemoveDeviceDialogOpen(false)}
+          onClose={() =>
+            navigate({
+              params: { id: String(firewallId) },
+              to:
+                type === 'linode'
+                  ? '/firewalls/$id/linodes'
+                  : '/firewalls/$id/nodebalancers',
+            })
+          }
           onService={undefined}
-          open={isRemoveDeviceDialogOpen}
+          open={location.pathname.endsWith('remove')}
         />
       </>
     );

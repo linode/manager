@@ -1,3 +1,4 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   screen,
   waitFor,
@@ -8,18 +9,13 @@ import * as React from 'react';
 
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import { accountSettingsFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
-import { profileFactory } from 'src/factories/profile';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  LONGVIEW_FREE_ID,
-  LongviewPlans,
-  LongviewPlansProps,
-  formatPrice,
-} from './LongviewPlans';
+import { formatPrice, LONGVIEW_FREE_ID, LongviewPlans } from './LongviewPlans';
+
+import type { LongviewPlansProps } from './LongviewPlans';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 
@@ -89,7 +85,6 @@ describe('LongviewPlans', () => {
     // calls to `act()`, which can lead to undefined behavior.
     for (let i = 0; i < mockLongviewSubscriptions.length; i += 1) {
       const sub = mockLongviewSubscriptions[i];
-      // eslint-disable-next-line no-await-in-loop
       await testRow(
         sub.id,
         sub.label,
@@ -141,7 +136,7 @@ describe('LongviewPlans', () => {
       timeout: 5000,
     });
 
-    screen.getByText(/don't have permission/gi);
+    screen.getByText(/don't have permission/i);
   });
 
   it('displays a message id the account is managed', async () => {

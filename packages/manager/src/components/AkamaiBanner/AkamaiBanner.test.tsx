@@ -1,9 +1,9 @@
+import { Button } from '@linode/ui';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Button } from '../Button/Button';
 import { AkamaiBanner } from './AkamaiBanner';
 
 import type { Flags } from 'src/featureFlags';
@@ -25,7 +25,7 @@ describe('AkamaiBanner', () => {
 
   it('should display text and link', () => {
     const props = {
-      link: { text: 'Link text', url: 'https://example.com' },
+      link: { text: 'Link text', url: 'https://example.com/' },
       text: 'Example text',
     };
 

@@ -1,4 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { roundTo } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,16 +10,12 @@ import {
   generateNetworkUnits,
   statMax,
 } from 'src/features/Longview/shared/utilities';
-import { roundTo } from 'src/utilities/roundTo';
 
-import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import {
-  StyledItemGrid,
-  StyledRootPaper,
-  StyledSmallGraphGrid,
-} from '../CommonStyles.styles';
+import { StyledRootPaper, StyledSmallGraphGrid } from '../CommonStyles.styles';
 import { ProcessGraphs } from '../ProcessGraphs';
+
+import type { ApacheResponse, LongviewProcesses } from '../../../request.types';
 
 interface Props {
   data?: ApacheResponse;
@@ -91,8 +88,9 @@ export const ApacheGraphs = React.memo((props: Props) => {
   return (
     <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
-        <StyledItemGrid xs={12}>
+        <Grid size={{ xs: 12 }}>
           <LongviewLineGraph
+            ariaLabel="Requests Per Second Graph"
             data={[
               {
                 backgroundColor: theme.graphs.requests,
@@ -101,16 +99,16 @@ export const ApacheGraphs = React.memo((props: Props) => {
                 label: 'Requests',
               },
             ]}
-            ariaLabel="Requests Per Second Graph"
             subtitle="requests/s"
             title="Requests"
             {...graphProps}
           />
-        </StyledItemGrid>
-        <StyledItemGrid xs={12}>
+        </Grid>
+        <Grid size={{ xs: 12 }}>
           <Grid container direction="row">
-            <StyledSmallGraphGrid sm={6} xs={12}>
+            <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Throughput Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.lightGreen,
@@ -127,7 +125,6 @@ export const ApacheGraphs = React.memo((props: Props) => {
                 formatData={(value: number) =>
                   roundTo(convertNetworkToUnit(value * 8, networkUnit))
                 }
-                ariaLabel="Throughput Graph"
                 formatTooltip={formatNetworkTooltip}
                 subtitle={`${networkUnit}/s`}
                 title="Throughput"
@@ -135,8 +132,9 @@ export const ApacheGraphs = React.memo((props: Props) => {
                 {...graphProps}
               />
             </StyledSmallGraphGrid>
-            <StyledSmallGraphGrid sm={6} xs={12}>
+            <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Workers Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.workers.waiting,
@@ -199,13 +197,12 @@ export const ApacheGraphs = React.memo((props: Props) => {
                     label: 'Cleanup',
                   },
                 ]}
-                ariaLabel="Workers Graph"
                 title="Workers"
                 {...graphProps}
               />
             </StyledSmallGraphGrid>
           </Grid>
-        </StyledItemGrid>
+        </Grid>
         <ProcessGraphs
           data={processesData}
           end={end}

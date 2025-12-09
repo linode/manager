@@ -1,20 +1,20 @@
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useUpdateSubnetMutation } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
+import type { APIError, ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
 }
 
@@ -22,64 +22,79 @@ const IP_HELPER_TEXT =
   'Once a subnet is created its IP range cannot be edited.';
 
 export const SubnetEditDrawer = (props: Props) => {
-  const { onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, subnetError, vpcId } = props;
 
   const {
-    error,
     isPending,
     mutateAsync: updateSubnet,
-    reset,
+    reset: resetMutation,
   } = useUpdateSubnetMutation(vpcId, subnet?.id ?? -1);
 
-  const form = useFormik<ModifySubnetPayload>({
-    enableReinitialize: true,
-    initialValues: {
+  const {
+    control,
+    formState: { errors, isDirty, isSubmitting },
+    handleSubmit,
+    reset: resetForm,
+    setError,
+  } = useForm<ModifySubnetPayload>({
+    mode: 'onBlur',
+    resolver: yupResolver(modifySubnetSchema),
+    values: {
       label: subnet?.label ?? '',
-    },
-    async onSubmit(values) {
-      await updateSubnet(values);
-      onClose();
     },
   });
 
-  React.useEffect(() => {
-    if (open) {
-      form.resetForm();
-      reset();
+  const handleDrawerClose = () => {
+    onClose();
+    resetForm();
+    resetMutation();
+  };
+
+  const onSubmit = async (values: ModifySubnetPayload) => {
+    try {
+      await updateSubnet(values);
+      handleDrawerClose();
+    } catch (errors) {
+      for (const error of errors) {
+        setError(error?.field ?? 'root', { message: error.reason });
+      }
     }
-  }, [open]);
-
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
-
-  // there isn't a 'view VPC/Subnet' grant that does anything, so all VPCs get returned even for restricted users
-  // with permissions set to 'None'. Therefore, we're treating those as read_only as well
-  const readOnly =
-    Boolean(profile?.restricted) &&
-    (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
-
-  const errorMap = getErrorMap(['label'], error);
+  };
+  // TODO: change 'update_vpc' to 'update_vpc_subnet' once it's available
+  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Subnet">
-      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-      {readOnly && (
+    <Drawer
+      error={subnetError}
+      isFetching={isFetching}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit Subnet"
+    >
+      {errors.root?.message && (
+        <Notice text={errors.root.message} variant="error" />
+      )}
+      {!permissions.update_vpc && (
         <Notice
-          important
           text={`You don't have permissions to edit ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
         />
       )}
-      <form onSubmit={form.handleSubmit}>
-        <TextField
-          disabled={readOnly}
-          errorText={errorMap.label}
-          label="Label"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          control={control}
           name="label"
-          onChange={form.handleChange}
-          value={form.values.label}
+          render={({ field, fieldState }) => (
+            <TextField
+              disabled={!permissions.update_vpc}
+              errorText={fieldState.error?.message}
+              label="Label"
+              name="label"
+              onBlur={field.onBlur}
+              onChange={field.onChange}
+              value={field.value}
+            />
+          )}
         />
         <TextField
           disabled
@@ -90,12 +105,12 @@ export const SubnetEditDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',
-            disabled: !form.dirty,
+            disabled: !isDirty || !permissions.update_vpc,
             label: 'Save',
-            loading: isPending,
+            loading: isPending || isSubmitting,
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleDrawerClose }}
         />
       </form>
     </Drawer>

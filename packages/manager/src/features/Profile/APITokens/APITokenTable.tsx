@@ -1,9 +1,11 @@
-import { Token } from '@linode/api-v4/lib/profile';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  useAppTokensQuery,
+  usePersonalAccessTokensQuery,
+  useProfile,
+} from '@linode/queries';
+import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -16,28 +18,19 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useProfile } from 'src/queries/profile/profile';
-import {
-  useAppTokensQuery,
-  usePersonalAccessTokensQuery,
-} from 'src/queries/profile/tokens';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { APITokenMenu } from './APITokenMenu';
-import {
-  StyledAddNewWrapper,
-  StyledHeadline,
-  StyledRootContainer,
-} from './APITokenTable.styles';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import { RevokeTokenDialog } from './RevokeTokenDialog';
 import { isWayInTheFuture } from './utils';
 import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
+
+import type { Token } from '@linode/api-v4';
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 
@@ -56,15 +49,22 @@ export const APITokenTable = (props: Props) => {
   const { title, type } = props;
 
   const { data: profile } = useProfile();
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'created',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'created',
+      },
+      from: '/profile/tokens',
     },
-    `${PREFERENCE_KEY}-order}`,
-    type === 'OAuth Client Token' ? 'oauth' : 'token'
-  );
-  const pagination = usePagination(1, PREFERENCE_KEY);
+    preferenceKey: `${PREFERENCE_KEY}-order`,
+    prefix: type === 'OAuth Client Token' ? 'oauth' : 'token',
+  });
+  const pagination = usePaginationV2({
+    initialPage: 1,
+    preferenceKey: PREFERENCE_KEY,
+    currentRoute: '/profile/tokens',
+  });
 
   const queryMap = {
     'OAuth Client Token': useAppTokensQuery,
@@ -185,32 +185,34 @@ export const APITokenTable = (props: Props) => {
 
   return (
     <Box>
-      <StyledRootContainer
-        alignItems="center"
-        container
-        justifyContent="space-between"
-        spacing={2}
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          justifyContent: 'space-between',
+          minHeight: '42px',
+          padding: 0.75,
+          paddingLeft: 2,
+        }}
       >
-        <Grid>
-          <StyledHeadline data-qa-table={type} variant="h3">
-            {title}
-          </StyledHeadline>
-        </Grid>
-        <StyledAddNewWrapper>
-          {type === 'Personal Access Token' && (
-            <Button
-              tooltipText={
-                isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
-              }
-              buttonType="primary"
-              disabled={isProxyUser}
-              onClick={() => setIsCreateOpen(true)}
-            >
-              Create a Personal Access Token
-            </Button>
-          )}
-        </StyledAddNewWrapper>
-      </StyledRootContainer>
+        <Typography data-qa-table={type} variant="h3">
+          {title}
+        </Typography>
+        {type === 'Personal Access Token' && (
+          <Button
+            buttonType="primary"
+            disabled={isProxyUser}
+            onClick={() => setIsCreateOpen(true)}
+            tooltipText={
+              isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
+            }
+          >
+            Create a Personal Access Token
+          </Button>
+        )}
+      </Paper>
       <Table aria-label={`List of ${title}`}>
         <TableHead>
           <TableRow data-qa-table-head>

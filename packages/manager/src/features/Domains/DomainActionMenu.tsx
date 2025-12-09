@@ -1,12 +1,15 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Theme, useTheme } from '@mui/material/styles';
+import { splitAt } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { Domain } from '@linode/api-v4/lib/domains';
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 const useStyles = makeStyles()(() => ({
   button: {
@@ -91,7 +94,7 @@ export const DomainActionMenu = React.memo((props: DomainActionMenuProps) => {
         })}
       <ActionMenu
         actionsList={menuActions}
-        ariaLabel={`Action menu for Domain ${domain}`}
+        ariaLabel={`Action menu for Domain ${domain.domain}`}
       />
     </>
   );

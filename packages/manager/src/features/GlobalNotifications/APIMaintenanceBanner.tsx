@@ -1,13 +1,14 @@
+import { queryPresets, useMaintenanceQuery } from '@linode/queries';
+import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
-import { SuppliedMaintenanceData } from 'src/featureFlags';
-import { queryPresets } from 'src/queries/base';
-import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
+import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import type { Maintenance } from '@linode/queries';
+import type { SuppliedMaintenanceData } from 'src/featureFlags';
 
 interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
@@ -16,9 +17,12 @@ interface Props {
 export const APIMaintenanceBanner = React.memo((props: Props) => {
   const { suppliedMaintenances } = props;
 
-  const { data: maintenancesData } = useMaintenanceQuery({
-    ...queryPresets.oneTimeFetch,
-  });
+  const { data: maintenancesData } = useMaintenanceQuery(
+    LINODE_STATUS_PAGE_URL,
+    {
+      ...queryPresets.oneTimeFetch,
+    }
+  );
   const maintenances = maintenancesData?.scheduled_maintenances ?? [];
 
   if (
@@ -63,7 +67,6 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
 
     return (
       <DismissibleBanner
-        important
         key={scheduledAPIMaintenance.id}
         preferenceKey={scheduledAPIMaintenance.id}
         variant="warning"
@@ -90,7 +93,6 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
   };
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {scheduledAPIMaintenances.map((scheduledAPIMaintenance) =>
         renderBanner(scheduledAPIMaintenance)

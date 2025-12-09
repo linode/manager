@@ -22,11 +22,12 @@ export const backup: PartialEventMap<'backups'> = {
   backups_restore: {
     failed: (e) => (
       <>
-        Backup could <strong>not</strong> be <strong>restored</strong> for
+        Backup could <strong>not</strong> be <strong>restored</strong> for{' '}
         {e.entity!.label}.{' '}
-        <Link to="https://www.linode.com/docs/products/storage/backups/#limits-and-considerations">
-          Learn more about limits and considerations.
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/backup-service#limits-and-considerations">
+          Learn more about limits and considerations
         </Link>
+        .
       </>
     ),
     finished: (e) => (

@@ -1,17 +1,20 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview/types';
+import {
+  Box,
+  CircleProgress,
+  ErrorState,
+  LinkButton,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { Props as LVProps } from 'src/containers/longview.container';
 
 import { LongviewListRows } from './LongviewListRows';
+
+import type { LongviewClient } from '@linode/api-v4/lib/longview/types';
+import type { Props as LVProps } from 'src/containers/longview.container';
 
 type LongviewProps = Omit<
   LVProps,
@@ -78,21 +81,21 @@ export const LongviewList = React.memo((props: Props) => {
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
       <Paper
+        data-testid="no-client-list"
         sx={{
           alignItems: 'center',
           display: 'flex',
           height: '20em',
           justifyContent: 'center',
         }}
-        data-testid="no-client-list"
       >
         <Typography sx={{ fontSize: '1.1em' }} variant="body1">
           {userCanCreateLongviewClient ? (
             <React.Fragment>
               You have no Longview clients configured.{' '}
-              <StyledLinkButton onClick={createLongviewClient}>
+              <LinkButton onClick={createLongviewClient}>
                 Click here to add one.
-              </StyledLinkButton>
+              </LinkButton>
             </React.Fragment>
           ) : (
             'You have no Longview clients configured.'

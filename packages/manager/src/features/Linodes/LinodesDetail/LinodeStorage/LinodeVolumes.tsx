@@ -1,12 +1,15 @@
+import {
+  useLinodeQuery,
+  useLinodeVolumesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
+import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -16,52 +19,56 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { CloneVolumeDrawer } from 'src/features/Volumes/CloneVolumeDrawer';
-import { DeleteVolumeDialog } from 'src/features/Volumes/DeleteVolumeDialog';
-import { DetachVolumeDialog } from 'src/features/Volumes/DetachVolumeDialog';
-import { EditVolumeDrawer } from 'src/features/Volumes/EditVolumeDrawer';
-import { ResizeVolumeDrawer } from 'src/features/Volumes/ResizeVolumeDrawer';
-import { VolumeDetailsDrawer } from 'src/features/Volumes/VolumeDetailsDrawer';
-import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawer/LinodeVolumeAddDrawer';
-import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { DeleteVolumeDialog } from 'src/features/Volumes/Dialogs/DeleteVolumeDialog';
+import { DetachVolumeDialog } from 'src/features/Volumes/Dialogs/DetachVolumeDialog';
+import { VolumeTableRow } from 'src/features/Volumes/Partials/VolumeTableRow';
+import { CloneVolumeDrawer } from 'src/features/Volumes/VolumeDrawers/CloneVolumeDrawer/CloneVolumeDrawer';
+import { EditVolumeDrawer } from 'src/features/Volumes/VolumeDrawers/EditVolumeDrawer/EditVolumeDrawer';
+import { ManageTagsDrawer } from 'src/features/Volumes/VolumeDrawers/ManageTagsDrawer/ManageTagsDrawer';
+import { ResizeVolumeDrawer } from 'src/features/Volumes/VolumeDrawers/ResizeVolumeDrawer';
+import { VolumeDetailsDrawer } from 'src/features/Volumes/VolumeDrawers/VolumeDetailsDrawer';
+import { LinodeVolumeAddDrawer } from 'src/features/Volumes/VolumeDrawers/VolumeDrawer/LinodeVolumeAddDrawer';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import type { Volume } from '@linode/api-v4';
 
 export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id,
-  });
-
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'label',
-    },
-    `${preferenceKey}-order`
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linode?.id
   );
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'label',
+      },
+      from: '/linodes/$linodeId/storage',
+    },
+    preferenceKey: `${preferenceKey}-order`,
+    prefix: preferenceKey,
+  });
 
   const filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    currentRoute: '/linodes/$linodeId/storage',
+    initialPage: 1,
+    preferenceKey,
+  });
 
   const regions = useRegionsQuery().data ?? [];
 
@@ -74,10 +81,11 @@ export const LinodeVolumes = () => {
     filter
   );
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
+  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] =
+    React.useState(false);
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
@@ -109,6 +117,11 @@ export const LinodeVolumes = () => {
     setIsEditDrawerOpen(true);
   };
 
+  const handleManageTags = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setisManageTagsDrawerOpen(true);
+  };
+
   const handleResize = (volume: Volume) => {
     setSelectedVolumeId(volume.id);
     setIsResizeDrawerOpen(true);
@@ -135,10 +148,10 @@ export const LinodeVolumes = () => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={numColumns}
           responsive={{
             3: { xsDown: true },
           }}
-          columns={numColumns}
           rows={1}
         />
       );
@@ -159,6 +172,7 @@ export const LinodeVolumes = () => {
               handleDetach: () => handleDetach(volume),
               handleDetails: () => handleDetails(volume),
               handleEdit: () => handleEdit(volume),
+              handleManageTags: () => handleManageTags(volume),
               handleResize: () => handleResize(volume),
               handleUpgrade: () => null,
             }}
@@ -167,6 +181,7 @@ export const LinodeVolumes = () => {
             }
             isDetailsPageRow
             key={volume.id}
+            linodeCapabilities={linode?.capabilities}
             volume={volume}
           />
         );
@@ -191,8 +206,13 @@ export const LinodeVolumes = () => {
         <Typography variant="h3">Volumes</Typography>
         <Button
           buttonType="primary"
-          disabled={isLinodesGrantReadOnly}
+          disabled={!linodePermissions?.update_linode}
           onClick={handleCreateVolume}
+          tooltipText={
+            !linodePermissions?.update_linode
+              ? 'You do not have permission to create or attach a volume to this Linode.'
+              : undefined
+          }
         >
           Add Volume
         </Button>
@@ -230,7 +250,7 @@ export const LinodeVolumes = () => {
             {isBlockStorageEncryptionFeatureEnabled && (
               <TableCell>Encryption</TableCell>
             )}
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>
@@ -259,6 +279,11 @@ export const LinodeVolumes = () => {
       <EditVolumeDrawer
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
+        volume={selectedVolume}
+      />
+      <ManageTagsDrawer
+        onClose={() => setisManageTagsDrawerOpen(false)}
+        open={isManageTagsDrawerOpen}
         volume={selectedVolume}
       />
       <ResizeVolumeDrawer

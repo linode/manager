@@ -1,7 +1,9 @@
-import { API_ROOT } from '../constants';
+import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Region, RegionAvailability } from './types';
+import { Region } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { RegionAvailability, RegionVPCAvailability } from './types';
 
 /**
  * getRegions
@@ -17,9 +19,9 @@ import { Region, RegionAvailability } from './types';
  */
 export const getRegions = (params?: Params) =>
   Request<Page<Region>>(
-    setURL(`${API_ROOT}/regions`),
+    setURL(`${BETA_API_ROOT}/regions`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -32,8 +34,8 @@ export const getRegions = (params?: Params) =>
  */
 export const getRegion = (regionId: string) =>
   Request<Region>(
-    setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}`),
-    setMethod('GET')
+    setURL(`${BETA_API_ROOT}/regions/${encodeURIComponent(regionId)}`),
+    setMethod('GET'),
   );
 
 export { Region };
@@ -45,10 +47,10 @@ export { Region };
  */
 export const getRegionAvailabilities = (params?: Params, filter?: Filter) =>
   Request<Page<RegionAvailability>>(
-    setURL(`${API_ROOT}/regions/availability`),
+    setURL(`${BETA_API_ROOT}/regions/availability`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -60,6 +62,34 @@ export const getRegionAvailabilities = (params?: Params, filter?: Filter) =>
  */
 export const getRegionAvailability = (regionId: string) =>
   Request<RegionAvailability[]>(
-    setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}/availability`),
-    setMethod('GET')
+    setURL(
+      `${BETA_API_ROOT}/regions/${encodeURIComponent(regionId)}/availability`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * getRegionsVPCAvailabilities
+ *
+ * Returns the availability of VPC IPv6 prefix lengths for all regions.
+ */
+export const getRegionsVPCAvailabilities = (params?: Params, filter?: Filter) =>
+  Request<Page<RegionVPCAvailability>>(
+    setURL(`${BETA_API_ROOT}/regions/vpc-availability`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  );
+
+/**
+ * getRegionVPCAvailability
+ *
+ * Returns the availability of VPC IPv6 prefix lengths for a specified region.
+ */
+export const getRegionVPCAvailability = (regionId: string) =>
+  Request<RegionVPCAvailability>(
+    setURL(
+      `${BETA_API_ROOT}/regions/${encodeURIComponent(regionId)}/vpc-availability`,
+    ),
+    setMethod('GET'),
   );

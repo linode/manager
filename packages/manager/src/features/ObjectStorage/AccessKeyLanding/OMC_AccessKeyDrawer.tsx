@@ -1,3 +1,13 @@
+import { useAccountSettings } from '@linode/queries';
+import {
+  ActionsPanel,
+  CircleProgress,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { sortByString } from '@linode/utilities';
 import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
@@ -5,18 +15,9 @@ import {
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getRegionsByRegionId } from 'src/utilities/regions';
-import { sortByString } from 'src/utilities/sort-by';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -58,11 +59,11 @@ export interface AccessKeyDrawerProps {
 // Access key scopes displayed in the drawer can have no permission or "No Access" selected, which are not valid API permissions.
 export interface DisplayedAccessKeyScope
   extends Omit<ObjectStorageKeyBucketAccess, 'permissions'> {
-  permissions: ObjectStorageKeyBucketAccessPermissions | null;
+  permissions: null | ObjectStorageKeyBucketAccessPermissions;
 }
 
 export interface FormState {
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   label: string;
   regions: string[];
 }
@@ -74,20 +75,20 @@ export interface FormState {
  * sorted by region.
  */
 
-export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
-  a: DisplayedAccessKeyScope,
-  b: DisplayedAccessKeyScope
-) => {
-  if (!a.region || !b.region) {
-    return 0;
-  }
+export const sortByRegion =
+  (regionLookup: { [key: string]: Region }) =>
+  (a: DisplayedAccessKeyScope, b: DisplayedAccessKeyScope) => {
+    if (!a.region || !b.region) {
+      return 0;
+    }
 
-  return sortByString(
-    regionLookup[a.region].label,
-    regionLookup[b.region].label,
-    'asc'
-  );
-};
+    return sortByString(
+      regionLookup[a.region].label,
+      regionLookup[b.region].label,
+      'asc'
+    );
+  };
+
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}
@@ -102,18 +103,10 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const {
-    isRestrictedUser,
-    mode,
-    objectStorageKey,
-    onClose,
-    onSubmit,
-    open,
-  } = props;
+  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
+    props;
 
-  const { data: regions } = useRegionsQuery();
-
-  const regionsLookup = regions && getRegionsByRegionId(regions);
+  const { regionsByIdMap } = useObjectStorageRegions();
 
   const {
     data: objectStorageBuckets,
@@ -158,6 +151,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
       // If any/all permissions are 'none' or null, don't include them in the response.
       const access = values.bucket_access ?? [];
+
       const payload = limitedAccessChecked
         ? {
             ...values,
@@ -168,6 +162,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             ),
           }
         : { ...values, bucket_access: null };
+
       const updatePayload = generateUpdatePayload(values, initialValues);
 
       if (mode !== 'creating') {
@@ -210,9 +205,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     const bucketsInRegions = buckets?.filter(
       (bucket) => bucket.region && formik.values.regions.includes(bucket.region)
     );
+
     formik.setFieldValue(
       'bucket_access',
-      getDefaultScopes(bucketsInRegions, regionsLookup)
+      getDefaultScopes(bucketsInRegions, regionsByIdMap)
     );
   };
 
@@ -243,8 +239,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
           {isRestrictedUser && (
             <Notice
-              important
-              text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
+              text="You don't have permissions to create an Access Key. Please contact an account administrator for details."
               variant="error"
             />
           )}
@@ -255,7 +250,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               Generate an Access Key for use with an{' '}
               <Link
                 className="h-u"
-                to="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+                to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools"
               >
                 S3-compatible client
               </Link>
@@ -284,24 +279,23 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             value={formik.values.label}
           />
           <AccessKeyRegions
+            disabled={isRestrictedUser}
             error={
               formik.touched.regions
                 ? (formik.errors.regions as string)
                 : undefined
             }
+            name="regions"
             onChange={(values) => {
               const bucketsInRegions = buckets?.filter(
                 (bucket) => bucket.region && values.includes(bucket.region)
               );
               formik.setFieldValue(
                 'bucket_access',
-                getDefaultScopes(bucketsInRegions, regionsLookup)
+                getDefaultScopes(bucketsInRegions, regionsByIdMap)
               );
               formik.setFieldValue('regions', values);
-              formik.setFieldTouched('regions', true, true);
             }}
-            disabled={isRestrictedUser}
-            name="regions"
             required
             selectedRegion={formik.values.regions}
           />

@@ -4,20 +4,11 @@ JavaScript client for the [Linode APIv4](https://developers.linode.com/api/v4)
 
 ## Installation
 
-```
-$ npm install @linode/api-v4
-```
-
-or with yarn:
-
-```
-$ yarn add @linode/api-v4
-```
-
-or with a CDN:
-
-```js
-<script src="https://unpkg.com/@linode/api-v4/lib/index.global.js"></script>
+```bash
+npm install @linode/api-v4 # using npm
+yarn add @linode/api-v4    # using yarn
+pnpm add @linode/api-v4    # using pnpm
+bun add @linode/api-v4     # using bun
 ```
 
 ## Usage
@@ -141,7 +132,7 @@ pagination and filter parameters to the API:
 
 ```js
 // Return page 2 of Linodes, with a page size of 100:
-getLinodes({ page: 2, pageSize: 100 });
+getLinodes({ page: 2, page_size: 100 });
 
 // Return all public Linode Images:
 getImages({}, { is_public: true });

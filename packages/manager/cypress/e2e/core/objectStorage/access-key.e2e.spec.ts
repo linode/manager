@@ -2,28 +2,29 @@
  * @file End-to-end tests for Object Storage Access Key operations.
  */
 
-import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
-import { authenticate } from 'support/api/authentication';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
+import { authenticate } from 'support/api/authentication';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import {
-  interceptGetAccessKeys,
   interceptCreateAccessKey,
+  interceptGetAccessKeys,
 } from 'support/intercepts/object-storage';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { mockGetAccount } from 'support/intercepts/account';
+import { chooseCluster } from 'support/util/clusters';
+import { randomLabel } from 'support/util/random';
+
 import { accountFactory } from 'src/factories';
+import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
 
 authenticate();
 describe('object storage access key end-to-end tests', () => {
   before(() => {
     cleanUp(['obj-buckets', 'obj-access-keys']);
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*
@@ -39,11 +40,11 @@ describe('object storage access key end-to-end tests', () => {
     interceptGetAccessKeys().as('getKeys');
     interceptCreateAccessKey().as('createKey');
 
-    mockGetAccount(accountFactory.build({ capabilities: [] }));
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
-    mockGetFeatureFlagClientstream();
 
     cy.visitWithLogin('/object-storage/access-keys');
     cy.wait('@getKeys');
@@ -58,7 +59,8 @@ describe('object storage access key end-to-end tests', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(keyLabel);
+        cy.findByText('Label').click();
+        cy.focused().type(keyLabel);
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
           .should('be.visible')
@@ -119,10 +121,10 @@ describe('object storage access key end-to-end tests', () => {
    */
   it('can create an access key with limited access - e2e', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-east-1';
+    const bucketClusterObj = chooseCluster();
     const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
+      cluster: bucketClusterObj.id,
       label: bucketLabel,
-      cluster: bucketCluster,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
       region: undefined,
     });
@@ -134,11 +136,13 @@ describe('object storage access key end-to-end tests', () => {
     ).then(() => {
       const keyLabel = randomLabel();
 
-      mockGetAccount(accountFactory.build({ capabilities: [] }));
+      mockGetAccount(
+        accountFactory.build({ capabilities: ['Object Storage'] })
+      );
       mockAppendFeatureFlags({
-        objMultiCluster: makeFeatureFlagData(false),
+        objMultiCluster: false,
+        objectStorageGen2: { enabled: false },
       });
-      mockGetFeatureFlagClientstream();
 
       interceptGetAccessKeys().as('getKeys');
       interceptCreateAccessKey().as('createKey');
@@ -156,7 +160,8 @@ describe('object storage access key end-to-end tests', () => {
         .findByTitle('Create Access Key')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Label').click().type(keyLabel);
+          cy.findByText('Label').click();
+          cy.focused().type(keyLabel);
           cy.findByLabelText('Limited Access').click();
           cy.findByLabelText('Select read-only for all').click();
 
@@ -204,7 +209,7 @@ describe('object storage access key end-to-end tests', () => {
             });
         });
 
-        const permissionLabel = `This token has read-only access for ${bucketCluster}-${bucketLabel}`;
+        const permissionLabel = `This token has read-only access for ${bucketClusterObj.id}-${bucketLabel}`;
         cy.findByLabelText(permissionLabel).should('be.visible');
       });
     });

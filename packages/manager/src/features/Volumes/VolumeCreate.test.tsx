@@ -1,18 +1,18 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VolumeCreate } from './VolumeCreate';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const encryptVolumeSectionHeader = 'Encrypt Volume';
 
 describe('VolumeCreate', () => {
   /* @TODO BSE: Remove feature flagging/conditionality once BSE is fully rolled out */
 
-  it('should not have a "Volume Encryption" section visible if the user has the account capability but the feature flag is off', () => {
+  it('should not have a "Volume Encryption" section visible if the user has the account capability but the feature flag is off', async () => {
     server.use(
       http.get(accountEndpoint, () => {
         return HttpResponse.json(
@@ -28,7 +28,7 @@ describe('VolumeCreate', () => {
     expect(queryByText(encryptVolumeSectionHeader)).not.toBeInTheDocument();
   });
 
-  it('should not have a "Volume Encryption" section visible if the user does not have the account capability but the feature flag is on', () => {
+  it('should not have a "Volume Encryption" section visible if the user does not have the account capability but the feature flag is on', async () => {
     server.use(
       http.get(accountEndpoint, () => {
         return HttpResponse.json(accountFactory.build({ capabilities: [] }));

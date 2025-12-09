@@ -1,4 +1,5 @@
-import { fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { dashboardFactory } from 'src/factories';
@@ -8,7 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
 
 const dashboardLabel = 'Factory Dashboard-1';
-const selectDashboardLabel = 'Select Dashboard';
+const selectDashboardLabel = 'Select a Dashboard';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
   useLoadUserPreferences: vi.fn().mockReturnValue({}),
@@ -33,6 +34,7 @@ vi.mock('src/queries/cloudpulse/dashboards', async () => {
 });
 const mockDashboard = dashboardFactory.build();
 
+const message = 'Select a dashboard and apply filters to visualize metrics.';
 queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
   data: {
     data: mockDashboard,
@@ -48,31 +50,34 @@ vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
 });
 describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if dashboard not selected', () => {
-    const screen = renderWithTheme(<CloudPulseDashboardLanding />);
+    renderWithTheme(<CloudPulseDashboardLanding />);
+    const text = screen.getByText('metrics');
+    expect(text).toBeInTheDocument();
 
     expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       'value',
       ''
     );
 
-    expect(
-      screen.getByText('Select Dashboard and filters to visualize metrics.')
-    ).toBeDefined();
+    const messageComponent = screen.getByText(message);
+    expect(messageComponent).toBeDefined();
   });
 
-  it('should render error placeholder if some dashboard is selected and filter config is not present', () => {
-    const screen = renderWithTheme(<CloudPulseDashboardLanding />);
+  it('should render error placeholder if some dashboard is selected and filter config is not present', async () => {
+    renderWithTheme(<CloudPulseDashboardLanding />);
 
-    fireEvent.change(screen.getByPlaceholderText(selectDashboardLabel), {
-      target: { value: 'a' },
+    await userEvent.type(
+      screen.getByPlaceholderText(selectDashboardLabel),
+      'a'
+    );
+
+    const option = screen.getByRole('option', {
+      name: dashboardLabel,
     });
-
-    expect(
-      screen.getByRole('option', { name: dashboardLabel })
-    ).toBeInTheDocument();
+    expect(option).toBeInTheDocument();
   });
 
-  it('should render error placeholder if some dashboard is select and filters are not selected', () => {
+  it('should render error placeholder if some dashboard is select and filters are not selected', async () => {
     queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
       data: {
         data: dashboardFactory.buildList(1, {
@@ -84,26 +89,26 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       isLoading: false,
     });
 
-    const screen = renderWithTheme(<CloudPulseDashboardLanding />);
+    renderWithTheme(<CloudPulseDashboardLanding />);
 
-    fireEvent.change(screen.getByPlaceholderText(selectDashboardLabel), {
-      target: { value: 'a' },
+    await userEvent.type(
+      screen.getByPlaceholderText(selectDashboardLabel),
+      'a'
+    );
+
+    const option = screen.getByRole('option', {
+      name: dashboardLabel,
     });
+    expect(option).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('option', { name: dashboardLabel })
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('option', { name: dashboardLabel }));
+    await userEvent.click(screen.getByRole('option', { name: dashboardLabel }));
 
     expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       // check if dashboard is selected already
       'value',
       dashboardLabel
     );
-
-    expect(
-      screen.getByText('Select Dashboard and filters to visualize metrics.')
-    ).toBeDefined();
+    const messageComponent = screen.getByText(message);
+    expect(messageComponent).toBeDefined();
   });
 });

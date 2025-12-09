@@ -2,10 +2,13 @@
  * @file Allows parallelization without Cypress Cloud.
  */
 
+import { readFileSync } from 'fs';
 import { globSync } from 'glob';
 import { resolve } from 'path';
-import { readFileSync } from 'fs';
-import { SpecWeight, SpecWeights, specWeightsSchema } from './generate-weights';
+
+import { specWeightsSchema } from './generate-weights';
+
+import type { SpecWeight, SpecWeights } from './generate-weights';
 import type { CypressPlugin } from './plugin';
 
 /**
@@ -86,7 +89,7 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
           'You can optimize your CI run performance by generating a valid weights file'
         );
         console.info(
-          `Example: CY_TEST_GENWEIGHTS='${splitRunWeightsPath}' yarn cy:run`
+          `Example: CY_TEST_GENWEIGHTS='${splitRunWeightsPath}' pnpm cy:run`
         );
       })();
     }

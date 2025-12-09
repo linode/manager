@@ -1,10 +1,7 @@
+import { Divider, FormControl, FormControlLabel, RadioGroup } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Divider } from 'src/components/Divider';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormGroup } from 'src/components/FormGroup';
-import { RadioGroup } from 'src/components/RadioGroup';
 
 const formGroupStyling = {
   '&.MuiFormGroup-root[role="radiogroup"]': {

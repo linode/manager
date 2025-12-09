@@ -1,3 +1,4 @@
+import { deleteAllTestDestinations } from 'support/api/delivery';
 import { deleteAllTestDomains } from 'support/api/domains';
 import { cancelAllTestEntityTransfers } from 'support/api/entityTransfer';
 import { deleteAllTestFirewalls } from 'support/api/firewalls';
@@ -10,13 +11,15 @@ import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets,
 } from 'support/api/objectStorage';
+import { deleteAllTestSSHKeys } from 'support/api/profile';
 import { deleteAllTestStackScripts } from 'support/api/stackscripts';
 import { deleteAllTestTags } from 'support/api/tags';
 import { deleteAllTestVolumes } from 'support/api/volumes';
-import { deleteAllTestSSHKeys } from 'support/api/profile';
+import { enhanceError } from 'support/util/api';
 
 /** Types of resources that can be cleaned up. */
 export type CleanUpResource =
+  | 'destinations'
   | 'domains'
   | 'firewalls'
   | 'images'
@@ -27,8 +30,8 @@ export type CleanUpResource =
   | 'obj-access-keys'
   | 'obj-buckets'
   | 'service-transfers'
-  | 'stackscripts'
   | 'ssh-keys'
+  | 'stackscripts'
   | 'tags'
   | 'volumes';
 
@@ -39,6 +42,7 @@ type CleanUpMap = {
 
 // Map `CleanUpResource` strings to the clean up functions they execute.
 const cleanUpMap: CleanUpMap = {
+  destinations: () => deleteAllTestDestinations(),
   domains: () => deleteAllTestDomains(),
   firewalls: () => deleteAllTestFirewalls(),
   images: () => deleteAllTestImages(),
@@ -72,8 +76,20 @@ export const cleanUp = (resources: CleanUpResource | CleanUpResource[]) => {
     for (const resource of resourcesArray) {
       const cleanFunction = cleanUpMap[resource];
       // Perform clean-up sequentially to avoid API rate limiting.
-      // eslint-disable-next-line no-await-in-loop
-      await cleanFunction();
+      try {
+        await cleanFunction();
+      } catch (e: any) {
+        // Log a warning but otherwise swallow errors if any resources fail to
+        // be cleaned up. There are a few cases where this is especially helpful:
+        //
+        // - Unplanned API issues or outages resulting in 5xx errors
+        // - 400 errors when inadevertently attempting to delete resources that are still busy (e.g. cleaning up a Linode that is the target of a clone operation)
+        const enhancedError = enhanceError(e);
+        console.warn(
+          'An API error occurred while attempting to clean up one or more resources:'
+        );
+        console.warn(enhancedError.message);
+      }
     }
   };
   return cy.defer(

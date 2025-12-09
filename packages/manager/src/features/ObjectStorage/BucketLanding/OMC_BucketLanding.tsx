@@ -1,36 +1,36 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { useProfile } from '@linode/queries';
+import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
+import { readableBytes, useOpenClose } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { useOpenClose } from 'src/hooks/useOpenClose';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
-import { isBucketError } from 'src/queries/object-storage/requests';
-import { useProfile } from 'src/queries/profile/profile';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
 
-import type { APIError, ObjectStorageBucket, Region } from '@linode/api-v4';
+import type { APIError, ObjectStorageBucket } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+
+interface Props {
+  isCreateBucketDrawerOpen?: boolean;
+}
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -38,8 +38,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const OMC_BucketLanding = () => {
+export const OMC_BucketLanding = (props: Props) => {
+  const { isCreateBucketDrawerOpen } = props;
   const { data: profile } = useProfile();
+  const { availableStorageRegions } = useObjectStorageRegions();
 
   const isRestrictedUser = profile?.restricted;
 
@@ -57,10 +59,8 @@ export const OMC_BucketLanding = () => {
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [
-    bucketDetailDrawerOpen,
-    setBucketDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
@@ -111,9 +111,55 @@ export const OMC_BucketLanding = () => {
   }, [removeBucketConfirmationDialog]);
 
   // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
-  const unavailableRegions = objectStorageBucketsResponse?.errors
-    ?.map((error) => (isBucketError(error) ? error.region : error.endpoint))
-    .filter((region): region is Region => region !== undefined);
+  const unavailableRegionLabels = React.useMemo(() => {
+    const errors = objectStorageBucketsResponse?.errors;
+
+    if (!errors) {
+      return [];
+    }
+
+    // Using a Map to store unique region-label pairs
+    // In our case, this handles deduplication automatically
+    const regionMap = new Map<string, string>();
+
+    // Single pass through errors to collect all region labels
+    errors.forEach((error) => {
+      if ('endpoint' in error && error.endpoint) {
+        const regionLabel = availableStorageRegions?.find(
+          (region) => region.id === error.endpoint.region
+        )?.label;
+
+        if (regionLabel) {
+          regionMap.set(error.endpoint.region, regionLabel);
+        }
+      } else if ('region' in error && error.region?.label) {
+        regionMap.set(error.region.label, error.region.label);
+      }
+    });
+
+    return Array.from(regionMap.values());
+  }, [objectStorageBucketsResponse, availableStorageRegions]);
+
+  const buckets = objectStorageBucketsResponse?.buckets ?? [];
+  const totalUsage = sumBucketUsage(buckets);
+  const bucketLabel = selectedBucket ? selectedBucket.label : '';
+
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: orderedData,
+  } = useOrderV2({
+    data: buckets,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/object-storage/buckets',
+    },
+    preferenceKey: 'object-storage-buckets',
+  });
 
   if (isRestrictedUser) {
     return <RenderEmpty />;
@@ -135,38 +181,31 @@ export const OMC_BucketLanding = () => {
   if (objectStorageBucketsResponse?.buckets.length === 0) {
     return (
       <>
-        {unavailableRegions && unavailableRegions.length > 0 && (
-          <UnavailableRegionsDisplay unavailableRegions={unavailableRegions} />
+        {unavailableRegionLabels && unavailableRegionLabels.length > 0 && (
+          <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
         )}
         <RenderEmpty />
       </>
     );
   }
 
-  const buckets = objectStorageBucketsResponse.buckets;
-  const totalUsage = sumBucketUsage(buckets);
-  const bucketLabel = selectedBucket ? selectedBucket.label : '';
-
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Buckets" />
-      {unavailableRegions && unavailableRegions.length > 0 && (
-        <UnavailableRegionsDisplay unavailableRegions={unavailableRegions} />
+      <DocumentTitleSegment
+        segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
+      />
+      {unavailableRegionLabels && unavailableRegionLabels.length > 0 && (
+        <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
       )}
-      <Grid xs={12}>
-        <OrderBy data={buckets} order={'asc'} orderBy={'label'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const bucketTableProps = {
-              data: orderedData,
-              handleClickDetails,
-              handleClickRemove,
-              handleOrderChange,
-              order,
-              orderBy,
-            };
-            return <BucketTable {...bucketTableProps} />;
-          }}
-        </OrderBy>
+      <Grid size={12}>
+        <BucketTable
+          data={orderedData ?? []}
+          handleClickDetails={handleClickDetails}
+          handleClickRemove={handleClickRemove}
+          handleOrderChange={handleOrderChange}
+          order={order}
+          orderBy={orderBy}
+        />
         {/* If there's more than one Bucket, display the total usage. */}
         {buckets.length > 1 ? (
           <Typography
@@ -186,6 +225,7 @@ export const OMC_BucketLanding = () => {
           type: 'Bucket',
         }}
         errors={error}
+        expand
         label={'Bucket Name'}
         loading={isLoading}
         onClick={removeBucket}
@@ -202,11 +242,11 @@ export const OMC_BucketLanding = () => {
         </Notice>
         <Typography className={classes.copy}>
           A bucket must be empty before deleting it. Please{' '}
-          <Link to="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/lifecycle-policies">
             delete all objects
           </Link>
           , or use{' '}
-          <Link to="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools">
             another tool
           </Link>{' '}
           to force deletion.
@@ -229,14 +269,14 @@ const RenderEmpty = () => {
   return <BucketLandingEmptyState />;
 };
 
-interface UnavailableRegionsDisplayProps {
-  unavailableRegions: Region[];
+interface UnavailableRegionLabelsProps {
+  regionLabels: string[];
 }
 
 const UnavailableRegionsDisplay = React.memo(
-  ({ unavailableRegions }: UnavailableRegionsDisplayProps) => {
-    const regionsAffected = unavailableRegions.map(
-      (unavailableRegion) => unavailableRegion.label
+  ({ regionLabels }: UnavailableRegionLabelsProps) => {
+    const regionsAffected = regionLabels.map(
+      (unavailableRegion) => unavailableRegion
     );
 
     return <Banner regionsAffected={regionsAffected} />;
@@ -251,7 +291,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected
@@ -259,8 +299,8 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
           : `${regionsAffected[0]}.`}
         <ul>
           {moreThanOneRegionAffected &&
-            regionsAffected.map((thisRegion) => (
-              <li key={thisRegion}>{thisRegion}</li>
+            regionsAffected.map((thisRegion, idx) => (
+              <li key={`${thisRegion}-${idx}`}>{thisRegion}</li>
             ))}
         </ul>
         If you have buckets in{' '}

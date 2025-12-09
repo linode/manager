@@ -1,34 +1,41 @@
 import * as React from 'react';
 
-import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { noPermissionTooltipText } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
-import { checkIfUserCanModifyFirewall } from 'src/features/Firewalls/shared';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { NO_PERMISSIONS_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface LinodeFirewallsActionMenuProps {
   firewallID: number;
+  linodeID: number;
   onUnassign: () => void;
 }
 
 export const LinodeFirewallsActionMenu = (
   props: LinodeFirewallsActionMenuProps
 ) => {
-  const { firewallID, onUnassign } = props;
+  const { onUnassign, linodeID, firewallID } = props;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallID,
-    profile,
-    grants
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeID
   );
 
-  const disabledProps = !userCanModifyFirewall
+  const { data: firewallPermissions } = usePermissions(
+    'firewall',
+    ['delete_firewall_device'],
+    firewallID
+  );
+
+  const disabledProps = !(
+    linodePermissions?.update_linode &&
+    firewallPermissions?.delete_firewall_device
+  )
     ? {
         disabled: true,
-        tooltip: noPermissionTooltipText,
+        tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
       }
     : {};
 
@@ -47,6 +54,7 @@ export const LinodeFirewallsActionMenu = (
       disabled={action.disabled}
       key={action.title}
       onClick={action.onClick}
+      tooltip={action.tooltip}
     />
   );
 };

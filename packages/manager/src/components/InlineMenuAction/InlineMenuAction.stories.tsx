@@ -1,9 +1,9 @@
-import { action } from '@storybook/addon-actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { InlineMenuAction } from './InlineMenuAction';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof InlineMenuAction> = {
   argTypes: {},

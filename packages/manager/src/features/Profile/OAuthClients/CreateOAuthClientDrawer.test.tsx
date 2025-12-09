@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { oauthClientFactory } from 'src/factories/accountOAuth';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
@@ -25,6 +25,14 @@ describe('Create API Token Drawer', () => {
     getByText('Callback URL');
     getByText('Create');
     getByText('Cancel');
+  });
+  it('Should have the Public checkbox as checked by default', () => {
+    const { getByRole } = renderWithTheme(
+      <CreateOAuthClientDrawer {...props} />
+    );
+
+    const checkbox = getByRole('checkbox', { name: 'Public' });
+    expect(checkbox).toBeChecked();
   });
   it('Should show client side validation errors', async () => {
     const { getByText } = renderWithTheme(

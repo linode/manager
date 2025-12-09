@@ -1,6 +1,5 @@
-import Factory from 'src/factories/factoryProxy';
-
-import { pickRandom } from 'src/utilities/random';
+import { pickRandom } from '@linode/utilities';
+import { Factory } from '@linode/utilities';
 
 import type {
   CreatePlacementGroupPayload,
@@ -8,10 +7,8 @@ import type {
 } from '@linode/api-v4';
 
 export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
-  placement_group_type: 'anti_affinity:local',
   id: Factory.each((id) => id),
   is_compliant: Factory.each(() => pickRandom([true, false])),
-  placement_group_policy: 'strict',
   label: Factory.each((id) => `pg-${id}`),
   members: [
     {
@@ -51,14 +48,16 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
       linode_id: 43,
     },
   ],
+  migrations: null,
+  placement_group_policy: 'strict',
+  placement_group_type: 'anti_affinity:local',
   region: 'us-east',
 });
 
-export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<CreatePlacementGroupPayload>(
-  {
-    placement_group_type: 'anti_affinity:local',
-    placement_group_policy: 'strict',
+export const createPlacementGroupPayloadFactory =
+  Factory.Sync.makeFactory<CreatePlacementGroupPayload>({
     label: Factory.each((id) => `mock-pg-${id}`),
+    placement_group_policy: 'strict',
+    placement_group_type: 'anti_affinity:local',
     region: pickRandom(['us-east', 'us-southeast', 'ca-central']),
-  }
-);
+  });

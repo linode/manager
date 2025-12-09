@@ -1,5 +1,6 @@
-import { shouldLoadDevTools } from 'src/dev-tools/load';
+import { ENABLE_DEV_TOOLS } from 'src/constants';
 
+import type { RegionSite } from '@linode/api-v4';
 import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
@@ -42,23 +43,31 @@ export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 };
 
+export const clearStorage = (key: string) => {
+  delete localStorageCache[key];
+  window.localStorage.removeItem(key);
+};
+
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
-const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
-const TYPE_TO_CONFIRM = 'typeToConfirm';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
+const CODE_VERIFIER = 'authentication/code-verifier';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 const SUPPORT = 'support';
 const TICKET = 'ticket';
 const STACKSCRIPT = 'stackscript';
 const DEV_TOOLS_ENV = 'devTools/env';
+const REGION_FILTER = 'regionFilter';
+const NODE_POOLS_EXPANDED = 'nodePoolsExpanded';
 
 export type PageSize = number;
+export type RegionFilter = 'all' | RegionSite;
 
 interface AuthGetAndSet {
-  get: () => any;
+  clear: () => void;
+  get: () => string | undefined;
   set: (value: string) => void;
 }
 
@@ -88,14 +97,17 @@ export const supportTicketStorageDefaults: SupportTicketFormFields = {
   selectedSeverity: undefined,
   summary: '',
   ticketType: 'general',
+  title: '',
+  entity: {
+    id: undefined,
+    type: 'none',
+  },
+  formPayloadValues: {},
 };
 
 export interface Storage {
-  BackupsCtaDismissed: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
   authentication: {
+    codeVerifier: AuthGetAndSet;
     expire: AuthGetAndSet;
     nonce: AuthGetAndSet;
     scopes: AuthGetAndSet;
@@ -109,9 +121,17 @@ export interface Storage {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
   };
+  nodePoolsExpanded: {
+    get: (clusterId: number) => number[];
+    set: (clusterId: number, v: number[]) => void;
+  };
   pageSize: {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
+  };
+  regionFilter: {
+    get: () => RegionFilter;
+    set: (v: RegionFilter) => void;
   };
   stackScriptInProgress: {
     get: () => StackScriptData;
@@ -125,33 +145,34 @@ export interface Storage {
     get: () => TicketReply;
     set: (v: TicketReply) => void;
   };
-  typeToConfirm: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
 }
 
 export const storage: Storage = {
-  BackupsCtaDismissed: {
-    get: () => getStorage(BACKUPSCTA_DISMISSED),
-    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
-  },
   authentication: {
+    codeVerifier: {
+      get: () => getStorage(CODE_VERIFIER),
+      set: (v) => setStorage(CODE_VERIFIER, v),
+      clear: () => clearStorage(CODE_VERIFIER),
+    },
     expire: {
       get: () => getStorage(EXPIRE),
       set: (v) => setStorage(EXPIRE, v),
+      clear: () => clearStorage(EXPIRE),
     },
     nonce: {
       get: () => getStorage(NONCE),
       set: (v) => setStorage(NONCE, v),
+      clear: () => clearStorage(NONCE),
     },
     scopes: {
       get: () => getStorage(SCOPES),
       set: (v) => setStorage(SCOPES, v),
+      clear: () => clearStorage(SCOPES),
     },
     token: {
       get: () => getStorage(TOKEN),
       set: (v) => setStorage(TOKEN, v),
+      clear: () => clearStorage(TOKEN),
     },
   },
   devToolsEnv: {
@@ -175,11 +196,20 @@ export const storage: Storage = {
     },
     set: (v) => setStorage(INFINITE_PAGE_SIZE, `${v}`),
   },
+  nodePoolsExpanded: {
+    get: (clusterId) => getStorage(`${NODE_POOLS_EXPANDED}-${clusterId}`),
+    set: (clusterId, v) =>
+      setStorage(`${NODE_POOLS_EXPANDED}-${clusterId}`, JSON.stringify(v)),
+  },
   pageSize: {
     get: () => {
       return parseInt(getStorage(PAGE_SIZE, '25'), 10);
     },
     set: (v) => setStorage(PAGE_SIZE, `${v}`),
+  },
+  regionFilter: {
+    get: () => getStorage(REGION_FILTER),
+    set: (v) => setStorage(REGION_FILTER, v),
   },
   stackScriptInProgress: {
     get: () =>
@@ -199,25 +229,15 @@ export const storage: Storage = {
     get: () => getStorage(TICKET, { text: '' }),
     set: (v) => setStorage(TICKET, JSON.stringify(v)),
   },
-  typeToConfirm: {
-    get: () => getStorage(TYPE_TO_CONFIRM),
-    set: (v) => setStorage(TYPE_TO_CONFIRM, 'true'),
-  },
 };
 
-export const {
-  BackupsCtaDismissed,
-  authentication,
-  stackScriptInProgress,
-  supportTicket,
-  ticketReply,
-} = storage;
+export const { stackScriptInProgress, supportTicket, ticketReply } = storage;
 
 // Only return these if the dev tools are enabled and we're in development mode.
 export const getEnvLocalStorageOverrides = () => {
   // This is broken into two logical branches so that local storage is accessed
   // ONLY if the dev tools are enabled and it's a development build.
-  if (shouldLoadDevTools && import.meta.env.DEV) {
+  if (ENABLE_DEV_TOOLS && import.meta.env.DEV) {
     const localStorageOverrides = storage.devToolsEnv.get();
     if (localStorageOverrides) {
       return localStorageOverrides;
@@ -233,4 +253,18 @@ export const isDevToolsEnvValid = (value: any) => {
     typeof value?.clientID === 'string' &&
     typeof value?.label === 'string'
   );
+};
+
+export const clearUserInput = () => {
+  supportTicket.set(supportTicketStorageDefaults);
+  ticketReply.set({ text: '', ticketId: -1 });
+  stackScriptInProgress.set({
+    description: '',
+    id: '',
+    images: [],
+    label: '',
+    rev_note: '',
+    script: '',
+    updated: '',
+  });
 };

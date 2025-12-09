@@ -3,7 +3,9 @@ import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Breadcrumb, BreadcrumbProps } from './Breadcrumb';
+import { Breadcrumb } from './Breadcrumb';
+
+import type { BreadcrumbProps } from './Breadcrumb';
 
 const props: BreadcrumbProps = {
   pathname: '/linodes/9872893679817/test/lastcrumb',
@@ -20,6 +22,13 @@ describe('Breadcrumb component', () => {
       wrapWithTheme(<Breadcrumb {...props} removeCrumbX={2} />)
     );
     expect(getAllByTestId('link-text')).toHaveLength(2);
+  });
+
+  it('removes multiple crumbs when given an array of indices', () => {
+    const { getAllByTestId } = render(
+      wrapWithTheme(<Breadcrumb {...props} removeCrumbX={[1, 2]} />)
+    );
+    expect(getAllByTestId('link-text')).toHaveLength(1);
   });
 
   it('renders an editable text field given editable props', () => {

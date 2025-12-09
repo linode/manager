@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
+import { Button } from '@linode/ui';
 import React from 'react';
+import { action } from 'storybook/actions';
 
-import { Button } from '../Button/Button';
 import { LandingHeader } from './LandingHeader';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof LandingHeader> = {
   argTypes: {
@@ -50,7 +50,7 @@ export const Default: Story = {
     disabledCreateButton: false,
     docsLabel: 'Docs',
     docsLink:
-      'https://www.linode.com/docs/products/compute/compute-instances/faqs/',
+      'https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances',
     entity: 'My Entity',
     extraActions: <Button buttonType="secondary">Import a Zone</Button>,
     loading: false,
@@ -69,7 +69,7 @@ export const withBreadcrumbOverrides: Story = {
       crumbOverrides: [
         {
           label: 'My First Crumb',
-          linkTo: '/someRoute',
+          linkTo: '/linodes',
           noCap: true,
           position: 1,
         },

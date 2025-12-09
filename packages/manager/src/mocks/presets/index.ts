@@ -5,14 +5,21 @@ import { baselineApiUnstablePreset } from './baseline/apiUnstable';
 import { baselineCrudPreset } from './baseline/crud';
 import { baselineLegacyPreset } from './baseline/legacy';
 import { baselineNoMocksPreset } from './baseline/noMocks';
-import { childAccountPreset } from './extra/account/childAccount';
+import { customAccountPreset } from './extra/account/customAccount';
+import { customEventsPreset } from './extra/account/customEvents';
+import { customMaintenancePreset } from './extra/account/customMaintenance';
+import { customNotificationsPreset } from './extra/account/customNotifications';
+import { customProfileAndGrantsPreset } from './extra/account/customProfileAndGrants';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
-import { parentAccountPreset } from './extra/account/parentAccount';
 import { apiResponseTimePreset } from './extra/api/api';
+import { linodeLimitsPreset } from './extra/limits/linode-limits';
+import { lkeLimitsPreset } from './extra/limits/lke-limits';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
 import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
 import { legacyRegionsPreset } from './extra/regions/legacyRegions';
+import { customUserAccountPermissionsPreset } from './extra/userPermissions/customUserAccountPermissions';
+import { customUserEntityPermissionsPreset } from './extra/userPermissions/customUserEntityPermissions';
 
 import type { MockPresetBaseline, MockPresetExtra } from '../types';
 
@@ -37,8 +44,15 @@ export const baselineMockPresets: MockPresetBaseline[] = [
  * */
 export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
-  parentAccountPreset,
-  childAccountPreset,
+  customAccountPreset,
+  customProfileAndGrantsPreset,
+  customEventsPreset,
+  customUserAccountPermissionsPreset,
+  customUserEntityPermissionsPreset,
+  customMaintenancePreset,
+  customNotificationsPreset,
+  linodeLimitsPreset,
+  lkeLimitsPreset,
   managedEnabledPreset,
   managedDisabledPreset,
   coreAndDistributedRegionsPreset,

@@ -2,6 +2,7 @@ import {
   createReplySchema,
   createSupportTicketSchema,
 } from '@linode/validation/lib/support.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,8 +11,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   ReplyRequest,
   SupportReply,
   SupportTicket,
@@ -33,7 +35,7 @@ export const getTickets = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -49,7 +51,7 @@ export const getTickets = (params?: Params, filter?: Filter) =>
 export const getTicket = (ticketID: number) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets/${encodeURIComponent(ticketID)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -67,15 +69,15 @@ export const getTicket = (ticketID: number) =>
 export const getTicketReplies = (
   ticketId: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<SupportReply>>(
     setURL(
-      `${API_ROOT}/support/tickets/${encodeURIComponent(ticketId)}/replies`
+      `${API_ROOT}/support/tickets/${encodeURIComponent(ticketId)}/replies`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -92,7 +94,7 @@ export const createSupportTicket = (data: TicketRequest) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('POST'),
-    setData(data, createSupportTicketSchema)
+    setData(data, createSupportTicketSchema),
   );
 
 /**
@@ -108,7 +110,7 @@ export const createSupportTicket = (data: TicketRequest) =>
 export const closeSupportTicket = (ticketId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/support/tickets/${encodeURIComponent(ticketId)}/close`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -126,11 +128,11 @@ export const createReply = (data: ReplyRequest) =>
   Request<SupportReply>(
     setURL(
       `${API_ROOT}/support/tickets/${encodeURIComponent(
-        data.ticket_id
-      )}/replies`
+        data.ticket_id,
+      )}/replies`,
     ),
     setMethod('POST'),
-    setData(data, createReplySchema)
+    setData(data, createReplySchema),
   );
 
 /**
@@ -145,8 +147,8 @@ export const createReply = (data: ReplyRequest) =>
 export const uploadAttachment = (ticketId: number, formData: FormData) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/support/tickets/${encodeURIComponent(ticketId)}/attachments`
+      `${API_ROOT}/support/tickets/${encodeURIComponent(ticketId)}/attachments`,
     ),
     setMethod('POST'),
-    setData(formData)
+    setData(formData),
   );

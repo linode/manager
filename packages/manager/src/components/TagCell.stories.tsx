@@ -1,12 +1,11 @@
-import { useArgs } from '@storybook/preview-api';
+import { Box } from '@linode/ui';
 import React from 'react';
-
-import { Box } from 'src/components/Box';
+import { useArgs } from 'storybook/preview-api';
 
 import { TagCell } from './TagCell/TagCell';
 
 import type { TagCellProps } from './TagCell/TagCell';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const _tags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
@@ -22,6 +21,7 @@ export const PanelView: StoryObj<TagCellProps> = {
         <Box sx={{ height: 300 }}>
           <TagCell
             {...args}
+            entity="Entity"
             tags={tags}
             updateTags={handleUpdateTags}
             view={args.view ?? 'panel'}
@@ -46,6 +46,7 @@ export const InlineView: StoryObj<TagCellProps> = {
         <Box sx={{ height: 300 }}>
           <TagCell
             {...args}
+            entity="Entity"
             tags={tags}
             updateTags={handleUpdateTags}
             view={args.view ?? 'inline'}

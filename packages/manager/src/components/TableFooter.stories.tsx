@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -7,9 +8,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
 import { TableFooter } from './TableFooter';
-import { Typography } from './Typography';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof TableFooter> = {
   args: {

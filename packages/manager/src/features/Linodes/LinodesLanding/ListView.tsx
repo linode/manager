@@ -17,9 +17,7 @@ export const ListView = (props: RenderLinodesProps) => {
   }
 
   return (
-    // eslint-disable-next-line
     <>
-      {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
       {data.map((linode, idx: number) => (
         <LinodeRow
           handlers={{
@@ -36,28 +34,8 @@ export const ListView = (props: RenderLinodesProps) => {
             onOpenResizeDialog: () =>
               openDialog('resize', linode.id, linode.label),
           }}
-          alerts={linode.alerts}
-          backups={linode.backups}
-          created={linode.created}
-          group={linode.group}
-          hypervisor={linode.hypervisor}
-          id={linode.id}
-          image={linode.image}
-          ipv4={linode.ipv4}
-          ipv6={linode.ipv6 || ''}
           key={`linode-row-${idx}`}
-          label={linode.label}
-          lke_cluster_id={linode.lke_cluster_id}
-          maintenance={linode.maintenance}
-          placement_group={linode.placement_group}
-          region={linode.region}
-          site_type={linode.site_type}
-          specs={linode.specs}
-          status={linode.status}
-          tags={linode.tags}
-          type={linode.type}
-          updated={linode.updated}
-          watchdog_enabled={linode.watchdog_enabled}
+          {...linode}
         />
       ))}
     </>

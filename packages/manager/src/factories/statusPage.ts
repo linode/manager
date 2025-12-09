@@ -1,14 +1,13 @@
-import Factory from 'src/factories/factoryProxy';
-import { v4 } from 'uuid';
+import { Factory } from '@linode/utilities';
 
-import {
+import type {
   Incident,
   IncidentPage,
   IncidentResponse,
   IncidentUpdate,
   Maintenance,
   MaintenanceResponse,
-} from 'src/queries/statusPage';
+} from '@linode/queries';
 
 const DATE = '2021-01-12T00:00:00.394Z';
 
@@ -23,21 +22,19 @@ export const pageFactory = Factory.Sync.makeFactory<IncidentPage>({
 export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   affected_components: [
     {
-      code: v4(),
-      name:
-        'Linode Kubernetes Engine - US-East (Newark) Linode Kubernetes Engine',
+      code: crypto.randomUUID && crypto.randomUUID(),
+      name: 'Linode Kubernetes Engine - US-East (Newark) Linode Kubernetes Engine',
       new_status: 'major_outage',
       old_status: 'operational',
     },
   ],
-  body:
-    'Our team is investigating an issue affecting the Linode Kubernetes Engine (LKE) in Newark. We will share additional updates as we have more information.',
+  body: 'Our team is investigating an issue affecting the Linode Kubernetes Engine (LKE) in Newark. We will share additional updates as we have more information.',
   created_at: DATE,
   custom_tweet: null,
   deliver_notifications: true,
   display_at: DATE,
   id: Factory.each((i) => String(i)),
-  incident_id: v4(),
+  incident_id: crypto.randomUUID && crypto.randomUUID(),
   status: 'investigating',
   tweet_id: Math.floor(Math.random() * 1000000),
   updated_at: DATE,
@@ -50,7 +47,7 @@ export const incidentFactory = Factory.Sync.makeFactory<Incident>({
   incident_updates: incidentUpdateFactory.buildList(5),
   monitoring_at: DATE,
   name: 'Service Issue - Linode Kubernetes Engine',
-  page_id: v4(),
+  page_id: crypto.randomUUID && crypto.randomUUID(),
   resolved_at: DATE,
   shortlink: 'https://stspg.io/gm27wxnn653m',
   started_at: DATE,
@@ -58,14 +55,14 @@ export const incidentFactory = Factory.Sync.makeFactory<Incident>({
   updated_at: DATE,
 });
 
-export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse>(
-  {
+export const incidentResponseFactory =
+  Factory.Sync.makeFactory<IncidentResponse>({
     incidents: [
       incidentFactory.build({
         impact: 'major',
         incident_updates: incidentUpdateFactory.buildList(4, {
-          body: `Our team is investigating a connectivity issue in our Mumbai data center. 
-          During this time, users may experience connection timeouts and errors for all services 
+          body: `Our team is investigating a connectivity issue in our Mumbai data center.
+          During this time, users may experience connection timeouts and errors for all services
           deployed in this data center. We will share additional updates as we have more information.`,
         }),
         name: 'Connectivity Issue - AP-West (Mumbai)',
@@ -74,8 +71,7 @@ export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse
       incidentFactory.build({ impact: 'critical' }),
     ],
     page: pageFactory.build(),
-  }
-);
+  });
 
 export const maintenanceFactory = Factory.Sync.makeFactory<Maintenance>({
   created_at: DATE,
@@ -92,21 +88,18 @@ export const maintenanceFactory = Factory.Sync.makeFactory<Maintenance>({
   updated_at: DATE,
 });
 
-export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceResponse>(
-  {
+export const maintenanceResponseFactory =
+  Factory.Sync.makeFactory<MaintenanceResponse>({
     page: pageFactory.build(),
     scheduled_maintenances: [
       maintenanceFactory.build({
         id: 'test001',
         incident_updates: [
           incidentUpdateFactory.build({
-            // eslint-disable-next-line xss/no-mixed-html
-            body:
-              'The Linode Cloud Manager, API, and CLI will be offline for internal upgrades and maintenance on Thursday, September 23rd, 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this window, running Linodes and related services will <b>not</b> be disrupted, but account management access and support tickets will be unavailable.',
+            body: 'The Linode Cloud Manager, API, and CLI will be offline for internal upgrades and maintenance on Thursday, September 23rd, 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this window, running Linodes and related services will <b>not</b> be disrupted, but account management access and support tickets will be unavailable.',
           }),
         ],
-        name:
-          'Cloud Manager and API Downtime on September 23, 2021 for 3-hour window',
+        name: 'Cloud Manager and API Downtime on September 23, 2021 for 3-hour window',
       }),
       // maintenanceFactory.build({
       //   id: 'test002',
@@ -121,5 +114,4 @@ export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceRe
       //   ],
       // }),
     ],
-  }
-);
+  });

@@ -1,12 +1,16 @@
-import { styled } from '@mui/material/styles';
-import * as React from 'react';
+import {
+  FormControlLabel,
+  Notice,
+  Paper,
+  Stack,
+  Toggle,
+  Typography,
+} from '@linode/ui';
+import React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
+
+import { usePermissions } from '../IAM/hooks/usePermissions';
 
 interface AutoEnrollProps {
   enabled: boolean;
@@ -17,59 +21,40 @@ interface AutoEnrollProps {
 export const AutoEnroll = (props: AutoEnrollProps) => {
   const { enabled, error, toggle } = props;
 
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
   return (
-    <StyledPaper>
+    <Paper
+      sx={(theme) => ({ backgroundColor: theme.palette.background.default })}
+      variant="outlined"
+    >
       {error && <Notice text={error} variant="error" />}
-      <StyledFormControlLabel
+      <FormControlLabel
+        checked={enabled}
+        control={<Toggle />}
+        disabled={!permissions.update_account_settings}
         label={
-          <StyledDiv>
-            <StyledTypography>
+          <Stack spacing={0.5}>
+            <Typography sx={(theme) => ({ font: theme.font.bold })}>
               Auto Enroll All New Linodes in Backups
-            </StyledTypography>
+            </Typography>
             <Typography variant="body1">
               Enroll all future Linodes in backups. Your account will be billed
               the additional hourly rate noted on the{' '}
               <Link
                 data-qa-backups-price
-                to="https://www.linode.com/products/backups/"
+                to="https://www.linode.com/pricing/#backups"
               >
                 Backups pricing page
               </Link>
               .
             </Typography>
-          </StyledDiv>
+          </Stack>
         }
-        control={<Toggle checked={enabled} onChange={toggle} />}
+        onChange={toggle}
+        sx={{ gap: 1 }}
       />
-    </StyledPaper>
+    </Paper>
   );
 };
-
-const StyledPaper = styled(Paper, {
-  label: 'StyledPaper',
-})(({ theme }) => ({
-  backgroundColor: theme.bg.offWhite,
-  padding: theme.spacing(1),
-}));
-
-const StyledFormControlLabel = styled(FormControlLabel, {
-  label: 'StyledFormControlLabel',
-})(({ theme }) => ({
-  alignItems: 'flex-start',
-  display: 'flex',
-  marginBottom: theme.spacing(1),
-  marginLeft: 0,
-}));
-
-const StyledDiv = styled('div', {
-  label: 'StyledDiv',
-})(({ theme }) => ({
-  marginTop: theme.spacing(1.5),
-}));
-
-const StyledTypography = styled(Typography, {
-  label: 'StyledTypography',
-})(({ theme }) => ({
-  fontSize: 17,
-  marginBottom: theme.spacing(1),
-}));

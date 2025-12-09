@@ -1,13 +1,13 @@
-import { Engine } from '@linode/api-v4/lib/databases';
+import { useDeleteDatabaseMutation } from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { useDeleteDatabaseMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { Engine } from '@linode/api-v4/lib/databases';
 
 interface Props {
   databaseEngine: Engine;
@@ -27,7 +27,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
   const defaultError = 'There was an error deleting this Database Cluster.';
   const [error, setError] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const onDeleteCluster = () => {
     setIsLoading(true);
@@ -38,7 +38,9 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
           variant: 'success',
         });
         onClose();
-        push('/databases');
+        navigate({
+          to: '/databases',
+        });
       })
       .catch((e) => {
         setIsLoading(false);
@@ -55,6 +57,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
         subType: 'Cluster',
         type: 'Database',
       }}
+      expand
       label={'Cluster Name'}
       loading={isLoading}
       onClick={onDeleteCluster}

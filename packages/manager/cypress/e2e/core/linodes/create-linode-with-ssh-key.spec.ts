@@ -1,30 +1,15 @@
-import {
-  accountUserFactory,
-  linodeFactory,
-  sshKeyFactory,
-} from 'src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel, randomNumber, randomString } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
+import { linodeFactory, sshKeyFactory } from '@linode/utilities';
 import { mockGetUser, mockGetUsers } from 'support/intercepts/account';
 import { mockCreateLinode } from 'support/intercepts/linodes';
-import { linodeCreatePage } from 'support/ui/pages';
-import { ui } from 'support/ui';
 import { mockCreateSSHKey } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { accountUserFactory } from 'src/factories';
 
 describe('Create Linode with SSH Key', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
   /*
    * - Confirms UI flow when creating a Linode with an authorized SSH key.
    * - Confirms that existing SSH keys are listed on page and can be selected.
@@ -43,8 +28,8 @@ describe('Create Linode with SSH Key', () => {
     });
 
     const mockUser = accountUserFactory.build({
-      username: randomLabel(),
       ssh_keys: [mockSshKey.label],
+      username: randomLabel(),
     });
 
     mockGetUsers([mockUser]);
@@ -54,14 +39,14 @@ describe('Create Linode with SSH Key', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that SSH key is listed, then select it.
+    cy.findByText(mockSshKey.label).scrollIntoView();
     cy.findByText(mockSshKey.label)
-      .scrollIntoView()
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -103,8 +88,8 @@ describe('Create Linode with SSH Key', () => {
     });
 
     const mockUser = accountUserFactory.build({
-      username: randomLabel(),
       ssh_keys: [],
+      username: randomLabel(),
     });
 
     const mockUserWithKey = {
@@ -120,14 +105,14 @@ describe('Create Linode with SSH Key', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that no SSH keys are listed for the mocked user.
+    cy.findByText(mockUser.username).scrollIntoView();
     cy.findByText(mockUser.username)
-      .scrollIntoView()
       .should('be.visible')
       .closest('tr')
       .within(() => {
@@ -161,8 +146,8 @@ describe('Create Linode with SSH Key', () => {
     cy.wait(['@createSSHKey', '@refetchUsers']);
 
     // Confirm that the new SSH key is listed, and select it to be added to the Linode.
+    cy.findByText(mockSshKey.label).scrollIntoView();
     cy.findByText(mockSshKey.label)
-      .scrollIntoView()
       .should('be.visible')
       .closest('tr')
       .within(() => {

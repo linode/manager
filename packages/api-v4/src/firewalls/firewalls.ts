@@ -1,3 +1,10 @@
+import {
+  CreateFirewallSchema,
+  FirewallDeviceSchema,
+  UpdateFirewallSchema,
+  UpdateFirewallSettingsSchema,
+} from '@linode/validation/lib/firewalls.schema';
+
 import { BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -6,20 +13,22 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
-  CreateFirewallSchema,
-  FirewallDeviceSchema,
-  UpdateFirewallSchema,
-} from '@linode/validation/lib/firewalls.schema';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   CreateFirewallPayload,
   Firewall,
   FirewallDevice,
   FirewallDevicePayload,
+  FirewallPrefixList,
   FirewallRules,
+  FirewallRuleSet,
+  FirewallSettings,
   FirewallTemplate,
+  FirewallTemplateSlug,
   UpdateFirewallPayload,
+  UpdateFirewallRules,
+  UpdateFirewallSettings,
 } from './types';
 
 /**
@@ -32,7 +41,7 @@ export const getFirewalls = (params?: Params, filter?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
-    setURL(`${BETA_API_ROOT}/networking/firewalls`)
+    setURL(`${BETA_API_ROOT}/networking/firewalls`),
   );
 
 /**
@@ -46,8 +55,8 @@ export const getFirewall = (firewallID: number) =>
   Request<Firewall>(
     setMethod('GET'),
     setURL(
-      `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(firewallID)}`
-    )
+      `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(firewallID)}`,
+    ),
   );
 
 /**
@@ -65,7 +74,7 @@ export const createFirewall = (data: CreateFirewallPayload) =>
   Request<Firewall>(
     setMethod('POST'),
     setData(data, CreateFirewallSchema),
-    setURL(`${BETA_API_ROOT}/networking/firewalls`)
+    setURL(`${BETA_API_ROOT}/networking/firewalls`),
   );
 
 /**
@@ -77,14 +86,14 @@ export const createFirewall = (data: CreateFirewallPayload) =>
  */
 export const updateFirewall = (
   firewallID: number,
-  data: UpdateFirewallPayload
+  data: UpdateFirewallPayload,
 ) =>
   Request<Firewall>(
     setMethod('PUT'),
     setData(data, UpdateFirewallSchema),
     setURL(
-      `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(firewallID)}`
-    )
+      `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(firewallID)}`,
+    ),
   );
 
 /**
@@ -117,8 +126,8 @@ export const deleteFirewall = (firewallID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(
-      `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(firewallID)}`
-    )
+      `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(firewallID)}`,
+    ),
   );
 
 // #region Firewall Rules
@@ -131,7 +140,7 @@ export const deleteFirewall = (firewallID: number) =>
 export const getFirewallRules = (
   firewallID: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<FirewallRules>>(
     setMethod('GET'),
@@ -139,9 +148,9 @@ export const getFirewallRules = (
     setXFilter(filter),
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
-        firewallID
-      )}/rules`
-    )
+        firewallID,
+      )}/rules`,
+    ),
   );
 
 /**
@@ -150,15 +159,18 @@ export const getFirewallRules = (
  * Updates the inbound and outbound Rules for a Firewall. Using this endpoint will
  * replace all of a Firewall's ruleset with the Rules specified in your request.
  */
-export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
+export const updateFirewallRules = (
+  firewallID: number,
+  data: UpdateFirewallRules,
+) =>
   Request<FirewallRules>(
     setMethod('PUT'),
     setData(data), // Validation is too complicated for these; leave it to the API.
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
-        firewallID
-      )}/rules`
-    )
+        firewallID,
+      )}/rules`,
+    ),
   );
 
 // #region Devices
@@ -172,7 +184,7 @@ export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
 export const getFirewallDevices = (
   firewallID: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<FirewallDevice>>(
     setMethod('GET'),
@@ -180,9 +192,9 @@ export const getFirewallDevices = (
     setXFilter(filter),
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
-        firewallID
-      )}/devices`
-    )
+        firewallID,
+      )}/devices`,
+    ),
   );
 
 /**
@@ -196,9 +208,9 @@ export const getFirewallDevice = (firewallID: number, deviceID: number) =>
     setMethod('GET'),
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
-        firewallID
-      )}/devices/${encodeURIComponent(deviceID)}`
-    )
+        firewallID,
+      )}/devices/${encodeURIComponent(deviceID)}`,
+    ),
   );
 
 /**
@@ -215,16 +227,16 @@ export const getFirewallDevice = (firewallID: number, deviceID: number) =>
  */
 export const addFirewallDevice = (
   firewallID: number,
-  data: FirewallDevicePayload
+  data: FirewallDevicePayload,
 ) =>
   Request<FirewallDevice>(
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
-        firewallID
-      )}/devices`
+        firewallID,
+      )}/devices`,
     ),
-    setData(data, FirewallDeviceSchema)
+    setData(data, FirewallDeviceSchema),
   );
 
 /**
@@ -240,9 +252,32 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
     setMethod('DELETE'),
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
-        firewallID
-      )}/devices/${encodeURIComponent(deviceID)}`
-    )
+        firewallID,
+      )}/devices/${encodeURIComponent(deviceID)}`,
+    ),
+  );
+
+/**
+ * getFirewallSettings
+ *
+ * Returns current interface default firewall settings
+ */
+export const getFirewallSettings = () =>
+  Request<FirewallSettings>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/settings`),
+  );
+
+/**
+ * updateFirewallSettings
+ *
+ * Update which firewalls should be the interface default firewalls
+ */
+export const updateFirewallSettings = (data: UpdateFirewallSettings) =>
+  Request<FirewallSettings>(
+    setMethod('PUT'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/settings`),
+    setData(data, UpdateFirewallSettingsSchema),
   );
 
 // #region Templates
@@ -255,21 +290,72 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
 export const getTemplates = () =>
   Request<Page<FirewallTemplate>>(
     setMethod('GET'),
-    setURL(`${BETA_API_ROOT}/networking/firewalls/templates`)
+    setURL(`${BETA_API_ROOT}/networking/firewalls/templates`),
   );
 
 /**
  * getTemplate
  *
  * Get a specific firewall template by its slug.
- *
  */
-export const getTemplate = (templateSlug: string) =>
+export const getTemplate = (templateSlug: FirewallTemplateSlug) =>
   Request<FirewallTemplate>(
     setMethod('GET'),
     setURL(
       `${BETA_API_ROOT}/networking/firewalls/templates/${encodeURIComponent(
-        templateSlug
-      )}`
-    )
+        templateSlug,
+      )}`,
+    ),
+  );
+
+/**
+ * getFirewallRuleSets
+ *
+ * Returns a paginated list of all Cloud Firewall Rule Sets.
+ */
+export const getFirewallRuleSets = (params?: Params, filter?: Filter) =>
+  Request<Page<FirewallRuleSet>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/rulesets`),
+  );
+
+/**
+ * getFirewallRuleSet
+ *
+ * Get a specific Firewall Rule Set by its ID.
+ */
+export const getFirewallRuleSet = (ruleSetID: number) =>
+  Request<FirewallRuleSet>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/networking/firewalls/rulesets/${encodeURIComponent(ruleSetID)}`,
+    ),
+  );
+
+/**
+ * getFirewallPrefixLists
+ *
+ * Returns a paginated list of all Cloud Firewall Prefix Lists.
+ */
+export const getFirewallPrefixLists = (params?: Params, filter?: Filter) =>
+  Request<Page<FirewallPrefixList>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+    setURL(`${BETA_API_ROOT}/networking/prefixlists`),
+  );
+
+/**
+ * getFirewallPrefixList
+ *
+ * Get a specific Firewall Prefix List by its ID.
+ */
+export const getFirewallPrefixList = (prefixListID: number) =>
+  Request<FirewallPrefixList>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/networking/prefixlists/${encodeURIComponent(prefixListID)}`,
+    ),
   );

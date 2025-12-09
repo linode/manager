@@ -46,6 +46,21 @@ const cloneLandingReducer = (
   action: ObjectUploaderAction
 ) => {
   switch (action.type) {
+    case 'CANCEL_OVERWRITE':
+      const idx = draft.files.findIndex(
+        (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
+      );
+      if (idx > -1) {
+        draft.files.splice(idx, 1);
+      }
+      updateCount(draft);
+      break;
+
+    case 'CLEAR_UPLOAD_HISTORY':
+      draft.files = [];
+      updateCount(draft);
+      break;
+
     // Add files to the queue
     case 'ENQUEUE':
       const newFiles: File[] = [];
@@ -90,28 +105,6 @@ const cloneLandingReducer = (
       updateCount(draft);
       break;
 
-    // Update files given a list of filenames and attributes to update.
-    case 'UPDATE_FILES':
-      action.filesToUpdate.forEach((filename) => {
-        const existingFile = draft.files.find((fileUpload) => {
-          return pathOrFileName(fileUpload.file) === filename;
-        });
-
-        if (existingFile) {
-          Object.keys(action.data).forEach(
-            (key: keyof Partial<ExtendedFile>) => {
-              (existingFile as any)[key] = action.data[key];
-            }
-          );
-
-          // If the status has been changed, we need to update the count.
-          if (action.data.status) {
-            updateCount(draft);
-          }
-        }
-      });
-      break;
-
     case 'NOTIFY_FILE_EXISTS': {
       const foundFile = draft.files.find(
         (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
@@ -135,19 +128,26 @@ const cloneLandingReducer = (
       break;
     }
 
-    case 'CANCEL_OVERWRITE':
-      const idx = draft.files.findIndex(
-        (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
-      );
-      if (idx > -1) {
-        draft.files.splice(idx, 1);
-      }
-      updateCount(draft);
-      break;
+    // Update files given a list of filenames and attributes to update.
+    case 'UPDATE_FILES':
+      action.filesToUpdate.forEach((filename) => {
+        const existingFile = draft.files.find((fileUpload) => {
+          return pathOrFileName(fileUpload.file) === filename;
+        });
 
-    case 'CLEAR_UPLOAD_HISTORY':
-      draft.files = [];
-      updateCount(draft);
+        if (existingFile) {
+          Object.keys(action.data).forEach(
+            (key: keyof Partial<ExtendedFile>) => {
+              (existingFile as any)[key] = action.data[key];
+            }
+          );
+
+          // If the status has been changed, we need to update the count.
+          if (action.data.status) {
+            updateCount(draft);
+          }
+        }
+      });
       break;
   }
 };

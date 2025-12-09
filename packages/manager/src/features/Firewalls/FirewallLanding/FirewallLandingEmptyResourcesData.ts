@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -21,24 +21,20 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Getting Started with Cloud Firewalls',
-      to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls',
     },
     {
       text: 'Manage Firewall Rules',
-      to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/guides/manage-firewall-rules/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/manage-firewall-rules',
     },
     {
       text: 'Comparing Cloud Firewalls to Linux Firewall Software',
-      to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/guides/comparing-firewalls/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/comparing-cloud-firewalls-to-linux-firewall-software',
     },
   ],
   moreInfo: {
     text: 'View additional Firewalls guides',
-    to:
-      'https://www.linode.com/docs/products/networking/cloud-firewall/guides/',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall',
   },
   title: 'Getting Started Guides',
 };
@@ -47,8 +43,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       external: true,
-      text:
-        'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
+      text: 'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
     },
     {

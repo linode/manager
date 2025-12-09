@@ -1,15 +1,14 @@
-import { action } from '@storybook/addon-actions';
+import { Box, Button } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import React from 'react';
+import { action } from 'storybook/actions';
 
-import { Box } from 'src/components/Box';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from 'src/components/Hidden';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 
-import { Button } from '../Button/Button';
 import { Link } from '../Link';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const sxBoxFlex = {
   alignItems: 'center',
@@ -59,7 +58,12 @@ export const Default: Story = {
                 window: 'W0',
               },
             }}
+            linodeId={12434}
+            linodeLabel="linode-001"
+            linodeRegion="us-east"
+            linodeStatus="running"
             linodeType={{
+              accelerated_devices: 0,
               addons: {
                 backups: {
                   price: {
@@ -96,10 +100,6 @@ export const Default: Story = {
               transfer: 2000,
               vcpus: 1,
             }}
-            linodeId={12434}
-            linodeLabel="linode-001"
-            linodeRegion="us-east"
-            linodeStatus="running"
             onOpenDeleteDialog={action('onOpenDeleteDialog')}
             onOpenMigrateDialog={action('onOpenMigrateDialog')}
             onOpenPowerDialog={action('onOpenPowerDialog')}

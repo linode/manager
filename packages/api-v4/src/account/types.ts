@@ -1,7 +1,7 @@
-import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
+import type { APIWarning, RequestOptions } from '../types';
 
-export type UserType = 'child' | 'parent' | 'proxy' | 'default';
+export type UserType = 'child' | 'default' | 'delegate' | 'parent' | 'proxy';
 
 export interface User {
   email: string;
@@ -9,7 +9,7 @@ export interface User {
    * Information for the most recent login attempt for this User.
    * `null` if no login attempts have been made since creation of this User.
    */
-  last_login: {
+  last_login: null | {
     /**
      * @example 2022-02-09T16:19:26
      */
@@ -18,92 +18,119 @@ export interface User {
      * @example successful
      */
     status: AccountLoginStatus;
-  } | null;
+  };
   /**
    * The date of when a password was set on a user.
    * `null` if this user has not created a password yet
    * @example 2022-02-09T16:19:26
    * @example null
    */
-  password_created: string | null;
+  password_created: null | string;
   restricted: boolean;
   ssh_keys: string[];
   tfa_enabled: boolean;
-  username: string;
   user_type: UserType;
-  verified_phone_number: string | null;
+  username: string;
+  verified_phone_number: null | string;
 }
 
 export interface Account {
+  active_promotions: ActivePromotion[];
   active_since: string;
-  address_2: string;
-  email: string;
-  first_name: string;
-  tax_id: string;
-  credit_card: CreditCardData;
-  state: string;
-  zip: string;
   address_1: string;
-  country: string;
-  last_name: string;
+  address_2: string;
   balance: number;
   balance_uninvoiced: number;
   billing_source: BillingSource;
-  city: string;
-  phone: string;
-  company: string;
-  active_promotions: ActivePromotion[];
   capabilities: AccountCapability[];
+  city: string;
+  company: string;
+  country: string;
+  credit_card: CreditCardData;
+  email: string;
   euuid: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  state: string;
+  tax_id: string;
+  zip: string;
 }
 
-export type BillingSource = 'linode' | 'akamai';
+export type BillingSource = 'akamai' | 'linode';
 
-export type AccountCapability =
-  | 'Akamai Cloud Load Balancer'
-  | 'Akamai Cloud Pulse'
-  | 'Block Storage'
-  | 'Block Storage Encryption'
-  | 'Cloud Firewall'
-  | 'CloudPulse'
-  | 'Disk Encryption'
-  | 'Kubernetes'
-  | 'Linodes'
-  | 'LKE HA Control Planes'
-  | 'Machine Images'
-  | 'Managed Databases'
-  | 'Managed Databases V2'
-  | 'NodeBalancers'
-  | 'Object Storage Access Key Regions'
-  | 'Object Storage Endpoint Types'
-  | 'Object Storage'
-  | 'Placement Group'
-  | 'Support Ticket Severity'
-  | 'Vlans'
-  | 'VPCs';
+export const accountCapabilities = [
+  'Akamai Cloud Load Balancer',
+  'Akamai Cloud Pulse',
+  'Akamai Cloud Pulse Logs',
+  'Block Storage',
+  'Block Storage Encryption',
+  'Cloud Firewall',
+  'Cloud Firewall Rule Set',
+  'CloudPulse',
+  'Disk Encryption',
+  'Kubernetes',
+  'Kubernetes Enterprise',
+  'Kubernetes Enterprise BYO VPC',
+  'Kubernetes Enterprise Dual Stack',
+  'Linodes',
+  'Linode Interfaces',
+  'LKE HA Control Planes',
+  'LKE Network Access Control List (IP ACL)',
+  'Machine Images',
+  'Managed Databases',
+  'Managed Databases Beta',
+  'NETINT Quadra T1U',
+  'Network LoadBalancer',
+  'NodeBalancers',
+  'Object Storage Access Key Regions',
+  'Object Storage Endpoint Types',
+  'Object Storage',
+  'Placement Group',
+  'SMTP Enabled',
+  'Support Ticket Severity',
+  'Vlans',
+  'VPCs',
+  'VPC Dual Stack',
+  'VPC IPv6 Large Prefixes',
+] as const;
+
+export type AccountCapability = (typeof accountCapabilities)[number];
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
   unavailable: Capabilities[];
 }
 
+export const linodeInterfaceAccountSettings = [
+  'legacy_config_only',
+  'legacy_config_default_but_linode_allowed',
+  'linode_default_but_legacy_config_allowed',
+  'linode_only',
+] as const;
+
+export type LinodeInterfaceAccountSetting =
+  (typeof linodeInterfaceAccountSettings)[number];
+
 export interface AccountSettings {
-  managed: boolean;
-  longview_subscription: string | null;
-  network_helper: boolean;
   backups_enabled: boolean;
+  interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
+  longview_subscription: null | string;
+  maintenance_policy: MaintenancePolicySlug;
+  managed: boolean;
+  network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
 }
 
 export interface ActivePromotion {
-  description: string;
-  summary: string;
-  expire_dt: string | null;
-  credit_remaining: string;
-  this_month_credit_remaining: string;
   credit_monthly_cap: string;
+  credit_remaining: string;
+  description: string;
+  expire_dt: null | string;
   image_url: string;
   service_type: PromotionServiceType;
+  summary: string;
+  this_month_credit_remaining: string;
 }
 
 export type PromotionServiceType =
@@ -124,45 +151,45 @@ export type PromotionServiceType =
 export type ThirdPartyPayment = 'google_pay' | 'paypal';
 
 export type CardType =
-  | 'Visa'
-  | 'MasterCard'
   | 'American Express'
   | 'Discover'
-  | 'JCB';
+  | 'JCB'
+  | 'MasterCard'
+  | 'Visa';
 
 export type PaymentType = 'credit_card' | ThirdPartyPayment;
 
 export interface TaxSummary {
-  tax: number;
   name: string;
+  tax: number;
 }
 
 export interface Invoice {
-  id: number;
   date: string;
+  id: number;
   label: string;
-  total: number;
-  tax: number;
   subtotal: number;
+  tax: number;
   tax_summary: TaxSummary[];
+  total: number;
 }
 
 export interface InvoiceItem {
   amount: number;
   from: null | string;
-  to: null | string;
   label: string;
   quantity: null | number;
-  type: 'hourly' | 'prepay' | 'misc';
-  unit_price: null | string;
+  region: null | string;
   tax: number;
+  to: null | string;
   total: number;
-  region: string | null;
+  type: 'hourly' | 'misc' | 'prepay';
+  unit_price: null | string;
 }
 
 export interface Payment {
-  id: number;
   date: string;
+  id: number;
   usd: number;
 }
 
@@ -170,21 +197,23 @@ export interface PaymentResponse extends Payment {
   warnings?: APIWarning[];
 }
 
-export type GrantLevel = null | 'read_only' | 'read_write';
+export type GrantLevel = 'read_only' | 'read_write' | null;
 
 export interface Grant {
   id: number;
-  permissions: GrantLevel;
   label: string;
+  permissions: GrantLevel;
 }
 export type GlobalGrantTypes =
   | 'account_access'
+  | 'add_databases'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'
+  | 'add_kubernetes'
   | 'add_linodes'
+  | 'add_lkes'
   | 'add_longview'
-  | 'add_databases'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'
@@ -198,23 +227,24 @@ export interface GlobalGrants {
 }
 
 export type GrantType =
-  | 'linode'
+  | 'database'
   | 'domain'
-  | 'nodebalancer'
+  | 'firewall'
   | 'image'
+  | 'linode'
+  | 'lkecluster'
   | 'longview'
+  | 'nodebalancer'
   | 'stackscript'
   | 'volume'
-  | 'database'
-  | 'firewall'
   | 'vpc';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 
 export interface NetworkUtilization {
   billable: number;
-  used: number;
   quota: number;
+  used: number;
 }
 export interface RegionalNetworkUtilization extends NetworkUtilization {
   region_transfers: RegionalTransferObject[];
@@ -244,44 +274,48 @@ export interface ChildAccountPayload extends RequestOptions {
 export type AgreementType = 'eu_model' | 'privacy_policy';
 
 export interface Agreements {
+  billing_agreement: boolean;
   eu_model: boolean;
   privacy_policy: boolean;
 }
 
 export type NotificationType =
   | 'billing_email_bounce'
-  | 'migration_scheduled'
-  | 'migration_pending'
-  | 'reboot_scheduled'
-  | 'outage'
   | 'maintenance'
+  | 'maintenance_in_progress'
+  | 'maintenance_pending'
   | 'maintenance_scheduled'
-  | 'payment_due'
-  | 'ticket_important'
-  | 'ticket_abuse'
+  | 'migration_pending'
+  | 'migration_scheduled'
   | 'notice'
+  | 'outage'
+  | 'payment_due'
   | 'promotion'
+  | 'reboot_scheduled'
+  | 'security_reboot_maintenance_scheduled'
+  | 'tax_id_verifying'
+  | 'ticket_abuse'
+  | 'ticket_important'
   | 'user_email_bounce'
-  | 'volume_migration_scheduled'
   | 'volume_migration_imminent'
-  | 'tax_id_invalid';
+  | 'volume_migration_scheduled';
 
-export type NotificationSeverity = 'minor' | 'major' | 'critical';
+export type NotificationSeverity = 'critical' | 'major' | 'minor';
 
 export interface Notification {
-  entity: null | Entity;
+  body: null | string;
+  entity: Entity | null;
   label: string;
   message: string;
-  type: NotificationType;
   severity: NotificationSeverity;
-  when: null | string;
+  type: NotificationType;
   until: null | string;
-  body: null | string;
+  when: null | string;
 }
 
 export interface Entity {
   id: number;
-  label: string | null;
+  label: null | string;
   type: string;
   url: string;
 }
@@ -312,7 +346,11 @@ export const EventActionKeys = [
   'database_scale',
   'database_update_failed',
   'database_update',
+  'database_migrate',
   'database_upgrade',
+  'destination_create',
+  'destination_delete',
+  'destination_update',
   'disk_create',
   'disk_delete',
   'disk_duplicate',
@@ -350,6 +388,9 @@ export const EventActionKeys = [
   'image_delete',
   'image_update',
   'image_upload',
+  'interface_create',
+  'interface_delete',
+  'interface_update',
   'ipaddress_update',
   'ipv6pool_add',
   'ipv6pool_delete',
@@ -368,6 +409,7 @@ export const EventActionKeys = [
   'linode_migrate',
   'linode_mutate_create',
   'linode_mutate',
+  'linode_poweroff_on',
   'linode_reboot',
   'linode_rebuild',
   'linode_resize_create',
@@ -434,6 +476,9 @@ export const EventActionKeys = [
   'stackscript_publicize',
   'stackscript_revise',
   'stackscript_update',
+  'stream_create',
+  'stream_delete',
+  'stream_update',
   'subnet_create',
   'subnet_delete',
   'subnet_update',
@@ -469,33 +514,42 @@ export const EventActionKeys = [
   'vpc_update',
 ] as const;
 
-export type EventAction = typeof EventActionKeys[number];
+export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
-  | 'scheduled'
-  | 'started'
-  | 'finished'
+  | 'canceled'
   | 'failed'
-  | 'notification';
+  | 'finished'
+  | 'notification'
+  | 'scheduled'
+  | 'started';
+
+export type EventSource = 'platform' | 'user';
 
 export interface Event {
-  id: number;
   action: EventAction;
+  complete_time?: null | string;
   created: string;
-  entity: Entity | null;
+  description?: null | string;
   /*
     NOTE: events before the duration key was added will have a duration of 0
   */
-  duration: number | null;
-  percent_complete: number | null;
-  rate: string | null;
+  duration: null | number;
+  entity: Entity | null;
+  id: number;
+  maintenance_policy_set?: MaintenancePolicySlug | null;
+  message: null | string;
+  not_before?: null | string;
+  percent_complete: null | number;
+  rate: null | string;
   read: boolean;
+  secondary_entity: Entity | null;
   seen: boolean;
+  source?: EventSource | null;
+  start_time?: null | string;
   status: EventStatus;
   time_remaining: null | string;
-  username: string | null;
-  secondary_entity: Entity | null;
-  message: string | null;
+  username: null | string;
 }
 /**
  * Represents an event which has an entity. For use with type guards.
@@ -508,59 +562,89 @@ export interface EntityEvent extends Event {
 export interface OAuthClient {
   id: string;
   label: string;
-  redirect_uri: string;
-  thumbnail_url: string | null;
   public: boolean;
-  status: 'disabled' | 'active' | 'suspended';
+  redirect_uri: string;
   secret: string;
+  status: 'active' | 'disabled' | 'suspended';
+  thumbnail_url: null | string;
 }
 
 export interface OAuthClientRequest {
   label: string;
-  redirect_uri: string;
   public?: boolean;
+  redirect_uri: string;
 }
 
 export interface SaveCreditCardData {
   card_number: string;
-  expiry_year: number;
-  expiry_month: number;
   cvv: string;
+  expiry_month: number;
+  expiry_year: number;
 }
 
 export interface AccountMaintenance {
-  reason: string;
-  status: 'pending' | 'started' | 'completed';
-  type: 'reboot' | 'cold_migration' | 'live_migration' | 'volume_migration';
-  when: string;
+  complete_time: null | string;
+  description: 'emergency' | 'scheduled';
   entity: {
     id: number;
     label: string;
-    type: string;
+    type: 'linode' | 'volume';
     url: string;
   };
+  maintenance_policy_set: MaintenancePolicySlug;
+  not_before: null | string;
+  reason: string;
+  source: 'platform' | 'user';
+  start_time: null | string;
+  status:
+    | 'canceled'
+    | 'completed'
+    | 'in_progress'
+    | 'pending'
+    | 'scheduled'
+    | 'started';
+  type:
+    | 'cold_migration'
+    | 'live_migration'
+    | 'migrate'
+    | 'power_off_on'
+    | 'reboot'
+    | 'volume_migration';
+  when: string; // Never null, always datetime object
 }
 
+// Note: In the future there will be more slugs, ie: 'private/1234'.
+export type MaintenancePolicySlug = 'linode/migrate' | 'linode/power_off_on';
+
+export type MaintenancePolicy = {
+  description: string;
+  is_default: boolean;
+  label: 'Migrate' | 'Power Off / Power On';
+  notification_period_sec: number;
+  slug: MaintenancePolicySlug;
+  type: 'linode_migrate' | 'linode_power_off_on' | 'migrate' | 'power_off_on'; // Should not be needed for UX. Mainly for FleetOps.
+};
+
 export interface PayPalData {
-  paypal_id: string;
   email: string;
+  paypal_id: string;
 }
 
 export interface CreditCardData {
-  expiry: string | null;
-  last_four: string | null;
   card_type?: CardType;
+  expiry: null | string;
+  last_four: null | string;
 }
 
 interface PaymentMethodMetaData {
+  created: string;
   id: number;
   is_default: boolean;
-  created: string;
 }
 
 interface PaymentMethodData<T, U> extends PaymentMethodMetaData {
-  type: T;
   data: U;
+  type: T;
 }
 
 export type PaymentMethod =
@@ -572,36 +656,40 @@ export interface ClientToken {
 }
 
 export interface PaymentMethodPayload {
-  type: 'credit_card' | 'payment_method_nonce';
   data: SaveCreditCardData | { nonce: string };
   is_default: boolean;
+  type: 'credit_card' | 'payment_method_nonce';
 }
 
 export interface MakePaymentData {
-  usd: string;
   cvv?: string;
   nonce?: string;
   payment_method_id?: number;
+  usd: string;
 }
 
-export type AccountLoginStatus = 'successful' | 'failed';
+export type AccountLoginStatus = 'failed' | 'successful';
 
 export interface AccountLogin {
   datetime: string;
   id: number;
   ip: string;
   restricted: boolean;
-  username: string;
   status: AccountLoginStatus;
+  username: string;
 }
 
 export interface AccountBeta {
+  description: null | string;
+  ended: null | string;
+  /**
+   * The datetime the account enrolled into the beta
+   * @example 2024-10-23T14:22:29
+   */
+  enrolled: string;
+  id: string;
   label: string;
   started: string;
-  id: string;
-  ended?: string;
-  description?: string;
-  enrolled: string;
 }
 
 export interface EnrollInBetaPayload {

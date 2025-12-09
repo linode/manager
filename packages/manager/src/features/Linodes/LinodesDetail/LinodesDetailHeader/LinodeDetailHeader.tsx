@@ -1,26 +1,24 @@
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import { useAllAccountMaintenanceQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { scrollErrorIntoView, useEditableLabelState } from '@linode/utilities';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
@@ -35,17 +33,6 @@ import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import type { BooleanString } from 'src/features/Linodes/types';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
-
-interface QueryParams extends BaseQueryParams {
-  delete: BooleanString;
-  migrate: BooleanString;
-  rebuild: BooleanString;
-  rescue: BooleanString;
-  resize: BooleanString;
-  upgrade: BooleanString;
-}
 
 export const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
@@ -53,58 +40,53 @@ export const LinodeDetailHeader = () => {
   // modal-related query params (and the older /:subpath routes before the redirect
   // logic changes the URL) to determine if a modal should be open when this component
   // is first rendered.
-  const location = useLocation();
-  const queryParams = getQueryParamsFromQueryString<QueryParams>(
-    location.search
-  );
+  const search = useSearch({ from: '/linodes/$linodeId' });
+  const navigate = useNavigate();
 
-  const match = useRouteMatch<{ linodeId: string; subpath: string }>({
-    path: '/linodes/:linodeId/:subpath?',
-  });
-
-  const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
+  const matchedLinodeId = Number(linodeId ?? 0);
 
   const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
 
-  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    matchedLinodeId
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    PENDING_MAINTENANCE_FILTER
   );
 
+  const { mutateAsync: updateLinode } =
+    useLinodeUpdateMutation(matchedLinodeId);
+
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeId
+  );
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(
-    queryParams.delete === 'true'
-  );
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(search.delete);
   const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(
-    queryParams.rebuild === 'true'
+    search.rebuild
   );
-  const [rescueDialogOpen, setRescueDialogOpen] = React.useState(
-    queryParams.rescue === 'true'
-  );
-  const [resizeDialogOpen, setResizeDialogOpen] = React.useState(
-    queryParams.resize === 'true'
-  );
+  const [rescueDialogOpen, setRescueDialogOpen] = React.useState(search.rescue);
+  const [resizeDialogOpen, setResizeDialogOpen] = React.useState(search.resize);
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
-    queryParams.migrate === 'true'
+    search.migrate
   );
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
-  const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
-
-  const history = useHistory();
+  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] =
+    React.useState(false);
+  const isUpgradeVolumesDialogOpen = search.upgrade;
 
   const closeDialogs = () => {
     // If the user is on a Linode detail tab with the modal open and they then close it,
     // change the URL to reflect just the tab they are on.
     if (
-      queryParams.resize ||
-      queryParams.rescue ||
-      queryParams.rebuild ||
-      queryParams.migrate ||
-      queryParams.upgrade
+      search.resize ||
+      search.rescue ||
+      search.rebuild ||
+      search.migrate ||
+      search.upgrade
     ) {
-      history.replace({ search: undefined });
+      navigate({ search: undefined });
     }
 
     setPowerDialogOpen(false);
@@ -116,11 +98,8 @@ export const LinodeDetailHeader = () => {
     setEnableBackupsDialogOpen(false);
   };
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
     try {
@@ -184,7 +163,7 @@ export const LinodeDetailHeader = () => {
     onOpenResizeDialog,
   };
 
-  if (isLoading) {
+  if (isLoading || isPermissionsLoading) {
     return <CircleProgress />;
   }
 
@@ -195,6 +174,12 @@ export const LinodeDetailHeader = () => {
   if (!linode) {
     return null;
   }
+
+  // Combine linode with maintenance data
+  const linodeWithMaintenance = addMaintenanceToLinodes(
+    accountMaintenanceData ?? [],
+    [linode]
+  )[0];
 
   return (
     <>
@@ -214,17 +199,18 @@ export const LinodeDetailHeader = () => {
           },
           pathname: `/linodes/${linode.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_linode}
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() => {
           sendLinodeCreateFlowDocsClickEvent('Getting Started');
         }}
-        docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
       />
       <LinodeEntityDetail
         handlers={handlers}
         id={matchedLinodeId}
-        linode={linode}
+        linode={linodeWithMaintenance}
       />
       <PowerActionsDialog
         action={powerAction}
@@ -237,36 +223,36 @@ export const LinodeDetailHeader = () => {
         linodeId={matchedLinodeId}
         linodeLabel={linode.label}
         onClose={closeDialogs}
-        onSuccess={() => history.replace('/linodes')}
-        open={deleteDialogOpen}
+        onSuccess={() => navigate({ to: '/linodes' })}
+        open={Boolean(deleteDialogOpen)}
       />
       <LinodeResize
         linodeId={matchedLinodeId}
         linodeLabel={linode.label}
         onClose={closeDialogs}
-        open={resizeDialogOpen}
+        open={Boolean(resizeDialogOpen)}
       />
       <LinodeRebuildDialog
         linodeId={matchedLinodeId}
         linodeLabel={linode.label}
         onClose={closeDialogs}
-        open={rebuildDialogOpen}
+        open={Boolean(rebuildDialogOpen)}
       />
       <RescueDialog
         linodeId={matchedLinodeId}
         linodeLabel={linode.label}
         onClose={closeDialogs}
-        open={rescueDialogOpen}
+        open={Boolean(rescueDialogOpen)}
       />
       <MigrateLinode
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
-        open={migrateDialogOpen}
+        open={Boolean(migrateDialogOpen)}
       />
       <UpgradeVolumesDialog
         linode={linode}
         onClose={closeDialogs}
-        open={isUpgradeVolumesDialogOpen}
+        open={Boolean(isUpgradeVolumesDialogOpen)}
       />
       <EnableBackupsDialog
         linodeId={matchedLinodeId}

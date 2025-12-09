@@ -1,5 +1,4 @@
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
+import type { BaseQueryParams, LinodeCreateType } from '@linode/utilities';
 
 export type DialogType =
   | 'delete'
@@ -11,12 +10,6 @@ export type DialogType =
   | 'resize'
   | 'upgrade_volumes';
 
-export type OpenDialog = (
-  type: DialogType,
-  linodeID: number,
-  linodeLabel?: string
-) => void;
-
 export interface LinodeCreateQueryParams extends BaseQueryParams {
   type: LinodeCreateType;
 }
@@ -25,5 +18,3 @@ export interface LinodeConfigAndDiskQueryParams extends BaseQueryParams {
   selectedDisk: string;
   selectedLinode: string;
 }
-
-export type BooleanString = 'false' | 'true';

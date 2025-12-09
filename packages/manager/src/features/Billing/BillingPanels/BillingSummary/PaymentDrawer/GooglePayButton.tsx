@@ -1,29 +1,32 @@
-import { APIWarning } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { useAccount, useClientToken } from '@linode/queries';
+import { CircleProgress, Tooltip } from '@linode/ui';
+import { useScript } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Tooltip } from 'src/components/Tooltip';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import {
   gPay,
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
-import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useScript } from 'src/hooks/useScript';
-import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/payment';
 
-import { SetSuccess } from './types';
+import type { SetSuccess } from './types';
+import type { APIWarning } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { QueryClient } from '@tanstack/react-query';
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& svg': {
-      color: theme.name === 'light' ? '#fff' : '#616161',
+      color:
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals.White
+          : theme.tokens.color.Neutrals[70],
       height: 16,
     },
     '&:hover': {
@@ -31,7 +34,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
       transition: 'none',
     },
     alignItems: 'center',
-    backgroundColor: theme.name === 'light' ? '#000' : '#fff',
+    backgroundColor:
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals.Black
+        : theme.tokens.color.Neutrals.White,
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
@@ -78,9 +84,8 @@ export const GooglePayButton = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] = React.useState<boolean>(
-    false
-  );
+  const [initializationError, setInitializationError] =
+    React.useState<boolean>(false);
   const { data: account } = useAccount();
 
   const {
@@ -140,10 +145,12 @@ export const GooglePayButton = (props: Props) => {
   if (isLoading) {
     return (
       <Grid
-        alignContent="center"
         className={classes.loading}
         container
-        justifyContent="center"
+        sx={{
+          alignContent: 'center',
+          justifyContent: 'center',
+        }}
       >
         <CircleProgress size="sm" />
       </Grid>
@@ -176,5 +183,3 @@ export const GooglePayButton = (props: Props) => {
     </div>
   );
 };
-
-export default GooglePayButton;

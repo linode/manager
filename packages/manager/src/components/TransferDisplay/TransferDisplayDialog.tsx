@@ -1,14 +1,12 @@
+import { useIsGeckoEnabled } from '@linode/shared';
+import { Box, Dialog, Divider, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 
-import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
 import { NETWORK_TRANSFER_USAGE_AND_COST_LINK } from './constants';
 import { TransferDisplayDialogHeader } from './TransferDisplayDialogHeader';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
@@ -39,7 +37,11 @@ export const TransferDisplayDialog = React.memo(
       regionTransferPools,
     } = props;
     const theme = useTheme();
-    const { isGeckoGAEnabled } = useIsGeckoEnabled();
+    const flags = useFlags();
+    const { isGeckoLAEnabled } = useIsGeckoEnabled(
+      flags.gecko2?.enabled,
+      flags.gecko2?.la
+    );
 
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =
@@ -65,16 +67,16 @@ export const TransferDisplayDialog = React.memo(
          *  Global Transfer Pool Display
          */}
         <TransferDisplayDialogHeader
+          dataTestId="global-transfer-pool-header"
+          headerText="Global Network Transfer Pool"
           tooltipText={`The Global Pool includes transfer associated with active services in your devices' ${
-            isGeckoGAEnabled ? 'core' : ''
+            isGeckoLAEnabled ? 'core' : ''
           } regions${
             listOfOtherRegionTransferPools.length > 0
               ? ` except for ${otherRegionPools}.`
               : '.'
           }
           `}
-          dataTestId="global-transfer-pool-header"
-          headerText="Global Network Transfer Pool"
         />
         <Typography marginBottom={theme.spacing(2)}>
           Any additional transfer usage that exceeds this monthly allotment
@@ -113,9 +115,9 @@ export const TransferDisplayDialog = React.memo(
                 marginTop={theme.spacing(2)}
               >
                 <Typography
-                  fontFamily={theme.font.bold}
                   fontSize={theme.typography.h3.fontSize}
                   marginBottom={theme.spacing()}
+                  sx={{ font: theme.font.bold }}
                 >
                   {pool.regionName}{' '}
                   <Typography

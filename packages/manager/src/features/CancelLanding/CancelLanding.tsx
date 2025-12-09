@@ -1,13 +1,13 @@
-import { Theme } from '@mui/material/styles';
-import { path } from 'ramda';
+import { Button, H1Header, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import { redirect, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { Button } from 'src/components/Button/Button';
-import { H1Header } from 'src/components/H1Header/H1Header';
-import { Typography } from 'src/components/Typography';
+import LightThemeAkamaiLogo from 'src/assets/logo/akamai-logo-color.svg';
+import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo.svg';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   logo: {
@@ -15,8 +15,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     '& button': {
-      backgroundColor: '#00b159',
-      color: '#fff',
       marginTop: theme.spacing(8),
     },
     '& h1': {
@@ -39,21 +37,26 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
-  const location = useLocation();
+  const search = useSearch({ from: '/cancel' });
+  const theme = useTheme();
 
-  const survey_link = path<string>(['state', 'survey_link'], location);
+  const surveyLink = search.survey_link;
 
-  if (!survey_link) {
-    return <Redirect to="/" />;
+  if (!surveyLink) {
+    throw redirect({ to: '/' });
   }
 
   const goToSurvey = () => {
-    window.location.assign(survey_link);
+    window.location.assign(surveyLink);
   };
 
   return (
     <div className={classes.root} data-testid="body">
-      <AkamaiLogo className={classes.logo} />
+      {theme.name === 'light' ? (
+        <LightThemeAkamaiLogo className={classes.logo} />
+      ) : (
+        <DarkThemeAkamaiLogo className={classes.logo} />
+      )}
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
         Your account is closed. We hope you&rsquo;ll consider us for your future
@@ -73,5 +76,3 @@ export const CancelLanding = React.memo(() => {
     </div>
   );
 });
-
-export default CancelLanding;

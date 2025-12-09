@@ -15,11 +15,14 @@ interface ExtraPresetOptionCheckboxProps
 export const ExtraPresetOptionSelect = (
   props: ExtraPresetOptionCheckboxProps
 ) => {
-  const { disabled, group, handlers, onSelectChange } = props;
+  const { group, handlers, onSelectChange } = props;
 
   return (
     <div>
       <select
+        className="dt-select dev-tools__select thin"
+        onChange={(e) => onSelectChange(e, group)}
+        style={{ width: 125 }}
         value={
           handlers.find(
             (h) =>
@@ -27,10 +30,6 @@ export const ExtraPresetOptionSelect = (
                 ?.id
           ) || ''
         }
-        className="dev-tools__select thin"
-        disabled={disabled}
-        onChange={(e) => onSelectChange(e, group)}
-        style={{ width: 125 }}
       >
         <option value="">No preset</option>
         {extraMockPresets

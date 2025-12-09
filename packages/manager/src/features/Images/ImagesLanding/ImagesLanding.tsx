@@ -1,127 +1,146 @@
-import CloseIcon from '@mui/icons-material/Close';
+import { imageQueries, useImageQuery, useImagesQuery } from '@linode/queries';
+import { getAPIFilterFromQuery } from '@linode/search';
+import {
+  CircleProgress,
+  Drawer,
+  ErrorState,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { debounce } from 'throttle-debounce';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Drawer } from 'src/components/Drawer';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
+import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import {
   isEventImageUpload,
   isEventInProgressDiskImagize,
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
-import {
-  imageQueries,
-  useDeleteImageMutation,
-  useImagesQuery,
-} from 'src/queries/images';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import {
+  AUTOMATIC_IMAGES_DEFAULT_ORDER,
+  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+  AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
+  AUTOMATIC_IMAGES_PREFERENCE_KEY,
+  MANUAL_IMAGES_DEFAULT_ORDER,
+  MANUAL_IMAGES_DEFAULT_ORDER_BY,
+  MANUAL_IMAGES_PREFERENCE_KEY,
+} from '../constants';
 import { getEventsForImages } from '../utils';
+import { DeleteImageDialog } from './DeleteImageDialog';
 import { EditImageDrawer } from './EditImageDrawer';
-import { ManageImageRegionsForm } from './ImageRegions/ManageImageRegionsForm';
+import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { Filter, ImageStatus } from '@linode/api-v4';
+import type { Filter, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-
-const searchQueryKey = 'query';
+import type { ImageAction } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacingFunction(24),
     padding: 0,
   },
   imageTableHeader: {
-    marginLeft: theme.spacing(),
-    padding: theme.spacing(),
+    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+    borderBottom: 0,
+    padding: theme.spacingFunction(8),
+    paddingLeft: theme.spacingFunction(12),
   },
   imageTableSubheader: {
-    marginTop: theme.spacing(),
+    marginTop: theme.spacingFunction(8),
   },
 }));
 
-interface ImageDialogState {
-  error?: string;
-  image?: string;
-  imageID?: string;
-  open: boolean;
-  status?: ImageStatus;
-  submitting: boolean;
-}
-
-const defaultDialogState = {
-  error: undefined,
-  image: '',
-  imageID: '',
-  open: false,
-  submitting: false,
-};
-
 export const ImagesLanding = () => {
   const { classes } = useStyles();
-  const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
-  const flags = useFlags();
-  const location = useLocation();
-  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
+  const params = useParams({
+    from: '/images/$imageId/$action',
+    shouldThrow: false,
   });
-  const queryParams = new URLSearchParams(location.search);
-  const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
-
+  const search = useSearch({ from: '/images' });
+  const { query } = search;
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const paginationForManualImages = usePagination(1, 'images-manual', 'manual');
+  const { data: permissions } = usePermissions('account', ['create_image']);
+  const canCreateImage = permissions?.create_image;
+
+  /**
+   * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
+   *
+   * Some fields like `status` and `region` can't be used in complex filters using '+or' / '+and'
+   *
+   * Using `tags` in a '+or' is currently broken. See ARB-5792
+   */
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
+    // Because Images have an array of region objects, we need to transform
+    // search queries like "region: us-east" to { regions: { region: "us-east" } }
+    // rather than the default behavior which is { region: { '+contains': "us-east" } }
+    filterShapeOverrides: {
+      '+contains': {
+        field: 'region',
+        filter: (value) => ({ regions: { region: value } }),
+      },
+      '+eq': {
+        field: 'region',
+        filter: (value) => ({ regions: { region: value } }),
+      },
+    },
+    searchableFieldsWithoutOperator: ['label', 'tags'],
+  });
+
+  const paginationForManualImages = usePaginationV2({
+    currentRoute: '/images',
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
 
   const {
     handleOrderChange: handleManualImagesOrderChange,
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
-  } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: MANUAL_IMAGES_DEFAULT_ORDER,
+        orderBy: MANUAL_IMAGES_DEFAULT_ORDER_BY,
+      },
+      from: '/images',
     },
-    'images-manual-order',
-    'manual'
-  );
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    prefix: 'manual',
+  });
 
   const manualImagesFilter: Filter = {
     ['+order']: manualImagesOrder,
     ['+order_by']: manualImagesOrderBy,
-    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
+    ...filter,
   };
 
   const {
@@ -145,32 +164,43 @@ export const ImagesLanding = () => {
       // to update Image region statuses. We should make the API
       // team and Images team implement events for this.
       refetchInterval: 30_000,
+      // If we have a search query, disable retries to keep the UI
+      // snappy if the user inputs an invalid X-Filter. Otherwise,
+      // pass undefined to use the default retry behavior.
+      retry: query ? false : undefined,
     }
   );
 
   // Pagination, order, and query hooks for automatic/recovery images
-  const paginationForAutomaticImages = usePagination(
-    1,
-    'images-automatic',
-    'automatic'
-  );
+  const paginationForAutomaticImages = usePaginationV2({
+    currentRoute: '/images',
+    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+
   const {
     handleOrderChange: handleAutomaticImagesOrderChange,
     order: automaticImagesOrder,
     orderBy: automaticImagesOrderBy,
-  } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: AUTOMATIC_IMAGES_DEFAULT_ORDER,
+        orderBy: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+      },
+      from: '/images',
     },
-    'images-automatic-order',
-    'automatic'
-  );
+    preferenceKey: AUTOMATIC_IMAGES_ORDER_PREFERENCE_KEY,
+    prefix: 'automatic',
+  });
 
   const automaticImagesFilter: Filter = {
     ['+order']: automaticImagesOrder,
     ['+order_by']: automaticImagesOrderBy,
-    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
+    ...filter,
   };
 
   const {
@@ -187,10 +217,20 @@ export const ImagesLanding = () => {
       ...automaticImagesFilter,
       is_public: false,
       type: 'automatic',
+    },
+    {
+      // If we have a search query, disable retries to keep the UI
+      // snappy if the user inputs an invalid X-Filter. Otherwise,
+      // pass undefined to use the default retry behavior.
+      retry: query ? false : undefined,
     }
   );
 
-  const { mutateAsync: deleteImage } = useDeleteImageMutation();
+  const {
+    data: selectedImage,
+    isLoading: isFetchingSelectedImage,
+    error: selectedImageError,
+  } = useImageQuery(params?.imageId ?? '', !!params?.imageId);
 
   const { events } = useEventsInfiniteQuery();
 
@@ -206,111 +246,38 @@ export const ImagesLanding = () => {
     imageEvents
   );
 
-  // TODO Image Service V2: delete after GA
-  const multiRegionsEnabled =
-    (flags.imageServiceGen2 &&
-      manualImages?.data.some((image) => image.regions?.length)) ??
-    false;
-
   // Automatic images with the associated events tied in.
   const automaticImagesEvents = getEventsForImages(
     automaticImages?.data ?? [],
     imageEvents
   );
 
-  const [selectedImageId, setSelectedImageId] = React.useState<string>();
-
-  const [
-    isManageRegionsDrawerOpen,
-    setIsManageRegionsDrawerOpen,
-  ] = React.useState(false);
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-  const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
-
-  const selectedImage =
-    manualImages?.data.find((i) => i.id === selectedImageId) ??
-    automaticImages?.data.find((i) => i.id === selectedImageId);
-
-  const [dialog, setDialogState] = React.useState<ImageDialogState>(
-    defaultDialogState
-  );
-
-  const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
-  const dialogMessage =
-    dialogAction === 'cancel'
-      ? 'Are you sure you want to cancel this Image upload?'
-      : 'Are you sure you want to delete this Image?';
-
-  const openDialog = (image: string, imageID: string, status: ImageStatus) => {
-    setDialogState({
-      error: undefined,
-      image,
-      imageID,
-      open: true,
-      status,
-      submitting: false,
+  const actionHandler = (image: Image, action: ImageAction) => {
+    navigate({
+      params: { action, imageId: image.id },
+      search: (prev) => prev,
+      to: '/images/$imageId/$action',
     });
   };
 
-  const closeDialog = () => {
-    setDialogState({ ...dialog, open: false });
+  const handleEdit = (image: Image) => {
+    actionHandler(image, 'edit');
   };
 
-  const handleRemoveImage = () => {
-    if (!dialog.imageID) {
-      setDialogState((dialog) => ({
-        ...dialog,
-        error: 'Image is not available.',
-      }));
-    }
-    setDialogState((dialog) => ({
-      ...dialog,
-      error: undefined,
-      submitting: true,
-    }));
-
-    deleteImage({ imageId: dialog.imageID! })
-      .then(() => {
-        closeDialog();
-        /**
-         * request generated by the Pagey HOC.
-         *
-         * We're making a request here because the image is being
-         * optimistically deleted on the API side, so a GET to /images
-         * will not return the image scheduled for deletion. This request
-         * is ensuring the image is removed from the list, to prevent the user
-         * from taking any action on the Image.
-         */
-        // this.props.onDelete();
-        enqueueSnackbar('Image has been scheduled for deletion.', {
-          variant: 'info',
-        });
-      })
-      .catch((err) => {
-        const _error = getErrorStringOrDefault(
-          err,
-          'There was an error deleting the image.'
-        );
-        setDialogState((dialog) => ({
-          ...dialog,
-          error: _error,
-          submitting: false,
-        }));
-      });
+  const handleRebuild = (image: Image) => {
+    actionHandler(image, 'rebuild');
   };
 
-  const onRetryClick = (
-    imageId: string,
-    imageLabel: string,
-    imageDescription: string
-  ) => {
-    queryClient.invalidateQueries({
-      queryKey: imageQueries.paginated._def,
-    });
-    history.push('/images/create/upload', {
-      imageDescription,
-      imageLabel,
-    });
+  const handleDelete = (image: Image) => {
+    actionHandler(image, 'delete');
+  };
+
+  const handleCloseDialog = () => {
+    navigate({ search: (prev) => prev, to: '/images' });
+  };
+
+  const handleManageRegions = (image: Image) => {
+    actionHandler(image, 'manage-replicas');
   };
 
   const onCancelFailedClick = () => {
@@ -319,51 +286,40 @@ export const ImagesLanding = () => {
     });
   };
 
-  const deployNewLinode = (imageID: string) => {
-    history.push({
-      pathname: `/linodes/create/`,
-      search: `?type=Images&imageID=${imageID}`,
-      state: { selectedImageId: imageID },
+  const handleDeployNewLinode = (imageId: string) => {
+    navigate({
+      to: '/linodes/create/images',
+      search: {
+        imageID: imageId,
+      },
     });
   };
 
-  const resetSearch = () => {
-    queryParams.delete(searchQueryKey);
-    history.push({ search: queryParams.toString() });
-  };
-
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    queryParams.delete('page');
-    queryParams.set(searchQueryKey, e.target.value);
-    history.push({ search: queryParams.toString() });
+  const onSearch = (query: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: query || undefined,
+      }),
+      to: '/images',
+    });
   };
 
   const handlers: ImageHandlers = {
     onCancelFailed: onCancelFailedClick,
-    onDelete: openDialog,
-    onDeploy: deployNewLinode,
-    onEdit: (image) => {
-      setSelectedImageId(image.id);
-      setIsEditDrawerOpen(true);
-    },
-    onManageRegions: multiRegionsEnabled
-      ? (image) => {
-          setSelectedImageId(image.id);
-          setIsManageRegionsDrawerOpen(true);
-        }
-      : undefined,
-    onRestore: (image) => {
-      setSelectedImageId(image.id);
-      setIsRebuildDrawerOpen(true);
-    },
-    onRetry: onRetryClick,
+    onDelete: handleDelete,
+    onDeploy: handleDeployNewLinode,
+    onEdit: handleEdit,
+    onManageRegions: handleManageRegions,
+    onRebuild: handleRebuild,
   };
 
   if (manualImagesLoading || automaticImagesLoading) {
     return <CircleProgress />;
   }
 
-  if (manualImagesError || automaticImagesError) {
+  if (!query && (manualImagesError || automaticImagesError)) {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
@@ -372,270 +328,244 @@ export const ImagesLanding = () => {
     );
   }
 
-  if (
-    manualImages?.results === 0 &&
-    automaticImages?.results === 0 &&
-    !imageLabelFromParam
-  ) {
+  if (manualImages?.results === 0 && automaticImages?.results === 0 && !query) {
     return <ImagesLandingEmptyState />;
   }
 
   const isFetching = manualImagesIsFetching || automaticImagesIsFetching;
 
   return (
-    <React.Fragment>
-      <DocumentTitleSegment segment="Images" />
+    <>
       <LandingHeader
-        buttonDataAttrs={{
-          tooltipText: getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          }),
+        breadcrumbProps={{
+          pathname: 'Images',
+          removeCrumbX: 1,
         }}
-        disabledCreateButton={isImagesReadOnly}
-        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+        buttonDataAttrs={{
+          tooltipText: canCreateImage
+            ? false
+            : "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
+        }}
+        disabledCreateButton={!canCreateImage}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
-        onButtonClick={() => history.push('/images/create')}
+        onButtonClick={() =>
+          navigate({ search: () => ({}), to: '/images/create' })
+        }
+        spacingBottom={16}
         title="Images"
       />
-      <TextField
-        InputProps={{
-          endAdornment: imageLabelFromParam && (
-            <InputAdornment position="end">
-              {isFetching && <CircleProgress size="sm" />}
-
-              <IconButton
-                aria-label="Clear"
-                data-testid="clear-images-search"
-                onClick={resetSearch}
-                size="small"
-              >
-                <CloseIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        onChange={debounce(400, (e) => {
-          onSearch(e);
-        })}
-        hideLabel
-        label="Search"
-        placeholder="Search Images"
-        sx={{ mb: 2 }}
-        value={imageLabelFromParam}
-      />
-      <Paper className={classes.imageTable}>
-        <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Custom Images</Typography>
-          <Typography className={classes.imageTableSubheader}>
-            These are images you manually uploaded or captured from an existing
-            Linode disk.
-          </Typography>
-        </div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableSortCell
-                active={manualImagesOrderBy === 'label'}
-                direction={manualImagesOrder}
-                handleClick={handleManualImagesOrderChange}
-                label="label"
-              >
-                Image
-              </TableSortCell>
-              <Hidden smDown>
-                <TableCell>Status</TableCell>
-              </Hidden>
-              {multiRegionsEnabled && (
-                <>
-                  <Hidden smDown>
-                    <TableCell>Region(s)</TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>Compatibility</TableCell>
-                  </Hidden>
-                </>
-              )}
-              <TableSortCell
-                active={manualImagesOrderBy === 'size'}
-                direction={manualImagesOrder}
-                handleClick={handleManualImagesOrderChange}
-                label="size"
-              >
-                Size
-              </TableSortCell>
-              {multiRegionsEnabled && (
-                <Hidden mdDown>
-                  <TableCell>Total Size</TableCell>
-                </Hidden>
-              )}
-              <Hidden mdDown>
+      <Stack spacing={3}>
+        <DebouncedSearchTextField
+          clearable
+          errorText={searchParseError?.message}
+          hideLabel
+          isSearching={isFetching}
+          label="Search"
+          onSearch={onSearch}
+          placeholder="Search Images"
+          value={query ?? ''}
+        />
+        <Paper className={classes.imageTable}>
+          <div className={classes.imageTableHeader}>
+            <Typography variant="h3">Custom Images</Typography>
+            <Typography className={classes.imageTableSubheader}>
+              These are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+                encrypted
+              </Link>{' '}
+              images you manually uploaded or captured from an existing compute
+              instance disk. You can deploy an image to a compute instance in
+              any region.
+            </Typography>
+          </div>
+          <Table>
+            <TableHead>
+              <TableRow>
                 <TableSortCell
-                  active={manualImagesOrderBy === 'created'}
+                  active={manualImagesOrderBy === 'label'}
                   direction={manualImagesOrder}
                   handleClick={handleManualImagesOrderChange}
-                  label="created"
+                  label="label"
                 >
-                  Created
+                  Image
                 </TableSortCell>
-              </Hidden>
-              {multiRegionsEnabled && (
+                <Hidden smDown>
+                  <TableCell>Status</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Replicated in</TableCell>
+                </Hidden>
+                <TableSortCell
+                  active={manualImagesOrderBy === 'size'}
+                  direction={manualImagesOrder}
+                  handleClick={handleManualImagesOrderChange}
+                  label="size"
+                >
+                  Original Image
+                </TableSortCell>
+                <Hidden mdDown>
+                  <TableCell>All Replicas</TableCell>
+                </Hidden>
+                <Hidden mdDown>
+                  <TableSortCell
+                    active={manualImagesOrderBy === 'created'}
+                    direction={manualImagesOrder}
+                    handleClick={handleManualImagesOrderChange}
+                    label="created"
+                  >
+                    Created
+                  </TableSortCell>
+                </Hidden>
                 <Hidden mdDown>
                   <TableCell>Image ID</TableCell>
                 </Hidden>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {manualImages?.results === 0 && (
+                <TableRowEmpty
+                  colSpan={9}
+                  message={`No Custom Images to display.`}
+                />
               )}
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {manualImages?.results === 0 && (
-              <TableRowEmpty
-                colSpan={9}
-                message={`No Custom Images to display.`}
-              />
-            )}
-            {manualImages?.data.map((manualImage) => (
-              <ImageRow
-                event={manualImagesEvents[manualImage.id]}
-                handlers={handlers}
-                image={manualImage}
-                key={manualImage.id}
-                multiRegionsEnabled={multiRegionsEnabled}
-              />
-            ))}
-          </TableBody>
-        </Table>
-        <PaginationFooter
-          count={manualImages?.results ?? 0}
-          eventCategory="Custom Images Table"
-          handlePageChange={paginationForManualImages.handlePageChange}
-          handleSizeChange={paginationForManualImages.handlePageSizeChange}
-          page={paginationForManualImages.page}
-          pageSize={paginationForManualImages.pageSize}
-        />
-      </Paper>
-      <Paper className={classes.imageTable}>
-        <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Recovery Images</Typography>
-          <Typography className={classes.imageTableSubheader}>
-            These are images we automatically capture when Linode disks are
-            deleted. They will be deleted after the indicated expiration date.
-          </Typography>
-        </div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'label'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="label"
-              >
-                Image
-              </TableSortCell>
-              <Hidden smDown>
-                <TableCell>Status</TableCell>
-              </Hidden>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'size'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="size"
-              >
-                Size
-              </TableSortCell>
-              <Hidden smDown>
+              {manualImagesError && query && (
+                <TableRowError
+                  colSpan={9}
+                  message={manualImagesError[0].reason}
+                />
+              )}
+              {manualImages?.data.map((manualImage) => (
+                <ImageRow
+                  event={manualImagesEvents[manualImage.id]}
+                  handlers={handlers}
+                  image={manualImage}
+                  key={manualImage.id}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={manualImages?.results ?? 0}
+            eventCategory="Custom Images Table"
+            handlePageChange={paginationForManualImages.handlePageChange}
+            handleSizeChange={paginationForManualImages.handlePageSizeChange}
+            page={paginationForManualImages.page}
+            pageSize={paginationForManualImages.pageSize}
+          />
+        </Paper>
+        <Paper className={classes.imageTable}>
+          <div className={classes.imageTableHeader}>
+            <Typography variant="h3">Recovery Images</Typography>
+            <Typography className={classes.imageTableSubheader}>
+              These are images we automatically capture when Linode disks are
+              deleted. They will be deleted after the indicated expiration date.
+            </Typography>
+          </div>
+          <Table>
+            <TableHead>
+              <TableRow>
                 <TableSortCell
-                  active={automaticImagesOrderBy === 'created'}
+                  active={automaticImagesOrderBy === 'label'}
                   direction={automaticImagesOrder}
                   handleClick={handleAutomaticImagesOrderChange}
-                  label="created"
+                  label="label"
                 >
-                  Created
+                  Image
                 </TableSortCell>
-              </Hidden>
-              <Hidden smDown>
-                <TableCell>Expires</TableCell>
-              </Hidden>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {automaticImages?.results === 0 && (
-              <TableRowEmpty
-                colSpan={6}
-                message={`No Recovery Images to display.`}
-              />
-            )}
-            {automaticImages?.data.map((automaticImage) => (
-              <ImageRow
-                event={automaticImagesEvents[automaticImage.id]}
-                handlers={handlers}
-                image={automaticImage}
-                key={automaticImage.id}
-              />
-            ))}
-          </TableBody>
-        </Table>
-        <PaginationFooter
-          count={automaticImages?.results ?? 0}
-          eventCategory="Recovery Images Table"
-          handlePageChange={paginationForAutomaticImages.handlePageChange}
-          handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
-          page={paginationForAutomaticImages.page}
-          pageSize={paginationForAutomaticImages.pageSize}
-        />
-      </Paper>
-      <EditImageDrawer
-        image={selectedImage}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
-      />
-      <RebuildImageDrawer
-        image={selectedImage}
-        onClose={() => setIsRebuildDrawerOpen(false)}
-        open={isRebuildDrawerOpen}
-      />
-      <Drawer
-        onClose={() => setIsManageRegionsDrawerOpen(false)}
-        open={isManageRegionsDrawerOpen}
-        title={`Manage Regions for ${selectedImage?.label}`}
-      >
-        <ManageImageRegionsForm
-          image={selectedImage}
-          onClose={() => setIsManageRegionsDrawerOpen(false)}
-        />
-      </Drawer>
-      <ConfirmationDialog
-        actions={
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label:
-                dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image',
-              loading: dialog.submitting,
-              onClick: handleRemoveImage,
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: dialogAction === 'cancel' ? 'Keep Image' : 'Cancel',
-              onClick: closeDialog,
-            }}
+                <Hidden smDown>
+                  <TableCell>Status</TableCell>
+                </Hidden>
+                <TableSortCell
+                  active={automaticImagesOrderBy === 'size'}
+                  direction={automaticImagesOrder}
+                  handleClick={handleAutomaticImagesOrderChange}
+                  label="size"
+                >
+                  Size
+                </TableSortCell>
+                <Hidden smDown>
+                  <TableSortCell
+                    active={automaticImagesOrderBy === 'created'}
+                    direction={automaticImagesOrder}
+                    handleClick={handleAutomaticImagesOrderChange}
+                    label="created"
+                  >
+                    Created
+                  </TableSortCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Expires</TableCell>
+                </Hidden>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {automaticImages?.results === 0 && (
+                <TableRowEmpty
+                  colSpan={6}
+                  message={`No Recovery Images to display.`}
+                />
+              )}
+              {automaticImagesError && query && (
+                <TableRowError
+                  colSpan={9}
+                  message={automaticImagesError[0].reason}
+                />
+              )}
+              {automaticImages?.data.map((automaticImage) => (
+                <ImageRow
+                  event={automaticImagesEvents[automaticImage.id]}
+                  handlers={handlers}
+                  image={automaticImage}
+                  key={automaticImage.id}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={automaticImages?.results ?? 0}
+            eventCategory="Recovery Images Table"
+            handlePageChange={paginationForAutomaticImages.handlePageChange}
+            handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
+            page={paginationForAutomaticImages.page}
+            pageSize={paginationForAutomaticImages.pageSize}
           />
-        }
-        title={
-          dialogAction === 'cancel'
-            ? 'Cancel Upload'
-            : `Delete Image ${dialog.image}`
-        }
-        onClose={closeDialog}
-        open={dialog.open}
-      >
-        {dialog.error && <Notice text={dialog.error} variant="error" />}
-        <Typography>{dialogMessage}</Typography>
-      </ConfirmationDialog>
-    </React.Fragment>
+        </Paper>
+        <EditImageDrawer
+          image={selectedImage}
+          imageError={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={params?.action === 'edit'}
+        />
+        <RebuildImageDrawer
+          image={selectedImage}
+          imageError={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={params?.action === 'rebuild'}
+        />
+        <Drawer
+          error={selectedImageError}
+          isFetching={isFetchingSelectedImage}
+          onClose={handleCloseDialog}
+          open={params?.action === 'manage-replicas'}
+          title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
+        >
+          <ManageImageReplicasForm
+            image={selectedImage}
+            onClose={handleCloseDialog}
+          />
+        </Drawer>
+        <DeleteImageDialog
+          imageId={params?.imageId}
+          onClose={handleCloseDialog}
+          open={params?.action === 'delete'}
+        />
+      </Stack>
+    </>
   );
 };
 

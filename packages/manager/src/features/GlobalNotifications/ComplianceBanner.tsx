@@ -1,12 +1,10 @@
-import { styled } from '@mui/system';
+import { useNotificationsQuery } from '@linode/queries';
+import { Box, Button, Typography } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
 
 import { isEUModelContractNotification } from '../NotificationCenter/utils';
 
@@ -29,7 +27,6 @@ export const ComplianceBanner = () => {
           Review Update
         </StyledActionButton>
       }
-      important
       preferenceKey="gdpr-compliance"
       variant="warning"
     >
@@ -50,7 +47,7 @@ export const ComplianceBanner = () => {
   );
 };
 
-const StyledActionButton = styled(Button)(({}) => ({
+const StyledActionButton = styled(Button)({
   marginLeft: 12,
   minWidth: 150,
-}));
+});

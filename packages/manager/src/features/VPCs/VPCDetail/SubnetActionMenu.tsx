@@ -1,7 +1,11 @@
-import { Subnet } from '@linode/api-v4';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
+
+import type { Subnet } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface SubnetActionHandlers {
   handleAssignLinodes: (subnet: Subnet) => void;
@@ -12,6 +16,7 @@ interface SubnetActionHandlers {
 
 interface Props extends SubnetActionHandlers {
   numLinodes: number;
+  numNodebalancers: number;
   subnet: Subnet;
   vpcId: number;
 }
@@ -23,8 +28,21 @@ export const SubnetActionMenu = (props: Props) => {
     handleEdit,
     handleUnassignLinodes,
     numLinodes,
+    numNodebalancers,
     subnet,
+    vpcId,
   } = props;
+
+  const flags = useIsNodebalancerVPCEnabled();
+
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['update_vpc', 'delete_vpc'],
+    vpcId
+  );
+
+  const canUpdateVPC = permissions?.update_vpc;
+  const canDeleteVPC = permissions?.delete_vpc;
 
   const actions: Action[] = [
     {
@@ -44,17 +62,25 @@ export const SubnetActionMenu = (props: Props) => {
         handleEdit(subnet);
       },
       title: 'Edit',
+      // TODO: change to 'update_vpc_subnet' once it's available
+      disabled: !canUpdateVPC,
+      tooltip: !canUpdateVPC
+        ? 'You do not have permission to edit this subnet.'
+        : undefined,
     },
     {
-      disabled: numLinodes !== 0,
+      // TODO: change to 'delete_vpc_subnet' once it's available
+      disabled: numLinodes !== 0 || numNodebalancers !== 0 || !canDeleteVPC,
       onClick: () => {
         handleDelete(subnet);
       },
       title: 'Delete',
       tooltip:
-        numLinodes > 0
-          ? 'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
-          : '',
+        numLinodes > 0 || numNodebalancers > 0
+          ? `${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'} assigned to a subnet must be unassigned before the subnet can be deleted.`
+          : !canDeleteVPC
+            ? 'You do not have permission to delete this subnet.'
+            : undefined,
     },
   ];
 

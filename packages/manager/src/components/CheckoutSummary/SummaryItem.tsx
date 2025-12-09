@@ -1,9 +1,9 @@
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import { Typography } from '../Typography';
-import { SummaryItem as Props } from './CheckoutSummary';
+import type { SummaryItem as Props } from './CheckoutSummary';
 
 export const SummaryItem = ({ details, title }: Props) => {
   return (
@@ -11,10 +11,10 @@ export const SummaryItem = ({ details, title }: Props) => {
       {title ? (
         <>
           <Typography
-            sx={(theme) => ({
-              fontFamily: theme.font.bold,
-            })}
             component="span"
+            sx={(theme) => ({
+              font: theme.font.bold,
+            })}
           >
             {title}
           </Typography>{' '}
@@ -27,7 +27,7 @@ export const SummaryItem = ({ details, title }: Props) => {
   );
 };
 
-const StyledGrid = styled(Grid2)(({ theme }) => ({
+const StyledGrid = styled(Grid)(({ theme }) => ({
   marginBottom: `${theme.spacing()} !important`,
   marginTop: `${theme.spacing()} !important`,
   paddingBottom: '0 !important',

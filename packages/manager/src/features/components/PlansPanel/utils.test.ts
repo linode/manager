@@ -1,6 +1,9 @@
+import { regionAvailabilityFactory } from '@linode/utilities';
+import { renderHook } from '@testing-library/react';
+
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { regionAvailabilityFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
 import {
@@ -10,9 +13,23 @@ import {
   getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
   planTypeOrder,
+  replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedPlansEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+  };
+});
 
 const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
@@ -28,6 +45,10 @@ const nanode = typeFactory.build({ class: 'nanode', id: 'g6-nanode-1' });
 const premium = typeFactory.build({ class: 'premium', id: 'g6-premium-2' });
 const highmem = typeFactory.build({ class: 'highmem', id: 'g6-highmem-1' });
 const gpu = typeFactory.build({ class: 'gpu', id: 'g6-gpu-1' });
+const accelerated = typeFactory.build({
+  class: 'accelerated',
+  id: 'accelerated-1',
+});
 
 describe('getPlanSelectionsByPlanType', () => {
   it('should return an object with plans grouped by type', () => {
@@ -59,6 +80,7 @@ describe('getPlanSelectionsByPlanType', () => {
       nanode,
       dedicated,
       prodedicated,
+      accelerated,
     ]);
     const expectedOrder = planTypeOrder;
 
@@ -104,6 +126,41 @@ describe('getPlanSelectionsByPlanType', () => {
     const actualKeys = Object.keys(actual);
 
     expect(actualKeys).toEqual(expectedOrder);
+  });
+
+  it('should filter out RTX6000 plans when isLKE is true', () => {
+    const rtx6000Plan = typeFactory.build({
+      class: 'gpu',
+      id: 'g1-gpu-rtx6000-1',
+    });
+    const rtx4000Plan = typeFactory.build({
+      class: 'gpu',
+      id: 'g1-gpu-rtx4000-1',
+    });
+
+    // With isLKE: true, RTX6000 should be filtered out
+    const actualWithLKE = getPlanSelectionsByPlanType(
+      [rtx6000Plan, rtx4000Plan],
+      { isLKE: true }
+    );
+
+    // With isLKE: false or default, RTX6000 should remain
+    const actualWithoutLKE = getPlanSelectionsByPlanType(
+      [rtx6000Plan, rtx4000Plan],
+      { isLKE: false }
+    );
+
+    const actualWithDefault = getPlanSelectionsByPlanType([
+      rtx6000Plan,
+      rtx4000Plan,
+    ]);
+
+    // RTX6000 should be filtered out in LKE context
+    expect(actualWithLKE.gpu).toEqual([rtx4000Plan]);
+
+    // RTX6000 should remain in non-LKE context
+    expect(actualWithoutLKE.gpu).toEqual([rtx6000Plan, rtx4000Plan]);
+    expect(actualWithDefault.gpu).toEqual([rtx6000Plan, rtx4000Plan]);
   });
 });
 
@@ -255,6 +312,9 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
     ]);
@@ -266,18 +326,27 @@ describe('extractPlansInformation', () => {
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: true,
         planIsDisabled512Gb: false,
+        planResizeNotSupported: false,
+        planIsSmallerThanUsage: false,
+        planIsTooSmallForAPL: undefined,
       },
       {
         ...g7Standard1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planResizeNotSupported: false,
+        planIsSmallerThanUsage: false,
+        planIsTooSmallForAPL: undefined,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planResizeNotSupported: false,
+        planIsSmallerThanUsage: false,
+        planIsTooSmallForAPL: undefined,
       },
     ]);
   });
@@ -286,6 +355,7 @@ describe('extractPlansInformation', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
       disabledSmallerPlans: [g7Standard1],
+      isLegacyDatabase: true,
       plans: [g6Standard1, g6Nanode1, g7Standard1],
       regionAvailabilities: [
         regionAvailabilityFactory.build({
@@ -314,7 +384,10 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -323,7 +396,10 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -332,7 +408,10 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: false,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: true,
+          planIsTooSmallForAPL: undefined,
         },
       },
     ]);
@@ -345,7 +424,10 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -354,7 +436,10 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: true,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: false,
+          planIsTooSmallForAPL: undefined,
         },
       },
       {
@@ -363,7 +448,10 @@ describe('extractPlansInformation', () => {
           planBelongsToDisabledClass: false,
           planHasLimitedAvailability: false,
           planIsDisabled512Gb: false,
+          planResizeNotSupported: false,
+          planIsSmallerThanUsage: false,
           planIsTooSmall: true,
+          planIsTooSmallForAPL: undefined,
         },
       },
     ]);
@@ -398,14 +486,20 @@ describe('extractPlansInformation', () => {
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planResizeNotSupported: false,
+        planIsSmallerThanUsage: false,
         planIsTooSmall: false,
+        planIsTooSmallForAPL: undefined,
       },
       {
         ...g6Nanode1,
         planBelongsToDisabledClass: false,
         planHasLimitedAvailability: false,
         planIsDisabled512Gb: false,
+        planResizeNotSupported: false,
+        planIsSmallerThanUsage: false,
         planIsTooSmall: false,
+        planIsTooSmallForAPL: undefined,
       },
     ]);
   });
@@ -415,6 +509,164 @@ describe('extractPlansInformation', () => {
       const result = getDisabledPlanReasonCopy({} as any);
 
       expect(result).toBe(PLAN_IS_CURRENTLY_UNAVAILABLE_COPY);
+    });
+  });
+
+  describe('replaceOrAppendPlaceholder512GbPlans', () => {
+    it('should not append to DBaaS plans', () => {
+      const plans = [
+        {
+          id: 'g6-dedicated-56',
+          label: 'DBaaS - Dedicated 256GB',
+        },
+      ] as PlanSelectionType[];
+      const results = replaceOrAppendPlaceholder512GbPlans(plans);
+      expect(results.length).toEqual(1);
+    });
+
+    it('should append to Linode plans', () => {
+      const plans = [
+        {
+          id: 'g6-dedicated-56',
+          label: 'Dedicated 256GB',
+        },
+      ] as PlanSelectionType[];
+      const results = replaceOrAppendPlaceholder512GbPlans(plans);
+      expect(results.length).toEqual(3);
+    });
+
+    it('should replace the Linode plan', () => {
+      const plans = [
+        {
+          id: 'not-the-right-id',
+          label: 'Premium 512GB',
+        },
+      ] as PlanSelectionType[];
+      const results = replaceOrAppendPlaceholder512GbPlans(plans);
+      expect(results[0].id).toEqual('g7-premium-64');
+    });
+  });
+});
+
+describe('useIsAcceleratedPlansEnabled', () => {
+  it('should return false for linode and lke plans: account capability DNE and feature flag false', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: false,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return false for linode and lke plans: account capability DNE and feature flag true', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: true,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return false for linode and lke plans: account capability exists and feature flag false', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: false,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return true for linode and lke plans', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: true,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: true,
+      isAcceleratedLinodePlansEnabled: true,
+    });
+  });
+
+  // just adding this test since I matched the feature flag values in all previous tests
+  it('linodePlans and lkePlans status can have different values depending on the feature flag', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: {
+            acceleratedPlans: {
+              linodePlans: true,
+              lkePlans: false,
+            },
+          },
+        }),
+    });
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: true,
     });
   });
 });

@@ -1,7 +1,5 @@
-/** Notice shown to users trying to assign a linode to a VPC. */
-export const vpcAssignLinodeRebootNotice =
-  'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.';
-
-/** Notice shown to users trying to unassign a linode from a VPC. */
-export const vpcUnassignLinodeRebootNotice =
-  'Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.';
+/** Copies shown to users when assigning and unassigning a Linode from a VPC */
+export const vpcConfigProfileInterfaceRebootNotice =
+  'Linodes with Configuration Profile Interfaces to be rebooted after changes.';
+export const vpcLinodeInterfaceShutDownNotice =
+  'Linodes with Linode Interfaces to be shut down and powered on after changes.';

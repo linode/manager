@@ -1,25 +1,9 @@
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from '@linode/queries';
+
+import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
-
-export const useImageAndLinodeGrantCheck = () => {
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
-
-  // Unrestricted users can create Images from any disk;
-  // Restricted users need read_write on the Linode they're trying to Imagize
-  // (in addition to the global add_images grant).
-  const permissionedLinodes = profile?.restricted
-    ? grants?.linode
-        .filter((thisGrant) => thisGrant.permissions === 'read_write')
-        .map((thisGrant) => thisGrant.id) ?? []
-    : null;
-
-  return { canCreateImage, permissionedLinodes };
-};
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
@@ -38,3 +22,36 @@ export const getEventsForImages = (images: Image[], events: Event[]) =>
       ),
     ])
   );
+
+/**
+ * We don't have a nice region capability for Images
+ * so we can use this useRegionsQuery wrapper to do
+ * some filtering to get compatible regions.
+ */
+export const useRegionsThatSupportImageStorage = () => {
+  const { data: regions } = useRegionsQuery();
+
+  return {
+    regions:
+      regions?.filter(
+        (r) =>
+          r.capabilities.includes('Object Storage') &&
+          !DISALLOWED_IMAGE_REGIONS.includes(r.id)
+      ) ?? [],
+  };
+};
+
+/**
+ * Returns whether or not features related to the Private Image Sharing project
+ * should be enabled.
+ *
+ * Currently, this just uses the `privateImageSharing` feature flag as a source of truth,
+ * but will eventually also look at account capabilities.
+ */
+
+export const useIsPrivateImageSharingEnabled = () => {
+  const flags = useFlags();
+
+  // @TODO Private Image Sharing: check for customer tag/account capability when it exists
+  return { isPrivateImageSharingEnabled: flags.privateImageSharing ?? false };
+};

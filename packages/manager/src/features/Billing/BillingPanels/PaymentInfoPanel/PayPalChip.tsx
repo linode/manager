@@ -1,32 +1,24 @@
-import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useAddPaymentMethodMutation, useClientToken } from '@linode/queries';
+import { Box, CircleProgress } from '@linode/ui';
 import {
   BraintreePayPalButtons,
-  CreateBillingAgreementActions,
+  DISPATCH_ACTION,
   FUNDING,
-  OnApproveBraintreeActions,
-  OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import React, { useEffect } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import React, { type JSX, useEffect } from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { reportException } from 'src/exceptionReporting';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { useClientToken } from 'src/queries/account/payment';
-import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles()(() => ({
-  disabled: {
-    // Allows us to disable the pointer on the PayPal button because the SDK does not
-    pointerEvents: 'none',
-  },
-}));
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  CreateBillingAgreementActions,
+  OnApproveBraintreeActions,
+  OnApproveBraintreeData,
+} from '@paypal/react-paypal-js';
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 interface Props {
   disabled: boolean;
@@ -40,9 +32,8 @@ export const PayPalChip = (props: Props) => {
   const { disabled, onClose, renderError, setMessage, setProcessing } = props;
   const { data, error: clientTokenError, isLoading } = useClientToken();
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
-  const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
+  const { mutateAsync: addPaymentMethod } = useAddPaymentMethodMutation();
 
   useEffect(() => {
     /**
@@ -51,15 +42,12 @@ export const PayPalChip = (props: Props) => {
      * The '!==' statements makes sure we don't re-render
      * when this component is re-mounted.
      */
-    if (
-      data?.client_token &&
-      options['data-client-token'] !== data.client_token
-    ) {
+    if (data?.client_token && options.dataClientToken !== data.client_token) {
       dispatch({
-        type: 'resetOptions',
+        type: DISPATCH_ACTION.RESET_OPTIONS,
         value: {
           ...options,
-          'data-client-token': data?.client_token,
+          dataClientToken: data?.client_token,
         },
       });
     }
@@ -77,7 +65,7 @@ export const PayPalChip = (props: Props) => {
       options.intent !== 'tokenize'
     ) {
       dispatch({
-        type: 'resetOptions',
+        type: DISPATCH_ACTION.RESET_OPTIONS,
         value: {
           ...options,
           commit: false,
@@ -105,20 +93,16 @@ export const PayPalChip = (props: Props) => {
 
     return actions.braintree
       .tokenizePayment(data)
-      .then((payload) => onNonce(payload.nonce, queryClient));
+      .then((payload) => onNonce(payload.nonce));
   };
 
-  const onNonce = (nonce: string, queryClient: QueryClient) => {
+  const onNonce = (nonce: string) => {
     addPaymentMethod({
       data: { nonce },
       is_default: true,
       type: 'payment_method_nonce',
     })
       .then(() => {
-        queryClient.invalidateQueries({
-          queryKey: accountQueries.paymentMethods.queryKey,
-        });
-
         onClose();
 
         enqueueSnackbar('Successfully added PayPal', {
@@ -160,19 +144,19 @@ export const PayPalChip = (props: Props) => {
     return renderError('Error initializing PayPal');
   }
 
-  if (isLoading || isPending || !options['data-client-token']) {
-    return (
-      <Grid>
-        <CircleProgress size="sm" />
-      </Grid>
-    );
+  if (isLoading || isPending || !options.dataClientToken) {
+    return <CircleProgress size="sm" />;
   }
 
   return (
-    <Grid
-      className={cx({
-        [classes.disabled]: disabled,
-      })}
+    <Box
+      sx={{
+        // Even if we pass disabled: true to the PayPal button, the cusor still shows as pointer, so we fix that here.
+        pointerEvents: disabled ? 'none' : undefined,
+        // We pass colorScheme: none to fix a dark mode issue
+        // https://github.com/paypal/paypal-js/issues/584#issuecomment-2652308317
+        colorScheme: 'none',
+      }}
     >
       <BraintreePayPalButtons
         createBillingAgreement={createBillingAgreement}
@@ -182,6 +166,6 @@ export const PayPalChip = (props: Props) => {
         onError={onError}
         style={{ height: 25 }}
       />
-    </Grid>
+    </Box>
   );
 };

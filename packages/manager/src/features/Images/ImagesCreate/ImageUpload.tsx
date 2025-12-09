@@ -1,62 +1,67 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+  useProfile,
+  useUploadImageMutation,
+} from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import {
+  ActionsPanel,
+  Box,
+  Button,
+  Checkbox,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
+import { useBlocker, useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { Stack } from 'src/components/Stack';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
-import { Dispatch } from 'src/hooks/types';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import { useUploadImageMutation } from 'src/queries/images';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';
-import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
-import {
-  ImageUploadFormData,
-  ImageUploadNavigationState,
-} from './ImageUpload.utils';
-import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 import { uploadImageFile } from '../requests';
+import { useRegionsThatSupportImageStorage } from '../utils';
+import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
+import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
+import type { ImageUploadFormData } from './ImageUpload.utils';
 import type { AxiosError, AxiosProgressEvent } from 'axios';
+import type { Dispatch } from 'src/hooks/types';
 
 export const ImageUpload = () => {
-  const { location } = useHistory<ImageUploadNavigationState | undefined>();
+  const { imageDescription, imageLabel } = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<Dispatch>();
   const hasPendingUpload = usePendingUpload();
-  const { push } = useHistory();
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
   const cancelRef = React.useRef<(() => void) | null>(null);
@@ -66,14 +71,14 @@ export const ImageUpload = () => {
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const { data: regions } = useRegionsQuery();
+  const { regions } = useRegionsThatSupportImageStorage();
   const { mutateAsync: createImage } = useUploadImageMutation();
   const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm<ImageUploadFormData>({
     defaultValues: {
-      description: location.state?.imageDescription,
-      label: location.state?.imageLabel,
+      description: imageDescription,
+      label: imageLabel,
     },
     mode: 'onBlur',
     resolver: yupResolver(ImageUploadSchema),
@@ -118,12 +123,12 @@ export const ImageUpload = () => {
         recordImageAnalytics('success', file);
 
         // Force a re-render so that `hasPendingUpload` is false when navigating away
-        // from the upload page. We need this to make the <Prompt /> work as expected.
+        // from the upload page. We need this to make the navigation prompt work as expected.
         flushSync(() => {
           dispatch(setPendingUpload(false));
         });
 
-        push('/images');
+        navigate({ search: () => ({}), to: '/images' });
       } catch (error) {
         // Handle an Axios error for the actual image upload
         form.setError('root', { message: (error as AxiosError).message });
@@ -155,43 +160,69 @@ export const ImageUpload = () => {
     selectedRegionId,
   });
 
-  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
+  const { data: permissions } = usePermissions('account', ['upload_image']);
+  const canUploadImage = permissions?.upload_image;
+
+  const { proceed, reset, status } = useBlocker({
+    enableBeforeUnload: hasPendingUpload,
+    shouldBlockFn: ({ next }) => {
+      // Only block if there are unsaved changes
+      if (!hasPendingUpload) {
+        return false;
+      }
+
+      // Don't block navigation to the specific route
+      const isNavigatingToAllowedRoute =
+        next.routeId === '/images/create/upload';
+
+      return !isNavigatingToAllowedRoute;
+    },
+    withResolver: true,
   });
 
-  // Called after a user confirms they want to navigate to another part of
-  // Cloud during a pending upload. When we have refresh tokens this won't be
-  // necessary; the user will be able to navigate to other components and we
-  // will show the upload progress in the lower part of the screen. For now we
-  // box the user on this page so we can handle token expiry (semi)-gracefully.
-  const onConfirm = (nextLocation: string) => {
-    if (cancelRef.current) {
-      cancelRef.current();
+  // Create a combined handler for proceeding with navigation
+  const handleProceedNavigation = React.useCallback(() => {
+    if (status === 'blocked' && proceed) {
+      proceed();
     }
+  }, [status, proceed]);
 
-    dispatch(setPendingUpload(false));
-
-    push(nextLocation);
-  };
+  // Create a combined handler for canceling navigation
+  const handleCancelNavigation = React.useCallback(() => {
+    if (status === 'blocked' && reset) {
+      reset();
+    }
+  }, [status, reset]);
 
   return (
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
-          {isImageCreateRestricted && (
+          {!canUploadImage && (
             <Notice
               text={getRestrictedResourceText({
                 action: 'create',
                 isSingular: false,
                 resourceType: 'Images',
               })}
-              important
               variant="error"
             />
           )}
           <Paper>
-            <Typography mb={1.5} variant="h2">
+            <Typography mb={2} variant="h2">
               Image Details
+            </Typography>
+            <Typography>
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#upload-an-image-file">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. An uploaded image file needs to
+              meet specific{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
+                requirements
+              </Link>
+              .
             </Typography>
             {form.formState.errors.root?.message && (
               <Notice
@@ -200,99 +231,90 @@ export const ImageUpload = () => {
               />
             )}
             <Controller
+              control={form.control}
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
-                  noMarginTop
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                   value={field.value ?? ''}
                 />
               )}
-              control={form.control}
-              name="label"
             />
             {flags.metadata && (
               <Box pl={0.25} pt={2}>
                 <Controller
+                  control={form.control}
+                  name="cloud_init"
                   render={({ field }) => (
                     <Checkbox
-                      disabled={
-                        isImageCreateRestricted || form.formState.isSubmitting
-                      }
+                      checked={field.value ?? false}
+                      disabled={!canUploadImage || form.formState.isSubmitting}
+                      onChange={field.onChange}
+                      text="This image is cloud-init compatible"
                       toolTipText={
                         <Typography>
                           Only check this box if your Custom Image is compatible
                           with cloud-init, or has cloud-init installed, and the
                           config has been changed to use our data service.{' '}
-                          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+                          <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-cloud-config-files-to-configure-a-server">
                             Learn how.
                           </Link>
                         </Typography>
                       }
-                      checked={field.value ?? false}
-                      onChange={field.onChange}
-                      text="This image is cloud-init compatible"
                     />
                   )}
-                  control={form.control}
-                  name="cloud_init"
                 />
               </Box>
             )}
             <Controller
+              control={form.control}
+              name="region"
               render={({ field, fieldState }) => (
                 <RegionSelect
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  currentCapability={undefined} // Images don't have a region capability yet
+                  disableClearable
+                  disabled={!canUploadImage || form.formState.isSubmitting}
+                  errorText={fieldState.error?.message}
+                  isGeckoLAEnabled={isGeckoLAEnabled}
+                  label="Region"
+                  onChange={(e, region) => field.onChange(region.id)}
+                  regions={regions}
                   textFieldProps={{
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
-                  currentCapability={undefined}
-                  disableClearable
-                  errorText={fieldState.error?.message}
-                  label="Region"
-                  onChange={(e, region) => field.onChange(region.id)}
-                  regionFilter="core" // Images service will not be supported for Gecko Beta
-                  regions={regions ?? []}
                   value={field.value ?? null}
                 />
               )}
-              control={form.control}
-              name="region"
             />
             <Controller
+              control={form.control}
+              name="tags"
               render={({ field, fieldState }) => (
                 <TagsInput
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
                   }
+                  tagError={fieldState.error?.message}
                   value={
                     field.value?.map((tag) => ({ label: tag, value: tag })) ??
                     []
                   }
-                  tagError={fieldState.error?.message}
                 />
               )}
-              control={form.control}
-              name="tags"
             />
             <Controller
+              control={form.control}
+              name="description"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={
-                    isImageCreateRestricted || form.formState.isSubmitting
-                  }
+                  disabled={!canUploadImage || form.formState.isSubmitting}
                   errorText={fieldState.error?.message}
                   label="Description"
                   multiline
@@ -302,8 +324,6 @@ export const ImageUpload = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={form.control}
-              name="description"
             />
             {showGDPRCheckbox && (
               <EUAgreementCheckbox
@@ -324,20 +344,13 @@ export const ImageUpload = () => {
                 variant="error"
               />
             )}
-            <Notice spacingBottom={0} variant="warning">
-              <Typography>
-                Image files must be raw disk images (.img) compressed using gzip
-                (.gz). The maximum file size is 5 GB (compressed) and maximum
-                image size is 6 GB (uncompressed).
-              </Typography>
-            </Notice>
-            <Typography sx={{ paddingBlock: 2 }}>
-              Custom Images are billed at $0.10/GB per month based on the
-              uncompressed image size.
-            </Typography>
             <Controller
+              control={form.control}
+              name="file"
               render={({ field }) => (
                 <ImageUploader
+                  disabled={!canUploadImage}
+                  isUploading={form.formState.isSubmitting}
                   onDropAccepted={(files) => {
                     form.setError('file', {});
                     field.onChange(files[0]);
@@ -360,29 +373,24 @@ export const ImageUpload = () => {
                     form.setError('file', { message });
                     form.resetField('file', { keepError: true });
                   }}
-                  disabled={isImageCreateRestricted}
-                  isUploading={form.formState.isSubmitting}
                   progress={uploadProgress}
                 />
               )}
-              control={form.control}
-              name="file"
             />
           </Paper>
           <Box display="flex" gap={1} justifyContent="flex-end">
             <Button
               buttonType="outlined"
+              disabled={!canUploadImage}
               onClick={() => setLinodeCLIModalOpen(true)}
-              disabled={isImageCreateRestricted}
             >
               Upload Using Command Line
             </Button>
             <Button
-              disabled={
-                isImageCreateRestricted ||
-                (showGDPRCheckbox && !hasSignedAgreement)
-              }
               buttonType="primary"
+              disabled={
+                !canUploadImage || (showGDPRCheckbox && !hasSignedAgreement)
+              }
               loading={form.formState.isSubmitting}
               type="submit"
             >
@@ -395,38 +403,35 @@ export const ImageUpload = () => {
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
       />
-      <Prompt
-        confirmWhenLeaving={true}
-        onConfirm={onConfirm}
-        when={hasPendingUpload}
-      >
-        {({ handleCancel, handleConfirm, isModalOpen }) => {
-          return (
-            <ConfirmationDialog
-              actions={
-                <ActionsPanel
-                  primaryButtonProps={{
-                    label: 'Leave Page',
-                    onClick: handleConfirm,
-                  }}
-                  secondaryButtonProps={{
-                    label: 'Cancel',
-                    onClick: handleCancel,
-                  }}
-                />
-              }
-              onClose={handleCancel}
-              open={isModalOpen}
-              title="Leave this page?"
-            >
-              <Typography variant="subtitle1">
-                An upload is in progress. If you navigate away from this page,
-                the upload will be canceled.
-              </Typography>
-            </ConfirmationDialog>
-          );
+
+      <ConfirmationDialog
+        actions={
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Leave Page',
+              onClick: () => {
+                handleProceedNavigation();
+              },
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: () => {
+                handleCancelNavigation();
+              },
+            }}
+          />
+        }
+        onClose={() => {
+          handleCancelNavigation();
         }}
-      </Prompt>
+        open={status === 'blocked'}
+        title="Leave this page?"
+      >
+        <Typography variant="subtitle1">
+          An upload is in progress. If you navigate away from this page, the
+          upload will be canceled.
+        </Typography>
+      </ConfirmationDialog>
     </FormProvider>
   );
 };

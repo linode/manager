@@ -1,24 +1,21 @@
+import { useDatabaseMutation } from '@linode/queries';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
 
-import AddAccessControlDrawer from './AddAccessControlDrawer';
+import { ManageAccessControlDrawer } from './ManageAccessControlDrawer';
 
 import type { APIError, Database } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
@@ -82,45 +79,25 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   database: Database;
   description?: JSX.Element;
+  disabled?: boolean;
 }
 
 export const AccessControls = (props: Props) => {
-  const {
-    database: { allow_list: allowList, engine, id },
-    description,
-  } = props;
+  const { database, description, disabled } = props;
 
   const { classes } = useStyles();
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
-  const [
-    accessControlToBeRemoved,
-    setAccessControlToBeRemoved,
-  ] = React.useState<null | string>(null);
+  const [accessControlToBeRemoved, setAccessControlToBeRemoved] =
+    React.useState<null | string>(null);
 
-  const [
-    addAccessControlDrawerOpen,
-    setAddAccessControlDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [manageAccessControlDrawerOpen, setManageAccessControlDrawerOpen] =
+    React.useState<boolean>(false);
 
-  const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
-
-  const {
-    isPending: databaseUpdating,
-    mutateAsync: updateDatabase,
-  } = useDatabaseMutation(engine, id);
-
-  React.useEffect(() => {
-    if (allowList.length > 0) {
-      const allowListExtended = allowList.map(stringToExtendedIP);
-
-      setExtendedIPs(allowListExtended);
-    } else {
-      setExtendedIPs([]);
-    }
-  }, [allowList]);
+  const { isPending: databaseUpdating, mutateAsync: updateDatabase } =
+    useDatabaseMutation(database.engine, database.id);
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
@@ -134,7 +111,7 @@ export const AccessControls = (props: Props) => {
 
   const handleRemoveIPAddress = () => {
     updateDatabase({
-      allow_list: allowList.filter(
+      allow_list: database.allow_list.filter(
         (ipAddress) => ipAddress !== accessControlToBeRemoved
       ),
     })
@@ -164,6 +141,7 @@ export const AccessControls = (props: Props) => {
                 <InlineMenuAction
                   actionText="Remove"
                   className={classes.removeButton}
+                  disabled={disabled}
                   onClick={() => handleClickRemove(accessControl)}
                 />
               </TableCell>
@@ -190,17 +168,21 @@ export const AccessControls = (props: Props) => {
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Access Controls</Typography>
+            <Typography variant="h3">Manage Access</Typography>
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
-        <AddNewLink
+        <Button
           className={classes.addAccessControlBtn}
-          label="Manage Access Controls"
-          onClick={() => setAddAccessControlDrawerOpen(true)}
-        />
+          data-testid="button-access-control"
+          disabled={disabled}
+          onClick={() => setManageAccessControlDrawerOpen(true)}
+          variant="secondary"
+        >
+          Manage Access
+        </Button>
       </div>
-      {ipTable(allowList)}
+      {ipTable(database.allow_list)}
       <ConfirmationDialog
         actions={actionsPanel}
         onClose={handleDialogClose}
@@ -215,11 +197,10 @@ export const AccessControls = (props: Props) => {
           address.
         </Typography>
       </ConfirmationDialog>
-      <AddAccessControlDrawer
-        allowList={extendedIPs}
-        onClose={() => setAddAccessControlDrawerOpen(false)}
-        open={addAccessControlDrawerOpen}
-        updateDatabase={updateDatabase}
+      <ManageAccessControlDrawer
+        database={database}
+        onClose={() => setManageAccessControlDrawerOpen(false)}
+        open={manageAccessControlDrawerOpen}
       />
     </>
   );

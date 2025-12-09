@@ -1,32 +1,39 @@
 import * as React from 'react';
 
-import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { noPermissionTooltipText } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
-import { checkIfUserCanModifyFirewall } from 'src/features/Firewalls/shared';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { NO_PERMISSIONS_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   firewallID: number;
+  nodeBalancerId: number;
   onUnassign: () => void;
 }
 
 export const NodeBalancerFirewallsActionMenu = (props: Props) => {
-  const { firewallID, onUnassign } = props;
+  const { firewallID, onUnassign, nodeBalancerId } = props;
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
-
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallID,
-    profile,
-    grants
+  const { data: firewallPermissions } = usePermissions(
+    'firewall',
+    ['delete_firewall_device'],
+    firewallID
   );
 
-  const disabledProps = !userCanModifyFirewall
+  const { data: nodeBalancerPermissions } = usePermissions(
+    'nodebalancer',
+    ['update_nodebalancer'],
+    nodeBalancerId
+  );
+
+  const disabledProps = !(
+    firewallPermissions.delete_firewall_device &&
+    nodeBalancerPermissions.update_nodebalancer
+  )
     ? {
         disabled: true,
-        tooltip: noPermissionTooltipText,
+        tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
       }
     : {};
 
@@ -45,6 +52,7 @@ export const NodeBalancerFirewallsActionMenu = (props: Props) => {
       disabled={action.disabled}
       key={action.title}
       onClick={action.onClick}
+      tooltip={action.tooltip}
     />
   );
 };

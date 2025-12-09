@@ -1,9 +1,8 @@
+import { useRevokeTrustedDeviceMutation } from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { useRevokeTrustedDeviceMutation } from 'src/queries/profile/profile';
 
 interface Props {
   deviceId: number;
@@ -14,9 +13,8 @@ interface Props {
 export const RevokeTrustedDeviceDialog = (props: Props) => {
   const { deviceId, onClose, open } = props;
 
-  const { error, isPending, mutateAsync } = useRevokeTrustedDeviceMutation(
-    deviceId
-  );
+  const { error, isPending, mutateAsync } =
+    useRevokeTrustedDeviceMutation(deviceId);
 
   const onRevoke = () => {
     mutateAsync().then(() => {

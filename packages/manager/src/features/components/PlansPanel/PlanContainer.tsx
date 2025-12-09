@@ -1,19 +1,80 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Notice, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
+import Paginate from 'src/components/Paginate';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
+import {
+  PLAN_FILTER_NO_RESULTS_MESSAGE,
+  PLAN_PANEL_PAGE_SIZE_OPTIONS,
+} from './constants';
 import { PlanSelection } from './PlanSelection';
 import { PlanSelectionTable } from './PlanSelectionTable';
 
 import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
+
+export interface PlanSelectionFilterOptionsTable {
+  header?: string;
+  planFilter?: (plan: PlanWithAvailability) => boolean;
+}
+
+export interface PlanSelectionDividers {
+  planType: LinodeTypeClass;
+  tables: PlanSelectionFilterOptionsTable[];
+}
+
+export interface PlanFilterRenderArgs {
+  /**
+   * Callback to notify parent of filter result
+   */
+  onResult: (result: PlanFilterRenderResult) => void;
+
+  /**
+   * All available plans (unfiltered)
+   */
+  plans: PlanWithAvailability[];
+
+  /**
+   * Plan type/class (e.g., 'dedicated', 'gpu')
+   */
+  planType: LinodeTypeClass | undefined;
+
+  /**
+   * Reset pagination back to the first page
+   */
+  resetPagination: () => void;
+
+  /**
+   * Whether filters should be disabled (e.g., no region selected)
+   */
+  shouldDisableFilters?: boolean;
+}
+
+export interface PlanFilterRenderResult {
+  /**
+   * Filtered plans after applying filters
+   */
+  filteredPlans: PlanWithAvailability[];
+
+  /**
+   * The filter UI component
+   */
+  filterUI: React.ReactNode;
+
+  /**
+   * Whether any filters are currently active
+   */
+  hasActiveFilters: boolean;
+}
 
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
@@ -22,8 +83,15 @@ export interface PlanContainerProps {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  planType?: LinodeTypeClass;
+
+  /**
+   * Render prop for custom filter UI per tab
+   * Receives plan data and pagination helpers, returns a React element
+   */
+  planFilters?: (args: PlanFilterRenderArgs) => React.ReactNode;
+
   plans: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -38,6 +106,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
     isCreate,
     linodeID,
     onSelect,
+    planFilters,
     planType,
     plans,
     selectedId,
@@ -47,10 +116,15 @@ export const PlanContainer = (props: PlanContainerProps) => {
   } = props;
   const location = useLocation();
   const flags = useFlags();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    plans,
+    planType
+  );
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const showTransfer =
-    showLimits && plans.some((plan: PlanWithAvailability) => plan.transfer);
+    showLimits &&
+    plans.some((plan: PlanWithAvailability) => plan.transfer !== undefined);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const showNetwork =
@@ -64,15 +138,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
-  interface PlanSelectionDividerTable {
-    header?: string;
-    planFilter?: (plan: PlanWithAvailability) => boolean;
-  }
-  interface PlanSelectionDividers {
-    flag: boolean;
-    planType: LinodeTypeClass;
-    tables: PlanSelectionDividerTable[];
-  }
+  const isDatabaseGA =
+    !flags.dbaasV2?.beta &&
+    flags.dbaasV2?.enabled &&
+    (isDatabaseCreateFlow || isDatabaseResizeFlow);
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -80,9 +149,13 @@ export const PlanContainer = (props: PlanContainerProps) => {
    */
   const planSelectionDividers: PlanSelectionDividers[] = [
     {
-      flag: Boolean(flags.gpuv2?.planDivider),
       planType: 'gpu',
       tables: [
+        {
+          header: 'NVIDIA RTX PRO 6000 Blackwell Server Edition',
+          planFilter: (plan: PlanWithAvailability) =>
+            plan.label.includes('Blackwell'),
+        },
         {
           header: 'NVIDIA RTX 4000 Ada',
           planFilter: (plan: PlanWithAvailability) =>
@@ -91,26 +164,22 @@ export const PlanContainer = (props: PlanContainerProps) => {
         {
           header: 'NVIDIA Quadro RTX 6000',
           planFilter: (plan: PlanWithAvailability) =>
-            !plan.label.includes('Ada'),
+            !plan.label.includes('Ada') && !plan.label.includes('Blackwell'),
         },
       ],
     },
   ];
 
   const renderPlanSelection = React.useCallback(
-    (filterOptions?: PlanSelectionDividerTable) => {
-      const _plans = filterOptions?.planFilter
-        ? plans.filter(filterOptions.planFilter)
-        : plans;
-
-      return _plans.map((plan, id) => {
+    (planList: PlanWithAvailability[]) =>
+      planList.map((plan, id) => {
         return (
           <PlanSelection
             currentPlanHeading={currentPlanHeading}
             hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
             idx={id}
             isCreate={isCreate}
-            key={id}
+            key={plan.id}
             linodeID={linodeID}
             onSelect={onSelect}
             plan={plan}
@@ -121,10 +190,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
             wholePanelIsDisabled={wholePanelIsDisabled}
           />
         );
-      });
-    },
+      }),
     [
-      plans,
       currentPlanHeading,
       hasMajorityOfPlansDisabled,
       isCreate,
@@ -138,86 +205,288 @@ export const PlanContainer = (props: PlanContainerProps) => {
     ]
   );
 
-  return (
-    <Grid container spacing={2}>
-      <Hidden lgUp={isCreate} mdUp={!isCreate}>
-        {shouldDisplayNoRegionSelectedMessage ? (
-          <Notice
-            spacingLeft={8}
-            spacingTop={8}
-            sx={{ '& p': { fontSize: '0.875rem' } }}
-            text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
-            variant="info"
-          />
-        ) : (
-          planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag
-              ? planSelectionDivider.tables.map((table) => {
+  const paginationPrefix = React.useMemo(
+    () => `plan-panel-${planType ?? 'all'}`,
+    [planType]
+  );
+
+  // State to hold filter result from the filter component
+  const [filterResult, setFilterResult] =
+    React.useState<null | PlanFilterRenderResult>(null);
+
+  // Ref to store the pagination handler from Paginate component
+  // This allows us to reset pagination when filters change
+  const handlePageChangeRef = React.useRef<((page: number) => void) | null>(
+    null
+  );
+
+  // Callback for filter component to update result
+  const handleFilterResult = React.useCallback(
+    (result: PlanFilterRenderResult) => {
+      setFilterResult(result);
+    },
+    []
+  );
+
+  // Callback to reset pagination to page 1
+  // Used by filter components when filters change
+  const resetPagination = React.useCallback(() => {
+    // Call the pagination handler to go to page 1
+    handlePageChangeRef.current?.(1);
+  }, []);
+
+  // Create filter state manager component if planFilters render prop is provided
+  // This component returns null but manages filter state via local React state
+  // State persists when switching tabs because Reach UI TabPanels stay mounted
+  // and communicates filtered results back to parent via the onResult callback
+  const filterStateManager = React.useMemo(() => {
+    if (isGenerationalPlansEnabled && planFilters) {
+      return planFilters({
+        onResult: handleFilterResult,
+        planType,
+        plans,
+        resetPagination,
+        shouldDisableFilters: shouldDisplayNoRegionSelectedMessage,
+      });
+    }
+    return null;
+  }, [
+    isGenerationalPlansEnabled,
+    planFilters,
+    planType,
+    plans,
+    handleFilterResult,
+    resetPagination,
+    shouldDisplayNoRegionSelectedMessage,
+  ]);
+
+  // Clear filter result when filters are disabled or removed
+  React.useEffect(() => {
+    if (!planFilters || !isGenerationalPlansEnabled) {
+      setFilterResult(null);
+    }
+  }, [isGenerationalPlansEnabled, planFilters]);
+
+  // Use filtered plans if available, otherwise use all plans
+  const effectiveFilterResult = isGenerationalPlansEnabled
+    ? filterResult
+    : null;
+  const plansToDisplay = effectiveFilterResult?.filteredPlans ?? plans;
+
+  // Automatically show empty state message when filters return no results
+  const tableEmptyState = shouldDisplayNoRegionSelectedMessage
+    ? null
+    : plansToDisplay.length === 0
+      ? { message: PLAN_FILTER_NO_RESULTS_MESSAGE }
+      : null;
+
+  // Feature gate: if pagination is disabled, render the old way
+  if (!isGenerationalPlansEnabled) {
+    return (
+      <Grid container spacing={2}>
+        <Hidden lgUp={isCreate} mdUp={!isCreate}>
+          {isCreate && isDatabaseGA && (
+            <Typography
+              sx={(theme: Theme) => ({
+                marginBottom: theme.spacingFunction(16),
+                marginLeft: theme.spacingFunction(8),
+                marginTop: theme.spacingFunction(8),
+              })}
+            >
+              Usable storage is smaller than the actual plan storage due to the
+              overhead from the database platform.
+            </Typography>
+          )}
+          {shouldDisplayNoRegionSelectedMessage ? (
+            <Notice
+              spacingLeft={8}
+              spacingTop={8}
+              sx={(theme) => ({
+                '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+              })}
+              text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+              variant="info"
+            />
+          ) : (
+            planSelectionDividers.map((planSelectionDivider) =>
+              planType === planSelectionDivider.planType
+                ? planSelectionDivider.tables.map((table) => {
+                    const filteredPlans = table.planFilter
+                      ? plans.filter(table.planFilter)
+                      : plans;
+                    return [
+                      filteredPlans.length > 0 && (
+                        <Grid key={table.header} size={12}>
+                          <Typography variant="h3">{table.header}</Typography>
+                        </Grid>
+                      ),
+                      renderPlanSelection(filteredPlans),
+                    ];
+                  })
+                : renderPlanSelection(plans)
+            )
+          )}
+        </Hidden>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
+          <Grid size={12}>
+            {planSelectionDividers.map((planSelectionDivider) =>
+              planType === planSelectionDivider.planType ? (
+                planSelectionDivider.tables.map((table, idx) => {
                   const filteredPlans = table.planFilter
                     ? plans.filter(table.planFilter)
                     : plans;
-                  return [
+                  return (
                     filteredPlans.length > 0 && (
-                      <Grid key={table.header} xs={12}>
-                        <Typography variant="h3">{table.header}</Typography>
-                      </Grid>
-                    ),
-                    renderPlanSelection({
-                      planFilter: table.planFilter,
-                    }),
-                  ];
-                })
-              : renderPlanSelection()
-          )
-        )}
-      </Hidden>
-      <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <Grid xs={12}>
-          {planSelectionDividers.map((planSelectionDivider) =>
-            planType === planSelectionDivider.planType &&
-            planSelectionDivider.flag ? (
-              planSelectionDivider.tables.map((table, idx) => {
-                const filteredPlans = table.planFilter
-                  ? plans.filter(table.planFilter)
-                  : plans;
-                return (
-                  filteredPlans.length > 0 && (
-                    <PlanSelectionTable
-                      filterOptions={{
-                        header: table.header,
-                      }}
-                      renderPlanSelection={() =>
-                        renderPlanSelection({
+                      <PlanSelectionTable
+                        filterOptions={{
                           header: table.header,
-                          planFilter: table.planFilter,
-                        })
-                      }
-                      shouldDisplayNoRegionSelectedMessage={
-                        shouldDisplayNoRegionSelectedMessage
-                      }
-                      key={`plan-filter-${idx}`}
-                      planFilter={table.planFilter}
-                      showNetwork={showNetwork}
-                      showTransfer={showTransfer}
-                    />
-                  )
-                );
-              })
-            ) : (
-              <PlanSelectionTable
-                shouldDisplayNoRegionSelectedMessage={
-                  shouldDisplayNoRegionSelectedMessage
-                }
-                key={planType}
-                renderPlanSelection={renderPlanSelection}
-                showNetwork={showNetwork}
-                showTransfer={showTransfer}
+                        }}
+                        key={`plan-filter-${idx}`}
+                        plans={filteredPlans}
+                        renderPlanSelection={renderPlanSelection}
+                        shouldDisplayNoRegionSelectedMessage={
+                          shouldDisplayNoRegionSelectedMessage
+                        }
+                        showNetwork={showNetwork}
+                        showTransfer={showTransfer}
+                      />
+                    )
+                  );
+                })
+              ) : (
+                <PlanSelectionTable
+                  key={planType}
+                  plans={plans}
+                  planType={planType}
+                  renderPlanSelection={renderPlanSelection}
+                  shouldDisplayNoRegionSelectedMessage={
+                    shouldDisplayNoRegionSelectedMessage
+                  }
+                  showNetwork={showNetwork}
+                  showTransfer={showTransfer}
+                  showUsableStorage={
+                    isDatabaseCreateFlow || isDatabaseResizeFlow
+                  }
+                />
+              )
+            )}
+          </Grid>
+        </Hidden>
+      </Grid>
+    );
+  }
+
+  // Pagination enabled: use new paginated rendering
+  return (
+    <Paginate
+      data={plansToDisplay}
+      key={paginationPrefix}
+      // Prevent plans panel page size changes from being persisted to global PAGE_SIZE storage.
+      // Plans panel uses custom page size options (15, 25, 50) which should not override
+      // the standard page size preference (25, 50, 75, 100) used by other tables.
+      noPageSizeOverride={true}
+      // Set default page size to 15 (first option in PLAN_PANEL_PAGE_SIZE_OPTIONS)
+      pageSize={PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value}
+      shouldScroll={false}
+    >
+      {({
+        count,
+        data: paginatedPlans,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize,
+      }) => {
+        // Store the handlePageChange function in ref so filters can call it
+        handlePageChangeRef.current = handlePageChange;
+
+        const shouldDisplayPagination = !shouldDisplayNoRegionSelectedMessage;
+
+        return (
+          <>
+            <Grid container spacing={2}>
+              {filterStateManager}
+
+              {/* Render filter UI that was passed via callback */}
+              {effectiveFilterResult?.filterUI && (
+                <Grid size={12}>{effectiveFilterResult.filterUI}</Grid>
+              )}
+
+              <Hidden lgUp={isCreate} mdUp={!isCreate}>
+                {isCreate && isDatabaseGA && (
+                  <Typography
+                    sx={(theme: Theme) => ({
+                      marginBottom: theme.spacingFunction(16),
+                      marginLeft: theme.spacingFunction(8),
+                      marginTop: theme.spacingFunction(8),
+                    })}
+                  >
+                    Usable storage is smaller than the actual plan storage due
+                    to the overhead from the database platform.
+                  </Typography>
+                )}
+                {shouldDisplayNoRegionSelectedMessage ? (
+                  <Notice
+                    spacingLeft={8}
+                    spacingTop={8}
+                    sx={(theme) => ({
+                      '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+                    })}
+                    text={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
+                    variant="info"
+                  />
+                ) : tableEmptyState ? (
+                  <Notice
+                    spacingLeft={8}
+                    spacingTop={8}
+                    sx={(theme) => ({
+                      '& p': { fontSize: theme.tokens.font.FontSize.Xs },
+                    })}
+                    text={tableEmptyState.message}
+                    variant="info"
+                  />
+                ) : (
+                  renderPlanSelection(paginatedPlans)
+                )}
+              </Hidden>
+              <Hidden lgDown={isCreate} mdDown={!isCreate}>
+                <Grid size={12}>
+                  <PlanSelectionTable
+                    filterEmptyStateMessage={tableEmptyState?.message}
+                    key={planType}
+                    plans={paginatedPlans}
+                    planType={planType}
+                    renderPlanSelection={renderPlanSelection}
+                    shouldDisplayNoRegionSelectedMessage={
+                      shouldDisplayNoRegionSelectedMessage
+                    }
+                    showNetwork={showNetwork}
+                    showTransfer={showTransfer}
+                    showUsableStorage={
+                      isDatabaseCreateFlow || isDatabaseResizeFlow
+                    }
+                  />
+                </Grid>
+              </Hidden>
+            </Grid>
+            {shouldDisplayPagination && (
+              <PaginationFooter
+                count={count}
+                customOptions={PLAN_PANEL_PAGE_SIZE_OPTIONS}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                minPageSize={PLAN_PANEL_PAGE_SIZE_OPTIONS[0].value}
+                page={page}
+                pageSize={pageSize}
+                sx={{
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                }}
               />
-            )
-          )}
-        </Grid>
-      </Hidden>
-    </Grid>
+            )}
+          </>
+        );
+      }}
+    </Paginate>
   );
 };

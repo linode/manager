@@ -1,16 +1,17 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { APIError } from '@linode/api-v4/lib/types';
+import {
+  updateTagsSuggestionsData,
+  useAllTagsQuery,
+  useProfile,
+} from '@linode/queries';
+import { Autocomplete, Chip, CloseIcon } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { concat } from 'ramda';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Chip } from 'src/components/Chip';
-import { useProfile } from 'src/queries/profile/profile';
-import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-export interface Tag {
+import type { APIError } from '@linode/api-v4/lib/types';
+
+export interface TagOption {
   label: string;
   value: string;
 }
@@ -45,7 +46,7 @@ export interface TagsInputProps {
   /**
    * Callback fired when the value changes.
    */
-  onChange: (selected: Tag[]) => void;
+  onChange: (selected: TagOption[]) => void;
   /**
    * An error to display beneath the input.
    */
@@ -53,19 +54,12 @@ export interface TagsInputProps {
   /**
    * The value of the input.
    */
-  value: Tag[];
+  value: TagOption[];
 }
 
 export const TagsInput = (props: TagsInputProps) => {
-  const {
-    disabled,
-    hideLabel,
-    label,
-    noMarginTop,
-    onChange,
-    tagError,
-    value,
-  } = props;
+  const { disabled, hideLabel, label, noMarginTop, onChange, tagError, value } =
+    props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
@@ -76,7 +70,7 @@ export const TagsInput = (props: TagsInputProps) => {
 
   const queryClient = useQueryClient();
 
-  const accountTagItems: Tag[] =
+  const accountTagItems: TagOption[] =
     accountTags?.map((tag) => ({
       label: tag.label,
       value: tag.label,
@@ -84,15 +78,28 @@ export const TagsInput = (props: TagsInputProps) => {
 
   const createTag = (inputValue: string) => {
     const newTag = { label: inputValue, value: inputValue };
-    const updatedSelectedTags = concat(value, [newTag]);
+    const updatedSelectedTags = [...value, newTag];
 
-    if (inputValue.length < 3 || inputValue.length > 50) {
-      setErrors([
-        {
-          field: 'label',
-          reason: 'Length must be 3-50 characters',
-        },
-      ]);
+    const errors = [];
+
+    inputValue = inputValue.trim();
+
+    if (inputValue === '') {
+      errors.push({
+        field: 'label',
+        reason: 'Tag cannot be an empty',
+      });
+    }
+
+    if (inputValue.length < 1 || inputValue.length > 50) {
+      errors.push({
+        field: 'label',
+        reason: 'Length must be 1-50 characters',
+      });
+    }
+
+    if (errors.length > 0) {
+      setErrors(errors);
     } else {
       setErrors([]);
       onChange(updatedSelectedTags);
@@ -102,12 +109,12 @@ export const TagsInput = (props: TagsInputProps) => {
     }
   };
 
-  const handleRemoveOption = (tagToRemove: Tag) => {
+  const handleRemoveOption = (tagToRemove: TagOption) => {
     onChange(value.filter((t) => t.value !== tagToRemove.value));
   };
 
   const filterOptions = (
-    options: Tag[],
+    options: TagOption[],
     { inputValue }: { inputValue: string }
   ) => {
     const filtered = options.filter((o) =>
@@ -143,6 +150,16 @@ export const TagsInput = (props: TagsInputProps) => {
 
   return (
     <Autocomplete
+      autoHighlight
+      clearOnBlur
+      disableCloseOnSelect={false}
+      disabled={disabled}
+      errorText={error}
+      filterOptions={filterOptions}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
+      label={label || 'Add Tags'}
+      multiple
+      noOptionsText={'No results.'}
       onChange={(_, newValue, reason, details) => {
         const detailsOption = details?.option;
         if (
@@ -155,6 +172,8 @@ export const TagsInput = (props: TagsInputProps) => {
           onChange(newValue);
         }
       }}
+      options={accountTagItems}
+      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ''}
       renderTags={(tagValue, getTagProps) => {
         return tagValue.map((option, index) => (
           <Chip
@@ -166,18 +185,6 @@ export const TagsInput = (props: TagsInputProps) => {
           />
         ));
       }}
-      autoHighlight
-      clearOnBlur
-      disableCloseOnSelect={false}
-      disabled={disabled}
-      errorText={error}
-      filterOptions={filterOptions}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      label={label || 'Add Tags'}
-      multiple
-      noOptionsText={'No results.'}
-      options={accountTagItems}
-      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ''}
       textFieldProps={{ hideLabel, noMarginTop }}
       value={value}
     />

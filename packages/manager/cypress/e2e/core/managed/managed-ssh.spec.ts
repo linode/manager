@@ -2,12 +2,9 @@
  * @file Integration tests for Managed SSH access.
  */
 
-import type { ManagedLinodeSetting } from '@linode/api-v4';
-import {
-  managedLinodeSettingFactory,
-  managedSSHSettingFactory,
-} from 'src/factories/managed';
+import { linodeFactory } from '@linode/utilities';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
+import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
   mockGetLinodeSettings,
   mockGetSshPublicKey,
@@ -21,6 +18,13 @@ import {
   randomString,
 } from 'support/util/random';
 
+import {
+  managedLinodeSettingFactory,
+  managedSSHSettingFactory,
+} from 'src/factories/managed';
+
+import type { ManagedLinodeSetting } from '@linode/api-v4';
+
 // Message that is shown when no Linodes are listed.
 const noLinodesMessage = "You don't have any Linodes on your account.";
 
@@ -31,11 +35,11 @@ const noLinodesMessage = "You don't have any Linodes on your account.";
  */
 const randomPublicSshKey = (): string => {
   const randomKey = randomString(400, {
-    uppercase: true,
     lowercase: true,
     numbers: true,
     spaces: false,
     symbols: false,
+    uppercase: true,
   });
 
   return `ssh-rsa e2etestkey${randomKey} managedservices@linode`;
@@ -78,6 +82,10 @@ describe('Managed SSH Access tab', () => {
   it('can update managed Linode SSH access', () => {
     const linodeLabel = randomLabel();
     const linodeId = 1;
+    const linode = linodeFactory.build({
+      id: linodeId,
+      label: linodeLabel,
+    });
 
     const newPort = randomNumber(65535);
     const newUser = randomString(8);
@@ -96,9 +104,9 @@ describe('Managed SSH Access tab', () => {
       ...originalLinodeSettings,
       ssh: {
         ...originalLinodeSettings.ssh,
-        user: newUser,
-        port: newPort,
         ip: 'any',
+        port: newPort,
+        user: newUser,
       },
     };
 
@@ -111,6 +119,7 @@ describe('Managed SSH Access tab', () => {
       },
     };
 
+    mockGetLinodeDetails(linodeId, linode).as('getLinode');
     mockGetSshPublicKey(randomPublicSshKey()).as('getSshPublicKey');
     mockGetLinodeSettings([originalLinodeSettings]).as('getLinodeSettings');
     visitUrlWithManagedEnabled('/managed/ssh-access');
@@ -127,6 +136,8 @@ describe('Managed SSH Access tab', () => {
           .click();
       });
 
+    cy.wait('@getLinode');
+
     // Fill out and submit SSH access edit form.
     mockUpdateLinodeSettings(linodeId, newLinodeSettings).as(
       'updateLinodeSettings'
@@ -135,23 +146,17 @@ describe('Managed SSH Access tab', () => {
       .findByTitle(`Edit SSH Access for ${linodeLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('User Account')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newUser);
+        cy.findByLabelText('User Account').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newUser);
 
         // Set IP address to 'Any'.
-        cy.findByLabelText('IP Address')
-          .should('be.visible')
-          .click()
-          .type('Any{enter}');
+        cy.findByLabelText('IP Address').should('be.visible').click();
+        cy.focused().type('Any{enter}');
 
-        cy.findByLabelText('Port')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(`${newPort}`);
+        cy.findByLabelText('Port').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(`${newPort}`);
 
         ui.button
           .findByTitle('Save Changes')

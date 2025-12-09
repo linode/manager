@@ -27,17 +27,19 @@ Feel free to open an issue to report a bug or request a feature.
     **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
 6. Open a pull request against `develop` and make sure the title follows the same format as the commit message.
-7. If needed, create a changeset to populate our changelog.
+7. Keep in mind that our repository is public and open source! Before adding screenshots to your PR, we recommend you enable the **Mask Sensitive Data** setting in Cloud Manager [Profile Settings](https://cloud.linode.com/profile/settings).
+8. If needed, create a changeset to populate our changelog.
     - If you don't have the Github CLI installed or need to update it (you need GH CLI 2.21.0 or greater),
         - install it via `brew`: https://github.com/cli/cli#installation or upgrade with `brew upgrade gh`
         - Once installed, run `gh repo set-default` and pick `linode/manager` (only > 2.21.0)
         - You can also just create the changeset manually, in this case make sure to use the proper formatting for it.
-    - Run `yarn changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
+    - Run `pnpm changeset`from the root, choose the package to create a changeset for, and provide a description for the change.
     You can either have it committed automatically or do it manually if you need to edit it.
     - A changeset is optional, but should be included if the PR falls in one of the following categories:<br>
     `Added`, `Fixed`, `Changed`, `Removed`, `Tech Stories`, `Tests`, `Upcoming Features`
       - Select the changeset category that matches the commit type in your PR title. (Where this isn't a 1:1 match: generally, a `feat` commit type falls under an `Added` change and `refactor` falls under `Tech Stories`.)
       - Write your changeset by following our [best practices](#writing-a-changeset).
+9. Automated tests and other CI checks will run automatically against the PR. It is the contributor's responsibility to ensure their changes pass the CI checks.
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
 
@@ -45,6 +47,7 @@ Two reviews from members of the Cloud Manager team are required before merge. Af
 
 Follow these best practices to write a good changeset:
 
+- Summarize your changes succinctly in 150 characters or less. A changeset shouldn't describe every line of code edited in the PR.
 - Use a consistent tense in all changeset entries. We have chosen to use **imperative (present)** tense. (This follows established [git commit message best practices](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).)
 - Avoid starting a changeset with the verb "Add", "Remove", "Change" or "Fix" when listed under that respective `Added`, `Removed`, `Changed` or `Fixed` section. It is unnecessary repetition.
 - For `Fixed` changesets, describe the bug that needed to be fixed, rather than the fix itself. (e.g. say "Missing button labels in action buttons" rather than "Make label prop required for action buttons").
@@ -73,4 +76,4 @@ Break down *additional* things in your PR into multiple PRs (like you would do w
 
 ## Docs
 
-To run the docs development server locally, [install Bun](https://bun.sh/) and start the server: `yarn docs`.
+To run the docs development server locally, [install Bun](https://bun.sh/) and start the server: `pnpm run docs`.

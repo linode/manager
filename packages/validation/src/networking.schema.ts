@@ -1,7 +1,7 @@
 import { array, boolean, number, object, string } from 'yup';
 
 export const updateIPSchema = object().shape({
-  rdns: string().notRequired().nullable(true),
+  rdns: string().notRequired().nullable(),
 });
 
 export const allocateIPSchema = object().shape({
@@ -9,7 +9,7 @@ export const allocateIPSchema = object().shape({
     .required()
     .matches(
       /^ipv4$/,
-      'Only IPv4 address may be allocated through this endpoint.'
+      'Only IPv4 address may be allocated through this endpoint.',
     ),
   public: boolean().required(),
   linode_id: number().required(),

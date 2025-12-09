@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { getFormattedStatus } from '@linode/utilities';
 
 import {
   isEventRelevantToLinode,
@@ -6,7 +6,8 @@ import {
   isPrimaryEntity,
   isSecondaryEntity,
 } from 'src/queries/events/event.helpers';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
+
+import type { Event, EventAction } from '@linode/api-v4/lib/account';
 
 export const transitionStatus = [
   'booting',
@@ -45,7 +46,10 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    transitionActionMap.hasOwnProperty(recentEvent.action) &&
+    Object.prototype.hasOwnProperty.call(
+      transitionActionMap,
+      recentEvent.action
+    ) &&
     recentEvent.percent_complete !== null &&
     recentEvent.percent_complete < 100
   );
@@ -69,7 +73,7 @@ export const transitionText = (
     return transitionActionMap[recentEvent.action];
   }
 
-  return capitalizeAllWords(status.replace('_', ' '));
+  return getFormattedStatus(status);
 };
 
 // Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.

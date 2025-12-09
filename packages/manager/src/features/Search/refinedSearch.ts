@@ -1,11 +1,12 @@
+import { isEmpty } from '@linode/api-v4';
 import logicQueryParser from 'logic-query-parser';
-import { all, any, equals, isEmpty } from 'ramda';
 import searchString from 'search-string';
 
-import { SearchField, SearchableItem } from './search.interfaces';
+import type { SearchableItem, SearchField } from './search.interfaces';
 
-export const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
-const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips'];
+export const COMPRESSED_IPV6_REGEX =
+  /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
+const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips', 'value'];
 
 // =============================================================================
 // REFINED SEARCH
@@ -36,9 +37,8 @@ export const refinedSearch = (
   // wrap this in a try/catch.
   try {
     const binaryTree = logicQueryParser.parse(formattedQuery);
-    const queryJSON: QueryJSON = logicQueryParser.utils.binaryTreeToQueryJson(
-      binaryTree
-    );
+    const queryJSON: QueryJSON =
+      logicQueryParser.utils.binaryTreeToQueryJson(binaryTree);
 
     // 3. Test the parsed query against each item.
     const results: SearchableItem[] = [];
@@ -57,6 +57,9 @@ export const refinedSearch = (
 };
 
 export const formatQuery = (query: string) => {
+  if (!query || typeof query !== 'string') {
+    return '';
+  }
   return query.trim().replace(' && ', ' AND ').replace(' || ', ' OR ');
 };
 
@@ -164,7 +167,14 @@ export const doesSearchTermMatchItemField = (
 ): boolean => {
   const flattenedItem = flattenSearchableItem(item);
 
-  const fieldValue = ensureValueIsString(flattenedItem[field]);
+  const fieldValue = ensureValueIsString(
+    flattenedItem[field as keyof typeof flattenedItem]
+  );
+
+  // Handle numeric comparison (e.g., for the "value" field to search linode by id)
+  if (typeof fieldValue === 'number') {
+    return fieldValue === Number(query); // Ensure exact match for numeric fields
+  }
 
   if (caseSensitive) {
     return fieldValue.includes(query);
@@ -177,11 +187,21 @@ export const doesSearchTermMatchItemField = (
 export const flattenSearchableItem = (item: SearchableItem) => ({
   label: item.label,
   type: item.entityType,
+  value: item.value,
   ...item.data,
 });
 
-export const ensureValueIsString = (value: any[] | string): string =>
-  Array.isArray(value) ? value.join(' ') : value ? value : '';
+export const ensureValueIsString = (
+  value: any[] | number | string | undefined
+): string => {
+  if (Array.isArray(value)) {
+    return value.join(' ');
+  }
+  if (value) {
+    return String(value);
+  }
+  return '';
+};
 
 export const getQueryInfo = (parsedQuery: any) => {
   // getParsedQuery() always includes an object called `excluded`. If search
@@ -203,7 +223,7 @@ export const getQueryInfo = (parsedQuery: any) => {
   };
 };
 
-// Our entities have several fields we'd like to search: "tags", "label", "ips".
+// Our entities have several fields we'd like to search: "tags", "label", "ips", "value".
 // A user might submit the query "tag:my-app". In this case, we want to trade
 // "tag" for "tags", since "tags" is the actual name of the intended property.
 export const getRealEntityKey = (key: string): SearchField | string => {
@@ -211,9 +231,11 @@ export const getRealEntityKey = (key: string): SearchField | string => {
   const LABEL: SearchField = 'label';
   const IPS: SearchField = 'ips';
   const TYPE: SearchField = 'type';
+  const VALUE: SearchField = 'value';
 
   const substitutions = {
     group: TAGS,
+    id: VALUE,
     ip: IPS,
     is: TYPE,
     name: LABEL,
@@ -229,10 +251,10 @@ export const getRealEntityKey = (key: string): SearchField | string => {
 };
 
 // Returns true if all values in array are true
-export const areAllTrue = all(equals(true));
+export const areAllTrue = (values: boolean[]) => values.every((value) => value);
 
 // Returns true if at least ONE value in array is true
-export const areAnyTrue = any(equals(true));
+export const areAnyTrue = (values: boolean[]) => values.some((value) => value);
 
 // This type is used by 'logic-query-parser
 export type ValueType = 'and' | 'or' | 'string';

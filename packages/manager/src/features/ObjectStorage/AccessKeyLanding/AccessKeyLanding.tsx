@@ -3,19 +3,16 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
+import { useAccountSettings } from '@linode/queries';
+import { useErrors, useOpenClose } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useErrors } from 'src/hooks/useErrors';
-import { useFlags } from 'src/hooks/useFlags';
-import { useOpenClose } from 'src/hooks/useOpenClose';
-import { usePagination } from 'src/hooks/usePagination';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
@@ -23,11 +20,12 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
+import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import ViewPermissionsDrawer from './ViewPermissionsDrawer';
+import { ViewPermissionsDrawer } from './ViewPermissionsDrawer';
 
 import type { MODE, OpenAccessDrawer } from './types';
 import type {
@@ -56,31 +54,32 @@ export const AccessKeyLanding = (props: Props) => {
     openAccessDrawer,
   } = props;
 
-  const pagination = usePagination(1);
+  const navigate = useNavigate();
+  const pagination = usePaginationV2({
+    currentRoute: '/object-storage/access-keys',
+    initialPage: 1,
+    preferenceKey: 'object-storage-keys-table',
+  });
 
   const { data, error, isLoading, refetch } = useObjectStorageAccessKeys({
     page: pagination.page,
     page_size: pagination.pageSize,
   });
 
-  const {
-    data: accountSettings,
-    refetch: requestAccountSettings,
-  } = useAccountSettings();
+  const { data: accountSettings, refetch: requestAccountSettings } =
+    useAccountSettings();
 
   // Key to display in Confirmation Modal upon creation
-  const [
-    keyToDisplay,
-    setKeyToDisplay,
-  ] = React.useState<ObjectStorageKey | null>(null);
+  const [keyToDisplay, setKeyToDisplay] =
+    React.useState<null | ObjectStorageKey>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
-  const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
+  const [keyToEdit, setKeyToEdit] = React.useState<null | ObjectStorageKey>(
     null
   );
 
   // Key to revoke (by clicking on a key's kebab menu )
-  const [keyToRevoke, setKeyToRevoke] = React.useState<ObjectStorageKey | null>(
+  const [keyToRevoke, setKeyToRevoke] = React.useState<null | ObjectStorageKey>(
     null
   );
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
@@ -88,14 +87,27 @@ export const AccessKeyLanding = (props: Props) => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-  const flags = useFlags();
-  const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
+
+  // Redirect to base access keys route if current page has no data
+  // TODO: Remove this implementation and replace `usePagination` with `usePaginate` hook. See [M3-10442]
+  React.useEffect(() => {
+    const currentPage = Number(pagination.page);
+
+    // Only redirect if we have data, no results, and we're not on page 1
+    if (
+      !isLoading &&
+      data &&
+      (data.results === 0 || data.data.length === 0) &&
+      currentPage > 1
+    ) {
+      navigate({
+        to: '/object-storage/access-keys',
+        search: { page: undefined, pageSize: undefined },
+      });
+    }
+  }, [data, isLoading, pagination.page, navigate]);
 
   const handleCreateKey = (
     values: CreateObjectStorageKeyPayload,
@@ -248,7 +260,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const openDrawer: OpenAccessDrawer = (
     mode: MODE,
-    objectStorageKey: ObjectStorageKey | null = null
+    objectStorageKey: null | ObjectStorageKey = null
   ) => {
     setKeyToEdit(objectStorageKey);
     if (mode !== 'creating') {
@@ -268,7 +280,9 @@ export const AccessKeyLanding = (props: Props) => {
 
   return (
     <div>
-      <DocumentTitleSegment segment="Access Keys" />
+      <DocumentTitleSegment
+        segment={`${accessDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
+      />
       <AccessKeyTable
         data={data?.data}
         data-qa-access-key-table
@@ -286,6 +300,7 @@ export const AccessKeyLanding = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+
       {isObjMultiClusterEnabled ? (
         <OMC_AccessKeyDrawer
           isRestrictedUser={props.isRestrictedUser}

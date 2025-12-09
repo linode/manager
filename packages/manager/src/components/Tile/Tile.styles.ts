@@ -1,5 +1,6 @@
-import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
+
+import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles<void, 'buttonTitle' | 'icon'>()(
   (theme: Theme, _params, classes) => ({

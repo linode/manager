@@ -4,8 +4,8 @@ import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  PromotionalOfferCard,
   checkStringOrDefault,
+  PromotionalOfferCard,
 } from './PromotionalOfferCard';
 
 const promo = promotionalOfferFactory.build();

@@ -1,4 +1,4 @@
-import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { createLinodeRequestFactory } from '@linode/utilities';
 
 import { generateCLICommand } from './generate-cli';
 
@@ -44,7 +44,7 @@ const linodeDataForCLI = `
   --type ${linodeRequest.type} \\
   --authorized_users Linny \\
   --authorized_users Gritty \\
-  --interfaces.ipam_address null --interfaces.ipv4.nat_1_1 \"any\" --interfaces.ipv4.vpc \"123\" --interfaces.label null --interfaces.primary true --interfaces.purpose \"vpc\" --interfaces.subnet_id 8296 \\
+  --interfaces '[{"ipv4":{"nat_1_1":"any","vpc":"123"},"primary":true,"purpose":"vpc","subnet_id":8296}]' \\
   --metadata.user_data="cmVrbmpnYmloZXVma2xkbQpqZXZia2Y=" \\
   --placement_group.id 1234 \\
   --stackscript_data '{"gh_username": "linode"}' \\
@@ -71,17 +71,5 @@ describe('generateCLICommand', () => {
   it('should parse array fields as multiple command args with the same key but diffeerent values', () => {
     expect(generatedCommand).toMatch('--authorized_users Linny');
     expect(generatedCommand).toMatch('--authorized_users Gritty');
-  });
-
-  describe('parsing of string arguments', () => {
-    it.skip('should escape strings that contain single quotes, double quotes, and forward slashes', () => {
-      const password = `@C@mplexP@ssword'"\\`;
-      const escapedPassword = `@C@mplexP@ssword\\\'\\\"\\\\\\`;
-      const linodeRequest = createLinodeRequestFactory.build({
-        root_pass: password,
-      });
-      const cliCommand = generateCLICommand(linodeRequest);
-      expect(cliCommand).toMatch(`--root_pass $'${escapedPassword}'`);
-    });
   });
 });

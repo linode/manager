@@ -1,8 +1,6 @@
-import {
-  DomainRecord,
-  DomainType,
-  createDomainRecord,
-} from '@linode/api-v4/lib/domains';
+import { createDomainRecord } from '@linode/api-v4/lib/domains';
+
+import type { DomainRecord, DomainType } from '@linode/api-v4/lib/domains';
 
 export const isValidDomainRecord = (
   hostname: string,
@@ -86,7 +84,7 @@ export const generateDefaultDomainRecords = (
 
   return Promise.all(
     /** ipv6 can be null so don't try to create domain records in that case */
-    !!cleanedIPv6
+    cleanedIPv6
       ? [
           ...baseIPv4Requests,
           createDomainRecord(domainID, {

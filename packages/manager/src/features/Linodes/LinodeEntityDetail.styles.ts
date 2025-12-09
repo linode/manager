@@ -1,15 +1,16 @@
-// This component was built asuming an unmodified MUI <Table />
-import Table from '@mui/material/Table';
-import Grid from '@mui/material/Unstable_Grid2';
+// This component was built assuming an unmodified MUI <Table />
+import { Typography as FontTypography } from '@linode/design-language-system';
+import { Box, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import Table from '@mui/material/Table';
 
-import { Box } from 'src/components/Box';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 // ---------------------------------------------------------------------
 // Header Styles
@@ -40,16 +41,8 @@ export const StyledColumnLabelGrid = styled(Grid, {
   label: 'StyledColumnLabelGrid',
 })(({ theme }) => ({
   color: theme.textColors.headlineStatic,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));
-
-export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
-  ({ theme }) => ({
-    '& p': {
-      color: theme.textColors.tableStatic,
-    },
-  })
-);
 
 export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
   ({ theme }) => ({
@@ -71,7 +64,7 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
 
 export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
   ({ theme }) => ({
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginRight: '4px',
   })
 );
@@ -87,8 +80,50 @@ export const sxLastListItem = {
   paddingRight: 0,
 };
 
+// ---------------------------------------------------------------------
+// VPC Label Styles
+// ---------------------------------------------------------------------
+
+export const StyledIPBox = styled(Box, { label: 'StyledIPBox' })(
+  ({ theme }) => ({
+    '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
+      opacity: 1,
+    },
+    border: 0,
+    display: 'flex',
+    marginLeft: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+      margin: theme.spacing(0),
+    },
+  })
+);
+
+export const StyledIPLabel = styled(Box, { label: 'StyledIPLabel' })(
+  ({ theme }) => ({
+    alignContent: 'center',
+    backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
+    color: theme.textColors.textAccessTable,
+    font: theme.font.bold,
+    padding: `${theme.spacing(1)} ${theme.spacing(3)} ${theme.spacing(
+      1
+    )} ${theme.spacing(1.5)}`,
+    whiteSpace: 'nowrap',
+  })
+);
+
+export const StyledIPItem = styled(Box, { label: 'StyledIPItem' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
+    display: 'flex',
+    font: FontTypography.Code,
+    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
+  })
+);
+
 export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
+    alignItems: 'center',
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
     display: 'flex',
@@ -126,7 +161,7 @@ export const StyledTable = styled(Table, { label: 'StyledTable' })(
         theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
       borderBottom: `1px solid ${theme.bg.bgPaper}`,
       color: theme.textColors.textAccessTable,
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       fontSize: '0.875rem',
       lineHeight: 1,
       padding: theme.spacing(),
@@ -157,10 +192,10 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
       fontSize: 15,
     },
     alignItems: 'center',
-    backgroundColor: theme.bg.bgAccessRow,
+    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
     color: theme.textColors.tableStatic,
     display: 'flex',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    font: FontTypography.Code,
     justifyContent: 'space-between',
     padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
     position: 'relative',
@@ -180,7 +215,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   ({ theme }) => ({
     '&:after': {
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.alias.Interaction.Background.Secondary});`,
       bottom: 0,
       content: '""',
       height: '100%',
@@ -188,6 +223,7 @@ export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
       right: 0,
       width: 30,
     },
+    display: 'flex',
     overflowX: 'auto',
     overflowY: 'hidden', // For Edge
     paddingRight: 15,

@@ -1,16 +1,18 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
+import { useAccount } from '@linode/queries';
+import { ActionsPanel, Box } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { isFeatureEnabledV2, truncateMiddle } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
+import { useParams, useSearch } from '@tanstack/react-router';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Hidden } from 'src/components/Hidden';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -19,21 +21,16 @@ import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import {
+  getObjectBucketObjectsQueryKey,
   objectStorageQueries,
   useObjectBucketObjectsInfiniteQuery,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
-import {
-  fetchBucketAndUpdateCache,
-  prefixToQueryKey,
-} from 'src/queries/object-storage/utilities';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
+import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { truncateMiddle } from 'src/utilities/truncate';
 
+import { QuotasInfoNotice } from '../QuotasInfoNotice';
 import { deleteObject as _deleteObject } from '../requests';
 import {
   displayName,
@@ -55,35 +52,23 @@ import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 
 import type {
-  ObjectStorageClusterID,
-  ObjectStorageEndpointTypes,
   ObjectStorageObject,
   ObjectStorageObjectList,
 } from '@linode/api-v4';
+import type { InfiniteData } from '@tanstack/react-query';
 
-interface MatchParams {
-  bucketName: string;
-  clusterId: ObjectStorageClusterID;
-}
-interface Props {
-  endpointType: ObjectStorageEndpointTypes;
-}
-
-export const BucketDetail = (props: Props) => {
-  const { endpointType } = props;
+export const BucketDetail = () => {
   /**
    * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
    * the bucket's region id
    */
-  const match = useRouteMatch<MatchParams>(
-    '/object-storage/buckets/:clusterId/:bucketName'
-  );
-  const location = useLocation();
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const bucketName = match?.params.bucketName || '';
-  const clusterId = match?.params.clusterId || '';
-  const prefix = getQueryParamFromQueryString(location.search, 'prefix');
+  const { bucketName, clusterId } = useParams({
+    from: '/object-storage/buckets/$clusterId/$bucketName',
+  });
+  const { prefix = '' } = useSearch({
+    from: '/object-storage/buckets/$clusterId/$bucketName',
+  });
   const queryClient = useQueryClient();
 
   const flags = useFlags();
@@ -113,27 +98,18 @@ export const BucketDetail = (props: Props) => {
     isFetchingNextPage,
     isLoading,
   } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
-  const [
-    isCreateFolderDrawerOpen,
-    setIsCreateFolderDrawerOpen,
-  ] = React.useState(false);
+  const [isCreateFolderDrawerOpen, setIsCreateFolderDrawerOpen] =
+    React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
   const [deleteObjectError, setDeleteObjectError] = React.useState<string>();
-  const [
-    deleteObjectDialogOpen,
-    setDeleteObjectDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = React.useState<ObjectStorageObject>();
-  const [
-    objectDetailDrawerOpen,
-    setObjectDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
-  const [deleteObjectLoading, setDeleteObjectLoading] = React.useState<boolean>(
-    false
-  );
+  const [deleteObjectDialogOpen, setDeleteObjectDialogOpen] =
+    React.useState<boolean>(false);
+  const [selectedObject, setSelectedObject] =
+    React.useState<ObjectStorageObject>();
+  const [objectDetailDrawerOpen, setObjectDetailDrawerOpen] =
+    React.useState<boolean>(false);
+  const [deleteObjectLoading, setDeleteObjectLoading] =
+    React.useState<boolean>(false);
 
   const handleDownload = async (objectName: string) => {
     try {
@@ -237,11 +213,7 @@ export const BucketDetail = (props: Props) => {
       pageParams: string[];
       pages: ObjectStorageObjectList[];
     }>(
-      [
-        ...objectStorageQueries.bucket(clusterId, bucketName)._ctx.objects
-          .queryKey,
-        ...prefixToQueryKey(prefix),
-      ],
+      getObjectBucketObjectsQueryKey(clusterId, bucketName, prefix),
       (data) => ({
         pageParams: data?.pageParams || [],
         pages,
@@ -279,7 +251,11 @@ export const BucketDetail = (props: Props) => {
   };
 
   const addOneFile = (objectName: string, sizeInBytes: number) => {
-    if (!data) {
+    const currentData = queryClient.getQueryData<
+      InfiniteData<ObjectStorageObjectList>
+    >(getObjectBucketObjectsQueryKey(clusterId, bucketName, prefix));
+
+    if (!currentData) {
       return;
     }
 
@@ -291,13 +267,13 @@ export const BucketDetail = (props: Props) => {
       size: sizeInBytes,
     };
 
-    for (let i = 0; i < data.pages.length; i++) {
-      const foundObjectIndex = data.pages[i].data.findIndex(
+    for (let i = 0; i < currentData.pages.length; i++) {
+      const foundObjectIndex = currentData.pages[i].data.findIndex(
         (_object) => _object.name === object.name
       );
       if (foundObjectIndex !== -1) {
-        const copy = [...data.pages];
-        const pageCopy = [...data.pages[i].data];
+        const copy = [...currentData.pages];
+        const pageCopy = [...currentData.pages[i].data];
 
         pageCopy[foundObjectIndex] = object;
 
@@ -309,7 +285,7 @@ export const BucketDetail = (props: Props) => {
       }
     }
 
-    const copy = [...data.pages];
+    const copy = [...currentData.pages];
     const dataCopy = [...copy[copy.length - 1].data];
 
     dataCopy.push(object);
@@ -322,7 +298,11 @@ export const BucketDetail = (props: Props) => {
   };
 
   const addOneFolder = (objectName: string) => {
-    if (!data) {
+    const currentData = queryClient.getQueryData<
+      InfiniteData<ObjectStorageObjectList>
+    >(getObjectBucketObjectsQueryKey(clusterId, bucketName, prefix));
+
+    if (!currentData) {
       return;
     }
 
@@ -334,7 +314,7 @@ export const BucketDetail = (props: Props) => {
       size: null,
     };
 
-    for (const page of data.pages) {
+    for (const page of currentData.pages) {
       if (page.data.find((object) => object.name === folder.name)) {
         // If a folder already exists in the store, invalidate that store for that specific
         // prefix. Due to how invalidateQueries works, all subdirectories also get invalidated.
@@ -349,7 +329,7 @@ export const BucketDetail = (props: Props) => {
       }
     }
 
-    const copy = [...data.pages];
+    const copy = [...currentData.pages];
     const dataCopy = [...copy[copy.length - 1].data];
 
     dataCopy.push(folder);
@@ -375,11 +355,9 @@ export const BucketDetail = (props: Props) => {
 
   return (
     <>
-      <BucketBreadcrumb
-        bucketName={bucketName}
-        history={history}
-        prefix={prefix}
-      />
+      <DocumentTitleSegment segment={`${bucketName} | Bucket`} />
+      <BucketBreadcrumb bucketName={bucketName} prefix={prefix} />
+      <QuotasInfoNotice action="adding objects" />
       <ObjectUploader
         bucketName={bucketName}
         clusterId={clusterId}
@@ -436,7 +414,6 @@ export const BucketDetail = (props: Props) => {
           </StyledTryAgainButton>
         </StyledErrorFooter>
       )}
-
       {!hasNextPage && numOfDisplayedObjects >= 100 && (
         <StyledFooter variant="subtitle2">
           Showing all {numOfDisplayedObjects} items
@@ -458,32 +435,31 @@ export const BucketDetail = (props: Props) => {
             }}
           />
         )}
+        error={deleteObjectError}
+        onClose={closeDeleteObjectDialog}
+        open={deleteObjectDialogOpen}
         title={
           objectToDelete
             ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
             : 'Delete object'
         }
-        error={deleteObjectError}
-        onClose={closeDeleteObjectDialog}
-        open={deleteObjectDialogOpen}
       >
         Are you sure you want to delete this object?
       </ConfirmationDialog>
       <ObjectDetailsDrawer
-        url={
-          selectedObject && bucket
-            ? generateObjectUrl(bucket.hostname, selectedObject.name)
-            : undefined
-        }
         bucketName={bucketName}
         clusterId={clusterId}
         displayName={selectedObject?.name}
-        endpointType={endpointType}
         lastModified={selectedObject?.last_modified}
         name={selectedObject?.name}
         onClose={closeObjectDetailsDrawer}
         open={objectDetailDrawerOpen}
         size={selectedObject?.size}
+        url={
+          selectedObject && bucket
+            ? generateObjectUrl(bucket.hostname, selectedObject.name)
+            : undefined
+        }
       />
       <CreateFolderDrawer
         bucketName={bucketName}

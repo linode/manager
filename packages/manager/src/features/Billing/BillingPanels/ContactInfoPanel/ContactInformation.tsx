@@ -1,22 +1,28 @@
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useNotificationsQuery, usePreferences } from '@linode/queries';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useState } from 'react';
 
-import { Box } from 'src/components/Box';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
+import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
   BillingActionButton,
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
+import {
+  StyledTypography,
+  StyledVisibilityHideIcon,
+  StyledVisibilityShowIcon,
+} from './ContactInformation.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import type { Profile } from '@linode/api-v4';
@@ -37,20 +43,7 @@ interface Props {
   zip: string;
 }
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  '& .dif': {
-    '& .MuiChip-root': {
-      position: 'absolute',
-      right: -10,
-      top: '-4px',
-    },
-    position: 'relative',
-    width: 'auto',
-  },
-  marginBottom: theme.spacing(1),
-}));
-
-const ContactInformation = (props: Props) => {
+export const ContactInformation = React.memo((props: Props) => {
   const {
     address1,
     address2,
@@ -67,60 +60,43 @@ const ContactInformation = (props: Props) => {
     zip,
   } = props;
 
-  const history = useHistory<{
-    contactDrawerOpen?: boolean;
-    focusEmail?: boolean;
-  }>();
-
-  const [
-    editContactDrawerOpen,
-    setEditContactDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const { iamRbacPrimaryNavChanges } = useFlags();
+  const navigate = useNavigate();
+  const { contactDrawerOpen, focusEmail } = useSearch({
+    strict: false,
+  });
 
   const { data: notifications } = useNotificationsQuery();
 
-  const [focusEmail, setFocusEmail] = React.useState(false);
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
 
   const isChildUser = Boolean(profile?.user_type === 'child');
 
-  const invalidTaxIdNotification = notifications?.find((notification) => {
-    return notification.type === 'tax_id_invalid';
+  const taxIdIsVerifyingNotification = notifications?.find((notification) => {
+    return notification.type === 'tax_id_verifying';
   });
 
-  const isReadOnly =
-    useRestrictedGlobalGrantCheck({
-      globalGrantType: 'account_access',
-      permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+  const { data: permissions } = usePermissions('account', ['update_account']);
 
-  const handleEditDrawerOpen = React.useCallback(
-    () => setEditContactDrawerOpen(true),
-    [setEditContactDrawerOpen]
+  const isReadOnly = !permissions.update_account || isChildUser;
+
+  const handleEditDrawerOpen = () => {
+    navigate({
+      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+      search: (prev) => ({
+        ...prev,
+        action: 'edit',
+        contactDrawerOpen: true,
+        focusEmail: false,
+      }),
+    });
+  };
+
+  const [isContactInfoMasked, setIsContactInfoMasked] = useState(
+    maskSensitiveDataPreference
   );
-
-  // On-the-fly route matching so this component can open the drawer itself.
-  const editBillingContactRouteMatch = Boolean(
-    useRouteMatch('/account/billing/edit')
-  );
-
-  React.useEffect(() => {
-    if (editBillingContactRouteMatch) {
-      handleEditDrawerOpen();
-    }
-  }, [editBillingContactRouteMatch, handleEditDrawerOpen]);
-
-  // Listen for changes to history state and open the drawer if necessary.
-  // This is currently in use by the EmailBounceNotification, which navigates
-  // the user to the Account page and opens the drawer to prompt them to change
-  // their billing email address.
-  React.useEffect(() => {
-    if (!editContactDrawerOpen && history.location.state?.contactDrawerOpen) {
-      setEditContactDrawerOpen(true);
-      if (history.location.state?.focusEmail) {
-        setFocusEmail(true);
-      }
-    }
-  }, [editContactDrawerOpen, history.location.state]);
 
   /**
    * Finding the country from the countryData JSON
@@ -152,120 +128,143 @@ const ContactInformation = (props: Props) => {
   };
 
   return (
-    <Grid md={6} xs={12}>
+    <Grid
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
-          <BillingActionButton
-            onClick={() => {
-              history.push('/account/billing/edit');
-              handleEditDrawerOpen();
-            }}
-            tooltipText={getRestrictedResourceText({
-              includeContactInfo: false,
-              isChildUser,
-              resourceType: 'Account',
-            })}
-            data-testid="edit-contact-info"
-            disableFocusRipple
-            disableRipple
-            disableTouchRipple
-            disabled={isReadOnly}
-          >
-            {EDIT_BILLING_CONTACT}
-          </BillingActionButton>
-        </BillingBox>
-
-        <Grid container spacing={2}>
-          {(firstName ||
-            lastName ||
-            company ||
-            address1 ||
-            address2 ||
-            city ||
-            state ||
-            zip ||
-            country) && (
-            <Grid sx={sxGrid}>
-              {(firstName || lastName) && (
-                <StyledTypography
-                  data-qa-contact-name
-                  sx={{ wordBreak: 'break-all' }}
-                >
-                  {firstName} {lastName}
-                </StyledTypography>
-              )}
-              {company && (
-                <StyledTypography
-                  data-qa-company
-                  sx={{ wordBreak: 'break-all' }}
-                >
-                  {company}
-                </StyledTypography>
-              )}
-              {(address1 || address2 || city || state || zip || country) && (
-                <>
-                  <StyledTypography data-qa-contact-address>
-                    {address1}
-                  </StyledTypography>
-                  <StyledTypography>{address2}</StyledTypography>
-                </>
-              )}
-              <StyledTypography>
-                {city}
-                {city && state && ','} {state} {zip}
-              </StyledTypography>
-              <StyledTypography>{countryName}</StyledTypography>
-            </Grid>
-          )}
-          <Grid sx={sxGrid}>
-            <StyledTypography
-              data-qa-contact-email
-              sx={{ wordBreak: 'break-all' }}
-            >
-              {email}
-            </StyledTypography>
-            {phone && (
-              <StyledTypography data-qa-contact-phone>{phone}</StyledTypography>
+          <Box display="flex" marginLeft="auto">
+            {!isContactInfoMasked && (
+              <BillingActionButton
+                data-testid="edit-contact-info"
+                disabled={isReadOnly}
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                onClick={handleEditDrawerOpen}
+                tooltipText={getRestrictedResourceText({
+                  includeContactInfo: false,
+                  isChildUser,
+                  resourceType: 'Account',
+                })}
+              >
+                {EDIT_BILLING_CONTACT}
+              </BillingActionButton>
             )}
-            {taxId && (
-              <Box alignItems="center" display="flex">
-                <StyledTypography
-                  sx={{
-                    margin: 0,
-                  }}
-                >
-                  <strong>Tax ID</strong> {taxId}
-                </StyledTypography>
-                {invalidTaxIdNotification && (
-                  <TooltipIcon
-                    sxTooltipIcon={{
-                      '& > svg': {
-                        fontSize: '18px',
-                      },
-                      paddingBottom: 0,
-                      paddingTop: 0,
-                    }}
-                    status="warning"
-                    text={invalidTaxIdNotification.label}
-                  />
+            {maskSensitiveDataPreference && (
+              <BillingActionButton
+                disabled={isReadOnly}
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                sx={{ marginLeft: !isContactInfoMasked ? 2 : 0 }}
+              >
+                {isContactInfoMasked ? (
+                  <StyledVisibilityShowIcon />
+                ) : (
+                  <StyledVisibilityHideIcon />
                 )}
-              </Box>
+                {isContactInfoMasked ? 'Show' : 'Hide'}
+              </BillingActionButton>
             )}
+          </Box>
+        </BillingBox>
+        {maskSensitiveDataPreference && isContactInfoMasked ? (
+          <MaskableTextAreaCopy />
+        ) : (
+          <Grid container spacing={2}>
+            {(firstName ||
+              lastName ||
+              company ||
+              address1 ||
+              address2 ||
+              city ||
+              state ||
+              zip ||
+              country) && (
+              <Grid sx={sxGrid}>
+                {(firstName || lastName) && (
+                  <StyledTypography
+                    data-qa-contact-name
+                    sx={{ wordBreak: 'keep-all' }}
+                  >
+                    {firstName} {lastName}
+                  </StyledTypography>
+                )}
+                {company && (
+                  <StyledTypography
+                    data-qa-company
+                    sx={{ wordBreak: 'keep-all' }}
+                  >
+                    {company}
+                  </StyledTypography>
+                )}
+                {(address1 || address2 || city || state || zip || country) && (
+                  <>
+                    <StyledTypography data-qa-contact-address>
+                      {address1}
+                    </StyledTypography>
+                    <StyledTypography>{address2}</StyledTypography>
+                  </>
+                )}
+                <StyledTypography>
+                  {city}
+                  {city && state && ','} {state} {zip}
+                </StyledTypography>
+                <StyledTypography>{countryName}</StyledTypography>
+              </Grid>
+            )}
+            <Grid sx={sxGrid}>
+              <StyledTypography
+                data-qa-contact-email
+                sx={{ wordBreak: 'break-all' }}
+              >
+                {email}
+              </StyledTypography>
+              {phone && (
+                <StyledTypography data-qa-contact-phone>
+                  {phone}
+                </StyledTypography>
+              )}
+              {taxId && (
+                <Box alignItems="center" display="flex">
+                  <StyledTypography
+                    sx={{
+                      margin: 0,
+                    }}
+                  >
+                    <strong>Tax ID</strong> {taxId}
+                  </StyledTypography>
+                  {taxIdIsVerifyingNotification && (
+                    <TooltipIcon
+                      icon={<StyledAutorenewIcon />}
+                      text={taxIdIsVerifyingNotification.label}
+                    />
+                  )}
+                </Box>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </BillingPaper>
       <BillingContactDrawer
+        // This is currently in use by the EmailBounceNotification, which navigates
+        // the user to the Account page and opens the drawer to prompt them to change
+        // their billing email address.
+        focusEmail={Boolean(focusEmail)}
         onClose={() => {
-          history.replace('/account/billing', { contactDrawerOpen: false });
-          setEditContactDrawerOpen(false);
-          setFocusEmail(false);
+          navigate({
+            to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+            search: undefined,
+          });
         }}
-        focusEmail={focusEmail}
-        open={editContactDrawerOpen}
+        open={Boolean(contactDrawerOpen)}
       />
     </Grid>
   );
-};
-
-export default React.memo(ContactInformation);
+});

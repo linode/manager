@@ -1,12 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Paper, Stack, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 
 import type { User } from '@linode/api-v4';
 
@@ -18,11 +17,11 @@ export const UserDetailsPanel = ({ user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <Typography>{user.username}</Typography>,
+      value: <MaskableText isToggleable text={user.username} />,
     },
     {
       label: 'Email',
-      value: <Typography>{user.email}</Typography>,
+      value: <MaskableText isToggleable text={user.email} />,
     },
     {
       label: 'Account Access',
@@ -69,7 +68,12 @@ export const UserDetailsPanel = ({ user }: Props) => {
     },
     {
       label: 'Verified Phone Number',
-      value: <Typography>{user.verified_phone_number ?? 'None'}</Typography>,
+      value: (
+        <MaskableText
+          isToggleable
+          text={user.verified_phone_number ?? 'None'}
+        />
+      ),
     },
     {
       label: 'SSH Keys',
@@ -90,9 +94,16 @@ export const UserDetailsPanel = ({ user }: Props) => {
     <Paper>
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item, index) => (
-          <Grid key={index} md={2} sm={2} xs={2}>
+          <Grid
+            key={index}
+            size={{
+              md: 2,
+              sm: 2,
+              xs: 2,
+            }}
+          >
             <Stack direction="row" spacing={1}>
-              <Typography fontFamily={(theme) => theme.font.bold}>
+              <Typography sx={(theme) => ({ font: theme.font.bold })}>
                 {item.label}
               </Typography>
               {item.value}

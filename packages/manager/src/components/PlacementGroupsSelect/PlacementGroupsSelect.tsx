@@ -1,15 +1,15 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { useAllPlacementGroupsQuery } from '@linode/queries';
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { TextFieldProps } from 'src/components/TextField';
+import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
-import type { PlacementGroup, Region } from '@linode/api-v4';
-import type { SxProps } from '@mui/system';
+import type { APIError, PlacementGroup, Region } from '@linode/api-v4';
+import type { TextFieldProps } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface PlacementGroupsSelectProps {
   /**
@@ -20,7 +20,7 @@ export interface PlacementGroupsSelectProps {
    * A callback to execute when the selected Placement Group changes.
    * The selection is handled by a parent component.
    */
-  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  handlePlacementGroupChange: (selected: null | PlacementGroup) => void;
   /**
    * The label for the TextField component.
    */
@@ -44,7 +44,7 @@ export interface PlacementGroupsSelectProps {
   /**
    * Any additional styles to apply to the root element.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /**
    * Any additional props to pass to the TextField component.
    */
@@ -97,33 +97,47 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
 
   return (
     <Autocomplete
+      clearOnBlur={true}
+      data-testid="placement-groups-select"
+      disabled={Boolean(!selectedRegion?.id) || disabled}
+      disabledItemsFocusable
+      errorText={error?.[0]?.reason}
+      getOptionDisabled={(placementGroup) =>
+        isDisabledPlacementGroup(placementGroup, selectedRegion)
+      }
+      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
+      helperText={
+        !selectedRegion
+          ? 'Select a Region to see available placement groups.'
+          : undefined
+      }
+      label={label}
+      loading={isFetching}
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
       onChange={(_, selectedOption) => {
         handlePlacementGroupChange(selectedOption ?? null);
       }}
+      options={placementGroups ?? []}
+      placeholder="None"
       renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+
         return (
           <PlacementGroupSelectOption
-            disabled={isDisabledPlacementGroup(option, selectedRegion)}
-            key={option.id}
-            label={option.label}
-            props={props}
+            disabledOptions={
+              isDisabledPlacementGroup(option, selectedRegion)
+                ? { reason: PLACEMENT_GROUP_HAS_NO_CAPACITY }
+                : undefined
+            }
+            item={option}
+            key={key}
+            props={rest}
             selected={selected}
-            value={option}
           />
         );
       }}
-      clearOnBlur={true}
-      data-testid="placement-groups-select"
-      disabled={Boolean(!selectedRegion?.id) || disabled}
-      errorText={error?.[0]?.reason}
-      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
-      label={label}
-      loading={isFetching}
-      options={placementGroups ?? []}
-      placeholder="None"
       sx={sx}
       value={selection}
       {...textFieldProps}

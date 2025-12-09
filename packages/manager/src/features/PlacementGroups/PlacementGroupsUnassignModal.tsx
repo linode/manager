@@ -1,58 +1,53 @@
+import { useUnassignLinodesFromPlacementGroup } from '@linode/queries';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { NotFound } from 'src/components/NotFound';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useUnassignLinodesFromPlacementGroup } from 'src/queries/placementGroups';
+
+import { PLACEMENT_GROUPS_DETAILS_ROUTE } from './constants';
 
 import type {
+  APIError,
   Linode,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
-  onExited?: () => void;
   open: boolean;
   selectedLinode: Linode | undefined;
+  selectedLinodeError: APIError[] | null;
 }
 
 export const PlacementGroupsUnassignModal = (props: Props) => {
-  const { onClose, onExited, open, selectedLinode } = props;
+  const {
+    isFetching,
+    onClose,
+    open,
+    selectedLinode: linode,
+    selectedLinodeError,
+  } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { id: placementGroupId, linodeId } = useParams<{
-    id: string;
-    linodeId: string;
-  }>();
+  const { id: placementGroupId } = useParams({
+    from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+  });
 
-  const [linode, setLinode] = React.useState<Linode | undefined>(
-    selectedLinode
-  );
+  const { linodeId } = useSearch({
+    from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+  });
 
   const {
     error,
     isPending,
     mutateAsync: unassignLinodes,
-  } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
-
-  const { data: linodeFromQuery, isFetching } = useLinodeQuery(
-    +linodeId ?? -1,
-    open && selectedLinode === undefined
+  } = useUnassignLinodesFromPlacementGroup(
+    placementGroupId ? +placementGroupId : -1
   );
-
-  React.useEffect(() => {
-    if (open) {
-      setLinode(selectedLinode ?? linodeFromQuery);
-    }
-  }, [selectedLinode, linodeFromQuery, open]);
 
   const payload: UnassignLinodesFromPlacementGroupPayload = {
     linodes: [linode?.id ?? -1],
@@ -72,7 +67,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   const isLinodeReadOnly = useIsResourceRestricted({
     grantLevel: 'read_write',
     grantType: 'linode',
-    id: +linodeId,
+    id: linodeId ? linodeId : -1,
   });
 
   const actions = (
@@ -91,37 +86,15 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     />
   );
 
-  if (!linode) {
-    return (
-      <ConfirmationDialog
-        sx={{
-          '& .MuiDialog-paper': {
-            '& > .MuiDialogContent-root > div': {
-              maxHeight: 300,
-              padding: 4,
-            },
-            maxHeight: 500,
-            width: 500,
-          },
-        }}
-        onClose={onClose}
-        onExited={onExited}
-        open={open}
-        title="Delete Placement Group"
-      >
-        {isFetching ? <CircleProgress /> : <NotFound />}
-      </ConfirmationDialog>
-    );
-  }
-
   return (
     <ConfirmationDialog
       actions={actions}
+      entityError={selectedLinodeError}
       error={error?.[0]?.reason}
+      isFetching={isFetching}
       onClose={onClose}
-      onExited={onExited}
       open={open}
-      title={linode?.label ? `Unassign ${linode.label}` : 'Unassign'}
+      title={`Unassign ${linode?.label ?? 'Unknown'}`}
     >
       {!linode && (
         <Notice

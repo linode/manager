@@ -1,14 +1,10 @@
-/* eslint-disable no-unused-expressions */
+import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
-
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import type { VncScreenHandle } from 'react-vnc';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { VncScreenHandle } from 'react-vnc';
 
 interface Props extends Omit<LinodeLishData, 'weblish_url'> {
   linode: Linode;
@@ -37,7 +33,6 @@ const Glish = (props: Props) => {
       }
     }, 30 * 1000);
 
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     document.addEventListener('paste', handlePaste);
 
     return () => {
@@ -55,7 +50,10 @@ const Glish = (props: Props) => {
 
   const handlePaste = (event: ClipboardEvent) => {
     event.preventDefault();
-    if (!ref.current?.rfb) {
+    if (
+      !ref.current?.rfb ||
+      ref.current.rfb._rfbConnectionState !== 'connected'
+    ) {
       return;
     }
     if (event.clipboardData === null) {
@@ -77,7 +75,6 @@ const Glish = (props: Props) => {
 
     monitor = new WebSocket(monitor_url, ws_protocols);
 
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     monitor.addEventListener('message', (ev) => {
       const data = JSON.parse(ev.data);
 
@@ -115,20 +112,20 @@ const Glish = (props: Props) => {
 
   return (
     <VncScreen
+      autoConnect={false}
       loadingUI={
         <Box p={8} position="absolute" top="0" width="100%">
           <CircleProgress />
         </Box>
       }
-      style={{
-        height: 'calc(100vh - 60px)',
-        padding: 8,
-      }}
-      autoConnect={false}
       ref={ref}
       rfbOptions={rfbOptions}
       scaleViewport
       showDotCursor
+      style={{
+        height: 'calc(100vh - 60px)',
+        padding: 8,
+      }}
       url={glish_url}
     />
   );
@@ -146,8 +143,14 @@ export default Glish;
  */
 const sendCharacter = (
   character: string,
-  ref: React.RefObject<VncScreenHandle>
+  ref: React.RefObject<null | VncScreenHandle>
 ) => {
+  if (
+    !ref.current?.rfb ||
+    ref.current.rfb._rfbConnectionState !== 'connected'
+  ) {
+    return;
+  }
   const actualCharacter = character[0];
   const requiresShift = actualCharacter.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
 
@@ -179,7 +182,7 @@ const sendCharacter = (
  */
 const sendString = (
   contents: string,
-  ref: React.RefObject<VncScreenHandle>,
+  ref: React.RefObject<null | VncScreenHandle>,
   delay: number = 10
 ) => {
   // Bail out if contents is empty.

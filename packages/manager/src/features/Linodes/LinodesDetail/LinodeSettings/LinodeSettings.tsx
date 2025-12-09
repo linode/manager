@@ -1,32 +1,48 @@
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
-import { useGrants } from 'src/queries/profile/profile';
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
 import { LinodeSettingsDeletePanel } from './LinodeSettingsDeletePanel';
 import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
+import { LinodeSettingsMaintenancePolicyPanel } from './LinodeSettingsMaintenancePolicyPanel';
 import { LinodeSettingsPasswordPanel } from './LinodeSettingsPasswordPanel';
 import { LinodeWatchdogPanel } from './LinodeWatchdogPanel';
 
 const LinodeSettings = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
-  const { data: grants } = useGrants();
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const isReadOnly =
-    grants !== undefined &&
-    grants?.linode.find((grant) => grant.id === id)?.permissions ===
-      'read_only';
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['update_linode', 'delete_linode'],
+    id
+  );
 
   return (
     <>
-      <LinodeSettingsLabelPanel isReadOnly={isReadOnly} linodeId={id} />
-      <LinodeSettingsPasswordPanel isReadOnly={isReadOnly} linodeId={id} />
-      <LinodeSettingsAlertsPanel isReadOnly={isReadOnly} linodeId={id} />
-      <LinodeWatchdogPanel isReadOnly={isReadOnly} linodeId={id} />
-      <LinodeSettingsDeletePanel isReadOnly={isReadOnly} linodeId={id} />
+      <LinodeSettingsLabelPanel
+        isReadOnly={!permissions.update_linode}
+        linodeId={id}
+      />
+      <LinodeSettingsPasswordPanel linodeId={id} />
+      {isVMHostMaintenanceEnabled && (
+        <LinodeSettingsMaintenancePolicyPanel
+          isReadOnly={!permissions.update_linode}
+          linodeId={id}
+        />
+      )}
+      <LinodeWatchdogPanel
+        isReadOnly={!permissions.update_linode}
+        linodeId={id}
+      />
+      <LinodeSettingsDeletePanel
+        isReadOnly={!permissions.delete_linode}
+        linodeId={id}
+      />
     </>
   );
 };

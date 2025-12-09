@@ -1,18 +1,107 @@
 import { hasId } from './presets/crud/seeds/utils';
 
 import type { MockState } from './types';
+import type { Entity } from '@linode/api-v4';
 
 type ObjectStore = 'mockState' | 'seedState';
 
 const MOCK_STATE: ObjectStore = 'mockState';
 const SEED_STATE: ObjectStore = 'seedState';
 
+// Helper method to find an item in the DB. Returns true
+// if the given item has the same ID as the given number
+const findItem = (item: unknown, id: number | string) => {
+  // Some items may be stored as [number, Entity], so we
+  // need to check for both Entity and [number, Entity] types
+  const isItemTuple = Array.isArray(item) && item.length >= 2;
+
+  const itemTupleToFind = isItemTuple && hasId(item[1]) && item[1].id === id;
+
+  const itemToFind = hasId(item) && item.id === id;
+  const entityIdToFind = hasId(item) && item.entityId === id;
+  const stringIdToFind =
+    hasId(item) && typeof id === 'string' && item.username === id;
+
+  return itemTupleToFind || itemToFind || entityIdToFind || stringIdToFind;
+};
+
+const addEntityToEntities = (
+  mockState: MockState,
+  entity: string,
+  item: any
+) => {
+  const entityType = mapMockTypesToEntityTypes(entity);
+  if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+    mockState.entities.push({
+      id: item.id,
+      label: item.label,
+      type: entityType,
+      url: `/${entity}/${item.id}`,
+    });
+  }
+};
+
+const mapMockTypesToEntityTypes = (entity: string) => {
+  switch (entity) {
+    case 'databases':
+      return 'database';
+    case 'domains':
+      return 'domain';
+    case 'firewalls':
+      return 'firewall';
+    case 'images':
+      return 'image';
+    case 'kubernetesClusters':
+      return 'lkecluster';
+    case 'linodes':
+      return 'linode';
+    case 'nodeBalancers':
+      return 'nodebalancer';
+    case 'placementGroups':
+      return 'placement_group';
+    case 'stackscripts':
+      return 'stackscript';
+    case 'volumes':
+      return 'volume';
+    case 'vpcs':
+      return 'vpc';
+    default:
+      return entity;
+  }
+};
+
+// export for seeding
+export const addToEntities = (
+  mockState: MockState,
+  entity: keyof MockState,
+  items: any[]
+) => {
+  items.forEach((item) =>
+    addEntityToEntities(mockState, mapMockTypesToEntityTypes(entity), item)
+  );
+};
+
+const TYPES_TO_ADD_TO_ENTITIES = [
+  'database',
+  'domain',
+  'firewall',
+  'image',
+  'linode',
+  'lkecluster',
+  'longview',
+  'nodebalancer',
+  'placement_group',
+  'stackscript',
+  'volume',
+  'vpc',
+];
+
 export const mswDB = {
   add: async <T extends keyof MockState>(
     entity: T,
     payload: MockState[T] extends Array<infer U> ? U : MockState[T],
     state: MockState
-  ): Promise<void> => {
+  ): Promise<MockState[T] extends Array<infer U> ? U : MockState[T]> => {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
@@ -42,15 +131,33 @@ export const mswDB = {
             newId = newId + 1;
           }
           payload.id = newId;
+        } else if (
+          // generate unique ID for tuple type entities if necessary
+          Array.isArray(payload) &&
+          payload.length >= 2 &&
+          hasId(payload[1])
+        ) {
+          let newId = payload[1].id;
+          while (
+            mockState[entity].some(
+              // eslint-disable-next-line no-loop-func
+              (item: [number, { id: number }]) => item[1].id === newId
+            )
+          ) {
+            newId = newId + 1;
+          }
+          payload[1].id = newId;
         }
 
         mockState[entity].push(payload);
         state[entity].push(payload as any);
 
+        addEntityToEntities(mockState, entity, payload);
+
         const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
-          resolve();
+          resolve(payload);
         };
         updatedRequest.onerror = (event) => {
           reject(event);
@@ -102,6 +209,8 @@ export const mswDB = {
         });
 
         mockState[entity].push(...payload);
+        payload.forEach((item) => addToEntities(mockState, entity, [item]));
+
         if (state) {
           state[entity].push(...(payload as any));
         }
@@ -140,7 +249,7 @@ export const mswDB = {
 
   delete: async <T extends keyof MockState>(
     entity: T,
-    id: number,
+    id: number | string,
     state: MockState
   ): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
@@ -161,13 +270,9 @@ export const mswDB = {
 
           const deleteEntity = (state: MockState | undefined) => {
             if (state && state[entity]) {
-              const index = state[entity].findIndex((item) => {
-                if (!hasId(item)) {
-                  return false;
-                }
-
-                return item.id === id;
-              });
+              const index = state[entity].findIndex((item) =>
+                findItem(item, id)
+              );
               if (index !== -1) {
                 state[entity].splice(index, 1);
               }
@@ -176,6 +281,24 @@ export const mswDB = {
 
           deleteEntity(mockState);
           deleteEntity(seedState);
+
+          const entityType = mapMockTypesToEntityTypes(entity);
+          if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+            const entityIndex = mockState.entities.findIndex(
+              (e: Entity) => e.type === entityType && e.id === id
+            );
+            if (entityIndex !== -1) {
+              mockState.entities.splice(entityIndex, 1);
+            }
+            if (seedState?.entities) {
+              const seedEntityIndex = seedState.entities.findIndex(
+                (e: Entity) => e.type === entityType && e.id === id
+              );
+              if (seedEntityIndex !== -1) {
+                seedState.entities.splice(seedEntityIndex, 1);
+              }
+            }
+          }
 
           if (state[entity]) {
             const stateIndex = state[entity].findIndex((item) => {
@@ -243,6 +366,18 @@ export const mswDB = {
           state[entity] = [];
         }
 
+        const entityType = mapMockTypesToEntityTypes(entity);
+        if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+          mockState.entities = mockState.entities.filter(
+            (e: Entity) => e.type !== entityType
+          );
+          if (state?.entities) {
+            state.entities = state.entities.filter(
+              (e: Entity) => e.type !== entityType
+            );
+          }
+        }
+
         const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
@@ -260,7 +395,7 @@ export const mswDB = {
 
   deleteMany: async <T extends keyof MockState>(
     entity: T,
-    ids: number[],
+    ids: number[] | string[],
     state?: MockState,
     objectStore: ObjectStore = MOCK_STATE
   ): Promise<void> => {
@@ -287,6 +422,24 @@ export const mswDB = {
           if (state) {
             state[entity].splice(index, 1);
           }
+
+          const entityType = mapMockTypesToEntityTypes(entity);
+          if (TYPES_TO_ADD_TO_ENTITIES.includes(entityType)) {
+            const entityIndex = mockState.entities.findIndex(
+              (e: Entity) => e.type === entityType && e.id === id
+            );
+            if (entityIndex !== -1) {
+              mockState.entities.splice(entityIndex, 1);
+            }
+            if (state?.entities) {
+              const stateEntityIndex = state.entities.findIndex(
+                (e: Entity) => e.type === entityType && e.id === id
+              );
+              if (stateEntityIndex !== -1) {
+                state.entities.splice(stateEntityIndex, 1);
+              }
+            }
+          }
         });
 
         const updatedRequest = store.put({ id: 1, ...mockState });
@@ -306,7 +459,7 @@ export const mswDB = {
 
   get: async <T extends keyof MockState>(
     entity: T,
-    id: number
+    id: number | string
   ): Promise<
     (MockState[T] extends Array<infer U> ? U : MockState[T]) | undefined
   > => {
@@ -326,12 +479,7 @@ export const mswDB = {
           const seedState = seedRequest.result;
 
           const findEntity = (state: MockState | undefined) => {
-            return state?.[entity]?.find((item) => {
-              if (!hasId(item)) {
-                return false;
-              }
-              return item.id === id;
-            });
+            return state?.[entity]?.find((item) => findItem(item, id));
           };
 
           const mockEntity = findEntity(mockState);
@@ -448,9 +596,9 @@ export const mswDB = {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
       const store = transaction.objectStore(objectStore);
-      // eslint-disable-next-line xss/no-mixed-html
+
       const sanitizedData = JSON.parse(JSON.stringify(data));
-      // eslint-disable-next-line xss/no-mixed-html
+
       const request = store.put({ id: 1, ...sanitizedData });
 
       request.onsuccess = () => {
@@ -464,7 +612,7 @@ export const mswDB = {
 
   update: async <T extends keyof MockState>(
     entity: T,
-    id: number,
+    id: number | string,
     payload: Partial<MockState[T] extends Array<infer U> ? U : MockState[T]>,
     state: MockState
   ): Promise<void> => {
@@ -482,11 +630,26 @@ export const mswDB = {
         const mockState = storeRequest.result;
         if (mockState && mockState[entity]) {
           const index = mockState[entity].findIndex(
-            (item: { id: number }) => item.id === id
+            (item: [number, { id: number }] | { id: number }) =>
+              findItem(item, id)
           );
+
           if (index !== -1) {
             Object.assign(mockState[entity][index], payload);
             Object.assign(state[entity][index], payload);
+            const entityType = mapMockTypesToEntityTypes(entity);
+
+            if (
+              TYPES_TO_ADD_TO_ENTITIES.includes(entityType) &&
+              'label' in payload
+            ) {
+              const entityIndex = mockState.entities.findIndex(
+                (e: Entity) => e.type === entityType && e.id === id
+              );
+              if (entityIndex !== -1 && payload.label) {
+                mockState.entities[entityIndex].label = payload.label;
+              }
+            }
 
             const updatedRequest = store.put({ id: 1, ...mockState });
             updatedRequest.onsuccess = () => resolve();
@@ -503,8 +666,10 @@ export const mswDB = {
           }
 
           const index = seedState[entity].findIndex(
-            (item: { id: number }) => item.id === id
+            (item: [number, { id: number }] | { id: number }) =>
+              findItem(item, id)
           );
+
           if (index === -1) {
             reject(new Error('Item not found'));
             return;
@@ -512,6 +677,19 @@ export const mswDB = {
 
           Object.assign(seedState[entity][index], payload);
           Object.assign(state[entity][index], payload);
+
+          if (
+            TYPES_TO_ADD_TO_ENTITIES.includes(entity) &&
+            'label' in payload &&
+            seedState.entities
+          ) {
+            const entityIndex = seedState.entities.findIndex(
+              (e: Entity) => e.type === entity && e.id === id
+            );
+            if (entityIndex !== -1 && payload.label) {
+              seedState.entities[entityIndex].label = payload.label;
+            }
+          }
 
           const updatedSeedRequest = seedStore.put({ id: 1, ...seedState });
           updatedSeedRequest.onsuccess = () => resolve();

@@ -2,11 +2,7 @@
  * @file Integration tests for account two-factor authentication functionality.
  */
 
-import { SecurityQuestionsData } from '@linode/api-v4';
-import {
-  profileFactory,
-  securityQuestionsFactory,
-} from 'src/factories/profile';
+import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
 import {
   mockConfirmTwoFactorAuth,
   mockDisableTwoFactorAuth,
@@ -16,11 +12,13 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import {
-  randomNumber,
-  randomLabel,
-  randomString,
   randomHex,
+  randomLabel,
+  randomNumber,
+  randomString,
 } from 'support/util/random';
+
+import type { SecurityQuestionsData } from '@linode/api-v4';
 
 /**
  * Returns a Cypress chainable for the "Two-Factor Authentication".
@@ -39,10 +37,10 @@ const getTwoFactorSection = (): Cypress.Chainable => {
 const randomScratchCode = (): string => {
   const randomScratchCodeOptions = {
     lowercase: true,
-    uppercase: false,
-    symbols: false,
     numbers: false,
     spaces: false,
+    symbols: false,
+    uppercase: false,
   };
 
   const segmentA = randomString(5, randomScratchCodeOptions);
@@ -61,10 +59,10 @@ const randomScratchCode = (): string => {
 const randomToken = (): string => {
   const randomTokenOptions = {
     lowercase: false,
-    uppercase: false,
     numbers: true,
-    symbols: false,
     spaces: false,
+    symbols: false,
+    uppercase: false,
   };
 
   return randomString(6, randomTokenOptions);
@@ -103,10 +101,10 @@ const getAnsweredSecurityQuestions = (): SecurityQuestionsData => {
 
 // User profile with 2FA disabled.
 const userProfile = profileFactory.build({
+  two_factor_auth: false,
   uid: randomNumber(1000, 9999),
   username: randomLabel(),
   verified_phone_number: undefined,
-  two_factor_auth: false,
 });
 
 // User profile with 2FA enabled.

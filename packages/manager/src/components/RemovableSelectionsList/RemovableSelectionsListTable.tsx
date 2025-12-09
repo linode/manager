@@ -1,7 +1,6 @@
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { IconButton } from 'src/components/IconButton';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -10,10 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { TableRowEmpty } from '../TableRowEmpty/TableRowEmpty';
-import {
-  SelectedOptionsHeader,
-  StyledLabel,
-} from './RemovableSelectionsList.style';
+import { StyledLabel } from './RemovableSelectionsList.style';
 
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed
@@ -25,6 +21,10 @@ export type RemovableItem = {
 };
 
 export interface RemovableSelectionsListTableProps {
+  /**
+   * If false, do not include VPC IPv6 and VPC IPv6 Ranges cells
+   */
+  displayVPCIPv6Data?: boolean;
   /**
    * The descriptive text to display above the list
    */
@@ -62,6 +62,7 @@ export const RemovableSelectionsListTable = (
 ) => {
   const {
     headerText,
+    displayVPCIPv6Data = false,
     isRemovable = true,
     noDataText,
     onRemove,
@@ -87,12 +88,22 @@ export const RemovableSelectionsListTable = (
                 : selection.label}
             </StyledLabel>
           </TableCell>
-          <TableCell>{selection.interfaceData?.ipv4?.vpc ?? null}</TableCell>
+          <TableCell>{selection.vpcIPv4 ?? null}</TableCell>
           <TableCell>
             {determineNoneSingleOrMultipleWithChip(
-              selection.interfaceData?.ip_ranges ?? []
+              selection.vpcIPv4Ranges ?? []
             )}
           </TableCell>
+          {displayVPCIPv6Data && (
+            <>
+              <TableCell>{selection.vpcIPv6 ?? null}</TableCell>
+              <TableCell>
+                {determineNoneSingleOrMultipleWithChip(
+                  selection.vpcIPv6Ranges ?? []
+                )}
+              </TableCell>
+            </>
+          )}
           <TableCell>
             {isRemovable && (
               <IconButton
@@ -105,7 +116,7 @@ export const RemovableSelectionsListTable = (
                 onClick={() => handleOnClick(selection)}
                 size="medium"
               >
-                <Close />
+                <CloseIcon />
               </IconButton>
             )}
           </TableCell>
@@ -127,14 +138,16 @@ export const RemovableSelectionsListTable = (
   });
 
   return (
-    <>
-      <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
+    <Stack spacing={1}>
+      <Typography>
+        <strong>{headerText}</strong>
+      </Typography>
       <Table>
         <TableHead>
           <TableRow>{tableHeadersJSX}</TableRow>
         </TableHead>
         <TableBody>{selectedOptionsJSX}</TableBody>
       </Table>
-    </>
+    </Stack>
   );
 };

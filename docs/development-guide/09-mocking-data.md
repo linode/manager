@@ -41,6 +41,8 @@ const linodeList = linodeFactory.buildList(10, { region: "eu-west" });
 // [{ id: 3, label: 'linode-3', region: 'eu-west' }, ...9 more ]
 ```
 
+Because our factories are used by our dev tools, unit tests, and end-to-end tests, we should avoid creating factories with random or unpredictable default values (e.g. by using utilities like `pickRandom` to assign property values).
+
 ### Intercepting Requests
 
 The [Mock Service Worker](https://mswjs.io/) package intercepts requests at the network level and returns the response you defined in the relevant factory.

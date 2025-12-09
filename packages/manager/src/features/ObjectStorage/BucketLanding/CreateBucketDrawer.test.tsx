@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -5,10 +6,9 @@ import * as React from 'react';
 import {
   accountSettingsFactory,
   objectStorageClusterFactory,
-  regionFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
@@ -17,8 +17,6 @@ const props = {
   isOpen: true,
   onClose: vi.fn(),
 };
-
-vi.mock('src/components/EnhancedSelect/Select');
 
 describe('CreateBucketDrawer', () => {
   it.skip('Should show a general error notice if the API returns one', async () => {
@@ -55,12 +53,8 @@ describe('CreateBucketDrawer', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      getByPlaceholderText,
-      getByTestId,
-    } = renderWithTheme(<CreateBucketDrawer {...props} />);
+    const { findByText, getByLabelText, getByPlaceholderText, getByTestId } =
+      renderWithTheme(<CreateBucketDrawer {...props} />);
 
     await userEvent.type(
       getByLabelText('Label', { exact: false }),

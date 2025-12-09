@@ -1,4 +1,5 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { PointerEventsCheckLevel } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { subnetFactory } from 'src/factories';
@@ -6,6 +7,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetActionMenu } from './SubnetActionMenu';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_vpc: true,
+      delete_vpc: true,
+    },
+  })),
+}));
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -16,70 +28,122 @@ const props = {
   handleEdit: vi.fn(),
   handleUnassignLinodes: vi.fn(),
   numLinodes: 1,
+  numNodebalancers: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,
 };
 
 describe('SubnetActionMenu', () => {
-  it('should render the subnet action menu', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
-    screen.getByText('Assign Linodes');
-    screen.getByText('Unassign Linodes');
-    screen.getByText('Edit');
-    screen.getByText('Delete');
+  it('should render the subnet action menu', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+    view.getByText('Assign Linodes');
+    view.getByText('Unassign Linodes');
+    view.getByText('Edit');
+    view.getByText('Delete');
   });
 
-  it('should not allow the delete button to be clicked', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+  it('should not allow the delete button to be clicked', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const deleteButton = screen.getByText('Delete');
-    fireEvent.click(deleteButton);
+    const deleteButton = view.getByRole('menuitem', { name: 'Delete' });
+    await userEvent.click(deleteButton, {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    });
     expect(props.handleDelete).not.toHaveBeenCalled();
-    const tooltipText = screen.getByLabelText(
+    const tooltipText = view.getByLabelText(
       'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).toBeInTheDocument();
   });
 
-  it('should allow the delete button to be clicked', () => {
-    const screen = renderWithTheme(
-      <SubnetActionMenu {...props} numLinodes={0} />
-    );
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+  it('should not allow the delete button to be clicked when isNodebalancerVPCEnabled is true', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />, {
+      flags: { nodebalancerVpc: true },
+    });
 
-    const deleteButton = screen.getByText('Delete');
-    fireEvent.click(deleteButton);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const deleteButton = view.getByText('Delete');
+    await userEvent.click(deleteButton, {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    });
+    expect(props.handleDelete).not.toHaveBeenCalled();
+    const tooltipText = view.getByLabelText(
+      'Resources assigned to a subnet must be unassigned before the subnet can be deleted.'
+    );
+    expect(tooltipText).toBeInTheDocument();
+  });
+
+  it('should allow the delete button to be clicked', async () => {
+    const view = renderWithTheme(
+      <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
+    );
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const deleteButton = view.getByText('Delete');
+    await userEvent.click(deleteButton);
     expect(props.handleDelete).toHaveBeenCalled();
-    const tooltipText = screen.queryByLabelText(
+    const tooltipText = view.queryByLabelText(
       'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).not.toBeInTheDocument();
   });
 
-  it('should allow the edit button to be clicked', () => {
-    const screen = renderWithTheme(
-      <SubnetActionMenu {...props} numLinodes={0} />
+  it('should allow the edit button to be clicked', async () => {
+    const view = renderWithTheme(
+      <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
     );
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const editButton = screen.getByText('Edit');
-    fireEvent.click(editButton);
+    const editButton = view.getByText('Edit');
+    await userEvent.click(editButton);
     expect(props.handleEdit).toHaveBeenCalled();
   });
 
-  it('should allow the Assign Linodes button to be clicked', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+  it('should allow the Assign Linodes button to be clicked', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const assignButton = screen.getByText('Assign Linodes');
-    fireEvent.click(assignButton);
+    const assignButton = view.getByText('Assign Linodes');
+    await userEvent.click(assignButton);
     expect(props.handleAssignLinodes).toHaveBeenCalled();
+  });
+
+  it('should disable the Edit button if user does not have update_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: false,
+        delete_vpc: false,
+      },
+    });
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const editButton = view.getByRole('menuitem', { name: 'Edit' });
+    expect(editButton).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable the Edit button if user has update_vpc permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: true,
+        delete_vpc: false,
+      },
+    });
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+
+    const editButton = view.getByRole('menuitem', { name: 'Edit' });
+    expect(editButton).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

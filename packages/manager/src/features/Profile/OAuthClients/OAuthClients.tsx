@@ -1,9 +1,9 @@
+import { useOAuthClientsQuery } from '@linode/queries';
+import { Box, Button } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,9 +14,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useOAuthClientsQuery } from 'src/queries/account/oauth';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
@@ -28,15 +28,22 @@ import { ResetOAuthClientDialog } from './ResetOAuthClientDialog';
 const PREFERENCE_KEY = 'oauth-clients';
 
 const OAuthClients = () => {
-  const pagination = usePagination(1, PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    initialPage: 1,
+    preferenceKey: PREFERENCE_KEY,
+    currentRoute: '/profile/clients',
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'status',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'status',
+      },
+      from: '/profile/clients',
     },
-    PREFERENCE_KEY
-  );
+    preferenceKey: PREFERENCE_KEY,
+  });
 
   const { data, error, isLoading } = useOAuthClientsQuery(
     {
@@ -48,6 +55,13 @@ const OAuthClients = () => {
       '+order_by': orderBy,
     }
   );
+
+  const { data: permissions } = usePermissions('account', [
+    'create_oauth_client',
+    'update_oauth_client',
+    'delete_oauth_client',
+    'reset_oauth_client_secret',
+  ]);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
@@ -101,6 +115,7 @@ const OAuthClients = () => {
         </Hidden>
         <TableCell actionCell>
           <ActionMenu
+            label={label}
             onOpenDeleteDialog={() => {
               setSelectedOAuthClientId(id);
               setIsDeleteDialogOpen(true);
@@ -113,7 +128,7 @@ const OAuthClients = () => {
               setSelectedOAuthClientId(id);
               setIsResetDialogOpen(true);
             }}
-            label={label}
+            permissions={permissions}
           />
         </TableCell>
       </TableRow>
@@ -129,10 +144,13 @@ const OAuthClients = () => {
         marginBottom={1}
         paddingRight={{ lg: 0, md: 0, sm: 1, xs: 1 }}
       >
-        <AddNewLink
-          label="Add an OAuth App"
+        <Button
+          buttonType="primary"
+          disabled={!permissions.create_oauth_client}
           onClick={() => setIsCreateDrawerOpen(true)}
-        />
+        >
+          Add an OAuth App
+        </Button>
       </Box>
       <Table aria-label="List of OAuth Apps">
         <TableHead>

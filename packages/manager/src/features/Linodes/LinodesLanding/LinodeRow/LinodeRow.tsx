@@ -1,15 +1,17 @@
+import { useTypeQuery } from '@linode/queries';
+import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
+import { statusTooltipIcons } from 'src/features/Linodes/LinodeEntityDetailHeaderMaintenancePolicy.utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
@@ -18,13 +20,11 @@ import {
 } from 'src/features/Linodes/transitions';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
+import { LinodeMaintenanceText } from '../../LinodeMaintenanceText';
 import { IPAddress } from '../IPAddress';
 import { RegionIndicator } from '../RegionIndicator';
-import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
+import { getLinodeIconStatus } from '../utils';
 import {
   StyledButton,
   StyledIpTableCell,
@@ -32,7 +32,7 @@ import {
 } from './LinodeRow.styles';
 
 import type { LinodeHandlers } from '../LinodesLanding';
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {
@@ -64,21 +64,9 @@ export const LinodeRow = (props: Props) => {
 
   const isBareMetalInstance = linodeType?.class === 'metal';
 
-  const loading = linodeInTransition(status, recentEvent);
+  const isTransitioning = linodeInTransition(status, recentEvent);
 
-  const parsedMaintenanceStartTime = parseMaintenanceStartTime(
-    maintenance?.when
-  );
-
-  const MaintenanceText = () => {
-    return (
-      <>
-        This Linode&rsquo;s maintenance window opens at{' '}
-        {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
-      </>
-    );
-  };
+  const maintenanceStartTime = maintenance?.start_time || maintenance?.when;
 
   const iconStatus = getLinodeIconStatus(status);
 
@@ -92,6 +80,12 @@ export const LinodeRow = (props: Props) => {
     setIsHovered(false);
   }, []);
 
+  const isPendingOrScheduled =
+    maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
+
+  const isInProgress =
+    maintenance?.status === 'started' || maintenance?.status === 'in_progress';
+
   return (
     <TableRow
       data-qa-linode={label}
@@ -99,46 +93,64 @@ export const LinodeRow = (props: Props) => {
       key={id}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      sx={{ height: 'auto' }}
     >
       <TableCell noWrap>
-        <Link tabIndex={0} to={`/linodes/${id}`}>
-          {label}
-        </Link>
+        <Link to={`/linodes/${id}`}>{label}</Link>
       </TableCell>
       <StyledMaintenanceTableCell
         data-qa-status
         maintenance={Boolean(maintenance)}
+        noWrap
         statusCell
       >
-        {!Boolean(maintenance) ? (
-          loading ? (
-            <>
-              <StatusIcon status={iconStatus} />
-              <StyledButton onClick={notificationContext.openMenu}>
-                <ProgressDisplay
-                  progress={getProgressOrDefault(recentEvent)}
-                  sx={{ display: 'inline-block' }}
-                  text={transitionText(status, id, recentEvent)}
-                />
-              </StyledButton>
-            </>
-          ) : (
-            <>
-              <StatusIcon status={iconStatus} />
-              {capitalizeAllWords(status.replace('_', ' '))}
-            </>
-          )
-        ) : (
-          <div style={{ alignItems: 'center', display: 'flex' }}>
-            <strong>Maintenance Scheduled</strong>
-            <TooltipIcon
-              status="help"
-              sx={{ tooltip: { maxWidth: 300 } }}
-              text={<MaintenanceText />}
-              tooltipPosition="top"
+        <StatusIcon status={iconStatus} />
+        {!isTransitioning && getFormattedStatus(status)}
+        {isTransitioning && (
+          <StyledButton onClick={notificationContext.openMenu}>
+            <ProgressDisplay
+              progress={getProgressOrDefault(recentEvent)}
+              sx={{ display: 'inline-block' }}
+              text={transitionText(status, id, recentEvent)}
             />
-          </div>
+          </StyledButton>
+        )}
+        {isInProgress && maintenanceStartTime && (
+          <TooltipIcon
+            className="ui-TooltipIcon ui-TooltipIcon-isActive"
+            icon={statusTooltipIcons.active}
+            sx={{ tooltip: { maxWidth: 300 } }}
+            text={
+              <LinodeMaintenanceText
+                isOpened
+                maintenanceStartTime={maintenanceStartTime}
+              />
+            }
+            tooltipPosition="top"
+          />
+        )}
+        {isPendingOrScheduled && (
+          <TooltipIcon
+            className="ui-TooltipIcon"
+            icon={
+              maintenance.status === 'pending'
+                ? statusTooltipIcons.pending
+                : statusTooltipIcons.scheduled
+            }
+            sx={{ tooltip: { maxWidth: 300 } }}
+            text={
+              maintenance?.status === 'pending' ? (
+                "This Linode's maintenance window is pending."
+              ) : maintenanceStartTime ? (
+                <LinodeMaintenanceText
+                  isOpened={false}
+                  maintenanceStartTime={maintenanceStartTime}
+                />
+              ) : (
+                "This Linode's maintenance window is scheduled."
+              )
+            }
+            tooltipPosition="top"
+          />
         )}
       </StyledMaintenanceTableCell>
       <Hidden smDown>
@@ -178,7 +190,6 @@ export const LinodeRow = (props: Props) => {
           linodeStatus={status}
           linodeType={linodeType}
           {...handlers}
-          inListView
         />
       </TableCell>
     </TableRow>
@@ -194,11 +205,12 @@ export const RenderFlag: React.FC<{
    * precedent over notifications
    */
   const { mutationAvailable } = props;
+  const theme = useTheme();
 
   if (mutationAvailable) {
     return (
       <Tooltip title="There is a free upgrade available for this Linode">
-        <Flag />
+        <Flag style={{ color: theme.tokens.alias.Content.Icon.Informative }} />
       </Tooltip>
     );
   }
@@ -210,7 +222,7 @@ RenderFlag.displayName = `RenderFlag`;
 export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text: string | undefined;
 }> = (props) => {
   const { className, progress, sx, text } = props;

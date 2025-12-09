@@ -1,8 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import { GaugePercentProps } from './GaugePercent';
+import type { GaugePercentProps } from './GaugePercent';
 
 type StyledGaugePercentProps = Pick<GaugePercentProps, 'innerTextFontSize'> &
   Required<Pick<GaugePercentProps, 'height' | 'width'>>;

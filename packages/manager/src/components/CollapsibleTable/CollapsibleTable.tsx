@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -7,23 +8,24 @@ import { TableHead } from 'src/components/TableHead';
 import { CollapsibleRow } from './CollapsibleRow';
 
 export interface TableItem {
+  id: number | string;
   InnerTable: JSX.Element;
-  OuterTableCells: JSX.Element;
-  id: number;
   label: string;
+  OuterTableCells: JSX.Element;
 }
 
 interface Props {
+  striped?: boolean;
   TableItems: TableItem[];
   TableRowEmpty: JSX.Element;
   TableRowHead: JSX.Element;
 }
 
 export const CollapsibleTable = (props: Props) => {
-  const { TableItems, TableRowEmpty, TableRowHead } = props;
+  const { TableItems, TableRowEmpty, TableRowHead, striped = true } = props;
 
   return (
-    <Table aria-label="collapsible table">
+    <Table aria-label="collapsible table" nested striped={striped}>
       <TableHead data-qa-table-row="collapsible-table-headers-row">
         {TableRowHead}
       </TableHead>
@@ -33,9 +35,9 @@ export const CollapsibleTable = (props: Props) => {
           return (
             <CollapsibleRow
               InnerTable={item.InnerTable}
-              OuterTableCells={item.OuterTableCells}
               key={item.id}
               label={item.label}
+              OuterTableCells={item.OuterTableCells}
             />
           );
         })}

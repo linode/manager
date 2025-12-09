@@ -1,10 +1,10 @@
+import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -15,38 +15,41 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import { NodeBalancerTableRow } from './NodeBalancerTableRow';
+import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
+import { NodeBalancerTableRow } from './NodeBalancerTableRow';
+
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
-  const [
-    selectedNodeBalancerId,
-    setSelectedNodeBalancerId,
-  ] = React.useState<number>(-1);
-
-  const history = useHistory();
-  const pagination = usePagination(1, preferenceKey);
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_nodebalancers',
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
+  const params = useParams({ strict: false });
+  const pagination = usePaginationV2({
+    currentRoute: '/nodebalancers',
+    initialPage: 1,
+    preferenceKey,
   });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const { data: permissions } = usePermissions('account', [
+    'create_nodebalancer',
+  ]);
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/nodebalancers',
     },
-    preferenceKey
-  );
+    preferenceKey,
+  });
 
   const filter = {
     ['+order']: order,
@@ -61,14 +64,13 @@ export const NodeBalancersLanding = () => {
     filter
   );
 
-  const selectedNodeBalancer = data?.data.find(
-    (nodebalancer) => nodebalancer.id === selectedNodeBalancerId
-  );
+  const {
+    data: selectedNodeBalancer,
+    isFetching: isFetchingNodeBalancer,
+    error: selectedNodeBalancerError,
+  } = useNodeBalancerQuery(Number(params.id), !!params.id);
 
-  const onDelete = (nodeBalancerId: number) => {
-    setSelectedNodeBalancerId(nodeBalancerId);
-    setIsDeleteDialogOpen(true);
-  };
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   if (error) {
     return (
@@ -90,6 +92,9 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: '/nodebalancers',
+        }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -97,10 +102,10 @@ export const NodeBalancersLanding = () => {
             resourceType: 'NodeBalancers',
           }),
         }}
-        disabledCreateButton={isRestricted}
-        docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+        disabledCreateButton={!permissions.create_nodebalancer}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         entity="NodeBalancer"
-        onButtonClick={() => history.push('/nodebalancers/create')}
+        onButtonClick={() => navigate({ to: '/nodebalancers/create' })}
         title="NodeBalancers"
       />
       <Table>
@@ -132,16 +137,17 @@ export const NodeBalancersLanding = () => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            {isNodebalancerVPCEnabled && (
+              <Hidden lgDown>
+                <TableCell>VPC</TableCell>
+              </Hidden>
+            )}
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {data?.data.map((nodebalancer) => (
-            <NodeBalancerTableRow
-              key={nodebalancer.id}
-              onDelete={() => onDelete(nodebalancer.id)}
-              {...nodebalancer}
-            />
+            <NodeBalancerTableRow key={nodebalancer.id} {...nodebalancer} />
           ))}
         </TableBody>
       </Table>
@@ -155,10 +161,10 @@ export const NodeBalancersLanding = () => {
       />
       <TransferDisplay spacingTop={18} />
       <NodeBalancerDeleteDialog
-        id={selectedNodeBalancerId}
-        label={selectedNodeBalancer?.label ?? ''}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        isFetching={isFetchingNodeBalancer}
+        nodeBalancerError={selectedNodeBalancerError}
+        open={match.routeId === '/nodebalancers/$id/delete'}
+        selectedNodeBalancer={selectedNodeBalancer}
       />
     </>
   );

@@ -1,38 +1,40 @@
-import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Formik, FormikHelpers } from 'formik';
+import {
+  ActionsPanel,
+  Drawer,
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+  Typography,
+} from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
+import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle/Toggle';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
+import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
-import {
-  StyledIPGrid,
-  StyledPortGrid,
-  StyledTypography,
-} from './EditSSHAccessDrawer.styles';
 import { DEFAULTS } from './common';
 
+import type { APIError, ManagedLinodeSetting } from '@linode/api-v4';
+import type { FormikHelpers } from 'formik';
+
 interface EditSSHAccessDrawerProps {
-  closeDrawer: () => void;
+  isFetching: boolean;
   isOpen: boolean;
+  linodeError: APIError[] | null;
   linodeSetting?: ManagedLinodeSetting;
 }
 
-const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
-  const { closeDrawer, isOpen, linodeSetting } = props;
-
+export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
+  const { isFetching, isOpen, linodeError, linodeSetting } = props;
+  const navigate = useNavigate();
   const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
     linodeSetting?.id || -1
   );
@@ -64,7 +66,7 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
     })
       .then(() => {
         setSubmitting(false);
-        closeDrawer();
+        navigate({ to: '/managed/ssh-access' });
       })
       .catch((err) => {
         setSubmitting(false);
@@ -78,7 +80,13 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
   };
 
   return (
-    <Drawer onClose={closeDrawer} open={isOpen} title={title}>
+    <Drawer
+      error={linodeError}
+      isFetching={isFetching}
+      onClose={() => navigate({ to: '/managed/ssh-access' })}
+      open={isOpen}
+      title={title}
+    >
       {!linodeSetting ? null : (
         <>
           {/* We're intentionally not validating with Formik, because we want to allow "Port" to
@@ -129,11 +137,11 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                   )}
 
                   <form>
-                    <StyledTypography variant="body1">
+                    <Typography variant="body1">
                       We’ll use the default settings for User Account (
                       {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
                       those fields empty.
-                    </StyledTypography>
+                    </Typography>
 
                     <FormControlLabel
                       control={
@@ -157,8 +165,8 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                       value={user}
                     />
 
-                    <Grid container spacing={2}>
-                      <StyledIPGrid md={8} xs={12}>
+                    <Grid container mt={2} spacing={2}>
+                      <Grid size={{ md: 8, xs: 12 }}>
                         <IPSelect
                           customizeOptions={(options) => [
                             // The first option should always be "Any".
@@ -168,40 +176,39 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                             },
                             ...options
                               // Remove Private IPs
-                              .filter(
-                                (option) => !privateIPRegex.test(option.value)
-                              )
+                              .filter((option) => !isPrivateIP(option.value))
                               // Remove the prefix length from each option.
                               .map((option) => ({
                                 label: removePrefixLength(option.value),
                                 value: removePrefixLength(option.value),
                               })),
                           ]}
+                          errorText={ipError}
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)
                           }
+                          linodeId={linodeSetting.id}
                           value={{
                             label: ip === 'any' ? 'Any' : ip,
                             value: ip,
                           }}
-                          errorText={ipError}
-                          linodeId={linodeSetting.id}
                         />
-                      </StyledIPGrid>
+                      </Grid>
 
-                      <StyledPortGrid md={4} xs={12}>
+                      <Grid size={{ md: 4, xs: 12 }}>
                         <TextField
                           error={!!portError}
                           errorText={portError}
                           label="Port"
                           name="ssh.port"
+                          noMarginTop
                           onBlur={handleBlur}
                           onChange={handleChange}
                           placeholder={String(port || DEFAULTS.port)}
                           type="number"
                           value={port}
                         />
-                      </StyledPortGrid>
+                      </Grid>
                     </Grid>
                     <ActionsPanel
                       primaryButtonProps={{
@@ -220,5 +227,3 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
     </Drawer>
   );
 };
-
-export default EditSSHAccessDrawer;

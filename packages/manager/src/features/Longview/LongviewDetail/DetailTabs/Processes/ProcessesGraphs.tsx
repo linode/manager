@@ -1,25 +1,20 @@
+import { Box, Paper, Typography } from '@linode/ui';
+import { convertBytesToTarget, readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
-import {
-  LongviewProcesses,
-  WithStartAndEnd,
-} from 'src/features/Longview/request.types';
 import {
   convertData,
   formatMemory,
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
-import {
-  convertBytesToTarget,
-  readableBytes,
-} from 'src/utilities/unitConversions';
 
-import { Process } from './types';
+import type { Process } from './types';
+import type {
+  LongviewProcesses,
+  WithStartAndEnd,
+} from 'src/features/Longview/request.types';
 
 interface Props {
   clientAPIKey: string;
@@ -28,7 +23,7 @@ interface Props {
   lastUpdated?: number;
   processesData: LongviewProcesses;
   processesLoading: boolean;
-  selectedProcess: Process | null;
+  selectedProcess: null | Process;
   time: WithStartAndEnd;
   timezone: string;
 }
@@ -108,6 +103,7 @@ export const ProcessesGraphs = (props: Props) => {
         }}
       >
         <LongviewLineGraph
+          ariaLabel="CPU Usage Graph"
           data={[
             {
               backgroundColor: theme.graphs.cpu.system,
@@ -116,7 +112,6 @@ export const ProcessesGraphs = (props: Props) => {
               label: 'CPU',
             },
           ]}
-          ariaLabel="CPU Usage Graph"
           subtitle="%"
           title="CPU"
           unit="%"
@@ -124,6 +119,7 @@ export const ProcessesGraphs = (props: Props) => {
         />
         <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
+            ariaLabel="RAM Usage Graph"
             data={[
               {
                 backgroundColor: theme.graphs.memory.used,
@@ -132,7 +128,6 @@ export const ProcessesGraphs = (props: Props) => {
                 label: 'RAM',
               },
             ]}
-            ariaLabel="RAM Usage Graph"
             formatData={(value: number) => convertBytesToTarget(memUnit, value)}
             formatTooltip={(value: number) => readableBytes(value).formatted}
             subtitle={memUnit}
@@ -142,6 +137,7 @@ export const ProcessesGraphs = (props: Props) => {
         </Box>
         <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
+            ariaLabel="Process Count Graph"
             data={[
               {
                 backgroundColor: theme.graphs.processCount,
@@ -150,7 +146,6 @@ export const ProcessesGraphs = (props: Props) => {
                 label: 'Count',
               },
             ]}
-            ariaLabel="Process Count Graph"
             suggestedMax={10}
             title="Count"
             {...commonGraphProps}
@@ -158,6 +153,7 @@ export const ProcessesGraphs = (props: Props) => {
         </Box>
         <Box marginTop={theme.spacing(3)}>
           <LongviewLineGraph
+            ariaLabel="Disk I/O Graph"
             data={[
               {
                 backgroundColor: theme.graphs.diskIO.write,
@@ -172,7 +168,6 @@ export const ProcessesGraphs = (props: Props) => {
                 label: 'Read',
               },
             ]}
-            ariaLabel="Disk I/O Graph"
             formatData={(value: number) => convertBytesToTarget(ioUnit, value)}
             formatTooltip={(value: number) => readableBytes(value).formatted}
             nativeLegend

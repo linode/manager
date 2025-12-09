@@ -1,9 +1,8 @@
-import { EventStatus } from '@linode/api-v4/lib/account';
-import { Dispatch } from 'redux';
-
-import { EventHandler } from 'src/store/types';
-
 import { getAllLongviewClients } from './longview.requests';
+
+import type { EventStatus } from '@linode/api-v4/lib/account';
+import type { Dispatch } from 'redux';
+import type { EventHandler } from 'src/store/types';
 
 const longviewEventHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, status } = event;

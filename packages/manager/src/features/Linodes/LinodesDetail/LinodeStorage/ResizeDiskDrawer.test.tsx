@@ -1,8 +1,9 @@
+import { linodeFactory } from '@linode/utilities';
 import React from 'react';
 
-import { linodeDiskFactory, linodeFactory } from 'src/factories';
+import { linodeDiskFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';

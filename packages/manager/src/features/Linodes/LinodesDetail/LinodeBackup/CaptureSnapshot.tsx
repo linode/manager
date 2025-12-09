@@ -1,16 +1,18 @@
+import { useLinodeBackupSnapshotMutation } from '@linode/queries';
+import {
+  Box,
+  Button,
+  FormControl,
+  Paper,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { FormControl } from 'src/components/FormControl';
-import { Paper } from 'src/components/Paper';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
@@ -51,6 +53,11 @@ export const CaptureSnapshot = (props: Props) => {
     },
   });
 
+  const handleClose = () => {
+    setIsSnapshotConfirmationDialogOpen(false);
+    reset();
+  };
+
   const hasErrorFor = getErrorMap(['label'], snapshotError);
 
   return (
@@ -88,8 +95,7 @@ export const CaptureSnapshot = (props: Props) => {
       <CaptureSnapshotConfirmationDialog
         error={hasErrorFor.none}
         loading={isSnapshotLoading}
-        onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
-        onExited={() => reset()}
+        onClose={handleClose}
         onSnapshot={() => snapshotForm.handleSubmit()}
         open={isSnapshotConfirmationDialogOpen}
       />

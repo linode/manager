@@ -1,6 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { useEffect, useState } from 'react';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface UseAPIRequest<T> {
   data: T;

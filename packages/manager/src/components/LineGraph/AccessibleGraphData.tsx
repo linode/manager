@@ -2,11 +2,10 @@
  * ONLY USED IN THE LINE GRAPH COMPONENT (Longview)
  * Delete when LineGraph is sunsetted
  */
+import { Box } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import type { ChartData, ChartPoint } from 'chart.js';
 
@@ -70,10 +69,10 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     return (
       !hidden && (
         <table
+          key={`accessible-graph-data-table-${tableID}`}
           summary={`This table contains the data for the ${
             ariaLabel && label ? ariaLabel + ` (${label})` : 'graph below'
           }`}
-          key={`accessible-graph-data-table-${tableID}`}
         >
           <thead>{TableHeader}</thead>
           <tbody>{TableBody}</tbody>

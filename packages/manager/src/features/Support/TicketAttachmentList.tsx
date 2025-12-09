@@ -1,11 +1,10 @@
+import { Typography } from '@linode/ui';
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
-import Grid from '@mui/material/Unstable_Grid2';
-import { isEmpty, slice } from 'ramda';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
-import { Typography } from 'src/components/Typography';
 
 import { TicketAttachmentRow } from './TicketAttachmentRow';
 
@@ -33,25 +32,30 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
     setShowMoreAttachments((prev) => !prev);
   };
 
-  if (isEmpty(attachments)) {
+  if (attachments.length === 0) {
     return null;
   }
+
   // create an array of icons to use
   const icons = addIconsToAttachments(attachments);
 
   return (
     <Grid
-      sx={(theme) => ({
-        marginLeft: theme.spacing(6),
-        marginTop: theme.spacing(),
-        maxWidth: 600,
-        [theme.breakpoints.down('sm')]: {
-          marginLeft: theme.spacing(5),
-          width: 'calc(100% - 32px)',
-        },
-      })}
       container
-      justifyContent="flex-start"
+      sx={[
+        {
+          justifyContent: 'flex-start',
+        },
+        (theme) => ({
+          marginLeft: theme.spacing(6),
+          marginTop: theme.spacing(),
+          maxWidth: 600,
+          [theme.breakpoints.down('sm')]: {
+            marginLeft: theme.spacing(5),
+            width: 'calc(100% - 32px)',
+          },
+        }),
+      ]}
     >
       <Grid
         sx={{
@@ -60,7 +64,7 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
       >
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow
-          attachments={slice(0, 5, attachments)}
+          attachments={attachments.slice(0, 5)}
           icons={icons}
         />
         {attachments.length > 5 && (
@@ -73,13 +77,13 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
             tabIndex={0}
           >
             <ShowMoreExpansion
+              defaultExpanded={false}
               name={
                 !showMoreAttachments ? 'Show More Files' : 'Show Less Files'
               }
-              defaultExpanded={false}
             >
               <TicketAttachmentRow
-                attachments={slice(5, Infinity, attachments)}
+                attachments={attachments.slice(5)}
                 icons={icons}
               />
             </ShowMoreExpansion>

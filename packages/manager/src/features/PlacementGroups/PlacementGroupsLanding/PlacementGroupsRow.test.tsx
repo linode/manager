@@ -1,10 +1,7 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import {
-  linodeFactory,
-  placementGroupFactory,
-  regionFactory,
-} from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import {
   renderWithTheme,
   resizeScreenSize,
@@ -22,7 +19,6 @@ const linode = linodeFactory.build({
 });
 
 const placementGroup = placementGroupFactory.build({
-  placement_group_type: 'anti_affinity:local',
   id: 1,
   is_compliant: false,
   label: 'group 1',
@@ -32,6 +28,7 @@ const placementGroup = placementGroupFactory.build({
       linode_id: 1,
     },
   ],
+  placement_group_type: 'anti_affinity:local',
   region: 'us-east',
 });
 

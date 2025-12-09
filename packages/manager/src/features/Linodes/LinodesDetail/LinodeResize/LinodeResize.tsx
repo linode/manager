@@ -1,38 +1,40 @@
+import {
+  useAllLinodeDisksQuery,
+  useAllTypes,
+  useLinodeQuery,
+  useLinodeResizeMutation,
+  usePreferences,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
+  Box,
+  Button,
+  Checkbox,
+  CircleProgress,
+  Dialog,
+  Divider,
+  Notice,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { Typography } from 'src/components/Typography';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeQuery,
-  useLinodeResizeMutation,
-} from 'src/queries/linodes/linodes';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import {
-  getError,
   isSmallerThanCurrentPlan,
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize.utils';
@@ -70,14 +72,19 @@ export const LinodeResize = (props: Props) => {
   );
 
   const { data: types } = useAllTypes(open);
-  const { data: preferences } = usePreferences(open);
+
+  const { data: typeToConfirmPreference } = usePreferences(
+    (preferences) => preferences?.type_to_confirm ?? true,
+    open
+  );
+
   const { enqueueSnackbar } = useSnackbar();
   const [confirmationText, setConfirmationText] = React.useState('');
-  const [hasResizeError, setHasResizeError] = React.useState<boolean>(false);
+  const [resizeError, setResizeError] = React.useState<string>('');
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const {
-    error: resizeError,
+    error,
     isPending,
     mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
@@ -89,11 +96,11 @@ export const LinodeResize = (props: Props) => {
   const hostMaintenance = linode?.status === 'stopped';
   const isLinodeOffline = linode?.status === 'offline';
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linodeId,
-  });
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['resize_linode'],
+    linodeId
+  );
 
   const formik = useFormik<ResizeLinodePayload>({
     initialValues: {
@@ -147,28 +154,25 @@ export const LinodeResize = (props: Props) => {
     if (!open) {
       formik.resetForm();
       setConfirmationText('');
-      setHasResizeError(false);
+      setResizeError('');
     }
   }, [open]);
 
   React.useEffect(() => {
-    if (resizeError) {
-      setHasResizeError(true);
+    if (error) {
+      setResizeError(error?.[0]?.reason);
     }
-  }, [resizeError]);
+  }, [error]);
 
-  const tableDisabled = hostMaintenance || isLinodesGrantReadOnly;
+  const tableDisabled = hostMaintenance || !permissions.resize_linode;
 
   const submitButtonDisabled =
-    preferences?.type_to_confirm !== false &&
-    confirmationText !== linode?.label;
+    Boolean(typeToConfirmPreference) && confirmationText !== linode?.label;
 
   const type = types?.find((t) => t.id === linode?.type);
 
-  const [
-    diskToResize,
-    _shouldEnableAutoResizeDiskOption,
-  ] = shouldEnableAutoResizeDiskOption(disks ?? []);
+  const [diskToResize, _shouldEnableAutoResizeDiskOption] =
+    shouldEnableAutoResizeDiskOption(disks ?? []);
 
   const isSmaller = isSmallerThanCurrentPlan(
     formik.values.type,
@@ -176,10 +180,7 @@ export const LinodeResize = (props: Props) => {
     types ?? []
   );
 
-  const currentTypes =
-    types?.filter((thisType) => !Boolean(thisType.successor)) ?? [];
-
-  const error = getError(resizeError);
+  const currentTypes = types?.filter((thisType) => !thisType.successor) ?? [];
 
   return (
     <Dialog
@@ -194,7 +195,7 @@ export const LinodeResize = (props: Props) => {
         <CircleProgress />
       ) : (
         <form onSubmit={formik.handleSubmit} ref={formRef}>
-          {isLinodesGrantReadOnly && <LinodePermissionsError />}
+          {!permissions.resize_linode && <LinodePermissionsError />}
           {hostMaintenance && <HostMaintenanceError />}
           {disksError && (
             <Notice
@@ -202,13 +203,23 @@ export const LinodeResize = (props: Props) => {
               variant="error"
             />
           )}
-          {hasResizeError && <Notice variant="error">{error}</Notice>}
+          {resizeError && (
+            <Notice variant="error">
+              <ErrorMessage
+                entity={{
+                  id: linodeId,
+                  type: 'linode_id',
+                }}
+                message={resizeError}
+              />
+            </Notice>
+          )}
           <Typography data-qa-description>
             If you&rsquo;re expecting a temporary burst of traffic to your
             website, or if you&rsquo;re not using your Linode as much as you
             thought, you can temporarily or permanently resize your Linode to a
             different plan.{' '}
-            <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/resize-a-compute-instance">
               Learn more.
             </Link>
           </Typography>
@@ -225,6 +236,7 @@ export const LinodeResize = (props: Props) => {
             <PlansPanel
               currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
               disabled={tableDisabled}
+              isResize
               onSelect={(type) => formik.setFieldValue('type', type)}
               regionsData={regionsData}
               selectedId={formik.values.type}
@@ -244,28 +256,28 @@ export const LinodeResize = (props: Props) => {
             Auto Resize Disk
             {disksError ? (
               <TooltipIcon
+                status="info"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
-                status="help"
                 text={`There was an error loading your Linode&rsquo; disks.`}
               />
             ) : isSmaller ? (
               <TooltipIcon
+                status="info"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
-                status="help"
                 text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
               />
             ) : !_shouldEnableAutoResizeDiskOption ? (
               <TooltipIcon
+                status="info"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
                 text={`Your ext disk can only be automatically resized if you have one ext
                     disk or one ext disk and one swap disk on this Linode.`}
-                status="help"
               />
             ) : null}
           </Typography>
@@ -275,6 +287,7 @@ export const LinodeResize = (props: Props) => {
                 ? false
                 : formik.values.allow_auto_disk_resize
             }
+            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
             onChange={(value, checked) =>
               formik.setFieldValue('allow_auto_disk_resize', checked)
             }
@@ -291,7 +304,6 @@ export const LinodeResize = (props: Props) => {
                 We recommend you keep this option enabled when available.
               </Typography>
             }
-            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
           />
           <Divider
             sx={{
@@ -313,19 +325,19 @@ export const LinodeResize = (props: Props) => {
               title="Confirm"
               typographyStyle={{ marginBottom: 8 }}
               value={confirmationText}
-              visible={preferences?.type_to_confirm}
+              visible={typeToConfirmPreference}
             />
           </Box>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              buttonType="primary"
+              data-qa-resize
               disabled={
                 !formik.values.type ||
                 linodeInTransition(linode?.status || '') ||
                 tableDisabled ||
                 submitButtonDisabled
               }
-              buttonType="primary"
-              data-qa-resize
               loading={isPending}
               type="submit"
             >

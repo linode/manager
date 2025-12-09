@@ -1,24 +1,34 @@
+import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import { Notice } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  plansNoticesUtils,
+} from '@linode/utilities';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
+import type { JSX } from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
-import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  getIsDistributedRegion,
+  isDistributedRegionSupported,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { createDedicatedPlanFiltersRenderProp } from './DedicatedPlanFilters';
 import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
+import { createGPUPlanFilterRenderProp } from './GpuFilters';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedPlansEnabled,
+  useShouldDisablePremiumPlansTab,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -26,6 +36,7 @@ import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 export interface PlansPanelProps {
+  additionalBanners?: React.ReactNode[];
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
@@ -35,16 +46,20 @@ export interface PlansPanelProps {
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
+  flow?: 'database' | 'kubernetes' | 'linode';
+  handleTabChange?: (index: number) => void;
   header?: string;
   isCreate?: boolean;
+  isLegacyDatabase?: boolean;
+  isResize?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
   selectedId?: string;
   selectedRegionID?: string;
   showLimits?: boolean;
-  tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
+  tabDisabledMessage?: string;
   types: PlanSelectionType[];
 }
 
@@ -58,6 +73,7 @@ export interface PlansPanelProps {
  */
 export const PlansPanel = (props: PlansPanelProps) => {
   const {
+    additionalBanners,
     className,
     copy,
     currentPlanHeading,
@@ -66,8 +82,12 @@ export const PlansPanel = (props: PlansPanelProps) => {
     disabledSmallerPlans,
     docsLink,
     error,
+    flow = 'linode',
+    handleTabChange,
     header,
     isCreate,
+    isLegacyDatabase,
+    isResize,
     linodeID,
     onSelect,
     regionsData,
@@ -78,20 +98,40 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
-  const location = useLocation();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
+  const location = window.location;
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
   );
 
+  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedPlansEnabled();
+
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
-    Boolean(flags.soldOutChips) && selectedRegionID !== undefined
+    Boolean(flags.soldOutChips) && Boolean(selectedRegionID)
   );
 
-  const _types = types.filter(
-    (type) =>
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
+  const _types = types.filter((type) => {
+    if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc?.enabled && isMTCPlan(type)) {
+      return false;
+    }
+
+    return (
       !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
-  );
+    );
+  });
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
@@ -108,9 +148,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   const getDedicatedDistributedRegionPlanType = () => {
     return types.filter(
       (type) =>
-        type.id.includes('dedicated-edge') ||
-        type.id.includes('nanode-edge') ||
-        type.class === 'edge'
+        type.id.includes('dedicated-edge') || type.id.includes('nanode-edge')
     );
   };
 
@@ -129,7 +167,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     selectedRegionID,
   });
 
-  const tabs = Object.keys(plans).map(
+  const isDatabaseResize = flow === 'database' && isResize;
+
+  const tabs = Object.keys(plans)?.map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
       const plansMap: PlanSelectionType[] = plans[plan]!;
       const {
@@ -140,6 +180,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disableLargestGbPlansFlag: flags.disableLargestGbPlans,
         disabledClasses,
         disabledSmallerPlans,
+        isLegacyDatabase,
+        isResize: isDatabaseResize ? false : isResize,
         plans: plansMap,
         regionAvailabilities,
         selectedRegionId: selectedRegionID,
@@ -153,21 +195,25 @@ export const PlansPanel = (props: PlansPanelProps) => {
           return (
             <>
               <PlanInformation
+                additionalBanners={additionalBanners}
+                disabledClasses={disabledClasses}
+                flow={flow}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
                 hideLimitedAvailabilityBanner={
                   showDistributedRegionPlanTable ||
                   !flags.disableLargestGbPlans ||
                   plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
                 }
+                isResize={isResize}
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
-                disabledClasses={disabledClasses}
-                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-                hasSelectedRegion={hasSelectedRegion}
+                plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 regionsData={regionsData || []}
               />
-              {showDistributedRegionPlanTable && (
+              {showDistributedRegionPlanTable && !isGeckoLAEnabled && (
                 <Notice
                   text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
                   variant="warning"
@@ -180,8 +226,18 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isCreate={isCreate}
                 linodeID={linodeID}
                 onSelect={onSelect}
-                planType={plan}
+                planFilters={(() => {
+                  switch (plan) {
+                    case 'dedicated':
+                      return createDedicatedPlanFiltersRenderProp();
+                    case 'gpu':
+                      return createGPUPlanFilterRenderProp();
+                    default:
+                      return undefined;
+                  }
+                })()}
                 plans={plansForThisLinodeTypeClass}
+                planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionID}
                 showLimits={showLimits}
@@ -190,7 +246,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
             </>
           );
         },
-        title: planTabInfoContent[plan === 'edge' ? 'dedicated' : plan]?.title,
+        title: planTabInfoContent[plan]?.title,
       };
     }
   );
@@ -217,12 +273,26 @@ export const PlansPanel = (props: PlansPanelProps) => {
     );
   }
 
+  // If there are no premium plans available, plans table will hide the premium tab.
+  // To override this behavior, we add the tab again and then disable it.
+  if (
+    shouldDisablePremiumPlansTab &&
+    !tabs.some((tab) => tab.title === planTabInfoContent.premium?.title)
+  ) {
+    tabs.push({
+      disabled: true,
+      render: () => <div />,
+      title: planTabInfoContent.premium?.title,
+    });
+  }
+
   return (
     <TabbedPanel
       copy={copy}
       data-qa-select-plan
       docsLink={docsLink}
       error={error}
+      handleTabChange={handleTabChange}
       header={header || 'Linode Plan'}
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}

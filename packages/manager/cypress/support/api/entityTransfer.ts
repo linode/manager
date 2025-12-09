@@ -1,14 +1,14 @@
 import {
-  EntityTransfer,
-  Linode,
-  cancelTransfer,
-  getEntityTransfers,
+  cancelServiceTransfer,
   getLinodes,
+  getServiceTransfers,
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
 import { isTestLabel } from './common';
+
+import type { EntityTransfer, Linode } from '@linode/api-v4';
 
 /**
  * Cancel all entity transfers whose labels are prefixed "cy-test-".
@@ -22,7 +22,7 @@ export const cancelAllTestEntityTransfers = async (): Promise<void> => {
 
   const entityTransfers = (
     await depaginate<EntityTransfer>((page: number) =>
-      getEntityTransfers({ page, page_size: pageSize })
+      getServiceTransfers({ page, page_size: pageSize })
     )
   ).filter(
     (entityTransfer: EntityTransfer) => entityTransfer.status === 'pending'
@@ -41,7 +41,7 @@ export const cancelAllTestEntityTransfers = async (): Promise<void> => {
         }
       );
       if (allLinodesAreTestLinodes) {
-        await cancelTransfer(entityTransfer.token);
+        await cancelServiceTransfer(entityTransfer.token);
       }
     }
   );

@@ -1,154 +1,124 @@
-import { DatabaseInstance } from '@linode/api-v4/lib/databases';
+import { useDatabasesQuery, useDatabaseTypesQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { Box } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useDatabasesQuery } from 'src/queries/databases/databases';
-import { useInProgressEvents } from 'src/queries/events/events';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { DatabaseEmptyState } from 'src/features/Databases/DatabaseLanding/DatabaseEmptyState';
+import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { DatabaseEmptyState } from './DatabaseEmptyState';
-import { DatabaseRow } from './DatabaseRow';
 
 const preferenceKey = 'databases';
 
-const DatabaseLanding = () => {
-  const history = useHistory();
-  const pagination = usePagination(1, preferenceKey);
+export const DatabaseLanding = () => {
+  const navigate = useNavigate();
+  const newDatabasesPagination = usePaginationV2({
+    currentRoute: '/databases',
+    preferenceKey,
+    queryParamsPrefix: 'new', // TODO (UIE-8634): Determine if we still need this prefix
+  });
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_databases',
+  });
 
-  const { data: events } = useInProgressEvents();
+  const { isDatabasesV2GA, isUserExistingBeta, isUserNewBeta } =
+    useIsDatabasesEnabled();
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'label',
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: 'rdbms-default',
+  });
+
+  const isDefaultEnabled =
+    isUserExistingBeta || isUserNewBeta || isDatabasesV2GA;
+
+  const {
+    handleOrderChange: databaseHandleOrderChange,
+    order: databaseOrder,
+    orderBy: databaseOrderBy,
+  } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'label',
+      },
+      from: '/databases',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `new-${preferenceKey}-order`, // TODO (UIE-8634): Determine if we still need 'new-' prefix
+  });
 
-  const filter = {
-    ['+order']: order,
-    ['+order_by']: orderBy,
+  const databasesFilter: Record<string, string> = {
+    ['+order']: databaseOrder,
+    ['+order_by']: databaseOrderBy,
+    ['platform']: 'rdbms-default',
   };
 
-  const { data, error, isLoading } = useDatabasesQuery(
+  const {
+    data: databases,
+    error: databasesError,
+    isLoading: databasesIsLoading,
+  } = useDatabasesQuery(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      page: newDatabasesPagination.page,
+      page_size: newDatabasesPagination.pageSize,
     },
-    filter
+    databasesFilter,
+    isDefaultEnabled // TODO (UIE-8634): Determine if check if still necessary
   );
 
-  if (error) {
+  if (databasesError) {
     return (
       <ErrorState
         errorText={
-          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].reason
+          getAPIErrorOrDefault(
+            databasesError,
+            'Error loading your databases.'
+          )[0].reason
         }
       />
     );
   }
 
-  if (isLoading) {
+  if (databasesIsLoading || isTypesLoading) {
     return <CircleProgress />;
   }
 
-  if (data?.results === 0) {
+  const showEmpty = !databases?.data.length;
+  if (showEmpty) {
     return <DatabaseEmptyState />;
   }
 
   return (
     <React.Fragment>
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Databases',
+          }),
+        }}
         createButtonText="Create Database Cluster"
-        docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
-        onButtonClick={() => history.push('/databases/create')}
+        disabledCreateButton={isRestricted}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters"
+        onButtonClick={() => navigate({ to: '/databases/create' })}
         title="Database Clusters"
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              Cluster Label
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'cluster_size'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="cluster_size"
-              >
-                Configuration
-              </TableSortCell>
-            </Hidden>
-            <TableSortCell
-              active={orderBy === 'engine'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="engine"
-            >
-              Engine
-            </TableSortCell>
-            <Hidden mdDown>
-              {/* TODO add back TableSortCell once API is updated to support sort by Region */}
-              <TableCell>Region</TableCell>
-            </Hidden>
-            <Hidden lgDown>
-              <TableSortCell
-                active={orderBy === 'created'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="created"
-              >
-                Created
-              </TableSortCell>
-            </Hidden>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.data.map((database: DatabaseInstance) => (
-            <DatabaseRow
-              database={database}
-              key={database.id}
-              events={events}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={data?.results || 0}
-        eventCategory="Databases Table"
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
+      <Box>
+        <DatabaseLandingTable
+          data={databases?.data}
+          handleOrderChange={databaseHandleOrderChange}
+          isNewDatabase={true} // TODO (UIE-8634): Remove logic around isNewDatabase flag in LandingTable component
+          order={databaseOrder}
+          orderBy={databaseOrderBy}
+          results={databases?.results}
+        />
+      </Box>
     </React.Fragment>
   );
 };
-
-export default React.memo(DatabaseLanding);

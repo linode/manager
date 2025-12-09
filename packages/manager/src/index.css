@@ -9,13 +9,20 @@ html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-stretch: normal;
+  font-optical-sizing: auto;
 }
 
 body {
   height: 100%;
   margin: 0;
   padding: 0 !important;
-  font-family: 'LatoWeb', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  overscroll-behavior: none;
+
+  strong, b {
+    font-weight: 700;
+  }
 }
 
 body.searchOverlay #main-content {
@@ -106,7 +113,6 @@ body.searchOverlay #main-content {
 
 #main-content {
   max-width: 1280px;
-  margin: 0 auto;
 }
 
 .label-visually-hidden {
@@ -150,12 +156,6 @@ a.h-u:hover {
 
 .secondaryLink:hover {
   text-decoration: underline;
-}
-
-strong,
-b {
-  font-family: 'LatoWebBold', sans-serif;
-  font-weight: normal;
 }
 
 .visually-hidden {
@@ -225,46 +225,12 @@ a.black:not(.nu):active {
 } */
 
 /* Reusable Classes */
-.mlMain {
-  width: 100%;
-  flex-basis: 100%;
-}
-.mlSidebar {
-  width: 100%;
-  flex-basis: 100%;
-  margin-top: 24px !important;
-}
-
 .flexCenter {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-@media (min-width: 960px) {
-  .mlMain {
-    max-width: 70%;
-    flex-basis: 70%;
-  }
-  .mlSidebar {
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
-    max-width: 30%;
-    padding: 8px !important;
-    margin-top: 0 !important;
-  }
-}
-@media (min-width: 1280px) {
-  .mlMain {
-    max-width: 78.8%;
-    flex-basis: 78.8%;
-  }
-  .mlSidebar {
-    max-width: 21.2%;
-    padding: 8px 14px !important;
-  }
-}
 .p0 {
   padding: 0 !important;
 }
@@ -327,7 +293,8 @@ button::-moz-focus-inner {
   background: #3683dc;
   color: white;
   font-size: 14px;
-  font-family: 'LatoWebBold', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
   padding: 8px;
   position: absolute;
   top: -40px;

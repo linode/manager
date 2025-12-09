@@ -1,15 +1,13 @@
+import { omittedProps, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-
-import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { DescriptionListProps } from './DescriptionList';
 import type { TypographyProps } from '@mui/material';
-import type { Grid2Props } from '@mui/material/Unstable_Grid2';
+import type { GridProps } from '@mui/material/Grid';
 
 interface StyledDLProps extends Omit<DescriptionListProps, 'items'> {
-  component: Grid2Props['component'];
+  component: GridProps['component'];
   gridColumns?: number;
   isStacked: boolean;
 }
@@ -43,6 +41,6 @@ export const StyledDLItemSeparator = styled(Grid, {
 export const StyledDT = styled(Typography, {
   label: 'StyledDT',
 })<TypographyProps>(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   marginRight: theme.spacing(0.75),
 }));

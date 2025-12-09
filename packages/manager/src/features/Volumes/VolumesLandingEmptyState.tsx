@@ -1,13 +1,13 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { StyledBucketIcon } from 'src/features/ObjectStorage/BucketLanding/StylesBucketIcon';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
-import { StyledVolumeIcon } from './VolumesLandingEmptyState.styles';
 import {
   gettingStartedGuides,
   headers,
@@ -16,11 +16,8 @@ import {
 } from './VolumesLandingEmptyStateData';
 
 export const VolumesLandingEmptyState = () => {
-  const { push } = useHistory();
-
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_volumes',
-  });
+  const navigate = useNavigate();
+  const { data: permissions } = usePermissions('account', ['create_volume']);
 
   return (
     <>
@@ -29,14 +26,14 @@ export const VolumesLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create Volume',
-            disabled: isRestricted,
+            disabled: !permissions?.create_volume,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',
                 category: linkAnalyticsEvent.category,
                 label: 'Create Volume',
               });
-              push('/volumes/create');
+              navigate({ to: '/volumes/create' });
             },
             tooltipText: getRestrictedResourceText({
               action: 'create',
@@ -47,7 +44,7 @@ export const VolumesLandingEmptyState = () => {
         ]}
         gettingStartedGuidesData={gettingStartedGuides}
         headers={headers}
-        icon={StyledVolumeIcon}
+        icon={StyledBucketIcon}
         linkAnalyticsEvent={linkAnalyticsEvent}
         youtubeLinkData={youtubeLinkData}
       />

@@ -1,100 +1,75 @@
+import { Outlet } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
+import { useTabs } from 'src/hooks/useTabs';
 
-const SSHKeys = React.lazy(() =>
-  import('./SSHKeys/SSHKeys').then((module) => ({
-    default: module.SSHKeys,
-  }))
-);
-const Settings = React.lazy(() =>
-  import('./Settings/Settings').then((module) => ({
-    default: module.ProfileSettings,
-  }))
-);
-const Referrals = React.lazy(() =>
-  import('./Referrals/Referrals').then((module) => ({
-    default: module.Referrals,
-  }))
-);
-const OAuthClients = React.lazy(() => import('./OAuthClients/OAuthClients'));
-const LishSettings = React.lazy(() =>
-  import('./LishSettings/LishSettings').then((module) => ({
-    default: module.LishSettings,
-  }))
-);
-const DisplaySettings = React.lazy(() =>
-  import('./DisplaySettings/DisplaySettings').then((module) => ({
-    default: module.DisplaySettings,
-  }))
-);
-const AuthenticationSettings = React.lazy(() =>
-  import('./AuthenticationSettings/AuthenticationSettings').then((module) => ({
-    default: module.AuthenticationSettings,
-  }))
-);
-const APITokens = React.lazy(() =>
-  import('./APITokens/APITokens').then((module) => ({
-    default: module.APITokens,
-  }))
-);
+export const Profile = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
-const Profile = () => {
-  const { url } = useRouteMatch();
-
-  const tabs: NavTab[] = [
+  const { tabs, handleTabChange, tabIndex } = useTabs([
     {
-      component: DisplaySettings,
-      routeName: `${url}/display`,
+      to: `/profile/display`,
       title: 'Display',
     },
     {
-      component: AuthenticationSettings,
-      routeName: `${url}/auth`,
+      to: `/profile/auth`,
       title: 'Login & Authentication',
     },
     {
-      component: SSHKeys,
-      routeName: `${url}/keys`,
+      to: `/profile/keys`,
       title: 'SSH Keys',
     },
     {
-      component: LishSettings,
-      routeName: `${url}/lish`,
+      to: `/profile/lish`,
       title: 'LISH Console Settings',
     },
     {
-      component: APITokens,
-      routeName: `${url}/tokens`,
+      to: `/profile/tokens`,
       title: 'API Tokens',
     },
     {
-      component: OAuthClients,
-      routeName: `${url}/clients`,
+      to: `/profile/clients`,
       title: 'OAuth Apps',
     },
     {
-      component: Referrals,
-      routeName: `${url}/referrals`,
-      title: 'Referrals',
+      to: iamRbacPrimaryNavChanges
+        ? `/profile/preferences`
+        : `/profile/referrals`,
+      title: iamRbacPrimaryNavChanges ? 'Preferences' : 'Referrals',
     },
     {
-      render: <Settings />,
-      routeName: `${url}/settings`,
-      title: 'My Settings',
+      to: iamRbacPrimaryNavChanges ? `/profile/referrals` : `/profile/settings`,
+      title: iamRbacPrimaryNavChanges ? 'Referrals' : 'My Settings',
     },
-  ];
+  ]);
+
+  // Default redirect to the display tab
+  if (location.pathname === '/profile') {
+    navigate({ to: '/profile/display' });
+  }
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile" />
       <LandingHeader removeCrumbX={1} title="My Profile" />
-      <NavTabs tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <TabPanels>
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <Outlet />
+          </React.Suspense>
+        </TabPanels>
+      </Tabs>
     </React.Fragment>
   );
 };
-
-export default Profile;

@@ -1,7 +1,8 @@
-import { API_ROOT } from '../constants';
+import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { AccountMaintenance } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { AccountMaintenance, MaintenancePolicy } from './types';
 
 /**
  * getAccountMaintenance
@@ -11,8 +12,22 @@ import { AccountMaintenance } from './types';
  */
 export const getAccountMaintenance = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<AccountMaintenance>>(
-    setURL(`${API_ROOT}/account/maintenance`),
+    setURL(`${BETA_API_ROOT}/account/maintenance`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
+  );
+
+/**
+ * getMaintenancePolicies
+ *
+ * Returns a list of maintenance policies that are available for Linodes in this account.
+ *
+ */
+export const getMaintenancePolicies = (params?: Params, filter?: Filter) =>
+  Request<ResourcePage<MaintenancePolicy>>(
+    setURL(`${BETA_API_ROOT}/maintenance/policies`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
   );

@@ -77,8 +77,7 @@ describe('getUpgradeableVolumeIds', () => {
     ];
 
     expect(getUpgradeableVolumeIds(volumes, notifications)).toStrictEqual([
-      1,
-      3,
+      1, 3,
     ]);
   });
 

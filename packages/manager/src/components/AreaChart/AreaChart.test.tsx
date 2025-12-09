@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -32,10 +32,13 @@ class ResizeObserver {
 
 describe('AreaChart', () => {
   window.ResizeObserver = ResizeObserver;
-  it('renders an AreaChart', () => {
+  it('renders an AreaChart', async () => {
     const { container } = renderWithTheme(<AreaChart {...props} />);
 
-    expect(container.querySelector('recharts-responsive-container'))
-      .toBeVisible;
+    await waitFor(() => {
+      expect(
+        container.querySelector('[class*="recharts-responsive-container"]')
+      ).toBeVisible();
+    });
   });
 });

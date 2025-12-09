@@ -1,35 +1,38 @@
+import {
+  useAllLinodeDisksQuery,
+  useLinodeChangePasswordMutation,
+  useLinodeDiskChangePasswordMutation,
+  useLinodeQuery,
+  useTypeQuery,
+} from '@linode/queries';
+import { Accordion, ActionsPanel, Notice, Select } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskChangePasswordMutation,
-} from 'src/queries/linodes/disks';
-import {
-  useLinodeChangePasswordMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useTypeQuery } from 'src/queries/types';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 interface Props {
-  isReadOnly?: boolean;
   linodeId: number;
 }
 
 export const LinodeSettingsPasswordPanel = (props: Props) => {
-  const { isReadOnly, linodeId } = props;
+  const { linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
+
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['password_reset_linode'],
+    linodeId
+  );
 
   const {
     data: disks,
@@ -90,7 +93,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     ?.filter((d) => d.filesystem !== 'swap')
     .map((d) => ({ label: d.label, value: d.id }));
 
-  // If there is only one selectable disk, select it automaticly
+  // If there is only one selectable disk, select it automatically
   React.useEffect(() => {
     if (diskOptions !== undefined && diskOptions.length === 1) {
       setSelectedDiskId(diskOptions[0].value);
@@ -101,7 +104,8 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     <StyledActionsPanel
       primaryButtonProps={{
         'data-testid': 'password - save',
-        disabled: isReadOnly || linode?.status !== 'offline',
+        disabled:
+          !permissions.password_reset_linode || linode?.status !== 'offline',
         label: 'Save',
         loading: isLoading,
         onClick: onSubmit,
@@ -122,29 +126,32 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
       <form>
         {generalError && <Notice text={generalError} variant="error" />}
         {!isBareMetalInstance ? (
-          <EnhancedSelect
+          <Select
             data-qa-select-linode
-            disabled={isReadOnly}
+            disabled={!permissions.password_reset_linode}
             errorText={disksError?.[0].reason}
-            isClearable={false}
-            isLoading={disksLoading}
             label="Disk"
-            onChange={(item) => setSelectedDiskId(item.value)}
-            options={diskOptions}
+            loading={disksLoading}
+            onChange={(_, item) =>
+              setSelectedDiskId(Number(item?.value) || null)
+            }
+            options={diskOptions ?? []}
             placeholder="Select a Disk"
-            value={diskOptions?.find((item) => item.value === selectedDiskId)}
+            value={
+              diskOptions?.find((item) => item.value === selectedDiskId) ?? null
+            }
           />
         ) : null}
         <React.Suspense fallback={<SuspenseLoader />}>
           <PasswordInput
+            autoComplete="new-password"
+            data-qa-password-input
+            disabled={!permissions.password_reset_linode}
             disabledReason={
-              isReadOnly
+              !permissions.password_reset_linode
                 ? "You don't have permissions to modify this Linode"
                 : undefined
             }
-            autoComplete="new-password"
-            data-qa-password-input
-            disabled={isReadOnly}
             error={Boolean(passwordError)}
             errorGroup="linode-settings-password"
             errorText={passwordError}

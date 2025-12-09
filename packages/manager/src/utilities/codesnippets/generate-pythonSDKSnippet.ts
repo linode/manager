@@ -1,4 +1,8 @@
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
+
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
 
 /**
  * Escapes special characters in a string for use in Python strings.
@@ -54,7 +58,11 @@ export function generatePythonLinodeSnippet(
     snippet += `    authorized_keys=[${keys}],\n`;
   }
   // Handling interfaces
-  if (config.interfaces && config.interfaces.length > 0) {
+  if (
+    config.interfaces &&
+    config.interfaces.length > 0 &&
+    getIsLegacyInterfaceArray(config.interfaces)
+  ) {
     snippet += '    interfaces=[\n';
     config.interfaces.forEach((iface) => {
       snippet += `        {\n`;
@@ -119,6 +127,6 @@ export function generatePythonLinodeSnippet(
     snippet = snippet.slice(0, -2) + '\n';
   }
 
-  snippet += ')\n';
+  snippet += ')';
   return snippet;
 }

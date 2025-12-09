@@ -1,18 +1,17 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { TRANSFER_FILTERS, useEntityTransfersQuery } from '@linode/queries';
+import { CircleProgress } from '@linode/ui';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { usePagination } from 'src/hooks/usePagination';
-import {
-  TRANSFER_FILTERS,
-  useEntityTransfersQuery,
-} from 'src/queries/entityTransfers';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
 import { TransferControls } from './TransferControls';
+
+import type { EntityTransfer } from '@linode/api-v4';
 
 export const EntityTransfersLanding = () => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
@@ -20,19 +19,29 @@ export const EntityTransfersLanding = () => {
     undefined
   );
 
-  const location = useLocation<{ transfer?: EntityTransfer }>();
-  const history = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const flags = useFlags();
+
+  const url = flags?.iamRbacPrimaryNavChanges
+    ? '/service-transfers'
+    : '/account/service-transfers';
 
   const handleCloseSuccessDialog = () => {
     setSuccessDialogOpen(false);
     setTransfer(undefined);
-    history.replace({ state: undefined });
+    navigate({
+      to: url,
+      state: (prev) => ({ ...prev, transfer: undefined }),
+    });
   };
 
+  const locationState = location.state as { transfer?: EntityTransfer };
+
   React.useEffect(() => {
-    if (location.state?.transfer) {
+    if (locationState?.transfer) {
       setSuccessDialogOpen(true);
-      setTransfer(location.state.transfer);
+      setTransfer(locationState.transfer);
     }
   }, [location]);
 
@@ -42,21 +51,24 @@ export const EntityTransfersLanding = () => {
   const receivedTransfersTablePreferenceKey = 'received-transfers-table';
   const sentTransfersTablePreferenceKey = 'sent-transfers-table';
 
-  const paginationPendingTransfers = usePagination(
+  const paginationPendingTransfers = usePaginationV2({
     initialPage,
-    pendingTransfersTablePreferenceKey,
-    pendingTransfersTablePreferenceKey
-  );
-  const paginationReceivedTransfers = usePagination(
+    currentRoute: url,
+    preferenceKey: pendingTransfersTablePreferenceKey,
+    queryParamsPrefix: pendingTransfersTablePreferenceKey,
+  });
+  const paginationReceivedTransfers = usePaginationV2({
     initialPage,
-    receivedTransfersTablePreferenceKey,
-    receivedTransfersTablePreferenceKey
-  );
-  const paginationSentTransfers = usePagination(
+    currentRoute: url,
+    preferenceKey: receivedTransfersTablePreferenceKey,
+    queryParamsPrefix: receivedTransfersTablePreferenceKey,
+  });
+  const paginationSentTransfers = usePaginationV2({
     initialPage,
-    sentTransfersTablePreferenceKey,
-    sentTransfersTablePreferenceKey
-  );
+    currentRoute: url,
+    preferenceKey: sentTransfersTablePreferenceKey,
+    queryParamsPrefix: sentTransfersTablePreferenceKey,
+  });
 
   // Fetch the Pending Transfers
   const {
@@ -108,10 +120,15 @@ export const EntityTransfersLanding = () => {
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
   const sentTransfersResults = sentTransfersData?.results ?? 0;
 
+  const { data: permissions } = usePermissions('account', [
+    'accept_service_transfer',
+    'create_service_transfer',
+    'cancel_service_transfer',
+  ]);
+
   return (
     <div style={{ overflowX: 'hidden' }}>
-      <DocumentTitleSegment segment="Transfers" />
-      <TransferControls />
+      <TransferControls permissions={permissions} />
       <CreateTransferSuccessDialog
         isOpen={successDialogOpen}
         onClose={handleCloseSuccessDialog}
@@ -125,31 +142,32 @@ export const EntityTransfersLanding = () => {
         <>
           {pendingTransfersResults > 0 ? (
             <TransfersTable
+              error={pendingTransfersError}
+              handlePageChange={paginationPendingTransfers.handlePageChange}
               handlePageSizeChange={
                 paginationPendingTransfers.handlePageSizeChange
               }
-              error={pendingTransfersError}
-              handlePageChange={paginationPendingTransfers.handlePageChange}
               isLoading={pendingTransfersLoading}
               page={paginationPendingTransfers.page}
               pageSize={paginationPendingTransfers.pageSize}
+              permissions={permissions}
               results={pendingTransfersResults}
-              transferType="pending"
               transfers={pendingTransfers}
+              transferType="pending"
             />
           ) : null}
           <TransfersTable
+            error={receivedTransfersError}
+            handlePageChange={paginationReceivedTransfers.handlePageChange}
             handlePageSizeChange={
               paginationReceivedTransfers.handlePageSizeChange
             }
-            error={receivedTransfersError}
-            handlePageChange={paginationReceivedTransfers.handlePageChange}
             isLoading={receivedTransfersLoading}
             page={paginationReceivedTransfers.page}
             pageSize={paginationReceivedTransfers.pageSize}
             results={receivedTransfersResults}
-            transferType="received"
             transfers={receivedTransfers}
+            transferType="received"
           />
           <TransfersTable
             error={sentTransfersError}
@@ -159,8 +177,8 @@ export const EntityTransfersLanding = () => {
             page={paginationSentTransfers.page}
             pageSize={paginationSentTransfers.pageSize}
             results={sentTransfersResults}
-            transferType="sent"
             transfers={sentTransfers}
+            transferType="sent"
           />
         </>
       )}

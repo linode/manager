@@ -54,6 +54,20 @@ vi.mock('highlight.js/lib/highlight', () => ({
   },
 }));
 
+// Mock ResizeObserver for tests
+global.ResizeObserver = class ResizeObserver {
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+};
+
+// @ts-expect-error Mock IntersectionObserver for tests
+global.IntersectionObserver = class IntersectionObserver {
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+};
+
 /**
  ***************************************
  *  Custom matchers & matchers overrides

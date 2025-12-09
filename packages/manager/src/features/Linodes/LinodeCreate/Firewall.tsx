@@ -1,0 +1,145 @@
+import { Box, Paper, Stack, Typography } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
+import React, { useState } from 'react';
+import { useController } from 'react-hook-form';
+
+import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
+import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
+import { Link } from 'src/components/Link';
+import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
+import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
+import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+
+import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
+
+export const Firewall = () => {
+  const { field, fieldState } = useController<
+    CreateLinodeRequest,
+    'firewall_id'
+  >({ name: 'firewall_id' });
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+
+  const flags = useFlags();
+
+  const createType = useGetLinodeCreateType();
+
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const secureVMFirewallBanner =
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
+
+  const { data: permissions } = usePermissions('account', [
+    'create_linode',
+    'create_firewall',
+  ]);
+
+  const firewallFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: createType ?? 'OS',
+    headerName: 'Firewall',
+    interaction: 'click',
+    label: 'Firewall',
+  };
+
+  return (
+    <Paper>
+      <Stack spacing={2}>
+        <Typography variant="h2">Firewall</Typography>
+        <Typography>
+          Assign an existing Firewall to this Linode to control inbound and
+          outbound network traffic.{' '}
+          <Link
+            onClick={() =>
+              sendLinodeCreateFormInputEvent({
+                createType: createType ?? 'OS',
+                headerName: 'Firewall',
+                interaction: 'click',
+                label: 'Learn more',
+              })
+            }
+            to={FIREWALL_GET_STARTED_LINK}
+          >
+            Learn more
+          </Link>
+          .
+        </Typography>
+        {secureVMFirewallBanner !== false &&
+          secureVMFirewallBanner.linodeCreate && (
+            <AkamaiBanner
+              action={
+                secureVMFirewallBanner.generateActionText ? (
+                  <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
+                    {secureVMFirewallBanner.generateActionText}
+                  </LinkButton>
+                ) : undefined
+              }
+              margin={2}
+              {...secureVMFirewallBanner.linodeCreate}
+            />
+          )}
+        <Stack spacing={1.5}>
+          <FirewallSelect
+            disabled={!permissions.create_linode}
+            errorText={fieldState.error?.message}
+            label="Assign Firewall"
+            onBlur={field.onBlur}
+            onChange={(e, firewall) => {
+              field.onChange(firewall?.id);
+              if (!firewall?.id) {
+                sendLinodeCreateFormInputEvent({
+                  ...firewallFormEventOptions,
+                  interaction: 'clear',
+                  subheaderName: 'Assign Firewall',
+                  trackOnce: true,
+                });
+              } else {
+                sendLinodeCreateFormInputEvent({
+                  ...firewallFormEventOptions,
+                  interaction: 'change',
+                  subheaderName: 'Assign Firewall',
+                  trackOnce: true,
+                });
+              }
+            }}
+            placeholder="None"
+            value={field.value}
+          />
+          <Box>
+            <LinkButton
+              disabled={!permissions.create_firewall}
+              onClick={() => {
+                setIsDrawerOpen(true);
+                sendLinodeCreateFormInputEvent({
+                  ...firewallFormEventOptions,
+                  label: 'Create Firewall',
+                });
+              }}
+            >
+              Create Firewall
+            </LinkButton>
+          </Box>
+        </Stack>
+      </Stack>
+      <CreateFirewallDrawer
+        createFlow="linode"
+        onClose={() => setIsDrawerOpen(false)}
+        onFirewallCreated={(firewall) => field.onChange(firewall.id)}
+        open={isDrawerOpen}
+      />
+      {secureVMNoticesEnabled && (
+        <GenerateFirewallDialog
+          onClose={() => setIsGenerateDialogOpen(false)}
+          onFirewallGenerated={(firewall) => field.onChange(firewall.id)}
+          open={isGenerateDialogOpen}
+        />
+      )}
+    </Paper>
+  );
+};

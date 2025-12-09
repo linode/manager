@@ -1,8 +1,8 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
 export const DesignUpdateBanner = () => {
@@ -30,7 +30,7 @@ export const DesignUpdateBanner = () => {
    */
   return (
     <DismissibleBanner preferenceKey={key} variant="info">
-      <Typography variant="body2">
+      <Typography fontSize="inherit">
         We are improving the Cloud Manager experience for our users.{' '}
         <Link to={link}>Read more</Link> about recent updates.
       </Typography>

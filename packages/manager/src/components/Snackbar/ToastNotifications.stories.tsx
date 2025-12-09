@@ -1,13 +1,12 @@
+import { Button, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
+import { eventFactory } from 'src/factories';
 import { getEventMessage } from 'src/features/Events/utils';
 
-import { Stack } from '../Stack';
-
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { VariantType } from 'notistack';
 
 /**
@@ -44,7 +43,7 @@ type Story = StoryObj<typeof Snackbar>;
 export const Default: Story = {
   args: {
     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-    hideIconVariant: true,
+    hideIconVariant: false,
     maxSnack: 5,
   },
   render: (args) => <Template {...args} />,
@@ -60,7 +59,14 @@ function Template(args: any) {
 
 function Example() {
   const { enqueueSnackbar } = useSnackbar();
-  const variants = ['default', 'success', 'warning', 'error', 'info'] as const;
+  const variants = [
+    'default',
+    'success',
+    'warning',
+    'error',
+    'info',
+    'tip',
+  ] as const;
   const showToast = (variant: VariantType) =>
     enqueueSnackbar(
       'Toast message. This will auto destruct after five seconds.',
@@ -86,24 +92,26 @@ function Example() {
 export const WithEventMessage: Story = {
   args: {
     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-    hideIconVariant: true,
+    hideIconVariant: false,
     maxSnack: 5,
   },
   render: (args) => {
     const WithEventMessage = () => {
       const { enqueueSnackbar } = useSnackbar();
-      const message = getEventMessage({
-        action: 'placement_group_assign',
-        entity: {
-          label: 'Entity',
-          url: 'https://google.com',
-        },
-        secondary_entity: {
-          label: 'Secondary Entity',
-          url: 'https://google.com',
-        },
-        status: 'notification',
-      });
+      const message = getEventMessage(
+        eventFactory.build({
+          action: 'placement_group_assign',
+          entity: {
+            label: 'Entity',
+            url: 'https://google.com',
+          },
+          secondary_entity: {
+            label: 'Secondary Entity',
+            url: 'https://google.com',
+          },
+          status: 'notification',
+        })
+      );
 
       return (
         <Button
@@ -126,7 +134,7 @@ export const WithEventMessage: Story = {
 export const WithLongMessage: Story = {
   args: {
     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-    hideIconVariant: true,
+    hideIconVariant: false,
     maxSnack: 5,
   },
   render: (args) => {
@@ -135,13 +143,13 @@ export const WithLongMessage: Story = {
 
       return (
         <Button
+          buttonType="primary"
           onClick={() =>
             enqueueSnackbar(
               'Tax Identification Number could not be verified. Please check your Tax ID for accuracy or contact customer support for assistance.',
               { variant: 'error' }
             )
           }
-          buttonType="primary"
         >
           Toast with Long Message
         </Button>

@@ -1,5 +1,12 @@
+import {
+  ErrorOutlinedIcon,
+  InfoOutlinedIcon,
+  SuccessOutlinedIcon,
+  TipOutlinedIcon,
+  WarningOutlinedIcon,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { MaterialDesignContent } from 'notistack';
+import { closeSnackbar, MaterialDesignContent } from 'notistack';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 
@@ -8,11 +15,33 @@ import { CloseSnackbar } from './CloseSnackbar';
 import type { Theme } from '@mui/material/styles';
 import type { SnackbarProviderProps } from 'notistack';
 
+// Add override for "tip" variant which is Akamai specific and not built into Notistack
+declare module 'notistack' {
+  interface VariantOverrides {
+    tip: true;
+  }
+}
+
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
+    '#notistack-snackbar': {
+      alignItems: 'flex-start',
+      position: 'relative',
+    },
+    '#notistack-snackbar > svg': {
+      position: 'absolute',
+      left: '-48px',
+      top: 6,
+      '& path': {
+        fill: theme.notificationToast.default.icon,
+      },
+    },
     '&.notistack-MuiContent': {
       color: theme.notificationToast.default.color,
       flexWrap: 'unset',
+      borderRadius: 0,
+      paddingLeft: theme.spacingFunction(12),
+      paddingRight: theme.spacingFunction(12),
       [theme.breakpoints.up('md')]: {
         maxWidth: '400px',
       },
@@ -25,7 +54,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
       backgroundColor: theme.notificationToast.error.backgroundColor,
       borderLeft: theme.notificationToast.error.borderLeft,
     },
-    '&.notistack-MuiContent-info': {
+    '&.notistack-MuiContent-info, &.notistack-MuiContent-tip': {
       backgroundColor: theme.notificationToast.info.backgroundColor,
       borderLeft: theme.notificationToast.info.borderLeft,
     },
@@ -36,6 +65,13 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     '&.notistack-MuiContent-warning': {
       backgroundColor: theme.notificationToast.warning.backgroundColor,
       borderLeft: theme.notificationToast.warning.borderLeft,
+      '& #notistack-snackbar svg > path': {
+        fill: theme.notificationToast.warning.icon,
+      },
+    },
+    '& #notistack-snackbar + div': {
+      alignSelf: 'flex-start',
+      paddingLeft: theme.spacingFunction(12),
     },
   })
 );
@@ -45,32 +81,34 @@ export const Snackbar = (props: SnackbarProviderProps) => {
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
    */
-  const notistackRef: React.Ref<SnackbarProvider> = React.createRef();
-  const onClickDismiss = (key: number | string | undefined) => () => {
-    if (notistackRef.current) {
-      notistackRef.current.closeSnackbar(key);
-    }
-  };
 
   const { children, ...rest } = props;
 
   return (
     <SnackbarProvider
-      ref={notistackRef}
-      {...rest}
-      Components={{
-        default: StyledMaterialDesignContent,
-        error: StyledMaterialDesignContent,
-        info: StyledMaterialDesignContent,
-        success: StyledMaterialDesignContent,
-        warning: StyledMaterialDesignContent,
+      iconVariant={{
+        default: <InfoOutlinedIcon />,
+        info: <InfoOutlinedIcon />,
+        tip: <TipOutlinedIcon />,
+        warning: <WarningOutlinedIcon />,
+        error: <ErrorOutlinedIcon />,
+        success: <SuccessOutlinedIcon />,
       }}
-      action={(key) => (
+      {...rest}
+      action={(snackbarId) => (
         <CloseSnackbar
-          onClick={onClickDismiss(key)}
+          onClick={() => closeSnackbar(snackbarId)}
           text="Dismiss Notification"
         />
       )}
+      Components={{
+        default: StyledMaterialDesignContent,
+        info: StyledMaterialDesignContent,
+        tip: StyledMaterialDesignContent,
+        warning: StyledMaterialDesignContent,
+        error: StyledMaterialDesignContent,
+        success: StyledMaterialDesignContent,
+      }}
     >
       {children}
     </SnackbarProvider>

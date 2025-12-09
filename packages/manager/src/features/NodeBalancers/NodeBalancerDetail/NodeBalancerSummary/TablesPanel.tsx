@@ -1,24 +1,18 @@
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
-
-import PendingIcon from 'src/assets/icons/pending.svg';
-import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import {
   useNodeBalancerQuery,
   useNodeBalancerStatsQuery,
-} from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile/profile';
+  useProfile,
+} from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
+import { formatNumber, getMetrics, getUserTimezone } from '@linode/utilities';
+import { styled, useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
+import * as React from 'react';
+
+import PendingIcon from 'src/assets/icons/pending.svg';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
-import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 import type { Theme } from '@mui/material/styles';
 import type {
@@ -35,13 +29,16 @@ export const TablesPanel = () => {
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
+  const { id } = useParams({
+    from: '/nodebalancers/$id/summary',
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const { data: stats, error, isLoading } = useNodeBalancerStatsQuery(
-    nodebalancer?.id ?? -1
-  );
+  const {
+    data: stats,
+    error,
+    isLoading,
+  } = useNodeBalancerStatsQuery(nodebalancer?.id ?? -1);
 
   const statsErrorString = error
     ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason
@@ -56,6 +53,12 @@ export const TablesPanel = () => {
     if (statsNotReadyError) {
       return (
         <ErrorState
+          CustomIcon={() => (
+            <PendingIcon
+              style={{ color: theme.tokens.alias.Content.Icon.Positive }}
+            />
+          )}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -70,8 +73,6 @@ export const TablesPanel = () => {
               </div>
             </>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       );
     }
@@ -98,7 +99,7 @@ export const TablesPanel = () => {
     );
 
     return (
-      <Box marginLeft={-3}>
+      <Box>
         <AreaChart
           areas={[
             {
@@ -106,24 +107,30 @@ export const TablesPanel = () => {
               dataKey: 'Connections',
             },
           ]}
+          ariaLabel="Connections Graph"
+          data={timeData}
+          height={412}
           legendRows={[
             {
               data: metrics,
               format: formatNumber,
-              legendColor: 'purple',
+              legendColor: theme.graphs.purple,
               legendTitle: 'Connections',
             },
           ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
+          showLegend
+          timezone={timezone}
+          unit={' CXN/s'}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
           }}
-          ariaLabel="Connections Graph"
-          data={timeData}
-          height={412}
-          showLegend
-          timezone={timezone}
-          unit={' CXN/s'}
         />
       </Box>
     );
@@ -147,6 +154,8 @@ export const TablesPanel = () => {
     if (statsNotReadyError) {
       return (
         <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -161,8 +170,6 @@ export const TablesPanel = () => {
               </div>
             </>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       );
     }
@@ -176,7 +183,7 @@ export const TablesPanel = () => {
     }
 
     return (
-      <Box marginLeft={-3}>
+      <Box>
         <AreaChart
           areas={[
             {
@@ -188,30 +195,36 @@ export const TablesPanel = () => {
               dataKey: 'Traffic Out',
             },
           ]}
+          ariaLabel="Network Traffic Graph"
+          data={timeData}
+          height={412}
           legendRows={[
             {
               data: getMetrics(trafficIn),
               format: formatBitsPerSecond,
-              legendColor: 'darkGreen',
+              legendColor: theme.graphs.darkGreen,
               legendTitle: 'Traffic In',
             },
             {
               data: getMetrics(trafficOut),
               format: formatBitsPerSecond,
-              legendColor: 'lightGreen',
+              legendColor: theme.graphs.lightGreen,
               legendTitle: 'Traffic Out',
             },
           ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
+          showLegend
+          timezone={timezone}
+          unit={' bits/s'}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
           }}
-          ariaLabel="Network Traffic Graph"
-          data={timeData}
-          height={412}
-          showLegend
-          timezone={timezone}
-          unit={' bits/s'}
         />
       </Box>
     );
@@ -255,11 +268,12 @@ const StyledTitle = styled(Typography, {
 
 export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
-})(({ theme }) => ({
-  backgroundColor: theme.bg.offWhite,
-  color: '#777',
+  shouldForwardProp: (prop) => prop !== 'legendHeight',
+})<{ legendHeight?: string }>(({ legendHeight, theme }) => ({
+  color: theme.tokens.color.Neutrals[70],
   fontSize: 14,
-  margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
+  height: legendHeight,
+  overflowY: 'auto',
 }));
 
 const StyledPanel = styled(Paper, {

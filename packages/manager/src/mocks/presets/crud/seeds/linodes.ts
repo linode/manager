@@ -1,6 +1,7 @@
+import { configFactory, linodeFactory } from '@linode/utilities';
+
 import { getSeedsCountMap } from 'src/dev-tools/utils';
-import { configFactory, linodeFactory } from 'src/factories';
-import { mswDB } from 'src/mocks/indexedDB';
+import { addToEntities, mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { Config } from '@linode/api-v4';
@@ -18,12 +19,16 @@ export const linodesSeeder: MockSeeder = {
     const count = seedsCountMap[linodesSeeder.id] ?? 0;
     const linodeSeeds = seedWithUniqueIds<'linodes'>({
       dbEntities: await mswDB.getAll('linodes'),
-      seedEntities: linodeFactory.buildList(count),
+      seedEntities: linodeFactory.buildList(count, {
+        capabilities: ['Block Storage Performance B1'],
+      }),
     });
 
     const configs: [number, Config][] = linodeSeeds.map((linodeSeed) => {
       return [linodeSeed.id, configFactory.build()];
     });
+
+    addToEntities(mockState, 'linodes', linodeSeeds);
 
     const updatedMockState = {
       ...mockState,

@@ -1,25 +1,21 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { useRegionsQuery } from '@linode/queries';
+import { Stack, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { getRegionsByRegionId, readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
+import { TableRow } from 'src/components/TableRow';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-import { getRegionsByRegionId } from 'src/utilities/regions';
-import { readableBytes } from 'src/utilities/unitConversions';
 
+import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { BucketActionMenu } from './BucketActionMenu';
 import {
-  StyledBucketLabelLink,
-  StyledBucketNameWrapper,
   StyledBucketObjectsCell,
   StyledBucketRegionCell,
-  StyledBucketRow,
   StyledBucketSizeCell,
 } from './BucketTableRow.styles';
 
@@ -46,14 +42,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const { data: clusters } = useObjectStorageClusters(
     !isObjMultiClusterEnabled
@@ -68,32 +57,27 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const typeLabel = isLegacy ? 'Legacy' : 'Standard';
 
   return (
-    <StyledBucketRow data-qa-bucket-cell={label} key={label}>
+    <TableRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
-          <Grid>
-            <StyledBucketNameWrapper>
-              <Typography component="h3" data-qa-label variant="body1">
-                <StyledBucketLabelLink
-                  to={`/object-storage/buckets/${
-                    isObjMultiClusterEnabled ? region : cluster
-                  }/${label}`}
-                >
-                  {label}{' '}
-                </StyledBucketLabelLink>
-              </Typography>
-            </StyledBucketNameWrapper>
-
+        <MaskableText isToggleable text={hostname}>
+          <Stack>
+            <Link
+              to={`/object-storage/buckets/${
+                isObjMultiClusterEnabled ? region : cluster
+              }/${label}`}
+            >
+              {label}
+            </Link>
             {hostname}
-          </Grid>
-        </Grid>
+          </Stack>
+        </MaskableText>
       </TableCell>
       <Hidden smDown>
         <StyledBucketRegionCell>
           <Typography data-qa-region variant="body1">
             {isObjMultiClusterEnabled && regionsLookup && region
               ? regionsLookup[region].label
-              : clusterRegion?.label ?? cluster}
+              : (clusterRegion?.label ?? cluster)}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
@@ -125,7 +109,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
         </StyledBucketObjectsCell>
       </Hidden>
 
-      <TableCell>
+      <TableCell sx={{ paddingRight: 0 }}>
         <BucketActionMenu
           cluster={cluster}
           data-qa-action-menu
@@ -134,6 +118,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           onRemove={onRemove}
         />
       </TableCell>
-    </StyledBucketRow>
+    </TableRow>
   );
 };

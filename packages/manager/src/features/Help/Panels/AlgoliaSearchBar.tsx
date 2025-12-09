@@ -1,70 +1,30 @@
-import Search from '@mui/icons-material/Search';
-import { Theme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
+import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
-import { makeStyles } from 'tss-react/mui';
 
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
-import { Notice } from 'src/components/Notice/Notice';
-import { selectStyles } from 'src/features/TopMenu/SearchBar/SearchBar';
+import Search from 'src/assets/icons/search.svg';
 
-import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
+import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  enhancedSelectWrapper: {
-    '& .input': {
-      '& > div': {
-        marginRight: 0,
-      },
-      '& p': {
-        color: theme.color.grey1,
-        paddingLeft: theme.spacing(3),
-      },
-      maxWidth: '100%',
-    },
-    '& .react-select__value-container': {
-      paddingLeft: theme.spacing(4),
-    },
-    margin: '0 auto',
-    maxHeight: 500,
-    [theme.breakpoints.up('md')]: {
-      width: 500,
-    },
-    width: 300,
-  },
-  notice: {
-    '& p': {
-      color: theme.color.white,
-      fontFamily: 'LatoWeb',
-    },
-  },
-  root: {
-    position: 'relative',
-  },
-  searchIcon: {
-    color: theme.color.grey1,
-    left: 5,
-    position: 'absolute',
-    top: 4,
-    zIndex: 3,
-  },
-}));
+import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
+import type { ConvertedItems } from '../SearchHOC';
 
-interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
+interface SelectedItem {
+  data: { source: string };
+  label: string;
+  value: string;
+}
 
-const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
-  const { classes } = useStyles();
+/**
+ * For Algolia search to work locally, ensure you have valid values set for
+ * REACT_APP_ALGOLIA_APPLICATION_ID and REACT_APP_ALGOLIA_SEARCH_KEY in your .env file.
+ */
+const AlgoliaSearchBar = (props: AlgoliaProps) => {
   const [inputValue, setInputValue] = React.useState('');
-  const {
-    history,
-    searchAlgolia,
-    searchEnabled,
-    searchError,
-    searchResults,
-  } = props;
+  const { searchAlgolia, searchEnabled, searchError, searchResults } = props;
+  const navigate = useNavigate();
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;
@@ -88,57 +48,79 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     [searchAlgolia]
   );
 
-  const getLinkTarget = (inputValue: string) => {
-    return inputValue
-      ? `/support/search/?query=${inputValue}`
-      : '/support/search/';
-  };
-
-  const handleSelect = (selected: Item<string>) => {
+  const handleSelect = (selected: ConvertedItems | null | SelectedItem) => {
     if (!selected || !inputValue) {
       return;
     }
 
-    if (selected.value === 'search') {
-      const link = getLinkTarget(inputValue);
-      history.push(link);
-    } else {
-      const href = pathOr('', ['data', 'href'], selected);
+    const href =
+      selected?.data && 'href' in selected.data ? selected.data.href : '';
+    if (href) {
+      // If an href exists for the selected option, redirect directly to that link.
       window.open(href, '_blank', 'noopener');
+    } else {
+      // If no href, we redirect to the search landing page.
+      navigate({
+        to: '/support/search',
+        search: { query: inputValue || undefined },
+      });
     }
   };
-
   return (
     <React.Fragment>
       {searchError && (
-        <Notice className={classes.notice} spacingTop={8} variant="error">
+        <Notice
+          spacingTop={8}
+          sx={(theme) => ({
+            '& p': {
+              color: theme.tokens.color.Neutrals.White,
+            },
+          })}
+          variant="error"
+        >
           {searchError}
         </Notice>
       )}
-      <div className={classes.root}>
-        <Search className={classes.searchIcon} data-qa-search-icon />
-        <EnhancedSelect
-          components={
-            { DropdownIndicator: () => null, Option: SearchItem } as any
-          }
-          className={classes.enhancedSelectWrapper}
-          disabled={!searchEnabled}
-          hideLabel
-          inputValue={inputValue}
-          isClearable={true}
-          isMulti={false}
-          label="Search for answers"
-          onChange={handleSelect}
-          onInputChange={onInputValueChange}
-          options={options}
-          placeholder="Search for answers..."
-          styles={selectStyles}
-        />
-      </div>
+      <Autocomplete
+        disabled={!searchEnabled}
+        inputValue={inputValue}
+        keepSearchEnabledOnMobile
+        label="Search for answers"
+        onChange={(_, selected) => handleSelect(selected)}
+        onInputChange={(_, value) => onInputValueChange(value)}
+        options={options}
+        placeholder="Search"
+        renderOption={(props, option) => {
+          return (
+            <SearchItem
+              data={option}
+              {...props}
+              key={`${props.key}-${option.value}`}
+            />
+          );
+        }}
+        sx={(theme) => ({
+          maxHeight: 500,
+          [theme.breakpoints.up('md')]: {
+            width: 500,
+          },
+          width: 300,
+        })}
+        textFieldProps={{
+          InputProps: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search data-qa-search-icon />
+              </InputAdornment>
+            ),
+          },
+          hideLabel: true,
+        }}
+      />
     </React.Fragment>
   );
 };
 
 export default withSearch({ highlight: false, hitsPerPage: 10 })(
-  withRouter(AlgoliaSearchBar)
+  AlgoliaSearchBar
 );

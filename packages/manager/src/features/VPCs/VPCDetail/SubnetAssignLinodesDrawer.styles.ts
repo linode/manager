@@ -1,6 +1,6 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
 export const StyledButtonBox = styled(Box, { label: 'StyledButtonBox' })(
   ({ theme }) => ({
     display: 'flex',

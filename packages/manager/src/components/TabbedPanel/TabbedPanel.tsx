@@ -1,19 +1,15 @@
+import { Box, Notice, Paper, Tooltip, Typography } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { type JSX, useEffect, useState } from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
 
-import { Box } from '../Box';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface Tab {
   disabled?: boolean;
@@ -27,13 +23,14 @@ interface TabbedPanelProps {
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;
-  handleTabChange?: () => void;
+  handleTabChange?: (index: number) => void;
   header: string;
   initTab?: number;
   innerClass?: string;
   noPadding?: boolean;
+  notice?: JSX.Element;
   rootClass?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   tabDisabledMessage?: string;
   tabs: Tab[];
   value?: number;
@@ -48,6 +45,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     header,
     initTab,
     innerClass,
+    notice,
     rootClass,
     sx,
     tabs,
@@ -56,22 +54,15 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
 
   const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
 
-  const sxHelpIcon = {
-    height: 20,
-    m: 0.5,
-    verticalAlign: 'sub',
-    width: 20,
-  };
-
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
     if (handleTabChange) {
-      handleTabChange();
+      handleTabChange(index);
     }
   };
 
   useEffect(() => {
-    if (tabIndex !== initTab) {
+    if (tabIndex === undefined && initTab !== undefined) {
       setTabIndex(initTab);
     }
   }, [initTab]);
@@ -97,29 +88,50 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </Notice>
         )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
+        {notice}
         <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
-              <StyledTab
-                disabled={tab.disabled}
-                key={`tabs-${tab.title}-${idx}`}
-              >
-                {tab.title}
+              <>
+                <StyledTab
+                  data-pendo-id={tab.title}
+                  disabled={tab.disabled}
+                  key={`tabs-${tab.title}-${idx}`}
+                >
+                  {tab.title}
+                </StyledTab>
                 {tab.disabled && props.tabDisabledMessage && (
-                  <Tooltip title={props.tabDisabledMessage}>
-                    <span>
-                      <HelpOutline fontSize="small" sx={sxHelpIcon} />
-                    </span>
+                  <Tooltip tabIndex={0} title={props.tabDisabledMessage}>
+                    <Box
+                      sx={(theme) => ({
+                        marginLeft: `-${theme.spacingFunction(12)}`,
+                        marginTop: theme.spacingFunction(10),
+                      })}
+                    >
+                      <HelpOutline
+                        fontSize="small"
+                        sx={(theme) => ({
+                          height: 20,
+                          m: 0.5,
+                          width: 20,
+                          color: theme.tokens.component.Tab.Disabled.Icon,
+                          '&:hover': {
+                            color: theme.tokens.component.Tab.Hover.Icon,
+                            cursor: 'pointer',
+                          },
+                        })}
+                      />
+                    </Box>
                   </Tooltip>
                 )}
-              </StyledTab>
+              </>
             ))}
           </StyledTabList>
           <TabPanels>
             {tabs.map((tab, idx) => (
               <TabPanel
-                key={`tabs-panel-${tab.title}-${idx}`}
                 data-qa-tp-tab={tab.title}
+                key={`tabs-panel-${tab.title}-${idx}`}
               >
                 {tab.render(rest.children)}
               </TabPanel>

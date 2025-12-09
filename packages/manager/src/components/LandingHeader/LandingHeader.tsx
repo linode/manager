@@ -1,21 +1,22 @@
-import { Theme, styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
-import {
-  Breadcrumb,
-  BreadcrumbProps,
-} from 'src/components/Breadcrumb/Breadcrumb';
-import { Button } from 'src/components/Button/Button';
+import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+
+import type { Theme } from '@mui/material/styles';
+import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;
   betaFeedbackLink?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
-  breadcrumbProps?: BreadcrumbProps;
+  breadcrumbProps?: Partial<BreadcrumbProps>;
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledBreadcrumbEditButton?: boolean;
@@ -28,8 +29,9 @@ export interface LandingHeaderProps {
   onButtonClick?: () => void;
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onDocsClick?: () => void;
-  removeCrumbX?: number;
+  removeCrumbX?: number | number[];
   shouldHideDocsAndCreateButtons?: boolean;
+  spacingBottom?: 0 | 4 | 16 | 24;
   title?: JSX.Element | string;
 }
 
@@ -56,6 +58,7 @@ export const LandingHeader = ({
   onDocsClick,
   removeCrumbX,
   shouldHideDocsAndCreateButtons,
+  spacingBottom = 24,
   title,
 }: LandingHeaderProps) => {
   const theme = useTheme();
@@ -75,12 +78,15 @@ export const LandingHeader = ({
     : `${title} Landing`;
 
   return (
-    <Grid
-      alignItems="center"
+    <StyledLandingHeaderGrid
       container
       data-qa-entity-header
-      justifyContent="space-between"
-      sx={{ width: '100%' }}
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: spacingBottom !== undefined ? `${spacingBottom}px` : 0,
+        width: '100%',
+      }}
     >
       <Grid>
         <Breadcrumb
@@ -98,24 +104,25 @@ export const LandingHeader = ({
         <Grid>
           <Grid
             sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flexWrap: xsDown ? 'wrap' : 'nowrap',
+              gap: 3,
+              justifyContent: 'flex-end',
               flex: '1 1 auto',
+
               marginLeft: customSmMdBetweenBreakpoint
-                ? theme.spacing(2)
+                ? theme.spacingFunction(16)
                 : customXsDownBreakpoint
-                ? theme.spacing(1)
-                : undefined,
+                  ? theme.spacingFunction(8)
+                  : undefined,
             }}
-            alignItems="center"
-            display="flex"
-            flexWrap={xsDown ? 'wrap' : 'nowrap'}
-            gap={3}
-            justifyContent="flex-end"
           >
             {betaFeedbackLink && (
               <span
                 style={{
-                  marginLeft: xsDown ? `${theme.spacing(2)}` : undefined,
-                  marginRight: `${theme.spacing(2)}`,
+                  marginLeft: xsDown ? theme.spacingFunction(16) : undefined,
+                  marginRight: theme.spacingFunction(16),
                 }}
               >
                 <DocsLink
@@ -134,7 +141,7 @@ export const LandingHeader = ({
               />
             ) : null}
             {renderActions && (
-              <Actions>
+              <StyledActions>
                 {extraActions}
                 {onButtonClick ? (
                   <Button
@@ -148,17 +155,23 @@ export const LandingHeader = ({
                     {createButtonText ?? `Create ${entity}`}
                   </Button>
                 ) : null}
-              </Actions>
+              </StyledActions>
             )}
           </Grid>
         </Grid>
       )}
-    </Grid>
+    </StyledLandingHeaderGrid>
   );
 };
 
-const Actions = styled('div')(() => ({
+const StyledActions = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: '24px',
+  gap: theme.spacingFunction(24),
   justifyContent: 'flex-end',
+}));
+
+const StyledLandingHeaderGrid = styled(Grid)(({ theme }) => ({
+  '&:not(:first-of-type)': {
+    marginTop: theme.spacingFunction(24),
+  },
 }));

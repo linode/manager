@@ -1,8 +1,9 @@
+import { getNewRegionLabel } from '@linode/utilities';
 import { randomItem } from 'support/util/random';
-import { buildArray, shuffleArray } from './arrays';
-import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
-import type { Capabilities, Region } from '@linode/api-v4';
+import { buildArray, shuffleArray } from './arrays';
+
+import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
 
 /**
  * Extended Region type to assist with Cloud Manager-specific label handling.
@@ -16,7 +17,7 @@ import type { Capabilities, Region } from '@linode/api-v4';
  * the `apiLabel` property.
  *
  * @see {@link https://github.com/linode/manager/pull/10740|Cloud Manager PR #10740}
- * @see {@link src/queries/regions/regions.ts}
+ * @see {@link packages/queries/src/regions/regions.ts (@linode/queries)}
  */
 export interface ExtendedRegion extends Region {
   /** Region label as defined by API v4. */
@@ -31,7 +32,7 @@ export interface ExtendedRegion extends Region {
  * @returns `true` if `region` is an `ExtendedRegion` instance, `false` otherwise.
  */
 export const isExtendedRegion = (
-  region: Region | ExtendedRegion
+  region: ExtendedRegion | Region
 ): region is ExtendedRegion => {
   if ('apiLabel' in region) {
     return true;
@@ -50,13 +51,13 @@ export const isExtendedRegion = (
  * @returns `ExtendedRegion` object for `region`.
  */
 export const extendRegion = (
-  region: Region | ExtendedRegion
+  region: ExtendedRegion | Region
 ): ExtendedRegion => {
   if (!isExtendedRegion(region)) {
     return {
       ...region,
-      label: getNewRegionLabel(region),
       apiLabel: region.label,
+      label: getNewRegionLabel(region),
     };
   }
   return region;
@@ -73,14 +74,15 @@ export const getRegionFromExtendedRegion = (
   extendedRegion: ExtendedRegion
 ): Region => {
   return {
+    capabilities: extendedRegion.capabilities,
+    country: extendedRegion.country,
     id: extendedRegion.id,
     label: extendedRegion.apiLabel,
-    country: extendedRegion.country,
-    capabilities: extendedRegion.capabilities,
     placement_group_limits: extendedRegion.placement_group_limits,
-    status: extendedRegion.status,
     resolvers: extendedRegion.resolvers,
     site_type: extendedRegion.site_type,
+    status: extendedRegion.status,
+    monitors: extendedRegion.monitors,
   };
 };
 
@@ -99,6 +101,36 @@ const disallowedRegionIds = [
 
   // Washington, DC
   'us-iad',
+
+  // Atlanta, GA
+  'us-southeast',
+
+  // Dallas, TX
+  'us-central',
+
+  // Frankfurt, DE
+  'eu-central',
+
+  // Fremont, CA
+  'us-west',
+
+  // London, GB
+  'eu-west',
+
+  // Mumbai, IN
+  'ap-west',
+
+  // Newark, NJ
+  'us-east',
+
+  // Singapore, SG
+  'ap-south',
+
+  // Sydney, AU
+  'ap-southeast',
+
+  // Toronto, CA
+  'ca-central',
 ];
 
 /**
@@ -127,6 +159,15 @@ export const getOverrideRegion = (): ExtendedRegion | undefined => {
 export const regions: ExtendedRegion[] = Cypress.env(
   'cloudManagerRegions'
 ) as ExtendedRegion[];
+
+/**
+ * Region availability data for Cloud Manager regions.
+ *
+ * Retrieved via Linode APIv4 during Cypress start-up.
+ */
+export const availability: AccountAvailability[] = Cypress.env(
+  'cloudManagerAvailability'
+) as AccountAvailability[];
 
 /**
  * Linode region(s) exposed to Cypress for testing.
@@ -197,9 +238,19 @@ export const getRegionByLabel = (label: string, searchRegions?: Region[]) => {
 interface ChooseRegionOptions {
   /**
    * If specified, the region returned will support the defined capabilities
-   * @example 'Managed Databases'
+   * @example ['Managed Databases']
    */
   capabilities?: Capabilities[];
+
+  /**
+   * Array of region IDs to exclude from results, in addition to `disallowedRegionIds` regions.
+   */
+  exclude?: string[];
+
+  /**
+   * Whether or not to include distributed regions in potential output.
+   */
+  includeDistributed?: boolean;
 
   /**
    * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
@@ -208,7 +259,7 @@ interface ChooseRegionOptions {
 }
 
 /**
- * Returns `true` if the given Region has all of the given capabilities.
+ * Returns `true` if the given Region has all of the given capabilities and availability for each capability.
  *
  * @param region - Region to check capabilities.
  * @param capabilities - Capabilities to check.
@@ -219,9 +270,20 @@ const regionHasCapabilities = (
   region: Region,
   capabilities: Capabilities[]
 ): boolean => {
-  return capabilities.every((capability) =>
+  const hasCapability = capabilities.every((capability) =>
     region.capabilities.includes(capability)
   );
+
+  const isUnavailable = availability.some((regionAvailability) => {
+    return (
+      regionAvailability.region === region.id &&
+      capabilities.some((capability) =>
+        regionAvailability.unavailable.includes(capability)
+      )
+    );
+  });
+
+  return hasCapability && !isUnavailable;
 };
 
 /**
@@ -258,6 +320,10 @@ const resolveSearchRegions = (
 ): Region[] => {
   const requiredCapabilities = options?.capabilities ?? [];
   const overrideRegion = getOverrideRegion();
+  const allDisallowedRegionIds = [
+    ...disallowedRegionIds,
+    ...(options?.exclude ?? []),
+  ];
 
   // If the user has specified an override region for this run, it takes precedent
   // over any other specified criteria.
@@ -267,12 +333,12 @@ const resolveSearchRegions = (
       throw new Error(
         `Override region ${overrideRegion.id} (${
           overrideRegion.label
-        }) does not support one or more capabilities: ${requiredCapabilities.join(
+        }) does not support or lacks availability for one or more capabilities: ${requiredCapabilities.join(
           ', '
         )}`
       );
     }
-    if (disallowedRegionIds.includes(overrideRegion.id)) {
+    if (allDisallowedRegionIds.includes(overrideRegion.id)) {
       throw new Error(
         `Override region ${overrideRegion.id} (${overrideRegion.label}) is disallowed for testing due to capacity limitations.`
       );
@@ -283,7 +349,17 @@ const resolveSearchRegions = (
   const capableRegions = regionsWithCapabilities(
     options?.regions ?? regions,
     requiredCapabilities
-  ).filter((region: Region) => !disallowedRegionIds.includes(region.id));
+  ).filter((region: Region) => {
+    const isDisallowed = !allDisallowedRegionIds.includes(region.id);
+    const isDistributed = region.site_type === 'distributed';
+
+    // Exclude distributed regions in output if `options.distributed` is not true.
+    if (isDistributed && options?.includeDistributed !== true) {
+      return false;
+    }
+
+    return isDisallowed;
+  });
 
   if (!capableRegions.length) {
     throw new Error(

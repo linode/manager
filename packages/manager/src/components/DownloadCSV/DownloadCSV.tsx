@@ -1,12 +1,11 @@
-import { SxProps } from '@mui/system';
+import { Button, LinkButton } from '@linode/ui';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
-import type { ButtonType } from 'src/components/Button/Button';
+import type { ButtonType } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface DownloadCSVProps {
   buttonType?: 'styledLink' | ButtonType;
@@ -17,7 +16,7 @@ interface DownloadCSVProps {
   filename: string;
   headers: { key: string; label: string }[];
   onClick: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text?: string;
 }
 
@@ -43,10 +42,10 @@ export const DownloadCSV = ({
 }: DownloadCSVProps) => {
   const renderButton =
     buttonType === 'styledLink' ? (
-      <StyledLinkButton onClick={onClick} sx={sx}>
+      <LinkButton onClick={onClick} sx={sx}>
         <DownloadIcon />
         {text}
-      </StyledLinkButton>
+      </LinkButton>
     ) : (
       <Button buttonType={buttonType} onClick={onClick} sx={sx}>
         {text}
@@ -64,6 +63,7 @@ export const DownloadCSV = ({
         filename={filename}
         headers={headers}
         ref={csvRef}
+        style={{ display: 'none' }}
         tabIndex={-1}
       />
       {renderButton}

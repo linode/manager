@@ -1,13 +1,17 @@
-import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
+import { useState } from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { checkIfUserCanModifyFirewall } from '../shared';
+import {
+  DEFAULT_FIREWALL_TOOLTIP_TEXT,
+  NO_PERMISSIONS_TOOLTIP_TEXT,
+} from './constants';
+
+import type { FirewallStatus } from '@linode/api-v4/lib/firewalls';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface ActionHandlers {
   [index: string]: any;
@@ -20,38 +24,39 @@ interface Props extends ActionHandlers {
   firewallID: number;
   firewallLabel: string;
   firewallStatus: FirewallStatus;
+  isDefaultFirewall: boolean;
 }
 
-export const noPermissionTooltipText =
-  "You don't have permissions to modify this Firewall.";
-
 export const FirewallActionMenu = React.memo((props: Props) => {
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
     firewallID,
     firewallLabel,
     firewallStatus,
+    isDefaultFirewall,
     triggerDeleteFirewall,
     triggerDisableFirewall,
     triggerEnableFirewall,
   } = props;
 
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
+  const { data: permissions, isLoading } = usePermissions(
+    'firewall',
+    ['update_firewall', 'delete_firewall'],
     firewallID,
-    profile,
-    grants
+    isOpen
   );
 
-  const disabledProps = !userCanModifyFirewall
-    ? {
-        disabled: true,
-        tooltip: noPermissionTooltipText,
-      }
-    : {};
+  const disabledProps = (hasPermission: boolean) =>
+    !hasPermission || (isLinodeInterfacesEnabled && isDefaultFirewall)
+      ? {
+          disabled: true,
+          tooltip: isDefaultFirewall
+            ? DEFAULT_FIREWALL_TOOLTIP_TEXT
+            : NO_PERMISSIONS_TOOLTIP_TEXT,
+        }
+      : {};
 
   const actions: Action[] = [
     {
@@ -59,14 +64,14 @@ export const FirewallActionMenu = React.memo((props: Props) => {
         handleEnableDisable();
       },
       title: firewallStatus === 'enabled' ? 'Disable' : 'Enable',
-      ...disabledProps,
+      ...disabledProps(permissions.update_firewall),
     },
     {
       onClick: () => {
         triggerDeleteFirewall(firewallID, firewallLabel);
       },
       title: 'Delete',
-      ...disabledProps,
+      ...disabledProps(permissions.delete_firewall),
     },
   ];
 
@@ -79,26 +84,11 @@ export const FirewallActionMenu = React.memo((props: Props) => {
   };
 
   return (
-    <>
-      {!matchesSmDown &&
-        actions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              aria-label={`${action.title} ${props.firewallLabel}`}
-              disabled={action.disabled}
-              key={action.title}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      {matchesSmDown && (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
-        />
-      )}
-    </>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+      loading={isLoading}
+      onOpen={() => setIsOpen(true)}
+    />
   );
 });

@@ -1,6 +1,5 @@
 import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { SessionExpirationDialog } from 'src/features/Account/SwitchAccounts/SessionExpirationDialog';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -20,34 +19,31 @@ vi.mock(
   })
 );
 
-const mockHistory = {
-  push: vi.fn(),
-  replace: vi.fn(),
-};
+const mockNavigate = vi.fn();
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => mockNavigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 const realLocation = window.location;
 
 afterAll(() => {
-  // eslint-disable-next-line
   window.location = realLocation;
 });
 
-// Mock useHistory
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
-
 describe('SessionExpirationDialog', () => {
-  it('renders correctly when isOpen is true', () => {
+  it('renders correctly when isOpen is true', async () => {
     const onCloseMock = vi.fn();
     const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+      <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
     );
 
     expect(getByText('Your session is about to expire')).toBeInTheDocument();
@@ -56,9 +52,7 @@ describe('SessionExpirationDialog', () => {
   it('tests the Continue Working button when is clicked', async () => {
     const onCloseMock = vi.fn();
     const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+      <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
     );
 
     await act(async () => {
@@ -73,13 +67,11 @@ describe('SessionExpirationDialog', () => {
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
     const mockReload = vi.fn();
     delete (window as Partial<Window>).location;
-    // eslint-disable-next-line
+
     window.location = { ...realLocation, reload: mockReload };
 
     const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />
-      </MemoryRouter>
+      <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />
     );
 
     await act(async () => {
@@ -87,7 +79,9 @@ describe('SessionExpirationDialog', () => {
       await Promise.resolve();
     });
 
-    expect(mockHistory.push).toHaveBeenCalledWith('/logout');
+    expect(mockNavigate).toHaveBeenCalledWith({
+      to: '/logout',
+    });
     expect(mockReload).toHaveBeenCalled();
   });
 });

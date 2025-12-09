@@ -1,22 +1,17 @@
+import { useLinodeVolumesQuery, useNotificationsQuery } from '@linode/queries';
+import { Button, Notice, Stack, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   linodeId: number;
 }
 
 export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { data: volumesData } = useLinodeVolumesQuery(linodeId);
   const { data: notifications } = useNotificationsQuery();
@@ -33,14 +28,14 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
   }
 
   return (
-    <Paper sx={{ padding: 0 }}>
-      <Notice spacingBottom={0} variant="info">
-        <Stack
-          alignItems="center"
-          direction="row"
-          justifyContent="space-between"
-          py={1}
-        >
+    <Notice forceImportantIconVerticalCenter variant="info">
+      <Stack
+        alignSelf="flex-start"
+        direction="row"
+        justifyContent="flex-end"
+        spacing={1}
+      >
+        <Stack flex={1} justifyContent="center">
           <Typography>
             {numUpgradeableVolumes === 1
               ? 'A Volume attached to this Linode is '
@@ -52,16 +47,20 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
             </Link>
             .
           </Typography>
-          <Button
-            onClick={() =>
-              history.push(`/linodes/${linodeId}/storage?upgrade=true`)
-            }
-            buttonType="primary"
-          >
-            Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
-          </Button>
         </Stack>
-      </Notice>
-    </Paper>
+        <Button
+          buttonType="primary"
+          onClick={() =>
+            navigate({
+              to: '/linodes/$linodeId/storage',
+              params: { linodeId },
+              search: { upgrade: true },
+            })
+          }
+        >
+          Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
+        </Button>
+      </Stack>
+    </Notice>
   );
 };

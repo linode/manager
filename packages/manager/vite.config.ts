@@ -1,7 +1,9 @@
 import react from '@vitejs/plugin-react-swc';
+import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
-import { URL } from 'url';
+
+import { urlCanParsePolyfill } from './src/polyfills/urlCanParse';
 
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
@@ -11,16 +13,22 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  plugins: [react(), svgr({ exportAsDefault: true })],
+  plugins: [
+    react(),
+    svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
+    urlCanParsePolyfill(),
+  ],
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
     },
   },
   server: {
+    allowedHosts: ['cloud.lindev.local'],
     port: 3000,
   },
   test: {
+    include: ['**/*.test.{js,jsx,ts,tsx}'],
     coverage: {
       exclude: [
         'src/**/*.constants.{js,jsx,ts,tsx}',
@@ -35,7 +43,6 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
-    pool: 'forks',
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/testSetup.ts',

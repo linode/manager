@@ -1,7 +1,6 @@
+import { useLinodeQuery } from '@linode/queries';
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Option {
   label: string;
@@ -33,7 +32,7 @@ export const IPSelect = (props: Props) => {
     }
   }
 
-  // Create React-Select-friendly options.
+  // Create Select-friendly options.
   let options = ips.map((ip) => ({ label: ip, value: ip }));
 
   // If a customizeOptions function was provided, apply it here.
@@ -56,6 +55,7 @@ export const IPSelect = (props: Props) => {
       errorText={errorText}
       label="IP Address"
       loading={isLoading}
+      noMarginTop
       onChange={(_, selected) => handleChange(selected.value)}
       options={options}
       placeholder="Select an IP Address..."

@@ -1,4 +1,3 @@
-import { APIError, User } from '@linode/api-v4';
 import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -7,12 +6,14 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import { UserRow } from './UserRow';
 
+import type { APIError, User } from '@linode/api-v4';
+
 interface Props {
   error: APIError[] | null;
   isLoading: boolean;
   numCols: number;
   onDelete: (username: string) => void;
-  users: User[] | undefined;
+  users: undefined | User[];
 }
 
 export const UsersLandingTableBody = (props: Props) => {

@@ -1,5 +1,6 @@
-import { CPU } from '../../request.types';
 import { normalizeValue, sumCPUUsage } from './CPU';
+
+import type { CPU } from '../../request.types';
 
 describe('CPU Gauge', () => {
   describe('sumCPUUSage', () => {

@@ -1,17 +1,50 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { accountFactory, linodeFactory, volumeFactory } from 'src/factories';
+import { accountFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeVolumes } from './LinodeVolumes';
 
-const accountEndpoint = '*/v4/account';
+const accountEndpoint = '*/v4*/account';
 const linodeInstanceEndpoint = '*/linode/instances/:id';
 const linodeVolumesEndpoint = '*/linode/instances/:id/volumes';
 
-describe('LinodeVolumes', () => {
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+  usePermissions: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
+describe('LinodeVolumes', async () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+    queryMocks.usePermissions.mockReturnValue({});
+  });
+
   const volumes = volumeFactory.buildList(3);
 
   it('should render', async () => {

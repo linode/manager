@@ -1,4 +1,4 @@
-import { Image } from '@linode/api-v4/lib/images';
+import type { Image } from '@linode/api-v4/lib/images';
 
 /**
  * returns either the Image label or "Unknown Image," depending on whether the image can

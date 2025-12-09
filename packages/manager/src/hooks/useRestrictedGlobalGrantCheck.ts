@@ -1,4 +1,4 @@
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from '@linode/queries';
 
 import type { RestrictedGlobalGrantType } from 'src/features/Account/utils';
 

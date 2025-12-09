@@ -1,9 +1,9 @@
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { regionFactory } from 'src/factories/regions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImageRegionRow } from './ImageRegionRow';
@@ -13,7 +13,7 @@ describe('ImageRegionRow', () => {
     const region = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );

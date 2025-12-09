@@ -1,7 +1,8 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { SuspenseLoader } from './SuspenseLoader';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof SuspenseLoader> = {
   component: SuspenseLoader,

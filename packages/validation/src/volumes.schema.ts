@@ -1,4 +1,5 @@
 import { array, number, object, string } from 'yup';
+
 import { MAX_VOLUME_SIZE } from './constants';
 
 const createSizeValidation = (minSize: number = 10) =>
@@ -8,7 +9,7 @@ const createSizeValidation = (minSize: number = 10) =>
     .min(minSize, `Size must be between ${minSize} and ${MAX_VOLUME_SIZE}.`)
     .max(
       MAX_VOLUME_SIZE,
-      `Size must be between ${minSize} and ${MAX_VOLUME_SIZE}.`
+      `Size must be between ${minSize} and ${MAX_VOLUME_SIZE}.`,
     )
     .required(`A size is required.`);
 
@@ -20,7 +21,7 @@ const createSizeValidation = (minSize: number = 10) =>
 export const CreateVolumeSchema = object({
   region: string().when('linode_id', {
     is: (id: any) => id === undefined || id === '',
-    then: string().required('Must provide a region or a Linode ID.'),
+    then: (schema) => schema.required('Must provide a region or a Linode ID.'),
   }),
   linode_id: number().nullable(),
   size: createSizeValidation(10),
@@ -45,7 +46,8 @@ export const ResizeVolumeSchema = (minSize: number = 10) =>
   });
 
 export const UpdateVolumeSchema = object({
-  label: string().required(),
+  label: string(),
+  tags: array().of(string()),
 });
 
 export const AttachVolumeSchema = object({

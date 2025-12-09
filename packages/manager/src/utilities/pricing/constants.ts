@@ -11,8 +11,13 @@ export const PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE =
   'Select a region to view plans and prices.';
 export const LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE =
   'Select a region, HA choice, and add a Node Pool to view pricing and create a cluster.';
+export const LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE =
+  'Select a region and add a Node Pool to view pricing and create a cluster.';
 export const DIFFERENT_PRICE_STRUCTURE_WARNING =
   'The selected region has a different price structure.';
 export const MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED =
   '2023-10-05 00:00:00Z';
 export const DOCS_LINK_LABEL_DC_PRICING = 'How Data Center Pricing Works';
+export const DOCS_LINK_LABEL_APL_APPLICATIONS = 'Available Applications';
+export const LKE_ADDITIONAL_PRICING =
+  'Additional services added to the cluster may incur charges.';

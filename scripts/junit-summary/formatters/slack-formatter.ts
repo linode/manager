@@ -9,6 +9,14 @@ import * as path from 'path';
 import { cypressRunCommand } from '../util/cypress';
 
 /**
+ * The maximum number of failures that will be listed in the Slack notification.
+ *
+ * The Slack notification has a maximum character limit, so we must truncate
+ * the failure results to reduce the risk of hitting that limit.
+ */
+const FAILURE_SUMMARY_LIMIT = 4;
+
+/**
  * Outputs test result summary formatted as a Slack message.
  *
  * @param info - Run info.
@@ -23,36 +31,46 @@ export const slackFormatter: Formatter = (
   _junitData: TestSuites[]
 ) => {
   const indicator = runInfo.failing ? ':x-mark:' : ':check-mark:';
-  const headline = (metadata.runId && metadata.runUrl)
-    ? `*Cypress test results for run <${metadata.runUrl}|#${metadata.runId}>*\n`
-    : `*Cypress test results*\n`;
+  const headline = metadata.pipelineTitle
+    ? `*${metadata.pipelineTitle}*\n`
+    : '*Cypress test results*\n';
+
+  const prInfo = (metadata.changeId && metadata.changeUrl && metadata.changeTitle)
+    ? `:pull-request: ${metadata.changeTitle} (<${metadata.changeUrl}|#${metadata.changeId}>)\n`
+    : null;
 
   const breakdown = `:small_red_triangle: ${runInfo.failing} Failing | :thumbs_up_green: ${runInfo.passing} Passing | :small_blue_diamond: ${runInfo.skipped} Skipped\n\n`;
 
   // Show a human-readable summary of what was tested and whether it succeeded.
   const summary = (() => {
-    const info = !runInfo.failing
+    const statusInfo = !runInfo.failing
      ? `> ${indicator} ${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')}`
      : `> ${indicator} ${runInfo.failing} failed ${pluralize(runInfo.failing, 'test', 'tests')}`;
 
-    const prInfo = (metadata.changeId && metadata.changeUrl)
-      ? ` on PR <${metadata.changeUrl}|#${metadata.changeId}>${metadata.changeTitle ? ` - _${metadata.changeTitle}_` : ''}`
+    const buildInfo = (metadata.runId && metadata.runUrl)
+      ? ` on run <${metadata.runUrl}|#${metadata.runId}>`
       : '';
 
     const runLength = `(${secondsToTimeString(runInfo.time)})`;
     const endingPunctuation = !runInfo.failing ? '.' : ':';
 
-    return `${info}${prInfo} ${runLength}${endingPunctuation}`
+    return `${statusInfo}${buildInfo} ${runLength}${endingPunctuation}`
   })();
 
   // Display a list of failed tests and collection of actions when applicable.
   const failedTestSummary = (() => {
     const failedTestLines = results
       .filter((result: TestResult) => result.failing)
+      .slice(0, FAILURE_SUMMARY_LIMIT)
       .map((result: TestResult) => {
         const specFile = path.basename(result.testFilename);
         return `• \`${specFile}\` — _${result.groupName}_ » _${result.testName}_`;
       });
+
+    const remainingFailures = runInfo.failing - FAILURE_SUMMARY_LIMIT;
+    const truncationNote = (runInfo.failing > FAILURE_SUMMARY_LIMIT)
+      ? `and ${remainingFailures} more ${pluralize(remainingFailures, 'failure', 'failures')}...\n`
+      : null;
 
     // When applicable, display actions that can be taken by the user.
     const failedTestActions = [
@@ -66,6 +84,7 @@ export const slackFormatter: Formatter = (
     return [
       '',
       ...failedTestLines,
+      truncationNote,
       '',
       failedTestActions ? failedTestActions : null,
     ]
@@ -86,6 +105,8 @@ export const slackFormatter: Formatter = (
     return `${rerunTip}\n${cypressCommand}`;
   })();
 
+  const extra = metadata.extra ? `${metadata.extra}\n` : null;
+
   // Display test run details (author, PR number, run number, etc.) when applicable.
   const footer = (() => {
     const authorIdentifier = (metadata.authorSlack ? `@${metadata.authorSlack}` : null)
@@ -104,6 +125,7 @@ export const slackFormatter: Formatter = (
 
   return [
     headline,
+    prInfo,
     breakdown,
     summary,
 
@@ -114,6 +136,9 @@ export const slackFormatter: Formatter = (
     // well as a command that can be used to re-run failed tests locally.
     runInfo.failing > 0 ? `${failedTestSummary}\n` : null,
     runInfo.failing > 0 ? `${rerunNote}\n` : null,
+
+    // If extra information has been supplied, display it above the footer.
+    extra,
 
     // Show run details footer.
     `:cypress: ${footer}`,

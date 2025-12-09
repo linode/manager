@@ -1,6 +1,11 @@
-import type { Doc, OCA } from './features/OneClickApps/types';
-import type { TPAProvider } from '@linode/api-v4/lib/profile';
-import type { NoticeVariant } from 'src/components/Notice/Notice';
+import type { OCA } from './features/OneClickApps/types';
+import type { Region } from '@linode/api-v4';
+import type {
+  AlertStatusType,
+  CloudPulseServiceType,
+  TPAProvider,
+} from '@linode/api-v4/lib/profile';
+import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
 
@@ -50,64 +55,185 @@ interface BaseFeatureFlag {
   enabled: boolean;
 }
 
+interface LinodeInterfacesFlag extends BaseFeatureFlag {
+  /**
+   * Shows a Beta chip for UI elements related to Linode Interfaces
+   */
+  beta?: boolean;
+  /**
+   * Enables the Interface History Table
+   */
+  interface_history?: boolean;
+  /**
+   * Shows a New chip for UI elements related to Linode Interfaces
+   */
+  new?: boolean;
+}
+
+interface VMHostMaintenanceFlag extends BaseFeatureFlag {
+  beta: boolean;
+  hasQueue?: boolean;
+  new: boolean;
+}
+
 interface BetaFeatureFlag extends BaseFeatureFlag {
   beta: boolean;
 }
 
-interface GaFeatureFlag extends BaseFeatureFlag {
+interface GeckoFeatureFlag extends BaseFeatureFlag {
   ga: boolean;
+  la: boolean;
 }
 
 interface AclpFlag {
+  /**
+   * This property indicates whether the feature is in beta
+   */
   beta: boolean;
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
+  bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether the feature is enabled
+   */
   enabled: boolean;
+
+  /**
+   * This property indicates whether to show widget dimension filters or not
+   */
+  showWidgetDimensionFilters?: boolean;
+}
+
+interface AclpLogsFlag extends BetaFeatureFlag {
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
+  bypassAccountCapabilities?: boolean;
+}
+
+interface LkeEnterpriseFlag extends BaseFeatureFlag {
+  ga: boolean;
+  la: boolean;
+  phase2Mtc: { byoVPC: boolean; dualStack: boolean };
+  postLa: boolean;
+}
+
+interface CloudNatFlag extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
 }
 
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
-  serviceType: string;
+  maxResourceSelections?: number;
+  serviceType: CloudPulseServiceType;
 }
 
-interface gpuV2 {
-  planDivider: boolean;
+interface GpuV2 {
+  egressBanner: boolean;
+  transferBanner: boolean;
 }
 
-type OneClickApp = Record<string, string>;
+interface AcceleratedPlansFlag {
+  linodePlans: boolean;
+  lkePlans: boolean;
+}
 
 interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
   key: string;
   link: string;
 }
 
+interface AclpAlerting {
+  accountAlertLimit: number;
+  accountMetricLimit: number;
+  alertDefinitions: boolean;
+  beta: boolean;
+  editDisabledStatuses?: AlertStatusType[];
+  notificationChannels: boolean;
+  recentActivity: boolean;
+  systemChannelSupportedServices?: CloudPulseServiceType[]; //linode, dbaas, etc. 
+}
+
+interface LimitsEvolution {
+  enabled: boolean;
+  requestForIncreaseDisabledForAll: boolean;
+  requestForIncreaseDisabledForInternalAccountsOnly: boolean;
+}
+
+interface MTC {
+  /**
+   * Whether the MTC feature is enabled.
+   */
+  enabled: boolean;
+  /**
+   * Region IDs where MTC is supported (Only used for Linode Migration region dropdown).
+   */
+  supportedRegions: Region['id'][];
+}
+
+interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface Flags {
+  acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
+  aclpAlerting: AclpAlerting;
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  aclpLogs: AclpLogsFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
+  aclpServices: Partial<AclpServices>;
+  apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
-  apicliDxToolsAdditions: boolean;
+  apl: boolean;
+  aplGeneralAvailability: boolean;
+  aplLkeE: boolean;
   blockStorageEncryption: boolean;
+  blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
+  cloudNat: CloudNatFlag;
+  databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePgBouncer: boolean;
+  databasePremium: boolean;
   databaseResize: boolean;
+  databaseRestrictPlanResize: boolean;
   databases: boolean;
+  databaseVpc: boolean;
+  databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
+  dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  gecko: boolean; // @TODO gecko: delete this after next release
-  gecko2: GaFeatureFlag;
-  gpuv2: gpuV2;
-  imageServiceGen2: boolean;
+  fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
+  gecko2: GeckoFeatureFlag;
+  generationalPlansv2: GenerationalPlansFlag;
+  gpuv2: GpuV2;
+  iam: BetaFeatureFlag;
+  iamDelegation: BaseFeatureFlag;
+  iamLimitedAvailabilityBadges: boolean;
+  iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
-  linodeCreateRefactor: boolean;
-  linodeCreateWithFirewall: boolean;
+  kubernetesBlackwellPlans: boolean;
+  limitsEvolution: LimitsEvolution;
+  linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
+  linodeInterfaces: LinodeInterfacesFlag;
+  lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  objMultiCluster: boolean;
+  mtc: MTC;
+  networkLoadBalancer: boolean;
+  nodebalancerIpv6: boolean;
+  nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
-  oneClickApps: OneClickApp;
-  oneClickAppsDocsOverride: Record<string, Doc[]>;
-  placementGroups: BetaFeatureFlag;
+  objMultiCluster: boolean;
+  objSummaryPage: boolean;
+  privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -118,21 +244,25 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
-  taxId: BaseFeatureFlag;
   taxes: Taxes;
+  taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
+  udp: boolean;
+  vmHostMaintenance: VMHostMaintenanceFlag;
+  volumeSummaryPage: boolean;
+  vpcIpv6: boolean;
 }
 
 interface MarketplaceAppOverride {
   /**
    * Define app details that should be overwritten
    *
-   * If you are adding an app that is not already defined in "oneClickAppsv2.ts",
+   * If you are adding an app that is not already defined in "oneClickApps.ts",
    * you *must* include all required OCA properties or Cloud Manager could crash.
    *
    * Pass `null` to hide the marketplace app
    */
-  details: Partial<OCA> | null;
+  details: null | Partial<OCA>;
   /**
    * The ID of the StackScript that powers this Marketplace app
    */
@@ -209,21 +339,25 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
+  | 'Delivery'
   | 'Domains'
   | 'Firewalls'
+  | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
   | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 interface ProductInformationBannerDecoration {
   important: 'false' | 'true' | boolean;
@@ -249,4 +383,21 @@ export interface SuppliedMaintenanceData {
 }
 export interface APIMaintenance {
   maintenances: SuppliedMaintenanceData[];
+}
+
+export interface AclpAlertServiceTypeConfig {
+  maxResourceSelectionCount: number;
+  serviceType: CloudPulseServiceType;
+  // This can be extended to have supportedRegions, supportedFilters and other tags
+}
+
+export type AclpServices = {
+  [serviceType in CloudPulseServiceType]: {
+    alerts?: AclpFlag;
+    metrics?: AclpFlag;
+  };
+};
+
+interface GenerationalPlansFlag extends BaseFeatureFlag {
+  allowedPlans: string[];
 }

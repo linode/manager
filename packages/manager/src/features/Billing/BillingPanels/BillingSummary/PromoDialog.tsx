@@ -1,17 +1,15 @@
 import { addPromotion } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
+import { accountQueries } from '@linode/queries';
+import { ActionsPanel, TextField, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles()(() => ({
   input: {
@@ -79,21 +77,21 @@ const PromoDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={actions}
+      error={error}
       onClose={onClose}
       open={open}
       title="Add promo code"
     >
-      {error && <Notice text={error} variant="error" />}
       <Typography>
         Enter the promo code in the field below. You will see promo details in
         the Promotions panel on the Billing Info tab.
       </Typography>
       <TextField
+        className={classes.input}
+        label="Promo code"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setPromoCode(e.target.value)
         }
-        className={classes.input}
-        label="Promo code"
         value={promoCode}
       />
     </ConfirmationDialog>

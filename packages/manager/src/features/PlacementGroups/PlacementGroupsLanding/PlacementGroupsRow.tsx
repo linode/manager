@@ -1,18 +1,16 @@
 import {
-  PLACEMENT_GROUP_TYPES,
   PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { List, ListItem, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
@@ -86,6 +84,9 @@ export const PlacementGroupsRow = React.memo(
             '0'
           ) : (
             <TextTooltip
+              displayText={`${assignedLinodes?.length ?? 0}`}
+              minWidth={250}
+              placement="bottom-start"
               PopperProps={{
                 sx: {
                   '& .MuiTooltip-tooltip': {
@@ -102,9 +103,6 @@ export const PlacementGroupsRow = React.memo(
                   ))}
                 </List>
               }
-              displayText={`${assignedLinodes?.length ?? 0}`}
-              minWidth={250}
-              placement="bottom-start"
             />
           )}
           &nbsp; of{' '}

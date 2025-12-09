@@ -1,5 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
+
+import type { APIError, FirewallPrefixList } from '@linode/api-v4/lib/types';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {
@@ -30,6 +31,12 @@ export const PORT_PRESETS_ITEMS = sortBy(
   prop('label'),
   Object.values(PORT_PRESETS)
 );
+
+export const RULESET_MARKED_FOR_DELETION_TEXT =
+  'This rule set will be automatically deleted when it’s no longer referenced by other firewalls.';
+
+export const PREFIXLIST_MARKED_FOR_DELETION_TEXT =
+  'This Prefix List will be automatically deleted when it’s no longer referenced by other firewalls.';
 
 /**
  * The API returns very good Firewall error messages that look like this:
@@ -113,4 +120,83 @@ export const sortString = (_a: string, _b: string) => {
 // If a port range is included (80-1000) return the first element of the range
 const stripHyphen = (str: string) => {
   return str.match(/-/) ? str.split('-')[0] : str;
+};
+
+export const firewallRuleCreateOptions = [
+  {
+    label: 'Create a Rule',
+    value: 'rule',
+  },
+  {
+    label: 'Reference Rule Set',
+    value: 'ruleset',
+  },
+] as const;
+
+type PrefixListGroup = 'Account' | 'Other' | 'System';
+
+export const groupPriority: Record<PrefixListGroup, number> = {
+  Account: 1,
+  System: 2,
+  Other: 3,
+};
+
+export const getPrefixListType = (name: string): PrefixListGroup => {
+  if (name.startsWith('pl::')) {
+    return 'Account';
+  }
+  if (name.startsWith('pl:system:')) {
+    return 'System';
+  }
+  return 'Other'; // Safe fallback
+};
+
+export type SpecialPrefixList = Partial<FirewallPrefixList>;
+
+const SPECIAL_PREFIX_LISTS_DESCRIPTION =
+  'System-defined PrefixLists, such as pl::vpcs:<current> and pl::subnets:<current>, for VPC interface firewalls are dynamic and update automatically. They manage access to and from the interface for addresses within the interface’s VPC or VPC subnet.';
+
+export const SPECIAL_PREFIX_LISTS: SpecialPrefixList[] = [
+  { name: 'pl::vpcs:<current>', description: SPECIAL_PREFIX_LISTS_DESCRIPTION },
+  {
+    name: 'pl::subnets:<current>',
+    description: SPECIAL_PREFIX_LISTS_DESCRIPTION,
+  },
+];
+
+export const SPECIAL_PREFIX_LIST_NAMES = SPECIAL_PREFIX_LISTS.map(
+  (pl) => pl.name
+);
+
+export const isSpecialPrefixList = (name: string | undefined) => {
+  if (!name) return false;
+  return SPECIAL_PREFIX_LIST_NAMES.includes(name);
+};
+
+/**
+ * Combine API prefix lists with hardcoded special prefix lists.
+ * API results override special PLs if names collide.
+ * Ensures no duplicate prefix lists when combining hardcoded and API values.
+ * @TODO: Remove hardcoded special PLs once API supports them.
+ */
+export const combinePrefixLists = (
+  apiPLs: (FirewallPrefixList | SpecialPrefixList)[] | undefined
+): (FirewallPrefixList | SpecialPrefixList)[] => {
+  const map = new Map<string, FirewallPrefixList | SpecialPrefixList>();
+
+  // Add hardcoded special PLs first
+  SPECIAL_PREFIX_LISTS.forEach((pl) => {
+    if (pl.name) {
+      map.set(pl.name, pl);
+    }
+  });
+
+  // Add API results (override if name matches with hardcoded special PLs)
+  (apiPLs ?? []).forEach((pl) => {
+    if (pl.name) {
+      map.set(pl.name, pl);
+    }
+  });
+
+  return Array.from(map.values());
 };

@@ -1,22 +1,89 @@
-import { sortByVersion } from 'src/utilities/sort-by';
+import { useAccount, useAccountBetaQuery, useGrants } from '@linode/queries';
+import { getBetaStatus, isFeatureEnabledV2 } from '@linode/utilities';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { Account } from '@linode/api-v4/lib/account';
 import type {
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
-export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
-export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
-export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
 
+type SortOrder = 'asc' | 'desc';
 interface ClusterData {
   CPU: number;
   RAM: number;
   Storage: number;
 }
+
+/**
+ * Compares two semantic version strings based on the specified order, including with special handling of LKE-Enterprise tier versions.
+ *
+ * This function splits each version string into its constituent parts (major, minor, patch),
+ * compares them numerically, and returns a positive number, zero, or a negative number
+ * based on the specified sorting order. If components are missing in either version,
+ * they are treated as zero.
+ *
+ * @param {string} a - The first version string to compare.
+ * @param {string} b - The second version string to compare.
+ * @param {SortOrder} order - The intended sort direction of the output; 'asc' means lower versions come first, 'desc' means higher versions come first.
+ * @returns {number} Returns a positive number if version `a` is greater than `b` according to the sort order,
+ *                   zero if they are equal, and a negative number if `b` is greater than `a`.
+ * * @example
+ * // returns a positive number
+ * sortByVersion('1.2.3', '1.2.2', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.2+lke2', 'asc');
+ *
+ * @example
+ * // returns zero
+ * sortByVersion('1.2.3', '1.2.3', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.3+lke1', 'asc');
+ *
+ * @example
+ * // returns a negative number
+ * sortByVersion('1.2.3', '1.2.4', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.4+lke1', 'asc');
+ */
+export const compareByKubernetesVersion = (
+  a: string,
+  b: string,
+  order: SortOrder
+): number => {
+  // For LKE-E versions, remove the 'v' prefix and split the core version (X.X.X) from the enterprise release version (+lkeX).
+  const aStrippedVersion = a.replace('v', '');
+  const bStrippedVersion = b.replace('v', '');
+  const [aCoreVersion, aEnterpriseVersion] = aStrippedVersion.split('+');
+  const [bCoreVersion, bEnterpriseVersion] = bStrippedVersion.split('+');
+
+  const aParts = aCoreVersion.split('.');
+  const bParts = bCoreVersion.split('.');
+  // For LKE-E versions, extract the number from the +lke suffix.
+  const aEnterpriseVersionNum =
+    Number(aEnterpriseVersion?.replace(/\D+/g, '')) || 0;
+  const bEnterpriseVersionNum =
+    Number(bEnterpriseVersion?.replace(/\D+/g, '')) || 0;
+
+  const result = (() => {
+    for (let i = 0; i < Math.max(aParts.length, bParts.length); i += 1) {
+      // If one version has a part and another doesn't (e.g. 3.1 vs 3.1.1),
+      // treat the missing part as 0.
+      const aNumber = Number(aParts[i]) || 0;
+      const bNumber = Number(bParts[i]) || 0;
+      const diff = aNumber - bNumber;
+
+      if (diff !== 0) {
+        return diff;
+      }
+    }
+    // If diff is 0, the core versions are the same, so compare the enterprise release version numbers.
+    return aEnterpriseVersionNum - bEnterpriseVersionNum;
+  })();
+
+  return order === 'asc' ? result : -result;
+};
 
 export const getTotalClusterMemoryCPUAndStorage = (
   pools: KubeNodePoolResponse[],
@@ -44,14 +111,10 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-export const getDescriptionForCluster = (
-  cluster: KubernetesCluster,
-  regions: Region[]
-) => {
-  const region = regions.find((r) => r.id === cluster.region);
+export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
   const description: string[] = [
     `Kubernetes ${cluster.k8s_version}`,
-    region?.label ?? cluster.region,
+    cluster.region,
   ];
 
   if (cluster.control_plane.high_availability) {
@@ -61,14 +124,19 @@ export const getDescriptionForCluster = (
   return description.join(', ');
 };
 
+/**
+ * Finds the next version for upgrade, given a current version and the list of all versions.
+ * @param currentVersion The current cluster version
+ * @param versions All available standard or enterprise versions
+ * @returns The next version from which to upgrade from the current version
+ */
 export const getNextVersion = (
   currentVersion: string,
-  versions: KubernetesVersion[]
+  versions: KubernetesTieredVersion[] | KubernetesVersion[] // TODO LKE-E: remove KubernetesVersion from type after GA.
 ) => {
   if (versions.length === 0) {
     return null;
   }
-
   const versionStrings = versions.map((v) => v.id).sort();
   const currentIdx = versionStrings.findIndex(
     (thisVersion) => currentVersion === thisVersion
@@ -98,17 +166,51 @@ export const getKubeHighAvailability = (
   account: Account | undefined,
   cluster?: KubernetesCluster | null
 ) => {
-  const showHighAvailability = account?.capabilities.includes(
-    'LKE HA Control Planes'
-  );
-
   const isClusterHighlyAvailable = Boolean(
-    showHighAvailability && cluster?.control_plane.high_availability
+    cluster?.control_plane.high_availability
   );
 
   return {
     isClusterHighlyAvailable,
-    showHighAvailability,
+  };
+};
+
+export const useAPLAvailability = () => {
+  const flags = useFlags();
+  const isAPLEnabled = Boolean(flags.apl);
+  const isAPLGeneralAvailability = Boolean(flags.aplGeneralAvailability);
+
+  // Only fetch the account beta if:
+  // 1. the APL flag is enabled
+  // 2. we're not in GA
+  const { data: beta, isLoading } = useAccountBetaQuery(
+    'apl',
+    isAPLEnabled && !isAPLGeneralAvailability
+  );
+
+  // In order to show the APL panel, we either:
+  // 1. Confirm the user is in the beta group (and the APL flag is enabled)
+  // or
+  // 2. Are in GA (which supersedes the beta group check and the APL flag)
+  const showAPL =
+    (beta !== undefined && getBetaStatus(beta) === 'active') ||
+    isAPLGeneralAvailability;
+
+  return {
+    isLoading: isAPLEnabled && isLoading,
+    showAPL,
+    isAPLGeneralAvailability,
+  };
+};
+
+export const getKubeControlPlaneACL = (
+  account: Account | undefined,
+  cluster?: KubernetesCluster | null
+) => {
+  const isClusterControlPlaneACLd = Boolean(cluster?.control_plane.acl);
+
+  return {
+    isClusterControlPlaneACLd,
   };
 };
 
@@ -137,7 +239,7 @@ export const getLatestVersion = (
   versions: { label: string; value: string }[]
 ): { label: string; value: string } => {
   const sortedVersions = versions.sort((a, b) => {
-    return sortByVersion(a.value, b.value, 'asc');
+    return compareByKubernetesVersion(a.value, b.value, 'asc');
   });
 
   const latestVersion = sortedVersions.pop();
@@ -148,4 +250,77 @@ export const getLatestVersion = (
   }
 
   return { label: `${latestVersion.value}`, value: `${latestVersion.value}` };
+};
+
+/**
+ * Hook to determine if the LKE-Enterprise feature should be visible to the user.
+ * Based on the user's account capability and the feature flag.
+ *
+ * @returns {boolean, boolean, boolean, boolean} - Whether the LKE-Enterprise flags are enabled for LA/GA and whether feature is enabled for LA/GA (flags + account capability).
+ */
+export const useIsLkeEnterpriseEnabled = () => {
+  const flags = useFlags();
+  const { data: account } = useAccount();
+  const { data: grants } = useGrants();
+
+  const hasAccountEndpointAccess =
+    grants?.global.account_access === 'read_only' ||
+    grants?.global.account_access === 'read_write';
+
+  const isLkeEnterpriseLAFlagEnabled = Boolean(
+    flags?.lkeEnterprise2?.enabled && flags.lkeEnterprise2.la
+  );
+  const isLkeEnterprisePhase2BYOVPCFlagEnabled = Boolean(
+    flags.lkeEnterprise2?.enabled && flags.lkeEnterprise2.phase2Mtc.byoVPC
+  );
+  const isLkeEnterprisePhase2DualStackFlagEnabled = Boolean(
+    flags.lkeEnterprise2?.enabled && flags.lkeEnterprise2.phase2Mtc.dualStack
+  );
+  const isLkeEnterprisePostLAFlagEnabled = Boolean(
+    flags?.lkeEnterprise2?.enabled && flags.lkeEnterprise2.postLa
+  );
+  const isLkeEnterpriseGAFlagEnabled = Boolean(
+    flags.lkeEnterprise2?.enabled && flags.lkeEnterprise2.ga
+  );
+
+  const isLkeEnterpriseLAFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterpriseLAFlagEnabled,
+    account?.capabilities ?? []
+  );
+  const isLkeEnterprisePhase2BYOVPCFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise BYO VPC',
+    isLkeEnterprisePhase2BYOVPCFlagEnabled,
+    account?.capabilities ?? []
+  );
+  const isLkeEnterprisePhase2DualStackFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise Dual Stack',
+    isLkeEnterprisePhase2DualStackFlagEnabled,
+    account?.capabilities ?? []
+  );
+  // For feature-flagged update strategy and firewall work
+  // For users with restricted billing/account access, skip the inaccessible capability and just check the feature flag.
+  // This is okay, because the LA feature is gated by the account capability.
+  const isLkeEnterprisePostLAFeatureEnabled = hasAccountEndpointAccess
+    ? isFeatureEnabledV2(
+        'Kubernetes Enterprise',
+        isLkeEnterprisePostLAFlagEnabled,
+        account?.capabilities ?? []
+      )
+    : isLkeEnterprisePostLAFlagEnabled;
+  const isLkeEnterpriseGAFeatureEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterpriseGAFlagEnabled,
+    account?.capabilities ?? []
+  );
+
+  return {
+    isLkeEnterpriseGAFeatureEnabled,
+    isLkeEnterpriseGAFlagEnabled,
+    isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
+    isLkeEnterprisePhase2BYOVPCFeatureEnabled,
+    isLkeEnterprisePhase2DualStackFeatureEnabled,
+    isLkeEnterprisePostLAFeatureEnabled,
+  };
 };

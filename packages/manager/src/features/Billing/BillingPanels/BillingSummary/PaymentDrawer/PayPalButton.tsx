@@ -1,28 +1,29 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { accountQueries, useAccount, useClientToken } from '@linode/queries';
+import { CircleProgress, Tooltip } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import {
   BraintreePayPalButtons,
-  CreateOrderBraintreeActions,
+  DISPATCH_ACTION,
   FUNDING,
-  OnApproveBraintreeActions,
-  OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Tooltip } from 'src/components/Tooltip';
 import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/payment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { SetSuccess } from './types';
-import { accountQueries } from 'src/queries/account/queries';
+import type { SetSuccess } from './types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  CreateOrderBraintreeActions,
+  OnApproveBraintreeActions,
+  OnApproveBraintreeData,
+} from '@paypal/react-paypal-js';
 
 const useStyles = makeStyles()(() => ({
   loading: {
@@ -38,6 +39,9 @@ const useStyles = makeStyles()(() => ({
   },
   root: {
     position: 'relative',
+    // We pass colorScheme: none to fix a dark mode issue
+    // https://github.com/paypal/paypal-js/issues/584#issuecomment-2652308317
+    colorScheme: 'none',
   },
 }));
 
@@ -86,15 +90,12 @@ export const PayPalButton = (props: Props) => {
      * The '!==' statements makes sure we don't re-render
      * when this component is re-mounted.
      */
-    if (
-      data?.client_token &&
-      options['data-client-token'] !== data.client_token
-    ) {
+    if (data?.client_token && options.dataClientToken !== data.client_token) {
       dispatch({
-        type: 'resetOptions',
+        type: DISPATCH_ACTION.RESET_OPTIONS,
         value: {
           ...options,
-          'data-client-token': data?.client_token,
+          dataClientToken: data?.client_token,
         },
       });
     }
@@ -112,7 +113,7 @@ export const PayPalButton = (props: Props) => {
       options.intent !== 'capture'
     ) {
       dispatch({
-        type: 'resetOptions',
+        type: DISPATCH_ACTION.RESET_OPTIONS,
         value: {
           ...options,
           commit: true,
@@ -128,7 +129,7 @@ export const PayPalButton = (props: Props) => {
    * Needed to pass dynamic amount to PayPal without re-render
    * https://github.com/paypal/react-paypal-js/issues/161
    */
-  const stateRef = React.useRef<TransactionInfo>();
+  const stateRef = React.useRef<TransactionInfo>(undefined);
 
   const [transaction, setTransaction] = React.useState<TransactionInfo>({
     amount: usd,
@@ -216,13 +217,15 @@ export const PayPalButton = (props: Props) => {
     setError('Unable to open PayPal.');
   };
 
-  if (clientTokenLoading || isPending || !options['data-client-token']) {
+  if (clientTokenLoading || isPending || !options.dataClientToken) {
     return (
       <Grid
-        alignContent="center"
         className={classes.loading}
         container
-        justifyContent="center"
+        sx={{
+          alignContent: 'center',
+          justifyContent: 'center',
+        }}
       >
         <CircleProgress size="sm" />
       </Grid>
@@ -256,5 +259,3 @@ export const PayPalButton = (props: Props) => {
     </div>
   );
 };
-
-export default PayPalButton;

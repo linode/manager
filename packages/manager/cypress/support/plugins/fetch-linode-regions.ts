@@ -1,7 +1,7 @@
-import { getRegions } from '@linode/api-v4';
+import { getAccountAvailabilities, getRegions } from '@linode/api-v4';
 
 import type { CypressPlugin } from './plugin';
-import type { ResourcePage, Region } from '@linode/api-v4';
+import type { AccountAvailability, Region, ResourcePage } from '@linode/api-v4';
 
 // TODO Clean up.
 /**
@@ -24,12 +24,12 @@ export const getCloudManagerLabel = (region: Region) => {
 };
 
 /**
- * Fetches Linode regions and stores data in Cypress `cloudManagerRegions` env.
- *
- * Throws an error if no OAuth token (used for regions API request) is defined.
+ * Fetches and stores Linode region data in Cypress environment object.
  */
 export const fetchLinodeRegions: CypressPlugin = async (on, config) => {
   const regions: ResourcePage<Region> = await getRegions({ page_size: 500 });
+  const availability: ResourcePage<AccountAvailability> =
+    await getAccountAvailabilities();
 
   const extendedRegions = regions.data.map((apiRegion: Region) => {
     return {
@@ -44,6 +44,7 @@ export const fetchLinodeRegions: CypressPlugin = async (on, config) => {
     env: {
       ...config.env,
       cloudManagerRegions: extendedRegions,
+      cloudManagerAvailability: availability.data,
     },
   };
 };

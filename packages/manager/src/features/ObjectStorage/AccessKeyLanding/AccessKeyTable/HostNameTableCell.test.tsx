@@ -1,10 +1,11 @@
+import { regionFactory } from '@linode/utilities';
 import '@testing-library/jest-dom';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { objectStorageKeyFactory, regionFactory } from 'src/factories';
+import { objectStorageKeyFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNameTableCell } from './HostNameTableCell';
@@ -41,7 +42,7 @@ describe('HostNameTableCell', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
@@ -77,21 +78,23 @@ describe('HostNameTableCell', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
-    const { findByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <HostNameTableCell
         setHostNames={vi.fn()}
         setShowHostNamesDrawers={vi.fn()}
         storageKeyData={storageKeyData}
       />
     );
-    const hostname = await findByText('US, Newark, NJ: alpha.test.com');
-    const moreButton = await findByText(/and\s+1\s+more\.\.\./);
-    await waitFor(() => expect(hostname).toBeInTheDocument());
 
-    await expect(moreButton).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText('Newark', { exact: false })).toBeInTheDocument();
+      expect(getByText('alpha.test.com', { exact: false })).toBeInTheDocument();
+      expect(getByText(/\+ 1 region/, { exact: false })).toBeInTheDocument();
+      expect(getByText('Show All', { exact: false })).toBeInTheDocument();
+    });
   });
 });

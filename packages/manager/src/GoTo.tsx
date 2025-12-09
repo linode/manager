@@ -1,66 +1,26 @@
-import Dialog from '@mui/material/Dialog';
+import { useAccountSettings } from '@linode/queries';
+import { Dialog, Select } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
-
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { usePermissions } from './features/IAM/hooks/usePermissions';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
-import { useAccountManagement } from './hooks/useAccountManagement';
+import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
-import type { Theme } from '@mui/material/styles';
-import type { Item } from 'src/components/EnhancedSelect/Select';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  input: {
-    width: '100%',
-  },
-  paper: {
-    '& .MuiInput-root': {
-      border: 0,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-    },
-    '& .react-select__control': {
-      backgroundColor: 'transparent',
-    },
-    '& .react-select__indicators': {
-      display: 'none',
-    },
-    '& .react-select__menu': {
-      border: 0,
-      borderRadius: 4,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-      marginTop: 12,
-      maxWidth: '100% !important',
-    },
-    '& .react-select__menu-list': {
-      maxHeight: '100% !important',
-      overflowX: 'auto',
-      padding: 0,
-    },
-    '& .react-select__option--is-focused': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-    },
-    '& .react-select__value-container': {
-      '& p': {
-        fontSize: '1rem',
-        overflow: 'visible',
-      },
-      overflow: 'auto',
-    },
-    overflow: 'visible',
-    position: 'absolute',
-    top: '10%',
-  },
-}));
+import type { SelectOption } from '@linode/ui';
 
 export const GoTo = React.memo(() => {
-  const { classes } = useStyles();
-  const routerHistory = useHistory();
-  const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
+  const navigate = useNavigate();
+
+  const { data: accountSettings } = useAccountSettings();
+
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
+  const isManagedAccount = accountSettings?.managed ?? false;
+
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
@@ -70,8 +30,8 @@ export const GoTo = React.memo(() => {
     setGoToOpen(false);
   };
 
-  const onSelect = (item: Item<string>) => {
-    routerHistory.push(item.value);
+  const onSelect = (item: SelectOption<string>) => {
+    navigate({ to: item.value });
     onClose();
   };
 
@@ -79,7 +39,7 @@ export const GoTo = React.memo(() => {
     () => [
       {
         display: 'Managed',
-        hide: !_isManagedAccount,
+        hide: !isManagedAccount,
         href: '/managed',
       },
       {
@@ -142,13 +102,24 @@ export const GoTo = React.memo(() => {
 
       {
         display: 'Marketplace',
-        href: '/linodes/create?type=One-Click',
+        href: '/linodes/create/marketplace',
       },
-      {
-        display: 'Account',
-        hide: !_hasAccountAccess,
-        href: '/account/billing',
-      },
+      ...(iamRbacPrimaryNavChanges
+        ? [
+            { display: 'Billing', href: '/billing' },
+            { display: 'Identity & Access', href: '/iam' },
+            { display: 'Login History', href: '/login-history' },
+            { display: 'Service Transfers', href: '/service-transfers' },
+            { display: 'Maintenance', href: '/maintenance' },
+            { display: 'Settings', href: '/settings' },
+          ]
+        : [
+            {
+              display: 'Account',
+              hide: !permissions.is_account_admin,
+              href: '/account/billing',
+            },
+          ]),
       {
         display: 'Help & Support',
         href: '/support',
@@ -158,10 +129,16 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount, isPlacementGroupsEnabled]
+    [
+      permissions.is_account_admin,
+      isDatabasesEnabled,
+      isManagedAccount,
+      isPlacementGroupsEnabled,
+      iamRbacPrimaryNavChanges,
+    ]
   );
 
-  const options: Item[] = React.useMemo(
+  const options: SelectOption<string>[] = React.useMemo(
     () =>
       links
         .filter((thisLink) => !thisLink.hide)
@@ -172,35 +149,50 @@ export const GoTo = React.memo(() => {
     [links]
   );
 
-  const dialogClasses = React.useMemo(() => ({ paper: classes.paper }), [
-    classes,
-  ]);
-
   return (
     <Dialog
-      classes={dialogClasses}
+      enableCloseOnBackdropClick
       onClose={onClose}
       open={goToOpen}
+      PaperProps={{
+        sx: {
+          '& .MuiAutocomplete-listbox': {
+            border: 0,
+            maxHeight: '75%',
+          },
+          '& .MuiDialogContent-root ': {
+            padding: '0 !important',
+          },
+          '& [data-qa-close-drawer="true"], & [data-qa-dialog-title="Go To..."], & [aria-label="Close"]':
+            {
+              display: 'none',
+            },
+          '& .MuiPaper-root': {
+            boxShadow: 'none',
+          },
+          height: '60%',
+          minHeight: '50%',
+          minWidth: 'auto !important',
+          padding: '0 !important',
+          width: 400,
+        },
+      }}
       title="Go To..."
     >
       {/* I was about to put a "@todo" item for mobile display, but realized
       keyboard shortcuts are not realistic on mobile devices. So I think an
       absolute width here is fine. */}
       <div style={{ maxHeight: 600, width: 400 }}>
-        <EnhancedSelect
+        <Select
           // eslint-disable-next-line
           autoFocus
-          blurInputOnSelect
           hideLabel
-          isClearable={false}
-          isMulti={false}
           label="Go To"
-          menuIsOpen={true}
-          onChange={onSelect}
-          openMenuOnClick={false}
-          openMenuOnFocus={false}
+          onChange={(_event, value) => onSelect(value)}
+          open
           options={options}
           placeholder="Go to..."
+          searchable
         />
       </div>
     </Dialog>

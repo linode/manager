@@ -1,38 +1,83 @@
-import { styled } from '@mui/material/styles';
-import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
-
-import { Paper } from 'src/components/Paper';
-import { TagCell } from 'src/components/TagCell/TagCell';
-import { Typography } from 'src/components/Typography';
-import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
+  useNodeBalancersFirewallsQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+  useNodeBalancerVPCConfigsBetaQuery,
+  useRegionsQuery,
+  useVPCQuery,
+} from '@linode/queries';
+import { Paper, Typography } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
+import { styled } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { TagCell } from 'src/components/TagCell/TagCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
+
+import { useIsNodebalancerVPCEnabled } from '../../utils';
 
 export const SummaryPanel = () => {
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
+  const { id } = useParams({
+    from: '/nodebalancers/$id/summary',
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
+    Number(id)
+  );
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
+    Number(id)
+  );
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
-  const isNodeBalancerReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'nodebalancer',
-    id: nodebalancer?.id,
+  const { data: accountPermissions } = usePermissions('account', [
+    'is_account_admin',
+  ]);
+
+  const flags = useIsNodebalancerVPCEnabled();
+
+  const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(id),
+    flags.isNodebalancerVPCEnabled
+  );
+
+  const { data: vpcDetails } = useVPCQuery(
+    Number(vpcConfig?.data[0]?.vpc_id) || -1,
+    Boolean(vpcConfig?.data[0]?.vpc_id)
+  );
+
+  const nbVPCConfigs = vpcConfig?.data ?? [];
+  const subnets = vpcDetails?.subnets ?? [];
+
+  const mergedSubnets = nbVPCConfigs.map((config) => {
+    const subnet = subnets.find((s) => s.id === config.subnet_id);
+
+    return {
+      id: config.subnet_id,
+      label: subnet?.label ?? `Subnet ${config.subnet_id}`,
+      ipv4Range: config.ipv4_range,
+    };
+  });
+
+  // If we can't get the cluster (status === 'error'), we can assume it's been deleted
+  const { status: clusterStatus } = useKubernetesClusterQuery({
+    enabled: Boolean(nodebalancer?.lke_cluster),
+    id: nodebalancer?.lke_cluster?.id ?? -1,
+    options: {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
   });
 
   const configPorts = configs?.reduce((acc, config) => {
@@ -58,6 +103,36 @@ export const SummaryPanel = () => {
           <StyledTitle data-qa-title variant="h3">
             NodeBalancer Details
           </StyledTitle>
+          {nodebalancer.type === 'premium' && (
+            <StyledSection>
+              <Typography data-qa-type variant="body1">
+                <strong>Type: </strong>
+                Premium
+              </Typography>
+            </StyledSection>
+          )}
+          {nodebalancer.lke_cluster && (
+            <StyledSection>
+              <Typography data-qa-cluster variant="body1">
+                <strong>Cluster: </strong>
+                {clusterStatus === 'error' ? (
+                  <>
+                    <span style={{ textDecoration: 'line-through' }}>
+                      {nodebalancer.lke_cluster.label}
+                    </span>
+                    <span style={{ fontStyle: 'italic' }}> (deleted)</span>
+                  </>
+                ) : (
+                  <Link
+                    accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
+                    to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
+                  >
+                    {nodebalancer.lke_cluster.label}
+                  </Link>
+                )}
+              </Typography>
+            </StyledSection>
+          )}
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>
@@ -65,6 +140,7 @@ export const SummaryPanel = () => {
               {configPorts?.map(({ configId, port }, i) => (
                 <React.Fragment key={configId}>
                   <Link
+                    accessibleAriaLabel={`Port ${port}`}
                     className="secondaryLink"
                     to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
                   >
@@ -106,7 +182,11 @@ export const SummaryPanel = () => {
             Firewall
           </StyledTitle>
           <Typography data-qa-firewall variant="body1">
-            <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+            <Link
+              accessibleAriaLabel={`Firewall ${linkText}`}
+              className="secondaryLink"
+              to={`/firewalls/${linkID}`}
+            >
               {linkText}
             </Link>
           </Typography>
@@ -127,12 +207,60 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
+      {flags.isNodebalancerVPCEnabled && Boolean(vpcConfig?.data.length) && (
+        <StyledSummarySection>
+          <StyledTitle
+            data-qa-title
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            variant="h3"
+          >
+            VPC
+          </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-ports variant="body1">
+              <strong>VPC:</strong>{' '}
+              {vpcConfig?.data.map((vpc, i) => (
+                <React.Fragment key={vpc.id}>
+                  <Link
+                    accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
+                    className="secondaryLink"
+                    to={`/vpcs/${vpc.vpc_id}`}
+                  >
+                    {vpcDetails?.label}
+                  </Link>
+                  {i < vpcConfig.data.length - 1 ? ', ' : ''}
+                </React.Fragment>
+              ))}
+            </Typography>
+          </StyledSection>
+          <StyledSection>
+            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+              <strong>Subnets:</strong>
+            </Typography>
+
+            {mergedSubnets.map((subnet) => (
+              <React.Fragment key={subnet.id}>
+                <Typography
+                  style={{ wordBreak: 'break-word', marginTop: '8px' }}
+                  variant="body1"
+                >
+                  {`${subnet.label}:`}
+                </Typography>
+                <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+                  {subnet.ipv4Range}
+                </Typography>
+              </React.Fragment>
+            ))}
+          </StyledSection>
+        </StyledSummarySection>
+      )}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           Tags
         </StyledTitle>
         <TagCell
-          disabled={isNodeBalancerReadOnly}
+          disabled={!accountPermissions.is_account_admin}
+          entity="NodeBalancer"
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
           view="panel"

@@ -1,45 +1,80 @@
 import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import {
-  getNextVersion,
-  localStorageWarning,
-} from 'src/features/Kubernetes/kubeUtils';
+import { Link } from 'src/components/Link';
+import { getNextVersion } from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
-  useKubernetesVersionQuery,
+  useKubernetesClusterQuery,
+  useKubernetesTieredVersionsQuery,
 } from 'src/queries/kubernetes';
+
+import { LocalStorageWarningNotice } from './KubernetesClusterDetail/LocalStorageWarningNotice';
+
+import type { KubernetesTier } from '@linode/api-v4/lib/kubernetes';
 
 interface Props {
   clusterID: number;
-  clusterLabel: string;
-  currentVersion: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const UpgradeDialog = (props: Props) => {
-  const { clusterID, clusterLabel, currentVersion, isOpen, onClose } = props;
+const getWorkerNodeCopy = (clusterTier: KubernetesTier = 'standard') => {
+  return clusterTier === 'standard' ? (
+    <span>
+      {' '}
+      and ensures that any new worker nodes are created using the newer
+      Kubernetes version.{' '}
+      <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-a-cluster-to-a-newer-kubernetes-version">
+        Learn more
+      </Link>
+      .
+    </span>
+  ) : (
+    <span>
+      . Existing worker nodes are updated automatically or manually, depending
+      on the update strategy defined for each node pool.{' '}
+      <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-an-lke-enterprise-cluster-to-a-newer-kubernetes-version">
+        Learn more
+      </Link>
+      .{' '}
+    </span>
+  );
+};
 
-  const { data: versions } = useKubernetesVersionQuery();
+export const UpgradeDialog = (props: Props) => {
+  const { clusterID, isOpen, onClose } = props;
+
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
+  const { data: cluster } = useKubernetesClusterQuery({
+    id: clusterID,
+  });
+
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
+
+  const { data: versions } = useKubernetesTieredVersionsQuery(
+    cluster?.tier ?? 'standard'
   );
 
-  const nextVersion = getNextVersion(currentVersion, versions ?? []);
-
-  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
-    false
+  const nextVersion = getNextVersion(
+    cluster?.k8s_version ?? '',
+    versions ?? []
   );
+
+  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] =
+    React.useState(false);
 
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
+
+  // Show the second step of the modal for LKE, but not LKE-E.
+  const shouldShowRecycleNodesStep =
+    cluster?.tier === 'standard' && hasUpdatedSuccessfully;
 
   React.useEffect(() => {
     if (isOpen) {
@@ -62,6 +97,10 @@ export const UpgradeDialog = (props: Props) => {
       .then((_) => {
         setHasUpdatedSuccessfully(true);
         setSubmitting(false);
+        // Do not proceed to the recycle step for LKE-E.
+        if (cluster?.tier === 'enterprise') {
+          onClose();
+        }
       })
       .catch((e) => {
         setSubmitting(false);
@@ -85,17 +124,19 @@ export const UpgradeDialog = (props: Props) => {
       });
   };
 
-  const dialogTitle = hasUpdatedSuccessfully
-    ? `Step 2: Recycle All Cluster Nodes`
-    : `Step 1: Upgrade ${clusterLabel} to Kubernetes ${nextVersion}`;
+  const dialogTitle = shouldShowRecycleNodesStep
+    ? 'Upgrade complete'
+    : `Upgrade Cluster ${cluster?.label} to ${nextVersion}`;
 
   const actions = (
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        label: hasUpdatedSuccessfully ? 'Recycle All Nodes' : 'Upgrade Version',
+        label: shouldShowRecycleNodesStep
+          ? 'Recycle All Nodes'
+          : 'Upgrade Version',
         loading: submitting,
-        onClick: hasUpdatedSuccessfully
+        onClick: shouldShowRecycleNodesStep
           ? onSubmitRecycleDialog
           : onSubmitUpgradeDialog,
       }}
@@ -117,18 +158,27 @@ export const UpgradeDialog = (props: Props) => {
       title={dialogTitle}
     >
       <Typography>
-        {hasUpdatedSuccessfully ? (
+        {shouldShowRecycleNodesStep ? (
           <>
-            Kubernetes version has been updated successfully. <br /> <br />
-            For the changes to take full effect you must recycle the nodes in
-            your cluster. {localStorageWarning}
+            The cluster’s Kubernetes version has been updated successfully to{' '}
+            <strong>{cluster?.k8s_version}</strong>. <br /> <br />
+            To upgrade your existing worker nodes, you can recycle all nodes
+            (which may have a performance impact) or perform other upgrade
+            methods. When recycling nodes, all nodes are deleted on a rolling
+            basis and new nodes are created to replace them. This may take
+            several minutes.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/upgrade-a-cluster-to-a-newer-kubernetes-version#upgrade-worker-nodes">
+              Learn more
+            </Link>
+            .
+            <LocalStorageWarningNotice />
           </>
         ) : (
           <>
-            Upgrade {clusterLabel}&rsquo;s Kubernetes version from{' '}
-            <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
-            Once the upgrade is complete you will need to recycle all nodes in
-            your cluster.
+            Upgrade the Kubernetes version on <strong>{cluster?.label}</strong>{' '}
+            from <strong>{cluster?.k8s_version}</strong> to{' '}
+            <strong>{nextVersion}</strong>. This upgrades the control plane on
+            your cluster{getWorkerNodeCopy(cluster?.tier)}
           </>
         )}
       </Typography>

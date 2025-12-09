@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { take, takeLast } from 'ramda';
 /**
  * Credit cards generally are valid through the expiry month (inclusive).
  *
@@ -41,7 +40,7 @@ export const isCreditCardExpired = (expDate: string) => {
 export const formatExpiry = (expiry: string): string => {
   const expiryData = expiry.split('/');
   return expiryData[1].length > 2
-    ? `${expiryData[0]}/${takeLast(2, expiryData[1])}`
+    ? `${expiryData[0]}/${expiryData[1].slice(-2)}`
     : expiry;
 };
 
@@ -56,5 +55,5 @@ export const parseExpiryYear = (
     return expiryYear;
   }
 
-  return take(2, String(new Date().getFullYear())) + expiryYear;
+  return String(new Date().getFullYear()).slice(0, 2) + expiryYear;
 };

@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -9,8 +8,8 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  LongviewClients,
   filterLongviewClientsByQuery,
+  LongviewClients,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
@@ -49,22 +48,21 @@ const props: LongviewClientsCombinedProps = {
   lvClientData: {},
   newClientLoading: false,
   updateLongviewClient: vi.fn(),
-  ...reactRouterProps,
 };
 
 describe('Utility Functions', () => {
   it('should properly filter longview clients by query', () => {
     expect(filterLongviewClientsByQuery('client-1', clients, {})).toEqual([
       clients[0],
-    ]),
-      expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
-        clients
-      ),
-      expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]),
-      expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]),
-      expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
-        []
-      );
+    ]);
+    expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
+      clients
+    );
+    expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]);
+    expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]);
+    expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
+      []
+    );
   });
 
   describe('Sorting helpers', () => {
@@ -82,11 +80,7 @@ describe('Utility Functions', () => {
 
       it('should respect the optional order argument', () => {
         expect([4, 3, 5, 1, 2].sort((a, b) => sortFunc(a, b, 'asc'))).toEqual([
-          1,
-          2,
-          3,
-          4,
-          5,
+          1, 2, 3, 4, 5,
         ]);
 
         expect(
@@ -103,7 +97,7 @@ describe('Utility Functions', () => {
 });
 
 describe('Longview clients list view', () => {
-  it('should request clients on load', () => {
+  it('should request clients on load', async () => {
     renderWithTheme(<LongviewClients {...props} />);
     expect(props.getLongviewClients).toHaveBeenCalledTimes(1);
   });
@@ -123,7 +117,7 @@ describe('Longview clients list view', () => {
     );
   });
 
-  it('should render a row for each client', () => {
+  it('should render a row for each client', async () => {
     const { queryAllByTestId } = renderWithTheme(
       <LongviewClients {...props} />
     );
@@ -133,7 +127,7 @@ describe('Longview clients list view', () => {
     );
   });
 
-  it('should render a CTA for non-Pro subscribers', () => {
+  it('should render a CTA for non-Pro subscribers', async () => {
     const { getByText } = renderWithTheme(
       <LongviewClients {...props} activeSubscription={{}} />
     );
@@ -141,7 +135,7 @@ describe('Longview clients list view', () => {
     getByText(/upgrade to longview pro/i);
   });
 
-  it('should not render a CTA for LV Pro subscribers', () => {
+  it('should not render a CTA for LV Pro subscribers', async () => {
     const { queryAllByText } = renderWithTheme(
       <LongviewClients
         {...props}

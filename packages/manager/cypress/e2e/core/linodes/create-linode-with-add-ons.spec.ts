@@ -1,27 +1,14 @@
-import { linodeFactory } from 'src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { linodeFactory } from '@linode/utilities';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode with Add-ons', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
   /*
    * - Confirms UI flow to create a Linode with backups using mock API data.
    * - Confirms that backups is reflected in create summary section.
@@ -42,7 +29,7 @@ describe('Create Linode with Add-ons', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -50,11 +37,10 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.checkEUAgreements();
 
     // Confirm Backups assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Backups').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Backups').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -96,7 +82,7 @@ describe('Create Linode with Add-ons', () => {
     cy.visitWithLogin('/linodes/create');
 
     linodeCreatePage.setLabel(mockLinode.label);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -104,11 +90,10 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.checkPrivateIPs();
 
     // Confirm Private IP assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Private IP').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Private IP').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

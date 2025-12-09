@@ -1,15 +1,17 @@
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { Paper } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { Paper } from 'src/components/Paper';
-import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { InstallationInstructions } from '../shared/InstallationInstructions';
-import { ActionHandlers, LongviewActionMenu } from './LongviewActionMenu';
+import { LongviewActionMenu } from './LongviewActionMenu';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
+
+import type { ActionHandlers } from './LongviewActionMenu';
+import type { DispatchProps } from 'src/containers/longview.container';
 
 interface Props extends ActionHandlers {
   clientAPIKey: string;
@@ -51,19 +53,24 @@ export const LongviewClientInstructions = (props: Props) => {
 
   return (
     <Paper
+      data-testid={clientID}
       sx={{
         marginBottom: theme.spacing(4),
         padding: theme.spacing(3),
       }}
-      data-testid={clientID}
     >
       <Grid
         aria-label="Installation instructions for the Longview agent"
         container
         data-testid="installation"
       >
-        <Grid xs={11} container>
-          <Grid md={3} xs={12}>
+        <Grid container size={11}>
+          <Grid
+            size={{
+              md: 3,
+              xs: 12,
+            }}
+          >
             {userCanModifyClient ? (
               <EditableEntityLabel
                 loading={updating}
@@ -78,15 +85,26 @@ export const LongviewClientInstructions = (props: Props) => {
               />
             )}
           </Grid>
-          <Grid md={9} xs={12}>
+          <Grid
+            size={{
+              md: 9,
+              xs: 12,
+            }}
+          >
             <InstallationInstructions
               APIKey={clientAPIKey}
               installationKey={installCode}
             />
           </Grid>
         </Grid>
-        <Grid xs={1}>
-          <Grid container justifyContent="flex-end" spacing={2}>
+        <Grid size={1}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
             <Grid>
               <LongviewActionMenu
                 longviewClientID={clientID}

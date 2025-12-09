@@ -3,7 +3,7 @@ import * as React from 'react';
 import { GaugePercent } from './GaugePercent';
 
 import type { GaugePercentProps } from './GaugePercent';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<GaugePercentProps> = {
   render: (args) => <GaugePercent {...args} />,

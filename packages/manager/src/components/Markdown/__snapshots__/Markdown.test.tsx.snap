@@ -1,0 +1,71 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Markdown component > should highlight text consistently 1`] = `
+<DocumentFragment>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-1ewp9t3-MuiTypography-root"
+  />
+  <h1>
+    Some markdown
+  </h1>
+  
+
+  <pre
+    class="shiki one-light"
+    style="background-color:#FAFAFA;color:#383A42"
+  >
+    <code>
+      <span
+        class="line"
+      >
+        <span
+          style="color:#A626A4"
+        >
+          const
+        </span>
+        <span
+          style="color:#4078F2"
+        >
+           x
+        </span>
+        <span
+          style="color:#0184BC"
+        >
+           =
+        </span>
+        <span
+          style="color:#A626A4"
+        >
+           function
+        </span>
+        <span
+          style="color:#383A42"
+        >
+          () { 
+        </span>
+        <span
+          style="color:#A626A4"
+        >
+          return
+        </span>
+        <span
+          style="color:#986801"
+        >
+           true
+        </span>
+        <span
+          style="color:#383A42"
+        >
+          ; }
+        </span>
+      </span>
+      
+
+      <span
+        class="line"
+      />
+    </code>
+  </pre>
+  <p />
+</DocumentFragment>
+`;

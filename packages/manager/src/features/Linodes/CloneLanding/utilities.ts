@@ -1,9 +1,10 @@
-import { Config, Devices, Disk } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { DateTime } from 'luxon';
-import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
-import { isDiskDevice } from '../LinodesDetail/LinodeConfigs/ConfigRow';
+
+import { isDiskDevice } from '../LinodesDetail/LinodeConfigs/utilities';
+
+import type { Config, Devices, Disk } from '@linode/api-v4/lib/linodes';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 /**
  * TYPES
@@ -87,6 +88,65 @@ const cloneLandingReducer = (
   action: CloneLandingAction
 ) => {
   switch (action.type) {
+    case 'clearAll':
+      // Set all `isSelected`s to `false, and set selectedLinodeId to null
+      draft.configSelection = Object.keys(draft.configSelection).reduce(
+        (acc: ConfigSelection, key) => {
+          acc[Number(key)] = {
+            ...draft.configSelection[Number(key)],
+            isSelected: false,
+          };
+          return acc;
+        },
+        {}
+      );
+      draft.diskSelection = Object.keys(draft.diskSelection).reduce(
+        (acc: DiskSelection, key) => {
+          acc[Number(key)] = {
+            ...draft.diskSelection[Number(key)],
+            isSelected: false,
+          };
+          return acc;
+        },
+        {}
+      );
+      draft.selectedLinodeId = null;
+      draft.errors = undefined;
+      break;
+
+    case 'setErrors':
+      draft.errors = action.errors;
+      break;
+
+    case 'setSelectedLinodeId':
+      draft.selectedLinodeId = action.id;
+      draft.errors = undefined;
+      break;
+
+    case 'setSubmitting':
+      draft.isSubmitting = action.value;
+      break;
+
+    // We're going to create new configSelection and diskSelection based on the
+    // given configs and disks, and the elements already selected in the current state.
+    case 'syncConfigsDisks':
+      const { configs, disks } = action;
+
+      // Grab the selected configs/disks from the current state.
+      const selectedConfigIds = getSelectedIDs(draft.configSelection);
+      const selectedDiskIds = getSelectedIDs(draft.diskSelection);
+
+      const { configSelection, diskSelection } = createConfigDiskSelection(
+        configs,
+        disks,
+        selectedConfigIds,
+        selectedDiskIds
+      );
+
+      draft.configSelection = configSelection;
+      draft.diskSelection = diskSelection;
+      break;
+
     case 'toggleConfig':
       // If the ID isn't in configSelection, return the state unchanged.
       if (!draft.configSelection[action.id]) {
@@ -112,53 +172,6 @@ const cloneLandingReducer = (
       // Clear errors on input change.
       draft.errors = undefined;
       break;
-
-    case 'setSelectedLinodeId':
-      draft.selectedLinodeId = action.id;
-      draft.errors = undefined;
-      break;
-
-    case 'setSubmitting':
-      draft.isSubmitting = action.value;
-      break;
-
-    case 'setErrors':
-      draft.errors = action.errors;
-      break;
-
-    case 'clearAll':
-      // Set all `isSelected`s to `false, and set selectedLinodeId to null
-      draft.configSelection = map(
-        (config) => ({ ...config, isSelected: false }),
-        draft.configSelection
-      );
-      draft.diskSelection = map(
-        (disk) => ({ ...disk, isSelected: false }),
-        draft.diskSelection
-      );
-      draft.selectedLinodeId = null;
-      draft.errors = undefined;
-      break;
-
-    // We're going to create new configSelection and diskSelection based on the
-    // given configs and disks, and the elements already selected in the current state.
-    case 'syncConfigsDisks':
-      const { configs, disks } = action;
-
-      // Grab the selected configs/disks from the current state.
-      const selectedConfigIds = getSelectedIDs(draft.configSelection);
-      const selectedDiskIds = getSelectedIDs(draft.diskSelection);
-
-      const { configSelection, diskSelection } = createConfigDiskSelection(
-        configs,
-        disks,
-        selectedConfigIds,
-        selectedDiskIds
-      );
-
-      draft.configSelection = configSelection;
-      draft.diskSelection = diskSelection;
-      break;
   }
 };
 
@@ -173,14 +186,9 @@ export const defaultState: CloneLandingState = {
 
 // Returns an array of IDs of configs/disks that are selected.
 const getSelectedIDs = (selection: ConfigSelection | DiskSelection) =>
-  compose(
-    // 3. Convert IDs to Numbers.
-    map((key) => Number(key)),
-    // 2. Get the keys (which are the IDs).
-    keys,
-    // 1. Only keep elements that are selected.
-    pickBy((c) => c.isSelected)
-  )(selection);
+  Object.keys(selection)
+    .filter((id) => selection[+id].isSelected) // 1. Only keep keys(IDs) of elements that are selected.
+    .map((id) => +id); // 2. Convert IDs to Numbers.
 
 export const createConfigDiskSelection = (
   configs: Config[],
@@ -274,17 +282,20 @@ export const getAllDisks = (
    *
    * 1. Grab associated disks from the selected CONFIGS
    * 2. Append the selected DISKS (the ones not attached to configs)
-   * 3. Flatten
-   * 4. There may be duplicates, so do uniqBy ID
+   * 3. There may be duplicates, so do uniqBy ID
    *
    * ...I can't believe the typing worked out for this...
    */
-  return compose(
-    uniqBy((eachDisk: Disk) => eachDisk.id),
-    flatten,
-    append(disks) as any,
-    map((eachConfig: ExtendedConfig) => eachConfig.associatedDisks)
-  )(configs);
+  const allDisks: Disk[] = configs.flatMap(
+    (eachConfig: ExtendedConfig) => eachConfig.associatedDisks
+  );
+
+  allDisks.push(...disks);
+  return allDisks.reduce(
+    (acc: Disk[], item) =>
+      acc.some((disk) => disk.id === item.id) ? acc : [...acc, item],
+    []
+  );
 };
 
 export type EstimatedCloneTimeMode = 'differentDatacenter' | 'sameDatacenter';

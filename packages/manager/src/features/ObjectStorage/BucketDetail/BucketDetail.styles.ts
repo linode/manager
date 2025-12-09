@@ -1,9 +1,7 @@
+import { Button, LinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
 
 export const StyledNameColumn = styled(TableCell, {
   label: 'StyledNameColumn',
@@ -17,7 +15,7 @@ export const StyledSizeColumn = styled(TableCell, {
   width: '10%',
 }));
 
-export const StyledTryAgainButton = styled(StyledLinkButton, {
+export const StyledTryAgainButton = styled(LinkButton, {
   label: 'StyledTryAgain',
 })(() => ({
   textDecoration: 'underline',

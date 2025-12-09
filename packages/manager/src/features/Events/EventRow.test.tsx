@@ -29,6 +29,6 @@ describe('EventRow', () => {
         name: /Two-factor authentication has been enabled./i,
       })
     ).toBeInTheDocument();
-    expect(getByRole('cell', { name: 'test_user' })).toBeInTheDocument();
+    expect(getByRole('cell', { name: /test_user/i })).toBeInTheDocument();
   });
 });

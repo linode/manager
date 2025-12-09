@@ -3,7 +3,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { IssueDay, IssueDayProps } from './IssueDay';
+import { IssueDay } from './IssueDay';
+
+import type { IssueDayProps } from './IssueDay';
 
 describe('IssueDay', () => {
   it('should include basic Monitor actions', () => {

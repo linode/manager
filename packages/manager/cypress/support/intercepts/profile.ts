@@ -13,9 +13,9 @@ import type {
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  SSHKey,
   Token,
   UserPreferences,
-  SSHKey,
 } from '@linode/api-v4';
 
 /**
@@ -78,7 +78,27 @@ export const mockGetProfileGrants = (
 export const mockGetUserPreferences = (
   preferences: UserPreferences
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('profile/preferences'), preferences);
+  const defaultPreferences = {
+    // All sidebar categories are expanded.
+    collapsedSideNavProductFamilies: [],
+
+    // Sidebar is not pinned.
+    desktop_sidebar_open: false,
+
+    // Type-to-confirm is enabled.
+    type_to_confirm: true,
+  };
+
+  const resolvedPreferences = {
+    ...defaultPreferences,
+    ...preferences,
+  };
+
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/preferences'),
+    resolvedPreferences
+  );
 };
 
 /**
@@ -125,7 +145,7 @@ export const mockSendVerificationCode = (): Cypress.Chainable<null> => {
 export const mockVerifyVerificationCode = (
   errorMessage?: string | undefined
 ): Cypress.Chainable<null> => {
-  const response = !!errorMessage ? makeErrorResponse(errorMessage) : {};
+  const response = errorMessage ? makeErrorResponse(errorMessage) : {};
   return cy.intercept(
     'POST',
     apiMatcher('profile/phone-number/verify'),
@@ -402,6 +422,25 @@ export const mockGetSSHKeys = (sshKeys: SSHKey[]): Cypress.Chainable<null> => {
     'GET',
     apiMatcher('/profile/sshkeys*'),
     paginateResponse(sshKeys)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch SSH keys and mocks an error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKeysError = (
+  errorMessage: string,
+  status: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/profile/sshkeys*'),
+    makeErrorResponse(errorMessage, status)
   );
 };
 

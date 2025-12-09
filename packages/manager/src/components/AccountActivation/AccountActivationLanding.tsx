@@ -1,80 +1,80 @@
+import { Box, ErrorState, LinkButton, Typography } from '@linode/ui';
 import Warning from '@mui/icons-material/CheckCircle';
-import { Theme } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
-import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
+import Logo from 'src/assets/logo/akamai-logo.svg';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  cta: {
-    ...theme.applyLinkStyles,
-  },
-  errorHeading: {
-    marginBottom: theme.spacing(2),
-  },
-  subheading: {
-    margin: '0 auto',
-    maxWidth: '60%',
-  },
-}));
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
-const AccountActivationLanding = () => {
-  const { classes } = useStyles();
-  const history = useHistory();
+export const AccountActivationLanding = () => {
+  const navigate = useNavigate();
 
-  const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
-    false
-  );
+  const [supportDrawerIsOpen, toggleSupportDrawer] =
+    React.useState<boolean>(false);
 
   const handleTicketSubmitSuccess = (
     ticketID: number,
     attachmentErrors?: AttachmentError[]
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketID}`,
-      state: { attachmentErrors },
+    navigate({
+      to: '/support/tickets/$ticketId',
+      params: { ticketId: ticketID },
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
 
     toggleSupportDrawer(false);
   };
 
   return (
-    <ErrorState
-      errorText={
-        <React.Fragment>
-          <Typography className={classes.errorHeading} variant="h2">
-            Your account is currently being reviewed.
-          </Typography>
-          <Typography className={classes.subheading}>
-            Thanks for signing up! You&rsquo;ll receive an email from us once
-            our review is complete, so hang tight. If you have questions during
-            this process{' '}
-            <button
-              className={classes.cta}
-              onClick={() => toggleSupportDrawer(true)}
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      justifyContent="center"
+    >
+      <Logo width={215} />
+      <ErrorState
+        CustomIcon={Warning}
+        CustomIconStyles={{ color: '#63A701' }}
+        errorText={
+          <React.Fragment>
+            <Typography
+              sx={(theme) => ({ marginBottom: theme.spacingFunction(16) })}
+              variant="h2"
             >
-              please open a Support ticket
-            </button>
-            .
-          </Typography>
-          <SupportTicketDialog
-            hideProductSelection
-            keepOpenOnSuccess={true}
-            onClose={() => toggleSupportDrawer(false)}
-            onSuccess={handleTicketSubmitSuccess}
-            open={supportDrawerIsOpen}
-            prefilledTitle="Help me activate my account"
-          />
-        </React.Fragment>
-      }
-      CustomIcon={Warning}
-      CustomIconStyles={{ color: '#63A701' }}
-    />
+              Your account is currently being reviewed.
+            </Typography>
+            <Typography
+              sx={{
+                margin: '0 auto',
+                maxWidth: '60%',
+              }}
+            >
+              Thanks for signing up! You&rsquo;ll receive an email from us once
+              our review is complete, so hang tight. If you have questions
+              during this process{' '}
+              <LinkButton onClick={() => toggleSupportDrawer(true)}>
+                please open a Support ticket
+              </LinkButton>
+              .
+            </Typography>
+            <SupportTicketDialog
+              hideProductSelection
+              keepOpenOnSuccess={true}
+              onClose={() => toggleSupportDrawer(false)}
+              onSuccess={handleTicketSubmitSuccess}
+              open={supportDrawerIsOpen}
+              prefilledTitle="Help me activate my account"
+            />
+          </React.Fragment>
+        }
+      />
+    </Box>
   );
 };
-
-export default React.memo(AccountActivationLanding);

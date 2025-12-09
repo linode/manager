@@ -1,9 +1,8 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { useRegionsQuery } from '@linode/queries';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface DNSResolversProps {
   region: string;
@@ -22,10 +21,10 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
   const renderIPResolvers = (resolvers: string[]) => {
     return resolvers.map((thisAddress) => (
       <Typography
+        key={`ip-resolver-item-${thisAddress}`}
         sx={{
           lineHeight: 1.43,
         }}
-        key={`ip-resolver-item-${thisAddress}`}
       >
         {thisAddress}
       </Typography>
@@ -34,6 +33,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
 
   return (
     <Grid
+      container
       sx={{
         display: 'grid',
         gridTemplateAreas: `
@@ -47,35 +47,34 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           paddingRight: 0,
         },
       }}
-      container
     >
       <Grid
+        size={12}
         sx={{
           gridArea: 'one',
           paddingBottom: 0,
           paddingTop: 0,
         }}
-        xs={12}
       >
         <Typography>
           <strong>DNS Resolvers</strong>
         </Typography>
       </Grid>
       <Grid
+        size="auto"
         sx={{
           gridArea: 'two',
           paddingRight: theme.spacing(2),
         }}
-        xs="auto"
       >
         {renderIPResolvers(v4Resolvers)}
       </Grid>
       <Grid
+        size="auto"
         sx={{
           gridArea: 'three',
           paddingLeft: theme.spacing(2),
         }}
-        xs="auto"
       >
         {renderIPResolvers(v6Resolvers)}
       </Grid>

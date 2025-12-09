@@ -1,9 +1,11 @@
-import { Theme } from '@mui/material/styles';
+import { useTrustedDevicesQuery } from '@linode/queries';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,12 +16,12 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useTrustedDevicesQuery } from 'src/queries/profile/profile';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -40,15 +42,22 @@ const TrustedDevices = () => {
 
   const { classes } = useStyles();
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    initialPage: 1,
+    preferenceKey,
+    currentRoute: '/profile/auth',
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'expiry',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'expiry',
+      },
+      from: '/profile/auth',
     },
-    preferenceKey
-  );
+    preferenceKey,
+  });
 
   const { data, error, isLoading } = useTrustedDevicesQuery(
     {
@@ -87,8 +96,12 @@ const TrustedDevices = () => {
     return data?.data.map((device) => {
       return (
         <TableRow key={device.id}>
-          <TableCell>{device.user_agent}</TableCell>
-          <TableCell>{device.last_remote_addr}</TableCell>
+          <TableCell>
+            <MaskableText isToggleable text={device.user_agent} />
+          </TableCell>
+          <TableCell>
+            <MaskableText isToggleable text={device.last_remote_addr} />
+          </TableCell>
           <TableCell>
             <DateTimeDisplay value={device.last_authenticated} />
           </TableCell>
@@ -148,15 +161,15 @@ const TrustedDevices = () => {
           </TableRow>
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
-        <PaginationFooter
-          count={data?.results ?? 0}
-          eventCategory="Trusted Devices Panel"
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-        />
       </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        eventCategory="Trusted Devices Panel"
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+      />
       <RevokeTrustedDeviceDialog
         deviceId={selectedDeviceId}
         onClose={() => setIsRevokeDialogOpen(false)}

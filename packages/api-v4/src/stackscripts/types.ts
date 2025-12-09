@@ -1,38 +1,38 @@
 export interface StackScriptPayload {
-  script: string;
-  label: string;
-  images: string[];
   description?: string;
+  images: string[];
   is_public?: boolean;
+  label: string;
   rev_note?: string;
+  script: string;
 }
 
 export interface StackScript {
-  deployments_active: number;
-  id: number;
-  user_gravatar_id: string;
-  label: string;
-  description: string;
-  images: string[];
-  deployments_total: number;
-  username: string;
-  is_public: boolean;
-  mine: boolean;
   created: string;
-  updated: string;
+  deployments_active: number;
+  deployments_total: number;
+  description: string;
+  id: number;
+  images: string[];
+  is_public: boolean;
+  label: string;
+  logo_url: string;
+  mine: boolean;
+  ordinal: number;
   rev_note: string;
   script: string;
+  updated: string;
   user_defined_fields: UserDefinedField[];
-  ordinal: number;
-  logo_url: string;
+  user_gravatar_id: string;
+  username: string;
 }
 
 export interface UserDefinedField {
-  label: string;
-  name: string;
-  example?: string;
-  oneof?: string;
-  manyof?: string;
   default?: string;
+  example?: string;
   header?: string;
+  label: string;
+  manyof?: string;
+  name: string;
+  oneof?: string;
 }

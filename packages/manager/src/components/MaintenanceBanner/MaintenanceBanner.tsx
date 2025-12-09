@@ -1,13 +1,14 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account';
+import { useAllAccountMaintenanceQuery, useProfile } from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
-import { useProfile } from 'src/queries/profile/profile';
+import { Link } from 'src/components/Link';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
+
+import type { AccountMaintenance } from '@linode/api-v4/lib/account';
 
 interface Props {
   maintenanceEnd?: null | string;
@@ -19,9 +20,14 @@ interface Props {
 export const MaintenanceBanner = React.memo((props: Props) => {
   const { maintenanceEnd, maintenanceStart, type } = props;
 
-  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+  const { data: rawAccountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    { status: { '+or': ['pending, started'] } }
+    PENDING_MAINTENANCE_FILTER
+  );
+
+  // Filter out platform maintenance, since that is handled separately
+  const accountMaintenanceData = rawAccountMaintenanceData?.filter(
+    (maintenance) => !isPlatformMaintenance(maintenance)
   );
 
   const {
@@ -68,7 +74,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
@@ -82,7 +88,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
       }
       <Typography lineHeight="20px">
         For more information, please see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
+        <Link to="/support/tickets/open">open support tickets.</Link>
       </Typography>
     </Notice>
   );
@@ -94,25 +100,25 @@ const generateIntroText = (
   end?: null | string,
   timezone?: string
 ) => {
-  const maintenanceInProgress = !!start
+  const maintenanceInProgress = start
     ? isPast(start)(new Date().toISOString())
     : false;
 
   /** we're on the Linode Detail Screen */
-  if (!!type) {
+  if (type) {
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
           This Linode&rsquo;s physical host is currently undergoing maintenance.{' '}
           {maintenanceActionTextMap[type]} Please refer to
-          <Link to="/support/tickets"> your Support tickets </Link> for more
-          information.
+          <Link to="/support/tickets/open"> your Support tickets </Link> for
+          more information.
         </React.Fragment>
       );
     }
 
     /** migration or reboot happening at a later date */
-    if (!!start) {
+    if (start) {
       /**
        * we're going to display both the raw and humanized versions of the date
        * to the user here.
@@ -164,6 +170,10 @@ export const maintenanceActionTextMap: Record<
     'During this time, your Linode will be shut down, cold migrated to a new host, then returned to its last state (running or powered off).',
   live_migration:
     'During this time, your Linode will be live migrated to a new host, then returned to its last state (running or powered off).',
+  migrate:
+    'During this time, your Linode will be migrated to a new host, then returned to its last state (running or powered off).',
+  power_off_on:
+    'During this time, your Linode will be shut down and remain offline, then returned to its last state (running or powered off).',
   reboot:
     'During this time, your Linode will be shut down and remain offline, then returned to its last state (running or powered off).',
   volume_migration:

@@ -1,0 +1,803 @@
+import { Factory, regionFactory } from '@linode/utilities';
+
+import type {
+  Alert,
+  AlertDefinitionDimensionFilter,
+  AlertDefinitionMetricCriteria,
+  CreateAlertDefinitionPayload,
+  Dimension,
+  MetricCriteria,
+  MetricDefinition,
+  TriggerCondition,
+} from '@linode/api-v4';
+
+export const alertDimensionsFactory =
+  Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>({
+    dimension_label: 'state',
+    label: 'State of CPU',
+    operator: 'eq',
+    value: 'idle',
+  });
+
+export const alertRulesFactory =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: alertDimensionsFactory.buildList(1),
+    label: 'CPU Usage',
+    metric: 'system_cpu_utilization_percent',
+    operator: 'eq',
+    threshold: 60,
+    unit: 'Bytes',
+  });
+
+export const triggerConditionFactory =
+  Factory.Sync.makeFactory<TriggerCondition>({
+    criteria_condition: 'ALL',
+    evaluation_period_seconds: 300,
+    polling_interval_seconds: 300,
+    trigger_occurrences: 5,
+  });
+export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+  aggregate_function: 'avg',
+  dimension_filters: [
+    {
+      dimension_label: 'state',
+      operator: 'eq',
+      value: 'user',
+    },
+  ],
+  metric: 'system_cpu_utilization_percent',
+  operator: 'eq',
+  threshold: 1000,
+});
+
+export const ingressTrafficRateRulesFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      {
+        dimension_label: 'port',
+        operator: 'eq',
+        value: '',
+      },
+      {
+        dimension_label: 'protocol',
+        operator: 'in',
+        value: 'TCP,UDP',
+      },
+      {
+        dimension_label: 'config_id',
+        operator: 'eq',
+        value: '',
+      },
+    ],
+    metric: 'nb_ingress_traffic_rate',
+    operator: 'eq',
+    threshold: 1000, // adjust as per your alert threshold
+  });
+
+export const egressTrafficRateRulesFactory =
+  ingressTrafficRateRulesFactory.extend({
+    metric: 'nb_egress_traffic_rate',
+  });
+
+export const newSessionsRulesFactory = ingressTrafficRateRulesFactory.extend({
+  metric: 'nb_new_sessions_per_second',
+});
+
+export const totalActiveSessionsRulesFactory =
+  ingressTrafficRateRulesFactory.extend({
+    metric: 'nb_total_active_sessions',
+  });
+
+export const totalActiveBackendsRulesFactory =
+  ingressTrafficRateRulesFactory.extend({
+    metric: 'nb_total_active_backends',
+  });
+
+export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
+  aggregate_function: 'avg',
+  dimension_filters: [],
+  metric: 'system_memory_usage_by_resource',
+  operator: 'eq',
+  threshold: 1000,
+});
+export const currentConnectionsRulesFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      { dimension_label: 'region_id', operator: 'eq', value: '' },
+      { dimension_label: 'customer_id', operator: 'eq', value: '' },
+      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'interface_id', operator: 'eq', value: '' },
+      {
+        dimension_label: 'interface_type',
+        operator: 'in',
+        value: 'vpc,public',
+      },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
+    ],
+    metric: 'current_connections',
+    operator: 'eq',
+    threshold: 1000,
+  });
+
+export const availableConnectionsRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'available_connections',
+};
+export const ingressPacketsAcceptedRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'ingress_packets_accepted',
+};
+
+export const egressPacketsAcceptedRulesFactory = {
+  ...currentConnectionsRulesFactory,
+  metric: 'egress_packets_accepted',
+};
+
+export const ingressBytesAcceptedRulesFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    dimension_filters: [
+      { dimension_label: 'region_id', operator: 'eq', value: '' },
+      { dimension_label: 'customer_id', operator: 'eq', value: '' },
+      { dimension_label: 'parent_vm_entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'entity_id', operator: 'eq', value: '' },
+      { dimension_label: 'interface_id', operator: 'eq', value: '' },
+      {
+        dimension_label: 'interface_type',
+        operator: 'in',
+        value: 'vpc,public',
+      },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: '' },
+    ],
+    metric: 'ingress_bytes_accepted',
+    operator: 'eq',
+    threshold: 1000,
+  });
+
+export const egressBytesAcceptedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'egress_bytes_accepted',
+};
+
+export const ingressPacketsDroppedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'ingress_packets_dropped',
+};
+
+export const egressPacketsDroppedRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'egress_packets_dropped',
+};
+
+export const packetsDroppedConnectionTableFullRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'packets_dropped_connection_table_full',
+};
+
+export const newIngressConnectionsRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'new_ingress_connections',
+};
+
+export const newEgressConnectionsRulesFactory = {
+  ...ingressBytesAcceptedRulesFactory,
+  metric: 'new_egress_connections',
+};
+
+// Example endpoints list (for the 'in' operator)
+const endpoints = [
+  'endpoint_type-E2-us-sea-2.linodeobjects.com',
+  'endpoint_type-E3-us-sea-3.linodeobjects.com',
+  'endpoint_type-E2-us-sea-4.linodeobjects.com',
+];
+/**
+ * Factory for a single Object Storage dimension filter
+ */
+export const objectStorageDimensionFactory =
+  Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>({
+    dimension_label: 'region',
+    label: 'Object Storage Region',
+    operator: 'eq',
+    value: 'Chicago, IL',
+  });
+
+/**
+ * Base Object Storage rule factory (like your baseObjectStorageRuleFactory)
+ */
+export const baseObjectStorageRuleFactory =
+  Factory.Sync.makeFactory<MetricCriteria>({
+    aggregate_function: 'avg',
+    operator: 'eq',
+    threshold: 1000,
+    metric: '',
+    dimension_filters: [
+      {
+        dimension_label: 'endpoint',
+        operator: 'eq',
+        value: 'endpoint_type-E2-us-sea-4.linodeobjects.com',
+      },
+      {
+        dimension_label: 'endpoint',
+        operator: 'in',
+        value: endpoints.join(','), // joined list of endpoints
+      },
+    ],
+  });
+export const metricBuilder =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    ...baseObjectStorageRuleFactory.build(),
+    label: 'Total bucket size',
+    unit: 'Bytes',
+    metric: 'obj_bucket_size',
+    dimension_filters: [
+      {
+        dimension_label: 'region',
+        label: 'Region',
+        operator: 'eq',
+        value: 'us-east',
+      },
+    ],
+  });
+
+export const alertDefinitionFactory =
+  Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
+    channel_ids: [1, 2, 3],
+    description: 'This is a default alert description.',
+    entity_ids: ['1', '2', '3', '4', '5'],
+    label: 'Default Alert Label',
+    rule_criteria: {
+      rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
+    },
+    severity: 1,
+    tags: ['tag1', 'tag2'],
+    trigger_conditions: triggerConditionFactory.build(),
+  });
+
+export const alertFactory = Factory.Sync.makeFactory<Alert>({
+  alert_channels: [
+    {
+      id: 1,
+      label: 'sample1',
+      type: 'alert-channel',
+      url: '',
+    },
+    {
+      id: 2,
+      label: 'sample2',
+      type: 'alert-channel',
+      url: '',
+    },
+  ],
+  class: 'dedicated',
+  created: new Date().toISOString(),
+  created_by: 'system',
+  description: 'Test description',
+  entity_ids: ['1', '2', '3', '48', '50', '51'],
+  scope: 'entity',
+  regions: regionFactory.buildList(3).map(({ id }) => id),
+  has_more_resources: true,
+  id: Factory.each((i) => i),
+  label: Factory.each((id) => `Alert-${id}`),
+  rule_criteria: {
+    rules: [alertRulesFactory.build({ dimension_filters: [] })],
+  },
+  service_type: 'linode',
+  severity: 0,
+  status: 'enabled',
+  tags: ['tag1', 'tag2'],
+  trigger_conditions: {
+    criteria_condition: 'ALL',
+    evaluation_period_seconds: 300,
+    polling_interval_seconds: 600,
+    trigger_occurrences: 3,
+  },
+  type: 'system',
+  updated: new Date().toISOString(),
+  updated_by: 'system',
+});
+
+const firewallLinodeDimensions: Dimension[] = [
+  { label: 'VPC-Subnet', dimension_label: 'vpc_subnet_id', values: [] },
+  {
+    label: 'Interface Type',
+    dimension_label: 'interface_type',
+    values: ['vpc', 'public'],
+  },
+  { label: 'Interface', dimension_label: 'interface_id', values: [] },
+  { label: 'Linode', dimension_label: 'linode_id', values: [] },
+  { label: 'Linode Region', dimension_label: 'region_id', values: [] },
+];
+
+const firewallNodebalancerDimensions: Dimension[] = [
+  { label: 'Protocol', dimension_label: 'protocol', values: ['TCP', 'UDP'] },
+  { label: 'IP Version', dimension_label: 'ip_version', values: ['v4', 'v6'] },
+  { label: 'NodeBalancer', dimension_label: 'nodebalancer_id', values: [] },
+];
+
+export const firewallMetricDefinitionFactory =
+  Factory.Sync.makeFactory<MetricDefinition>({
+    label: 'Firewall Metric',
+    metric: 'firewall_metric',
+    unit: 'metric_unit',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg', 'sum', 'max', 'min', 'count'],
+    dimensions: [],
+  });
+export const firewallMetricDefinitionsResponse: MetricDefinition[] = [
+  firewallMetricDefinitionFactory.build({
+    label: 'Current connections (Linode)',
+    metric: 'fw_active_connections',
+    unit: 'Count',
+    available_aggregate_functions: ['avg', 'max', 'min'],
+    dimensions: firewallLinodeDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress Packets Accepted (Linode)',
+    metric: 'fw_ingress_packets_accepted',
+    unit: 'packets/s',
+    available_aggregate_functions: ['sum'],
+    dimensions: firewallLinodeDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Available Connections (Linode)',
+    metric: 'fw_available_connections',
+    unit: 'Count',
+    available_aggregate_functions: ['avg', 'max', 'min'],
+    dimensions: firewallLinodeDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress Bytes Accepted (Linode)',
+    metric: 'fw_ingress_bytes_accepted',
+    unit: 'Bps',
+    available_aggregate_functions: ['sum'],
+    dimensions: firewallLinodeDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress Bytes Accepted (Node Balancer)',
+    metric: 'nb_ingress_bytes_accepted',
+    unit: 'Bps',
+    scrape_interval: '300s',
+    available_aggregate_functions: ['sum'],
+    dimensions: firewallNodebalancerDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress Bytes Dropped  (Node Balancer)',
+    metric: 'nb_ingress_bytes_dropped',
+    unit: 'Bps',
+    scrape_interval: '300s',
+    available_aggregate_functions: ['sum'],
+    dimensions: firewallNodebalancerDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress Packets Accepted  (Node Balancer)',
+    metric: 'nb_ingress_packets_accepted',
+    unit: 'packets/s',
+    scrape_interval: '300s',
+    available_aggregate_functions: ['sum'],
+    dimensions: firewallNodebalancerDimensions,
+  }),
+  firewallMetricDefinitionFactory.build({
+    label: 'Ingress Packets Dropped  (Node Balancer)',
+    metric: 'nb_ingress_packets_dropped',
+    unit: 'packets/s',
+    scrape_interval: '300s',
+    available_aggregate_functions: ['sum'],
+    dimensions: firewallNodebalancerDimensions,
+  }),
+];
+
+export const firewallMetricRulesFactory =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Current connections (Linode)',
+    metric: 'fw_active_connections',
+    unit: 'count',
+    aggregate_function: 'avg',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'VPC-Subnet',
+        dimension_label: 'vpc_subnet_id',
+        operator: 'in',
+        value: '1',
+      },
+      {
+        label: 'Linode',
+        dimension_label: 'linode_id',
+        operator: 'in',
+        value: '1',
+      },
+      {
+        label: 'Linode Region',
+        dimension_label: 'region_id',
+        operator: 'in',
+        value: 'pl-labkrk-2',
+      },
+    ],
+  });
+
+export const objectStorageMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'All requests',
+    metric: 'obj_requests_num',
+    unit: 'Count',
+    aggregate_function: 'sum',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'Endpoint',
+        dimension_label: 'endpoint',
+        operator: 'eq',
+        value: 'us-iad-1.linodeobjects.com',
+      },
+      {
+        label: 'Endpoint',
+        dimension_label: 'endpoint',
+        operator: 'in',
+        value: 'ap-west-1.linodeobjects.com,us-iad-1.linodeobjects.com',
+      },
+    ],
+  });
+
+export const objectStorageMetricRules: MetricDefinition[] = [
+  {
+    label: 'All requests',
+    metric_type: 'gauge',
+    metric: 'obj_requests_num',
+    unit: 'Count',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['sum'],
+    dimensions: [
+      {
+        label: 'Endpoint',
+        dimension_label: 'endpoint',
+        values: [],
+      },
+      {
+        label: 'Request type',
+        dimension_label: 'request_type',
+        values: ['head', 'get', 'put', 'delete', 'list', 'other'],
+      },
+    ],
+  },
+];
+
+export const blockStorageMetricRules: MetricDefinition[] = [
+  {
+    label: 'Volume Read Operations',
+    metric: 'volume_read_ops',
+    unit: 'Count',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Operations',
+    metric: 'volume_write_ops',
+    unit: 'Count',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Bytes',
+    metric: 'volume_read_bytes',
+    unit: 'KB',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Bytes',
+    metric: 'volume_write_bytes',
+    unit: 'KB',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p99',
+    metric: 'volume_read_latency_p99',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p95',
+    metric: 'volume_read_latency_p95',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p90',
+    metric: 'volume_read_latency_p90',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Read Latency p50',
+    metric: 'volume_read_latency_p50',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p99',
+    metric: 'volume_write_latency_p99',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p95',
+    metric: 'volume_write_latency_p95',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p90',
+    metric: 'volume_write_latency_p90',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Volume Write Latency p50',
+    metric: 'volume_write_latency_p50',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '300s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        values: [],
+      },
+    ],
+  },
+];
+
+export const blockStorageMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Volume Read Operations',
+    metric: 'volume_read_ops',
+    unit: 'Count',
+    aggregate_function: 'avg',
+    operator: 'eq',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'linode_id',
+        dimension_label: 'linode_id',
+        operator: 'in',
+        value: '1',
+      },
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'us-east',
+      },
+    ],
+  });
+
+// --- Additional Metrics (Examples) ---
+
+export const blockStorageMetricCriteriaList = [
+  blockStorageMetricCriteria.build({
+    label: 'Volume Write Operations',
+    metric: 'volume_write_ops',
+    unit: 'Count',
+    aggregate_function: 'avg',
+    operator: 'gt',
+    threshold: 2000,
+    dimension_filters: [
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'us-west',
+      },
+      {
+        label: 'entity_id',
+        dimension_label: 'entity_id',
+        operator: 'eq',
+        value: 'vol-1',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Read Bytes',
+    metric: 'volume_read_bytes',
+    unit: 'Bytes',
+    aggregate_function: 'sum',
+    operator: 'gte',
+    threshold: 500000,
+    dimension_filters: [
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'ap-south',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Write Bytes',
+    metric: 'volume_write_bytes',
+    unit: 'Bytes',
+    aggregate_function: 'sum',
+    operator: 'lt',
+    threshold: 1000000,
+    dimension_filters: [
+      {
+        label: 'response_type',
+        dimension_label: 'response_type',
+        operator: 'in',
+        value: '200,400,500',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Read IOPS',
+    metric: 'volume_read_iops',
+    unit: 'Count',
+    aggregate_function: 'max',
+    operator: 'lte',
+    threshold: 1500,
+    dimension_filters: [
+      {
+        label: 'entity_id',
+        dimension_label: 'entity_id',
+        operator: 'eq',
+        value: 'block-01',
+      },
+    ],
+  }),
+
+  blockStorageMetricCriteria.build({
+    label: 'Volume Write IOPS',
+    metric: 'volume_write_iops',
+    unit: 'Count',
+    aggregate_function: 'max',
+    operator: 'gt',
+    threshold: 2500,
+    dimension_filters: [
+      {
+        label: 'region',
+        dimension_label: 'region',
+        operator: 'eq',
+        value: 'us-central',
+      },
+    ],
+  }),
+];
+
+export const firewallNodebalancerMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Ingress Packets Dropped  (Node Balancer)',
+    metric: 'nb_ingress_packets_dropped',
+    unit: 'packets/s',
+    aggregate_function: 'sum',
+    operator: 'gt',
+    threshold: 1000,
+    dimension_filters: [
+      {
+        label: 'NodeBalancer',
+        dimension_label: 'nodebalancer_id',
+        operator: 'in',
+        value: '333',
+      },
+    ],
+  });

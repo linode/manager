@@ -1,38 +1,29 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsUnassignModal } from './PlacementGroupsUnassignModal';
 
 const queryMocks = vi.hoisted(() => ({
-  useLinodeQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
     useParams: queryMocks.useParams,
-  };
-});
-
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
-  return {
-    ...actual,
-    useLinodeQuery: queryMocks.useLinodeQuery,
+    useSearch: queryMocks.useSearch,
   };
 });
 
 describe('PlacementGroupsUnassignModal', () => {
   it('should render and have the proper content and CTAs', () => {
-    queryMocks.useLinodeQuery.mockReturnValue({
-      data: linodeFactory.build({
-        id: 1,
-        label: 'test-linode',
-      }),
+    const linode = linodeFactory.build({
+      id: 1,
+      label: 'test-linode',
     });
     queryMocks.useParams.mockReturnValue({
       id: '1',
@@ -41,9 +32,11 @@ describe('PlacementGroupsUnassignModal', () => {
 
     const { getByLabelText, getByRole } = renderWithTheme(
       <PlacementGroupsUnassignModal
+        isFetching={false}
         onClose={() => null}
         open
-        selectedLinode={undefined}
+        selectedLinode={linode}
+        selectedLinodeError={null}
       />
     );
 

@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsCreateDrawer } from './PlacementGroupsCreateDrawer';
@@ -21,8 +20,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
@@ -46,7 +45,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(radioInputs[0]).toBeChecked();
   });
 
-  it('Placement Group Type select should have the correct options', async () => {
+  it('Placement Group Type select should have the correct options', () => {
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
@@ -68,9 +67,8 @@ describe('PlacementGroupsCreateDrawer', () => {
         {...commonProps}
       />,
       {
-        MemoryRouter: {
-          initialEntries: ['/linodes/create'],
-        },
+        initialRoute: '/linodes/create',
+        initialEntries: ['/linodes/create'],
       }
     );
 
@@ -80,12 +78,8 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should call the mutation when the form is submitted', async () => {
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-      getByRole,
-      getByText,
-    } = renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
+    const { getByLabelText, getByPlaceholderText, getByRole, getByText } =
+      renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
 
     fireEvent.change(getByLabelText('Label'), {
       target: { value: 'my-label' },
@@ -107,38 +101,11 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        placement_group_type: 'anti_affinity:local',
-        placement_group_policy: 'strict',
         label: 'my-label',
+        placement_group_policy: 'strict',
+        placement_group_type: 'anti_affinity:local',
         region: 'us-east',
       });
-    });
-  });
-
-  it('should display an error message if the region has reached capacity', async () => {
-    queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
-      data: [placementGroupFactory.build({ region: 'us-west' })],
-    });
-    const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <PlacementGroupsCreateDrawer {...commonProps} />
-    );
-
-    const regionSelect = getByPlaceholderText('Select a Region');
-    fireEvent.focus(regionSelect);
-    fireEvent.change(regionSelect, {
-      target: { value: regionWithoutCapacity },
-    });
-    await waitFor(() => {
-      expect(getByText(regionWithoutCapacity)).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        getByText(
-          'You’ve reached the limit of placement groups you can create in this region.'
-        )
-      ).toBeInTheDocument();
     });
   });
 });

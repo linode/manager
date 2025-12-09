@@ -1,6 +1,5 @@
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
-
-import { CircleProgress } from 'src/components/CircleProgress';
 
 interface Props {
   /**

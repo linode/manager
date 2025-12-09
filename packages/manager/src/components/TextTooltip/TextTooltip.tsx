@@ -1,18 +1,13 @@
+import { Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-
-import type { SxProps } from '@mui/material';
+import type { TypographyProps } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
-import type { TypographyProps } from 'src/components/Typography';
 
 export interface TextTooltipProps {
-  /**
-   * Props to pass to the Popper component
-   */
-  PopperProps?: TooltipProps['PopperProps'];
   /**
    * The data-qa-tooltip attribute for the tooltip.
    * Defaults to the tooltip title, but will be undefined if the title is a JSX element.
@@ -29,8 +24,12 @@ export interface TextTooltipProps {
    * @default bottom
    */
   placement?: TooltipProps['placement'];
+  /**
+   * Props to pass to the Popper component
+   */
+  PopperProps?: TooltipProps['PopperProps'];
   /** Optional custom styles */
-  sxTypography?: SxProps;
+  sxTypography?: SxProps<Theme>;
   /** The text to display inside the tooltip */
   tooltipText: JSX.Element | string;
   /**
@@ -57,6 +56,9 @@ export const TextTooltip = (props: TextTooltipProps) => {
 
   return (
     <StyledRootTooltip
+      data-qa-tooltip={dataQaTooltip}
+      enterTouchDelay={0}
+      placement={placement ? placement : 'bottom'}
       PopperProps={{
         ...PopperProps,
         sx: {
@@ -66,9 +68,6 @@ export const TextTooltip = (props: TextTooltipProps) => {
           },
         },
       }}
-      data-qa-tooltip={dataQaTooltip}
-      enterTouchDelay={0}
-      placement={placement ? placement : 'bottom'}
       tabIndex={0}
       title={tooltipText}
     >

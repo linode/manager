@@ -1,6 +1,6 @@
-import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
-
 import { reportException } from 'src/exceptionReporting';
+
+import type { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 
 export const parseMaintenanceStartTime = (startTime?: null | string) => {
   if (!startTime) {
@@ -26,16 +26,16 @@ export type ExtendedStatus = 'busy' | 'maintenance' | LinodeStatus;
 // Given a Linode's status, assign it a priority so the "Status" column can be sorted in this way.
 export const statusToPriority = (status: ExtendedStatus): number => {
   switch (status) {
-    case 'maintenance':
-      return 1;
-    case 'stopped':
-      return 2;
     case 'busy':
       return 3;
-    case 'running':
-      return 4;
+    case 'maintenance':
+      return 1;
     case 'offline':
       return 5;
+    case 'running':
+      return 4;
+    case 'stopped':
+      return 2;
     default:
       // All long-running statuses ("resizing", "cloning", etc.) are given priority 3.
       return 3;
@@ -56,9 +56,11 @@ export const getLinodeIconStatus = (status: LinodeStatus) => {
 export const getVPCsFromLinodeConfigs = (configs: Config[]): number[] => {
   const vpcIds = new Set<number>();
   for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.purpose === 'vpc' && linodeInterface.vpc_id) {
-        vpcIds.add(linodeInterface.vpc_id);
+    if (config.interfaces) {
+      for (const linodeInterface of config.interfaces) {
+        if (linodeInterface.purpose === 'vpc' && linodeInterface.vpc_id) {
+          vpcIds.add(linodeInterface.vpc_id);
+        }
       }
     }
   }

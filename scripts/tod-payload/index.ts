@@ -6,6 +6,20 @@ import { program } from 'commander';
 import * as fs from 'fs/promises';
 import { resolve } from 'path';
 
+/**
+ * Encode a string to base64, accounting for UTF-8 characters.
+ */
+const b64EncodeUnicode = (str: string) => {
+  // Adapted from: https://stackoverflow.com/a/30106551
+  return btoa(
+      encodeURIComponent(str)
+        .replace(
+          /%([0-9A-F]{2})/g,
+          (_match, p1: string) => {
+          return String.fromCharCode(Number(`0x${p1}`));
+  }));
+}
+
 program
   .name('tod-payload')
   .description('Output TOD test result payload')
@@ -17,14 +31,14 @@ program
   .option('-v, --appVersion <str>', 'Application version')
   .option('-t, --appTeam <str>', 'Application team name')
   .option('-f, --fail', 'Treat payload as failure')
-  .option('-t, --tag <str>', 'Optional tag for run')
+  .option('-T, --tag <str>', 'Optional tag for run')
 
   .action((junitPath: string) => {
     return main(junitPath);
   });
 
 const main = async (junitPath: string) => {
-  const resolvedJunitPath = resolve(junitPath);
+  const resolvedJunitPath = resolve(import.meta.dirname, '..', '..', junitPath);
 
   // Create an array of absolute file paths to JUnit XML report files.
   // Account for cases where `resolvedJunitPath` is a path to a directory
@@ -48,6 +62,7 @@ const main = async (junitPath: string) => {
     return fs.readFile(junitFile, 'utf8');
   }));
 
+
   const payload = JSON.stringify({
     team: program.opts()['appTeam'],
     name: program.opts()['appName'],
@@ -57,7 +72,7 @@ const main = async (junitPath: string) => {
     pass: !program.opts()['fail'],
     tag: !!program.opts()['tag'] ? program.opts()['tag'] : undefined,
     xunitResults: junitContents.map((junitContent) => {
-      return btoa(junitContent);
+      return b64EncodeUnicode(junitContent);
     }),
   });
 

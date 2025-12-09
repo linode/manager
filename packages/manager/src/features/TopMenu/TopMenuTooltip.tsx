@@ -1,6 +1,6 @@
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
-
-import { Tooltip } from 'src/components/Tooltip';
+import type { JSX } from 'react';
 
 import type { Theme } from '@mui/material';
 
@@ -24,12 +24,12 @@ export const TopMenuTooltip = React.memo(({ children, title }: Props) => {
 });
 
 export const topMenuIconButtonSx = (theme: Theme) => ({
+  '&:active': {
+    color: theme.tokens.component.GlobalHeader.Icon.Active,
+  },
   '&:hover, &:focus': {
-    color: '#606469',
+    color: theme.tokens.component.GlobalHeader.Icon.Hover,
   },
-  color: '#c9c7c7',
-  height: `50px`,
-  [theme.breakpoints.down('sm')]: {
-    padding: 1,
-  },
+  color: theme.tokens.component.GlobalHeader.Icon.Default,
+  padding: theme.tokens.spacing.S8,
 });

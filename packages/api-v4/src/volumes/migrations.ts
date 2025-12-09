@@ -1,6 +1,7 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { VolumesMigrationQueue } from './types';
+
+import type { VolumesMigrationQueue } from './types';
 
 /**
  * getVolumesMigrationQueue
@@ -11,9 +12,9 @@ import { VolumesMigrationQueue } from './types';
 export const getVolumesMigrationQueue = (region: string) =>
   Request<VolumesMigrationQueue>(
     setURL(
-      `${BETA_API_ROOT}/regions/${encodeURIComponent(region)}/migration-queue`
+      `${BETA_API_ROOT}/regions/${encodeURIComponent(region)}/migration-queue`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -27,6 +28,6 @@ export const migrateVolumes = (volumes: number[]) => {
   return Request<{}>(
     setURL(`${BETA_API_ROOT}/volumes/migrate`),
     setMethod('POST'),
-    setData({ volumes })
+    setData({ volumes }),
   );
 };

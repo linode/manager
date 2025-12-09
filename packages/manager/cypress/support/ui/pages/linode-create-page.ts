@@ -22,14 +22,12 @@ export const linodeCreatePage = {
   checkEUAgreements: () => {
     cy.get('body').then(($body) => {
       if ($body.find('div[data-testid="eu-agreement-checkbox"]').length > 0) {
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.findAllByText('EU Standard Contractual Clauses', {
           exact: false,
         }).should('be.visible');
         // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.get('[data-testid="eu-agreement-checkbox"]')
           .within(() => {
-            // eslint-disable-next-line cypress/unsafe-to-chain-command
             cy.get('[id="gdpr-checkbox"]').click();
           })
           .click();
@@ -126,5 +124,30 @@ export const linodeCreatePage = {
     cy.findByLabelText('Root Password').as('rootPasswordField').click();
 
     cy.get('@rootPasswordField').type(linodePassword, { log: false });
+  },
+
+  /**
+   * Select the Linode Interfaces Type.
+   */
+  selectLinodeInterfacesType: () => {
+    cy.findByText('Linode Interfaces').click();
+  },
+
+  /**
+   * Select the Legacy Interfaces Type.
+   */
+  selectLegacyConfigInterfacesType: () => {
+    cy.findByText('Configuration Profile Interfaces (Legacy)').click();
+  },
+
+  /**
+   * Select the interfaces' card.
+   *
+   * @param title - Interfaces' card title to select.
+   */
+  selectInterfaceCard: (title: string) => {
+    cy.get(`[data-qa-select-card-heading="${title}"]`)
+      .should('be.visible')
+      .click();
   },
 };

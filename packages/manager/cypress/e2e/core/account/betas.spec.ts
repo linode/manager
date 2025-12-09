@@ -3,10 +3,13 @@
  */
 
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { ui } from 'support/ui';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 
 // TODO Delete feature flag mocks when feature flag is removed.
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('Betas landing page', () => {
   /*
    * - Confirms that Betas nav item is present when feature is enabled.
@@ -26,7 +29,11 @@ describe('Betas landing page', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@getFeatureFlags');
 
-    ui.nav.findItemByTitle('Betas').should('be.visible').click();
+    ui.nav
+      .findItemByTitle('Betas')
+      .scrollIntoView()
+      .should('be.visible')
+      .click();
 
     cy.url().should('endWith', '/betas');
 

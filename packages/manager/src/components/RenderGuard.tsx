@@ -1,7 +1,6 @@
+import { getDisplayName } from '@linode/utilities';
 import { equals } from 'ramda';
 import * as React from 'react';
-
-import { getDisplayName } from 'src/utilities/getDisplayName';
 
 export interface RenderGuardProps {
   updateFor?: any[];
@@ -12,6 +11,8 @@ export const RenderGuard = <P extends {}>(
   Component: React.ComponentType<P & RenderGuardProps>
 ) => {
   class ComponentWithRenderGuard extends React.Component<P & RenderGuardProps> {
+    static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
+
     render() {
       // cast of this.props to any needed because of
       // https://github.com/Microsoft/TypeScript/issues/17281
@@ -31,8 +32,6 @@ export const RenderGuard = <P extends {}>(
       // if updateFor isn't provided, always update (this is React's default behavior)
       return true;
     }
-
-    static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
   }
 
   return ComponentWithRenderGuard as React.ComponentType<P & RenderGuardProps>;

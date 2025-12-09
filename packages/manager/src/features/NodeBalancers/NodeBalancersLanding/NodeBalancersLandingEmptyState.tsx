@@ -1,11 +1,11 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -16,11 +16,11 @@ import {
 } from './NodeBalancersLandingEmptyStateData';
 
 export const NodeBalancerLandingEmptyState = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_nodebalancers',
-  });
+  const { data: permissions } = usePermissions('account', [
+    'create_nodebalancer',
+  ]);
 
   return (
     <React.Fragment>
@@ -29,14 +29,16 @@ export const NodeBalancerLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Create NodeBalancer',
-            disabled: isRestricted,
+            disabled: !permissions.create_nodebalancer,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',
                 category: linkAnalyticsEvent.category,
                 label: 'Create NodeBalancer',
               });
-              push('/nodebalancers/create');
+              navigate({
+                to: '/nodebalancers/create',
+              });
             },
             tooltipText: getRestrictedResourceText({
               action: 'create',
@@ -47,7 +49,7 @@ export const NodeBalancerLandingEmptyState = () => {
         ]}
         gettingStartedGuidesData={gettingStartedGuides}
         headers={headers}
-        icon={NodeBalancer}
+        icon={NetworkIcon}
         linkAnalyticsEvent={linkAnalyticsEvent}
         youtubeLinkData={youtubeLinkData}
       />

@@ -1,25 +1,21 @@
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { matchPath } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
+import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
+import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { BucketAccess } from './BucketAccess';
 
-import type { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
-import type { ComponentType, LazyExoticComponent } from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
-
-const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
+const ObjectList = React.lazy(() =>
   import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))
 );
 const BucketSSL = React.lazy(() =>
@@ -27,79 +23,43 @@ const BucketSSL = React.lazy(() =>
     default: module.BucketSSL,
   }))
 );
-const BucketProperties = React.lazy(() =>
-  import('./BucketProperties').then((module) => ({
-    default: module.BucketProperties,
-  }))
-);
 
-interface MatchProps {
-  bucketName: string;
-  clusterId: ObjectStorageClusterID;
-}
+export const BucketDetailLanding = React.memo(() => {
+  const { bucketName, clusterId } = useParams({
+    from: '/object-storage/buckets/$clusterId/$bucketName',
+  });
 
-type Props = RouteComponentProps<MatchProps>;
-
-export const BucketDetailLanding = React.memo((props: Props) => {
-  const { data: account } = useAccount();
-  const flags = useFlags();
-
-  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
-    'Object Storage Endpoint Types',
-    Boolean(flags.objectStorageGen2?.enabled),
-    account?.capabilities ?? []
-  );
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const { data: bucketsData } = useObjectStorageBuckets(
     isObjectStorageGen2Enabled
   );
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-  const { bucketName, clusterId } = props.match.params;
-
   const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
 
   const { endpoint_type } = bucket ?? {};
 
-  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type === 'E3';
+  const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
 
-  const tabs = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: `${props.match.url}/objects`,
       title: 'Objects',
+      to: `/object-storage/buckets/$clusterId/$bucketName/objects`,
     },
     {
-      routeName: `${props.match.url}/access`,
       title: 'Access',
+      to: `/object-storage/buckets/$clusterId/$bucketName/access`,
     },
-    ...(flags.objectStorageGen2?.enabled
-      ? [
-          {
-            routeName: `${props.match.url}/properties`,
-            title: 'Properties',
-          },
-        ]
-      : []),
-    ...(!isSSLEnabled
-      ? [
-          {
-            routeName: `${props.match.url}/ssl`,
-            title: 'SSL/TLS',
-          },
-        ]
-      : []),
-  ];
-
-  const [index, setIndex] = React.useState(
-    tabs.findIndex((tab) => matches(tab.routeName)) || 0
-  );
-
-  const handleTabChange = (index: number) => {
-    setIndex(index);
-    props.history.push(tabs[index].routeName);
-  };
+    {
+      hide: !bucketsData || isGen2Endpoint,
+      title: 'SSL/TLS',
+      to: `/object-storage/buckets/$clusterId/$bucketName/ssl`,
+    },
+    {
+      title: 'Metrics',
+      to: `/object-storage/buckets/$clusterId/$bucketName/metrics`,
+    },
+  ]);
 
   return (
     <>
@@ -118,15 +78,16 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         // Purposefully not using the title prop here because we want to use the `bucketName` override.
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
+        spacingBottom={4}
       />
 
-      <Tabs index={index} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} endpointType={endpoint_type} />
+              <ObjectList />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <BucketAccess
@@ -135,13 +96,18 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            {flags.objectStorageGen2?.enabled && bucket && (
+            {!isGen2Endpoint && (
               <SafeTabPanel index={2}>
-                <BucketProperties bucket={bucket} />
+                <BucketSSL bucketName={bucketName} clusterId={clusterId} />
               </SafeTabPanel>
             )}
-            <SafeTabPanel index={tabs.length - 1}>
-              <BucketSSL bucketName={bucketName} clusterId={clusterId} />
+            <SafeTabPanel index={isGen2Endpoint ? 2 : 3}>
+              <CloudPulseDashboardWithFilters
+                region={bucket?.region}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                resource={bucket?.hostname!}
+                serviceType="objectstorage"
+              />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
@@ -151,3 +117,5 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 });
 
 export default BucketDetailLanding;
+
+BucketDetailLanding.displayName = 'BucketDetailLanding';

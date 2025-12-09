@@ -1,54 +1,54 @@
 export interface ManagedServiceMonitor {
-  id: number;
-  label: string;
-  created: string;
-  updated: string;
-  status: MonitorStatus;
-  service_type: ServiceType;
-  timeout: number;
-  region: string | null;
-  credentials: number[]; // @todo
   address: string;
   body: string;
-  notes: string;
   consultation_group: string; // deprecated but still returned by API
-}
-
-export type MonitorStatus = 'pending' | 'disabled' | 'ok' | 'problem';
-
-export type ServiceType = 'url' | 'tcp';
-
-export interface ManagedLinodeSetting {
+  created: string;
+  credentials: number[]; // @todo
   id: number;
   label: string;
+  notes: string;
+  region: null | string;
+  service_type: ServiceType;
+  status: MonitorStatus;
+  timeout: number;
+  updated: string;
+}
+
+export type MonitorStatus = 'disabled' | 'ok' | 'pending' | 'problem';
+
+export type ServiceType = 'tcp' | 'url';
+
+export interface ManagedLinodeSetting {
   group: string;
+  id: number;
+  label: string;
   ssh: ManagedSSHSetting;
 }
 
 export interface ManagedSSHSetting {
   access: boolean;
-  user: string;
   ip: string;
   port: number;
+  user: string;
 }
 
 export interface ManagedCredential {
   id: number;
-  last_decrypted: string | null;
   label: string;
+  last_decrypted: null | string;
 }
 
 export interface ManagedContact {
+  email: string;
+  group: null | string;
   id: number;
   name: string;
-  email: string;
   phone: ManagedContactPhone;
-  group: string | null;
   updated: string;
 }
 export interface ManagedContactPhone {
-  primary?: string | null;
-  secondary?: string | null;
+  primary?: null | string;
+  secondary?: null | string;
 }
 
 export interface ManagedSSHPubKey {
@@ -56,14 +56,14 @@ export interface ManagedSSHPubKey {
 }
 
 export interface ManagedServicePayload {
-  label: string;
-  service_type: ServiceType;
   address: string;
-  timeout: number;
-  notes?: string;
   body?: string;
   consultation_group?: string;
   credentials?: number[];
+  label: string;
+  notes?: string;
+  service_type: ServiceType;
+  timeout: number;
 }
 
 export interface CredentialPayload {
@@ -83,17 +83,17 @@ export interface UpdatePasswordPayload {
 }
 
 export interface ContactPayload {
-  name: string;
   email: string;
+  group?: null | string;
+  name: string;
   phone?: ManagedContactPhone;
-  group?: string | null;
 }
 
 export interface ManagedIssue {
-  id: number;
-  services: number[];
   created: string;
   entity: IssueEntity;
+  id: number;
+  services: number[];
 }
 
 // This is much like a support ticket but it's a special case so here's a special type:
@@ -110,8 +110,8 @@ export interface DataSeries {
 }
 
 export interface ManagedStatsData {
-  disk: DataSeries[];
   cpu: DataSeries[];
+  disk: DataSeries[];
   net_in: DataSeries[];
   net_out: DataSeries[];
   swap: DataSeries[];

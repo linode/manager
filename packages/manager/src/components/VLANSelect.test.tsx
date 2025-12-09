@@ -3,10 +3,10 @@ import React from 'react';
 
 import { VLANFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VLANSelect, getVLANSelectFilter } from './VLANSelect';
+import { getVLANSelectFilter, VLANSelect } from './VLANSelect';
 
 describe('VLANSelect', () => {
   it('should render a default "VLAN" label', () => {
@@ -66,6 +66,14 @@ describe('VLANSelect', () => {
     await userEvent.click(vlanOption);
 
     expect(onChange).toHaveBeenCalledWith(vlan.label);
+  });
+
+  it('should show the `value` if one is provided', () => {
+    const { getByDisplayValue } = renderWithTheme(
+      <VLANSelect value="my-vlan-label" />
+    );
+
+    expect(getByDisplayValue('my-vlan-label')).toBeVisible();
   });
 });
 

@@ -1,17 +1,17 @@
+import {
+  useNotificationsQuery,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import { LinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
-import { path } from 'ramda';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
@@ -50,77 +50,76 @@ const formatNotificationForDisplay = (
   id: `notification-${idx}`,
 });
 
-export const useFormattedNotifications = (): NotificationCenterNotificationsItem[] => {
-  const notificationContext = React.useContext(_notificationContext);
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
+export const useFormattedNotifications =
+  (): NotificationCenterNotificationsItem[] => {
+    const notificationContext = React.useContext(_notificationContext);
+    const { dismissNotifications, hasDismissedNotifications } =
+      useDismissibleNotifications();
 
-  const { data: regions } = useRegionsQuery();
-  const { data: profile } = useProfile();
-  const { data: notifications } = useNotificationsQuery();
+    const { data: regions } = useRegionsQuery();
+    const { data: profile } = useProfile();
+    const { data: notifications } = useNotificationsQuery();
 
-  const volumeMigrationScheduledIsPresent = notifications?.some(
-    (notification) =>
-      notification.type === ('volume_migration_scheduled' as NotificationType)
-  );
-
-  const dayOfMonth = DateTime.local().day;
-
-  const handleClose = () => {
-    dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
-    notificationContext.closeMenu();
-  };
-
-  const filteredNotifications = notifications?.filter((thisNotification) => {
-    /**
-     * Don't show balance overdue notifications at the beginning of the month
-     * to avoid causing anxiety if an automatic payment takes time to process.
-     * This is a temporary hack; customers can have their payment grace period extended
-     * to more than 3 days, and using this method also means that if you're more than
-     * a month overdue the notification will disappear for three days.
-     *
-     * Also filter out volume_migration_scheduled notifications, since those will be condensed into a single customized one.
-     */
-    return (
-      !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
-      !['volume_migration_imminent', 'volume_migration_scheduled'].includes(
-        thisNotification.type
-      )
+    const volumeMigrationScheduledIsPresent = notifications?.some(
+      (notification) =>
+        notification.type === ('volume_migration_scheduled' as NotificationType)
     );
-  });
 
-  if (volumeMigrationScheduledIsPresent && filteredNotifications) {
-    filteredNotifications.push({
-      body: null,
-      entity: null,
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
-      message:
-        'You have pending volume migrations. Check the maintenance page for more details.',
-      severity: 'major',
-      type: 'volume_migration_scheduled',
-      until: null,
-      when: null,
+    const dayOfMonth = DateTime.local().day;
+
+    const handleClose = () => {
+      dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
+      notificationContext.closeMenu();
+    };
+
+    const filteredNotifications = notifications?.filter((thisNotification) => {
+      /**
+       * Don't show balance overdue notifications at the beginning of the month
+       * to avoid causing anxiety if an automatic payment takes time to process.
+       * This is a temporary hack; customers can have their payment grace period extended
+       * to more than 3 days, and using this method also means that if you're more than
+       * a month overdue the notification will disappear for three days.
+       *
+       * Also filter out volume_migration_scheduled notifications, since those will be condensed into a single customized one.
+       */
+      return (
+        !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
+        !['volume_migration_imminent', 'volume_migration_scheduled'].includes(
+          thisNotification.type
+        )
+      );
     });
-  }
 
-  return (
-    filteredNotifications?.map((notification, idx) =>
-      formatNotificationForDisplay(
-        interceptNotification(
-          notification,
+    if (volumeMigrationScheduledIsPresent && filteredNotifications) {
+      filteredNotifications.push({
+        body: null,
+        entity: null,
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        message:
+          'You have pending volume migrations. Check the maintenance page for more details.',
+        severity: 'major',
+        type: 'volume_migration_scheduled',
+        until: null,
+        when: null,
+      });
+    }
+
+    return (
+      filteredNotifications?.map((notification, idx) =>
+        formatNotificationForDisplay(
+          interceptNotification(
+            notification,
+            handleClose,
+            regions ?? [],
+            profile
+          ),
+          idx,
           handleClose,
-          regions ?? [],
-          profile
-        ),
-        idx,
-        handleClose,
-        !hasDismissedNotifications([notification], 'notificationMenu')
-      )
-    ) ?? []
-  );
-};
+          !hasDismissedNotifications([notification], 'notificationMenu')
+        )
+      ) ?? []
+    );
+  };
 
 /**
  * This function intercepts the notification for further processing and formatting. Depending on the notification type,
@@ -178,10 +177,7 @@ const interceptNotification = (
     notification.entity?.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
-    const linodeAttachedToNotification: string | undefined = path(
-      ['label'],
-      notification.entity
-    );
+    const linodeAttachedToNotification = notification.entity.label;
 
     const jsx = (
       <Typography>
@@ -193,7 +189,7 @@ const interceptNotification = (
         </Link>{' '}
         resides on a host that is pending critical maintenance. You should have
         received a{' '}
-        <Link onClick={onClose} to={'/support/tickets?type=open'}>
+        <Link onClick={onClose} to={'/support/tickets/open'}>
           support ticket
         </Link>{' '}
         that details how you will be affected. Please see the aforementioned
@@ -386,12 +382,12 @@ const ComplianceNotification = () => {
       Please review the compliance update for guidance regarding the EU Standard
       Contractual Clauses and its application to users located in Europe as well
       as deployments in Linode’s London and Frankfurt data centers
-      <StyledLinkButton
+      <LinkButton
         onClick={() => complianceModelContext.open()}
         sx={{ minHeight: 0 }}
       >
         Review compliance update.
-      </StyledLinkButton>
+      </LinkButton>
     </Typography>
   );
 };

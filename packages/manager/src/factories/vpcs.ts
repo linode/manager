@@ -1,5 +1,6 @@
-import { VPC } from '@linode/api-v4/lib/vpcs/types';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
+
+import type { VPC, VPCIP } from '@linode/api-v4';
 
 export const vpcFactory = Factory.Sync.makeFactory<VPC>({
   created: '2023-07-12T16:08:53',
@@ -9,4 +10,48 @@ export const vpcFactory = Factory.Sync.makeFactory<VPC>({
   region: 'us-east',
   subnets: [],
   updated: '2023-07-12T16:08:53',
+});
+
+export const vpcIPv4Factory = Factory.Sync.makeFactory<VPCIP>({
+  active: true,
+  address: '192.0.2.141',
+  address_range: null,
+  config_id: Factory.each((i) => i),
+  gateway: '192.0.2.1',
+  interface_id: Factory.each((i) => i),
+  ipv6_addresses: [],
+  ipv6_is_public: null,
+  ipv6_range: null,
+  linode_id: Factory.each((i) => i),
+  nat_1_1: '192.0.2.97',
+  nodebalancer_id: null,
+  prefix: 24,
+  region: 'us-east',
+  subnet_id: Factory.each((i) => i),
+  subnet_mask: '192.0.2.3',
+  vpc_id: Factory.each((i) => i),
+});
+
+export const vpcIPv6Factory = Factory.Sync.makeFactory<VPCIP>({
+  active: true,
+  address: null,
+  address_range: null,
+  config_id: Factory.each((i) => i),
+  gateway: null,
+  interface_id: Factory.each((i) => i),
+  ipv6_addresses: [
+    {
+      slaac_address: '2001:DB8::0000',
+    },
+  ],
+  ipv6_is_public: null,
+  ipv6_range: '2600:3c11:e41c:1::/64',
+  linode_id: Factory.each((i) => i),
+  nat_1_1: '',
+  nodebalancer_id: null,
+  prefix: 24,
+  region: 'us-east',
+  subnet_id: Factory.each((i) => i),
+  subnet_mask: '',
+  vpc_id: Factory.each((i) => i),
 });

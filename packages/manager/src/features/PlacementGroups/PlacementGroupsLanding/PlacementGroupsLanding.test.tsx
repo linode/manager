@@ -7,11 +7,20 @@ import { PlacementGroupsLanding } from './PlacementGroupsLanding';
 import { headers } from './PlacementGroupsLandingEmptyStateData';
 
 const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({}),
   usePlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     usePlacementGroupsQuery: queryMocks.usePlacementGroupsQuery,
@@ -19,27 +28,31 @@ vi.mock('src/queries/placementGroups', async () => {
 });
 
 describe('PlacementGroupsLanding', () => {
-  it('renders loading state', () => {
+  it('renders loading state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       isLoading: true,
     });
 
-    const { getByRole } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByRole } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByRole('progressbar')).toBeInTheDocument();
   });
 
-  it('renders error state', () => {
+  it('renders error state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       error: [{ reason: 'Not found' }],
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(/not found/i)).toBeInTheDocument();
   });
 
-  it('renders docs link and create button', () => {
+  it('renders docs link and create button', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [
@@ -51,13 +64,15 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(/create placement group/i)).toBeInTheDocument();
     expect(getByText(/docs/i)).toBeInTheDocument();
   });
 
-  it('renders placement groups', () => {
+  it('renders placement groups', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [
@@ -72,13 +87,15 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(/group 1/i)).toBeInTheDocument();
     expect(getByText(/group 2/i)).toBeInTheDocument();
   });
 
-  it('should render placement group landing with empty state', () => {
+  it('should render placement group landing with empty state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [],
@@ -86,12 +103,14 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText(headers.description)).toBeInTheDocument();
   });
 
-  it('should render placement group Getting Started Guides on landing page with empty state', () => {
+  it('should render placement group Getting Started Guides on landing page with empty state', async () => {
     queryMocks.usePlacementGroupsQuery.mockReturnValue({
       data: {
         data: [],
@@ -99,7 +118,9 @@ describe('PlacementGroupsLanding', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<PlacementGroupsLanding />);
+    const { getByText } = renderWithTheme(<PlacementGroupsLanding />, {
+      initialRoute: '/placement-groups',
+    });
 
     expect(getByText('Getting Started Guides')).toBeInTheDocument();
   });

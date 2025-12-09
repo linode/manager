@@ -1,7 +1,5 @@
-import type { Grant, Grants } from '@linode/api-v4';
-import { profileFactory } from '@src/factories';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
   mockGetUser,
@@ -11,10 +9,13 @@ import {
   mockUpdateUser,
   mockUpdateUserGrants,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
 import { randomLabel } from 'support/util/random';
+
+import type { Grant, Grants } from '@linode/api-v4';
 
 // Message shown when user has unrestricted account access.
 const unrestrictedAccessMessage =
@@ -119,6 +120,7 @@ const entityLabelsFromGrants = (grants: Grants) => {
     ...grants.image,
     ...grants.linode,
     ...grants.longview,
+    ...grants.lkecluster,
     ...grants.nodebalancer,
     ...grants.stackscript,
     ...grants.volume,
@@ -144,7 +146,7 @@ const assertAllGlobalPermissions = (enabled: boolean) => {
  * @param billingAccess - Billing access to select.
  */
 const selectBillingAccess = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')
@@ -158,7 +160,7 @@ const selectBillingAccess = (
  * @param billingAccess - Selected billing access to assert.
  */
 const assertBillingAccessSelected = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')
@@ -167,6 +169,13 @@ const assertBillingAccessSelected = (
 };
 
 describe('User permission management', () => {
+  beforeEach(() => {
+    // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: true,
+    }).as('getFeatureFlags');
+  });
+
   /*
    * - Confirms that full account access can be toggled for account users using mock API data.
    * - Confirms that users can navigate to User Permissions pages via Users & Grants page.
@@ -175,8 +184,8 @@ describe('User permission management', () => {
    */
   it('can toggle full account access', () => {
     const mockUser = accountUserFactory.build({
-      username: randomLabel(),
       restricted: false,
+      username: randomLabel(),
     });
 
     const mockUserUpdated = {
@@ -192,7 +201,7 @@ describe('User permission management', () => {
     mockGetUserGrantsUnrestrictedAccess(mockUser.username).as('getUserGrants');
 
     // Navigate to Users & Grants page, find mock user, click its "User Permissions" button.
-    cy.visitWithLogin('/account/users');
+    cy.visitWithLogin('/users');
     cy.wait('@getUsers');
     cy.findByText(mockUser.username)
       .should('be.visible')
@@ -207,16 +216,13 @@ describe('User permission management', () => {
 
     // Confirm that Cloud navigates to the user's permissions page and that user has
     // unrestricted account access.
-    cy.url().should(
-      'endWith',
-      `/account/users/${mockUser.username}/permissions`
-    );
+    cy.url().should('endWith', `/users/${mockUser.username}/permissions`);
     cy.findByText(unrestrictedAccessMessage).should('be.visible');
 
     // Restrict account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUserUpdated);
     mockGetUserGrants(mockUser.username, mockUserGrantsUpdated);
-    cy.findByLabelText('Toggle Full Account Access')
+    cy.get('[data-qa="toggle-full-account-access"]')
       .should('be.visible')
       .click();
 
@@ -250,7 +256,7 @@ describe('User permission management', () => {
     // Re-enable unrestricted account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUser);
     mockGetUserGrantsUnrestrictedAccess(mockUser.username);
-    cy.findByLabelText('Toggle Full Account Access')
+    cy.get('[data-qa="toggle-full-account-access"]')
       .should('be.visible')
       .click();
 
@@ -266,8 +272,8 @@ describe('User permission management', () => {
    */
   it('can update global and specific permissions', () => {
     const mockUser = accountUserFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUserGrants = { ...userPermissionsGrants };
@@ -278,18 +284,20 @@ describe('User permission management', () => {
       ...mockUserGrants,
       global: {
         account_access: 'read_only',
-        cancel_account: true,
-        child_account_access: true,
-        add_domains: true,
         add_databases: true,
+        add_domains: true,
         add_firewalls: true,
         add_images: true,
         add_linodes: true,
+        add_lkes: true,
         add_longview: true,
         add_nodebalancers: true,
+        add_kubernetes: true,
         add_stackscripts: true,
         add_volumes: true,
         add_vpcs: true,
+        cancel_account: true,
+        child_account_access: true,
         longview_subscription: true,
       },
     };
@@ -302,7 +310,7 @@ describe('User permission management', () => {
 
     mockGetUser(mockUser).as('getUser');
     mockGetUserGrants(mockUser.username, mockUserGrants).as('getUserGrants');
-    cy.visitWithLogin(`/account/users/${mockUser.username}/permissions`);
+    cy.visitWithLogin(`/users/${mockUser.username}/permissions`);
     cy.wait(['@getUser', '@getUserGrants']);
 
     mockUpdateUserGrants(mockUser.username, mockUserGrantsUpdatedGlobal).as(
@@ -385,8 +393,8 @@ describe('User permission management', () => {
    */
   it('can reset user permissions changes', () => {
     const mockUser = accountUserFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUserGrants = { ...userPermissionsGrants };
@@ -394,7 +402,7 @@ describe('User permission management', () => {
 
     mockGetUser(mockUser);
     mockGetUserGrants(mockUser.username, mockUserGrants);
-    cy.visitWithLogin(`/account/users/${mockUser.username}/permissions`);
+    cy.visitWithLogin(`/users/${mockUser.username}/permissions`);
 
     // Test reset in Global Permissions section.
     cy.get('[data-qa-global-section]')
@@ -485,9 +493,9 @@ describe('User permission management', () => {
     });
 
     const mockActiveUser = accountUserFactory.build({
-      username: 'unrestricted-child-user',
       restricted: false,
       user_type: 'child',
+      username: 'unrestricted-child-user',
     });
 
     const mockRestrictedUser = {
@@ -505,9 +513,7 @@ describe('User permission management', () => {
     mockGetUserGrants(mockActiveUser.username, mockUserGrants);
     mockGetProfile(mockProfile);
 
-    cy.visitWithLogin(
-      `/account/users/${mockRestrictedUser.username}/permissions`
-    );
+    cy.visitWithLogin(`/users/${mockRestrictedUser.username}/permissions`);
     mockGetUser(mockRestrictedUser);
     mockGetUserGrants(mockRestrictedUser.username, mockUserGrants);
 
@@ -543,8 +549,8 @@ describe('User permission management', () => {
    */
   it('tests the user permissions for a child account viewing a proxy user', () => {
     const mockChildProfile = profileFactory.build({
-      username: 'proxy-user',
       user_type: 'child',
+      username: 'proxy-user',
     });
 
     const mockChildUser = accountUserFactory.build({
@@ -569,16 +575,14 @@ describe('User permission management', () => {
     mockGetUser(mockRestrictedProxyUser);
     mockGetUserGrants(mockRestrictedProxyUser.username, mockUserGrants);
 
-    cy.visitWithLogin(
-      `/account/users/${mockRestrictedProxyUser.username}/permissions`
-    );
+    cy.visitWithLogin(`/users/${mockRestrictedProxyUser.username}/permissions`);
 
     cy.findByText('Parent User Permissions', { exact: false }).should(
       'be.visible'
     );
 
     // Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
-    expect(cy.findByText('User Profile').should('not.exist'));
+    cy.findByText('User Profile').should('not.exist');
 
     cy.get('[data-qa-global-section]')
       .should('be.visible')

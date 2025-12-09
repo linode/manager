@@ -1,18 +1,17 @@
-import { useArgs } from '@storybook/preview-api';
+import { Box } from '@linode/ui';
+import { regions } from '@linode/utilities';
 import React from 'react';
-
-import { regions } from 'src/__data__/regionsData';
-import { Box } from 'src/components/Box';
+import { useArgs } from 'storybook/preview-api';
 
 import { RegionSelect } from './RegionSelect';
 
 import type { RegionSelectProps } from './RegionSelect.types';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<RegionSelectProps> = {
   render: (args) => {
     const SelectWrapper = () => {
-      const [_, updateArgs] = useArgs();
+      const [, updateArgs] = useArgs();
       return (
         <Box sx={{ minHeight: 500 }}>
           <RegionSelect
@@ -33,6 +32,7 @@ const meta: Meta<RegionSelectProps> = {
     disabled: false,
     errorText: '',
     helperText: '',
+    isGeckoLAEnabled: false,
     label: 'Region',
     regions,
     required: true,

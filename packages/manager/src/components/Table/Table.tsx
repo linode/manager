@@ -1,10 +1,15 @@
-import {
-  default as _Table,
-  TableProps as _TableProps,
-} from '@mui/material/Table';
+import { usePreferences } from '@linode/queries';
+import { default as _Table } from '@mui/material/Table';
 import * as React from 'react';
+import { useStyles } from 'tss-react';
+
+import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 import { StyledTableWrapper } from './Table.styles';
+
+import type { TableProps as _TableProps } from '@mui/material/Table';
+
+type SpacingSize = 0 | 8 | 16 | 24;
 
 export interface TableProps extends _TableProps {
   /** Optional additional css class to pass to the component */
@@ -15,10 +20,10 @@ export interface TableProps extends _TableProps {
    */
   colCount?: number;
   /**
-   * Optional boolean to remove the border from the table
+   * Optional boolean to enable or disable nested tables
    * @default false
    */
-  noBorder?: boolean;
+  nested?: boolean;
   /** Optional boolean to remove the overflow from the table */
   noOverflow?: boolean;
   /**
@@ -35,12 +40,17 @@ export interface TableProps extends _TableProps {
    * Optional spacing to add to the bottom of the table
    * @default 0
    */
-  spacingBottom?: 0 | 8 | 16 | 24;
+  spacingBottom?: SpacingSize;
   /**
    * Optional spacing to add to the top of the table
    * @default 0
    */
-  spacingTop?: 0 | 8 | 16 | 24;
+  spacingTop?: SpacingSize;
+  /**
+   * Optional boolean to enable or disable striped rows
+   * @default true
+   */
+  striped?: boolean;
   /** Optional caption to add to the table */
   tableCaption?: string;
   /** Optional additional css class name to pass to the table */
@@ -64,30 +74,40 @@ export interface TableProps extends _TableProps {
  * - **Disclaimer:** The UX team is in the process of assessing the usability of all of the above
  */
 export const Table = (props: TableProps) => {
+  const { cx } = useStyles();
   const {
     className,
     colCount,
-    noBorder,
+    nested = false,
     noOverflow,
     rowCount,
     rowHoverState = true,
     spacingBottom,
     spacingTop,
-    tableClass,
+    striped = true,
+    tableClass = '',
     ...rest
   } = props;
+
+  const { data: tableStripingPreference } = usePreferences(
+    (preferences) => preferences?.isTableStripingEnabled
+  );
+
+  const isTableStripingEnabled =
+    getIsTableStripingEnabled(tableStripingPreference) && striped;
 
   return (
     <StyledTableWrapper
       className={className}
-      noBorder={noBorder}
       noOverflow={noOverflow}
       rowHoverState={rowHoverState}
       spacingBottom={spacingBottom}
       spacingTop={spacingTop}
     >
       <_Table
-        className={tableClass}
+        className={cx(tableClass, {
+          ['MuiTable-zebra']: isTableStripingEnabled && !nested,
+        })}
         {...rest}
         aria-colcount={colCount}
         aria-rowcount={rowCount}

@@ -1,11 +1,7 @@
+import { ActionsPanel, Drawer, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 
 interface MutateInfo {
   disk: null | number;
@@ -94,13 +90,8 @@ export class MutateDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      error,
-      estimatedTimeToUpgradeInMins,
-      handleClose,
-      loading,
-      open,
-    } = this.props;
+    const { error, estimatedTimeToUpgradeInMins, handleClose, loading, open } =
+      this.props;
 
     const { extendedUpgradeInfo } = this.state;
 
@@ -117,12 +108,8 @@ export class MutateDrawer extends React.Component<Props, State> {
           <ul className="nonMUI-list">
             {Object.keys(extendedUpgradeInfo).map(
               (newSpec: keyof typeof extendedUpgradeInfo) => {
-                const {
-                  currentAmount,
-                  label,
-                  newAmount,
-                  unit,
-                } = extendedUpgradeInfo[newSpec];
+                const { currentAmount, label, newAmount, unit } =
+                  extendedUpgradeInfo[newSpec];
 
                 if (newAmount === null) {
                   return null;

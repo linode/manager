@@ -5,6 +5,7 @@ import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { Configs } from './Configs';
+
 import type { ConfigsProps } from './Configs';
 
 const mockHandleSelect = vi.fn();

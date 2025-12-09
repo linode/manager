@@ -1,74 +1,91 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import {
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { Theme } from '@mui/material/styles';
+import type {
   Action,
-  ActionMenu,
   ActionMenuProps,
 } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface FirewallRuleActionMenuProps extends Partial<ActionMenuProps> {
   disabled: boolean;
+  handleCloneFirewallRule?: (idx: number) => void; // Cloning is NOT applicable in the case of ruleset
+  handleDeleteFirewallRule: (idx: number) => void;
+  handleOpenRuleDrawerForEditing?: (idx: number) => void; // Editing is NOT applicable in the case of ruleset
   idx: number;
-  triggerCloneFirewallRule: (idx: number) => void;
-  triggerDeleteFirewallRule: (idx: number) => void;
-  triggerOpenRuleDrawerForEditing: (idx: number) => void;
+  isRuleSetRowEnabled: boolean;
 }
 
 export const FirewallRuleActionMenu = React.memo(
   (props: FirewallRuleActionMenuProps) => {
     const theme = useTheme<Theme>();
-    const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+    const matchesLgDown = useMediaQuery(theme.breakpoints.down('lg'));
+
+    const rulesetEditActionToolTipText =
+      'Edit your custom Rule Set\u2019s label, description, or rules, using the API. Rule Sets that are defined by a managed-service can only be updated by service accounts.';
 
     const {
       disabled,
+      handleCloneFirewallRule,
+      handleDeleteFirewallRule,
+      handleOpenRuleDrawerForEditing,
       idx,
-      triggerCloneFirewallRule,
-      triggerDeleteFirewallRule,
-      triggerOpenRuleDrawerForEditing,
+      isRuleSetRowEnabled,
       ...actionMenuProps
     } = props;
 
     const actions: Action[] = [
       {
-        disabled,
+        disabled: disabled || isRuleSetRowEnabled,
         onClick: () => {
-          triggerOpenRuleDrawerForEditing(idx);
+          handleOpenRuleDrawerForEditing?.(idx);
         },
         title: 'Edit',
+        tooltip: isRuleSetRowEnabled ? rulesetEditActionToolTipText : undefined,
       },
+      ...(!isRuleSetRowEnabled
+        ? [
+            {
+              disabled,
+              onClick: () => {
+                handleCloneFirewallRule?.(idx);
+              },
+              title: 'Clone',
+            },
+          ]
+        : []),
       {
         disabled,
         onClick: () => {
-          triggerCloneFirewallRule(idx);
+          handleDeleteFirewallRule(idx);
         },
-        title: 'Clone',
-      },
-      {
-        disabled,
-        onClick: () => {
-          triggerDeleteFirewallRule(idx);
-        },
-        title: 'Delete',
+        title: isRuleSetRowEnabled ? 'Remove' : 'Delete',
       },
     ];
 
     return (
       <>
-        {!matchesSmDown &&
-          actions.map((action) => {
-            return (
-              <InlineMenuAction
-                actionText={action.title}
-                disabled={action.disabled}
-                key={action.title}
-                onClick={action.onClick}
-              />
-            );
-          })}
-        {matchesSmDown && (
+        {!matchesLgDown && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {actions.map((action) => {
+              return (
+                <InlineMenuAction
+                  actionText={action.title}
+                  disabled={action.disabled}
+                  key={action.title}
+                  onClick={action.onClick}
+                  tooltip={action.tooltip}
+                />
+              );
+            })}
+          </Box>
+        )}
+        {matchesLgDown && (
           <ActionMenu
             actionsList={actions}
             ariaLabel={`Action menu for Firewall Rule`}

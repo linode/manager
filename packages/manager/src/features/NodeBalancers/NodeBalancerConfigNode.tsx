@@ -1,34 +1,47 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Notice,
+  Select,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
-import { Divider } from 'src/components/Divider';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
-import { NodeBalancerConfigNodeFields } from './types';
 
+import type {
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigurationsPermissions,
+} from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
-  configIdx?: number;
-  disabled: boolean;
-  forEdit: boolean;
+  configIdx: number;
+  disallowRemoval: boolean;
+  forEdit?: boolean;
+  hideModeSelect: boolean;
   idx: number;
   node: NodeBalancerConfigNodeFields;
   nodeBalancerRegion?: string;
-  onNodeAddressChange: (nodeIdx: number, value: string) => void;
+  nodeBalancerSubnetId?: number;
+  nodeBalancerVpcId?: number;
+  onNodeAddressChange: (
+    nodeIdx: number,
+    value: string,
+    subnetId?: number
+  ) => void;
   onNodeLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeModeChange: (nodeId: number, mode: NodeBalancerConfigNodeMode) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  permissions?: Partial<Record<NodeBalancerConfigurationsPermissions, boolean>>;
   removeNode: (nodeIndex: number) => void;
 }
 
@@ -52,17 +65,21 @@ export const NodeBalancerConfigNode = React.memo(
   (props: NodeBalancerConfigNodeProps) => {
     const {
       configIdx,
-      disabled,
-      forEdit,
+      permissions,
+      disallowRemoval,
+      hideModeSelect,
       idx,
       node,
       nodeBalancerRegion,
+      nodeBalancerVpcId,
+      nodeBalancerSubnetId,
       onNodeAddressChange,
       onNodeLabelChange,
       onNodeModeChange,
       onNodePortChange,
       onNodeWeightChange,
       removeNode,
+      forEdit,
     } = props;
 
     if (node.modifyStatus === 'delete') {
@@ -75,15 +92,19 @@ export const NodeBalancerConfigNode = React.memo(
       node.errors
     );
 
+    const disabled = forEdit
+      ? !permissions?.update_nodebalancer
+      : !permissions?.create_nodebalancer;
+
     return (
       <React.Fragment>
-        <Grid data-qa-node sx={{ padding: 1 }} xs={12}>
+        <Grid data-qa-node size={12}>
           {idx !== 0 && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Divider
                 style={{
                   marginBottom: 24,
-                  marginTop: forEdit ? 8 : 24,
+                  marginTop: 8,
                 }}
               />
             </Grid>
@@ -95,29 +116,33 @@ export const NodeBalancerConfigNode = React.memo(
           )}
           <Grid container spacing={2}>
             <Grid
-              sx={{
-                '.MuiInputLabel-root': {
-                  marginTop: 0,
-                },
+              size={{
+                lg: 4,
+                sm: 6,
+                xs: 12,
               }}
-              lg={forEdit ? 2 : 4}
-              sm={forEdit ? 4 : 6}
-              xs={12}
             >
               <TextField
                 data-qa-backend-ip-label
                 disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.label}
                 inputId={`node-label-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Label"
+                noMarginTop
                 onChange={onNodeLabelChange}
                 value={node.label}
               />
             </Grid>
             {node.status && (
-              <Grid lg={2} sm={4} xs={6}>
+              <Grid
+                size={{
+                  lg: 2,
+                  sm: 4,
+                  xs: 6,
+                }}
+              >
                 <StyledStatusHeader data-qa-active-checks-header variant="h3">
                   Status
                 </StyledStatusHeader>
@@ -130,30 +155,40 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-        <Grid sx={{ padding: 1 }} xs={12}>
+        <Grid size={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
-            <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
+            <Grid
+              size={{
+                lg: 4,
+                sm: 6,
+                xs: 12,
+              }}
+            >
               <ConfigNodeIPSelect
-                textfieldProps={{
-                  dataAttrs: {
-                    'data-qa-backend-ip-address': true,
-                  },
-                }}
                 disabled={disabled}
                 errorText={nodesErrorMap.address}
                 handleChange={onNodeAddressChange}
                 inputId={`ip-select-node-${configIdx}-${idx}`}
                 nodeAddress={node.address}
                 nodeIndex={idx}
-                selectedRegion={nodeBalancerRegion}
+                region={nodeBalancerRegion}
+                subnetId={nodeBalancerSubnetId}
+                vpcId={nodeBalancerVpcId}
               />
             </Grid>
-            <Grid lg={2} sm={3} xs={6}>
+            <Grid
+              size={{
+                lg: 2,
+                sm: 3,
+                xs: 6,
+              }}
+            >
               <TextField
                 data-qa-backend-ip-port
                 disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.port}
+                inputId={`node-port-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Port"
                 noMarginTop
@@ -162,12 +197,19 @@ export const NodeBalancerConfigNode = React.memo(
                 value={node.port}
               />
             </Grid>
-            <Grid lg={2} sm={3} xs={6}>
+            <Grid
+              size={{
+                lg: 2,
+                sm: 3,
+                xs: 6,
+              }}
+            >
               <TextField
                 data-qa-backend-ip-weight
                 disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={`${configIdx}`}
                 errorText={nodesErrorMap.weight}
+                inputId={`node-weight-${configIdx}-${idx}`}
                 inputProps={{ 'data-node-idx': idx }}
                 label="Weight"
                 noMarginTop
@@ -176,25 +218,38 @@ export const NodeBalancerConfigNode = React.memo(
                 value={node.weight}
               />
             </Grid>
-            {forEdit && (
-              <Grid lg={2} sm={3} xs={6}>
-                <Autocomplete
-                  value={modeOptions.find(
-                    (option) => option.value === node.mode
-                  )}
-                  disableClearable
+            {!hideModeSelect && (
+              <Grid
+                size={{
+                  lg: 2,
+                  sm: 3,
+                  xs: 6,
+                }}
+              >
+                <Select
                   disabled={disabled}
                   errorText={nodesErrorMap.mode}
                   label="Mode"
-                  noMarginTop
                   onChange={(_, option) => onNodeModeChange(idx, option.value)}
                   options={modeOptions}
+                  textFieldProps={{ noMarginTop: true }}
+                  value={
+                    modeOptions.find((option) => option.value === node.mode) ??
+                    modeOptions.find((option) => option.value === 'accept')
+                  }
                 />
               </Grid>
             )}
-            {(forEdit || idx !== 0) && (
-              <Box alignSelf="flex-end" paddingBottom={1}>
-                <Button disabled={disabled} onClick={() => removeNode(idx)}>
+            {!disallowRemoval && (
+              <Box alignSelf="flex-end">
+                <Button
+                  disabled={
+                    forEdit
+                      ? !permissions?.delete_nodebalancer
+                      : !permissions?.create_nodebalancer
+                  }
+                  onClick={() => removeNode(idx)}
+                >
                   Remove
                 </Button>
               </Box>

@@ -1,22 +1,23 @@
-import { BrowserOptions, Event as SentryEvent, init } from '@sentry/react';
+import { deepStringTransform, redactAccessToken } from '@linode/utilities';
+import { init } from '@sentry/react';
 
-import { APP_ROOT, SENTRY_URL } from 'src/constants';
-import { deepStringTransform } from 'src/utilities/deepStringTransform';
-import { redactAccessToken } from 'src/utilities/redactAccessToken';
+import { ENVIRONMENT_NAME, SENTRY_URL } from 'src/constants';
 
 import packageJson from '../package.json';
 
-export const initSentry = () => {
-  const environment = getSentryEnvironment();
+import type { APIError } from '@linode/api-v4';
+import type { ErrorEvent as SentryErrorEvent } from '@sentry/react';
 
+export const initSentry = () => {
   if (SENTRY_URL) {
     init({
       allowUrls: [
-        /** anything from either *.linode.com/* or localhost:3000 */
-        /linode.com{1}/g,
-        /localhost:3000{1}/g,
+        /**
+         * anything from either *linode.com* or *localhost:3000*
+         */
+        'linode.com',
+        'localhost:3000',
       ],
-      autoSessionTracking: false,
       beforeSend,
       denyUrls: [
         // New Relic script
@@ -26,7 +27,7 @@ export const initSentry = () => {
         /^chrome:\/\//i,
       ],
       dsn: SENTRY_URL,
-      environment,
+      environment: ENVIRONMENT_NAME,
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -87,8 +88,15 @@ export const initSentry = () => {
   }
 };
 
-const beforeSend: BrowserOptions['beforeSend'] = (sentryEvent, hint) => {
+export const beforeSend = (
+  sentryEvent: SentryErrorEvent
+): null | SentryErrorEvent => {
   const normalizedErrorMessage = normalizeErrorMessage(sentryEvent.message);
+
+  const userAgent = sentryEvent.request?.headers?.['User-Agent'];
+  if (userAgent?.includes('Catchpoint')) {
+    return null;
+  }
 
   if (
     errorsToIgnore.some((eachRegex) =>
@@ -135,7 +143,10 @@ export const errorsToIgnore: RegExp[] = [
 // actually be something like a (Linode) API Error instead of a string. We need
 // to ensure we're  dealing with strings so we can determine if we should ignore
 // the error, or appropriately report the message to Sentry (i.e. not "<unknown>").
-export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
+type ErrorMessage = (() => void) | [APIError] | object | string | undefined;
+export const normalizeErrorMessage = (
+  sentryErrorMessage: ErrorMessage
+): string => {
   if (typeof sentryErrorMessage === 'string') {
     return sentryErrorMessage;
   }
@@ -155,7 +166,9 @@ export const normalizeErrorMessage = (sentryErrorMessage: any): string => {
   return JSON.stringify(sentryErrorMessage);
 };
 
-const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
+const maybeAddCustomFingerprint = (
+  event: SentryErrorEvent
+): SentryErrorEvent => {
   const fingerprint = Object.keys(customFingerPrintMap).reduce((acc, value) => {
     /** if our sentry error matches one of the keys in the map */
     const exception = event.exception;
@@ -178,7 +191,7 @@ const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
    * add the fingerprint to the Sentry error so same events get
    * grouped together in the Sentry dashboard.
    */
-  return !!fingerprint
+  return fingerprint
     ? {
         ...event,
         fingerprint: [fingerprint],
@@ -203,21 +216,4 @@ const customFingerPrintMap = {
   /** group all local storage errors together */
   localstorage: 'Local Storage Error',
   quotaExceeded: 'Local Storage Error',
-};
-
-/**
- * Derives a environment name from the APP_ROOT environment variable
- * so a Sentry issue is identified by the correct environment name.
- */
-const getSentryEnvironment = () => {
-  if (APP_ROOT === 'https://cloud.linode.com') {
-    return 'production';
-  }
-  if (APP_ROOT.includes('staging')) {
-    return 'staging';
-  }
-  if (APP_ROOT.includes('dev')) {
-    return 'dev';
-  }
-  return 'local';
 };

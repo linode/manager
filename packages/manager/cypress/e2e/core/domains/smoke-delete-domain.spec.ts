@@ -1,12 +1,15 @@
-import { Domain } from '@linode/api-v4';
-import { domainFactory } from '@src/factories';
-import { containsClick } from 'support/helpers';
-import { authenticate } from 'support/api/authentication';
-import { randomDomainName } from 'support/util/random';
 import { createDomain } from '@linode/api-v4/lib/domains';
+import { domainFactory } from '@src/factories';
+import { authenticate } from 'support/api/authentication';
 import { ui } from 'support/ui';
+import { randomDomainName } from 'support/util/random';
+
+import type { Domain } from '@linode/api-v4';
 
 authenticate();
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('Delete a Domain', () => {
   /*
    * - Clicks "Delete" action menu item for domain but cancels operation.
@@ -30,11 +33,14 @@ describe('Delete a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain}`)
+              .findByTitle(`Action menu for Domain ${domain.domain}`)
+              .should('be.visible')
+              .click();
+            ui.actionMenuItem
+              .findByTitle('Delete')
               .should('be.visible')
               .click();
           });
-        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
         // Cancel deletion when prompted to confirm.
         ui.dialog
@@ -54,11 +60,14 @@ describe('Delete a Domain', () => {
           .closest('tr')
           .within(() => {
             ui.actionMenu
-              .findByTitle(`Action menu for Domain ${domain}`)
+              .findByTitle(`Action menu for Domain ${domain.domain}`)
+              .should('be.visible')
+              .click();
+            ui.actionMenuItem
+              .findByTitle('Delete')
               .should('be.visible')
               .click();
           });
-        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
 
         // Confirm deletion.
         ui.dialog
@@ -70,8 +79,9 @@ describe('Delete a Domain', () => {
               .findButtonByTitle('Delete Domain')
               .should('be.visible')
               .should('be.disabled');
+            cy.contains('Domain Name').click();
+            cy.focused().type(domain.domain);
 
-            containsClick('Domain Name').type(domain.domain);
             ui.buttonGroup
               .findButtonByTitle('Delete Domain')
               .should('be.visible')

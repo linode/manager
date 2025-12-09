@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import DashboardCard from './DashboardCard';
@@ -18,6 +18,7 @@ export const StyledOuterContainerGrid = styled(Grid, {
   background: theme.bg.bgPaper,
   flexDirection: 'column',
   margin: '-8px',
+  padding: theme.spacingFunction(12),
   [theme.breakpoints.up('sm')]: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -35,12 +36,3 @@ export const StyledDashboardCard = styled(DashboardCard, {
   },
   width: '100%',
 }));
-
-export const StyledStatusGrid = styled(Grid, { label: 'StyledStatusGrid' })(
-  ({ theme }) => ({
-    position: 'relative',
-    [theme.breakpoints.up('sm')]: {
-      margin: `${theme.spacing(3)} ${theme.spacing(1)} !important`,
-    },
-  })
-);

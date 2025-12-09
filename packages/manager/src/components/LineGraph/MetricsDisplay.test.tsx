@@ -1,10 +1,8 @@
+import { formatPercentage } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import * as React from 'react';
 
-import {
-  MetricsDisplay,
-  metricsBySection,
-} from 'src/components/LineGraph/MetricsDisplay';
-import { formatPercentage } from 'src/utilities/statMetrics';
+import { MetricsDisplay } from 'src/components/LineGraph/MetricsDisplay';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('CPUMetrics', () => {
@@ -88,7 +86,7 @@ describe('CPUMetrics', () => {
       />
     );
 
-    for (const value of ['10.00%', '5.50%', '7.75%']) {
+    for (const value of ['10.00 %', '5.50 %', '7.75 %']) {
       expect(getByText(value)).toBeVisible();
     }
   });
@@ -119,12 +117,50 @@ describe('CPUMetrics', () => {
 });
 
 describe('metrics by section', () => {
-  it('returns expected metric data', () => {
-    const metrics = { average: 5, last: 8, length: 10, max: 10, total: 80 };
-    expect(metricsBySection(metrics)).toHaveLength(3);
-    expect(metricsBySection(metrics)).toBeInstanceOf(Array);
-    expect(metricsBySection(metrics)[0]).toEqual(metrics.max);
-    expect(metricsBySection(metrics)[1]).toEqual(metrics.average);
-    expect(metricsBySection(metrics)[2]).toEqual(metrics.last);
+  const sampleMetrics = { average: 5, last: 8, length: 10, max: 10, total: 80 };
+  const defaultProps = {
+    rows: [
+      {
+        data: sampleMetrics,
+        format: (n: number) => n.toString(),
+        legendColor: 'blue' as const,
+        legendTitle: 'Test Metric',
+      },
+    ],
+  };
+
+  it('renders metric data in correct order and format', () => {
+    renderWithTheme(<MetricsDisplay {...defaultProps} />);
+
+    // Check if headers are rendered in correct order
+    const headers = screen.getAllByRole('columnheader');
+    expect(headers[1]).toHaveTextContent('Max');
+    expect(headers[2]).toHaveTextContent('Avg');
+    expect(headers[3]).toHaveTextContent('Last');
+
+    // Check if metric values are rendered in correct order
+    const cells = screen.getAllByRole('cell');
+    expect(cells[1]).toHaveTextContent('10'); // max
+    expect(cells[2]).toHaveTextContent('5'); // average
+    expect(cells[3]).toHaveTextContent('8'); // last
+  });
+
+  it('formats metric values using provided format function', () => {
+    const formatFn = (n: number) => `${n}%`;
+    renderWithTheme(
+      <MetricsDisplay
+        rows={[
+          {
+            ...defaultProps.rows[0],
+            format: formatFn,
+          },
+        ]}
+      />
+    );
+
+    const cells = screen.getAllByRole('cell');
+    expect(cells[1]).toHaveTextContent('10%');
+    expect(cells[2]).toHaveTextContent('5%');
+    expect(cells[3]).toHaveTextContent('8%');
   });
 });

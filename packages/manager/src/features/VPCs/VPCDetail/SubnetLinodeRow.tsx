@@ -1,61 +1,86 @@
+import { useLinodeQuery } from '@linode/queries';
+import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Hidden } from 'src/components/Hidden';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
+import { useInterfaceDataForLinode } from '../../../hooks/useInterfaceDataForLinode';
 import {
-  NETWORK_INTERFACES_GUIDE_URL,
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
 import {
   hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
-  getSubnetInterfaceFromConfigs,
+  getLinodeInterfaceIPv4Ranges,
+  getLinodeInterfaceIPv6Ranges,
+  getLinodeInterfacePrimaryIPv4,
+  hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
+import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
+import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import {
-  StyledActionTableCell,
-  StyledTableCell,
-  StyledTableHeadCell,
-  StyledTableRow,
-  StyledWarningIcon,
-} from './SubnetLinodeRow.styles';
+  ConfigInterfaceFirewallCell,
+  LinodeInterfaceFirewallCell,
+} from './SubnetLinodeRowFirewallsCell';
 
-import type { APIError, Firewall, Linode } from '@linode/api-v4';
-import type { Config, Interface } from '@linode/api-v4/lib/linodes/types';
-import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+import type {
+  APIError,
+  Interface,
+  Linode,
+  LinodeInterface,
+  Subnet,
+  SubnetLinodeInterfaceData,
+} from '@linode/api-v4';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handlePowerActionsLinode: (linode: Linode, action: Action) => void;
+  handlePowerActionsLinode: (
+    linode: Linode,
+    action: Action,
+    subnet?: Subnet
+  ) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
+  hover?: boolean;
+  isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
-  subnet?: Subnet;
+  subnet: Subnet;
   subnetId: number;
+  subnetInterfaces: SubnetLinodeInterfaceData[];
 }
 
 export const SubnetLinodeRow = (props: Props) => {
   const {
     handlePowerActionsLinode,
     handleUnassignLinode,
+    hover = false,
+    isVPCLKEEnterpriseCluster,
     linodeId,
     subnet,
     subnetId,
+    subnetInterfaces,
   } = props;
+
+  const { isDualStackEnabled } = useVPCDualStack();
+
+  const subnetInterfaceData =
+    subnetInterfaces.find((interfaceData) => interfaceData.active) ??
+    subnetInterfaces[0];
+  const {
+    active: isInterfaceActive,
+    config_id: configId,
+    id: interfaceId,
+  } = subnetInterfaceData;
+  const isLinodeInterface = configId === null;
 
   const {
     data: linode,
@@ -63,37 +88,48 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: linodeLoading,
   } = useLinodeQuery(linodeId);
 
-  const {
-    data: attachedFirewalls,
-    error: firewallsError,
-    isLoading: firewallsLoading,
-  } = useLinodeFirewallsQuery(linodeId);
+  /**
+   * We need to handle support for both legacy interfaces and Linode interfaces.
+   * The below hook gives us the relevant interface data depending on
+   * interface type.
+   */
+  const { interfacesInfo } = useInterfaceDataForLinode({
+    configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
+    interfaceId,
+    isLinodeInterface,
+    linodeId,
+  });
 
   const {
-    data: configs,
-    error: configsError,
-    isLoading: configsLoading,
-  } = useAllLinodeConfigsQuery(linodeId);
+    config, // undefined if this Linode is using Linode Interfaces. Used to determine an unrecommended configuration
+    configInterface, // undefined if this Linode is using Linode Interfaces
+    interfaceData,
+    interfaceError,
+    interfaceLoading,
+    linodeInterface, // undefined if this Linode is using Config Profile Interfaces
+  } = interfacesInfo;
 
-  const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
-    configs ?? [],
-    subnet?.id ?? -1
-  );
+  const hasUnrecommendedConfiguration = isLinodeInterface
+    ? hasUnrecommendedConfigurationLinodeInterface(
+        linodeInterface,
+        isInterfaceActive
+      )
+    : _hasUnrecommendedConfiguration(config, subnetId);
 
-  if (linodeLoading || !linode) {
+  if (linodeLoading) {
     return (
-      <TableRow>
-        <TableCell colSpan={6}>
+      <TableRow hover={hover}>
+        <TableCell colSpan={6} style={{ textAlign: 'center' }}>
           <CircleProgress size="sm" />
         </TableCell>
       </TableRow>
     );
   }
 
-  if (linodeError) {
+  if (linodeError || !linode) {
     return (
-      <TableRow data-testid="subnet-linode-row-error">
-        <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
+      <TableRow data-testid="subnet-linode-row-error" hover={hover}>
+        <TableCell colSpan={6} style={{ justifyItems: 'center' }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
               data-qa-error-icon
@@ -110,55 +146,54 @@ export const SubnetLinodeRow = (props: Props) => {
   }
 
   const linkifiedLinodeLabel = (
-    <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+    <Link
+      to={`/linodes/${linode.id}${
+        isLinodeInterface
+          ? `/networking/interfaces/${subnetInterfaceData.id}`
+          : ''
+      }`}
+    >
+      {linode.label}
+    </Link>
   );
 
-  const labelCell = hasUnrecommendedConfiguration ? (
-    <Box
-      data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
-      sx={{ alignItems: 'center', display: 'flex' }}
-    >
-      <TooltipIcon
-        text={
-          <Typography>
-            This Linode is using an unrecommended configuration profile. Update
-            its configuration profile to avoid connectivity issues. Read our{' '}
-            <Link to={NETWORK_INTERFACES_GUIDE_URL}>
-              Configuration Profiles
-            </Link>{' '}
-            guide for more information.
-          </Typography>
-        }
-        icon={<StyledWarningIcon />}
-        status="other"
-        sxTooltipIcon={{ paddingLeft: 0 }}
-      />
-      {linkifiedLinodeLabel}
-    </Box>
-  ) : (
-    linkifiedLinodeLabel
-  );
+  const labelCell =
+    !isVPCLKEEnterpriseCluster && hasUnrecommendedConfiguration ? (
+      <Box
+        data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
+        sx={{ alignItems: 'center', display: 'flex' }}
+      >
+        <TooltipIcon
+          icon={<StyledWarningIcon />}
+          sxTooltipIcon={{ paddingLeft: 0 }}
+          text={
+            <Typography>
+              {isLinodeInterface
+                ? 'This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
+                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
+            </Typography>
+          }
+        />
+        {linkifiedLinodeLabel}
+      </Box>
+    ) : (
+      linkifiedLinodeLabel
+    );
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
   const isOffline = linode.status === 'stopped' || linode.status === 'offline';
   const isRebootNeeded =
-    isRunning &&
-    configs?.some((config) =>
-      config.interfaces.some(
-        (linodeInterface) =>
-          linodeInterface.purpose === 'vpc' && !linodeInterface.active
-      )
-    );
+    isRunning && !isLinodeInterface && !configInterface?.active;
 
   const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
   return (
-    <StyledTableRow>
-      <StyledTableCell component="th" scope="row" sx={{ paddingLeft: 6 }}>
+    <TableRow>
+      <TableCell component="th" noWrap scope="row">
         {labelCell}
-      </StyledTableCell>
-      <StyledTableCell statusCell>
+      </TableCell>
+      <TableCell statusCell>
         <StatusIcon
           aria-label={`Linode status ${linode?.status ?? iconStatus}`}
           status={iconStatus}
@@ -167,186 +202,229 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {'Reboot Needed'}
             <TooltipIcon
-              status="help"
+              status="info"
               sxTooltipIcon={{ paddingRight: 0 }}
               text={VPC_REBOOT_MESSAGE}
             />
           </>
         ) : (
-          capitalizeAllWords(linode.status.replace('_', ' '))
+          getFormattedStatus(linode.status)
         )}
-      </StyledTableCell>
+      </TableCell>
       <Hidden smDown>
-        <StyledTableCell>
-          {getSubnetLinodeIPv4CellString(
-            configs ?? [],
-            configsLoading,
-            subnetId,
-            configsError ?? undefined
-          )}
-        </StyledTableCell>
+        <TableCell noWrap>
+          {getSubnetLinodeIPCellString({
+            interfaceData,
+            ipType: 'ipv4',
+            loading: interfaceLoading,
+            error: interfaceError ?? undefined,
+          })}
+        </TableCell>
       </Hidden>
       <Hidden smDown>
-        <StyledTableCell>
-          {getIPRangesCellContents(
-            configs ?? [],
-            configsLoading,
-            subnetId,
-            configsError ?? undefined
-          )}
-        </StyledTableCell>
+        <TableCell noWrap>
+          {getIPRangesCellContents({
+            interfaceData,
+            ipType: 'ipv4',
+            loading: interfaceLoading,
+            error: interfaceError ?? undefined,
+          })}
+        </TableCell>
       </Hidden>
+      {isDualStackEnabled && (
+        <>
+          <Hidden smDown>
+            <TableCell data-testid="vpc-ipv6-cell" noWrap>
+              {getSubnetLinodeIPCellString({
+                interfaceData,
+                ipType: 'ipv6',
+                loading: interfaceLoading,
+                error: interfaceError ?? undefined,
+              })}
+            </TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell data-testid="linode-ipv6-ranges-cell" noWrap>
+              {getIPRangesCellContents({
+                interfaceData,
+                ipType: 'ipv6',
+                loading: interfaceLoading,
+                error: interfaceError ?? undefined,
+              })}
+            </TableCell>
+          </Hidden>
+        </>
+      )}
       <Hidden smDown>
-        <StyledTableCell>
-          {getFirewallsCellString(
-            attachedFirewalls?.data ?? [],
-            firewallsLoading,
-            firewallsError ?? undefined
-          )}
-        </StyledTableCell>
-      </Hidden>
-      <StyledActionTableCell actionCell>
-        {isRebootNeeded && (
-          <InlineMenuAction
-            onClick={() => {
-              handlePowerActionsLinode(linode, 'Reboot');
-            }}
-            actionText="Reboot"
+        {isLinodeInterface ? (
+          <LinodeInterfaceFirewallCell
+            interfaceId={interfaceId}
+            linodeId={linodeId}
           />
+        ) : (
+          <ConfigInterfaceFirewallCell linodeId={linodeId} />
         )}
-        {showPowerButton && (
-          <InlineMenuAction
-            onClick={() => {
-              handlePowerActionsLinode(
-                linode,
-                isOffline ? 'Power On' : 'Power Off'
-              );
-            }}
-            actionText={isOffline ? 'Power On' : 'Power Off'}
-          />
-        )}
-        <InlineMenuAction
-          actionText="Unassign Linode"
-          onClick={() => handleUnassignLinode(linode, subnet)}
+      </Hidden>
+      <TableCell actionCell noWrap>
+        <SubnetLinodeActionMenu
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isOffline={isOffline}
+          isRebootNeeded={isRebootNeeded}
+          linode={linode}
+          showPowerButton={showPowerButton}
+          subnet={subnet}
         />
-      </StyledActionTableCell>
-    </StyledTableRow>
+      </TableCell>
+    </TableRow>
   );
 };
 
-const getFirewallsCellString = (
-  data: Firewall[],
-  loading: boolean,
-  error?: APIError[]
+type InterfaceDataTypes = Interface | LinodeInterface | undefined;
+interface IPCellStringInputs {
+  error?: APIError[];
+  interfaceData: InterfaceDataTypes;
+  ipType: 'ipv4' | 'ipv6';
+  loading: boolean;
+}
+
+const getSubnetLinodeIPCellString = (
+  ipCellStringInputs: IPCellStringInputs
 ): JSX.Element | string => {
+  const { error, interfaceData, ipType, loading } = ipCellStringInputs;
   if (loading) {
     return 'Loading...';
   }
 
   if (error) {
-    return 'Error retrieving Firewalls';
+    return `Error retrieving VPC ${ipType === 'ipv4' ? 'IPv4s' : 'IPv6s'}`;
   }
 
-  if (data.length === 0) {
+  if (!interfaceData) {
     return 'None';
   }
 
-  return getFirewallLinks(data);
+  if ('purpose' in interfaceData) {
+    // presence of `purpose` property indicates it is a Config Profile/legacy interface
+    return ipType === 'ipv4'
+      ? getIPLinkForConfigInterface(interfaceData, 'ipv4')
+      : getIPLinkForConfigInterface(interfaceData, 'ipv6');
+  } else {
+    if (ipType === 'ipv4') {
+      const primaryIPv4 = getLinodeInterfacePrimaryIPv4(interfaceData);
+      return <span key={interfaceData.id}>{primaryIPv4 ?? 'None'}</span>;
+    }
+
+    return (
+      <span key={interfaceData.id}>
+        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? '—'}
+      </span>
+    );
+  }
 };
 
-const getSubnetLinodeIPv4CellString = (
-  configs: Config[],
-  loading: boolean,
-  subnetId: number,
-  error?: APIError[]
-): JSX.Element | string => {
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return 'Error retrieving VPC IPv4s';
-  }
-
-  if (configs.length === 0) {
-    return 'None';
-  }
-
-  const configInterface = getSubnetInterfaceFromConfigs(configs, subnetId);
-  return getIPv4Link(configInterface);
-};
-
-const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
+const getIPLinkForConfigInterface = (
+  configInterface: Interface | undefined,
+  ipType: 'ipv4' | 'ipv6'
+): JSX.Element => {
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {configInterface && (
-        <span key={configInterface.id}>{configInterface.ipv4?.vpc}</span>
-      )}
-    </>
-  );
-};
-
-const getIPRangesCellContents = (
-  configs: Config[],
-  loading: boolean,
-  subnetId: number,
-  error?: APIError[]
-): JSX.Element | string => {
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return 'Error retrieving VPC IPv4s';
-  }
-
-  if (configs.length === 0) {
-    return 'None';
-  }
-
-  const configInterface = getSubnetInterfaceFromConfigs(configs, subnetId);
-  return determineNoneSingleOrMultipleWithChip(
-    configInterface?.ip_ranges ?? []
-  );
-};
-
-const getFirewallLinks = (data: Firewall[]): JSX.Element => {
-  const firstThreeFirewalls = data.slice(0, 3);
-  return (
-    <>
-      {firstThreeFirewalls.map((firewall, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={firewall.id}
-          to={`/firewalls/${firewall.id}`}
-        >
-          {idx > 0 && `, `}
-          {firewall.label}
-        </Link>
-      ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
+        <span key={configInterface.id}>
+          {ipType === 'ipv4'
+            ? configInterface.ipv4?.vpc
+            : (configInterface.ipv6?.slaac[0]?.address ?? '—')}
         </span>
       )}
     </>
   );
 };
 
+interface IPRangesCellStringInputs {
+  error?: APIError[];
+  interfaceData: InterfaceDataTypes;
+  ipType: 'ipv4' | 'ipv6';
+  loading: boolean;
+}
+
+const getIPRangesCellContents = (
+  ipRangesCellStringInputs: IPRangesCellStringInputs
+): JSX.Element | string => {
+  const { error, interfaceData, ipType, loading } = ipRangesCellStringInputs;
+
+  if (loading) {
+    return 'Loading...';
+  }
+
+  if (error) {
+    return `Error retrieving VPC ${ipType === 'ipv4' ? 'IPv4' : 'IPv6'}s`;
+  }
+
+  if (!interfaceData) {
+    return 'None';
+  }
+
+  if ('purpose' in interfaceData) {
+    // presence of `purpose` property indicates it is a Config Profile/legacy interface
+    if (ipType === 'ipv4') {
+      return determineNoneSingleOrMultipleWithChip(
+        interfaceData.ip_ranges ?? []
+      );
+    }
+
+    const ipv6Ranges =
+      interfaceData.ipv6?.ranges
+        .map((rangeObj) => rangeObj.range)
+        .filter((range) => range !== undefined) ?? [];
+
+    const noneSingleOrMultipleWithChipIPV6 =
+      determineNoneSingleOrMultipleWithChip(ipv6Ranges);
+
+    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
+    return !interfaceData.ipv6 ? '—' : noneSingleOrMultipleWithChipIPV6;
+  } else {
+    const linodeInterfaceVPCRanges =
+      ipType === 'ipv4'
+        ? getLinodeInterfaceIPv4Ranges(interfaceData)
+        : getLinodeInterfaceIPv6Ranges(interfaceData);
+
+    const noneSingleOrMultipleWithChip = determineNoneSingleOrMultipleWithChip(
+      linodeInterfaceVPCRanges ?? []
+    );
+
+    // For IPv6 columns, we want to display em dashes instead of 'None' in the cells to help indicate the VPC/subnet does not support IPv6
+    return ipType === 'ipv6' && !interfaceData.vpc?.ipv6
+      ? '—'
+      : noneSingleOrMultipleWithChip;
+  }
+};
+
 export const SubnetLinodeTableRowHead = (
+  isDualStackEnabled: boolean = false
+) => (
   <TableRow>
-    <StyledTableHeadCell>Linode Label</StyledTableHeadCell>
-    <StyledTableHeadCell sx={{ width: '14%' }}>Status</StyledTableHeadCell>
+    <TableCell sx={{ width: '24%' }}>Linode</TableCell>
+    <TableCell sx={{ width: '14%' }}>Status</TableCell>
     <Hidden smDown>
-      <StyledTableHeadCell>VPC IPv4</StyledTableHeadCell>
+      <TableCell>VPC IPv4</TableCell>
     </Hidden>
     <Hidden smDown>
-      <StyledTableHeadCell>VPC IPv4 Ranges</StyledTableHeadCell>
+      <TableCell>VPC IPv4 Ranges</TableCell>
     </Hidden>
+    {isDualStackEnabled && (
+      <>
+        <Hidden smDown>
+          <TableCell>VPC IPv6</TableCell>
+        </Hidden>
+        <Hidden smDown>
+          <TableCell>VPC IPv6 Ranges</TableCell>
+        </Hidden>
+      </>
+    )}
     <Hidden smDown>
-      <StyledTableHeadCell>Firewalls</StyledTableHeadCell>
+      <TableCell sx={{ width: '18%' }}>Firewalls</TableCell>
     </Hidden>
-    <StyledTableHeadCell />
+    <TableCell sx={{ width: '10%' }} />
   </TableRow>
 );

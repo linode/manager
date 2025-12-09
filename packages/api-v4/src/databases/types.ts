@@ -1,196 +1,263 @@
-import { BaseType } from '../linodes/types';
+import type { BaseType } from '../linodes/types';
 
-export type DatabaseTypeClass = 'standard' | 'dedicated' | 'nanode' | 'premium';
+export type DatabaseTypeClass = 'dedicated' | 'nanode' | 'premium' | 'standard';
+
+export type Platform = 'rdbms-default' | 'rdbms-legacy';
 
 export interface DatabasePriceObject {
-  monthly: number;
   hourly: number;
+  monthly: number;
 }
 
 export interface DatabaseClusterSizeObject {
-  quantity: number;
   price: DatabasePriceObject;
+  quantity: number;
 }
 
-type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
+export type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   engines: Engines;
 }
 
-export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
+export type Engine = 'mysql' | 'postgresql';
 
 export interface DatabaseEngine {
-  id: string;
+  deprecated?: boolean;
   engine: Engine;
+  id: string;
   version: string;
-  deprecated: boolean;
 }
 
 export type DatabaseStatus =
+  | 'active'
+  | 'degraded'
+  | 'failed'
+  | 'migrated'
+  | 'migrating'
   | 'provisioning'
   | 'resizing'
-  | 'active'
-  | 'suspending'
-  | 'suspended'
-  | 'resuming'
   | 'restoring'
-  | 'failed'
-  | 'degraded';
-
-export type DatabaseBackupType = 'snapshot' | 'auto';
-
+  | 'resuming'
+  | 'suspended'
+  | 'suspending';
+/** @deprecated TODO (UIE-8214) remove after migration */
+export type DatabaseBackupType = 'auto' | 'snapshot';
+/** @deprecated TODO (UIE-8214) remove after migration */
 export interface DatabaseBackup {
-  id: number;
-  type: DatabaseBackupType;
-  label: string;
   created: string;
+  id: number;
+  label: string;
+  type: DatabaseBackupType;
+}
+
+export interface ConfigurationItem {
+  description?: string;
+  enum?: string[];
+  example?: boolean | number | string;
+  maximum?: number; // max value for the number input
+  maxLength?: number; // max length for the text input
+  minimum?: number; // min value for the number input
+  minLength?: number; // min length for the text input
+  pattern?: string;
+  requires_restart?: boolean;
+  type?: [string, null] | string | string[];
+}
+
+export type ConfigValue = boolean | number | string;
+
+export type ConfigCategoryValues = Record<string, ConfigValue>;
+export type DatabaseEngineConfig = Record<
+  string,
+  ConfigurationItem | Record<string, ConfigurationItem>
+>;
+export interface DatabaseInstanceAdvancedConfig {
+  [category: string]: ConfigCategoryValues | ConfigValue;
+}
+export interface DatabaseFork {
+  restore_time?: string;
+  source: number;
+}
+
+export interface DatabaseBackupsPayload {
+  fork: DatabaseFork;
+  private_network?: null | PrivateNetwork;
+  region?: string;
 }
 
 export interface DatabaseCredentials {
-  username: string;
   password: string;
+  username: string;
 }
 
 interface DatabaseHosts {
   primary: string;
-  secondary: string;
+  secondary?: string;
+  standby?: string;
 }
 
 export interface SSLFields {
   ca_certificate: string;
 }
 
-type MemberType = 'primary' | 'failover';
+type MemberType = 'failover' | 'primary';
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
 export interface DatabaseInstance {
-  id: number;
-  label: string;
-  engine: Engine;
-  type: string;
-  region: string;
-  version: string;
-  status: DatabaseStatus;
+  allow_list: string[];
   cluster_size: ClusterSize;
-  updated: string;
+  connection_pool_port: null | number;
+  connection_strings: ConnectionStrings[];
   created: string;
-  instance_uri: string;
-  hosts: DatabaseHosts;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
+  encrypted: boolean;
+  engine: Engine;
+  engine_config: DatabaseInstanceAdvancedConfig;
+  hosts: DatabaseHosts | null;
+  id: number;
+  instance_uri?: string;
+  label: string;
   /**
    * A key/value object where the key is an IP address and the value is a member type.
    */
   members: Record<string, MemberType>;
-  platform?: string;
+  oldest_restore_time?: string;
+  platform?: Platform;
+  readonly_count?: ReadonlyCount;
+  region: string;
+  status: DatabaseStatus;
+  type: string;
+  updated: string;
+  updates: UpdatesSchedule;
+  version: string;
 }
 
 export type ClusterSize = 1 | 2 | 3;
 
-type ReadonlyCount = 0 | 2;
-
-export type MySQLReplicationType = 'none' | 'semi_synch' | 'asynch';
-
-export interface CreateDatabasePayload {
-  label: string;
-  region: string;
-  type: string;
-  cluster_size?: ClusterSize;
-  engine?: Engine;
-  encrypted?: boolean;
-  ssl_connection?: boolean;
-  replication_type?: MySQLReplicationType | PostgresReplicationType;
-  allow_list?: string[];
+export interface PrivateNetwork {
+  public_access?: boolean;
+  subnet_id: null | number;
+  vpc_id: null | number;
 }
 
-type DriverTypes = 'jdbc' | 'odbc' | 'php' | 'python' | 'ruby' | 'node.js';
+type ReadonlyCount = 0 | 2;
+
+/** @deprecated TODO (UIE-8214) remove POST GA */
+export type MySQLReplicationType = 'asynch' | 'none' | 'semi_synch';
+
+export interface CreateDatabasePayload {
+  allow_list: string[];
+  cluster_size?: ClusterSize;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
+  encrypted?: boolean;
+  engine?: Engine;
+  label: string;
+  private_network?: null | PrivateNetwork; //  TODO (UIE-8831): Remove optional (?) post VPC release, since it will always be in create payload
+  region: string;
+  /** @Deprecated used by rdbms-legacy only */
+  replication_type?: MySQLReplicationType | PostgresReplicationType;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
+  ssl_connection?: boolean;
+  type: string;
+}
+
+/** @deprecated TODO (UIE-8214) remove POST GA */
+type DriverTypes = 'jdbc' | 'node.js' | 'odbc' | 'php' | 'python' | 'ruby';
+
+/** @deprecated TODO (UIE-8214) remove POST GA */
 interface ConnectionStrings {
   driver: DriverTypes;
   value: string;
 }
 
-export type UpdatesFrequency = 'weekly' | 'monthly';
 export interface UpdatesSchedule {
-  frequency: UpdatesFrequency;
-  duration: number;
-  hour_of_day: number;
   day_of_week: number;
-  week_of_month: number | null;
+  duration: number;
+  frequency: 'monthly' | 'weekly';
+  hour_of_day: number;
+  pending?: PendingUpdates[];
+  week_of_month: null | number;
+}
+
+/**
+ * Maintenance/patches for the next maintenance window
+ * @since V2GA */
+export interface PendingUpdates {
+  /**
+   * Optional ISO-8601 UTC timestamp
+   * describing the point in time by which a mandatory update must be applied.
+   * Not all updates have deadlines.
+   */
+  deadline: null | string;
+  description: string;
+  /**
+   * Optional ISO-8601 UTC timestamp
+   * describing the maintenance window in which the update is planned to be applied.
+   * Users may trigger these updates outside a scheduled maintenance window by calling the patch API.
+   */
+  planned_for: null | string;
 }
 
 // Database is the base interface for the shape of data returned by /databases/{engine}/instances
-export interface BaseDatabase {
-  id: number;
-  label: string;
-  type: string;
-  version: string;
-  region: string;
-  status: DatabaseStatus;
-  cluster_size: ClusterSize;
-  readonly_count?: ReadonlyCount;
-  engine: Engine;
-  encrypted: boolean;
-  ssl_connection: boolean;
-  allow_list: string[];
-  connection_strings: ConnectionStrings[];
-  created: string;
-  updated: string;
-  hosts: DatabaseHosts;
+interface BaseDatabase extends DatabaseInstance {
   port: number;
-  updates: UpdatesSchedule;
-  /**
-   * total_disk_size_gb is feature flagged by the API.
-   * It may not be defined.
-   */
-  total_disk_size_gb?: number;
-  /**
-   * used_disk_size_gb is feature flagged by the API.
-   * It may not be defined.
-   */
-  used_disk_size_gb?: number;
-  /**
-   * A key/value object where the key is an IP address and the value is a member type.
-   */
-  members: Record<string, MemberType>;
+  private_network?: null | PrivateNetwork; //  TODO (UIE-8831): Confirm whether this still needs to be optional (?) post VPC release.
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
+  ssl_connection: boolean;
+  total_disk_size_gb: number;
+  used_disk_size_gb: null | number;
 }
 
+/** @deprecated TODO (UIE-8214) remove POST GA */
 export interface MySQLDatabase extends BaseDatabase {
-  replication_type: MySQLReplicationType;
+  /** @Deprecated used by rdbms-legacy only */
+  replication_type?: MySQLReplicationType;
 }
 
-export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
+/** @deprecated TODO (UIE-8214) remove POST GA */
+export type PostgresReplicationType = 'asynch' | 'none' | 'synch';
 
-type ReplicationCommitTypes =
-  | 'on'
+/** @deprecated TODO (UIE-8214) remove POST GA */
+export type ReplicationCommitTypes =
   | 'local'
-  | 'remote_write'
+  | 'off'
+  | 'on'
   | 'remote_apply'
-  | 'off';
+  | 'remote_write';
 
+/** @deprecated TODO (UIE-8214) remove POST GA */
 export interface PostgresDatabase extends BaseDatabase {
-  replication_type: PostgresReplicationType;
-  replication_commit_type: ReplicationCommitTypes;
+  /** @Deprecated used by rdbms-legacy only */
+  replication_commit_type?: ReplicationCommitTypes;
+  /** @Deprecated used by rdbms-legacy only */
+  replication_type?: PostgresReplicationType;
 }
 
-type MongoStorageEngine = 'wiredtiger' | 'mmapv1';
-type MongoCompressionType = 'none' | 'snappy' | 'zlib';
-export interface MongoDatabase extends BaseDatabase {
-  storage_engine: MongoStorageEngine;
-  compression_type: MongoCompressionType;
-  replica_set: string | null;
-  peers: string[];
-}
-
+/** @deprecated TODO (UIE-8214) remove POST GA */
 export type ComprehensiveReplicationType = MySQLReplicationType &
   PostgresReplicationType;
 
 export type Database = BaseDatabase &
   Partial<MySQLDatabase> &
-  Partial<PostgresDatabase> &
-  Partial<MongoDatabase>;
+  Partial<PostgresDatabase>;
 
 export interface UpdateDatabasePayload {
-  label?: string;
   allow_list?: string[];
-  updates?: UpdatesSchedule;
+  cluster_size?: number;
+  engine_config?: DatabaseInstanceAdvancedConfig;
+  label?: string;
+  private_network?: null | PrivateNetwork;
   type?: string;
+  updates?: UpdatesSchedule;
+  version?: string;
+}
+
+export type PoolMode = 'session' | 'statement' | 'transaction';
+
+export interface ConnectionPool {
+  database: string;
+  label: string;
+  mode: PoolMode;
+  size: number;
+  username: null | string;
 }

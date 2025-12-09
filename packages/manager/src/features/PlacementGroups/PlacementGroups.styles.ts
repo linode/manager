@@ -1,6 +1,5 @@
+import { List } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { List } from 'src/components/List';
 
 export const StyledDetailPanelFormattedRegionList = styled(List, {
   label: 'StyledFormattedRegionList',

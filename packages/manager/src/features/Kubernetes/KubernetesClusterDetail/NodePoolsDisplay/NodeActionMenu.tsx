@@ -1,25 +1,33 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   instanceLabel?: string;
+  isLkeClusterRestricted: boolean;
   nodeId?: string;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
 export const NodeActionMenu = (props: Props) => {
-  const { instanceLabel, nodeId, openRecycleNodeDialog } = props;
+  const {
+    instanceLabel,
+    isLkeClusterRestricted,
+    nodeId,
+    openRecycleNodeDialog,
+  } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
     {
-      disabled: !nodeId || !instanceLabel,
+      disabled: !nodeId || !instanceLabel || isLkeClusterRestricted,
       onClick: () => {
         if (!nodeId || !instanceLabel) {
           return;
@@ -50,5 +58,3 @@ export const NodeActionMenu = (props: Props) => {
     </Box>
   );
 };
-
-export default React.memo(NodeActionMenu);

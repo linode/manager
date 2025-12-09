@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -6,19 +6,6 @@ import { linodeDiskFactory } from 'src/factories';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
-
-const mockHistory = {
-  push: vi.fn(),
-};
-
-// Mock useHistory
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
 
 const defaultProps = {
   disk: linodeDiskFactory.build(),
@@ -29,7 +16,35 @@ const defaultProps = {
   onResize: vi.fn(),
 };
 
-describe('LinodeActionMenu', () => {
+const navigate = vi.fn();
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
+  useParams: vi.fn(() => ({})),
+  userPermissions: vi.fn(() => ({
+    data: {
+      update_linode: false,
+      resize_linode: false,
+      delete_linode: false,
+      clone_linode: false,
+      create_image: true,
+    },
+  })),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
+describe('LinodeDiskActionMenu', () => {
   beforeEach(() => mockMatchMedia());
 
   it('should contain all basic actions when the Linode is running', async () => {
@@ -56,18 +71,6 @@ describe('LinodeActionMenu', () => {
     }
   });
 
-  it('should show inline actions for md screens', async () => {
-    mockMatchMedia(false);
-
-    const { getByText } = renderWithTheme(
-      <LinodeDiskActionMenu {...defaultProps} />
-    );
-
-    ['Rename', 'Resize'].forEach((action) =>
-      expect(getByText(action)).toBeVisible()
-    );
-  });
-
   it('should hide inline actions for sm screens', async () => {
     const { queryByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
@@ -89,17 +92,18 @@ describe('LinodeActionMenu', () => {
 
     await userEvent.click(actionMenuButton);
 
-    await userEvent.click(getByText('Rename'));
-    expect(defaultProps.onRename).toHaveBeenCalled();
-
-    await userEvent.click(getByText('Resize'));
-    expect(defaultProps.onResize).toHaveBeenCalled();
-
-    await userEvent.click(getByText('Delete'));
-    expect(defaultProps.onDelete).toHaveBeenCalled();
+    expect(getByText('Rename')).toBeVisible();
+    expect(getByText('Resize')).toBeVisible();
+    expect(getByText('Delete')).toBeVisible();
+    expect(getByText('Create Disk Image')).toBeVisible();
+    expect(getByText('Clone')).toBeVisible();
   });
 
   it('Create Disk Image should redirect to image create tab', async () => {
+    queryMocks.useParams.mockReturnValue({
+      linodeId: defaultProps.linodeId,
+    });
+
     const { getByLabelText, getByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
@@ -112,12 +116,27 @@ describe('LinodeActionMenu', () => {
 
     await userEvent.click(getByText('Create Disk Image'));
 
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      `/images/create/disk?selectedLinode=${defaultProps.linodeId}&selectedDisk=${defaultProps.disk.id}`
-    );
+    expect(navigate).toHaveBeenCalledWith({
+      to: '/images/create/disk',
+      search: {
+        selectedLinode: String(defaultProps.linodeId),
+        selectedDisk: String(defaultProps.disk.id),
+      },
+    });
   });
 
   it('Clone should redirect to clone page', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        ...queryMocks.userPermissions().data,
+        clone_linode: true,
+      },
+    });
+
+    queryMocks.useParams.mockReturnValue({
+      linodeId: defaultProps.linodeId,
+    });
+
     const { getByLabelText, getByText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
@@ -130,12 +149,22 @@ describe('LinodeActionMenu', () => {
 
     await userEvent.click(getByText('Clone'));
 
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      `/linodes/${defaultProps.linodeId}/clone/disks?selectedDisk=${defaultProps.disk.id}`
-    );
+    expect(navigate).toHaveBeenCalledWith({
+      to: `/linodes/${defaultProps.linodeId}/clone/disks`,
+      search: {
+        selectedDisk: String(defaultProps.disk.id),
+      },
+    });
   });
 
   it('should disable Resize and Delete when the Linode is running', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        ...queryMocks.userPermissions().data,
+        resize_linode: true,
+        delete_linode: true,
+      },
+    });
     const { getAllByLabelText, getByLabelText } = renderWithTheme(
       <LinodeDiskActionMenu {...defaultProps} />
     );
@@ -148,7 +177,7 @@ describe('LinodeActionMenu', () => {
 
     expect(
       getAllByLabelText(
-        'Your Linode must be fully powered down in order to perform this action'
+        'Your Linode must be fully powered down in order to perform this action.'
       )
     ).toHaveLength(2);
   });
@@ -172,5 +201,73 @@ describe('LinodeActionMenu', () => {
     expect(tooltip).toBeInTheDocument();
     fireEvent.click(tooltip);
     expect(tooltip).toBeVisible();
+  });
+
+  it('should disable all actions menu if the user does not have permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: false,
+        resize_linode: false,
+        delete_linode: false,
+        clone_linode: false,
+        create_image: false,
+      },
+    });
+
+    const { getByLabelText } = renderWithTheme(
+      <LinodeDiskActionMenu {...defaultProps} />
+    );
+
+    const actionMenuButton = getByLabelText(
+      `Action menu for Disk ${defaultProps.disk.label}`
+    );
+
+    await userEvent.click(actionMenuButton);
+
+    const renameBtn = screen.getByTestId('Rename');
+    expect(renameBtn).toHaveAttribute('aria-disabled', 'true');
+
+    const resizeBtn = screen.getByTestId('Resize');
+    expect(resizeBtn).toHaveAttribute('aria-disabled', 'true');
+
+    const cloneBtn = screen.getByTestId('Clone');
+    expect(cloneBtn).toHaveAttribute('aria-disabled', 'true');
+
+    const deleteBtn = screen.getByTestId('Delete');
+    expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable all actions menu if the user has permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_linode: true,
+        resize_linode: true,
+        delete_linode: true,
+        clone_linode: true,
+        create_image: true,
+      },
+    });
+
+    const { getByLabelText } = renderWithTheme(
+      <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
+    );
+
+    const actionMenuButton = getByLabelText(
+      `Action menu for Disk ${defaultProps.disk.label}`
+    );
+
+    await userEvent.click(actionMenuButton);
+
+    const renameBtn = screen.getByTestId('Rename');
+    expect(renameBtn).not.toHaveAttribute('aria-disabled', 'true');
+
+    const resizeBtn = screen.getByTestId('Resize');
+    expect(resizeBtn).not.toHaveAttribute('aria-disabled', 'true');
+
+    const cloneBtn = screen.getByTestId('Clone');
+    expect(cloneBtn).not.toHaveAttribute('aria-disabled', 'true');
+
+    const deleteBtn = screen.getByTestId('Delete');
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

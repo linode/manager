@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

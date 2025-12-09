@@ -1,9 +1,9 @@
+import { Typography as FontTypography } from '@linode/design-language-system';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -14,22 +14,13 @@ interface Color {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alias: {
-    color: '#32363c',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    fontSize: '0.875rem',
+    font: FontTypography.Code,
   },
   color: {
-    color: '#888f91',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    fontSize: '0.875rem',
-  },
-  root: {
-    '& h2': {
-      color: '#32363c',
-    },
+    font: FontTypography.Code,
   },
   swatch: {
-    border: '1px solid #888f91',
+    border: `1px solid ${theme.tokens.color.Neutrals[60]}`,
     borderRadius: 3,
     height: theme.spacing(4.5),
     margin: '0px 16px',
@@ -50,7 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
  *
  * If a color does not exist in the current palette and is only used once, consider applying the color conditionally:
  *
- * `theme.name === 'light' ? '#fff' : '#000'`
+ * `theme.name === 'light' ? theme.tokens.color.Neutrals.White : theme.tokens.color.Neutrals.Black`
  */
 export const ColorPalette = () => {
   const { classes } = useStyles();
@@ -124,10 +115,6 @@ export const ColorPalette = () => {
       color: theme.bg.bgPaper,
     },
     {
-      alias: 'theme.bg.bgAccessRow',
-      color: theme.bg.bgAccessRow,
-    },
-    {
       alias: 'theme.bg.bgAccessRowTransparentGradient',
       color: theme.bg.bgAccessRowTransparentGradient,
     },
@@ -173,11 +160,16 @@ export const ColorPalette = () => {
 
   const createSwatch = (color: string, alias: string) => {
     return (
-      <Grid className={classes.swatchWrapper} key={alias} md={4} sm={6} xs={12}>
-        <div
-          className={classes.swatch}
-          style={{ backgroundColor: color }}
-        ></div>
+      <Grid
+        className={classes.swatchWrapper}
+        key={alias}
+        size={{
+          md: 4,
+          sm: 6,
+          xs: 12,
+        }}
+      >
+        <div className={classes.swatch} style={{ backgroundColor: color }} />
         <Typography variant="body1">
           <span className={classes.alias}>{alias}</span>
           <br />
@@ -190,7 +182,7 @@ export const ColorPalette = () => {
   const renderColor = (heading: string, colors: Color[]) => {
     return (
       <>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography variant="h2">{heading}</Typography>
         </Grid>
         {colors.map((color) => createSwatch(color.color, color.alias))}
@@ -199,7 +191,7 @@ export const ColorPalette = () => {
   };
 
   return (
-    <Grid className={classes.root} container spacing={2}>
+    <Grid container spacing={2}>
       {renderColor('Primary Colors', primaryColors)}
       {renderColor('Etc.', etc)}
       {renderColor('Background Colors', bgColors)}

@@ -1,12 +1,10 @@
+import { useAccountUser } from '@linode/queries';
+import { CircleProgress, ErrorState, NotFound, Stack } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { NotFound } from 'src/components/NotFound';
-import { Stack } from 'src/components/Stack';
-import { useAccountUser } from 'src/queries/account/users';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
@@ -14,7 +12,13 @@ import { UserEmailPanel } from './UserEmailPanel';
 import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
-  const { username } = useParams<{ username: string }>();
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
+  const { username } = useParams({
+    from: iamRbacPrimaryNavChanges
+      ? '/users/$username'
+      : '/account/users/$username',
+  });
 
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
 

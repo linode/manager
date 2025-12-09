@@ -1,5 +1,5 @@
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -8,14 +8,11 @@ import {
   getMaxUnitAndFormatNetwork,
 } from 'src/features/Longview/shared/utilities';
 
-import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import {
-  StyledRootPaper,
-  StyledItemGrid,
-  StyledSmallGraphGrid,
-} from '../CommonStyles.styles';
+import { StyledRootPaper, StyledSmallGraphGrid } from '../CommonStyles.styles';
 import { ProcessGraphs } from '../ProcessGraphs';
+
+import type { LongviewProcesses, MySQLResponse } from '../../../request.types';
 
 interface Props {
   data?: MySQLResponse;
@@ -67,8 +64,9 @@ export const MySQLGraphs = (props: Props) => {
   return (
     <StyledRootPaper>
       <Grid container direction="column" spacing={0}>
-        <StyledItemGrid xs={12}>
+        <Grid size={{ xs: 12 }}>
           <LongviewLineGraph
+            ariaLabel="Queries Per Second Graph"
             data={[
               {
                 backgroundColor: theme.graphs.queries.select,
@@ -95,7 +93,6 @@ export const MySQLGraphs = (props: Props) => {
                 label: 'DELETE',
               },
             ]}
-            ariaLabel="Queries Per Second Graph"
             error={error}
             loading={loading}
             nativeLegend
@@ -104,11 +101,12 @@ export const MySQLGraphs = (props: Props) => {
             timezone={timezone}
             title="Queries"
           />
-        </StyledItemGrid>
-        <StyledItemGrid xs={12}>
+        </Grid>
+        <Grid size={{ xs: 12 }}>
           <Grid container direction="row">
-            <StyledSmallGraphGrid sm={6} xs={12}>
+            <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Throughput Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.darkGreen,
@@ -123,7 +121,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Outbound',
                   },
                 ]}
-                ariaLabel="Throughput Graph"
                 error={error}
                 formatData={formatNetwork}
                 formatTooltip={formatNetworkTooltip}
@@ -136,8 +133,9 @@ export const MySQLGraphs = (props: Props) => {
                 unit={'/s'}
               />
             </StyledSmallGraphGrid>
-            <StyledSmallGraphGrid sm={6} xs={12}>
+            <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Connections Per Second Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.connections.accepted,
@@ -146,7 +144,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Connections',
                   },
                 ]}
-                ariaLabel="Connections Per Second Graph"
                 error={error}
                 loading={loading}
                 nativeLegend
@@ -158,11 +155,12 @@ export const MySQLGraphs = (props: Props) => {
               />
             </StyledSmallGraphGrid>
           </Grid>
-        </StyledItemGrid>
-        <StyledItemGrid xs={12}>
+        </Grid>
+        <Grid size={{ xs: 12 }}>
           <Grid container direction="row">
-            <StyledSmallGraphGrid sm={6} xs={12}>
+            <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Slow Queries Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.slowQueries,
@@ -171,7 +169,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Slow Queries',
                   },
                 ]}
-                ariaLabel="Slow Queries Graph"
                 error={error}
                 loading={loading}
                 nativeLegend
@@ -180,8 +177,9 @@ export const MySQLGraphs = (props: Props) => {
                 title="Slow Queries"
               />
             </StyledSmallGraphGrid>
-            <StyledSmallGraphGrid sm={6} xs={12}>
+            <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Aborted Clients and Connections Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.aborted.connections,
@@ -206,7 +204,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Clients',
                   },
                 ]}
-                ariaLabel="Aborted Clients and Connections Graph"
                 error={error}
                 loading={loading}
                 nativeLegend
@@ -216,7 +213,7 @@ export const MySQLGraphs = (props: Props) => {
               />
             </StyledSmallGraphGrid>
           </Grid>
-        </StyledItemGrid>
+        </Grid>
         <ProcessGraphs
           data={processesData}
           end={end}

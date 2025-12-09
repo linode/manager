@@ -1,10 +1,11 @@
+import { breakpoints } from '@linode/ui';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { breakpoints } from 'src/foundations/breakpoints';
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
-import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, SideMenu } from './SideMenu';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
+import { SideMenu } from './SideMenu';
 
 // Mock PrimaryNav component
 vi.mock('./PrimaryNav', () => {
@@ -15,19 +16,34 @@ vi.mock('./PrimaryNav', () => {
 });
 
 const closeMenuMock = vi.fn();
+const desktopMenuToggle = vi.fn();
+
+const resizeDesktop = () => resizeScreenSize(breakpoints.values.lg);
+const resizeMobile = () => resizeScreenSize(breakpoints.values.sm);
 
 describe('SideMenu Component', () => {
   it('renders without crashing', () => {
     renderWithTheme(
-      <SideMenu closeMenu={closeMenuMock} collapse={false} open={true} />
+      <SideMenu
+        closeMenu={closeMenuMock}
+        collapse={false}
+        desktopMenuToggle={desktopMenuToggle}
+        open={true}
+      />
     );
 
     expect(screen.getByText('Mocked PrimaryNav')).toBeInTheDocument();
   });
 
   it('renders expanded menu (desktop)', () => {
+    resizeDesktop();
     renderWithTheme(
-      <SideMenu closeMenu={closeMenuMock} collapse={false} open={true} />
+      <SideMenu
+        closeMenu={closeMenuMock}
+        collapse={false}
+        desktopMenuToggle={desktopMenuToggle}
+        open={true}
+      />
     );
 
     const drawerPaper = screen.getByTestId('side-menu');
@@ -38,8 +54,14 @@ describe('SideMenu Component', () => {
   });
 
   it('renders collapsed menu (desktop)', () => {
+    resizeDesktop();
     renderWithTheme(
-      <SideMenu closeMenu={closeMenuMock} collapse={true} open={true} />
+      <SideMenu
+        closeMenu={closeMenuMock}
+        collapse={true}
+        desktopMenuToggle={desktopMenuToggle}
+        open={true}
+      />
     );
 
     const drawerPaper = screen.getByTestId('side-menu');
@@ -52,8 +74,14 @@ describe('SideMenu Component', () => {
   });
 
   it('expands collapsed menu on hover (desktop)', async () => {
+    resizeDesktop();
     renderWithTheme(
-      <SideMenu closeMenu={closeMenuMock} collapse={true} open={true} />
+      <SideMenu
+        closeMenu={closeMenuMock}
+        collapse={true}
+        desktopMenuToggle={desktopMenuToggle}
+        open={true}
+      />
     );
     const drawerPaper = screen.getByTestId('side-menu');
 
@@ -65,10 +93,15 @@ describe('SideMenu Component', () => {
   });
 
   it('handles open state on mobile', () => {
-    resizeScreenSize(breakpoints.values.sm);
+    resizeMobile();
 
     renderWithTheme(
-      <SideMenu closeMenu={closeMenuMock} collapse={false} open={true} />
+      <SideMenu
+        closeMenu={closeMenuMock}
+        collapse={false}
+        desktopMenuToggle={desktopMenuToggle}
+        open={true}
+      />
     );
 
     const drawerPaper = screen.getByTestId('side-menu-mobile');
@@ -79,10 +112,15 @@ describe('SideMenu Component', () => {
   });
 
   it('handles close state on mobile', () => {
-    resizeScreenSize(breakpoints.values.sm);
+    resizeMobile();
 
     renderWithTheme(
-      <SideMenu closeMenu={closeMenuMock} collapse={false} open={false} />
+      <SideMenu
+        closeMenu={closeMenuMock}
+        collapse={false}
+        desktopMenuToggle={desktopMenuToggle}
+        open={false}
+      />
     );
 
     const drawerPaper = screen.getByTestId('side-menu-mobile');

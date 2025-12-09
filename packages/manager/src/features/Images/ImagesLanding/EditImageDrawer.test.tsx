@@ -9,9 +9,19 @@ import { EditImageDrawer } from './EditImageDrawer';
 
 const props = {
   image: imageFactory.build(),
+  imageError: null,
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
 };
+
+const queryMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+}));
 
 const mockUpdateImage = vi.fn();
 vi.mock('@linode/api-v4', async () => {
@@ -22,6 +32,12 @@ vi.mock('@linode/api-v4', async () => {
       return Promise.resolve(props.image);
     },
   };
+});
+
+beforeEach(() => {
+  queryMocks.usePermissions.mockReturnValue({
+    data: { update_image: true, is_account_admin: true },
+  });
 });
 
 describe('EditImageDrawer', () => {

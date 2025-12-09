@@ -1,9 +1,7 @@
+import { useVLANsInfiniteQuery } from '@linode/queries';
+import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
-
-import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
-import { useVLANsInfiniteQuery } from 'src/queries/vlans';
-
-import { Autocomplete } from './Autocomplete/Autocomplete';
 
 import type { Filter } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';
@@ -22,6 +20,10 @@ interface Props {
    * Default API filter
    */
   filter?: Filter;
+  /**
+   * Helper text that will show below the select
+   */
+  helperText?: string;
   /**
    * Called when the field is blurred
    */
@@ -47,10 +49,19 @@ interface Props {
  * - Allows VLAN creation
  */
 export const VLANSelect = (props: Props) => {
-  const { disabled, errorText, filter, onBlur, onChange, sx, value } = props;
+  const {
+    disabled,
+    errorText,
+    filter,
+    helperText,
+    onBlur,
+    onChange,
+    sx,
+    value,
+  } = props;
 
   const [open, setOpen] = React.useState(false);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(value ?? '');
 
   useEffect(() => {
     if (!value && inputValue) {
@@ -67,13 +78,8 @@ export const VLANSelect = (props: Props) => {
     inputValue: debouncedInputValue,
   });
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-  } = useVLANsInfiniteQuery(apiFilter, open);
+  const { data, error, fetchNextPage, hasNextPage, isFetching } =
+    useVLANsInfiniteQuery(apiFilter, open);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -96,24 +102,30 @@ export const VLANSelect = (props: Props) => {
 
   return (
     <Autocomplete
-      ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
-      }}
+      disabled={disabled}
+      errorText={errorText ?? error?.[0].reason}
       getOptionLabel={(option) =>
         option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
       }
-      isOptionEqualToValue={(option1, options2) =>
-        option1.label === options2.label
+      helperText={helperText}
+      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
+      isOptionEqualToValue={(option1, option2) =>
+        option1.label === option2.label
       }
+      label="VLAN"
+      loading={isFetching}
+      noMarginTop
+      noOptionsText="You have no VLANs in this region. Type to create one."
+      onBlur={() => {
+        if (onBlur) {
+          onBlur();
+        }
+        if (onChange && inputValue && inputValue !== value) {
+          // if input value has changed, select that value. This handles the case where users
+          // expect the new VLAN to be selected onBlur if the only option that exists is to create it
+          onChange(inputValue);
+        }
+      }}
       onChange={(event, value) => {
         if (onChange) {
           onChange(value?.label ?? null);
@@ -133,16 +145,23 @@ export const VLANSelect = (props: Props) => {
       onOpen={() => {
         setOpen(true);
       }}
-      disabled={disabled}
-      errorText={errorText ?? error?.[0].reason}
-      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
-      label="VLAN"
-      loading={isFetching}
-      noOptionsText="You have no VLANs in this region. Type to create one."
-      onBlur={onBlur}
       open={open}
       options={vlans}
       placeholder="Create or select a VLAN"
+      slotProps={{
+        listbox: {
+          onScroll: (event: React.SyntheticEvent) => {
+            const listboxNode = event.currentTarget;
+            if (
+              listboxNode.scrollTop + listboxNode.clientHeight >=
+                listboxNode.scrollHeight &&
+              hasNextPage
+            ) {
+              fetchNextPage();
+            }
+          },
+        },
+      }}
       sx={sx}
       value={selectedVLAN}
     />

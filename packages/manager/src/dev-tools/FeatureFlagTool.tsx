@@ -7,7 +7,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type { FlagSet, Flags } from 'src/featureFlags';
+import type { Flags, FlagSet } from 'src/featureFlags';
 import type { Dispatch } from 'src/hooks/types';
 
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
@@ -20,52 +20,167 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  */
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
+  { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
+  { flag: 'aclpServices', label: 'ACLP Services' },
+  { flag: 'aclpLogs', label: 'ACLP Logs' },
+  { flag: 'apl', label: 'Akamai App Platform' },
+  { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
+  { flag: 'aplLkeE', label: 'Akamai App Platform LKE-E' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
+  { flag: 'blockStorageVolumeLimit', label: 'Block Storage Volume Limit' },
+  { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
+  {
+    flag: 'fwRulesetsPrefixLists',
+    label: 'Firewall RuleSets and Prefix Lists (JSON-based)',
+  },
   { flag: 'gecko2', label: 'Gecko' },
-  { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
-  { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
+  { flag: 'generationalPlansv2', label: 'Generational compute plans' },
+  { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
+  { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
+  { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
+  { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
+  { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
+  { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
-  { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'privateImageSharing', label: 'Private Image Sharing' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
+  { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
+  { flag: 'databasePgBouncer', label: 'Database PgBouncer' },
   { flag: 'databaseResize', label: 'Database Resize' },
+  { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
+  { flag: 'databaseVpc', label: 'Database VPC' },
+  { flag: 'databaseVpcBeta', label: 'Database VPC Beta' },
+  { flag: 'databasePremium', label: 'Database Premium' },
+  {
+    flag: 'databaseRestrictPlanResize',
+    label: 'Database Restrict Premium Plan Resize',
+  },
+  { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
+  { flag: 'iam', label: 'IAM enabled & Beta' },
+  {
+    flag: 'iamLimitedAvailabilityBadges',
+    label: 'IAM Limited Availability Badges',
+  },
+  { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
+  { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
+  {
+    flag: 'linodeCloneFirewall',
+    label: 'Linode Clone Firewall',
+  },
+  {
+    flag: 'vmHostMaintenance',
+    label: 'VM Host Maintenance Policy',
+  },
+  { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
+  { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
+  { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
+
+interface RenderFlagItemProps {
+  label: string;
+  onCheck: (e: React.ChangeEvent, flag: string) => void;
+  path: string;
+  searchTerm: string;
+  value: boolean | object | string | undefined;
+}
+
+const renderFlagItem = ({
+  label,
+  onCheck,
+  path = '',
+  searchTerm,
+  value,
+}: RenderFlagItemProps) => {
+  const isObject = typeof value === 'object' && value !== null;
+
+  if (!isObject) {
+    return (
+      <label title={label}>
+        <input
+          checked={Boolean(value)}
+          onChange={(e) => onCheck(e, path || label)}
+          type="checkbox"
+        />
+        {label}
+      </label>
+    );
+  }
+
+  const sortedEntries = Object.entries(value).sort((a, b) =>
+    a[0].localeCompare(b[0])
+  );
+
+  return (
+    <ul>
+      <details>
+        <summary>{label}</summary>
+        {sortedEntries.map(([key, nestedValue], index) => (
+          <li key={`${key}-${index}`}>
+            {renderFlagItem({
+              label: key,
+              onCheck,
+              path: path ? `${path}.${key}` : key,
+              searchTerm,
+              value: nestedValue,
+            })}
+          </li>
+        ))}
+      </details>
+    </ul>
+  );
+};
 
 const renderFlagItems = (
   flags: Partial<Flags>,
-  onCheck: (e: React.ChangeEvent, flag: string) => void
+  onCheck: (e: React.ChangeEvent, flag: string) => void,
+  searchTerm: string
 ) => {
-  return options.map((option) => {
+  const sortedOptions = options.sort((a, b) => a.label.localeCompare(b.label));
+  return sortedOptions.map((option) => {
     const flagValue = flags[option.flag];
-    const isChecked =
-      typeof flagValue === 'object' && 'enabled' in flagValue
-        ? Boolean(flagValue.enabled)
-        : Boolean(flagValue);
+    const isSearchMatch = option.label
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    if (!isSearchMatch) {
+      return null;
+    }
 
     return (
       <li key={option.flag}>
-        <input
-          style={{
-            marginRight: 12,
-          }}
-          checked={isChecked}
-          onChange={(e) => onCheck(e, option.flag)}
-          type="checkbox"
-        />
-        <span title={option.label}>{option.label}</span>
+        {renderFlagItem({
+          label: option.label,
+          onCheck,
+          path: option.flag,
+          searchTerm,
+          value: flagValue,
+        })}
       </li>
     );
   });
 };
 
+interface NestedObject {
+  [key: string]: boolean | NestedObject;
+}
+
+interface SetNestedValueOptions {
+  ldFlagsObj: NestedObject;
+  path: string[];
+  storedFlagsObj: NestedObject;
+  updatedValue: boolean;
+}
+
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
   const ldFlags = ldUseFlags();
+  const [searchTerm, setSearchTerm] = React.useState('');
 
   React.useEffect(() => {
     const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY);
@@ -74,19 +189,68 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     }
   }, [dispatch]);
 
+  const setNestedValue = ({
+    ldFlagsObj,
+    path,
+    storedFlagsObj,
+    updatedValue,
+  }: SetNestedValueOptions): NestedObject => {
+    const [currentKey, ...restPath] = path;
+
+    // Merge original LD values and existing stored overrides at the current recursion level
+    const base = {
+      ...ldFlagsObj, // Keep original LD values at this level
+      ...storedFlagsObj, // Apply any existing stored overrides at this level
+    };
+
+    // Base case (final key in the path)
+    if (restPath.length === 0) {
+      return {
+        ...base,
+        [currentKey]: updatedValue, // Apply the new change
+      };
+    }
+
+    return {
+      ...base,
+      [currentKey]: setNestedValue({
+        ldFlagsObj: (ldFlagsObj?.[currentKey] as NestedObject) ?? {},
+        path: restPath,
+        storedFlagsObj: (storedFlagsObj?.[currentKey] as NestedObject) ?? {},
+        updatedValue,
+      }),
+    };
+  };
+
   const handleCheck = (
     e: React.ChangeEvent<HTMLInputElement>,
     flag: keyof FlagSet
   ) => {
-    const currentFlag = flags[flag];
-    const updatedValue =
-      typeof currentFlag == 'object' && 'enabled' in currentFlag
-        ? { ...currentFlag, enabled: e.target.checked } // If current flag is an object, update 'enabled' key
-        : e.target.checked;
-    const updatedFlags = {
-      ...getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY),
-      [flag]: updatedValue,
-    };
+    const updatedValue = e.target.checked;
+    const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY) || {};
+
+    const flagParts = flag.split('.');
+
+    // If the flag is not a nested flag, update it directly at the root level
+    if (flagParts.length === 1) {
+      updateFlagStorage({ ...storedFlags, [flag]: updatedValue });
+      return;
+    }
+
+    // If the flag is a nested flag, recursively update only the specific property that changed,
+    // starting from the parentKey and preserving sibling values at each level
+    const [parentKey, ...restPath] = flagParts;
+    const updatedNested = setNestedValue({
+      ldFlagsObj: ldFlags[parentKey],
+      storedFlagsObj: storedFlags[parentKey],
+      path: restPath,
+      updatedValue,
+    });
+
+    updateFlagStorage({ ...storedFlags, [parentKey]: updatedNested });
+  };
+
+  const updateFlagStorage = (updatedFlags: object) => {
     dispatch(setMockFeatureFlags(updatedFlags));
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, JSON.stringify(updatedFlags));
   };
@@ -99,6 +263,10 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, '');
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <div className="dev-tools__tool">
       <div className="dev-tools__tool__header">
@@ -108,12 +276,20 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       </div>
       <div className="dev-tools__tool__body">
         <div className="dev-tools__list-box">
-          <ul>{renderFlagItems(flags, handleCheck)}</ul>
+          <input
+            onChange={handleSearch}
+            placeholder="Search feature flags"
+            style={{ margin: 12 }}
+            type="text"
+          />
+          <ul>{renderFlagItems(flags, handleCheck, searchTerm)}</ul>
         </div>
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button onClick={resetFlags}>Reset to LD DEV Defaults</button>
+          <button className="dev-tools-button" onClick={resetFlags}>
+            Reset to LD DEV Defaults
+          </button>
         </div>
       </div>
     </div>

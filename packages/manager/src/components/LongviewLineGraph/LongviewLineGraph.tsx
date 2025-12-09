@@ -1,15 +1,14 @@
-import { Theme } from '@mui/material/styles';
+import { Divider, ErrorState, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Divider } from 'src/components/Divider';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import {
+import { LineGraph } from 'src/components/LineGraph/LineGraph';
+
+import type { Theme } from '@mui/material/styles';
+import type {
   DataSet,
-  LineGraph,
   LineGraphProps,
 } from 'src/components/LineGraph/LineGraph';
-import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   message: {
@@ -23,7 +22,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       color: theme.palette.text.primary,
     },
     color: theme.color.headline,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
   },
 }));
@@ -44,10 +43,10 @@ export const LongviewLineGraph = React.memo((props: LongViewLineGraphProps) => {
   const message = error // Error state is separate, don't want to put text on top of it
     ? undefined
     : loading // Loading takes precedence over empty data
-    ? 'Loading data...'
-    : isDataEmpty(props.data)
-    ? 'No data to display'
-    : undefined;
+      ? 'Loading data...'
+      : isDataEmpty(props.data)
+        ? 'No data to display'
+        : undefined;
 
   return (
     <React.Fragment>

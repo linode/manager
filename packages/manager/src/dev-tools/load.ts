@@ -1,4 +1,3 @@
-import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { mswDB } from 'src/mocks/indexedDB';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { createInitialMockStore, emptyStore } from 'src/mocks/mockState';
@@ -12,9 +11,7 @@ import {
   isMSWEnabled,
 } from './utils';
 
-import type { QueryClient } from '@tanstack/react-query';
 import type { MockPresetExtra, MockSeeder, MockState } from 'src/mocks/types';
-import type { ApplicationStore } from 'src/store';
 
 export let mockState: MockState;
 
@@ -24,12 +21,7 @@ export let mockState: MockState;
  *
  * @param store Redux store to control
  */
-export async function loadDevTools(
-  store: ApplicationStore,
-  client: QueryClient
-) {
-  const devTools = await import('./dev-tools');
-
+export async function loadDevTools() {
   if (isMSWEnabled) {
     const { worker: mswWorker } = await import('../mocks/mswWorkers');
     const mswPresetId = getBaselinePreset() ?? defaultBaselineMockPreset.id;
@@ -76,9 +68,9 @@ export async function loadDevTools(
 
     const seeds = await populateSeeds(emptyStore);
 
-    const seedPromises = (Object.keys(
-      seedContext
-    ) as (keyof MockState)[]).map((key) => updateSeedContext(key, seeds));
+    const seedPromises = (Object.keys(seedContext) as (keyof MockState)[]).map(
+      (key) => updateSeedContext(key, seeds)
+    );
 
     await Promise.all(seedPromises);
 
@@ -87,33 +79,21 @@ export async function loadDevTools(
     // Merge the contexts
     const mergedContext: MockState = {
       ...initialContext,
-      eventQueue: [
-        ...initialContext.eventQueue,
-        ...(seedContext?.eventQueue || []),
-      ],
-      firewalls: [
-        ...initialContext.firewalls,
-        ...(seedContext?.firewalls || []),
-      ],
-      linodeConfigs: [
-        ...initialContext.linodeConfigs,
-        ...(seedContext?.linodeConfigs || []),
-      ],
-      linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
-      notificationQueue: [
-        ...initialContext.notificationQueue,
-        ...(seedContext?.notificationQueue || []),
-      ],
-      placementGroups: [
-        ...initialContext.placementGroups,
-        ...(seedContext?.placementGroups || []),
-      ],
-      regionAvailability: [
-        ...initialContext.regionAvailability,
-        ...(seedContext?.regionAvailability || []),
-      ],
-      regions: [...initialContext.regions, ...(seedContext?.regions || [])],
-      volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
+      ...Object.fromEntries(
+        Object.keys(initialContext).map((key) => {
+          const k = key as keyof MockState;
+          const initialValue = initialContext[k];
+          const seedValue = seedContext?.[k];
+
+          if (Array.isArray(initialValue) && Array.isArray(seedValue)) {
+            return [k, [...initialValue, ...seedValue]];
+          } else if (seedValue !== undefined) {
+            return [k, seedValue];
+          } else {
+            return [k, initialValue];
+          }
+        })
+      ),
     };
 
     const extraHandlers = extraMswPresets.reduce(
@@ -128,15 +108,4 @@ export async function loadDevTools(
     const worker = mswWorker(extraHandlers, baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
-
-  devTools.install(store, client);
 }
-
-/**
- * Defaults to `true` for development
- * Default to `false` in production builds
- *
- * Define `REACT_APP_ENABLE_DEV_TOOLS` to explicitly enable or disable dev tools
- */
-export const shouldLoadDevTools =
-  ENABLE_DEV_TOOLS !== undefined ? ENABLE_DEV_TOOLS : import.meta.env.DEV;

@@ -1,7 +1,8 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { AccountLogin } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { AccountLogin } from './types';
 
 /**
  * getAccountLogins
@@ -14,7 +15,7 @@ export const getAccountLogins = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/account/logins`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -28,5 +29,5 @@ export const getAccountLogins = (params?: Params, filter?: Filter) =>
 export const getAccountLogin = (loginId: number) =>
   Request<AccountLogin>(
     setURL(`${API_ROOT}/account/logins/${encodeURIComponent(loginId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );

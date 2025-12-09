@@ -1,6 +1,7 @@
 import {
-  DEFAULT_SUBNET_IPV4_VALUE,
   calculateAvailableIPv4sRFC1918,
+  calculateAvailableIPv6Linodes,
+  DEFAULT_SUBNET_IPV4_VALUE,
   getRecommendedSubnetIPv4,
 } from './subnets';
 
@@ -124,5 +125,21 @@ describe('getRecommendedSubnetIPv4', () => {
   it('may recommend valid IPs that cover the same range', () => {
     const recommendedIP = getRecommendedSubnetIPv4('172.16.0.0/16', []);
     expect(recommendedIP).toEqual('172.16.1.0/16');
+  });
+});
+
+describe('calculateAvailableIPv6Linodes', () => {
+  it('should return 2^(64-X) - 1 where X is the mask', () => {
+    const availableIPv6Linodes = calculateAvailableIPv6Linodes('/52');
+    expect(availableIPv6Linodes).toEqual(4095);
+
+    const availableIPv6Linodes2 = calculateAvailableIPv6Linodes('/53');
+    expect(availableIPv6Linodes2).toEqual(2047);
+
+    const availableIPv6Linodes3 = calculateAvailableIPv6Linodes('/54');
+    expect(availableIPv6Linodes3).toEqual(1023);
+
+    const availableIPv6Linodes4 = calculateAvailableIPv6Linodes('/62');
+    expect(availableIPv6Linodes4).toEqual(3);
   });
 });

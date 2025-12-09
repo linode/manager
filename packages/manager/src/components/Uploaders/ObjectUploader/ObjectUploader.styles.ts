@@ -1,7 +1,6 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
-
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 

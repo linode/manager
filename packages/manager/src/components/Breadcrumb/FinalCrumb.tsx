@@ -1,11 +1,13 @@
 import * as React from 'react';
 
+import { Link } from '../Link';
 import {
   StyledDiv,
   StyledEditableText,
   StyledH1Header,
 } from './FinalCrumb.styles';
-import { EditableProps, LabelProps } from './types';
+
+import type { EditableProps, LabelProps } from './types';
 
 interface Props {
   crumb: string;
@@ -15,12 +17,15 @@ interface Props {
 }
 
 export const FinalCrumb = React.memo((props: Props) => {
-  const {
-    crumb,
-    disabledBreadcrumbEditButton,
-    labelOptions,
-    onEditHandlers,
-  } = props;
+  const { crumb, disabledBreadcrumbEditButton, labelOptions, onEditHandlers } =
+    props;
+
+  const linkProps = labelOptions?.linkTo
+    ? {
+        LinkComponent: Link,
+        labelLink: labelOptions.linkTo,
+      }
+    : {};
 
   if (onEditHandlers) {
     return (
@@ -29,10 +34,11 @@ export const FinalCrumb = React.memo((props: Props) => {
         disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         errorText={onEditHandlers.errorText}
         handleAnalyticsEvent={onEditHandlers.handleAnalyticsEvent}
-        labelLink={labelOptions && labelOptions.linkTo}
+        isBreadcrumb
         onCancel={onEditHandlers.onCancel}
         onEdit={onEditHandlers.onEdit}
         text={onEditHandlers.editableTextTitle}
+        {...linkProps}
       />
     );
   }
@@ -40,11 +46,11 @@ export const FinalCrumb = React.memo((props: Props) => {
   return (
     <StyledDiv>
       <StyledH1Header
+        dataQaEl={crumb}
         sx={{
           ...(labelOptions &&
             labelOptions.noCap && { textTransform: 'initial' }),
         }}
-        dataQaEl={crumb}
         title={crumb}
       />
     </StyledDiv>

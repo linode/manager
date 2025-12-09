@@ -1,6 +1,10 @@
-import ZoomInMap from '@mui/icons-material/ZoomInMap';
-import ZoomOutMap from '@mui/icons-material/ZoomOutMap';
+import { IconButton } from '@mui/material';
 import * as React from 'react';
+
+import ZoomInMap from 'src/assets/icons/zoomin.svg';
+import ZoomOutMap from 'src/assets/icons/zoomout.svg';
+
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
 
 export interface ZoomIconProperties {
   className?: string;
@@ -9,29 +13,49 @@ export interface ZoomIconProperties {
 }
 
 export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
-  const handleClick = (needZoomIn: boolean) => {
-    props.handleZoomToggle(needZoomIn);
-  };
+  const { handleZoomToggle } = props;
 
-  const ToggleZoomer = () => {
-    if (props.zoomIn) {
-      return (
-        <ZoomInMap
-          data-testid="zoom-in"
-          onClick={() => handleClick(false)}
-          style={{ color: 'grey', fontSize: 'x-large' }}
-        />
-      );
-    }
-
+  if (props.zoomIn) {
     return (
-      <ZoomOutMap
-        data-testid="zoom-out"
-        onClick={() => handleClick(true)}
-        style={{ color: 'grey', fontSize: 'x-large' }}
-      />
+      <CloudPulseTooltip
+        key="minimize-tooltip"
+        placement="bottom-end"
+        title="Minimize"
+      >
+        <IconButton
+          aria-label="Zoom Out"
+          color="inherit"
+          data-testid="zoom-out"
+          onClick={() => handleZoomToggle(false)}
+          sx={{
+            padding: 0,
+            visibility: { lg: 'visible', xs: 'hidden' },
+          }}
+        >
+          <ZoomOutMap />
+        </IconButton>
+      </CloudPulseTooltip>
     );
-  };
+  }
 
-  return <ToggleZoomer />;
+  return (
+    <CloudPulseTooltip
+      key="maximize-tooltip"
+      placement="bottom-end"
+      title="Maximize"
+    >
+      <IconButton
+        aria-label="Zoom In"
+        color="inherit"
+        data-testid="zoom-in"
+        onClick={() => handleZoomToggle(true)}
+        sx={{
+          padding: 0,
+          visibility: { lg: 'visible', xs: 'hidden' },
+        }}
+      >
+        <ZoomInMap />
+      </IconButton>
+    </CloudPulseTooltip>
+  );
 });

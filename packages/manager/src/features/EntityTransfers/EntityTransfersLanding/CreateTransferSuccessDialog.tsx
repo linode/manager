@@ -1,27 +1,25 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
+import { Button, Tooltip, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
-import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { parseAPIDate } from 'src/utilities/date';
-import { pluralize } from 'src/utilities/pluralize';
 
 import {
-  StyledCopyDiv,
   StyledCopyableTextField,
+  StyledCopyDiv,
   StyledDialog,
   StyledInputDiv,
   StyledTypography,
 } from './CreateTransferSuccessDialog.styles';
+
+import type { EntityTransfer } from '@linode/api-v4';
 
 const debouncedSendEntityTransferCopyTokenEvent = debounce(
   10 * 1000,
@@ -44,11 +42,23 @@ interface Props {
 export const CreateTransferSuccessDialog = React.memo((props: Props) => {
   const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
+
   const handleCopy = (idx: number, text: string) => {
     copy(text);
-    setTooltipOpen((state) => update(idx, true, state));
+
+    setTooltipOpen((prev) => {
+      const newToolTipState = [...prev];
+      newToolTipState[idx] = true;
+      return newToolTipState;
+    });
+
     setTimeout(
-      () => setTooltipOpen((state) => update(idx, false, state)),
+      () =>
+        setTooltipOpen((prev) => {
+          const newToolTipState = [...prev];
+          newToolTipState[idx] = false;
+          return newToolTipState;
+        }),
       1000
     );
   };
@@ -92,19 +102,19 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <StyledCopyableTextField
           aria-disabled
           fullWidth
-          hideIcon
+          hideIcons
           label="Token"
           value={transfer.token}
         />
         <Tooltip open={tooltipOpen[0]} title="Copied!">
           <StyledCopyDiv>
             <Button
+              buttonType="outlined"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferCopyTokenEvent();
                 handleCopy(0, transfer.token);
               }}
-              buttonType="outlined"
             >
               Copy Token
             </Button>
@@ -115,7 +125,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <StyledCopyableTextField
           aria-disabled
           fullWidth
-          hideIcon
+          hideIcons
           label="Draft Email"
           multiline
           value={draftEmail}
@@ -123,12 +133,12 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <Tooltip open={tooltipOpen[1]} title="Copied!">
           <StyledCopyDiv>
             <Button
+              buttonType="primary"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferDraftEmailEvent();
                 handleCopy(1, draftEmail);
               }}
-              buttonType="primary"
             >
               Copy Draft Email
             </Button>

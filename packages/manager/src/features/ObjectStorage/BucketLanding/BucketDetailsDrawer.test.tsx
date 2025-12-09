@@ -1,23 +1,32 @@
+import {
+  profileFactory,
+  readableBytes,
+  regionFactory,
+  truncateMiddle,
+} from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
 import {
   objectStorageBucketFactory,
-  profileFactory,
-  regionFactory,
+  objectStorageBucketFactoryGen2,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 
 // Mock utility functions
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    readableBytes: vi.fn(),
+    truncateMiddle: vi.fn(),
+  };
+});
 vi.mock('src/utilities/formatDate');
-vi.mock('src/utilities/truncate');
-vi.mock('src/utilities/unitConversions');
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({
@@ -28,8 +37,8 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 // Mock the queries
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -198,5 +207,61 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
         screen.queryByLabelText('Access Control List (ACL)')
       ).not.toBeInTheDocument();
     });
+  });
+});
+
+describe('BucketDetailDrawer: Gen2 UI', () => {
+  const e3Bucket = objectStorageBucketFactoryGen2.build();
+
+  const region = regionFactory.build({
+    id: e3Bucket.region,
+  });
+
+  it('renders correctly when open', () => {
+    renderWithThemeAndHookFormContext({
+      component: (
+        <BucketDetailsDrawer
+          onClose={mockOnClose}
+          open={true}
+          selectedBucket={e3Bucket}
+        />
+      ),
+      options: {
+        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+      },
+    });
+
+    expect(screen.getByText(e3Bucket.label)).toBeInTheDocument();
+    expect(screen.getByTestId('createdTime')).toHaveTextContent(
+      'Created: 2019-12-12'
+    );
+    expect(screen.getByTestId('endpointType')).toHaveTextContent(
+      `Endpoint Type: E3`
+    );
+    expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
+    expect(screen.getByText(e3Bucket.hostname)).toBeInTheDocument();
+    expect(screen.getByText('1 MB')).toBeInTheDocument();
+    expect(screen.getByText('103 objects')).toBeInTheDocument();
+  });
+
+  it("doesn't show the CORS switch for E2 and E3 buckets", async () => {
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: (
+        <BucketDetailsDrawer
+          onClose={mockOnClose}
+          open={true}
+          selectedBucket={e3Bucket}
+        />
+      ),
+      options: {
+        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+      },
+    });
+
+    expect(
+      getByText(
+        /CORS \(Cross Origin Sharing\) is not available for endpoint types E2 and E3./
+      )
+    ).toBeInTheDocument();
   });
 });

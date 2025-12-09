@@ -1,10 +1,9 @@
+import { Box } from '@linode/ui';
 import 'font-logos/assets/font-logos.css';
 import React from 'react';
 
-import { Box } from './Box';
-
-import type { BoxProps } from './Box';
 import type { Image } from '@linode/api-v4';
+import type { BoxProps } from '@linode/ui';
 
 interface Props extends BoxProps {
   /**

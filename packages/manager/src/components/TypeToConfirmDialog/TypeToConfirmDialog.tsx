@@ -1,16 +1,15 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { usePreferences } from '@linode/queries';
+import { ActionsPanel } from '@linode/ui';
+import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import {
-  ConfirmationDialog,
-  ConfirmationDialogProps,
-} from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  TypeToConfirm,
-  TypeToConfirmProps,
-} from 'src/components/TypeToConfirm/TypeToConfirm';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { ActionButtonsProps } from '@linode/ui';
+import type { ConfirmationDialogProps } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import type { TypeToConfirmProps } from 'src/components/TypeToConfirm/TypeToConfirm';
 
 interface EntityInfo {
   action?:
@@ -19,28 +18,31 @@ interface EntityInfo {
     | 'detachment'
     | 'resizing'
     | 'restoration';
+  error?: APIError[] | null | string | undefined;
   name?: string | undefined;
   primaryBtnText: string;
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
   type:
     | 'AccountSetting'
+    | 'Alert'
     | 'Bucket'
     | 'Database'
+    | 'Domain'
+    | 'Image'
     | 'Kubernetes'
     | 'Linode'
     | 'Load Balancer'
+    | 'Managed Contact'
+    | 'Managed Credential'
+    | 'Managed Service Monitor'
     | 'NodeBalancer'
     | 'Placement Group'
     | 'Subnet'
-    | 'VPC'
-    | 'Volume';
+    | 'Volume'
+    | 'VPC';
 }
 
 interface TypeToConfirmDialogProps {
-  /**
-   * Chidlren are rendered above the TypeToConfirm input
-   */
-  children?: React.ReactNode;
   /**
    * Props to be allow disabling the input
    */
@@ -57,6 +59,11 @@ interface TypeToConfirmDialogProps {
    * Error to be displayed in the dialog
    */
   errors?: APIError[] | null | undefined;
+  /**
+   * Makes the TextField use 100% of the available width
+   * @default false
+   */
+  expand?: boolean;
   /*
    * The label for the dialog
    */
@@ -70,13 +77,18 @@ interface TypeToConfirmDialogProps {
    */
   onClick: () => void;
   /**
-   * Optional callback to be executed when the closing animation has completed
-   */
-  onExited?: () => void;
-  /**
    * The open/closed state of the dialog
    */
   open: boolean;
+  /** Props for the primary button */
+  primaryButtonProps?: Omit<ActionButtonsProps, 'label'>;
+  /**
+   * Determines the order of the primary and secondary buttons within the actions panel.
+   * If true, the primary button will be on the left and the secondary button on the right.
+   */
+  reversePrimaryButtonPosition?: boolean;
+  /** Props for the secondary button */
+  secondaryButtonProps?: ActionButtonsProps;
 }
 
 type CombinedProps = TypeToConfirmDialogProps &
@@ -90,90 +102,165 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     disableTypeToConfirmSubmit,
     entity,
     errors,
+    expand,
     inputProps,
+    isFetching,
     label,
     loading,
     onClick,
     onClose,
-    onExited,
     open,
+    primaryButtonProps,
+    reversePrimaryButtonPosition,
+    secondaryButtonProps,
     textFieldStyle,
     title,
     typographyStyle,
+    typographyStyleSx,
   } = props;
 
-  const [confirmText, setConfirmText] = React.useState('');
+  const [confirmationValues, setConfirmationValues] = React.useState({
+    confirmText: '',
+    services: false,
+    users: false,
+  });
 
-  const { data: preferences } = usePreferences();
+  const handleDeleteAccountServices = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setConfirmationValues({
+      ...confirmationValues,
+      [e.target.name]: e?.target.checked,
+    });
+  };
+
+  const { data: typeToConfirmPreference } = usePreferences(
+    (preferences) => preferences?.type_to_confirm ?? true
+  );
+
+  const isCloseAccount = entity.subType === 'CloseAccount';
+  const isTypeToConfirmEnabled =
+    Boolean(typeToConfirmPreference) || isCloseAccount;
+  const isTextConfirmationValid =
+    confirmationValues.confirmText === entity.name;
+  const isCloseAccountValid =
+    !isCloseAccount ||
+    (confirmationValues.services && confirmationValues.users);
+
   const isPrimaryButtonDisabled =
-    (preferences?.type_to_confirm !== false && confirmText !== entity.name) ||
+    (isTypeToConfirmEnabled && !isTextConfirmationValid) ||
+    !isCloseAccountValid ||
     disableTypeToConfirmSubmit;
-  const isTypeToConfirmInputDisabled = disableTypeToConfirmInput;
 
   React.useEffect(() => {
     if (open) {
-      setConfirmText('');
+      setConfirmationValues({
+        ...confirmationValues,
+        confirmText: '',
+      });
     }
   }, [open]);
 
-  const typeInstructions =
-    entity.action === 'cancellation'
-      ? `type your Username `
-      : `type  the name of the ${entity.type} ${entity.subType || ''} `;
+  const getButtonProps = () => {
+    const confirmProps: ActionButtonsProps = {
+      ...primaryButtonProps,
+      ...((entity.action === 'deletion' ||
+        entity.action === 'cancellation' ||
+        isCloseAccount) && {
+        color: 'error',
+      }),
+      'data-testid': 'confirm',
+      disabled: isPrimaryButtonDisabled,
+      label: entity.primaryBtnText,
+      loading,
+      onClick,
+    };
 
-  const actions = (
-    <ActionsPanel
-      primaryButtonProps={{
-        'data-testid': 'confirm',
-        disabled: isPrimaryButtonDisabled,
-        label: entity.primaryBtnText,
-        loading,
-        onClick,
-      }}
-      secondaryButtonProps={{
-        'data-testid': 'cancel',
-        label: 'Cancel',
-        onClick: onClose,
-      }}
-      style={{ padding: 0 }}
-    />
-  );
+    const cancelProps: ActionButtonsProps = {
+      'data-testid': 'cancel',
+      label: 'Cancel',
+      onClick: () => onClose?.({}, 'escapeKeyDown'),
+      ...secondaryButtonProps,
+    };
+
+    return {
+      primaryButtonProps: reversePrimaryButtonPosition
+        ? cancelProps
+        : confirmProps,
+      secondaryButtonProps: reversePrimaryButtonPosition
+        ? confirmProps
+        : cancelProps,
+    };
+  };
+
+  const getTypeToConfirmProps = () => {
+    if (isCloseAccount) {
+      return {
+        confirmationText: (
+          <FormLabel>
+            Please confirm you want to close your cloud computing services
+            account
+          </FormLabel>
+        ),
+        hideInstructions: true,
+        placeholder: 'Email',
+      };
+    }
+
+    const typeInstructions =
+      entity.action === 'cancellation' && entity.type === 'AccountSetting'
+        ? 'type your Username '
+        : `type the name of the ${entity.type} ${entity.subType || ''} `;
+
+    return {
+      confirmationText: (
+        <span>
+          To confirm {entity.action}, {typeInstructions}(<b>{entity.name}</b>)
+          in the field below:
+        </span>
+      ),
+      hideInstructions: false,
+      placeholder: '',
+    };
+  };
 
   return (
     <ConfirmationDialog
-      actions={actions}
+      actions={
+        <ActionsPanel
+          {...getButtonProps()}
+          reversePrimaryButtonPosition={reversePrimaryButtonPosition}
+          style={{ padding: 0 }}
+        />
+      }
+      entityError={entity.error}
       error={errors ? errors[0].reason : undefined}
+      isFetching={isFetching}
       onClose={onClose}
-      onExited={onExited}
       open={open}
       title={title}
     >
       {children}
       <TypeToConfirm
-        confirmationText={
-          entity.subType === 'CloseAccount' ? (
-            ''
-          ) : (
-            <span>
-              To confirm {entity.action}, {typeInstructions}(
-              <b>{entity.name}</b>) in the field below:
-            </span>
-          )
-        }
-        onChange={(input) => {
-          setConfirmText(input);
-        }}
+        {...getTypeToConfirmProps()}
         data-testid={'dialog-confirm-text-input'}
-        disabled={isTypeToConfirmInputDisabled}
-        expand
-        hideInstructions={entity.subType === 'CloseAccount'}
+        disabled={disableTypeToConfirmInput}
+        expand={expand}
+        handleDeleteAccountServices={handleDeleteAccountServices}
         inputProps={inputProps}
+        isCloseAccount={isCloseAccount}
         label={label}
-        placeholder={entity.subType === 'CloseAccount' ? 'Username' : ''}
+        onChange={(input) => {
+          setConfirmationValues({
+            ...confirmationValues,
+            confirmText: input,
+          });
+        }}
         textFieldStyle={textFieldStyle}
         typographyStyle={typographyStyle}
-        value={confirmText}
-        visible={preferences?.type_to_confirm}
+        typographyStyleSx={typographyStyleSx}
+        value={confirmationValues.confirmText}
+        visible={typeToConfirmPreference || isCloseAccount}
       />
     </ConfirmationDialog>
   );

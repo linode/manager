@@ -1,16 +1,14 @@
+import { useAccount } from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
+import { pluralize, useInterval } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useInterval } from 'src/hooks/useInterval';
-import { useAccount } from 'src/queries/account/account';
 import { parseAPIDate } from 'src/utilities/date';
-import { pluralize } from 'src/utilities/pluralize';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 interface SessionExpirationDialogProps {
@@ -32,14 +30,14 @@ export const SessionExpirationDialog = React.memo(
       seconds: 0,
     });
     const [logoutLoading, setLogoutLoading] = React.useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { data: account } = useAccount();
     const euuid = account?.euuid ?? '';
 
     const {
       createToken,
-      createTokenError,
-      createTokenLoading,
+      error: createTokenError,
+      loading: createTokenLoading,
       revokeToken,
       updateCurrentToken,
       validateParentToken,
@@ -83,7 +81,7 @@ export const SessionExpirationDialog = React.memo(
       setLogoutLoading(true);
 
       if (!validateParentToken()) {
-        history.push('/logout');
+        navigate({ to: '/logout' });
       }
 
       await revokeToken().catch(() => {
@@ -173,13 +171,13 @@ export const SessionExpirationDialog = React.memo(
 
     return (
       <ConfirmationDialog
-        onClose={() => {
-          onClose();
-        }}
         actions={actions}
         data-testid="session-expiration-dialog"
         error={createTokenErrorReason}
         maxWidth="xs"
+        onClose={() => {
+          onClose();
+        }}
         open={isOpen}
         title="Your session is about to expire"
       >

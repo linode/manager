@@ -1,44 +1,43 @@
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
-import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import {
   useDeletePlacementGroup,
   useUnassignLinodesFromPlacementGroup,
-} from 'src/queries/placementGroups';
+} from '@linode/queries';
+import { Button, List, ListItem, Notice, Typography } from '@linode/ui';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
 import { getPlacementGroupLinodes } from './utils';
 
 import type {
+  APIError,
   Linode,
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
-import type { ButtonProps } from 'src/components/Button/Button';
+import type { ButtonProps } from '@linode/ui';
 
 interface Props {
   disableUnassignButton: boolean;
+  isFetching: boolean;
   linodes: Linode[] | undefined;
   onClose: () => void;
   open: boolean;
   selectedPlacementGroup: PlacementGroup | undefined;
+  selectedPlacementGroupError: APIError[] | null;
 }
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
+    isFetching,
     linodes,
     onClose,
     open,
     selectedPlacementGroup,
+    selectedPlacementGroupError,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -99,52 +98,29 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const assignedLinodesCount = assignedLinodes?.length ?? 0;
   const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
 
-  if (!selectedPlacementGroup) {
-    return null;
-  }
-
-  if (!assignedLinodes) {
-    return (
-      <ConfirmationDialog
-        sx={{
-          '& .MuiDialog-paper': {
-            '& > .MuiDialogContent-root > div': {
-              maxHeight: 300,
-              padding: 4,
-            },
-            maxHeight: 500,
-            width: 500,
-          },
-        }}
-        onClose={handleClose}
-        open={open}
-        title="Delete Placement Group"
-      >
-        <CircleProgress />
-      </ConfirmationDialog>
-    );
-  }
-
   return (
     <TypeToConfirmDialog
-      entity={{
-        action: 'deletion',
-        name: selectedPlacementGroup.label,
-        primaryBtnText: 'Delete',
-        type: 'Placement Group',
-      }}
       disableTypeToConfirmInput={isDisabled}
       disableTypeToConfirmSubmit={isDisabled}
+      entity={{
+        action: 'deletion',
+        name: selectedPlacementGroup?.label,
+        primaryBtnText: 'Delete',
+        type: 'Placement Group',
+        error: selectedPlacementGroupError,
+      }}
+      expand
+      isFetching={isFetching}
       label="Placement Group"
       loading={deletePlacementLoading}
       onClick={onDelete}
       onClose={handleClose}
       open={open}
-      title={`Delete Placement Group ${selectedPlacementGroup.label}`}
+      title={`Delete Placement Group${selectedPlacementGroup ? ` ${selectedPlacementGroup.label}` : ''}?`}
     >
       {error && (
         <Notice
-          key={selectedPlacementGroup.id}
+          key={selectedPlacementGroup?.id}
           text={error?.[0]?.reason}
           variant="error"
         />
@@ -156,19 +132,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             <Typography>
               <strong>Warning:</strong>
             </Typography>
-            <List
-              sx={(theme) => ({
-                '& > li': {
-                  display: 'list-item',
-                  fontSize: '0.875rem',
-                  pb: 0,
-                  pl: 0,
-                },
-                listStyle: 'disc',
-                ml: theme.spacing(2),
-                mt: theme.spacing(),
-              })}
-            >
+            <List>
               <ListItem>
                 Deleting a placement group is permanent and cannot be undone.
               </ListItem>
@@ -179,26 +143,26 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             </List>
           </Notice>
           <RemovableSelectionsList
+            disableItemsOnRemove
+            hasEncounteredMutationError={Boolean(unassignLinodeError)}
+            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup?.label}`}
+            id="assigned-linodes"
+            maxWidth={540}
+            noDataText="No Linodes assigned to this Placement Group."
+            onRemove={handleUnassignLinode}
             RemoveButton={(props: ButtonProps) => (
               <Button
                 {...props}
+                disabled={disableUnassignButton || props.disabled}
                 sx={(theme) => ({
-                  fontFamily: theme.font.normal,
+                  font: theme.font.normal,
                   fontSize: '0.875rem',
                 })}
-                disabled={disableUnassignButton || props.disabled}
                 variant="text"
               >
                 Unassign
               </Button>
             )}
-            disableItemsOnRemove
-            hasEncounteredMutationError={Boolean(unassignLinodeError)}
-            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup.label}`}
-            id="assigned-linodes"
-            maxWidth={540}
-            noDataText="No Linodes assigned to this Placement Group."
-            onRemove={handleUnassignLinode}
             selectionData={assignedLinodes ?? []}
             showLoadingIndicatorOnRemove
             sx={{ mb: 3, mt: 1 }}

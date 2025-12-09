@@ -1,9 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { Typography } from 'src/components/Typography';
 
 import { EditableInput } from './EditableInput';
 
@@ -48,23 +48,23 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
 
   return (
     <Grid
+      container
+      direction="row"
       sx={{
+        alignItems: 'center',
+        justifyContent: 'flex-start',
         margin: 0,
         minHeight: '40px',
       }}
-      alignItems="center"
-      container
-      direction="row"
-      justifyContent="flex-start"
       wrap="nowrap"
     >
       {!isEditing && iconVariant && (
         <Grid className="py0 px0">
           <EntityIcon
+            status={status}
             style={{
               marginRight: theme.spacing(1),
             }}
-            status={status}
             variant={iconVariant}
           />
         </Grid>
@@ -86,7 +86,7 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
             />
           </Grid>
           {subText && !isEditing && (
-            <Grid className="py0 px0" xs={12}>
+            <Grid className="py0 px0" size={12}>
               <Typography variant="body1">{subText}</Typography>
             </Grid>
           )}

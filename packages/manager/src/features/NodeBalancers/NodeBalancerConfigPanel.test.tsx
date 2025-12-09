@@ -1,41 +1,37 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
-  NodeBalancerConfigPanel,
-  ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
-  SOURCE_ALGORITHM_HELPER_TEXT,
-} from './NodeBalancerConfigPanel';
+import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 
 import type {
   NodeBalancerConfigNodeFields,
   NodeBalancerConfigPanelProps,
 } from './types';
 
-beforeEach(() => {
-  vi.resetAllMocks();
-});
-
 const node: NodeBalancerConfigNodeFields = {
   address: '',
   label: '',
   mode: 'accept',
   modifyStatus: 'new',
-  port: 80,
+  port: '80',
   weight: 100,
 };
 
-const props: NodeBalancerConfigPanelProps = {
+export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   addNode: vi.fn(),
   algorithm: 'roundrobin',
   checkBody: '',
   checkPassive: true,
   checkPath: '',
   configIdx: 0,
-  disabled: false,
+  permissions: {
+    update_nodebalancer: true,
+    delete_nodebalancer: true,
+    create_nodebalancer_config: true,
+    create_nodebalancer: true,
+  },
   healthCheckAttempts: 2,
   healthCheckInterval: 5,
   healthCheckTimeout: 3,
@@ -61,6 +57,7 @@ const props: NodeBalancerConfigPanelProps = {
   onSave: vi.fn(),
   onSessionStickinessChange: vi.fn(),
   onSslCertificateChange: vi.fn(),
+  onUdpCheckPortChange: vi.fn(),
   port: 80,
   privateKey: '',
   protocol: 'http',
@@ -68,9 +65,20 @@ const props: NodeBalancerConfigPanelProps = {
   removeNode: vi.fn(),
   sessionStickiness: 'table',
   sslCertificate: '',
+  udpCheckPort: 80,
 };
 
-const activeHealthChecks = ['Interval', 'Timeout', 'Attempts'];
+const activeHealthChecksFormInputs = ['Interval', 'Timeout', 'Attempts'];
+
+const activeHealthChecksHelperText = [
+  'Seconds (2-3600) between health check probes.',
+  'Seconds to wait (1-30) before considering the probe a failure. Must be less than Interval.',
+  'Number of failed probes (1-30) before taking a node out of rotation.',
+];
+
+const sslCertificate = 'ssl-certificate';
+const privateKey = 'private-key';
+const proxyProtocol = 'Proxy Protocol';
 
 describe('NodeBalancerConfigPanel', () => {
   it('renders the NodeBalancerConfigPanel', () => {
@@ -79,7 +87,10 @@ describe('NodeBalancerConfigPanel', () => {
       getByText,
       queryByLabelText,
       queryByTestId,
-    } = renderWithTheme(<NodeBalancerConfigPanel {...props} />);
+      queryByText,
+    } = renderWithTheme(
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
+    );
 
     expect(getByLabelText('Protocol')).toBeVisible();
     expect(getByLabelText('Algorithm')).toBeVisible();
@@ -89,175 +100,358 @@ describe('NodeBalancerConfigPanel', () => {
     expect(getByLabelText('IP Address')).toBeVisible();
     expect(getByLabelText('Weight')).toBeVisible();
     expect(getByLabelText('Port')).toBeVisible();
-    expect(getByText('Listen on this port.')).toBeVisible();
+    expect(
+      getByText(
+        'The unique inbound port that this NodeBalancer configuration will listen on.'
+      )
+    ).toBeVisible();
     expect(getByText('Active Health Checks')).toBeVisible();
     expect(
       getByText(
-        'Route subsequent requests from the client to the same backend.'
+        'Routes subsequent requests from the client to the same backend.'
       )
     ).toBeVisible();
     expect(
       getByText(
-        'Enable passive checks based on observing communication with back-end nodes.'
+        "When enabled, the NodeBalancer monitors requests to backends. If a request times out, returns a 5xx response (except 501/505), or fails to connect, the backend is marked 'down' and removed from rotation."
       )
     ).toBeVisible();
     expect(
       getByText(
-        "Active health checks proactively check the health of back-end nodes. 'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body."
+        "Monitors backends to ensure they’re 'up' and handling requests."
       )
     ).toBeVisible();
     expect(getByText('Add a Node')).toBeVisible();
     expect(getByText('Backend Nodes')).toBeVisible();
 
-    activeHealthChecks.forEach((type) => {
-      expect(queryByLabelText(type)).not.toBeInTheDocument();
+    activeHealthChecksFormInputs.forEach((formLabel) => {
+      expect(queryByLabelText(formLabel)).not.toBeInTheDocument();
     });
-    expect(queryByTestId('ssl-certificate')).not.toBeInTheDocument();
-    expect(queryByTestId('private-key')).not.toBeInTheDocument();
+    activeHealthChecksHelperText.forEach((helperText) => {
+      expect(queryByText(helperText)).not.toBeInTheDocument();
+    });
+    expect(queryByTestId(sslCertificate)).not.toBeInTheDocument();
+    expect(queryByTestId(privateKey)).not.toBeInTheDocument();
     expect(queryByTestId('http-path')).not.toBeInTheDocument();
     expect(queryByTestId('http-body')).not.toBeInTheDocument();
-    expect(queryByLabelText('Proxy Protocol')).not.toBeInTheDocument();
+    expect(queryByLabelText(proxyProtocol)).not.toBeInTheDocument();
   });
 
   it('renders form fields specific to the HTTPS protocol', () => {
     const { getByTestId, queryByLabelText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} protocol="https" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="https"
+      />
     );
 
-    expect(getByTestId('ssl-certificate')).toBeVisible();
-    expect(getByTestId('private-key')).toBeVisible();
-    expect(queryByLabelText('Proxy Protocol')).not.toBeInTheDocument();
+    expect(getByTestId(sslCertificate)).toBeVisible();
+    expect(getByTestId(privateKey)).toBeVisible();
+    expect(queryByLabelText(proxyProtocol)).not.toBeInTheDocument();
   });
 
   it('renders form fields specific to the TCP protocol', () => {
     const { getByLabelText, queryByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} protocol="tcp" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="tcp"
+      />
     );
 
-    expect(getByLabelText('Proxy Protocol')).toBeVisible();
-    expect(queryByTestId('ssl-certificate')).not.toBeInTheDocument();
-    expect(queryByTestId('private-key')).not.toBeInTheDocument();
+    expect(getByLabelText(proxyProtocol)).toBeVisible();
+    expect(queryByTestId(sslCertificate)).not.toBeInTheDocument();
+    expect(queryByTestId(privateKey)).not.toBeInTheDocument();
   });
 
   it('renders fields specific to the Active Health Check type of TCP Connection', () => {
-    const { getByLabelText, queryByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} healthCheckType="connection" />
+    const { getByLabelText, getByText, queryByTestId } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="connection"
+      />
     );
 
-    activeHealthChecks.forEach((type) => {
-      expect(getByLabelText(type)).toBeVisible();
+    activeHealthChecksFormInputs.forEach((formLabel) => {
+      expect(getByLabelText(formLabel)).toBeVisible();
+    });
+    activeHealthChecksHelperText.forEach((helperText) => {
+      expect(getByText(helperText)).toBeVisible();
     });
     expect(queryByTestId('http-path')).not.toBeInTheDocument();
     expect(queryByTestId('http-body')).not.toBeInTheDocument();
   });
 
   it('renders fields specific to the Active Health Check type of HTTP Status', () => {
-    const { getByLabelText, getByTestId, queryByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} healthCheckType="http" />
-    );
+    const { getByLabelText, getByTestId, getByText, queryByTestId } =
+      renderWithTheme(
+        <NodeBalancerConfigPanel
+          {...nbConfigPanelMockPropsForTest}
+          healthCheckType="http"
+        />
+      );
 
-    activeHealthChecks.forEach((type) => {
-      expect(getByLabelText(type)).toBeVisible();
+    activeHealthChecksFormInputs.forEach((formLabel) => {
+      expect(getByLabelText(formLabel)).toBeVisible();
+    });
+    activeHealthChecksHelperText.forEach((helperText) => {
+      expect(getByText(helperText)).toBeVisible();
     });
     expect(getByTestId('http-path')).toBeVisible();
     expect(queryByTestId('http-body')).not.toBeInTheDocument();
   });
 
   it('renders fields specific to the Active Health Check type of HTTP Body', () => {
-    const { getByLabelText, getByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} healthCheckType="http_body" />
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="http_body"
+      />
     );
 
-    activeHealthChecks.forEach((type) => {
-      expect(getByLabelText(type)).toBeVisible();
+    activeHealthChecksFormInputs.forEach((formLabel) => {
+      expect(getByLabelText(formLabel)).toBeVisible();
+    });
+    activeHealthChecksHelperText.forEach((helperText) => {
+      expect(getByText(helperText)).toBeVisible();
     });
     expect(getByTestId('http-path')).toBeVisible();
     expect(getByTestId('http-body')).toBeVisible();
   });
 
-  it('renders the relevant helper text for the Round Robin algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
-    );
-
-    expect(getByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)).toBeVisible();
-    expect(
-      queryByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)
-    ).not.toBeInTheDocument();
-    expect(queryByText(SOURCE_ALGORITHM_HELPER_TEXT)).not.toBeInTheDocument();
-  });
-
-  it('renders the relevant helper text for the Least Connections algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} algorithm={'leastconn'} />
-    );
-
-    expect(getByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)).toBeVisible();
-    expect(queryByText(SOURCE_ALGORITHM_HELPER_TEXT)).not.toBeInTheDocument();
-    expect(
-      queryByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders the relevant helper text for the Source algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} algorithm={'source'} />
-    );
-
-    expect(getByText(SOURCE_ALGORITHM_HELPER_TEXT)).toBeVisible();
-    expect(
-      queryByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)
-    ).not.toBeInTheDocument();
-    expect(
-      queryByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)
-    ).not.toBeInTheDocument();
-  });
-
-  it('adds another backend node', () => {
+  it('adds another backend node', async () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     const addNodeButton = getByText('Add a Node');
-    fireEvent.click(addNodeButton);
-    expect(props.addNode).toHaveBeenCalled();
+    await userEvent.click(addNodeButton);
+    expect(nbConfigPanelMockPropsForTest.addNode).toHaveBeenCalled();
   });
 
   it('cannot remove a backend node if there is only one node', () => {
     const { queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     expect(queryByText('Remove')).not.toBeInTheDocument();
   });
 
-  it('removes a backend node', () => {
+  it('removes a backend node', async () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} nodes={[{ ...node }, node]} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        nodes={[{ ...node }, node]}
+      />
     );
 
     const removeNodeButton = getByText('Remove');
-    fireEvent.click(removeNodeButton);
-    expect(props.removeNode).toHaveBeenCalled();
+    await userEvent.click(removeNodeButton);
+    expect(nbConfigPanelMockPropsForTest.removeNode).toHaveBeenCalled();
   });
 
-  it('deletes the configuration panel', () => {
+  it('deletes the configuration panel', async () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     const deleteConfigButton = getByText('Delete');
-    fireEvent.click(deleteConfigButton);
-    expect(props.onDelete).toHaveBeenCalled();
+    await userEvent.click(deleteConfigButton);
+    expect(nbConfigPanelMockPropsForTest.onDelete).toHaveBeenCalled();
   });
 
-  it('saves the input after editing the configuration', () => {
+  it('saves the input after editing the configuration', async () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} forEdit={true} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={true}
+      />
     );
 
     const editConfigButton = getByText('Save');
-    fireEvent.click(editConfigButton);
-    expect(props.onSave).toHaveBeenCalled();
+    await userEvent.click(editConfigButton);
+    expect(nbConfigPanelMockPropsForTest.onSave).toHaveBeenCalled();
+  });
+
+  it('does not show the passive checks option for the UDP protocol', () => {
+    const { queryByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="udp"
+      />
+    );
+
+    expect(queryByText('Passive Checks')).not.toBeInTheDocument();
+  });
+
+  it('shows correct algorithm options for the UDP protocol', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="udp"
+      />
+    );
+
+    const algorithmField = getByLabelText('Algorithm');
+
+    expect(algorithmField).toBeVisible();
+
+    await userEvent.click(algorithmField);
+
+    for (const algorithm of ['Round Robin', 'Least Connections', 'Ring Hash']) {
+      expect(getByText(algorithm)).toBeVisible();
+    }
+  });
+
+  it('shows correct session stickiness options for the UDP protocol', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="udp"
+      />
+    );
+
+    const sessionStickinessField = getByLabelText('Session Stickiness');
+
+    expect(sessionStickinessField).toBeVisible();
+
+    await userEvent.click(sessionStickinessField);
+
+    for (const algorithm of ['None', 'Session', 'Source IP']) {
+      expect(getByText(algorithm)).toBeVisible();
+    }
+  });
+
+  it('shows a "Health Check Port" field when health checks are enabled', async () => {
+    const onChange = vi.fn();
+
+    const { getByLabelText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="connection"
+        onUdpCheckPortChange={onChange}
+        protocol="udp"
+      />,
+      { flags: { udp: true } }
+    );
+
+    const checkPortField = getByLabelText('Health Check Port');
+
+    expect(checkPortField).toBeVisible();
+
+    await userEvent.type(checkPortField, '8080');
+
+    expect(onChange).toHaveBeenCalledWith(8080);
+  });
+
+  it('should enable all fields for create mode if user has create_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={false}
+        permissions={{
+          create_nodebalancer: true,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).not.toHaveAttribute('aria-disabled', true);
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).not.toHaveAttribute('aria-disabled', true);
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).not.toHaveAttribute('aria-disabled', true);
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).not.toHaveAttribute('aria-disabled', true);
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', true);
+  });
+
+  it('should disable all fields for create mode if user does not have create_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={false}
+        permissions={{
+          create_nodebalancer: false,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).toBeDisabled();
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).toBeDisabled();
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).toBeDisabled();
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).toBeDisabled();
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).toBeDisabled();
+  });
+
+  it('should enable all fields for edit mode if user has update_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={true}
+        permissions={{
+          update_nodebalancer: true,
+          delete_nodebalancer: true,
+          create_nodebalancer_config: true,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).not.toHaveAttribute('aria-disabled', true);
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).not.toHaveAttribute('aria-disabled', true);
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).not.toHaveAttribute('aria-disabled', true);
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).not.toHaveAttribute('aria-disabled', true);
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', true);
+  });
+
+  it('should disable all fields for edit mode if user does not have update_nodebalancer permission', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={true}
+        permissions={{
+          update_nodebalancer: false,
+          delete_nodebalancer: false,
+          create_nodebalancer_config: false,
+        }}
+      />
+    );
+
+    const portField = getByLabelText('Port');
+    expect(portField).toBeDisabled();
+
+    const protocolField = getByLabelText('Protocol');
+    expect(protocolField).toBeDisabled();
+
+    const algorithmField = getByLabelText('Algorithm');
+    expect(algorithmField).toBeDisabled();
+
+    const addNodeButton = getByText('Add a Node');
+    expect(addNodeButton).toBeDisabled();
+
+    const deleteBtn = getByText('Delete');
+    expect(deleteBtn).toBeDisabled();
   });
 });

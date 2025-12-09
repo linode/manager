@@ -1,31 +1,41 @@
-import type { KubernetesCluster } from '@linode/api-v4';
+import { regionFactory } from '@linode/utilities';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetClusters,
+  mockGetCluster,
   mockGetClusterPools,
+  mockGetClusters,
   mockGetKubeconfig,
+  mockGetTieredKubernetesVersions,
+  mockRecycleAllNodes,
+  mockUpdateCluster,
 } from 'support/intercepts/lke';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+import { readDownload } from 'support/util/downloads';
+import { getRegionById } from 'support/util/regions';
+
 import {
   accountFactory,
   kubernetesClusterFactory,
+  kubernetesEnterpriseTierVersionFactory,
+  kubernetesStandardTierVersionFactory,
   nodePoolFactory,
 } from 'src/factories';
-import { getRegionById } from 'support/util/regions';
-import { readDownload } from 'support/util/downloads';
-import { ui } from 'support/ui';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetAccount } from 'support/intercepts/account';
 
+import type { KubernetesCluster } from '@linode/api-v4';
+
+const mockRegion = regionFactory.build({
+  id: 'us-central',
+  label: 'Dallas, TX',
+  capabilities: ['Linodes', 'Disk Encryption'],
+});
 describe('LKE landing page', () => {
   it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
+      linodeDiskEncryption: false,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -51,22 +61,24 @@ describe('LKE landing page', () => {
   it('displays a Disk Encryption info banner if the LDE feature is enabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
       capabilities: ['Linodes', 'Disk Encryption'],
     });
-    const mockClusters = kubernetesClusterFactory.buildList(3);
+    const mockClusters = kubernetesClusterFactory.buildList(3, {
+      region: mockRegion.id,
+    });
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetClusters(mockClusters).as('getClusters');
+    mockGetRegions([mockRegion]).as('getRegions');
 
     // Intercept request
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait(['@getClusters', '@getAccount']);
+    cy.wait(['@getClusters', '@getAccount', '@getRegions']);
 
     // Check if banner is visible
     cy.contains('Disk encryption is now standard on Linodes.').should(
@@ -78,24 +90,27 @@ describe('LKE landing page', () => {
    * - Confirms that LKE clusters are listed on landing page.
    */
   it('lists LKE clusters', () => {
-    const mockClusters = kubernetesClusterFactory.buildList(10);
+    const mockClusters = kubernetesClusterFactory.buildList(10, {
+      region: mockRegion.id,
+    });
     mockGetClusters(mockClusters).as('getClusters');
 
     mockClusters.forEach((cluster: KubernetesCluster) => {
       mockGetClusterPools(cluster.id, nodePoolFactory.buildList(3));
     });
 
+    mockGetRegions([mockRegion]).as('getRegions');
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait('@getClusters');
+    cy.wait(['@getClusters', '@getRegions']);
 
     mockClusters.forEach((cluster: KubernetesCluster) => {
       cy.findByText(cluster.label)
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(getRegionById(cluster.region).label).should(
-            'be.visible'
-          );
+          cy.findByText(
+            getRegionById(cluster.region, [mockRegion]).label
+          ).should('be.visible');
           cy.findByText(cluster.k8s_version).should('be.visible');
 
           ui.button
@@ -170,5 +185,188 @@ describe('LKE landing page', () => {
 
     cy.wait('@getKubeconfig');
     readDownload(mockKubeconfigFilename).should('eq', mockKubeconfigContents);
+  });
+
+  it('does not show an Upgrade chip when there is no new kubernetes standard version', () => {
+    const mockStandardTierVersions =
+      kubernetesStandardTierVersionFactory.buildList(2);
+    const newVersion = mockStandardTierVersions[1].id;
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: newVersion,
+    });
+
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetTieredKubernetesVersions('standard', mockStandardTierVersions).as(
+      'getTieredVersions'
+    );
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getClusters', '@getTieredVersions']);
+
+    cy.findByText(newVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('not.exist');
+  });
+
+  it('does not show an Upgrade chip when there is no new kubernetes enterprise version', () => {
+    const mockEnterpriseTierVersions =
+      kubernetesEnterpriseTierVersionFactory.buildList(2);
+    const newVersion = mockEnterpriseTierVersions[1].id;
+
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
+
+    // TODO LKE-E: Remove once feature is in GA
+    mockAppendFeatureFlags({
+      lkeEnterprise2: { enabled: true, la: true },
+    });
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: newVersion,
+      tier: 'enterprise',
+    });
+
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetTieredKubernetesVersions(
+      'enterprise',
+      mockEnterpriseTierVersions
+    ).as('getTieredVersions');
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getAccount', '@getClusters', '@getTieredVersions']);
+
+    cy.findByText(newVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('not.exist');
+  });
+
+  it('can upgrade the standard kubernetes version from the landing page', () => {
+    const mockStandardTierVersions =
+      kubernetesStandardTierVersionFactory.buildList(2);
+    const oldVersion = mockStandardTierVersions[0].id;
+    const newVersion = mockStandardTierVersions[1].id;
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: oldVersion,
+      tier: 'standard',
+    });
+
+    const updatedCluster = { ...cluster, k8s_version: newVersion };
+
+    mockGetCluster(cluster).as('getCluster');
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetTieredKubernetesVersions('standard', mockStandardTierVersions).as(
+      'getTieredVersions'
+    );
+    mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
+    mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getClusters', '@getTieredVersions']);
+
+    cy.findByText(oldVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('be.visible').should('be.enabled').click();
+
+    cy.wait(['@getCluster']);
+
+    ui.dialog
+      .findByTitle(`Upgrade Cluster ${cluster.label} to ${newVersion}`)
+      .should('be.visible');
+
+    mockGetClusters([updatedCluster]).as('getClusters');
+
+    ui.button
+      .findByTitle('Upgrade Version')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait(['@updateCluster', '@getClusters']);
+
+    ui.dialog.findByTitle('Upgrade complete').should('be.visible');
+
+    ui.button
+      .findByTitle('Recycle All Nodes')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@recycleAllNodes');
+
+    ui.toast.assertMessage('Recycle started successfully.');
+
+    cy.findByText(newVersion).should('be.visible');
+  });
+
+  it('can upgrade the enterprise kubernetes version from the landing page', () => {
+    const mockEnterpriseTierVersions =
+      kubernetesEnterpriseTierVersionFactory.buildList(2);
+    const oldVersion = mockEnterpriseTierVersions[0].id;
+
+    const newVersion = mockEnterpriseTierVersions[1].id;
+
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Kubernetes Enterprise'],
+      })
+    ).as('getAccount');
+
+    // TODO LKE-E: Remove once feature is in GA
+    mockAppendFeatureFlags({
+      lkeEnterprise2: { enabled: true, la: true },
+    });
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: oldVersion,
+      tier: 'enterprise',
+    });
+
+    const updatedCluster = { ...cluster, k8s_version: newVersion };
+
+    mockGetCluster(cluster).as('getCluster');
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetTieredKubernetesVersions(
+      'enterprise',
+      mockEnterpriseTierVersions
+    ).as('getTieredVersions');
+    mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
+    mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getAccount', '@getClusters', '@getTieredVersions']);
+
+    cy.findByText(oldVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('be.visible').should('be.enabled').click();
+
+    cy.wait(['@getCluster']);
+
+    ui.dialog
+      .findByTitle(`Upgrade Cluster ${cluster.label} to ${newVersion}`)
+      .should('be.visible');
+
+    mockGetClusters([updatedCluster]).as('getClusters');
+
+    ui.button
+      .findByTitle('Upgrade Version')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait(['@updateCluster', '@getClusters']);
+
+    // Verify the second step in the banner is not shown for LKE-E.
+    cy.findByText('Upgrade complete').should('not.exist');
+
+    cy.findByText(newVersion).should('be.visible');
   });
 });

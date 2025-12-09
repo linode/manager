@@ -1,10 +1,10 @@
+import { usePreferences } from '@linode/queries';
+import { tail } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
-import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
-import { privateIPRegex } from 'src/utilities/ipUtils';
-import { tail } from 'src/utilities/tail';
+import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
   StyledCopyTooltip,
@@ -55,7 +55,7 @@ export interface IPAddressProps {
 }
 
 export const sortIPAddress = (ip1: string, ip2: string) =>
-  (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
+  (isPrivateIP(ip1) ? 1 : -1) - (isPrivateIP(ip2) ? 1 : -1);
 
 export const IPAddress = (props: IPAddressProps) => {
   const {
@@ -73,8 +73,11 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const copiedTimeout: null | number = null;
 
-  const [isIpTooltipHovered, setIsIpTooltipHovered] = React.useState<boolean>(
-    false
+  const [isIpTooltipHovered, setIsIpTooltipHovered] =
+    React.useState<boolean>(false);
+
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
   );
 
   React.useEffect(() => {
@@ -89,10 +92,6 @@ export const IPAddress = (props: IPAddressProps) => {
   const handleMouseLeave = () => setIsIpTooltipHovered(false);
 
   const renderCopyIcon = (ip: string) => {
-    if (disabled) {
-      return PublicIpsUnassignedTooltip;
-    }
-
     return (
       <StyledIpLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip
@@ -123,6 +122,8 @@ export const IPAddress = (props: IPAddressProps) => {
           copyableText
           data-qa-copy-ip-text
           disabled={disabled}
+          masked={Boolean(maskSensitiveDataPreference)}
+          maskedTextLength="ipv4"
           text={ip}
         />
         {renderCopyIcon(ip)}
@@ -133,7 +134,6 @@ export const IPAddress = (props: IPAddressProps) => {
   return (
     <StyledRootDiv showAll={showAll}>
       {!showAll ? renderIP(formattedIPS[0]) : formattedIPS.map(renderIP)}
-
       {formattedIPS.length > 1 && showMore && !showAll && (
         <ShowMore
           ariaItemType="IP addresses"

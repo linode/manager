@@ -1,9 +1,7 @@
+import { linodeConfigInterfaceFactory, linodeFactory } from '@linode/utilities';
 import React from 'react';
 
-import {
-  LinodeConfigInterfaceFactory,
-  linodeConfigFactory,
-} from 'src/factories';
+import { linodeConfigFactory } from 'src/factories';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
@@ -12,10 +10,34 @@ import {
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
-import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
+import {
+  LinodeConfigDialog,
+  padList,
+  unrecommendedConfigNoticeSelector,
+} from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
+
+const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn().mockReturnValue({}),
+  useLinodeQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 
 describe('LinodeConfigDialog', () => {
   describe('padInterface helper method', () => {
@@ -32,12 +54,12 @@ describe('LinodeConfigDialog', () => {
     });
   });
 
-  const publicInterface = LinodeConfigInterfaceFactory.build({
+  const publicInterface = linodeConfigInterfaceFactory.build({
     primary: true,
     purpose: 'public',
   });
 
-  const vpcInterface = LinodeConfigInterfaceFactory.build({
+  const vpcInterface = linodeConfigInterfaceFactory.build({
     ipv4: {
       nat_1_1: '10.0.0.0',
     },
@@ -45,7 +67,7 @@ describe('LinodeConfigDialog', () => {
     purpose: 'vpc',
   });
 
-  const vpcInterfaceWithoutNAT = LinodeConfigInterfaceFactory.build({
+  const vpcInterfaceWithoutNAT = linodeConfigInterfaceFactory.build({
     primary: false,
     purpose: 'vpc',
   });
@@ -116,9 +138,10 @@ describe('LinodeConfigDialog', () => {
 
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterfacePrimaryWithoutNAT,
-        primaryInterfaceIndex: editableFieldsWithSingleInterface.interfaces.findIndex(
-          (element) => element.primary === true
-        ),
+        primaryInterfaceIndex:
+          editableFieldsWithSingleInterface.interfaces.findIndex(
+            (element) => element.primary === true
+          ),
         thisIndex: editableFieldsWithSingleInterface.interfaces.findIndex(
           (element) => element.purpose === 'vpc'
         ),
@@ -136,9 +159,10 @@ describe('LinodeConfigDialog', () => {
 
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: publicInterface,
-        primaryInterfaceIndex: editableFieldsWithoutVPCInterface.interfaces.findIndex(
-          (element) => element.primary === true
-        ),
+        primaryInterfaceIndex:
+          editableFieldsWithoutVPCInterface.interfaces.findIndex(
+            (element) => element.primary === true
+          ),
         thisIndex: 0,
         values: editableFieldsWithoutVPCInterface,
       });
@@ -149,7 +173,6 @@ describe('LinodeConfigDialog', () => {
 
   it('should display the correct network interfaces', async () => {
     const props = {
-      isReadOnly: false,
       linodeId: 0,
       onClose: vi.fn(),
     };
@@ -170,5 +193,37 @@ describe('LinodeConfigDialog', () => {
 
     await findByDisplayValue('VPC');
     await findByDisplayValue('Public Internet');
+  });
+
+  it('should hide the Network Interfaces section if Linode uses new interfaces', () => {
+    const props = {
+      linodeId: 1,
+      onClose: vi.fn(),
+    };
+
+    const linode = linodeFactory.build({ interface_generation: 'linode' });
+
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linode,
+    });
+
+    queryMocks.useFlags.mockReturnValue({
+      linodeInterfaces: { enabled: true },
+    });
+
+    const { queryByLabelText } = renderWithTheme(
+      <LinodeConfigDialog
+        config={linodeConfigFactory.build({ interfaces: null })}
+        open={true}
+        {...props}
+      />
+    );
+
+    expect(
+      queryByLabelText('Primary Interface (Default Route)')
+    ).not.toBeInTheDocument();
+    expect(queryByLabelText('eth0')).not.toBeInTheDocument();
+    expect(queryByLabelText('eth1')).not.toBeInTheDocument();
+    expect(queryByLabelText('eth2')).not.toBeInTheDocument();
   });
 });

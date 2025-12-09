@@ -1,18 +1,17 @@
+import { Chip, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
 import { eventMessages } from 'src/features/Events/factory';
 
 import type { EventMessage } from './types';
 import type { Event } from '@linode/api-v4/lib/account';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const event: Event = eventFactory.build({
   action: 'linode_boot',
@@ -22,7 +21,7 @@ const event: Event = eventFactory.build({
     type: 'linode',
     url: 'https://google.com',
   },
-  message: 'message with a `ticked` word',
+  message: 'message with a `ticked` word - please contact Support',
   secondary_entity: {
     id: 1,
     label: '{secondary entity}',

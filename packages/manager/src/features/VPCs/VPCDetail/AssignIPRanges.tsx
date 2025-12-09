@@ -1,85 +1,101 @@
-import { styled, useTheme } from '@mui/material/styles';
-import * as React from 'react';
+import { Box, Divider, Notice, TooltipIcon, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
-import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import {
-  ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK,
-  ASSIGN_IPV4_RANGES_DESCRIPTION,
+  ASSIGN_IP_RANGES_TITLE,
   ASSIGN_IPV4_RANGES_TITLE,
 } from 'src/features/VPCs/constants';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 
-import type { SxProps } from '@mui/material/styles';
+import {
+  DualStackVPCRangesDescription,
+  VPCRangesDescription,
+} from '../components/VPCRangesDescription';
+
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
   handleIPRangeChange: (ips: ExtendedIP[]) => void;
+  handleIPv6RangeChange?: (ips: ExtendedIP[]) => void;
   includeDescriptionInTooltip?: boolean;
-  ipRanges: ExtendedIP[];
   ipRangesError?: string;
-  sx?: SxProps;
+  ipv4Ranges: ExtendedIP[];
+  ipv6Ranges?: ExtendedIP[];
+  ipv6RangesError?: string;
+  showIPv6Fields?: boolean;
+  sx?: SxProps<Theme>;
 }
 
 export const AssignIPRanges = (props: Props) => {
   const {
     handleIPRangeChange,
+    handleIPv6RangeChange = () => null,
     includeDescriptionInTooltip,
-    ipRanges,
+    ipv4Ranges,
+    ipv6Ranges,
     ipRangesError,
+    ipv6RangesError,
+    showIPv6Fields,
     sx,
   } = props;
 
   const theme = useTheme();
 
+  const vpcRangesDescription = showIPv6Fields ? (
+    <DualStackVPCRangesDescription />
+  ) : (
+    <VPCRangesDescription />
+  );
+
   return (
     <>
       <Divider sx={sx} />
       {ipRangesError && <Notice text={ipRangesError} variant="error" />}
+      {showIPv6Fields && ipv6RangesError && (
+        <Notice text={ipv6RangesError} variant="error" />
+      )}
       <Box
         alignItems={includeDescriptionInTooltip ? 'center' : 'flex-start'}
         display="flex"
         flexDirection={includeDescriptionInTooltip ? 'row' : 'column'}
       >
-        <Typography sx={{ fontFamily: theme.font.bold }}>
-          {ASSIGN_IPV4_RANGES_TITLE}
+        <Typography sx={{ font: theme.font.bold }}>
+          {showIPv6Fields ? ASSIGN_IP_RANGES_TITLE : ASSIGN_IPV4_RANGES_TITLE}
         </Typography>
         {includeDescriptionInTooltip ? (
           <TooltipIcon
+            status="info"
             sxTooltipIcon={{
-              marginLeft: theme.spacing(0.5),
-              padding: theme.spacing(0.5),
+              padding: theme.spacingFunction(8),
             }}
-            status="help"
-            text={IPv4RangesDescriptionJSX}
+            text={vpcRangesDescription}
           />
         ) : (
-          <Typography variant="body1">{IPv4RangesDescriptionJSX}</Typography>
+          vpcRangesDescription
         )}
       </Box>
       <MultipleIPInput
+        adjustSpacingForVPCDualStack={showIPv6Fields}
         buttonText="Add IPv4 Range"
-        forVPCIPv4Ranges
-        ips={ipRanges}
+        forVPCIPRanges
+        ips={ipv4Ranges}
         onChange={handleIPRangeChange}
-        placeholder="10.0.0.0/24"
+        // eslint-disable-next-line sonarjs/no-hardcoded-ip
+        placeholder={showIPv6Fields ? undefined : '10.0.0.0/24'}
         title="" // Empty string so a title isn't displayed for each IP input
       />
+      {showIPv6Fields && (
+        <MultipleIPInput
+          adjustSpacingForVPCDualStack={showIPv6Fields}
+          buttonText="Add IPv6 Range"
+          forVPCIPRanges
+          ips={ipv6Ranges ?? []}
+          onChange={handleIPv6RangeChange}
+          title="" // Empty string so a title isn't displayed for each IP input
+        />
+      )}
     </>
   );
 };
-
-const StyledDescription = styled('span')(() => ({
-  marginRight: '5px',
-}));
-
-const IPv4RangesDescriptionJSX = (
-  <>
-    <StyledDescription>{ASSIGN_IPV4_RANGES_DESCRIPTION}</StyledDescription>
-    <Link to={ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK}>Learn more</Link>.
-  </>
-);

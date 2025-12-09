@@ -1,11 +1,15 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useProfile } from '@linode/queries';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useProfile } from 'src/queries/profile/profile';
+import { useFlags } from 'src/hooks/useFlags';
+
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   isProxyUser: boolean;
@@ -14,9 +18,10 @@ interface Props {
 }
 
 export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
@@ -24,7 +29,12 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
   const proxyUserActions: Action[] = [
     {
       onClick: () => {
-        history.push(`/account/users/${username}/permissions`);
+        navigate({
+          to: iamRbacPrimaryNavChanges
+            ? '/users/$username/permissions'
+            : '/account/users/$username/permissions',
+          params: { username },
+        });
       },
       title: 'Manage Access',
     },
@@ -33,13 +43,23 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
   const nonProxyUserActions: Action[] = [
     {
       onClick: () => {
-        history.push(`/account/users/${username}`);
+        navigate({
+          to: iamRbacPrimaryNavChanges
+            ? '/users/$username'
+            : '/account/users/$username',
+          params: { username },
+        });
       },
       title: 'User Profile',
     },
     {
       onClick: () => {
-        history.push(`/account/users/${username}/permissions`);
+        navigate({
+          to: iamRbacPrimaryNavChanges
+            ? '/users/$username/permissions'
+            : '/account/users/$username/permissions',
+          params: { username },
+        });
       },
       title: 'User Permissions',
     },

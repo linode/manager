@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   createAccountLimitSupportTicketSchema,
   createSMTPSupportTicketSchema,
@@ -6,7 +7,6 @@ import {
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type {
   EntityType,
@@ -69,11 +69,13 @@ export const ENTITY_MAP: Record<string, EntityType> = {
   Kubernetes: 'lkecluster_id',
   Linodes: 'linode_id',
   NodeBalancers: 'nodebalancer_id',
+  'Object Storage': 'bucket',
   VPCs: 'vpc_id',
   Volumes: 'volume_id',
 };
 
 export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
+  bucket: 'Bucket',
   database_id: 'Database Cluster',
   domain_id: 'Domain',
   firewall_id: 'Firewall',
@@ -89,7 +91,7 @@ export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
 // General custom fields common to multiple custom ticket types.
 export const CUSTOM_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   customerName: 'First and last name',
-  // eslint-disable-next-line perfectionist/sort-objects
+
   companyName: 'Business or company name',
   publicInfo:
     "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
@@ -106,7 +108,7 @@ export const SMTP_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
 export const ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP: Record<string, string> = {
   ...CUSTOM_FIELD_NAME_TO_LABEL_MAP,
   numberOfEntities: 'Total number of entities you need?',
-  // eslint-disable-next-line perfectionist/sort-objects
+
   linodePlan: 'Which Linode plan do you need access to?',
   useCase:
     'A detailed description of your use case and why you need access to more/larger entities',
@@ -135,10 +137,7 @@ export const SEVERITY_OPTIONS: {
 export const TICKET_SEVERITY_TOOLTIP_TEXT = (
   <>
     <Typography paragraph>
-      <Typography
-        display="inline"
-        sx={(theme) => ({ fontFamily: theme.font.bold })}
-      >
+      <Typography display="inline" sx={(theme) => ({ font: theme.font.bold })}>
         3-Low Impact:
       </Typography>{' '}
       Routine maintenance, configuration change requests, questions about your
@@ -146,10 +145,7 @@ export const TICKET_SEVERITY_TOOLTIP_TEXT = (
       requests, and general feedback.
     </Typography>
     <Typography paragraph>
-      <Typography
-        display="inline"
-        sx={(theme) => ({ fontFamily: theme.font.bold })}
-      >
+      <Typography display="inline" sx={(theme) => ({ font: theme.font.bold })}>
         2-Moderate Impact:
       </Typography>{' '}
       Akamai system or application is partially or moderately impacted, or a
@@ -157,10 +153,7 @@ export const TICKET_SEVERITY_TOOLTIP_TEXT = (
       workaround is cumbersome to implement.
     </Typography>
     <Typography paragraph>
-      <Typography
-        display="inline"
-        sx={(theme) => ({ fontFamily: theme.font.bold })}
-      >
+      <Typography display="inline" sx={(theme) => ({ font: theme.font.bold })}>
         1-Major Impact:
       </Typography>{' '}
       Akamai system or major application is down or seriously impacted and there

@@ -1,7 +1,5 @@
-import { groupBy } from 'ramda';
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import type { Kernel } from '@linode/api-v4';
 
@@ -32,16 +30,6 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
   const options = kernelsToGroupedItems(kernels);
   return (
     <Autocomplete
-      renderOption={(props, kernel) => {
-        return (
-          <li {...props} data-testid="kernel-option">
-            {kernel.label}
-          </li>
-        );
-      }}
-      textFieldProps={{
-        errorGroup: 'linode-config-drawer',
-      }}
       autoHighlight
       disableClearable
       disabled={readOnly}
@@ -51,6 +39,17 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
       onChange={(_, selected) => onChange(selected.value)}
       options={options}
       placeholder="Select a Kernel"
+      renderOption={(props, kernel) => {
+        const { key, ...rest } = props;
+        return (
+          <li {...rest} data-testid="kernel-option" key={key}>
+            {kernel.label}
+          </li>
+        );
+      }}
+      textFieldProps={{
+        errorGroup: 'linode-config-drawer',
+      }}
       value={getSelectedKernelId(selectedKernel, options)}
     />
   );
@@ -66,30 +65,31 @@ export const getSelectedKernelId = (
   return options.find((option) => kernelID === option.value);
 };
 
-export const groupKernels = (kernel: Kernel) => {
-  if (kernel.label.match(/latest/i)) {
-    return 'Current';
-  }
-  if (['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label)) {
-    return 'Current';
-  }
-  if (kernel.label === 'Direct Disk') {
-    return 'Current';
-  }
-  if (kernel.deprecated) {
-    return 'Deprecated';
-  }
-  if (kernel.architecture === 'x86_64') {
-    return '64 bit';
-  } else if (kernel.architecture === 'i386') {
-    return '32 bit';
-  }
-  // Fallback; this should never happen.
-  return 'Current';
-};
-
 export const kernelsToGroupedItems = (kernels: Kernel[]) => {
-  const groupedKernels = groupBy(groupKernels, kernels);
+  const groupedKernels: { [index: string]: Kernel[] } = {};
+  kernels.forEach((kernel) => {
+    let group = '';
+    if (
+      kernel.label.match(/latest/i) ||
+      ['GRUB 2', 'GRUB (Legacy)'].includes(kernel.label) ||
+      kernel.label === 'Direct Disk'
+    ) {
+      group = 'Current';
+    } else if (kernel.deprecated) {
+      group = 'Deprecated';
+    } else if (kernel.architecture === 'x86_64') {
+      group = '64 bit';
+    } else if (kernel.architecture === 'i386') {
+      group = '32 bit';
+    } else {
+      group = 'Current';
+    }
+    if (Array.isArray(groupedKernels[group])) {
+      groupedKernels[group].push({ ...kernel });
+    } else {
+      groupedKernels[group] = [{ ...kernel }];
+    }
+  });
 
   groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
   return Object.keys(groupedKernels)

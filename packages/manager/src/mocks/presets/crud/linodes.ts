@@ -1,16 +1,35 @@
 import {
+  createLinodeInterface,
+  deleteLinodeInterface,
+  getInterfaces,
+  getLinodeInterfaceFirewalls,
+  updateLinodeInterface,
+  updateLinodeInterfaceSettings,
+  upgradeToLinodeInterfaces,
+} from 'src/mocks/presets/crud/handlers/linodes/interfaces';
+import {
   createLinode,
   deleteLinode,
   getLinodeBackups,
   getLinodeDisks,
   getLinodeFirewalls,
   getLinodeIps,
+  getLinodePlans,
+  getLinodes,
   getLinodeStats,
   getLinodeTransfer,
-  getLinodes,
   shutDownLinode,
   updateLinode,
-} from 'src/mocks/presets/crud/handlers/linodes';
+} from 'src/mocks/presets/crud/handlers/linodes/linodes';
+
+import {
+  appendConfigInterface,
+  createConfig,
+  deleteConfig,
+  deleteConfigInterface,
+  getConfigs,
+  updateConfig,
+} from './handlers/linodes/configs';
 
 import type { MockPresetCrud } from 'src/mocks/types';
 
@@ -21,6 +40,8 @@ export const linodeCrudPreset: MockPresetCrud = {
     createLinode,
     updateLinode,
     deleteLinode,
+    getConfigs,
+    getInterfaces,
     getLinodeStats,
     getLinodeDisks,
     getLinodeFirewalls,
@@ -28,6 +49,18 @@ export const linodeCrudPreset: MockPresetCrud = {
     getLinodeIps,
     getLinodeBackups,
     shutDownLinode,
+    getLinodePlans,
+    upgradeToLinodeInterfaces,
+    deleteLinodeInterface,
+    createLinodeInterface,
+    updateLinodeInterface,
+    updateLinodeInterfaceSettings,
+    getLinodeInterfaceFirewalls,
+    appendConfigInterface,
+    deleteConfigInterface,
+    updateConfig,
+    createConfig,
+    deleteConfig,
   ],
   id: 'linodes:crud',
   label: 'Linode CRUD',

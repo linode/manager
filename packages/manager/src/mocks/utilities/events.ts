@@ -1,4 +1,5 @@
 import { eventFactory } from 'src/factories';
+
 import { mswDB } from '../indexedDB';
 
 import type { Event } from '@linode/api-v4';
@@ -28,7 +29,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const queueEvents = (props: QueuedEvents): Promise<void> => {
   const { event, mockState, sequence } = props;
 
-  const initialDelay = 7500;
+  const initialDelay = 2500;
   const progressDelay = 10_000;
   let accumulatedDelay = 0;
   let lastEventWasProgress = false;

@@ -1,7 +1,10 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -11,31 +14,37 @@ import {
   youtubeLinkData,
 } from './StackScriptsEmptyResourcesData';
 
-interface Props {
-  goToCreateStackScript: () => void;
-}
+export const StackScriptsEmptyLandingState = () => {
+  const navigate = useNavigate();
 
-export const StackScriptsEmptyLandingState = (props: Props) => {
-  const { goToCreateStackScript } = props;
+  const isStackScriptCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_stackscripts',
+  });
 
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create StackScript',
+          disabled: isStackScriptCreationRestricted,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
               category: linkAnalyticsEvent.category,
               label: 'Create StackScript',
             });
-            goToCreateStackScript();
+            navigate({ to: '/stackscripts/create' });
           },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'StackScripts',
+          }),
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={StackScriptsIcon}
+      icon={ComputeIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

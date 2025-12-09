@@ -1,11 +1,10 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { ShowMoreExpansion } from './ShowMoreExpansion';
 
 import type { ShowMoreExpansionProps } from './ShowMoreExpansion';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<ShowMoreExpansionProps> = {
   render: (args) => <ShowMoreExpansion {...args} />,

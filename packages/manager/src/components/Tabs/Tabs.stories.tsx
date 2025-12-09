@@ -1,15 +1,14 @@
+import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
 
 import { TabLinkList } from './TabLinkList';
 
 import type { TabsProps } from '@reach/tabs';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const _tabs = [
   {

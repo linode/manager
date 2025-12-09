@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DeletePaymentMethodDialog } from './DeletePaymentMethodDialog';
 
 const props = {
-  error: 'some error',
+  error: undefined,
   loading: false,
   onClose: vi.fn(),
   onDelete: vi.fn(),
@@ -14,8 +14,26 @@ const props = {
   paymentMethod: undefined,
 };
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      delete_payment_method: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('Delete Payment Method Dialog', () => {
   it('renders the delete payment method dialog', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_payment_method: true,
+      },
+    });
+
     const screen = renderWithTheme(<DeletePaymentMethodDialog {...props} />);
 
     const headerText = screen.getByText('Delete Payment Method');
@@ -31,6 +49,12 @@ describe('Delete Payment Method Dialog', () => {
   });
 
   it('calls the corresponding functions when buttons are clicked', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_payment_method: true,
+      },
+    });
+
     const screen = renderWithTheme(<DeletePaymentMethodDialog {...props} />);
 
     const deleteButton = screen.getByText('Delete');
@@ -42,5 +66,18 @@ describe('Delete Payment Method Dialog', () => {
     expect(cancelButton).toBeVisible();
     fireEvent.click(cancelButton);
     expect(props.onClose).toHaveBeenCalled();
+  });
+
+  it('disables the delete button if the user does not have the delete_payment_method permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        delete_payment_method: false,
+      },
+    });
+
+    const screen = renderWithTheme(<DeletePaymentMethodDialog {...props} />);
+
+    const deleteButton = screen.getByText('Delete');
+    expect(deleteButton).toBeDisabled();
   });
 });

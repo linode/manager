@@ -1,7 +1,10 @@
 import {
+  createDatabaseConnectionPoolSchema,
   createDatabaseSchema,
+  updateDatabaseConnectionPoolSchema,
   updateDatabaseSchema,
 } from '@linode/validation/lib/databases.schema';
+
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,15 +13,19 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
+  ConnectionPool,
   CreateDatabasePayload,
   Database,
-  DatabaseInstance,
   DatabaseBackup,
+  DatabaseBackupsPayload,
   DatabaseCredentials,
-  DatabaseType,
   DatabaseEngine,
+  DatabaseEngineConfig,
+  DatabaseInstance,
+  DatabaseType,
   Engine,
   SSLFields,
   UpdateDatabasePayload,
@@ -35,7 +42,7 @@ export const getDatabases = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/databases/instances`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -49,7 +56,7 @@ export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/databases/types`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -61,7 +68,7 @@ export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
 export const getDatabaseType = (typeSlug: string) =>
   Request<DatabaseType>(
     setURL(`${API_ROOT}/databases/types/${encodeURIComponent(typeSlug)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -75,7 +82,7 @@ export const getDatabaseEngines = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/databases/engines`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -87,7 +94,7 @@ export const getDatabaseEngines = (params?: Params, filter?: Filter) =>
 export const getDatabaseEngine = (engineSlug: string) =>
   Request<DatabaseEngine>(
     setURL(`${API_ROOT}/databases/engines/${encodeURIComponent(engineSlug)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -98,12 +105,12 @@ export const getDatabaseEngine = (engineSlug: string) =>
  */
 export const createDatabase = (
   engine: Engine = 'mysql',
-  data: CreateDatabasePayload
+  data: CreateDatabasePayload,
 ) =>
   Request<Database>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
-    setData(data, createDatabaseSchema)
+    setData(data, createDatabaseSchema),
   );
 
 /**
@@ -115,13 +122,13 @@ export const createDatabase = (
 export const getEngineDatabases = (
   engine: Engine,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<Database>>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -134,10 +141,10 @@ export const getEngineDatabase = (engine: Engine, databaseID: number) =>
   Request<Database>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -150,16 +157,31 @@ export const getEngineDatabase = (engine: Engine, databaseID: number) =>
 export const updateDatabase = (
   engine: Engine,
   databaseID: number,
-  data: UpdateDatabasePayload
+  data: UpdateDatabasePayload,
 ) =>
   Request<Database>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}`,
     ),
     setMethod('PUT'),
-    setData(data, updateDatabaseSchema)
+    setData(data, updateDatabaseSchema),
+  );
+
+/**
+ * patchDatabase
+ *
+ * Patch security updates for the database (outside of the maintenance window)
+ */
+export const patchDatabase = (engine: Engine, databaseID: number) =>
+  Request<void>(
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/patch`,
+    ),
+    setMethod('POST'),
   );
 
 /**
@@ -171,10 +193,10 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -187,17 +209,17 @@ export const getDatabaseBackups = (
   engine: Engine,
   databaseID: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<DatabaseBackup>>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/backups`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/backups`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -209,38 +231,53 @@ export const getDatabaseBackups = (
 export const getDatabaseBackup = (
   engine: Engine,
   databaseID: number,
-  backupID: number
+  backupID: number,
 ) =>
   Request<DatabaseBackup>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
+        engine,
       )}/instances/${encodeURIComponent(
-        databaseID
-      )}/backups/${encodeURIComponent(backupID)}`
+        databaseID,
+      )}/backups/${encodeURIComponent(backupID)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
- * restoreWithBackup
+ * legacyRestoreWithBackup
+ *
+ * Fully restore a backup to the cluster
+ */
+export const legacyRestoreWithBackup = (
+  engine: Engine,
+  databaseID: number,
+  backupID: number,
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine,
+      )}/instances/${encodeURIComponent(
+        databaseID,
+      )}/backups/${encodeURIComponent(backupID)}/restore`,
+    ),
+    setMethod('POST'),
+  );
+
+/**
+ * restoreWithBackup for the New Database
  *
  * Fully restore a backup to the cluster
  */
 export const restoreWithBackup = (
   engine: Engine,
-  databaseID: number,
-  backupID: number
+  data: DatabaseBackupsPayload,
 ) =>
-  Request<{}>(
-    setURL(
-      `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(
-        databaseID
-      )}/backups/${encodeURIComponent(backupID)}/restore`
-    ),
-    setMethod('POST')
+  Request<Database>(
+    setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
+    setMethod('POST'),
+    setData(data),
   );
 
 /**
@@ -253,10 +290,10 @@ export const getDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<DatabaseCredentials>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/credentials`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/credentials`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -268,10 +305,10 @@ export const resetDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/credentials/reset`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/credentials/reset`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -283,8 +320,120 @@ export const getSSLFields = (engine: Engine, databaseID: number) =>
   Request<SSLFields>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/ssl`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/ssl`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
+  );
+
+/**
+ * suspendDatabase
+ *
+ * Suspend the specified database cluster
+ */
+export const suspendDatabase = (engine: Engine, databaseID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/suspend`,
+    ),
+    setMethod('POST'),
+  );
+
+/**
+ * resumeDatabase
+ *
+ * Resume the specified database cluster
+ */
+export const resumeDatabase = (engine: Engine, databaseID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/resume`,
+    ),
+    setMethod('POST'),
+  );
+
+/**
+ * getConfig
+ *
+ * Return detailed list of all the configuration options
+ *
+ */
+export const getDatabaseEngineConfig = (engine: Engine) =>
+  Request<DatabaseEngineConfig>(
+    setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/config`),
+    setMethod('GET'),
+  );
+
+/**
+ * Get a paginated list of connection pools for a database
+ */
+export const getDatabaseConnectionPools = (databaseID: number) =>
+  Request<Page<ConnectionPool>>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * Get a connection pool for a database
+ */
+export const getDatabaseConnectionPool = (
+  databaseID: number,
+  poolName: string,
+) =>
+  Request<ConnectionPool>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * Create a new connection pool for a database. Connection pools can only be created on active clusters
+ */
+export const createDatabaseConnectionPool = (
+  databaseID: number,
+  data: ConnectionPool,
+) =>
+  Request<ConnectionPool>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
+    ),
+    setMethod('POST'),
+    setData(data, createDatabaseConnectionPoolSchema),
+  );
+
+/**
+ * Update an existing connection pool. This may cause sudden closure of an in-use connection pool
+ */
+export const updateDatabaseConnectionPool = (
+  databaseID: number,
+  poolName: string,
+  data: Omit<ConnectionPool, 'label'>,
+) =>
+  Request<ConnectionPool>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+    ),
+    setMethod('PUT'),
+    setData(data, updateDatabaseConnectionPoolSchema),
+  );
+
+/**
+ * Delete an existing connection pool. This may cause sudden closure of an in-use connection pool
+ */
+export const deleteDatabaseConnectionPool = (
+  databaseID: number,
+  poolName: string,
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools/${encodeURIComponent(poolName)}`,
+    ),
+    setMethod('DELETE'),
   );

@@ -1,16 +1,14 @@
+import { useNotificationsQuery } from '@linode/queries';
+import { Box, Chip, Divider, rotate360, Typography } from '@linode/ui';
+import { usePrevious } from '@linode/utilities';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
-import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/Chip';
-import { Divider } from 'src/components/Divider';
-import { LinkButton } from 'src/components/LinkButton';
-import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
 import {
   notificationCenterContext as _notificationContext,
@@ -19,25 +17,25 @@ import {
 import { NotificationCenterNotificationsContainer } from 'src/features/NotificationCenter/Notifications/NotificationCenterNotificationsContainer';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/useFormattedNotifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { usePrevious } from 'src/hooks/usePrevious';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
   useEventsInfiniteQuery,
   useMarkEventsAsSeen,
 } from 'src/queries/events/events';
-import { rotate360 } from 'src/styles/keyframes';
 
-import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
+import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
 
 export const NotificationMenu = () => {
-  const history = useHistory();
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
   const notificationContext = React.useContext(_notificationContext);
 
-  const { data, events } = useEventsInfiniteQuery();
+  const { data } = useEventsInfiniteQuery();
+
+  // Just use the first page of events because we `slice` to get the first 20 events anyway
+  const events = data?.pages[0].data ?? [];
+
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
@@ -86,37 +84,49 @@ export const NotificationMenu = () => {
     <>
       <TopMenuTooltip title="Notifications">
         <IconButton
-          sx={(theme) => ({
-            ...topMenuIconButtonSx(theme),
-            color: notificationContext.menuOpen ? '#606469' : '#c9c7c7',
-          })}
           aria-describedby={id}
           aria-haspopup="true"
           aria-label="Notifications"
+          disableRipple
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
+          sx={(theme) => ({
+            ...topMenuIconButtonSx(theme),
+            color: notificationContext.menuOpen
+              ? theme.tokens.component.GlobalHeader.Icon.Active
+              : theme.tokens.component.GlobalHeader.Icon.Default,
+          })}
         >
-          <Bell height="20px" width="20px" />
+          <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
             <StyledChip
-              color="primary"
+              adjustBorderRadius={
+                numNotifications > 9 || showInProgressEventIcon
+              }
+              color="error"
               data-testid="events-count-notification"
+              icon={
+                showInProgressEventIcon ? (
+                  <StyledAutorenewIcon data-testid="in-progress-event-icon" />
+                ) : undefined
+              }
               label={numNotifications > 9 ? '9+' : numNotifications}
-              showPlus={numNotifications > 9}
               size="small"
             />
-          )}
-          {showInProgressEventIcon && (
-            <StyledAutorenewIcon data-testid="in-progress-event-icon" />
           )}
         </IconButton>
       </TopMenuTooltip>
       <Popover
+        anchorEl={anchorRef.current}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
         }}
+        data-qa-notification-menu
+        id={id}
+        onClose={handleClose}
+        open={notificationContext.menuOpen}
         slotProps={{
           paper: {
             sx: (theme) => ({
@@ -131,32 +141,32 @@ export const NotificationMenu = () => {
             }),
           },
         }}
-        anchorEl={anchorRef.current}
-        id={id}
-        onClose={handleClose}
-        open={notificationContext.menuOpen}
       >
         <NotificationCenterNotificationsContainer />
         <Box>
           <Box display="flex" justifyContent="space-between" px={2}>
             <Typography variant="h3">Events</Typography>
-            <LinkButton
-              onClick={() => {
-                history.push('/events');
-                handleClose();
-              }}
-            >
+            <Link onClick={() => handleClose()} to="/events">
               View all events
-            </LinkButton>
+            </Link>
           </Box>
           <Divider spacingBottom={0} />
-          {data?.pages[0].data.slice(0, 20).map((event) => (
-            <NotificationCenterEvent
-              event={event}
-              key={event.id}
-              onClose={handleClose}
-            />
-          ))}
+
+          {events.length > 0 ? (
+            events
+              .slice(0, 20)
+              .map((event) => (
+                <NotificationCenterEvent
+                  event={event}
+                  key={event.id}
+                  onClose={handleClose}
+                />
+              ))
+          ) : (
+            <Box pt={2} px={2}>
+              No recent events to display
+            </Box>
+          )}
         </Box>
       </Popover>
     </>
@@ -165,29 +175,30 @@ export const NotificationMenu = () => {
 
 const StyledChip = styled(Chip, {
   label: 'StyledEventNotificationChip',
-  shouldForwardProp: (prop) => prop !== 'showPlus',
-})<{ showPlus: boolean }>(({ theme, ...props }) => ({
-  '& .MuiChip-label': {
-    paddingLeft: 2,
-    paddingRight: 2,
+  shouldForwardProp: (prop) => prop !== 'adjustBorderRadius',
+})<{ adjustBorderRadius: boolean }>(({ theme, ...props }) => ({
+  '& .MuiChip-icon': {
+    margin: 0,
+    marginLeft: theme.tokens.spacing.S2,
   },
-  borderRadius: props.showPlus ? 12 : '50%',
-  fontFamily: theme.font.bold,
-  fontSize: '0.72rem',
-  height: 18,
+  '& .MuiChip-label': {
+    padding: 0,
+  },
+  backgroundColor: theme.tokens.component.GlobalHeader.Badge.Background,
+  borderRadius: props.adjustBorderRadius ? theme.tokens.spacing.S12 : '50%',
+  color: theme.tokens.component.GlobalHeader.Badge.Text,
+  flexDirection: 'row-reverse',
+  font: theme.tokens.alias.Typography.Label.Bold.Xs,
   justifyContent: 'center',
   left: 20,
-  padding: 0,
+  padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S6}`,
   position: 'absolute',
-  top: 0,
-  width: props.showPlus ? 22 : 18,
+  top: '-3px',
 }));
 
-const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
+export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
-  bottom: 4,
-  color: theme.palette.primary.main,
-  fontSize: 18,
-  position: 'absolute',
-  right: 2,
+  fill: theme.tokens.component.GlobalHeader.Badge.Icon,
+  height: '12px',
+  width: '12px',
 }));

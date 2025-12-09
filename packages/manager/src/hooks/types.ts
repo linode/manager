@@ -1,6 +1,5 @@
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-
-import { ApplicationState } from 'src/store';
+import type { AnyAction } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
+import type { ApplicationState } from 'src/store';
 
 export type Dispatch = ThunkDispatch<ApplicationState, undefined, AnyAction>;

@@ -1,11 +1,17 @@
+import { useFirewallsQuery } from '@linode/queries';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Hidden,
+  TooltipIcon,
+  useTheme,
+} from '@linode/ui';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -14,13 +20,15 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsFirewallRulesetsPrefixlistsEnabled } from '../shared';
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 import { FirewallDialog } from './FirewallDialog';
 import { FirewallLandingEmptyState } from './FirewallLandingEmptyState';
@@ -32,16 +40,23 @@ import type { Mode } from './FirewallDialog';
 const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const history = useHistory();
-  const pagination = usePagination(1, preferenceKey);
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const pagination = usePaginationV2({
+    currentRoute: '/firewalls',
+    preferenceKey,
+  });
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/firewalls',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey,
+  });
+  const theme = useTheme();
 
   const filter = {
     ['+order']: order,
@@ -60,7 +75,11 @@ const FirewallLanding = () => {
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
 
+  const rulesColumnTooltipText =
+    'Includes both rules and Rule Sets in the count. Each Rule Set is counted as one rule, regardless of how many rules it contains.';
   const flags = useFlags();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
 
@@ -71,6 +90,8 @@ const FirewallLanding = () => {
   const selectedFirewall = data?.data.find(
     (firewall) => firewall.id === selectedFirewallId
   );
+
+  const { data: permissions } = usePermissions('account', ['create_firewall']);
 
   const openModal = (mode: Mode, id: number) => {
     setSelectedFirewallId(id);
@@ -91,11 +112,11 @@ const FirewallLanding = () => {
   };
 
   const onOpenCreateDrawer = () => {
-    history.replace('/firewalls/create');
+    navigate({ to: '/firewalls/create' });
   };
 
   const onCloseCreateDrawer = () => {
-    history.replace('/firewalls');
+    navigate({ to: '/firewalls' });
   };
 
   const handlers: FirewallHandlers = {
@@ -133,7 +154,23 @@ const FirewallLanding = () => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment
+        segment={`${
+          isCreateFirewallDrawerOpen ? 'Create a Firewall' : 'Firewall'
+        }`}
+      />
       <LandingHeader
+        breadcrumbProps={{ pathname: '/firewalls' }}
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Firewalls',
+          }),
+        }}
+        disabledCreateButton={!permissions.create_firewall}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
+        entity="Firewall"
         extraActions={
           secureVMNoticesEnabled && flags.secureVmCopy?.generateActionText ? (
             <Button
@@ -144,9 +181,6 @@ const FirewallLanding = () => {
             </Button>
           ) : undefined
         }
-        breadcrumbProps={{ pathname: '/firewalls' }}
-        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
-        entity="Firewall"
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"
       />
@@ -158,6 +192,7 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '20%' }}
             >
               Label
             </TableSortCell>
@@ -166,14 +201,26 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="status"
+              sx={{ width: '10%' }}
             >
               Status
             </TableSortCell>
             <Hidden smDown>
-              <TableCell>Rules</TableCell>
-              <TableCell>Services</TableCell>
+              <TableCell sx={{ width: '15%' }}>
+                Rules
+                {isFirewallRulesetsPrefixlistsFeatureEnabled && (
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{
+                      padding: `0 ${theme.spacingFunction(8)} ${theme.spacingFunction(2)} ${theme.spacingFunction(8)}`,
+                    }}
+                    text={rulesColumnTooltipText}
+                  />
+                )}
+              </TableCell>
+              <TableCell sx={{ width: '45%' }}>Services</TableCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell sx={{ width: '10%' }} />
           </TableRow>
         </TableHead>
         <TableBody>

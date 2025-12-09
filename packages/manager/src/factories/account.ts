@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type {
   Account,
@@ -45,33 +45,37 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Linodes',
     'LKE HA Control Planes',
     'Machine Images',
-    'Managed Databases V2',
+    'Managed Databases',
+    'Managed Databases Beta',
+    'NETINT Quadra T1U',
+    'Network LoadBalancer',
     'NodeBalancers',
     'Object Storage Access Key Regions',
     'Object Storage Endpoint Types',
     'Object Storage',
     'Placement Group',
     'Vlans',
+    'Kubernetes Enterprise',
   ],
-  city: 'Colorado',
+  city: 'Philadelphia',
   company: Factory.each((i) => `company-${i}`),
-  country: 'CA',
+  country: 'US',
   credit_card: {
-    expiry: '01/2018',
+    expiry: '01/2028',
     last_four: '1111',
   },
   email: 'my-email@example.com',
   euuid: Factory.each((i) => `278EC57D-7424-4B3A-B35C3CE395787567-${i}`),
-  first_name: 'XRbganOEO',
-  last_name: 'demo2',
-  phone: '19005553221',
-  state: 'BC',
+  first_name: 'John',
+  last_name: 'Doe',
+  phone: '1215550001',
+  state: 'PA',
   tax_id: '111111111',
   zip: '19106',
 });
 
-export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
-  {
+export const accountTransferFactory =
+  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
     billable: 0,
     quota: 25000, // GB
     region_transfers: [
@@ -89,14 +93,12 @@ export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUt
       },
     ],
     used: 9000, // GB
-  }
-);
+  });
 
-export const accountTransferNoResourceFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
-  {
+export const accountTransferNoResourceFactory =
+  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
     billable: 0,
     quota: 0,
     region_transfers: [],
     used: 0,
-  }
-);
+  });

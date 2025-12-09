@@ -4,10 +4,12 @@ import * as React from 'react';
 import { assertOrder, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  OrderBy,
   getInitialValuesFromUserPreferences,
+  OrderBy,
   sortData,
 } from './OrderBy';
+
+import type { ManagerPreferences } from '@linode/utilities';
 
 const a = {
   age: 43,
@@ -61,14 +63,13 @@ describe('OrderBy', () => {
   });
 
   describe('getInitialValuesFromUserPreferences', () => {
-    const preferences = {
-      sortKeys: {
-        ['listening-services']: {
-          order: 'desc' as any,
-          orderBy: 'test-order',
-        },
+    const preferences: ManagerPreferences['sortKeys'] = {
+      ['listening-services']: {
+        order: 'desc',
+        orderBy: 'test-order',
       },
     };
+
     it('should return values from query params if available', () => {
       expect(
         getInitialValuesFromUserPreferences(

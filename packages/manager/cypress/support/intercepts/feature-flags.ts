@@ -2,17 +2,13 @@
  * @file Cypress intercepts and mocks for Cloud Manager feature flags.
  */
 
+import {
+  launchDarklyClientstreamPattern,
+  launchDarklyUrlPattern,
+} from 'support/constants/feature-flags';
 import { getResponseDataFromMockData } from 'support/util/feature-flags';
 
 import type { FeatureFlagMockData } from 'support/util/feature-flags';
-
-// LaunchDarkly URL pattern for feature flag retrieval.
-const launchDarklyUrlPattern =
-  'https://app.launchdarkly.com/sdk/evalx/*/contexts/*';
-
-// LaunchDarkly URL pattern for feature flag / event streaming.
-const launchDarklyClientstreamPattern =
-  'https://clientstream.launchdarkly.com/eval/*/*';
 
 /**
  * Intercepts GET request to feature flag clientstream URL and mocks the response.

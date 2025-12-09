@@ -9,8 +9,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'us',
-    id: 'us-den-edge-1',
-    label: 'Edge - Denver, CO',
+    id: 'us-den-1',
+    label: 'Distributed - Denver, CO',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -21,6 +21,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -30,8 +31,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'de',
-    id: 'de-ham-edge-1',
-    label: 'Edge - Hamburg, DE',
+    id: 'de-ham-1',
+    label: 'Distributed - Hamburg, DE',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -42,6 +43,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -51,8 +53,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'fr',
-    id: 'fr-mrs-edge-1',
-    label: 'Edge - Marseille, FR',
+    id: 'fr-mrs-1',
+    label: 'Distributed - Marseille, FR',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -63,6 +65,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -72,8 +75,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'za',
-    id: 'za-jnb-edge-1',
-    label: 'Edge - Johannesburg, ZA\t',
+    id: 'za-jnb-1',
+    label: 'Distributed - Johannesburg, ZA\t',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -84,6 +87,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -93,8 +97,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'my',
-    id: 'my-kul-edge-1',
-    label: 'Edge - Kuala Lumpur, MY',
+    id: 'my-kul-1',
+    label: 'Distributed - Kuala Lumpur, MY',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -105,6 +109,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -114,8 +119,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'co',
-    id: 'co-bog-edge-1',
-    label: 'Edge - Bogotá, CO',
+    id: 'co-bog-1',
+    label: 'Distributed - Bogotá, CO',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -126,6 +131,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -135,8 +141,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'mx',
-    id: 'mx-qro-edge-1',
-    label: 'Edge - Querétaro, MX',
+    id: 'mx-qro-1',
+    label: 'Distributed - Querétaro, MX',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -147,6 +153,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -156,8 +163,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'us',
-    id: 'us-hou-edge-1',
-    label: 'Edge - Houston, TX',
+    id: 'us-hou-1',
+    label: 'Distributed - Houston, TX',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -168,6 +175,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -177,8 +185,8 @@ export const distributedRegions: Region[] = [
       'Placement Group',
     ],
     country: 'cl',
-    id: 'cl-scl-edge-1',
-    label: 'Edge - Santiago, CL',
+    id: 'cl-scl-1',
+    label: 'Distributed - Santiago, CL',
     placement_group_limits: {
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
@@ -189,5 +197,6 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: { alerts: [], metrics: [] },
   },
 ];

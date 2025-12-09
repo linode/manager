@@ -1,14 +1,16 @@
+import { useProfile } from '@linode/queries';
+import { Box } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { BarPercent } from 'src/components/BarPercent';
-import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { TextTooltip } from 'src/components/TextTooltip';
 
-import { StyledGravatar } from './EventRow.styles';
 import {
   formatProgressEvent,
   getEventMessage,
@@ -24,22 +26,24 @@ interface EventRowProps {
 
 export const EventRow = (props: EventRowProps) => {
   const { event } = props;
-  const timestamp = getEventTimestamp(event);
+  const theme = useTheme();
   const { action, message, username } = {
     action: event.action,
     message: getEventMessage(event),
     username: getEventUsername(event),
   };
+  const { data: profile } = useProfile();
 
   if (!message) {
     return null;
   }
 
-  const { progressEventDisplay, showProgress } = formatProgressEvent(event);
+  const { progressEventDate, progressEventDuration, showProgress } =
+    formatProgressEvent(event);
 
   return (
-    <TableRow data-qa-event-row data-test-id={action}>
-      <TableCell data-qa-event-message-cell parentColumn="Event">
+    <TableRow data-qa-event-row data-testid={action}>
+      <TableCell data-qa-event-message-cell>
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (
           <BarPercent
@@ -52,15 +56,29 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-username-cell parentColumn="Username">
+        <TableCell data-qa-event-username-cell>
           <Box alignItems="center" display="flex" gap={1}>
-            <StyledGravatar username={username === 'Linode' ? '' : username} />
+            <Avatar
+              color={
+                username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              height={24}
+              username={username}
+              width={24}
+            />
             {username}
           </Box>
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Relative Date">
-        {progressEventDisplay}
+      <TableCell>
+        <TextTooltip
+          displayText={progressEventDate}
+          minWidth={130}
+          placement="top"
+          tooltipText={<DateTimeDisplay value={event.created} />}
+        />
         {username && (
           <Hidden smUp>
             <br />
@@ -71,8 +89,8 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden mdDown>
-        <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
-          <DateTimeDisplay value={timestamp.toString()} />
+        <TableCell data-qa-event-created-cell>
+          {progressEventDuration}
         </TableCell>
       </Hidden>
     </TableRow>

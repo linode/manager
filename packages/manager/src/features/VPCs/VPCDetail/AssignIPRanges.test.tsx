@@ -1,13 +1,11 @@
 import * as React from 'react';
 
-import {
-  ASSIGN_IPV4_RANGES_DESCRIPTION,
-  ASSIGN_IPV4_RANGES_TITLE,
-} from 'src/features/VPCs/constants';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+import { ASSIGN_IPV4_RANGES_TITLE } from 'src/features/VPCs/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignIPRanges } from './AssignIPRanges';
+
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 describe('AssignIPRanges', () => {
   const handleIPRangeChangeMock = vi.fn();
@@ -22,19 +20,26 @@ describe('AssignIPRanges', () => {
     const { getByText } = renderWithTheme(
       <AssignIPRanges
         handleIPRangeChange={handleIPRangeChangeMock}
-        ipRanges={ipRanges}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={ipRanges}
       />
     );
     expect(getByText(ASSIGN_IPV4_RANGES_TITLE)).toBeInTheDocument();
-    expect(getByText(ASSIGN_IPV4_RANGES_DESCRIPTION)).toBeInTheDocument();
+    expect(
+      getByText(
+        'Assign additional IPv4 address ranges that the VPC can use to reach services running on this Linode.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
   });
 
   it('renders error notice if ipRangesError is provided', () => {
     const { getByText } = renderWithTheme(
       <AssignIPRanges
         handleIPRangeChange={handleIPRangeChangeMock}
-        ipRanges={ipRanges}
+        handleIPv6RangeChange={vi.fn()}
         ipRangesError={ipRangesError}
+        ipv4Ranges={ipRanges}
       />
     );
     expect(getByText('Error message')).toBeInTheDocument();
@@ -44,11 +49,52 @@ describe('AssignIPRanges', () => {
     const { getByText } = renderWithTheme(
       <AssignIPRanges
         handleIPRangeChange={handleIPRangeChangeMock}
-        ipRanges={ipRanges}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={ipRanges}
       />
     );
 
     const button = getByText('Add IPv4 Range');
     expect(button).toBeInTheDocument();
+  });
+
+  it('has section titles reflective of dual stack when showIPv6Fields is true', () => {
+    const { getByText } = renderWithTheme(
+      <AssignIPRanges
+        handleIPRangeChange={vi.fn()}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={[]}
+        ipv6Ranges={[]}
+        showIPv6Fields={true}
+      />
+    );
+
+    const additionalIPRangesSectionTitle = getByText(
+      /Assign additional IP ranges/i
+    );
+    expect(additionalIPRangesSectionTitle).toBeInTheDocument();
+
+    const button = getByText('Add IPv6 Range');
+    expect(button).toBeInTheDocument();
+  });
+
+  it('does not have section titles reflective of dual stack when showIPv6Fields is false', () => {
+    const { queryByText } = renderWithTheme(
+      <AssignIPRanges
+        handleIPRangeChange={vi.fn()}
+        handleIPv6RangeChange={vi.fn()}
+        ipv4Ranges={[]}
+        ipv6Ranges={[]}
+        showIPv6Fields={false}
+      />
+    );
+
+    const additionalIPRangesSectionTitle = queryByText(
+      /Assign additional IP ranges/i
+    );
+    expect(additionalIPRangesSectionTitle).not.toBeInTheDocument();
+
+    const button = queryByText('Add IPv6 Range');
+    expect(button).not.toBeInTheDocument();
   });
 });

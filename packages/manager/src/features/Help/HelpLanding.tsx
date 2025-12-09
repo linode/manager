@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -25,3 +26,7 @@ const StyledRootContainer = styled('div', {
     padding: `${theme.spacing(2)} ${theme.spacing(14)}`,
   },
 }));
+
+export const helpLandingLazyRoute = createLazyRoute('/')({
+  component: HelpLanding,
+});

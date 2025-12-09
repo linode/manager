@@ -1,42 +1,50 @@
-import { Domain } from '@linode/api-v4';
+import { useCloneDomainMutation, useGrants, useProfile } from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { TextField } from 'src/components/TextField';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { useCloneDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import type { APIError, Domain } from '@linode/api-v4';
 
 interface CloneDomainDrawerProps {
   domain: Domain | undefined;
+  domainError: APIError[] | null;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
-  const { domain, onClose: _onClose, open } = props;
+  const { domain, domainError, isFetching, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { error, mutateAsync: cloneDomain, reset } = useCloneDomainMutation(
-    domain?.id ?? 0
-  );
+  const {
+    error,
+    mutateAsync: cloneDomain,
+    reset,
+  } = useCloneDomainMutation(domain?.id ?? 0);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const formik = useFormik<{ domain: string }>({
     initialValues: { domain: '' },
     onSubmit: async (values) => {
       const newDomain = await cloneDomain(values);
-      history.push(`/domains/${newDomain.id}`);
       onClose();
+      navigate({
+        params: { domainId: newDomain.id },
+        to: '/domains/$domainId',
+      });
     },
   });
 
@@ -49,7 +57,13 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   const noPermission = profile?.restricted && !grants?.global.add_domains;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Clone Domain">
+    <Drawer
+      error={domainError}
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title="Clone Domain"
+    >
       {noPermission && (
         <Notice variant="error">
           You do not have permission to create new Domains.

@@ -1,29 +1,31 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
-import { update } from 'ramda';
+import { useCreateSupportTicketMutation } from '@linode/queries';
+import {
+  Accordion,
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Dialog,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
-import { makeStyles } from 'tss-react/mui';
 
-import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { reduceAsync } from 'src/utilities/reduceAsync';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
+import { updateFileAtIndex } from '../ticketUtils';
 import {
   ENTITY_ID_TO_NAME_MAP,
   SCHEMA_MAP,
@@ -41,31 +43,12 @@ import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
-import type { CreateKubeClusterPayload } from '@linode/api-v4';
-import type { TicketSeverity } from '@linode/api-v4/lib/support';
-import type { CreateLinodeRequest } from '@linode/api-v4/src/linodes/types';
-import type { Theme } from '@mui/material/styles';
+import type {
+  CreateKubeClusterPayload,
+  CreateLinodeRequest,
+  TicketSeverity,
+} from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  expPanelSummary: {
-    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    borderTop: `1px solid ${theme.bg.main}`,
-    paddingTop: theme.spacing(1),
-  },
-  innerReply: {
-    '& div[role="tablist"]': {
-      marginBottom: theme.spacing(),
-      marginTop: theme.spacing(),
-    },
-    padding: 0,
-  },
-  rootReply: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-    padding: 0,
-  },
-}));
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -78,6 +61,7 @@ interface AttachmentWithTarget {
 }
 
 export type EntityType =
+  | 'bucket'
   | 'database_id'
   | 'domain_id'
   | 'firewall_id'
@@ -120,12 +104,23 @@ export interface SupportTicketDialogProps {
 
 export interface SupportTicketFormFields {
   description: string;
+  entity?: EntityForTicketDetails;
   entityId: string;
   entityInputValue: string;
   entityType: EntityType;
+  formPayloadValues?: FormPayloadValues;
   selectedSeverity: TicketSeverity | undefined;
   summary: string;
   ticketType: TicketType;
+  title?: string;
+}
+
+export interface SupportTicketLocationState {
+  description?: SupportTicketDialogProps['prefilledDescription'];
+  entity?: SupportTicketDialogProps['prefilledEntity'];
+  formPayloadValues?: SupportTicketFormFields['formPayloadValues'];
+  ticketType?: SupportTicketDialogProps['prefilledTicketType'];
+  title?: SupportTicketDialogProps['prefilledTitle'];
 }
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -153,27 +148,27 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const location = useLocation<any>();
-  const stateParams = location.state;
+  const location = useLocation();
+  const locationState = location.state as SupportTicketLocationState;
 
   // Collect prefilled data from props or Link parameters.
-  const _prefilledDescription: string =
-    prefilledDescription ?? stateParams?.description ?? undefined;
-  const _prefilledEntity: EntityForTicketDetails =
-    prefilledEntity ?? stateParams?.entity ?? undefined;
-  const _prefilledTitle: string =
-    prefilledTitle ?? stateParams?.title ?? undefined;
-  const prefilledFormPayloadValues: FormPayloadValues =
-    stateParams?.formPayloadValues ?? undefined;
-  const _prefilledTicketType: TicketType =
-    prefilledTicketType ?? stateParams?.ticketType ?? undefined;
+  const _prefilledDescription: string | undefined =
+    prefilledDescription ?? locationState?.description ?? undefined;
+  const _prefilledEntity: EntityForTicketDetails | undefined =
+    prefilledEntity ?? locationState?.entity ?? undefined;
+  const _prefilledTitle: string | undefined =
+    prefilledTitle ?? locationState?.title ?? undefined;
+  const prefilledFormPayloadValues: FormPayloadValues | undefined =
+    locationState?.formPayloadValues ?? undefined;
+  const _prefilledTicketType: TicketType | undefined =
+    prefilledTicketType ?? locationState?.ticketType ?? undefined;
 
   // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
   const newPrefilledTitle = _prefilledTitle
     ? _prefilledTitle
     : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
-    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
-    : undefined;
+      ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+      : undefined;
 
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
@@ -212,11 +207,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-  const { classes } = useStyles();
-
   React.useEffect(() => {
     if (!open) {
-      resetDrawer();
+      resetDialog();
     }
   }, [open]);
 
@@ -229,8 +222,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
-    .current;
+  const debouncedSave = React.useRef(
+    debounce(500, false, saveFormData)
+  ).current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
@@ -238,7 +232,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   }, [summary, description, entityId, entityType, selectedSeverity]);
 
   /**
-   * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
+   * Clear the dialog completely if clearValues is passed (when canceling out of the dialog or successfully submitting)
    * or reset to the default values (from localStorage) otherwise.
    */
   const resetTicket = (clearValues: boolean = false) => {
@@ -256,7 +250,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     });
   };
 
-  const resetDrawer = (clearValues: boolean = false) => {
+  const resetDialog = (clearValues: boolean = false) => {
     resetTicket(clearValues);
     setFiles([]);
 
@@ -267,7 +261,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleClose = () => {
     if (ticketType !== 'general') {
-      window.setTimeout(() => resetDrawer(true), 500);
+      window.setTimeout(() => resetDialog(true), 500);
     }
     props.onClose();
     sendSupportTicketExitEvent('Close');
@@ -275,7 +269,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleCancel = () => {
     props.onClose();
-    window.setTimeout(() => resetDrawer(true), 500);
+    window.setTimeout(() => resetDialog(true), 500);
     sendSupportTicketExitEvent('Cancel');
   };
 
@@ -294,12 +288,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     return uploadAttachment(attachment.ticketId, attachment.file)
       .then(() => {
         /* null out an uploaded file after upload */
-        setFiles((oldFiles: FileAttachment[]) =>
-          update(
-            idx,
-            { file: null, name: '', uploaded: true, uploading: false },
-            oldFiles
-          )
+        setFiles((oldFiles) =>
+          updateFileAtIndex(oldFiles, idx, {
+            file: null,
+            name: '',
+            uploaded: true,
+            uploading: false,
+          })
         );
         return accumulator;
       })
@@ -309,7 +304,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
          * fail! Don't try to aggregate errors!
          */
         setFiles((oldFiles) =>
-          update(idx, { ...oldFiles[idx], uploading: false }, oldFiles)
+          updateFileAtIndex(oldFiles, idx, {
+            uploading: false,
+          })
         );
         const newError = getErrorStringOrDefault(
           attachmentErrors,
@@ -331,7 +328,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       .filter((file) => !file.uploaded)
       .map((file, idx) => {
         setFiles((oldFiles) =>
-          update(idx, { ...oldFiles[idx], uploading: true }, oldFiles)
+          updateFileAtIndex(oldFiles, idx, {
+            uploading: true,
+          })
         );
         const formData = new FormData();
         formData.append('file', file.file ?? ''); // Safety check for TS only
@@ -367,12 +366,28 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
     setSubmitting(true);
 
-    createSupportTicket({
-      [_entityType]: Number(_entityId),
+    const baseRequestPayload = {
       description: _description,
       severity: selectedSeverity,
       summary,
-    })
+    };
+
+    let requestPayload;
+    if (entityType === 'bucket') {
+      const bucketLabel = values.entityInputValue;
+      requestPayload = {
+        bucket: bucketLabel,
+        region: _entityId,
+        ...baseRequestPayload,
+      };
+    } else {
+      requestPayload = {
+        [_entityType]: Number(_entityId),
+        ...baseRequestPayload,
+      };
+    }
+
+    createSupportTicket(requestPayload)
       .then((response) => {
         return response;
       })
@@ -380,7 +395,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
           setSubmitting(false);
           if (!props.keepOpenOnSuccess) {
-            window.setTimeout(() => resetDrawer(true), 500);
+            window.setTimeout(() => resetDialog(true), 500);
             props.onClose();
           }
           /* Errors will be an array of errors, or empty if all attachments succeeded. */
@@ -406,7 +421,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const selectedSeverityLabel =
     selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
-    selectedSeverity != undefined && selectedSeverityLabel != undefined
+    selectedSeverity !== undefined && selectedSeverityLabel !== undefined
       ? {
           label: selectedSeverityLabel,
           value: selectedSeverity,
@@ -425,18 +440,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         >
           {props.children || (
             <>
-              {form.formState.errors.root && (
-                <Notice
-                  data-qa-notice
-                  text={form.formState.errors.root.message}
-                  variant="error"
-                />
-              )}
-
               <Typography data-qa-support-ticket-helper-text>
                 {TICKET_TYPE_MAP[ticketType].helperText}
               </Typography>
               <Controller
+                control={form.control}
+                name="summary"
                 render={({ field, fieldState }) => (
                   <TextField
                     data-qa-ticket-summary
@@ -449,32 +458,30 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                     value={summary}
                   />
                 )}
-                control={form.control}
-                name="summary"
               />
               {hasSeverityCapability && (
                 <Controller
+                  control={form.control}
+                  name="selectedSeverity"
                   render={({ field }) => (
                     <Autocomplete
+                      autoHighlight
+                      data-qa-ticket-severity
+                      label="Severity"
                       onChange={(e, severity) =>
                         field.onChange(
-                          severity != null ? severity.value : undefined
+                          severity !== null ? severity.value : undefined
                         )
                       }
+                      options={SEVERITY_OPTIONS}
+                      sx={{ maxWidth: 'initial' }}
                       textFieldProps={{
                         tooltipPosition: 'right',
                         tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
                       }}
-                      autoHighlight
-                      data-qa-ticket-severity
-                      label="Severity"
-                      options={SEVERITY_OPTIONS}
-                      sx={{ maxWidth: 'initial' }}
                       value={selectedSeverityOption ?? null}
                     />
                   )}
-                  control={form.control}
-                  name="selectedSeverity"
                 />
               )}
             </>
@@ -490,30 +497,40 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields />
               )}
-              <Controller
-                render={({ field, fieldState }) => (
-                  <TabbedReply
-                    placeholder={
-                      "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                    }
-                    error={fieldState.error?.message}
-                    handleChange={field.onChange}
-                    innerClass={classes.innerReply}
-                    required
-                    rootClass={classes.rootReply}
-                    value={description}
-                  />
-                )}
-                control={form.control}
-                name="description"
-              />
+              <Box mt={1}>
+                <Controller
+                  control={form.control}
+                  name="description"
+                  render={({ field, fieldState }) => (
+                    <TabbedReply
+                      error={fieldState.error?.message}
+                      handleChange={field.onChange}
+                      placeholder={
+                        'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
+                      }
+                      required
+                      value={description}
+                    />
+                  )}
+                />
+              </Box>
               <Accordion
-                detailProps={{ className: classes.expPanelSummary }}
+                detailProps={{ sx: { p: 0.25 } }}
                 heading="Formatting Tips"
+                summaryProps={{ sx: { paddingX: 0.25 } }}
+                sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
               >
                 <MarkdownReference />
               </Accordion>
               <AttachFileForm files={files} updateFiles={updateFiles} />
+              {form.formState.errors.root && (
+                <Notice
+                  data-qa-notice
+                  spacingTop={16}
+                  text={form.formState.errors.root.message}
+                  variant="error"
+                />
+              )}
             </>
           )}
           <ActionsPanel

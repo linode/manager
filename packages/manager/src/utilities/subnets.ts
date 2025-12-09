@@ -1,5 +1,6 @@
 import { determineIPType } from '@linode/validation';
 
+// eslint-disable-next-line sonarjs/no-hardcoded-ip
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
@@ -7,29 +8,65 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'label', label: 'Linode Label' },
   { key: 'id', label: 'Linode ID' },
   { key: 'ipv4', label: 'IPv4' },
-  { key: 'interfaceData.ipv4.vpc', label: 'IPv4 VPC' },
-  { key: 'interfaceData.ip_ranges', label: 'IPv4 VPC Ranges' },
+  { key: 'vpcIPv4', label: 'IPv4 VPC' },
+  { key: 'vpcIPv4Ranges', label: 'IPv4 VPC Ranges' },
 ];
 
-// @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
-export interface SubnetIPState {
-  availIPv4s?: number;
-  ipv4?: string;
-  ipv4Error?: string;
-  ipv6?: string;
-  ipv6Error?: string;
-}
-
-export interface SubnetFieldState {
-  ip: SubnetIPState;
+interface SubnetIPv6PrefixOption {
   label: string;
-  labelError?: string;
+  value: string;
 }
 
-export type SubnetIPType = 'ipv4' | 'ipv6';
+export const SUBNET_IPV6_PREFIX_LENGTHS: SubnetIPv6PrefixOption[] = [
+  {
+    label: '/52',
+    value: '/52',
+  },
+  {
+    label: '/53',
+    value: '/53',
+  },
+  {
+    label: '/54',
+    value: '/54',
+  },
+  {
+    label: '/55',
+    value: '/55',
+  },
+  {
+    label: '/56',
+    value: '/56',
+  },
+  {
+    label: '/57',
+    value: '/57',
+  },
+  {
+    label: '/58',
+    value: '/58',
+  },
+  {
+    label: '/59',
+    value: '/59',
+  },
+  {
+    label: '/60',
+    value: '/60',
+  },
+  {
+    label: '/61',
+    value: '/61',
+  },
+  {
+    label: '/62',
+    value: '/62',
+  },
+];
 
 /**
  * Maps subnet mask length to number of theoretically available IPs.
+ * - For a /X in IPv4, it is 2^(32-X)
  * - To get usable IPs, subtract 2 from the given number, as the first and last
  * ips are always reserved
  * - To get available IPs for our VPCs, subtract 4 (the number of reserved IPs)
@@ -69,6 +106,26 @@ export const SubnetMaskToAvailIPv4s: Record<number, number> = {
   30: 4,
   31: 2,
   32: 1,
+};
+
+/**
+ * Maps subnet mask length to number of theoretically usable Linodes (not IPs as it would be too large).
+ * - Each Linode will use a minimum one /64 in the subnet
+ * - For a /X in IPv6, to calculate the number of available Linodes, it is 2^(64-X)
+ * - To get usable Linodes, subtract 1 from the given number (one subnet is reserved)
+ */
+export const SubnetMaskToUsableIPv6Linodes: Record<number, number> = {
+  52: 4095,
+  53: 2047,
+  54: 1023,
+  55: 511,
+  56: 255,
+  57: 127,
+  58: 63,
+  59: 31,
+  60: 15,
+  61: 7,
+  62: 3,
 };
 
 /**
@@ -112,6 +169,12 @@ export const calculateAvailableIPv4sRFC1918 = (
     : undefined;
 };
 
+export const calculateAvailableIPv6Linodes = (address: string): number => {
+  const [, mask] = address.split('/');
+
+  return SubnetMaskToUsableIPv6Linodes[Number(mask)];
+};
+
 /**
  * Calculates the next subnet IPv4 address to recommend when creating a subnet, based off of the last recommended ipv4 and already existing IPv4s,
  * by incrementing the third octet by one.
@@ -128,12 +191,8 @@ export const getRecommendedSubnetIPv4 = (
   lastRecommendedIPv4: string,
   otherIPv4s: string[]
 ): string => {
-  const [
-    firstOctet,
-    secondOctet,
-    thirdOctet,
-    fourthOctet,
-  ] = lastRecommendedIPv4.split('.');
+  const [firstOctet, secondOctet, thirdOctet, fourthOctet] =
+    lastRecommendedIPv4.split('.');
   const parsedThirdOctet = parseInt(thirdOctet, 10);
   let ipv4ToReturn = '';
 

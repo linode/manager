@@ -1,7 +1,5 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4/lib/placement-groups';
-
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 import type {
   CreatePlacementGroupPayload,
@@ -125,19 +123,10 @@ export const getLinodesFromAllPlacementGroups = (
 export const useIsPlacementGroupsEnabled = (): {
   isPlacementGroupsEnabled: boolean;
 } => {
-  const { data: account, error } = useAccount();
-  const flags = useFlags();
+  const { data: account } = useAccount();
 
-  if (error || !flags) {
-    return { isPlacementGroupsEnabled: false };
-  }
-
-  const hasAccountCapability = account?.capabilities?.includes(
-    'Placement Group'
-  );
-  const isFeatureFlagEnabled = flags.placementGroups?.enabled;
   const isPlacementGroupsEnabled = Boolean(
-    hasAccountCapability && isFeatureFlagEnabled
+    account?.capabilities?.includes('Placement Group')
   );
 
   return { isPlacementGroupsEnabled };

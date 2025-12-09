@@ -1,16 +1,14 @@
+import { Accordion, Box, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { Box } from 'src/components/Box';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
-import { useStyles } from '../NotificationCenter.styles';
 import {
   StyledHeader,
   StyledRootContainer,
 } from '../NotificationCenter.styles';
+import { useStyles } from '../NotificationCenter.styles';
 import { useFormattedNotifications } from '../useFormattedNotifications';
 import { NotificationCenterNotifications } from './NotificationCenterNotifications';
 
@@ -82,11 +80,11 @@ export const NotificationCenterNotificationsContainer = (
 
       <Hidden smUp>
         <Accordion
+          defaultExpanded={true}
+          heading={header}
           headingNumberCount={
             notifications.length > 0 ? notifications.length : undefined
           }
-          defaultExpanded={true}
-          heading={header}
         >
           <NotificationCenterNotifications
             content={notifications}

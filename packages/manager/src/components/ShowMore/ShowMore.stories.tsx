@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const mockArray = [...Array(5)].map((_, i) => String.fromCharCode(97 + i));
 

@@ -1,12 +1,13 @@
-import { Subnet } from '@linode/api-v4';
 import * as React from 'react';
 
-import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
+import type { Subnet } from '@linode/api-v4';
+
 const props = {
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
   subnet: {
@@ -19,18 +20,16 @@ const props = {
 
 describe('Subnet Unassign Linodes Drawer', () => {
   it('should render a subnet Unassign linodes drawer', () => {
-    const { getByText } = renderWithTheme(
-      <SubnetUnassignLinodesDrawer {...props} />
-    );
+    const view = renderWithTheme(<SubnetUnassignLinodesDrawer {...props} />);
 
-    const header = getByText(
+    const header = view.getByText(
       'Unassign Linodes from subnet: subnet-1 (10.0.0.0/24)'
     );
     expect(header).toBeVisible();
-    const notice = getByText(SUBNET_UNASSIGN_LINODES_WARNING);
+    const notice = view.getByTestId('subnet-linode-action-notice');
     expect(notice).toBeVisible();
 
-    const linodeSelect = getByText('Linodes');
+    const linodeSelect = view.getByText('Linodes');
     expect(linodeSelect).toBeVisible();
   });
 });

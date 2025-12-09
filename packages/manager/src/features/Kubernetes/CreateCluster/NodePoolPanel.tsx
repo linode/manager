@@ -1,33 +1,33 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
+import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { extendType } from 'src/utilities/extendType';
 
-import { ADD_NODE_POOLS_DESCRIPTION } from '../ClusterList/constants';
+import {
+  ADD_NODE_POOLS_DESCRIPTION,
+  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+  DEFAULT_PLAN_COUNT,
+} from '../constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
-import type {
-  KubeNodePoolResponse,
-  LinodeTypeClass,
-  Region,
-} from '@linode/api-v4';
+import type { NodePoolConfigDrawerHandlerParams } from './CreateCluster';
+import type { KubernetesTier, LinodeTypeClass, Region } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
-const DEFAULT_PLAN_COUNT = 3;
-
 export interface NodePoolPanelProps {
-  addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   apiError?: string;
+  handleConfigurePool: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasSelectedRegion: boolean;
+  isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
+  selectedTier: KubernetesTier;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
@@ -53,21 +53,19 @@ const RenderLoadingOrContent = (props: NodePoolPanelProps) => {
 
 const Panel = (props: NodePoolPanelProps) => {
   const {
-    addNodePool,
     apiError,
     hasSelectedRegion,
+    isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
+    handleConfigurePool,
     regionsData,
     selectedRegionId,
+    selectedTier,
     types,
   } = props;
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
-
-  const regions = useRegionsQuery().data ?? [];
+  const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -77,9 +75,8 @@ const Panel = (props: NodePoolPanelProps) => {
   const extendedTypes = types.map(extendType);
 
   const addPool = (selectedPlanType: string, nodeCount: number) => {
-    addNodePool({
+    append({
       count: nodeCount,
-      id: Math.random(),
       type: selectedPlanType,
     });
   };
@@ -89,38 +86,50 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  const regionSupportsDiskEncryption = doesRegionSupportFeature(
-    selectedRegionId ?? '',
-    regions,
-    'Disk Encryption'
-  );
+  const { control } = useFormContext();
+  const { append } = useFieldArray({
+    control,
+    name: 'nodePools',
+  });
+
+  const getPlansPanelCopy = () => {
+    return selectedTier === 'enterprise'
+      ? ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION
+      : ADD_NODE_POOLS_DESCRIPTION;
+  };
 
   return (
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
-          copy={
-            isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
-              ? ADD_NODE_POOLS_DESCRIPTION
-              : 'Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool.'
-          }
+          copy={getPlansPanelCopy()}
+          error={apiError}
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
-          types={extendedTypes.filter(
-            (t) => t.class !== 'nanode' && t.class !== 'gpu'
-          )} // No Nanodes or GPUs in clusters
-          error={apiError}
+          handleConfigurePool={handleConfigurePool}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
+          isAPLEnabled={isAPLEnabled}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          onAdd={addPool}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onAdd={addPool} // Once LKE-E Post-LA work goes to prod, we can remove this prop.
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
           selectedId={selectedType}
           selectedRegionId={selectedRegionId}
+          selectedTier={selectedTier}
+          types={extendedTypes.filter((t) => {
+            if (!isAcceleratedLKEPlansEnabled && t.class === 'accelerated') {
+              // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
+              return false;
+            }
+
+            // No Nanodes in Kubernetes clusters
+            return t.class !== 'nanode';
+          })}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

@@ -1,7 +1,8 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { Event, Notification } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { Event, Notification } from './types';
 
 /**
  * getEvents
@@ -14,7 +15,7 @@ export const getEvents = (params: Params = {}, filter: Filter = {}) =>
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -26,20 +27,20 @@ export const getEvents = (params: Params = {}, filter: Filter = {}) =>
 export const getEvent = (eventId: number) =>
   Request<Event>(
     setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
  * markEventSeen
  *
- * Set the "seen" property of an event to true
+ * Marks all events up to and including the referenced event ID as "seen"
  *
  * @param eventId { number } ID of the event to designate as seen
  */
 export const markEventSeen = (eventId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}/seen`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -49,11 +50,15 @@ export const markEventSeen = (eventId: number) =>
  *
  * @param eventId { number } ID of the event to designate as read
  *
+ * @deprecated As of `5/20/2025`, this endpoint is deprecated. It will be sunset on `6/17/2025`.
+ *
+ * If you depend on using `read`, you may be able to use `markEventSeen` and `seen` instead.
+ * Please note that the `seen` endpoint functions differently and will mark all events up to and including the referenced event ID as "seen" rather than individual events.
  */
 export const markEventRead = (eventId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/events/${encodeURIComponent(eventId)}/read`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -67,5 +72,5 @@ export const getNotifications = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/account/notifications`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );

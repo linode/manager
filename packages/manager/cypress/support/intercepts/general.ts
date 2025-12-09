@@ -59,7 +59,7 @@ export const mockApiMaintenanceMode = (): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts all requests to Linode API v4 and mocks an error HTTP response.
+ * Intercepts all requests to Linode API-v4 and mocks an error HTTP response.
  *
  * @param errorCode - HTTP status code to mock.
  * @param errorMessage - Response error message to mock.
@@ -80,4 +80,24 @@ export const mockApiRequestWithError = (
       ],
     },
   });
+};
+
+/**
+ * Intercepts all requests to Linode API-v4 and inserts internal user header.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockApiInternalUser = (): Cypress.Chainable<null> => {
+  return cy.intercept(
+    {
+      middleware: true,
+      url: apiMatcher('**/*'),
+    },
+    (req) => {
+      // Re-add internal-only header
+      req.on('response', (res) => {
+        res.headers['akamai-internal-account'] = '*';
+      });
+    }
+  );
 };

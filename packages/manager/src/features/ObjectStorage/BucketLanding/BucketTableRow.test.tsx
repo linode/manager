@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { buckets } from 'src/__data__/buckets';
+import { objectStorageBucketFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { BucketTableRow } from './BucketTableRow';
@@ -8,7 +8,15 @@ import { BucketTableRow } from './BucketTableRow';
 import type { BucketTableRowProps } from './BucketTableRow';
 
 const mockOnRemove = vi.fn();
-const bucket = buckets[0];
+const bucket = objectStorageBucketFactory.build({
+  cluster: 'us-east-1',
+  created: '2017-12-11T16:35:31',
+  hostname: 'test-bucket-001.alpha.linodeobjects.com',
+  label: 'test-bucket-001',
+  objects: 2,
+  region: 'us-east',
+  size: 5418860544,
+});
 
 describe('BucketTableRow', () => {
   const props: BucketTableRowProps = {
@@ -37,7 +45,7 @@ describe('BucketTableRow', () => {
     getByText('test-bucket-001.alpha.linodeobjects.com');
   });
 
-  it('should render a size with the correct size abbreviation', () => {
+  it('should render size with base2 calculations (displaying GB but representing GiB)', () => {
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<BucketTableRow {...props} />)
     );

@@ -3,8 +3,10 @@ import {
   COUNTRY_CODE_TO_CONTINENT_CODE,
 } from '@linode/api-v4';
 
-import type { Agreements, Country, Profile } from '@linode/api-v4';
+import { GLOBAL_QUOTA_VALUE } from 'src/components/RegionSelect/constants';
+
 import type { Region } from '@linode/api-v4';
+import type { Agreements, Country, Profile } from '@linode/api-v4';
 
 interface GDPRConfiguration {
   /** The user's agreements */
@@ -22,13 +24,19 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
     return 'Other';
   }
 
+  // The global option should not be grouped
+  // An empty string here makes sense to avoid bigger refactors to an already complicated Component
+  if (region.id === GLOBAL_QUOTA_VALUE) {
+    return region.id;
+  }
+
   const continentCode =
     COUNTRY_CODE_TO_CONTINENT_CODE[
       region.country.toUpperCase() as Uppercase<Country>
     ];
 
   return continentCode
-    ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'
+    ? (CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other')
     : 'Other';
 };
 

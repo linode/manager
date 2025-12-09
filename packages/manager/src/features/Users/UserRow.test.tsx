@@ -1,9 +1,8 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantsFactory } from 'src/factories/grants';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -17,7 +16,7 @@ import { UserRow } from './UserRow';
 beforeAll(() => mockMatchMedia());
 
 describe('UserRow', () => {
-  it('renders a username and email', () => {
+  it('renders a username and email', async () => {
     const user = accountUserFactory.build();
 
     const { getByText } = renderWithTheme(
@@ -28,7 +27,7 @@ describe('UserRow', () => {
     expect(getByText(user.email)).toBeVisible();
   });
 
-  it('renders "Full" if the user is unrestricted', () => {
+  it('renders "Full" if the user is unrestricted', async () => {
     const user = accountUserFactory.build({ restricted: false });
 
     const { getByText } = renderWithTheme(
@@ -38,7 +37,7 @@ describe('UserRow', () => {
     expect(getByText('Full')).toBeVisible();
   });
 
-  it('renders "Limited" if the user is restricted', () => {
+  it('renders "Limited" if the user is restricted', async () => {
     const user = accountUserFactory.build({ restricted: true });
 
     const { getByText } = renderWithTheme(
@@ -151,7 +150,7 @@ describe('UserRow', () => {
     expect(queryByText('2022-02-09T16:19:26')).not.toBeInTheDocument();
   });
 
-  it('renders "Never" if last_login is null', () => {
+  it('renders "Never" if last_login is null', async () => {
     const user = accountUserFactory.build({ last_login: null });
 
     const { getByText } = renderWithTheme(

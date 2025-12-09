@@ -1,19 +1,21 @@
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import { useFlags } from './useFlags';
 import { useIsAkamaiAccount } from './useIsAkamaiAccount';
 
+import type { ManagerPreferences } from '@linode/utilities';
 import type { FlagSet } from 'src/featureFlags';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const useSecureVMNoticesEnabled = () => {
-  const { data: preferences } = usePreferences();
+  const { data: secureVMsNoticePreference } = usePreferences(
+    (preferences) => preferences?.secure_vm_notices
+  );
   const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
   const flags = useFlags();
 
   return {
     secureVMNoticesEnabled: getSecureVMNoticesEnabled(
-      preferences,
+      secureVMsNoticePreference,
       isInternalAccount,
       flags
     ),
@@ -21,14 +23,14 @@ export const useSecureVMNoticesEnabled = () => {
 };
 
 const getSecureVMNoticesEnabled = (
-  preferences: ManagerPreferences | undefined,
+  preference: ManagerPreferences['secure_vm_notices'] | undefined,
   isInternalAccount: boolean | undefined,
   flags: FlagSet
 ) => {
   if (Object.keys(flags.secureVmCopy ?? {}).length === 0) {
     return false;
   }
-  switch (preferences?.secure_vm_notices) {
+  switch (preference) {
     case 'always':
       return true;
     case 'never':

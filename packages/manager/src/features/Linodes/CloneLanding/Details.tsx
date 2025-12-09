@@ -1,19 +1,20 @@
-import { Disk, Linode } from '@linode/api-v4/lib/linodes';
-import Close from '@mui/icons-material/Close';
+import { useRegionsQuery } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
+  ActionsPanel,
+  Button,
+  CloseIcon,
+  Divider,
+  List,
+  ListItem,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
   StyledButton,
@@ -21,12 +22,10 @@ import {
   StyledHeader,
   StyledTypography,
 } from './Details.styles';
-import {
-  EstimatedCloneTimeMode,
-  ExtendedConfig,
-  getAllDisks,
-  getEstimatedCloneTime,
-} from './utilities';
+import { getAllDisks, getEstimatedCloneTime } from './utilities';
+
+import type { EstimatedCloneTimeMode, ExtendedConfig } from './utilities';
+import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   clearAll: () => void;
@@ -161,7 +160,7 @@ export const Details = (props: Props) => {
                   data-qa-inline-delete
                   onClick={() => handleToggleConfig(eachConfig.id)}
                 >
-                  <Close />
+                  <CloseIcon />
                 </StyledButton>
               </StyledDiv>
               <List sx={{ flexBasis: '100%', marginLeft: theme.spacing(2) }}>
@@ -191,7 +190,7 @@ export const Details = (props: Props) => {
                 data-qa-inline-delete
                 onClick={() => handleToggleDisk(eachDisk.id)}
               >
-                <Close />
+                <CloseIcon />
               </StyledButton>
             </ListItem>
           );
@@ -212,6 +211,8 @@ export const Details = (props: Props) => {
       )}
 
       <LinodeSelect
+        clearable={false}
+        errorText={linodeError}
         onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);
@@ -222,8 +223,6 @@ export const Details = (props: Props) => {
             ? (linode: Linode) => linode.id !== currentLinodeId
             : undefined
         }
-        clearable={false}
-        errorText={linodeError}
         placeholder="Destination"
         value={selectedLinodeId}
       />

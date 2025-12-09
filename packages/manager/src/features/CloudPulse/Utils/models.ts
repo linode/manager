@@ -1,4 +1,18 @@
-import type { DatabaseEngine, DatabaseType } from '@linode/api-v4';
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { AssociatedEntityType } from '../shared/types';
+import type {
+  Capabilities,
+  CloudPulseServiceType,
+  DatabaseEngine,
+  DatabaseInstance,
+  DatabaseType,
+  Firewall,
+  KubernetesCluster,
+  Linode,
+  NodeBalancer,
+  ObjectStorageBucket,
+  Volume,
+} from '@linode/api-v4';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
 /**
@@ -6,15 +20,21 @@ import type { QueryFunction, QueryKey } from '@tanstack/react-query';
  */
 export interface CloudPulseServiceTypeFilterMap {
   /**
+   * The associated entity type for the service type
+   */
+  readonly associatedEntityType?: AssociatedEntityType;
+  /**
+   * Current capability corresponding to a service type
+   */
+  readonly capability: Capabilities;
+  /**
    * The list of filters for a service type
    */
-
   readonly filters: CloudPulseServiceTypeFilters[];
-
   /**
    * The service types like dbaas, linode etc.,
    */
-  readonly serviceType: 'dbaas' | 'linode';
+  readonly serviceType: CloudPulseServiceType;
 }
 
 /**
@@ -36,8 +56,17 @@ export interface CloudPulseServiceTypeFilters {
 /**
  * As of now, the list of possible custom filters are engine, database type, this union type will be expanded if we start enhancing our custom select config
  */
-export type QueryFunctionType = DatabaseEngine[] | DatabaseType[];
-
+export type QueryFunctionType =
+  | CloudPulseResources[]
+  | DatabaseEngine[]
+  | DatabaseInstance[]
+  | DatabaseType[]
+  | Firewall[]
+  | KubernetesCluster[]
+  | Linode[]
+  | NodeBalancer[]
+  | ObjectStorageBucket[]
+  | Volume[];
 /**
  * The non array types of QueryFunctionType like DatabaseEngine|DatabaseType
  */
@@ -84,9 +113,28 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
+   * This is an optional field, controls the associated entity type for the dashboard
+   */
+  associatedEntityType?: AssociatedEntityType;
+  /**
+   * This is an optional field, it is used to define the child filters for a parent filter
+   */
+  children?: string[];
+
+  /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected
    */
   dependency?: string[];
+
+  /**
+   * If this filter is part of metric-definitions API, this field holds the dimension key
+   */
+  dimensionKey?: string;
+
+  /**
+   * This is an optional field, it is used to filter the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
 
   /**
    * This is the field that will be sent in the metrics api call or xFilter
@@ -99,6 +147,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
   filterType: string;
 
   /**
+   * If this is true, we will only allow users to select a certain threshold
+   */
+  hasRestrictedSelections?: boolean;
+
+  /**
    * If this is true, we will pass the filter in the metrics api otherwise, we don't
    */
   isFilterable: boolean;
@@ -107,22 +160,29 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * If this is true, we will pass the filter as a explicit key in the request else inside the filters object of metrics request
    */
   isMetricsFilter: boolean;
+
   /**
    * If this is true, multiselect will be enabled for the filter, only applicable for static and dynamic, not for predefined ones
    */
   isMultiSelect?: boolean;
   /**
+   * If this is true, we will pass filter as an optional filter
+   */
+  isOptional?: boolean;
+
+  /**
    * If this is true, we will only allow users to select a certain threshold, only applicable for static and dynamic, not for predefined ones
    */
   maxSelections?: number;
+
   /**
    * The name of the filter
    */
   name: string;
   /**
-   * This will be helpful, when we build a reusable component for integrating in service page, whether to show the filter there or not
+   *  This is helpful to determine the views in which the filter should be shown
    */
-  neededInServicePage: boolean;
+  neededInViews: CloudPulseAvailableViews[];
   /**
    * This is an optional field, needed if the select type is static, this is the list of options to be displayed in dropdown component
    */
@@ -135,6 +195,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    *  This controls the order of rendering the filtering componenents
    */
   priority: number;
+
   /**
    * default is predefined filters like (region, resources, timeduration) or dynamic / static
    */
@@ -168,5 +229,21 @@ export enum CloudPulseSelectTypes {
   /**
    * static selection type, where the service owner will give the static options for the filter
    */
+  // eslint-disable-next-line sonarjs/future-reserved-words
   static,
+}
+
+/**
+ * CloudPulseAvailableViews holds the views in which the filter should be shown
+ */
+export enum CloudPulseAvailableViews {
+  /**
+   * Represents the centralized Metrics view. If present in a filter's view configuration, that filter will be shown in the central page
+   */
+  central,
+
+  /**
+   * Represents the service page's Metrics view. If present in a filter's view configuration, that filter will be shown in the service page
+   */
+  service,
 }

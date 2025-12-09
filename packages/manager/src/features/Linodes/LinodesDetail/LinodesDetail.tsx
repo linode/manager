@@ -1,20 +1,11 @@
+import { useLinodeQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
 
 const LinodesDetailHeader = React.lazy(() =>
   import(
@@ -33,17 +24,22 @@ const CloneLanding = React.lazy(() =>
 );
 
 export const LinodeDetail = () => {
-  const { path, url } = useRouteMatch();
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const queryParams = getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
-    location.search
-  );
+  const isCloneRoute = location.pathname.includes('/clone');
 
-  const id = Number(linodeId);
+  const closeUpgradeInterfacesDialog = () => {
+    const newPath =
+      location.pathname ===
+      `/linodes/${linodeId}/configurations/upgrade-interfaces`
+        ? location.pathname.split('/').slice(0, -1).join('/')
+        : location.pathname;
+    navigate({ to: newPath });
+  };
 
-  const { data: linode, error, isLoading } = useLinodeQuery(id);
+  const { data: linode, error, isLoading } = useLinodeQuery(linodeId);
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -55,36 +51,28 @@ export const LinodeDetail = () => {
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <Switch>
-        {/*
+      {/*
           Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
           Or... at least it appears that way to the user. We would like it to live WITHIN
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
-          */}
-        <Route component={CloneLanding} path={`${path}/clone`} />
-        {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
-          <Redirect
-            to={{
-              pathname: url,
-              search: new URLSearchParams({
-                ...queryParams,
-                [path]: 'true',
-              }).toString(),
-            }}
-            from={`${url}/${path}`}
-            key={path}
-          />
-        ))}
-        <Route
-          render={() => (
-            <React.Fragment>
-              <LinodesDetailHeader />
-              <LinodesDetailNavigation />
-            </React.Fragment>
-          )}
-        />
-      </Switch>
+      */}
+      {isCloneRoute ? (
+        <CloneLanding />
+      ) : (
+        <>
+          <LinodesDetailHeader />
+          <LinodesDetailNavigation />
+        </>
+      )}
+      <UpgradeInterfacesDialog
+        linodeId={linodeId}
+        onClose={closeUpgradeInterfacesDialog}
+        open={
+          location.pathname ===
+          `/linodes/${linodeId}/configurations/upgrade-interfaces`
+        }
+      />
     </React.Suspense>
   );
 };

@@ -1,24 +1,21 @@
-import { DateTime } from 'luxon';
-import { equals, pathOr, sort, splitAt } from 'ramda';
-import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { debounce } from 'throttle-debounce';
-
-import { usePrevious } from 'src/hooks/usePrevious';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import {
+  pathOr,
   sortByArrayLength,
   sortByNumber,
   sortByString,
-  sortByUTFDate,
-} from 'src/utilities/sort-by';
+  splitAt,
+  usePrevious,
+} from '@linode/utilities';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
+import { DateTime } from 'luxon';
+import { equals, sort } from 'ramda';
+import * as React from 'react';
+import { debounce } from 'throttle-debounce';
 
-import type { Order } from 'src/hooks/useOrder';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import { sortByUTFDate } from 'src/utilities/sortByUTFDate';
+
+import type { ManagerPreferences, Order } from '@linode/utilities';
 
 export interface OrderByProps<T> extends State {
   data: T[];
@@ -58,7 +55,7 @@ export type CombinedProps<T> = Props<T>;
  */
 export const getInitialValuesFromUserPreferences = (
   preferenceKey: string,
-  preferences: ManagerPreferences,
+  preferences: ManagerPreferences['sortKeys'],
   params: Record<string, string>,
   defaultOrderBy?: string,
   defaultOrder?: Order,
@@ -91,7 +88,7 @@ export const getInitialValuesFromUserPreferences = (
     };
   }
   return (
-    preferences?.sortKeys?.[preferenceKey] ?? {
+    preferences?.[preferenceKey] ?? {
       order: defaultOrder,
       orderBy: defaultOrderBy,
     }
@@ -137,8 +134,8 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
     }
 
     /** basically, if orderByProp exists, do a pathOr with that instead */
-    const aValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], a);
-    const bValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], b);
+    const aValue = pathOr<any, T>('', orderByProp ? orderByProp : [orderBy], a);
+    const bValue = pathOr<any, T>('', orderByProp ? orderByProp : [orderBy], b);
 
     if (Array.isArray(aValue) && Array.isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order);
@@ -156,16 +153,23 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
 };
 
 export const OrderBy = <T,>(props: CombinedProps<T>) => {
-  const { data: preferences } = usePreferences();
+  const { data: sortPreferences } = usePreferences(
+    (preferences) => preferences?.sortKeys
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
-  const history = useHistory();
-  const params = getQueryParamsFromQueryString(location.search);
+  const navigate = useNavigate();
+  const search = useSearch({
+    strict: false,
+  });
+  const onlySearch = Object.fromEntries(
+    Object.entries(search).filter(([key]) => key.startsWith('order'))
+  ) as Record<string, string>;
 
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
-    preferences ?? {},
-    params,
+    sortPreferences ?? {},
+    onlySearch,
     props.orderBy,
     props.order
   );
@@ -210,7 +214,7 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
       if (props.preferenceKey) {
         updatePreferences({
           sortKeys: {
-            ...(preferences?.sortKeys ?? {}),
+            ...(sortPreferences ?? {}),
             [props.preferenceKey]: { order, orderBy },
           },
         });
@@ -223,7 +227,14 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
     setOrder(newOrder);
 
     // Update the URL query params so that the current sort is bookmark-able
-    history.replace({ search: `?order=${newOrder}&orderBy=${newOrderBy}` });
+    navigate({
+      to: location.pathname,
+      search: (prev: Record<string, string>) => ({
+        ...prev,
+        order: newOrder,
+        orderBy: newOrderBy,
+      }),
+    });
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
@@ -236,7 +247,6 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
     orderBy,
   };
 
-  // eslint-disable-next-line
   return <>{props.children(downstreamProps)}</>;
 };
 

@@ -1,27 +1,35 @@
+import { useDeleteVPCMutation } from '@linode/queries';
+import { Notice } from '@linode/ui';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useDeleteVPCMutation } from 'src/queries/vpcs/vpcs';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import type { APIError, VPC } from '@linode/api-v4';
 
 interface Props {
-  id?: number;
-  label?: string;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
+  vpc?: VPC;
+  vpcError: APIError[] | null;
 }
 
 export const VPCDeleteDialog = (props: Props) => {
-  const { id, label, onClose, open } = props;
+  const { isFetching, onClose, open, vpc, vpcError } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
     isPending,
     mutateAsync: deleteVPC,
     reset,
-  } = useDeleteVPCMutation(id ?? -1);
-  const history = useHistory();
+  } = useDeleteVPCMutation(vpc?.id ?? -1);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { data: permissions } = usePermissions('vpc', ['delete_vpc'], vpc?.id);
 
   React.useEffect(() => {
     if (open) {
@@ -35,27 +43,38 @@ export const VPCDeleteDialog = (props: Props) => {
         variant: 'success',
       });
       onClose();
-      if (history.location.pathname !== '/vpcs') {
-        history.push('/vpcs');
+      if (location.pathname !== '/vpcs') {
+        navigate({ to: '/vpcs' });
       }
     });
   };
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={!permissions.delete_vpc}
       entity={{
         action: 'deletion',
-        name: label,
+        name: vpc?.label,
         primaryBtnText: 'Delete',
         type: 'VPC',
+        error: vpcError,
       }}
       errors={error}
+      expand
+      isFetching={isFetching}
       label="VPC Label"
       loading={isPending}
       onClick={onDeleteVPC}
       onClose={onClose}
       open={open}
-      title={`Delete VPC ${label}`}
-    />
+      title={`Delete VPC${vpc ? ` ${vpc.label}` : ''}`}
+    >
+      {!permissions.delete_vpc && (
+        <Notice
+          text={`You don't have permissions to delete ${vpc?.label}. Please contact an account administrator for details.`}
+          variant="error"
+        />
+      )}
+    </TypeToConfirmDialog>
   );
 };

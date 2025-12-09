@@ -1,6 +1,10 @@
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
+
 import { escapeStringForCLI } from '../escapeStringForCLI';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
 
 /**
  * Generates a Terraform config to setup a Linode instance.
@@ -34,7 +38,11 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
     terraformConfig += `  metadata {\n    user_data = "${config.metadata.user_data}"\n  }\n`;
   }
 
-  if (config.interfaces && config.interfaces.length > 0) {
+  if (
+    config.interfaces &&
+    config.interfaces.length > 0 &&
+    getIsLegacyInterfaceArray(config.interfaces)
+  ) {
     config.interfaces.forEach((interfaceConfig) => {
       terraformConfig += `  interface {\n    purpose = "${interfaceConfig.purpose}"\n`;
       if (interfaceConfig.subnet_id) {
@@ -92,7 +100,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
   if (config.swap_size) {
     terraformConfig += `  swap_size = ${config.swap_size}\n`;
   }
-  if (config.hasOwnProperty('private_ip')) {
+  if (Object.prototype.hasOwnProperty.call(config, 'private_ip')) {
     // Checks explicitly for property existence
     terraformConfig += `  private_ip = ${config.private_ip}\n`;
   }
@@ -100,7 +108,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
     terraformConfig += `  backups_enabled = ${config.backups_enabled}\n`;
   }
 
-  terraformConfig += `}\n`;
+  terraformConfig += `}`;
 
   return terraformConfig;
 }

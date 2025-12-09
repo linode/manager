@@ -1,4 +1,7 @@
+import { PRIVATE_IPV4_REGEX } from '@linode/validation';
 import { parseCIDR, parse as parseIP } from 'ipaddr.js';
+
+import type { PrefixListRuleReference } from 'src/features/Firewalls/shared';
 
 /**
  * Removes the prefix length from the end of an IPv6 address.
@@ -8,18 +11,24 @@ import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 export const removePrefixLength = (ip: string) => ip.replace(/\/\d+/, '');
 
 /**
- * Regex for determining if a string is a private IP Addresses
+ * Determines if an IPv4 address is private
+ * @returns true if the given IPv4 address is private
  */
-export const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+export const isPrivateIP = (ip: string) => {
+  return PRIVATE_IPV4_REGEX.test(ip);
+};
 
 export interface ExtendedIP {
   address: string;
   error?: string;
 }
 
+export interface ExtendedPL extends ExtendedIP, PrefixListRuleReference {}
+
 export const stringToExtendedIP = (ip: string): ExtendedIP => ({ address: ip });
 export const extendedIPToString = (ip: ExtendedIP): string => ip.address;
 export const ipFieldPlaceholder = '192.0.2.1/32';
+export const ipV6FieldPlaceholder = '2600:1401:4000::1726:XXXX';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
@@ -33,7 +42,7 @@ export const validateIPs = (
 ): ExtendedIP[] => {
   return ips.map(({ address }) => {
     if (!options?.allowEmptyAddress && !address) {
-      return { address, error: 'Please enter an IP address.' };
+      return { address, error: 'Enter an IP address.' };
     }
     // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
     // methods for each, so we check for a netmask to decide the method to use.

@@ -1,16 +1,12 @@
-import {
-  EntityTransfer,
-  TransferEntities,
-} from '@linode/api-v4/lib/entity-transfers/types';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 import { DateTime } from 'luxon';
-import { v4 } from 'uuid';
 
-export const transferEntitiesFactory = Factory.Sync.makeFactory<TransferEntities>(
-  {
+import type { EntityTransfer, TransferEntities } from '@linode/api-v4';
+
+export const transferEntitiesFactory =
+  Factory.Sync.makeFactory<TransferEntities>({
     linodes: [0, 1, 2, 3],
-  }
-);
+  });
 
 export const entityTransferFactory = Factory.Sync.makeFactory<EntityTransfer>({
   created: DateTime.utc().toISO(),
@@ -18,6 +14,6 @@ export const entityTransferFactory = Factory.Sync.makeFactory<EntityTransfer>({
   expiry: DateTime.utc().plus({ days: 1 }).toISO(),
   is_sender: true,
   status: 'pending',
-  token: Factory.each(() => v4()),
+  token: Factory.each(() => crypto.randomUUID()),
   updated: DateTime.utc().toISO(),
 });

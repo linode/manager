@@ -1,14 +1,64 @@
+import type { AccountCapability } from 'src/account';
+
+export type AlertSeverityType = 0 | 1 | 2 | 3;
+export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
+export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
+export type CloudPulseServiceType =
+  | 'blockstorage'
+  | 'dbaas'
+  | 'firewall'
+  | 'linode'
+  | 'lke'
+  | 'nodebalancer'
+  | 'objectstorage';
+export type AlertClass = 'dedicated' | 'shared';
+export type DimensionFilterOperatorType =
+  | 'endswith'
+  | 'eq'
+  | 'in'
+  | 'neq'
+  | 'startswith';
+export type AlertDefinitionType = 'system' | 'user';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
+export type AlertStatusType =
+  | 'disabled'
+  | 'disabling'
+  | 'enabled'
+  | 'enabling'
+  | 'failed'
+  | 'in progress'
+  | 'provisioning';
+export type CriteriaConditionType = 'ALL';
+export type MetricUnitType =
+  | 'bit_per_second'
+  | 'byte'
+  | 'GB'
+  | 'KB'
+  | 'MB'
+  | 'millisecond'
+  | 'number'
+  | 'percent'
+  | 'second';
+export type NotificationStatus = 'Disabled' | 'Enabled';
+export type ChannelType = 'email' | 'pagerduty' | 'slack' | 'webhook';
+export type AlertNotificationType = 'system' | 'user';
+type AlertNotificationEmail = 'email';
+type AlertNotificationSlack = 'slack';
+type AlertNotificationPagerDuty = 'pagerduty';
+type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
+  created: string;
+  group_by?: string[];
   id: number;
   label: string;
-  widgets: Widgets[];
-  created: string;
-  updated: string;
+  service_type: CloudPulseServiceType;
   time_duration: TimeDuration;
-  service_type: string;
+  updated: string;
+  widgets: Widgets[];
 }
 
 export interface TimeGranularity {
+  label?: string;
   unit: string;
   value: number;
 }
@@ -18,92 +68,104 @@ export interface TimeDuration {
   value: number;
 }
 
+export interface DateTimeWithPreset {
+  end: string;
+  preset?: string;
+  start: string;
+  timeZone?: string;
+}
+
 export interface Widgets {
+  aggregate_function: string;
+  chart_type: 'area' | 'line';
+  color: string;
+  entity_ids: string[];
+  filters: Filters[];
+  group_by?: string[];
   label: string;
   metric: string;
-  aggregate_function: string;
-  group_by: string;
-  region_id: number;
   namespace_id: number;
-  color: string;
+  region_id: number;
+  service_type: CloudPulseServiceType;
+  serviceType: CloudPulseServiceType;
   size: number;
-  chart_type: string;
-  y_label: string;
-  filters: Filters[];
-  serviceType: string;
-  service_type: string;
-  resource_id: string[];
-  time_granularity: TimeGranularity;
   time_duration: TimeDuration;
+  time_granularity: TimeGranularity;
   unit: string;
+  y_label: string;
 }
 
 export interface Filters {
-  key: string;
-  operator: string;
+  dimension_label: string;
+  operator: DimensionFilterOperatorType;
   value: string;
 }
 
-// Define the type for filter values
-type FilterValue =
+export type FilterValue =
+  | DateTimeWithPreset
   | number
+  | number[]
   | string
   | string[]
-  | number[]
-  | WidgetFilterValue
-  | undefined;
+  | undefined
+  | WidgetFilterValue;
 
 type WidgetFilterValue = { [key: string]: AclpWidget };
 
 export interface AclpConfig {
-  // we maintain only the filters selected in the preferences for latest selected dashboard
   [key: string]: FilterValue;
   widgets?: WidgetFilterValue;
 }
 
 export interface AclpWidget {
   aggregateFunction: string;
-  timeGranularity: TimeGranularity;
+  filters: Filters[];
+  groupBy?: string[];
   label: string;
   size: number;
+  timeGranularity: TimeGranularity;
 }
 
-export interface MetricDefinitions {
-  data: AvailableMetrics[];
-}
-
-export interface AvailableMetrics {
+export interface MetricDefinition {
+  available_aggregate_functions: string[];
+  dimensions: Dimension[];
+  is_alertable: boolean;
   label: string;
   metric: string;
   metric_type: string;
-  unit: string;
   scrape_interval: string;
-  available_aggregate_functions: string[];
-  dimensions: Dimension[];
+  unit: string;
 }
 
 export interface Dimension {
-  label: string;
   dimension_label: string;
+  label: string;
   values: string[];
 }
 
 export interface JWETokenPayLoad {
-  resource_ids: number[];
+  entity_ids?: number[];
 }
 
 export interface JWEToken {
   token: string;
 }
 
-export interface CloudPulseMetricsRequest {
-  metric: string;
-  filters?: Filters[];
+export interface Metric {
   aggregate_function: string;
-  group_by: string;
-  relative_time_duration: TimeDuration;
+  name: string;
+}
+
+export interface CloudPulseMetricsRequest {
+  absolute_time_duration: DateTimeWithPreset | undefined;
+  associated_entity_region?: string;
+  entity_ids: number[] | string[] | undefined;
+  entity_region?: string;
+  filters?: Filters[];
+  group_by?: string[];
+  metrics: Metric[];
+  relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
-  resource_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {
@@ -125,10 +187,228 @@ export interface CloudPulseMetricsList {
   values: [number, string][];
 }
 
-export interface ServiceTypes {
-  service_type: string;
+export interface ServiceAlert {
+  evaluation_period_seconds: number[];
+  polling_interval_seconds: number[];
+  scope: AlertDefinitionScope[];
+}
+
+export interface Service {
+  alert: ServiceAlert;
+  label: string;
+  regions: string;
+  service_type: CloudPulseServiceType;
 }
 
 export interface ServiceTypesList {
-  data: ServiceTypes[];
+  data: Service[];
+}
+
+export interface CreateAlertDefinitionPayload {
+  channel_ids: number[];
+  description?: string;
+  entity_ids?: string[];
+  label: string;
+  regions?: string[];
+  rule_criteria: {
+    rules: MetricCriteria[];
+  };
+  severity: AlertSeverityType;
+  tags?: string[];
+  trigger_conditions: TriggerCondition;
+}
+
+export interface MetricCriteria {
+  aggregate_function: MetricAggregationType;
+  dimension_filters?: DimensionFilter[];
+  metric: string;
+  operator: MetricOperatorType;
+  threshold: number;
+}
+
+export interface AlertDefinitionMetricCriteria
+  extends Omit<MetricCriteria, 'dimension_filters'> {
+  dimension_filters?: AlertDefinitionDimensionFilter[];
+  label: string;
+  unit: string;
+}
+export interface DimensionFilter {
+  dimension_label: string;
+  operator: DimensionFilterOperatorType;
+  value: string;
+}
+
+export interface AlertDefinitionDimensionFilter extends DimensionFilter {
+  label: string;
+}
+export interface TriggerCondition {
+  criteria_condition: CriteriaConditionType;
+  evaluation_period_seconds: number;
+  polling_interval_seconds: number;
+  trigger_occurrences: number;
+}
+export interface Alert {
+  alert_channels: {
+    id: number;
+    label: string;
+    type: 'alert-channel';
+    url: string;
+  }[];
+  class?: AlertClass;
+  created: string;
+  created_by: string;
+  description: string;
+  entity_ids: string[];
+  has_more_resources: boolean;
+  id: number;
+  label: string;
+  regions?: string[];
+  rule_criteria: {
+    rules: AlertDefinitionMetricCriteria[];
+  };
+  scope: AlertDefinitionScope;
+  service_type: CloudPulseServiceType;
+  severity: AlertSeverityType;
+  status: AlertStatusType;
+  tags: string[];
+  trigger_conditions: TriggerCondition;
+  type: AlertDefinitionType;
+  updated: string;
+  updated_by: string;
+}
+
+interface NotificationChannelAlerts {
+  id: number;
+  label: string;
+  type: 'alerts-definitions';
+  url: string;
+}
+interface NotificationChannelBase {
+  alerts: NotificationChannelAlerts[];
+  channel_type: ChannelType;
+  created: string;
+  created_by: string;
+  id: number;
+  label: string;
+  status: NotificationStatus;
+  type: AlertNotificationType;
+  updated: string;
+  updated_by: string;
+}
+
+interface NotificationChannelEmail extends NotificationChannelBase {
+  channel_type: AlertNotificationEmail;
+  content: {
+    email: {
+      email_addresses: string[];
+      message: string;
+      subject: string;
+    };
+  };
+}
+
+interface NotificationChannelSlack extends NotificationChannelBase {
+  channel_type: AlertNotificationSlack;
+  content: {
+    slack: {
+      message: string;
+      slack_channel: string;
+      slack_webhook_url: string;
+    };
+  };
+}
+
+interface NotificationChannelPagerDuty extends NotificationChannelBase {
+  channel_type: AlertNotificationPagerDuty;
+  content: {
+    pagerduty: {
+      attributes: string[];
+      description: string;
+      service_api_key: string;
+    };
+  };
+}
+interface NotificationChannelWebHook extends NotificationChannelBase {
+  channel_type: AlertNotificationWebHook;
+  content: {
+    webhook: {
+      http_headers: {
+        header_key: string;
+        header_value: string;
+      }[];
+      webhook_url: string;
+    };
+  };
+}
+export type NotificationChannel =
+  | NotificationChannelEmail
+  | NotificationChannelPagerDuty
+  | NotificationChannelSlack
+  | NotificationChannelWebHook;
+
+export interface EditAlertDefinitionPayload {
+  channel_ids?: number[];
+  description?: string;
+  entity_ids?: string[];
+  label?: string;
+  regions?: string[];
+  rule_criteria?: {
+    rules: MetricCriteria[];
+  };
+  severity?: AlertSeverityType;
+  status?: AlertStatusType;
+  tags?: string[];
+  trigger_conditions?: TriggerCondition;
+}
+
+export interface EditAlertPayloadWithService
+  extends EditAlertDefinitionPayload {
+  alertId: number;
+  serviceType: CloudPulseServiceType;
+  type?: AlertDefinitionType | null;
+}
+
+export type AlertStatusUpdateType = 'Disable' | 'Enable';
+
+export interface EntityAlertUpdatePayload {
+  alert: Alert;
+  entityId: string;
+}
+
+export interface DeleteAlertPayload {
+  alertId: number;
+  serviceType: CloudPulseServiceType;
+}
+
+export const capabilityServiceTypeMapping: Record<
+  CloudPulseServiceType,
+  AccountCapability
+> = {
+  linode: 'Linodes',
+  dbaas: 'Managed Databases',
+  nodebalancer: 'NodeBalancers',
+  firewall: 'Cloud Firewall',
+  objectstorage: 'Object Storage',
+  blockstorage: 'Block Storage',
+  lke: 'Kubernetes',
+};
+
+/**
+ * Represents the payload for CloudPulse alerts, included only when the ACLP beta mode is enabled.
+ *
+ * In Beta mode, the `alerts` object contains enabled system and user alert IDs.
+ * - Legacy mode: `alerts` is not included (read-only mode).
+ * - Beta mode: `alerts` is passed and editable.
+ */
+export interface CloudPulseAlertsPayload {
+  /**
+   * Array of enabled system alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
+  system_alerts?: number[];
+  /**
+   * Array of enabled user alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
+  user_alerts?: number[];
 }

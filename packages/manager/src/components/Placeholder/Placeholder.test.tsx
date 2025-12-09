@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Placeholder } from './Placeholder';
@@ -14,16 +14,16 @@ describe('Placeholder', () => {
     const title = getByText('This is a title');
     const icon = getByTestId('placeholder-icon');
     expect(title).toHaveClass('MuiTypography-h1');
-    expect(container.querySelector('[height="50"]')).toEqual(icon);
+    expect(container.querySelector('[height="20"]')).toEqual(icon);
   });
 
   it('displays the given icon and changes the heading style', () => {
     const { container, getByTestId } = renderWithTheme(
-      <Placeholder icon={StackScriptIcon} title="title" />
+      <Placeholder icon={ComputeIcon} title="title" />
     );
 
     const icon = getByTestId('placeholder-icon');
-    const iconQueriedDifferently = container.querySelector('[height="21"]');
+    const iconQueriedDifferently = container.querySelector('[height="20"]');
     expect(icon).toEqual(iconQueriedDifferently);
   });
 

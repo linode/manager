@@ -1,7 +1,6 @@
-import {
-  ObjectUploaderState,
-  curriedObjectUploaderReducer as reducer,
-} from './reducer';
+import { curriedObjectUploaderReducer as reducer } from './reducer';
+
+import type { ObjectUploaderState } from './reducer';
 
 describe('reducer', () => {
   const baseState: ObjectUploaderState = {
@@ -15,6 +14,7 @@ describe('reducer', () => {
 
   const file1: File = {
     arrayBuffer: vi.fn(),
+    bytes: async () => new Uint8Array(),
     lastModified: 0,
     name: 'my-file1',
     size: 0,
@@ -24,8 +24,10 @@ describe('reducer', () => {
     type: '',
     webkitRelativePath: '',
   };
+
   const file2: File = {
     arrayBuffer: vi.fn(),
+    bytes: async () => new Uint8Array(),
     lastModified: 0,
     name: 'my-file2',
     size: 0,

@@ -1,6 +1,6 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories/linodes';
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -23,16 +23,16 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual<any>('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
   };
 });
 
-vi.mock('src/queries/types', async () => {
-  const actual = await vi.importActual<any>('src/queries/types');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useTypeQuery: queryMocks.useTypeQuery,

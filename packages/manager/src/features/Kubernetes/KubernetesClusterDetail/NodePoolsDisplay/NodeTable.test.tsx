@@ -1,83 +1,79 @@
-import * as React from 'react';
+import { linodeFactory } from '@linode/utilities';
+import { DateTime } from 'luxon';
+import React from 'react';
 
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
-import { linodeFactory } from 'src/factories/linodes';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NodeTable, Props, encryptionStatusTestId } from './NodeTable';
+import { NodeTable } from './NodeTable';
 
-const mockLinodes = linodeFactory.buildList(3);
-
-const mockKubeNodes = kubeLinodeFactory.buildList(3);
-
-const props: Props = {
-  encryptionStatus: 'enabled',
-  nodes: mockKubeNodes,
-  openRecycleNodeDialog: vi.fn(),
-  poolId: 1,
-  typeLabel: 'Linode 2G',
-};
-
-beforeAll(() => linodeFactory.resetSequenceNumber());
+import type { Props } from './NodeTable';
+import type { KubernetesTier } from '@linode/api-v4';
 
 describe('NodeTable', () => {
-  const mocks = vi.hoisted(() => {
-    return {
-      useIsDiskEncryptionFeatureEnabled: vi.fn(),
-    };
-  });
+  const linodes = [
+    linodeFactory.build({ label: 'linode-1', ipv4: ['50.116.6.1'] }),
+    linodeFactory.build({ label: 'linode-2', ipv4: ['50.116.6.2'] }),
+    linodeFactory.build({ label: 'linode-3', ipv4: ['50.116.6.3'] }),
+  ];
 
-  vi.mock('src/components/Encryption/utils.ts', async () => {
-    const actual = await vi.importActual<any>(
-      'src/components/Encryption/utils.ts'
+  const nodes = linodes.map((linode) =>
+    kubeLinodeFactory.build({
+      instance_id: linode.id,
+    })
+  );
+
+  const props: Props = {
+    clusterCreated: '2025-01-13T02:58:58',
+    clusterTier: 'standard',
+    isLkeClusterRestricted: false,
+    nodes,
+    openRecycleNodeDialog: vi.fn(),
+    statusFilter: 'all',
+    nodePoolType: 'g6-standard-1',
+  };
+
+  it('includes label, status, and IP columns', async () => {
+    server.use(
+      http.get('*/linode/instances*', () => {
+        return HttpResponse.json(makeResourcePage(linodes));
+      })
     );
-    return {
-      ...actual,
-      __esModule: true,
-      useIsDiskEncryptionFeatureEnabled: mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-        () => {
-          return {
-            isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
-          };
-        }
-      ),
+
+    const { findAllByText, findByText } = renderWithTheme(
+      <NodeTable {...props} />
+    );
+
+    expect(await findAllByText('Running')).toHaveLength(3);
+
+    await Promise.all(
+      linodes.map(async (linode) => {
+        await findByText(linode.label);
+        await findByText(linode.ipv4[0]);
+      })
+    );
+  });
+
+  it('displays a provisioning message if the cluster was created within the first 20 mins and there are no nodes yet', async () => {
+    const clusterProps = {
+      ...props,
+      clusterCreated: DateTime.local().toISO(),
+      clusterTier: 'enterprise' as KubernetesTier,
+      nodes: [],
     };
-  });
 
-  it('includes label, status, and IP columns', () => {
-    const { findByText } = renderWithTheme(<NodeTable {...props} />);
-    mockLinodes.forEach(async (thisLinode) => {
-      await findByText(thisLinode.label);
-      await findByText(thisLinode.ipv4[0]);
-      await findByText('Ready');
-    });
-  });
+    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
 
-  it('includes the Pool ID', () => {
-    const { getByText } = renderWithTheme(<NodeTable {...props} />);
-    getByText('Pool ID 1');
-  });
+    expect(
+      await findByText(
+        'Worker nodes will appear once cluster provisioning is complete.'
+      )
+    ).toBeVisible();
 
-  it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', () => {
-    // situation where isDiskEncryptionFeatureEnabled === false
-    const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
-    const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
-
-    expect(encryptionStatusFragment).not.toBeInTheDocument();
-  });
-
-  it('displays the encryption status of the pool if the feature flag is on and the account has the capability', () => {
-    mocks.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(() => {
-      return {
-        isDiskEncryptionFeatureEnabled: true,
-      };
-    });
-
-    const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
-    const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
-
-    expect(encryptionStatusFragment).toBeInTheDocument();
-
-    mocks.useIsDiskEncryptionFeatureEnabled.mockRestore();
+    expect(
+      await findByText('Provisioning can take up to ~20 minutes.')
+    ).toBeVisible();
   });
 });

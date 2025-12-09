@@ -1,16 +1,27 @@
-import { createTestLinode } from 'support/util/linodes';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { grantsFactory, profileFactory } from '@linode/utilities';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { mockGetUser } from 'support/intercepts/account';
 import { interceptCreateFirewall } from 'support/intercepts/firewalls';
-import { randomString, randomLabel } from 'support/util/random';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
+import { accountUserFactory } from 'src/factories';
 authenticate();
+
 describe('create firewall', () => {
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'firewalls']);
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*
@@ -35,7 +46,8 @@ describe('create firewall', () => {
         cy.get('[data-testid="submit"]').click();
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
-        cy.contains('Label').click().type(firewall.label);
+        cy.contains('Label').click();
+        cy.focused().type(firewall.label);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
           .should('be.visible')
@@ -86,18 +98,17 @@ describe('create firewall', () => {
         .should('be.visible')
         .within(() => {
           // Fill out and submit firewall create form.
-          cy.contains('Label').click().type(firewall.label);
-          cy.findByLabelText('Linodes')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.contains('Label').click();
+          cy.focused().type(firewall.label);
+          cy.findByLabelText('Linodes').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)
             .should('be.visible')
             .click();
 
-          cy.findByLabelText('Linodes').should('be.visible').click();
+          cy.focused().type('{esc}');
 
           ui.buttonGroup
             .findButtonByTitle('Create Firewall')
@@ -112,11 +123,73 @@ describe('create firewall', () => {
       cy.findByText(firewall.label)
         .closest('tr')
         .within(() => {
-          cy.findByText(firewall.label).should('be.visible');
+          cy.findByText(firewall.label).should('be.visible'); // FAILED
           cy.findByText('Enabled').should('be.visible');
           cy.findByText('No rules').should('be.visible');
           cy.findByText(linode.label).should('be.visible');
         });
     });
+  });
+});
+
+describe('restricted user cannot create firewall', () => {
+  beforeEach(() => {
+    cleanUp(['lke-clusters', 'linodes', 'firewalls']);
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_firewalls: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+  });
+
+  /*
+   * - Verifies that restricted user cannot create firewall on landing page
+   */
+  it('confirms the create button is disabled on the Firewall Landing page', () => {
+    cy.visitWithLogin('/firewalls');
+    ui.button
+      .findByTitle('Create Firewall')
+      .should('be.visible')
+      .should('be.disabled');
+  });
+
+  /*
+   * - Verifies that restricted user cannot create firewall in drawer
+   */
+  it('confirms the Create Firewall button is disabled in create drawer', () => {
+    cy.visitWithLogin('/firewalls/create');
+
+    ui.drawer
+      .findByTitle('Create Firewall')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(
+          "You don't have permissions to create a new Firewall. Please contact an account administrator for details."
+        );
+        ui.buttonGroup.findButtonByTitle('Create Firewall').scrollIntoView();
+        ui.buttonGroup
+          .findButtonByTitle('Create Firewall')
+          .should('be.visible')
+          .should('be.disabled');
+        // all form inputs are disabled
+        cy.get('input').each((input) => {
+          cy.wrap(input).should('be.disabled');
+        });
+      });
   });
 });

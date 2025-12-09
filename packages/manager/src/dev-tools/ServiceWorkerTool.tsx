@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
 import { mswDB } from 'src/mocks/indexedDB';
 import { extraMockPresets } from 'src/mocks/presets';
 import { dbSeeders } from 'src/mocks/presets/crud/seeds';
@@ -12,12 +11,28 @@ import { ExtraPresetOptions } from './components/ExtraPresetOptions';
 import { SeedOptions } from './components/SeedOptions';
 import {
   getBaselinePreset,
+  getCustomAccountData,
+  getCustomEventsData,
+  getCustomGrantsData,
+  getCustomMaintenanceData,
+  getCustomNotificationsData,
+  getCustomProfileData,
+  getCustomUserAccountPermissionsData,
+  getCustomUserEntityPermissionsData,
   getExtraPresets,
   getExtraPresetsMap,
   getSeeders,
   getSeedsCountMap,
   isMSWEnabled,
   saveBaselinePreset,
+  saveCustomAccountData,
+  saveCustomEventsData,
+  saveCustomGrantsData,
+  saveCustomMaintenanceData,
+  saveCustomNotificationsData,
+  saveCustomProfileData,
+  saveCustomUserAccountPermissionsData,
+  saveCustomUserEntityPermissionsData,
   saveExtraPresets,
   saveExtraPresetsMap,
   saveMSWEnabled,
@@ -25,6 +40,15 @@ import {
   saveSeedsCountMap,
 } from './utils';
 
+import type {
+  Account,
+  AccountMaintenance,
+  Event,
+  Grants,
+  Notification,
+  PermissionType,
+  Profile,
+} from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetCrudId,
@@ -48,13 +72,38 @@ export const ServiceWorkerTool = () => {
   const loadedSeeders = getSeeders(dbSeeders);
   const loadedSeedsCountMap = getSeedsCountMap();
   const loadedPresetsMap = getExtraPresetsMap();
+  const [baselinePreset, setBaselinePreset] =
+    React.useState<MockPresetBaselineId>(loadedBaselinePreset);
+  const [extraPresets, setExtraPresets] =
+    React.useState<string[]>(loadedExtraPresets);
+  const [customAccountData, setCustomAccountData] = React.useState<
+    Account | null | undefined
+  >(getCustomAccountData());
+  const [customProfileData, setCustomProfileData] = React.useState<
+    null | Profile | undefined
+  >(getCustomProfileData());
   const [
-    baselinePreset,
-    setBaselinePreset,
-  ] = React.useState<MockPresetBaselineId>(loadedBaselinePreset);
-  const [extraPresets, setExtraPresets] = React.useState<string[]>(
-    loadedExtraPresets
+    customUserAccountPermissionsData,
+    setCustomUserAccountPermissionsData,
+  ] = React.useState<null | PermissionType[] | undefined>(
+    getCustomUserAccountPermissionsData()
   );
+  const [customUserEntityPermissionsData, setCustomUserEntityPermissionsData] =
+    React.useState<null | PermissionType[] | undefined>(
+      getCustomUserEntityPermissionsData()
+    );
+  const [customEventsData, setCustomEventsData] = React.useState<
+    Event[] | null | undefined
+  >(getCustomEventsData());
+  const [customGrantsData, setCustomGrantsData] = React.useState<
+    Grants | null | undefined
+  >(getCustomGrantsData());
+  const [customMaintenanceData, setCustomMaintenanceData] = React.useState<
+    AccountMaintenance[] | null | undefined
+  >(getCustomMaintenanceData());
+  const [customNotificationsData, setCustomNotificationsData] = React.useState<
+    Notification[] | null | undefined
+  >(getCustomNotificationsData());
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedPresetsMap);
@@ -62,6 +111,7 @@ export const ServiceWorkerTool = () => {
   const [seedsCountMap, setSeedsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedSeedsCountMap);
+  const [mswEnabled, setMswEnabled] = React.useState(isMSWEnabled);
   const isCrudPreset =
     loadedBaselinePreset === 'baseline:crud' ||
     baselinePreset === 'baseline:crud';
@@ -72,6 +122,65 @@ export const ServiceWorkerTool = () => {
     mocksCleared: false,
   });
 
+  React.useEffect(() => {
+    const currentAccountData = getCustomAccountData();
+    const currentGrantsData = getCustomGrantsData();
+    const currentProfileData = getCustomProfileData();
+    const currentUserAccountPermissionsData =
+      getCustomUserAccountPermissionsData();
+    const currentUserEntityPermissionsData =
+      getCustomUserEntityPermissionsData();
+    const currentEventsData = getCustomEventsData();
+    const currentMaintenanceData = getCustomMaintenanceData();
+    const currentNotificationsData = getCustomNotificationsData();
+    const hasCustomAccountChanges =
+      JSON.stringify(currentAccountData) !== JSON.stringify(customAccountData);
+    const hasCustomGrantsChanges =
+      JSON.stringify(currentGrantsData) !== JSON.stringify(customGrantsData);
+    const hasCustomProfileChanges =
+      JSON.stringify(currentProfileData) !== JSON.stringify(customProfileData);
+    const hasCustomEventsChanges =
+      JSON.stringify(currentEventsData) !== JSON.stringify(customEventsData);
+    const hasCustomMaintenanceChanges =
+      JSON.stringify(currentMaintenanceData) !==
+      JSON.stringify(customMaintenanceData);
+    const hasCustomNotificationsChanges =
+      JSON.stringify(currentNotificationsData) !==
+      JSON.stringify(customNotificationsData);
+
+    const hasCustomUserAccountPermissionsChanges =
+      JSON.stringify(currentUserAccountPermissionsData) !==
+      JSON.stringify(customUserAccountPermissionsData);
+    const hasCustomUserEntityPermissionsChanges =
+      JSON.stringify(currentUserEntityPermissionsData) !==
+      JSON.stringify(customUserEntityPermissionsData);
+
+    if (
+      hasCustomAccountChanges ||
+      hasCustomGrantsChanges ||
+      hasCustomProfileChanges ||
+      hasCustomEventsChanges ||
+      hasCustomMaintenanceChanges ||
+      hasCustomNotificationsChanges ||
+      hasCustomUserAccountPermissionsChanges ||
+      hasCustomUserEntityPermissionsChanges
+    ) {
+      setSaveState((prev) => ({
+        ...prev,
+        hasUnsavedChanges: true,
+      }));
+    }
+  }, [
+    customAccountData,
+    customEventsData,
+    customMaintenanceData,
+    customGrantsData,
+    customNotificationsData,
+    customProfileData,
+    customUserAccountPermissionsData,
+    customUserEntityPermissionsData,
+  ]);
+
   const globalHandlers = {
     applyChanges: () => {
       // Save base preset, extra presets, and content seeders to local storage.
@@ -80,6 +189,46 @@ export const ServiceWorkerTool = () => {
       saveSeeders(seeders);
       saveSeedsCountMap(seedsCountMap);
       saveExtraPresetsMap(presetsCountMap);
+
+      if (extraPresets.includes('account:custom') && customAccountData) {
+        saveCustomAccountData(customAccountData);
+      }
+
+      if (extraPresets.includes('profile-grants:custom')) {
+        if (customProfileData) {
+          saveCustomProfileData(customProfileData);
+        }
+        if (customGrantsData) {
+          saveCustomGrantsData(customGrantsData);
+        }
+      }
+      if (extraPresets.includes('events:custom') && customEventsData) {
+        saveCustomEventsData(customEventsData);
+      }
+      if (
+        extraPresets.includes('maintenance:custom') &&
+        customMaintenanceData
+      ) {
+        saveCustomMaintenanceData(customMaintenanceData);
+      }
+      if (
+        extraPresets.includes('notifications:custom') &&
+        customNotificationsData
+      ) {
+        saveCustomNotificationsData(customNotificationsData);
+      }
+      if (
+        extraPresets.includes('userAccountPermissions:custom') &&
+        customUserAccountPermissionsData
+      ) {
+        saveCustomUserAccountPermissionsData(customUserAccountPermissionsData);
+      }
+      if (
+        extraPresets.includes('userEntityPermissions:custom') &&
+        customUserEntityPermissionsData
+      ) {
+        saveCustomUserEntityPermissionsData(customUserEntityPermissionsData);
+      }
 
       const promises = seeders.map((seederId) => {
         const seeder = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
@@ -95,11 +244,7 @@ export const ServiceWorkerTool = () => {
         }));
       });
 
-      // We only have to reload the window if MSW is already enabled. Otherwise,
-      // the changes will automatically be picked up next time MSW is enabled.
-      if (isMSWEnabled) {
-        window.location.reload();
-      }
+      window.location.reload();
     },
 
     discardChanges: () => {
@@ -108,6 +253,16 @@ export const ServiceWorkerTool = () => {
       setSeeders(getSeeders(dbSeeders));
       setSeedsCountMap(getSeedsCountMap());
       setPresetsCountMap(getExtraPresetsMap());
+      setCustomAccountData(getCustomAccountData());
+      setCustomGrantsData(getCustomGrantsData());
+      setCustomProfileData(getCustomProfileData());
+      setCustomEventsData(getCustomEventsData());
+      setCustomMaintenanceData(getCustomMaintenanceData());
+      setCustomNotificationsData(getCustomNotificationsData());
+      setCustomUserAccountPermissionsData(
+        getCustomUserAccountPermissionsData()
+      );
+      setCustomUserEntityPermissionsData(getCustomUserEntityPermissionsData());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -118,14 +273,32 @@ export const ServiceWorkerTool = () => {
       mswDB.clear('mockState');
       mswDB.clear('seedState');
       seederHandlers.removeAll();
-      setBaselinePreset('baseline:preset-mocking');
+
+      setBaselinePreset('baseline:static-mocking');
       setExtraPresets([]);
       setPresetsCountMap({});
-      saveBaselinePreset('baseline:preset-mocking');
+      setCustomAccountData(null);
+      setCustomGrantsData(null);
+      setCustomProfileData(null);
+      setCustomEventsData(null);
+      setCustomMaintenanceData(null);
+      setCustomNotificationsData(null);
+      setCustomUserAccountPermissionsData(null);
+      setCustomUserEntityPermissionsData(null);
+
+      saveBaselinePreset('baseline:static-mocking');
       saveExtraPresets([]);
       saveSeeders([]);
       saveSeedsCountMap({});
       saveExtraPresetsMap({});
+      saveCustomAccountData(null);
+      saveCustomProfileData(null);
+      saveCustomGrantsData(null);
+      saveCustomEventsData(null);
+      saveCustomMaintenanceData(null);
+      saveCustomNotificationsData(null);
+      saveCustomUserAccountPermissionsData(null);
+      saveCustomUserEntityPermissionsData(null);
 
       setSaveState({
         hasSaved: false,
@@ -136,7 +309,11 @@ export const ServiceWorkerTool = () => {
 
     toggleMSW: (e: React.ChangeEvent<HTMLInputElement>) => {
       saveMSWEnabled(e.target.checked);
-      window.location.reload();
+      setMswEnabled(e.target.checked);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
     },
   };
 
@@ -270,104 +447,123 @@ export const ServiceWorkerTool = () => {
       <div className="dev-tools__tool__header">
         <span title="Configure API mocking rules">API Mocks</span>
       </div>
-      <Tooltip
-        placement="top"
-        title={!isMSWEnabled ? '⚠️ Enable MSW to select a preset' : ''}
-      >
-        <div className="dev-tools__tool__body dev-tools__msw">
-          <div className="dev-tools__msw__presets">
-            <div>
+
+      <div className="dev-tools__tool__body dev-tools__msw">
+        <div className="dev-tools__msw__presets">
+          <div>
+            <label title="Enable MSW">
               <input
-                checked={isMSWEnabled}
+                checked={mswEnabled}
                 onChange={(e) => globalHandlers.toggleMSW(e)}
-                style={{ margin: 0 }}
                 type="checkbox"
               />
-              <span style={{ marginLeft: 8 }}>
-                <span>Enable MSW</span>
-              </span>
-            </div>
-            <div>
               <span
-                style={{ marginRight: 8, opacity: !isMSWEnabled ? 0.5 : 1 }}
-              >
-                Base Preset
-              </span>
-              <DevToolSelect
-                disabled={!isMSWEnabled}
-                onChange={(e) => presetHandlers.changeBase(e)}
-                value={baselinePreset}
-              >
-                <BaselinePresetOptions />
-              </DevToolSelect>
-            </div>
-          </div>
-          <div
-            className={`dev-tools__msw__extras ${
-              !isMSWEnabled ? 'disabled' : ''
-            }`}
-          >
-            <div className="dev-tools__msw__column">
-              <div
-                className={`dev-tools__msw__column__heading ${
-                  !isCrudPreset ? 'disabled' : ''
+                className={`dev-tools__msw__presets__toggle ${
+                  mswEnabled ? 'enabled' : 'disabled'
                 }`}
               >
-                Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
-                <button
-                  className="small right-align"
-                  disabled={!isMSWEnabled || !isCrudPreset}
-                  onClick={() => seederHandlers.removeAll()}
-                >
-                  Remove all seeds
-                </button>
-              </div>
-              <div className="dev-tools__msw__column__body">
-                <div className="dev-tools__list-box">
-                  <SeedOptions
-                    disabled={!isMSWEnabled || !isCrudPreset}
-                    onCountChange={seederHandlers.changeCount}
-                    onToggleSeeder={seederHandlers.toggle}
-                    seeders={seeders}
-                    seedsCountMap={seedsCountMap}
-                  />
-                </div>
+                Enable MSW
+              </span>
+            </label>
+          </div>
+          <div>
+            <span style={{ marginRight: 8 }}>Base Preset</span>
+            <DevToolSelect
+              onChange={(e) => presetHandlers.changeBase(e)}
+              value={baselinePreset}
+            >
+              <BaselinePresetOptions />
+            </DevToolSelect>
+          </div>
+        </div>
+        <div className="dev-tools__msw__extras">
+          <div className="dev-tools__msw__column">
+            <div
+              className={`dev-tools__msw__column__heading ${
+                !isCrudPreset ? 'disabled' : ''
+              }`}
+            >
+              Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
+              <button
+                className="dev-tools-button small right-align"
+                disabled={!isCrudPreset}
+                onClick={() => seederHandlers.removeAll()}
+              >
+                Remove all seeds
+              </button>
+            </div>
+            <div className="dev-tools__msw__column__body">
+              <div className="dev-tools__list-box">
+                <SeedOptions
+                  disabled={!isCrudPreset}
+                  onCountChange={seederHandlers.changeCount}
+                  onToggleSeeder={seederHandlers.toggle}
+                  seeders={seeders}
+                  seedsCountMap={seedsCountMap}
+                />
               </div>
             </div>
-            <div className="dev-tools__msw__column">
-              <div className="dev-tools__msw__column__heading">Presets</div>
-              <div className="dev-tools__msw__column__body">
-                <div className="dev-tools__list-box">
-                  <ExtraPresetOptions
-                    disabled={!isMSWEnabled}
-                    handlers={extraPresets}
-                    onPresetCountChange={presetHandlers.changeCount}
-                    onSelectChange={presetHandlers.changeSelect}
-                    onTogglePreset={presetHandlers.toggle}
-                    presetsCountMap={presetsCountMap}
-                  />
-                </div>
+          </div>
+          <div className="dev-tools__msw__column">
+            <div className="dev-tools__msw__column__heading">Presets</div>
+            <div className="dev-tools__msw__column__body">
+              <div className="dev-tools__list-box">
+                <ExtraPresetOptions
+                  customAccountData={customAccountData}
+                  customEventsData={customEventsData}
+                  customGrantsData={customGrantsData}
+                  customMaintenanceData={customMaintenanceData}
+                  customNotificationsData={customNotificationsData}
+                  customProfileData={customProfileData}
+                  customUserAccountPermissionsData={
+                    customUserAccountPermissionsData
+                  }
+                  customUserEntityPermissionsData={
+                    customUserEntityPermissionsData
+                  }
+                  handlers={extraPresets}
+                  onCustomAccountChange={setCustomAccountData}
+                  onCustomEventsChange={setCustomEventsData}
+                  onCustomGrantsChange={setCustomGrantsData}
+                  onCustomMaintenanceChange={setCustomMaintenanceData}
+                  onCustomNotificationsChange={setCustomNotificationsData}
+                  onCustomProfileChange={setCustomProfileData}
+                  onCustomUserAccountPermissionsChange={
+                    setCustomUserAccountPermissionsData
+                  }
+                  onCustomUserEntityPermissionsChange={
+                    setCustomUserEntityPermissionsData
+                  }
+                  onPresetCountChange={presetHandlers.changeCount}
+                  onSelectChange={presetHandlers.changeSelect}
+                  onTogglePreset={presetHandlers.toggle}
+                  presetsCountMap={presetsCountMap}
+                />
               </div>
             </div>
           </div>
         </div>
-      </Tooltip>
+      </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
           <button
+            className="dev-tools-button"
             disabled={saveState.mocksCleared}
             onClick={globalHandlers.resetAll}
           >
             Reset all (Store, Seeds & Presets)
           </button>
           <button
+            className="dev-tools-button"
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={globalHandlers.discardChanges}
           >
             Discard Changes
           </button>
           <button
-            className={saveState.hasUnsavedChanges ? 'green' : ''}
+            className={`dev-tools-button ${
+              saveState.hasUnsavedChanges ? 'green' : ''
+            }`}
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={globalHandlers.applyChanges}
           >

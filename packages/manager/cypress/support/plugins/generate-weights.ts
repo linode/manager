@@ -1,8 +1,10 @@
-import type { CypressPlugin } from './plugin';
-import { DateTime } from 'luxon';
 import { writeFileSync } from 'fs';
+import { DateTime } from 'luxon';
 import { resolve } from 'path';
-import { object, string, array, number, SchemaOf } from 'yup';
+import { array, number, object, string } from 'yup';
+
+import type { CypressPlugin } from './plugin';
+import type { ObjectSchema } from 'yup';
 
 // The name of the environment variable to read to check if generation is enabled.
 // The value should be a path to the weights file.
@@ -22,14 +24,14 @@ export interface SpecWeights {
     datetime: string;
 
     /**
-     * Total test weight.
-     */
-    totalWeight: number;
-
-    /**
      * Total test run duration in milliseconds.
      */
     totalDuration: number;
+
+    /**
+     * Total test weight.
+     */
+    totalWeight: number;
   };
   /**
    * Array of spec weights.
@@ -50,7 +52,7 @@ export interface SpecWeight extends SpecResult {
 /**
  * Spec weights schema for JSON parsing, etc.
  */
-export const specWeightsSchema: SchemaOf<SpecWeights> = object({
+export const specWeightsSchema: ObjectSchema<SpecWeights> = object({
   meta: object({
     datetime: string().required(),
     totalWeight: number().required(),
@@ -72,14 +74,14 @@ export const specWeightsSchema: SchemaOf<SpecWeights> = object({
  */
 interface SpecResult {
   /**
-   * Relative path to spec file.
-   */
-  filepath: string;
-
-  /**
    * Spec run duration in milliseconds.
    */
   duration: number;
+
+  /**
+   * Relative path to spec file.
+   */
+  filepath: string;
 }
 
 /**
@@ -90,7 +92,7 @@ interface SpecResult {
 export const generateTestWeights: CypressPlugin = (on, config) => {
   const specResults: SpecResult[] = [];
 
-  if (!!config.env[envVarName]) {
+  if (config.env[envVarName]) {
     const writeFilepath = config.env[envVarName];
 
     // Capture duration after each spec runs.
@@ -113,15 +115,15 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
       'after:run',
       (
         results:
-          | CypressCommandLine.CypressRunResult
           | CypressCommandLine.CypressFailedRunResult
+          | CypressCommandLine.CypressRunResult
       ) => {
         // Determine whether this is a failed run. "Failed" in this context means
         // that Cypress itself failed to run, not that the test results contained failures.
         const isFailedResult = (
           results:
-            | CypressCommandLine.CypressRunResult
             | CypressCommandLine.CypressFailedRunResult
+            | CypressCommandLine.CypressRunResult
         ): results is CypressCommandLine.CypressFailedRunResult => {
           return 'failures' in results;
         };
@@ -135,15 +137,13 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
               totalWeight,
               totalDuration,
             },
-            weights: specResults.map(
-              (specResult: SpecResult): SpecWeight => {
-                return {
-                  filepath: specResult.filepath,
-                  duration: specResult.duration,
-                  weight: (specResult.duration / totalDuration) * totalWeight,
-                };
-              }
-            ),
+            weights: specResults.map((specResult: SpecResult): SpecWeight => {
+              return {
+                filepath: specResult.filepath,
+                duration: specResult.duration,
+                weight: (specResult.duration / totalDuration) * totalWeight,
+              };
+            }),
           };
 
           const resolvePath = resolve(writeFilepath);

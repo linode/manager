@@ -1,7 +1,5 @@
+import { Box, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Box } from 'src/components/Box';
-import { Typography } from 'src/components/Typography';
 
 export const StyledSummaryBox = styled(Box, {
   label: 'StyledSummaryBox',

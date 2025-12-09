@@ -1,10 +1,7 @@
-import { Grid, Paper } from '@mui/material';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 
-import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import {
@@ -12,25 +9,22 @@ import {
   useGetCloudPulseMetricDefinitionsByServiceType,
 } from 'src/queries/cloudpulse/services';
 
-import { getUserPreferenceObject } from '../Utils/UserPreference';
-import { createObjectCopy } from '../Utils/utils';
-import { CloudPulseWidget } from '../Widget/CloudPulseWidget';
+import { RESOURCE_FILTER_MAP } from '../Utils/constants';
 import {
-  all_interval_options,
-  getInSeconds,
-  getIntervalIndex,
-} from '../Widget/components/CloudPulseIntervalSelect';
+  getAssociatedEntityType,
+  getResourcesFilterConfig,
+} from '../Utils/FilterConfig';
+import { useAclpPreference } from '../Utils/UserPreference';
+import {
+  renderPlaceHolder,
+  RenderWidgets,
+} from '../Widget/CloudPulseWidgetRenderer';
 
+import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type {
-  CloudPulseMetricsAdditionalFilters,
-  CloudPulseWidgetProperties,
-} from '../Widget/CloudPulseWidget';
-import type {
-  AvailableMetrics,
-  Dashboard,
+  CloudPulseServiceType,
+  DateTimeWithPreset,
   JWETokenPayLoad,
-  TimeDuration,
-  Widgets,
 } from '@linode/api-v4';
 
 export interface DashboardProperties {
@@ -47,12 +41,22 @@ export interface DashboardProperties {
   /**
    * time duration to fetch the metrics data in this widget
    */
-  duration: TimeDuration;
+  duration: DateTimeWithPreset;
+
+  /**
+   * list of fields to group the metrics data by
+   */
+  groupBy: string[];
+
+  /**
+   * Selected linode region for the dashboard
+   */
+  linodeRegion?: string;
 
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
    */
-  manualRefreshTimeStamp?: number | undefined;
+  manualRefreshTimeStamp?: number;
 
   /**
    * Selected region for the dashboard
@@ -68,6 +72,16 @@ export interface DashboardProperties {
    * optional flag to check whether changes should be stored in preferences or not (in case this component is reused)
    */
   savePref?: boolean;
+
+  /**
+   * Selected service type for the dashboard
+   */
+  serviceType: CloudPulseServiceType;
+
+  /**
+   * Selected tags for the dashboard
+   */
+  tags?: string[];
 }
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
@@ -78,68 +92,46 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    serviceType,
+    groupBy,
+    linodeRegion,
+    region,
   } = props;
 
+  const { preferences } = useAclpPreference();
+
   const getJweTokenPayload = (): JWETokenPayLoad => {
+    if (serviceType === 'objectstorage') {
+      return {};
+    }
     return {
-      resource_ids: resourceList?.map((resource) => Number(resource.id)) ?? [],
+      entity_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
-  };
-
-  const getCloudPulseGraphProperties = (
-    widget: Widgets
-  ): CloudPulseWidgetProperties => {
-    const graphProp: CloudPulseWidgetProperties = {
-      additionalFilters,
-      ariaLabel: widget.label,
-      authToken: '',
-      availableMetrics: undefined,
-      duration,
-      errorLabel: 'Error While Loading Data',
-      resourceIds: resources,
-      resources: [],
-      serviceType: dashboard?.service_type ?? '',
-      timeStamp: manualRefreshTimeStamp,
-      unit: widget.unit ?? '%',
-      widget: { ...widget },
-    };
-    if (savePref) {
-      setPreferredWidgetPlan(graphProp.widget);
-    }
-    return graphProp;
-  };
-
-  const setPreferredWidgetPlan = (widgetObj: Widgets) => {
-    const widgetPreferences = getUserPreferenceObject().widgets;
-    const pref = widgetPreferences?.[widgetObj.label];
-    if (pref) {
-      Object.assign(widgetObj, {
-        aggregate_function: pref.aggregateFunction,
-        size: pref.size,
-        time_granularity: { ...pref.timeGranularity },
-      });
-    }
-  };
-
-  const getTimeGranularity = (scrapeInterval: string) => {
-    const scrapeIntervalValue = getInSeconds(scrapeInterval);
-    const index = getIntervalIndex(scrapeIntervalValue);
-    return index < 0 ? all_interval_options[0] : all_interval_options[index];
   };
 
   const {
     data: dashboard,
+    isError: isDashboardApiError,
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
+  // Get the resources filter configuration for the dashboard
+  const resourcesFilterConfig = getResourcesFilterConfig(dashboardId);
+  const filterFn = resourcesFilterConfig?.filterFn;
+  // Get the associated entity type for the dashboard
+  const associatedEntityType = getAssociatedEntityType(dashboardId);
+
   const {
     data: resourceList,
+    isError: isResourcesApiError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
+    associatedEntityType,
+    filterFn
   );
 
   const {
@@ -154,104 +146,72 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
     data: jweToken,
     isError: isJweTokenError,
-    isLoading: isJweTokenLoading,
+    isFetching: isJweTokenFetching,
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
-    Boolean(resourceList)
+    !isDashboardLoading && !isDashboardApiError
   );
 
-  if (isJweTokenError) {
-    return (
-      <Grid item xs>
-        <ErrorState errorText="Failed to get jwe token" />
-      </Grid>
-    );
+  if (isDashboardApiError) {
+    return renderErrorState('Failed to fetch the dashboard details.');
   }
 
-  if (
-    isMetricDefinitionLoading ||
-    isDashboardLoading ||
-    isResourcesLoading ||
-    isJweTokenLoading
-  ) {
-    return <CircleProgress />;
+  if (isResourcesApiError) {
+    return renderErrorState('Failed to fetch Resources.');
+  }
+
+  if (isJweTokenError) {
+    return renderErrorState('Failed to get the authentication token.');
   }
 
   if (isMetricDefinitionError) {
-    return <ErrorState errorText={'Error loading metric definitions'} />;
+    return renderErrorState('Error loading the definitions of metrics.');
   }
 
-  const RenderWidgets = () => {
-    if (!dashboard || !dashboard.widgets?.length) {
-      return renderPlaceHolder(
-        'No visualizations are available at this moment. Create Dashboards to list here.'
-      );
-    }
-
-    if (
-      !dashboard.service_type ||
-      !Boolean(resources.length > 0) ||
-      !jweToken?.token ||
-      !Boolean(resourceList?.length)
-    ) {
-      return renderPlaceHolder(
-        'Select Dashboard, Region and Resource to visualize metrics'
-      );
-    }
-
-    // maintain a copy
-    const newDashboard: Dashboard = createObjectCopy(dashboard)!;
+  if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return (
-      <Grid columnSpacing={1} container item rowSpacing={2} xs={12}>
-        {{ ...newDashboard }.widgets.map((widget, index) => {
-          // check if widget metric definition is available or not
-          if (widget) {
-            // find the metric defintion of the widget label
-            const availMetrics = metricDefinitions?.data.find(
-              (availMetrics: AvailableMetrics) =>
-                widget.label === availMetrics.label
-            );
-            const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
-              ...widget,
-            });
-
-            // metric definition is available but time_granularity is not present
-            if (
-              availMetrics &&
-              !cloudPulseWidgetProperties.widget.time_granularity
-            ) {
-              cloudPulseWidgetProperties.widget.time_granularity = getTimeGranularity(
-                availMetrics.scrape_interval
-              );
-            }
-            return (
-              <CloudPulseWidget
-                key={widget.label}
-                {...cloudPulseWidgetProperties}
-                authToken={jweToken?.token}
-                availableMetrics={availMetrics}
-                resources={resourceList!}
-                savePref={savePref}
-              />
-            );
-          } else {
-            return <React.Fragment key={index}></React.Fragment>;
-          }
+      <CircleProgress
+        sx={(theme) => ({
+          padding: theme.spacingFunction(16),
         })}
-      </Grid>
+      />
     );
-  };
+  }
 
-  const renderPlaceHolder = (title: string) => {
-    return (
-      <Grid item xs>
-        <Paper>
-          <Placeholder icon={CloudPulseIcon} isEntity title={title} />
-        </Paper>
-      </Grid>
+  if (!dashboard) {
+    return renderPlaceHolder(
+      'No visualizations are available at this moment. Create Dashboards to list here.'
     );
-  };
+  }
+  return (
+    <RenderWidgets
+      additionalFilters={additionalFilters}
+      dashboard={dashboard}
+      duration={duration}
+      groupBy={groupBy}
+      isJweTokenFetching={isJweTokenFetching}
+      jweToken={jweToken}
+      linodeRegion={linodeRegion}
+      manualRefreshTimeStamp={manualRefreshTimeStamp}
+      metricDefinitions={metricDefinitions}
+      preferences={preferences}
+      region={region}
+      resourceList={resourceList}
+      resources={resources}
+      savePref={savePref}
+    />
+  );
+};
 
-  return <RenderWidgets />;
+/**
+ * @param errorMessage The error message to be displayed
+ * @returns The error state component with error message passed
+ */
+const renderErrorState = (errorMessage: string) => {
+  return (
+    <GridLegacy item xs>
+      <ErrorState errorText={errorMessage} />
+    </GridLegacy>
+  );
 };

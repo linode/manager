@@ -18,7 +18,8 @@ export const useCloudPulseMetricsQuery = (
   serviceType: string,
   request: CloudPulseMetricsRequest,
   obj: {
-    authToken: string;
+    authToken?: string;
+    isFiltersLoading?: boolean;
     isFlags: boolean;
     label: string;
     timeStamp: number | undefined;
@@ -29,7 +30,7 @@ export const useCloudPulseMetricsQuery = (
 
   const query = useQuery<CloudPulseMetricsResponse, APIError[]>({
     ...queryFactory.metrics(
-      obj.authToken,
+      obj.authToken ?? '',
       obj.url,
       serviceType,
       request,
@@ -37,7 +38,7 @@ export const useCloudPulseMetricsQuery = (
       obj.label
     ),
 
-    enabled: !!obj.isFlags,
+    enabled: !!obj.isFlags && !obj.isFiltersLoading,
     refetchInterval: 120000,
     refetchOnWindowFocus: false,
     retry: 0,
@@ -49,15 +50,14 @@ export const useCloudPulseMetricsQuery = (
       query.error.length > 0 &&
       query.error[0].reason == 'Token expired'
     ) {
-      const currentJWEtokenCache:
-        | JWEToken
-        | undefined = queryClient.getQueryData(
-        queryFactory.token(serviceType, { resource_ids: [] }).queryKey
-      );
+      const currentJWEtokenCache: JWEToken | undefined =
+        queryClient.getQueryData(
+          queryFactory.token(serviceType, { entity_ids: [] }).queryKey
+        );
       if (currentJWEtokenCache?.token === obj.authToken) {
         queryClient.invalidateQueries(
           {
-            queryKey: queryFactory.token(serviceType, { resource_ids: [] })
+            queryKey: queryFactory.token(serviceType, { entity_ids: [] })
               .queryKey,
           },
           {
@@ -84,11 +84,11 @@ export const fetchCloudPulseMetrics = (
       Authorization: `Bearer ${token}`,
     },
     method: 'POST',
-    url: `${readApiEndpoint}${encodeURIComponent(serviceType!)}/metrics`,
+    url: `${readApiEndpoint}${encodeURIComponent(serviceType)}/metrics`,
   };
 
   return axiosInstance
     .request(config)
     .then((response) => response.data)
-    .catch((error) => Promise.reject(error.response.data.errors));
+    .catch((error) => Promise.reject(error.response?.data?.errors));
 };

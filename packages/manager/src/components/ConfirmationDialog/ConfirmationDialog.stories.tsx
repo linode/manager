@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
+import { ActionsPanel } from '@linode/ui';
 import React from 'react';
+import { action } from 'storybook/actions';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ConfirmationDialog> = {
   argTypes: {
@@ -63,7 +63,7 @@ export const Default: Story = {
   ),
 };
 
-export const Error: Story = {
+export const ConfirmationDialogError: Story = {
   args: {
     error: 'There was an error somewhere in the process.',
   },

@@ -21,6 +21,21 @@ export const mockGetVolumes = (volumes: Volume[]): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to fetch a Volume and mocks response.
+ *
+ * @param volume - Volume with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetVolume = (volume: Volume): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`volumes/${volume.id}`),
+    makeResponse(volume)
+  );
+};
+
+/**
  * Intercepts POST request to create a Volume.
  *
  * @returns Cypress chainable.

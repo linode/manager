@@ -1,8 +1,5 @@
-import Close from '@mui/icons-material/Close';
+import { Button, CloseIcon, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
-import { Typography } from 'src/components/Typography';
 
 export const StyledButton = styled(Button, {
   label: 'StyledButton',
@@ -26,7 +23,7 @@ export const StyledSubmitButton = styled(Button, {
   width: '100%',
 }));
 
-export const StyledClose = styled(Close, {
+export const StyledClose = styled(CloseIcon, {
   label: 'StyledClose',
 })(({ theme }) => ({
   '& svg': { height: 11, width: 11 },
@@ -37,18 +34,9 @@ export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
   color: theme.color.green,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   marginTop: theme.spacing(3),
-}));
-
-export const StyledHeaderTypography = styled(Typography, {
-  label: 'StyledHeaderTypography',
-})(({ theme }) => ({
-  color: theme.color.green,
-  fontFamily: theme.font.bold,
-  fontSize: '1.25rem',
-  lineHeight: '1.5rem',
 }));
 
 export const StyledRowDiv = styled('div', {

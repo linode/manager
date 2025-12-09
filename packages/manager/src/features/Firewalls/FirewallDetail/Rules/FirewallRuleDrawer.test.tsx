@@ -1,28 +1,57 @@
-import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import { capitalize } from '@linode/utilities';
+import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { firewallRuleSetFactory } from 'src/factories';
 import { allIPs } from 'src/features/Firewalls/shared';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import * as shared from '../../shared';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import {
-  IP_ERROR_MESSAGE,
   classifyIPs,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
-  getInitialIPs,
+  getInitialIPsOrPLs,
+  IP_ERROR_MESSAGE,
   itemsToPortString,
   portStringToItems,
   validateForm,
   validateIPs,
 } from './FirewallRuleDrawer.utils';
-import { ExtendedFirewallRule } from './firewallRuleEditor';
-import { FirewallRuleError, PORT_PRESETS } from './shared';
+import { PORT_PRESETS, RULESET_MARKED_FOR_DELETION_TEXT } from './shared';
 
 import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
+import type { ExtendedFirewallRule } from './firewallRuleEditor';
+import type { Category, FirewallRuleError } from './shared';
+import type {
+  FirewallPolicyType,
+  FirewallRuleSet,
+} from '@linode/api-v4/lib/firewalls/types';
 
+const queryMocks = vi.hoisted(() => ({
+  useFirewallRuleSetQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useFirewallRuleSetQuery: queryMocks.useFirewallRuleSetQuery,
+  };
+});
+
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    getUserTimezone: vi.fn().mockReturnValue('utc'),
+  };
+});
+
+const mockHandleOpenPrefixListDrawer = vi.fn();
 const mockOnClose = vi.fn();
 const mockOnSubmit = vi.fn();
 
@@ -32,12 +61,23 @@ const props: FirewallRuleDrawerProps = {
   category: 'inbound',
   isOpen: true,
   mode: 'create',
+  inboundAndOutboundRules: [],
+  handleOpenPrefixListDrawer: mockHandleOpenPrefixListDrawer,
   onClose: mockOnClose,
   onSubmit: mockOnSubmit,
 };
 
+const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+
 describe('AddRuleDrawer', () => {
   it('renders the title', () => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+
     const { getByText } = renderWithTheme(
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
@@ -65,20 +105,217 @@ describe('AddRuleDrawer', () => {
   });
 });
 
+describe('AddRuleSetDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+  });
+
+  it('renders the drawer title', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    expect(getByText('Add an Inbound Rule or Rule Set')).toBeVisible();
+  });
+
+  it('renders the selection cards', () => {
+    const { getByText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    expect(getByText(/Create a Rule/i)).toBeVisible();
+    expect(getByText(/Reference Rule Set/i)).toBeVisible();
+  });
+
+  it('renders the Rule Set form and its elements when selection card is clicked', async () => {
+    const { getByText, getByPlaceholderText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    const ruleSetCard = getByText(/Reference Rule Set/i);
+    await userEvent.click(ruleSetCard);
+
+    // Description
+    expect(
+      getByText(
+        'RuleSets are reusable collections of Cloud Firewall rules that use the same fields as individual rules. They let you manage and update multiple rules as a group. You can then apply them across different firewalls by reference.'
+      )
+    ).toBeVisible();
+
+    // Autocomplete field
+    expect(getByText('Rule Set')).toBeVisible();
+    expect(
+      getByPlaceholderText('Type to search or select a Rule Set')
+    ).toBeVisible();
+
+    // Action buttons
+    expect(getByRole('button', { name: 'Add Rule' })).toBeVisible();
+    expect(getByRole('button', { name: 'Cancel' })).toBeVisible();
+
+    // Footer text
+    expect(
+      getByText(
+        'Rule changes don’t take effect immediately. You can add or delete rules before saving all your changes to this Firewall.'
+      )
+    ).toBeVisible();
+  });
+
+  it('shows validation message when Rule Set form is submitted without selecting a value', async () => {
+    const { getByText, getByRole } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+
+    // Click the Rule Set Selection card to open the Rule Set form
+    const ruleSetCard = getByText(/Reference Rule Set/i);
+    await userEvent.click(ruleSetCard);
+
+    // Click the "Add Rule" button without selecting the Autocomplete field
+    const addRuleButton = getByRole('button', { name: 'Add Rule' });
+    await userEvent.click(addRuleButton);
+
+    // Expect the validation message to appear
+    getByText('Rule Set is required.');
+  });
+});
+
+describe('ViewRuleSetDetailsDrawer', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+  });
+
+  const activeRuleSet = firewallRuleSetFactory.build({ id: 123 });
+  const deletedRuleSet = firewallRuleSetFactory.build({
+    id: 456,
+    deleted: '2025-07-24T04:23:17',
+  });
+
+  it.each([
+    ['inbound', activeRuleSet],
+    ['outbound', activeRuleSet],
+    ['inbound', deletedRuleSet],
+    ['outbound', deletedRuleSet],
+  ] as [Category, FirewallRuleSet][])(
+    'renders %s ruleset drawer (%s)',
+    async (category, mockData) => {
+      queryMocks.useFirewallRuleSetQuery.mockReturnValue({
+        data: mockData,
+        isFetching: false,
+        error: null,
+      });
+
+      const { getByText, getByRole, getByTestId, findByText, queryByText } =
+        renderWithTheme(
+          <FirewallRuleDrawer
+            {...props}
+            category={category}
+            mode="view"
+            ruleToModifyOrView={{
+              ruleset: mockData.id,
+              originalIndex: 0,
+              status: 'NEW',
+            }}
+          />
+        );
+
+      // Drawer title
+      expect(
+        getByText(`${capitalize(category)} Rule Set details`)
+      ).toBeVisible();
+
+      // Labels
+      const labels = [
+        'Label',
+        'ID',
+        'Description',
+        'Service Defined',
+        'Version',
+        'Created',
+        'Updated',
+      ];
+      labels.forEach((label) => expect(getByText(`${label}:`)).toBeVisible());
+
+      // Check ID value
+      expect(getByText(`${mockData.id}`)).toBeVisible();
+
+      if (mockData.deleted) {
+        // Marked for deletion status section
+        expect(getByText('Marked for deletion:')).toBeVisible();
+        expect(getByText('2025-07-24 04:23')).toBeVisible();
+        // Tooltip icon should exist
+        const tooltipIcon = getByTestId('tooltip-info-icon');
+        expect(tooltipIcon).toBeInTheDocument();
+
+        // Tooltip text should exist
+        await userEvent.hover(tooltipIcon);
+        expect(
+          await findByText(RULESET_MARKED_FOR_DELETION_TEXT)
+        ).toBeVisible();
+      } else {
+        // Marked for deletion status section should not exist
+        expect(queryByText('Marked for deletion:')).not.toBeInTheDocument();
+      }
+
+      // Rules section
+      expect(getByText(`${capitalize(category)} Rules`)).toBeVisible();
+
+      // Cancel button
+      expect(getByRole('button', { name: 'Close' })).toBeVisible();
+    }
+  );
+});
+
+describe('EditRuleDrawer', () => {
+  it('should not show the Firewall RS & PL feature chip in the title in Edit mode', () => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: true,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <FirewallRuleDrawer {...props} mode="edit" />
+    );
+
+    const titleContainer = getByTestId('drawer-title-container');
+
+    // The beta (chip) should NOT be in the title area
+    expect(within(titleContainer).queryByText('beta')).not.toBeInTheDocument();
+  });
+});
+
 describe('utilities', () => {
   describe('formValueToIPs', () => {
     it('returns a complete set of IPs given a string form value', () => {
-      expect(formValueToIPs('all', [''].map(stringToExtendedIP))).toEqual(
+      expect(formValueToIPs('all', [''].map(stringToExtendedIP), [])).toEqual(
         allIPs
       );
-      expect(formValueToIPs('allIPv4', [''].map(stringToExtendedIP))).toEqual({
+      expect(
+        formValueToIPs('allIPv4', [''].map(stringToExtendedIP), [])
+      ).toEqual({
         ipv4: ['0.0.0.0/0'],
       });
-      expect(formValueToIPs('allIPv6', [''].map(stringToExtendedIP))).toEqual({
+      expect(
+        formValueToIPs('allIPv6', [''].map(stringToExtendedIP), [])
+      ).toEqual({
         ipv6: ['::/0'],
       });
       expect(
-        formValueToIPs('ip/netmask', ['1.1.1.1'].map(stringToExtendedIP))
+        formValueToIPs(
+          'ip/netmask/prefixlist',
+          ['1.1.1.1'].map(stringToExtendedIP),
+          []
+        )
       ).toEqual({
         ipv4: ['1.1.1.1'],
       });
@@ -97,22 +334,27 @@ describe('utilities', () => {
   });
 
   describe('validateForm', () => {
+    const baseOptions = {
+      validatedIPs: [],
+      validatedPLs: [],
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+    };
+
     it('validates protocol', () => {
-      expect(validateForm({})).toHaveProperty(
+      expect(validateForm({}, baseOptions)).toHaveProperty(
         'protocol',
         'Protocol is required.'
       );
     });
     it('validates ports', () => {
-      expect(validateForm({ ports: '80', protocol: 'ICMP' })).toHaveProperty(
-        'ports',
-        'Ports are not allowed for ICMP protocols.'
-      );
       expect(
-        validateForm({ ports: '443', protocol: 'IPENCAP' })
+        validateForm({ ports: '80', protocol: 'ICMP' }, baseOptions)
+      ).toHaveProperty('ports', 'Ports are not allowed for ICMP protocols.');
+      expect(
+        validateForm({ ports: '443', protocol: 'IPENCAP' }, baseOptions)
       ).toHaveProperty('ports', 'Ports are not allowed for IPENCAP protocols.');
       expect(
-        validateForm({ ports: 'invalid-port', protocol: 'TCP' })
+        validateForm({ ports: 'invalid-port', protocol: 'TCP' }, baseOptions)
       ).toHaveProperty('ports');
     });
     it('validates custom ports', () => {
@@ -121,56 +363,77 @@ describe('utilities', () => {
         label: 'Firewalllabel',
       };
       // SUCCESS CASES
-      expect(validateForm({ ports: '1234', protocol: 'TCP', ...rest })).toEqual(
-        {}
-      );
       expect(
-        validateForm({ ports: '1,2,3,4,5', protocol: 'TCP', ...rest })
+        validateForm({ ports: '1234', protocol: 'TCP', ...rest }, baseOptions)
       ).toEqual({});
       expect(
-        validateForm({ ports: '1, 2, 3, 4, 5', protocol: 'TCP', ...rest })
-      ).toEqual({});
-      expect(validateForm({ ports: '1-20', protocol: 'TCP', ...rest })).toEqual(
-        {}
-      );
-      expect(
-        validateForm({
-          ports: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15',
-          protocol: 'TCP',
-          ...rest,
-        })
+        validateForm(
+          { ports: '1,2,3,4,5', protocol: 'TCP', ...rest },
+          baseOptions
+        )
       ).toEqual({});
       expect(
-        validateForm({ ports: '1-2,3-4', protocol: 'TCP', ...rest })
+        validateForm(
+          { ports: '1, 2, 3, 4, 5', protocol: 'TCP', ...rest },
+          baseOptions
+        )
       ).toEqual({});
       expect(
-        validateForm({ ports: '1,5-12', protocol: 'TCP', ...rest })
+        validateForm({ ports: '1-20', protocol: 'TCP', ...rest }, baseOptions)
+      ).toEqual({});
+      expect(
+        validateForm(
+          {
+            ports: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15',
+            protocol: 'TCP',
+            ...rest,
+          },
+          baseOptions
+        )
+      ).toEqual({});
+      expect(
+        validateForm(
+          { ports: '1-2,3-4', protocol: 'TCP', ...rest },
+          baseOptions
+        )
+      ).toEqual({});
+      expect(
+        validateForm({ ports: '1,5-12', protocol: 'TCP', ...rest }, baseOptions)
       ).toEqual({});
       // FAILURE CASES
       expect(
-        validateForm({ ports: '1,21-12', protocol: 'TCP', ...rest })
+        validateForm(
+          { ports: '1,21-12', protocol: 'TCP', ...rest },
+          baseOptions
+        )
       ).toHaveProperty(
         'ports',
         'Range must start with a smaller number and end with a larger number'
       );
       expect(
-        validateForm({ ports: '1-21-45', protocol: 'TCP', ...rest })
+        validateForm(
+          { ports: '1-21-45', protocol: 'TCP', ...rest },
+          baseOptions
+        )
       ).toHaveProperty('ports', 'Ranges must have 2 values');
       expect(
-        validateForm({ ports: 'abc', protocol: 'TCP', ...rest })
+        validateForm({ ports: 'abc', protocol: 'TCP', ...rest }, baseOptions)
       ).toHaveProperty('ports', 'Must be 1-65535');
       expect(
-        validateForm({ ports: '1--20', protocol: 'TCP', ...rest })
+        validateForm({ ports: '1--20', protocol: 'TCP', ...rest }, baseOptions)
       ).toHaveProperty('ports', 'Must be 1-65535');
       expect(
-        validateForm({ ports: '-20', protocol: 'TCP', ...rest })
+        validateForm({ ports: '-20', protocol: 'TCP', ...rest }, baseOptions)
       ).toHaveProperty('ports', 'Must be 1-65535');
       expect(
-        validateForm({
-          ports: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16',
-          protocol: 'TCP',
-          ...rest,
-        })
+        validateForm(
+          {
+            ports: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16',
+            protocol: 'TCP',
+            ...rest,
+          },
+          baseOptions
+        )
       ).toHaveProperty(
         'ports',
         'Number of ports or port range endpoints exceeded. Max allowed is 15'
@@ -225,11 +488,79 @@ describe('utilities', () => {
           ports: '80',
           protocol: 'TCP',
         };
-        expect(validateForm({ label: value, ...rest })).toEqual(result);
+        expect(validateForm({ label: value, ...rest }, baseOptions)).toEqual(
+          result
+        );
       });
     });
+
+    it('handles addresses field when isFirewallRulesetsPrefixlistsFeatureEnabled is true', () => {
+      // Invalid cases
+      expect(
+        validateForm(
+          {},
+          {
+            ...baseOptions,
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
+      ).toHaveProperty('addresses', 'Sources is a required field.');
+
+      expect(
+        validateForm(
+          { addresses: 'ip/netmask/prefixlist' },
+          {
+            ...baseOptions,
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
+      ).toHaveProperty(
+        'addresses',
+        'Add an IP address in IP/mask format, or reference a Prefix List name.'
+      );
+
+      // Valid cases
+      expect(
+        validateForm(
+          { addresses: 'ip/netmask/prefixlist' },
+          {
+            validatedIPs: [
+              { address: '192.268.0.0' },
+              { address: '192.268.0.1' },
+            ],
+            validatedPLs: [
+              { address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: true },
+            ],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
+      ).not.toHaveProperty('addresses');
+      expect(
+        validateForm(
+          { addresses: 'ip/netmask/prefixlist' },
+          {
+            validatedIPs: [{ address: '192.268.0.0' }],
+            validatedPLs: [],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
+      ).not.toHaveProperty('addresses');
+      expect(
+        validateForm(
+          { addresses: 'ip/netmask/prefixlist' },
+          {
+            validatedIPs: [],
+            validatedPLs: [
+              { address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: true },
+            ],
+            isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+          }
+        )
+      ).not.toHaveProperty('addresses');
+    });
+
     it('handles required fields', () => {
-      expect(validateForm({})).toEqual({
+      expect(validateForm({}, baseOptions)).toEqual({
         addresses: 'Sources is a required field.',
         label: 'Label is required.',
         ports: 'Ports is a required field.',
@@ -238,11 +569,11 @@ describe('utilities', () => {
     });
   });
 
-  describe('getInitialIPs', () => {
+  describe('getInitialIPsOrPLs', () => {
     const ruleToModify: ExtendedFirewallRule = {
       action: 'ACCEPT',
       addresses: {
-        ipv4: ['1.2.3.4'],
+        ipv4: ['1.2.3.4', 'pl:system:test'],
         ipv6: ['::0'],
       },
       originalIndex: 0,
@@ -251,10 +582,8 @@ describe('utilities', () => {
       status: 'NEW',
     };
     it('parses the IPs when no errors', () => {
-      expect(getInitialIPs(ruleToModify)).toEqual([
-        { address: '1.2.3.4' },
-        { address: '::0' },
-      ]);
+      const { ips: initalIPs } = getInitialIPsOrPLs(ruleToModify);
+      expect(initalIPs).toEqual([{ address: '1.2.3.4' }, { address: '::0' }]);
     });
     it('parses the IPs with no errors', () => {
       const errors: FirewallRuleError[] = [
@@ -266,13 +595,17 @@ describe('utilities', () => {
           reason: 'Invalid IP',
         },
       ];
-      expect(getInitialIPs({ ...ruleToModify, errors })).toEqual([
+      const { ips: initalIPs } = getInitialIPsOrPLs({
+        ...ruleToModify,
+        errors,
+      });
+      expect(initalIPs).toEqual([
         { address: '1.2.3.4', error: IP_ERROR_MESSAGE },
         { address: '::0' },
       ]);
     });
     it('offsets error indices correctly', () => {
-      const result = getInitialIPs({
+      const { ips: initialIPs } = getInitialIPsOrPLs({
         ...ruleToModify,
         addresses: {
           ipv4: ['1.2.3.4'],
@@ -288,9 +621,15 @@ describe('utilities', () => {
           },
         ],
       });
-      expect(result).toEqual([
+      expect(initialIPs).toEqual([
         { address: '1.2.3.4' },
         { address: 'INVALID_IP', error: IP_ERROR_MESSAGE },
+      ]);
+    });
+    it('parses the PLs when no errors', () => {
+      const { pls: initalPLs } = getInitialIPsOrPLs(ruleToModify);
+      expect(initalPLs).toEqual([
+        { address: 'pl:system:test', inIPv4Rule: true, inIPv6Rule: false },
       ]);
     });
   });
@@ -321,12 +660,13 @@ describe('utilities', () => {
     };
 
     it('correctly matches values to their representative type', () => {
-      const result = deriveTypeFromValuesAndIPs(formValues, []);
+      const result = deriveTypeFromValuesAndIPs(formValues, [], []);
       expect(result).toBe('https');
     });
     it('returns "custom" if there is no match', () => {
       const result = deriveTypeFromValuesAndIPs(
         { ...formValues, ports: '22-23' },
+        [],
         []
       );
       expect(result).toBe('custom');
@@ -389,6 +729,12 @@ describe('utilities', () => {
     it('should recognize that 1-65535 means open all ports', () => {
       const [items, portString] = portStringToItems('1-65535');
       expect(items).toEqual([PORT_PRESETS['ALL']]);
+      expect(portString).toEqual('');
+    });
+
+    it('should handle duplicates', () => {
+      const [items, portString] = portStringToItems('22, 443, 22');
+      expect(items).toEqual([PORT_PRESETS['22'], PORT_PRESETS['443']]);
       expect(portString).toEqual('');
     });
 

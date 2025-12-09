@@ -1,24 +1,12 @@
+import type React from 'react';
+
 import type {
   AccountAvailability,
   Capabilities,
   Region,
   RegionSite,
 } from '@linode/api-v4';
-import type React from 'react';
-import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
-
-export interface DisableRegionOption {
-  /**
-   * The reason the region option is disabled.
-   * This is shown to the user as a tooltip.
-   */
-  reason: JSX.Element | string;
-  /**
-   * An optional minWith applied to the tooltip
-   * @default 215
-   */
-  tooltipWidth?: number;
-}
+import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -34,8 +22,9 @@ export interface GetRegionLabel {
   includeSlug?: boolean;
   region: Region;
 }
+
 export interface RegionSelectProps<
-  DisableClearable extends boolean | undefined = undefined
+  DisableClearable extends boolean | undefined = undefined,
 > extends Omit<
     EnhancedAutocompleteProps<Region, false, DisableClearable>,
     'label' | 'options' | 'value'
@@ -44,25 +33,36 @@ export interface RegionSelectProps<
    * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
    * Only use `undefined` for situations where there is no relevant capability for the RegionSelect - this will not filter any of the regions passed in.
    * Otherwise, a capability should always be passed in.
-   *
-   * See `ImageUpload.tsx` for an example of a RegionSelect with an undefined `currentCapability` - there is no capability associated with Images yet.
    */
   currentCapability: Capabilities | undefined;
   /**
    * A key/value object for disabling regions by their ID.
    */
-  disabledRegions?: Record<string, DisableRegionOption>;
+  disabledRegions?: Record<string, DisableItemOption>;
+  /**
+   * Used to override filtering done by the `currentCapability` prop
+   * @todo Remove this after Object Storage Gen2.
+   */
+  forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
+  /**
+   * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
+   */
+  isGeckoLAEnabled: boolean;
   label?: string;
   regionFilter?: RegionFilterValue;
+  /**
+   * The regions to display in the RegionSelect dropdown.
+   *
+   * Note: if the `region.id` is "global", an additional "Global (Account level)" option will be displayed first in the dropdown, outside of any region grouping.
+   */
   regions: Region[];
   required?: boolean;
-  showDistributedRegionIconHelperText?: boolean;
   tooltipText?: string;
   /**
    * The ID of the selected region.
    */
-  value: string | undefined;
+  value: null | string;
   width?: number;
 }
 
@@ -71,19 +71,28 @@ export interface RegionMultiSelectProps
     EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
-  SelectedRegionsList?: React.ComponentType<{
-    onRemove: (region: string) => void;
-    selectedRegions: Region[];
-  }>;
   currentCapability: Capabilities | undefined;
-  disabledRegions?: Record<string, DisableRegionOption>;
+  disabledRegions?: Record<string, DisableItemOption>;
+  /**
+   * Used to override filtering done by the `currentCapability` prop
+   * @todo Remove this after Object Storage Gen2.
+   */
+  forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
   isClearable?: boolean;
+  /**
+   * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
+   */
+  isGeckoLAEnabled: boolean;
   label?: string;
   onChange: (ids: string[]) => void;
   regions: Region[];
   required?: boolean;
   selectedIds: string[];
+  SelectedRegionsList?: React.ComponentType<{
+    onRemove: (region: string) => void;
+    selectedRegions: Region[];
+  }>;
   sortRegionOptions?: (a: Region, b: Region) => number;
   tooltipText?: string;
   width?: number;

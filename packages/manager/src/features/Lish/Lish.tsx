@@ -1,21 +1,19 @@
+import { useLinodeLishQuery, useLinodeQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useInitialRequests } from 'src/hooks/useInitialRequests';
-import {
-  useLinodeLishQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
 
 import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
+
+import { storage } from 'src/utilities/storage';
+
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -23,12 +21,78 @@ import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
-const Lish = () => {
-  const history = useHistory();
+export interface RetryLimiterInterface {
+  reset: () => void;
+  retryAllowed: () => boolean;
+}
 
-  const { isLoading: isMakingInitalRequests } = useInitialRequests();
+export const RetryLimiter = (
+  maxTries: number,
+  perTimeWindowMs: number
+): RetryLimiterInterface => {
+  let retryTimes: number[] = [];
 
-  const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
+  return {
+    reset: (): void => {
+      retryTimes = [];
+    },
+    retryAllowed: (): boolean => {
+      const now = Date.now();
+      retryTimes.push(now);
+      const cutOffTime = now - perTimeWindowMs;
+      while (retryTimes.length && retryTimes[0] < cutOffTime) {
+        retryTimes.shift();
+      }
+      return retryTimes.length < maxTries;
+    },
+  };
+};
+
+export interface LishErrorInterface {
+  formatted: string;
+  grn: string;
+  isExpired: boolean;
+  reason: string;
+}
+
+export const ParsePotentialLishErrorString = (
+  s: null | string
+): LishErrorInterface | null => {
+  if (!s) {
+    return null;
+  }
+
+  let parsed = null;
+  try {
+    parsed = JSON.parse(s);
+  } catch {
+    return null;
+  }
+
+  const grn = typeof parsed?.grn === 'string' ? parsed?.grn : '';
+  const grnFormatted = grn ? ` (${grn})` : '';
+
+  {
+    const reason = parsed?.reason;
+    if (parsed?.type === 'error' && typeof reason === 'string') {
+      const formattedPrefix = reason.indexOf(' ') >= 0 ? '' : 'Error code: ';
+      return {
+        formatted: formattedPrefix + reason + grnFormatted,
+        grn,
+        isExpired: reason.toLowerCase() === 'your session has expired.',
+        reason,
+      };
+    }
+  }
+  return null;
+};
+
+export const Lish = () => {
+  const navigate = useNavigate();
+
+  const { linodeId, type } = useParams({
+    strict: false,
+  });
   const id = Number(linodeId);
 
   const {
@@ -44,7 +108,7 @@ const Lish = () => {
     refetch,
   } = useLinodeLishQuery(id);
 
-  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
+  const isLoading = isLinodeLoading || isTokenLoading;
 
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
@@ -55,7 +119,7 @@ const Lish = () => {
   }, []);
 
   const checkAuthentication = () => {
-    const token = window.localStorage.getItem('authentication/token');
+    const token = storage.authentication.token.get();
 
     if (!token) {
       window.close();
@@ -79,7 +143,9 @@ const Lish = () => {
   ].filter(Boolean) as Tab[];
 
   const navToURL = (index: number) => {
-    history.replace(`/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`);
+    navigate({
+      to: `/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`,
+    });
   };
 
   const refreshToken = async () => {

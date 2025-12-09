@@ -1,23 +1,24 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { isEmpty, splitAt } from 'ramda';
+import { isEmpty } from '@linode/api-v4';
+import { Hidden } from '@linode/ui';
+import { capitalize, splitAt } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { StyledButton, StyledTypography } from './ResultGroup.styles';
 import { ResultRow } from './ResultRow';
 
+import type { SearchableItem } from './search.interfaces';
+
 interface ResultGroupProps {
   entity: string;
   groupSize: number;
-  results: Item[];
+  results: SearchableItem[];
 }
 
 export const ResultGroup = (props: ResultGroupProps) => {

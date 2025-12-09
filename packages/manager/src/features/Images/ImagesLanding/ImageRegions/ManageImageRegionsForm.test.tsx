@@ -1,18 +1,31 @@
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { imageFactory, regionFactory } from 'src/factories';
+import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ManageImageRegionsForm } from './ManageImageRegionsForm';
+import { ManageImageReplicasForm } from './ManageImageRegionsForm';
+
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      replicate_image: true,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 
 describe('ManageImageRegionsDrawer', () => {
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const cancelButton = getByText('Cancel').closest('button');
@@ -43,13 +56,13 @@ describe('ManageImageRegionsDrawer', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region1, region2]));
       })
     );
 
     const { findByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     await findByText('US, Newark, NJ');
@@ -59,8 +72,16 @@ describe('ManageImageRegionsDrawer', () => {
   });
 
   it('should render a status of "unsaved" when a new region is selected', async () => {
-    const region1 = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
-    const region2 = regionFactory.build({ id: 'us-west', label: 'Place, CA' });
+    const region1 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    });
+    const region2 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-west',
+      label: 'Place, CA',
+    });
 
     const image = imageFactory.build({
       regions: [
@@ -72,13 +93,13 @@ describe('ManageImageRegionsDrawer', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region1, region2]));
       })
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const saveButton = getByText('Save').closest('button');
@@ -121,13 +142,13 @@ describe('ManageImageRegionsDrawer', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region1, region2]));
       })
     );
 
     const { findByText, getByLabelText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     // Verify both region labels have been loaded by the API
@@ -150,5 +171,30 @@ describe('ManageImageRegionsDrawer', () => {
         'You cannot remove this region because at least one available region must be present.'
       )
     ).toBeInTheDocument();
+  });
+
+  it('should enable the region select if the user has permissions', async () => {
+    const image = imageFactory.build();
+    const { getByRole } = renderWithTheme(
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
+    );
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+    expect(select).toBeEnabled();
+  });
+
+  it('should disable the region select if the user has no permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        replicate_image: false,
+      },
+    });
+    const image = imageFactory.build();
+    const { getByRole } = renderWithTheme(
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
+    );
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+    expect(select).toBeDisabled();
   });
 });

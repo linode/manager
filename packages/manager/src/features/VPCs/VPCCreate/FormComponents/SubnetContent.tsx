@@ -1,10 +1,10 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
+import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
 import { MultipleSubnetInput } from '../MultipleSubnetInput';
@@ -13,27 +13,21 @@ import {
   StyledHeaderTypography,
 } from './VPCCreateForm.styles';
 
-import type { APIError } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
-import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
-import type { SubnetFieldState } from 'src/utilities/subnets';
-
+import type { CreateVPCPayload } from '@linode/api-v4';
 interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
-  onChangeField: (field: string, value: SubnetFieldState[]) => void;
-  subnetErrors?: APIError[];
-  subnets: SubnetFieldState[];
 }
 
 export const SubnetContent = (props: Props) => {
-  const { disabled, isDrawer, onChangeField, subnetErrors, subnets } = props;
+  const { disabled, isDrawer } = props;
 
-  const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
+  const createType = useGetLinodeCreateType();
+
+  const {
+    formState: { errors },
+  } = useFormContext<CreateVPCPayload>();
 
   return (
     <>
@@ -46,35 +40,34 @@ export const SubnetContent = (props: Props) => {
           onClick={() =>
             isFromLinodeCreate &&
             sendLinodeCreateFormInputEvent({
-              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              createType: createType ?? 'OS',
               headerName: 'Create VPC',
               interaction: 'click',
               label: 'Learn more',
               subheaderName: 'Subnets',
             })
           }
-          to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/manage-vpc-subnets"
         >
           Learn more
         </Link>
         .
       </StyledBodyTypography>
-      {subnetErrors
-        ? subnetErrors.map((apiError: APIError) => (
-            <Notice
-              key={apiError.reason}
-              spacingBottom={8}
-              text={apiError.reason}
-              variant="error"
-            />
-          ))
-        : null}
-      <MultipleSubnetInput
-        disabled={disabled}
-        isDrawer={isDrawer}
-        onChange={(subnets) => onChangeField('subnets', subnets)}
-        subnets={subnets}
-      />
+      {errors.root?.subnetLabel && (
+        <Notice
+          spacingBottom={8}
+          text={errors.root.subnetLabel.message}
+          variant="error"
+        />
+      )}
+      {errors.root?.subnetIPv4 && (
+        <Notice
+          spacingBottom={8}
+          text={errors.root.subnetIPv4.message}
+          variant="error"
+        />
+      )}
+      <MultipleSubnetInput disabled={disabled} isDrawer={isDrawer} />
     </>
   );
 };

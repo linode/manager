@@ -1,11 +1,15 @@
-import { array, boolean, lazy, mixed, number, object, string } from 'yup';
-// We must use a default export for ipaddr.js so our packages node compatability
+// We must use a default export for ipaddr.js so our packages node compatibility
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
+import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+
 import { vpcsValidateIP } from './vpcs.schema';
 
+const VPC_INTERFACE_IP_RULE =
+  'A VPC interface must have an IPv4, an IPv6, or both, but not neither.';
+
 // Functions for test validations
-const validateIP = (ipAddress?: string | null) => {
+const validateIP = (ipAddress?: null | string) => {
   if (!ipAddress) {
     return true;
   }
@@ -20,7 +24,7 @@ const validateIP = (ipAddress?: string | null) => {
   return true;
 };
 
-const test_vpcsValidateIP = (value?: string | null) => {
+const test_vpcsValidateIP = (value?: null | string) => {
   // Since the field is optional, return true here to prevent an incorrect test failure.
   if (value === undefined || value === null) {
     return true;
@@ -33,12 +37,30 @@ const test_vpcsValidateIP = (value?: string | null) => {
   });
 };
 
+const validateIPv6PrefixLengthIs64 = (value?: null | string) => {
+  if (value === undefined || value === null) {
+    return false;
+  }
+
+  if (value === 'auto') {
+    // Do not fail the test for "auto" values as those are valid
+    return true;
+  }
+
+  return vpcsValidateIP({
+    value,
+    shouldHaveIPMask: true,
+    mustBeIPMask: false,
+    checkIPv6PrefixLengthIs64: true,
+  });
+};
+
 // Utils
 const testnameDisallowedBasedOnPurpose = (allowedPurpose: string) =>
   `Disallowed for non-${allowedPurpose} interfaces`;
 const testmessageDisallowedBasedOnPurpose = (
   allowedPurpose: string,
-  field: string
+  field: string,
 ) =>
   `${field} is not allowed for interfaces that do not have a purpose set to ${allowedPurpose}.`;
 
@@ -47,7 +69,7 @@ const LINODE_LABEL_CHAR_REQUIREMENT =
   'Label must contain between 3 and 64 characters.';
 
 // Schemas
-const stackscript_data = array().of(object()).nullable(true);
+const stackscript_data = object().nullable();
 
 const IPv4 = string()
   .notRequired()
@@ -70,164 +92,221 @@ const IPv6 = string()
 
 const ipv4ConfigInterface = object().when('purpose', {
   is: 'vpc',
-  then: object({
-    vpc: IPv4,
-    nat_1_1: lazy((value) =>
-      value === 'any' ? string().notRequired().nullable() : IPv4
-    ),
-  }),
-  otherwise: object()
-    .nullable()
-    .test({
-      name: testnameDisallowedBasedOnPurpose('VPC'),
-      message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv4.vpc'),
-      /*
+  then: (schema) =>
+    schema
+      .shape({
+        vpc: IPv4,
+        nat_1_1: lazy((value) =>
+          value === 'any' || value === ''
+            ? string().notRequired().nullable()
+            : IPv4,
+        ),
+      })
+      .when('ipv6', {
+        is: (value: unknown) => value === null || value === undefined,
+        then: (schema) => schema.required(VPC_INTERFACE_IP_RULE),
+      }),
+  otherwise: (schema) =>
+    schema
+      .nullable()
+      .test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv4.vpc'),
+        /*
         Workaround to get test to fail if field is populated when it should not be based
         on purpose (inspired by similar approach in firewalls.schema.ts for ports field).
         Similarly-structured logic (return typeof xyz === 'undefined') throughout this
         file serves the same purpose.
       */
-      test: (value) => {
-        if (value?.vpc) {
-          return typeof value.vpc === 'undefined';
-        }
+        test: (value: any) => {
+          if (value?.vpc) {
+            return typeof value.vpc === 'undefined';
+          }
 
-        return true;
-      },
-    })
+          return true;
+        },
+      })
+      .test({
+        name: testnameDisallowedBasedOnPurpose('VPC'),
+        message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv4.nat_1_1'),
+        test: (value: any) => {
+          if (value?.nat_1_1) {
+            return typeof value.nat_1_1 === 'undefined';
+          }
+
+          return true;
+        },
+      }),
+});
+
+const slaacSchema = object().shape({
+  range: string()
+    .required('VPC IPv6 is required.')
     .test({
-      name: testnameDisallowedBasedOnPurpose('VPC'),
-      message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv4.nat_1_1'),
-      test: (value) => {
-        if (value?.nat_1_1) {
-          return typeof value.nat_1_1 === 'undefined';
-        }
-
-        return true;
-      },
+      name: 'IPv6 prefix length',
+      message: 'Must be a /64 IPv6 network CIDR',
+      test: (value) => validateIPv6PrefixLengthIs64(value),
     }),
 });
 
-const ipv6ConfigInterface = object().when('purpose', {
-  is: 'vpc',
-  then: object({
-    vpc: IPv6,
-  }),
-  otherwise: object()
-    .nullable()
+const VPCInterfaceIPv6RangeSchema = object({
+  range: string()
+    .required('Range is required.')
     .test({
-      name: testnameDisallowedBasedOnPurpose('VPC'),
-      message: testmessageDisallowedBasedOnPurpose('vpc', 'ipv6.vpc'),
-      test: (value) => {
-        if (value?.vpc) {
-          return typeof value.vpc === 'undefined';
-        }
-
-        return true;
-      },
+      name: 'IPv6 prefix length',
+      message: 'Must be a /64 IPv6 network CIDR',
+      test: (value) => validateIPv6PrefixLengthIs64(value),
     }),
 });
 
-export const LinodeInterfaceSchema = object().shape({
-  purpose: mixed().oneOf(
-    ['public', 'vlan', 'vpc'],
-    'Purpose must be public, vlan, or vpc.'
-  ),
-  label: string().when('purpose', {
-    is: 'vlan',
-    then: string()
-      .required('VLAN label is required.')
-      .min(1, 'VLAN label must be between 1 and 64 characters.')
-      .max(64, 'VLAN label must be between 1 and 64 characters.')
-      .matches(
-        /[a-zA-Z0-9-]+/,
-        'Must include only ASCII letters, numbers, and dashes'
-      ),
-    otherwise: string().when('label', {
-      is: null,
-      then: string().nullable(),
-      otherwise: string().test({
-        name: testnameDisallowedBasedOnPurpose('VLAN'),
-        message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
-        test: (value) => typeof value === 'undefined' || value === '',
-      }),
+const ipv6Interface = object({
+  slaac: array()
+    .of(slaacSchema)
+    .test({
+      name: 'slaac field must have zero or one entry',
+      message: 'ipv6.slaac field must have zero or one entry',
+      test: (value) =>
+        !value ? true : value?.length === 0 || value?.length === 1,
     }),
-  }),
-  ipam_address: string().when('purpose', {
-    is: 'vlan',
-    then: string().notRequired().nullable().test({
-      name: 'validateIPAM',
-      message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
-      test: validateIP,
+  ranges: array().of(VPCInterfaceIPv6RangeSchema),
+  is_public: boolean(),
+}).notRequired();
+
+// This is the validation schema for legacy interfaces attached to configuration profiles
+// For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
+export const ConfigProfileInterfaceSchema = object().shape(
+  {
+    purpose: string()
+      .oneOf(
+        ['public', 'vlan', 'vpc'] as const,
+        'Purpose must be public, vlan, or vpc.',
+      )
+      .defined()
+      .required(),
+    label: string().when('purpose', {
+      is: 'vlan',
+      then: (schema) =>
+        schema
+          .required('VLAN label is required.')
+          .min(1, 'VLAN label must be between 1 and 64 characters.')
+          .max(64, 'VLAN label must be between 1 and 64 characters.')
+          .matches(
+            /[a-zA-Z0-9-]+/,
+            'Must include only ASCII letters, numbers, and dashes',
+          ),
+      otherwise: (schema) =>
+        schema.when('label', {
+          is: null,
+          then: (s) => s.nullable(),
+          otherwise: (s) =>
+            s.test({
+              name: testnameDisallowedBasedOnPurpose('VLAN'),
+              message: testmessageDisallowedBasedOnPurpose('vlan', 'label'),
+              test: (value) => typeof value === 'undefined' || value === '',
+            }),
+        }),
     }),
-    otherwise: string().when('ipam_address', {
-      is: null,
-      then: string().nullable(),
-      otherwise: string().test({
-        name: testnameDisallowedBasedOnPurpose('VLAN'),
-        message: testmessageDisallowedBasedOnPurpose('vlan', 'ipam_address'),
-        test: (value) => typeof value === 'undefined' || value === '',
-      }),
+    ipam_address: string().when('purpose', {
+      is: 'vlan',
+      then: (schema) =>
+        schema.notRequired().nullable().test({
+          name: 'validateIPAM',
+          message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+          test: validateIP,
+        }),
+      otherwise: (schema) =>
+        schema.when('ipam_address', {
+          is: null,
+          then: (s) => s.nullable(),
+          otherwise: (s) =>
+            s.test({
+              name: testnameDisallowedBasedOnPurpose('VLAN'),
+              message: testmessageDisallowedBasedOnPurpose(
+                'vlan',
+                'ipam_address',
+              ),
+              test: (value) => typeof value === 'undefined' || value === '',
+            }),
+        }),
     }),
-  }),
-  primary: boolean().notRequired(),
-  subnet_id: number().when('purpose', {
-    is: 'vpc',
-    then: number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .required('Subnet is required.'),
-    otherwise: number()
-      .notRequired()
-      .nullable()
-      .test({
-        name: testnameDisallowedBasedOnPurpose('VPC'),
-        message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
-        test: (value) => typeof value === 'undefined' || value === null,
-      }),
-  }),
-  vpc_id: number().when('purpose', {
-    is: 'vpc',
-    then: number().required('VPC is required.'),
-    otherwise: number()
-      .notRequired()
-      .nullable()
-      .test({
-        name: testnameDisallowedBasedOnPurpose('VPC'),
-        message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
-        test: (value) => typeof value === 'undefined' || value === null,
-      }),
-  }),
-  ipv4: ipv4ConfigInterface,
-  ipv6: ipv6ConfigInterface,
-  ip_ranges: array()
-    .of(string())
-    .notRequired()
-    .nullable()
-    .when('purpose', {
+    primary: boolean()
+      .test(
+        'cant-use-with-vlan',
+        "VLAN interfaces can't be the primary interface",
+        (value, context) => {
+          const isVLANandIsSetToPrimary =
+            value && context.parent.purpose === 'vlan';
+          return !isVLANandIsSetToPrimary;
+        },
+      )
+      .optional(),
+    subnet_id: number().when('purpose', {
       is: 'vpc',
-      then: array()
-        .of(
-          string().test(
-            'valid-ip-range',
-            'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
-            validateIP
-          )
-        )
-        .notRequired()
-        .nullable(),
-      otherwise: array()
-        .test({
-          name: testnameDisallowedBasedOnPurpose('VPC'),
-          message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
-          test: (value) => typeof value === 'undefined' || value === null,
-        })
-        .notRequired()
-        .nullable(),
+      then: (schema) =>
+        schema
+          .transform((value) => (isNaN(value) ? undefined : value))
+          .required('Subnet is required.'),
+      otherwise: (schema) =>
+        schema
+          .notRequired()
+          .nullable()
+          .test({
+            name: testnameDisallowedBasedOnPurpose('VPC'),
+            message: testmessageDisallowedBasedOnPurpose('vpc', 'subnet_id'),
+            test: (value) => typeof value === 'undefined' || value === null,
+          }),
     }),
-});
+    vpc_id: number().when('purpose', {
+      is: 'vpc',
+      then: (schema) => schema.required('VPC is required.'),
+      otherwise: (schema) =>
+        schema
+          .notRequired()
+          .nullable()
+          .test({
+            name: testnameDisallowedBasedOnPurpose('VPC'),
+            message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
+            test: (value) => typeof value === 'undefined' || value === null,
+          }),
+    }),
+    ipv4: ipv4ConfigInterface,
+    ipv6: ipv6Interface.nonNullable(),
+    ip_ranges: array()
+      .of(string().defined())
+      .notRequired()
+      .nullable()
+      .when('purpose', {
+        is: 'vpc',
+        then: (schema) =>
+          schema
+            .of(
+              string().test(
+                'valid-ip-range',
+                'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+                validateIP,
+              ),
+            )
+            .notRequired()
+            .nullable(),
+        otherwise: (schema) =>
+          schema
+            .test({
+              name: testnameDisallowedBasedOnPurpose('VPC'),
+              message: testmessageDisallowedBasedOnPurpose('vpc', 'ip_ranges'),
+              test: (value) => typeof value === 'undefined' || value === null,
+            })
+            .notRequired()
+            .nullable(),
+      }),
+  },
+  [
+    ['ipv6', 'ipv4'],
+    ['ipv4', 'ipv6'],
+  ],
+);
 
-export const LinodeInterfacesSchema = array()
-  .of(LinodeInterfaceSchema)
+export const ConfigProfileInterfacesSchema = array()
+  .of(ConfigProfileInterfaceSchema)
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -239,7 +318,7 @@ export const LinodeInterfacesSchema = array()
       return (
         list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
       );
-    }
+    },
   );
 
 export const UpdateConfigInterfaceOrderSchema = object({
@@ -253,7 +332,9 @@ export const UpdateConfigInterfaceSchema = object({
     .shape({
       vpc: IPv4,
       nat_1_1: lazy((value) =>
-        value === 'any' ? string().notRequired().nullable() : IPv4
+        value === 'any' || value === ''
+          ? string().notRequired().nullable()
+          : IPv4,
       ),
     }),
   ipv6: object().notRequired().nullable().shape({
@@ -262,83 +343,62 @@ export const UpdateConfigInterfaceSchema = object({
   ip_ranges: array().of(string().test(validateIP)).max(1).notRequired(),
 });
 
-// const rootPasswordValidation = string().test(
-//   'is-strong-password',
-//   'Password does not meet strength requirements.',
-//   (value: string) =>
-//     Boolean(value) && zxcvbn(value).score >= MINIMUM_PASSWORD_STRENGTH
-// );
-
 export const ResizeLinodeDiskSchema = object({
   size: number().required('Size is required.').min(1),
 });
 
 export const UpdateLinodePasswordSchema = object({
   password: string().required('Password is required.'),
-  // .concat(rootPasswordValidation)
 });
 
 const MetadataSchema = object({
-  user_data: string().notRequired().nullable(true),
+  user_data: string().nullable().defined(),
 });
 
 const PlacementGroupPayloadSchema = object({
-  id: number().notRequired().nullable(true),
+  id: number().required(),
 });
 
 const DiskEncryptionSchema = string()
   .oneOf(['enabled', 'disabled'])
-  .notRequired()
-  .nullable(true);
+  .notRequired();
 
-export const CreateLinodeSchema = object({
-  type: string().ensure().required('Plan is required.'),
-  region: string().ensure().required('Region is required.'),
-  stackscript_id: number().nullable().notRequired(),
-  backup_id: number().nullable().notRequired(),
-  swap_size: number().notRequired(),
-  image: string().when('stackscript_id', {
-    is: (value?: number) => value !== undefined,
-    then: string().ensure().required('Image is required.'),
-    otherwise: string().nullable().notRequired(),
-  }),
-  authorized_keys: array().of(string()).notRequired(),
-  backups_enabled: boolean().notRequired(),
-  stackscript_data,
-  booted: boolean().notRequired(),
-  label: string()
-    .transform((v) => (v === '' ? undefined : v))
-    .notRequired()
-    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
-    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
-  tags: array().of(string()).notRequired(),
-  private_ip: boolean().notRequired(),
-  authorized_users: array().of(string()).notRequired(),
-  root_pass: string().when('image', {
-    is: (value: any) => Boolean(value),
-    then: string().required(
-      'You must provide a root password when deploying from an image.'
-    ),
-    // .concat(rootPasswordValidation),
-    otherwise: string().notRequired(),
-  }),
-  interfaces: LinodeInterfacesSchema,
-  metadata: MetadataSchema,
-  firewall_id: number().nullable().notRequired(),
-  placement_group: PlacementGroupPayloadSchema,
-  disk_encryption: DiskEncryptionSchema,
-});
+/**
+ * A number field schema with conditional validation for legacy alert fields.
+ * @param label - The label used in the required error message.
+ * @returns A number schema with conditional validation.
+ */
+const legacyAlertsFieldSchema = (
+  label:
+    | 'CPU Usage'
+    | 'Disk I/O Rate'
+    | 'Incoming Traffic'
+    | 'Outbound Traffic'
+    | 'Transfer Quota',
+) =>
+  // If system_alerts and user_alerts are undefined, then it is legacy alerts context.
+  // If it is legacy alerts context, then the field is required.
+  number().when(['system_alerts', 'user_alerts'], {
+    is: (systemAlerts?: number[], userAlerts?: number[]) => {
+      return systemAlerts === undefined && userAlerts === undefined;
+    },
+    then: (schema) => schema.required(`${label} is required.`),
+    otherwise: (schema) => schema.notRequired(),
+  });
 
-const alerts = object({
-  cpu: number()
-    .typeError('CPU Usage must be a number')
+export const UpdateLinodeAlertsSchema = object({
+  // Legacy numeric-threshold alerts. All fields are required to update legacy alerts, but not for ACLP alerts.
+  cpu: legacyAlertsFieldSchema('CPU Usage')
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800'),
-  network_in: number(),
-  network_out: number(),
-  transfer_quota: number(),
-  io: number(),
-}).notRequired();
+  network_in: legacyAlertsFieldSchema('Incoming Traffic'),
+  network_out: legacyAlertsFieldSchema('Outbound Traffic'),
+  transfer_quota: legacyAlertsFieldSchema('Transfer Quota'),
+  io: legacyAlertsFieldSchema('Disk I/O Rate'),
+  // ACLP alerts. All fields are required to update ACLP alerts, but not for legacy alerts.
+  system_alerts: array().of(number().defined()).notRequired(),
+  user_alerts: array().of(number().defined()).notRequired(),
+});
 
 const schedule = object({
   day: mixed().oneOf(
@@ -351,7 +411,7 @@ const schedule = object({
       'Friday',
       'Saturday',
     ],
-    'Invalid day value.'
+    'Invalid day value.',
   ),
   window: mixed().oneOf(
     [
@@ -369,7 +429,7 @@ const schedule = object({
       'W22',
       'W24',
     ],
-    'Invalid schedule value.'
+    'Invalid schedule value.',
   ),
 });
 
@@ -386,28 +446,23 @@ export const UpdateLinodeSchema = object({
     .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
-  alerts,
+  alerts: UpdateLinodeAlertsSchema.notRequired().default(undefined),
   backups,
 });
 
-const SSHKeySchema = object({
-  id: number(),
-  label: string(),
-  ssh_key: string(),
-  created: string(),
-});
-
-// Include `shape()` here so that the schema can be extended without TS complaining.
-export const RebuildLinodeSchema = object().shape({
+export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
   root_pass: string().required('Password is required.'),
-  authorized_keys: array().of(SSHKeySchema),
-  authorized_users: array().of(string()),
-  stackscript_id: number().notRequired(),
-  stackscript_data,
-  booted: boolean().notRequired(),
-  metadata: MetadataSchema,
-  disk_encryption: DiskEncryptionSchema,
+  authorized_keys: array().of(string().required()),
+  authorized_users: array().of(string().required()),
+  stackscript_id: number().optional(),
+  stackscript_data: stackscript_data.notRequired(),
+  booted: boolean().optional(),
+  /**
+   * `metadata` is an optional object with required properties (see https://github.com/jquense/yup/issues/772)
+   */
+  metadata: MetadataSchema.optional().default(undefined),
+  disk_encryption: string().oneOf(['enabled', 'disabled']).optional(),
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({
@@ -429,19 +484,77 @@ export const CreateSnapshotSchema = object({
 });
 
 const device = object({
-  disk_id: number().nullable(true),
-  volume_id: number().nullable(true),
-}).nullable(true);
+  disk_id: number().nullable(),
+  volume_id: number().nullable(),
+})
+  .nullable()
+  .notRequired();
 
 const devices = object({
   sda: device,
+  sdaa: device,
+  sdab: device,
+  sdac: device,
+  sdad: device,
+  sdae: device,
+  sdaf: device,
+  sdag: device,
+  sdah: device,
+  sdai: device,
+  sdaj: device,
+  sdak: device,
+  sdal: device,
+  sdam: device,
+  sdan: device,
+  sdao: device,
+  sdap: device,
+  sdaq: device,
+  sdar: device,
+  sdas: device,
+  sdat: device,
+  sdau: device,
+  sdav: device,
+  sdaw: device,
+  sdax: device,
+  sday: device,
+  sdaz: device,
   sdb: device,
+  sdba: device,
+  sdbb: device,
+  sdbc: device,
+  sdbd: device,
+  sdbe: device,
+  sdbf: device,
+  sdbg: device,
+  sdbh: device,
+  sdbi: device,
+  sdbj: device,
+  sdbk: device,
+  sdbl: device,
   sdc: device,
   sdd: device,
   sde: device,
   sdf: device,
   sdg: device,
   sdh: device,
+  sdi: device,
+  sdj: device,
+  sdk: device,
+  sdl: device,
+  sdm: device,
+  sdn: device,
+  sdo: device,
+  sdp: device,
+  sdq: device,
+  sdr: device,
+  sds: device,
+  sdt: device,
+  sdu: device,
+  sdv: device,
+  sdw: device,
+  sdx: device,
+  sdy: device,
+  sdz: device,
 });
 
 const helpers = object({
@@ -465,7 +578,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -480,7 +593,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: LinodeInterfacesSchema,
+  interfaces: ConfigProfileInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({
@@ -496,11 +609,12 @@ export const CreateLinodeDiskSchema = object({
   authorized_users: array().of(string()),
   root_pass: string().when('image', {
     is: (value: any) => Boolean(value),
-    then: string().required(
-      'You must provide a root password when deploying from an image.'
-    ),
+    then: (schema) =>
+      schema.required(
+        'You must provide a root password when deploying from an image.',
+      ),
     // .concat(rootPasswordValidation),
-    otherwise: string().notRequired(),
+    otherwise: (schema) => schema.notRequired(),
   }),
   stackscript_id: number(),
   stackscript_data,
@@ -516,8 +630,231 @@ export const UpdateLinodeDiskSchema = object({
     .oneOf(['raw', 'swap', 'ext3', 'ext4', 'initrd']),
 });
 
-export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().shape(
-  {
-    image: string().required('An image is required.'),
-  }
-);
+export const CreateLinodeDiskFromImageSchema =
+  CreateLinodeDiskSchema.clone().shape({
+    image: string()
+      .required('An image is required.')
+      .typeError('An image is required.'),
+  });
+
+const LABEL_LENGTH_MESSAGE = 'Label must be between 1 and 64 characters.';
+const LABEL_CHARACTER_TYPES =
+  'Must include only ASCII letters, numbers, and dashes';
+
+export const UpgradeToLinodeInterfaceSchema = object({
+  config_id: number().nullable(),
+  dry_run: boolean(),
+});
+
+export const UpdateLinodeInterfaceSettingsSchema = object({
+  network_helper: boolean().nullable(),
+  default_route: object({
+    ipv4_interface_id: number().nullable(),
+    ipv6_interface_id: number().nullable(),
+  }),
+});
+
+const BaseInterfaceIPv4AddressSchema = object({
+  address: string().required('IPv4 address is required.'),
+  primary: boolean(),
+});
+
+const VPCInterfaceIPv4RangeSchema = object({
+  range: string().required('Range is required.'),
+});
+
+const PublicInterfaceRangeSchema = object({
+  range: string().required('IPv6 range is required.').nullable(),
+});
+
+const CreateVPCInterfaceIpv4AddressSchema = object({
+  address: string().required('VPC IPv4 is required.'),
+  primary: boolean(),
+  nat_1_1_address: string().nullable(),
+});
+
+const CreateVlanInterfaceSchema = object({
+  vlan_label: string()
+    .min(1, LABEL_LENGTH_MESSAGE)
+    .max(64, LABEL_LENGTH_MESSAGE)
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES)
+    .required('VLAN label is required.'),
+  ipam_address: string().nullable(),
+});
+
+const CreateLinodeAclpAlertsSchema = object({
+  system_alerts: array().of(number().defined()).required(),
+  user_alerts: array().of(number().defined()).required(),
+});
+
+export const CreateVPCInterfaceSchema = object({
+  subnet_id: number().required('Subnet is required.'),
+  ipv4: object({
+    addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
+    ranges: array().of(VPCInterfaceIPv4RangeSchema),
+  }).notRequired(),
+  ipv6: ipv6Interface,
+});
+
+export const CreateLinodeInterfaceSchema = object({
+  firewall_id: number().nullable(),
+  default_route: object({
+    ipv4: boolean(),
+    ipv6: boolean(),
+  })
+    .notRequired()
+    .default(null),
+  vpc: CreateVPCInterfaceSchema.notRequired().default(null),
+  public: object({
+    ipv4: object({
+      addresses: array().of(BaseInterfaceIPv4AddressSchema),
+    }).notRequired(),
+    ipv6: object({
+      ranges: array().of(PublicInterfaceRangeSchema),
+    }).notRequired(),
+  })
+    .notRequired()
+    .default(null),
+  vlan: CreateVlanInterfaceSchema.notRequired().default(null),
+});
+
+const ModifyVPCInterfaceIpv4AddressSchema = object({
+  address: string(),
+  primary: boolean().nullable(),
+  nat_1_1_address: string().nullable(),
+});
+
+const ModifyVlanInterfaceSchema = object({
+  vlan_label: string()
+    .required()
+    .nullable()
+    .min(1, LABEL_LENGTH_MESSAGE)
+    .max(64, LABEL_LENGTH_MESSAGE)
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+  ipam_address: string().nullable(),
+})
+  .notRequired()
+  .nullable();
+
+const ModifyVPCInterfaceIPv6SlaacSchema = object({
+  range: string().notRequired().nullable(),
+});
+
+export const ModifyLinodeInterfaceSchema = object({
+  default_route: object({
+    ipv4: boolean().nullable(),
+    ipv6: boolean().nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  vpc: object({
+    subnet_id: number().required(),
+    ipv4: object({
+      addresses: array()
+        .of(ModifyVPCInterfaceIpv4AddressSchema)
+        .notRequired()
+        .nullable(),
+      ranges: array().of(VPCInterfaceIPv4RangeSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+    ipv6: object({
+      slaac: array()
+        .of(ModifyVPCInterfaceIPv6SlaacSchema)
+        .notRequired()
+        .nullable(),
+      ranges: array().of(VPCInterfaceIPv6RangeSchema).notRequired().nullable(),
+      is_public: boolean().notRequired().nullable(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  public: object({
+    ipv4: object({
+      addresses: array().of(BaseInterfaceIPv4AddressSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+    ipv6: object({
+      ranges: array().of(PublicInterfaceRangeSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+  })
+    .notRequired()
+    .nullable(),
+  vlan: ModifyVlanInterfaceSchema,
+});
+
+export const CreateLinodeSchema = object({
+  type: string().ensure().required('Plan is required.'),
+  region: string().ensure().required('Region is required.'),
+  stackscript_id: number().nullable().notRequired(),
+  backup_id: number().nullable().notRequired(),
+  swap_size: number().notRequired(),
+  image: string().when('stackscript_id', {
+    is: (value?: number) => value !== undefined,
+    then: (schema) => schema.ensure().required('Image is required.'),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+  authorized_keys: array().of(string().defined()).notRequired(),
+  backups_enabled: boolean().notRequired(),
+  stackscript_data,
+  booted: boolean().notRequired(),
+  label: string()
+    .transform((v) => (v === '' ? undefined : v))
+    .notRequired()
+    .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
+    .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
+  tags: array().of(string().defined()).notRequired(),
+  private_ip: boolean().notRequired(),
+  authorized_users: array().of(string().defined()).notRequired(),
+  root_pass: string().when('image', {
+    is: (value: any) => Boolean(value),
+    then: (schema) =>
+      schema.required(
+        'You must provide a root password when deploying from an image.',
+      ),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  interfaces: array().when(
+    'interface_generation',
+    ([interface_generation], schema) => {
+      if (interface_generation === 'linode') {
+        return schema.of(CreateLinodeInterfaceSchema);
+      }
+
+      return ConfigProfileInterfacesSchema;
+    },
+  ),
+  interface_generation: string()
+    .oneOf(['legacy_config', 'linode'])
+    .notRequired(),
+  network_helper: boolean(),
+  ipv4: array()
+    .of(string().defined())
+    .when('interface_generation', {
+      is: 'linode',
+      then: (schema) =>
+        schema
+          .nullable()
+          .notRequired()
+          .test({
+            name: 'IPv4 field is not allowed for Linode Interfaces',
+            message:
+              'ipv4 field must be omitted or empty if using Linode Interfaces',
+            test: (value) => !value || value.length === 0,
+          }),
+    }),
+  metadata: MetadataSchema.notRequired().default(undefined),
+  firewall_id: number().nullable().notRequired(),
+  placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
+  disk_encryption: DiskEncryptionSchema,
+  maintenance_policy: string()
+    .oneOf(['linode/migrate', 'linode/power_off_on', undefined])
+    .notRequired()
+    .nullable(),
+  alerts: CreateLinodeAclpAlertsSchema.notRequired().default(undefined),
+});

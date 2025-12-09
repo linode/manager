@@ -1,13 +1,10 @@
+import { linodeTransferFactory, regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import {
-  accountTransferFactory,
-  linodeTransferFactory,
-  regionFactory,
-} from 'src/factories';
+import { accountTransferFactory } from 'src/factories';
 import { typeFactory } from 'src/factories/types';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NetworkTransfer } from './NetworkTransfer';
@@ -38,7 +35,7 @@ describe('renders the component with the right data', () => {
       http.get('*/v4/account/transfer', () => {
         return HttpResponse.json(accountTransfer);
       }),
-      http.get('*/v4/linode/instances/:id/transfer', () => {
+      http.get('*/v4*/linode/instances/:id/transfer', () => {
         return HttpResponse.json(linodeTransfer);
       })
     );
@@ -89,7 +86,7 @@ describe('renders the component with the right data', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       }),
       http.get('*/v4/linode/types/:id', () => {
@@ -98,7 +95,7 @@ describe('renders the component with the right data', () => {
       http.get('*/v4/account/transfer', () => {
         return HttpResponse.json(accountTransfer);
       }),
-      http.get('*/v4/linode/instances/:id/transfer', () => {
+      http.get('*/v4*/linode/instances/:id/transfer', () => {
         return HttpResponse.json(linodeTransfer);
       })
     );

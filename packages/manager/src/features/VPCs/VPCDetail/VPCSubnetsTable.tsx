@@ -1,13 +1,22 @@
-import { styled, useTheme } from '@mui/material/styles';
+import {
+  useLinodeQuery,
+  useSubnetQuery,
+  useSubnetsQuery,
+} from '@linode/queries';
+import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -16,17 +25,25 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useSubnetsQuery } from 'src/queries/vpcs/vpcs';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
+import { SUBNET_ACTION_PATH } from '../constants';
+import { VPC_DETAILS_ROUTE } from '../constants';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
+import {
+  SubnetNodeBalancerRow,
+  SubnetNodebalancerTableRowHead,
+} from './SubnetNodebalancerRow';
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
@@ -35,6 +52,7 @@ import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
+  isVPCLKEEnterpriseCluster: boolean;
   vpcId: number;
   vpcRegion: string;
 }
@@ -42,49 +60,51 @@ interface Props {
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { vpcId, vpcRegion } = props;
+  const { isVPCLKEEnterpriseCluster, vpcId, vpcRegion } = props;
   const theme = useTheme();
-  const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
-  const [selectedSubnet, setSelectedSubnet] = React.useState<
-    Subnet | undefined
-  >();
-  const [selectedLinode, setSelectedLinode] = React.useState<
-    Linode | undefined
-  >();
-  const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
-    false
-  );
-  const [editSubnetsDrawerOpen, setEditSubnetsDrawerOpen] = React.useState(
-    false
-  );
-  const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
-    false
-  );
-  const [
-    subnetAssignLinodesDrawerOpen,
-    setSubnetAssignLinodesDrawerOpen,
-  ] = React.useState(false);
-  const [powerActionDialogOpen, setPowerActionDialogOpen] = React.useState(
-    false
-  );
+  const { enqueueSnackbar } = useSnackbar();
+
+  const navigate = useNavigate();
+  const params = useParams({ strict: false });
+  const location = useLocation();
+
   const [linodePowerAction, setLinodePowerAction] = React.useState<
     Action | undefined
   >();
 
-  const [
-    subnetUnassignLinodesDrawerOpen,
-    setSubnetUnassignLinodesDrawerOpen,
-  ] = React.useState(false);
-
-  const pagination = usePagination(1, preferenceKey);
-
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: VPC_DETAILS_ROUTE,
     },
-    `${preferenceKey}-order`
+    preferenceKey: `${preferenceKey}-order`,
+  });
+
+  const search = useSearch({
+    from: VPC_DETAILS_ROUTE,
+  });
+  const { query } = search;
+
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+  const { isDualStackEnabled } = useVPCDualStack();
+
+  const { data: permissions } = usePermissions(
+    'vpc',
+    ['create_vpc_subnet'],
+    vpcId
   );
+
+  const pagination = usePaginationV2({
+    currentRoute: VPC_DETAILS_ROUTE,
+    preferenceKey,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
 
   const filter = {
     ['+order']: order,
@@ -108,62 +128,140 @@ export const VPCSubnetsTable = (props: Props) => {
     };
   };
 
-  const { data: subnets, error, isLoading } = useSubnetsQuery(
+  const {
+    data: subnets,
+    error,
+    isLoading,
+  } = useSubnetsQuery(
     vpcId,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    generateSubnetsXFilter(subnetsFilterText)
+    generateSubnetsXFilter(query ?? '')
   );
 
+  const {
+    data: selectedSubnet,
+    isFetching: isFetchingSubnet,
+    error: selectedSubnetError,
+  } = useSubnetQuery(
+    vpcId,
+    params.subnetId ?? -1,
+    !!params.vpcId && !!params.subnetId
+  );
+
+  const {
+    data: selectedLinode,
+    isFetching: isFetchingLinode,
+    error: selectedLinodeError,
+  } = useLinodeQuery(params.linodeId ?? -1, !!params.linodeId);
+
   const handleSearch = (searchText: string) => {
-    setSubnetsFilterText(searchText);
-    // If you're on page 2+, need to go back to page 1 to see the actual results
-    pagination.handlePageChange(1);
+    navigate({
+      params: { vpcId },
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: searchText || undefined,
+      }),
+      to: VPC_DETAILS_ROUTE,
+    });
+  };
+
+  const onCloseSubnetDrawer = () => {
+    navigate({
+      params: { vpcId },
+      to: VPC_DETAILS_ROUTE,
+    });
+  };
+
+  const handleSubnetCreate = () => {
+    navigate({ params: { vpcId }, to: '/vpcs/$vpcId/subnets/create' });
   };
 
   const handleSubnetDelete = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setDeleteSubnetDialogOpen(true);
+    navigate({
+      params: { subnetAction: 'delete', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
-  const handleEditSubnet = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setEditSubnetsDrawerOpen(true);
+  const handleSubnetEdit = (subnet: Subnet) => {
+    navigate({
+      params: { subnetAction: 'edit', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
   const handleSubnetUnassignLinodes = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setSubnetUnassignLinodesDrawerOpen(true);
+    navigate({
+      params: { subnetAction: 'unassign', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
   const handleSubnetUnassignLinode = (linode: Linode, subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setSelectedLinode(linode);
-    setSubnetUnassignLinodesDrawerOpen(true);
+    navigate({
+      params: {
+        linodeAction: 'unassign',
+        linodeId: linode.id,
+        subnetId: subnet.id,
+        vpcId,
+      },
+      to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
+    });
   };
 
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setSubnetAssignLinodesDrawerOpen(true);
+    navigate({
+      params: { subnetAction: 'assign', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
-  const handlePowerActionsLinode = (linode: Linode, action: Action) => {
-    setSelectedLinode(linode);
-    setPowerActionDialogOpen(true);
+  const handlePowerActionsLinode = (
+    linode: Linode,
+    action: Action,
+    subnet: Subnet
+  ) => {
     setLinodePowerAction(action);
+    navigate({
+      params: {
+        linodeAction: 'power-action',
+        linodeId: linode.id,
+        subnetId: subnet.id ?? selectedSubnet?.id ?? -1,
+        vpcId,
+      },
+      to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
+    });
   };
 
-  // Ensure that the selected subnet passed to the drawer is up to date
+  // If the user initiates a history -/+ to complete a linode action and the linode
+  // is no longer assigned to the subnet, push navigation to the vpc's detail page
   React.useEffect(() => {
-    if (subnets && selectedSubnet) {
-      const updatedSubnet = subnets.data.find(
-        (subnet) => subnet.id === selectedSubnet.id
-      );
-      setSelectedSubnet(updatedSubnet);
+    if (
+      params.linodeAction &&
+      selectedLinode &&
+      selectedSubnet &&
+      !selectedSubnet?.linodes.some((linode) => linode.id === selectedLinode.id)
+    ) {
+      navigate({
+        params: { vpcId },
+        to: VPC_DETAILS_ROUTE,
+      });
+      enqueueSnackbar(`Linode ${selectedLinode.label} not found in subnet`, {
+        variant: 'error',
+      });
     }
-  }, [subnets, selectedSubnet]);
+  }, [
+    selectedSubnet,
+    vpcId,
+    navigate,
+    params.linodeAction,
+    selectedLinode,
+    enqueueSnackbar,
+  ]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -177,22 +275,22 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const SubnetTableRowHead = (
     <TableRow>
-      <StyledTableSortCell
+      <TableSortCell
+        active={orderBy === 'label'}
+        direction={order}
+        handleClick={handleOrderChange}
+        label="label"
         sx={(theme) => ({
           [theme.breakpoints.down('sm')]: {
             width: '50%',
           },
           width: '24%',
         })}
-        active={orderBy === 'label'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="label"
       >
-        Subnet Label
-      </StyledTableSortCell>
+        Subnet
+      </TableSortCell>
       <Hidden smDown>
-        <StyledTableSortCell
+        <TableSortCell
           active={orderBy === 'id'}
           direction={order}
           handleClick={handleOrderChange}
@@ -200,13 +298,18 @@ export const VPCSubnetsTable = (props: Props) => {
           sx={{ width: '10%' }}
         >
           Subnet ID
-        </StyledTableSortCell>
+        </TableSortCell>
       </Hidden>
-      <StyledTableCell sx={{ width: '18%' }}>Subnet IP Range</StyledTableCell>
+      <TableCell sx={{ width: '18%' }}>
+        Subnet {isDualStackEnabled ? 'IPv4' : 'IP'} Range
+      </TableCell>
+      {isDualStackEnabled && <TableCell>Subnet IPv6 Range</TableCell>}
       <Hidden smDown>
-        <StyledTableCell sx={{ width: '10%' }}>Linodes</StyledTableCell>
+        <TableCell
+          sx={{ width: '10%' }}
+        >{`${isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
       </Hidden>
-      <StyledTableCell></StyledTableCell>
+      <TableCell />
     </TableRow>
   );
 
@@ -218,16 +321,22 @@ export const VPCSubnetsTable = (props: Props) => {
             <TableCell>{subnet.id}</TableCell>
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
+          {isDualStackEnabled && (
+            <TableCell>{subnet.ipv6?.[0]?.range ?? '—'}</TableCell>
+          )}
           <Hidden smDown>
-            <TableCell>{subnet.linodes.length}</TableCell>
+            <TableCell>
+              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
+            </TableCell>
           </Hidden>
-          <TableCell align="right">
+          <TableCell actionCell>
             <SubnetActionMenu
               handleAssignLinodes={handleSubnetAssignLinodes}
               handleDelete={handleSubnetDelete}
-              handleEdit={handleEditSubnet}
+              handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
               numLinodes={subnet.linodes.length}
+              numNodebalancers={subnet.nodebalancers.length}
               subnet={subnet}
               vpcId={vpcId}
             />
@@ -236,27 +345,58 @@ export const VPCSubnetsTable = (props: Props) => {
       );
 
       const InnerTable = (
-        <Table aria-label="Linode" size="small">
-          <TableHead style={{ fontSize: '.875rem' }}>
-            {SubnetLinodeTableRowHead}
-          </TableHead>
-          <TableBody>
-            {subnet.linodes.length > 0 ? (
-              subnet.linodes.map((linodeInfo) => (
-                <SubnetLinodeRow
-                  handlePowerActionsLinode={handlePowerActionsLinode}
-                  handleUnassignLinode={handleSubnetUnassignLinode}
-                  key={linodeInfo.id}
-                  linodeId={linodeInfo.id}
-                  subnet={subnet}
-                  subnetId={subnet.id}
+        <>
+          <Table aria-label="Linode" size="small" striped={false}>
+            <TableHead
+              style={{
+                color: theme.tokens.color.Neutrals.White,
+              }}
+            >
+              {SubnetLinodeTableRowHead(isDualStackEnabled)}
+            </TableHead>
+            <TableBody>
+              {subnet.linodes.length > 0 ? (
+                subnet.linodes.map((linodeInfo) => (
+                  <SubnetLinodeRow
+                    handlePowerActionsLinode={handlePowerActionsLinode}
+                    handleUnassignLinode={handleSubnetUnassignLinode}
+                    isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+                    key={linodeInfo.id}
+                    linodeId={linodeInfo.id}
+                    subnet={subnet}
+                    subnetId={subnet.id}
+                    subnetInterfaces={linodeInfo.interfaces}
+                  />
+                ))
+              ) : (
+                <TableRowEmpty
+                  colSpan={isDualStackEnabled ? 8 : 6}
+                  message="No Linodes"
                 />
-              ))
-            ) : (
-              <TableRowEmpty colSpan={6} message={'No Linodes'} />
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+          {isNodebalancerVPCEnabled && subnet.nodebalancers?.length > 0 && (
+            <Table aria-label="NodeBalancers" size="small" striped={false}>
+              <TableHead
+                style={{
+                  color: theme.tokens.color.Neutrals.White,
+                }}
+              >
+                {SubnetNodebalancerTableRowHead}
+              </TableHead>
+              <TableBody>
+                {subnet.nodebalancers.map((nb) => (
+                  <SubnetNodeBalancerRow
+                    ipv4={nb.ipv4_range}
+                    key={nb.id}
+                    nodeBalancerId={nb.id}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </>
       );
 
       return {
@@ -272,111 +412,102 @@ export const VPCSubnetsTable = (props: Props) => {
     <>
       <Box display="flex" flexWrap="wrap" justifyContent="space-between">
         <DebouncedSearchTextField
-          sx={{
-            marginBottom: theme.spacing(2),
-            [theme.breakpoints.up('sm')]: {
-              width: '416px',
-            },
-            width: '250px',
-          }}
           debounceTime={250}
           hideLabel
           isSearching={false}
           label="Filter Subnets by label or id"
           onSearch={handleSearch}
           placeholder="Filter Subnets by label or id"
+          sx={{
+            marginBottom: theme.spacingFunction(16),
+            [theme.breakpoints.up('sm')]: {
+              width: '416px',
+            },
+            width: '250px',
+          }}
+          value={query ?? ''}
         />
         <Button
-          sx={{
-            marginBottom: theme.spacing(2),
-          }}
           buttonType="primary"
-          onClick={() => setSubnetCreateDrawerOpen(true)}
+          disabled={!permissions.create_vpc_subnet}
+          onClick={handleSubnetCreate}
+          sx={{
+            marginBottom: theme.spacingFunction(16),
+          }}
+          tooltipText={
+            !permissions.create_vpc_subnet
+              ? 'You do not have permission to create a VPC subnet.'
+              : undefined
+          }
         >
           Create Subnet
         </Button>
       </Box>
-      {subnetCreateDrawerOpen && (
-        <SubnetCreateDrawer
-          onClose={() => setSubnetCreateDrawerOpen(false)}
-          open={subnetCreateDrawerOpen}
-          vpcId={vpcId}
-        />
-      )}
+      <SubnetCreateDrawer
+        onClose={onCloseSubnetDrawer}
+        open={location.pathname.includes('subnets/create')}
+        vpcId={vpcId}
+      />
       <CollapsibleTable
-        TableRowEmpty={
-          <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
-        }
         TableItems={getTableItems()}
+        TableRowEmpty={
+          <TableRowEmpty colSpan={5} message="No Subnets are assigned." />
+        }
         TableRowHead={SubnetTableRowHead}
       />
       <PaginationFooter
-        count={subnets.data?.length || 0}
+        count={subnets.results || 0}
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {subnetUnassignLinodesDrawerOpen && (
-        <SubnetUnassignLinodesDrawer
-          onClose={() => {
-            setSubnetUnassignLinodesDrawerOpen(false);
-            setSelectedLinode(undefined);
-          }}
-          open={subnetUnassignLinodesDrawerOpen}
-          singleLinodeToBeUnassigned={selectedLinode}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
-      {subnetAssignLinodesDrawerOpen && (
-        <SubnetAssignLinodesDrawer
-          onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
-          open={subnetAssignLinodesDrawerOpen}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-          vpcRegion={vpcRegion}
-        />
-      )}
-      {deleteSubnetDialogOpen && (
-        <SubnetDeleteDialog
-          onClose={() => setDeleteSubnetDialogOpen(false)}
-          open={deleteSubnetDialogOpen}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
-      {editSubnetsDrawerOpen && (
-        <SubnetEditDrawer
-          onClose={() => setEditSubnetsDrawerOpen(false)}
-          open={editSubnetsDrawerOpen}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
-      {powerActionDialogOpen && (
-        <PowerActionsDialog
-          action={linodePowerAction ?? 'Reboot'}
-          isOpen={powerActionDialogOpen}
-          linodeId={selectedLinode?.id}
-          linodeLabel={selectedLinode?.label}
-          onClose={() => setPowerActionDialogOpen(false)}
-        />
-      )}
+      <SubnetUnassignLinodesDrawer
+        isFetching={isFetchingSubnet || isFetchingLinode}
+        linodeError={selectedLinodeError}
+        onClose={onCloseSubnetDrawer}
+        open={
+          params.subnetAction === 'unassign' ||
+          params.linodeAction === 'unassign'
+        }
+        singleLinodeToBeUnassigned={selectedLinode}
+        subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
+        vpcId={vpcId}
+      />
+      <SubnetAssignLinodesDrawer
+        isFetching={isFetchingSubnet}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'assign'}
+        subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
+        vpcId={vpcId}
+        vpcRegion={vpcRegion}
+      />
+      <SubnetDeleteDialog
+        isFetching={isFetchingSubnet}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'delete'}
+        subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
+        vpcId={vpcId}
+      />
+      <SubnetEditDrawer
+        isFetching={isFetchingSubnet}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'edit'}
+        subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
+        vpcId={vpcId}
+      />
+      <PowerActionsDialog
+        action={linodePowerAction ?? 'Reboot'}
+        isFetching={isFetchingLinode}
+        isOpen={params.linodeAction === 'power-action'}
+        linodeId={selectedLinode?.id}
+        linodeLabel={selectedLinode?.label}
+        onClose={onCloseSubnetDrawer}
+      />
     </>
   );
 };
-
-const StyledTableCell = styled(TableCell, {
-  label: 'StyledTableCell',
-})(({ theme }) => ({
-  borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  whiteSpace: 'nowrap',
-}));
-
-const StyledTableSortCell = styled(TableSortCell, {
-  label: 'StyledTableSortCell',
-})(({ theme }) => ({
-  borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  whiteSpace: 'nowrap',
-}));

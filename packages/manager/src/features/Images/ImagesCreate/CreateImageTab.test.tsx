@@ -1,21 +1,68 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
-import {
-  imageFactory,
-  linodeDiskFactory,
-  linodeFactory,
-  regionFactory,
-} from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { imageFactory, linodeDiskFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateImageTab } from './CreateImageTab';
 
+const queryMocks = vi.hoisted(() => ({
+  useLinodeQuery: vi.fn().mockReturnValue({}),
+  useAllLinodesQuery: vi.fn().mockReturnValue({}),
+  useAllLinodeDisksQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
+  useCreateImageMutation: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({ query: undefined }),
+  usePermissions: vi.fn().mockReturnValue({}),
+  useGetAllUserEntitiesByPermission: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+    useAllLinodeDisksQuery: queryMocks.useAllLinodeDisksQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
+    useCreateImageMutation: queryMocks.useCreateImageMutation,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+}));
+
+vi.mock('src/features/IAM/hooks/useGetAllUserEntitiesByPermission', () => ({
+  useGetAllUserEntitiesByPermission:
+    queryMocks.useGetAllUserEntitiesByPermission,
+}));
+
 describe('CreateImageTab', () => {
-  it('should render fields, titles, and buttons in their default state', () => {
+  beforeEach(() => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: { create_image: true },
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+  });
+
+  it('should render fields, titles, and buttons in their default state', async () => {
     const { getByLabelText, getByText } = renderWithTheme(<CreateImageTab />);
 
     expect(getByText('Select Linode & Disk')).toBeVisible();
@@ -45,22 +92,32 @@ describe('CreateImageTab', () => {
     const linode = linodeFactory.build();
     const disk = linodeDiskFactory.build();
 
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id/disks', () => {
-        return HttpResponse.json(makeResourcePage([disk]));
-      })
-    );
-
-    const { getByLabelText } = renderWithTheme(<CreateImageTab />, {
-      MemoryRouter: {
-        initialEntries: [
-          `/images/create/disk?selectedLinode=${linode.id}&selectedDisk=${disk.id}`,
-        ],
-      },
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
     });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linode,
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodeDisksQuery.mockReturnValue({
+      data: [disk],
+      isFetching: false,
+      error: null,
+    });
+    queryMocks.useSearch.mockReturnValue({
+      selectedDisk: disk.id,
+      selectedLinode: linode.id,
+    });
+
+    const { getByLabelText } = renderWithTheme(<CreateImageTab />);
 
     await waitFor(() => {
       expect(getByLabelText('Linode')).toHaveValue(linode.label);
@@ -69,6 +126,10 @@ describe('CreateImageTab', () => {
   });
 
   it('should render client side validation errors', async () => {
+    queryMocks.useSearch.mockReturnValue({
+      selectedDisk: undefined,
+      selectedLinode: undefined,
+    });
     const { getByText } = renderWithTheme(<CreateImageTab />);
 
     const submitButton = getByText('Create Image').closest('button');
@@ -83,24 +144,34 @@ describe('CreateImageTab', () => {
     const disk = linodeDiskFactory.build();
     const image = imageFactory.build();
 
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id/disks', () => {
-        return HttpResponse.json(makeResourcePage([disk]));
-      }),
-      http.post('*/v4/images', () => {
-        return HttpResponse.json(image);
-      })
-    );
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linode,
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodeDisksQuery.mockReturnValue({
+      data: [disk],
+      isFetching: false,
+      error: null,
+    });
+    queryMocks.useCreateImageMutation.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue(image),
+      isLoading: false,
+      error: null,
+    });
 
-    const {
-      findByText,
-      getByLabelText,
-      getByText,
-      queryByText,
-    } = renderWithTheme(<CreateImageTab />);
+    const { findByText, getByLabelText, getByText, queryByText } =
+      renderWithTheme(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -130,21 +201,35 @@ describe('CreateImageTab', () => {
     await findByText('Image scheduled for creation.');
   });
 
-  it('should render a notice if the user selects a Linode in a distributed compute region', async () => {
-    const region = regionFactory.build({ site_type: 'distributed' });
+  it('should render a notice if the user selects a Linode in a region that does not support image storage', async () => {
+    const region = regionFactory.build({ capabilities: [] });
     const linode = linodeFactory.build({ region: region.id });
 
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id', () => {
-        return HttpResponse.json(linode);
-      }),
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
-      })
-    );
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linode,
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodeDisksQuery.mockReturnValue({
+      data: [linode],
+      isFetching: false,
+      error: null,
+    });
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [region],
+      isLoading: false,
+      error: null,
+    });
 
     const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />);
 
@@ -156,42 +241,10 @@ describe('CreateImageTab', () => {
 
     await userEvent.click(linodeOption);
 
-    // Verify distributed compute region notice renders
     await findByText(
-      'This Linode is in a distributed compute region. Images captured from this Linode will be stored in the closest core site.'
+      'This Linode’s region doesn’t support local image storage.',
+      { exact: false }
     );
-  });
-
-  it('should render an encryption notice if disk encryption is enabled and the Linode is not in a distributed compute region', async () => {
-    const region = regionFactory.build({ site_type: 'core' });
-    const linode = linodeFactory.build({ region: region.id });
-
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id', () => {
-        return HttpResponse.json(linode);
-      }),
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />, {
-      flags: { linodeDiskEncryption: true },
-    });
-
-    const linodeSelect = getByLabelText('Linode');
-
-    await userEvent.click(linodeSelect);
-
-    const linodeOption = await findByText(linode.label);
-
-    await userEvent.click(linodeOption);
-
-    // Verify encryption notice renders
-    await findByText('Virtual Machine Images are not encrypted.');
   });
 
   it('should auto-populate image label based on linode and disk', async () => {
@@ -200,20 +253,31 @@ describe('CreateImageTab', () => {
     const disk2 = linodeDiskFactory.build();
     const image = imageFactory.build();
 
-    server.use(
-      http.get('*/v4/linode/instances', () => {
-        return HttpResponse.json(makeResourcePage([linode]));
-      }),
-      http.get('*/v4/linode/instances/:id', () => {
-        return HttpResponse.json(linode);
-      }),
-      http.get('*/v4/linode/instances/:id/disks', () => {
-        return HttpResponse.json(makeResourcePage([disk1, disk2]));
-      }),
-      http.post('*/v4/images', () => {
-        return HttpResponse.json(image);
-      })
-    );
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linode,
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllLinodeDisksQuery.mockReturnValue({
+      data: [disk1, disk2],
+      isFetching: false,
+      error: null,
+    });
+    queryMocks.useCreateImageMutation.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue(image),
+      isLoading: false,
+      error: null,
+    });
 
     const { findByText, getByLabelText, queryByText } = renderWithTheme(
       <CreateImageTab />

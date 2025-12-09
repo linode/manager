@@ -1,13 +1,16 @@
 import react from '@vitejs/plugin-react-swc';
-import svgr from 'vite-plugin-svgr';
-import { defineConfig } from 'vite';
 import { URL } from 'url';
+import { defineConfig } from 'vite';
+import svgr from 'vite-plugin-svgr';
 
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
-  plugins: [react(), svgr({ exportAsDefault: true })],
+  plugins: [
+    react(),
+    svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
+  ],
   build: {
     rollupOptions: {
       // Suppress "SOURCEMAP_ERROR" warnings.

@@ -1,9 +1,9 @@
+import { Button } from '@linode/ui';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Button } from '../Button/Button';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 const defaultList = Array.from({ length: 5 }, (_, index) => {
@@ -95,8 +95,8 @@ describe('Removable Selections List', () => {
     const { queryAllByText } = renderWithTheme(
       <RemovableSelectionsList
         {...props}
-        RemoveButton={() => <Button>Remove Linode</Button>}
         isRemovable
+        RemoveButton={() => <Button>Remove Linode</Button>}
       />
     );
     expect(queryAllByText('Remove Linode')).toHaveLength(5);

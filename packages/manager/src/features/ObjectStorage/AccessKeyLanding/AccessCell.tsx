@@ -1,10 +1,8 @@
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+import { Radio, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Check from 'src/assets/icons/monitor-ok.svg';
-import { Radio } from 'src/components/Radio/Radio';
-import { Tooltip } from 'src/components/Tooltip';
 
 interface RadioButton extends HTMLInputElement {
   name: string;
@@ -48,12 +46,12 @@ export const AccessCell = React.memo((props: AccessCellProps) => {
 
   const radioBtn = (
     <Radio
-      inputProps={{
-        'aria-label': `${scope} for ${scopeDisplay}`,
-      }}
       checked={active}
       data-testid={`perm-${scopeDisplay}-radio`}
       disabled={disabled}
+      inputProps={{
+        'aria-label': `${scope} for ${scopeDisplay}`,
+      }}
       name={scopeDisplay}
       onChange={onChange}
       value={scope}
@@ -71,10 +69,11 @@ export const AccessCell = React.memo((props: AccessCellProps) => {
 
 const StyledCheckIcon = styled('span', {
   label: 'StyledCheckIcon',
-})(() => ({
+})(({ theme }) => ({
   '& svg': {
     height: 25,
     width: 25,
+    color: theme.tokens.alias.Content.Icon.Positive,
   },
   alignItems: 'center',
   display: 'flex',

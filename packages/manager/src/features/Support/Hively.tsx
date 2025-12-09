@@ -1,14 +1,11 @@
-import { Stack } from 'src/components/Stack';
+import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 
 import { OFFICIAL_USERNAMES } from './ticketUtils';
-import { Box } from 'src/components/Box';
 
 interface Props {
   /** The username of the Linode user who created the ticket. */
@@ -68,10 +65,10 @@ export const Hively = (props: Props) => {
           to={href + '3'}
         >
           <img
+            alt="Happy face emoji"
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/841/px_25/Happy_square_gradient_icon.png?1704911301'
             }
-            alt="Happy face emoji"
           />
         </Link>
         <Link
@@ -81,10 +78,10 @@ export const Hively = (props: Props) => {
           to={href + '2'}
         >
           <img
+            alt="Indifferent face emoji"
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/842/px_25/Neutral_square_gradient_icon.png?1704911301'
             }
-            alt="Indifferent face emoji"
           />
         </Link>
         <Link
@@ -94,10 +91,10 @@ export const Hively = (props: Props) => {
           to={href + '1'}
         >
           <img
+            alt="Sad Face emoji"
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/843/px_25/Unhappy_square_gradient_icon.png?1704911301'
             }
-            alt="Sad Face emoji"
           />
         </Link>
       </Stack>

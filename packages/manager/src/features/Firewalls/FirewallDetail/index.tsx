@@ -1,26 +1,42 @@
+import {
+  useAllFirewallDevicesQuery,
+  useFirewallQuery,
+  useFirewallSettingsQuery,
+  useMutateFirewall,
+} from '@linode/queries';
+import {
+  Chip,
+  CircleProgress,
+  ErrorState,
+  LinkButton,
+  Paper,
+  Typography,
+} from '@linode/ui';
+import { NotFound } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LinkButton } from 'src/components/LinkButton';
-import { NotFound } from 'src/components/NotFound';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useTabs } from 'src/hooks/useTabs';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { checkIfUserCanModifyFirewall } from '../shared';
+import {
+  FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
+  getFirewallDefaultEntities,
+} from '../components/FirewallSelectOption.utils';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -35,23 +51,33 @@ const FirewallDeviceLanding = React.lazy(() =>
 );
 
 export const FirewallDetail = () => {
-  const { id, tab } = useParams<{ id: string; tab?: string }>();
-  const history = useHistory();
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+  const { id } = useParams({
+    strict: false,
+  });
+
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const firewallId = Number(id);
 
-  const userCanModifyFirewall = checkIfUserCanModifyFirewall(
-    firewallId,
-    profile,
-    grants
+  const { data: firewallSettings } = useFirewallSettingsQuery({
+    enabled: isLinodeInterfacesEnabled,
+  });
+
+  const defaultEntities =
+    firewallSettings &&
+    getFirewallDefaultEntities(firewallId, firewallSettings);
+
+  const { data: permissions } = usePermissions(
+    'firewall',
+    ['update_firewall_rules', 'update_firewall'],
+    firewallId
   );
 
   const { data: allDevices } = useAllFirewallDevicesQuery(firewallId);
@@ -62,28 +88,47 @@ export const FirewallDetail = () => {
         acc.linodeCount += 1;
       } else if (device.entity.type === 'nodebalancer') {
         acc.nodebalancerCount += 1;
+      } else if (
+        isLinodeInterfacesEnabled &&
+        device.entity.type === 'linode_interface' &&
+        device.entity.parent_entity
+      ) {
+        const linodeId = device.entity.parent_entity.id;
+        if (!acc.seenLinodeIdsForInterfaces.has(linodeId)) {
+          acc.linodeCount += 1;
+        }
+        acc.seenLinodeIdsForInterfaces.add(linodeId);
       }
       return acc;
     },
-    { linodeCount: 0, nodebalancerCount: 0 }
-  ) || { linodeCount: 0, nodebalancerCount: 0 };
-
-  const tabs = [
     {
-      routeName: `/firewalls/${id}/rules`,
+      linodeCount: 0,
+      nodebalancerCount: 0,
+      seenLinodeIdsForInterfaces: new Set<number>(),
+    }
+  ) || {
+    linodeCount: 0,
+    nodebalancerCount: 0,
+  };
+
+  const { handleTabChange, tabIndex, tabs } = useTabs([
+    {
       title: 'Rules',
+      to: `/firewalls/$id/rules`,
     },
     {
-      routeName: `/firewalls/${id}/linodes`,
       title: `Linodes (${linodeCount})`,
+      to: `/firewalls/$id/linodes`,
     },
     {
-      routeName: `/firewalls/${id}/nodebalancers`,
       title: `NodeBalancers (${nodebalancerCount})`,
+      to: `/firewalls/$id/nodebalancers`,
     },
-  ];
-
-  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
+    {
+      title: 'Metrics',
+      to: `/firewalls/$id/metrics`,
+    },
+  ]);
 
   const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
@@ -133,8 +178,10 @@ export const FirewallDetail = () => {
           },
           pathname: `/firewalls/${firewall.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_firewall}
         docsLabel="Docs"
-        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
+        spacingBottom={4}
         title="Firewall Details"
       />
       {secureVMFirewallBanner && secureVMFirewallBanner.firewallDetails && (
@@ -150,37 +197,69 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(i) => history.push(tabs[i].routeName)}
-      >
-        <TabLinkList tabs={tabs} />
-
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <FirewallRulesLanding
-              disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
-              rules={firewall.rules}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <FirewallDeviceLanding
-              disabled={!userCanModifyFirewall}
-              firewallId={firewallId}
-              firewallLabel={firewall.label}
-              type="linode"
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <FirewallDeviceLanding
-              disabled={!userCanModifyFirewall}
-              firewallId={firewallId}
-              firewallLabel={firewall.label}
-              type="nodebalancer"
-            />
-          </SafeTabPanel>
-        </TabPanels>
+      {isLinodeInterfacesEnabled &&
+        defaultEntities &&
+        defaultEntities.length > 0 && (
+          <Paper
+            sx={(theme) => ({
+              alignItems: 'center',
+              columnGap: 1,
+              display: 'flex',
+              flexWrap: 'wrap',
+              margin: `${theme.spacingFunction(8)} 0`,
+              padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(
+                16
+              )}`,
+              rowGap: 1,
+            })}
+          >
+            <Typography
+              sx={(theme) => ({ marginRight: theme.spacingFunction(8) })}
+            >
+              <strong>Default</strong>
+            </Typography>
+            {defaultEntities.map((defaultEntity) => (
+              <Chip
+                key={defaultEntity}
+                label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}
+                size="small"
+              />
+            ))}
+          </Paper>
+        )}
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <FirewallRulesLanding
+                disabled={!permissions.update_firewall_rules}
+                firewallID={firewallId}
+                rules={firewall.rules}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <FirewallDeviceLanding
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="linode"
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <FirewallDeviceLanding
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="nodebalancer"
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <CloudPulseDashboardWithFilters
+                resource={firewallId}
+                serviceType="firewall"
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
       <GenerateFirewallDialog
         onClose={() => setIsGenerateDialogOpen(false)}

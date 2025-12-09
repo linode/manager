@@ -22,8 +22,8 @@ describe('CheckoutBar', () => {
     );
 
     expect(getByText('Checkout')).toBeVisible();
-    expect(getByTestId('Button')).toBeInTheDocument();
-    expect(getByTestId('Button')).toHaveTextContent('Submit');
+    expect(getByTestId('button')).toBeInTheDocument();
+    expect(getByTestId('button')).toHaveTextContent('Submit');
     expect(getByText('Child items can go here!')).toBeInTheDocument();
   });
 
@@ -50,12 +50,12 @@ describe('CheckoutBar', () => {
   });
 
   it('should disable submit button and show loading icon if isMakingRequest is true', () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, getByRole } = renderWithTheme(
       <CheckoutBar {...defaultArgs} isMakingRequest={true} />
     );
 
-    expect(getByTestId('Button')).toBeDisabled();
-    expect(getByTestId('loadingIcon')).toBeInTheDocument();
+    expect(getByTestId('button')).toBeDisabled();
+    expect(getByRole('progressbar')).toBeInTheDocument();
   });
 
   it("should disable submit button and show 'Submit' text if disabled prop is set", () => {
@@ -63,7 +63,7 @@ describe('CheckoutBar', () => {
       <CheckoutBar {...defaultArgs} disabled />
     );
 
-    const button = getByTestId('Button');
+    const button = getByTestId('button');
     expect(button).toBeDisabled();
     expect(button).toHaveTextContent('Submit');
   });

@@ -1,7 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import React from 'react';
 
-import { accountUserFactory, profileFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { accountUserFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserEmailPanel } from './UserEmailPanel';

@@ -1,14 +1,13 @@
+import { List, ListItem } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 import type { ResourcesLinks } from './ResourcesLinksTypes';
 
 export const ResourceLinks = (props: ResourcesLinks) => {
-  const { linkAnalyticsEvent, links } = props;
+  const { linkAnalyticsEvent, links, onClick } = props;
 
   return (
     <List>
@@ -16,7 +15,10 @@ export const ResourceLinks = (props: ResourcesLinks) => {
         <ListItem key={linkData.to}>
           <Link
             external={linkData.external}
-            onClick={getLinkOnClick(linkAnalyticsEvent, linkData.text)}
+            onClick={() => {
+              getLinkOnClick(linkAnalyticsEvent, linkData.text);
+              onClick?.();
+            }}
             to={linkData.to}
           >
             {linkData.text}

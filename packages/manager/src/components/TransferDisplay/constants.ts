@@ -2,7 +2,7 @@
 // Components constants
 // ====================
 export const NETWORK_TRANSFER_USAGE_AND_COST_LINK =
-  'https://www.linode.com/docs/products/platform/get-started/guides/network-transfer/';
+  'https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs';
 
 // ====================
 // Test constants

@@ -7,7 +7,7 @@ We use [Material-UI](https://mui.com/material-ui/getting-started/overview/) as t
 All MUI components have abstractions in the Cloud Manager codebase, meaning you will use relative imports to use them instead of importing from MUI directly:
 
 ```ts
-import { Typography } from "src/components/Typography"; // NOT from '@mui/material/Typography'
+import { Typography } from "@linode/ui"; // NOT from '@mui/material/Typography'
 ```
 
 We do this because it gives us the ability to customize the component and still keep imports consistent. It also gives us flexibility if we ever wanted to change out the underlying component library.
@@ -22,9 +22,9 @@ We use [Storybook](https://storybook.js.org/) to document our UI component libra
 
 #### Running Storybook Locally
 
-`yarn build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
+`pnpm run --filter linode-manager build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
 
-`yarn storybook`: starts the local dev server at `localhost:6006`
+`pnpm storybook`: starts the local dev server at `localhost:6006`
 
 #### Adding Stories
 

@@ -1,10 +1,9 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { CheckoutBar } from './CheckoutBar';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof CheckoutBar>;
 
@@ -26,7 +25,7 @@ const meta: Meta<typeof CheckoutBar> = {
   },
   component: CheckoutBar,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '2em' }}>
         <Story />
       </div>

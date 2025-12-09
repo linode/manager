@@ -1,7 +1,8 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4';
+import { useAllFirewallDevicesQuery } from '@linode/queries';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -9,10 +10,10 @@ import {
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { LinodeFirewallsActionMenu } from './LinodeFirewallsActionMenu';
+
+import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface LinodeFirewallsRowProps {
   firewall: Firewall;
@@ -39,9 +40,7 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
   return (
     <TableRow data-qa-linode-firewall-row key={`firewall-${firewallID}`}>
       <TableCell data-qa-firewall-label>
-        <Link tabIndex={0} to={`/firewalls/${firewallID}`}>
-          {label}
-        </Link>
+        <Link to={`/firewalls/${firewallID}`}>{label}</Link>
       </TableCell>
       <TableCell data-qa-firewall-status statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -51,6 +50,7 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       <TableCell actionCell>
         <LinodeFirewallsActionMenu
           firewallID={firewallID}
+          linodeID={linodeID}
           onUnassign={() => onClickUnassign(firewallDevice, firewall)}
         />
       </TableCell>

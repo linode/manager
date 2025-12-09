@@ -1,7 +1,6 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Checkbox } from '@linode/ui';
 import * as React from 'react';
 
-import { Checkbox } from 'src/components/Checkbox';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -10,11 +9,12 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
-import { ConfigSelection } from './utilities';
+import type { ConfigSelection } from './utilities';
+import type { Config } from '@linode/api-v4/lib/linodes';
 
 export interface ConfigsProps {
-  configSelection: ConfigSelection;
   configs: Config[];
+  configSelection: ConfigSelection;
   handleSelect: (id: number) => void;
 }
 

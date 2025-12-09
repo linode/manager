@@ -1,8 +1,9 @@
-import { accountTransferFactory } from 'src/factories/account';
 import {
   regionFactory,
   regionWithDynamicPricingFactory,
-} from 'src/factories/regions';
+} from '@linode/utilities';
+
+import { accountTransferFactory } from 'src/factories/account';
 
 import {
   calculatePoolUsagePct,
@@ -20,7 +21,8 @@ const mockRegions = [
   regionWithDynamicPricingFactory.build(),
 ];
 
-vi.mock('src/queries/regions/regions', () => ({
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: vi.fn(() => mockRegions),
 }));
 

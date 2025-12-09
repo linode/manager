@@ -1,6 +1,5 @@
+import { isNumber } from '@linode/utilities';
 import * as React from 'react';
-
-import { isNumber } from 'src/utilities/isNumber';
 
 interface CurrencyFormatterProps {
   /**
@@ -22,11 +21,15 @@ interface CurrencyFormatterProps {
 }
 
 export const Currency = (props: CurrencyFormatterProps) => {
-  const { dataAttrs, quantity, wrapInParentheses } = props;
+  const { dataAttrs, decimalPlaces, quantity, wrapInParentheses } = props;
+
+  // Use the default value (2) when decimalPlaces is negative or undefined.
+  const minimumFractionDigits =
+    decimalPlaces !== undefined && decimalPlaces >= 0 ? decimalPlaces : 2;
 
   const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
-    minimumFractionDigits: props.decimalPlaces ?? 2,
+    minimumFractionDigits,
     style: 'currency',
   });
 

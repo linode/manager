@@ -1,12 +1,14 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import { Typography } from 'src/components/Typography';
-import { ExtendedIssue } from 'src/queries/managed/types';
+import { Link } from 'src/components/Link';
 
 import { StyledButton, StyledGrid } from './MonitorTickets.styles';
+
+import type { ExtendedIssue } from 'src/queries/managed/types';
 
 interface MonitorTicketsProps {
   issues: ExtendedIssue[];
@@ -14,7 +16,7 @@ interface MonitorTicketsProps {
 
 export const MonitorTickets = (props: MonitorTicketsProps) => {
   const { issues } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
 
@@ -52,16 +54,21 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
           </Typography>
         ) : (
           <StyledButton
+            buttonType="primary"
             onClick={() =>
-              history.push({
-                pathname: '/support/tickets',
-                state: {
-                  open: true,
-                  title: 'Managed monitor issue',
+              navigate({
+                search: {
+                  dialogOpen: true,
                 },
+                state: (prev) => ({
+                  ...prev,
+                  supportTicketFormFields: {
+                    title: 'Managed monitor issue',
+                  },
+                }),
+                to: '/support/tickets/open',
               })
             }
-            buttonType="primary"
           >
             Open a ticket
           </StyledButton>

@@ -1,27 +1,29 @@
 import {
-  PLACEMENT_GROUP_TYPES,
   PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import {
+  useAllLinodesQuery,
+  useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
+  ActionsPanel,
+  Box,
+  Divider,
+  Drawer,
+  Notice,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Divider } from 'src/components/Divider';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import {
-  useAllPlacementGroupsQuery,
-  useAssignLinodesToPlacementGroup,
-} from 'src/queries/placementGroups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,
@@ -43,10 +45,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
       region: selectedPlacementGroup?.region,
     }
   );
-  const {
-    data: allPlacementGroups,
-    error: allPlacementGroupsError,
-  } = useAllPlacementGroupsQuery({});
+  const { data: allPlacementGroups, error: allPlacementGroupsError } =
+    useAllPlacementGroupsQuery({});
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
@@ -55,10 +55,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     placementGroup: selectedPlacementGroup,
     region,
   });
-  const {
-    isPending,
-    mutateAsync: assignLinodes,
-  } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
+  const { isPending, mutateAsync: assignLinodes } =
+    useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
@@ -76,9 +74,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     handleResetForm();
   };
 
-  const linodesFromAllPlacementGroups = getLinodesFromAllPlacementGroups(
-    allPlacementGroups
-  );
+  const linodesFromAllPlacementGroups =
+    getLinodesFromAllPlacementGroups(allPlacementGroups);
 
   const getLinodeSelectOptions = (): Linode[] => {
     // We filter out Linodes that are already assigned to a Placement Group
@@ -98,11 +95,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return null;
   }
 
-  const {
-    label,
-    placement_group_policy,
-    placement_group_type,
-  } = selectedPlacementGroup;
+  const { label, placement_group_policy, placement_group_type } =
+    selectedPlacementGroup;
   const linodeSelectLabel = region
     ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
@@ -172,12 +166,12 @@ export const PlacementGroupsAssignLinodesDrawer = (
           </Typography>
           <Box sx={{ alignItems: 'flex-end', display: 'flex' }}>
             <LinodeSelect
-              onSelectionChange={(value) => {
-                setSelectedLinode(value);
-              }}
               checkIsOptionEqualToValue
               disabled={hasReachedCapacity || isPending}
               label={linodeSelectLabel}
+              onSelectionChange={(value) => {
+                setSelectedLinode(value);
+              }}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"
               sx={{ flexGrow: 1 }}
@@ -185,7 +179,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
             />
             <TooltipIcon
               placement="right"
-              status="help"
+              status="info"
               sxTooltipIcon={{ position: 'relative', top: 4 }}
               text="Only displaying Linodes that aren’t assigned to a Placement Group."
             />

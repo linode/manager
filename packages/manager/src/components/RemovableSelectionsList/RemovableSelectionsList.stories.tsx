@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+import { Button } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from '../Button/Button';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 import type { RemovableItem } from './RemovableSelectionsList';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof RemovableSelectionsList>;
 
@@ -129,10 +128,13 @@ export const WithReadableRemoveCTA: Story = {
       return (
         <>
           <RemovableSelectionsList
+            headerText="Linodes to remove"
+            noDataText="No Linodes available"
+            onRemove={handleRemove}
             RemoveButton={() => (
               <Button
                 sx={(theme) => ({
-                  fontFamily: theme.font.normal,
+                  font: theme.font.normal,
                   fontSize: '0.875rem',
                 })}
                 variant="text"
@@ -140,9 +142,6 @@ export const WithReadableRemoveCTA: Story = {
                 Remove
               </Button>
             )}
-            headerText="Linodes to remove"
-            noDataText="No Linodes available"
-            onRemove={handleRemove}
             selectionData={data}
           />
           <Button onClick={resetList} sx={{ marginTop: 2 }}>

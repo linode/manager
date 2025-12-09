@@ -1,7 +1,6 @@
-import { makeStyles } from 'tss-react/mui';
+import { ActionsPanel } from '@linode/ui';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { makeStyles } from 'tss-react/mui';
 
 import { CloseTicketLink } from '../CloseTicketLink';
 
@@ -33,12 +32,12 @@ export const ReplyActions = (props: Props) => {
     <>
       {closable && <CloseTicketLink ticketId={ticketId} />}
       <ActionsPanel
+        className={classes.actions}
         primaryButtonProps={{
           label: 'Add Update',
           loading: isSubmitting,
           onClick: handleSubmitForm,
         }}
-        className={classes.actions}
       />
     </>
   );

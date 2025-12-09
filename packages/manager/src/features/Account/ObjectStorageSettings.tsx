@@ -1,22 +1,29 @@
+import { useAccountSettings, useProfile } from '@linode/queries';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  Notice,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { useAccountSettings } from 'src/queries/account/settings';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
-import { useProfile } from 'src/queries/profile/profile';
+
+import { usePermissions } from '../IAM/hooks/usePermissions';
 
 export const ObjectStorageSettings = () => {
   const { data: profile } = useProfile();
   const { data: accountSettings, isLoading } = useAccountSettings();
+
+  const { data: permissions } = usePermissions('account', [
+    'update_account_settings',
+  ]);
 
   const {
     error,
@@ -27,9 +34,8 @@ export const ObjectStorageSettings = () => {
 
   const username = profile?.username;
 
-  const [isCancelDialogOpen, setIsCancelDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCancelDialogOpen, setIsCancelDialogOpen] =
+    React.useState<boolean>(false);
 
   const handleCloseCancelDialog = () => {
     setIsCancelDialogOpen(false);
@@ -51,9 +57,10 @@ export const ObjectStorageSettings = () => {
 
   return (
     <>
-      <Accordion defaultExpanded heading="Object Storage">
+      <Paper data-testid="object-storage">
+        <Typography variant="h2">Object Storage</Typography>
         {accountSettings?.object_storage === 'active' ? (
-          <Stack spacing={2}>
+          <Stack mt={1} spacing={2}>
             <Typography variant="body1">
               Object Storage is enabled on your account. Upon cancellation, all
               Object Storage Access Keys will be revoked, all buckets will be
@@ -62,6 +69,7 @@ export const ObjectStorageSettings = () => {
             <Box>
               <Button
                 buttonType="outlined"
+                disabled={!permissions.update_account_settings}
                 onClick={() => setIsCancelDialogOpen(true)}
               >
                 Cancel Object Storage
@@ -82,7 +90,7 @@ export const ObjectStorageSettings = () => {
             .
           </Typography>
         )}
-      </Accordion>
+      </Paper>
       <TypeToConfirmDialog
         entity={{
           action: 'cancellation',
@@ -91,6 +99,7 @@ export const ObjectStorageSettings = () => {
           subType: 'ObjectStorage',
           type: 'AccountSetting',
         }}
+        errors={error}
         label="Username"
         loading={isCancelLoading}
         onClick={handleCancelObjectStorage}
@@ -98,7 +107,6 @@ export const ObjectStorageSettings = () => {
         open={isCancelDialogOpen}
         title="Cancel Object Storage"
       >
-        {error && <Notice text={error[0].reason} variant="error" />}
         <Notice variant="warning">
           <Typography sx={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Canceling Object Storage will permanently

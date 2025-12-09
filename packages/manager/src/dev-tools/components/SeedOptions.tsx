@@ -29,18 +29,20 @@ export const SeedOptions = ({
             .filter((dbSeeder) => dbSeeder.group.id === group)
             .map((dbSeeder) => (
               <li key={dbSeeder.id}>
-                <input
-                  checked={seeders.includes(dbSeeder.id)}
-                  disabled={disabled}
-                  onChange={(e) => onToggleSeeder(e, dbSeeder.id)}
-                  style={{ marginRight: 12 }}
-                  type="checkbox"
-                />
-                <span title={dbSeeder.desc || dbSeeder.label}>
+                <label title={dbSeeder.desc || dbSeeder.label}>
+                  <input
+                    checked={seeders.includes(dbSeeder.id)}
+                    disabled={disabled}
+                    onChange={(e) => onToggleSeeder(e, dbSeeder.id)}
+                    type="checkbox"
+                  />
                   {dbSeeder.label}
-                </span>
+                </label>
                 {dbSeeder.canUpdateCount && (
                   <input
+                    aria-label={`Value for ${dbSeeder.label}`}
+                    disabled={disabled || !seeders.includes(dbSeeder.id)}
+                    min={0}
                     onBlur={(e) => {
                       const value = e.target.value;
                       if (value === '') {
@@ -61,9 +63,6 @@ export const SeedOptions = ({
                         e.target.value = '';
                       }
                     }}
-                    aria-label={`Value for ${dbSeeder.label}`}
-                    disabled={disabled || !seeders.includes(dbSeeder.id)}
-                    min={0}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
                     value={seedsCountMap[dbSeeder.id] || '0'}

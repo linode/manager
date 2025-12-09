@@ -25,6 +25,7 @@ import type {
   Token,
   User,
 } from '@linode/api-v4';
+import type { APIErrorContents } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch account and mocks response.
@@ -229,7 +230,7 @@ export const mockUpdateUserGrants = (
  * @returns Cypress chainable.
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('account/entity-transfers'));
+  return cy.intercept('POST', apiMatcher('account/service-transfers'));
 };
 
 /**
@@ -244,7 +245,7 @@ export const mockInitiateEntityTransferError = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher('account/entity-transfers'),
+    apiMatcher('account/service-transfers'),
     makeErrorResponse(errorMessage)
   );
 };
@@ -271,38 +272,61 @@ export const mockGetEntityTransfers = (
   received: EntityTransfer[],
   sent: EntityTransfer[]
 ) => {
-  return cy.intercept('GET', apiMatcher('account/entity-transfers*'), (req) => {
-    const filters = getFilters(req);
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/service-transfers*'),
+    (req) => {
+      const filters = getFilters(req);
 
-    if (filters?.['status'] === 'pending') {
-      req.reply(paginateResponse(pending));
-      return;
-    }
-
-    if (filters?.['+and'] && Array.isArray(filters['+and'])) {
-      const compositeFilters: Record<string, unknown>[] = filters['+and'];
-
-      // Confirm that `is_sender` is set, and, if so, that it has the expected value.
-      const hasTrueSenderValue = compositeFilters.some(
-        (compositeFilter) => compositeFilter['is_sender'] === true
-      );
-      const hasFalseSenderValue = compositeFilters.some(
-        (compositeFilter) => compositeFilter['is_sender'] === false
-      );
-
-      if (hasTrueSenderValue) {
-        req.reply(paginateResponse(sent));
+      if (filters?.['status'] === 'pending') {
+        req.reply(paginateResponse(pending));
         return;
       }
 
-      if (hasFalseSenderValue) {
-        req.reply(paginateResponse(received));
-        return;
-      }
-    }
+      if (filters?.['+and'] && Array.isArray(filters['+and'])) {
+        const compositeFilters: Record<string, unknown>[] = filters['+and'];
 
-    req.continue();
-  });
+        // Confirm that `is_sender` is set, and, if so, that it has the expected value.
+        const hasTrueSenderValue = compositeFilters.some(
+          (compositeFilter) => compositeFilter['is_sender'] === true
+        );
+        const hasFalseSenderValue = compositeFilters.some(
+          (compositeFilter) => compositeFilter['is_sender'] === false
+        );
+
+        if (hasTrueSenderValue) {
+          req.reply(paginateResponse(sent));
+          return;
+        }
+
+        if (hasFalseSenderValue) {
+          req.reply(paginateResponse(received));
+          return;
+        }
+      }
+
+      req.continue();
+    }
+  );
+};
+
+/**
+ * Intercepts GET request to fetch service transfers and mocks an error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetEntityTransfersError = (
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 500
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/service-transfers*'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };
 
 /**
@@ -319,7 +343,7 @@ export const mockReceiveEntityTransfer = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`account/entity-transfers/${token}`),
+    apiMatcher(`account/service-transfers/${token}`),
     transfer
   );
 };
@@ -336,7 +360,7 @@ export const mockAcceptEntityTransfer = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher(`account/entity-transfers/${token}/accept`),
+    apiMatcher(`account/service-transfers/${token}/accept`),
     {}
   );
 };
@@ -365,6 +389,25 @@ export const mockUpdateAccountSettings = (
   settings: AccountSettings
 ): Cypress.Chainable<null> => {
   return cy.intercept('PUT', apiMatcher('account/settings'), settings);
+};
+
+/**
+ * Intercepts PUT request to update account settings and mocks an API error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountSettingsError = (
+  errorContents: APIErrorContents = 'An unknown error has occurred',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('account/settings'),
+    makeErrorResponse(errorContents, statusCode)
+  );
 };
 
 /**
@@ -574,6 +617,23 @@ export const mockGetAccountAgreements = (
 };
 
 /**
+ * Intercepts POST request to update account agreements and mocks response.
+ *
+ * @param agreements - Agreements with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountAgreements = (
+  agreements: Agreements
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/agreements`),
+    makeResponse(agreements)
+  );
+};
+
+/**
  * Intercepts GET request to fetch child accounts and mocks the response.
  *
  * @param childAccounts - Child account objects with which to mock response.
@@ -689,7 +749,7 @@ export const mockGetMaintenance = (
   return cy.intercept('GET', apiMatcher(`account/maintenance*`), (req) => {
     const filters = getFilters(req);
 
-    if (filters?.['status'] === 'completed') {
+    if (JSON.stringify(filters?.['status']).includes('completed')) {
       req.reply(paginateResponse(accountCompletedMaintenance));
     } else {
       req.reply(paginateResponse(accountPendingMaintenance));
@@ -704,4 +764,36 @@ export const mockGetMaintenance = (
  */
 export const interceptGetAccountAvailability = (): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('account/availability*'));
+};
+
+/**
+ * Mocks POST request to enable the Linode Managed.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockEnableLinodeManaged = (): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/settings/managed-enable'),
+    makeResponse()
+  );
+};
+
+/**
+ * Mocks POST request to to enable the Linode Managed and mocks an error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockEnableLinodeManagedError = (
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 400
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/settings/managed-enable'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };

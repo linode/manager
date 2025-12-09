@@ -1,28 +1,28 @@
-import { Typography } from '@mui/material';
+import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from 'src/components/Hidden';
-import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
-import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
+import { LinodeEntityDetailHeaderMaintenancePolicy } from './LinodeEntityDetailHeaderMaintenancePolicy';
 import { getLinodeIconStatus } from './LinodesLanding/utils';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { Config, LinodeBackups } from '@linode/api-v4';
+import type {
+  Config,
+  LinodeBackups,
+  MaintenancePolicySlug,
+} from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
-import type { TypographyProps } from 'src/components/Typography';
+import type { TypographyProps } from '@linode/ui';
+import type { LinodeMaintenance } from 'src/utilities/linodes';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -47,8 +47,10 @@ export interface HeaderProps {
   isSummaryView?: boolean;
   linodeId: number;
   linodeLabel: string;
+  linodeMaintenancePolicySet: MaintenancePolicySlug | undefined;
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
+  maintenance: LinodeMaintenance | null;
   openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
@@ -74,6 +76,8 @@ export const LinodeEntityDetailHeader = (
     linodeLabel,
     linodeRegionDisplay,
     linodeStatus,
+    linodeMaintenancePolicySet,
+    maintenance,
     openNotificationMenu,
     progress,
     transitionText,
@@ -81,28 +85,21 @@ export const LinodeEntityDetailHeader = (
     variant,
   } = props;
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linodeId,
-  });
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const isRunning = linodeStatus === 'running';
-  const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
 
-  const handleConsoleButtonClick = (id: number) => {
-    sendLinodeActionMenuItemEvent('Launch Console');
-    lishLaunch(id);
-  };
-
-  const isRebootNeeded =
-    isRunning &&
-    configs?.some((config) =>
-      config.interfaces.some(
-        (linodeInterface) =>
-          linodeInterface.purpose === 'vpc' && !linodeInterface.active
-      )
-    );
+  const isRebootNeeded = React.useMemo(
+    () =>
+      isRunning &&
+      configs?.some((config) =>
+        config.interfaces?.some(
+          (linodeInterface) =>
+            linodeInterface.purpose === 'vpc' && !linodeInterface.active
+        )
+      ),
+    [configs, isRunning]
+  );
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
@@ -116,29 +113,6 @@ export const LinodeEntityDetailHeader = (
     // to display "Cloning to 'destination-linode'.
     formattedTransitionText !== formattedStatus;
 
-  const sxActionItem = {
-    '&:focus': {
-      color: theme.color.white,
-    },
-    '&:hover': {
-      '&[aria-disabled="true"]': {
-        color: theme.color.disabledText,
-      },
-
-      color: theme.color.white,
-    },
-    '&[aria-disabled="true"]': {
-      background: 'transparent',
-      color: theme.color.disabledText,
-    },
-    background: 'transparent',
-    color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.normal,
-    fontSize: '0.875rem',
-    height: theme.spacing(5),
-    minWidth: 'auto',
-  };
-
   const sxBoxFlex = {
     alignItems: 'center',
     display: 'flex',
@@ -147,28 +121,46 @@ export const LinodeEntityDetailHeader = (
   return (
     <EntityHeader
       isSummaryView={isSummaryView}
-      title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
+      title={
+        <StyledLink params={{ linodeId }} to="/linodes/$linodeId">
+          {linodeLabel}
+        </StyledLink>
+      }
       variant={variant}
     >
-      <Box sx={sxBoxFlex}>
+      <Box
+        sx={(theme) => ({
+          ...sxBoxFlex,
+          gap: theme.spacingFunction(8),
+          flexWrap: 'wrap',
+          padding: `${theme.spacingFunction(6)} 0 ${theme.spacingFunction(6)} ${theme.spacingFunction(16)}`,
+        })}
+      >
         <Stack
           alignItems="center"
           aria-label={`Linode status ${linodeStatus}`}
           data-qa-linode-status
           direction="row"
-          spacing={1.5}
-          sx={{ paddingX: 2 }}
+          spacing={1.25}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
-          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {formattedStatus}
           </Typography>
         </Stack>
         {isRebootNeeded && (
           <TooltipIcon
-            status="help"
-            sxTooltipIcon={{ padding: 0 }}
+            status="info"
+            sxTooltipIcon={{
+              padding: `0 ${theme.spacingFunction(4)} 0 0`,
+            }}
             text={VPC_REBOOT_MESSAGE}
+          />
+        )}
+        {isVMHostMaintenanceEnabled && (
+          <LinodeEntityDetailHeaderMaintenancePolicy
+            linodeMaintenancePolicySet={linodeMaintenancePolicySet}
+            maintenance={maintenance}
           />
         )}
         {hasSecondaryStatus && (
@@ -179,43 +171,13 @@ export const LinodeEntityDetailHeader = (
           >
             <ProgressDisplay
               progress={progress ?? 0}
-              sx={{ color: 'primary.main', fontFamily: theme.font.bold }}
+              sx={{ color: 'primary.main', font: theme.font.bold }}
               text={formattedTransitionText}
             />
           </Button>
         )}
       </Box>
       <Box sx={sxBoxFlex}>
-        <Hidden mdDown>
-          <Button
-            onClick={() =>
-              handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
-            }
-            buttonType="primary"
-            disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
-            sx={sxActionItem}
-          >
-            {isRunning ? 'Power Off' : 'Power On'}
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={isOffline || isLinodesGrantReadOnly}
-            onClick={() => handlers.onOpenPowerDialog('Reboot')}
-            sx={sxActionItem}
-          >
-            Reboot
-          </Button>
-          <Button
-            onClick={() => {
-              handleConsoleButtonClick(linodeId);
-            }}
-            buttonType="primary"
-            disabled={isLinodesGrantReadOnly}
-            sx={sxActionItem}
-          >
-            Launch LISH Console
-          </Button>
-        </Hidden>
         <LinodeActionMenu
           linodeBackups={backups}
           linodeId={linodeId}

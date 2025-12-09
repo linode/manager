@@ -1,49 +1,52 @@
+/* eslint-disable no-console */
+import { formatDuration } from '@linode/utilities';
 import { Duration } from 'luxon';
+import type { JSX } from 'react';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { parseAPIDate } from 'src/utilities/date';
 
 import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
 
-type EventMessageManualInput = {
-  action: Event['action'];
-  entity?: Partial<Event['entity']>;
-  secondary_entity?: Partial<Event['secondary_entity']>;
-  status: Event['status'];
-};
-
 /**
- * The event Message Getter
+ * The event Message Getter gets an event message (JSX) from an `Event`
+ *
  * Intentionally avoiding parsing and formatting, and should remain as such.
- *
- * Defining two function signatures for getEventMessage:
- * - A function that takes a full Event object (event page and notification center)
- * - A function that takes an object with action, status, entity, and secondary_entity (getting a message for a snackbar for instance, where we manually pass the action & status)
- *
- * Using typescript overloads allows for both Event and EventMessageInput types.
  *
  * We don't include defaulting to the API message response here because:
  * - we want to control the message output (our types require us to define one) and rather show nothing than a broken message.
  * - the API message is empty 99% of the time and when present, isn't meant to be displayed as a full message, rather a part of it. (ex: `domain_record_create`)
  */
-export function getEventMessage(event: Event): JSX.Element | null | string;
-export function getEventMessage(
-  event: EventMessageManualInput
-): JSX.Element | null | string;
-export function getEventMessage(
-  event: Event | EventMessageManualInput
-): JSX.Element | null | string {
-  if (!event?.action || !event?.status) {
+export function getEventMessage(event: Event): JSX.Element | null | string {
+  const eventActionFactory = eventMessages[event.action];
+
+  if (!eventActionFactory) {
+    if (import.meta.env.DEV) {
+      console.warn(
+        `⚠️ No event message factory found for event "${event.action}"`
+      );
+    }
+
     return null;
   }
 
-  const message = eventMessages[event?.action]?.[event.status];
+  const eventMessageFunction = eventActionFactory[event.status];
 
-  return message ? message(event as Event) : null;
+  if (!eventMessageFunction) {
+    if (import.meta.env.DEV) {
+      console.warn(
+        `⚠️ Event message factory for "${event.action}" was found, but a function for status "${event.status}" was not defined.`
+      );
+    }
+
+    return null;
+  }
+
+  return eventMessageFunction(event);
 }
 
 /**
@@ -55,7 +58,7 @@ export const getEventUsername = (event: Event) => {
     return event.username;
   }
 
-  return 'Linode';
+  return 'Akamai';
 };
 
 /**
@@ -112,7 +115,8 @@ const shouldShowEventProgress = (event: Event): boolean => {
 };
 
 interface ProgressEventDisplay {
-  progressEventDisplay: null | string;
+  progressEventDate: string;
+  progressEventDuration: string;
   showProgress: boolean;
 }
 
@@ -124,16 +128,20 @@ interface ProgressEventDisplay {
  */
 export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
   const showProgress = shouldShowEventProgress(event);
-  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+  const startDate = parseAPIDate(event.created).toRelative();
+  const progressEventDate = showProgress ? `Started ${startDate}` : startDate;
 
-  const progressEventDisplay = showProgress
-    ? parsedTimeRemaining
-      ? `~${parsedTimeRemaining}`
-      : `Started ${getEventTimestamp(event).toRelative()}`
-    : getEventTimestamp(event).toRelative();
+  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+  const eventDuration = event.duration
+    ? formatDuration(Duration.fromObject({ seconds: event.duration }))
+    : '-';
+  const progressEventDuration = parsedTimeRemaining
+    ? `~${parsedTimeRemaining}`
+    : eventDuration;
 
   return {
-    progressEventDisplay,
+    progressEventDate,
+    progressEventDuration,
     showProgress,
   };
 };

@@ -1,10 +1,7 @@
+import { Autocomplete, ListItemOption, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from './constants';
 import { placementGroupTypeOptions } from './utils';
@@ -24,52 +21,40 @@ export const PlacementGroupTypeSelect = (props: Props) => {
       defaultValue={placementGroupTypeOptions.find(
         (option) => option.value === 'anti_affinity:local'
       )}
+      disableClearable={true}
+      disabled={disabledPlacementGroupCreateButton}
+      disabledItemsFocusable
+      errorText={error}
+      getOptionDisabled={(option) => option.value === 'affinity:local'}
+      label="Placement Group Type"
       onChange={(_, value) => {
         setFieldValue('placement_group_type', value?.value ?? '');
       }}
-      renderOption={(props, option) => {
-        const isDisabledMenuItem = option.value === 'affinity:local';
+      options={placementGroupTypeOptions}
+      placeholder="Select an Placement Group Type"
+      renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+        const isDisabled = option.value === 'affinity:local';
+
+        const disabledReason = (
+          <Typography>
+            Currently, only Anti-affinity placement groups are supported.{' '}
+            <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
+          </Typography>
+        );
 
         return (
-          <Tooltip
-            title={
-              isDisabledMenuItem ? (
-                <Typography>
-                  Currently, only Anti-affinity placement groups are supported.{' '}
-                  <Link to={PLACEMENT_GROUPS_DOCS_LINK}>Learn more</Link>.
-                </Typography>
-              ) : (
-                ''
-              )
+          <ListItemOption
+            disabledOptions={
+              isDisabled ? { reason: disabledReason } : undefined
             }
-            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
-            disableFocusListener={!isDisabledMenuItem}
-            disableHoverListener={!isDisabledMenuItem}
-            disableTouchListener={!isDisabledMenuItem}
-            enterDelay={200}
-            enterNextDelay={200}
-            enterTouchDelay={200}
-            key={option.value}
+            item={{ ...option, id: option.value }}
+            key={key}
+            props={rest}
+            selected={selected}
           >
-            <ListItem
-              {...props}
-              className={
-                isDisabledMenuItem
-                  ? `${props.className} Mui-disabled`
-                  : props.className
-              }
-              onClick={(e) =>
-                isDisabledMenuItem
-                  ? e.preventDefault()
-                  : props.onClick
-                  ? props.onClick(e)
-                  : null
-              }
-              component="li"
-            >
-              {option.label}
-            </ListItem>
-          </Tooltip>
+            {option.label}
+          </ListItemOption>
         );
       }}
       textFieldProps={{
@@ -83,12 +68,6 @@ export const PlacementGroupTypeSelect = (props: Props) => {
           </Typography>
         ),
       }}
-      disableClearable={true}
-      disabled={disabledPlacementGroupCreateButton}
-      errorText={error}
-      label="Placement Group Type"
-      options={placementGroupTypeOptions}
-      placeholder="Select an Placement Group Type"
     />
   );
 };

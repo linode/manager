@@ -1,11 +1,12 @@
-import { InterfacePurpose } from '@linode/api-v4';
+import { queryClientFactory } from '@linode/queries';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { InterfaceSelect } from './InterfaceSelect';
+
+import type { InterfacePurpose } from '@linode/api-v4';
 
 const queryClient = queryClientFactory();
 
@@ -23,7 +24,6 @@ describe('InterfaceSelect', () => {
     handleChange: vi.fn(),
     ipamAddress: null,
     label: null,
-    readOnly: false,
     region: 'us-east',
     regionHasVLANs: true,
     slotNumber: 0,

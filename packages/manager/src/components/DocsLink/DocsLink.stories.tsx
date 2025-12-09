@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { DocsLink } from './DocsLink';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { DocsLinkProps } from 'src/components/DocsLink/DocsLink';
 
 export const Default: StoryObj<DocsLinkProps> = {
@@ -12,7 +12,7 @@ export const Default: StoryObj<DocsLinkProps> = {
 const meta: Meta<DocsLinkProps> = {
   argTypes: {},
   args: {
-    href: 'https://www.linode.com/docs/products/compute/compute-instances/faqs',
+    href: 'https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances',
     label: 'Custom Doc Link Label',
   },
   component: DocsLink,

@@ -1,10 +1,6 @@
-import { SxProps } from '@mui/material/styles';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-
-import { Box } from 'src/components/Box';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 
 import {
   StyledDL,
@@ -12,8 +8,8 @@ import {
   StyledDT,
 } from './DescriptionList.styles';
 
-import type { Breakpoint, Theme } from '@mui/material/styles';
-import type { TooltipIconProps } from 'src/components/TooltipIcon';
+import type { TooltipIconProps } from '@linode/ui';
+import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
 type DescriptionListBaseProps = {
   /**
@@ -67,7 +63,7 @@ type DescriptionListBaseProps = {
   /**
    * Additional styles to apply to the component.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 };
 
 interface DescriptionListGridProps
@@ -78,8 +74,8 @@ interface DescriptionListGridProps
    * Only for the "grid" display mode.
    */
   gridProps: {
-    columnSpacing?: number;
     columns: number;
+    columnSpacing?: number;
   };
 }
 
@@ -138,7 +134,7 @@ export const DescriptionList = (props: DescriptionListProps) => {
               <Typography component="dd">{description}</Typography>
               {tooltip && (
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{ px: 1, py: 0, top: -2 }}
                   text={tooltip?.text}
                   tooltipPosition={tooltip?.position}

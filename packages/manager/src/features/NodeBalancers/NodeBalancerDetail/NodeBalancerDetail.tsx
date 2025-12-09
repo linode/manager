@@ -1,80 +1,68 @@
-import * as React from 'react';
-import {
-  matchPath,
-  useHistory,
-  useLocation,
-  useParams,
-} from 'react-router-dom';
-
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile/profile';
+} from '@linode/queries';
+import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
+import React from 'react';
+
+import { LandingHeader } from 'src/components/LandingHeader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import NodeBalancerConfigurations from './NodeBalancerConfigurations';
-import NodeBalancerSettings from './NodeBalancerSettings';
+import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationsWrapper';
+import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
 export const NodeBalancerDetail = () => {
-  const history = useHistory();
-  const location = useLocation();
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const [label, setLabel] = React.useState<string>();
-  const { data: grants } = useGrants();
+  const { id } = useParams({
+    strict: false,
+  });
 
   const {
     error: updateError,
     mutateAsync: updateNodeBalancer,
-  } = useNodebalancerUpdateMutation(id);
+    reset,
+  } = useNodebalancerUpdateMutation(Number(id));
 
-  const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
+  const {
+    data: nodebalancer,
+    error,
+    isLoading,
+  } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const isNodeBalancerReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'nodebalancer',
-    id: nodebalancer?.id,
-  });
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    ['update_nodebalancer'],
+    nodebalancer?.id
+  );
 
-  React.useEffect(() => {
-    if (label !== nodebalancer?.label) {
-      setLabel(nodebalancer?.label);
-    }
-  }, [nodebalancer]);
-
-  const cancelUpdate = () => {
-    setLabel(nodebalancer?.label);
-  };
-
-  const tabs = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: `/nodebalancers/${id}/summary`,
       title: 'Summary',
+      to: '/nodebalancers/$id/summary',
     },
     {
-      routeName: `/nodebalancers/${id}/configurations`,
       title: 'Configurations',
+      to: '/nodebalancers/$id/configurations',
     },
     {
-      routeName: `/nodebalancers/${id}/settings`,
       title: 'Settings',
+      to: '/nodebalancers/$id/settings',
     },
-  ];
-
-  const matches = (pathName: string) =>
-    Boolean(matchPath(location.pathname, { path: pathName }));
+    {
+      title: 'Metrics',
+      to: '/nodebalancers/$id/metrics',
+    },
+  ]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -93,12 +81,6 @@ export const NodeBalancerDetail = () => {
   const errorMap = getErrorMap(['label'], updateError);
   const labelError = errorMap.label;
 
-  const nodeBalancerLabel = label !== undefined ? label : nodebalancer?.label;
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
   return (
     <React.Fragment>
       <LandingHeader
@@ -106,51 +88,49 @@ export const NodeBalancerDetail = () => {
           crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           firstAndLastOnly: true,
           onEditHandlers: {
-            editableTextTitle: nodeBalancerLabel,
+            editableTextTitle: nodebalancer.label,
             errorText: labelError,
-            onCancel: cancelUpdate,
+            onCancel: () => reset(),
             onEdit: (label) => updateNodeBalancer({ label }),
           },
-          pathname: `/nodebalancers/${nodeBalancerLabel}`,
+          pathname: `/nodebalancers/${nodebalancer.label}`,
         }}
+        disabledBreadcrumbEditButton={!permissions.update_nodebalancer}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
-        title={nodeBalancerLabel}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
+        spacingBottom={4}
+        title={nodebalancer.label}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
-      {isNodeBalancerReadOnly && (
+      {!permissions.update_nodebalancer && (
         <Notice
           text={getRestrictedResourceText({
             resourceType: 'NodeBalancers',
           })}
-          important
           variant="warning"
         />
       )}
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <NodeBalancerSummary />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <NodeBalancerConfigurations
-              grants={grants}
-              nodeBalancerLabel={nodebalancer.label}
-              nodeBalancerRegion={nodebalancer.region}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <NodeBalancerSettings />
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <NodeBalancerSummary />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <NodeBalancerConfigurationsWrapper />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <NodeBalancerSettings />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <CloudPulseDashboardWithFilters
+                dashboardId={3}
+                resource={nodebalancer.id}
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
     </React.Fragment>
   );

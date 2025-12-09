@@ -1,15 +1,11 @@
-import { ContactPayload, ManagedContact } from '@linode/api-v4/lib/managed';
+import { ActionsPanel, Drawer, Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Formik, FormikHelpers } from 'formik';
-import { pathOr, pick } from 'ramda';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
+import { useMatch } from '@tanstack/react-router';
+import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,
@@ -20,14 +16,16 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
-import { ManagedContactGroup, Mode } from './common';
+import type { ManagedContactGroup } from './common';
+import type { APIError, ContactPayload, ManagedContact } from '@linode/api-v4';
+import type { FormikHelpers } from 'formik';
 
 interface ContactsDrawerProps {
-  closeDrawer: () => void;
   contact?: ManagedContact;
+  contactError: APIError[] | null;
   groups: ManagedContactGroup[];
+  isFetching: boolean;
   isOpen: boolean;
-  mode: Mode;
 }
 
 const emptyContactPayload: ContactPayload = {
@@ -41,20 +39,29 @@ const emptyContactPayload: ContactPayload = {
 };
 
 const ContactsDrawer = (props: ContactsDrawerProps) => {
-  const { closeDrawer, contact, groups, isOpen, mode } = props;
-
-  const isEditing = mode === 'edit' && contact;
+  const { contact, contactError, groups, isFetching, isOpen } = props;
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
+  const isEditing = match.routeId === '/managed/contacts/$contactId/edit';
 
   const { mutateAsync: createContact } = useCreateContactMutation();
   const { mutateAsync: updateContact } = useUpdateContactMutation(
-    contact?.id || -1
+    contact?.id ?? -1
   );
 
   // If we're in Edit mode, take the initialValues from the contact we're editing.
   // Otherwise, all initial values should be empty strings.
+  const getContactInfo = (): ContactPayload => {
+    return {
+      email: contact?.email ?? '',
+      group: contact?.group,
+      name: contact?.name ?? '',
+      phone: contact?.phone,
+    };
+  };
+
   const initialValues: ContactPayload = isEditing
-    ? // Pick select properties to create a ContactPayload from Linode.ManagedContact.
-      (pick(['name', 'email', 'phone', 'group'], contact) as ContactPayload)
+    ? getContactInfo()
     : emptyContactPayload;
 
   const onSubmit = (
@@ -73,7 +80,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
     // Conditionally build request based on the mode of the drawer.
     let createOrUpdate: () => Promise<ManagedContact>;
 
-    if (mode === 'edit' && contact) {
+    if (isEditing && contact) {
       createOrUpdate = () => updateContact(payload);
     } else {
       createOrUpdate = () => createContact(payload);
@@ -82,7 +89,9 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
     createOrUpdate()
       .then(() => {
         setSubmitting(false);
-        closeDrawer();
+        navigate({
+          to: '/managed/contacts',
+        });
       })
       .catch((err) => {
         setSubmitting(false);
@@ -100,7 +109,13 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   return (
     <Drawer
-      onClose={closeDrawer}
+      error={contactError}
+      isFetching={isFetching}
+      onClose={() => {
+        navigate({
+          to: '/managed/contacts',
+        });
+      }}
       open={isOpen}
       title={`${isEditing ? 'Edit' : 'Add'} Contact`}
     >
@@ -123,9 +138,10 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
             values,
           } = formikProps;
 
-          const primaryPhoneError = pathOr('', ['phone', 'primary'], errors);
+          // @todo: map the primary and secondary phone errors to the respective variables when using react-hook-form
+          const primaryPhoneError = errors?.phone ?? '';
           // prettier-ignore
-          const secondaryPhoneError = pathOr('', ['phone', 'secondary'], errors);
+          const secondaryPhoneError = errors?.phone ?? '';
 
           return (
             <>
@@ -136,7 +152,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   variant="error"
                 />
               )}
-
               <form onSubmit={handleSubmit}>
                 <TextField
                   error={!!errors.name}
@@ -162,7 +177,12 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                 />
 
                 <Grid container spacing={2}>
-                  <Grid md={6} xs={12}>
+                  <Grid
+                    size={{
+                      md: 6,
+                      xs: 12,
+                    }}
+                  >
                     <TextField
                       error={!!primaryPhoneError}
                       errorText={primaryPhoneError}
@@ -170,10 +190,15 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                       name="phone.primary"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={pathOr('', ['phone', 'primary'], values)}
+                      value={values?.phone?.primary ?? ''}
                     />
                   </Grid>
-                  <Grid md={6} xs={12}>
+                  <Grid
+                    size={{
+                      md: 6,
+                      xs: 12,
+                    }}
+                  >
                     <TextField
                       error={!!secondaryPhoneError}
                       errorText={secondaryPhoneError}
@@ -181,20 +206,23 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                       name="phone.secondary"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      value={pathOr('', ['phone', 'secondary'], values)}
+                      value={values?.phone?.secondary ?? ''}
                     />
                   </Grid>
                 </Grid>
 
-                {/* @todo: This <Select /> should be clearable eventually, but isn't currently allowed by the API. */}
                 <Select
-                  onChange={(selectedGroup) =>
+                  creatable
+                  errorText={errors.group}
+                  label="Group"
+                  onChange={(_, selectedGroup) =>
                     setFieldValue('group', selectedGroup?.value)
                   }
                   options={groups.map((group) => ({
                     label: group.groupName,
                     value: group.groupName,
                   }))}
+                  placeholder="Create or Select a Group"
                   value={
                     values.group
                       ? {
@@ -203,11 +231,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                         }
                       : null
                   }
-                  creatable
-                  errorText={errors.group}
-                  isClearable={false}
-                  label="Group"
-                  placeholder="Create or Select a Group"
                 />
 
                 <ActionsPanel

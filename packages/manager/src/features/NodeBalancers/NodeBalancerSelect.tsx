@@ -1,14 +1,14 @@
-import { NodeBalancer } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
-import CloseIcon from '@mui/icons-material/Close';
+import { useAllNodeBalancersQuery } from '@linode/queries';
+import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
+import { mapIdsToDevices } from '@linode/utilities';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+import { useGetAllUserEntitiesByPermission } from '../IAM/hooks/useGetAllUserEntitiesByPermission';
+
+import type { APIError, NodeBalancer } from '@linode/api-v4';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface NodeBalancerSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -44,7 +44,7 @@ interface NodeBalancerSelectProps {
   /* Displays an indication that the input is required. */
   required?: boolean;
   /* Adds custom styles to the component. */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export interface NodeBalancerMultiSelectProps extends NodeBalancerSelectProps {
@@ -97,7 +97,19 @@ export const NodeBalancerSelect = (
 
   const { data, error, isLoading } = useAllNodeBalancersQuery();
 
-  const nodebalancers = optionsFilter ? data?.filter(optionsFilter) : data;
+  const {
+    data: availableNodebalancers,
+    error: availableNodebalancersError,
+    isLoading: availableNodebalancersLoading,
+  } = useGetAllUserEntitiesByPermission<NodeBalancer>({
+    entityType: 'nodebalancer',
+    permission: 'update_nodebalancer',
+    enabled: Boolean(optionsFilter),
+  });
+
+  const nodebalancers = optionsFilter
+    ? availableNodebalancers?.filter(optionsFilter)
+    : data;
 
   React.useEffect(() => {
     /** We want to clear the input value when the value prop changes to null.
@@ -111,63 +123,71 @@ export const NodeBalancerSelect = (
 
   return (
     <Autocomplete
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
+      clearOnBlur={false}
+      data-testid="add-nodebalancer-autocomplete"
+      disableClearable={!clearable}
+      disableCloseOnSelect={multiple}
+      disabled={disabled}
+      disablePortal={true}
+      errorText={
+        (error?.[0].reason || availableNodebalancersError?.[0]?.reason) ??
+        errorText
+      }
       getOptionLabel={(nodebalancer: NodeBalancer) =>
         renderOptionLabel ? renderOptionLabel(nodebalancer) : nodebalancer.label
       }
+      helperText={helperText}
+      id={id}
+      inputValue={inputValue}
+      label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
+      loading={isLoading || availableNodebalancersLoading || loading}
+      multiple={multiple}
+      noMarginTop={noMarginTop}
       noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
+        noOptionsMessage ??
+        getDefaultNoOptionsMessage(
+          error || availableNodebalancersError,
+          isLoading || availableNodebalancersLoading
+        )
       }
+      onBlur={onBlur}
       onChange={(_, value) =>
         multiple && Array.isArray(value)
           ? onSelectionChange(value)
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
+      onInputChange={(_, value) => setInputValue(value)}
+      options={options || (nodebalancers ?? [])}
       placeholder={
         placeholder
           ? placeholder
           : multiple
-          ? 'Select NodeBalancers'
-          : 'Select a NodeBalancer'
+            ? 'Select NodeBalancers'
+            : 'Select a NodeBalancer'
       }
+      PopperComponent={CustomPopper}
+      popupIcon={<KeyboardArrowDownIcon />}
       renderOption={
         renderOption
           ? (props, option, { selected }) => {
+              const { key, ...rest } = props;
               return (
-                <li {...props} data-qa-linode-option>
+                <li {...rest} data-qa-linode-option key={key}>
                   {renderOption(option, selected)}
                 </li>
               );
             }
           : undefined
       }
+      sx={sx}
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
-            ? nodebalancers?.filter(value) ?? null
-            : nodebalancers?.find(value) ?? null
+            ? (nodebalancers?.filter(value) ?? null)
+            : (nodebalancers?.find(value) ?? null)
           : mapIdsToDevices<NodeBalancer>(value, nodebalancers)
       }
-      ChipProps={{ deleteIcon: <CloseIcon /> }}
-      PopperComponent={CustomPopper}
-      clearOnBlur={false}
-      data-testid="add-nodebalancer-autocomplete"
-      disableClearable={!clearable}
-      disableCloseOnSelect={multiple}
-      disablePortal={true}
-      disabled={disabled}
-      errorText={error?.[0].reason ?? errorText}
-      helperText={helperText}
-      id={id}
-      inputValue={inputValue}
-      label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
-      loading={isLoading || loading}
-      multiple={multiple}
-      noMarginTop={noMarginTop}
-      onBlur={onBlur}
-      onInputChange={(_, value) => setInputValue(value)}
-      options={options || (nodebalancers ?? [])}
-      popupIcon={<KeyboardArrowDownIcon />}
-      sx={sx}
     />
   );
 };

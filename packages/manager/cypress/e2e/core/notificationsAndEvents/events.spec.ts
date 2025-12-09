@@ -1,17 +1,17 @@
+import { EventActionKeys } from '@linode/api-v4';
 import { eventFactory } from '@src/factories/events';
 import { mockGetEvents } from 'support/intercepts/events';
-import { EventActionKeys } from '@linode/api-v4';
 
 import type { Event } from '@linode/api-v4';
 
 const events: Event[] = EventActionKeys.map((action) => {
   return eventFactory.build({
     action,
-    message: `${action + ' message'}`,
-    seen: false,
-    read: false,
-    percent_complete: null,
     entity: { id: 0, label: 'linode-0' },
+    message: `${action + ' message'}`,
+    percent_complete: null,
+    read: false,
+    seen: false,
   });
 });
 
@@ -28,7 +28,7 @@ describe('verify notification types and icons', () => {
         }
         const text = [`${events[i].message}`, `${events[i].entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
-        cy.get(`[data-test-id="${events[i].action}"]`).within(() => {
+        cy.get(`[data-testid="${events[i].action}"]`).within(() => {
           cy.contains(regex);
         });
       }
@@ -38,7 +38,7 @@ describe('verify notification types and icons', () => {
       events.forEach((event) => {
         const text = [`${event.message}`, `${event.entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
-        cy.get(`[data-test-id="${event.action}"]`).within(() => {
+        cy.get(`[data-testid="${event.action}"]`).within(() => {
           cy.contains(regex);
         });
       });

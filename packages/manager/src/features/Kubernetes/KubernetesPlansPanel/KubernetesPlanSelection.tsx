@@ -1,31 +1,37 @@
-import { PriceObject } from '@linode/api-v4';
-import { Region } from '@linode/api-v4/lib/regions';
+import { Box, Button, Chip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
-import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DisabledPlanSelectionTooltip } from 'src/features/components/PlansPanel/DisabledPlanSelectionTooltip';
 import { getDisabledPlanReasonCopy } from 'src/features/components/PlansPanel/utils';
 import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from 'src/features/Kubernetes/constants';
+import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
+import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
+
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
+import type { KubernetesTier, PriceObject } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4/lib/regions';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
@@ -33,6 +39,7 @@ export interface KubernetesPlanSelectionProps {
   plan: PlanWithAvailability;
   selectedId?: string;
   selectedRegionId?: Region['id'];
+  selectedTier: KubernetesTier;
   updatePlanCount: (planId: string, newCount: number) => void;
   wholePanelIsDisabled: boolean;
 }
@@ -45,9 +52,11 @@ export const KubernetesPlanSelection = (
     idx,
     onAdd,
     onSelect,
+    handleConfigurePool,
     plan,
     selectedId,
     selectedRegionId,
+    selectedTier,
     updatePlanCount,
     wholePanelIsDisabled,
   } = props;
@@ -55,15 +64,27 @@ export const KubernetesPlanSelection = (
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
+    planIsTooSmallForAPL,
+    planResizeNotSupported,
   } = plan;
 
   const rowIsDisabled =
-    wholePanelIsDisabled || planHasLimitedAvailability || planIsDisabled512Gb;
+    wholePanelIsDisabled ||
+    planHasLimitedAvailability ||
+    planIsDisabled512Gb ||
+    planIsTooSmallForAPL ||
+    planResizeNotSupported;
   const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     plan,
     selectedRegionId
   );
+
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  // Show the Configure Pool button in the Create flow plans table, but not in the Add Node Pool drawer flow.
+  const shouldShowConfigurePoolButton =
+    isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
@@ -71,6 +92,8 @@ export const KubernetesPlanSelection = (
     planIsDisabled512Gb,
     // So far, planIsTooSmall only applies to DbaaS plans (resize)
     planIsTooSmall: false,
+    planIsTooSmallForAPL,
+    planResizeNotSupported,
     wholePanelIsDisabled,
   });
 
@@ -83,7 +106,9 @@ export const KubernetesPlanSelection = (
     !hasMajorityOfPlansDisabled &&
     (planBelongsToDisabledClass ||
       planIsDisabled512Gb ||
-      planHasLimitedAvailability);
+      planIsTooSmallForAPL ||
+      planHasLimitedAvailability ||
+      planResizeNotSupported);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
@@ -94,22 +119,50 @@ export const KubernetesPlanSelection = (
   ];
 
   const renderVariant = () => (
-    <Grid xs={12}>
+    <Grid size={12}>
       <StyledInputOuter>
-        <EnhancedNumberInput
-          disabled={rowIsDisabled}
-          setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
-          value={count}
-        />
-        {onAdd && (
-          <Button
+        {shouldShowConfigurePoolButton ? (
+          <StyledPrimaryActionButton
+            aria-label={rowIsDisabled ? disabledPlanReasonCopy : undefined}
             buttonType="primary"
-            disabled={count < 1 || rowIsDisabled}
-            onClick={() => onAdd(plan.id, count)}
-            sx={{ marginLeft: '10px', minWidth: '85px' }}
+            disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
+            onClick={() =>
+              handleConfigurePool
+                ? handleConfigurePool({
+                    drawerMode: 'add',
+                    isOpen: true,
+                    planLabel: plan.id,
+                  })
+                : null
+            }
           >
-            Add
-          </Button>
+            Configure Pool
+          </StyledPrimaryActionButton>
+        ) : (
+          <>
+            <EnhancedNumberInput
+              disabled={rowIsDisabled}
+              max={
+                selectedTier === 'enterprise'
+                  ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                  : MAX_NODES_PER_POOL_STANDARD_TIER
+              }
+              setValue={(newCount: number) =>
+                updatePlanCount(plan.id, newCount)
+              }
+              value={count}
+            />
+            {onAdd && (
+              <Button
+                buttonType="primary"
+                disabled={count < 1 || rowIsDisabled}
+                onClick={() => onAdd(plan.id, count)}
+                sx={{ marginLeft: '10px', minWidth: '85px' }}
+              >
+                Add
+              </Button>
+            )}
+          </>
         )}
       </StyledInputOuter>
     </Grid>
@@ -159,37 +212,68 @@ export const KubernetesPlanSelection = (
           </TableCell>
           <TableCell>
             <StyledInputOuter>
-              <EnhancedNumberInput
-                disabled={
-                  // When on the add pool flow, we only want the current input to be active,
-                  // unless we've just landed on the form, all the inputs are empty,
-                  // or there was a pricing data error.
-                  (!onAdd && Boolean(selectedId) && plan.id !== selectedId) ||
-                  rowIsDisabled ||
-                  typeof price?.hourly !== 'number'
-                }
-                setValue={(newCount: number) =>
-                  updatePlanCount(plan.id, newCount)
-                }
-                inputLabel={`edit-quantity-${plan.id}`}
-                value={count}
-              />
-              {onAdd && (
-                <Button
+              {shouldShowConfigurePoolButton ? (
+                <StyledPrimaryActionButton
                   aria-label={
                     rowIsDisabled ? disabledPlanReasonCopy : undefined
                   }
-                  disabled={
-                    count < 1 ||
-                    rowIsDisabled ||
-                    typeof price?.hourly !== 'number'
-                  }
                   buttonType="primary"
-                  onClick={() => onAdd(plan.id, count)}
-                  sx={{ marginLeft: '10px', minWidth: '85px' }}
+                  disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
+                  onClick={() =>
+                    handleConfigurePool
+                      ? handleConfigurePool({
+                          drawerMode: 'add',
+                          isOpen: true,
+                          planLabel: plan.id,
+                        })
+                      : null
+                  }
+                  sx={{ marginLeft: '10px' }}
                 >
-                  Add
-                </Button>
+                  Configure Pool
+                </StyledPrimaryActionButton>
+              ) : (
+                <>
+                  <EnhancedNumberInput
+                    disabled={
+                      // When on the add pool flow, we only want the current input to be active,
+                      // unless we've just landed on the form, all the inputs are empty,
+                      // or there was a pricing data error.
+                      (!onAdd &&
+                        Boolean(selectedId) &&
+                        plan.id !== selectedId) ||
+                      rowIsDisabled ||
+                      typeof price?.hourly !== 'number'
+                    }
+                    inputLabel={`edit-quantity-${plan.id}`}
+                    max={
+                      selectedTier === 'enterprise'
+                        ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                        : MAX_NODES_PER_POOL_STANDARD_TIER
+                    }
+                    setValue={(newCount: number) =>
+                      updatePlanCount(plan.id, newCount)
+                    }
+                    value={count}
+                  />
+                  {onAdd && (
+                    <Button
+                      aria-label={
+                        rowIsDisabled ? disabledPlanReasonCopy : undefined
+                      }
+                      buttonType="primary"
+                      disabled={
+                        count < 1 ||
+                        rowIsDisabled ||
+                        typeof price?.hourly !== 'number'
+                      }
+                      onClick={() => onAdd(plan.id, count)}
+                      sx={{ marginLeft: '10px', minWidth: '85px' }}
+                    >
+                      Add
+                    </Button>
+                  )}
+                </>
               )}
             </StyledInputOuter>
           </TableCell>
@@ -198,6 +282,12 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
+          checked={plan.id === String(selectedId)}
+          disabled={rowIsDisabled}
+          heading={plan.heading}
+          key={plan.id}
+          onClick={() => onSelect(plan.id)}
+          renderVariant={renderVariant}
           subheadings={[
             ...subHeadings,
             planHasLimitedAvailability || planIsDisabled512Gb ? (
@@ -206,12 +296,6 @@ export const KubernetesPlanSelection = (
               ''
             ),
           ]}
-          checked={plan.id === String(selectedId)}
-          disabled={rowIsDisabled}
-          heading={plan.heading}
-          key={plan.id}
-          onClick={() => onSelect(plan.id)}
-          renderVariant={renderVariant}
           tooltip={rowIsDisabled ? disabledPlanReasonCopy : undefined}
         />
       </Hidden>
@@ -229,3 +313,12 @@ const StyledInputOuter = styled('div', { label: 'StyledInputOuter' })(
     },
   })
 );
+
+const StyledPrimaryActionButton = styled(Button, {
+  label: 'StyledPrimaryActionButton',
+})(({ theme }) => ({
+  minWidth: '85px',
+  [theme.breakpoints.between(960, 1110)]: {
+    margin: theme.spacingFunction(8),
+  },
+}));

@@ -1,8 +1,9 @@
+import { useProfile } from '@linode/queries';
+import { Box, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { Box } from 'src/components/Box';
-import { Typography } from 'src/components/Typography';
 import {
   formatProgressEvent,
   getEventMessage,
@@ -10,7 +11,7 @@ import {
 } from 'src/features/Events/utils';
 
 import {
-  NotificationEventGravatar,
+  NotificationEventAvatar,
   NotificationEventStyledBox,
   notificationEventStyles,
 } from '../NotificationCenter.styles';
@@ -25,10 +26,13 @@ interface NotificationEventProps {
 export const NotificationCenterEvent = React.memo(
   (props: NotificationEventProps) => {
     const { event } = props;
+    const theme = useTheme();
     const { classes, cx } = notificationEventStyles();
     const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
     const message = getEventMessage(event);
     const username = getEventUsername(event);
+
+    const { data: profile } = useProfile();
 
     /**
      * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -39,14 +43,24 @@ export const NotificationCenterEvent = React.memo(
       return null;
     }
 
-    const { progressEventDisplay, showProgress } = formatProgressEvent(event);
+    const { progressEventDate, showProgress } = formatProgressEvent(event);
 
     return (
       <NotificationEventStyledBox
         className={unseenEventClass}
+        data-qa-event={event.id}
+        data-qa-event-seen={event.seen}
         data-testid={event.action}
       >
-        <NotificationEventGravatar username={event.username} />
+        <NotificationEventAvatar
+          color={
+            username !== profile?.username
+              ? theme.palette.primary.dark
+              : undefined
+          }
+          username={username}
+        />
+
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
           {showProgress && (
@@ -59,7 +73,7 @@ export const NotificationCenterEvent = React.memo(
             />
           )}
           <Typography sx={{ fontSize: '0.8rem' }}>
-            {progressEventDisplay} | {username}
+            {progressEventDate} | {username}
           </Typography>
         </Box>
       </NotificationEventStyledBox>

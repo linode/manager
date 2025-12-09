@@ -1,7 +1,24 @@
 import { getRegionById, getRegionByLabel } from 'support/util/regions';
 
-import type { SelectorMatcherOptions } from '@testing-library/cypress';
 import type { Region } from '@linode/api-v4';
+import type { SelectorMatcherOptions } from '@testing-library/cypress';
+
+/**
+ * Returns a regular expression object to match against region select items.
+ *
+ * This expression accounts for these cases:
+ * - Gecko LA is disabled (region ID is present in line with label)
+ * - Gecko LA is enabled (region ID is not in line with label, rendered in separate element)
+ * - Avoids selecting similarly named regions (e.g. "UK, London" and "UK, London 2")
+ *
+ * @param region - Region for which to return RegEx.
+ *
+ * @returns Regular expression object to match menu item of given Region.
+ */
+// TODO Remove this and use exact string matching once Gecko feature flag is retired.
+const getRegionItemRegEx = (region: Region) => {
+  return new RegExp(`${region.label}(\\s?\\(${region.id}\\)|$)`);
+};
 
 /**
  * Autocomplete UI element.
@@ -12,6 +29,17 @@ export const autocomplete = {
    */
   find: (): Cypress.Chainable => {
     return cy.get('[data-qa-autocomplete] input');
+  },
+
+  /**
+   * Finds an autocomplete element by its label.
+   *
+   * @param label - Label of the autocomplete to select.
+   *
+   * @returns A Cypress chainable object that represents the located element.
+   */
+  findByLabel: (label: string): Cypress.Chainable => {
+    return cy.get(`[data-qa-autocomplete="${label}"] input`);
   },
 };
 
@@ -33,7 +61,7 @@ export const autocompletePopper = {
    * Finds an item within an autocomplete popper that has the given title.
    */
   findByTitle: (
-    title: string,
+    title: RegExp | string,
     options?: SelectorMatcherOptions
   ): Cypress.Chainable => {
     return (
@@ -90,7 +118,7 @@ export const regionSelect = {
    */
   findItemByRegionId: (regionId: string, searchRegions?: Region[]) => {
     const region = getRegionById(regionId, searchRegions);
-    return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
+    return autocompletePopper.findByTitle(getRegionItemRegEx(region));
   },
 
   /**
@@ -105,6 +133,6 @@ export const regionSelect = {
    */
   findItemByRegionLabel: (regionLabel: string, searchRegions?: Region[]) => {
     const region = getRegionByLabel(regionLabel, searchRegions);
-    return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
+    return autocompletePopper.findByTitle(getRegionItemRegEx(region));
   },
 };

@@ -1,44 +1,51 @@
+import { usePreferences, useProfile } from '@linode/queries';
+import { Box, Stack, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { HashLink } from 'react-router-hash-link';
 
-import { Box } from 'src/components/Box';
-import {
-  DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
-  UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
-} from 'src/components/Encryption/constants';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
-import { useProfile } from 'src/queries/profile/profile';
-import { pluralize } from 'src/utilities/pluralize';
+import { ipTableId } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/utils';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
+import { LinodeEncryptionStatus } from './LinodeEncryptionStatus';
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
+  StyledCopyTooltip,
+  StyledIPBox,
+  StyledIPItem,
+  StyledIPLabel,
   StyledLabelBox,
   StyledListItem,
-  StyledSummaryGrid,
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
-import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import { StyledIPStack } from './LinodeEntityDetailBody.styles';
+import { LinodeEntityDetailRowConfigFirewall } from './LinodeEntityDetailRowConfigFirewall';
+import { LinodeEntityDetailRowInterfaceFirewall } from './LinodeEntityDetailRowInterfaceFirewall';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import { getSubnetsString, getVPCIPv4, getVPCIPv6 } from './utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { VPC } from '@linode/api-v4/lib';
 import type {
   EncryptionStatus,
   Interface,
+  InterfaceGenerationType,
   Linode,
-} from '@linode/api-v4/lib/linodes/types';
-import type { Subnet } from '@linode/api-v4/lib/vpcs';
-import type { TypographyProps } from 'src/components/Typography';
+  LinodeCapabilities,
+  LinodeInterface,
+  VPC,
+} from '@linode/api-v4';
+import type { TypographyProps } from '@linode/ui';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -53,17 +60,20 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export interface BodyProps {
-  configInterfaceWithVPC?: Interface;
   encryptionStatus: EncryptionStatus | undefined;
   gbRAM: number;
   gbStorage: number;
+  interfaceGeneration: InterfaceGenerationType | undefined;
+  interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
-  isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
-  isVPCOnlyLinode: boolean;
+  isUnreachablePublicIPv4: boolean;
+  isUnreachablePublicIPv6: boolean;
+  linodeCapabilities: LinodeCapabilities[];
   linodeId: number;
   linodeIsInDistributedRegion: boolean;
   linodeLabel: string;
+  linodeLkeClusterId: null | number;
   numCPUs: number;
   numVolumes: number;
   region: string;
@@ -72,17 +82,20 @@ export interface BodyProps {
 
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
-    configInterfaceWithVPC,
     encryptionStatus,
     gbRAM,
     gbStorage,
+    isUnreachablePublicIPv4,
+    interfaceGeneration,
+    interfaceWithVPC,
     ipv4,
     ipv6,
-    isLKELinode,
-    isVPCOnlyLinode,
+    isUnreachablePublicIPv6,
+    linodeCapabilities,
     linodeId,
     linodeIsInDistributedRegion,
     linodeLabel,
+    linodeLkeClusterId,
     numCPUs,
     numVolumes,
     region,
@@ -90,15 +103,24 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
+
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
-  // @ TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
+  const { isDualStackEnabled } = useVPCDualStack();
+
+  const isLinodeInterface = interfaceGeneration === 'linode';
+  const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
+  const vpcIPv6 = getVPCIPv6(interfaceWithVPC);
+
+  // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
     isDiskEncryptionFeatureEnabled && Boolean(encryptionStatus);
 
@@ -116,62 +138,112 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
+  const { isLoading } = useAPLAvailability();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    enabled: Boolean(linodeLkeClusterId) && !isLoading,
+    id: linodeLkeClusterId ?? -1,
+  });
+
   return (
     <>
       <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
         <Grid
           container
-          flexDirection={matchesLgUp ? 'row' : 'column'}
-          sm={isDisplayingEncryptedStatus ? 4 : 3}
+          size={{
+            sm: isDisplayingEncryptedStatus ? 4 : 3,
+            xs: 12,
+          }}
           spacing={0}
-          xs={12}
+          sx={{
+            flexDirection: matchesLgUp ? 'row' : 'column',
+          }}
         >
           <StyledColumnLabelGrid
             mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
-            xs={12}
+            size={{ xs: 12 }}
           >
             Summary
           </StyledColumnLabelGrid>
-          <StyledSummaryGrid container spacing={1}>
-            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
+          <Grid container spacing={1}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
               <Typography>
                 {pluralize('CPU Core', 'CPU Cores', numCPUs)}
               </Typography>
             </Grid>
-            <Grid alignItems="center" display="flex" lg={6} sm={12} xs={6}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
               <Typography>{gbStorage} GB Storage</Typography>
             </Grid>
-            <Grid lg={6} sm={12} xs={6}>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+            >
               <Typography>{gbRAM} GB RAM</Typography>
             </Grid>
-            <Grid lg={6} sm={12} xs={6}>
-              <Typography>
-                {pluralize('Volume', 'Volumes', numVolumes)}
-              </Typography>
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 6,
+              }}
+            >
+              <Box
+                sx={(theme) => ({
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: theme.spacing(),
+                })}
+              >
+                <Typography>
+                  {pluralize('Volume', 'Volumes', numVolumes)}
+                </Typography>
+
+                {numVolumes > 0 && (
+                  <HighPerformanceVolumeIcon
+                    linodeCapabilities={linodeCapabilities}
+                  />
+                )}
+              </Box>
             </Grid>
             {isDiskEncryptionFeatureEnabled && encryptionStatus && (
               <Grid>
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                >
-                  <EncryptedStatus
-                    tooltipText={
-                      isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                    }
-                    encryptionStatus={encryptionStatus}
-                  />
-                </Box>
+                <LinodeEncryptionStatus linodeId={linodeId} />
               </Grid>
             )}
-          </StyledSummaryGrid>
+          </Grid>
         </Grid>
-        <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
-          <Grid container xs={12}>
+
+        <Grid
+          container
+          size={{
+            sm: isDisplayingEncryptedStatus ? 8 : 9,
+            xs: 12,
+          }}
+        >
+          <Grid container size={12}>
             <AccessTable
               footer={
                 numIPAddresses > 2 ? (
@@ -179,32 +251,54 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     sx={{ position: matchesLgUp ? 'absolute' : 'relative' }}
                     variant="body1"
                   >
-                    <HashLink
-                      to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                    <Link
+                      hash={ipTableId}
+                      params={{ linodeId }}
+                      to={'/linodes/$linodeId/networking'}
                     >
                       View all IP Addresses
-                    </HashLink>
+                    </Link>
                   </Typography>
                 ) : undefined
               }
               gridSize={{ lg: 5, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
-              rows={[{ text: firstAddress }, { text: secondAddress }]}
+              hasPublicInterface={isUnreachablePublicIPv6}
+              isLinodeInterface={isLinodeInterface}
+              rows={[
+                {
+                  isMasked: maskSensitiveDataPreference,
+                  maskedTextLength: 'ipv4',
+                  text: firstAddress,
+                  disabled: isUnreachablePublicIPv4,
+                },
+                {
+                  isMasked: maskSensitiveDataPreference,
+                  maskedTextLength: 'ipv6',
+                  text: secondAddress,
+                  disabled: isUnreachablePublicIPv6,
+                },
+              ]}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
+              gridSize={{ lg: 7, xs: 12 }}
               rows={[
-                { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+                {
+                  heading: 'SSH Access',
+                  isMasked: maskSensitiveDataPreference,
+                  text: sshLink(ipv4[0]),
+                },
                 {
                   heading: 'LISH Console via SSH',
+                  isMasked: !linodeIsInDistributedRegion
+                    ? maskSensitiveDataPreference
+                    : false,
                   text: linodeIsInDistributedRegion
                     ? 'N/A'
                     : lishLink(username, region, linodeLabel),
                 },
               ]}
-              gridSize={{ lg: 7, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
               title="Access"
             />
@@ -213,71 +307,109 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
       </StyledBodyGrid>
       {vpcLinodeIsAssignedTo && (
         <Grid
-          sx={{
-            borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-          }}
           container
           direction="column"
-          spacing={2}
+          spacing={1}
+          sx={{
+            borderTop: `1px solid ${theme.borderColors.borderTable}`,
+            padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+          }}
         >
           <StyledColumnLabelGrid data-testid="vpc-section-title">
             VPC
           </StyledColumnLabelGrid>
           <Grid
-            sx={{
-              margin: 0,
-              padding: '0 0 8px 0',
-              [theme.breakpoints.down('md')]: {
-                display: 'flex',
-                flexDirection: 'column',
-                paddingLeft: '8px',
-              },
-            }}
             container
             direction="row"
-            spacing={2}
+            spacing={0}
+            sx={{
+              alignItems: 'center',
+              margin: 0,
+              padding: '0 0 8px 0',
+              [theme.breakpoints.down('lg')]: {
+                alignItems: 'start',
+                display: 'flex',
+                flexDirection: 'column',
+              },
+            }}
           >
-            <StyledVPCBox>
-              <StyledListItem>
-                <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
-                <Link
-                  data-testid="assigned-vpc-label"
-                  to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
-                >
-                  {vpcLinodeIsAssignedTo.label}
-                </Link>
-              </StyledListItem>
-            </StyledVPCBox>
-            <StyledVPCBox>
-              <StyledListItem>
-                <StyledLabelBox component="span" data-testid="subnets-string">
-                  Subnets:
-                </StyledLabelBox>{' '}
-                {getSubnetsString(linodeAssociatedSubnets ?? [])}
-              </StyledListItem>
-            </StyledVPCBox>
-            <StyledVPCBox>
-              <StyledListItem sx={{ ...sxLastListItem }}>
-                <StyledLabelBox component="span" data-testid="vpc-ipv4">
-                  VPC IPv4:
-                </StyledLabelBox>{' '}
-                {configInterfaceWithVPC?.ipv4?.vpc}
-              </StyledListItem>
-            </StyledVPCBox>
+            <Stack
+              direction="row"
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  alignItems: 'start',
+                  display: 'flex',
+                  flexDirection: 'column',
+                },
+              }}
+            >
+              <StyledVPCBox>
+                <StyledListItem sx={{ paddingLeft: 0 }}>
+                  <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
+                  <Link
+                    data-testid="assigned-vpc-label"
+                    to={`/vpcs/${vpcLinodeIsAssignedTo.id}`}
+                  >
+                    {vpcLinodeIsAssignedTo.label}
+                  </Link>
+                </StyledListItem>
+              </StyledVPCBox>
+              <StyledVPCBox>
+                <StyledListItem sx={{ ...sxLastListItem }}>
+                  <StyledLabelBox component="span" data-testid="subnets-string">
+                    Subnet:
+                  </StyledLabelBox>{' '}
+                  {getSubnetsString(linodeAssociatedSubnets ?? [])}
+                </StyledListItem>
+              </StyledVPCBox>
+            </Stack>
+            <StyledIPStack direction="row">
+              {vpcIPv4 && (
+                <StyledIPBox>
+                  <StyledIPLabel data-testid="vpc-ipv4-label">
+                    VPC IPv4
+                  </StyledIPLabel>
+                  <StyledIPItem component="span" data-testid="vpc-ipv4">
+                    <CopyTooltip copyableText text={vpcIPv4} />
+                    <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                      <StyledCopyTooltip text={vpcIPv4} />
+                    </Box>
+                  </StyledIPItem>
+                </StyledIPBox>
+              )}
+              {isDualStackEnabled &&
+                vpcIPv6 && ( // @TODO VPC IPv6: remove Dual Stack check once VPC IPv6 is fully rolled out
+                  <StyledIPBox>
+                    <StyledIPLabel data-testid="vpc-ipv6-label">
+                      VPC IPv6
+                    </StyledIPLabel>
+                    <StyledIPItem component="span" data-testid="vpc-ipv6">
+                      <CopyTooltip copyableText text={vpcIPv6} />
+                      <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                        <StyledCopyTooltip text={vpcIPv6} />
+                      </Box>
+                    </StyledIPItem>
+                  </StyledIPBox>
+                )}
+            </StyledIPStack>
           </Grid>
         </Grid>
+      )}
+      {isLinodeInterface ? (
+        <LinodeEntityDetailRowInterfaceFirewall
+          cluster={cluster}
+          linodeId={linodeId}
+          linodeLkeClusterId={linodeLkeClusterId}
+        />
+      ) : (
+        <LinodeEntityDetailRowConfigFirewall
+          cluster={cluster}
+          interfaceGeneration={interfaceGeneration}
+          linodeId={linodeId}
+          linodeLkeClusterId={linodeLkeClusterId}
+          region={region}
+        />
       )}
     </>
   );
 });
-
-export const getSubnetsString = (data: Subnet[]) => {
-  const firstThreeSubnets = data.slice(0, 3);
-  const subnetLabels = firstThreeSubnets.map((subnet) => subnet.label);
-  const firstThreeSubnetsString = subnetLabels.join(', ');
-
-  return data.length > 3
-    ? firstThreeSubnetsString.concat(`, plus ${data.length - 3} more.`)
-    : firstThreeSubnetsString;
-};

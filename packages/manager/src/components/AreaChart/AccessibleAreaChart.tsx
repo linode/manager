@@ -1,7 +1,6 @@
+import { Box } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import { getAccessibleTimestamp } from './utils';
 
@@ -53,10 +52,10 @@ export const AccessibleAreaChart = (props: AccessibleAreaChartProps) => {
 
     return (
       <table
+        key={`accessible-graph-data-table-${tableID}`}
         summary={`This table contains the data for the ${
           ariaLabel && dataKey ? ariaLabel + ` (${dataKey})` : 'graph below'
         }`}
-        key={`accessible-graph-data-table-${tableID}`}
       >
         <thead>{TableHeader}</thead>
         <tbody>{TableBody}</tbody>

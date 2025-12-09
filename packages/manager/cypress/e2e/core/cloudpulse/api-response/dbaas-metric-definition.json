@@ -1,0 +1,175 @@
+{
+    "data": [
+        {
+            "label": "CPU Usage",
+            "metric": "cpu_usage",
+            "unit": "%",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Disk I/O Read",
+            "metric": "read_iops",
+            "unit": "IOPS",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Disk I/O Write",
+            "metric": "write_iops",
+            "unit": "IOPS",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Memory Usage",
+            "metric": "memory_usage",
+            "unit": "%",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Available Memory",
+            "metric": "available_memory",
+            "unit": "GB",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Disk Space Usage",
+            "metric": "disk_usage",
+            "unit": "%",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": true,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Available Disk Space",
+            "metric": "available_disk",
+            "unit": "GB",
+            "metric_type": "gauge",
+            "scrape_interval": "60s",
+            "is_alertable": false,
+            "available_aggregate_functions": [
+                "min",
+                "max",
+                "sum",
+                "avg"
+            ],
+            "dimensions": [
+                {
+                    "label": "Node Type",
+                    "dimension_label": "node_type",
+                    "values": [
+                        "primary",
+                        "secondary"
+                    ]
+                }
+            ]
+        }
+    ],
+    "page": 1,
+    "pages": 1,
+    "results": 7
+}

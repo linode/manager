@@ -1,15 +1,14 @@
+import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import {
   StyledBox,
   StyledLabelBox,
@@ -19,7 +18,6 @@ import {
 } from './LinodeEntityDetail.styles';
 
 interface FooterProps {
-  isLinodesGrantReadOnly: boolean;
   linodeCreated: string;
   linodeId: number;
   linodeLabel: string;
@@ -34,7 +32,6 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
 
   const {
-    isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
     linodeLabel,
@@ -43,10 +40,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     linodeTags,
   } = props;
 
-  const isReadOnlyAccountAccess = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'account_access',
-    permittedGrantLevel: 'read_write',
-  });
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
@@ -68,31 +62,35 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   return (
     <Grid
-      sx={{
-        flex: 1,
-        padding: 0,
-      }}
-      alignItems="center"
       container
       direction="row"
-      justifyContent="space-between"
       spacing={2}
+      sx={{
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'space-between',
+        paddingY: 0,
+      }}
     >
       <Grid
+        size={{
+          lg: 8,
+          xs: 12,
+        }}
         sx={{
+          alignItems: 'flex-start',
           display: 'flex',
           padding: 0,
+
           [theme.breakpoints.down('lg')]: {
             padding: '8px',
           },
+
           [theme.breakpoints.down('md')]: {
             display: 'grid',
             gridTemplateColumns: '50% 2fr',
           },
         }}
-        alignItems="flex-start"
-        lg={8}
-        xs={12}
       >
         <StyledBox>
           {linodePlan && (
@@ -133,21 +131,27 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         </StyledBox>
       </Grid>
       <Grid
+        size={{
+          lg: 4,
+          xs: 12,
+        }}
         sx={{
           [theme.breakpoints.down('lg')]: {
             display: 'flex',
             justifyContent: 'flex-start',
           },
         }}
-        lg={4}
-        xs={12}
       >
         <TagCell
+          // A restricted user can technically add tags to a Linode if they have read-write permission on the Linode,
+          // but for the sake of the user experience, we choose to disable the "Add a tag" button in the UI because
+          // restricted users can't see account tags using GET /v4/tags
+          disabled={!permissions.is_account_admin}
+          entity="Linode"
+          entityLabel={linodeLabel}
           sx={{
             width: '100%',
           }}
-          disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
-          entityLabel={linodeLabel}
           tags={linodeTags}
           updateTags={updateTags}
           view="inline"

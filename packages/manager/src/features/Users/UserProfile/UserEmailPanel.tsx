@@ -1,12 +1,12 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutateProfile, useProfile } from '@linode/queries';
+import { Button, Paper, TextField } from '@linode/ui';
+import { UpdateUserEmailSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Button } from 'src/components/Button/Button';
-import { Paper } from 'src/components/Paper';
-import { TextField } from 'src/components/TextField';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import type { User } from '@linode/api-v4';
 
@@ -28,6 +28,7 @@ export const UserEmailPanel = ({ user }: Props) => {
     handleSubmit,
     setError,
   } = useForm({
+    resolver: yupResolver(UpdateUserEmailSchema),
     defaultValues: { email: user.email },
     values: { email: user.email },
   });
@@ -45,8 +46,8 @@ export const UserEmailPanel = ({ user }: Props) => {
   const disabledReason = isProxyUserProfile
     ? RESTRICTED_FIELD_TOOLTIP
     : profile?.username !== user.username
-    ? 'You can\u{2019}t change another user\u{2019}s email address.'
-    : undefined;
+      ? 'You can\u{2019}t change another user\u{2019}s email address.'
+      : undefined;
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
   const disableEmailField =
@@ -56,6 +57,8 @@ export const UserEmailPanel = ({ user }: Props) => {
     <Paper>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="email"
           render={({ field, fieldState }) => (
             <TextField
               disabled={disableEmailField}
@@ -70,8 +73,6 @@ export const UserEmailPanel = ({ user }: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="email"
         />
         <Button
           buttonType="primary"

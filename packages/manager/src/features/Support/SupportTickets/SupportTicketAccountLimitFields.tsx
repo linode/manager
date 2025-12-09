@@ -1,10 +1,9 @@
+import { useAccount, useSpecificTypes, useTypeQuery } from '@linode/queries';
+import { TextField } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
-import { useAccount } from 'src/queries/account/account';
-import { useSpecificTypes, useTypeQuery } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
@@ -58,16 +57,16 @@ export const SupportTicketAccountLimitFields = ({
   const defaultValues = {
     ...formState.defaultValues,
     customerName: `${account?.first_name ?? ''} ${account?.last_name ?? ''}`,
-    // eslint-disable-next-line perfectionist/sort-objects
+
     companyName: account?.company ?? '',
     numberOfEntities: '',
-    // eslint-disable-next-line perfectionist/sort-objects
+
     linodePlan:
       linodeType?.label ??
       kubeTypes.map((type) => type.formattedLabel).join(', ') ??
       '',
     useCase: '',
-    // eslint-disable-next-line perfectionist/sort-objects
+
     publicInfo: '',
   };
 
@@ -81,6 +80,8 @@ export const SupportTicketAccountLimitFields = ({
   return (
     <>
       <Controller
+        control={control}
+        name="customerName"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-customer-name
@@ -92,10 +93,10 @@ export const SupportTicketAccountLimitFields = ({
             value={field.value}
           />
         )}
-        control={control}
-        name="customerName"
       />
       <Controller
+        control={control}
+        name="companyName"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-company-name
@@ -106,21 +107,21 @@ export const SupportTicketAccountLimitFields = ({
             value={field.value}
           />
         )}
-        control={control}
-        name="companyName"
       />
       <SupportTicketProductSelectionFields ticketType="accountLimit" />
       {shouldShowLinodePlanField && (
         <Controller
+          control={control}
+          name="linodePlan"
           render={({ field, fieldState }) => (
             <TextField
+              data-qa-ticket-linode-plan
+              errorText={fieldState.error?.message}
               helperText={
                 <Link to="https://www.linode.com/pricing/">
                   View types of plans
                 </Link>
               }
-              data-qa-ticket-linode-plan
-              errorText={fieldState.error?.message}
               label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.linodePlan}
               name="linodePlan"
               onChange={field.onChange}
@@ -128,20 +129,20 @@ export const SupportTicketAccountLimitFields = ({
               value={field.value}
             />
           )}
-          control={control}
-          name="linodePlan"
         />
       )}
       <Controller
+        control={control}
+        name="useCase"
         render={({ field, fieldState }) => (
           <TextField
+            data-qa-ticket-use-case
+            errorText={fieldState.error?.message}
+            expand
             label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.useCase.replace(
               'entities',
               getEntityNameFromEntityType(entityType, true)
             )}
-            data-qa-ticket-use-case
-            errorText={fieldState.error?.message}
-            expand
             multiline
             name="useCase"
             onChange={field.onChange}
@@ -149,10 +150,10 @@ export const SupportTicketAccountLimitFields = ({
             value={field.value}
           />
         )}
-        control={control}
-        name="useCase"
       />
       <Controller
+        control={control}
+        name="publicInfo"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-public-info
@@ -166,8 +167,6 @@ export const SupportTicketAccountLimitFields = ({
             value={field.value}
           />
         )}
-        control={control}
-        name="publicInfo"
       />
     </>
   );

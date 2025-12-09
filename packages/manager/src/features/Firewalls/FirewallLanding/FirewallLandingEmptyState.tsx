@@ -1,7 +1,9 @@
 import * as React from 'react';
 
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -18,11 +20,14 @@ interface Props {
 export const FirewallLandingEmptyState = (props: Props) => {
   const { openAddFirewallDrawer } = props;
 
+  const { data: permissions } = usePermissions('account', ['create_firewall']);
+
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Firewall',
+          disabled: !permissions.create_firewall,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -31,11 +36,16 @@ export const FirewallLandingEmptyState = (props: Props) => {
             });
             openAddFirewallDrawer();
           },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Firewalls',
+          }),
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={FirewallIcon}
+      icon={NetworkIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

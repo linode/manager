@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface FileAttachment {
   /* Each file needs to keep track of its own errors because each request hits the same endpoint */

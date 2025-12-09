@@ -1,18 +1,22 @@
+import { regionAvailabilityFactory } from '@linode/utilities';
+import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
+import { randomIp, randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import type {
   ClusterSize,
-  Engine,
-  Region,
   DatabaseEngine,
   DatabaseType,
+  Engine,
+  Region,
+  RegionAvailability,
 } from '@linode/api-v4';
-import { randomLabel } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 
-export interface databaseClusterConfiguration {
+export interface DatabaseClusterConfiguration {
   clusterSize: ClusterSize;
   dbType: Engine;
   engine: string;
+  ip: string;
   label: string;
   linodeType: string;
   region: Region;
@@ -322,10 +326,119 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
     memory: 98304,
     vcpus: 20,
   }),
+  databaseTypeFactory.build({
+    class: 'premium',
+    id: 'g7-premium-2',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 5.04,
+            monthly: 3360.0,
+          },
+          quantity: 3,
+        },
+      ],
+    },
+    disk: 59392,
+    label: 'Premium 4 GB',
+    memory: 4096,
+    vcpus: 20,
+  }),
+  databaseTypeFactory.build({
+    class: 'premium',
+    id: 'g7-premium-4',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 5.04,
+            monthly: 3360.0,
+          },
+          quantity: 3,
+        },
+      ],
+    },
+    disk: 133120,
+    label: 'Premium 8 GB',
+    memory: 8192,
+    vcpus: 20,
+  }),
+  databaseTypeFactory.build({
+    class: 'premium',
+    id: 'g7-premium-8',
+    engines: {
+      mysql: [
+        {
+          price: {
+            // (Insert your desired price here)
+            hourly: 5.04,
+            monthly: 3360.0,
+          },
+          quantity: 3,
+        },
+      ],
+    },
+    disk: 286720,
+    label: 'Premium 16 GB',
+    memory: 16384,
+    vcpus: 20,
+  }),
+];
+
+// Array of database plans availability in a region used for mocking.
+export const databaseRegionAvailability: RegionAvailability[] = [
+  regionAvailabilityFactory.build({
+    plan: 'g6-nanode-1',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g6-standard-8',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g6-standard-16',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g6-dedicated-8',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g6-dedicated-32',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g6-dedicated-48',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g7-premium-2',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g7-premium-4',
+    region: '*',
+    available: true,
+  }),
+  regionAvailabilityFactory.build({
+    plan: 'g7-premium-8',
+    region: '*',
+    available: true,
+  }),
 ];
 
 // Array of database cluster configurations for which to test creation.
-export const databaseConfigurations: databaseClusterConfiguration[] = [
+export const databaseConfigurations: DatabaseClusterConfiguration[] = [
   {
     clusterSize: 1,
     dbType: 'mysql',
@@ -334,6 +447,17 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 2,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-dedicated-2',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '8',
+    ip: '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e',
   },
   {
     clusterSize: 3,
@@ -343,17 +467,8 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-dedicated-2',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
+    ip: '',
   },
-  // {
-  //   label: randomLabel(),
-  //   linodeType: 'g6-dedicated-16',
-  //   clusterSize: 1,
-  //   dbType: 'mongodb',
-  //   regionTypeahead: 'Atlanta',
-  //   region: 'us-southeast',
-  //   engine: 'MongoDB',
-  //   version: '4',
-  // },
   {
     clusterSize: 3,
     dbType: 'postgresql',
@@ -362,10 +477,47 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '13',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 1,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g7-premium-2',
+    region: chooseRegion({
+      capabilities: ['Managed Databases', 'Premium Plans'],
+    }),
+    version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 2,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g7-premium-4',
+    region: chooseRegion({
+      capabilities: ['Managed Databases', 'Premium Plans'],
+    }),
+    version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 3,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g7-premium-2',
+    region: chooseRegion({
+      capabilities: ['Managed Databases', 'Premium Plans'],
+    }),
+    version: '8',
+    ip: randomIp(),
   },
 ];
 
-export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
+export const databaseConfigurationsResize: DatabaseClusterConfiguration[] = [
   {
     clusterSize: 3,
     dbType: 'mysql',
@@ -374,6 +526,7 @@ export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
     linodeType: 'g6-standard-6',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '8',
+    ip: randomIp(),
   },
   {
     clusterSize: 3,
@@ -383,5 +536,54 @@ export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
     linodeType: 'g6-dedicated-16',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 3,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g7-premium-4',
+    region: chooseRegion({
+      capabilities: ['Managed Databases', 'Premium Plans'],
+    }),
+    version: '5',
+    ip: randomIp(),
+  },
+];
+
+// Array of database cluster configurations for which to test creation.
+export const databaseConfigurationsAdvConfig: DatabaseClusterConfiguration[] = [
+  {
+    clusterSize: 1,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 3,
+    dbType: 'postgresql',
+    engine: 'PostgreSQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '13',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 2,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g7-premium-2',
+    region: chooseRegion({
+      capabilities: ['Managed Databases', 'Premium Plans'],
+    }),
+    version: '8',
+    ip: randomIp(),
   },
 ];

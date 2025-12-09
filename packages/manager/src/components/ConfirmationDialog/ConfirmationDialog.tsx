@@ -1,20 +1,19 @@
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
+import { Dialog, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
-
-import type { DialogProps } from '@mui/material/Dialog';
-
+import type { APIError } from '@linode/api-v4';
+import type { DialogProps } from '@linode/ui';
 export interface ConfirmationDialogProps extends DialogProps {
-  actions?: ((props: any) => JSX.Element) | JSX.Element;
-  error?: JSX.Element | string;
-  onClose: () => void;
-  onExited?: () => void;
-  title: string;
+  /**
+   * The actions to be displayed in the dialog.
+   */
+  actions?: ((props: DialogProps) => JSX.Element) | JSX.Element;
+  /**
+   * The error to be displayed in case fetching the entity failed.
+   */
+  entityError?: APIError[] | null | string;
 }
 
 /**
@@ -26,76 +25,32 @@ export interface ConfirmationDialogProps extends DialogProps {
  * - Avoid “Are you sure?” language. Assume the user knows what they want to do while helping them avoid unintended consequences.
  *
  */
-export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
-  const {
-    actions,
-    children,
-    error,
-    onClose,
-    onExited,
-    title,
-    ...dialogProps
-  } = props;
+export const ConfirmationDialog = React.forwardRef<
+  HTMLDivElement,
+  ConfirmationDialogProps
+>((props, ref) => {
+  const { actions, children, entityError, ...dialogProps } = props;
 
   return (
-    <StyledDialog
+    <Dialog
       {...dialogProps}
-      TransitionProps={{
-        ...dialogProps.TransitionProps,
-        onExited,
-      }}
-      onClose={(_, reason) => {
-        if (reason !== 'backdropClick') {
-          onClose();
-        }
-      }}
+      error={props.error || entityError}
       PaperProps={{ role: undefined }}
-      data-qa-dialog
-      data-qa-drawer
-      data-testid="drawer"
-      role="dialog"
+      ref={ref}
     >
-      <DialogTitle onClose={onClose} title={title} />
-      <StyledDialogContent data-qa-dialog-content>
-        {children}
-        {error && <StyledErrorText>{error}</StyledErrorText>}
-      </StyledDialogContent>
-      <StyledDialogActions>
+      <StyledDialogContentSection>{children}</StyledDialogContentSection>
+      <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {actions && typeof actions === 'function'
           ? actions(dialogProps)
           : actions}
-      </StyledDialogActions>
-    </StyledDialog>
+      </Stack>
+    </Dialog>
   );
-};
-
-const StyledDialog = styled(Dialog, {
-  label: 'StyledDialog',
-})({
-  '& .MuiDialogTitle-root': {
-    marginBottom: '10px',
-  },
 });
 
-const StyledDialogActions = styled(DialogActions, {
-  label: 'StyledDialogActions',
-})({
-  '& button': {
-    marginBottom: 0,
-  },
-  justifyContent: 'flex-end',
-});
-
-const StyledDialogContent = styled(DialogContent, {
-  label: 'StyledDialogContent',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const StyledErrorText = styled(DialogContentText, {
-  label: 'StyledErrorText',
-})(({ theme }) => ({
-  color: theme.palette.error.dark,
-  marginTop: theme.spacing(2),
+const StyledDialogContentSection = styled(Stack, {
+  label: 'StyledDialogContentSection',
+})(({ theme: { spacing } }) => ({
+  marginBottom: spacing(2),
+  order: -1,
 }));

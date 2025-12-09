@@ -1,29 +1,40 @@
-import { getBooleanEnv } from './utilities/env';
+import { getBooleanEnv } from '@linode/utilities';
 
-// whether or not this is a Vite production build
+// Whether or not this is a Vite production build
 // This does not necessarily mean Cloud is running in a production environment.
 // For example, cloud.dev.linode.com is technically a production build.
 export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = getBooleanEnv(
-  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
-);
+export const ENABLE_DEV_TOOLS =
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS === undefined
+    ? import.meta.env.DEV
+    : getBooleanEnv(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
 
 // allow us to explicity enable maintenance mode
-export const ENABLE_MAINTENANCE_MODE =
-  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE === 'true';
+export const ENABLE_MAINTENANCE_MODE = getBooleanEnv(
+  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE
+);
 
-/** required for the app to function */
-export const APP_ROOT =
-  import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
-export const LOGIN_ROOT =
-  import.meta.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
+/**
+ * Because Cloud Manager uses two different search implementations depending on the account's
+ * size, we have this environment variable which allows us to force Cloud Manager to use
+ * a desired implementation.
+ *
+ * @example REACT_APP_FORCE_SEARCH_TYPE=api
+ */
+export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
+
 export const API_ROOT =
   import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
-export const BETA_API_ROOT = API_ROOT + 'beta';
-/** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
-export const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
+
+/**
+ * A display name for the current environment.
+ * This exists so we can dynamically set our Sentry environment.
+ */
+export const ENVIRONMENT_NAME =
+  import.meta.env.REACT_APP_ENVIRONMENT_NAME ?? 'local';
+
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
@@ -40,11 +51,6 @@ export const LAUNCH_DARKLY_API_KEY =
 export const LINODE_STATUS_PAGE_URL =
   import.meta.env.REACT_APP_STATUS_PAGE_URL ||
   'https://status.linode.com/api/v2';
-
-// Maximum page size allowed by the API. Used in the `getAll()` helper function
-// to request as many items at once as possible.
-export const API_MAX_PAGE_SIZE =
-  Number(import.meta.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
 
 // Having more of a single entity than this number classifies you as having
 // a "large account".
@@ -65,21 +71,16 @@ export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
 /** optional variables */
 export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
-export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
-export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
+
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
-export const NUM_ADOBE_SCRIPTS = 3;
+
+/** Pendo */
+export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
+
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
-
-export const LOG_PERFORMANCE_METRICS =
-  !isProductionBuild &&
-  import.meta.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
-
-export const DISABLE_EVENT_THROTTLE =
-  Boolean(import.meta.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
@@ -117,16 +118,8 @@ export const POLLING_INTERVALS = {
   IN_PROGRESS: 2_000,
 } as const;
 
-/**
- * Time after which data from the API is considered stale (half an hour)
- */
-export const REFRESH_INTERVAL = 60 * 30 * 1000;
-
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
-
-// Default size limit for Images (some users have custom limits)
-export const IMAGE_DEFAULT_LIMIT = 6144;
 
 export const allowedHTMLTagsStrict: string[] = [
   'a',
@@ -197,12 +190,6 @@ export const LINODE_NETWORK_IN = 40;
 export const nonClickEvents = ['profile_update'];
 
 /**
- * Root URL for Object Storage clusters and buckets.
- * A bucket can be accessed at: {bucket}.{cluster}.OBJECT_STORAGE_ROOT
- */
-export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
-
-/**
  * This delimiter is used to retrieve objects at just one hierarchical level.
  * As an example, assume the following objects are in a bucket:
  *
@@ -219,10 +206,6 @@ export const OBJECT_STORAGE_DELIMITER = '/';
 // Value from  1-4 reflecting a minimum score from zxcvbn
 export const MINIMUM_PASSWORD_STRENGTH = 4;
 
-// When true, use the mock API defined in serverHandlers.ts instead of making network requests
-export const MOCK_SERVICE_WORKER =
-  import.meta.env.REACT_APP_MOCK_SERVICE_WORKER === 'true';
-
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
 
@@ -232,11 +215,6 @@ export const PAYMENT_SOFT_MAX = 2_000;
 export const PAYMENT_HARD_MAX = 50_000;
 
 export const DB_ROOT_USERNAME = 'linroot';
-
-// "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
-// https://www.linode.com/docs/email/best-practices/running-a-mail-server/
-export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
-  '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
 
 // The date Linode switching to Akamai (for purposes of billing)
 export const AKAMAI_DATE = '2022-12-15 00:00:00';
@@ -270,12 +248,6 @@ export const ADDRESSES = {
   },
 };
 
-export const ACCESS_LEVELS = {
-  none: 'none',
-  readOnly: 'read_only',
-  readWrite: 'read_write',
-};
-
 // Linode Community URL accessible from the TopMenu Community icon
 export const LINODE_COMMUNITY_URL = 'https://linode.com/community';
 
@@ -284,13 +256,41 @@ export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 export const DEVELOPERS_LINK = 'https://developers.linode.com';
 
 // URL validators
-export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const OFFSITE_URL_REGEX =
+  /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
 export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // Firewall links
-export const CREATE_FIREWALL_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/';
 export const FIREWALL_GET_STARTED_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/';
+  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls';
 export const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations';
+  'https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall#limits-and-considerations';
+
+/**
+ * An array of region IDs.
+ *
+ * Currently, we don't have a region capability for Images.
+ * We check for the Object Storage capability (because images use Object Stoarge on the backend)
+ * but we need to exclude some regions manually because not every Object Stoage region support images.
+ *
+ * I made https://github.com/bnussman/image-compat-checker to try to help us identify which regions support images
+ * and which regions do not.
+ *
+ * Long term, we will hopefully remove this constant if
+ * - the API provides us a region capability for Images
+ * - or all Object Storage regions support Images
+ */
+export const DISALLOWED_IMAGE_REGIONS = [
+  'gb-lon',
+  'au-mel',
+  'sg-sin-2',
+  'jp-tyo-3',
+];
+
+// Default tooltip text for actions without permission
+export const NO_PERMISSION_TOOLTIP_TEXT =
+  'You do not have permission to perform this action.';
+
+// Default device limit for Linode Configuration profiles. Configuration profiles can have have up to 64
+// devices depending on the Linode's RAM, but will always be able to have at least 8.
+export const DEFAULT_DEVICE_LIMIT = 8;

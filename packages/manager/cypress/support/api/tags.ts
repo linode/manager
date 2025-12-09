@@ -1,8 +1,9 @@
 import { deleteTag, getTags } from '@linode/api-v4/lib/tags';
-import { Tag } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { entityTag } from 'support/constants/cypress';
 import { depaginate } from 'support/util/paginate';
+
+import type { Tag } from '@linode/api-v4';
 
 /**
  * Delete all tags whose labels are prefixed "cy-test-".
@@ -17,7 +18,6 @@ export const deleteAllTestTags = async (): Promise<void> => {
   for (const testTag of testTags) {
     // Accounts can have thousands of tags, so we want to send these requests
     // sequentially to avoid overloading the API.
-    // eslint-disable-next-line no-await-in-loop
     await deleteTag(testTag.label);
   }
 };

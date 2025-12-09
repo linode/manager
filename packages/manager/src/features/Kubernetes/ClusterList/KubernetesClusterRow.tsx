@@ -1,20 +1,17 @@
-import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
+import { useRegionsQuery, useSpecificTypes } from '@linode/queries';
+import { Chip, Stack } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useAllKubernetesNodePoolQuery,
-  useKubernetesVersionQuery,
+  useKubernetesTieredVersionsQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import {
@@ -22,33 +19,9 @@ import {
   getTotalClusterMemoryCPUAndStorage,
 } from '../kubeUtils';
 import { ClusterActionMenu } from './ClusterActionMenu';
+import { ClusterChips } from './ClusterChips';
 
-const useStyles = makeStyles()(() => ({
-  clusterRow: {
-    '&:before': {
-      display: 'none',
-    },
-  },
-  labelStatusWrapper: {
-    alignItems: 'center',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    whiteSpace: 'nowrap',
-  },
-  link: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-    },
-    display: 'block',
-    fontSize: '.875rem',
-    lineHeight: '1.125rem',
-  },
-  version: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-}));
+import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 
 export interface Props {
   cluster: KubernetesCluster;
@@ -62,15 +35,23 @@ export interface Props {
 
 export const KubernetesClusterRow = (props: Props) => {
   const { cluster, openDeleteDialog, openUpgradeDialog } = props;
-  const { classes } = useStyles();
 
-  const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r) => r.id === cluster.region);
+
+  const { data: versions } = useKubernetesTieredVersionsQuery(
+    cluster?.tier ?? 'standard'
+  );
+
+  const isLKEClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: cluster.id,
+  });
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
@@ -83,56 +64,35 @@ export const KubernetesClusterRow = (props: Props) => {
 
   return (
     <TableRow
-      className={classes.clusterRow}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
       key={cluster.id}
     >
       <TableCell data-qa-cluster-label>
-        <Grid
+        <Stack
           alignItems="center"
-          container
+          direction="row"
           justifyContent="space-between"
-          wrap="nowrap"
+          spacing={1}
         >
-          <Grid className="py0">
-            <div className={classes.labelStatusWrapper}>
-              <Link
-                className={classes.link}
-                tabIndex={0}
-                to={`/kubernetes/clusters/${cluster.id}/summary`}
-              >
-                {cluster.label}
-              </Link>
-            </div>
-          </Grid>
-          {cluster.control_plane.high_availability && (
-            <Grid>
-              <Chip
-                data-testid="ha-chip"
-                label="HA"
-                size="small"
-                sx={(theme) => ({ borderColor: theme.color.green })}
-                variant="outlined"
-              />
-            </Grid>
-          )}
-        </Grid>
+          <Link to={`/kubernetes/clusters/${cluster.id}/summary`}>
+            {cluster.label}
+          </Link>
+          <ClusterChips cluster={cluster} />
+        </Stack>
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-cluster-version>
-          <div className={classes.version}>
-            {cluster.k8s_version}
-            {hasUpgrade && (
-              <Chip
-                clickable
-                label="UPGRADE"
-                onClick={openUpgradeDialog}
-                size="small"
-                sx={{ mx: 2 }}
-              />
-            )}
-          </div>
+          {cluster.k8s_version}
+          {hasUpgrade && !isLKEClusterReadOnly && (
+            <Chip
+              clickable
+              label="UPGRADE"
+              onClick={openUpgradeDialog}
+              size="small"
+              sx={{ mx: 2 }}
+            />
+          )}
         </TableCell>
         <TableCell data-qa-cluster-date>
           <DateTimeDisplay value={cluster.created} />
@@ -149,11 +109,12 @@ export const KubernetesClusterRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell>
         <ClusterActionMenu
+          clusterId={cluster.id}
+          clusterLabel={cluster.label}
+          disabled={isLKEClusterReadOnly}
           openDialog={() =>
             openDeleteDialog(cluster.id, cluster.label, pools ?? [])
           }
-          clusterId={cluster.id}
-          clusterLabel={cluster.label}
         />
       </TableCell>
     </TableRow>

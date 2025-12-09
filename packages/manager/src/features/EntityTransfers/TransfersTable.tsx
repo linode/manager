@@ -1,25 +1,28 @@
-import {
-  EntityTransfer,
-  TransferEntities,
-} from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { type PermissionType } from '@linode/api-v4';
+import { Accordion } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { ConfirmTransferCancelDialog } from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import { TransferDetailsDialog } from './EntityTransfersLanding/TransferDetailsDialog';
 import { RenderTransferRow } from './RenderTransferRow';
 import { StyledDiv, StyledTable } from './TransfersTable.styles';
 
+import type {
+  APIError,
+  EntityTransfer,
+  TransferEntities,
+} from '@linode/api-v4/lib/types';
+
+type PermissionsSubset<T extends PermissionType> = T;
 interface Props {
   error: APIError[] | null;
   handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
@@ -27,10 +30,17 @@ interface Props {
   isLoading: boolean;
   page: number;
   pageSize: number;
+  permissions?: Record<TransfersPermissions, boolean>;
   results: number;
-  transferType: 'pending' | 'received' | 'sent';
   transfers?: EntityTransfer[];
+  transferType: 'pending' | 'received' | 'sent';
 }
+
+export type TransfersPermissions = PermissionsSubset<
+  | 'accept_service_transfer'
+  | 'cancel_service_transfer'
+  | 'create_service_transfer'
+>;
 
 export const TransfersTable = React.memo((props: Props) => {
   const {
@@ -43,11 +53,11 @@ export const TransfersTable = React.memo((props: Props) => {
     results,
     transferType,
     transfers,
+    permissions,
   } = props;
 
-  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
-    false
-  );
+  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] =
+    React.useState(false);
   const [tokenBeingCanceled, setTokenBeingCanceled] = React.useState('');
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [currentToken, setCurrentToken] = React.useState('');
@@ -135,26 +145,27 @@ export const TransfersTable = React.memo((props: Props) => {
             </TableHead>
             <TableBody>
               <TableContentWrapper
+                error={error ?? undefined}
+                length={transfers?.length ?? 0}
+                loading={isLoading}
                 loadingProps={{
                   columns: 3,
                   responsive: {
                     // @TODO do this
                   },
                 }}
-                error={error ?? undefined}
-                length={transfers?.length ?? 0}
-                loading={isLoading}
               >
                 {transfers?.map((transfer, idx) => (
                   <RenderTransferRow
-                    handleCancelPendingTransferClick={
-                      handleCancelPendingTransferClick
-                    }
                     created={transfer.created}
                     entities={transfer.entities}
                     expiry={transfer.expiry}
+                    handleCancelPendingTransferClick={
+                      handleCancelPendingTransferClick
+                    }
                     handleTokenClick={handleTokenClick}
                     key={`${transferType}-${idx}`}
+                    permissions={permissions}
                     status={transfer.status}
                     token={transfer.token}
                     transferType={transferType}

@@ -1,10 +1,10 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
-import Factory from 'src/factories/factoryProxy';
+import { pickRandom, randomDate } from '@linode/utilities';
+import { Factory } from '@linode/utilities';
 
-import { pickRandom, randomDate } from 'src/utilities/random';
+import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 
-export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMaintenance>(
-  {
+export const accountMaintenanceFactory =
+  Factory.Sync.makeFactory<AccountMaintenance>({
     entity: Factory.each((id) =>
       pickRandom([
         {
@@ -21,6 +21,9 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
         },
       ])
     ),
+    maintenance_policy_set: Factory.each(() =>
+      pickRandom(['linode/migrate', 'linode/power_off_on'])
+    ),
     reason: Factory.each(() =>
       pickRandom([
         `This maintenance will allow us to update the BIOS on the host’s motherboard.`,
@@ -34,10 +37,24 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
         `We must replace faulty RAM in your Linode's host.`,
       ])
     ),
+    description: Factory.each(() =>
+      pickRandom<AccountMaintenance['description']>(['emergency', 'scheduled'])
+    ),
+    source: Factory.each(() => pickRandom(['user', 'platform'])),
     status: Factory.each(() => pickRandom(['pending', 'started'])),
     type: Factory.each(() =>
       pickRandom(['cold_migration', 'live_migration', 'reboot'])
     ),
-    when: Factory.each(() => randomDate().toISOString()),
-  }
-);
+    when: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+    not_before: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+    start_time: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+    complete_time: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+  });

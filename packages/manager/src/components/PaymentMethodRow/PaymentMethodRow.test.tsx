@@ -1,5 +1,6 @@
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -10,8 +11,22 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {
+      make_billing_payment: false,
+      set_default_payment_method: false,
+      delete_payment_method: false,
+    },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
+  const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
@@ -20,9 +35,9 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 });
 
 describe('Payment Method Row', () => {
-  it('Displays "Default" chip if payment method is set as default', () => {
+  it('Displays "Default" chip if payment method is set as default', async () => {
     const { getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
           paymentMethod={paymentMethodFactory.build({ is_default: true })}
@@ -33,9 +48,9 @@ describe('Payment Method Row', () => {
     expect(getByText('DEFAULT')).toBeVisible();
   });
 
-  it('Does not display "Default" chip if payment method is not set as default', () => {
+  it('Does not display "Default" chip if payment method is not set as default', async () => {
     const { queryByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
           paymentMethod={paymentMethodFactory.build({ is_default: false })}
@@ -46,7 +61,7 @@ describe('Payment Method Row', () => {
     expect(queryByText('DEFAULT')).toBeNull();
   });
 
-  it('Has default ARIA label for credit card and Google Pay payment methods', () => {
+  it('Has default ARIA label for credit card and Google Pay payment methods', async () => {
     const expectedLabelCreditCard = 'Action menu for card ending in 1881';
     const expectedLabelGooglePay = 'Action menu for card ending in 1111';
 
@@ -71,7 +86,7 @@ describe('Payment Method Row', () => {
     });
 
     const { getByLabelText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
           paymentMethod={paymentMethodCreditCard}
@@ -87,7 +102,7 @@ describe('Payment Method Row', () => {
     expect(getByLabelText(expectedLabelGooglePay)).toBeVisible();
   });
 
-  it('Has PayPal-specific ARIA label for PayPal payment methods', () => {
+  it('Has PayPal-specific ARIA label for PayPal payment methods', async () => {
     const expectedLabelPayPal =
       'Action menu for Paypal testpaypaluser@example.com';
     const payPalPaymentMethod = paymentMethodFactory.build({
@@ -100,7 +115,7 @@ describe('Payment Method Row', () => {
     });
 
     const { getByLabelText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
           paymentMethod={payPalPaymentMethod}
@@ -113,7 +128,7 @@ describe('Payment Method Row', () => {
 
   it('Disables "Make Default" and "Delete" actions if payment method is set as default', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
           paymentMethod={paymentMethodFactory.build({ is_default: true })}
@@ -131,9 +146,15 @@ describe('Payment Method Row', () => {
 
   it('Calls `onDelete` callback when "Delete" action is clicked', async () => {
     const mockFunction = vi.fn();
-
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        make_billing_payment: false,
+        set_default_payment_method: false,
+        delete_payment_method: true,
+      },
+    });
     const { getByLabelText, getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={mockFunction}
           paymentMethod={paymentMethodFactory.build({ is_default: false })}
@@ -152,6 +173,13 @@ describe('Payment Method Row', () => {
   });
 
   it('Makes payment method default when "Make Default" action is clicked', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        make_billing_payment: true,
+        set_default_payment_method: true,
+        delete_payment_method: false,
+      },
+    });
     const paymentMethod = paymentMethodFactory.build({
       data: {
         card_type: 'Visa',
@@ -161,7 +189,7 @@ describe('Payment Method Row', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
       </PayPalScriptProvider>
     );
@@ -176,21 +204,20 @@ describe('Payment Method Row', () => {
     expect(makeDefaultPaymentMethod).toBeCalledTimes(1);
   });
 
-  it('Opens "Make a Payment" drawer if "Make a Payment" action is clicked', async () => {
-    const paymentMethod = paymentMethodFactory.build();
-
-    /*
-     * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
-     * and is required for this test. We may want to consider decoupling these components in the future.
-     */
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-        <BillingSummary
-          balance={0}
-          balanceUninvoiced={0}
-          paymentMethods={[paymentMethod]}
+  it('should disable "Make a Payment" button if the user does not have make_billing_payment permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        make_billing_payment: false,
+        set_default_payment_method: false,
+        delete_payment_method: false,
+      },
+    });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <PaymentMethodRow
+          onDelete={vi.fn()}
+          paymentMethod={paymentMethodFactory.build({ is_default: true })}
         />
-        <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
       </PayPalScriptProvider>
     );
 
@@ -199,9 +226,95 @@ describe('Payment Method Row', () => {
 
     const makePaymentButton = getByText('Make a Payment');
     expect(makePaymentButton).toBeVisible();
+    expect(
+      makePaymentButton.closest('li')?.getAttribute('aria-disabled')
+    ).toEqual('true');
+  });
+
+  it('should enable "Make a Payment" button if the user has make_billing_payment permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        make_billing_payment: true,
+        set_default_payment_method: false,
+        delete_payment_method: false,
+      },
+    });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+        <PaymentMethodRow
+          onDelete={vi.fn()}
+          paymentMethod={paymentMethodFactory.build({ is_default: true })}
+        />
+      </PayPalScriptProvider>
+    );
+
+    const actionMenu = getByLabelText('Action menu for card ending in 1881');
+    await userEvent.click(actionMenu);
+
+    const makePaymentButton = getByText('Make a Payment');
+    expect(makePaymentButton).toBeVisible();
+    expect(
+      makePaymentButton.closest('li')?.getAttribute('aria-disabled')
+    ).not.toEqual('true');
+  });
+
+  it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
+    const paymentMethods = [
+      paymentMethodFactory.build({
+        type: 'paypal',
+        data: { email: 'test@linode.com', paypal_id: '' },
+      }),
+      paymentMethodFactory.build({
+        type: 'credit_card',
+        data: { last_four: '1881' },
+      }),
+    ];
+
+    /*
+     * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
+     * and is required for this test. We may want to consider decoupling these components in the future.
+     */
+    const { getByLabelText, getByTestId, getByText, getAllByTestId } =
+      renderWithTheme(
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+          <BillingSummary
+            balance={0}
+            balanceUninvoiced={0}
+            paymentMethods={paymentMethods}
+          />
+          <PaymentMethodRow
+            onDelete={vi.fn()}
+            paymentMethod={paymentMethods[1]}
+          />
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
+      );
+
+    const actionMenu = getByLabelText('Action menu for card ending in 1881');
+    await userEvent.click(actionMenu);
+
+    const makePaymentButton = getByText('Make a Payment');
+    expect(makePaymentButton).toBeVisible();
     await userEvent.click(makePaymentButton);
 
-    expect(getByTestId('drawer')).toBeVisible();
-    expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+    await waitFor(() => {
+      expect(getByTestId('drawer')).toBeVisible();
+    });
+
+    expect(getByTestId('drawer-title')).toHaveTextContent('Make a Payment');
+
+    const expectedSelectionCard = getAllByTestId('selection-card')[1];
+
+    expect(expectedSelectionCard).toBeVisible();
+    expect(expectedSelectionCard).toHaveTextContent('1881');
+    expect(expectedSelectionCard).toHaveAttribute(
+      'data-qa-selection-card-checked',
+      'true'
+    );
+
+    // In the future, if we have access to the router's state,
+    // we can assert the search params.
   });
 });

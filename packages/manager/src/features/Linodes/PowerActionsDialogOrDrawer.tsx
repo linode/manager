@@ -1,20 +1,16 @@
-import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
+  useAllLinodeConfigsQuery,
   useBootLinodeMutation,
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
+import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Link } from 'src/components/Link';
+import { useEventsPollingActions } from 'src/queries/events/events';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
 
@@ -22,6 +18,7 @@ export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
 interface Props {
   action: Action;
+  isFetching?: boolean;
   isOpen: boolean;
   linodeId: number | undefined;
   linodeLabel?: string | undefined;
@@ -40,7 +37,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, linodeLabel, onClose } = props;
+  const { action, isFetching, isOpen, linodeId, linodeLabel, onClose } = props;
   const theme = useTheme();
 
   const {
@@ -142,18 +139,16 @@ export const PowerActionsDialog = (props: Props) => {
           secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
         />
       }
-      sx={{
-        '& .dialog-content': {
-          paddingBottom: 0,
-          paddingTop: 0,
-        },
-      }}
       error={error?.[0].reason}
+      isFetching={isFetching}
       onClose={handleOnClose}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
-      {isPowerOnAction ? (
+      {isRebootAction && (
+        <Typography>Are you sure you want to reboot this Linode?</Typography>
+      )}
+      {isPowerOnAction && (
         <Typography
           sx={{
             alignItems: 'center',
@@ -163,51 +158,39 @@ export const PowerActionsDialog = (props: Props) => {
           }}
         >
           See the&nbsp;
-          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance">
             guide for setting up and securing a compute instance
           </Link>
           &nbsp;for more information.
         </Typography>
-      ) : null}
+      )}
       {showConfigSelect && (
-        <>
-          <Autocomplete
-            value={configOptions.find(
-              (option) => option.value === selectedConfigID
-            )}
-            autoHighlight
-            disablePortal={false}
-            errorText={configsError?.[0].reason}
-            label="Config"
-            loading={configsLoading}
-            onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
-            options={configOptions}
-          />
-          <FormHelperText>
-            If no value is selected, the last booted config will be used.
-          </FormHelperText>
-        </>
+        <Autocomplete
+          autoHighlight
+          disablePortal={false}
+          errorText={configsError?.[0].reason}
+          helperText="If no value is selected, the last booted config will be used."
+          label="Config"
+          loading={configsLoading}
+          onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
+          options={configOptions}
+          value={
+            configOptions.find((option) => option.value === selectedConfigID) ??
+            null
+          }
+        />
       )}
       {props.action === 'Power Off' && (
-        <span>
-          <Notice
-            sx={{
-              '& .noticeText': {
-                fontSize: '0.875rem !important',
-              },
-            }}
-            variant="warning"
-          >
-            <strong>Note: </strong>
-            Powered down Linodes will still accrue charges.
-            <br />
-            See the&nbsp;
-            <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services">
+        <Notice spacingBottom={0} variant="warning">
+          <Typography>
+            <strong>Note: </strong>Powered down Linodes will still accrue
+            charges. See the&nbsp;
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
               Billing and Payments documentation
             </Link>
             &nbsp;for more information.
-          </Notice>
-        </span>
+          </Typography>
+        </Notice>
       )}
     </ConfirmationDialog>
   );

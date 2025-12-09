@@ -1,11 +1,11 @@
+import { Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
@@ -59,10 +59,10 @@ export const TicketRow = ({ ticket }: Props) => {
       </Hidden>
       <Hidden mdDown>
         <TableCell
+          data-qa-support-entity
           sx={{
             lineHeight: 1.1,
           }}
-          data-qa-support-entity
         >
           {renderEntityLink(ticket)}
         </TableCell>

@@ -1,14 +1,16 @@
-import { Theme, styled } from '@mui/material/styles';
+import { omittedProps } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
-import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { Theme } from '@mui/material/styles';
 
 type StyledMaintenanceCellProps = { maintenance: boolean };
 
 const statusLinkStyles = (theme: Theme) => ({
   '& p': {
     color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
   },
   backgroundColor: 'transparent',
   border: 'none',
@@ -49,11 +51,6 @@ export const StyledMaintenanceTableCell = styled(TableCell, {
           [theme.breakpoints.up('md')]: {
             minWidth: 200,
           },
-        },
-        '& button': {
-          color: theme.textColors.linkActiveLight,
-          padding: '0 6px',
-          position: 'relative',
         },
         [theme.breakpoints.up('md')]: {
           width: '20%',

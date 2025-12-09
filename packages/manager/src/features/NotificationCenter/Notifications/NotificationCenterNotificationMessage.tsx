@@ -1,11 +1,9 @@
+import { Box, Divider, Typography } from '@linode/ui';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
-import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { StyledLink } from '../NotificationCenter.styles';
@@ -47,11 +45,11 @@ export const NotificationCenterNotificationMessage = (
   return (
     <>
       <Box
+        data-testid={notification.type}
         sx={{
           alignItem: 'flex-start',
           display: 'flex',
         }}
-        data-test-id={notification.type}
       >
         <Box
           sx={{
@@ -70,18 +68,18 @@ export const NotificationCenterNotificationMessage = (
           >
             {severity === 'critical' ? (
               <ErrorIcon
+                data-testid={`${severity}Icon`}
                 sx={{
                   fill: theme.color.red,
                 }}
-                data-test-id={`${severity}Icon`}
               />
             ) : null}
             {severity === 'major' ? (
               <WarningIcon
+                data-testid={severity + 'Icon'}
                 sx={{
                   fill: theme.palette.warning.dark,
                 }}
-                data-test-id={severity + 'Icon'}
               />
             ) : null}
           </Box>

@@ -1,24 +1,24 @@
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
-import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
+import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
+import { NodeBalancerVPC } from './NodeBalancerVPC';
 
-interface Props extends NodeBalancer {
-  onDelete: () => void;
-}
+import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 
-export const NodeBalancerTableRow = (props: Props) => {
-  const { id, ipv4, label, onDelete, region, transfer } = props;
+export const NodeBalancerTableRow = (props: NodeBalancer) => {
+  const { id, ipv4, label, region, transfer } = props;
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
 
@@ -32,7 +32,7 @@ export const NodeBalancerTableRow = (props: Props) => {
   return (
     <TableRow key={id}>
       <TableCell>
-        <Link tabIndex={0} to={`/nodebalancers/${id}`}>
+        <Link accessibleAriaLabel={label} to={`/nodebalancers/${id}`}>
           {label}
         </Link>
       </TableCell>
@@ -48,7 +48,10 @@ export const NodeBalancerTableRow = (props: Props) => {
           {configs?.length === 0 && 'None'}
           {configs?.map(({ id: configId, port }, i) => (
             <React.Fragment key={configId}>
-              <Link to={`/nodebalancers/${id}/configurations/${configId}`}>
+              <Link
+                accessibleAriaLabel={`NodeBalancer Port ${port}`}
+                to={`/nodebalancers/${id}/configurations/${configId}`}
+              >
                 {port}
               </Link>
               {i < configs.length - 1 ? ', ' : ''}
@@ -64,12 +67,15 @@ export const NodeBalancerTableRow = (props: Props) => {
           <RegionIndicator region={region} />
         </TableCell>
       </Hidden>
+      {isNodebalancerVPCEnabled && (
+        <Hidden lgDown>
+          <TableCell data-qa-vpc>
+            <NodeBalancerVPC nodeBalancerId={id} />
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
-        <NodeBalancerActionMenu
-          label={label}
-          nodeBalancerId={id}
-          toggleDialog={onDelete}
-        />
+        <NodeBalancerActionMenu nodeBalancerId={id} />
       </TableCell>
     </TableRow>
   );

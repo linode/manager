@@ -1,35 +1,32 @@
+import { loadScript } from '@linode/utilities';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from 'src/constants';
+import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-
-import { loadScript } from './useScript';
 
 /**
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
  */
 export const useAdobeAnalytics = () => {
-  const history = useHistory();
+  const location = useLocation();
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script
-    if (!!ADOBE_ANALYTICS_URL) {
+    if (ADOBE_ANALYTICS_URL) {
       loadScript(ADOBE_ANALYTICS_URL, { location: 'head' })
         .then((data) => {
-          const adobeScriptTags = document.querySelectorAll(
-            'script[src^="https://assets.adobedtm.com/"]'
-          );
-          // Log an error; if the promise resolved, the _satellite object and 3 Adobe scripts should be present in the DOM.
-          if (
-            data.status !== 'ready' ||
-            !window._satellite ||
-            adobeScriptTags.length !== NUM_ADOBE_SCRIPTS
-          ) {
+          // Log a Sentry error if the Launch script isn't ready or the _satellite object isn't present in the DOM.
+          if (data.status !== 'ready' || !window._satellite) {
             reportException(
               'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
             );
           }
+
+          // Fire the first page view for the landing page
+          window._satellite.track('page view', {
+            url: window.location.pathname,
+          });
         })
         .catch(() => {
           // Do nothing; a user may have analytics script requests blocked.
@@ -39,17 +36,14 @@ export const useAdobeAnalytics = () => {
 
   React.useEffect(() => {
     /**
-     * Send pageviews
+     * Send pageviews when location changes
      */
-    return history.listen(({ pathname }) => {
-      // Send Adobe Analytics page view events
-      if (window._satellite) {
-        window._satellite.track('page view', {
-          url: pathname,
-        });
-      }
-    });
-  }, [history]);
+    if (window._satellite) {
+      window._satellite.track('page view', {
+        url: location.pathname,
+      });
+    }
+  }, [location.pathname]); // Listen to location changes
 
   return null;
 };

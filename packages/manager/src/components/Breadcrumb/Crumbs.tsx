@@ -1,6 +1,6 @@
-import { LocationDescriptor } from 'history';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+
+import { Link } from 'src/components/Link';
 
 import {
   StyledDiv,
@@ -9,11 +9,13 @@ import {
 } from './Crumbs.styles';
 import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
-import { EditableProps, LabelProps } from './types';
+
+import type { EditableProps, LabelProps } from './types';
+import type { LinkProps } from '@tanstack/react-router';
 
 export interface CrumbOverridesProps {
-  label?: string;
-  linkTo?: LocationDescriptor;
+  label?: React.ReactNode | string;
+  linkTo?: LinkProps['to'];
   noCap?: boolean;
   position: number;
 }
@@ -56,6 +58,7 @@ export const Crumbs = React.memo((props: Props) => {
         return (
           <StyledDiv key={key}>
             <Link
+              data-qa-link
               to={
                 crumbOverrides && override
                   ? override.linkTo
@@ -63,15 +66,14 @@ export const Crumbs = React.memo((props: Props) => {
                     : link
                   : link
               }
-              data-qa-link
             >
               <StyledTypography
+                data-qa-link-text
+                data-testid={'link-text'}
                 sx={{
                   ...(override &&
                     override.noCap && { textTransform: 'initial' }),
                 }}
-                data-qa-link-text
-                data-testid={'link-text'}
               >
                 {crumbOverrides && override
                   ? override.label

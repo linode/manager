@@ -13,25 +13,29 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import * as React from 'react';
-import { mount } from 'cypress/react18';
-
-import { Provider } from 'react-redux';
-import { LDProvider } from 'launchdarkly-react-client-sdk';
+import { queryClientFactory } from '@linode/queries';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClientFactory } from '@src/queries/base';
-import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router';
+import '@testing-library/cypress/add-commands';
+import 'cypress-axe';
+import { mount } from 'cypress/react';
+import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
-import { MemoryRouter } from 'react-router-dom';
+import * as React from 'react';
+import { Provider } from 'react-redux';
+
+import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
 
-import '@testing-library/cypress/add-commands';
-import { ThemeName } from 'src/foundations/themes';
-
-import 'cypress-axe';
-
-// Load fonts using Vite rather than HTML `<link />`.
-import '../../../public/fonts/fonts.css';
+import type { ThemeName } from '@linode/ui';
+import type { AnyRoute, AnyRouter } from '@tanstack/react-router';
+import type { Flags } from 'src/featureFlags';
 
 /**
  * Mounts a component with a Cloud Manager theme applied.
@@ -42,10 +46,26 @@ import '../../../public/fonts/fonts.css';
 export const mountWithTheme = (
   jsx: React.ReactNode,
   theme: ThemeName = 'light',
-  flags: any = {}
+  flags: Partial<Flags> = {},
+  routeTree?: (parentRoute: AnyRoute) => AnyRoute[]
 ) => {
   const queryClient = queryClientFactory();
   const store = storeFactory();
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => jsx,
+    getParentRoute: () => rootRoute,
+    path: '/',
+  });
+  const router: AnyRouter = createRouter({
+    defaultNotFoundComponent: () => <div>Not Found</div>,
+    history: createMemoryHistory({
+      initialEntries: ['/'],
+    }),
+    routeTree: routeTree
+      ? rootRoute.addChildren([indexRoute, ...routeTree(indexRoute)])
+      : rootRoute.addChildren([indexRoute]),
+  });
 
   return mount(
     <Provider store={store}>
@@ -58,7 +78,7 @@ export const mountWithTheme = (
             options={{ bootstrap: flags }}
           >
             <SnackbarProvider>
-              <MemoryRouter>{jsx}</MemoryRouter>
+              <RouterProvider router={router} />
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>

@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { typeFactory } from 'src/factories/types';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigureForm } from './ConfigureForm';
@@ -174,10 +174,7 @@ describe('ConfigureForm component with price comparison', () => {
         {...props}
         currentRegion="us-east"
         selectedRegion="us-central"
-      />,
-      {
-        flags: { placementGroups: { beta: true, enabled: true } },
-      }
+      />
     );
 
     // Verify that the PlacementGroupsSelect component is rendered

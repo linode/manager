@@ -1,35 +1,30 @@
+import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
 import React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, setStorage } from 'src/utilities/storage';
+import { getStorage, setStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
 import type { APIError, UserType } from '@linode/api-v4';
-import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
   onClose: () => void;
   open: boolean;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 interface HandleSwitchToChildAccountProps {
-  currentTokenWithBearer?: AuthState['token'];
+  currentTokenWithBearer?: string;
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
@@ -43,11 +38,11 @@ export const SwitchAccountDrawer = (props: Props) => {
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
-  const currentTokenWithBearer = useCurrentToken() ?? '';
+  const currentTokenWithBearer = storage.authentication.token.get() ?? '';
 
   const {
     createToken,
-    createTokenError,
+    error: createTokenError,
     revokeToken,
     updateCurrentToken,
     validateParentToken,
@@ -142,16 +137,16 @@ export const SwitchAccountDrawer = (props: Props) => {
         {isProxyUser && (
           <>
             {' or '}
-            <StyledLinkButton
+            <LinkButton
+              aria-label="parent-account-link"
+              disabled={isSubmitting}
               onClick={() => {
                 sendSwitchToParentAccountEvent();
                 handleSwitchToParentAccount();
               }}
-              aria-label="parent-account-link"
-              disabled={isSubmitting}
             >
               switch back to your account
-            </StyledLinkButton>
+            </LinkButton>
           </>
         )}
         .

@@ -1,17 +1,19 @@
-import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
+import { LinkButton } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { DomainActionMenu, Handlers } from './DomainActionMenu';
+import { DomainActionMenu } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
+
+import type { Handlers } from './DomainActionMenu';
+import type { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 
 interface DomainTableRowProps extends Handlers {
   domain: Domain;
@@ -25,13 +27,11 @@ export const DomainTableRow = React.memo((props: DomainTableRowProps) => {
       <TableCell data-qa-domain-label>
         <StyledDiv>
           {domain.type !== 'slave' ? (
-            <Link tabIndex={0} to={`/domains/${domain.id}`}>
-              {domain.domain}
-            </Link>
+            <Link to={`/domains/${domain.id}`}>{domain.domain}</Link>
           ) : (
-            <StyledLinkButton onClick={() => props.onEdit(domain)}>
+            <LinkButton onClick={() => props.onEdit(domain)}>
               {domain.domain}
-            </StyledLinkButton>
+            </LinkButton>
           )}
         </StyledDiv>
       </TableCell>

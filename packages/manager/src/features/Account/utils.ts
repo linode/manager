@@ -11,6 +11,7 @@ export type ActionType =
   | 'create'
   | 'delete'
   | 'detach'
+  | 'download'
   | 'edit'
   | 'migrate'
   | 'modify'
@@ -18,10 +19,12 @@ export type ActionType =
   | 'rebuild'
   | 'rescue'
   | 'resize'
+  | 'resume'
+  | 'suspend'
   | 'view';
 
 interface GetRestrictedResourceText {
-  action?: ActionType;
+  action?: ActionType | ActionType[];
   includeContactInfo?: boolean;
   isChildUser?: boolean;
   isSingular?: boolean;
@@ -44,7 +47,7 @@ export type RestrictedGlobalGrantType =
   | NonAccountAccessGrant;
 
 /**
- * Get a resource restricted message based on action and resource type.
+ * Get a resource restricted message based on action(s) and resource type.
  */
 export const getRestrictedResourceText = ({
   action = 'edit',
@@ -59,7 +62,9 @@ export const getRestrictedResourceText = ({
 
   const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
 
-  let message = `You don't have permissions to ${action} ${resource}.`;
+  const actionText = formatAction(action);
+
+  let message = `You don't have permissions to ${actionText} ${resource}.`;
 
   if (includeContactInfo) {
     message += ` Please contact your ${contactPerson} to request the necessary permissions.`;
@@ -87,3 +92,41 @@ export const useIsTaxIdEnabled = (): {
 
   return { isTaxIdEnabled };
 };
+
+/**
+ * Hook to determine if the VM Host Maintenance feature should be visible to the user.
+ * Based on the feature flag.
+ */
+export const useVMHostMaintenanceEnabled = () => {
+  const flags = useFlags();
+
+  if (!flags) {
+    return { isVMHostMaintenanceEnabled: false };
+  }
+
+  const isVMHostMaintenanceEnabled = Boolean(flags.vmHostMaintenance?.enabled);
+  const isVMHostMaintenanceInBeta = Boolean(flags.vmHostMaintenance?.beta);
+  const isVMHostMaintenanceNew = Boolean(flags.vmHostMaintenance?.new);
+
+  return {
+    isVMHostMaintenanceEnabled,
+    isVMHostMaintenanceInBeta,
+    isVMHostMaintenanceNew,
+  };
+};
+
+/**
+ * Formats one or more actions into a readable string
+ * @param action - A single action or array of actions
+ *
+ * @returns A formatted string representing the action(s)
+ */
+function formatAction(action: ActionType | ActionType[]): string {
+  if (!Array.isArray(action)) return action;
+
+  const len = action.length;
+  if (len === 1) return action[0];
+  if (len === 2) return `${action[0]} or ${action[1]}`;
+
+  return `${action.slice(0, -1).join(', ')}, or ${action[action.length - 1]}`;
+}

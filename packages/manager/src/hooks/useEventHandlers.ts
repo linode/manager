@@ -1,31 +1,30 @@
+import {
+  firewallEventsHandler,
+  imageEventsHandler,
+  nodebalancerEventHandler,
+  oauthClientsEventHandler,
+  placementGroupEventHandler,
+  sshKeyEventHandler,
+  taxIdEventHandler,
+  tokenEventHandler,
+} from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { taxIdEventHandler } from 'src/queries/account/billing';
-import { oauthClientsEventHandler } from 'src/queries/account/oauth';
 import { databaseEventsHandler } from 'src/queries/databases/events';
 import { domainEventsHandler } from 'src/queries/domains';
-import { firewallEventsHandler } from 'src/queries/firewalls';
-import { imageEventsHandler } from 'src/queries/images';
-import { linodeEventsHandler } from 'src/queries/linodes/events';
-import { diskEventHandler } from 'src/queries/linodes/events';
-import { nodebalancerEventHandler } from 'src/queries/nodebalancers';
-import { sshKeyEventHandler } from 'src/queries/profile/profile';
-import { tokenEventHandler } from 'src/queries/profile/tokens';
 import { stackScriptEventHandler } from 'src/queries/stackscripts';
 import { supportTicketEventHandler } from 'src/queries/support';
 import { volumeEventsHandler } from 'src/queries/volumes/events';
 
-import type { Event } from '@linode/api-v4';
-import type {
-  InvalidateQueryFilters,
-  QueryClient,
-} from '@tanstack/react-query';
+import {
+  diskEventHandler,
+  interfaceEventHandler,
+  linodeEventsHandler,
+} from '../queries/linodes/events';
 
-export interface EventHandlerData {
-  event: Event;
-  invalidateQueries: (filters: InvalidateQueryFilters) => Promise<void>;
-  queryClient: QueryClient;
-}
+import type { Event } from '@linode/api-v4';
+import type { EventHandlerData } from '@linode/queries';
+import type { InvalidateQueryFilters } from '@tanstack/react-query';
 
 export const eventHandlers: {
   filter: (event: Event) => boolean;
@@ -70,6 +69,10 @@ export const eventHandlers: {
     handler: oauthClientsEventHandler,
   },
   {
+    filter: (event) => event.action.startsWith('placement_group'),
+    handler: placementGroupEventHandler,
+  },
+  {
     filter: (event) =>
       event.action.startsWith('linode') || event.action.startsWith('backups'),
     handler: linodeEventsHandler,
@@ -89,6 +92,10 @@ export const eventHandlers: {
   {
     filter: (event) => event.action.startsWith('tax_id'),
     handler: taxIdEventHandler,
+  },
+  {
+    filter: (event) => event.action.startsWith('interface'),
+    handler: interfaceEventHandler,
   },
 ];
 

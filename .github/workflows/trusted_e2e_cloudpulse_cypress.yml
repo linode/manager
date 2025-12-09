@@ -1,0 +1,56 @@
+name: Trusted Cloudpulse E2E on PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to run E2E against"
+        required: true
+        type: number
+jobs:
+  cloudpulse-e2e:
+    runs-on: ubuntu-latest
+
+    env:
+      # Cypress secret
+      CYPRESS_MANAGER_OAUTH: ${{ secrets.MANAGER_OAUTH }}
+
+      # App env
+      REACT_APP_LOGIN_ROOT: https://login.linode.com
+      REACT_APP_API_ROOT: https://api.linode.com/v4
+      REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+      REACT_APP_APP_ROOT: http://localhost:3000
+      REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
+      REACT_APP_LKE_HIGH_AVAILABILITY_PRICE: "60"
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.inputs.pr_number }}/head
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile && pnpm bootstrap
+      - name: Start app
+        run: pnpm dev &
+
+      - name: Wait for app
+        run: npx wait-on http://localhost:3000
+
+      - name: Install Cypress
+        run: |
+          cd packages/manager
+          pnpm exec cypress install
+
+      - name: Run Cloudpulse Cypress tests
+        run: |
+          cd packages/manager
+          pnpm cy:run -s 'cypress/e2e/core/cloudpulse/!(cloudpulse-navigation.spec.ts)'

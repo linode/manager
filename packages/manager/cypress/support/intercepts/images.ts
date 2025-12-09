@@ -5,9 +5,9 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
+import { makeResponse } from 'support/util/response';
 
 import type { Image } from '@linode/api-v4';
-import { makeResponse } from 'support/util/response';
 
 /**
  * Intercepts POST request to create a machine image and mocks the response.
@@ -68,7 +68,7 @@ export const mockGetCustomImages = (
 };
 
 /**
- * Intercepts GET request to retrieve custom images and mocks response.
+ * Intercepts GET request to retrieve recovery images and mocks response.
  *
  * @param images - Array of Image objects with which to mock response.
  *

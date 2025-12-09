@@ -1,12 +1,11 @@
-import { styled, useTheme } from '@mui/material/styles';
+import { Box, Select } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-
-import { Box } from '../Box';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
+import { MIN_PAGE_SIZE, PAGE_SIZES } from './PaginationFooter.constants';
 
-export const MIN_PAGE_SIZE = 25;
+import type { SxProps } from '@mui/material/styles';
 
 export interface PaginationProps {
   count: number;
@@ -15,14 +14,20 @@ export interface PaginationProps {
   page: number;
   pageSize: number;
   showAll?: boolean;
+  sx?: SxProps;
+}
+
+interface PaginationOption {
+  label: string;
+  value: number;
 }
 
 interface Props extends PaginationProps {
+  customOptions?: PaginationOption[];
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
+  minPageSize?: number;
 }
-
-export const PAGE_SIZES = [MIN_PAGE_SIZE, 50, 75, 100, Infinity];
 
 const baseOptions = [
   { label: 'Show 25', value: PAGE_SIZES[0] },
@@ -35,19 +40,22 @@ export const PaginationFooter = (props: Props) => {
   const theme = useTheme();
   const {
     count,
+    customOptions,
     fixedSize,
     handlePageChange,
     handleSizeChange,
+    minPageSize = MIN_PAGE_SIZE,
     page,
     pageSize,
     showAll,
+    sx,
   } = props;
 
-  if (count <= MIN_PAGE_SIZE && !fixedSize) {
+  if (count <= minPageSize && !fixedSize) {
     return null;
   }
 
-  const finalOptions = [...baseOptions];
+  const finalOptions = [...(customOptions ?? baseOptions)];
 
   // Add "Show All" to the list of options if the consumer has so specified.
   if (showAll) {
@@ -63,13 +71,16 @@ export const PaginationFooter = (props: Props) => {
 
   return (
     <Box
-      sx={{
-        background: theme.bg.bgPaper,
-      }}
       alignItems="center"
+      data-qa-table-pagination
       display="flex"
       justifyContent="space-between"
-      data-qa-table-pagination
+      sx={{
+        background: theme.bg.bgPaper,
+        border: `1px solid ${theme.tokens.component.Table.Row.Border}`,
+        borderTop: 0,
+        ...sx,
+      }}
     >
       {!isShowingAll && (
         <PaginationControls
@@ -80,54 +91,26 @@ export const PaginationFooter = (props: Props) => {
         />
       )}
       {!fixedSize ? (
-        <PageSizeSelectContainer data-qa-pagination-page-size>
-          <Autocomplete
-            disableClearable
+        <Box data-qa-pagination-page-size padding={0.5}>
+          <Select
+            hideLabel
             label="Number of items to show"
-            onChange={(_, selected) => handleSizeChange(selected.value)}
+            listItemProps={(value) => {
+              return {
+                dataAttributes: {
+                  'data-qa-pagination-page-size-option': String(value.value),
+                },
+              };
+            }}
+            onChange={(_e, value) => handleSizeChange(Number(value.value))}
             options={finalOptions}
-            textFieldProps={{ hideLabel: true, noMarginTop: true }}
-            value={defaultPagination}
+            value={{
+              label: defaultPagination?.label ?? finalOptions[0]?.label ?? '',
+              value: defaultPagination?.value ?? finalOptions[0]?.value ?? '',
+            }}
           />
-        </PageSizeSelectContainer>
+        </Box>
       ) : null}
     </Box>
   );
-};
-
-const PageSizeSelectContainer = styled(Box, {
-  label: 'PageSizeSelectContainer',
-})(({ theme }) => ({
-  '& .MuiInput-input': {
-    paddingTop: 4,
-  },
-  '& .MuiInput-root': {
-    '&.Mui-focused': {
-      boxShadow: 'none',
-    },
-    backgroundColor: theme.bg.bgPaper,
-    border: 'none',
-  },
-  '& .react-select__value-container': {
-    paddingLeft: 12,
-  },
-}));
-
-/**
- * Return the minimum page size needed to display a given number of items (`value`).
- * Example: getMinimumPageSizeForNumberOfItems(30, [25, 50, 75]) === 50
- */
-export const getMinimumPageSizeForNumberOfItems = (
-  numberOfItems: number,
-  pageSizes: number[] = PAGE_SIZES
-) => {
-  // Ensure the page sizes are sorted numerically.
-  const sortedPageSizes = [...pageSizes].sort((a, b) => a - b);
-
-  for (let i = 0; i < sortedPageSizes.length; i++) {
-    if (numberOfItems <= sortedPageSizes[i]) {
-      return sortedPageSizes[i];
-    }
-  }
-  return Infinity;
 };

@@ -1,12 +1,11 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 
 export interface Props {
   currentPlan: string;
-  error?: JSX.Element | string;
+  error?: string;
   isOpen: boolean;
   onClose: () => void;
   onResize: () => void;

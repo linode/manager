@@ -1,24 +1,36 @@
 import { sanitizeUrl } from '@braintree/sanitize-url';
-import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { useStyles } from 'src/components/Link.styles';
+import { omitProps } from '@linode/ui';
 import {
   childrenContainsNoText,
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
-} from 'src/utilities/link';
-import { omitProps } from 'src/utilities/omittedProps';
+} from '@linode/utilities'; // `link.ts` utils from @linode/utilities
+// eslint-disable-next-line no-restricted-imports
+import { Link as RouterLink } from '@tanstack/react-router';
+import * as React from 'react';
 
-import type { LinkProps as _LinkProps } from 'react-router-dom';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import { useStyles } from 'src/components/Link.styles';
 
-export interface LinkProps extends _LinkProps {
+import type { LinkProps as _LinkProps } from '@tanstack/react-router';
+
+type To = _LinkProps['to'] | (string & {});
+
+export interface LinkProps extends Omit<_LinkProps, 'to'> {
   /**
    * This property can override the value of the copy passed by default to the aria label from the children.
    * This is useful when the text of the link is unavailable, not descriptive enough, or a single icon is used as the child.
    */
   accessibleAriaLabel?: string;
+  /**
+   * Optional prop to bypass URL sanitization. Use with caution.
+   * @default false
+   */
+  bypassSanitization?: boolean;
+  /**
+   * Optional prop to pass a className to the link.
+   */
+  className?: string;
   /**
    * Optional prop to render the link as an external link, which features an external link icon, opens in a new tab<br />
    * and provides by default "noopener noreferrer" attributes to prevent security vulnerabilities.
@@ -38,14 +50,25 @@ export interface LinkProps extends _LinkProps {
    */
   hideIcon?: boolean;
   /**
-   * The Link's destination.
-   * We are overwriting react-router-dom's `to` type because they allow objects, functions, and strings.
-   * We want to keep our `to` prop simple so that we can easily read and sanitize it.
-   *
-   * @example "/profile/display"
-   * @example "https://linode.com"
+   * Optional prop to pass a onClick handler to the link.
    */
-  to: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /**
+   * Optional prop to pass a pendo id to the link.
+   */
+  pendoId?: string;
+  /**
+   * Optional prop to pass a sx style to the link.
+   */
+  style?: React.CSSProperties;
+  /**
+   * Optional prop to pass a title to the link.
+   */
+  title?: string;
+  /**
+   * The destination URL. Can be a relative path for internal navigation or an absolute URL for external links.
+   */
+  to?: To;
 }
 
 /**
@@ -76,21 +99,32 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       children,
       className,
       external,
+      bypassSanitization,
       forceCopyColor,
       hideIcon,
       onClick,
+      pendoId,
+      style,
+      title,
       to,
     } = props;
     const { classes, cx } = useStyles();
-    const sanitizedUrl = () => sanitizeUrl(to);
-    const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
-    const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
+    const processedUrl = () => {
+      if (!to) return '';
+      return bypassSanitization ? to : sanitizeUrl(to);
+    };
+    const shouldOpenInNewTab = opensInNewTab(processedUrl());
+    const resolvedChildren =
+      typeof children === 'function'
+        ? children({ isActive: false, isTransitioning: false })
+        : children;
+    const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(resolvedChildren);
     const externalNotice = '- link opens in a new tab';
     const ariaLabel = accessibleAriaLabel
       ? `${accessibleAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`
       : `${childrenAsAriaLabel} ${shouldOpenInNewTab ? externalNotice : ''}`;
 
-    if (childrenContainsNoText(children) && !accessibleAriaLabel) {
+    if (childrenContainsNoText(resolvedChildren) && !accessibleAriaLabel) {
       // eslint-disable-next-line no-console
       console.error(
         'Link component must have text content to be accessible to screen readers. Please provide an accessibleAriaLabel prop or text content.'
@@ -101,10 +135,13 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       'accessibleAriaLabel',
       'external',
       'forceCopyColor',
+      'to',
+      'pendoId',
     ]);
 
     return shouldOpenInNewTab ? (
       <a
+        aria-label={ariaLabel}
         className={cx(
           classes.root,
           {
@@ -112,15 +149,17 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           },
           className
         )}
-        aria-label={ariaLabel}
+        data-pendo-id={pendoId}
         data-testid={external ? 'external-site-link' : 'external-link'}
-        href={sanitizedUrl()}
+        href={processedUrl()}
         onClick={onClick}
         ref={ref}
         rel="noopener noreferrer"
+        style={style}
         target="_blank"
+        title={title}
       >
-        {children}
+        {resolvedChildren}
         {external && !hideIcon && (
           <span
             className={cx(classes.iconContainer, {
@@ -134,6 +173,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     ) : (
       <RouterLink
         aria-label={ariaLabel}
+        data-pendo-id={pendoId}
         data-testid="internal-link"
         {...routerLinkProps}
         className={cx(
@@ -144,6 +184,9 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           className
         )}
         ref={ref}
+        style={style}
+        title={title}
+        {...(to && !shouldOpenInNewTab ? { to: to as _LinkProps['to'] } : {})}
       />
     );
   }

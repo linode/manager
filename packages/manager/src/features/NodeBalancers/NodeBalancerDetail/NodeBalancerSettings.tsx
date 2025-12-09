@@ -1,58 +1,61 @@
-import { useTheme } from '@mui/material';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
-
-import { Accordion } from 'src/components/Accordion';
-import { Button } from 'src/components/Button/Button';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { TextField } from 'src/components/TextField';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
+} from '@linode/queries';
+import {
+  Accordion,
+  Button,
+  FormHelperText,
+  InputAdornment,
+  TextField,
+} from '@linode/ui';
+import { useTheme } from '@mui/material';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import { NO_PERMISSIONS_TOOLTIP_TEXT } from '../constants';
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
-  const displayFirewallInfoText = attachedFirewallData?.results === 0;
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
+  const { id } = useParams({ strict: false });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const isNodeBalancerReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'nodebalancer',
-    id: nodebalancer?.id,
-  });
+  const { data: permissions } = usePermissions(
+    'nodebalancer',
+    ['update_nodebalancer', 'delete_nodebalancer'],
+    nodebalancer?.id
+  );
 
   const {
     error: labelError,
     isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
-  } = useNodebalancerUpdateMutation(id);
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const {
     error: throttleError,
     isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
-  } = useNodebalancerUpdateMutation(id);
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 
   const [connectionThrottle, setConnectionThrottle] = React.useState(
     nodebalancer?.client_conn_throttle
   );
+
+  const {
+    data: selectedNodeBalancer,
+    isFetching: isFetchingNodeBalancer,
+    error: nodeBalancerError,
+  } = useNodeBalancerQuery(Number(id), !!id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -78,7 +81,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="NodeBalancer Label">
         <TextField
           data-qa-label-panel
-          disabled={isNodeBalancerReadOnly}
+          disabled={!permissions.update_nodebalancer}
           errorText={labelError?.[0].reason}
           label="Label"
           onChange={(e) => setLabel(e.target.value)}
@@ -88,30 +91,34 @@ export const NodeBalancerSettings = () => {
         <Button
           buttonType="primary"
           data-qa-label-save
-          disabled={isNodeBalancerReadOnly || label === nodebalancer.label}
+          disabled={
+            !permissions.update_nodebalancer || label === nodebalancer.label
+          }
           loading={isUpdatingLabel}
           onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
+          tooltipText={
+            !permissions.update_nodebalancer
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : undefined
+          }
         >
           Save
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls
-          displayFirewallInfoText={displayFirewallInfoText}
-          nodeBalancerId={id}
-        />
+        <NodeBalancerFirewalls nodeBalancerId={Number(id)} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
+          data-qa-connection-throttle
+          disabled={!permissions.update_nodebalancer}
+          errorText={throttleError?.[0].reason}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">/ second</InputAdornment>
             ),
           }}
-          data-qa-connection-throttle
-          disabled={isNodeBalancerReadOnly}
-          errorText={throttleError?.[0].reason}
           label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
           placeholder="0"
@@ -123,15 +130,15 @@ export const NodeBalancerSettings = () => {
           to this number per second. 0 to disable.
         </FormHelperText>
         <Button
+          buttonType="primary"
+          data-qa-label-save
+          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
+          loading={isUpdatingThrottle}
           onClick={() =>
             updateNodeBalancerThrottle({
               client_conn_throttle: connectionThrottle,
             })
           }
-          buttonType="primary"
-          data-qa-label-save
-          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
-          loading={isUpdatingThrottle}
           sx={sxButton}
         >
           Save
@@ -140,20 +147,29 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
-          disabled={isNodeBalancerReadOnly}
-          onClick={() => setIsDeleteDialogOpen(true)}
+          data-testid="delete-nodebalancer"
+          disabled={!permissions.delete_nodebalancer}
+          onClick={() =>
+            navigate({
+              params: { id: String(id) },
+              to: '/nodebalancers/$id/settings/delete',
+            })
+          }
+          tooltipText={
+            !permissions.delete_nodebalancer
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : undefined
+          }
         >
           Delete
         </Button>
       </Accordion>
       <NodeBalancerDeleteDialog
-        id={nodebalancer.id}
-        label={nodebalancer?.label}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        isFetching={isFetchingNodeBalancer}
+        nodeBalancerError={nodeBalancerError}
+        open={match.routeId === '/nodebalancers/$id/settings/delete'}
+        selectedNodeBalancer={selectedNodeBalancer}
       />
     </div>
   );
 };
-
-export default NodeBalancerSettings;

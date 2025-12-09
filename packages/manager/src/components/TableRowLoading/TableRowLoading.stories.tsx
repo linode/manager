@@ -8,7 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 import type { TableRowLoadingProps } from './TableRowLoading';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TableRowLoadingProps> = {
   render: (args) => {

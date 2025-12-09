@@ -1,7 +1,7 @@
-import { Stack } from '@mui/material';
-import * as React from 'react';
+import { useLinodeFirewallsQuery } from '@linode/queries';
+import { Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
-import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -10,20 +10,29 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Typography } from 'src/components/Typography';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
+import { AddFirewallForm } from './AddFirewallForm';
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
 
 import type { Firewall, FirewallDevice } from '@linode/api-v4';
-
+const NO_PERMISSIONS_TOOLTIP_TEXT =
+  "You don't have permissions to add Firewall.";
+const MORE_THAN_ONE_FIREWALL_TOOLTIP_TEXT =
+  'Linodes can only have one Firewall assigned.';
 interface LinodeFirewallsProps {
   linodeID: number;
 }
 
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
+  const { data: permissions } = usePermissions(
+    'linode',
+    ['apply_linode_firewalls'],
+    linodeID,
+    true
+  );
 
   const {
     data: attachedFirewallData,
@@ -34,14 +43,12 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const attachedFirewalls = attachedFirewallData?.data;
 
   const [selectedFirewall, setSelectedFirewall] = React.useState<Firewall>();
-  const [
-    deviceToBeRemoved,
-    setDeviceToBeRemoved,
-  ] = React.useState<FirewallDevice>();
-  const [
-    isRemoveDeviceDialogOpen,
-    setIsRemoveDeviceDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [deviceToBeRemoved, setDeviceToBeRemoved] =
+    React.useState<FirewallDevice>();
+  const [isRemoveDeviceDialogOpen, setIsRemoveDeviceDialogOpen] =
+    React.useState<boolean>(false);
+  const [isAddFirewallDrawerOpen, setIsAddFirewalDrawerOpen] =
+    React.useState<boolean>(false);
 
   const handleClickUnassign = (device: FirewallDevice, firewall: Firewall) => {
     setDeviceToBeRemoved(device);
@@ -74,18 +81,42 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
 
   return (
     <Stack>
-      <Paper sx={{ display: 'flex', px: 2, py: 1.25 }}>
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0.5,
+        }}
+      >
         <Typography data-testid="linode-firewalls-table-header" variant="h3">
           Firewalls
         </Typography>
+        <Button
+          buttonType="primary"
+          disabled={
+            (attachedFirewallData && attachedFirewallData.results >= 1) ||
+            !permissions.apply_linode_firewalls
+          }
+          onClick={() => setIsAddFirewalDrawerOpen(true)}
+          tooltipText={
+            !permissions.apply_linode_firewalls
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : MORE_THAN_ONE_FIREWALL_TOOLTIP_TEXT
+          }
+        >
+          Add Firewall
+        </Button>
       </Paper>
-      <Table>
+      <Table data-qa-linode-firewalls-table>
         <TableHead>
           <TableRow>
             <TableCell>Firewall</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Rules</TableCell>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>
@@ -98,6 +129,17 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         onService
         open={isRemoveDeviceDialogOpen}
       />
+      <Drawer
+        onClose={() => setIsAddFirewalDrawerOpen(false)}
+        open={isAddFirewallDrawerOpen}
+        title="Add Firewall"
+      >
+        <AddFirewallForm
+          entityId={linodeID}
+          entityType="linode"
+          onCancel={() => setIsAddFirewalDrawerOpen(false)}
+        />
+      </Drawer>
     </Stack>
   );
 };

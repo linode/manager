@@ -1,0 +1,43 @@
+name: Pull Request Workflow
+
+on:
+    workflow_dispatch:
+    pull_request_target:
+        types: [opened]
+        branches:
+            - aclp_develop
+            
+permissions:
+    contents: read
+    id-token: write
+
+jobs:
+    run-scripts:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Set up python
+              uses: actions/setup-python@v5
+              with:
+                 python-version: '3.x'
+
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install requests
+
+            - name: Run Pull Request Notifier
+              env:
+                BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+                ROOM_ID: ${{ secrets.ROOM_ID }}
+                url: ${{ github.event.pull_request.html_url }}
+                title: ${{ github.event.pull_request.title }}
+                author: ${{ github.event.pull_request.user.login }}
+              run: |
+                cd scripts
+                python3 pull_request_notifier.py
+
+            

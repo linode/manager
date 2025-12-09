@@ -1,15 +1,34 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
+
+import type { Order } from 'src/hooks/useOrderV2';
+
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
 
 const defaultProps = {
   error: [],
   handleUnassignLinodeModal: vi.fn(),
   isFetchingLinodes: false,
   linodes: linodeFactory.buildList(5),
+  orderByProps: {
+    handleOrderChange: vi.fn(),
+    order: 'asc' as Order,
+    orderBy: 'label',
+  },
 };
 
 describe('PlacementGroupsLinodesTable', () => {
