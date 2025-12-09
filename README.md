@@ -41,7 +41,7 @@
 
 ## Overview
 
-This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related Typescript packages:
+This repository is the home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related Typescript packages:
 - [`@linode/api-v4`](packages/api-v4/)
 - [`@linode/queries`](packages/queries/)
 - [`@linode/search`](packages/search/)
