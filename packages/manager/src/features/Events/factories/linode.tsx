@@ -5,23 +5,6 @@ import { Link } from 'src/components/Link';
 import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
-import type { AccountMaintenance } from '@linode/api-v4';
-
-/**
- * Normalizes the event description to a valid maintenance type.
- * Only accepts 'emergency' or 'scheduled' from AccountMaintenance.description,
- * defaults to 'maintenance' for any other value or null/undefined.
- */
-type MaintenanceDescription = 'maintenance' | AccountMaintenance['description'];
-
-const getMaintenanceDescription = (
-  description: null | string | undefined
-): MaintenanceDescription => {
-  if (description === 'emergency' || description === 'scheduled') {
-    return description;
-  }
-  return 'maintenance';
-};
 
 export const linode: PartialEventMap<'linode'> = {
   linode_addip: {
@@ -258,106 +241,30 @@ export const linode: PartialEventMap<'linode'> = {
     ),
   },
   linode_migrate: {
-    failed: (e) => {
-      const maintenanceType = getMaintenanceDescription(e.description);
-      return (
-        <>
-          Migration <strong>failed</strong> for Linode{' '}
-          <EventLink event={e} to="entity" /> for{' '}
-          {maintenanceType === 'maintenance' ? (
-            <strong>maintenance</strong>
-          ) : (
-            <>
-              <strong>{maintenanceType}</strong> maintenance
-            </>
-          )}
-          {e.secondary_entity ? (
-            <>
-              {' '}
-              with config <EventLink event={e} to="secondaryEntity" />
-            </>
-          ) : (
-            ''
-          )}
-          .
-        </>
-      );
-    },
-    finished: (e) => {
-      const maintenanceType = getMaintenanceDescription(e.description);
-      return (
-        <>
-          Linode <EventLink event={e} to="entity" /> has been{' '}
-          <strong>migrated</strong> for{' '}
-          {maintenanceType === 'maintenance' ? (
-            <strong>maintenance</strong>
-          ) : (
-            <>
-              <strong>{maintenanceType}</strong> maintenance
-            </>
-          )}
-          {e.secondary_entity ? (
-            <>
-              {' '}
-              with config <EventLink event={e} to="secondaryEntity" />
-            </>
-          ) : (
-            ''
-          )}
-          .
-        </>
-      );
-    },
-    scheduled: (e) => {
-      const maintenanceType = getMaintenanceDescription(e.description);
-      return (
-        <>
-          Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
-          <strong>migrated</strong> for{' '}
-          {maintenanceType === 'maintenance' ? (
-            <strong>maintenance</strong>
-          ) : (
-            <>
-              <strong>{maintenanceType}</strong> maintenance
-            </>
-          )}
-          {e.secondary_entity ? (
-            <>
-              {' '}
-              with config <EventLink event={e} to="secondaryEntity" />
-            </>
-          ) : (
-            ''
-          )}
-          .
-        </>
-      );
-    },
-    started: (e) => {
-      const maintenanceType = getMaintenanceDescription(e.description);
-      return (
-        <>
-          Linode <EventLink event={e} to="entity" /> is being{' '}
-          <strong>migrated</strong> for{' '}
-          {maintenanceType === 'maintenance' ? (
-            <strong>maintenance</strong>
-          ) : (
-            <>
-              <strong>{maintenanceType}</strong> maintenance
-            </>
-          )}
-          {e.secondary_entity ? (
-            <>
-              {' '}
-              with config <EventLink event={e} to="secondaryEntity" />
-            </>
-          ) : (
-            ''
-          )}
-          .
-        </>
-      );
-    },
+    failed: (e) => (
+      <>
+        Migration <strong>failed</strong> for Linode{' '}
+        <EventLink event={e} to="entity" />.
+      </>
+    ),
+    finished: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> has been{' '}
+        <strong>migrated</strong>.
+      </>
+    ),
+    scheduled: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
+        <strong>migrated</strong>.
+      </>
+    ),
+    started: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> is being{' '}
+        <strong>migrated</strong>.
+      </>
+    ),
   },
   linode_migrate_datacenter: {
     failed: (e) => (
