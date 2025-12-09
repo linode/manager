@@ -406,6 +406,36 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON_EMOJI: ":package:"
 
+  cloudpulse-cypress:
+  runs-on: ubuntu-latest
+  env:
+    REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
+    MANAGER_OAUTH: ${{ secrets.MANAGER_OAUTH }}
+    REACT_APP_LOGIN_ROOT: 'https://login.linode.com'
+    REACT_APP_API_ROOT: 'https://api.linode.com/v4'
+    REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+    REACT_APP_APP_ROOT: 'http://localhost:3000'
+    REACT_APP_LKE_HIGH_AVAILABILITY_PRICE: '60'
+    CI: true
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
+      with:
+        run_install: false
+        version: 10
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "20.17"
+        cache: "pnpm"
+    - run: pnpm install --frozen-lockfile && pnpm bootstrap
+    - run: pnpm dev &
+    - run: npx wait-on http://localhost:3000
+    - run: |
+        cd packages/manager
+        pnpm exec cypress install
+    - run: cd packages/manager && pnpm cy:run -s 'cypress/e2e/core/cloudpulse/!(cloudpulse-navigation.spec.ts)'
+
   build-storybook:
     runs-on: ubuntu-latest
     needs: build-sdk
