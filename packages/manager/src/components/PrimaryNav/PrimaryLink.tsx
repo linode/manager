@@ -1,4 +1,4 @@
-import { BetaChip } from '@linode/ui';
+import { BetaChip, NewFeatureChip } from '@linode/ui';
 import * as React from 'react';
 
 import { StyledActiveLink, StyledPrimaryLinkBox } from './PrimaryNav.styles';
@@ -17,6 +17,7 @@ export interface BaseNavLink {
 export interface PrimaryLink extends BaseNavLink {
   betaChipClassName?: string;
   isBeta?: boolean;
+  isNew?: boolean;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
@@ -35,6 +36,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     to,
     isActiveLink,
     isBeta,
+    isNew,
     isCollapsed,
     onClick,
   } = props;
@@ -63,6 +65,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
         {isBeta ? (
           <BetaChip className={`${betaChipClassName ?? ''}`} component="span" />
         ) : null}
+        {isNew ? <NewFeatureChip component="span" /> : null}
       </StyledPrimaryLinkBox>
     </StyledActiveLink>
   );

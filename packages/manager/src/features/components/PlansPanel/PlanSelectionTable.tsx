@@ -59,7 +59,10 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showUsableStorage,
   } = props;
   const flags = useFlags();
-  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled();
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    plans,
+    planType
+  );
 
   // Determine spacing based on feature flag:
   // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}

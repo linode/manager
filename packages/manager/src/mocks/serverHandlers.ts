@@ -150,6 +150,7 @@ import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
+import { SPECIAL_PREFIX_LIST_NAMES } from 'src/features/Firewalls/FirewallDetail/Rules/shared';
 
 import type {
   AccountMaintenance,
@@ -1395,14 +1396,25 @@ export const handlers = [
       const filter = JSON.parse(request.headers.get('x-filter') || '{}');
 
       if (filter['name']) {
-        const match =
-          prefixlists.find((pl) => pl.name === filter.name) ??
-          firewallPrefixListFactory.build({
-            name: filter['name'],
-            description: `${filter['name']} description`,
-          }); // fallback if not found
+        const existingPrefixList = prefixlists.find(
+          (pl) => pl.name === filter.name
+        );
 
-        return HttpResponse.json(makeResourcePage([match]));
+        // SPECIAL_PREFIX_LIST_NAMES may expand in the future if returned by the API
+        const isPrefixListSpecial = SPECIAL_PREFIX_LIST_NAMES.includes(
+          filter.name
+        );
+
+        const match = isPrefixListSpecial
+          ? [] // Special PLs: API currently returns empty; @TODO: update with actual response once API supports them
+          : [
+              existingPrefixList ??
+                firewallPrefixListFactory.build({
+                  name: filter.name,
+                  description: `${filter.name} description`,
+                }),
+            ];
+        return HttpResponse.json(makeResourcePage(match));
       }
     }
     return HttpResponse.json(makeResourcePage(prefixlists));
@@ -1431,6 +1443,7 @@ export const handlers = [
                   ipv4: [
                     'pl:system:resolvers:test',
                     'pl:system:test',
+                    'pl::vpcs:<current>', // special prefixlist
                     '192.168.1.200',
                     '192.168.1.201',
                   ],
@@ -1471,6 +1484,7 @@ export const handlers = [
                       'pl::supports-both-but-empty-both',
                       '172.31.255.255',
                       'pl::marked-for-deletion',
+                      'pl::vpcs:<current>', // special prefixlist
                     ],
                     ipv6: [
                       'pl::supports-both',
@@ -1483,10 +1497,11 @@ export const handlers = [
                       // our logic will treat them as a single entity within the ipv4 or ipv6 array.
                       'pl::vpcs:supports-both-2',
                       '2001:db8:85a3::8a2e:372:7336/128',
+                      'pl::subnets:<current>', // special prefixlist
                     ],
                   },
                   ports: '22, 53, 80, 100, 443, 3306',
-                  protocol: 'IPENCAP',
+                  protocol: 'UDP',
                   action: 'ACCEPT',
                 }),
               ],

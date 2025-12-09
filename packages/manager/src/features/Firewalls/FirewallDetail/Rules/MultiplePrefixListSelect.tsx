@@ -1,26 +1,34 @@
 import { useAllFirewallPrefixListsQuery } from '@linode/queries';
 import {
   Autocomplete,
-  BetaChip,
   Box,
   Button,
   Checkbox,
   CloseIcon,
   IconButton,
   InputLabel,
+  LinkButton,
   Stack,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Link } from 'src/components/Link';
-import { useIsFirewallRulesetsPrefixlistsEnabled } from 'src/features/Firewalls/shared';
+import {
+  getFeatureChip,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from 'src/features/Firewalls/shared';
 
-import { getPrefixListType, groupPriority } from './shared';
+import {
+  combinePrefixLists,
+  getPrefixListType,
+  groupPriority,
+  isSpecialPrefixList,
+} from './shared';
 
 import type { FirewallPrefixList } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+import type { PrefixListRuleReference } from 'src/features/Firewalls/shared';
 import type { ExtendedPL } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -29,26 +37,39 @@ const useStyles = makeStyles()((theme: Theme) => ({
       justifyContent: 'flex-start',
     },
     paddingLeft: 0,
-    paddingTop: theme.spacingFunction(12),
+    paddingTop: theme.spacingFunction(12), // default when empty
+  },
+  addPLReducedPadding: {
+    paddingTop: theme.spacingFunction(4), // when last row is selected
+  },
+  autocomplete: {
+    "& [data-testid='inputLabelWrapper']": {
+      display: 'none',
+    },
   },
   button: {
     '& > span': {
       padding: 2,
     },
-    marginLeft: `-${theme.spacingFunction(8)}`,
-    marginTop: 4,
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-  },
-  root: {
     marginTop: theme.spacingFunction(8),
+    marginLeft: `-${theme.spacingFunction(8)}`,
+    height: 20,
+    width: 20,
+    padding: 0,
   },
 }));
 
-const isPrefixListSupported = (pl: FirewallPrefixList) =>
-  (pl.ipv4 !== null && pl.ipv4 !== undefined) ||
-  (pl.ipv6 !== null && pl.ipv6 !== undefined);
+const isPrefixListSupported = (pl: FirewallPrefixList) => {
+  // Whitelisting all the Special PrefixLists as supported ones.
+  if (isSpecialPrefixList(pl.name)) {
+    return true;
+  }
+
+  return (
+    (pl.ipv4 !== null && pl.ipv4 !== undefined) ||
+    (pl.ipv6 !== null && pl.ipv6 !== undefined)
+  );
+};
 
 const getSupportDetails = (pl: FirewallPrefixList) => ({
   isPLIPv4Unsupported: pl.ipv4 === null || pl.ipv4 === undefined,
@@ -59,8 +80,13 @@ const getSupportDetails = (pl: FirewallPrefixList) => ({
  * Default selection state for a newly chosen Prefix List
  */
 const getDefaultPLReferenceState = (
-  support: ReturnType<typeof getSupportDetails>
+  support: null | ReturnType<typeof getSupportDetails>
 ): { inIPv4Rule: boolean; inIPv6Rule: boolean } => {
+  if (support === null) {
+    // Special Prefix List case
+    return { inIPv4Rule: true, inIPv6Rule: false };
+  }
+
   const { isPLIPv4Unsupported, isPLIPv6Unsupported } = support;
 
   if (!isPLIPv4Unsupported && !isPLIPv6Unsupported)
@@ -89,6 +115,14 @@ export interface MultiplePrefixListSelectProps {
   disabled?: boolean;
 
   /**
+   * Opens the Prefix List details drawer for the given Prefix List.
+   */
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
+
+  /**
    * Callback triggered when PLs change, passing updated `pls`.
    */
   onChange: (pls: ExtendedPL[]) => void;
@@ -106,17 +140,20 @@ export interface MultiplePrefixListSelectProps {
 
 export const MultiplePrefixListSelect = React.memo(
   (props: MultiplePrefixListSelectProps) => {
-    const { className, disabled, pls, onChange } = props;
+    const { className, disabled, handleOpenPrefixListDrawer, onChange, pls } =
+      props;
     const { classes, cx } = useStyles();
     const {
       isFirewallRulesetsPrefixlistsFeatureEnabled,
       isFirewallRulesetsPrefixListsBetaEnabled,
+      isFirewallRulesetsPrefixListsGAEnabled,
     } = useIsFirewallRulesetsPrefixlistsEnabled();
+
     const { data, isLoading } = useAllFirewallPrefixListsQuery(
       isFirewallRulesetsPrefixlistsFeatureEnabled
     );
 
-    const prefixLists = data ?? [];
+    const prefixLists = React.useMemo(() => combinePrefixLists(data), [data]);
 
     /**
      * Filter prefix lists to include those that support IPv4, IPv6, or both,
@@ -127,16 +164,18 @@ export const MultiplePrefixListSelect = React.memo(
         prefixLists
           .filter(isPrefixListSupported)
           .map((pl) => ({
-            label: pl.name,
-            value: pl.id,
-            support: getSupportDetails(pl),
+            label: pl.name!,
+            value: pl.id ?? pl.name,
+            support: !isSpecialPrefixList(pl.name)
+              ? getSupportDetails(pl as FirewallPrefixList)
+              : null,
           }))
           // The API does not seem to sort prefix lists by "name" to prioritize certain types.
           // This sort ensures that Autocomplete's groupBy displays groups correctly without duplicates
           // and that the dropdown shows groups in the desired order.
           .sort((a, b) => {
-            const groupA = getPrefixListType(a.label);
-            const groupB = getPrefixListType(b.label);
+            const groupA = getPrefixListType(a.label!);
+            const groupB = getPrefixListType(b.label!);
 
             return groupPriority[groupA] - groupPriority[groupB];
           }),
@@ -202,6 +241,9 @@ export const MultiplePrefixListSelect = React.memo(
       return null;
     }
 
+    const lastRowSelected =
+      pls.length > 0 && pls[pls.length - 1].address !== '';
+
     const renderRow = (thisPL: ExtendedPL, idx: number) => {
       const availableOptions = getAvailableOptions(idx, thisPL.address);
 
@@ -211,9 +253,9 @@ export const MultiplePrefixListSelect = React.memo(
 
       // Disabling a checkbox ensures that at least one option (IPv4 or IPv6) remains checked
       const ipv4Unsupported =
-        selectedOption?.support.isPLIPv4Unsupported === true;
+        selectedOption?.support?.isPLIPv4Unsupported === true;
       const ipv6Unsupported =
-        selectedOption?.support.isPLIPv6Unsupported === true;
+        selectedOption?.support?.isPLIPv6Unsupported === true;
 
       const ipv4Forced =
         thisPL.inIPv4Rule === true && thisPL.inIPv6Rule === false;
@@ -222,6 +264,19 @@ export const MultiplePrefixListSelect = React.memo(
 
       const disableIPv4 = ipv4Unsupported || ipv4Forced;
       const disableIPv6 = ipv6Unsupported || ipv6Forced;
+
+      const getCheckboxTooltipText = (
+        ipUnsupported?: boolean,
+        ipForced?: boolean
+      ) => {
+        if (ipUnsupported) {
+          return 'Not supported by this Prefix List';
+        }
+        if (ipForced) {
+          return 'At least one array must be selected';
+        }
+        return undefined;
+      };
 
       return (
         <Grid
@@ -236,6 +291,7 @@ export const MultiplePrefixListSelect = React.memo(
         >
           <Grid size={11}>
             <Autocomplete
+              className={classes.autocomplete}
               disableClearable={prefixLists.length > 0}
               disabled={disabled}
               errorText={thisPL.error}
@@ -260,23 +316,46 @@ export const MultiplePrefixListSelect = React.memo(
                 sx={{ ml: 0.4 }}
               >
                 <Box display="flex" gap={2}>
-                  <Checkbox
-                    checked={thisPL.inIPv4Rule === true}
-                    data-testid={`ipv4-checkbox-${idx}`}
-                    disabled={disableIPv4 || disabled}
-                    onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
-                    text="IPv4"
-                  />
-                  <Checkbox
-                    checked={thisPL.inIPv6Rule === true}
-                    data-testid={`ipv6-checkbox-${idx}`}
-                    disabled={disableIPv6 || disabled}
-                    onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
-                    text="IPv6"
-                  />
+                  <Stack direction="row">
+                    <Checkbox
+                      checked={thisPL.inIPv4Rule === true}
+                      data-testid={`ipv4-checkbox-${idx}`}
+                      disabled={disableIPv4 || disabled}
+                      id={`ipv4-checkbox-${idx}`}
+                      onChange={() => handleToggleIPv4(!thisPL.inIPv4Rule, idx)}
+                      text="IPv4"
+                      toolTipText={getCheckboxTooltipText(
+                        ipv4Unsupported,
+                        ipv4Forced
+                      )}
+                    />
+                  </Stack>
+                  <Stack direction="row">
+                    <Checkbox
+                      checked={thisPL.inIPv6Rule === true}
+                      data-testid={`ipv6-checkbox-${idx}`}
+                      disabled={disableIPv6 || disabled}
+                      id={`ipv6-checkbox-${idx}`}
+                      onChange={() => handleToggleIPv6(!thisPL.inIPv6Rule, idx)}
+                      text="IPv6"
+                      toolTipText={getCheckboxTooltipText(
+                        ipv6Unsupported,
+                        ipv6Forced
+                      )}
+                    />
+                  </Stack>
                 </Box>
                 <Box alignItems="center" display="flex">
-                  <Link onClick={() => {}}>View Details</Link>
+                  <LinkButton
+                    onClick={() => {
+                      handleOpenPrefixListDrawer(thisPL.address, {
+                        inIPv4Rule: thisPL.inIPv4Rule,
+                        inIPv6Rule: thisPL.inIPv6Rule,
+                      });
+                    }}
+                  >
+                    View Details
+                  </LinkButton>
                 </Box>
               </Box>
             )}
@@ -288,11 +367,6 @@ export const MultiplePrefixListSelect = React.memo(
               data-testid="button"
               disabled={disabled}
               onClick={() => removeInput(idx)}
-              sx={(theme) => ({
-                height: 20,
-                width: 20,
-                marginTop: `${theme.spacingFunction(16)} !important`,
-              })}
             >
               <CloseIcon data-testid={`delete-pl-${idx}`} />
             </IconButton>
@@ -302,12 +376,16 @@ export const MultiplePrefixListSelect = React.memo(
     };
 
     return (
-      <div className={cx(classes.root, className)}>
+      <div className={cx(className)}>
         {/* Display the title only when pls.length > 0 (i.e., at least one PL row is added) */}
         {pls.length > 0 && (
           <Box display="flex">
-            <InputLabel sx={{ margin: 0 }}>Prefix List</InputLabel>
-            {isFirewallRulesetsPrefixListsBetaEnabled && <BetaChip />}
+            <InputLabel>Prefix List</InputLabel>
+            {getFeatureChip({
+              isFirewallRulesetsPrefixlistsFeatureEnabled,
+              isFirewallRulesetsPrefixListsBetaEnabled,
+              isFirewallRulesetsPrefixListsGAEnabled,
+            })}
           </Box>
         )}
         <Stack spacing={1}>
@@ -315,7 +393,10 @@ export const MultiplePrefixListSelect = React.memo(
         </Stack>
         <Button
           buttonType="secondary"
-          className={classes.addPL}
+          className={cx(
+            classes.addPL,
+            lastRowSelected && classes.addPLReducedPadding // Reduce top padding when last PL selected
+          )}
           compactX
           disabled={disabled}
           onClick={addNewInput}
