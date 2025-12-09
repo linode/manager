@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 
 import { ROLES_LEARN_MORE_LINK } from '../constants';
-import { Entities } from '../Entities/Entities';
+import { EntitiesSelect } from '../Entities/EntitiesSelect';
 import { Permissions } from '../Permissions/Permissions';
 import { type ExtendedRole, getFacadeRoleDescription } from '../utilities';
 import {
@@ -62,7 +62,7 @@ export const AssignedPermissionsPanel = ({
       )}
       {mode !== 'change-role-for-entity' && (
         <StyledEntityBox hideDetails={hideDetails}>
-          <Entities
+          <EntitiesSelect
             access={role.access}
             errorText={errorText}
             mode={mode}
