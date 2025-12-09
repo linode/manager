@@ -82,7 +82,10 @@ describe('getResolvedDimensionValue', () => {
     'subnet-1': 'VPC-1_subnet-1',
     'subnet-2': 'VPC-1_subnet-2',
   };
-
+  const nodebalancersMap = {
+    '33': 'nodebalancer-a',
+    '44': 'nodebalancer-b',
+  };
   it('should return correct transformed value', () => {
     const linodeResult = getResolvedDimensionValue({
       dimensionFilterKey: 'linode_id',
@@ -91,6 +94,7 @@ describe('getResolvedDimensionValue', () => {
       serviceType: 'firewall',
       linodeMap,
       vpcSubnetMap,
+      nodebalancersMap,
     });
     expect(linodeResult).toBe('linode-a, linode-b');
 
@@ -101,10 +105,23 @@ describe('getResolvedDimensionValue', () => {
       serviceType: 'firewall',
       linodeMap,
       vpcSubnetMap,
+      nodebalancersMap,
     });
     expect(vpcResult).toBe('VPC-1_subnet-1');
   });
 
+  it('should return correct transformed value for nodebalancer_id', () => {
+    const nodebalancerResult = getResolvedDimensionValue({
+      dimensionFilterKey: 'nodebalancer_id',
+      dimensionOperator: 'in',
+      value: '33,44',
+      serviceType: 'firewall',
+      linodeMap,
+      vpcSubnetMap,
+      nodebalancersMap,
+    });
+    expect(nodebalancerResult).toBe('nodebalancer-a, nodebalancer-b');
+  });
   it('should not transform value if operator is not in allowed list', () => {
     const result = getResolvedDimensionValue({
       dimensionFilterKey: 'linode_id',
@@ -113,6 +130,7 @@ describe('getResolvedDimensionValue', () => {
       serviceType: 'firewall',
       linodeMap,
       vpcSubnetMap,
+      nodebalancersMap,
     });
     expect(result).toBe('linode-c, linode-d');
   });
@@ -125,6 +143,7 @@ describe('getResolvedDimensionValue', () => {
       serviceType: 'firewall',
       linodeMap,
       vpcSubnetMap,
+      nodebalancersMap,
     });
     expect(nullResult).toBe('');
   });

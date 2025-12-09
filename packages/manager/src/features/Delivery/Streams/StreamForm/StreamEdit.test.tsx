@@ -65,7 +65,7 @@ describe('StreamEdit', () => {
     // Host:
     expect(screen.getByText('3000')).toBeVisible();
     // Bucket:
-    expect(screen.getByText('Bucket Name')).toBeVisible();
+    expect(screen.getByText('destinations-bucket-name')).toBeVisible();
     // Access Key ID:
     expect(screen.getByTestId('access-key-id')).toHaveTextContent(
       '*****************'
@@ -97,9 +97,9 @@ describe('StreamEdit', () => {
         await waitFor(() => {
           expect(hostInput).toBeDefined();
         });
-        await userEvent.type(hostInput, 'Test');
+        await userEvent.type(hostInput, 'test');
         const bucketInput = screen.getByLabelText('Bucket');
-        await userEvent.type(bucketInput, 'Test');
+        await userEvent.type(bucketInput, 'test');
         const accessKeyIDInput = screen.getByLabelText('Access Key ID');
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');

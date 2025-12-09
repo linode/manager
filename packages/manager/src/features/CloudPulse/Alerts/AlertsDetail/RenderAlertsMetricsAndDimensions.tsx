@@ -2,7 +2,11 @@ import {
   type AlertDefinitionMetricCriteria,
   type CloudPulseServiceType,
 } from '@linode/api-v4';
-import { useAllLinodesQuery, useAllVPCsQuery } from '@linode/queries';
+import {
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVPCsQuery,
+} from '@linode/queries';
 import { Divider } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
 import React, { useMemo } from 'react';
@@ -17,6 +21,7 @@ import {
 import { getVPCSubnets } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
 import {
   LINODE_DIMENSION_LABEL,
+  NODEBALANCER_DIMENSION_LABEL,
   VPC_SUBNET_DIMENSION_LABEL,
 } from './constants';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
@@ -47,9 +52,18 @@ export const RenderAlertMetricsAndDimensions = React.memo(
       ruleCriteria,
       VPC_SUBNET_DIMENSION_LABEL
     );
+    const isNodebalancersRequired = isCheckRequired(
+      ruleCriteria,
+      NODEBALANCER_DIMENSION_LABEL
+    );
     // Initialize the query, but only run when needed
     const { data: linodes } = useAllLinodesQuery({}, {}, isLinodeRequired);
     const { data: vpcs } = useAllVPCsQuery({ enabled: isVPCRequired });
+    const { data: nodebalancers } = useAllNodeBalancersQuery(
+      isNodebalancersRequired,
+      {},
+      {}
+    );
 
     // create a map of id to labels for lookup
     const linodeMap = useMemo(
@@ -72,6 +86,17 @@ export const RenderAlertMetricsAndDimensions = React.memo(
         };
       }, {});
     }, [vpcs]);
+
+    const nodebalancersMap = useMemo(() => {
+      return (
+        nodebalancers?.reduce<Record<string, string>>((acc, nodebalancer) => {
+          return {
+            ...acc,
+            [String(nodebalancer.id)]: nodebalancer.label,
+          };
+        }, {}) ?? {}
+      );
+    }, [nodebalancers]);
 
     if (!ruleCriteria.rules?.length) {
       return <NullComponent />;
@@ -125,6 +150,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                       serviceType,
                       value,
                       vpcSubnetMap,
+                      nodebalancersMap,
                     }),
                   ]
                 )}

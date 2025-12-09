@@ -16,12 +16,10 @@ beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({}),
-  useQueryWithPermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 describe('Image Table Row', () => {
@@ -165,9 +163,6 @@ describe('Image Table Row', () => {
   it('calls handlers when performing actions', async () => {
     const image = imageFactory.build({
       regions: [{ region: 'us-east', status: 'available' }],
-    });
-    queryMocks.useQueryWithPermissions.mockReturnValue({
-      data: [image],
     });
 
     const { getByLabelText, getByText } = renderWithTheme(

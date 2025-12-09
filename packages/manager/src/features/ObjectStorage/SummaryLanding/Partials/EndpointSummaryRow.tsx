@@ -1,13 +1,11 @@
-import {
-  Box,
-  CircleProgress,
-  ErrorState,
-  Typography,
-  useTheme,
-} from '@linode/ui';
+import { Typography, useTheme } from '@linode/ui';
 import * as React from 'react';
 
 import { QuotaUsageBar } from 'src/components/QuotaUsageBar/QuotaUsageBar';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 import { useGetObjUsagePerEndpoint } from '../hooks/useGetObjUsagePerEndpoint';
 
@@ -24,58 +22,61 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
     isError,
   } = useGetObjUsagePerEndpoint(endpoint);
 
+  if (isFetching) {
+    return <TableRowLoading columns={3} />;
+  }
+
   if (isError) {
     return (
-      <>
-        <hr />
-        <ErrorState
-          compact={true}
-          errorText={`There was an error retrieving ${endpoint} endpoint data.`}
-        />
-      </>
+      <TableRowError
+        colSpan={3}
+        message={`There was an error retrieving ${endpoint} endpoint data.`}
+      />
     );
   }
 
+  const capacityQuota = quotaWithUsage.find(
+    (quota) => quota.quota_name === 'Total Capacity'
+  );
+  const objectsQuota = quotaWithUsage.find(
+    (quota) => quota.quota_name === 'Number of Objects'
+  );
+  const bucketsQuota = quotaWithUsage.find(
+    (quota) => quota.quota_name === 'Number of Buckets'
+  );
+
   return (
-    <>
-      <hr />
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: theme.spacingFunction(16),
-          padding: theme.spacingFunction(8),
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <h3>{endpoint}</h3>
-        </Box>
-
-        <Box sx={{ display: 'flex', gap: '3rem', justifyContent: 'center' }}>
-          {isFetching && <CircleProgress size="md" />}
-
-          {!isFetching &&
-            quotaWithUsage.map((quota, index) => {
-              return (
-                <Box key={index} sx={{ flex: 1 }}>
-                  <Typography>{quota.quota_name}</Typography>
-                  <QuotaUsageBar
-                    limit={quota.quota_limit}
-                    resourceMetric={quota.resource_metric}
-                    usage={quota?.usage?.usage ?? 0}
-                  />
-                </Box>
-              );
-            })}
-        </Box>
-      </Box>
-    </>
+    <TableRow>
+      {!!capacityQuota && (
+        <TableCell sx={{ paddingY: theme.spacingFunction(8) }}>
+          <Typography>{endpoint}</Typography>
+          <QuotaUsageBar
+            limit={capacityQuota.quota_limit}
+            resourceMetric={capacityQuota.resource_metric}
+            usage={capacityQuota?.usage?.usage ?? 0}
+          />
+        </TableCell>
+      )}
+      {!!objectsQuota && (
+        <TableCell sx={{ paddingY: theme.spacingFunction(8) }}>
+          <Typography>{endpoint}</Typography>
+          <QuotaUsageBar
+            limit={objectsQuota.quota_limit}
+            resourceMetric={objectsQuota.resource_metric}
+            usage={objectsQuota?.usage?.usage ?? 0}
+          />
+        </TableCell>
+      )}
+      {!!bucketsQuota && (
+        <TableCell sx={{ paddingY: theme.spacingFunction(8) }}>
+          <Typography>{endpoint}</Typography>
+          <QuotaUsageBar
+            limit={bucketsQuota.quota_limit}
+            resourceMetric={bucketsQuota.resource_metric}
+            usage={bucketsQuota?.usage?.usage ?? 0}
+          />
+        </TableCell>
+      )}
+    </TableRow>
   );
 };

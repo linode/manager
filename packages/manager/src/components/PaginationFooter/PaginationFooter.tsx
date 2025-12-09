@@ -26,6 +26,7 @@ interface Props extends PaginationProps {
   customOptions?: PaginationOption[];
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
+  minPageSize?: number;
 }
 
 const baseOptions = [
@@ -43,13 +44,14 @@ export const PaginationFooter = (props: Props) => {
     fixedSize,
     handlePageChange,
     handleSizeChange,
+    minPageSize = MIN_PAGE_SIZE,
     page,
     pageSize,
     showAll,
     sx,
   } = props;
 
-  if (count <= MIN_PAGE_SIZE && !fixedSize) {
+  if (count <= minPageSize && !fixedSize) {
     return null;
   }
 
@@ -103,8 +105,8 @@ export const PaginationFooter = (props: Props) => {
             onChange={(_e, value) => handleSizeChange(Number(value.value))}
             options={finalOptions}
             value={{
-              label: defaultPagination?.label ?? '',
-              value: defaultPagination?.value ?? '',
+              label: defaultPagination?.label ?? finalOptions[0]?.label ?? '',
+              value: defaultPagination?.value ?? finalOptions[0]?.value ?? '',
             }}
           />
         </Box>

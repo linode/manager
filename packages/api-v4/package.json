@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.153.0",
+  "version": "0.154.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -59,7 +59,8 @@
     "@linode/tsconfig": "workspace:*",
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
-    "tsup": "^8.4.0"
+    "tsup": "^8.4.0",
+    "@types/node": "^22.13.14"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

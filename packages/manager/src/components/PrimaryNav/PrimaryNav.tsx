@@ -22,6 +22,7 @@ import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -56,6 +57,7 @@ export type NavEntity =
   | 'Marketplace'
   | 'Metrics'
   | 'Monitor'
+  | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -115,6 +117,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
+
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const {
     data: preferences,
@@ -203,6 +208,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/firewalls',
               },
               {
+                display: 'Network Load Balancer',
+                hide: !isNetworkLoadBalancerEnabled,
+                to: '/netloadbalancers',
+              },
+              {
                 display: 'NodeBalancers',
                 to: '/nodebalancers',
               },
@@ -238,17 +248,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Alerts',
                 hide: !isAlertsEnabled,
                 to: '/alerts',
-                isBeta: flags.aclp?.beta,
-              },
-              {
-                display: 'Longview',
-                to: '/longview',
+                isBeta: flags.aclpAlerting?.beta,
               },
               {
                 display: 'Logs',
                 hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
                 isBeta: isACLPLogsBeta,
+              },
+              {
+                display: 'Longview',
+                to: '/longview',
               },
             ],
             name: 'Monitor',
@@ -266,6 +276,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
                 to: '/iam',
                 isBeta: isIAMBeta,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Account',
@@ -299,6 +310,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled,
                 to: '/iam',
                 isBeta: isIAMBeta,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',
@@ -340,6 +352,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
+        isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]
     );

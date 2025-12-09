@@ -74,6 +74,10 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     control,
     name: 'entity_ids',
   });
+  const entityType = useWatch({
+    control,
+    name: 'entity_type',
+  });
   const serviceType = useWatch({
     control,
     name: 'serviceType',
@@ -169,6 +173,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               dimensionLabel={dimensionFieldWatcher}
               disabled={!dimensionFieldWatcher}
               entities={entities}
+              entityType={entityType ?? undefined}
               errorText={fieldState.error?.message}
               name={name}
               onBlur={field.onBlur}

@@ -109,7 +109,7 @@ export const UsersActionMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for user ${profileUserName}`}
+      ariaLabel={`Action menu for user ${username}`}
     />
   );
 };

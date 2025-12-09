@@ -61,7 +61,7 @@ export interface AuthCallbackOptions {
   /**
    * The raw search or has params sent by the login server
    */
-  params: string;
+  params: Record<string, unknown> | string;
 }
 
 /**

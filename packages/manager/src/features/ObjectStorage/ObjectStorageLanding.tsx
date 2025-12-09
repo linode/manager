@@ -120,6 +120,7 @@ export const ObjectStorageLanding = () => {
     }
   };
 
+  const isSummaryOpened = match.routeId === '/object-storage/summary';
   const isCreateBucketOpen = match.routeId === '/object-storage/buckets/create';
   const isCreateAccessKeyOpen =
     match.routeId === '/object-storage/access-keys/create';
@@ -151,7 +152,7 @@ export const ObjectStorageLanding = () => {
         disabledCreateButton={isRestrictedUser}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         entity="Object Storage"
-        onButtonClick={createButtonAction}
+        onButtonClick={isSummaryOpened ? undefined : createButtonAction}
         removeCrumbX={1}
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
         spacingBottom={4}

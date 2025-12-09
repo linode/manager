@@ -86,6 +86,14 @@ const mockGPUType = [
   }),
 ];
 
+const mockPremiumType = [
+  linodeTypeFactory.build({
+    class: 'premium',
+    id: 'premium-8',
+    label: 'Premium 8GB',
+  }),
+];
+
 const mockAcceleratedType = [
   linodeTypeFactory.build({
     class: 'accelerated',
@@ -99,6 +107,7 @@ const mockLinodeTypes = [
   ...mockHighMemoryLinodeTypes,
   ...mockSharedLinodeTypes,
   ...mockGPUType,
+  ...mockPremiumType,
   ...mockAcceleratedType,
 ];
 
@@ -225,7 +234,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
         cy.get('[id="g7-premium-64"]').should('be.disabled');
         cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
@@ -355,7 +364,7 @@ describe('displays kubernetes plans panel based on availability', () => {
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
         cy.get('[data-qa-plan-row="Premium 512 GB"]').should(
           'have.attr',
           'disabled'

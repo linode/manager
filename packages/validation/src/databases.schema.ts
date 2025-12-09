@@ -28,6 +28,13 @@ export const getDynamicDatabaseSchema = (isVPCSelected: boolean) => {
   });
 };
 
+export const updateMaintenanceSchema = object({
+  frequency: string().oneOf(['weekly', 'monthly']).optional(),
+  hour_of_day: number(),
+  day_of_week: number(),
+  week_of_month: number().nullable(),
+});
+
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
   allow_list: array().of(string()).notRequired(),
@@ -210,3 +217,22 @@ export const createDynamicAdvancedConfigSchema = (allConfigurations: any[]) => {
     ),
   });
 };
+
+export const createDatabaseConnectionPoolSchema = object({
+  database: string().required('Database is required'),
+  mode: string()
+    .oneOf(['transaction', 'session', 'statement'], 'Pool mode is required')
+    .required('Pool mode is required'),
+  label: string()
+    .required('Name is required')
+    .max(63, 'Name must not exceed 63 characters'),
+  size: number().required('Size is required'),
+  username: string().nullable().required('Username is required'),
+});
+
+export const updateDatabaseConnectionPoolSchema = object({
+  database: string().optional(),
+  mode: string().oneOf(['transaction', 'session', 'statement']).optional(),
+  size: number().optional(),
+  username: string().nullable().optional(),
+});

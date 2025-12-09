@@ -158,9 +158,9 @@ describe('StreamFormDelivery', () => {
 
     // Type the test value inside the input
     const bucketInput = screen.getByLabelText('Bucket');
-    await userEvent.type(bucketInput, 'Test');
+    await userEvent.type(bucketInput, 'test');
 
-    expect(bucketInput.getAttribute('value')).toEqual('Test');
+    expect(bucketInput.getAttribute('value')).toEqual('test');
   });
 
   it('should render Access Key ID input after adding a new destination name and allow to type text', async () => {

@@ -2,6 +2,7 @@ import { useAccount } from '@linode/queries';
 import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
   DEDICATED_512_GB_PLAN,
@@ -23,6 +24,7 @@ import type {
 import type {
   BaseType,
   Capabilities,
+  LinodeType,
   LinodeTypeClass,
   Region,
   RegionAvailability,
@@ -235,6 +237,8 @@ export const planTabInfoContent = {
     key: 'dedicated',
     title: 'Dedicated CPU',
     typography:
+      'Dedicated CPU instances are built for full-duty workloads needing consistent performance. Choose from different hardware generations — newer plans feature the latest hardware. Select Compute Optimized (1:2) for CPU-heavy tasks or General Purpose (1:4) for balanced workloads.',
+    typographyOld:
       'Dedicated CPU instances are good for full-duty workloads where consistent performance is important.',
   },
   gpu: {
@@ -494,4 +498,20 @@ export const getDisabledPlanReasonCopy = ({
   }
 
   return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
+};
+
+export const useShouldDisablePremiumPlansTab = ({
+  types,
+}: {
+  types: LinodeType[] | PlanSelectionType[] | undefined;
+}): boolean => {
+  const { isGenerationalPlansEnabled, allowedPlans } =
+    useIsGenerationalPlansEnabled(types, 'premium');
+  // Check if any public premium plans are available.
+  // We can omit "Premium HT" and "Premium nested" plans as customers don't deploy them using cloud manager.
+  const arePublicPremiumPlansAvailable = types?.some(
+    (plan) => plan.class === 'premium' && allowedPlans.includes(plan.id)
+  );
+
+  return Boolean(isGenerationalPlansEnabled) && !arePublicPremiumPlansAvailable;
 };

@@ -25,6 +25,7 @@ export const StreamCreate = () => {
         },
       ],
     },
+    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: [1, 2],
     title: 'Create Stream',
   };

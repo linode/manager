@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 
 import { EndpointMultiselect } from './Partials/EndpointMultiselect';
-import { EndpointSummaryRow } from './Partials/EndpointSummaryRow';
+import { EndpointSummaryTable } from './Partials/EndpointSummaryTable';
 
 import type { EndpointMultiselectValue } from './Partials/EndpointMultiselect';
 
@@ -35,11 +35,11 @@ export const SummaryLanding = () => {
         values={selectedEndpoints}
       />
 
-      <Box>
-        {selectedEndpoints.map((endpoint, index) => {
-          return <EndpointSummaryRow endpoint={endpoint.label} key={index} />;
-        })}
-      </Box>
+      {!!selectedEndpoints.length && (
+        <EndpointSummaryTable
+          endpoints={selectedEndpoints.map((endpoint) => endpoint.label)}
+        />
+      )}
     </Box>
   );
 };

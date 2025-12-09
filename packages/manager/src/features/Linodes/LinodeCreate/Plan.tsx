@@ -4,6 +4,7 @@ import { useController, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+import { useShouldDisablePremiumPlansTab } from 'src/features/components/PlansPanel/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -28,10 +29,15 @@ export const Plan = () => {
 
   const { data: permissions } = usePermissions('account', ['create_linode']);
 
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
   return (
     <PlansPanel
       data-qa-select-plan
       disabled={!permissions.create_linode}
+      disabledTabs={shouldDisablePremiumPlansTab ? ['premium'] : undefined}
       docsLink={
         <DocsLink
           href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
@@ -55,6 +61,11 @@ export const Plan = () => {
       selectedId={field.value}
       selectedRegionID={regionId}
       showLimits
+      tabDisabledMessage={
+        shouldDisablePremiumPlansTab
+          ? 'Premium CPUs are now called Dedicated G7 Plans.'
+          : undefined
+      }
       types={types?.map(extendType) ?? []} // @todo don't extend type
     />
   );

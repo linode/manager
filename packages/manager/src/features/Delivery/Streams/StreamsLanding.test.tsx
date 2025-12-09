@@ -80,7 +80,8 @@ describe('Streams Landing Table', () => {
     within(screen.getByRole('table')).getByText('Status');
     screen.getByText('ID');
     screen.getByText('Destination Type');
-    screen.getByText('Creation Time');
+    screen.getByText('Last Modified');
+    screen.getByText('Last Modified By');
 
     // PaginationFooter
     const paginationFooterSelectPageSizeInput = screen.getAllByTestId(

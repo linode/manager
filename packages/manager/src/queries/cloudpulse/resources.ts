@@ -12,7 +12,7 @@ export const useResourcesQuery = (
   resourceType: string | undefined,
   params?: Params,
   filters?: Filter,
-  associatedEntityType: AssociatedEntityType = 'both',
+  associatedEntityType?: AssociatedEntityType,
   filterFn?: (resources: QueryFunctionType) => QueryFunctionType
 ) =>
   useQuery<any[], unknown, CloudPulseResources[]>({
@@ -30,16 +30,11 @@ export const useResourcesQuery = (
         // handle separately for firewall resource type
         if (resourceType === 'firewall') {
           resource.entities?.forEach((entity: FirewallDeviceEntity) => {
-            if (
-              (entity.type === associatedEntityType ||
-                associatedEntityType === 'both') &&
-              entity.label
-            ) {
+            if (entity.type === associatedEntityType && entity.label) {
               entities[String(entity.id)] = entity.label;
             }
             if (
-              (associatedEntityType === 'linode' ||
-                associatedEntityType === 'both') &&
+              associatedEntityType === 'linode' &&
               entity.type === 'linode_interface' &&
               entity.parent_entity?.label
             ) {
@@ -50,7 +45,7 @@ export const useResourcesQuery = (
         }
         const id =
           resourceType === 'objectstorage'
-            ? resource.hostname
+            ? resource.hostname || resource.id
             : String(resource.id);
         return {
           engineType: resource.engine,
@@ -63,6 +58,7 @@ export const useResourcesQuery = (
           entities,
           clusterSize: resource.cluster_size,
           volumeLinodeId: String(resource.linode_id),
+          volumeLinodeLabel: resource.linode_label,
         };
       });
     },
