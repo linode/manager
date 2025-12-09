@@ -163,11 +163,14 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
                   data-qa-back-navigation
                   disableRipple
                   onClick={handleBackNavigation}
-                  size="small"
                   sx={(theme) => ({
                     color: theme.palette.text.primary,
                     padding: 0,
-                    marginRight: theme.spacing(1),
+                    marginRight: theme.spacingFunction(8),
+                    '& svg': {
+                      width: 24,
+                      height: 24,
+                    },
                   })}
                 >
                   <ChevronLeftIcon />
