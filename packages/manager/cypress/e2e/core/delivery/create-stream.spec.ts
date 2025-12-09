@@ -166,7 +166,7 @@ describe('Create Stream', () => {
     });
   });
 
-  describe('given Kubernetes Audit Logs Stream Type', () => {
+  describe('given Kubernetes API Audit Logs Stream Type', () => {
     it('selects clusters and creates new stream', () => {
       // Mock API responses
       mockGetDestinations([mockDestination]);

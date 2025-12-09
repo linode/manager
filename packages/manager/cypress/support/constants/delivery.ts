@@ -15,7 +15,7 @@ export const mockDestinationPayload: CreateDestinationPayload = {
   type: destinationType.AkamaiObjectStorage,
   details: {
     host: randomString(),
-    bucket_name: randomString(),
+    bucket_name: randomLabel(),
     access_key_id: randomString(),
     access_key_secret: randomString(),
     path: '/',

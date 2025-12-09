@@ -27,12 +27,14 @@ export const FirewallRuleSetForm = React.memo(
   (props: FirewallRuleSetFormProps) => {
     const {
       category,
+      closeDrawer,
       errors,
+      handleOpenPrefixListDrawer,
       handleSubmit,
+      inboundAndOutboundRules,
       setFieldTouched,
       setFieldValue,
       touched,
-      closeDrawer,
       values,
     } = props;
 
@@ -57,7 +59,14 @@ export const FirewallRuleSetForm = React.memo(
     const ruleSetDropdownOptions = React.useMemo(
       () =>
         ruleSets
-          .filter((ruleSet) => ruleSet.type === category) // Display only rule sets applicable to the given category
+          // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
+          .filter(
+            (ruleSet) =>
+              ruleSet.type === category &&
+              !inboundAndOutboundRules.some(
+                (rule) => rule.ruleset === ruleSet.id
+              )
+          ) // Display only rule sets applicable to the given category and filter out rule sets already referenced by the FW
           .map((ruleSet) => ({
             label: ruleSet.label,
             value: ruleSet.id,
@@ -213,6 +222,7 @@ export const FirewallRuleSetForm = React.memo(
                       {rule.protocol};&nbsp;{rule.ports};&nbsp;
                       {generateAddressesLabelV2({
                         addresses: rule.addresses,
+                        onPrefixListClick: handleOpenPrefixListDrawer,
                         showTruncateChip: false,
                       })}
                     </Box>

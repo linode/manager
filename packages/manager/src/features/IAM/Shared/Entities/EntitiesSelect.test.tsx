@@ -5,7 +5,7 @@ import React from 'react';
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Entities } from './Entities';
+import { EntitiesSelect } from './EntitiesSelect';
 
 import type { EntitiesOption } from '../types';
 
@@ -40,7 +40,7 @@ const mockValue: EntitiesOption[] = [];
 describe('Entities', () => {
   it('renders correct data when it is an account access and type is an account', () => {
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="account_access"
         mode="assign-role"
         onChange={mockOnChange}
@@ -61,7 +61,7 @@ describe('Entities', () => {
 
   it('renders correct data when it is an account access and type is not an account', () => {
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="account_access"
         mode="assign-role"
         onChange={mockOnChange}
@@ -86,7 +86,7 @@ describe('Entities', () => {
     });
 
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="entity_access"
         mode="assign-role"
         onChange={mockOnChange}
@@ -112,7 +112,7 @@ describe('Entities', () => {
     });
 
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="entity_access"
         mode="assign-role"
         onChange={mockOnChange}
@@ -138,7 +138,7 @@ describe('Entities', () => {
     });
 
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="entity_access"
         mode="assign-role"
         onChange={mockOnChange}
@@ -160,7 +160,7 @@ describe('Entities', () => {
     });
 
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="entity_access"
         mode="assign-role"
         onChange={mockOnChange}
@@ -176,7 +176,7 @@ describe('Entities', () => {
 
   it('renders Autocomplete as readonly when mode is "change-role"', () => {
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="entity_access"
         mode="change-role"
         onChange={mockOnChange}
@@ -194,7 +194,7 @@ describe('Entities', () => {
     const errorMessage = 'Entities are required.';
 
     renderWithTheme(
-      <Entities
+      <EntitiesSelect
         access="entity_access"
         errorText={errorMessage}
         mode="assign-role"

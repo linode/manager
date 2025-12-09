@@ -1,5 +1,10 @@
-import { Box, Chip, Tooltip } from '@linode/ui';
-import { capitalize, truncateAndJoinList } from '@linode/utilities';
+import { useAccount } from '@linode/queries';
+import { BetaChip, Box, Chip, NewFeatureChip, Tooltip } from '@linode/ui';
+import {
+  capitalize,
+  isFeatureEnabledV2,
+  truncateAndJoinList,
+} from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -72,12 +77,24 @@ export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'IPENCAP', value: 'IPENCAP' },
 ];
 
-export const addressOptions = [
-  { label: 'All IPv4, All IPv6', value: 'all' },
-  { label: 'All IPv4', value: 'allIPv4' },
-  { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask', value: 'ip/netmask' },
-];
+export const useAddressOptions = () => {
+  const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
+    useIsFirewallRulesetsPrefixlistsEnabled();
+
+  return [
+    { label: 'All IPv4, All IPv6', value: 'all' },
+    { label: 'All IPv4', value: 'allIPv4' },
+    { label: 'All IPv6', value: 'allIPv6' },
+    {
+      label: isFirewallRulesetsPrefixlistsFeatureEnabled
+        ? 'IP / Netmask / Prefix List'
+        : 'IP / Netmask',
+      // We can keep this entire value even if the option is feature-flagged.
+      // Feature-flagging the label (without the "Prefix List" text) is sufficient.
+      value: 'ip/netmask/prefixlist',
+    },
+  ];
+};
 
 export const portPresets: Record<FirewallPreset, keyof typeof PORT_PRESETS> = {
   dns: '53',
@@ -94,6 +111,8 @@ export const allIPs = {
   ipv4: [allIPv4],
   ipv6: [allIPv6],
 };
+
+export const FW_RULESET_CAPABILITY = 'Cloud Firewall Rule Set';
 
 export interface PredefinedFirewall {
   inbound: FirewallRuleType[];
@@ -251,8 +270,11 @@ export const generateAddressesLabel = (
   return 'None';
 };
 
-export type PrefixListReference = { inIPv4Rule: boolean; inIPv6Rule: boolean };
-export type PrefixListReferenceMap = Record<string, PrefixListReference>;
+export type PrefixListRuleReference = {
+  inIPv4Rule: boolean;
+  inIPv6Rule: boolean;
+};
+export type PrefixListReferenceMap = Record<string, PrefixListRuleReference>;
 
 const isPrefixList = (ip: string) => ip.startsWith('pl:');
 
@@ -309,7 +331,7 @@ export const buildPrefixListReferenceMap = (addresses: {
 /**
  * Represents the Firewall Rule IP families to which a Prefix List (PL) is attached or referenced.
  *
- * Used for display and logic purposes, e.g., appending to a PL label in the UI as:
+ * Used to display a suffix next to the Prefix List label in the UI, e.g.,:
  * "pl:system:example (IPv4)", "pl:system:example (IPv6)", or "pl:system:example (IPv4, IPv6)".
  *
  * The value indicates which firewall IPs the PL applies to:
@@ -331,11 +353,11 @@ interface GenerateAddressesLabelV2Options {
    * Optional callback invoked when a prefix list label is clicked.
    *
    * @param prefixListLabel - The label of the clicked prefix list (e.g., "pl:system:test")
-   * @param plRuleRefTag - Indicates which firewall rule IP family(s) this PL belongs to: `(IPv4)`, `(IPv6)`, or `(IPv4, IPv6)`
+   * @param plRuleRef - Indicates whether the PL is referenced in the IPv4 and/or IPv6 firewall rule
    */
   onPrefixListClick?: (
     prefixListLabel: string,
-    plRuleRefTag: FirewallRulePrefixListReferenceTag
+    plRuleRef: PrefixListRuleReference
   ) => void;
   /**
    * Whether to show the truncation "+N" chip with a scrollable tooltip
@@ -389,6 +411,24 @@ export const generateAddressesLabelV2 = (
     elements.push('All IPv6');
   }
 
+  // Add remaining IPv4 addresses that are not prefix lists
+  if (!allowedAllIPv4) {
+    addresses?.ipv4?.forEach((ip) => {
+      if (!isPrefixList(ip)) {
+        elements.push(<span key={ip}>{ip}</span>);
+      }
+    });
+  }
+
+  // Add remaining IPv6 addresses that are not prefix lists
+  if (!allowedAllIPv6) {
+    addresses?.ipv6?.forEach((ip) => {
+      if (!isPrefixList(ip)) {
+        elements.push(<span key={ip}>{ip}</span>);
+      }
+    });
+  }
+
   // Build a map of prefix lists.
   // NOTE: If "allowedAllIPv4" or "allowedAllIPv6" is true, we skip those IPs entirely
   // because "All IPvX" is already represented, and there are no specific addresses to map.
@@ -416,31 +456,13 @@ export const generateAddressesLabelV2 = (
         key={pl}
         onClick={(e) => {
           e.preventDefault();
-          onPrefixListClick?.(pl, plRuleRefTag);
+          onPrefixListClick?.(pl, reference);
         }}
       >
         {`${pl} ${plRuleRefTag}`}
       </Link>
     );
   });
-
-  // Add remaining IPv4 addresses that are not prefix lists
-  if (!allowedAllIPv4) {
-    addresses?.ipv4?.forEach((ip) => {
-      if (!isPrefixList(ip)) {
-        elements.push(<span key={ip}>{ip}</span>);
-      }
-    });
-  }
-
-  // Add remaining IPv6 addresses that are not prefix lists
-  if (!allowedAllIPv6) {
-    addresses?.ipv6?.forEach((ip) => {
-      if (!isPrefixList(ip)) {
-        elements.push(<span key={ip}>{ip}</span>);
-      }
-    });
-  }
 
   // If no IPs are allowed
   if (elements.length === 0) return 'None';
@@ -456,18 +478,18 @@ export const generateAddressesLabelV2 = (
       sx={(theme) => ({
         maxHeight: '40vh',
         overflowY: 'auto',
-        // Extra space on the right to prevent scrollbar from overlapping content
-        paddingRight: theme.spacingFunction(8),
+        px: theme.spacingFunction(16),
       })}
     >
-      <ul
-        style={{
+      <Box
+        component="ul"
+        sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
-          gap: 4,
-          paddingLeft: 20,
+          gap: 0.5,
+          px: theme.spacingFunction(20),
           margin: 0,
-        }}
+        })}
       >
         {hiddenElements.map((el, i) => (
           <li
@@ -478,7 +500,7 @@ export const generateAddressesLabelV2 = (
             {el}
           </li>
         ))}
-      </ul>
+      </Box>
     </Box>
   );
 
@@ -500,13 +522,13 @@ export const generateAddressesLabelV2 = (
       </Box>
       {hasMore && (
         <Tooltip
-          arrow
           placement="bottom"
           slotProps={{
             tooltip: {
               sx: (theme) => ({
                 minWidth: '248px',
-                padding: `${theme.spacingFunction(16)} !important`,
+                paddingX: '0 !important',
+                paddingY: `${theme.spacingFunction(16)} !important`,
               }),
             },
           }}
@@ -551,17 +573,60 @@ export const getFirewallDescription = (firewall: Firewall) => {
  * but will eventually also look at account capabilities if available.
  */
 export const useIsFirewallRulesetsPrefixlistsEnabled = () => {
+  const { data: account } = useAccount();
   const flags = useFlags();
+
+  if (!flags) {
+    return {
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    };
+  }
 
   // @TODO: Firewall Rulesets & Prefix Lists - check for customer tag/account capability when it exists
   return {
-    isFirewallRulesetsPrefixlistsFeatureEnabled:
-      flags.fwRulesetsPrefixLists?.enabled ?? false,
-    isFirewallRulesetsPrefixListsBetaEnabled:
-      flags.fwRulesetsPrefixLists?.beta ?? false,
-    isFirewallRulesetsPrefixListsLAEnabled:
-      flags.fwRulesetsPrefixLists?.la ?? false,
-    isFirewallRulesetsPrefixListsGAEnabled:
-      flags.fwRulesetsPrefixLists?.ga ?? false,
+    isFirewallRulesetsPrefixlistsFeatureEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.enabled),
+      account?.capabilities ?? []
+    ),
+    isFirewallRulesetsPrefixListsBetaEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.beta),
+      account?.capabilities ?? []
+    ),
+    isFirewallRulesetsPrefixListsLAEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.la),
+      account?.capabilities ?? []
+    ),
+    isFirewallRulesetsPrefixListsGAEnabled: isFeatureEnabledV2(
+      FW_RULESET_CAPABILITY,
+      Boolean(flags.fwRulesetsPrefixLists?.ga),
+      account?.capabilities ?? []
+    ),
   };
+};
+
+/**
+ * Returns the feature chip for Firewall Rulesets & Prefix Lists.
+ *
+ * - Shows `<BetaChip />` if the feature is in Beta.
+ * - Shows `<NewFeatureChip />` if the feature is in GA.
+ * - Returns `null` if the feature is disabled OR if the feature is enabled but no chip applies.
+ */
+export const getFeatureChip = ({
+  isFirewallRulesetsPrefixlistsFeatureEnabled,
+  isFirewallRulesetsPrefixListsBetaEnabled,
+  isFirewallRulesetsPrefixListsGAEnabled,
+}: Omit<
+  ReturnType<typeof useIsFirewallRulesetsPrefixlistsEnabled>,
+  'isFirewallRulesetsPrefixListsLAEnabled'
+>) => {
+  if (!isFirewallRulesetsPrefixlistsFeatureEnabled) return null;
+  if (isFirewallRulesetsPrefixListsBetaEnabled) return <BetaChip />;
+  if (isFirewallRulesetsPrefixListsGAEnabled) return <NewFeatureChip />;
+  return null;
 };

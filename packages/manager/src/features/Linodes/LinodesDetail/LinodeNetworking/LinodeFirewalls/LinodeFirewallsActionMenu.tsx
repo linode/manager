@@ -8,22 +8,31 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface LinodeFirewallsActionMenuProps {
   firewallID: number;
+  linodeID: number;
   onUnassign: () => void;
 }
 
 export const LinodeFirewallsActionMenu = (
   props: LinodeFirewallsActionMenuProps
 ) => {
-  const { firewallID, onUnassign } = props;
+  const { onUnassign, linodeID, firewallID } = props;
 
-  const { data: permissions } = usePermissions(
-    'firewall',
-    ['delete_firewall_device'],
-    firewallID,
-    true
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    linodeID
   );
 
-  const disabledProps = !permissions.delete_firewall_device
+  const { data: firewallPermissions } = usePermissions(
+    'firewall',
+    ['delete_firewall_device'],
+    firewallID
+  );
+
+  const disabledProps = !(
+    linodePermissions?.update_linode &&
+    firewallPermissions?.delete_firewall_device
+  )
     ? {
         disabled: true,
         tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
