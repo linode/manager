@@ -35,6 +35,10 @@ export const loadEnvironmentConfig: CypressPlugin = (
     console.warn('.env file will be ignored.');
   }
 
+  console.warn('env', process.env);
+  console.warn('configenv', config.env);
+  console.warn('config', config);
+
   return {
     ...config,
     env: {
