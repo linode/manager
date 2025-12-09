@@ -42,6 +42,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - EntitiesSelect performance on large accounts ([#13168](https://github.com/linode/manager/pull/13168))
 - Optimize rendering of entities in AssignedRolesTable ([#13173](https://github.com/linode/manager/pull/13173))
 - Forking a Database Cluster with VPC into another region ([#13174](https://github.com/linode/manager/pull/13174))
+- The "in use / not in use" indicators in Prefix List Details drawer opened from Add/Edit Rule drawer ([#13184](https://github.com/linode/manager/pull/13184))
 
 ### Tech Stories:
 
