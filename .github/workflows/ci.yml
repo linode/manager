@@ -411,6 +411,7 @@ jobs:
     env:
       REACT_APP_LAUNCH_DARKLY_ID: ${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}
       MANAGER_OAUTH: ${{ secrets.MANAGER_OAUTH_SECRET }}
+      CYPRESS_MANAGER_OAUTH: ${{ secrets.MANAGER_OAUTH_SECRET }}
       REACT_APP_LOGIN_ROOT: 'https://login.linode.com'
       REACT_APP_API_ROOT: 'https://api.linode.com/v4'
       REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
