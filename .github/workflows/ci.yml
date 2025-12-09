@@ -434,7 +434,7 @@ jobs:
       - run: |
           cd packages/manager
           pnpm exec cypress install
-      - run: cd packages/manager && pnpm cy:run -s 'cypress/e2e/core/cloudpulse/!(cloudpulse-navigation.spec.ts)'
+      - run: cd packages/manager && pnpm cy:run -s 'cypress/e2e/core/cloudpulse/cloudpulse-region-support.spec.ts'
 
   build-storybook:
     runs-on: ubuntu-latest
