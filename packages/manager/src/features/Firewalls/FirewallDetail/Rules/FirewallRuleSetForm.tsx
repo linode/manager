@@ -59,14 +59,26 @@ export const FirewallRuleSetForm = React.memo(
     const ruleSetDropdownOptions = React.useMemo(
       () =>
         ruleSets
-          // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
-          .filter(
-            (ruleSet) =>
-              ruleSet.type === category &&
-              !inboundAndOutboundRules.some(
-                (rule) => rule.ruleset === ruleSet.id
-              )
-          ) // Display only rule sets applicable to the given category and filter out rule sets already referenced by the FW
+          .filter((ruleSet) => {
+            // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
+            const isCorrectType = ruleSet.type === category;
+
+            const isNotAlreadyReferenced = !inboundAndOutboundRules.some(
+              (rule) => rule.ruleset === ruleSet.id
+            );
+
+            const isNotMarkedForDeletion = ruleSet.deleted === null;
+
+            /**
+             * Display only those Rule Sets that:
+             * - are applicable to the given category
+             * - are not already referenced by the firewall
+             * - are not marked for deletion
+             */
+            return (
+              isCorrectType && isNotAlreadyReferenced && isNotMarkedForDeletion
+            );
+          })
           .map((ruleSet) => ({
             label: ruleSet.label,
             value: ruleSet.id,
