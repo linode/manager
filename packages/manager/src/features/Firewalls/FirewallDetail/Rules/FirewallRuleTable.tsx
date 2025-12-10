@@ -473,7 +473,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               )}
             </Box>
             <Box sx={{ whiteSpace: 'nowrap' }}>
-              <span>{rulesetDetails ? 'ID: ' : 'Ruleset ID: '}</span>
+              <span>{rulesetDetails ? 'ID: ' : 'Rule Set ID: '}</span>
               <IPAddress ips={[String(ruleset)]} isHovered={isHovered} />
             </Box>
           </Box>
