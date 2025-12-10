@@ -143,7 +143,7 @@ describe('AddRuleSetDrawer', () => {
     // Description
     expect(
       getByText(
-        'RuleSets are reusable collections of Cloud Firewall rules that use the same fields as individual rules. They let you manage and update multiple rules as a group. You can then apply them across different firewalls by reference.'
+        'Rule Sets are reusable collections of Cloud Firewall rules that use the same fields as individual rules. They let you manage and update multiple rules as a group. You can then apply them across different firewalls by reference.'
       )
     ).toBeVisible();
 
