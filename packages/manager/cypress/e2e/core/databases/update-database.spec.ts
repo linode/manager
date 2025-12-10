@@ -187,8 +187,15 @@ const modifyMaintenanceWindow = (label: string, windowValue: string) => {
     .should('be.visible')
     .should('be.disabled');
 
-  ui.autocomplete.findByLabel(label).should('be.visible').type(windowValue);
-  cy.contains(windowValue).should('be.visible').click();
+  // Open the dropdown via shadow DOM
+  ui.cdsAutoComplete.findByLabel(label, 'input[role="combobox"]').click();
+
+  // Select the value from the dropdown
+  ui.cdsAutoComplete
+    .findByLabel(label, '[role="listbox"]')
+    .contains(windowValue)
+    .click();
+
   ui.cdsButton.findButtonByTitle('Save Changes').then((btn) => {
     btn[0].click(); // Native DOM click
   });
@@ -343,7 +350,7 @@ const validateActionItems = (state: string, label: string) => {
 };
 
 // eslint-disable-next-line sonarjs/no-skipped-tests
-describe.skip('Update database clusters', () => {
+describe('Update database clusters', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       databaseVpc: true,
