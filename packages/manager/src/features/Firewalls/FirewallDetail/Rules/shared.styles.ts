@@ -24,7 +24,7 @@ export const StyledListItem = styled(Typography, {
   display: 'flex',
   padding: `${theme.spacingFunction(4 * paddingMultiplier)} 0`,
   ...(fieldsMode && {
-    flexWrap: 'wrap',
+    flexWrap: 'wrap', // Longer labels start on the next line
   }),
 }));
 
