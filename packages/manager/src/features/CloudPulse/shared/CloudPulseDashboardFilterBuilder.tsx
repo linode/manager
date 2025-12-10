@@ -114,6 +114,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> =
       React.useRef({});
 
+    // Reset the dependent filter reference when the dashboard id changes
+    React.useEffect(() => {
+      dependentFilterReference.current = {};
+    }, [dashboard.id]);
+
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
         if (dashboard && dashboard.service_type) {
@@ -368,9 +373,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               preferences,
               resource_ids: resource_ids?.length
                 ? resource_ids
-                : (
-                    dependentFilterReference.current[RESOURCE_ID] as string[]
-                  )?.map((id: string) => Number(id)),
+                : Array.isArray(dependentFilterReference.current[RESOURCE_ID])
+                  ? dependentFilterReference.current[RESOURCE_ID].map(
+                      Number
+                    ).filter((id) => !Number.isNaN(id))
+                  : [],
               shouldDisable: isError || isLoading,
             },
             handleNodeTypeChange
