@@ -109,11 +109,7 @@ export const FirewallRuleSetDetailsView = (
         <StyledListItem
           key={`item-${idx}`}
           paddingMultiplier={2}
-          sx={
-            item.column
-              ? { flexDirection: 'column', alignItems: 'flex-start' }
-              : {}
-          }
+          sx={item.column ? { flexDirection: 'column' } : {}}
         >
           {item.label && (
             <StyledLabel component="span">{item.label}:</StyledLabel>
