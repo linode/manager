@@ -19,9 +19,8 @@ export const StyledListItem = styled(Typography, {
   label: 'StyledTypography',
   shouldForwardProp: omittedProps(['paddingMultiplier']),
 })<StyledListItemProps>(({ theme, paddingMultiplier = 1 }) => ({
-  alignItems: 'flex-start',
+  alignItems: 'center',
   display: 'flex',
-  flexWrap: 'wrap',
   padding: `${theme.spacingFunction(4 * paddingMultiplier)} 0`,
 }));
 
