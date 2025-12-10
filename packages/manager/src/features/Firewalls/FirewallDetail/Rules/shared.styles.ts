@@ -21,6 +21,7 @@ export const StyledListItem = styled(Typography, {
 })<StyledListItemProps>(({ theme, paddingMultiplier = 1 }) => ({
   alignItems: 'flex-start',
   display: 'flex',
+  flexWrap: 'wrap',
   padding: `${theme.spacingFunction(4 * paddingMultiplier)} 0`,
 }));
 
