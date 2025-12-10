@@ -106,6 +106,7 @@ const assertPasswordComplexity = (
   desiredPassword: string,
   passwordStrength: 'Fair' | 'Good' | 'Weak'
 ) => {
+  cy.findByLabelText('Root Password').scrollIntoView();
   cy.findByLabelText('Root Password').should('be.visible').clear();
   cy.focused().type(desiredPassword);
 
@@ -228,6 +229,7 @@ describe('rebuild linode', () => {
           .click();
 
         // Type to confirm.
+        cy.findByLabelText('Linode Label').scrollIntoView();
         cy.findByLabelText('Linode Label').type(linode.label);
 
         // Verify the password complexity functionality.
@@ -303,6 +305,8 @@ describe('rebuild linode', () => {
           .findByTitle(almaLinuxImageLabel)
           .should('be.visible')
           .click();
+
+        cy.findByLabelText('Linode Label').scrollIntoView();
 
         cy.findByLabelText('Linode Label')
           .should('be.visible')
@@ -380,6 +384,8 @@ describe('rebuild linode', () => {
           .should('be.visible')
           .click();
 
+        cy.findByLabelText('Linode Label').scrollIntoView();
+
         cy.findByLabelText('Linode Label')
           .should('be.visible')
           .type(linode.label);
@@ -423,6 +429,7 @@ describe('rebuild linode', () => {
 
       assertPasswordComplexity(rootPassword, 'Good');
 
+      cy.findByLabelText('Linode Label').scrollIntoView();
       cy.findByLabelText('Linode Label').should('be.visible').click();
       cy.focused().type(mockLinode.label);
 
@@ -483,6 +490,7 @@ describe('rebuild linode', () => {
       ).should('be.checked');
 
       // Type to confirm
+      cy.findByLabelText('Linode Label').scrollIntoView();
       cy.findByLabelText('Linode Label').should('be.visible').click();
       cy.focused().type(linode.label);
 
@@ -551,7 +559,10 @@ describe('rebuild linode', () => {
           .click();
 
         // Type to confirm.
-        cy.findByLabelText('Linode Label').type(linode.label);
+        cy.findByLabelText('Linode Label').scrollIntoView();
+        cy.findByLabelText('Linode Label')
+          .should('be.visible')
+          .type(linode.label);
 
         assertPasswordComplexity(rootPassword, 'Good');
         submitRebuildWithRetry();
