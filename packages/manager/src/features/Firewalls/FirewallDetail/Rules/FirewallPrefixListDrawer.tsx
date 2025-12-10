@@ -227,13 +227,10 @@ export const FirewallPrefixListDrawer = React.memo(
             <>
               {fields.map((item, idx) => (
                 <StyledListItem
+                  fieldsMode
                   key={`item-${idx}`}
                   paddingMultiplier={2}
-                  sx={{
-                    alignItems: 'flex-start',
-                    flexWrap: 'wrap',
-                    ...(item.column ? { flexDirection: 'column' } : {}),
-                  }}
+                  sx={item.column ? { flexDirection: 'column' } : {}}
                 >
                   {item.label && (
                     <StyledLabel component="span">{item.label}:</StyledLabel>

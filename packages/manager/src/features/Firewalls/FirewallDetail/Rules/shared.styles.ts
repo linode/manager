@@ -12,16 +12,20 @@ import type { FirewallPolicyType } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
 interface StyledListItemProps {
+  fieldsMode?: boolean;
   paddingMultiplier?: number; // optional, default 1
 }
 
 export const StyledListItem = styled(Typography, {
   label: 'StyledTypography',
-  shouldForwardProp: omittedProps(['paddingMultiplier']),
-})<StyledListItemProps>(({ theme, paddingMultiplier = 1 }) => ({
-  alignItems: 'center',
+  shouldForwardProp: omittedProps(['fieldsMode', 'paddingMultiplier']),
+})<StyledListItemProps>(({ theme, fieldsMode, paddingMultiplier = 1 }) => ({
+  alignItems: fieldsMode ? 'flex-start' : 'center',
   display: 'flex',
   padding: `${theme.spacingFunction(4 * paddingMultiplier)} 0`,
+  ...(fieldsMode && {
+    flexWrap: 'wrap',
+  }),
 }));
 
 export const StyledLabel = styled(Box, {
