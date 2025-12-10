@@ -71,7 +71,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       width: '1em',
     },
     color: theme.palette.primary.main,
-    display: 'inline-block',
+    display: 'flex',
     position: 'relative',
   },
 }));
