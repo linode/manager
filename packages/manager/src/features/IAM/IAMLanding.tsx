@@ -53,7 +53,7 @@ export const IdentityAccessLanding = React.memo(() => {
   };
 
   if (location.pathname === '/iam') {
-    navigate({ to: '/iam/users' });
+    navigate({ to: '/iam/users', replace: true });
   }
 
   return (
