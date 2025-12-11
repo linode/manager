@@ -39,6 +39,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         setIsCopying(true);
         const { data } = await getDatabaseCredentials();
         if (data) {
+          // copy with username/password data
           copy(
             `postgres://${data?.username}:${data?.password}@${database.hosts?.primary}`
           );

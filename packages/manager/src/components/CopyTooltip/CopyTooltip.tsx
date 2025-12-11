@@ -30,10 +30,6 @@ export interface CopyTooltipProps {
    */
   isMaskingControlled?: boolean;
   /**
-   * Callback to be executed when the icon is clicked.
-   */
-
-  /**
    * If true, the text will be masked with dots when displayed. It will still be copyable.
    * @default false
    */
@@ -42,6 +38,9 @@ export interface CopyTooltipProps {
    * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
    */
   maskedTextLength?: MaskableTextLength | number;
+  /**
+   * Callback to be executed when the icon is clicked.
+   */
   onClickCallback?: () => void;
   /**
    * The placement of the tooltip.
