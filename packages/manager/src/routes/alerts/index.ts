@@ -68,6 +68,15 @@ const cloudPulseAlertsDefinitionsCatchAllRoute = createRoute({
   },
 });
 
+const cloudPulseNotificationChannelsRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'notification-channels',
+}).lazy(() =>
+  import(
+    'src/features/CloudPulse/Alerts/NotificationChannels/NotificationsChannelsListing/cloudPulseAlertsNotificationChannelsListingLazyRoute'
+  ).then((m) => m.cloudPulseAlertsNotificationChannelsListingLazyRoute)
+);
+
 export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
   cloudPulseAlertsIndexRoute,
   cloudPulseAlertsDefinitionsRoute.addChildren([
@@ -76,4 +85,5 @@ export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
     cloudPulseAlertsDefinitionsEditRoute,
   ]),
   cloudPulseAlertsDefinitionsCatchAllRoute,
+  cloudPulseNotificationChannelsRoute,
 ]);

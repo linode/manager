@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.155.0",
+  "version": "1.156.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -45,7 +45,7 @@
     "@tanstack/react-query-devtools": "5.51.24",
     "@tanstack/react-router": "^1.111.11",
     "@xterm/xterm": "^5.5.0",
-    "akamai-cds-react-components": "0.0.1-alpha.15",
+    "akamai-cds-react-components": "0.0.1-alpha.18",
     "algoliasearch": "^4.14.3",
     "axios": "~1.12.0",
     "braintree-web": "^3.92.2",
@@ -180,7 +180,7 @@
     "pdfreader": "^3.0.7",
     "redux-mock-store": "^1.5.3",
     "storybook": "^9.0.12",
-    "vite": "^7.1.11",
+    "vite": "^7.2.2",
     "vite-plugin-svgr": "^4.5.0"
   },
   "browserslist": [

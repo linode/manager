@@ -117,6 +117,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
+
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const {
@@ -246,17 +248,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Alerts',
                 hide: !isAlertsEnabled,
                 to: '/alerts',
-                isBeta: flags.aclp?.beta,
-              },
-              {
-                display: 'Longview',
-                to: '/longview',
+                isBeta: flags.aclpAlerting?.beta,
               },
               {
                 display: 'Logs',
                 hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
                 isBeta: isACLPLogsBeta,
+              },
+              {
+                display: 'Longview',
+                to: '/longview',
               },
             ],
             name: 'Monitor',
@@ -274,6 +276,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
                 to: '/iam',
                 isBeta: isIAMBeta,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Account',
@@ -307,6 +310,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isIAMEnabled,
                 to: '/iam',
                 isBeta: isIAMBeta,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',

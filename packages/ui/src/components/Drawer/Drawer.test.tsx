@@ -3,6 +3,7 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithTheme } from '../../utilities/testHelpers';
+import { BetaChip } from '../BetaChip';
 import { Button } from '../Button';
 import { Drawer } from './Drawer';
 
@@ -73,5 +74,22 @@ describe('Drawer', () => {
     );
 
     expect(getByRole('progressbar')).toBeVisible();
+  });
+
+  it('should render a Dailog with beta chip if titleSuffix is set to betaChip', () => {
+    const { getByText } = renderWithTheme(
+      <Drawer {...defaultArgs} open={true} titleSuffix={<BetaChip />} />,
+    );
+
+    expect(getByText('beta')).toBeVisible();
+  });
+
+  it('should render a Dailog with back button if handleBackNavigation is provided', () => {
+    const { getByLabelText } = renderWithTheme(
+      <Drawer {...defaultArgs} handleBackNavigation={() => {}} open={true} />,
+    );
+    const iconButton = getByLabelText('back navigation');
+
+    expect(iconButton).toBeVisible();
   });
 });

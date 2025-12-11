@@ -66,6 +66,7 @@ export const accountCapabilities = [
   'Block Storage',
   'Block Storage Encryption',
   'Cloud Firewall',
+  'Cloud Firewall Rule Set',
   'CloudPulse',
   'Disk Encryption',
   'Kubernetes',

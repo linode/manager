@@ -16,33 +16,68 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 
 import {
-  generateAddressesLabel,
+  generateAddressesLabelV2,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from '../../shared';
 import { StyledLabel, StyledListItem, useStyles } from './shared.styles';
 
 import type { FirewallRuleSetFormProps } from './FirewallRuleDrawer.types';
+import type { Category } from './shared';
+import type { FirewallRuleSet, FirewallRuleType } from '@linode/api-v4';
+
+interface FilterRuleSetsArgs {
+  category: Category;
+  inboundAndOutboundRules: FirewallRuleType[];
+  ruleSets: FirewallRuleSet[];
+}
+
+/**
+ * Display only those Rule Sets that:
+ * - are applicable to the given category
+ * - are not already referenced by the firewall
+ * - are not marked for deletion
+ */
+export const filterRuleSets = ({
+  ruleSets,
+  category,
+  inboundAndOutboundRules,
+}: FilterRuleSetsArgs) => {
+  return ruleSets.filter((ruleSet) => {
+    // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
+    const isCorrectType = ruleSet.type === category;
+
+    const isNotAlreadyReferenced = !inboundAndOutboundRules.some(
+      (rule) => rule.ruleset === ruleSet.id
+    );
+
+    const isNotMarkedForDeletion = ruleSet.deleted === null;
+
+    return isCorrectType && isNotAlreadyReferenced && isNotMarkedForDeletion;
+  });
+};
 
 export const FirewallRuleSetForm = React.memo(
   (props: FirewallRuleSetFormProps) => {
     const {
       category,
+      closeDrawer,
       errors,
+      handleOpenPrefixListDrawer,
       handleSubmit,
+      inboundAndOutboundRules,
       setFieldTouched,
       setFieldValue,
       touched,
-      closeDrawer,
       values,
     } = props;
 
     const { classes } = useStyles();
 
-    const { isFirewallRulesetsPrefixlistsEnabled } =
+    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
       useIsFirewallRulesetsPrefixlistsEnabled();
 
     const { data, error, isLoading } = useAllFirewallRuleSetsQuery(
-      isFirewallRulesetsPrefixlistsEnabled
+      isFirewallRulesetsPrefixlistsFeatureEnabled
     );
 
     const ruleSets = data ?? [];
@@ -56,12 +91,14 @@ export const FirewallRuleSetForm = React.memo(
     // Build dropdown options
     const ruleSetDropdownOptions = React.useMemo(
       () =>
-        ruleSets
-          .filter((ruleSet) => ruleSet.type === category) // Display only rule sets applicable to the given category
-          .map((ruleSet) => ({
-            label: ruleSet.label,
-            value: ruleSet.id,
-          })),
+        filterRuleSets({
+          ruleSets,
+          category,
+          inboundAndOutboundRules,
+        }).map((ruleSet) => ({
+          label: ruleSet.label,
+          value: ruleSet.id,
+        })),
       [ruleSets]
     );
 
@@ -74,7 +111,7 @@ export const FirewallRuleSetForm = React.memo(
           <Typography
             sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
           >
-            RuleSets are reusable collections of Cloud Firewall rules that use
+            Rule Sets are reusable collections of Cloud Firewall rules that use
             the same fields as individual rules. They let you manage and update
             multiple rules as a group. You can then apply them across different
             firewalls by reference.
@@ -211,7 +248,11 @@ export const FirewallRuleSetForm = React.memo(
                     />
                     <Box>
                       {rule.protocol};&nbsp;{rule.ports};&nbsp;
-                      {generateAddressesLabel(rule.addresses)}
+                      {generateAddressesLabelV2({
+                        addresses: rule.addresses,
+                        onPrefixListClick: handleOpenPrefixListDrawer,
+                        showTruncateChip: false,
+                      })}
                     </Box>
                   </StyledListItem>
                 ))}
