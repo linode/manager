@@ -119,7 +119,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
               to: '/nodebalancers/$id/settings/add-firewall',
             })
           }
-          tooltipText="NodeBalanacers can only have one Firewall assigned."
+          tooltipText="NodeBalancers can only have one Firewall assigned."
         >
           Add Firewall
         </Button>

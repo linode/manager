@@ -397,8 +397,6 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     return <TableRowLoading columns={smDown ? 3 : lgDown ? 5 : 6} />;
   }
 
-  const ruleSetCopyableId = `${rulesetDetails ? 'ID:' : 'Ruleset ID:'} ${ruleset}`;
-
   return (
     <StyledTableRow
       aria-label={label ?? `firewall rule ${id}`}
@@ -475,7 +473,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
               )}
             </Box>
             <Box sx={{ whiteSpace: 'nowrap' }}>
-              <IPAddress ips={[ruleSetCopyableId]} isHovered={isHovered} />
+              <span>{rulesetDetails ? 'ID: ' : 'Rule Set ID: '}</span>
+              <IPAddress ips={[String(ruleset)]} isHovered={isHovered} />
             </Box>
           </Box>
         </TableCell>
