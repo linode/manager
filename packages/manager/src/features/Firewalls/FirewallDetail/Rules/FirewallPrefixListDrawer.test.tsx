@@ -47,35 +47,40 @@ const computeExpectedElements = (
   let title = 'Prefix List details';
   let button = 'Close';
   let label = 'Name:';
+  let hasBackNavigation = false;
 
   if (context?.type === 'ruleset' && context.modeViewedFrom === 'create') {
     title = `Add an ${capitalize(category)} Rule or Rule Set`;
     button = `Back to ${capitalize(category)} Rule Set`;
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   if (context?.type === 'rule' && context.modeViewedFrom === 'create') {
     title = `Add an ${capitalize(category)} Rule or Rule Set`;
     button = `Back to ${capitalize(category)} Rule`;
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   if (context?.type === 'ruleset' && context.modeViewedFrom === 'view') {
     title = `${capitalize(category)} Rule Set details`;
     button = 'Back to the Rule Set';
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   if (context?.type === 'rule' && context.modeViewedFrom === 'edit') {
     title = 'Edit Rule';
     button = 'Back to Rule';
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   // Default values when there is no specific drawer context
   // (e.g., type === 'rule' and modeViewedFrom === undefined,
   // meaning the drawer is opened directly from the Firewall Table row)
-  return { title, button, label };
+  return { title, button, label, hasBackNavigation };
 };
 
 describe('FirewallPrefixListDrawer', () => {
@@ -158,7 +163,7 @@ describe('FirewallPrefixListDrawer', () => {
         mockData,
       ]);
 
-      const { getByText, getByRole } = renderWithTheme(
+      const { getByText, getByRole, queryByLabelText } = renderWithTheme(
         <FirewallPrefixListDrawer
           category={category}
           context={context}
@@ -169,10 +174,16 @@ describe('FirewallPrefixListDrawer', () => {
       );
 
       // Compute expectations
-      const { title, button, label } = computeExpectedElements(
-        category,
-        context
-      );
+      const { title, button, label, hasBackNavigation } =
+        computeExpectedElements(category, context);
+
+      // Back Navigation (only if expected)
+      const backIconButton = queryByLabelText('back navigation');
+      if (hasBackNavigation) {
+        expect(backIconButton).toBeVisible();
+      } else {
+        expect(backIconButton).not.toBeInTheDocument();
+      }
 
       // Title
       expect(getByText(title)).toBeVisible();
