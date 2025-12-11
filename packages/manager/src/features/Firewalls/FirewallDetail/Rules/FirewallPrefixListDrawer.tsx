@@ -210,6 +210,9 @@ export const FirewallPrefixListDrawer = React.memo(
     return (
       <Drawer
         error={error}
+        handleBackNavigation={
+          backButtonText ? () => onClose({ closeAll: false }) : undefined
+        }
         isFetching={isFetching}
         onClose={() => onClose({ closeAll: true })}
         open={isOpen}
