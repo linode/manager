@@ -1,4 +1,4 @@
-import { array, mixed, object, string } from 'yup';
+import { mixed, object, string } from 'yup';
 
 import type { ChannelType } from '@linode/api-v4';
 
