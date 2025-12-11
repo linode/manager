@@ -107,11 +107,13 @@ export const ServiceURI = (props: ServiceURIProps) => {
         )}
         @{database.hosts?.primary}:<Code>{'{connection pool port}'}</Code>/
         <Code>{'{connection pool label}'}</Code>
-        <StyledCopyTooltip
-          loading={isCopying}
-          onClickCallback={handleCopy}
-          text={serviceURI}
-        />
+        {isCopying ? (
+          <Button loading sx={{ paddingLeft: 2 }}>
+            {' '}
+          </Button>
+        ) : (
+          <StyledCopyTooltip onClickCallback={handleCopy} text={serviceURI} />
+        )}
       </StyledValueGrid>
     </StyledGridContainer>
   );
