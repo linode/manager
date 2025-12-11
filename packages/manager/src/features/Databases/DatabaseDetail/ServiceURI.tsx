@@ -70,12 +70,19 @@ export const ServiceURI = (props: ServiceURIProps) => {
       <Grid
         size={{
           md: 1.5,
-          xs: 1.5,
+          xs: 2,
         }}
       >
         <StyledLabelTypography>Service URI</StyledLabelTypography>
       </Grid>
-      <StyledValueGrid>
+      <StyledValueGrid
+        size={{
+          md: 10,
+          xs: 10,
+        }}
+        sx={{ overflowX: 'auto', overflowY: 'hidden' }}
+        whiteSpace="pre"
+      >
         postgres://
         {credentialsError ? (
           <Button
