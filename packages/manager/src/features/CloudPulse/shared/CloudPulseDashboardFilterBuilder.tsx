@@ -114,11 +114,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> =
       React.useRef({});
 
-    // Reset the dependent filter reference when the dashboard id changes
-    React.useEffect(() => {
-      dependentFilterReference.current = {};
-    }, [dashboard.id]);
-
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
         if (dashboard && dashboard.service_type) {
