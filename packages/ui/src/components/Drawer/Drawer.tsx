@@ -24,6 +24,10 @@ export interface DrawerProps extends _DrawerProps {
    * It prevents the drawer from showing broken content.
    */
   error?: APIError[] | null | string;
+  /**
+   * An optional prop that handles back navigation for second-level drawers.
+   * It can act as a visual indicator, similar to a back button or `onClose` handler.
+   */
   handleBackNavigation?: () => void;
   /**
    * Whether the drawer is fetching the entity's data.
@@ -156,43 +160,45 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           wrap="nowrap"
         >
           <Grid>
-            <Box alignItems="center" display="flex">
-              {handleBackNavigation! && (
-                <IconButton
-                  aria-label="back navigation"
-                  data-qa-back-navigation
-                  disableRipple
-                  onClick={handleBackNavigation}
-                  sx={(theme) => ({
-                    color: theme.palette.text.primary,
-                    padding: 0,
-                    marginRight: theme.spacingFunction(8),
-                    '& svg': {
-                      width: 24,
-                      height: 24,
-                    },
-                  })}
-                >
-                  <ChevronLeftIcon />
-                </IconButton>
-              )}
-              {isFetching ? null : (
-                <React.Fragment>
-                  <Typography
-                    data-qa-drawer-title={lastTitleRef.current}
-                    data-testid="drawer-title"
-                    id={titleID}
-                    sx={{
-                      wordBreak: 'break-word',
-                    }}
-                    variant="h2"
+            {isFetching ? null : (
+              <Box
+                alignItems="center"
+                data-testid="drawer-title-container"
+                display="flex"
+              >
+                {handleBackNavigation && (
+                  <IconButton
+                    aria-label="back navigation"
+                    data-qa-back-navigation
+                    disableRipple
+                    onClick={handleBackNavigation}
+                    sx={(theme) => ({
+                      color: theme.palette.text.primary,
+                      padding: 0,
+                      marginRight: theme.spacingFunction(8),
+                      '& svg': {
+                        width: 24,
+                        height: 24,
+                      },
+                    })}
                   >
-                    {lastTitleRef.current}
-                  </Typography>
-                  {titleSuffix && <span>{titleSuffix}</span>}
-                </React.Fragment>
-              )}
-            </Box>
+                    <ChevronLeftIcon />
+                  </IconButton>
+                )}
+                <Typography
+                  data-qa-drawer-title={lastTitleRef.current}
+                  data-testid="drawer-title"
+                  id={titleID}
+                  sx={{
+                    wordBreak: 'break-word',
+                  }}
+                  variant="h2"
+                >
+                  {lastTitleRef.current}
+                </Typography>
+                {titleSuffix && <span>{titleSuffix}</span>}
+              </Box>
+            )}
           </Grid>
           <Grid>
             <IconButton
