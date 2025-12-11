@@ -286,13 +286,13 @@ interface NotificationChannelAlerts {
 interface NotificationChannelBase {
   alerts: NotificationChannelAlerts[];
   channel_type: ChannelType;
-  created_at: string;
+  created: string;
   created_by: string;
   id: number;
   label: string;
   status: NotificationStatus;
   type: AlertNotificationType;
-  updated_at: string;
+  updated: string;
   updated_by: string;
 }
 
