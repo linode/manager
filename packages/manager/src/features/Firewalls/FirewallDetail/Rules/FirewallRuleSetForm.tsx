@@ -22,6 +22,39 @@ import {
 import { StyledLabel, StyledListItem, useStyles } from './shared.styles';
 
 import type { FirewallRuleSetFormProps } from './FirewallRuleDrawer.types';
+import type { Category } from './shared';
+import type { FirewallRuleSet, FirewallRuleType } from '@linode/api-v4';
+
+interface FilterRuleSetsArgs {
+  category: Category;
+  inboundAndOutboundRules: FirewallRuleType[];
+  ruleSets: FirewallRuleSet[];
+}
+
+/**
+ * Display only those Rule Sets that:
+ * - are applicable to the given category
+ * - are not already referenced by the firewall
+ * - are not marked for deletion
+ */
+export const filterRuleSets = ({
+  ruleSets,
+  category,
+  inboundAndOutboundRules,
+}: FilterRuleSetsArgs) => {
+  return ruleSets.filter((ruleSet) => {
+    // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
+    const isCorrectType = ruleSet.type === category;
+
+    const isNotAlreadyReferenced = !inboundAndOutboundRules.some(
+      (rule) => rule.ruleset === ruleSet.id
+    );
+
+    const isNotMarkedForDeletion = ruleSet.deleted === null;
+
+    return isCorrectType && isNotAlreadyReferenced && isNotMarkedForDeletion;
+  });
+};
 
 export const FirewallRuleSetForm = React.memo(
   (props: FirewallRuleSetFormProps) => {
@@ -58,31 +91,14 @@ export const FirewallRuleSetForm = React.memo(
     // Build dropdown options
     const ruleSetDropdownOptions = React.useMemo(
       () =>
-        ruleSets
-          .filter((ruleSet) => {
-            // TODO: Firewall RuleSets: Remove this client-side filter once the API supports filtering by the 'type' field
-            const isCorrectType = ruleSet.type === category;
-
-            const isNotAlreadyReferenced = !inboundAndOutboundRules.some(
-              (rule) => rule.ruleset === ruleSet.id
-            );
-
-            const isNotMarkedForDeletion = ruleSet.deleted === null;
-
-            /**
-             * Display only those Rule Sets that:
-             * - are applicable to the given category
-             * - are not already referenced by the firewall
-             * - are not marked for deletion
-             */
-            return (
-              isCorrectType && isNotAlreadyReferenced && isNotMarkedForDeletion
-            );
-          })
-          .map((ruleSet) => ({
-            label: ruleSet.label,
-            value: ruleSet.id,
-          })),
+        filterRuleSets({
+          ruleSets,
+          category,
+          inboundAndOutboundRules,
+        }).map((ruleSet) => ({
+          label: ruleSet.label,
+          value: ruleSet.id,
+        })),
       [ruleSets]
     );
 
