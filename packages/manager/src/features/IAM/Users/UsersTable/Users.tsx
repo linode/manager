@@ -199,8 +199,8 @@ export const UsersLanding = () => {
               disabled={!canCreateUser}
               onClick={() => setIsCreateDrawerOpen(true)}
               tooltipText={
-                canCreateUser
-                  ? 'You cannot create other users as a restricted user.'
+                !canCreateUser
+                  ? 'You do not have permission to create other users.'
                   : undefined
               }
             >
