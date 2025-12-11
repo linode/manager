@@ -446,10 +446,13 @@ describe('LKE Cluster Creation with APL enabled', () => {
 
     cy.wait('@getRegionAvailability');
 
-    cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
-    cy.findByTestId('newFeatureChip')
-      .should('be.visible')
-      .should('have.text', 'new');
+    cy.findByTestId('application-platform-form').within(() => {
+      cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
+      cy.findByTestId('newFeatureChip')
+        .should('be.visible')
+        .should('have.text', 'new');
+    });
+
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
     cy.findByTestId('ha-radio-button-yes').should('be.disabled');
     cy.get(
