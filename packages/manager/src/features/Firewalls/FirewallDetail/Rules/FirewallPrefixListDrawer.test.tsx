@@ -177,7 +177,7 @@ describe('FirewallPrefixListDrawer', () => {
       const { title, button, label, hasBackNavigation } =
         computeExpectedElements(category, context);
 
-      // Back Navigation (only if expected)
+      // Back Navigation (Expected only for second-level drawers)
       const backIconButton = queryByLabelText('back navigation');
       if (hasBackNavigation) {
         expect(backIconButton).toBeVisible();
