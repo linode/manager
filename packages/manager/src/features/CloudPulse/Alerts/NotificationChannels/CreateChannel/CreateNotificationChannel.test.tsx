@@ -41,7 +41,7 @@ describe('CreateNotificationChannel', () => {
     expect(screen.getByText('Channel Settings')).toBeVisible();
   });
 
-  it('should render the channel type select component', async() => {
+  it('should render the channel type select component', async () => {
     renderWithTheme(<CreateNotificationChannel />);
 
     expect(screen.getByTestId(CHANNEL_TYPE_SELECT_TESTID)).toBeVisible();
