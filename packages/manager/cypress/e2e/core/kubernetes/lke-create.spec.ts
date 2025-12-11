@@ -1929,7 +1929,7 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
       ui.tabList.findTabByTitle('GPU').should('be.visible').click();
 
       cy.findByRole('table', {
-        name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
+        name: 'List of Linode Plans',
       }).within(() => {
         cy.get('tbody tr')
           .should('have.length', 4)
