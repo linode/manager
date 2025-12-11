@@ -84,17 +84,20 @@ const getDefaultPLReferenceState = (
 ): { inIPv4Rule: boolean; inIPv6Rule: boolean } => {
   if (support === null) {
     // Special Prefix List case
-    return { inIPv4Rule: true, inIPv6Rule: false };
+    return { inIPv4Rule: true, inIPv6Rule: true };
   }
 
   const { isPLIPv4Unsupported, isPLIPv6Unsupported } = support;
 
+  // Supports both IPv4 & IPv6
   if (!isPLIPv4Unsupported && !isPLIPv6Unsupported)
-    return { inIPv4Rule: true, inIPv6Rule: false };
+    return { inIPv4Rule: true, inIPv6Rule: true };
 
+  // Supports only IPv4
   if (!isPLIPv4Unsupported && isPLIPv6Unsupported)
     return { inIPv4Rule: true, inIPv6Rule: false };
 
+  // Supports only Ipv6
   if (isPLIPv4Unsupported && !isPLIPv6Unsupported)
     return { inIPv4Rule: false, inIPv6Rule: true };
 
