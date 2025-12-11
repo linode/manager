@@ -1,3 +1,10 @@
+## [2025-12-09] - v0.13.0
+
+
+### Tech Stories:
+
+- Update `scrollErrorIntoViewV2.test.tsx‎` to not mock  MutationObserver` ([#13119](https://github.com/linode/manager/pull/13119))
+
 ## [2025-11-18] - v0.12.0
 
 
