@@ -52,3 +52,38 @@ export const getQuotaUsage = (type: QuotaType, id: string) =>
     setURL(`${BETA_API_ROOT}/${type}/quotas/${id}/usage`),
     setMethod('GET'),
   );
+
+/**
+ * getGlobalQuotas
+ *
+ * Returns a paginated list of global quotas for a particular service specified by `type`.
+ *
+ * This request can be filtered on `quota_name`, `service_name` and `scope`.
+ *
+ * @param type { QuotaType } retrieve quotas within this service type.
+ */
+export const getGlobalQuotas = (
+  type: QuotaType,
+  params: Params = {},
+  filter: Filter = {},
+) =>
+  Request<Page<Quota>>(
+    setURL(`${BETA_API_ROOT}/${type}/global-quotas`),
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params),
+  );
+
+/**
+ * getGlobalQuotaUsage
+ *
+ * Returns the usage for a single global quota within a particular service specified by `type`.
+ *
+ * @param type { QuotaType } retrieve a quota within this service type.
+ * @param id { string } the quota ID to look up.
+ */
+export const getGlobalQuotaUsage = (type: QuotaType, id: string) =>
+  Request<QuotaUsage>(
+    setURL(`${BETA_API_ROOT}/${type}/global-quotas/${id}/usage`),
+    setMethod('GET'),
+  );

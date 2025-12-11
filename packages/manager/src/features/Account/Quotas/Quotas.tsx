@@ -13,7 +13,8 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 
-import { QuotasTable } from './QuotasTable';
+import { GlobalQuotasTable } from './GlobalQuotasTable/GlobalQuotasTable';
+import { QuotasTable } from './QuotasTable/QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
 
 import type { Quota } from '@linode/api-v4';
@@ -39,6 +40,18 @@ export const Quotas = () => {
   return (
     <>
       <DocumentTitleSegment segment="Quotas" />
+
+      <Paper
+        sx={(theme: Theme) => ({
+          marginTop: theme.spacingFunction(16),
+        })}
+        variant="outlined"
+      >
+        <Typography variant="h2">Object Storage: global</Typography>
+
+        <GlobalQuotasTable />
+      </Paper>
+
       <Paper
         sx={(theme: Theme) => ({
           marginTop: theme.spacingFunction(16),
@@ -46,7 +59,7 @@ export const Quotas = () => {
         variant="outlined"
       >
         <Stack>
-          <Typography variant="h2">Object Storage</Typography>
+          <Typography variant="h2">Object Storage: per-endpoint</Typography>
           <Box sx={{ display: 'flex' }}>
             <Notice spacingTop={16} variant="info">
               <Typography>
@@ -105,7 +118,12 @@ export const Quotas = () => {
             </Link>
             .
           </Typography>
-          <Stack direction="column" spacing={2}>
+
+          <Stack
+            data-testid="endpoint-quotas-table-container"
+            direction="column"
+            spacing={2}
+          >
             <QuotasTable
               selectedLocation={selectedLocation}
               selectedService={{

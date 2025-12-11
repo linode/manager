@@ -26,6 +26,8 @@ const INCLUDED_OBJ_QUOTA_TYPES = [
   'obj-total-concurrent-requests',
 ];
 
+export const QUOTA_ROW_MIN_HEIGHT = 58;
+
 type UseGetLocationsForQuotaService =
   | {
       isFetchingRegions: boolean;

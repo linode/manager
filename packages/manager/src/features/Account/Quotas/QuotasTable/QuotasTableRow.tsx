@@ -9,7 +9,12 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 
-import { convertResourceMetric, getQuotaError, pluralizeMetric } from './utils';
+import {
+  convertResourceMetric,
+  getQuotaError,
+  pluralizeMetric,
+  QUOTA_ROW_MIN_HEIGHT,
+} from '../utils';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -32,8 +37,6 @@ interface QuotasTableRowProps {
   setSelectedQuota: (quota: Quota) => void;
   setSupportModalOpen: (open: boolean) => void;
 }
-
-const quotaRowMinHeight = 58;
 
 export const QuotasTableRow = (props: QuotasTableRowProps) => {
   const {
@@ -79,7 +82,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
   };
 
   return (
-    <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
+    <TableRow key={quota.quota_id} sx={{ height: QUOTA_ROW_MIN_HEIGHT }}>
       <TableCell>
         <Box alignItems="center" display="flex" flexWrap="nowrap">
           <Typography
