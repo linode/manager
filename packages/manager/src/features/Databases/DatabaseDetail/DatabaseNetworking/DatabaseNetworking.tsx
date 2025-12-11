@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { ServiceURI } from 'src/features/Databases/DatabaseDetail/ServiceURI';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { ACCESS_CONTROLS_IN_SETTINGS_TEXT } from '../../constants';
 import AccessControls from '../AccessControls';
@@ -10,6 +11,7 @@ import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseManageNetworking } from './DatabaseManageNetworking';
 
 export const DatabaseNetworking = () => {
+  const flags = useFlags();
   const navigate = useNavigate();
   const { database, disabled, engine, isVPCEnabled } =
     useDatabaseDetailContext();
@@ -37,7 +39,9 @@ export const DatabaseNetworking = () => {
           description={accessControlCopy}
           disabled={disabled}
         />
-        {database.connection_pool_port && <ServiceURI database={database} />}
+        {flags.databasePgBouncer && database.connection_pool_port && (
+          <ServiceURI database={database} />
+        )}
         <DatabaseManageNetworking database={database} />
       </Stack>
     </Paper>
