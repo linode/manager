@@ -1,4 +1,10 @@
-import { getQuota, getQuotas, getQuotaUsage } from '@linode/api-v4';
+import {
+  getGlobalQuotas,
+  getGlobalQuotaUsage,
+  getQuota,
+  getQuotas,
+  getQuotaUsage,
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { getAllQuotas } from './requests';
@@ -22,6 +28,22 @@ export const quotaQueries = createQueryKeys('quotas', {
       }),
       usage: (id: string) => ({
         queryFn: () => getQuotaUsage(type, id),
+        queryKey: [id],
+      }),
+    },
+    queryKey: [type],
+  }),
+});
+
+export const globalQuotaQueries = createQueryKeys('global-quotas', {
+  service: (type: QuotaType) => ({
+    contextQueries: {
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getGlobalQuotas(type, params, filter),
+        queryKey: [params, filter],
+      }),
+      usage: (id: string) => ({
+        queryFn: () => getGlobalQuotaUsage(type, id),
         queryKey: [id],
       }),
     },

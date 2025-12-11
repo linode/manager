@@ -15,9 +15,9 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import { QuotasIncreaseForm } from './QuotasIncreaseForm';
+import { QuotasIncreaseForm } from '../QuotasIncreaseForm';
+import { getQuotasFilters } from '../utils';
 import { QuotasTableRow } from './QuotasTableRow';
-import { getQuotasFilters } from './utils';
 
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';

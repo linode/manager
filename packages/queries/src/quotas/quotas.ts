@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { quotaQueries } from './keys';
+import { globalQuotaQueries, quotaQueries } from './keys';
 
 import type {
   APIError,
@@ -49,4 +49,16 @@ export const useQuotaUsageQuery = (
   useQuery<QuotaUsage, APIError[]>({
     ...quotaQueries.service(service)._ctx.usage(id),
     enabled,
+  });
+
+export const useGlobalQuotasQuery = (
+  service: QuotaType,
+  params: Params = {},
+  filter: Filter = {},
+  enabled = true,
+) =>
+  useQuery<ResourcePage<Quota>, APIError[]>({
+    ...globalQuotaQueries.service(service)._ctx.paginated(params, filter),
+    enabled,
+    placeholderData: keepPreviousData,
   });
