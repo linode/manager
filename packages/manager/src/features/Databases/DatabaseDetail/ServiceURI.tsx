@@ -60,7 +60,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     }
   };
 
-  const serviceURI = `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}`;
+  const serviceURI = `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}?sslmode=require`;
 
   // hide loading state if the user clicks on the copy icon
   const showBtnLoading =
@@ -71,58 +71,68 @@ export const ServiceURI = (props: ServiceURIProps) => {
       <Grid
         size={{
           md: 1.5,
-          xs: 2,
+          xs: 3,
         }}
       >
         <StyledLabelTypography>Service URI</StyledLabelTypography>
       </Grid>
-      <StyledValueGrid
-        size={{
-          md: 10,
-          xs: 10,
-        }}
-        sx={{ overflowX: 'auto', overflowY: 'hidden' }}
-        whiteSpace="pre"
-      >
-        postgres://
-        {credentialsError ? (
-          <Button
-            loading={showBtnLoading}
-            onClick={() => getDatabaseCredentials()}
-            sx={(theme) => ({
-              p: 0,
-              color: theme.tokens.alias.Content.Text.Negative,
-              '&:hover, &:focus': {
+      <Grid display="contents">
+        <StyledValueGrid
+          size={{
+            md: 10,
+            xs: 10,
+          }}
+          sx={{ overflowX: 'auto', overflowY: 'hidden' }}
+          whiteSpace="pre"
+        >
+          postgres://
+          {credentialsError ? (
+            <Button
+              loading={showBtnLoading}
+              onClick={() => getDatabaseCredentials()}
+              sx={(theme) => ({
+                p: 0,
                 color: theme.tokens.alias.Content.Text.Negative,
-              },
-            })}
-          >
-            {`{error. click to retry}`}
-          </Button>
-        ) : hidePassword || (!credentialsError && !credentials) ? (
-          <Button
-            loading={showBtnLoading}
-            onClick={() => {
-              setHidePassword(false);
-              getDatabaseCredentials();
-            }}
-            sx={{ p: 0 }}
-          >
-            {`{click to reveal password}`}
-          </Button>
-        ) : (
-          `${credentials?.username}:${credentials?.password}`
-        )}
-        @{database.hosts?.primary}:<Code>{'{connection pool port}'}</Code>/
-        <Code>{'{connection pool label}'}</Code>
+                '&:hover, &:focus': {
+                  color: theme.tokens.alias.Content.Text.Negative,
+                },
+              })}
+            >
+              {`{error. click to retry reveal}`}
+            </Button>
+          ) : hidePassword || (!credentialsError && !credentials) ? (
+            <Button
+              loading={showBtnLoading}
+              onClick={() => {
+                setHidePassword(false);
+                getDatabaseCredentials();
+              }}
+              sx={{ p: 0 }}
+            >
+              {`{click to reveal password}`}
+            </Button>
+          ) : (
+            `${credentials?.username}:${credentials?.password}`
+          )}
+          @{database.hosts?.primary}:<Code>{'{connection pool port}'}</Code>/
+          <Code>{'{connection pool label}'}</Code>?sslmode=require
+        </StyledValueGrid>
         {isCopying ? (
           <Button loading sx={{ paddingLeft: 2 }}>
             {' '}
           </Button>
         ) : (
-          <StyledCopyTooltip onClickCallback={handleCopy} text={serviceURI} />
+          <Grid
+            alignContent="center"
+            size={{
+              md: 0.5,
+              xs: 1,
+            }}
+          >
+            <StyledCopyTooltip onClickCallback={handleCopy} text={serviceURI} />
+          </Grid>
         )}
-      </StyledValueGrid>
+      </Grid>
     </StyledGridContainer>
   );
 };
