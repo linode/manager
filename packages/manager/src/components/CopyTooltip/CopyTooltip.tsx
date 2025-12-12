@@ -35,13 +35,12 @@ export interface CopyTooltipProps {
    */
   masked?: boolean;
   /**
-   * Callback to be executed when the icon is clicked.
-   */
-
-  /**
    * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
    */
   maskedTextLength?: MaskableTextLength | number;
+  /**
+   * Callback to be executed when the icon is clicked.
+   */
   onClickCallback?: () => void;
   /**
    * The placement of the tooltip.

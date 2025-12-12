@@ -210,6 +210,11 @@ const makeMockDatabase = (params: PathParams): Database => {
 
     db.ssl_connection = true;
   }
+
+  if (db.engine === 'postgresql') {
+    db.connection_pool_port = 100;
+  }
+
   const database = databaseFactory.build(db);
 
   if (database.platform !== 'rdbms-default') {
