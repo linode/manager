@@ -10,6 +10,7 @@ export * from './firewalls';
 export * from './iam';
 export * from './images';
 export * from './linodes';
+export * from './locks';
 export * from './netloadbalancers';
 export * from './networking';
 export * from './networktransfer';
