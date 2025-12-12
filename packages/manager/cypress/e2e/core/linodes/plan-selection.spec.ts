@@ -390,7 +390,7 @@ describe('displays specific linode plans for GPU', () => {
     }).as('getFeatureFlags');
   });
 
-  it('Should render divided tables when GPU divider enabled', () => {
+  it('Should render GPU plans in Linodes Create', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
@@ -406,19 +406,11 @@ describe('displays specific linode plans for GPU', () => {
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
-        name: 'List of NVIDIA RTX 4000 Ada Plans',
+        name: 'List of Linode Plans',
       }).within(() => {
-        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[id="gpu-2"]').should('be.disabled');
-      });
-
-      cy.findByRole('table', {
-        name: 'List of NVIDIA Quadro RTX 6000 Plans',
-      }).within(() => {
-        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
         cy.get('[id="gpu-1"]').should('be.disabled');
+        cy.get('[id="gpu-2"]').should('be.disabled');
       });
     });
   });
@@ -439,7 +431,7 @@ describe('displays specific kubernetes plans for GPU', () => {
     }).as('getFeatureFlags');
   });
 
-  it('Should render divided tables when GPU divider enabled', () => {
+  it('Should render GPU plans in Kubernetes Create', () => {
     cy.visitWithLogin('/kubernetes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
@@ -455,22 +447,14 @@ describe('displays specific kubernetes plans for GPU', () => {
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
-        name: 'List of NVIDIA RTX 4000 Ada Plans',
+        name: 'List of Linode Plans',
       }).within(() => {
-        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
+        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
         cy.get('[data-qa-plan-row="gpu-2 Ada"]').should(
           'have.attr',
           'disabled'
         );
-      });
-
-      cy.findByRole('table', {
-        name: 'List of NVIDIA Quadro RTX 6000 Plans',
-      }).within(() => {
-        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
       });
     });
   });

@@ -54,6 +54,7 @@ describe('MultiplePrefixListSelect', () => {
     }, // supported (supports only ipv4)
     { name: 'pl:system:supports-both', ipv4: [], ipv6: [] }, // supported (supports both)
     { name: 'pl:system:not-supported', ipv4: null, ipv6: null }, // unsupported
+    { name: 'pl::vpcs:<current>' }, // Special Prefix List (Doesn't have IPv4 & IPv6)
   ];
 
   queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
@@ -177,7 +178,7 @@ describe('MultiplePrefixListSelect', () => {
     getByDisplayValue('pl:system:supports-only-ipv4');
   });
 
-  it('defaults to IPv4 selected and IPv6 unselected when choosing a PL that supports both', async () => {
+  it('defaults to both IPv4 and IPv6 selected when choosing a PL that supports both', async () => {
     const pls = [{ address: '', inIPv4Rule: false, inIPv6Rule: false }];
     const { findByText, getByRole } = renderWithTheme(
       <MultiplePrefixListSelect {...baseProps} pls={pls} />
@@ -196,7 +197,31 @@ describe('MultiplePrefixListSelect', () => {
       {
         address: 'pl::supports-both',
         inIPv4Rule: true,
-        inIPv6Rule: false,
+        inIPv6Rule: true,
+      },
+    ]);
+  });
+
+  it('defaults to both IPv4 and IPv6 selected when choosing a Special PL', async () => {
+    const pls = [{ address: '', inIPv4Rule: false, inIPv6Rule: false }];
+    const { findByText, getByRole } = renderWithTheme(
+      <MultiplePrefixListSelect {...baseProps} pls={pls} />
+    );
+
+    const input = getByRole('combobox');
+
+    // Type the Special PL name to filter the dropdown
+    await userEvent.type(input, 'pl::vpcs:<current>');
+
+    // Select the option from the autocomplete dropdown
+    const option = await findByText('pl::vpcs:<current>');
+    await userEvent.click(option);
+
+    expect(baseProps.onChange).toHaveBeenCalledWith([
+      {
+        address: 'pl::vpcs:<current>',
+        inIPv4Rule: true,
+        inIPv6Rule: true,
       },
     ]);
   });
