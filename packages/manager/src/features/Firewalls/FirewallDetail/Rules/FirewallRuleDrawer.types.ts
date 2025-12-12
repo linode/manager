@@ -1,4 +1,5 @@
-import type { FirewallOptionItem } from '../../shared';
+import type { FirewallOptionItem, PrefixListRuleReference } from '../../shared';
+import type { PrefixListDrawerContext } from './FirewallPrefixListDrawer';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type {
@@ -6,12 +7,18 @@ import type {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { FormikProps } from 'formik';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 
 export type FirewallRuleDrawerMode = 'create' | 'edit' | 'view';
 
 export interface FirewallRuleDrawerProps {
   category: Category;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference,
+    contextType: PrefixListDrawerContext['type']
+  ) => void;
+  inboundAndOutboundRules: FirewallRuleType[];
   isOpen: boolean;
   mode: FirewallRuleDrawerMode;
   onClose: () => void;
@@ -39,11 +46,17 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   addressesLabel: string;
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
+  pls: ExtendedPL[];
   presetPorts: FirewallOptionItem<string>[];
   ruleErrors?: FirewallRuleError[];
   setIPs: (ips: ExtendedIP[]) => void;
+  setPLs: (pls: ExtendedPL[]) => void;
   setPresetPorts: (selected: FirewallOptionItem<string>[]) => void;
 }
 
@@ -51,5 +64,10 @@ export interface FirewallRuleSetFormProps
   extends FormikProps<FormRuleSetState> {
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
+  inboundAndOutboundRules: FirewallRuleType[];
   ruleErrors?: FirewallRuleError[];
 }

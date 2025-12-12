@@ -446,10 +446,13 @@ describe('LKE Cluster Creation with APL enabled', () => {
 
     cy.wait('@getRegionAvailability');
 
-    cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
-    cy.findByTestId('newFeatureChip')
-      .should('be.visible')
-      .should('have.text', 'new');
+    cy.findByTestId('application-platform-form').within(() => {
+      cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
+      cy.findByTestId('newFeatureChip')
+        .should('be.visible')
+        .should('have.text', 'new');
+    });
+
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
     cy.findByTestId('ha-radio-button-yes').should('be.disabled');
     cy.get(
@@ -1926,7 +1929,7 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
       ui.tabList.findTabByTitle('GPU').should('be.visible').click();
 
       cy.findByRole('table', {
-        name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
+        name: 'List of Linode Plans',
       }).within(() => {
         cy.get('tbody tr')
           .should('have.length', 4)

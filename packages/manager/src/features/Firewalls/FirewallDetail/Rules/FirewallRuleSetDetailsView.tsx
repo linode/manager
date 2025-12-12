@@ -27,19 +27,24 @@ import {
   useStyles,
 } from './shared.styles';
 
+import type { PrefixListRuleReference } from '../../shared';
 import type { Category } from './shared';
 import type { FirewallRuleType } from '@linode/api-v4';
 
 interface FirewallRuleSetDetailsViewProps {
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   ruleset: FirewallRuleType['ruleset'];
 }
 
 export const FirewallRuleSetDetailsView = (
   props: FirewallRuleSetDetailsViewProps
 ) => {
-  const { category, closeDrawer, ruleset } = props;
+  const { category, closeDrawer, handleOpenPrefixListDrawer, ruleset } = props;
 
   const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
     useIsFirewallRulesetsPrefixlistsEnabled();
@@ -102,13 +107,10 @@ export const FirewallRuleSetDetailsView = (
         },
       ].map((item, idx) => (
         <StyledListItem
+          fieldsMode
           key={`item-${idx}`}
           paddingMultiplier={2}
-          sx={
-            item.column
-              ? { flexDirection: 'column', alignItems: 'flex-start' }
-              : {}
-          }
+          sx={item.column ? { flexDirection: 'column' } : {}}
         >
           {item.label && (
             <StyledLabel component="span">{item.label}:</StyledLabel>
@@ -181,6 +183,7 @@ export const FirewallRuleSetDetailsView = (
               {rule.protocol};&nbsp;{rule.ports};&nbsp;
               {generateAddressesLabelV2({
                 addresses: rule.addresses,
+                onPrefixListClick: handleOpenPrefixListDrawer,
                 showTruncateChip: false,
               })}
             </Box>
@@ -190,7 +193,7 @@ export const FirewallRuleSetDetailsView = (
 
       <ActionsPanel
         secondaryButtonProps={{
-          label: 'Cancel',
+          label: 'Close',
           onClick: closeDrawer,
         }}
       />

@@ -73,11 +73,8 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
     cy.get('[data-qa-error="true"]').should('be.visible');
 
     cy.findByRole('table', {
-      name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
+      name: 'List of Linode Plans',
     }).within(() => {
-      cy.findByText('NVIDIA RTX PRO 6000 Blackwell Server Edition').should(
-        'be.visible'
-      );
       cy.get('tbody tr')
         .should('have.length', 4)
         .each((_, index) => {
@@ -107,11 +104,8 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
       });
 
     cy.findByRole('table', {
-      name: 'List of NVIDIA RTX PRO 6000 Blackwell Server Edition Plans',
+      name: 'List of Linode Plans',
     }).within(() => {
-      cy.findByText('NVIDIA RTX PRO 6000 Blackwell Server Edition').should(
-        'be.visible'
-      );
       cy.get('tbody tr')
         .should('have.length', 4)
         .each((_, index) => {
