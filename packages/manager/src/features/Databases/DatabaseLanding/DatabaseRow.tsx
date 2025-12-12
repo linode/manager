@@ -3,7 +3,7 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { Chip, Hidden, styled } from '@linode/ui';
+import { Chip, Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import * as React from 'react';
@@ -16,7 +16,7 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { getActionMenuWrapperStyles } from '../shared.styles';
+import { StyledActionMenuWrapper } from '../shared.styles';
 
 import type { Event } from '@linode/api-v4';
 import type {
@@ -35,10 +35,6 @@ interface Props {
   handlers?: ActionHandlers;
   isNewDatabase?: boolean;
 }
-
-const DatabaseActionMenuStyledWrapper = styled(TableCell, {
-  label: 'DatabaseActionMenuStyledWrapper',
-})(({ theme }) => getActionMenuWrapperStyles(theme));
 
 export const DatabaseRow = ({
   database,
@@ -136,7 +132,7 @@ export const DatabaseRow = ({
         </TableCell>
       </Hidden>
       {isDatabasesV2GA && isNewDatabase && (
-        <DatabaseActionMenuStyledWrapper>
+        <StyledActionMenuWrapper>
           <DatabaseActionMenu
             databaseEngine={engine}
             databaseId={id}
@@ -144,7 +140,7 @@ export const DatabaseRow = ({
             databaseStatus={status}
             handlers={handlers!}
           />
-        </DatabaseActionMenuStyledWrapper>
+        </StyledActionMenuWrapper>
       )}
     </TableRow>
   );
