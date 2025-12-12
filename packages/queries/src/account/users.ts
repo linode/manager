@@ -29,11 +29,9 @@ export const useAccountUsers = ({
   filters?: Filter;
   params?: Params;
 }) => {
-  const { data: profile } = useProfile();
-
   return useQuery<ResourcePage<User>, APIError[]>({
     ...accountQueries.users._ctx.paginated(params, filters),
-    enabled: enabled && !profile?.restricted,
+    enabled,
     placeholderData: keepPreviousData,
   });
 };
