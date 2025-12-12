@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { FolderTableRow } from 'src/features/ObjectStorage/BucketDetail/FolderTableRow';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import type { FolderTableRowProps } from 'src/features/ObjectStorage/BucketDetail/FolderTableRow';
+import { FolderTableRow } from './FolderTableRow';
+
+import type { FolderTableRowProps } from './FolderTableRow';
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
