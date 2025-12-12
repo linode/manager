@@ -4,6 +4,7 @@ import {
   Button,
   CircleProgress,
   ErrorState,
+  Stack,
   Typography,
 } from '@linode/ui';
 import React from 'react';
@@ -76,8 +77,8 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
   return (
     <>
       <div className={classes.topSection}>
-        <div className={classes.sectionTitleAndText}>
-          <div className={classes.sectionTitle}>
+        <Stack spacing={0.5}>
+          <div style={{ display: 'flex' }}>
             <Typography variant="h3">Manage Networking</Typography>
             {flags.databaseVpcBeta && <BetaChip />}
           </div>
@@ -93,7 +94,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             availability. Avoid writing data to the database while a change is
             in progress.
           </Typography>
-        </div>
+        </Stack>
         <Button
           buttonType="outlined"
           className={classes.actionBtn}
