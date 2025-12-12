@@ -227,6 +227,9 @@ describe('restricted user billing flows', () => {
     // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
     mockAppendFeatureFlags({
       iamRbacPrimaryNavChanges: true,
+      iam: {
+        enabled: false,
+      },
     });
   });
 

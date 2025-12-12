@@ -20,6 +20,7 @@ import {
   mockEnableLinodeManagedError,
   mockGetAccount,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetProfile,
@@ -33,6 +34,14 @@ import { accountFactory } from 'src/factories/account';
 import type { Linode } from '@linode/api-v4';
 
 describe('Account Linode Managed', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Confirms that a user can add linode managed from the Account Settings page.
    * - Confirms that user is told about the Managed price.

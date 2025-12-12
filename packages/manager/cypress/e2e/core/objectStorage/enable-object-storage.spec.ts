@@ -51,6 +51,14 @@ const objNotes = {
 };
 
 describe('Object Storage enrollment', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Confirms that Object Storage can be enabled using mock API data.
    * - Confirms that pricing information link is present in enrollment dialog.
