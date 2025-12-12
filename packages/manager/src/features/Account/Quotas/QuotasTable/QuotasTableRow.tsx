@@ -9,7 +9,11 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 
-import { convertResourceMetric, getQuotaError, pluralizeMetric } from './utils';
+import {
+  convertResourceMetric,
+  getQuotaError,
+  pluralizeMetric,
+} from '../utils';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
