@@ -6,10 +6,12 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 
+import { channelTypeOptions } from '../../constants';
 import { NotificationChannelTypeSelect } from './NotificationChannelTypeSelect';
 import { createNotificationChannelSchema } from './schemas';
 
 import type { CreateNotificationChannelForm } from './types';
+import type { ChannelType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 const overrides: CrumbOverridesProps[] = [
@@ -36,11 +38,6 @@ export const CreateNotificationChannel = () => {
 
   const channelTypeWatcher = useWatch({ control, name: 'type' });
 
-  // reset the name field when the channel type changes
-  const handleChannelTypeChange = React.useCallback(() => {
-    resetField('name', { defaultValue: '' });
-  }, [resetField]);
-
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb
@@ -52,9 +49,26 @@ export const CreateNotificationChannel = () => {
           <Typography marginTop={2} variant="h2">
             Channel Settings
           </Typography>
-          <NotificationChannelTypeSelect
-            handleChannelTypeChange={handleChannelTypeChange}
+          <Controller
+            control={control}
             name="type"
+            render={({ field, fieldState }) => {
+              // Reset the name field when the channel type changes
+              const handleChannelTypeChange = (value: ChannelType | null) => {
+                field.onChange(value);
+                resetField('name', { defaultValue: '' });
+              };
+
+              return (
+                <NotificationChannelTypeSelect
+                  error={fieldState.error?.message}
+                  handleChannelTypeChange={handleChannelTypeChange}
+                  onBlur={field.onBlur}
+                  options={channelTypeOptions}
+                  value={field.value}
+                />
+              );
+            }}
           />
           {channelTypeWatcher && (
             <Controller
