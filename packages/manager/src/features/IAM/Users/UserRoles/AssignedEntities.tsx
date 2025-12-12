@@ -9,6 +9,7 @@ import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';
 
 interface Props {
+  disabled?: boolean;
   onButtonClick: (roleName: AccountRoleType | EntityRoleType) => void;
   onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
   role: ExtendedRoleView;
@@ -18,6 +19,7 @@ export const AssignedEntities = ({
   onButtonClick,
   onRemoveAssignment,
   role,
+  disabled,
 }: Props) => {
   const theme = useTheme();
 
@@ -55,6 +57,7 @@ export const AssignedEntities = ({
         <Chip
           data-testid="entities"
           deleteIcon={<CloseIcon data-testid="CloseIcon" />}
+          disabled={disabled}
           label={
             entity.name.length > 30
               ? `${entity.name.slice(0, 20)}...`

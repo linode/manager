@@ -262,6 +262,7 @@ export const AssignedRolesTable = () => {
             ) : (
               <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                 <AssignedEntities
+                  disabled={!permissions.is_account_admin}
                   onButtonClick={handleViewEntities}
                   onRemoveAssignment={handleRemoveAssignment}
                   role={role}
