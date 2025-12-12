@@ -9,7 +9,7 @@ import { UsernamePanel } from './UsernamePanel';
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
-      update_user: false,
+      is_account_admin: false,
     },
   })),
 }));
@@ -31,7 +31,7 @@ describe('UsernamePanel', () => {
     expect(usernameTextField).toHaveDisplayValue(user.username);
   });
 
-  it('disables the input if the user doesn not have update_user permission', async () => {
+  it('disables the input if the user doesn not have is_account_admin permission', async () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
@@ -50,7 +50,7 @@ describe('UsernamePanel', () => {
   it("does not allow the user to update a proxy user's username", async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_user: true,
+        is_account_admin: true,
       },
     });
 
@@ -76,14 +76,14 @@ describe('UsernamePanel', () => {
     expect(getByText('Save').closest('button')).toBeDisabled();
   });
 
-  it('enables the save button when the user makes a change to the username and has update_user permission', async () => {
+  it('enables the save button when the user makes a change to the username and has is_account_admin permission', async () => {
     const user = accountUserFactory.build({
       username: 'my-linode-username',
     });
 
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_user: true,
+        is_account_admin: true,
       },
     });
 
@@ -102,14 +102,14 @@ describe('UsernamePanel', () => {
     expect(saveButton).toBeEnabled();
   });
 
-  it('disables the save button when the user does not have update_user permission', async () => {
+  it('disables the save button when the user does not have is_account_admin permission', async () => {
     const user = accountUserFactory.build({
       username: 'my-linode-username',
     });
 
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_user: false,
+        is_account_admin: false,
       },
     });
 

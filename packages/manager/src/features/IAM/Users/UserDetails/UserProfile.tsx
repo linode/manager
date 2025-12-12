@@ -19,11 +19,7 @@ import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions('account', [
-    'is_account_admin',
-    'update_user',
-    'delete_user',
-  ]);
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const isAccountAdmin = permissions?.is_account_admin;
 
@@ -33,10 +29,6 @@ export const UserProfile = () => {
     isLoading,
   } = useAccountUser(username ?? '', isAccountAdmin);
   const { data: assignedRoles } = useUserRoles(username ?? '', isAccountAdmin);
-
-  // Only admin users get update_user and delete_user permissions, but doing a bit of defensive programming here to be safe.
-  const canUpdateUser = isAccountAdmin || permissions?.update_user;
-  const canDeleteUser = isAccountAdmin || permissions?.delete_user;
 
   if (isLoading) {
     return <CircleProgress />;
@@ -66,9 +58,9 @@ export const UserProfile = () => {
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
         <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
-        <UsernamePanel activeUser={user} canUpdateUser={canUpdateUser} />
-        <UserEmailPanel activeUser={user} canUpdateUser={canUpdateUser} />
-        <DeleteUserPanel activeUser={user} canDeleteUser={canDeleteUser} />
+        <UsernamePanel activeUser={user} canUpdateUser={isAccountAdmin} />
+        <UserEmailPanel activeUser={user} canUpdateUser={isAccountAdmin} />
+        <DeleteUserPanel activeUser={user} canDeleteUser={isAccountAdmin} />
       </Stack>
     </>
   );
