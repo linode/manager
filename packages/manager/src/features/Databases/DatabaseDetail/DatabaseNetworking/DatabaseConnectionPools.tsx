@@ -4,6 +4,7 @@ import {
   CircleProgress,
   ErrorState,
   Hidden,
+  Stack,
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -84,17 +85,15 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
   return (
     <>
       <div className={classes.topSection}>
-        <div className={classes.sectionTitleAndText}>
-          <div className={classes.sectionTitle}>
-            <Typography variant="h3">
-              Manage PgBouncer Connection Pools
-            </Typography>
-          </div>
+        <Stack spacing={0.5}>
+          <Typography variant="h3">
+            Manage PgBouncer Connection Pools
+          </Typography>
           <Typography sx={{ maxWidth: '500px' }}>
             Manage PgBouncer connection pools to minimize the use of your server
             resources.
           </Typography>
-        </div>
+        </Stack>
         <Button
           buttonType="outlined"
           className={classes.actionBtn}

@@ -39,19 +39,12 @@ export const makeSettingsItemStyles = makeStyles()((theme: Theme) => ({
     },
     width: '65%',
   },
-  sectionTitle: {
-    marginBottom: '0.25rem',
-    display: 'flex',
-  },
-  sectionTitleAndText: {
-    width: '100%',
-  },
   topSection: {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'space-between',
     [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
+      display: 'block',
     },
   },
 }));
