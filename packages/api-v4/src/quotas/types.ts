@@ -34,6 +34,11 @@ export interface Quota {
   quota_name: string;
 
   /**
+   * Customer facing id describing the quota.
+   */
+  quota_type_id: string;
+
+  /**
    * The region slug to which this limit applies.
    *
    * OBJ limits are applied by endpoint, not region.
@@ -52,6 +57,11 @@ export interface Quota {
    * For OBJ limits only.
    */
   s3_endpoint?: string;
+
+  /**
+   * Sets usage column to be n/a when value is "none".
+   */
+  usage_mode: 'none' | 'normal';
 }
 
 /**

@@ -1,5 +1,9 @@
 import { useRegionsQuery } from '@linode/queries';
-import { capitalize, readableBytes } from '@linode/utilities';
+import {
+  capitalize,
+  convertStorageUnit,
+  readableBytes,
+} from '@linode/utilities';
 import { object, string } from 'yup';
 
 import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
@@ -190,6 +194,14 @@ export const convertResourceMetric = ({
       }).value,
       convertedResourceMetric: capitalize(limitReadable.unit),
       convertedLimit: limitReadable.value,
+    };
+  }
+
+  if (initialResourceMetric === 'byte_per_second') {
+    return {
+      convertedUsage: 0,
+      convertedResourceMetric: 'Gbps',
+      convertedLimit: convertStorageUnit('B', initialLimit, 'GB'),
     };
   }
 

@@ -129,7 +129,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
               usage={quota.usage?.usage ?? 0}
             />
           ) : (
-            <Typography>Data not available</Typography>
+            <Typography>n/a</Typography>
           )}
         </Box>
       </TableCell>

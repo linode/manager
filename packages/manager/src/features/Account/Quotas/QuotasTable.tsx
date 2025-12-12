@@ -25,6 +25,12 @@ import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/S
 
 const quotaRowMinHeight = 58;
 
+const EXCLUDED_QUOTA_TYPE_IDS = [
+  'obj-per-ip-upload-throughput',
+  'obj-per-ip-download-throughput',
+  'obj-per-ip-concurrent-requests',
+];
+
 interface QuotasTableProps {
   selectedLocation: null | SelectOption<Quota['region_applied']>;
   selectedService: SelectOption<QuotaType>;
@@ -72,9 +78,13 @@ export const QuotasTable = (props: QuotasTableProps) => {
   );
 
   // Quota Usage Queries
-  // For each quota, fetch the usage in parallel
+  // For each quota with usage_mode == normal,
+  // fetch the usage in parallel
   // This will only fetch for the paginated set
-  const quotaIds = quotas?.data.map((quota) => quota.quota_id) ?? [];
+  const quotaIds =
+    quotas?.data
+      .filter((quota) => quota.usage_mode === 'normal')
+      .map((quota) => quota.quota_id) ?? [];
   const quotaUsageQueries = useQueries({
     queries: quotaIds.map((quotaId) =>
       quotaQueries.service(selectedService.value)._ctx.usage(quotaId)
@@ -147,7 +157,11 @@ export const QuotasTable = (props: QuotasTableProps) => {
             />
           ) : (
             quotasWithUsage.map((quota, index) => {
-              const hasQuotaUsage = quota.usage?.usage !== null;
+              const hasQuotaUsage =
+                quota.usage_mode === 'normal' && quota.usage?.usage !== null;
+              if (EXCLUDED_QUOTA_TYPE_IDS.includes(quota.quota_type_id)) {
+                return null;
+              }
 
               return (
                 <QuotasTableRow
