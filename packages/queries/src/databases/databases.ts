@@ -208,7 +208,6 @@ export const useDatabaseConnectionPoolQuery = (
       .database('postgresql', databaseId)
       ._ctx.connectionPools._ctx.pool(poolName),
     enabled,
-    refetchInterval: 20000,
   });
 
 export const useDatabaseConnectionPoolsQuery = (
