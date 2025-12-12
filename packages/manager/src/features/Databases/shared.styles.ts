@@ -1,8 +1,12 @@
+import { styled } from '@linode/ui';
+import { TableCell } from 'akamai-cds-react-components/Table';
 import { makeStyles } from 'tss-react/mui';
 
 import type { Theme } from '@mui/material';
 
-export const getActionMenuWrapperStyles = (theme: Theme) => ({
+export const StyledActionMenuWrapper = styled(TableCell, {
+  label: 'StyledActionMenuWrapper',
+})(({ theme }) => ({
   justifyContent: 'flex-end',
   display: 'flex',
   alignItems: 'center',
@@ -16,7 +20,7 @@ export const getActionMenuWrapperStyles = (theme: Theme) => ({
     backgroundColor: 'transparent',
     color: theme.tokens.alias.Content.Icon.Primary.Hover,
   },
-});
+}));
 
 export const makeSettingsItemStyles = makeStyles()((theme: Theme) => ({
   actionBtn: {

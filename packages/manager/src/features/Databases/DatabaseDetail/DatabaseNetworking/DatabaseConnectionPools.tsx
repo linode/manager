@@ -4,7 +4,6 @@ import {
   CircleProgress,
   ErrorState,
   Hidden,
-  styled,
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -20,11 +19,15 @@ import {
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import {
+  MIN_PAGE_SIZE,
+  PAGE_SIZES,
+} from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import {
-  getActionMenuWrapperStyles,
   makeSettingsItemStyles,
+  StyledActionMenuWrapper,
 } from '../../shared.styles';
 
 import type { Database } from '@linode/api-v4';
@@ -34,10 +37,6 @@ interface Props {
   database: Database;
   disabled?: boolean;
 }
-
-const ConnectionPoolActionMenuStyledWrapper = styled(TableCell, {
-  label: 'ConnectionPoolActionMenuStyledWrapper',
-})(({ theme }) => getActionMenuWrapperStyles(theme));
 
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
@@ -60,11 +59,6 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
     page: pagination.page,
     page_size: pagination.pageSize,
   });
-
-  const PAGE_SIZES = [25, 50, 75, 100];
-  const MIN_PAGE_SIZE = 25;
-
-  const results = connectionPools?.results;
 
   const connectionPoolActions: Action[] = [
     {
@@ -178,21 +172,21 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
                         : pool.username}
                     </TableCell>
                   </Hidden>
-                  <ConnectionPoolActionMenuStyledWrapper>
+                  <StyledActionMenuWrapper>
                     <ActionMenu
                       actionsList={connectionPoolActions}
                       ariaLabel={`Action menu for connection pool ${pool.label}`}
                     />
-                  </ConnectionPoolActionMenuStyledWrapper>
+                  </StyledActionMenuWrapper>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </div>
-      {(results || 0) > MIN_PAGE_SIZE && (
+      {(connectionPools?.results || 0) > MIN_PAGE_SIZE && (
         <Pagination
-          count={results || 0}
+          count={connectionPools?.results || 0}
           onPageChange={(e: CustomEvent<number>) =>
             pagination.handlePageChange(Number(e.detail))
           }
