@@ -30,7 +30,6 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { skip } from 'support/util/skip';
 
 import { accountFactory, accountUserFactory } from 'src/factories';
 
@@ -157,81 +156,16 @@ describe('Create Linode', () => {
       });
 
       /*
-       * - Confirms Premium Plan Linode can be created end-to-end.
-       * - Confirms creation flow, that Linode boots, and that UI reflects status.
+       * - Confirms Premium Plan Tab is disabled in Linodes Create
        */
-      it(`creates a Premium CPU Linode`, () => {
-        cy.tag('env:premiumPlans');
-
-        // TODO Allow `chooseRegion` to be configured not to throw.
-        const linodeRegion = (() => {
-          try {
-            return chooseRegion({
-              capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
-            });
-          } catch {
-            skip();
-          }
-          return;
-        })()!;
-
-        const linodeLabel = randomLabel();
-        const planId = 'g7-premium-2';
-        const planLabel = 'Premium 4 GB';
-        const planType = 'Premium CPU';
-
+      it(`should feature a disabled Premium Tab in Linodes Create`, () => {
         interceptGetProfile().as('getProfile');
         interceptCreateLinode().as('createLinode');
         cy.visitWithLogin('/linodes/create');
 
-        // Set Linode label, OS, plan type, password, etc.
-        linodeCreatePage.setLabel(linodeLabel);
-        linodeCreatePage.selectImage('Debian 12');
-        linodeCreatePage.selectRegionById(linodeRegion.id);
-        linodeCreatePage.selectPlan(planType, planLabel);
-        linodeCreatePage.setRootPassword(randomString(32));
-
-        // Confirm information in summary is shown as expected.
-        cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-        cy.get('[data-qa-linode-create-summary]').within(() => {
-          cy.findByText('Debian 12').should('be.visible');
-          cy.findByText(linodeRegion.label).should('be.visible');
-          cy.findByText(planLabel).should('be.visible');
-        });
-
-        // Create Linode and confirm it's provisioned as expected.
-        ui.button
-          .findByTitle('Create Linode')
+        cy.findByRole('tab', { name: 'Premium CPU' })
           .should('be.visible')
-          .should('be.enabled')
-          .click();
-
-        cy.wait('@createLinode').then((xhr) => {
-          const requestPayload = xhr.request.body;
-          const responsePayload = xhr.response?.body;
-
-          // Confirm that API request and response contain expected data
-          expect(requestPayload['label']).to.equal(linodeLabel);
-          expect(requestPayload['region']).to.equal(linodeRegion.id);
-          expect(requestPayload['type']).to.equal(planId);
-
-          expect(responsePayload['label']).to.equal(linodeLabel);
-          expect(responsePayload['region']).to.equal(linodeRegion.id);
-          expect(responsePayload['type']).to.equal(planId);
-
-          // Confirm that Cloud redirects to details page
-          cy.url().should('endWith', `/linodes/${responsePayload['id']}`);
-        });
-
-        cy.wait('@getProfile').then((xhr) => {
-          username = xhr.response?.body.username;
-        });
-
-        // Confirm toast notification should appear on Linode create.
-        ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
-        cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
-          'be.visible'
-        );
+          .should('be.disabled');
       });
     });
   });
