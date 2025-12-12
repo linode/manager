@@ -58,7 +58,20 @@ const customHTTPsDetailsSchema = object({
 });
 
 const akamaiObjectStorageDetailsBaseSchema = object({
-  host: string().max(maxLength, maxLengthMessage).required('Host is required.'),
+  host: string()
+    .max(maxLength, maxLengthMessage)
+    .required('Host is required.')
+    .test(
+      'host-must-start-with-bucket-name',
+      'Host must start with the bucket name ( e.g., <bucket>.domain.com ).',
+      (value, ctx) => {
+        if (ctx.parent.bucket_name) {
+          return value.split('.')[0] === ctx.parent.bucket_name;
+        }
+
+        return true;
+      },
+    ),
   bucket_name: string()
     .required('Bucket name is required.')
     .min(3, 'Bucket name must be between 3 and 63 characters.')
@@ -71,7 +84,18 @@ const akamaiObjectStorageDetailsBaseSchema = object({
       /^(?!.*[.-]{2})[a-z0-9.-]+$/,
       'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.',
     )
-    .max(63, 'Bucket name must be between 3 and 63 characters.'),
+    .max(63, 'Bucket name must be between 3 and 63 characters.')
+    .test(
+      'bucket-name-same-in-host',
+      'Bucket must match the bucket name used in the host prefix.',
+      (value, ctx) => {
+        if (ctx.parent.host) {
+          return ctx.parent.host.split('.')[0] === value;
+        }
+
+        return true;
+      },
+    ),
   path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)
