@@ -371,12 +371,16 @@ export const getDatabaseEngineConfig = (engine: Engine) =>
 /**
  * Get a paginated list of connection pools for a database
  */
-export const getDatabaseConnectionPools = (databaseID: number) =>
+export const getDatabaseConnectionPools = (
+  databaseID: number,
+  params?: Params,
+) =>
   Request<Page<ConnectionPool>>(
     setURL(
       `${API_ROOT}/databases/postgresql/instances/${encodeURIComponent(databaseID)}/connection-pools`,
     ),
     setMethod('GET'),
+    setParams(params),
   );
 
 /**

@@ -4,15 +4,16 @@ import {
   Button,
   CircleProgress,
   ErrorState,
+  Stack,
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
+import { makeSettingsItemStyles } from '../../shared.styles';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
 import { StyledGridContainer } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
@@ -20,7 +21,6 @@ import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
 import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';
 
 import type { Database } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 
 interface Props {
   database: Database;
@@ -28,42 +28,8 @@ interface Props {
 }
 
 export const DatabaseManageNetworking = ({ database }: Props) => {
-  const useStyles = makeStyles()((theme: Theme) => ({
-    manageNetworkingBtn: {
-      minWidth: 225,
-      [theme.breakpoints.down('md')]: {
-        alignSelf: 'flex-start',
-        marginTop: '1rem',
-        marginBottom: '1rem',
-      },
-    },
-    sectionText: {
-      marginBottom: '1rem',
-      marginRight: 0,
-      [theme.breakpoints.down('sm')]: {
-        width: '100%',
-      },
-      width: '65%',
-    },
-    sectionTitle: {
-      marginBottom: '0.25rem',
-      display: 'flex',
-    },
-    sectionTitleAndText: {
-      width: '100%',
-    },
-    topSection: {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'space-between',
-      [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
-      },
-    },
-  }));
-
   const flags = useFlags();
-  const { classes } = useStyles();
+  const { classes } = makeSettingsItemStyles();
   const [isManageNetworkingDrawerOpen, setIsManageNetworkingDrawerOpen] =
     React.useState(false);
   const [isUnassignVPCDialogOpen, setIsUnassignVPCDialogOpen] =
@@ -111,8 +77,8 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
   return (
     <>
       <div className={classes.topSection}>
-        <div className={classes.sectionTitleAndText}>
-          <div className={classes.sectionTitle}>
+        <Stack spacing={0.5}>
+          <div style={{ display: 'flex' }}>
             <Typography variant="h3">Manage Networking</Typography>
             {flags.databaseVpcBeta && <BetaChip />}
           </div>
@@ -128,10 +94,10 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             availability. Avoid writing data to the database while a change is
             in progress.
           </Typography>
-        </div>
+        </Stack>
         <Button
           buttonType="outlined"
-          className={classes.manageNetworkingBtn}
+          className={classes.actionBtn}
           disabled={!hasVPCs}
           onClick={onManageAccess}
           TooltipProps={{ placement: 'top' }}

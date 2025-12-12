@@ -2,15 +2,20 @@ import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { ACCESS_CONTROLS_IN_SETTINGS_TEXT } from '../../constants';
 import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
+import { DatabaseConnectionPools } from './DatabaseConnectionPools';
 import { DatabaseManageNetworking } from './DatabaseManageNetworking';
 
 export const DatabaseNetworking = () => {
   const navigate = useNavigate();
   const { database, disabled, engine, isVPCEnabled } =
     useDatabaseDetailContext();
+
+  const flags = useFlags();
 
   const accessControlCopy = (
     <Typography>{ACCESS_CONTROLS_IN_SETTINGS_TEXT}</Typography>
@@ -36,6 +41,9 @@ export const DatabaseNetworking = () => {
           disabled={disabled}
         />
         <DatabaseManageNetworking database={database} />
+        {flags.databasePgBouncer && database.engine === 'postgresql' && (
+          <DatabaseConnectionPools database={database} />
+        )}
       </Stack>
     </Paper>
   );
