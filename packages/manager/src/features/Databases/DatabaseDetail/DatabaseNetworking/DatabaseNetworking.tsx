@@ -39,9 +39,9 @@ export const DatabaseNetworking = () => {
           description={accessControlCopy}
           disabled={disabled}
         />
-        {flags.databasePgBouncer && database.connection_pool_port && (
-          <ServiceURI database={database} />
-        )}
+        {flags.databasePgBouncer &&
+          database.engine === 'postgresql' &&
+          database.connection_pool_port && <ServiceURI database={database} />}
         <DatabaseManageNetworking database={database} />
       </Stack>
     </Paper>

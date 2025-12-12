@@ -17,13 +17,13 @@ export const ConnectionDetailsRow = (props: ConnectionDetailsRowProps) => {
     <>
       <Grid
         size={{
-          md: 2.5,
-          xs: 2.5,
+          md: 4,
+          xs: 3,
         }}
       >
         <StyledLabelTypography>{label}</StyledLabelTypography>
       </Grid>
-      <StyledValueGrid size={{ md: 9, xs: 9 }}>{children}</StyledValueGrid>
+      <StyledValueGrid size={{ md: 8, xs: 9 }}>{children}</StyledValueGrid>
     </>
   );
 };
