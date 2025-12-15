@@ -305,6 +305,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
+                    disabled={!isAccountAdmin}
                     style={{
                       wordBreak: 'break-word',
                       minWidth: COLUMN_WIDTHS.name,
