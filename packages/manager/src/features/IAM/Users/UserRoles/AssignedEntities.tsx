@@ -56,14 +56,17 @@ export const AssignedEntities = ({
       >
         <Chip
           data-testid="entities"
-          deleteIcon={<CloseIcon data-testid="CloseIcon" />}
-          disabled={disabled}
+          deleteIcon={
+            disabled ? undefined : <CloseIcon data-testid="CloseIcon" />
+          }
           label={
             entity.name.length > 30
               ? `${entity.name.slice(0, 20)}...`
               : entity.name
           }
-          onDelete={() => onRemoveAssignment(entity, role)}
+          onDelete={
+            disabled ? undefined : () => onRemoveAssignment(entity, role)
+          }
           sx={{
             backgroundColor:
               theme.name === 'light'
