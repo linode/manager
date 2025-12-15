@@ -146,6 +146,13 @@ export const channelTypeOptions: Item<string, ChannelType>[] = [
   },
 ];
 
+export const channelTypeMap: Record<ChannelType, string> = {
+  email: 'Email',
+  pagerduty: 'PagerDuty',
+  slack: 'Slack',
+  webhook: 'Webhook',
+};
+
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
