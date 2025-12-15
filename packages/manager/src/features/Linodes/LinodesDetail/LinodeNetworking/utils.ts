@@ -138,13 +138,13 @@ export const ipToDisplay = (ip: IPAddress, key: IPKey): IPDisplay => {
   };
 };
 
-const ipAdressForVPC = (
+const ipAddressForVPC = (
   ip: VPCIP,
-  ipAdress: string,
+  ipAddress: string,
   ipType: string
 ): IPAddress => {
   return {
-    address: ipAdress,
+    address: ipAddress,
     gateway: ip.gateway,
     interface_id: ip.interface_id,
     linode_id: ip.linode_id!,
@@ -182,7 +182,7 @@ export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
     }
     if (ip.nat_1_1) {
       vpcIPDisplay.push({
-        _ip: ipAdressForVPC(ip, ip.nat_1_1, 'VPC NAT – IPv4'),
+        _ip: ipAddressForVPC(ip, ip.nat_1_1, 'VPC NAT – IPv4'),
         address: ip.nat_1_1,
         type: 'VPC NAT – IPv4',
         ...emptyProps,
