@@ -1,4 +1,4 @@
-import { mixed, object, string } from 'yup';
+import { array, mixed, object, string } from 'yup';
 
 import type { ChannelType } from '@linode/api-v4';
 
@@ -10,4 +10,11 @@ export const createNotificationChannelSchema = object({
     .required(fieldErrorMessage)
     .nullable()
     .test('nonNull', fieldErrorMessage, (value) => value !== null),
+  recipients: array()
+    .of(string().defined())
+    .required(fieldErrorMessage)
+    .nullable()
+    .test('nonNullAndNotEmpty', fieldErrorMessage, (value) => {
+      return value !== null && Array.isArray(value) && value.length > 0;
+    }),
 });

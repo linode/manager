@@ -1,14 +1,23 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Typography } from '@linode/ui';
+import { ActionsPanel, TextField, Typography } from '@linode/ui';
 import { Paper } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useCreateNotificationChannel } from 'src/queries/cloudpulse/alerts';
 
-import { channelTypeOptions } from '../../constants';
+import {
+  channelTypeOptions,
+  CREATE_CHANNEL_FAILED_MESSAGE,
+  CREATE_CHANNEL_SUCCESS_MESSAGE,
+} from '../../constants';
 import { NotificationChannelTypeSelect } from './NotificationChannelTypeSelect';
+import { NotificationRecipients } from './NotificationRecipients';
 import { createNotificationChannelSchema } from './schemas';
+import { filterCreateChannelFormValues } from './utilities';
 
 import type { CreateNotificationChannelForm } from './types';
 import type { ChannelType } from '@linode/api-v4';
@@ -25,18 +34,43 @@ const overrides: CrumbOverridesProps[] = [
 const initialValues: CreateNotificationChannelForm = {
   type: null,
   name: '',
+  recipients: [],
 };
 
 export const CreateNotificationChannel = () => {
+  const navigate = useNavigate();
+  // Navigate to the notification channels listing page on exit, e.g. on cancel or successful save
+  const createChannelExit = () => {
+    navigate({ to: '/alerts/notification-channels' });
+  };
+
   const formMethods = useForm<CreateNotificationChannelForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
     resolver: yupResolver(createNotificationChannelSchema),
   });
 
-  const { control, resetField } = formMethods;
+  const { control, resetField, handleSubmit } = formMethods;
 
   const channelTypeWatcher = useWatch({ control, name: 'type' });
+
+  const { mutateAsync: createChannel } = useCreateNotificationChannel();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  // submit the form and create the notification channel on success and show snackbar message on success or failure
+  const onSubmit = handleSubmit(async (values) => {
+    createChannel(filterCreateChannelFormValues(values))
+      .then(() => {
+        enqueueSnackbar(CREATE_CHANNEL_SUCCESS_MESSAGE, {
+          variant: 'success',
+        });
+        createChannelExit();
+      })
+      .catch(() => {
+        enqueueSnackbar(CREATE_CHANNEL_FAILED_MESSAGE, { variant: 'error' });
+      });
+  });
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
@@ -45,7 +79,7 @@ export const CreateNotificationChannel = () => {
         pathname="/NotificationChannels/Create Channel"
       />
       <FormProvider {...formMethods}>
-        <form>
+        <form onSubmit={onSubmit}>
           <Typography marginTop={2} variant="h2">
             Channel Settings
           </Typography>
@@ -57,6 +91,7 @@ export const CreateNotificationChannel = () => {
               const handleChannelTypeChange = (value: ChannelType | null) => {
                 field.onChange(value);
                 resetField('name', { defaultValue: '' });
+                resetField('recipients', { defaultValue: [] });
               };
 
               return (
@@ -87,6 +122,21 @@ export const CreateNotificationChannel = () => {
               )}
             />
           )}
+          {channelTypeWatcher === 'email' && (
+            <NotificationRecipients name="recipients" />
+          )}
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Submit',
+              loading: false,
+              type: 'submit',
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: createChannelExit,
+            }}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+          />
         </form>
       </FormProvider>
     </Paper>

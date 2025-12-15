@@ -4,19 +4,47 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { CREATE_CHANNEL_SUCCESS_MESSAGE } from '../../constants';
 import { CreateNotificationChannel } from './CreateNotificationChannel';
 
 const queryMocks = vi.hoisted(() => ({
-  useCreateNotificationChannel: vi.fn().mockReturnValue({
-    mutateAsync: vi.fn(),
-  }),
+  mutateAsync: vi.fn().mockResolvedValue({}),
+  navigate: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/alerts');
   return {
     ...actual,
-    useCreateNotificationChannel: queryMocks.useCreateNotificationChannel,
+    useCreateNotificationChannel: vi.fn(() => ({
+      mutateAsync: queryMocks.mutateAsync,
+    })),
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: vi.fn(() => queryMocks.navigate),
+  };
+});
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccountUsersInfiniteQuery: vi.fn(() => ({
+      data: {
+        pages: [
+          { data: [{ username: 'testuser1' }, { username: 'testuser2' }] },
+        ],
+      },
+      fetchNextPage: vi.fn(),
+      hasNextPage: false,
+      isFetching: false,
+      isLoading: false,
+    })),
   };
 });
 
@@ -29,9 +57,8 @@ const CHANNEL_NAME_VALUE = 'My Email Channel';
 
 describe('CreateNotificationChannel', () => {
   beforeEach(() => {
-    queryMocks.useCreateNotificationChannel.mockReturnValue({
-      mutateAsync: vi.fn(),
-    });
+    vi.clearAllMocks();
+    queryMocks.mutateAsync.mockResolvedValue({});
   });
 
   it('should render the breadcrumb and form title', () => {
@@ -126,5 +153,54 @@ describe('CreateNotificationChannel', () => {
     await user.tab();
 
     await screen.findByText(REQUIRED_FIELD_ERROR);
+  });
+
+  it('should display validation error for recipients field with no value', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CreateNotificationChannel />);
+
+    // Select a channel type
+    const channelTypeSelect = screen.getByTestId(CHANNEL_TYPE_SELECT_TESTID);
+    await user.click(
+      within(channelTypeSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: EMAIL_OPTION_LABEL }));
+
+    const recipientsInput = screen.getByLabelText('Recipients');
+    await user.click(recipientsInput);
+    await user.tab();
+
+    await screen.findByText(REQUIRED_FIELD_ERROR);
+  });
+
+  it('should be able to submit the form with valid values', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CreateNotificationChannel />);
+
+    // Select a channel type
+    const channelTypeSelect = screen.getByTestId(CHANNEL_TYPE_SELECT_TESTID);
+    await user.click(
+      within(channelTypeSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: EMAIL_OPTION_LABEL }));
+
+    const nameInput = screen.getByLabelText(NAME_LABEL);
+    await user.type(nameInput, CHANNEL_NAME_VALUE);
+
+    // Select a recipient from the autocomplete dropdown
+    const recipientsSelect = screen.getByTestId('recipients-select');
+    await user.click(
+      within(recipientsSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: 'testuser1' }));
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await screen.findByText(CREATE_CHANNEL_SUCCESS_MESSAGE);
+
+    expect(queryMocks.mutateAsync).toHaveBeenCalled();
+    expect(queryMocks.navigate).toHaveBeenCalledWith({
+      to: '/alerts/notification-channels',
+    });
   });
 });
