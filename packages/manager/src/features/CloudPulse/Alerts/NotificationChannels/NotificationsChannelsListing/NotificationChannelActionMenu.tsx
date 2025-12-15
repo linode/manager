@@ -35,7 +35,7 @@ export const NotificationChannelActionMenu = (
   return (
     <ActionMenu
       actionsList={
-        getNotificationChannelActionsList(handlers)[notificationType]
+        getNotificationChannelActionsList(handlers)[notificationType] || []
       }
       ariaLabel={`Action menu for Notification Channel ${channelLabel}`}
     />
