@@ -109,7 +109,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       refetch: getCSVData,
     } = useGetAllUserEntitiesByPermission<Linode>({
       entityType: 'linode',
-      permission: 'delete_linode',
+      permission: 'update_linode',
       enabled: open,
     });
 

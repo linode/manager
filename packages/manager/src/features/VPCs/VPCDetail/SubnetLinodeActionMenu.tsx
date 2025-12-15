@@ -38,7 +38,7 @@ export const SubnetLinodeActionMenu = (props: Props) => {
   // TODO: change 'delete_linode' to 'delete_linode_config_profile_interface' once it's available
   const { data: linodePermissions } = usePermissions(
     'linode',
-    ['reboot_linode', 'boot_linode', 'shutdown_linode', 'delete_linode'],
+    ['reboot_linode', 'boot_linode', 'shutdown_linode', 'update_linode'],
     linode.id
   );
 
@@ -82,8 +82,8 @@ export const SubnetLinodeActionMenu = (props: Props) => {
       handleUnassignLinode(linode, subnet);
     },
     title: 'Unassign Linode',
-    disabled: !linodePermissions?.delete_linode,
-    tooltip: !linodePermissions?.delete_linode
+    disabled: !linodePermissions?.update_linode,
+    tooltip: !linodePermissions?.update_linode
       ? 'You do not have permission to unassign this Linode.'
       : undefined,
   });
