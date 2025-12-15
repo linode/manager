@@ -4,7 +4,10 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CREATE_CHANNEL_SUCCESS_MESSAGE } from '../../constants';
+import {
+  CREATE_CHANNEL_FAILED_MESSAGE,
+  CREATE_CHANNEL_SUCCESS_MESSAGE,
+} from '../../constants';
 import { CreateNotificationChannel } from './CreateNotificationChannel';
 
 const queryMocks = vi.hoisted(() => ({
@@ -202,5 +205,33 @@ describe('CreateNotificationChannel', () => {
     expect(queryMocks.navigate).toHaveBeenCalledWith({
       to: '/alerts/notification-channels',
     });
+  });
+
+  it('should show error snackbar message when creating notification channel fails', async () => {
+    queryMocks.mutateAsync.mockRejectedValue(
+      new Error('Failed to create notification channel')
+    );
+    const user = userEvent.setup();
+    renderWithTheme(<CreateNotificationChannel />);
+
+    // Select a channel type
+    const channelTypeSelect = screen.getByTestId(CHANNEL_TYPE_SELECT_TESTID);
+    await user.click(
+      within(channelTypeSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: EMAIL_OPTION_LABEL }));
+
+    const nameInput = screen.getByLabelText(NAME_LABEL);
+    await user.type(nameInput, CHANNEL_NAME_VALUE);
+
+    // Select a recipient from the autocomplete dropdown
+    const recipientsSelect = screen.getByTestId('recipients-select');
+    await user.click(
+      within(recipientsSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: 'testuser1' }));
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await screen.findByText(CREATE_CHANNEL_FAILED_MESSAGE);
   });
 });
