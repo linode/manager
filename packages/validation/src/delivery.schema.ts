@@ -57,16 +57,21 @@ const customHTTPsDetailsSchema = object({
   endpoint_url: string().max(maxLength, maxLengthMessage).required(),
 });
 
+const hostRgx =
+  // eslint-disable-next-line sonarjs/slow-regex
+  /(?<bucket>[a-z0-9-.]+)\.(?:s3(?:-accesspoint)?\.[a-z0-9-]+\.amazonaws\.com|(?!devcloud\.)[a-z0-9-]+\.(?:devcloud\.)?linodeobjects\.com)/;
+
 const akamaiObjectStorageDetailsBaseSchema = object({
   host: string()
     .max(maxLength, maxLengthMessage)
     .required('Host is required.')
     .test(
-      'host-must-start-with-bucket-name',
-      'Host must start with the bucket name ( e.g., <bucket>.domain.com ).',
+      'host-must-match-with-bucket-name-if-provided',
+      'Bucket provided as a part of a host must be same as bucket name.',
       (value, ctx) => {
         if (ctx.parent.bucket_name) {
-          return value.split('.')[0] === ctx.parent.bucket_name;
+          const groups = hostRgx.exec(value)?.groups;
+          return groups ? groups.bucket === ctx.parent.bucket_name : true;
         }
 
         return true;
@@ -86,11 +91,12 @@ const akamaiObjectStorageDetailsBaseSchema = object({
     )
     .max(63, 'Bucket name must be between 3 and 63 characters.')
     .test(
-      'bucket-name-same-in-host',
+      'bucket-name-same-in-host-if-provided',
       'Bucket must match the bucket name used in the host prefix.',
       (value, ctx) => {
         if (ctx.parent.host) {
-          return ctx.parent.host.split('.')[0] === value;
+          const groups = hostRgx.exec(ctx.parent.host)?.groups;
+          return groups ? groups.bucket === value : true;
         }
 
         return true;
