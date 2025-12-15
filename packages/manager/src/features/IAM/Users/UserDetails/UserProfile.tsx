@@ -19,7 +19,10 @@ import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'view_account',
+  ]);
 
   const isAccountAdmin = permissions?.is_account_admin;
 
@@ -27,14 +30,20 @@ export const UserProfile = () => {
     data: user,
     error,
     isLoading,
-  } = useAccountUser(username ?? '', isAccountAdmin);
-  const { data: assignedRoles } = useUserRoles(username ?? '', isAccountAdmin);
+  } = useAccountUser(
+    username ?? '',
+    isAccountAdmin || permissions?.view_account
+  );
+  const { data: assignedRoles } = useUserRoles(
+    username ?? '',
+    isAccountAdmin || permissions?.view_account
+  );
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!isAccountAdmin) {
+  if (!(isAccountAdmin || permissions?.view_account)) {
     return (
       <Notice variant="error">
         You do not have permission to view this user&apos;s details.
