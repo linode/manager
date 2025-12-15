@@ -108,7 +108,7 @@ describe('UserEmailPanel', () => {
     expect(errorText).toBeInTheDocument();
   });
 
-  it('disables the save button when the user does not have update_user permission', async () => {
+  it('disables the save button when the user does not have is_account_admin permission', async () => {
     const user = accountUserFactory.build({
       email: 'my-linode-email',
     });
