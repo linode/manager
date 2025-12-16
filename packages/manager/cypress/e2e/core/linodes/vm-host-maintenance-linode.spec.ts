@@ -61,6 +61,9 @@ describe('Host & VM maintenance notification banner', () => {
       vmHostMaintenance: {
         enabled: true,
       },
+      iam: {
+        enabled: false,
+      },
     }).as('getFeatureFlags');
 
     mockGetLinodes(mockLinodes).as('getLinodes');
