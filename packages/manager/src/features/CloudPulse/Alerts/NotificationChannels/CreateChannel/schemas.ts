@@ -13,8 +13,5 @@ export const createNotificationChannelSchema = object({
   recipients: array()
     .of(string().defined())
     .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNullAndNotEmpty', fieldErrorMessage, (value) => {
-      return value !== null && Array.isArray(value) && value.length > 0;
-    }),
+    .min(1, fieldErrorMessage),
 });
