@@ -64,7 +64,7 @@ export const UserEmailPanel = ({ canUpdateUser, activeUser }: Props) => {
           name="email"
           render={({ field, fieldState }) => (
             <TextField
-              disabled={disableEmailField}
+              disabled={disableEmailField || !canUpdateUser}
               errorText={fieldState.error?.message}
               label="Email"
               noMarginTop

@@ -376,6 +376,7 @@ export const AssignedRolesTable = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: theme.tokens.spacing.S12,
+          minHeight: '38px',
         }}
       >
         <Grid container direction="row" rowSpacing={1}>
