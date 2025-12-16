@@ -29,6 +29,13 @@ const sortOrderMap = {
 const LabelLookup = Object.fromEntries(
   ChannelListingTableLabelMap.map((item) => [item.colName, item.label])
 );
+type SortOrder = 'ascending' | 'descending';
+
+interface VerifyChannelSortingParams {
+  columnLabel: string;
+  expected: number[];
+  sortOrder: SortOrder;
+}
 
 const notificationChannels = notificationChannelFactory
   .buildList(26)
@@ -101,11 +108,13 @@ const mockProfile = profileFactory.build({
 
 /**
  * Verifies sorting of a column in the alerts table.
- * @param {string} columnLabel - The label of the column to sort.
- * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
- * @param {number[]} expected - Expected order after sorting.
+ *
+ * @param params - Configuration object for sorting verification.
+ * @param params.columnLabel - The label of the column to sort.
+ * @param params.sortOrder - Expected sorting order (ascending | descending).
+ * @param params.expected - Expected row order after sorting.
  */
-const verifyChannelSorting = (
+const VerifyChannelSortingParams = (
   columnLabel: string,
   sortOrder: 'ascending' | 'descending',
   expected: number[]
@@ -133,7 +142,7 @@ const verifyChannelSorting = (
         .map((row) =>
           Number(row.getAttribute('data-qa-notification-channel-cell'))
         );
-      expect(actualOrder).to.deep.equal(expected);
+      expect(actualOrder).to.eqls(expected);
     }
   );
 
@@ -344,8 +353,8 @@ describe('Notification Channel Listing Page', () => {
     });
 
     sortColumns.forEach(({ column, ascending, descending }) => {
-      verifyChannelSorting(column, 'ascending', ascending);
-      verifyChannelSorting(column, 'descending', descending);
+      VerifyChannelSortingParams(column, 'ascending', ascending);
+      VerifyChannelSortingParams(column, 'descending', descending);
     });
   });
 });
