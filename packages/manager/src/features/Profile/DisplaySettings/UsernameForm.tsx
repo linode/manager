@@ -24,7 +24,7 @@ export const UsernameForm = () => {
 
   const values = { username: profile?.username ?? '' };
 
-  const { data: permissions } = usePermissions('account', ['update_user']);
+  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const {
     control,
@@ -37,7 +37,7 @@ export const UsernameForm = () => {
     values,
   });
 
-  const tooltipForDisabledUsernameField = !permissions.update_user
+  const tooltipForDisabledUsernameField = !permissions.is_account_admin
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
     : profile?.user_type === 'proxy'
       ? RESTRICTED_FIELD_TOOLTIP

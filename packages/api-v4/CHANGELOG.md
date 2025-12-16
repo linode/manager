@@ -1,3 +1,10 @@
+## [2025-12-16] - v0.154.1
+
+
+### Added:
+
+- `Akamai Cloud Pulse Logs LKE-E Audit` to the `AccountCapability` type ([#13171](https://github.com/linode/manager/pull/13171))
+
 ## [2025-12-09] - v0.154.0
 
 

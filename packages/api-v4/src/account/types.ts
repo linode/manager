@@ -63,6 +63,7 @@ export const accountCapabilities = [
   'Akamai Cloud Load Balancer',
   'Akamai Cloud Pulse',
   'Akamai Cloud Pulse Logs',
+  'Akamai Cloud Pulse Logs LKE-E Audit',
   'Block Storage',
   'Block Storage Encryption',
   'Cloud Firewall',
