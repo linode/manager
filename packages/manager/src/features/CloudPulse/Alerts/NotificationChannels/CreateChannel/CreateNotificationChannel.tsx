@@ -50,7 +50,12 @@ export const CreateNotificationChannel = () => {
     resolver: yupResolver(createNotificationChannelSchema),
   });
 
-  const { control, resetField, handleSubmit } = formMethods;
+  const {
+    control,
+    resetField,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = formMethods;
 
   const channelTypeWatcher = useWatch({ control, name: 'type' });
 
@@ -123,12 +128,23 @@ export const CreateNotificationChannel = () => {
             />
           )}
           {channelTypeWatcher === 'email' && (
-            <NotificationRecipients name="recipients" />
+            <Controller
+              control={control}
+              name="recipients"
+              render={({ field, fieldState }) => (
+                <NotificationRecipients
+                  error={fieldState.error?.message}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  value={field.value ?? []}
+                />
+              )}
+            />
           )}
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
-              loading: false,
+              loading: isSubmitting,
               type: 'submit',
             }}
             secondaryButtonProps={{
