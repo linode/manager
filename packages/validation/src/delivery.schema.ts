@@ -67,7 +67,7 @@ const akamaiObjectStorageDetailsBaseSchema = object({
     .required('Host is required.')
     .test(
       'host-must-match-with-bucket-name-if-provided',
-      'Bucket provided as a part of a host must be same as bucket name.',
+      'Bucket name provided as a part of the host must be the same as the bucket.',
       (value, ctx) => {
         if (ctx.parent.bucket_name) {
           const groups = hostRgx.exec(value)?.groups;
