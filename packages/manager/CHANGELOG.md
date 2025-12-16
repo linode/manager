@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-12-16] - v1.156.1
+
+
+### Changed:
+
+- Logs: in Stream Form limit access to "lke_audit_logs" type based on Akamai Cloud Pulse Logs LKE-E Audit capability ([#13171](https://github.com/linode/manager/pull/13171))
+
+### Fixed:
+
+- IAM: Inability for restricted users to update own username in their profile ([#13198](https://github.com/linode/manager/pull/13198))
+- IAM: Remove Role filter (already assigned roles) in ChangeRoleForEntityDrawer ([#13201](https://github.com/linode/manager/pull/13201))
+
 ## [2025-12-09] - v1.156.0
 
 
