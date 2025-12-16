@@ -1,6 +1,7 @@
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { getProfile } from 'support/api/account';
 import { mockUpdateUsername } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptGetProfile,
   mockGetProfileGrants,
@@ -50,6 +51,14 @@ const verifyUsernameAndEmail = (
 };
 
 describe('Display Settings', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Validates username update flow via the profile display page using mocked data.
    */
