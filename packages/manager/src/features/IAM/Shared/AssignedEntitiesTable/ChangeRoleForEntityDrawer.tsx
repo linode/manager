@@ -90,24 +90,16 @@ export const ChangeRoleForEntityDrawer = ({
         el.access === role?.access &&
         el.value !== role?.role_name;
 
-      // Exclude account roles already assigned to the user
       if (isAccountRole(el)) {
-        return (
-          !assignedRoles?.account_access.includes(el.value) &&
-          matchesRoleContext
-        );
+        return matchesRoleContext;
       }
-      // Exclude entity roles already assigned to the user
+
       if (isEntityRole(el)) {
-        return (
-          !assignedRoles?.entity_access.some((entity) =>
-            entity.roles.includes(el.value)
-          ) && matchesRoleContext
-        );
+        return matchesRoleContext;
       }
       return true;
     });
-  }, [accountRoles, role, assignedRoles]);
+  }, [accountRoles, role]);
 
   const {
     control,
