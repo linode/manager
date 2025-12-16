@@ -321,6 +321,29 @@ export const ConfigProfileInterfacesSchema = array()
     },
   );
 
+// This was created specifically for use in UpdateLinodeConfigSchema.
+// Altering `ConfigProfileInterfaceSchema` results in issues related to the `interfaces` property
+// that bubble up to `CreateLinodeSchema` in LinodeCreate/schemas.ts
+export const UpdateConfigProfileInterfacesSchema = array()
+  .of(
+    ConfigProfileInterfaceSchema.clone().shape({
+      ipv6: ipv6Interface.notRequired().nullable(),
+    }),
+  )
+  .test(
+    'unique-public-interface',
+    'Only one public interface per config is allowed.',
+    (list?: any[] | null) => {
+      if (!list) {
+        return true;
+      }
+
+      return (
+        list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
+      );
+    },
+  );
+
 export const UpdateConfigInterfaceOrderSchema = object({
   ids: array().of(number()).required('The list of interface IDs is required.'),
 });
@@ -593,7 +616,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: ConfigProfileInterfacesSchema,
+  interfaces: UpdateConfigProfileInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({

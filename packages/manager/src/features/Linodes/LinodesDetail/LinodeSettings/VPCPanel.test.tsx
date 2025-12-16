@@ -13,18 +13,27 @@ beforeAll(() => mockMatchMedia());
 
 const props = {
   additionalIPv4RangesForVPC: [],
+  additionalIPv6RangesForVPC: [],
   assignPublicIPv4Address: false,
+  assignPublicIPv6Address: false,
   autoassignIPv4WithinVPC: true,
+  autoassignIPv6WithinVPC: false,
   handleIPv4RangeChange: vi.fn(),
+  handleIPv6RangeChange: vi.fn(),
   handleSelectVPC: vi.fn(),
   handleSubnetChange: vi.fn(),
   handleVPCIPv4Change: vi.fn(),
+  handleVPCIPv6Change: vi.fn(),
   region: 'us-east',
   selectedSubnetId: undefined,
   selectedVPCId: undefined,
+  showIPv6Content: false,
   toggleAssignPublicIPv4Address: vi.fn(),
+  toggleAssignPublicIPv6Address: vi.fn(),
   toggleAutoassignIPv4WithinVPCEnabled: vi.fn(),
+  toggleAutoassignIPv6WithinVPCEnabled: vi.fn(),
   vpcIPv4AddressOfLinode: undefined,
+  vpcIPv6AddressOfLinode: undefined,
 };
 
 const vpcPanelTestId = 'vpc-panel';

@@ -16,7 +16,7 @@ import {
   FirewallCell,
   LKEClusterCell,
 } from './LinodeEntityDetailRowInterfaceFirewall';
-import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/LinodeConfigs';
+import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/constants';
 import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 
 import type {

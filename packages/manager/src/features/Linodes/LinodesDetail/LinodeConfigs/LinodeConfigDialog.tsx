@@ -47,11 +47,6 @@ import { Link } from 'src/components/Link';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
-  LINODE_UNREACHABLE_HELPER_TEXT,
-  NATTED_PUBLIC_IP_HELPER_TEXT,
-  NOT_NATTED_HELPER_TEXT,
-} from 'src/features/VPCs/constants';
-import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
@@ -68,7 +63,11 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
-import { getPrimaryInterfaceIndex, useGetDeviceLimit } from './utilities';
+import {
+  getPrimaryInterfaceIndex,
+  unrecommendedConfigNoticeSelector,
+  useGetDeviceLimit,
+} from './utilities';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
 import type {
@@ -92,7 +91,7 @@ type RunLevel = 'binbash' | 'default' | 'single';
 type VirtMode = 'fullvirt' | 'paravirt';
 export type MemoryLimit = 'no_limit' | 'set_limit';
 
-interface EditableFields {
+export interface EditableFields {
   comments?: string;
   devices: DevicesAsStrings;
   helpers: Helpers;
@@ -181,6 +180,7 @@ const interfacesToState = (interfaces?: Interface[] | null) => {
       ip_ranges,
       ipam_address,
       ipv4,
+      ipv6,
       label,
       primary,
       purpose,
@@ -191,6 +191,7 @@ const interfacesToState = (interfaces?: Interface[] | null) => {
       ip_ranges,
       ipam_address,
       ipv4,
+      ipv6,
       label,
       primary,
       purpose,
@@ -1049,7 +1050,7 @@ export const LinodeConfigDialog = (props: Props) => {
                     />
                   </>
                   {values.interfaces?.map((thisInterface, idx) => {
-                    const thisInterfaceIPRanges: ExtendedIP[] = (
+                    const thisInterfaceIPv4Ranges: ExtendedIP[] = (
                       thisInterface.ip_ranges ?? []
                     ).map((ip_range, index) => {
                       // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
@@ -1069,6 +1070,26 @@ export const LinodeConfigDialog = (props: Props) => {
                       };
                     });
 
+                    const thisInterfaceIPv6Ranges: ExtendedIP[] = (
+                      thisInterface.ipv6?.ranges ?? []
+                    ).map((ipv6Range, index) => {
+                      // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ipv6.ranges[1] is invalid"
+                      // @ts-expect-error this form intentionally breaks formik's error type
+                      const errorString: string = formik.errors[
+                        `interfaces[${idx}].ipv6.ranges[${index}].range`
+                      ]?.includes('is invalid')
+                        ? 'Invalid IPv6 range'
+                        : // @ts-expect-error this form intentionally breaks formik's error type
+                          formik.errors[
+                            `interfaces[${idx}].ipv6.ranges[${index}].range`
+                          ];
+
+                      return {
+                        address: ipv6Range.range,
+                        error: errorString,
+                      };
+                    });
+
                     return (
                       <React.Fragment key={`${idx}-interface`}>
                         {unrecommendedConfigNoticeSelector({
@@ -1078,7 +1099,8 @@ export const LinodeConfigDialog = (props: Props) => {
                           values,
                         })}
                         <InterfaceSelect
-                          additionalIPv4RangesForVPC={thisInterfaceIPRanges}
+                          additionalIPv4RangesForVPC={thisInterfaceIPv4Ranges}
+                          additionalIPv6RangesForVPC={thisInterfaceIPv6Ranges}
                           errors={{
                             ipRangeError:
                               // @ts-expect-error this form intentionally breaks formik's error type
@@ -1104,6 +1126,11 @@ export const LinodeConfigDialog = (props: Props) => {
                             vpcIPv4Error:
                               // @ts-expect-error this form intentionally breaks formik's error type
                               formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                            vpcIPv6Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[
+                                `interfaces[${idx}].ipv6.slaac[0].range`
+                              ],
                           }}
                           handleChange={(newInterface: ExtendedInterface) => {
                             handleInterfaceChange(idx, newInterface);
@@ -1122,6 +1149,12 @@ export const LinodeConfigDialog = (props: Props) => {
                           subnetId={thisInterface.subnet_id}
                           vpcId={thisInterface.vpc_id}
                           vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
+                          vpcIPv6={
+                            thisInterface.ipv6?.slaac?.[0]?.address ?? undefined
+                          }
+                          vpcIPv6IsPublic={
+                            thisInterface.ipv6?.is_public ?? false
+                          }
                         />
                       </React.Fragment>
                     );
@@ -1243,76 +1276,3 @@ const DialogContent = (props: ConfigFormProps) => {
 
 const isUsingCustomRoot = (value: string) =>
   pathsOptionsLabels.includes(value) === false;
-
-const noticeForScenario = (scenarioText: string) => (
-  <Notice
-    data-testid={'notice-for-unrecommended-scenario'}
-    text={scenarioText}
-    variant="warning"
-  />
-);
-
-/**
- * Returns a JSX warning notice if the current network interface configuration
- * is unrecommended and may lead to undesired or unsupported behavior.
- *
- * @param _interface the current config interface being passed in
- * @param primaryInterfaceIndex the index of the primary interface
- * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
- * @param values the values held in Formik state, having a type of `EditableFields`
- * @returns JSX.Element | null
- */
-export const unrecommendedConfigNoticeSelector = ({
-  _interface,
-  primaryInterfaceIndex,
-  thisIndex,
-  values,
-}: {
-  _interface: ExtendedInterface;
-  primaryInterfaceIndex: null | number;
-  thisIndex: number;
-  values: EditableFields;
-}): JSX.Element | null => {
-  const vpcInterface = _interface.purpose === 'vpc';
-  const nattedIPv4Address = Boolean(_interface.ipv4?.nat_1_1);
-
-  const filteredInterfaces =
-    values.interfaces?.filter((_interface) => _interface.purpose !== 'none') ??
-    [];
-
-  // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
-  const primaryInterfaceIsVPC =
-    primaryInterfaceIndex !== null &&
-    values.interfaces &&
-    values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
-
-  /*
-   Scenario 1:
-    - the interface passed in to this function is a VPC interface
-    - the index of the primary interface !== the index of the interface passed in to this function
-    - nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" checked)
-
-   Scenario 2:
-    - all of Scenario 1, except: !nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" unchecked)
-
-   Scenario 3:
-    - only eth0 populated, and it is a VPC interface
-
-   If not one of the above scenarios, do not display a warning notice re: configuration
-  */
-  if (
-    vpcInterface &&
-    primaryInterfaceIndex !== thisIndex &&
-    !primaryInterfaceIsVPC
-  ) {
-    return nattedIPv4Address
-      ? noticeForScenario(NATTED_PUBLIC_IP_HELPER_TEXT)
-      : noticeForScenario(LINODE_UNREACHABLE_HELPER_TEXT);
-  }
-
-  if (filteredInterfaces.length === 1 && vpcInterface && !nattedIPv4Address) {
-    return noticeForScenario(NOT_NATTED_HELPER_TEXT);
-  }
-
-  return null;
-};
