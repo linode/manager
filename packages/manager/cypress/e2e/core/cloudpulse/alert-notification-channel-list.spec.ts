@@ -107,16 +107,14 @@ const mockProfile = profileFactory.build({
 const verifyChannelSorting = (
   columnLabel: string,
   sortOrder: 'ascending' | 'descending',
-  expected: number[]
+  expected: string[]
 ) => {
   cy.get(`[data-qa-header="${columnLabel}"]`).click({ force: true });
 
-  // Wait for DOM update, then check and correct
   cy.get(`[data-qa-header="${columnLabel}"]`)
     .invoke('attr', 'aria-sort')
     .then((current) => {
       if (current !== sortOrder) {
-        // Click again ONLY if needed
         cy.get(`[data-qa-header="${columnLabel}"]`).click({ force: true });
       }
     });
@@ -132,13 +130,15 @@ const verifyChannelSorting = (
       const actualOrder = $rows
         .toArray()
         .map((row) =>
-          Number(row.getAttribute('data-qa-notification-channel-cell'))
+          String(row.getAttribute('data-qa-notification-channel-cell'))
         );
       expect(actualOrder).to.deep.equal(expected);
     }
   );
+
   const order = sortOrderMap[sortOrder];
   const orderBy = LabelLookup[columnLabel];
+
   cy.url().should(
     'endWith',
     `/alerts/notification-channels?order=${order}&orderBy=${orderBy}`
@@ -263,69 +263,65 @@ describe('Notification Channel Listing Page', () => {
     const sortColumns = [
       {
         column: 'Channel Name',
-        ascending: [
-          1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 2, 20, 21, 22, 23, 24, 25,
-          26, 3, 4, 5, 6, 7, 8, 9,
-        ],
-        descending: [
-          9, 8, 7, 6, 5, 4, 3, 26, 25, 24, 23, 22, 21, 20, 2, 19, 18, 17, 16,
-          15, 14, 13, 12, 11, 10, 1,
-        ],
+        ascending: [...notificationChannels]
+          .sort((a, b) => a.label.localeCompare(b.label))
+          .map((ch) => String(ch.id)),
+
+        descending: [...notificationChannels]
+          .sort((a, b) => b.label.localeCompare(a.label))
+          .map((ch) => String(ch.id)),
       },
       {
         column: 'Alerts',
-        ascending: [
-          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
-          15, 17, 19, 21, 23, 25,
-        ],
-        descending: [
-          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
-          16, 18, 20, 22, 24, 26,
-        ],
+        ascending: [...notificationChannels]
+          .sort((a, b) => a.alerts.length - b.alerts.length)
+          .map((ch) => String(ch.id)),
+
+        descending: [...notificationChannels]
+          .sort((a, b) => b.alerts.length - a.alerts.length)
+          .map((ch) => String(ch.id)),
       },
+
       {
         column: 'Channel Type',
-        ascending: [
-          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
-          16, 18, 20, 22, 24, 26,
-        ],
-        descending: [
-          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
-          15, 17, 19, 21, 23, 25,
-        ],
+        ascending: [...notificationChannels]
+          .sort((a, b) => a.channel_type.localeCompare(b.channel_type))
+          .map((ch) => String(ch.id)),
+
+        descending: [...notificationChannels]
+          .sort((a, b) => b.channel_type.localeCompare(a.channel_type))
+          .map((ch) => String(ch.id)),
       },
+
       {
         column: 'Created By',
-        ascending: [
-          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
-          15, 17, 19, 21, 23, 25,
-        ],
-        descending: [
-          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
-          16, 18, 20, 22, 24, 26,
-        ],
+        ascending: [...notificationChannels]
+          .sort((a, b) => a.created_by.localeCompare(b.created_by))
+          .map((ch) => String(ch.id)),
+
+        descending: [...notificationChannels]
+          .sort((a, b) => b.created_by.localeCompare(a.created_by))
+          .map((ch) => String(ch.id)),
       },
       {
         column: 'Last Modified',
-        ascending: [
-          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-          21, 22, 23, 24, 25, 26,
-        ],
-        descending: [
-          26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9,
-          8, 7, 6, 5, 4, 3, 2, 1,
-        ],
+        ascending: [...notificationChannels]
+          .sort((a, b) => a.updated.localeCompare(b.updated))
+          .map((ch) => String(ch.id)),
+
+        descending: [...notificationChannels]
+          .sort((a, b) => b.updated.localeCompare(a.updated))
+          .map((ch) => String(ch.id)),
       },
       {
         column: 'Last Modified By',
-        ascending: [
-          2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 1, 3, 5, 7, 9, 11, 13,
-          15, 17, 19, 21, 23, 25,
-        ],
-        descending: [
-          1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 2, 4, 6, 8, 10, 12, 14,
-          16, 18, 20, 22, 24, 26,
-        ],
+        ascending: [...notificationChannels]
+          .sort((a, b) => a.updated_by.localeCompare(b.updated_by))
+          .map((ch) => String(ch.id)),
+
+        descending: [...notificationChannels]
+          .sort((a, b) => b.updated_by.localeCompare(a.updated_by))
+          .map((ch) => String(ch.id)),
       },
     ];
 
@@ -333,10 +329,8 @@ describe('Notification Channel Listing Page', () => {
 
     cy.get('@headers').then(($headers) => {
       const actual = Array.from($headers)
-        .map((th) => th.textContent ?? '')
+        .map((th) => th.textContent?.trim())
         .filter(Boolean);
-
-      expect(actual.length).to.equal(6);
 
       expect(actual).to.deep.equal([
         'Channel Name',
