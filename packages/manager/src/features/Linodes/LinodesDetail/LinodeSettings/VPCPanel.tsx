@@ -19,10 +19,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { PublicAccess } from 'src/features/VPCs/components/PublicAccess';
-// import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -58,7 +58,6 @@ export interface VPCPanelProps {
   vpcIPv4Error?: string;
   vpcIPv6AddressOfLinode: string | undefined;
   vpcIPv6Error?: string;
-  vpcIPv6RangesError?: string;
 }
 
 const ERROR_GROUP_STRING = 'vpc-errors';
@@ -78,7 +77,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
     handleVPCIPv4Change,
     handleVPCIPv6Change,
     showIPv6Content,
-    // publicIPv4Error,
     region,
     selectedSubnetId,
     selectedVPCId,
@@ -93,7 +91,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
     vpcIdError,
     vpcIPv6AddressOfLinode,
     vpcIPv6Error,
-    // vpcIPv6RangesError,
   } = props;
 
   const theme = useTheme();
@@ -276,19 +273,18 @@ export const VPCPanel = (props: VPCPanelProps) => {
                             <Typography noWrap={!isSmallBp}>
                               Auto-assign VPC IPv6 address
                             </Typography>
-                            <TooltipIcon status="info" text={'Placeholder'} />
+                            <TooltipIcon
+                              status="info"
+                              text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
+                            />
                           </Box>
                         }
                       />
                     </Box>
                     {!autoassignIPv6WithinVPC && (
                       <TextField
-                        // disabled={userCannotAssignLinodes}
                         errorGroup={ERROR_GROUP_STRING}
-                        errorText={vpcIPv6Error} // {assignLinodesErrors['vpc.ipv6.slaac[0].range']}
-                        // helperText={generateVPCIPv6InputHelperText(
-                        //   subnet?.ipv6?.[0].range ?? ''
-                        // )}
+                        errorText={vpcIPv6Error}
                         label="VPC IPv6"
                         noMarginTop
                         onChange={(e) => handleVPCIPv6Change(e.target.value)}
@@ -310,7 +306,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   }
                   showIPv6Content={showIPv6Content}
                   sx={{ margin: `${theme.spacingFunction(16)} 0` }}
-                  userCannotAssignLinodes={false} // @TODO Fix this
+                  userCannotAssignLinodes={false}
                 />
                 <AssignIPRanges
                   handleIPRangeChange={handleIPv4RangeChange}
