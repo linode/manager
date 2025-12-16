@@ -101,13 +101,14 @@ const mockProfile = profileFactory.build({
 
 /**
  * Verifies sorting of a column in the alerts table.
+ * @param {string} columnLabel - The label of the column to sort.
  * @param {'ascending' | 'descending'} sortOrder - Expected sorting order.
- * @param {number[]} expectedValues - Expected values in sorted order.
+ * @param {number[]} expected - Expected order after sorting.
  */
 const verifyChannelSorting = (
   columnLabel: string,
   sortOrder: 'ascending' | 'descending',
-  expected: string[]
+  expected: number[]
 ) => {
   cy.get(`[data-qa-header="${columnLabel}"]`).click({ force: true });
 
@@ -130,7 +131,7 @@ const verifyChannelSorting = (
       const actualOrder = $rows
         .toArray()
         .map((row) =>
-          String(row.getAttribute('data-qa-notification-channel-cell'))
+          Number(row.getAttribute('data-qa-notification-channel-cell'))
         );
       expect(actualOrder).to.deep.equal(expected);
     }
@@ -265,63 +266,63 @@ describe('Notification Channel Listing Page', () => {
         column: 'Channel Name',
         ascending: [...notificationChannels]
           .sort((a, b) => a.label.localeCompare(b.label))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
 
         descending: [...notificationChannels]
           .sort((a, b) => b.label.localeCompare(a.label))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
       },
       {
         column: 'Alerts',
         ascending: [...notificationChannels]
           .sort((a, b) => a.alerts.length - b.alerts.length)
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
 
         descending: [...notificationChannels]
           .sort((a, b) => b.alerts.length - a.alerts.length)
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
       },
 
       {
         column: 'Channel Type',
         ascending: [...notificationChannels]
           .sort((a, b) => a.channel_type.localeCompare(b.channel_type))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
 
         descending: [...notificationChannels]
           .sort((a, b) => b.channel_type.localeCompare(a.channel_type))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
       },
 
       {
         column: 'Created By',
         ascending: [...notificationChannels]
           .sort((a, b) => a.created_by.localeCompare(b.created_by))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
 
         descending: [...notificationChannels]
           .sort((a, b) => b.created_by.localeCompare(a.created_by))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
       },
       {
         column: 'Last Modified',
         ascending: [...notificationChannels]
           .sort((a, b) => a.updated.localeCompare(b.updated))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
 
         descending: [...notificationChannels]
           .sort((a, b) => b.updated.localeCompare(a.updated))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
       },
       {
         column: 'Last Modified By',
         ascending: [...notificationChannels]
           .sort((a, b) => a.updated_by.localeCompare(b.updated_by))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
 
         descending: [...notificationChannels]
           .sort((a, b) => b.updated_by.localeCompare(a.updated_by))
-          .map((ch) => String(ch.id)),
+          .map((ch) => ch.id),
       },
     ];
 
