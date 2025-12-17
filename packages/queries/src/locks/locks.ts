@@ -1,15 +1,17 @@
 import {
   createLock,
-  type CreateLockPayload,
   deleteLock,
   getLock,
   getLocks,
-  type ResourceLock,
 } from '@linode/api-v4/lib/locks';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { APIError, Filter, Params, ResourcePage } from '@linode/api-v4';
+import type {
+  CreateLockPayload,
+  ResourceLock,
+} from '@linode/api-v4/lib/locks/types';
 
 export const lockQueries = createQueryKeys('locks', {
   lock: (id: number) => ({
