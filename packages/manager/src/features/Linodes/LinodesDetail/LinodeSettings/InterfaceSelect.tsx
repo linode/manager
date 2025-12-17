@@ -116,10 +116,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const [autoassignIPv6VPCAddress, setAutoassignIPv6VPCAddress] =
     React.useState<boolean>(vpcIPv6 === undefined);
 
-  const [vpcIPv6UserInput, setVPCIPv6UserInput] = React.useState<null | string>(
-    null
-  );
-
   const purposeOptions: SelectOption<ExtendedPurpose>[] = [
     {
       label: 'Public Internet',
@@ -182,23 +178,11 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
       purpose,
     });
 
-  // `ipv6.slaac` -- if omitted or null, configuration unchanged
-  // `ipv6.slaac[0].range` -- if omitted or null, defaults to "auto"
-  // Desired state:
-  // - if auto-assign checkbox is checked, submit `ipv6.slaac[0].range: "auto"`
-  // - if there's a VPC IPv6 address (vpcIPv6) && vpcIPv6UserInput === null, display it & exclude `ipv6.slaac` from the payload
-  // - if there's a VPC IPv6 address (vpcIPv6) && vpcIPv6UserInput !== null, submit vpcIPv6UserInput in the `ipv6.slaac[0].range` field
-  // - if there's not a VPC IPv6 address (vpcIPv6) && vpcIPv6UserInput === null, the checkbox should be checked and submit `ipv6.slaac[0].range: "auto"`
-
   const slaacFieldValue = autoassignIPv6VPCAddress
     ? [{ range: 'auto' }]
-    : vpcIPv6 && vpcIPv6UserInput === null
-      ? undefined
-      : vpcIPv6 && vpcIPv6UserInput !== null
-        ? [{ range: vpcIPv6UserInput }]
-        : !vpcIPv6 && vpcIPv6UserInput === null
-          ? [{ range: 'auto' }]
-          : undefined;
+    : vpcIPv6
+      ? [{ range: vpcIPv6 }]
+      : undefined;
 
   const handleVPCLabelChange = (selectedVPCId: number) => {
     // Only clear VPC related fields if VPC selection changes
@@ -553,10 +537,13 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
-            handleVPCIPv6Change={(vpcIPv6Input) => {
-              setVPCIPv6UserInput(vpcIPv6Input);
-              handleVPCIPv6Input(vpcIPv6UserInput ?? undefined);
-            }}
+            handleVPCIPv6Change={
+              handleVPCIPv6Input
+              //   (vpcIPv6Input) => {
+              //   setVPCIPv6UserInput(vpcIPv6Input);
+              //   handleVPCIPv6Input(vpcIPv6UserInput ?? undefined);
+              // }
+            }
             publicIPv4Error={errors.publicIPv4Error}
             region={region}
             selectedSubnetId={subnetId}
