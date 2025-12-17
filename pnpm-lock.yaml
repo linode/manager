@@ -1659,15 +1659,15 @@ packages:
       eslint: ^9
 
   '@lit-labs/ssr-dom-shim@1.4.0':
-    resolution: {integrity: sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@lit-labs/ssr-dom-shim/-/ssr-dom-shim-1.4.0.tgz}
+    resolution: {integrity: sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==}
 
   '@lit/react@1.0.8':
-    resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@lit/react/-/react-1.0.8.tgz}
+    resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==}
     peerDependencies:
       '@types/react': 17 || 18 || 19
 
   '@lit/reactive-element@2.1.1':
-    resolution: {integrity: sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@lit/reactive-element/-/reactive-element-2.1.1.tgz}
+    resolution: {integrity: sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==}
 
   '@lukemorales/query-key-factory@1.3.4':
     resolution: {integrity: sha512-A3frRDdkmaNNQi6mxIshsDk4chRXWoXa05US8fBo4kci/H+lVmujS6QrwQLLGIkNIRFGjMqp2uKjC4XsLdydRw==}
@@ -2991,13 +2991,13 @@ packages:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
   akamai-cds-react-components@0.0.1-alpha.19:
-    resolution: {integrity: sha512-YNQPeP4i65qKA5bjOb4ti0ciwQOYZqsKlJ9f14g7xeJCHamyqxPuHIGsOTvykhKyFoXLL8+kejDS52H5vLvVug==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/akamai-cds-react-components/-/akamai-cds-react-components-0.0.1-alpha.19.tgz}
+    resolution: {integrity: sha512-YNQPeP4i65qKA5bjOb4ti0ciwQOYZqsKlJ9f14g7xeJCHamyqxPuHIGsOTvykhKyFoXLL8+kejDS52H5vLvVug==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
 
   akamai-cds-web-components@0.0.1-alpha.19:
-    resolution: {integrity: sha512-8xzQjUtNgpbmINt72deakR96vWDJekfjWMt7DJ3DWumlhXDzekf2hm3Q8++hObjKVx6KgXpUDOGzAdU5yMKeiQ==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/akamai-cds-web-components/-/akamai-cds-web-components-0.0.1-alpha.19.tgz}
+    resolution: {integrity: sha512-8xzQjUtNgpbmINt72deakR96vWDJekfjWMt7DJ3DWumlhXDzekf2hm3Q8++hObjKVx6KgXpUDOGzAdU5yMKeiQ==}
     peerDependencies:
       '@linode/design-language-system': ^5.2.0
 
@@ -4815,13 +4815,13 @@ packages:
     engines: {node: '>=18.0.0'}
 
   lit-element@4.2.1:
-    resolution: {integrity: sha512-WGAWRGzirAgyphK2urmYOV72tlvnxw7YfyLDgQ+OZnM9vQQBQnumQ7jUJe6unEzwGU3ahFOjuz1iz1jjrpCPuw==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/lit-element/-/lit-element-4.2.1.tgz}
+    resolution: {integrity: sha512-WGAWRGzirAgyphK2urmYOV72tlvnxw7YfyLDgQ+OZnM9vQQBQnumQ7jUJe6unEzwGU3ahFOjuz1iz1jjrpCPuw==}
 
   lit-html@3.3.1:
-    resolution: {integrity: sha512-S9hbyDu/vs1qNrithiNyeyv64c9yqiW9l+DBgI18fL+MTvOtWoFR0FWiyq1TxaYef5wNlpEmzlXoBlZEO+WjoA==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/lit-html/-/lit-html-3.3.1.tgz}
+    resolution: {integrity: sha512-S9hbyDu/vs1qNrithiNyeyv64c9yqiW9l+DBgI18fL+MTvOtWoFR0FWiyq1TxaYef5wNlpEmzlXoBlZEO+WjoA==}
 
   lit@3.3.1:
-    resolution: {integrity: sha512-Ksr/8L3PTapbdXJCk+EJVB78jDodUMaP54gD24W186zGRARvwrsPfS60wae/SSCTCNZVPd1chXqio1qHQmu4NA==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/lit/-/lit-3.3.1.tgz}
+    resolution: {integrity: sha512-Ksr/8L3PTapbdXJCk+EJVB78jDodUMaP54gD24W186zGRARvwrsPfS60wae/SSCTCNZVPd1chXqio1qHQmu4NA==}
 
   load-tsconfig@0.2.5:
     resolution: {integrity: sha512-IXO6OCs9yg8tMKzfPZ1YmheJbZCiEsnBdcB03l0OcfK9prKnJb96siuHCr5Fl37/yo9DnKU+TLpxzTUspw9shg==}
@@ -12301,7 +12301,7 @@ snapshots:
 
   tsx@4.19.3:
     dependencies:
-      esbuild: 0.25.3
+      esbuild: 0.25.12
       get-tsconfig: 4.8.1
     optionalDependencies:
       fsevents: 2.3.3
