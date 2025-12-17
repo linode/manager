@@ -224,10 +224,10 @@ export const RolesTable = ({ roles = [] }: Props) => {
             onClick={() => handleAssignSelectedRoles()}
             sx={{ height: 34 }}
             tooltipText={
-              selectedRows.length === 0
-                ? 'You must select some roles to assign them.'
-                : !isAccountAdmin
-                  ? 'You do not have permission to assign roles.'
+              !isAccountAdmin
+                ? 'You do not have permission to assign roles.'
+                : selectedRows.length === 0
+                  ? 'You must select some roles to assign them.'
                   : undefined
             }
           >
@@ -305,6 +305,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
+                    disabled={!isAccountAdmin}
                     style={{
                       wordBreak: 'break-word',
                       minWidth: COLUMN_WIDTHS.name,
