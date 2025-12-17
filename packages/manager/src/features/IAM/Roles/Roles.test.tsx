@@ -60,6 +60,7 @@ describe('RolesLanding', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
         view_account: true,
+        is_account_admin: true,
       },
     });
     queryMocks.useAccountRoles.mockReturnValue({
@@ -76,6 +77,7 @@ describe('RolesLanding', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
         view_account: false,
+        is_account_admin: false,
       },
     });
 
@@ -89,6 +91,7 @@ describe('RolesLanding', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
         view_account: true,
+        is_account_admin: true,
       },
     });
     queryMocks.useProfile.mockReturnValue({ data: { user_type: 'parent' } });
@@ -107,6 +110,7 @@ describe('RolesLanding', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
         view_account: true,
+        is_account_admin: true,
       },
     });
     queryMocks.useProfile.mockReturnValue({ data: { user_type: 'child' } });

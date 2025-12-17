@@ -13,7 +13,7 @@ import { DefaultRolesPanel } from './Defaults/DefaultRolesPanel';
 export const RolesLanding = () => {
   const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
     'account',
-    ['view_account']
+    ['view_account', 'is_account_admin']
   );
   const { data: accountRoles, isLoading } = useAccountRoles(
     permissions?.view_account
@@ -33,7 +33,7 @@ export const RolesLanding = () => {
     return <CircleProgress />;
   }
 
-  if (!permissions?.view_account) {
+  if (!(permissions?.view_account || permissions?.is_account_admin)) {
     return (
       <Notice variant="error">You do not have permission to view roles.</Notice>
     );
