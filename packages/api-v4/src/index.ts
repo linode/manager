@@ -24,6 +24,8 @@ export * from './kubernetes';
 
 export * from './linodes';
 
+export * from './locks';
+
 export * from './longview';
 
 export * from './managed';
