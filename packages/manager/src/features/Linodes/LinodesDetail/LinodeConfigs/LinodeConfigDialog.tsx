@@ -1150,7 +1150,7 @@ export const LinodeConfigDialog = (props: Props) => {
                           vpcId={thisInterface.vpc_id}
                           vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
                           vpcIPv6={
-                            thisInterface.ipv6?.slaac?.[0]?.address ?? undefined
+                            thisInterface.ipv6?.slaac?.[0]?.range ?? undefined
                           }
                           vpcIPv6IsPublic={
                             thisInterface.ipv6?.is_public ?? false

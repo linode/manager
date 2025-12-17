@@ -158,9 +158,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByLabelText(
-          'Auto-assign a VPC IPv4 address for this Linode in the VPC'
-        )
+        wrapper.getByLabelText('Auto-assign VPC IPv4 address')
       ).not.toBeChecked();
       // Using regex here to account for the "(required)" indicator.
       expect(wrapper.getByLabelText(/^VPC IPv4.*/)).toHaveValue('10.0.4.3');
