@@ -79,7 +79,7 @@ export const CloudPulseDimensionFiltersSelect = React.memo(
       <>
         <CloudPulseTooltip placement="bottom-end" title="Dimension Filters">
           <IconButton
-            aria-label="Widget Dimension Filter"
+            aria-label={`Widget Dimension Filter${drawerLabel}`}
             color="inherit"
             data-qa-selected={selectionCount}
             data-testid="dimension-filter"
