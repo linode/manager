@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import ChevronLeftIcon from '../../assets/icons/chevron-left.svg';
 import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
@@ -23,6 +24,11 @@ export interface DrawerProps extends _DrawerProps {
    * It prevents the drawer from showing broken content.
    */
   error?: APIError[] | null | string;
+  /**
+   * An optional prop that handles back navigation for second-level drawers.
+   * It can act as a visual indicator, similar to a back button or `onClose` handler.
+   */
+  handleBackNavigation?: () => void;
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -62,12 +68,13 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const {
       children,
       error,
-      titleSuffix,
+      handleBackNavigation,
       isFetching,
       onClose,
       open,
       sx,
       title,
+      titleSuffix,
       wide,
       ...rest
     } = props;
@@ -159,6 +166,25 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
                 data-testid="drawer-title-container"
                 display="flex"
               >
+                {handleBackNavigation && (
+                  <IconButton
+                    aria-label="back navigation"
+                    data-qa-back-navigation
+                    disableRipple
+                    onClick={handleBackNavigation}
+                    sx={(theme) => ({
+                      color: theme.palette.text.primary,
+                      padding: 0,
+                      marginRight: theme.spacingFunction(8),
+                      '& svg': {
+                        width: 24,
+                        height: 24,
+                      },
+                    })}
+                  >
+                    <ChevronLeftIcon />
+                  </IconButton>
+                )}
                 <Typography
                   data-qa-drawer-title={lastTitleRef.current}
                   data-testid="drawer-title"
