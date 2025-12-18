@@ -46,7 +46,8 @@ export const NotificationChannelTableRow = (
       <TableCell>
         <Link
           data-qa-alert-link
-          to={`/alerts/notification-channels/detail/${id}`}
+          params={{ channelId: String(id) }}
+          to={'/alerts/notification-channels/detail/$channelId'}
         >
           {label}
         </Link>
