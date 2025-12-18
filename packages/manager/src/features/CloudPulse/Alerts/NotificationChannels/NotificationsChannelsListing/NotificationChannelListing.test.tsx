@@ -125,4 +125,19 @@ describe('NotificationChannelListing', () => {
     expect(screen.getByText('Channel Name')).toBeVisible();
     expect(screen.getByText('No data to display.')).toBeVisible();
   });
+
+  it('should render the link in the channel name', () => {
+    renderWithTheme(<NotificationChannelListing />);
+
+    mockNotificationChannels.forEach((channel) => {
+      const link = screen.getByRole('link', {
+        name: channel.label,
+      });
+      expect(link).toBeVisible();
+      expect(link).toHaveAttribute(
+        'href',
+        `/alerts/notification-channels/detail/${channel.id}`
+      );
+    });
+  });
 });
