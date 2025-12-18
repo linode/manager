@@ -10,7 +10,7 @@ import type { PickPermissions, UserType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 type UserActionMenuPermissions = PickPermissions<
-  'delete_user' | 'is_account_admin'
+  'delete_user' | 'is_account_admin' | 'view_account'
 >;
 
 interface Props {
@@ -29,6 +29,7 @@ export const UsersActionMenu = (props: Props) => {
     useDelegationRole();
 
   const isAccountAdmin = permissions.is_account_admin;
+  const isAccountViewer = permissions.view_account;
   const canDeleteUser = isAccountAdmin || permissions.delete_user;
   const isDelegateUser = userType === 'delegate';
 
@@ -46,8 +47,8 @@ export const UsersActionMenu = (props: Props) => {
         });
       },
       hidden: shouldHideForChildDelegate,
-      disabled: !isAccountAdmin,
-      tooltip: !isAccountAdmin
+      disabled: !isAccountViewer,
+      tooltip: !isAccountViewer
         ? 'You do not have permission to view user details.'
         : undefined,
       title: 'View User Details',
@@ -59,8 +60,8 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !isAccountAdmin,
-      tooltip: !isAccountAdmin
+      disabled: !isAccountViewer,
+      tooltip: !isAccountViewer
         ? 'You do not have permission to view assigned roles.'
         : undefined,
       title: 'View Assigned Roles',
@@ -72,8 +73,8 @@ export const UsersActionMenu = (props: Props) => {
           params: { username },
         });
       },
-      disabled: !isAccountAdmin,
-      tooltip: !isAccountAdmin
+      disabled: !isAccountViewer,
+      tooltip: !isAccountViewer
         ? 'You do not have permission to view entity access.'
         : undefined,
       title: 'View Entity Access',
