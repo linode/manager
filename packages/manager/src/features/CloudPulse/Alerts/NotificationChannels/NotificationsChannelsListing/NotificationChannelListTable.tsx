@@ -1,5 +1,6 @@
 import { TooltipIcon } from '@linode/ui';
 import { GridLegacy, TableBody, TableHead } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -44,7 +45,14 @@ export interface NotificationChannelListTableProps {
 export const NotificationChannelListTable = React.memo(
   (props: NotificationChannelListTableProps) => {
     const { error, isLoading, notificationChannels, scrollToElement } = props;
+    const navigate = useNavigate();
 
+    const handleDetails = ({ id }: NotificationChannel) => {
+      navigate({
+        to: '/alerts/notification-channels/detail/$channelId',
+        params: { channelId: String(id) },
+      });
+    };
     const _error = error
       ? getAPIErrorOrDefault(
           error,
@@ -129,6 +137,8 @@ export const NotificationChannelListTable = React.memo(
                       {ChannelListingTableLabelMap.map((value) => (
                         <TableSortCell
                           active={orderBy === value.label}
+                          data-qa-header={value.colName}
+                          data-qa-sorting={value.colName}
                           direction={order}
                           handleClick={handleTableSort}
                           key={value.label}
@@ -160,6 +170,9 @@ export const NotificationChannelListTable = React.memo(
                     {paginatedAndOrderedNotificationChannels.map(
                       (channel: NotificationChannel) => (
                         <NotificationChannelTableRow
+                          handlers={{
+                            handleDetails: () => handleDetails(channel),
+                          }}
                           key={channel.id}
                           notificationChannel={channel}
                         />
