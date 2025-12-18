@@ -286,7 +286,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: theme.tokens.spacing.S12,
-          minHeight: '38px',
+          minHeight: theme.spacingFunction(40),
         }}
       >
         <DebouncedSearchTextField
