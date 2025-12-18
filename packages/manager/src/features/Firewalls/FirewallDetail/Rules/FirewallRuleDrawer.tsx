@@ -6,7 +6,10 @@ import * as React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-import { useIsFirewallRulesetsPrefixlistsEnabled } from '../../shared';
+import {
+  getFeatureChip,
+  useIsFirewallRulesetsPrefixlistsEnabled,
+} from '../../shared';
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -47,11 +50,15 @@ export const FirewallRuleDrawer = React.memo(
       isOpen,
       mode,
       onClose,
+      inboundAndOutboundRules,
       ruleToModifyOrView,
     } = props;
 
-    const { isFirewallRulesetsPrefixlistsFeatureEnabled } =
-      useIsFirewallRulesetsPrefixlistsEnabled();
+    const {
+      isFirewallRulesetsPrefixlistsFeatureEnabled,
+      isFirewallRulesetsPrefixListsBetaEnabled,
+      isFirewallRulesetsPrefixListsGAEnabled,
+    } = useIsFirewallRulesetsPrefixlistsEnabled();
 
     /**
      * State for the type of entity being created: either a firewall 'rule' or
@@ -189,8 +196,23 @@ export const FirewallRuleDrawer = React.memo(
       return errors;
     };
 
+    const featureChip =
+      getFeatureChip({
+        isFirewallRulesetsPrefixlistsFeatureEnabled,
+        isFirewallRulesetsPrefixListsBetaEnabled,
+        isFirewallRulesetsPrefixListsGAEnabled,
+      }) ?? undefined;
+
+    // Do not show the Firewall RS & PL feature chip in Edit mode drawer title
+    const titleSuffix = mode === 'edit' ? undefined : featureChip;
+
     return (
-      <Drawer onClose={onClose} open={isOpen} title={title}>
+      <Drawer
+        onClose={onClose}
+        open={isOpen}
+        title={title}
+        titleSuffix={titleSuffix}
+      >
         {mode === 'create' && isFirewallRulesetsPrefixlistsFeatureEnabled && (
           <Grid container spacing={2}>
             {firewallRuleCreateOptions.map((option) => (
@@ -245,6 +267,13 @@ export const FirewallRuleDrawer = React.memo(
                   addressesLabel={addressesLabel}
                   category={category}
                   closeDrawer={onClose}
+                  handleOpenPrefixListDrawer={(prefixListLabel, plRuleRef) => {
+                    handleOpenPrefixListDrawer(
+                      prefixListLabel,
+                      plRuleRef,
+                      'rule'
+                    );
+                  }}
                   ips={ips}
                   mode={mode}
                   pls={pls}
@@ -296,6 +325,7 @@ export const FirewallRuleDrawer = React.memo(
                         'ruleset'
                       );
                     }}
+                    inboundAndOutboundRules={inboundAndOutboundRules}
                     ruleErrors={ruleToModifyOrView?.errors}
                     {...formikProps}
                   />

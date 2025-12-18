@@ -9,6 +9,7 @@ import {
   useUpdateStreamMutation,
 } from '@linode/queries';
 import { Stack } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
@@ -52,6 +53,7 @@ export const StreamForm = (props: StreamFormProps) => {
     setDestinationVerified,
   } = useVerifyDestination();
 
+  const formRef = React.useRef<HTMLFormElement>(null);
   const form = useFormContext<StreamAndDestinationFormType>();
   const { control, handleSubmit, trigger } = form;
 
@@ -170,11 +172,13 @@ export const StreamForm = (props: StreamFormProps) => {
 
     if (isValid) {
       await verifyDestination(destination);
+    } else {
+      scrollErrorIntoViewV2(formRef);
     }
   };
 
   return (
-    <form>
+    <form ref={formRef}>
       <Grid container spacing={2}>
         <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
           <Stack spacing={2}>
@@ -198,7 +202,9 @@ export const StreamForm = (props: StreamFormProps) => {
             isSubmitting={isSubmitting}
             isTesting={isVerifyingDestination}
             mode={mode}
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, () =>
+              scrollErrorIntoViewV2(formRef)
+            )}
             onTestConnection={handleTestConnection}
           />
         </Grid>

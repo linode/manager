@@ -18,6 +18,7 @@ export interface FirewallRuleDrawerProps {
     plRuleRef: PrefixListRuleReference,
     contextType: PrefixListDrawerContext['type']
   ) => void;
+  inboundAndOutboundRules: FirewallRuleType[];
   isOpen: boolean;
   mode: FirewallRuleDrawerMode;
   onClose: () => void;
@@ -45,6 +46,10 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   addressesLabel: string;
   category: Category;
   closeDrawer: () => void;
+  handleOpenPrefixListDrawer: (
+    prefixListLabel: string,
+    plRuleRef: PrefixListRuleReference
+  ) => void;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
   pls: ExtendedPL[];
@@ -63,5 +68,6 @@ export interface FirewallRuleSetFormProps
     prefixListLabel: string,
     plRuleRef: PrefixListRuleReference
   ) => void;
+  inboundAndOutboundRules: FirewallRuleType[];
   ruleErrors?: FirewallRuleError[];
 }

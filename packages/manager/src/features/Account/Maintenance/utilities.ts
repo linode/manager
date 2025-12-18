@@ -40,7 +40,7 @@ export const maintenanceDateColumnMap: Record<
 > = {
   completed: ['complete_time', 'End Date'],
   'in progress': ['start_time', 'Start Date'],
-  upcoming: ['when', 'Start Date'],
+  upcoming: ['start_time', 'Start Date'],
   pending: ['when', 'Date'],
 };
 

@@ -3,6 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { accountFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -11,6 +13,7 @@ import {
   buildPrefixListReferenceMap,
   generateAddressesLabel,
   generateAddressesLabelV2,
+  getFeatureChip,
   predefinedFirewallFromRule,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from './shared';
@@ -227,6 +230,14 @@ describe('buildPrefixListMap', () => {
 describe('generateAddressesLabelV2', () => {
   const onPrefixListClick = vi.fn();
 
+  /**
+   * Expected display order of addresses:
+   * '192.168.1.1',
+   * '2001:db8:85a3::8a2e:370:7334/128',
+   * 'pl:system:test-1 (IPv4, IPv6)',
+   * 'pl::test-2 (IPv4)',
+   * 'pl::test-3 (IPv6)'
+   */
   const addresses: FirewallRuleType['addresses'] = {
     ipv4: [
       'pl:system:test-1', // PL attached to both IPv4/IPv6
@@ -325,15 +336,15 @@ describe('generateAddressesLabelV2', () => {
     });
     const { getByText, queryByText } = renderWithTheme(<>{result}</>);
 
-    expect(getByText('pl:system:test-1 (IPv4, IPv6)')).toBeVisible();
+    expect(getByText('192.168.1.1')).toBeVisible();
 
     expect(getByText('+4')).toBeVisible(); // 5 total elements (1 shown + 4 hidden)
 
     // Hidden items are not rendered outside tooltip
+    expect(queryByText('2001:db8:85a3::8a2e:370:7334/128')).toBeNull();
+    expect(queryByText('pl:system:test-1 (IPv4, IPv6)')).toBeNull();
     expect(queryByText('pl::test-2 (IPv4)')).toBeNull();
     expect(queryByText('pl::test-3 (IPv6)')).toBeNull();
-    expect(queryByText('192.168.1.1')).toBeNull();
-    expect(queryByText('2001:db8:85a3::8a2e:370:7334/128')).toBeNull();
   });
 
   it('renders all items if showTruncateChip is false', () => {
@@ -363,11 +374,11 @@ describe('generateAddressesLabelV2', () => {
     );
 
     // Only the first 2 elements are visible outside tooltip
-    expect(getByText('pl:system:test-1 (IPv4, IPv6)')).toBeVisible();
-    expect(getByText('pl::test-2 (IPv4)')).toBeVisible();
+    expect(getByText('192.168.1.1')).toBeVisible();
+    expect(getByText('2001:db8:85a3::8a2e:370:7334/128')).toBeVisible();
+    expect(queryByText('pl:system:test-1 (IPv4, IPv6)')).toBeNull();
+    expect(queryByText('pl::test-2 (IPv4)')).toBeNull();
     expect(queryByText('pl::test-3 (IPv6)')).toBeNull();
-    expect(queryByText('192.168.1.1')).toBeNull();
-    expect(queryByText('2001:db8:85a3::8a2e:370:7334/128')).toBeNull();
 
     // Chip shows correct hidden count
     const chip = getByText('+3');
@@ -382,15 +393,15 @@ describe('generateAddressesLabelV2', () => {
     // Check that only hidden items are present in tooltip
     expect(tooltipItems).toHaveLength(3);
     expect(tooltipItems.map((item) => item.textContent)).toEqual([
+      'pl:system:test-1 (IPv4, IPv6)',
+      'pl::test-2 (IPv4)',
       'pl::test-3 (IPv6)',
-      '192.168.1.1',
-      '2001:db8:85a3::8a2e:370:7334/128',
     ]);
   });
 });
 
 describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
-  it('returns true if the feature is enabled', async () => {
+  it('returns true if the feature is enabled AND the account has the capability', async () => {
     const options = {
       flags: {
         fwRulesetsPrefixLists: {
@@ -401,6 +412,16 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
         },
       },
     };
+
+    const account = accountFactory.build({
+      capabilities: ['Cloud Firewall Rule Set'],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
@@ -416,7 +437,7 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
     });
   });
 
-  it('returns false if the feature is NOT enabled', async () => {
+  it('returns false if the feature is NOT enabled but the account has the capability', async () => {
     const options = {
       flags: {
         fwRulesetsPrefixLists: {
@@ -427,6 +448,16 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
         },
       },
     };
+
+    const account = accountFactory.build({
+      capabilities: ['Cloud Firewall Rule Set'],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
@@ -440,5 +471,81 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
         false
       );
     });
+  });
+
+  it('returns false if the feature is enabled but the account DOES NOT have the capability', async () => {
+    const options = {
+      flags: {
+        fwRulesetsPrefixLists: {
+          enabled: true,
+          beta: false,
+          la: false,
+          ga: false,
+        },
+      },
+    };
+
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    server.use(
+      http.get('*/v4*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { result } = renderHook(
+      () => useIsFirewallRulesetsPrefixlistsEnabled(),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, options),
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current.isFirewallRulesetsPrefixlistsFeatureEnabled).toBe(
+        false
+      );
+    });
+  });
+});
+
+describe('getFeatureChip', () => {
+  it('returns null if RS & PL feature is disabled', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: false,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+    expect(result).toBeNull();
+  });
+
+  it('returns BetaChip if Firewall RS & PL feature is enabled and Beta is true', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: true,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+    expect(getByText('beta')).toBeVisible();
+  });
+
+  it('returns NewFeatureChip if Firewall RS & PL feature is enabled, GA is true, and Beta is false', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: true,
+    });
+    const { getByText } = renderWithTheme(<>{result}</>);
+    expect(getByText('new')).toBeVisible();
+  });
+
+  it('returns null if feature is enabled but neither Beta nor GA', () => {
+    const result = getFeatureChip({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+    expect(result).toBeNull();
   });
 });

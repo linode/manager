@@ -287,65 +287,6 @@ const eventTemplates = {
       status: 'finished',
     }),
 
-  'Linode Migration In Progress': () =>
-    eventFactory.build({
-      action: 'linode_migrate',
-      entity: {
-        id: 1,
-        label: 'linode-1',
-        type: 'linode',
-        url: '/v4/linode/instances/1',
-      },
-      message: 'Linode migration in progress.',
-      percent_complete: 45,
-      status: 'started',
-    }),
-
-  'Linode Migration - Emergency': () =>
-    eventFactory.build({
-      action: 'linode_migrate',
-      description: 'emergency',
-      entity: {
-        id: 1,
-        label: 'linode-1',
-        type: 'linode',
-        url: '/v4/linode/instances/1',
-      },
-      message: 'Emergency linode migration in progress.',
-      percent_complete: 30,
-      status: 'started',
-    }),
-
-  'Linode Migration - Scheduled Started': () =>
-    eventFactory.build({
-      action: 'linode_migrate',
-      description: 'scheduled',
-      entity: {
-        id: 1,
-        label: 'linode-1',
-        type: 'linode',
-        url: '/v4/linode/instances/1',
-      },
-      message: 'Scheduled linode migration in progress.',
-      percent_complete: 10,
-      status: 'started',
-    }),
-
-  'Linode Migration - Scheduled': () =>
-    eventFactory.build({
-      action: 'linode_migrate',
-      description: 'scheduled',
-      entity: {
-        id: 1,
-        label: 'linode-1',
-        type: 'linode',
-        url: '/v4/linode/instances/1',
-      },
-      message: 'Scheduled linode migration in progress.',
-      percent_complete: 0,
-      status: 'scheduled',
-    }),
-
   'Completed Event': () =>
     eventFactory.build({
       action: 'account_update',

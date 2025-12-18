@@ -2,7 +2,6 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { accountFactory, firewallDeviceFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { FirewallDeviceRow } from './FirewallDeviceRow';
@@ -10,22 +9,25 @@ import { FirewallDeviceRow } from './FirewallDeviceRow';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
-  userPermissions: vi.fn(() => ({
-    data: {
-      update_linode: true,
-    },
-  })),
+  useAccount: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
-}));
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+  };
+});
 
 const props = {
   device: firewallDeviceFactory.build(),
   disabled: false,
   handleRemoveDevice: vi.fn(),
   isLinodeRelatedDevice: true,
+  isLinodeUpdatable: true,
+  isNodebalancerUpdatable: true,
+  isPermissionsLoading: false,
 };
 
 const INTERFACE_TEXT = 'Configuration Profile Interface';
@@ -36,11 +38,11 @@ describe('FirewallDeviceRow', () => {
       capabilities: ['Linode Interfaces'],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
 
     const { getAllByRole, getByText, findByText } = renderWithTheme(
       <FirewallDeviceRow {...props} />,
