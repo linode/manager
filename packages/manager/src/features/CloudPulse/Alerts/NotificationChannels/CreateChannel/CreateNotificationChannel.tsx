@@ -55,6 +55,7 @@ export const CreateNotificationChannel = () => {
     resetField,
     handleSubmit,
     formState: { isSubmitting },
+    setError,
   } = formMethods;
 
   const channelTypeWatcher = useWatch({ control, name: 'type' });
@@ -65,16 +66,25 @@ export const CreateNotificationChannel = () => {
 
   // submit the form and create the notification channel on success and show snackbar message on success or failure
   const onSubmit = handleSubmit(async (values) => {
-    createChannel(filterCreateChannelFormValues(values))
-      .then(() => {
-        enqueueSnackbar(CREATE_CHANNEL_SUCCESS_MESSAGE, {
-          variant: 'success',
-        });
-        createChannelExit();
-      })
-      .catch(() => {
-        enqueueSnackbar(CREATE_CHANNEL_FAILED_MESSAGE, { variant: 'error' });
+    try {
+      await createChannel(filterCreateChannelFormValues(values));
+      enqueueSnackbar(CREATE_CHANNEL_SUCCESS_MESSAGE, {
+        variant: 'success',
       });
+      createChannelExit();
+    } catch (errors) {
+      for (const error of errors) {
+        if (error.field) {
+          setError(error.field, {
+            message: error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE,
+          });
+        } else {
+          enqueueSnackbar(error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE, {
+            variant: 'error',
+          });
+        }
+      }
+    }
   });
 
   return (

@@ -208,9 +208,7 @@ describe('CreateNotificationChannel', () => {
   });
 
   it('should show error snackbar message when creating notification channel fails', async () => {
-    queryMocks.mutateAsync.mockRejectedValue(
-      new Error('Failed to create notification channel')
-    );
+    queryMocks.mutateAsync.mockRejectedValue([{ reason: 'There is an error' }]);
     const user = userEvent.setup();
     renderWithTheme(<CreateNotificationChannel />);
 
@@ -232,6 +230,6 @@ describe('CreateNotificationChannel', () => {
     await user.click(screen.getByRole('option', { name: 'testuser1' }));
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
-    await screen.findByText(CREATE_CHANNEL_FAILED_MESSAGE);
+    await screen.findByText('There is an error');
   });
 });
