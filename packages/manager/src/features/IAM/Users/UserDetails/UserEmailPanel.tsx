@@ -54,7 +54,7 @@ export const UserEmailPanel = ({ canUpdateUser, activeUser }: Props) => {
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
   const disableEmailField =
-    profileUserName !== activeUser.username || isProxyUser;
+    profileUserName !== activeUser.username || isProxyUser || !canUpdateUser;
 
   return (
     <Paper>
