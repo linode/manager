@@ -295,16 +295,7 @@ export const DateTimeRangePicker = ({
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box>
-        <Stack
-          sx={(theme) => ({
-            sx,
-            gap: theme.spacingFunction(16),
-            flexDirection: 'row',
-            [theme.breakpoints.down('md')]: {
-              flexDirection: 'column',
-            },
-          })}
-        >
+        <Stack direction={isSmallScreen ? 'column' : 'row'} spacing={2} sx={sx}>
           <DateTimeField
             errorText={startDateError}
             format={format}
