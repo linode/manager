@@ -4441,8 +4441,6 @@ export const handlers = [
     );
   }),
   http.post('*/v4beta/monitor/alert-channels', () => {
-    return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(3))
-    );
+    return HttpResponse.json(notificationChannelFactory.build());
   }),
 ];
