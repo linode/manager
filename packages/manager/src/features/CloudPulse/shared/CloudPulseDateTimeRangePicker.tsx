@@ -37,8 +37,9 @@ export const CloudPulseDateTimeRangePicker = React.memo(
     const theme = useTheme();
     const timezone =
       defaultSelected?.timeZone ??
-      profile?.timezone ??
-      DateTime.local().zoneName;
+      (profile?.timezone === 'GMT'
+        ? 'Etc/GMT' // this is present in timezone list for GMT
+        : (profile?.timezone ?? DateTime.local().zoneName));
 
     if (!defaultSelected) {
       defaultSelected = defaultTimeDuration(timezone);
