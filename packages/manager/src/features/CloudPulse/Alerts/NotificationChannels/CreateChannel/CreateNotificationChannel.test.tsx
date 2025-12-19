@@ -4,10 +4,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  CREATE_CHANNEL_FAILED_MESSAGE,
-  CREATE_CHANNEL_SUCCESS_MESSAGE,
-} from '../../constants';
+import { CREATE_CHANNEL_SUCCESS_MESSAGE } from '../../constants';
 import { CreateNotificationChannel } from './CreateNotificationChannel';
 
 const queryMocks = vi.hoisted(() => ({
