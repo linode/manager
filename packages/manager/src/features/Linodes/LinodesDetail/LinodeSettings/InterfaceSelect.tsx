@@ -114,7 +114,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const [newVlan, setNewVlan] = React.useState('');
 
   const [autoassignIPv6VPCAddress, setAutoassignIPv6VPCAddress] =
-    React.useState<boolean>(vpcIPv6 === undefined);
+    React.useState<boolean>(false);
 
   const purposeOptions: SelectOption<ExtendedPurpose>[] = [
     {
@@ -296,7 +296,9 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
         is_public: vpcIPv6IsPublic,
         ranges: _additionalIPv6RangesForVPC,
         slaac:
-          vpcIPv6Input !== undefined ? [{ range: vpcIPv6Input }] : undefined,
+          vpcIPv6Input !== undefined && vpcIPv6Input !== ''
+            ? [{ range: vpcIPv6Input }]
+            : undefined,
       },
       purpose,
       subnet_id: subnetId,
@@ -339,6 +341,18 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
       subnet_id: subnetId,
       vpc_id: vpcId,
     });
+  };
+
+  const handleToggleAutoassignIPv6WithinVPCEnabled = () => {
+    const newValue = !autoassignIPv6VPCAddress;
+
+    setAutoassignIPv6VPCAddress(newValue);
+
+    if (newValue) {
+      handleVPCIPv6Input('auto');
+    } else {
+      handleVPCIPv6Input(undefined);
+    }
   };
 
   const handleCreateOption = (_newVlan: string) => {
@@ -537,13 +551,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
-            handleVPCIPv6Change={
-              handleVPCIPv6Input
-              //   (vpcIPv6Input) => {
-              //   setVPCIPv6UserInput(vpcIPv6Input);
-              //   handleVPCIPv6Input(vpcIPv6UserInput ?? undefined);
-              // }
-            }
+            handleVPCIPv6Change={handleVPCIPv6Input}
             publicIPv4Error={errors.publicIPv4Error}
             region={region}
             selectedSubnetId={subnetId}
@@ -559,9 +567,9 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               handleVPCIPv4Input(vpcIPv4 === undefined ? '' : undefined)
             }
-            toggleAutoassignIPv6WithinVPCEnabled={() => {
-              setAutoassignIPv6VPCAddress(!autoassignIPv6VPCAddress);
-            }}
+            toggleAutoassignIPv6WithinVPCEnabled={
+              handleToggleAutoassignIPv6WithinVPCEnabled
+            }
             vpcIdError={errors.vpcError}
             vpcIPRangesError={errors.ipRangeError}
             vpcIPv4AddressOfLinode={vpcIPv4}

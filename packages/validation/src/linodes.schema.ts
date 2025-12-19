@@ -141,7 +141,7 @@ const ipv4ConfigInterface = object().when('purpose', {
 
 const slaacSchema = object().shape({
   range: string()
-    .required('VPC IPv6 is required.')
+    .optional()
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
