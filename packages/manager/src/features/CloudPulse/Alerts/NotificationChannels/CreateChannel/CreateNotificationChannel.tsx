@@ -72,7 +72,10 @@ export const CreateNotificationChannel = () => {
         variant: 'success',
       });
       createChannelExit();
-    } catch (errors) {
+    } catch (error) {
+      // Handle both array and non-array errors
+      const errors = Array.isArray(error) ? error : [error];
+
       for (const error of errors) {
         if (error.field) {
           setError(error.field, {
