@@ -8,6 +8,9 @@ import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { NotificationChannelTableRow } from './NotificationChannelTableRow';
 
 describe('NotificationChannelTableRow', () => {
+  const mockHandleDetails = vi.fn();
+  const handlers = { handleDetails: mockHandleDetails };
+
   it('should render a notification channel row with all fields', () => {
     const updated = new Date().toISOString();
     const channel = notificationChannelFactory.build({
@@ -24,7 +27,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
@@ -49,7 +55,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
@@ -70,7 +79,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
@@ -91,7 +103,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
@@ -111,7 +126,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
@@ -125,7 +143,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
@@ -137,7 +158,10 @@ describe('NotificationChannelTableRow', () => {
 
     renderWithTheme(
       wrapWithTableBody(
-        <NotificationChannelTableRow notificationChannel={channel} />
+        <NotificationChannelTableRow
+          handlers={handlers}
+          notificationChannel={channel}
+        />
       )
     );
 
