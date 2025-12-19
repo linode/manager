@@ -741,6 +741,11 @@ export const timezones = [
   },
   {
     label: 'Greenwich Mean Time',
+    name: 'GMT',
+    offset: 0,
+  },
+  {
+    label: 'Greenwich Mean Time',
     name: 'Etc/GMT',
     offset: 0,
   },
