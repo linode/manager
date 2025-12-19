@@ -92,22 +92,15 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         el.value !== role?.name;
       // Exclude account roles already assigned to the user
       if (isAccountRole(el)) {
-        return (
-          !assignedRoles?.account_access.includes(el.value) &&
-          matchesRoleContext
-        );
+        return matchesRoleContext;
       }
       // Exclude entity roles already assigned to the user
       if (isEntityRole(el)) {
-        return (
-          !assignedRoles?.entity_access.some((entity) =>
-            entity.roles.includes(el.value)
-          ) && matchesRoleContext
-        );
+        return matchesRoleContext;
       }
       return true;
     });
-  }, [accountRoles, assignedRoles, role]);
+  }, [accountRoles, role]);
 
   const {
     control,
