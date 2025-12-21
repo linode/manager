@@ -197,16 +197,16 @@ export const CloudPulseRegionSelect = React.memo(
         }}
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegionsFromResources}
-        sx={
-          shouldAddSpacing
-            ? {
-                '& .MuiInputLabel-root': {
-                  marginBottom: '4px',
-                },
-              }
-            : undefined
-        }
-        textFieldProps={{ ...CLOUD_PULSE_TEXT_FIELD_PROPS }}
+        textFieldProps={{
+          ...CLOUD_PULSE_TEXT_FIELD_PROPS,
+          ...(shouldAddSpacing && {
+            slotProps: {
+              root: {
+                sx: { marginTop: '4px' },
+              },
+            },
+          }),
+        }}
         value={
           supportedRegionsFromResources?.length
             ? (selectedRegion ?? null)
