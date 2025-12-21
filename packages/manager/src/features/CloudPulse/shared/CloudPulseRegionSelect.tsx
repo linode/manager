@@ -20,6 +20,7 @@ import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
+import type { Theme } from '@linode/ui';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -202,7 +203,9 @@ export const CloudPulseRegionSelect = React.memo(
           ...(shouldAddSpacing && {
             slotProps: {
               root: {
-                sx: { marginTop: '4px' },
+                sx: (theme: Theme) => ({
+                  marginTop: theme.spacingFunction(4),
+                }),
               },
             },
           }),
