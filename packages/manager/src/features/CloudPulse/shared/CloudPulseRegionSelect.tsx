@@ -201,12 +201,10 @@ export const CloudPulseRegionSelect = React.memo(
         textFieldProps={{
           ...CLOUD_PULSE_TEXT_FIELD_PROPS,
           ...(shouldAddSpacing && {
-            slotProps: {
-              root: {
-                sx: (theme: Theme) => ({
-                  marginTop: theme.spacingFunction(4),
-                }),
-              },
+            InputLabelProps: {
+              sx: (theme: Theme) => ({
+                marginBottom: theme.spacingFunction(4),
+              }),
             },
           }),
         }}
