@@ -10,6 +10,7 @@ import { filterRegionByServiceType } from '../Alerts/Utils/utils';
 import {
   NO_REGION_MESSAGE,
   PARENT_ENTITY_REGION,
+  REGION,
   RESOURCE_FILTER_MAP,
 } from '../Utils/constants';
 import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
@@ -153,6 +154,9 @@ export const CloudPulseRegionSelect = React.memo(
       dependencyKey, // Reacts to region changes
     ]);
 
+    // Add spacing for region filter in LKE service to align with Clusters filter that has tooltip
+    const shouldAddSpacing = serviceType === 'lke' && filterKey === REGION;
+
     return (
       <RegionSelect
         currentCapability={capability}
@@ -193,6 +197,15 @@ export const CloudPulseRegionSelect = React.memo(
         }}
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegionsFromResources}
+        sx={
+          shouldAddSpacing
+            ? {
+                '& .MuiInputLabel-root': {
+                  marginBottom: '4px',
+                },
+              }
+            : undefined
+        }
         textFieldProps={{ ...CLOUD_PULSE_TEXT_FIELD_PROPS }}
         value={
           supportedRegionsFromResources?.length
