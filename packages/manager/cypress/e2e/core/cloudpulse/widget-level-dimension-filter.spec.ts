@@ -199,7 +199,7 @@ describe('Widget level dimension filter ', () => {
     ui.button
       .findByAttribute(
         'aria-label',
-        `Widget Dimension Filter${dashboard.widgets[0].label}`
+        `Widget Dimension Filter ${dashboard.widgets[0].label}`
       )
       .should('be.visible')
       .click();
@@ -360,7 +360,7 @@ describe('Widget level dimension filter ', () => {
     ui.button
       .findByAttribute(
         'aria-label',
-        `Widget Dimension Filter${dashboard.widgets[0].label}`
+        `Widget Dimension Filter ${dashboard.widgets[0].label}`
       )
       .within(() => {
         cy.get('[data-qa-badge="dimension-filter-badge-content"]')
@@ -392,7 +392,7 @@ describe('Widget level dimension filter ', () => {
     ui.button
       .findByAttribute(
         'aria-label',
-        `Widget Dimension Filter${dashboard.widgets[0].label}`
+        `Widget Dimension Filter ${dashboard.widgets[0].label}`
       )
       .should('be.visible')
       .click();
@@ -491,7 +491,7 @@ describe('Widget level dimension filter ', () => {
     ui.button
       .findByAttribute(
         'aria-label',
-        `Widget Dimension Filter${dashboard.widgets[0].label}`
+        `Widget Dimension Filter ${dashboard.widgets[0].label}`
       )
       .within(() => {
         cy.get('[data-qa-badge="dimension-filter-badge-content"]')
@@ -508,7 +508,7 @@ describe('Widget level dimension filter ', () => {
     ui.button
       .findByAttribute(
         'aria-label',
-        `Widget Dimension Filter${dashboard.widgets[0].label}`
+        `Widget Dimension Filter ${dashboard.widgets[0].label}`
       )
       .should('be.visible')
       .click();
@@ -649,7 +649,7 @@ describe('Widget level dimension filter ', () => {
     ui.button
       .findByAttribute(
         'aria-label',
-        `Widget Dimension Filter${dashboard.widgets[0].label}`
+        `Widget Dimension Filter ${dashboard.widgets[0].label}`
       )
       .within(() => {
         cy.get('[data-qa-badge="dimension-filter-badge-content"]')
