@@ -30,6 +30,7 @@ import {
   makeSettingsItemStyles,
   StyledActionMenuWrapper,
 } from '../../shared.styles';
+import { ServiceURI } from '../ServiceURI';
 
 import type { Database } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -104,6 +105,9 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           Add Pool
         </Button>
       </div>
+      {connectionPools && connectionPools.data.length > 0 && (
+        <ServiceURI database={database} />
+      )}
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table
           aria-label={'List of Connection pools'}

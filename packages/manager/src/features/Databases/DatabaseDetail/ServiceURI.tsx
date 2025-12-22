@@ -41,7 +41,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         if (data) {
           // copy with username/password data
           copy(
-            `postgres://${data?.username}:${data?.password}@${database.hosts?.primary}`
+            `postgres://${data?.username}:${data?.password}@${database.hosts?.primary}?sslmode=require`
           );
         } else {
           enqueueSnackbar(
