@@ -176,7 +176,9 @@ export const AddNotificationChannelDrawer = (
                     onBlur={field.onBlur}
                     onChange={(_, selected, reason) => {
                       field.onChange(
-                        reason === 'selectOption' ? selected.label : null
+                        reason === 'selectOption' && selected
+                          ? selected.label
+                          : null
                       );
                     }}
                     options={selectedChannelTypeTemplate ?? []}
