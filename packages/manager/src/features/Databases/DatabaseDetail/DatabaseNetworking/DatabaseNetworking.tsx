@@ -8,6 +8,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { ACCESS_CONTROLS_IN_SETTINGS_TEXT } from '../../constants';
 import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
+import { DatabaseConnectionPools } from './DatabaseConnectionPools';
 import { DatabaseManageNetworking } from './DatabaseManageNetworking';
 
 export const DatabaseNetworking = () => {
@@ -43,6 +44,9 @@ export const DatabaseNetworking = () => {
           database.engine === 'postgresql' &&
           database.connection_pool_port && <ServiceURI database={database} />}
         <DatabaseManageNetworking database={database} />
+        {flags.databasePgBouncer && database.engine === 'postgresql' && (
+          <DatabaseConnectionPools database={database} />
+        )}
       </Stack>
     </Paper>
   );

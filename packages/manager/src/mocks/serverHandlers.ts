@@ -52,6 +52,7 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseConnectionPoolFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
@@ -372,6 +373,11 @@ const databases = [
     const combinedList = [...engine1, ...engine2];
 
     return HttpResponse.json(makeResourcePage(combinedList));
+  }),
+
+  http.get('*/databases/postgresql/instances/:id/connection-pools', () => {
+    const connectionPools = databaseConnectionPoolFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage(connectionPools));
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
@@ -3568,9 +3574,17 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/monitor/alert-channels', () => {
-    return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(7))
+    const notificationChannels = notificationChannelFactory.buildList(3);
+    notificationChannels.push(
+      notificationChannelFactory.build({
+        label: 'Email test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+      })
     );
+    notificationChannels.push(...notificationChannelFactory.buildList(75));
+    return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {

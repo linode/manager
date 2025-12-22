@@ -262,6 +262,7 @@ export const AssignedRolesTable = () => {
             ) : (
               <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                 <AssignedEntities
+                  disabled={!permissions.is_account_admin}
                   onButtonClick={handleViewEntities}
                   onRemoveAssignment={handleRemoveAssignment}
                   role={role}
@@ -375,6 +376,7 @@ export const AssignedRolesTable = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: theme.tokens.spacing.S12,
+          minHeight: theme.spacingFunction(40),
         }}
       >
         <Grid container direction="row" rowSpacing={1}>

@@ -88,6 +88,13 @@ describe('object storage smoke tests', () => {
   it('can upload, view, and delete bucket objects - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
+    const bucketMock = objectStorageBucketFactory.build({
+      cluster: bucketCluster,
+      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      label: bucketLabel,
+      objects: 0,
+    });
+
     const bucketContents = [
       'object-storage-files/1.txt',
       'object-storage-files/2.jpg',
@@ -95,11 +102,13 @@ describe('object storage smoke tests', () => {
       'object-storage-files/4.zip',
     ];
 
+    mockGetBuckets([bucketMock]).as('getBuckets');
     mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
 
     cy.visitWithLogin(
       `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
     );
+    cy.wait('@getBuckets');
     cy.wait('@getBucketObjects');
 
     cy.log('Upload bucket objects');

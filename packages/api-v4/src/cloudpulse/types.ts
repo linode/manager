@@ -41,7 +41,7 @@ export type MetricUnitType =
   | 'second';
 export type NotificationStatus = 'Disabled' | 'Enabled';
 export type ChannelType = 'email' | 'pagerduty' | 'slack' | 'webhook';
-export type AlertNotificationType = 'custom' | 'default';
+export type AlertNotificationType = 'system' | 'user';
 type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
@@ -286,13 +286,13 @@ interface NotificationChannelAlerts {
 interface NotificationChannelBase {
   alerts: NotificationChannelAlerts[];
   channel_type: ChannelType;
-  created_at: string;
+  created: string;
   created_by: string;
   id: number;
   label: string;
   status: NotificationStatus;
   type: AlertNotificationType;
-  updated_at: string;
+  updated: string;
   updated_by: string;
 }
 

@@ -10,7 +10,7 @@ import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { AccessSelect } from './AccessSelect';
+import { AccessSelect } from '../AccessTab/AccessSelect';
 
 export interface ObjectDetailsDrawerProps {
   bucketName: string;
