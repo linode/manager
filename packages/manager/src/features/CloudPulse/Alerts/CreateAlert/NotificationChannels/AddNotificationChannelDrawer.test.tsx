@@ -95,7 +95,7 @@ describe('AddNotificationChannelDrawer component', () => {
     ).toBeInTheDocument();
 
     const type = await findByText(mockData[0].type);
-    expect(type).toBeInTheDocument();
+    expect(type).toBeVisible();
 
     await userEvent.click(
       await findByRole('option', {
