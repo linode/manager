@@ -1,11 +1,11 @@
-import {
+import { Factory } from './factoryProxy';
+
+import type {
   MarketplaceCategory,
   MarketplacePartner,
   MarketplaceProduct,
   MarketplaceType,
 } from '@linode/api-v4';
-
-import { Factory } from './factoryProxy';
 
 export const marketplaceProductFactory =
   Factory.Sync.makeFactory<MarketplaceProduct>({

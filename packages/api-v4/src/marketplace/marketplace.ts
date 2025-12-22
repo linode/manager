@@ -9,8 +9,10 @@ import Request, {
   setXFilter,
 } from 'src/request';
 
-import { MarketplacePartnerReferralPayload, MarketplaceProduct } from './types';
-
+import type {
+  MarketplacePartnerReferralPayload,
+  MarketplaceProduct,
+} from './types';
 import type { Filter, ResourcePage as Page, Params } from 'src/types';
 
 export const getMarketplaceProducts = (params?: Params, filters?: Filter) =>

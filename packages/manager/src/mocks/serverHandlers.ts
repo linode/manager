@@ -641,6 +641,10 @@ const marketplace = [
     const marketplaceType = marketplaceProductFactory.buildList(5);
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
+  http.post('*/v4beta/marketplace/referral', async () => {
+    await sleep(2000);
+    return HttpResponse.json({});
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
