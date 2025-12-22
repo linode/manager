@@ -78,10 +78,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
       </Grid>
       <Grid display="contents">
         <StyledValueGrid
-          size={{
-            md: 10,
-            xs: 10,
-          }}
+          size="grow"
           sx={{ overflowX: 'auto', overflowY: 'hidden' }}
           whiteSpace="pre"
         >
@@ -98,7 +95,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
                 },
               })}
             >
-              {`{error. click to retry reveal}`}
+              {`{error. click to retry}`}
             </Button>
           ) : hidePassword || (!credentialsError && !credentials) ? (
             <Button
@@ -114,21 +111,16 @@ export const ServiceURI = (props: ServiceURIProps) => {
           ) : (
             `${credentials?.username}:${credentials?.password}`
           )}
-          @{database.hosts?.primary}:<Code>{'{connection pool port}'}</Code>/
-          <Code>{'{connection pool label}'}</Code>?sslmode=require
+          @{database.hosts?.primary}:
+          <StyledCode>{'{connection pool port}'}</StyledCode>/
+          <StyledCode>{'{connection pool label}'}</StyledCode>?sslmode=require
         </StyledValueGrid>
         {isCopying ? (
           <Button loading sx={{ paddingLeft: 2 }}>
             {' '}
           </Button>
         ) : (
-          <Grid
-            alignContent="center"
-            size={{
-              md: 0.5,
-              xs: 1,
-            }}
-          >
+          <Grid alignContent="center" size="auto">
             <StyledCopyTooltip onClickCallback={handleCopy} text={serviceURI} />
           </Grid>
         )}
@@ -136,6 +128,12 @@ export const ServiceURI = (props: ServiceURIProps) => {
     </StyledGridContainer>
   );
 };
+
+export const StyledCode = styled(Code, {
+  label: 'StyledCode',
+})(() => ({
+  margin: 0,
+}));
 
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
@@ -149,5 +147,5 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
     backgroundColor: 'transparent',
   },
   display: 'flex',
-  marginLeft: theme.spacingFunction(4),
+  margin: `0 ${theme.spacingFunction(4)}`,
 }));
