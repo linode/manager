@@ -37,7 +37,7 @@ export const NotificationChannelTypeSelect = React.memo(
         errorText={error}
         label="Type"
         onBlur={onBlur}
-        onChange={(_, selected: Item<string, ChannelType>, reason) => {
+        onChange={(_, selected, reason) => {
           if (selected) {
             handleChannelTypeChange(selected.value);
           }
