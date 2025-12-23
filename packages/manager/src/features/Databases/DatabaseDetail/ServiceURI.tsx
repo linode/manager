@@ -78,6 +78,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
       </Grid>
       <Grid display="contents">
         <StyledValueGrid
+          data-testid="service-uri"
           size="grow"
           sx={{ overflowX: 'auto', overflowY: 'hidden' }}
           whiteSpace="pre"
