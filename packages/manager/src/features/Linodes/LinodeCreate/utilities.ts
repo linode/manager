@@ -616,14 +616,13 @@ export const getDefaultInterfaceGenerationFromAccountSetting = (
 ): InterfaceGenerationType | undefined => {
   if (
     accountSetting === 'linode_only' ||
-    accountSetting === 'linode_default_but_legacy_config_allowed'
-  ) {
-    return 'linode';
-  }
-  if (
-    accountSetting === 'legacy_config_only' ||
+    accountSetting === 'linode_default_but_legacy_config_allowed' ||
     accountSetting === 'legacy_config_default_but_linode_allowed'
   ) {
+    // Default selection is to the Linode interface to encourage new customer accounts to adopt it safely when using Cloud Manager.
+    return 'linode';
+  }
+  if (accountSetting === 'legacy_config_only') {
     return 'legacy_config';
   }
   return undefined;
