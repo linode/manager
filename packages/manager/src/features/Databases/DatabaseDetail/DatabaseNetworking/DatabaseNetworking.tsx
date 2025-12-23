@@ -11,11 +11,10 @@ import { DatabaseConnectionPools } from './DatabaseConnectionPools';
 import { DatabaseManageNetworking } from './DatabaseManageNetworking';
 
 export const DatabaseNetworking = () => {
+  const flags = useFlags();
   const navigate = useNavigate();
   const { database, disabled, engine, isVPCEnabled } =
     useDatabaseDetailContext();
-
-  const flags = useFlags();
 
   const accessControlCopy = (
     <Typography>{ACCESS_CONTROLS_IN_SETTINGS_TEXT}</Typography>
