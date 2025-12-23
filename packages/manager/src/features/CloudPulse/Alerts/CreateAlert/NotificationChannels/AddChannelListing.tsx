@@ -4,6 +4,7 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
 import { channelTypeOptions, MULTILINE_ERROR_SEPARATOR } from '../../constants';
@@ -14,13 +15,21 @@ import { AddNotificationChannelDrawer } from './AddNotificationChannelDrawer';
 import { RenderChannelDetails } from './RenderChannelDetails';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { NotificationChannel } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  NotificationChannel,
+} from '@linode/api-v4';
 
 interface AddChannelListingProps {
   /**
    *  FieldPathByValue for the notification channel ids
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, number[]>;
+
+  /**
+   * Service type of the CloudPulse alert
+   */
+  serviceType: CloudPulseServiceType | null;
 }
 
 interface NotificationChannelsProps {
@@ -34,9 +43,10 @@ interface NotificationChannelsProps {
   notification: NotificationChannel;
 }
 export const AddChannelListing = (props: AddChannelListingProps) => {
-  const { name } = props;
+  const { name, serviceType } = props;
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   const [openAddNotification, setOpenAddNotification] = React.useState(false);
+  const flags = useFlags();
 
   const notificationChannelWatcher = useWatch({
     control,
@@ -49,12 +59,31 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
   } = useAllAlertNotificationChannelsQuery();
 
   const notifications = React.useMemo(() => {
-    return (
-      notificationData?.filter(
-        ({ id }) => !notificationChannelWatcher.includes(id)
-      ) ?? []
-    );
-  }, [notificationChannelWatcher, notificationData]);
+    if (!notificationData) return [];
+
+    return notificationData.filter(({ id, type }) => {
+      if (notificationChannelWatcher.includes(id)) return false; // id already selected
+
+      const systemSupportedTypes =
+        flags.aclpAlerting?.systemChannelSupportedServices;
+
+      if (serviceType && systemSupportedTypes?.includes(serviceType)) {
+        return true; // show all types of channels if serviceType is supported
+      }
+
+      if (serviceType && systemSupportedTypes) {
+        return type === 'user'; // only show user-defined alert channels
+      }
+
+      // if no flags, show all types
+      return true;
+    });
+  }, [
+    flags.aclpAlerting?.systemChannelSupportedServices,
+    notificationChannelWatcher,
+    notificationData,
+    serviceType,
+  ]);
 
   const selectedNotifications = React.useMemo(() => {
     return (
@@ -168,12 +197,14 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
           <Button
             buttonType="outlined"
             data-qa-buttons="true"
-            disabled={notificationChannelWatcher.length === 5}
+            disabled={notificationChannelWatcher.length === 5 || !serviceType}
             onClick={handleOpenDrawer}
             size="medium"
             sx={{
               width:
-                notificationChannelWatcher.length === 5 ? '215px' : '190px',
+                notificationChannelWatcher.length === 5 || !serviceType
+                  ? '215px'
+                  : '190px',
             }}
             tooltipText="You can add up to 5 notification channels."
           >
