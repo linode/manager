@@ -177,6 +177,11 @@ interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
   la: boolean;
 }
 
+interface Marketplace extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -223,6 +228,7 @@ export interface Flags {
   linodeInterfaces: LinodeInterfacesFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
+  marketplace: Marketplace;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc: MTC;
@@ -344,12 +350,12 @@ export type ProductInformationBannerLocation =
   | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
-  | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
   | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Marketplace'
   | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'

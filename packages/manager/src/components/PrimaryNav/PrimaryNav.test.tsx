@@ -590,4 +590,23 @@ describe('PrimaryNav', () => {
 
     expect(databaseNavItem).toBeVisible();
   });
+
+  it('should show Partner Referral menu item if the user has the account capability and the flag is enabled', async () => {
+    const flags: Partial<Flags> = {
+      marketplace: {
+        enabled: true,
+        beta: false,
+        la: false,
+        ga: false,
+      },
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const marketplaceNavItem = await findByTestId('menu-item-Partner Referral');
+
+    expect(marketplaceNavItem).toBeVisible();
+  });
 });
