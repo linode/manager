@@ -5,8 +5,6 @@ import React, { useState } from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { User } from '@linode/api-v4';
-
 export interface NotificationRecipientsProps {
   /**
    * Error text to display when the field has a validation error
@@ -57,9 +55,9 @@ export const NotificationRecipients = React.memo(
     const options = React.useMemo(() => {
       const users = accountUsers?.pages.flatMap((page) => page.data);
       return (
-        users?.map((user: User) => ({
+        users?.map((user) => ({
+          ...user,
           label: user.username,
-          value: user.username,
         })) || []
       );
     }, [accountUsers]);
@@ -68,10 +66,11 @@ export const NotificationRecipients = React.memo(
       if (!value || !Array.isArray(value)) {
         return [];
       }
-      return value.map((val) => {
-        const match = options.find((opt) => opt.value === val);
-        return match ?? { label: val, value: val };
-      });
+      return value
+        .map((val) => {
+          return options.find((opt) => opt.label === val);
+        })
+        .filter((opt) => opt !== undefined);
     }, [options, value]);
 
     // Handle the scroll event to load more users when the user scrolls to the bottom of the list
@@ -111,7 +110,7 @@ export const NotificationRecipients = React.memo(
           !error ? `Select up to ${maxRecipientsSelectionLimit} Recipients` : ''
         }
         inputValue={usernameInput}
-        isOptionEqualToValue={(option, value) => option.value === value.value}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Recipients"
         limitTags={1}
         loading={isLoadingAccountUsers || isFetchingAccountUsers}
@@ -123,7 +122,7 @@ export const NotificationRecipients = React.memo(
             return;
           }
 
-          onChange(selected.map((item) => item.value));
+          onChange(selected.map((item) => item.label));
           setUsernameInput('');
         }}
         onInputChange={(_, value, reason) => {

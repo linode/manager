@@ -13,23 +13,11 @@ const queryMocks = vi.hoisted(() => ({
   useAccountUsersInfiniteQuery: vi.fn().mockReturnValue({}),
 }));
 
-const flagsMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({}),
-}));
-
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccountUsersInfiniteQuery: queryMocks.useAccountUsersInfiniteQuery,
-  };
-});
-
-vi.mock('src/hooks/useFlags', async () => {
-  const actual = await vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: flagsMocks.useFlags,
   };
 });
 
@@ -47,16 +35,6 @@ const DESELECT_ALL = 'Deselect All';
 const ARIA_SELECTED = 'aria-selected';
 
 describe('NotificationRecipients component tests', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    // Default mock for flags
-    flagsMocks.useFlags.mockReturnValue({
-      aclpAlerting: {
-        maxEmailChannelRecipients: 10,
-      },
-    });
-  });
-
   it('should render the component with empty state', () => {
     queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
       data: { pages: [{ data: [] }] },
@@ -187,7 +165,19 @@ describe('NotificationRecipients component tests', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<NotificationRecipients {...props} />);
+    renderWithTheme(<NotificationRecipients {...props} />, {
+      flags: {
+        aclpAlerting: {
+          accountAlertLimit: 10,
+          accountMetricLimit: 10,
+          alertDefinitions: true,
+          beta: false,
+          maxEmailChannelRecipients: 10,
+          notificationChannels: true,
+          recentActivity: false,
+        },
+      },
+    });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
 
@@ -202,13 +192,6 @@ describe('NotificationRecipients component tests', () => {
   it('should disable unselected options when max selections reached', async () => {
     const mockUsers = accountUserFactory.buildList(12);
 
-    // Set max limit to 5 for this test
-    flagsMocks.useFlags.mockReturnValue({
-      aclpAlerting: {
-        maxEmailChannelRecipients: 5,
-      },
-    });
-
     queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
       data: { pages: [{ data: mockUsers }] },
       fetchNextPage: vi.fn(),
@@ -222,7 +205,20 @@ describe('NotificationRecipients component tests', () => {
       .slice(0, 5)
       .map((user) => user.username);
     renderWithTheme(
-      <NotificationRecipients {...props} value={selectedUsernames} />
+      <NotificationRecipients {...props} value={selectedUsernames} />,
+      {
+        flags: {
+          aclpAlerting: {
+            accountAlertLimit: 10,
+            accountMetricLimit: 10,
+            alertDefinitions: true,
+            beta: false,
+            maxEmailChannelRecipients: 5,
+            notificationChannels: true,
+            recentActivity: false,
+          },
+        },
+      }
     );
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
@@ -295,8 +291,6 @@ describe('NotificationRecipients component tests', () => {
   });
 
   it('should use default max recipients limit when flag is not set', () => {
-    flagsMocks.useFlags.mockReturnValue({});
-
     queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
       data: { pages: [{ data: [] }] },
       fetchNextPage: vi.fn(),

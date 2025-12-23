@@ -20,10 +20,6 @@ const props: NotificationChannelTypeSelectProps = {
 };
 
 describe('NotificationChannelTypeSelect component tests', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should render the Autocomplete component', () => {
     renderWithTheme(<NotificationChannelTypeSelect {...props} />);
 
