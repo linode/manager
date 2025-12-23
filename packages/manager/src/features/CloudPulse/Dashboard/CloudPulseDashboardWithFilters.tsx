@@ -127,7 +127,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
         setDashboard(dashboard);
         setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
       },
-      []
+      [timezone]
     );
 
     const handleTimeRangeChange = React.useCallback(

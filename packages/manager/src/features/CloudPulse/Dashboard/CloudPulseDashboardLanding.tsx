@@ -80,14 +80,17 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
 
-  const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
-    setDashboard(dashboardObj);
-    setFilterData({
-      id: {},
-      label: {},
-    }); // clear the filter values on dashboard change
-    setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
-  }, []);
+  const onDashboardChange = React.useCallback(
+    (dashboardObj: Dashboard) => {
+      setDashboard(dashboardObj);
+      setFilterData({
+        id: {},
+        label: {},
+      }); // clear the filter values on dashboard change
+      setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
+    },
+    [timezone]
+  );
   const onTimeDurationChange = React.useCallback(
     (timeDurationObj: DateTimeWithPreset) => {
       setTimeDuration(timeDurationObj);
