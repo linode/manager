@@ -15,7 +15,7 @@ export const MarketplaceRoute = () => {
   }
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <DocumentTitleSegment segment="Marketplace" />
+      <DocumentTitleSegment segment="Partner Referrals" />
       <ProductInformationBanner bannerLocation="Marketplace" />
       <Outlet />
     </React.Suspense>

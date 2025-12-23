@@ -7,6 +7,7 @@ import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsMarketplaceEnabled } from 'src/features/Marketplace/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 import {
@@ -30,10 +31,11 @@ export type CreateEntity =
   | 'Image'
   | 'Kubernetes'
   | 'Linode'
-  | 'Marketplace'
+  | 'Marketplace' // TODO: Cloud Manager Marketplace - Remove marketplace references once 'Quick Deploy Apps' is fully rolled out
   | 'NodeBalancer'
   | 'Object Storage'
   | 'Placement Group'
+  | 'Quick Deploy Apps'
   | 'Volume'
   | 'VPC';
 
@@ -52,6 +54,7 @@ export const CreateMenu = () => {
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const { isMarketplaceFeatureEnabled } = useIsMarketplaceEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -90,7 +93,9 @@ export const CreateMenu = () => {
         {
           attr: { 'data-qa-one-click-add-new': true },
           description: 'Deploy applications with ease',
-          display: 'Marketplace',
+          display: !isMarketplaceFeatureEnabled
+            ? 'Marketplace'
+            : 'Quick Deploy Apps',
           to: '/linodes/create/marketplace',
         },
       ],

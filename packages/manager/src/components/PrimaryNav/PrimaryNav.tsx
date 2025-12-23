@@ -55,6 +55,7 @@ export type NavEntity =
   | 'Longview'
   | 'Maintenance'
   | 'Managed'
+  | 'Marketplace' // TODO: Cloud Manager Marketplace - Remove marketplace references once 'Quick Deploy Apps' is fully rolled out
   | 'Metrics'
   | 'Monitor'
   | 'Network Load Balancer'

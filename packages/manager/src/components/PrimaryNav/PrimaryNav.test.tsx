@@ -605,8 +605,10 @@ describe('PrimaryNav', () => {
       flags,
     });
 
-    const marketplaceNavItem = await findByTestId('menu-item-Partner Referral');
+    const partnerReferralNavItem = await findByTestId(
+      'menu-item-Partner Referrals'
+    );
 
-    expect(marketplaceNavItem).toBeVisible();
+    expect(partnerReferralNavItem).toBeVisible();
   });
 });

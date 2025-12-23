@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { usePermissions } from './features/IAM/hooks/usePermissions';
+import { useIsMarketplaceEnabled } from './features/Marketplace/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
@@ -24,6 +25,8 @@ export const GoTo = React.memo(() => {
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isMarketplaceFeatureEnabled } = useIsMarketplaceEnabled();
+
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
   const onClose = () => {
@@ -99,9 +102,10 @@ export const GoTo = React.memo(() => {
         display: 'Longview',
         href: '/longview',
       },
-
       {
-        display: 'Marketplace',
+        display: !isMarketplaceFeatureEnabled
+          ? 'Marketplace'
+          : 'Quick Deploy Apps',
         href: '/linodes/create/marketplace',
       },
       ...(iamRbacPrimaryNavChanges
@@ -133,6 +137,7 @@ export const GoTo = React.memo(() => {
       permissions.is_account_admin,
       isDatabasesEnabled,
       isManagedAccount,
+      isMarketplaceFeatureEnabled,
       isPlacementGroupsEnabled,
       iamRbacPrimaryNavChanges,
     ]
