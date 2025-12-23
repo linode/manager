@@ -46,6 +46,11 @@ type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
+type EmailRecipientType =
+  | 'admin_users'
+  | 'read_users'
+  | 'read_write_users'
+  | 'user';
 export interface Dashboard {
   created: string;
   group_by?: string[];
@@ -305,6 +310,12 @@ interface NotificationChannelEmail extends NotificationChannelBase {
       subject: string;
     };
   };
+  details?: {
+    email: {
+      recipient_type: EmailRecipientType;
+      usernames: string[];
+    };
+  };
 }
 
 interface NotificationChannelSlack extends NotificationChannelBase {
@@ -429,4 +440,23 @@ export interface CreateNotificationChannelPayload {
    * The label of the channel to create.
    */
   label: string;
+}
+
+export interface EditNotificationChannelPayload {
+  /**
+   * The details of the channel to edit.
+   */
+  details: EmailDetail;
+  /**
+   * The label of the channel to edit.
+   */
+  label: string;
+}
+
+export interface EditNotificationChannelPayloadWithId
+  extends EditNotificationChannelPayload {
+  /**
+   * The ID of the channel to edit.
+   */
+  channelId: number;
 }

@@ -1,9 +1,9 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
-import { EditNotificationChannel } from './EditNotificationChannel';
+import { EditChannelLanding } from './EditChannelLanding';
 
 export const cloudPulseAlertsNotificationChannelEditLazyRoute = createLazyRoute(
   '/alerts/notification-channels/edit/$channelId'
 )({
-  component: EditNotificationChannel,
+  component: EditChannelLanding,
 });

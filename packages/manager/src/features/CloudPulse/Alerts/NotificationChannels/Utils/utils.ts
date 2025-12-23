@@ -11,10 +11,6 @@ export const getNotificationChannelActionsList = ({
 > => ({
   system: [
     {
-      onClick: handleEdit,
-      title: 'Edit',
-    },
-    {
       onClick: handleDetails,
       title: 'Show Details',
     },
