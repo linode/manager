@@ -69,7 +69,9 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           }
           yAxisProps={
             isHumanizableUnit
-              ? undefined
+              ? {
+                  tickFormat: (value: number) => `${humanizeLargeData(value)}`,
+                }
               : {
                   tickFormat: (value: number) => `${roundTo(value, 3)}`,
                 }
