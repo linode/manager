@@ -165,6 +165,7 @@ export const CreateAlertDefinition = () => {
     });
     resetField('scope', { defaultValue: null });
     resetField('entity_type', { defaultValue: 'linode' });
+    resetField('channel_ids', { defaultValue: [] });
   }, [resetField]);
 
   const handleEntityTypeChange = React.useCallback(() => {
@@ -256,7 +257,10 @@ export const CreateAlertDefinition = () => {
               serviceMetadataError={serviceMetadataError}
               serviceMetadataLoading={serviceMetadataLoading}
             />
-            <AddChannelListing name="channel_ids" />
+            <AddChannelListing
+              name="channel_ids"
+              serviceType={serviceTypeWatcher}
+            />
             <ActionsPanel
               primaryButtonProps={{
                 label: 'Submit',
