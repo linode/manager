@@ -15,7 +15,10 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { convertToGmt, defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
+import {
+  convertToGmt,
+  defaultTimeDuration,
+} from '../Utils/CloudPulseDateTimePickerUtils';
 import { PARENT_ENTITY_REGION } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
