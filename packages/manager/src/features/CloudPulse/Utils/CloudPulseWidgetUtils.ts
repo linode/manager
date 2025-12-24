@@ -2,8 +2,6 @@ import { Alias } from '@linode/design-language-system';
 import { DateTimeRangePicker } from '@linode/ui';
 import { getMetrics } from '@linode/utilities';
 
-import { humanizeLargeData } from 'src/components/AreaChart/utils';
-
 import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
 import {
   convertValueToUnit,
@@ -13,6 +11,7 @@ import {
 } from './unitConversion';
 import {
   convertTimeDurationToStartAndEndTimeRange,
+  humanizeLargeData,
   seriesDataFormatter,
 } from './utils';
 
