@@ -56,7 +56,7 @@ export const EditNotificationChannel = (
   const formMethods = useForm<CreateNotificationChannelForm>({
     defaultValues: {
       name: channelData.label,
-      type: channelData?.channel_type ?? 'email',
+      type: channelData.channel_type,
       recipients:
         channelData.channel_type === 'email'
           ? (channelData.details?.email.usernames ?? [])

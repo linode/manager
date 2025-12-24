@@ -45,11 +45,11 @@ export const NotificationChannelTypeSelect = React.memo(
         label="Type"
         onBlur={onBlur}
         onChange={(_, selected, reason) => {
-          if (selected && handleChannelTypeChange) {
-            handleChannelTypeChange(selected.value);
+          if (selected) {
+            handleChannelTypeChange?.(selected.value);
           }
-          if (reason === 'clear' && handleChannelTypeChange) {
-            handleChannelTypeChange(null);
+          if (reason === 'clear') {
+            handleChannelTypeChange?.(null);
           }
         }}
         options={options}

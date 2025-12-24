@@ -110,6 +110,21 @@ describe('EditNotificationChannel component', () => {
     expect(textfieldInput).toHaveAttribute('value', UPDATED_CHANNEL_NAME);
   });
 
+  it('should display validation error for name field with special characters', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(
+      <EditNotificationChannel channelData={channelData} channelId="1" />
+    );
+
+    const nameInput = screen.getByLabelText(NAME_LABEL);
+    await user.type(nameInput, '*#&+:<>"?@%');
+    await user.tab();
+
+    await screen.findByText(
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+    );
+  });
+
   it('should submit form data correctly and show success message', async () => {
     const user = userEvent.setup();
     renderWithTheme(

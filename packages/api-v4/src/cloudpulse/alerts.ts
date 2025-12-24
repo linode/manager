@@ -2,6 +2,7 @@ import {
   createAlertDefinitionSchema,
   createNotificationChannelPayloadSchema,
   editAlertDefinitionSchema,
+  editNotificationChannelPayloadSchema,
 } from '@linode/validation';
 
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -169,5 +170,5 @@ export const updateNotificationChannel = (
       `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
     ),
     setMethod('PUT'),
-    setData(data),
+    setData(data, editNotificationChannelPayloadSchema),
   );

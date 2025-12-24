@@ -32,25 +32,25 @@ export const EditChannelLanding = () => {
 
   if (isLoading) {
     return (
-      <EditChannelLoadingState overrides={overrides} pathname={pathname}>
+      <EditChannelState overrides={overrides} pathname={pathname}>
         <CircleProgress />
-      </EditChannelLoadingState>
+      </EditChannelState>
     );
   }
 
   if (isError) {
     return (
-      <EditChannelLoadingState overrides={overrides} pathname={pathname}>
+      <EditChannelState overrides={overrides} pathname={pathname}>
         <ErrorState errorText="An error occurred while loading the notification channel. Please try again later." />
-      </EditChannelLoadingState>
+      </EditChannelState>
     );
   }
 
   if (!channelData) {
     return (
-      <EditChannelLoadingState overrides={overrides} pathname={pathname}>
+      <EditChannelState overrides={overrides} pathname={pathname}>
         <StyledPlaceholder icon={EntityIcon} title="No Data to display." />
-      </EditChannelLoadingState>
+      </EditChannelState>
     );
   }
 
@@ -65,7 +65,7 @@ export const EditChannelLanding = () => {
  * @param crumbOverrides - The overrides to be provided in breadcrumb
  * @param children - The message component (e.g., CircleProgress, ErrorState, or Placeholder)
  */
-const EditChannelLoadingState = ({
+const EditChannelState = ({
   children,
   overrides,
   pathname,
