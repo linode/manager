@@ -8,9 +8,9 @@ export const filterCreateChannelFormValues = (
     channel_type: formValues.type ?? 'email',
     details: {
       email: {
-        usernames: formValues.recipients ?? [],
+        usernames: formValues.recipients,
       },
     },
-    label: formValues.name ?? '',
+    label: formValues.name,
   };
 };
