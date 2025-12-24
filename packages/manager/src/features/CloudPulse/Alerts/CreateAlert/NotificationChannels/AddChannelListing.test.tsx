@@ -46,7 +46,9 @@ describe('Channel Listing component', () => {
 
     const { getByText } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
+        component: (
+          <AddChannelListing name="channel_ids" serviceType={'linode'} />
+        ),
         useFormOptions: {
           defaultValues: {
             channel_ids: [mockNotificationData[0].id],
@@ -59,10 +61,30 @@ describe('Channel Listing component', () => {
     expect(getByText(emailAddresses[1])).toBeInTheDocument();
   });
 
+  it('should disable the add notification button when service type is null', () => {
+    const { getByText, getByRole } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: <AddChannelListing name="channel_ids" serviceType={null} />,
+        useFormOptions: {
+          defaultValues: {
+            channel_ids: [],
+          },
+        },
+      });
+    expect(getByText('4. Notification Channels')).toBeVisible();
+    const addButton = getByRole('button', {
+      name: 'Add notification channel',
+    });
+
+    expect(addButton).toBeDisabled();
+  });
+
   it('should remove the fields', async () => {
     const { getByTestId } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
+        component: (
+          <AddChannelListing name="channel_ids" serviceType={'linode'} />
+        ),
         useFormOptions: {
           defaultValues: {
             channel_ids: [mockNotificationData[0].id],
@@ -82,7 +104,9 @@ describe('Channel Listing component', () => {
     const mockMaxLimit = 5;
     const { getByRole, findByText } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
+        component: (
+          <AddChannelListing name="channel_ids" serviceType={'linode'} />
+        ),
         useFormOptions: {
           defaultValues: {
             channel_ids: Array(mockMaxLimit).fill(mockNotificationData[0].id), // simulate 5 channels
