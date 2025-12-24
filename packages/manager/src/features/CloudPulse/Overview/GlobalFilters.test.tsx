@@ -52,7 +52,7 @@ describe('Global filters component test', () => {
   it('Should have time range select with default value', () => {
     setup();
 
-    const timeRangeSelect = screen.getByText('Start Date');
+    const timeRangeSelect = screen.getByTestId('preset-button');
 
     expect(timeRangeSelect).toBeInTheDocument();
   });
