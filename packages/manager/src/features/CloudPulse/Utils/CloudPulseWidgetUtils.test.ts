@@ -1,6 +1,5 @@
 import { formatPercentage } from '@linode/utilities';
 
-import * as utilities from 'src/components/AreaChart/utils';
 import { widgetFactory } from 'src/factories';
 
 import {
@@ -12,6 +11,7 @@ import {
   getTimeDurationFromPreset,
   mapResourceIdToName,
 } from './CloudPulseWidgetUtils';
+import * as utilities from './utils';
 
 import type {
   DimensionNameProperties,
