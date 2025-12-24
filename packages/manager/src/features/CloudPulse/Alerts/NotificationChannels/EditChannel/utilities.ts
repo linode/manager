@@ -10,7 +10,7 @@ export const filterEditChannelFormValues = (
     label: formValues.name,
     details: {
       email: {
-        usernames: formValues.recipients ?? [],
+        usernames: formValues.recipients,
       },
     },
   };
