@@ -20,12 +20,6 @@ export const notificationChannelFactory =
         subject: 'Sample Alert',
       },
     },
-    details: {
-      email: {
-        usernames: ['ChildUser', 'NonAdminUser'],
-      },
-      name: 'Test Channel',
-    },
     created: new Date().toISOString(),
     created_by: 'user1',
     id: Factory.each((i) => i),
@@ -34,4 +28,4 @@ export const notificationChannelFactory =
     type: 'user',
     updated: new Date().toISOString(),
     updated_by: 'user1',
-  } as any);
+  });
