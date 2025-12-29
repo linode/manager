@@ -130,6 +130,7 @@ export const InterfaceType = ({ index }: Props) => {
         {interfaceTypes.map((interfaceType) => (
           <FormControlLabel
             control={<Radio />}
+            data-qa-interface-type-option={interfaceType.purpose}
             disabled={disabled}
             key={interfaceType.purpose}
             label={

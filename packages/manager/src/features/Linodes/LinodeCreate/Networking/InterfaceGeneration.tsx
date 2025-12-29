@@ -66,6 +66,7 @@ export const InterfaceGeneration = () => {
           >
             <FormControlLabel
               control={<Radio />}
+              data-qa-interfaces-option="linode"
               label={
                 <Stack mt={1.25} spacing={0.5}>
                   <Stack direction="row">
@@ -95,6 +96,7 @@ export const InterfaceGeneration = () => {
             />
             <FormControlLabel
               control={<Radio />}
+              data-qa-interfaces-option="legacy_config"
               label={
                 <Stack direction="row" mt={1.25} spacing={0.5}>
                   <Typography sx={(theme) => ({ font: theme.font.bold })}>
