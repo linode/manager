@@ -17,11 +17,13 @@ const channelData = notificationChannelFactory.build({
 const queryMocks = vi.hoisted(() => ({
   useNotificationChannelQuery: vi.fn(),
   useParams: vi.fn(),
+  useUpdateNotificationChannel: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useNotificationChannelQuery: queryMocks.useNotificationChannelQuery,
+  useUpdateNotificationChannel: queryMocks.useUpdateNotificationChannel,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -37,11 +39,15 @@ describe('EditChannelLanding component tests', () => {
     queryMocks.useParams.mockReturnValue({
       channelId: '1',
     });
+    queryMocks.useUpdateNotificationChannel.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+      reset: vi.fn(),
+    });
   });
 
   it('should render loading state when data is loading', () => {
     queryMocks.useNotificationChannelQuery.mockReturnValue({
-      data: null,
+      data: channelData,
       isError: false,
       isLoading: true,
     });
@@ -56,7 +62,7 @@ describe('EditChannelLanding component tests', () => {
 
   it('should render error state when there is an error loading the channel', () => {
     queryMocks.useNotificationChannelQuery.mockReturnValue({
-      data: null,
+      data: channelData,
       isError: true,
       isLoading: false,
     });
