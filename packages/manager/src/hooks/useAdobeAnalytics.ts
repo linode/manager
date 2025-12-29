@@ -4,6 +4,7 @@ import React from 'react';
 
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { getStoredCustomerUuid } from 'src/utilities/analytics/utils';
 
 /**
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
@@ -24,8 +25,10 @@ export const useAdobeAnalytics = () => {
           }
 
           // Fire the first page view for the landing page
+          const euuid = getStoredCustomerUuid();
           window._satellite.track('page view', {
             url: window.location.pathname,
+            ...(euuid && { euuid }),
           });
         })
         .catch(() => {
@@ -36,11 +39,14 @@ export const useAdobeAnalytics = () => {
 
   React.useEffect(() => {
     /**
-     * Send pageviews when location changes
+     * Send pageviews when location changes.
+     * Includes EUUID (Enterprise UUID) if available from authenticated API responses.
      */
     if (window._satellite) {
+      const euuid = getStoredCustomerUuid();
       window._satellite.track('page view', {
         url: location.pathname,
+        ...(euuid && { euuid }),
       });
     }
   }, [location.pathname]); // Listen to location changes

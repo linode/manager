@@ -3,6 +3,7 @@ import { AxiosHeaders } from 'axios';
 
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
+import { sendCustomerUuidEvent } from 'src/utilities/analytics/utils';
 
 import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
@@ -133,6 +134,35 @@ export const isSuccessfulGETProfileResponse = (
   );
 };
 
+/**
+ * Flag to ensure we only send the EUUID to Adobe Analytics once per session.
+ * The EUUID doesn't change during a session, so we only need to track it once.
+ */
+let hasTrackedCustomerUuid = false;
+
+/**
+ * Extracts the X-Customer-Uuid header from API responses and sends it to Adobe Analytics.
+ * This header contains the EUUID (Enterprise UUID) which identifies customers,
+ * including those with restricted billing access who may not have access to account info.
+ *
+ * The EUUID is only tracked once per session to avoid duplicate analytics events.
+ */
+export const extractAndTrackCustomerUuid = (
+  response: AxiosResponse
+): AxiosResponse => {
+  const customerUuidHeader = 'x-customer-uuid';
+
+  if (!hasTrackedCustomerUuid && customerUuidHeader in response.headers) {
+    const euuid = response.headers[customerUuidHeader];
+    if (euuid && typeof euuid === 'string') {
+      sendCustomerUuidEvent(euuid);
+      hasTrackedCustomerUuid = true;
+    }
+  }
+
+  return response;
+};
+
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use(async (config) => {
     if (
@@ -176,4 +206,9 @@ export const setupInterceptors = (store: ApplicationStore) => {
   );
 
   baseRequest.interceptors.response.use(injectAkamaiAccountHeader);
+
+  // Extract the EUUID (Enterprise UUID) from the X-Customer-Uuid header
+  // and send it to Adobe Analytics. This header is returned on authenticated
+  // API requests and identifies customers, including those with restricted billing access.
+  baseRequest.interceptors.response.use(extractAndTrackCustomerUuid);
 };
