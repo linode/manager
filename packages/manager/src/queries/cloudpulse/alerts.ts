@@ -326,14 +326,11 @@ export const useUpdateNotificationChannel = () => {
         }
       );
 
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.notificationChannels._ctx.channelById(
-          updatedChannel.id
-        ).queryKey,
-      });
+      queryClient.setQueryData<NotificationChannel>(
+        queryFactory.notificationChannels._ctx.channelById(updatedChannel.id)
+          .queryKey,
+        updatedChannel
+      );
     },
   });
 };
