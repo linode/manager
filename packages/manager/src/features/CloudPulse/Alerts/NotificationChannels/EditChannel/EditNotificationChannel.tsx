@@ -3,7 +3,7 @@ import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useUpdateNotificationChannel } from 'src/queries/cloudpulse/alerts';
@@ -68,8 +68,6 @@ export const EditNotificationChannel = (
 
   const { control, handleSubmit, formState } = formMethods;
 
-  const channelTypeWatcher = useWatch({ control, name: 'type' });
-
   const onSubmit = handleSubmit(async (values) => {
     try {
       await updateChannel(filterEditChannelFormValues(channelId, values));
@@ -120,37 +118,34 @@ export const EditNotificationChannel = (
               />
             )}
           />
-          {channelTypeWatcher && (
-            <Controller
-              control={control}
-              name="name"
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  data-testid="channel-name"
-                  errorText={fieldState.error?.message}
-                  label="Name"
-                  name="name"
-                  placeholder="Enter a name for the channel"
-                  value={field.value ?? ''}
-                />
-              )}
-            />
-          )}
-          {channelTypeWatcher === 'email' && (
-            <Controller
-              control={control}
-              name="recipients"
-              render={({ field, fieldState }) => (
-                <NotificationRecipients
-                  error={fieldState.error?.message}
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  value={field.value ?? []}
-                />
-              )}
-            />
-          )}
+          <Controller
+            control={control}
+            name="name"
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                data-testid="channel-name"
+                errorText={fieldState.error?.message}
+                label="Name"
+                name="name"
+                placeholder="Enter a name for the channel"
+                value={field.value ?? ''}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="recipients"
+            render={({ field, fieldState }) => (
+              <NotificationRecipients
+                error={fieldState.error?.message}
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                value={field.value ?? []}
+              />
+            )}
+          />
+
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'save-edit-channel',

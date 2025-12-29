@@ -4,11 +4,13 @@ import React from 'react';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import NullComponent from 'src/components/NullComponent';
 import { useNotificationChannelQuery } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../../AlertsDetail/AlertDetail';
 import { EditNotificationChannel } from './EditNotificationChannel';
 
+import type { NotificationChannel } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
 const overrides: CrumbOverridesProps[] = [
@@ -18,6 +20,25 @@ const overrides: CrumbOverridesProps[] = [
     position: 1,
   },
 ];
+
+const getLoadingOrErrorState = (
+  channelData: NotificationChannel | undefined,
+  isLoading: boolean,
+  isError: boolean
+): React.JSX.Element => {
+  if (!channelData) {
+    return <StyledPlaceholder icon={EntityIcon} title="No Data to display." />;
+  }
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+  if (isError) {
+    return (
+      <ErrorState errorText="An error occurred while loading the notification channel. Please try again later." />
+    );
+  }
+  return <NullComponent />;
+};
 
 export const EditChannelLanding = () => {
   const { channelId } = useParams({
@@ -30,26 +51,10 @@ export const EditChannelLanding = () => {
   } = useNotificationChannelQuery(Number(channelId));
   const pathname = '/Notification Channels/Edit';
 
-  if (isLoading) {
+  if (!channelData || isLoading || isError) {
     return (
       <EditChannelState overrides={overrides} pathname={pathname}>
-        <CircleProgress />
-      </EditChannelState>
-    );
-  }
-
-  if (isError) {
-    return (
-      <EditChannelState overrides={overrides} pathname={pathname}>
-        <ErrorState errorText="An error occurred while loading the notification channel. Please try again later." />
-      </EditChannelState>
-    );
-  }
-
-  if (!channelData) {
-    return (
-      <EditChannelState overrides={overrides} pathname={pathname}>
-        <StyledPlaceholder icon={EntityIcon} title="No Data to display." />
+        {getLoadingOrErrorState(channelData, isLoading, isError)}
       </EditChannelState>
     );
   }
