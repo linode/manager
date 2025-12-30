@@ -11,7 +11,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -35,9 +34,8 @@ interface Props {
 
 const PaymentInformation = (props: Props) => {
   const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
-  const { iamRbacPrimaryNavChanges } = useFlags();
   const search = useSearch({
-    from: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+    from: '/billing',
   });
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
@@ -81,7 +79,7 @@ const PaymentInformation = (props: Props) => {
   const closeAddDrawer = React.useCallback(() => {
     setAddDrawerOpen(false);
     navigate({
-      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+      to: '/billing',
     });
   }, [navigate]);
 
@@ -122,9 +120,7 @@ const PaymentInformation = (props: Props) => {
               disableTouchRipple
               onClick={() =>
                 navigate({
-                  to: iamRbacPrimaryNavChanges
-                    ? '/billing'
-                    : '/account/billing',
+                  to: '/billing',
                   search: (prev) => ({
                     ...prev,
                     action: 'add-payment-method',

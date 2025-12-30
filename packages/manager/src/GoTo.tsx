@@ -4,11 +4,9 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
-import { usePermissions } from './features/IAM/hooks/usePermissions';
 import { useIsMarketplaceV2Enabled } from './features/Marketplace/utils';
 import { useIsNetworkLoadBalancerEnabled } from './features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
-import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 import type { SelectOption } from '@linode/ui';
@@ -18,11 +16,7 @@ export const GoTo = React.memo(() => {
 
   const { data: accountSettings } = useAccountSettings();
 
-  const { iamRbacPrimaryNavChanges } = useFlags();
-
   const isManagedAccount = accountSettings?.managed ?? false;
-
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
@@ -115,22 +109,12 @@ export const GoTo = React.memo(() => {
           : 'Quick Deploy Apps',
         href: '/linodes/create/marketplace',
       },
-      ...(iamRbacPrimaryNavChanges
-        ? [
-            { display: 'Billing', href: '/billing' },
-            { display: 'Identity & Access', href: '/iam' },
-            { display: 'Login History', href: '/login-history' },
-            { display: 'Service Transfers', href: '/service-transfers' },
-            { display: 'Maintenance', href: '/maintenance' },
-            { display: 'Settings', href: '/settings' },
-          ]
-        : [
-            {
-              display: 'Account',
-              hide: !permissions.is_account_admin,
-              href: '/account/billing',
-            },
-          ]),
+      { display: 'Billing', href: '/billing' },
+      { display: 'Identity & Access', href: '/iam' },
+      { display: 'Login History', href: '/login-history' },
+      { display: 'Service Transfers', href: '/service-transfers' },
+      { display: 'Maintenance', href: '/maintenance' },
+      { display: 'Settings', href: '/settings' },
       {
         display: 'Help & Support',
         href: '/support',
@@ -141,13 +125,11 @@ export const GoTo = React.memo(() => {
       },
     ],
     [
-      permissions.is_account_admin,
       isDatabasesEnabled,
       isManagedAccount,
       isMarketplaceV2FeatureEnabled,
       isNetworkLoadBalancerEnabled,
       isPlacementGroupsEnabled,
-      iamRbacPrimaryNavChanges,
     ]
   );
 

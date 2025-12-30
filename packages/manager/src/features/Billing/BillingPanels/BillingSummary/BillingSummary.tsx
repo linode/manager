@@ -7,7 +7,6 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -35,15 +34,13 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     'create_promo_code',
   ]);
 
-  const { iamRbacPrimaryNavChanges } = useFlags();
-
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
 
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
-  const url = iamRbacPrimaryNavChanges ? '/billing' : '/account/billing';
+  const url = '/billing';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
   const isBalanceOutsideGracePeriod = notifications?.some(
