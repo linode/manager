@@ -203,4 +203,28 @@ export const database: PartialEventMap<'database'> = {
       </>
     ),
   },
+  database_pg_connection_pool_create: {
+    notification: (e) => (
+      <>
+        A Database connection pool has been <strong>added</strong> to{' '}
+        <EventLink event={e} to="entity" />.
+      </>
+    ),
+  },
+  database_pg_connection_pool_delete: {
+    notification: (e) => (
+      <>
+        A Database connection pool has been <strong>deleted</strong> from{' '}
+        <EventLink event={e} to="entity" />.
+      </>
+    ),
+  },
+  database_pg_connection_pool_update: {
+    notification: (e) => (
+      <>
+        A Database connection pool has been <strong>updated</strong> from{' '}
+        <EventLink event={e} to="entity" />.
+      </>
+    ),
+  },
 };
