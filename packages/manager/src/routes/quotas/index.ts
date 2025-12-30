@@ -22,14 +22,6 @@ const quotasCatchAllRoute = createRoute({
 const quotasIndexRoute = createRoute({
   getParentRoute: () => quotasRoute,
   path: '/',
-  beforeLoad: ({ context }) => {
-    if (!context?.flags?.iamRbacPrimaryNavChanges) {
-      throw redirect({
-        to: `/account/quotas`,
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/Quotas//quotasLandingLazyRoute').then(
     (m) => m.quotasLandingLazyRoute
