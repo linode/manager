@@ -301,3 +301,9 @@ export const entityLabelMap = {
 
 export const entityTypeTooltipText =
   'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.';
+
+export const CREATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel created successfully. You can now use it to deliver alert notifications.';
+
+export const CREATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to create the notification channel. Verify the configuration details and try again.';
