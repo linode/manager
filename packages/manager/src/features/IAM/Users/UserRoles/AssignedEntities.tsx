@@ -38,7 +38,7 @@ export const AssignedEntities = ({
 
   // We don't need to send all items to the TruncatedList component for performance reasons,
   // since past a certain count they will be hidden within the row.
-  const MAX_ITEMS_TO_RENDER = 15;
+  const MAX_ITEMS_TO_RENDER = 25;
   const entitiesToRender = sortedEntities.slice(0, MAX_ITEMS_TO_RENDER);
   const totalCount = sortedEntities.length;
 
