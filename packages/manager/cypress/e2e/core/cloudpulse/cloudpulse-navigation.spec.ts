@@ -24,12 +24,15 @@ describe('Moniter navigation', () => {
       aclp: {
         beta: true,
         enabled: true,
+        new: true,
       },
     }).as('getFeatureFlags');
 
     cy.visitWithLogin('/linodes');
     cy.wait('@getFeatureFlags');
-
+    cy.get('[data-testid="menu-item-Metrics"]').within(() => {
+      cy.get('[data-testid="newFeatureChip"]').should('be.visible'); // check for new feature chip
+    });
     cy.get('[data-testid="menu-item-Metrics"]').should('be.visible').click();
     cy.url().should('endWith', '/metrics');
   });

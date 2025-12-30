@@ -228,6 +228,7 @@ describe('PrimaryNav', () => {
       aclp: {
         beta: true,
         enabled: true,
+        new: true,
       },
       aclpAlerting: {
         accountAlertLimit: 10,
@@ -239,7 +240,7 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findAllByTestId, findByText } = renderWithTheme(
+    const { findAllByTestId, findByText, findByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
@@ -249,6 +250,9 @@ describe('PrimaryNav', () => {
     const monitorMetricsDisplayItem = await findByText('Metrics');
     const monitorAlertsDisplayItem = await findByText('Alerts');
     const betaChip = await findAllByTestId('betaChip');
+    const newFeatureChip = await findByTestId('newFeatureChip');
+
+    expect(newFeatureChip).toBeVisible();
 
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeVisible();
