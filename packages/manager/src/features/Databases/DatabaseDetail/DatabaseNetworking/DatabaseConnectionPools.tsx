@@ -31,6 +31,7 @@ import {
   StyledActionMenuWrapper,
 } from '../../shared.styles';
 import { ServiceURI } from '../ServiceURI';
+import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
 
 import type { Database } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -46,6 +47,8 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
   const poolLabelCellStyles = {
     flex: '.5 1 20.5%',
   };
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
   const pagination = usePaginationV2({
     currentRoute: '/databases/$engine/$databaseId/networking',
@@ -68,7 +71,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
       title: 'Edit', // TODO: UIE-9395 Implement edit functionality
     },
     {
-      onClick: () => null, // TODO: UIE-9430 Implement delete functionality
+      onClick: () => setDeleteDialogOpen(true),
       title: 'Delete',
     },
   ];
@@ -156,32 +159,42 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
               </TableRow>
             ) : (
               connectionPools?.data.map((pool) => (
-                <TableRow key={`connection-pool-row-${pool.label}`} zebra>
-                  <TableCell style={poolLabelCellStyles}>
-                    {pool.label}
-                  </TableCell>
-                  <Hidden smDown>
-                    <TableCell>
-                      {`${pool.mode.charAt(0).toUpperCase()}${pool.mode.slice(1)}`}
+                <>
+                  <TableRow key={`connection-pool-row-${pool.label}`} zebra>
+                    <TableCell style={poolLabelCellStyles}>
+                      {pool.label}
                     </TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>{pool.size}</TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>
-                      {pool.username === null
-                        ? 'Reuse inbound user'
-                        : pool.username}
-                    </TableCell>
-                  </Hidden>
-                  <StyledActionMenuWrapper>
-                    <ActionMenu
-                      actionsList={connectionPoolActions}
-                      ariaLabel={`Action menu for connection pool ${pool.label}`}
+                    <Hidden smDown>
+                      <TableCell>
+                        {`${pool.mode.charAt(0).toUpperCase()}${pool.mode.slice(1)}`}
+                      </TableCell>
+                    </Hidden>
+                    <Hidden smDown>
+                      <TableCell>{pool.size}</TableCell>
+                    </Hidden>
+                    <Hidden smDown>
+                      <TableCell>
+                        {pool.username === null
+                          ? 'Reuse inbound user'
+                          : pool.username}
+                      </TableCell>
+                    </Hidden>
+                    <StyledActionMenuWrapper>
+                      <ActionMenu
+                        actionsList={connectionPoolActions}
+                        ariaLabel={`Action menu for connection pool ${pool.label}`}
+                      />
+                    </StyledActionMenuWrapper>
+                  </TableRow>
+                  {deleteDialogOpen && (
+                    <DatabaseConnectionPoolDeleteDialog
+                      databaseId={database.id}
+                      onClose={() => setDeleteDialogOpen(false)}
+                      open={deleteDialogOpen}
+                      poolName={pool.label}
                     />
-                  </StyledActionMenuWrapper>
-                </TableRow>
+                  )}
+                </>
               ))
             )}
           </TableBody>

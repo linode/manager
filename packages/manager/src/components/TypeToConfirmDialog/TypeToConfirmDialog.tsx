@@ -27,6 +27,7 @@ interface EntityInfo {
     | 'Alert'
     | 'Bucket'
     | 'Database'
+    | 'Database Connection Pool'
     | 'Domain'
     | 'Image'
     | 'Kubernetes'
