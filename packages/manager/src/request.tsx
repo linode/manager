@@ -3,7 +3,6 @@ import { AxiosHeaders } from 'axios';
 
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
-import { sendCustomerUuidEvent } from 'src/utilities/analytics/utils';
 
 import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
@@ -103,6 +102,18 @@ export type ProfileWithAkamaiAccountHeader = Profile & {
   _akamaiAccount: boolean;
 };
 
+// A user's external UUID can be found on the response to /account.
+// Since that endpoint is not available to restricted users, the API also
+// returns it as an HTTP header ("X-Customer-Uuid"). This header is injected
+// in the response to `/profile` so that it's available in Redux.
+export type ProfileWithEuuid = Profile & {
+  _euuidFromHttpHeader?: string;
+};
+
+export type ExtendedProfile = Profile &
+  ProfileWithAkamaiAccountHeader &
+  ProfileWithEuuid;
+
 export const injectAkamaiAccountHeader = (
   response: AxiosResponse
 ): AxiosResponse => {
@@ -135,31 +146,30 @@ export const isSuccessfulGETProfileResponse = (
 };
 
 /**
- * Flag to ensure we only send the EUUID to Adobe Analytics once per session.
- * The EUUID doesn't change during a session, so we only need to track it once.
+ * A user's external UUID can be found on the response to /account.
+ * Since that endpoint is not available to restricted users, the API also
+ * returns it as an HTTP header ("X-Customer-Uuid"). This middleware injects
+ * the value of the header to the GET /profile response so it can be added to
+ * the Redux store and used throughout the app.
  */
-let hasTrackedCustomerUuid = false;
-
-/**
- * Extracts the X-Customer-Uuid header from API responses and sends it to Adobe Analytics.
- * This header contains the EUUID (Enterprise UUID) which identifies customers,
- * including those with restricted billing access who may not have access to account info.
- *
- * The EUUID is only tracked once per session to avoid duplicate analytics events.
- */
-export const extractAndTrackCustomerUuid = (
+export const injectEuuidToProfile = (
   response: AxiosResponse
 ): AxiosResponse => {
-  const customerUuidHeader = 'x-customer-uuid';
+  if (isSuccessfulGETProfileResponse(response)) {
+    const xCustomerUuidHeader = response.headers['x-customer-uuid'];
+    // NOTE: this won't work locally (only staging and prod allow this header)
+    if (xCustomerUuidHeader) {
+      const profileWithEuuid: ProfileWithEuuid = {
+        ...response.data,
+        _euuidFromHttpHeader: xCustomerUuidHeader,
+      };
 
-  if (!hasTrackedCustomerUuid && customerUuidHeader in response.headers) {
-    const euuid = response.headers[customerUuidHeader];
-    if (euuid && typeof euuid === 'string') {
-      sendCustomerUuidEvent(euuid);
-      hasTrackedCustomerUuid = true;
+      return {
+        ...response,
+        data: profileWithEuuid,
+      };
     }
   }
-
   return response;
 };
 
@@ -207,8 +217,6 @@ export const setupInterceptors = (store: ApplicationStore) => {
 
   baseRequest.interceptors.response.use(injectAkamaiAccountHeader);
 
-  // Extract the EUUID (Enterprise UUID) from the X-Customer-Uuid header
-  // and send it to Adobe Analytics. This header is returned on authenticated
-  // API requests and identifies customers, including those with restricted billing access.
-  baseRequest.interceptors.response.use(extractAndTrackCustomerUuid);
+  // Inject the EUUID from the X-Customer-Uuid header into the profile response
+  baseRequest.interceptors.response.use(injectEuuidToProfile);
 };

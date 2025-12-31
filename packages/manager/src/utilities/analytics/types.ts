@@ -10,25 +10,13 @@ declare global {
 type DTMSatellite = {
   track: (
     eventName: string,
-    eventPayload:
-      | AnalyticsPayload
-      | CustomerUuidPayload
-      | FormPayload
-      | PageViewPayload
+    eventPayload: AnalyticsPayload | FormPayload | PageViewPayload
   ) => void;
 };
 
 interface PageViewPayload {
   euuid?: string;
   url: string;
-}
-
-/**
- * Payload for the 'setCustomerUUID' event sent to Adobe Analytics.
- * Contains the EUUID (Enterprise UUID) extracted from the X-Customer-Uuid HTTP header.
- */
-export interface CustomerUuidPayload {
-  euuid: string;
 }
 
 export interface CustomAnalyticsData {
