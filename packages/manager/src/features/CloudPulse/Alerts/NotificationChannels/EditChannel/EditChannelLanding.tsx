@@ -2,8 +2,8 @@ import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
+import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import NullComponent from 'src/components/NullComponent';
 import { useNotificationChannelQuery } from 'src/queries/cloudpulse/alerts';
 
@@ -26,9 +26,6 @@ const getLoadingOrErrorState = (
   isLoading: boolean,
   isError: boolean
 ): React.JSX.Element => {
-  if (!channelData) {
-    return <StyledPlaceholder icon={EntityIcon} title="No Data to display." />;
-  }
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -36,6 +33,9 @@ const getLoadingOrErrorState = (
     return (
       <ErrorState errorText="An error occurred while loading the notification channel. Please try again later." />
     );
+  }
+  if (!channelData) {
+    return <StyledPlaceholder icon={EntityIcon} title="No Data to display." />;
   }
   return <NullComponent />;
 };
