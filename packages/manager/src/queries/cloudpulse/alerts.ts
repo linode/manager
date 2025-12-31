@@ -1,6 +1,7 @@
 import {
   addEntityToAlert,
   createAlertDefinition,
+  createNotificationChannel,
   deleteAlertDefinition,
   deleteEntityFromAlert,
   editAlertDefinition,
@@ -21,6 +22,7 @@ import type {
   Alert,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
+  CreateNotificationChannelPayload,
   DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
@@ -255,6 +257,31 @@ export const useServiceAlertsMutation = (
     },
     onSuccess(_, payload) {
       invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
+    },
+  });
+};
+
+export const useCreateNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NotificationChannel,
+    APIError[],
+    CreateNotificationChannelPayload
+  >({
+    mutationFn: (data) => createNotificationChannel(data),
+    onSuccess: async (newChannel) => {
+      const allChannelsKey =
+        queryFactory.notificationChannels._ctx.all().queryKey;
+      const oldChannels =
+        queryClient.getQueryData<NotificationChannel[]>(allChannelsKey);
+
+      // Use cached alerts list if available to avoid refetching from API.
+      if (oldChannels) {
+        queryClient.setQueryData<NotificationChannel[]>(allChannelsKey, [
+          ...oldChannels,
+          newChannel,
+        ]);
+      }
     },
   });
 };
