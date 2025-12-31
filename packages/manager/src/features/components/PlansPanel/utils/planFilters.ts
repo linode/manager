@@ -72,7 +72,7 @@ export const filterPlansByGeneration = (
  * Determines the relative generation order of a plan based on its ID.
  *
  * Used to sort plans from newest to oldest when the "All" type
- * filter is selected (G8 → G7 → G6).
+ * filter is selected (G8 -> G7 -> G6).
  */
 export const getGenerationRank = (planId: string): number => {
   if (planId.startsWith('g8-')) return 3;
