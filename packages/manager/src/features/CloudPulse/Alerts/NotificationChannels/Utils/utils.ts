@@ -17,12 +17,12 @@ export const getNotificationChannelActionsList = ({
   ],
   user: [
     {
-      onClick: handleEdit,
-      title: 'Edit',
-    },
-    {
       onClick: handleDetails,
       title: 'Show Details',
+    },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
     },
   ],
 });
