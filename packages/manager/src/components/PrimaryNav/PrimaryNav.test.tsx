@@ -240,7 +240,7 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findAllByTestId, findByText, findByTestId } = renderWithTheme(
+    const { findAllByTestId, findByText, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
@@ -250,13 +250,55 @@ describe('PrimaryNav', () => {
     const monitorMetricsDisplayItem = await findByText('Metrics');
     const monitorAlertsDisplayItem = await findByText('Alerts');
     const betaChip = await findAllByTestId('betaChip');
-    const newFeatureChip = await findByTestId('newFeatureChip');
-
-    expect(newFeatureChip).toBeVisible();
+    const newFeatureChip = queryByTestId('newFeatureChip');
+    expect(newFeatureChip).toBeNull(); // when beta is true, only beta chip is shown not new chip
 
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeVisible();
     expect(betaChip).toHaveLength(2);
+  });
+
+  it('shoud show beta chip next to Metrics menu item if the user has the account capability and aclp feature flag has new true', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: true,
+        new: true,
+      },
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: true,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
+
+    const { findByText, findByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = await findByText('Metrics');
+    const monitorAlertsDisplayItem = await findByText('Alerts');
+    const newFeatureChip = await findByTestId('newFeatureChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(newFeatureChip).toBeVisible();
   });
 
   it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
