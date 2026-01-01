@@ -97,7 +97,7 @@ const databaseMock: Database = databaseFactory.build({
 });
 // Profile timezone is set to 'UTC'
 const mockProfile = profileFactory.build({
-  timezone: 'UTC',
+  timezone: 'America/New_York',
 });
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -149,30 +149,23 @@ const getDateRangeInGMT = (
  * @returns {{start: string, end: string}} - The start and end dates of the current month in ISO 8601 format.
  */
 
-const getThisMonthRange = (): DateTimeWithPreset => {
-  const nowUtc = DateTime.utc(); // Current time in UTC
-
-  const startOfMonthUtc = nowUtc.startOf('month'); // Start of current month in UTC
+const getThisMonthRange = (timeZone: string): DateTimeWithPreset => {
+  const now = DateTime.now().setZone(timeZone);
 
   return {
-    start: startOfMonthUtc.toFormat(formatter),
-    end: nowUtc.toFormat(formatter),
+    start: now.startOf('month').toUTC().toFormat(formatter),
+    end: now.toUTC().toFormat(formatter),
   };
 };
-const getLastMonthRange = (): DateTimeWithPreset => {
-  // Get current time in UTC
-  const now = DateTime.utc();
 
-  // Get last month in UTC
+const getLastMonthRange = (timeZone: string): DateTimeWithPreset => {
+  const now = DateTime.now().setZone(timeZone);
+
   const lastMonth = now.minus({ months: 1 });
 
-  // Get start and end of last month in UTC and format
-  const start = lastMonth.startOf('month').toFormat(formatter);
-  const end = lastMonth.endOf('month').toFormat(formatter);
-
   return {
-    start,
-    end,
+    start: lastMonth.startOf('month').toUTC().toFormat(formatter),
+    end: lastMonth.endOf('month').toUTC().toFormat(formatter),
   };
 };
 
@@ -522,7 +515,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const { end, start } = getLastMonthRange();
+    const { start, end } = getLastMonthRange(mockProfile.timezone);
 
     ui.button.findByTitle('Last hour').as('startDateInput');
     cy.get('@startDateInput').scrollIntoView();
@@ -558,7 +551,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const { end, start } = getThisMonthRange();
+    const { start, end } = getThisMonthRange(mockProfile.timezone);
 
     ui.button.findByTitle('Last hour').as('startDateInput');
     cy.get('@startDateInput').scrollIntoView();
