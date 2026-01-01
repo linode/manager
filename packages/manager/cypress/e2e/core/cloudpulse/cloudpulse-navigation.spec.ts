@@ -22,7 +22,7 @@ describe('Moniter navigation', () => {
   it('can navigate to metrics landing page', () => {
     mockAppendFeatureFlags({
       aclp: {
-        beta: true,
+        beta: false,
         enabled: true,
         new: true,
       },
