@@ -50,7 +50,15 @@ vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
 });
 describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if dashboard not selected', () => {
-    renderWithTheme(<CloudPulseDashboardLanding />);
+    renderWithTheme(<CloudPulseDashboardLanding />, {
+      flags: {
+        aclp: {
+          new: true,
+          beta: false,
+          enabled: true,
+        },
+      },
+    });
     const text = screen.getByText('metrics');
     expect(text).toBeInTheDocument();
 
@@ -61,6 +69,9 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     const messageComponent = screen.getByText(message);
     expect(messageComponent).toBeDefined();
+
+    const newFeatureChip = screen.getByTestId('newFeatureChip');
+    expect(newFeatureChip).toBeVisible();
   });
 
   it('should render error placeholder if some dashboard is selected and filter config is not present', async () => {
