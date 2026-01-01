@@ -547,10 +547,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
             modeViewedFrom: ruleDrawer.mode,
           });
         }}
-        inboundAndOutboundRules={[
-          ...(rules.inbound ?? []),
-          ...(rules.outbound ?? []),
-        ]}
+        inboundAndOutboundRules={[...inboundRules, ...outboundRules]}
         isOpen={
           location.pathname.endsWith('add/inbound') ||
           location.pathname.endsWith('add/outbound') ||
