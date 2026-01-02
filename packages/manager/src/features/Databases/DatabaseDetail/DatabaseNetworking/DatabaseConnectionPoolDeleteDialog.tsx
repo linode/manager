@@ -39,7 +39,7 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
       }}
       errors={error}
       expand
-      label="Database Connection Pool"
+      label="Database Connection Pool label"
       loading={isPending}
       onClick={onDelete}
       onClose={onClose}
