@@ -95,9 +95,11 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.id,
   type: engine,
 });
+
+const timezone = 'America/New_York';
 // Profile timezone is set to 'UTC'
 const mockProfile = profileFactory.build({
-  timezone: 'America/New_York',
+  timezone,
 });
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -515,7 +517,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const { start, end } = getLastMonthRange(mockProfile.timezone);
+    const { start, end } = getLastMonthRange(timezone);
 
     ui.button.findByTitle('Last hour').as('startDateInput');
     cy.get('@startDateInput').scrollIntoView();
@@ -551,7 +553,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const { start, end } = getThisMonthRange(mockProfile.timezone);
+    const { start, end } = getThisMonthRange(timezone);
 
     ui.button.findByTitle('Last hour').as('startDateInput');
     cy.get('@startDateInput').scrollIntoView();
