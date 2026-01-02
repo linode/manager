@@ -102,7 +102,7 @@ const mockProfile = profileFactory.build({
   timezone,
 });
 /**
- * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
+ * Generates a date in America/New_York based on a specified number of days offset,
  * hour, and minute. The function also provides individual date components such as day, hour,
  * minute, month, and AM/PM.
  * @param {number} hour - The hour to set for the resulting date (0-23).
@@ -120,7 +120,7 @@ const getDateRangeInGMT = (
   minute: number = 0,
   isStart: boolean = false
 ) => {
-  const now = DateTime.now().setZone(timezone); // Set the timezone to GMT
+  const now = DateTime.now().setZone(timezone);
   const targetDate = isStart
     ? now.startOf('month').set({ hour, minute }).setZone(timezone)
     : now.set({ hour, minute }).setZone(timezone);
@@ -185,7 +185,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
    * - Simulates loading test data without real API calls.
    *
-   * - Creates a mock profile with timezone set to GMT ('Etc/GMT').
+   * - Creates a mock profile with timezone set to America/New_York.
    * - Ensures consistency in time-based functionality and API requests.
    *
    * - Confirms accurate calculation of "This Month" and "Last Month" time ranges.
@@ -233,7 +233,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
-    // --- Generate start and end date/time in GMT ---
     const {
       actualDate: startActualDate,
       day: startDay,
