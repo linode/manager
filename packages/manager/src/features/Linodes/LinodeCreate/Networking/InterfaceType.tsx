@@ -9,6 +9,7 @@ import {
 } from '@linode/ui';
 import { FormControlLabel, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import type { ChangeEvent } from 'react';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -124,7 +125,7 @@ export const InterfaceType = ({ index }: Props) => {
       <RadioGroup
         aria-describedby="network-connection-helper-text"
         aria-labelledby="network-connection-label"
-        onChange={(e) => onChange(e.target.value as InterfacePurpose)}
+        onChange={(_: ChangeEvent, value: InterfacePurpose) => onChange(value)}
         value={field.value}
       >
         {interfaceTypes.map((interfaceType) => (
