@@ -97,7 +97,7 @@ const databaseMock: Database = databaseFactory.build({
 });
 
 const timezone = 'America/New_York';
-// Profile timezone is set to 'UTC'
+// Profile timezone is set to 'America/New_York'
 const mockProfile = profileFactory.build({
   timezone,
 });
@@ -105,9 +105,6 @@ const mockProfile = profileFactory.build({
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
  * hour, and minute. The function also provides individual date components such as day, hour,
  * minute, month, and AM/PM.
- *
- * @param {number} daysOffset - The number of days to adjust from the current date. Positive
- *                               values give a future date, negative values give a past date.
  * @param {number} hour - The hour to set for the resulting date (0-23).
  * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
  *
@@ -123,11 +120,11 @@ const getDateRangeInGMT = (
   minute: number = 0,
   isStart: boolean = false
 ) => {
-  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
+  const now = DateTime.now().setZone(timezone); // Set the timezone to GMT
   const targetDate = isStart
-    ? now.startOf('month').set({ hour, minute }).setZone('GMT')
-    : now.set({ hour, minute }).setZone('GMT');
-  const actualDate = targetDate.setZone('GMT').toFormat('yyyy-LL-dd HH:mm');
+    ? now.startOf('month').set({ hour, minute }).setZone(timezone)
+    : now.set({ hour, minute }).setZone(timezone);
+  const actualDate = targetDate.setZone(timezone).toFormat('yyyy-LL-dd HH:mm');
 
   const previousMonthDate = targetDate.minus({ months: 1 });
 
