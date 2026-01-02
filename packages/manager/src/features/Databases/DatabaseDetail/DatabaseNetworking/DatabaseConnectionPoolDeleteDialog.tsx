@@ -8,21 +8,21 @@ interface Props {
   databaseId: number;
   onClose: () => void;
   open: boolean;
-  poolName: string;
+  poolLabel: string;
 }
 
 export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
-  const { onClose, open, databaseId, poolName } = props;
+  const { onClose, open, databaseId, poolLabel } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
     isPending,
     mutateAsync: deleteConnectionPool,
-  } = useDeleteDatabaseConnectionPoolMutation(databaseId, poolName);
+  } = useDeleteDatabaseConnectionPoolMutation(databaseId, poolLabel);
 
   const onDelete = () => {
     deleteConnectionPool().then(() => {
-      enqueueSnackbar(`Connection Pool ${poolName} deleted successfully.`, {
+      enqueueSnackbar(`Connection Pool ${poolLabel} deleted successfully.`, {
         variant: 'success',
       });
       onClose();
@@ -33,7 +33,7 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: poolName,
+        name: poolLabel,
         primaryBtnText: 'Delete',
         type: 'Database Connection Pool',
       }}
@@ -44,7 +44,7 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
       onClick={onDelete}
       onClose={onClose}
       open={open}
-      title={`Delete Database Connection Pool ${poolName}`}
+      title={`Delete Database Connection Pool ${poolLabel}`}
     />
   );
 };
