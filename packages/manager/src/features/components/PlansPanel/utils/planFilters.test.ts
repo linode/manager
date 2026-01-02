@@ -252,8 +252,21 @@ describe('planFilters utilities', () => {
       );
     });
 
+    it('handles multi-digit generations correctly', () => {
+      expect(getGenerationRank('g10-dedicated-2')).toBeGreaterThan(
+        getGenerationRank('g8-dedicated-4-2')
+      );
+      expect(getGenerationRank('g11-dedicated-2')).toBeGreaterThan(
+        getGenerationRank('g10-dedicated-2')
+      );
+    });
+
     it('returns 0 for unknown generations', () => {
       expect(getGenerationRank('legacy-plan')).toBe(0);
+      expect(getGenerationRank('gg-xyz')).toBe(0);
+      expect(getGenerationRank('g-pqr')).toBe(0);
+      expect(getGenerationRank('x123')).toBe(0);
+      expect(getGenerationRank('')).toBe(0);
     });
   });
 });
