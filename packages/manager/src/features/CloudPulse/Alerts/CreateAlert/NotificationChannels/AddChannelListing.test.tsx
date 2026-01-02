@@ -40,7 +40,7 @@ describe('Channel Listing component', () => {
   it('should render the notification channels ', () => {
     const emailAddresses =
       mockNotificationData[0].channel_type === 'email' &&
-      mockNotificationData[0].content.email
+      mockNotificationData[0].content?.email
         ? mockNotificationData[0].content.email.email_addresses
         : [];
 
