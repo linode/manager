@@ -258,7 +258,7 @@ describe('Payment Method Row', () => {
     ).not.toEqual('true');
   });
 
-  it.only('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
+  it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         make_billing_payment: true,
@@ -307,8 +307,10 @@ describe('Payment Method Row', () => {
 
     await waitFor(() => {
       expect(router.state.location.pathname).toBe('/billing');
+    });
+    await waitFor(() => {
       expect(router.state.location.searchStr).toBe(
-        '?action=make-payment&paymentMethodId=2'
+        '?action=make-payment&paymentMethodId=12'
       );
     });
   });
