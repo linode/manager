@@ -104,8 +104,6 @@ const mockProfile = profileFactory.build({
  * hour, and minute. The function also provides individual date components such as day, hour,
  * minute, month, and AM/PM.
  *
- * @param {number} daysOffset - The number of days to adjust from the current date. Positive
- *                               values give a future date, negative values give a past date.
  * @param {number} hour - The hour to set for the resulting date (0-23).
  * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
  *
@@ -121,13 +119,16 @@ const getDateRangeInGMT = (
   minute: number = 0,
   isStart: boolean = false
 ) => {
-  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
+  const now = DateTime.now().setZone('GMT');
+
   const targetDate = isStart
     ? now.startOf('month').set({ hour, minute }).setZone('GMT')
     : now.set({ hour, minute }).setZone('GMT');
-  const actualDate = targetDate.setZone('GMT').toFormat('yyyy-LL-dd HH:mm');
 
-  const previousMonthDate = targetDate.minus({ months: 1 });
+  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm');
+
+  // Correct: previous month must be based on a stable reference
+  const previousMonthBase = now.minus({ months: 1 });
 
   return {
     actualDate,
@@ -137,8 +138,8 @@ const getDateRangeInGMT = (
     month: targetDate.toFormat('LLLL'),
     year: targetDate.year,
     daysInMonth: targetDate.daysInMonth,
-    previousMonth: previousMonthDate.toFormat('LLLL'),
-    previousYear: previousMonthDate.year,
+    previousMonth: previousMonthBase.toFormat('LLLL'),
+    previousYear: previousMonthBase.year,
   };
 };
 
@@ -238,6 +239,89 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       '@fetchPreferences',
       '@fetchDatabases',
     ]);
+  });
+  it('should correctly resolve previous month across calendar edge cases', () => {
+    const testDates = [
+      {
+        iso: '2025-02-28T10:00:00Z',
+        currentMonth: 'February',
+        currentYear: 2025,
+        expectedMonth: 'January',
+        expectedYear: 2025,
+        isLeapYear: false,
+      },
+      {
+        iso: '2025-12-31T23:59:59Z',
+        currentMonth: 'December',
+        currentYear: 2025,
+        expectedMonth: 'November',
+        expectedYear: 2025,
+        isLeapYear: false,
+      },
+      {
+        iso: '2025-03-31T12:30:00Z',
+        currentMonth: 'March',
+        currentYear: 2025,
+        expectedMonth: 'February',
+        expectedYear: 2025,
+        isLeapYear: false,
+      },
+      {
+        iso: '2025-05-30T08:15:00Z',
+        currentMonth: 'May',
+        currentYear: 2025,
+        expectedMonth: 'April',
+        expectedYear: 2025,
+        isLeapYear: false,
+      },
+      {
+        iso: '2024-02-29T10:00:00Z',
+        currentMonth: 'February',
+        currentYear: 2024,
+        expectedMonth: 'January',
+        expectedYear: 2024,
+        isLeapYear: true,
+      },
+      {
+        iso: '2026-01-01T00:00:00Z',
+        currentMonth: 'January',
+        currentYear: 2026,
+        expectedMonth: 'December',
+        expectedYear: 2025,
+        isLeapYear: false,
+      },
+    ];
+
+    testDates.forEach(
+      ({
+        iso,
+        currentMonth,
+        currentYear,
+        expectedMonth,
+        expectedYear,
+        isLeapYear,
+      }) => {
+        const now = DateTime.fromISO(iso, { zone: 'GMT' });
+
+        // Current date assertions
+        expect(now.toFormat('LLLL')).to.eq(currentMonth);
+        expect(now.year).to.eq(currentYear);
+        expect(now.isInLeapYear).to.eq(isLeapYear);
+
+        // Previous month logic
+        const previousMonthBase = now.startOf('month').minus({ months: 1 });
+
+        expect(previousMonthBase.toFormat('LLLL')).to.eq(expectedMonth);
+        expect(previousMonthBase.year).to.eq(expectedYear);
+
+        // Explicit year relationship check
+        if (currentMonth === 'January') {
+          expect(previousMonthBase.year).to.eq(currentYear - 1);
+        } else {
+          expect(previousMonthBase.year).to.eq(currentYear);
+        }
+      }
+    );
   });
 
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
