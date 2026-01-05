@@ -11,6 +11,7 @@ import {
   getTimeDurationFromPreset,
   mapResourceIdToName,
 } from './CloudPulseWidgetUtils';
+import * as utilities from './utils';
 
 import type {
   DimensionNameProperties,
@@ -100,52 +101,90 @@ describe('getLabelName method', () => {
   });
 });
 
-it('test generateGraphData with metrics data', () => {
-  const mockMetricsResponse: CloudPulseMetricsResponse = {
-    data: {
-      result: [
-        {
-          metric: { entity_id: '1' },
-          values: [[1234567890, '50']],
-        },
-      ],
-      result_type: 'matrix',
-    },
-    isPartial: false,
-    stats: {
-      series_fetched: 1,
-    },
-    status: 'success',
-  };
+describe('generateGraphData method', () => {
+  it('test generateGraphData with metrics data', () => {
+    const mockMetricsResponse: CloudPulseMetricsResponse = {
+      data: {
+        result: [
+          {
+            metric: { entity_id: '1' },
+            values: [[1234567890, '50']],
+          },
+        ],
+        result_type: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        series_fetched: 1,
+      },
+      status: 'success',
+    };
 
-  const result = generateGraphData({
-    label: 'Graph',
-    metricsList: mockMetricsResponse,
-    resources: [{ id: '1', label: 'linode-1' }],
-    status: 'success',
-    unit: '%',
-    serviceType: 'linode',
-    groupBy: ['entity_id'],
+    const result = generateGraphData({
+      label: 'Graph',
+      metricsList: mockMetricsResponse,
+      resources: [{ id: '1', label: 'linode-1' }],
+      status: 'success',
+      unit: '%',
+      serviceType: 'linode',
+      groupBy: ['entity_id'],
+      humanizableUnits: [],
+    });
+
+    expect(result.areas[0].dataKey).toBe('linode-1');
+    expect(result.dimensions).toEqual([
+      {
+        'linode-1': 50,
+        timestamp: 1234567890000,
+      },
+    ]);
+
+    expect(result.legendRowsData[0].data).toEqual({
+      average: 50,
+      last: 50,
+      length: 1,
+      max: 50,
+      total: 50,
+    });
+    expect(result.legendRowsData[0].format).toBeDefined();
+    expect(result.legendRowsData[0].legendTitle).toBe('linode-1');
+    expect(result.unit).toBe('%');
   });
 
-  expect(result.areas[0].dataKey).toBe('linode-1');
-  expect(result.dimensions).toEqual([
-    {
-      'linode-1': 50,
-      timestamp: 1234567890000,
-    },
-  ]);
+  it('test makes legend rows humanizable when unit is in humanizableUnits', () => {
+    const spy = vi.spyOn(utilities, 'humanizeLargeData');
+    const mockMetricsResponse: CloudPulseMetricsResponse = {
+      data: {
+        result: [
+          {
+            metric: { entity_id: '1' },
+            values: [[1234567890, '50000']],
+          },
+        ],
+        result_type: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        series_fetched: 1,
+      },
+      status: 'success',
+    };
 
-  expect(result.legendRowsData[0].data).toEqual({
-    average: 50,
-    last: 50,
-    length: 1,
-    max: 50,
-    total: 50,
+    const result = generateGraphData({
+      label: 'Graph',
+      metricsList: mockMetricsResponse,
+      resources: [{ id: '1', label: 'linode-1' }],
+      status: 'success',
+      unit: 'Count',
+      serviceType: 'linode',
+      groupBy: ['entity_id'],
+      humanizableUnits: ['Count'],
+    });
+
+    expect(result.legendRowsData[0].format).toBeDefined();
+    result.legendRowsData[0].format(50000);
+    expect(spy).toHaveBeenCalledWith(50000);
   });
-  expect(result.legendRowsData[0].format).toBeDefined();
-  expect(result.legendRowsData[0].legendTitle).toBe('linode-1');
-  expect(result.unit).toBe('%');
 });
 
 describe('getDimensionName method', () => {
