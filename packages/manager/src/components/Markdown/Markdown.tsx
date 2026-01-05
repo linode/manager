@@ -43,6 +43,7 @@ export const Markdown = (props: HighlightedMarkdownProps) => {
         });
       }
     },
+    breaks: true,
     html: true,
     linkify: true,
   });
