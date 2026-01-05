@@ -182,12 +182,11 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    // Updated selector for MUI x-date-pickers v8 - click on the wrapper div
-    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
+    ui.button.findByTitle('Last hour').as('timeRangeTrigger');
+    cy.get('@timeRangeTrigger').click();
 
-    cy.get('@startDateInput').click();
-
-    cy.get('[data-qa-preset="Last day"]').click();
+    // select a different preset but cancel
+    ui.button.findByTitle('Last day').click();
 
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')

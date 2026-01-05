@@ -40,7 +40,7 @@ describe('database monitor', () => {
     expect(loadingElement).toBeInTheDocument();
     await waitForElementToBeRemoved(loadingElement);
 
-    const startDate = screen.getByText('Start Date');
-    expect(startDate).toBeInTheDocument();
+    const presetButton = screen.getByTestId('preset-button');
+    expect(presetButton).toBeInTheDocument();
   });
 });
