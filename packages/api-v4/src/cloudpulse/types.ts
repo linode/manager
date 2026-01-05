@@ -490,3 +490,10 @@ export interface EditNotificationChannelPayloadWithId
    */
   channelId: number;
 }
+
+export interface DeleteChannelPayload {
+  /**
+   * The ID of the channel to delete.
+   */
+  channelId: number;
+}

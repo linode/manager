@@ -172,3 +172,11 @@ export const updateNotificationChannel = (
     setMethod('PUT'),
     setData(data, editNotificationChannelPayloadSchema),
   );
+
+export const deleteNotificationChannel = (channelId: number) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('DELETE'),
+  );

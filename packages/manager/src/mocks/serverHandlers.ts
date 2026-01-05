@@ -3615,6 +3615,7 @@ export const handlers = [
         updated: '2023-11-05T04:00:00',
         updated_by: 'user3',
         created_by: 'admin',
+        alerts: [],
       })
     );
     notificationChannels.push(
@@ -4498,5 +4499,8 @@ export const handlers = [
         },
       })
     );
+  }),
+  http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
+    return HttpResponse.json({});
   }),
 ];

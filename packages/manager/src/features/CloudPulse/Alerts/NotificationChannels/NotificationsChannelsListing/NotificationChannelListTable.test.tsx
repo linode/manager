@@ -2,13 +2,33 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { alertDefinitionFactory } from 'src/factories';
 import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import {
+  DELETE_CHANNEL_FAILED_MESSAGE,
+  DELETE_CHANNEL_SUCCESS_MESSAGE,
+  DELETE_CHANNEL_TOOLTIP_TEXT,
+} from '../../constants';
 import { NotificationChannelListTable } from './NotificationChannelListTable';
 
 const mockScrollToElement = vi.fn();
+
+const queryMocks = vi.hoisted(() => ({
+  mutateAsync: vi.fn(),
+}));
+
+vi.mock('src/queries/cloudpulse/alerts', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/alerts');
+  return {
+    ...actual,
+    useDeleteNotificationChannel: vi.fn(() => ({
+      mutateAsync: queryMocks.mutateAsync,
+    })),
+  };
+});
 
 const ALERT_TYPE = 'alerts-definitions';
 
@@ -157,5 +177,146 @@ describe('NotificationChannelListTable', () => {
     );
 
     screen.getByRole('button', { name: /next/i });
+  });
+
+  it('should not show delete action for system channels', async () => {
+    const channel = notificationChannelFactory.build({
+      type: 'system',
+    });
+
+    renderWithTheme(
+      <NotificationChannelListTable
+        isLoading={false}
+        notificationChannels={[channel]}
+        scrollToElement={mockScrollToElement}
+      />
+    );
+
+    const actionMenu = screen.getByRole('button', {
+      name: `Action menu for Notification Channel ${channel.label}`,
+    });
+
+    await userEvent.click(actionMenu);
+    expect(screen.queryByTestId('Delete')).not.toBeInTheDocument();
+  });
+
+  it('should disable delete if the user channel has alerts and show tooltip', async () => {
+    const channel = notificationChannelFactory.build({
+      alerts: alertDefinitionFactory.buildList(3),
+    });
+
+    renderWithTheme(
+      <NotificationChannelListTable
+        isLoading={false}
+        notificationChannels={[channel]}
+        scrollToElement={mockScrollToElement}
+      />
+    );
+
+    const actionMenu = screen.getByRole('button', {
+      name: `Action menu for Notification Channel ${channel.label}`,
+    });
+
+    await userEvent.click(actionMenu);
+    expect(screen.getByTestId('Delete')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+
+    const tooltip = screen.getByLabelText(DELETE_CHANNEL_TOOLTIP_TEXT);
+    expect(tooltip).toBeInTheDocument();
+  });
+
+  it('should open delete confirmation dialog when delete is clicked', async () => {
+    const user = userEvent.setup();
+    const channel = notificationChannelFactory.build({
+      label: 'test_channel',
+      alerts: [],
+    });
+
+    renderWithTheme(
+      <NotificationChannelListTable
+        isLoading={false}
+        notificationChannels={[channel]}
+        scrollToElement={mockScrollToElement}
+      />
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: `Action menu for Notification Channel ${channel.label}`,
+      })
+    );
+    await user.click(screen.getByText('Delete'));
+
+    expect(screen.getByText(`Delete ${channel.label}?`)).toBeVisible();
+  });
+
+  it('should show success snackbar when deleting notification channel succeeds', async () => {
+    queryMocks.mutateAsync.mockResolvedValue({});
+    const user = userEvent.setup();
+    const channel = notificationChannelFactory.build({
+      label: 'Channel to be deleted',
+      alerts: [],
+    });
+
+    renderWithTheme(
+      <NotificationChannelListTable
+        isLoading={false}
+        notificationChannels={[channel]}
+        scrollToElement={mockScrollToElement}
+      />
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: `Action menu for Notification Channel ${channel.label}`,
+      })
+    );
+    await user.click(screen.getByText('Delete'));
+
+    expect(screen.getByText(`Delete ${channel.label}?`)).toBeVisible();
+
+    // Type the channel label to confirm
+    const input = screen.getByLabelText('Channel Label');
+    await user.type(input, channel.label);
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    expect(screen.getByText(DELETE_CHANNEL_SUCCESS_MESSAGE)).toBeVisible();
+  });
+
+  it('should show error snackbar when deleting notification channel fails', async () => {
+    const user = userEvent.setup();
+    const channel = notificationChannelFactory.build({
+      label: 'Channel to be deleted',
+      alerts: [],
+    });
+
+    queryMocks.mutateAsync.mockRejectedValue([
+      { reason: DELETE_CHANNEL_FAILED_MESSAGE },
+    ]);
+
+    renderWithTheme(
+      <NotificationChannelListTable
+        isLoading={false}
+        notificationChannels={[channel]}
+        scrollToElement={mockScrollToElement}
+      />
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: `Action menu for Notification Channel ${channel.label}`,
+      })
+    );
+    await user.click(screen.getByText('Delete'));
+
+    expect(screen.getByText(`Delete ${channel.label}?`)).toBeVisible();
+
+    // Type the channel label to confirm
+    const input = screen.getByLabelText('Channel Label');
+    await user.type(input, channel.label);
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+
+    expect(screen.getByText(DELETE_CHANNEL_FAILED_MESSAGE)).toBeVisible();
   });
 });

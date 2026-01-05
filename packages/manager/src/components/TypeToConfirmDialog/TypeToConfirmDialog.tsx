@@ -26,6 +26,7 @@ interface EntityInfo {
     | 'AccountSetting'
     | 'Alert'
     | 'Bucket'
+    | 'Channel'
     | 'Database'
     | 'Domain'
     | 'Image'
