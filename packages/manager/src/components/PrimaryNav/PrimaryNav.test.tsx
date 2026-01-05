@@ -593,12 +593,7 @@ describe('PrimaryNav', () => {
 
   it('should show Partner Referral menu item if the user has the account capability and the flag is enabled', async () => {
     const flags: Partial<Flags> = {
-      marketplace: {
-        enabled: true,
-        beta: false,
-        la: false,
-        ga: false,
-      },
+      marketplaceV2: true,
     };
 
     const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {

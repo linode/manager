@@ -5,10 +5,10 @@ import React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useIsMarketplaceEnabled } from 'src/features/Marketplace/utils';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
 
 export const MarketplaceRoute = () => {
-  const { isMarketplaceFeatureEnabled } = useIsMarketplaceEnabled();
+  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
 
   if (!isMarketplaceFeatureEnabled) {
     return <NotFound />;

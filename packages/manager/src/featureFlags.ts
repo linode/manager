@@ -177,11 +177,6 @@ interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
   la: boolean;
 }
 
-interface Marketplace extends BetaFeatureFlag {
-  ga: boolean;
-  la: boolean;
-}
-
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -228,8 +223,8 @@ export interface Flags {
   linodeInterfaces: LinodeInterfacesFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
-  marketplace: Marketplace;
   marketplaceAppOverrides: MarketplaceAppOverride[];
+  marketplaceV2: boolean;
   metadata: boolean;
   mtc: MTC;
   networkLoadBalancer: boolean;

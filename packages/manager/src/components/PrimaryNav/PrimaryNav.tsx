@@ -22,7 +22,7 @@ import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { useIsMarketplaceEnabled } from 'src/features/Marketplace/utils';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -124,8 +124,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
-  const { isMarketplaceFeatureEnabled, isMarketplaceBetaEnabled } =
-    useIsMarketplaceEnabled();
+  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
 
   const {
     data: preferences,
@@ -191,7 +190,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 attr: { 'data-qa-one-click-nav-btn': true },
                 display: 'Partner Referrals',
                 hide: !isMarketplaceFeatureEnabled,
-                isBeta: isMarketplaceFeatureEnabled && isMarketplaceBetaEnabled,
+                isBeta: isMarketplaceFeatureEnabled,
                 to: '/cloud-marketplace/catalog',
               },
             ],
@@ -368,7 +367,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
         isMarketplaceFeatureEnabled,
-        isMarketplaceBetaEnabled,
         isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]

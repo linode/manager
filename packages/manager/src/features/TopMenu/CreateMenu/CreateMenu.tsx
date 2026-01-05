@@ -7,7 +7,7 @@ import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsMarketplaceEnabled } from 'src/features/Marketplace/utils';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 import {
@@ -54,7 +54,7 @@ export const CreateMenu = () => {
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isMarketplaceFeatureEnabled } = useIsMarketplaceEnabled();
+  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
