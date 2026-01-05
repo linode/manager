@@ -1,4 +1,4 @@
-import { useVlansQuery } from '@linode/queries';
+import { useSubnetQuery, useVlansQuery } from '@linode/queries';
 import {
   Autocomplete,
   Divider,
@@ -14,6 +14,7 @@ import * as React from 'react';
 import type { JSX } from 'react';
 
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
+import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type {
@@ -27,6 +28,7 @@ interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
 
 interface InterfaceSelectProps extends VPCState {
   additionalIPv4RangesForVPC?: ExtendedIP[];
+  additionalIPv6RangesForVPC?: ExtendedIP[];
   errors: InterfaceErrors;
   fromAddonsPanel?: boolean;
   handleChange: (updatedInterface: ExtendedInterface) => void;
@@ -37,14 +39,17 @@ interface InterfaceSelectProps extends VPCState {
   regionHasVLANs?: boolean;
   regionHasVPCs?: boolean;
   slotNumber: number;
+  vpcIPv6IsPublic: boolean;
 }
 interface VPCInterfaceErrors {
   ipRangeError?: string;
   labelError?: string;
   publicIPv4Error?: string;
+  publicIPv6Error?: string;
   subnetError?: string;
   vpcError?: string;
   vpcIPv4Error?: string;
+  vpcIPv6Error?: string;
 }
 
 interface OtherInterfaceErrors {
@@ -57,6 +62,7 @@ interface VPCState {
   subnetId?: null | number;
   vpcId?: null | number;
   vpcIPv4?: string;
+  vpcIPv6?: string;
 }
 
 // To allow for empty slots, which the API doesn't account for
@@ -69,6 +75,7 @@ export interface ExtendedInterface
 export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const {
     additionalIPv4RangesForVPC,
+    additionalIPv6RangesForVPC,
     errors,
     fromAddonsPanel,
     handleChange,
@@ -82,7 +89,9 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     slotNumber,
     subnetId,
     vpcIPv4,
+    vpcIPv6,
     vpcId,
+    vpcIPv6IsPublic,
   } = props;
 
   const theme = useTheme();
@@ -90,7 +99,23 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     theme.breakpoints.down(fromAddonsPanel ? 'sm' : 1015)
   );
 
+  const { isDualStackEnabled } = useVPCDualStack();
+
+  const { data: selectedSubnet } = useSubnetQuery(
+    vpcId ?? -1,
+    subnetId ?? -1,
+    isDualStackEnabled && Boolean(vpcId) && Boolean(subnetId)
+  );
+
+  // Show IPv6 content if Dual Stack is enabled and the VPC of the selected subnet is Dual Stack
+  const showIPv6Content =
+    isDualStackEnabled &&
+    Boolean(selectedSubnet?.ipv6?.length && selectedSubnet?.ipv6?.length > 0);
+
   const [newVlan, setNewVlan] = React.useState('');
+
+  const [autoassignIPv6VPCAddress, setAutoassignIPv6VPCAddress] =
+    React.useState<boolean>(false);
 
   const purposeOptions: SelectOption<ExtendedPurpose>[] = [
     {
@@ -131,6 +156,10 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     (ip_range) => ip_range.address
   );
 
+  const _additionalIPv6RangesForVPC = additionalIPv6RangesForVPC?.map(
+    (ip_range) => ({ range: ip_range.address })
+  );
+
   const handlePurposeChange = (selectedValue: ExtendedPurpose) => {
     const purpose = selectedValue;
     handleChange({
@@ -150,6 +179,12 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
       purpose,
     });
 
+  const slaacFieldValue = autoassignIPv6VPCAddress
+    ? [{ range: 'auto' }]
+    : vpcIPv6
+      ? [{ range: vpcIPv6 }]
+      : undefined;
+
   const handleVPCLabelChange = (selectedVPCId: number) => {
     // Only clear VPC related fields if VPC selection changes
     if (selectedVPCId !== vpcId) {
@@ -159,6 +194,13 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           nat_1_1: nattedIPv4Address,
           vpc: vpcIPv4,
         },
+        ipv6: showIPv6Content
+          ? {
+              is_public: vpcIPv6IsPublic,
+              ranges: _additionalIPv6RangesForVPC,
+              slaac: slaacFieldValue,
+            }
+          : undefined,
         purpose,
         vpc_id: selectedVPCId,
       });
@@ -171,6 +213,31 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
       ipv4: {
         nat_1_1: nattedIPv4Address,
         vpc: vpcIPv4,
+      },
+      ipv6: showIPv6Content
+        ? {
+            is_public: vpcIPv6IsPublic,
+            ranges: _additionalIPv6RangesForVPC,
+            slaac: slaacFieldValue,
+          }
+        : undefined,
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
+    });
+  };
+
+  const handleIPv6RangeChange = (ipv6Ranges: ExtendedIP[]) => {
+    handleChange({
+      ip_ranges: _additionalIPv4RangesForVPC,
+      ipv4: {
+        nat_1_1: nattedIPv4Address,
+        vpc: vpcIPv4,
+      },
+      ipv6: {
+        is_public: vpcIPv6IsPublic,
+        ranges: ipv6Ranges.map((ip_range) => ({ range: ip_range.address })),
+        slaac: slaacFieldValue,
       },
       purpose,
       subnet_id: subnetId,
@@ -185,34 +252,109 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
         nat_1_1: nattedIPv4Address,
         vpc: vpcIPv4,
       },
+      ipv6: showIPv6Content
+        ? {
+            is_public: vpcIPv6IsPublic,
+            ranges: _additionalIPv6RangesForVPC,
+            slaac: slaacFieldValue,
+          }
+        : undefined,
       purpose,
       subnet_id: selectedSubnetId,
       vpc_id: vpcId,
     });
 
-  const handleVPCIPv4Input = (vpcIPv4Input: string | undefined) =>
-    handleChange({
+  const handleVPCIPv4Input = (vpcIPv4Input: string | undefined) => {
+    const obj = {
       ip_ranges: _additionalIPv4RangesForVPC,
       ipv4: {
         nat_1_1: nattedIPv4Address,
         vpc: vpcIPv4Input,
       },
+      ipv6: showIPv6Content
+        ? {
+            is_public: vpcIPv6IsPublic,
+            ranges: _additionalIPv6RangesForVPC,
+            slaac: slaacFieldValue,
+          }
+        : undefined,
       purpose,
       subnet_id: subnetId,
       vpc_id: vpcId,
-    });
+    };
 
-  const handleIPv4Input = (IPv4Input: null | string) =>
+    handleChange(obj);
+  };
+
+  const handleVPCIPv6Input = (vpcIPv6Input: string | undefined) => {
     handleChange({
       ip_ranges: _additionalIPv4RangesForVPC,
       ipv4: {
-        nat_1_1: IPv4Input,
+        nat_1_1: nattedIPv4Address,
         vpc: vpcIPv4,
+      },
+      ipv6: {
+        is_public: vpcIPv6IsPublic,
+        ranges: _additionalIPv6RangesForVPC,
+        slaac:
+          vpcIPv6Input !== undefined && vpcIPv6Input !== ''
+            ? [{ range: vpcIPv6Input }]
+            : undefined,
       },
       purpose,
       subnet_id: subnetId,
       vpc_id: vpcId,
     });
+  };
+
+  const handleIPv4Input = (ipv4Input: null | string) =>
+    handleChange({
+      ip_ranges: _additionalIPv4RangesForVPC,
+      ipv4: {
+        nat_1_1: ipv4Input,
+        vpc: vpcIPv4,
+      },
+      ipv6: showIPv6Content
+        ? {
+            is_public: vpcIPv6IsPublic,
+            ranges: _additionalIPv6RangesForVPC,
+            slaac: slaacFieldValue,
+          }
+        : undefined,
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
+    });
+
+  const handleIPv6IsPublicChange = (vpcIPv6IsPublic: boolean) => {
+    handleChange({
+      ip_ranges: _additionalIPv4RangesForVPC,
+      ipv4: {
+        nat_1_1: nattedIPv4Address,
+        vpc: vpcIPv4,
+      },
+      ipv6: {
+        is_public: !vpcIPv6IsPublic,
+        slaac: slaacFieldValue,
+        ranges: _additionalIPv6RangesForVPC,
+      },
+      purpose,
+      subnet_id: subnetId,
+      vpc_id: vpcId,
+    });
+  };
+
+  const handleToggleAutoassignIPv6WithinVPCEnabled = () => {
+    const newValue = !autoassignIPv6VPCAddress;
+
+    setAutoassignIPv6VPCAddress(newValue);
+
+    if (newValue) {
+      handleVPCIPv6Input('auto');
+    } else {
+      handleVPCIPv6Input(undefined);
+    }
+  };
 
   const handleCreateOption = (_newVlan: string) => {
     setNewVlan(_newVlan);
@@ -400,25 +542,42 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
         <Grid size={isSmallBp ? 12 : 6}>
           <VPCPanel
             additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
+            additionalIPv6RangesForVPC={additionalIPv6RangesForVPC ?? []}
             assignPublicIPv4Address={nattedIPv4Address !== undefined}
+            assignPublicIPv6Address={vpcIPv6IsPublic}
             autoassignIPv4WithinVPC={vpcIPv4 === undefined}
+            autoassignIPv6WithinVPC={autoassignIPv6VPCAddress}
             handleIPv4RangeChange={handleIPv4RangeChange}
+            handleIPv6RangeChange={handleIPv6RangeChange}
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
             handleVPCIPv4Change={handleVPCIPv4Input}
+            handleVPCIPv6Change={handleVPCIPv6Input}
             publicIPv4Error={errors.publicIPv4Error}
+            publicIPv6Error={errors.publicIPv6Error}
             region={region}
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
+            showIPv6Content={showIPv6Content}
             subnetError={errors.subnetError}
-            toggleAssignPublicIPv4Address={handleIPv4Input}
+            toggleAssignPublicIPv4Address={() =>
+              handleIPv4Input(nattedIPv4Address === undefined ? 'any' : null)
+            }
+            toggleAssignPublicIPv6Address={() =>
+              handleIPv6IsPublicChange(vpcIPv6IsPublic)
+            }
             toggleAutoassignIPv4WithinVPCEnabled={() =>
               handleVPCIPv4Input(vpcIPv4 === undefined ? '' : undefined)
+            }
+            toggleAutoassignIPv6WithinVPCEnabled={
+              handleToggleAutoassignIPv6WithinVPCEnabled
             }
             vpcIdError={errors.vpcError}
             vpcIPRangesError={errors.ipRangeError}
             vpcIPv4AddressOfLinode={vpcIPv4}
             vpcIPv4Error={errors.vpcIPv4Error}
+            vpcIPv6AddressOfLinode={vpcIPv6}
+            vpcIPv6Error={errors.vpcIPv6Error}
           />
         </Grid>
       )}
