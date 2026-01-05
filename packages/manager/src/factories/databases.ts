@@ -292,7 +292,7 @@ export const databaseConnectionPoolFactory =
   Factory.Sync.makeFactory<ConnectionPool>({
     database: 'defaultdb',
     mode: 'transaction',
-    label: Factory.each((i) => `connection-pool/${i}`),
+    label: Factory.each((i) => `connection-pool-${i}`),
     size: 10,
     username: null,
   });
