@@ -6,23 +6,17 @@ import React from 'react';
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
-import type { ExtendedProfile } from 'src/request';
-
 /**
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
  * The EUUID is read from the profile data (injected by the injectEuuidToProfile interceptor).
  */
 export const useAdobeAnalytics = () => {
   const location = useLocation();
-  const { data: profile } = useProfile() as {
-    data: ExtendedProfile | undefined;
-  };
-  const euuid = profile?._euuidFromHttpHeader;
+  const { data: profile } = useProfile();
+  const euuid = profile?.euuidFromHttpHeader;
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script
-    // Note: The first page view may not include EUUID since the profile
-    // may not have loaded yet. Subsequent page views will include it.
     if (ADOBE_ANALYTICS_URL) {
       loadScript(ADOBE_ANALYTICS_URL, { location: 'head' })
         .then((data) => {

@@ -16,6 +16,7 @@ export interface Profile {
   authorized_keys: null | string[];
   email: string;
   email_notifications: boolean;
+  euuidFromHttpHeader?: string;
   ip_whitelist_enabled: boolean;
   lish_auth_method: 'disabled' | 'keys_only' | 'password_keys';
   referrals: Referrals;

@@ -102,18 +102,6 @@ export type ProfileWithAkamaiAccountHeader = Profile & {
   _akamaiAccount: boolean;
 };
 
-// A user's external UUID can be found on the response to /account.
-// Since that endpoint is not available to restricted users, the API also
-// returns it as an HTTP header ("X-Customer-Uuid"). This header is injected
-// in the response to `/profile` so that it's available in Redux.
-export type ProfileWithEuuid = Profile & {
-  _euuidFromHttpHeader?: string;
-};
-
-export type ExtendedProfile = Profile &
-  ProfileWithAkamaiAccountHeader &
-  ProfileWithEuuid;
-
 export const injectAkamaiAccountHeader = (
   response: AxiosResponse
 ): AxiosResponse => {
@@ -159,9 +147,9 @@ export const injectEuuidToProfile = (
     const xCustomerUuidHeader = response.headers['x-customer-uuid'];
     // NOTE: this won't work locally (only staging and prod allow this header)
     if (xCustomerUuidHeader) {
-      const profileWithEuuid: ProfileWithEuuid = {
+      const profileWithEuuid: Profile = {
         ...response.data,
-        _euuidFromHttpHeader: xCustomerUuidHeader,
+        euuidFromHttpHeader: xCustomerUuidHeader,
       };
 
       return {

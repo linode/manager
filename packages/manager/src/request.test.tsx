@@ -114,30 +114,32 @@ describe('injectAkamaiAccountHeader', () => {
 
 describe('injectEuuidToProfile', () => {
   const profile = profileFactory.build();
-  const response: Partial<AxiosResponse> = {
+  const response: AxiosResponse = {
     data: profile,
     status: 200,
+    statusText: 'OK',
     config: { headers: new AxiosHeaders(), url: '/profile', method: 'get' },
     headers: { 'x-customer-uuid': '1234' },
   };
 
   it('injects the euuid on successful GET profile response ', () => {
-    const results = injectEuuidToProfile(response as any);
-    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+    const results = injectEuuidToProfile(response);
+    expect(results.data).toHaveProperty('euuidFromHttpHeader', '1234');
     // eslint-disable-next-line
-    const { _euuidFromHttpHeader, ...originalData } = results.data;
+    const { euuidFromHttpHeader, ...originalData } = results.data;
     expect(originalData).toEqual(profile);
   });
 
   it('returns the original profile data if no header is present', () => {
-    const responseWithNoHeaders = { ...response, headers: {} };
-    expect(injectEuuidToProfile(responseWithNoHeaders as any).data).toEqual(
-      profile
-    );
+    const responseWithNoHeaders: AxiosResponse = { ...response, headers: {} };
+    expect(injectEuuidToProfile(responseWithNoHeaders).data).toEqual(profile);
   });
 
   it("doesn't inject the euuid on other endpoints", () => {
-    const accountResponse = { ...response, config: { url: '/account' } };
-    expect(injectEuuidToProfile(accountResponse as any).data).toEqual(profile);
+    const accountResponse: AxiosResponse = {
+      ...response,
+      config: { ...response.config, url: '/account' },
+    };
+    expect(injectEuuidToProfile(accountResponse).data).toEqual(profile);
   });
 });
