@@ -221,6 +221,7 @@ export const VPC = ({ index }: Props) => {
           </Box>
         </Stack>
         <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
+        <Divider sx={(theme) => ({ marginTop: theme.spacingFunction(16) })} />
         {showIPv6Fields && (
           <VPCIPv6Ranges
             disabled={!regionSupportsVPCs}
