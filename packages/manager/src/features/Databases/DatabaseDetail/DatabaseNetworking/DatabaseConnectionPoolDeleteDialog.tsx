@@ -1,8 +1,9 @@
 import { useDeleteDatabaseConnectionPoolMutation } from '@linode/queries';
+import { ActionsPanel, Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 interface Props {
   databaseId: number;
@@ -17,6 +18,7 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
   const {
     error,
     isPending,
+    reset,
     mutateAsync: deleteConnectionPool,
   } = useDeleteDatabaseConnectionPoolMutation(databaseId, poolLabel);
 
@@ -29,22 +31,35 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
     });
   };
 
-  return (
-    <TypeToConfirmDialog
-      entity={{
-        action: 'deletion',
-        name: poolLabel,
-        primaryBtnText: 'Delete',
-        type: 'Database Connection Pool',
+  const clearErrorAndClose = () => {
+    reset();
+    onClose();
+  };
+
+  const actions = (
+    <ActionsPanel
+      primaryButtonProps={{
+        label: 'Delete Connection Pool',
+        loading: isPending,
+        onClick: onDelete,
       }}
-      errors={error}
-      expand
-      label="Database Connection Pool label"
-      loading={isPending}
-      onClick={onDelete}
-      onClose={onClose}
-      open={open}
-      title={`Delete Database Connection Pool ${poolLabel}`}
+      secondaryButtonProps={{ label: 'Cancel', onClick: clearErrorAndClose }}
+      style={{ padding: 0 }}
     />
+  );
+
+  return (
+    <ConfirmationDialog
+      actions={actions}
+      error={error}
+      onClose={() => clearErrorAndClose()}
+      open={open}
+      title={`Delete the ${poolLabel} Connection pool?`}
+    >
+      <Notice variant="warning">
+        <strong>Warning:</strong> Deletion will break the service URI for any
+        clients using this pool.
+      </Notice>
+    </ConfirmationDialog>
   );
 };
