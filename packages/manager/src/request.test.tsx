@@ -124,9 +124,8 @@ describe('injectEuuidToProfile', () => {
 
   it('injects the euuid on successful GET profile response ', () => {
     const results = injectEuuidToProfile(response);
-    expect(results.data).toHaveProperty('euuidFromHttpHeader', '1234');
-    // eslint-disable-next-line
-    const { euuidFromHttpHeader, ...originalData } = results.data;
+    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+    const { _euuidFromHttpHeader, ...originalData } = results.data;
     expect(originalData).toEqual(profile);
   });
 

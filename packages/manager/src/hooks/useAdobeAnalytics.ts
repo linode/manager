@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { loadScript } from '@linode/utilities';
 import { useLocation } from '@tanstack/react-router';
 import React from 'react';
@@ -6,14 +5,15 @@ import React from 'react';
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
+import { useEuuidFromHttpHeader } from './useEuuidFromHttpHeader';
+
 /**
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
  * The EUUID is read from the profile data (injected by the injectEuuidToProfile interceptor).
  */
 export const useAdobeAnalytics = () => {
   const location = useLocation();
-  const { data: profile } = useProfile();
-  const euuid = profile?.euuidFromHttpHeader;
+  const { euuid } = useEuuidFromHttpHeader();
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script
