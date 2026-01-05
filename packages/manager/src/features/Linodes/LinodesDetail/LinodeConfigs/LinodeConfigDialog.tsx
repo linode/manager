@@ -1117,6 +1117,11 @@ export const LinodeConfigDialog = (props: Props) => {
                             publicIPv4Error:
                               // @ts-expect-error this form intentionally breaks formik's error type
                               formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
+                            publicIPv6Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[
+                                `interfaces[${idx}].ipv6.is_public`
+                              ],
                             subnetError:
                               // @ts-expect-error this form intentionally breaks formik's error type
                               formik.errors[`interfaces[${idx}].subnet_id`],

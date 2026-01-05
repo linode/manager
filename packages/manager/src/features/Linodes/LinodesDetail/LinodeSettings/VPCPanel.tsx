@@ -43,6 +43,7 @@ export interface VPCPanelProps {
   handleVPCIPv4Change: (IPv4: string) => void;
   handleVPCIPv6Change: (IPv6: string) => void;
   publicIPv4Error?: string;
+  publicIPv6Error?: string;
   region: string | undefined;
   selectedSubnetId: null | number | undefined;
   selectedVPCId: null | number | undefined;
@@ -76,10 +77,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
     handleSubnetChange,
     handleVPCIPv4Change,
     handleVPCIPv6Change,
-    showIPv6Content,
+    publicIPv4Error,
+    publicIPv6Error,
     region,
     selectedSubnetId,
     selectedVPCId,
+    showIPv6Content,
     subnetError,
     toggleAssignPublicIPv4Address,
     toggleAssignPublicIPv6Address,
@@ -304,6 +307,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   handleAllowPublicIPv6AccessChange={
                     toggleAssignPublicIPv6Address
                   }
+                  publicIPv4Error={publicIPv4Error}
+                  publicIPv6Error={publicIPv6Error}
                   showIPv6Content={showIPv6Content}
                   sx={{ margin: `${theme.spacingFunction(16)} 0` }}
                   userCannotAssignLinodes={false}

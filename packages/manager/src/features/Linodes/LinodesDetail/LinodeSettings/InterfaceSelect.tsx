@@ -45,6 +45,7 @@ interface VPCInterfaceErrors {
   ipRangeError?: string;
   labelError?: string;
   publicIPv4Error?: string;
+  publicIPv6Error?: string;
   subnetError?: string;
   vpcError?: string;
   vpcIPv4Error?: string;
@@ -553,6 +554,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             handleVPCIPv4Change={handleVPCIPv4Input}
             handleVPCIPv6Change={handleVPCIPv6Input}
             publicIPv4Error={errors.publicIPv4Error}
+            publicIPv6Error={errors.publicIPv6Error}
             region={region}
             selectedSubnetId={subnetId}
             selectedVPCId={vpcId}
