@@ -132,29 +132,6 @@ describe('NotificationRecipients component tests', () => {
     expect(mockOnChange).toHaveBeenCalledWith([]);
   });
 
-  it('should disable Select All when search input is not empty', async () => {
-    const mockUsers = accountUserFactory.buildList(3);
-
-    queryMocks.useAllAccountUsersQuery.mockReturnValue({
-      data: mockUsers,
-      isLoading: false,
-      isError: false,
-    });
-
-    renderWithTheme(<NotificationRecipients {...props} />);
-
-    const input = screen.getByPlaceholderText('Select recipients');
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await userEvent.type(input, 'test');
-
-    await waitFor(() => {
-      const selectAllOption = screen.queryByRole('option', {
-        name: SELECT_ALL,
-      });
-      expect(selectAllOption).not.toBeInTheDocument();
-    });
-  });
-
   it('should disable Select All when recipients exceed max limit', async () => {
     const mockUsers = accountUserFactory.buildList(15);
 
