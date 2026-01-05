@@ -9,7 +9,6 @@ import {
 
 import { profileQueries, useProfile } from '../profile';
 import { accountQueries } from './queries';
-import { getAllUsers } from './requests';
 
 import type {
   APIError,
@@ -157,9 +156,9 @@ export const useCreateUserMutation = () => {
   });
 };
 
-export const useAllAccountUsersQuery = () => {
+export const useAllAccountUsersQuery = (enabled: boolean = true) => {
   return useQuery<User[], APIError[]>({
-    queryFn: () => getAllUsers(),
-    queryKey: ['users'],
+    ...accountQueries.users._ctx.all,
+    enabled,
   });
 };

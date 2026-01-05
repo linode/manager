@@ -24,6 +24,7 @@ import {
   getAllMaintenancePolicies,
   getAllNotifications,
   getAllPaymentMethodsRequest,
+  getAllUsers,
 } from './requests';
 
 import type { Filter, Params, RequestOptions } from '@linode/api-v4';
@@ -121,6 +122,10 @@ export const accountQueries = createQueryKeys('account', {
   },
   users: {
     contextQueries: {
+      all: {
+        queryFn: getAllUsers,
+        queryKey: null,
+      },
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getUsers(params, filter),
         queryKey: [params, filter],
