@@ -12,7 +12,7 @@ const mockData: NotificationChannel = notificationChannelFactory.build();
 describe('RenderChannelDetails component', () => {
   it('should render the email channel type notification details', () => {
     const emailAddresses =
-      mockData.channel_type === 'email' && mockData.content.email
+      mockData.channel_type === 'email' && mockData.content?.email
         ? mockData.content.email.email_addresses
         : [];
     const container = renderWithTheme(

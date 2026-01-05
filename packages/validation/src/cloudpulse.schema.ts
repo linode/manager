@@ -133,3 +133,18 @@ export const editAlertDefinitionSchema = object({
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
   regions: array().of(string().defined()).optional(),
 });
+
+export const createNotificationChannelPayloadSchema = object({
+  label: string().required(fieldErrorMessage),
+  channel_type: string()
+    .oneOf(['email', 'webhook', 'pagerduty', 'slack'])
+    .required(fieldErrorMessage),
+  details: object({
+    email: object({
+      usernames: array()
+        .of(string())
+        .min(1, fieldErrorMessage)
+        .required(fieldErrorMessage),
+    }).required(),
+  }).required(),
+});

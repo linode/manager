@@ -211,6 +211,11 @@ const makeMockDatabase = (params: PathParams): Database => {
 
     db.ssl_connection = true;
   }
+
+  if (db.engine === 'postgresql') {
+    db.connection_pool_port = 100;
+  }
+
   const database = databaseFactory.build(db);
 
   if (database.platform !== 'rdbms-default') {
@@ -3578,6 +3583,15 @@ export const handlers = [
         created_by: 'admin',
       })
     );
+    notificationChannels.push(
+      notificationChannelFactory.build({
+        label: 'System channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user5',
+        created_by: 'admin',
+        type: 'system',
+      })
+    );
     notificationChannels.push(...notificationChannelFactory.buildList(75));
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
@@ -4425,5 +4439,8 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))
     );
+  }),
+  http.post('*/v4beta/monitor/alert-channels', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
   }),
 ];
