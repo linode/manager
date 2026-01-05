@@ -1,3 +1,6 @@
+import { Typography } from '@linode/ui';
+import * as React from 'react';
+
 export const deviceSlots = [
   'sda',
   'sdb',
@@ -133,3 +136,17 @@ export const pathsOptions = [
 ];
 
 export const pathsOptionsLabels = pathsOptions.map((path) => path.label);
+
+export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT = (
+  <>
+    <Typography>
+      Configuration Profile interfaces from a single profile can be upgraded to
+      Linode Interfaces.
+    </Typography>
+    <Typography mt={2}>
+      After the upgrade, the Linode can only use Linode Interfaces and cannot
+      revert to Configuration Profile interfaces. Use the dry-run feature to
+      review the changes before committing.
+    </Typography>
+  </>
+);
