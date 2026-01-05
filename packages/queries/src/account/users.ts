@@ -156,9 +156,13 @@ export const useCreateUserMutation = () => {
   });
 };
 
-export const useAllAccountUsersQuery = (enabled: boolean = true) => {
+export const useAllAccountUsersQuery = (
+  enabled: boolean = true,
+  filters: Filter = {},
+  params: Params = {},
+) => {
   return useQuery<User[], APIError[]>({
-    ...accountQueries.users._ctx.all,
+    ...accountQueries.users._ctx.all(params, filters),
     enabled,
   });
 };

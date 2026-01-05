@@ -122,10 +122,10 @@ export const accountQueries = createQueryKeys('account', {
   },
   users: {
     contextQueries: {
-      all: {
-        queryFn: getAllUsers,
-        queryKey: null,
-      },
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllUsers(params, filter),
+        queryKey: [params, filter],
+      }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getUsers(params, filter),
         queryKey: [params, filter],

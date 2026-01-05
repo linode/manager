@@ -37,11 +37,10 @@ export const NotificationRecipients = React.memo(
       data: accountUsers,
       isLoading: isLoadingAccountUsers,
       isError: isAccountUsersError,
-    } = useAllAccountUsersQuery();
-
-    const sortedUsers = React.useMemo(() => {
-      return accountUsers?.sort((a, b) => a.username.localeCompare(b.username));
-    }, [accountUsers]);
+    } = useAllAccountUsersQuery(true, {
+      '+order': 'asc',
+      '+order_by': 'username',
+    });
 
     // Notify parent if API failed to load users
     React.useEffect(() => {
@@ -52,12 +51,12 @@ export const NotificationRecipients = React.memo(
 
     const options = React.useMemo(() => {
       return (
-        sortedUsers?.map((user) => ({
+        accountUsers?.map((user) => ({
           ...user,
           label: user.username,
         })) || []
       );
-    }, [sortedUsers]);
+    }, [accountUsers]);
 
     const selectedOptions = React.useMemo(() => {
       if (!value || !Array.isArray(value)) {

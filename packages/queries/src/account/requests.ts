@@ -70,8 +70,11 @@ export const getAllMaintenancePolicies = () =>
     getMaintenancePolicies(params, filters),
   )().then((data) => data.data);
 
-export const getAllUsers = async () => {
-  return getAll<User>((params, filters) => getUsers(params, filters))().then(
-    (data) => data.data,
-  );
+export const getAllUsers = async (
+  passedParams: Params = {},
+  passedFilters: Filter = {},
+) => {
+  return getAll<User>((params, filters) =>
+    getUsers({ ...params, ...passedParams }, { ...filters, ...passedFilters }),
+  )().then((data) => data.data);
 };
