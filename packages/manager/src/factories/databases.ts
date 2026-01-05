@@ -450,16 +450,13 @@ export const postgresConfigResponse = {
     requires_restart: true,
     type: 'boolean',
   },
-  pglookout: {
-    max_failover_replication_time_lag: {
-      default: 60,
-      description:
-        'Number of seconds of master unavailability before triggering database failover to standby',
-      maximum: 999999,
-      minimum: 10,
-      requires_restart: false,
-      type: 'integer',
-    },
+  synchronous_replication: {
+    description:
+      'Synchronous replication type. Note that the service plan also needs to support synchronous replication.',
+    enum: ['quorum', 'off'],
+    example: 'quorum',
+    requires_restart: false,
+    type: 'string',
   },
 };
 export const databaseEngineConfigFactory = Factory.each((i) =>

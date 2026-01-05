@@ -49,6 +49,31 @@ const getFlattenDefaultConfigs = (
       : [fullKey];
   });
 
+const flattenConfigsEngineLevel = (
+  configs: Record<string, any>
+): Record<string, any> => {
+  const result: Record<string, any> = {};
+  Object.entries(configs).forEach(([key, value]) => {
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      // Only flatten if value is a config group (not a config leaf)
+      Object.values(value).every(
+        (v) => typeof v === 'object' && v !== null && !Array.isArray(v)
+      )
+    ) {
+      // Nested group (e.g., pg, mysql)
+      Object.entries(value).forEach(([subKey, subValue]) => {
+        result[subKey] = subValue;
+      });
+    } else {
+      // Top-level config
+      result[key] = value;
+    }
+  });
+  return result;
+};
+
 /**
  * Get list of advanced Configurations available for users to add/modify
  *
@@ -102,7 +127,13 @@ const addConfigsToUI = (
 
   // Process new configs to be added
   const newEntries = Object.entries(configsList)
-    .filter(([key]) => !database.engine_config[engineType][key])
+    .filter(([key]) => {
+      // Check both the engine subfield and the top-level for the config key
+      return (
+        !(key in database.engine_config[engineType]) &&
+        !(key in database.engine_config)
+      );
+    })
     .slice(0, addSingle ? 1 : undefined); // Limit to 1 if addSingle, otherwise all
 
   if (newEntries.length > 0) {
@@ -121,8 +152,20 @@ const addConfigsToUI = (
         .within(() => {
           // Confirms configure drawer already renders default configs
           Object.keys(database.engine_config[engineType]).forEach((key) => {
+            cy.findByText(`${engineType}.${key}`).scrollIntoView();
             cy.findByText(`${engineType}.${key}`).should('be.visible');
           });
+          Object.keys(database.engine_config)
+            .filter(
+              (key) =>
+                key !== 'pg' &&
+                key !== 'mysql' &&
+                typeof database.engine_config[key] !== 'object'
+            )
+            .forEach((key) => {
+              cy.findByText(key).scrollIntoView();
+              cy.findByText(key).should('be.visible');
+            });
 
           // Adding configs one at a time from the dropdown
           cy.get(
@@ -140,9 +183,23 @@ const addConfigsToUI = (
 
           // Type value for non-boolean configs
           if (value.type !== 'boolean') {
-            cy.get(`[name="${flatKey}"]`).scrollIntoView();
-            cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
-            cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
+            cy.get('form').then(($form) => {
+              // Try to find the input by name within the form
+              if ($form.find(`[name="${flatKey}"]`).length) {
+                cy.get(`[name="${flatKey}"]`).scrollIntoView();
+                cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
+                cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
+              } else {
+                // Fallback: Material-UI Autocomplete (like synchronous_replication)
+                ui.autocomplete
+                  .find()
+                  .first()
+                  .scrollIntoView()
+                  .should('be.visible')
+                  .clear()
+                  .type(`${additionalConfigs[flatKey]}`);
+              }
+            });
           }
         });
     });
@@ -390,16 +447,24 @@ describe('Update database clusters', () => {
             .should('be.enabled')
             .click();
 
+          const flatMockConfigs = flattenConfigsEngineLevel(mockConfigs);
+
           // Add configs from the configList to the existing database cluster
           const {
             additionalConfigs: allConfig,
             saveButton: saveRestartButton,
-          } = addConfigsToUI(
-            mockConfigs[engineType],
-            database,
-            engineType,
-            false
-          );
+          } = addConfigsToUI(flatMockConfigs, database, engineType, false);
+
+          const nestedConfig: Record<string, any> = {};
+          const topLevelConfig: Record<string, any> = {};
+          // Separate nested engine configs and top-level configs
+          Object.entries(allConfig).forEach(([key, value]) => {
+            if (key in mockConfigs[engineType]) {
+              nestedConfig[key] = value;
+            } else {
+              topLevelConfig[key] = value;
+            }
+          });
 
           // Update advanced configurations with the newly added config
           mockUpdateDatabase(database.id, database.engine, {
@@ -408,8 +473,9 @@ describe('Update database clusters', () => {
               ...(database.engine_config as ConfigCategoryValues),
               [engineType]: {
                 ...(existingConfig as ConfigCategoryValues),
-                ...allConfig,
+                ...nestedConfig,
               },
+              ...topLevelConfig,
             },
           }).as('updateAdvancedConfiguration');
 
@@ -423,8 +489,11 @@ describe('Update database clusters', () => {
           cy.wait('@updateAdvancedConfiguration');
 
           // Confirms newly added advacned Config on the Configuration tab tableview
-          Object.keys(allConfig).forEach((key) => {
+          Object.keys(nestedConfig).forEach((key) => {
             cy.findByText(`${engineType}.${key}`).should('be.visible');
+          });
+          Object.keys(topLevelConfig).forEach((key) => {
+            cy.findByText(`${key}`).should('be.visible');
           });
         });
 
