@@ -89,7 +89,9 @@ export const NotificationRecipients = React.memo(
         }
         getOptionLabel={(option) => option.label}
         helperText={
-          !error ? `Select up to ${maxRecipientsSelectionLimit} Recipients` : ''
+          !(error || isAccountUsersError)
+            ? `Select up to ${maxRecipientsSelectionLimit} Recipients`
+            : ''
         }
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Recipients"
