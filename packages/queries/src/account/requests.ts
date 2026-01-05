@@ -71,5 +71,7 @@ export const getAllMaintenancePolicies = () =>
   )().then((data) => data.data);
 
 export const getAllUsers = async () => {
-  return getAll<User>(() => getUsers())().then((data) => data.data);
+  return getAll<User>((params, filters) => getUsers(params, filters))().then(
+    (data) => data.data,
+  );
 };
