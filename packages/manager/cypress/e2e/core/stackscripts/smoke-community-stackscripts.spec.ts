@@ -379,6 +379,13 @@ describe('Community Stackscripts integration tests', () => {
 
     // An error message shows up when no region is selected
     cy.contains('Plan is required.').should('be.visible');
+
+    // For the Dedicated 8 GB, Use filter to select G6 Dedicated instead of relying on pagination
+    ui.autocomplete.findByLabel('Dedicated Plans').click();
+    ui.autocompletePopper.find().within(() => {
+      cy.findByText('G6 Dedicated').should('be.visible').click();
+    });
+
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')
       .closest('tr')
       .within(() => {
