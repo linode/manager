@@ -224,9 +224,14 @@ export const createDatabaseConnectionPoolSchema = object({
     .oneOf(['transaction', 'session', 'statement'], 'Pool mode is required')
     .required('Pool mode is required'),
   label: string()
-    .required('Name is required')
-    .max(63, 'Name must not exceed 63 characters'),
-  size: number().required('Size is required'),
+    .required('Pool name is required')
+    .max(63, 'Pool name must not exceed 63 characters'),
+  size: number()
+    .required('Pool size is required')
+    .typeError('Pool size must be a number')
+    .integer('Pool size must be a whole number')
+    .min(1, 'Pool size must be at least 1')
+    .max(1000, 'Pool size must be at most 1000'),
   username: string().nullable().required('Username is required'),
 });
 

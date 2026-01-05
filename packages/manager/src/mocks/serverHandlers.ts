@@ -385,6 +385,25 @@ const databases = [
     return HttpResponse.json(makeResourcePage(connectionPools));
   }),
 
+  http.post(
+    '*/databases/postgresql/instances/:id/connection-pools',
+    async ({ request }) => {
+      // const body = await request.json();
+      // const payload: any = body;
+
+      // const connectionPool = databaseConnectionPoolFactory.build({
+      //   database: payload.database,
+      //   label: payload.label,
+      //   mode: payload.mode,
+      //   size: 10,
+      //   username: payload.username,
+      // });
+
+      // return HttpResponse.json(connectionPool);
+      return HttpResponse.json({});
+    }
+  ),
+
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
     const database = makeMockDatabase(params);
     return HttpResponse.json(database);
