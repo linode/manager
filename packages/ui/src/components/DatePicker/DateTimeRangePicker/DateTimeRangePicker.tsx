@@ -52,6 +52,12 @@ export interface DateTimeRangePickerProps {
     timeZone: null | string;
   }) => void;
 
+  /** Callback when the popover is closed */
+  onClose?: (selectedPreset: string) => void;
+
+  /** Property to control whether the calendar popover is open */
+  openCalendar?: boolean;
+
   /** Additional settings for the presets dropdown */
   presetsProps?: {
     /** Default value for the presets field */
@@ -108,6 +114,8 @@ export const DateTimeRangePicker = ({
   startDateProps,
   sx,
   timeZoneProps,
+  openCalendar,
+  onClose,
 }: DateTimeRangePickerProps) => {
   const [startDate, setStartDate] = useState<DateTime | null>(
     startDateProps?.value ?? null,
@@ -122,7 +130,7 @@ export const DateTimeRangePicker = ({
     startDateProps?.errorMessage,
   );
   const [endDateError, setEndDateError] = useState(endDateProps?.errorMessage);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(openCalendar ?? false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
@@ -170,6 +178,7 @@ export const DateTimeRangePicker = ({
     setEndDateError('');
     setOpen(false);
     setAnchorEl(null);
+    onClose?.(previousValues.current.selectedPreset ?? '');
   };
 
   const handleApply = () => {
@@ -275,10 +284,18 @@ export const DateTimeRangePicker = ({
     setEndDateError('');
   };
 
+  React.useEffect(() => {
+    if (!anchorEl && startDateInputRef.current) {
+      setAnchorEl(
+        startDateInputRef.current?.parentElement || startDateInputRef.current,
+      );
+    }
+  }, []);
+
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box>
-        <Stack direction="row" spacing={2} sx={sx}>
+        <Stack direction={isSmallScreen ? 'column' : 'row'} spacing={2} sx={sx}>
           <DateTimeField
             errorText={startDateError}
             format={format}
@@ -379,6 +396,7 @@ export const DateTimeRangePicker = ({
                   label="Start Time"
                   onChange={(newTime: DateTime | null) => {
                     if (newTime) {
+                      setSelectedPreset(PRESET_LABELS.RESET); // Reset preset on manual time change
                       setStartDate((prev) => {
                         const updatedValue =
                           prev?.set({
@@ -404,6 +422,7 @@ export const DateTimeRangePicker = ({
                   label="End Time"
                   onChange={(newTime: DateTime | null) => {
                     if (newTime) {
+                      setSelectedPreset(PRESET_LABELS.RESET); // Reset preset on manual time change
                       setEndDate((prev) => {
                         const updatedValue =
                           prev?.set({
