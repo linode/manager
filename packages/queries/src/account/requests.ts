@@ -6,6 +6,7 @@ import {
   getNotifications,
   getPaymentMethods,
   getPayments,
+  getUsers,
 } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
@@ -19,6 +20,7 @@ import type {
   Params,
   Payment,
   PaymentMethod,
+  User,
 } from '@linode/api-v4';
 
 export const getAllNotifications = () =>
@@ -67,3 +69,7 @@ export const getAllMaintenancePolicies = () =>
   getAll<MaintenancePolicy>((params, filters) =>
     getMaintenancePolicies(params, filters),
   )().then((data) => data.data);
+
+export const getAllUsers = async () => {
+  return getAll<User>(() => getUsers())().then((data) => data.data);
+};
