@@ -78,11 +78,13 @@ export const BillingLanding = () => {
       pathname: '/billing',
     },
     buttonDataAttrs: {
-      disabled: isReadOnly,
-      tooltipText: getRestrictedResourceText({
-        isChildUser,
-        resourceType: 'Account',
-      }),
+      disabled: isReadOnly || isAkamaiAccount,
+      tooltipText: isAkamaiAccount
+        ? 'This feature is not available for Akamai accounts.'
+        : getRestrictedResourceText({
+            isChildUser,
+            resourceType: 'Account',
+          }),
     },
     createButtonText: 'Make a Payment',
     docsLabel: 'How Linode Billing Works',
@@ -98,12 +100,10 @@ export const BillingLanding = () => {
       />
     ) : undefined,
     onButtonClick: () =>
-      !isAkamaiAccount
-        ? navigate({
-            to: '/billing',
-            search: { action: 'make-payment' },
-          })
-        : {},
+      navigate({
+        to: '/billing',
+        search: { action: 'make-payment' },
+      }),
     title: 'Billing',
   };
 
