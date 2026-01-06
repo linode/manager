@@ -187,8 +187,22 @@ const formatToUtcDateTime = (dateStr: string): string => {
     .toFormat('yyyy-MM-dd HH:mm');
 };
 
-// It is going to be modified
-describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
+/*
+ * TODO Fix or migrate the tests in `timerange-verification.spec.ts`.
+ *
+ * The tests in this spec frequently fail during specific dates and time periods
+ * throughout the day and year. Because there are so many tests in this spec, the
+ * timeouts and subsequent failures can delay test runs by several (45+) minutes
+ * which frequently interferes with unrelated test runs.
+ *
+ * Other considerations:
+ *
+ * - Would unit tests or component tests be a better fit for this?
+ *
+ * - Are these tests adding any value? They fail frequently and the failures do
+ *   not get reviewed. They do not seem to be protecting us from regressions.
+ */
+describe.skip('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
    * - Simulates loading test data without real API calls.
