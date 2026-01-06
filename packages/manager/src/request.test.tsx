@@ -2,7 +2,12 @@ import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
 import { setAuthDataInLocalStorage } from './OAuth/oauth';
-import { getURL, handleError, injectAkamaiAccountHeader } from './request';
+import {
+  getURL,
+  handleError,
+  injectAkamaiAccountHeader,
+  injectEuuidToProfile,
+} from './request';
 import { storeFactory } from './store';
 import { storage } from './utilities/storage';
 
@@ -104,5 +109,36 @@ describe('injectAkamaiAccountHeader', () => {
     expect(injectAkamaiAccountHeader(accountResponse as any).data).toEqual(
       profile
     );
+  });
+});
+
+describe('injectEuuidToProfile', () => {
+  const profile = profileFactory.build();
+  const response: AxiosResponse = {
+    data: profile,
+    status: 200,
+    statusText: 'OK',
+    config: { headers: new AxiosHeaders(), url: '/profile', method: 'get' },
+    headers: { 'x-customer-uuid': '1234' },
+  };
+
+  it('injects the euuid on successful GET profile response ', () => {
+    const results = injectEuuidToProfile(response);
+    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+    const { _euuidFromHttpHeader, ...originalData } = results.data;
+    expect(originalData).toEqual(profile);
+  });
+
+  it('returns the original profile data if no header is present', () => {
+    const responseWithNoHeaders: AxiosResponse = { ...response, headers: {} };
+    expect(injectEuuidToProfile(responseWithNoHeaders).data).toEqual(profile);
+  });
+
+  it("doesn't inject the euuid on other endpoints", () => {
+    const accountResponse: AxiosResponse = {
+      ...response,
+      config: { ...response.config, url: '/account' },
+    };
+    expect(injectEuuidToProfile(accountResponse).data).toEqual(profile);
   });
 });
