@@ -19,21 +19,19 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import {
   MIN_PAGE_SIZE,
   PAGE_SIZES,
 } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { CONNECTION_POOL_LABEL_CELL_STYLES } from 'src/features/Databases/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import {
-  makeSettingsItemStyles,
-  StyledActionMenuWrapper,
-} from '../../shared.styles';
+import { makeSettingsItemStyles } from '../../shared.styles';
 import { ServiceURI } from '../ServiceURI';
+import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
+import { DatabaseConnectionPoolRow } from './DatabaseConnectionPoolRow';
 
 import type { Database } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   database: Database;
@@ -43,9 +41,9 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
-  const poolLabelCellStyles = {
-    flex: '.5 1 20.5%',
-  };
+
+  const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
+    React.useState<null | string>();
 
   const pagination = usePaginationV2({
     currentRoute: '/databases/$engine/$databaseId/networking',
@@ -61,17 +59,6 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
     page: pagination.page,
     page_size: pagination.pageSize,
   });
-
-  const connectionPoolActions: Action[] = [
-    {
-      onClick: () => null,
-      title: 'Edit', // TODO: UIE-9395 Implement edit functionality
-    },
-    {
-      onClick: () => null, // TODO: UIE-9430 Implement delete functionality
-      title: 'Delete',
-    },
-  ];
 
   if (connectionPoolsLoading) {
     return <CircleProgress />;
@@ -127,7 +114,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
               }
               headerborder
             >
-              <TableHeaderCell style={poolLabelCellStyles}>
+              <TableHeaderCell style={CONNECTION_POOL_LABEL_CELL_STYLES}>
                 Pool Label
               </TableHeaderCell>
               <Hidden smDown>
@@ -156,32 +143,11 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
               </TableRow>
             ) : (
               connectionPools?.data.map((pool) => (
-                <TableRow key={`connection-pool-row-${pool.label}`} zebra>
-                  <TableCell style={poolLabelCellStyles}>
-                    {pool.label}
-                  </TableCell>
-                  <Hidden smDown>
-                    <TableCell>
-                      {`${pool.mode.charAt(0).toUpperCase()}${pool.mode.slice(1)}`}
-                    </TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>{pool.size}</TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>
-                      {pool.username === null
-                        ? 'Reuse inbound user'
-                        : pool.username}
-                    </TableCell>
-                  </Hidden>
-                  <StyledActionMenuWrapper>
-                    <ActionMenu
-                      actionsList={connectionPoolActions}
-                      ariaLabel={`Action menu for connection pool ${pool.label}`}
-                    />
-                  </StyledActionMenuWrapper>
-                </TableRow>
+                <DatabaseConnectionPoolRow
+                  key={pool.label}
+                  onDelete={() => setDeletePoolLabelSelection(pool.label)}
+                  pool={pool}
+                />
               ))
             )}
           </TableBody>
@@ -207,6 +173,12 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           }}
         />
       )}
+      <DatabaseConnectionPoolDeleteDialog
+        databaseId={database.id}
+        onClose={() => setDeletePoolLabelSelection(null)}
+        open={Boolean(deletePoolLabelSelection)}
+        poolLabel={deletePoolLabelSelection ?? ''}
+      />
     </>
   );
 };
