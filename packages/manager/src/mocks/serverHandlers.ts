@@ -21,6 +21,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  marketplaceProductFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
@@ -616,6 +617,39 @@ const netLoadBalancers = [
       );
     }
   ),
+];
+
+const marketplace = [
+  http.get('*/v4beta/marketplace/products', () => {
+    const marketplaceProduct = marketplaceProductFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
+  }),
+  http.get('*/v4beta/marketplace/products/:productId', () => {
+    const marketplaceProductDetail = marketplaceProductFactory.buildList(10, {
+      details: {
+        overview: {
+          description:
+            'This is a detailed description of the marketplace product.',
+        },
+        pricing: 'Pricing information goes here.',
+        documentation: 'Documentation link or information goes here.',
+        support: 'Support information goes here.',
+      },
+    });
+    return HttpResponse.json(...marketplaceProductDetail);
+  }),
+  http.get('*/v4beta/marketplace/categories', () => {
+    const marketplaceCategory = marketplaceProductFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
+  }),
+  http.get('*/v4beta/marketplace/types', () => {
+    const marketplaceType = marketplaceProductFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+  }),
+  http.post('*/v4beta/marketplace/referral', async () => {
+    await sleep(2000);
+    return HttpResponse.json({});
+  }),
 ];
 
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
@@ -4435,6 +4469,7 @@ export const handlers = [
   ...vpc,
   ...entities,
   ...netLoadBalancers,
+  ...marketplace,
   http.get('*/v4beta/maintenance/policies', () => {
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))
