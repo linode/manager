@@ -716,7 +716,11 @@ export const handlers = [
       // restricted: true,
       // user_type: 'default',
     });
-    return HttpResponse.json(profile);
+    return HttpResponse.json(profile, {
+      headers: {
+        'X-Customer-UUID': '51C68049-266E-451B-80ABFC92B5B9D576',
+      },
+    });
   }),
 
   http.put('*/profile', async ({ request }) => {
