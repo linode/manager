@@ -4,6 +4,7 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export const getNotificationChannelActionsList = ({
   handleDetails,
+  handleEdit,
 }: NotificationChannelActionHandlers): Record<
   AlertNotificationType,
   Action[]
@@ -18,6 +19,10 @@ export const getNotificationChannelActionsList = ({
     {
       onClick: handleDetails,
       title: 'Show Details',
+    },
+    {
+      onClick: handleEdit,
+      title: 'Edit',
     },
   ],
 });

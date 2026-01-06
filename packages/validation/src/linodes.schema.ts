@@ -141,7 +141,7 @@ const ipv4ConfigInterface = object().when('purpose', {
 
 const slaacSchema = object().shape({
   range: string()
-    .required('VPC IPv6 is required.')
+    .optional()
     .test({
       name: 'IPv6 prefix length',
       message: 'Must be a /64 IPv6 network CIDR',
@@ -307,6 +307,29 @@ export const ConfigProfileInterfaceSchema = object().shape(
 
 export const ConfigProfileInterfacesSchema = array()
   .of(ConfigProfileInterfaceSchema)
+  .test(
+    'unique-public-interface',
+    'Only one public interface per config is allowed.',
+    (list?: any[] | null) => {
+      if (!list) {
+        return true;
+      }
+
+      return (
+        list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
+      );
+    },
+  );
+
+// This was created specifically for use in UpdateLinodeConfigSchema.
+// Altering `ConfigProfileInterfaceSchema` results in issues related to the `interfaces` property
+// that bubble up to `CreateLinodeSchema` in LinodeCreate/schemas.ts
+export const UpdateConfigProfileInterfacesSchema = array()
+  .of(
+    ConfigProfileInterfaceSchema.clone().shape({
+      ipv6: ipv6Interface.notRequired().nullable(),
+    }),
+  )
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
@@ -593,7 +616,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: ConfigProfileInterfacesSchema,
+  interfaces: UpdateConfigProfileInterfacesSchema,
 });
 
 export const CreateLinodeDiskSchema = object({

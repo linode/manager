@@ -101,7 +101,7 @@ const isEmailContent = (
     message: string;
     subject: string;
   };
-} => 'email' in content;
+} => content !== undefined && 'email' in content;
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
