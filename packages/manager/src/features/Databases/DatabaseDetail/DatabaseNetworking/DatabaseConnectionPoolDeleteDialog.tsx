@@ -54,7 +54,7 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
       error={error}
       onClose={() => clearErrorAndClose()}
       open={open}
-      title={`Delete the ${poolLabel} Connection pool?`}
+      title={`Delete Connection Pool ${poolLabel}?`}
     >
       <Notice variant="warning">
         <strong>Warning:</strong> Deletion will break the service URI for any
