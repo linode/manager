@@ -102,6 +102,14 @@ export type ProfileWithAkamaiAccountHeader = Profile & {
   _akamaiAccount: boolean;
 };
 
+// A user's external UUID can be found on the response to /account.
+// Since that endpoint is not available to restricted users, the API also
+// returns it as an HTTP header ("X-Customer-Uuid"). This header is injected
+// in the response to `/profile` so that it's available in Redux.
+export type ProfileWithEuuid = Profile & {
+  _euuidFromHttpHeader?: string;
+};
+
 export const injectAkamaiAccountHeader = (
   response: AxiosResponse
 ): AxiosResponse => {
@@ -131,6 +139,34 @@ export const isSuccessfulGETProfileResponse = (
   return (
     (method === 'get' && status === 200 && url?.endsWith('/profile')) ?? false
   );
+};
+
+/**
+ * A user's external UUID can be found on the response to /account.
+ * Since that endpoint is not available to restricted users, the API also
+ * returns it as an HTTP header ("X-Customer-Uuid"). This middleware injects
+ * the value of the header to the GET /profile response so it can be added to
+ * the Redux store and used throughout the app.
+ */
+export const injectEuuidToProfile = (
+  response: AxiosResponse
+): AxiosResponse => {
+  if (isSuccessfulGETProfileResponse(response)) {
+    const xCustomerUuidHeader = response.headers['x-customer-uuid'];
+    // NOTE: this won't work locally (only staging and prod allow this header)
+    if (xCustomerUuidHeader) {
+      const profileWithEuuid: ProfileWithEuuid = {
+        ...response.data,
+        _euuidFromHttpHeader: xCustomerUuidHeader,
+      };
+
+      return {
+        ...response,
+        data: profileWithEuuid,
+      };
+    }
+  }
+  return response;
 };
 
 export const setupInterceptors = (store: ApplicationStore) => {
@@ -176,4 +212,7 @@ export const setupInterceptors = (store: ApplicationStore) => {
   );
 
   baseRequest.interceptors.response.use(injectAkamaiAccountHeader);
+
+  // Inject the EUUID from the X-Customer-Uuid header into the profile response
+  baseRequest.interceptors.response.use(injectEuuidToProfile);
 };

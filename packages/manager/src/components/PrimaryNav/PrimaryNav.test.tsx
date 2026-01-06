@@ -630,10 +630,26 @@ describe('PrimaryNav', () => {
       flags,
     });
 
-    const databaseNavItem = await findByTestId(
+    const networkLoadbalancerNavItem = await findByTestId(
       'menu-item-Network Load Balancer'
     );
 
-    expect(databaseNavItem).toBeVisible();
+    expect(networkLoadbalancerNavItem).toBeVisible();
+  });
+
+  it('should show Partner Referral menu item if the user has the account capability and the flag is enabled', async () => {
+    const flags: Partial<Flags> = {
+      marketplaceV2: true,
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const partnerReferralNavItem = await findByTestId(
+      'menu-item-Partner Referrals'
+    );
+
+    expect(partnerReferralNavItem).toBeVisible();
   });
 });
