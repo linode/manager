@@ -6,13 +6,17 @@ import type { ChannelType } from '@linode/api-v4';
 
 export interface NotificationChannelTypeSelectProps {
   /**
+   * Whether the channel type select is disabled
+   */
+  disabled?: boolean;
+  /**
    * Error text to display when the field has a validation error
    */
   error?: string;
   /**
    * Function to handle the change of the channel type
    */
-  handleChannelTypeChange: (value: ChannelType | null) => void;
+  handleChannelTypeChange?: (value: ChannelType | null) => void;
   /**
    * Function to handle the blur event
    */
@@ -29,20 +33,23 @@ export interface NotificationChannelTypeSelectProps {
 
 export const NotificationChannelTypeSelect = React.memo(
   (props: NotificationChannelTypeSelectProps) => {
-    const { error, handleChannelTypeChange, value, options, onBlur } = props;
+    const { disabled, error, handleChannelTypeChange, value, options, onBlur } =
+      props;
 
     return (
       <Autocomplete
         data-testid="channel-type-select"
+        disableClearable={disabled}
+        disabled={disabled}
         errorText={error}
         label="Type"
         onBlur={onBlur}
         onChange={(_, selected, reason) => {
           if (selected) {
-            handleChannelTypeChange(selected.value);
+            handleChannelTypeChange?.(selected.value);
           }
           if (reason === 'clear') {
-            handleChannelTypeChange(null);
+            handleChannelTypeChange?.(null);
           }
         }}
         options={options}

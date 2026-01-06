@@ -155,6 +155,26 @@ describe('CreateNotificationChannel', () => {
     await screen.findByText(REQUIRED_FIELD_ERROR);
   });
 
+  it('should display validation error for name field with special characters', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CreateNotificationChannel />);
+
+    // Select a channel type
+    const channelTypeSelect = screen.getByTestId(CHANNEL_TYPE_SELECT_TESTID);
+    await user.click(
+      within(channelTypeSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: EMAIL_OPTION_LABEL }));
+
+    const nameInput = screen.getByLabelText(NAME_LABEL);
+    await user.type(nameInput, '*#&+:<>"?@%');
+    await user.tab();
+
+    await screen.findByText(
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+    );
+  });
+
   it('should display validation error for recipients field with no value', async () => {
     const user = userEvent.setup();
     renderWithTheme(<CreateNotificationChannel />);

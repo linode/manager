@@ -451,6 +451,12 @@ export interface CloudPulseAlertsPayload {
   user_alerts?: number[];
 }
 
+interface EmailDetail {
+  email: {
+    usernames: string[];
+  };
+}
+
 export interface CreateNotificationChannelPayload {
   /**
    * The type of channel to create.
@@ -459,13 +465,28 @@ export interface CreateNotificationChannelPayload {
   /**
    * The details of the channel to create.
    */
-  details: {
-    email: {
-      usernames: string[];
-    };
-  };
+  details: EmailDetail;
   /**
    * The label of the channel to create.
    */
   label: string;
+}
+
+export interface EditNotificationChannelPayload {
+  /**
+   * The details of the channel to edit.
+   */
+  details: EmailDetail;
+  /**
+   * The label of the channel to edit.
+   */
+  label: string;
+}
+
+export interface EditNotificationChannelPayloadWithId
+  extends EditNotificationChannelPayload {
+  /**
+   * The ID of the channel to edit.
+   */
+  channelId: number;
 }
