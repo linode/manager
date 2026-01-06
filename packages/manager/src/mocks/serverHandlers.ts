@@ -4478,4 +4478,25 @@ export const handlers = [
   http.post('*/v4beta/monitor/alert-channels', () => {
     return HttpResponse.json(notificationChannelFactory.build());
   }),
+  http.put('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.get('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(
+      notificationChannelFactory.build({
+        id: 5,
+        label: 'Email test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        type: 'user',
+        channel_type: 'email',
+        details: {
+          email: {
+            usernames: ['ChildUser', 'NonAdminUser'],
+          },
+        },
+      })
+    );
+  }),
 ];
