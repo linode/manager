@@ -16,6 +16,7 @@ import { PromoDisplay } from './PromoDisplay';
 
 import type { PaymentMethod } from '@linode/api-v4';
 import type { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import type { BillingSearch } from 'src/routes/billing';
 
 interface BillingSummaryProps {
   balance: number;
@@ -79,6 +80,10 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     setSelectedPaymentMethod(undefined);
     navigate({
       to: url,
+      search: (prev: BillingSearch) => ({
+        ...prev,
+        action: prev.action === 'make-payment' ? undefined : prev.action,
+      }),
     });
   }, [navigate]);
 

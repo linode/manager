@@ -23,7 +23,7 @@ import { AddPaymentMethodDrawer } from './AddPaymentMethodDrawer/AddPaymentMetho
 import type { Profile } from '@linode/api-v4';
 import type { PaymentMethod } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
-
+import type { BillingSearch } from 'src/routes/billing';
 interface Props {
   error?: APIError[] | null;
   isAkamaiCustomer: boolean;
@@ -80,6 +80,10 @@ const PaymentInformation = (props: Props) => {
     setAddDrawerOpen(false);
     navigate({
       to: '/billing',
+      search: (prev: BillingSearch) => ({
+        ...prev,
+        action: prev.action === 'add-payment-method' ? undefined : prev.action,
+      }),
     });
   }, [navigate]);
 
