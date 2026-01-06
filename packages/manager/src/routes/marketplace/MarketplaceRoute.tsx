@@ -8,9 +8,9 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
 
 export const MarketplaceRoute = () => {
-  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
-  if (!isMarketplaceFeatureEnabled) {
+  if (!isMarketplaceV2FeatureEnabled) {
     return <NotFound />;
   }
   return (

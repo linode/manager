@@ -124,7 +124,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
-  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
   const {
     data: preferences,
@@ -181,16 +181,19 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 attr: { 'data-qa-one-click-nav-btn': true },
-                display: !isMarketplaceFeatureEnabled
+                display: !isMarketplaceV2FeatureEnabled
                   ? 'Marketplace'
                   : 'Quick Deploy Apps',
                 to: '/linodes/create/marketplace',
               },
               {
-                attr: { 'data-qa-one-click-nav-btn': true },
+                attr: {
+                  'data-qa-one-click-nav-btn': true,
+                  'data-pendo-id': 'menu-item-Cloud Marketplace',
+                },
                 display: 'Partner Referrals',
-                hide: !isMarketplaceFeatureEnabled,
-                isBeta: isMarketplaceFeatureEnabled,
+                hide: !isMarketplaceV2FeatureEnabled,
+                isBeta: isMarketplaceV2FeatureEnabled,
                 to: '/cloud-marketplace/catalog',
               },
             ],
@@ -367,7 +370,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
-        isMarketplaceFeatureEnabled,
+        isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]

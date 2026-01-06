@@ -54,7 +54,7 @@ export const CreateMenu = () => {
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -93,7 +93,7 @@ export const CreateMenu = () => {
         {
           attr: { 'data-qa-one-click-add-new': true },
           description: 'Deploy applications with ease',
-          display: !isMarketplaceFeatureEnabled
+          display: !isMarketplaceV2FeatureEnabled
             ? 'Marketplace'
             : 'Quick Deploy Apps',
           to: '/linodes/create/marketplace',

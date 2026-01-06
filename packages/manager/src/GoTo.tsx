@@ -25,7 +25,7 @@ export const GoTo = React.memo(() => {
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-  const { isMarketplaceFeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
@@ -103,7 +103,7 @@ export const GoTo = React.memo(() => {
         href: '/longview',
       },
       {
-        display: !isMarketplaceFeatureEnabled
+        display: !isMarketplaceV2FeatureEnabled
           ? 'Marketplace'
           : 'Quick Deploy Apps',
         href: '/linodes/create/marketplace',
@@ -137,7 +137,7 @@ export const GoTo = React.memo(() => {
       permissions.is_account_admin,
       isDatabasesEnabled,
       isManagedAccount,
-      isMarketplaceFeatureEnabled,
+      isMarketplaceV2FeatureEnabled,
       isPlacementGroupsEnabled,
       iamRbacPrimaryNavChanges,
     ]

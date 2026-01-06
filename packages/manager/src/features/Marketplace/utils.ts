@@ -12,12 +12,12 @@ export const useIsMarketplaceV2Enabled = () => {
 
   if (!flags) {
     return {
-      isMarketplaceFeatureEnabled: false,
+      isMarketplaceV2FeatureEnabled: false,
     };
   }
 
   // @TODO: Cloud Manager Marketplace - check for customer tag/account capability when it exists
   return {
-    isMarketplaceFeatureEnabled: flags.marketplaceV2,
+    isMarketplaceV2FeatureEnabled: flags.marketplaceV2,
   };
 };
