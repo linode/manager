@@ -21,7 +21,10 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  marketplaceCategoryFactory,
+  marketplacePartnersFactory,
   marketplaceProductFactory,
+  marketplaceTypeFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
@@ -625,7 +628,7 @@ const marketplace = [
     return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
   }),
   http.get('*/v4beta/marketplace/products/:productId', () => {
-    const marketplaceProductDetail = marketplaceProductFactory.buildList(10, {
+    const marketplaceProductDetail = marketplaceProductFactory.build({
       details: {
         overview: {
           description:
@@ -636,14 +639,18 @@ const marketplace = [
         support: 'Support information goes here.',
       },
     });
-    return HttpResponse.json(...marketplaceProductDetail);
+    return HttpResponse.json(marketplaceProductDetail);
   }),
   http.get('*/v4beta/marketplace/categories', () => {
-    const marketplaceCategory = marketplaceProductFactory.buildList(5);
+    const marketplaceCategory = marketplaceCategoryFactory.buildList(5);
     return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
   }),
   http.get('*/v4beta/marketplace/types', () => {
-    const marketplaceType = marketplaceProductFactory.buildList(5);
+    const marketplaceType = marketplaceTypeFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+  }),
+  http.get('*/v4beta/marketplace/partners', () => {
+    const marketplaceType = marketplacePartnersFactory.buildList(5);
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.post('*/v4beta/marketplace/referral', async () => {
