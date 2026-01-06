@@ -57,7 +57,7 @@ export const NotificationChannelListTable = React.memo(
     const handleEdit = ({ id }: NotificationChannel) => {
       navigate({
         to: '/alerts/notification-channels/edit/$channelId',
-        params: { channelId: String(id) },
+        params: { channelId: id },
       });
     };
     const _error = error

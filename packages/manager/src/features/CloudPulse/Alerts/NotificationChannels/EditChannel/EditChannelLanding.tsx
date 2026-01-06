@@ -4,7 +4,6 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import NullComponent from 'src/components/NullComponent';
 import { useNotificationChannelQuery } from 'src/queries/cloudpulse/alerts';
 
 import { StyledPlaceholder } from '../../AlertsDetail/AlertDetail';
@@ -25,7 +24,7 @@ const getLoadingOrErrorState = (
   channelData: NotificationChannel | undefined,
   isLoading: boolean,
   isError: boolean
-): React.JSX.Element => {
+): null | React.JSX.Element => {
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -37,7 +36,7 @@ const getLoadingOrErrorState = (
   if (!channelData) {
     return <StyledPlaceholder icon={EntityIcon} title="No Data to display." />;
   }
-  return <NullComponent />;
+  return null;
 };
 
 export const EditChannelLanding = () => {
@@ -48,14 +47,14 @@ export const EditChannelLanding = () => {
     data: channelData,
     isError,
     isLoading,
-  } = useNotificationChannelQuery(Number(channelId));
+  } = useNotificationChannelQuery(channelId);
   const pathname = '/Notification Channels/Edit';
 
   if (!channelData || isLoading || isError) {
     return (
-      <EditChannelState overrides={overrides} pathname={pathname}>
+      <EditChannelContainer overrides={overrides} pathname={pathname}>
         {getLoadingOrErrorState(channelData, isLoading, isError)}
-      </EditChannelState>
+      </EditChannelContainer>
     );
   }
 
@@ -70,7 +69,7 @@ export const EditChannelLanding = () => {
  * @param crumbOverrides - The overrides to be provided in breadcrumb
  * @param children - The message component (e.g., CircleProgress, ErrorState, or Placeholder)
  */
-const EditChannelState = ({
+const EditChannelContainer = ({
   children,
   overrides,
   pathname,
@@ -82,7 +81,7 @@ const EditChannelState = ({
   return (
     <>
       <Breadcrumb crumbOverrides={overrides} pathname={pathname} />
-      <Box alignContent="center" height="600px">
+      <Box alignContent="center" minHeight="600px">
         {children}
       </Box>
     </>

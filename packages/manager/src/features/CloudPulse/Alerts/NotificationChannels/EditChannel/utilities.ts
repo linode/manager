@@ -2,11 +2,11 @@ import type { CreateNotificationChannelForm } from '../CreateChannel/types';
 import type { EditNotificationChannelPayloadWithId } from '@linode/api-v4';
 
 export const filterEditChannelFormValues = (
-  channelId: string,
+  channelId: number,
   formValues: CreateNotificationChannelForm
 ): EditNotificationChannelPayloadWithId => {
   return {
-    channelId: Number(channelId),
+    channelId,
     label: formValues.name,
     details: {
       email: {

@@ -73,7 +73,7 @@ const channelData = notificationChannelFactory.build({
 describe('EditNotificationChannel component', () => {
   it('should render the breadcrumb, form components, and initial values', async () => {
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     // Breadcrumb and title
@@ -96,7 +96,7 @@ describe('EditNotificationChannel component', () => {
   it('should be able to update the name field', async () => {
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     const nameInput = screen.getByLabelText(NAME_LABEL);
@@ -113,7 +113,7 @@ describe('EditNotificationChannel component', () => {
   it('should display validation error for name field with special characters', async () => {
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     const nameInput = screen.getByLabelText(NAME_LABEL);
@@ -128,7 +128,7 @@ describe('EditNotificationChannel component', () => {
   it('should submit form data correctly and show success message', async () => {
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
     // Update the name
     const nameInput = screen.getByLabelText(NAME_LABEL);
@@ -155,7 +155,7 @@ describe('EditNotificationChannel component', () => {
   it('should display validation errors for empty fields', async () => {
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     // Clear the name field and blur to trigger validation
@@ -171,7 +171,7 @@ describe('EditNotificationChannel component', () => {
   it('should navigate back when Cancel button is clicked', async () => {
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
@@ -188,7 +188,7 @@ describe('EditNotificationChannel component', () => {
 
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     // Update the name
@@ -209,7 +209,7 @@ describe('EditNotificationChannel component', () => {
 
     const user = userEvent.setup();
     renderWithTheme(
-      <EditNotificationChannel channelData={channelData} channelId="1" />
+      <EditNotificationChannel channelData={channelData} channelId={1} />
     );
 
     // Update the name

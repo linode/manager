@@ -336,7 +336,7 @@ export const useUpdateNotificationChannel = () => {
 };
 
 export const useNotificationChannelQuery = (channelId: number) => {
-  return useQuery<NotificationChannel, APIError[]>({
-    ...queryFactory.notificationChannels._ctx.channelById(channelId),
-  });
+  return useQuery<NotificationChannel, APIError[]>(
+    queryFactory.notificationChannels._ctx.channelById(channelId)
+  );
 };

@@ -98,6 +98,11 @@ export const cloudPulseNotificationChannelsCreateRoute = createRoute({
 const cloudPulseNotificationChannelEditRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: 'notification-channels/edit/$channelId',
+  params: {
+    parse: (rawParams) => ({
+      channelId: Number(rawParams.channelId),
+    }),
+  },
 }).lazy(() =>
   import(
     'src/features/CloudPulse/Alerts/NotificationChannels/EditChannel/cloudPulseAlertsNotificationChannelsEditLazyRoute'

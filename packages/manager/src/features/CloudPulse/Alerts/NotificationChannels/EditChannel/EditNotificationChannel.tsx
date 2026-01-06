@@ -41,7 +41,7 @@ export interface EditNotificationChannelProps {
   /**
    * The channel ID being edited.
    */
-  channelId: string;
+  channelId: number;
 }
 
 export const EditNotificationChannel = (

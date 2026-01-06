@@ -37,7 +37,7 @@ vi.mock('@tanstack/react-router', async () => {
 describe('EditChannelLanding component tests', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
-      channelId: '1',
+      channelId: 1,
     });
     queryMocks.useUpdateNotificationChannel.mockReturnValue({
       mutateAsync: vi.fn().mockResolvedValue({}),
