@@ -27,6 +27,7 @@ describe('InterfaceSelect', () => {
     region: 'us-east',
     regionHasVLANs: true,
     slotNumber: 0,
+    vpcIPv6IsPublic: false,
   };
 
   it('should display helper text regarding VPCs not being available in the region in the Linode Add/Edit Config dialog if applicable', async () => {
