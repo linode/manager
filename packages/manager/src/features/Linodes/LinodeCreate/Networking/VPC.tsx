@@ -67,7 +67,7 @@ export const VPC = ({ index }: Props) => {
     Boolean(selectedSubnet?.ipv6?.length && selectedSubnet?.ipv6?.length > 0);
 
   return (
-    <Box>
+    <Box sx={{ mb: '16px !important' }}>
       <Stack spacing={1.5}>
         {selectedRegion && !regionSupportsVPCs && <VPCAvailabilityNotice />}
         <Controller
@@ -221,7 +221,6 @@ export const VPC = ({ index }: Props) => {
           </Box>
         </Stack>
         <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
-        <Divider sx={(theme) => ({ marginTop: theme.spacingFunction(16) })} />
         {showIPv6Fields && (
           <VPCIPv6Ranges
             disabled={!regionSupportsVPCs}
