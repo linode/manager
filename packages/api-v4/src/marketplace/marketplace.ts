@@ -10,8 +10,11 @@ import Request, {
 } from 'src/request';
 
 import type {
+  MarketplaceCategory,
+  MarketplacePartner,
   MarketplacePartnerReferralPayload,
   MarketplaceProduct,
+  MarketplaceType,
 } from './types';
 import type { Filter, ResourcePage as Page, Params } from 'src/types';
 
@@ -32,7 +35,7 @@ export const getMarketplaceProduct = (productId: number) =>
   );
 
 export const getMarketplaceCategories = (params?: Params, filters?: Filter) =>
-  Request<Page<MarketplaceProduct>>(
+  Request<Page<MarketplaceCategory>>(
     setURL(`${BETA_API_ROOT}/marketplace/categories`),
     setMethod('GET'),
     setParams(params),
@@ -40,8 +43,16 @@ export const getMarketplaceCategories = (params?: Params, filters?: Filter) =>
   );
 
 export const getMarketplaceTypes = (params?: Params, filters?: Filter) =>
-  Request<Page<MarketplaceProduct>>(
+  Request<Page<MarketplaceType>>(
     setURL(`${BETA_API_ROOT}/marketplace/types`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  );
+
+export const getMarketplacePartners = (params?: Params, filters?: Filter) =>
+  Request<Page<MarketplacePartner>>(
+    setURL(`${BETA_API_ROOT}/marketplace/partners`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
