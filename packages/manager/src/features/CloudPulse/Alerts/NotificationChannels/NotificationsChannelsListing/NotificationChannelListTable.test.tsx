@@ -10,8 +10,6 @@ import { NotificationChannelListTable } from './NotificationChannelListTable';
 
 const mockScrollToElement = vi.fn();
 
-const ALERT_TYPE = 'alerts-definitions';
-
 describe('NotificationChannelListTable', () => {
   it('should render the notification channel table headers', () => {
     renderWithTheme(
@@ -127,11 +125,7 @@ describe('NotificationChannelListTable', () => {
 
   it('should display correct alerts count', () => {
     const channel = notificationChannelFactory.build({
-      alerts: [
-        { id: 1, label: 'Alert 1', type: ALERT_TYPE, url: 'url1' },
-        { id: 2, label: 'Alert 2', type: ALERT_TYPE, url: 'url2' },
-        { id: 3, label: 'Alert 3', type: ALERT_TYPE, url: 'url3' },
-      ],
+      alerts: { alert_count: 3 },
     });
 
     renderWithTheme(
