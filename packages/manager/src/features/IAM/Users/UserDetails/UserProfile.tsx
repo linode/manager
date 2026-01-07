@@ -68,7 +68,7 @@ export const UserProfile = () => {
       >
         <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
         <UsernamePanel activeUser={user} canUpdateUser={isAccountAdmin} />
-        <UserEmailPanel activeUser={user} canUpdateUser={isAccountAdmin} />
+        <UserEmailPanel activeUser={user} />
         <DeleteUserPanel activeUser={user} canDeleteUser={isAccountAdmin} />
       </Stack>
     </>

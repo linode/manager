@@ -108,4 +108,26 @@ describe('DatabaseManageNetworkingDrawer Component', () => {
     );
     expect(errorStateText).toBeInTheDocument();
   });
+
+  it('should render service URI component if there are connection pools', () => {
+    queryMocks.useDatabaseConnectionPoolsQuery.mockReturnValue({
+      data: makeResourcePage([mockConnectionPool]),
+      isLoading: false,
+    });
+
+    renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />);
+    const serviceURIText = screen.getByText('Service URI');
+    expect(serviceURIText).toBeInTheDocument();
+  });
+
+  it('should not render service URI component if there are no connection pools', () => {
+    queryMocks.useDatabaseConnectionPoolsQuery.mockReturnValue({
+      data: makeResourcePage([]),
+      isLoading: false,
+    });
+
+    renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />);
+    const serviceURIText = screen.queryByText('Service URI');
+    expect(serviceURIText).not.toBeInTheDocument();
+  });
 });
