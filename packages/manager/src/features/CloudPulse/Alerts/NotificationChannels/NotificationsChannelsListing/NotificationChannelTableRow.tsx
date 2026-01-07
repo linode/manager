@@ -52,7 +52,7 @@ export const NotificationChannelTableRow = (
           {label}
         </Link>
       </TableCell>
-      <TableCell>{alerts.alert_count}</TableCell>
+      <TableCell>{alerts.length}</TableCell>
       <TableCell>{channelTypeMap[channel_type]}</TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
