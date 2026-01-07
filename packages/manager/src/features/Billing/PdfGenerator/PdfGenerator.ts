@@ -179,15 +179,10 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
 };
 
 // M3-6177 only make one request to get the logo
-const getAkamaiLogo = () => {
-  return axios
-    .get(AkamaiLogo, { responseType: 'blob' })
-    .then((res) => {
-      return URL.createObjectURL(res.data);
-    })
-    .catch(() => {
-      return AkamaiLogo;
-    });
+const getAkamaiLogo = async () => {
+  const response = await axios.get(AkamaiLogo, { responseType: 'arraybuffer' });
+  const base64 = Buffer.from(response.data, 'binary').toString('base64');
+  return `data:image/png;base64,${base64}`;
 };
 
 interface PrintInvoiceOptions {
@@ -324,12 +319,12 @@ export const printInvoice = async (
   }
 };
 
-export const printPayment = (
+export const printPayment = async (
   account: Account,
   payment: Payment,
   countryTax?: TaxDetail,
   timezone?: string
-): PdfResult => {
+): Promise<PdfResult> => {
   try {
     const date = formatDate(payment.date, {
       displayTime: true,
@@ -340,7 +335,8 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
+    const AkamaiLogoURL = await getAkamaiLogo();
+    doc.addImage(AkamaiLogoURL, 'JPEG', 160, 10, 120, 40, undefined, 'MEDIUM');
 
     const leftHeaderYPosition = addLeftHeader(
       doc,

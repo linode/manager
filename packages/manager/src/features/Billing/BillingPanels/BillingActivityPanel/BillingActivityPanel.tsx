@@ -284,7 +284,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   );
 
   const downloadPaymentPDF = React.useCallback(
-    (paymentId: number) => {
+    async (paymentId: number) => {
       const payment = payments?.find(
         (thisPayment) => thisPayment.id === paymentId
       );
@@ -307,7 +307,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
         taxes?.date,
         taxes?.country_tax
       );
-      const result = printPayment(account, payment, countryTax);
+      const result = await printPayment(account, payment, countryTax);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
