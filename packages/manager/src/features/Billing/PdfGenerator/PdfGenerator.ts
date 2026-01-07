@@ -180,9 +180,14 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
 
 // M3-6177 only make one request to get the logo
 const getAkamaiLogo = async () => {
-  const response = await axios.get(AkamaiLogo, { responseType: 'arraybuffer' });
-  const base64 = Buffer.from(response.data, 'binary').toString('base64');
-  return `data:image/png;base64,${base64}`;
+  const response = await axios.get(AkamaiLogo, { responseType: 'blob' });
+
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(response.data);
+  });
 };
 
 interface PrintInvoiceOptions {
