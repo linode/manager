@@ -1,3 +1,14 @@
+## [2026-01-12] - v0.19.0
+
+
+### Changed:
+
+- IAM: Enable account_viewer to access users table ([#13189](https://github.com/linode/manager/pull/13189))
+
+### Upcoming Features:
+
+- Add new API queries for CRUD of locks for Resource Locking feature(RESPROT2)  ([#13187](https://github.com/linode/manager/pull/13187))
+
 ## [2025-12-09] - v0.18.0
 
 
