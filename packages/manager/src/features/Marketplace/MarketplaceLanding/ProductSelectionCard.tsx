@@ -115,7 +115,13 @@ export const ProductSelectionCard = React.memo(
             position: 'absolute',
           })}
         >
-          <Chip label={type} size="small" />
+          <Chip
+            label={type}
+            size="small"
+            sx={(theme) => ({
+              backgroundColor: theme.tokens.alias.Background.Informativesubtle,
+            })}
+          />
         </Box>,
       ];
     }, [subheadings, type]);
@@ -158,6 +164,9 @@ export const ProductSelectionCard = React.memo(
                   fontWeight: theme.tokens.font.FontWeight.Bold,
                   padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(6)}`,
                 },
+                backgroundColor:
+                  theme.tokens.component.Badge.Positive.Subtle.Background,
+                color: theme.tokens.component.Badge.Positive.Subtle.Text,
                 flexShrink: 0,
               })}
             />
