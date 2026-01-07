@@ -41,12 +41,11 @@ const notificationChannels = notificationChannelFactory
   .buildList(26)
   .map((ch, i) => {
     const isEmail = i % 2 === 0;
-    const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
-      id: idx + 1,
-      label: `Alert-${idx + 1}`,
+    const alerts = {
+      alert_count: isEmail ? 5 : 3,
+      url: `monitor/alert-channels/${i + 1}/alerts`,
       type: 'alerts-definitions',
-      url: 'Sample',
-    }));
+    };
 
     if (isEmail) {
       return {
@@ -147,7 +146,7 @@ const VerifyChannelSortingParams = (
   );
 
   const order = sortOrderMap[sortOrder];
-  const orderBy = LabelLookup[columnLabel];
+  const orderBy = encodeURIComponent(LabelLookup[columnLabel]);
 
   cy.url().should(
     'endWith',
@@ -215,16 +214,7 @@ describe('Notification Channel Listing Page', () => {
         }
 
         // Alerts list
-        expect(item.alerts.length).to.eq(expected.alerts.length);
-
-        item.alerts.forEach((alert, aIndex) => {
-          const expAlert = expected.alerts[aIndex];
-
-          expect(alert.id).to.eq(expAlert.id);
-          expect(alert.label).to.eq(expAlert.label);
-          expect(alert.type).to.eq(expAlert.type);
-          expect(alert.url).to.eq(expAlert.url);
-        });
+        expect(item.alerts.alert_count).to.eq(expected.alerts.alert_count);
       });
     });
   });
@@ -254,7 +244,9 @@ describe('Notification Channel Listing Page', () => {
 
           cy.wrap($row).within(() => {
             cy.findByText(expected.label).should('be.visible');
-            cy.findByText(String(expected.alerts.length)).should('be.visible');
+            cy.findByText(String(expected.alerts.alert_count)).should(
+              'be.visible'
+            );
             cy.findByText('Email').should('be.visible');
             cy.get('td').eq(3).should('have.text', expected.created_by);
             cy.findByText(
@@ -284,11 +276,11 @@ describe('Notification Channel Listing Page', () => {
       {
         column: 'Alerts',
         ascending: [...notificationChannels]
-          .sort((a, b) => a.alerts.length - b.alerts.length)
+          .sort((a, b) => a.alerts.alert_count - b.alerts.alert_count)
           .map((ch) => ch.id),
 
         descending: [...notificationChannels]
-          .sort((a, b) => b.alerts.length - a.alerts.length)
+          .sort((a, b) => b.alerts.alert_count - a.alerts.alert_count)
           .map((ch) => ch.id),
       },
 
