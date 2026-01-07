@@ -243,6 +243,8 @@ export const LinodeCreate = () => {
     });
   }
 
+  const interfaceGeneration = form.watch('interface_generation');
+
   return (
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
@@ -300,7 +302,7 @@ export const LinodeCreate = () => {
             isAlertsBetaMode={isAclpAlertsBetaCreateFlow}
             onAlertsModeChange={setIsAclpAlertsBetaCreateFlow}
           />
-          <Addons />
+          <Addons interfaceGeneration={interfaceGeneration!} />
           <EUAgreement />
           <Summary isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
           <SMTP />
