@@ -67,7 +67,7 @@ export const VPC = ({ index }: Props) => {
     Boolean(selectedSubnet?.ipv6?.length && selectedSubnet?.ipv6?.length > 0);
 
   return (
-    <Box>
+    <Box sx={{ mb: '16px !important' }}>
       <Stack spacing={1.5}>
         {selectedRegion && !regionSupportsVPCs && <VPCAvailabilityNotice />}
         <Controller
@@ -164,23 +164,25 @@ export const VPC = ({ index }: Props) => {
             )}
           />
           {showIPv6Fields && (
-            <Controller
-              control={control}
-              name={`linodeInterfaces.${index}.vpc.ipv6.slaac.0.range`}
-              render={({ field, fieldState }) => (
-                <VPCIPv6Address
-                  disabled={!regionSupportsVPCs}
-                  errorMessage={
-                    fieldState.error?.message ??
-                    errors.linodeInterfaces?.[index]?.vpc?.ipv6?.slaac?.[0]
-                      ?.range?.message
-                  }
-                  fieldValue={field.value}
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                />
-              )}
-            />
+            <Box sx={{ mb: 2 }}>
+              <Controller
+                control={control}
+                name={`linodeInterfaces.${index}.vpc.ipv6.slaac.0.range`}
+                render={({ field, fieldState }) => (
+                  <VPCIPv6Address
+                    disabled={!regionSupportsVPCs}
+                    errorMessage={
+                      fieldState.error?.message ??
+                      errors.linodeInterfaces?.[index]?.vpc?.ipv6?.slaac?.[0]
+                        ?.range?.message
+                    }
+                    fieldValue={field.value}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+            </Box>
           )}
           <Box>
             <Divider
