@@ -200,12 +200,9 @@ export const ProductSelectionCard = React.memo(
   }
 );
 
-const StyledLogoBox = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.tokens.color.Neutrals[20]}`,
-  borderRadius: theme.tokens.alias.Radius.Default,
+const StyledLogoBox = styled(Box)({
   height: '48px',
   maxWidth: '96px',
   overflow: 'hidden',
-  padding: theme.spacingFunction(8),
   width: 'auto',
-}));
+});
