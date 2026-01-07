@@ -319,9 +319,14 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
-    // Open VLAN accordion and select existing VLAN.
-    cy.get('[data-qa-select-card-heading="VLAN"]').should('be.visible').click();
-    cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    // select existing VLAN.
+    linodeCreatePage.selectInterface('vlan');
+    // Confirm that mocked VLAN is shown in the Autocomplete, and then select it.
+    cy.get('[data-qa-autocomplete="VLAN"]').within(() => {
+      cy.findByLabelText('VLAN').should('be.visible');
+      cy.get('[data-testid="textfield-input"]').click();
+      cy.focused().type(`${mockVlan.label}`);
+    });
     ui.autocompletePopper
       .findByTitle(mockVlan.label)
       .should('be.visible')
@@ -399,10 +404,14 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VLAN card
-    linodeCreatePage.selectInterfaceCard('VLAN');
+    linodeCreatePage.selectInterface('vlan');
 
-    // Open VLAN accordion and select existing VLAN.
-    cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    // select existing VLAN.
+    cy.get('[data-qa-autocomplete="VLAN"]').within(() => {
+      cy.findByLabelText('VLAN').should('be.visible');
+      cy.get('[data-testid="textfield-input"]').click();
+      cy.focused().type(`${mockVlan.label}`);
+    });
     ui.autocompletePopper
       .findByTitle(mockVlan.label)
       .should('be.visible')
@@ -477,10 +486,14 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     assertNewLinodeInterfacesIsAvailable();
 
     // Select VLAN card
-    linodeCreatePage.selectInterfaceCard('VLAN');
+    linodeCreatePage.selectInterface('vlan');
 
-    // Open VLAN accordion and specify new VLAN.
-    cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    // select new VLAN.
+    cy.get('[data-qa-autocomplete="VLAN"]').within(() => {
+      cy.findByLabelText('VLAN').should('be.visible');
+      cy.get('[data-testid="textfield-input"]').click();
+      cy.focused().type(`${mockVlan.label}`);
+    });
     ui.autocompletePopper
       .findByTitle(`Create "${mockVlan.label}"`)
       .should('be.visible')
@@ -558,10 +571,14 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VLAN card
-    linodeCreatePage.selectInterfaceCard('VLAN');
+    linodeCreatePage.selectInterface('vlan');
 
-    // Open VLAN accordion and specify new VLAN.
-    cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
+    // select new VLAN.
+    cy.get('[data-qa-autocomplete="VLAN"]').within(() => {
+      cy.findByLabelText('VLAN').should('be.visible');
+      cy.get('[data-testid="textfield-input"]').click();
+      cy.focused().type(`${mockVlan.label}`);
+    });
     ui.autocompletePopper
       .findByTitle(`Create "${mockVlan.label}"`)
       .should('be.visible')
@@ -620,9 +637,9 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     assertNewLinodeInterfacesIsAvailable();
 
     // Select VLAN card
-    linodeCreatePage.selectInterfaceCard('VLAN');
+    linodeCreatePage.selectInterface('vlan');
 
-    // Expand VLAN accordion, confirm VLAN availability notice is displayed and
+    // confirm VLAN availability notice is displayed and
     // that VLAN fields are disabled while no region is selected.
     cy.findByText('VLAN is not available in the selected region.', {
       exact: false,
