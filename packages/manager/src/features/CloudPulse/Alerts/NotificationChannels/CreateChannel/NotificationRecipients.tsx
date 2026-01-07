@@ -1,7 +1,6 @@
-import { useAccountUsersInfiniteQuery } from '@linode/queries';
+import { useAllAccountUsersQuery } from '@linode/queries';
 import { Autocomplete, Box, SelectedIcon, StyledListItem } from '@linode/ui';
-import { useDebouncedValue } from '@linode/utilities';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -19,6 +18,10 @@ export interface NotificationRecipientsProps {
    */
   onChange: (value: string[]) => void;
   /**
+   * Callback when API fails and there are no options available
+   */
+  onError?: () => void;
+  /**
    * Selected recipients (array of usernames)
    */
   value: string[];
@@ -26,36 +29,29 @@ export interface NotificationRecipientsProps {
 
 export const NotificationRecipients = React.memo(
   (props: NotificationRecipientsProps) => {
-    const { error, onBlur, onChange, value } = props;
-
-    const [usernameInput, setUsernameInput] = useState<string>('');
-    const debouncedUsernameInput = useDebouncedValue(usernameInput);
+    const { error, onBlur, onChange, onError, value } = props;
 
     const flags = useFlags();
 
-    // Filter the users by the debounced username input
-    const userSearchFilter = debouncedUsernameInput
-      ? {
-          ['+or']: [{ username: { ['+contains']: debouncedUsernameInput } }],
-        }
-      : undefined;
-
     const {
       data: accountUsers,
-      fetchNextPage,
-      hasNextPage,
-      isFetching: isFetchingAccountUsers,
       isLoading: isLoadingAccountUsers,
-    } = useAccountUsersInfiniteQuery({
-      ...userSearchFilter,
+      isError: isAccountUsersError,
+    } = useAllAccountUsersQuery(true, {
       '+order': 'asc',
       '+order_by': 'username',
     });
 
+    // Notify parent if API failed to load users
+    React.useEffect(() => {
+      if (isAccountUsersError && onError) {
+        onError();
+      }
+    }, [isAccountUsersError, onError]);
+
     const options = React.useMemo(() => {
-      const users = accountUsers?.pages.flatMap((page) => page.data);
       return (
-        users?.map((user) => ({
+        accountUsers?.map((user) => ({
           ...user,
           label: user.username,
         })) || []
@@ -73,21 +69,6 @@ export const NotificationRecipients = React.memo(
         .filter((opt) => opt !== undefined);
     }, [options, value]);
 
-    // Handle the scroll event to load more users when the user scrolls to the bottom of the list
-    const handleScroll = (event: React.SyntheticEvent) => {
-      const listboxNode = event.currentTarget;
-      const isAtBottom =
-        Math.abs(
-          listboxNode.scrollHeight -
-            listboxNode.clientHeight -
-            listboxNode.scrollTop
-        ) < 1;
-
-      if (isAtBottom && hasNextPage) {
-        fetchNextPage();
-      }
-    };
-
     // Maximum recipients selection limit is fetched from launchdarkly
     const maxRecipientsSelectionLimit =
       flags.aclpAlerting?.maxEmailChannelRecipients || 10;
@@ -101,19 +82,20 @@ export const NotificationRecipients = React.memo(
     return (
       <Autocomplete
         data-testid="recipients-select"
-        disableSelectAll={
-          recipientsLimitReached || debouncedUsernameInput !== ''
+        disableSelectAll={recipientsLimitReached}
+        errorText={
+          error ?? (isAccountUsersError ? 'Failed to fetch the users.' : '')
         }
-        errorText={error}
         getOptionLabel={(option) => option.label}
         helperText={
-          !error ? `Select up to ${maxRecipientsSelectionLimit} Recipients` : ''
+          !(error || isAccountUsersError)
+            ? `Select up to ${maxRecipientsSelectionLimit} Recipients`
+            : ''
         }
-        inputValue={usernameInput}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Recipients"
         limitTags={1}
-        loading={isLoadingAccountUsers || isFetchingAccountUsers}
+        loading={isLoadingAccountUsers}
         multiple
         onBlur={onBlur}
         onChange={(_, selected, reason) => {
@@ -123,13 +105,6 @@ export const NotificationRecipients = React.memo(
           }
 
           onChange(selected.map((item) => item.label));
-          setUsernameInput('');
-        }}
-        onInputChange={(_, value, reason) => {
-          // Only update for actual typing; ignore MUI reset calls
-          if (reason === 'input') {
-            setUsernameInput(value);
-          }
         }}
         options={options}
         placeholder="Select recipients"
@@ -167,9 +142,6 @@ export const NotificationRecipients = React.memo(
           );
         }}
         slotProps={{
-          listbox: {
-            onScroll: handleScroll,
-          },
           popper: {
             placement: 'bottom',
           },
