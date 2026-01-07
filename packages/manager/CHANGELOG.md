@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Elastic Stack and Weaviate to Marketplace Apps ([#13149](https://github.com/linode/manager/pull/13149))
 - IAM: a permission check to the users table input based on view_account permission ([#13206](https://github.com/linode/manager/pull/13206))
-- Add humanization support for selected units in CloudPulse metrics graphs'1 yAxis, legend and tooltip ([#13220](https://github.com/linode/manager/pull/13220))
+- Add humanization support for selected units in CloudPulse metrics graphs yAxis, legend and tooltip ([#13220](https://github.com/linode/manager/pull/13220))
 - Add customized humanize method for `cloudpulse metric` graphs ([#13224](https://github.com/linode/manager/pull/13224))
 - Extract EUUID from authenticated API calls at the interceptor level and share it with Adobe analytics through the page view event ([#13229](https://github.com/linode/manager/pull/13229))
 - New feature marker in navigation menu and primary breadcrumbs of `CloudPulse metrics` ([#13230](https://github.com/linode/manager/pull/13230))
