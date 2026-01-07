@@ -6,9 +6,16 @@ import { useWatch } from 'react-hook-form';
 import { Backups } from './Backups';
 import { PrivateIP } from './PrivateIP';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type {
+  CreateLinodeRequest,
+  InterfaceGenerationType,
+} from '@linode/api-v4';
 
-export const Addons = () => {
+interface AddonsProps {
+  interfaceGeneration?: InterfaceGenerationType;
+}
+
+export const Addons = ({ interfaceGeneration }: AddonsProps) => {
   const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
 
   const { data: regions } = useRegionsQuery();
@@ -20,6 +27,8 @@ export const Addons = () => {
 
   const isDistributedRegionSelected =
     selectedRegion?.site_type === 'distributed';
+
+  const shouldShowPrivateIP = interfaceGeneration !== 'linode';
 
   return (
     <Paper data-qa-add-ons>
@@ -33,7 +42,7 @@ export const Addons = () => {
         )}
         <Stack divider={<Divider />} spacing={2}>
           <Backups />
-          <PrivateIP />
+          {shouldShowPrivateIP && <PrivateIP />}
         </Stack>
       </Stack>
     </Paper>
