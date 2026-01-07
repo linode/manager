@@ -6,8 +6,6 @@ import type { JSX } from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-import type { SxProps, Theme } from '@mui/material/styles';
-
 export interface ProductSelectionCardProps {
   /**
    * Company name displayed below the product name
@@ -39,10 +37,6 @@ export interface ProductSelectionCardProps {
    */
   productTag?: string;
   /**
-   * Optional custom styles
-   */
-  sx?: SxProps<Theme>;
-  /**
    * Bottom left type chip label (e.g., "SaaS and APIs")
    */
   type?: string;
@@ -63,7 +57,6 @@ export const ProductSelectionCard = React.memo(
       onClick,
       productName,
       productTag,
-      sx,
     } = props;
 
     const subheadings = React.useMemo(() => {
@@ -181,7 +174,6 @@ export const ProductSelectionCard = React.memo(
         onClick={onClick}
         renderIcon={renderHeader}
         subheadings={subheadingsWithChip}
-        sx={sx}
         sxCardBase={(theme) => ({
           alignItems: 'flex-start',
           flexDirection: 'column',
