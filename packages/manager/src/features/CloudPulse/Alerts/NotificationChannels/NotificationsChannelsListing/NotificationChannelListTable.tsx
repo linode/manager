@@ -266,7 +266,7 @@ export const NotificationChannelListTable = React.memo(
                   action: 'deletion',
                   name: selectedChannel?.label ?? '',
                   primaryBtnText: 'Delete',
-                  type: 'Channel',
+                  type: 'Notification Channel',
                 }}
                 expand
                 label="Channel Label"
