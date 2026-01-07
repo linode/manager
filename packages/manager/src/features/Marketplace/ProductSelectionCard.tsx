@@ -23,7 +23,7 @@ export interface ProductSelectionCardProps {
   /**
    * URL or path to the product logo image
    */
-  logoUrl?: string;
+  logoUrl: string;
   /**
    * Callback fired when the card is clicked
    */
@@ -98,7 +98,7 @@ export const ProductSelectionCard = React.memo(
       }
 
       return items;
-    }, [companyName, description]);
+    }, [companyName, description, type]);
 
     // Add type chip (if available) as last element with absolute positioning at bottom
     const subheadingsWithChip = React.useMemo(() => {
@@ -168,7 +168,6 @@ export const ProductSelectionCard = React.memo(
 
     return (
       <SelectionCard
-        data-testid="product-card"
         disabled={disabled}
         heading={productName}
         onClick={onClick}
