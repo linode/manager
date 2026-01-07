@@ -276,20 +276,11 @@ describe('Notification Channel Listing Page', () => {
       {
         column: 'Alerts',
         ascending: [...notificationChannels]
-          .sort(
-            // Primary sort by `alert_count`. When two items have the same
-            // alert count, fall back to `a.id - b.id` as a deterministic
-            // tie-breaker so test expectations remain stable.
-            (a, b) => a.alerts.alert_count - b.alerts.alert_count
-          )
+          .sort((a, b) => a.alerts.alert_count - b.alerts.alert_count)
           .map((ch) => ch.id),
 
         descending: [...notificationChannels]
-          .sort(
-            // Primary sort by `alert_count` (desc). Tie-break with `a.id - b.id`
-            // to keep ordering deterministic for assertions.
-            (a, b) => b.alerts.alert_count - a.alerts.alert_count
-          )
+          .sort((a, b) => b.alerts.alert_count - a.alerts.alert_count)
           .map((ch) => ch.id),
       },
 
