@@ -13,12 +13,21 @@ const queryMocks = vi.hoisted(() => ({
   mutateAsync: vi.fn(),
   useNavigate: vi.fn(() => navigate),
   useUpdateNotificationChannel: vi.fn(),
+  useAllAccountUsersQuery: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useUpdateNotificationChannel: queryMocks.useUpdateNotificationChannel,
 }));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllAccountUsersQuery: queryMocks.useAllAccountUsersQuery,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -51,6 +60,11 @@ beforeEach(() => {
   queryMocks.useUpdateNotificationChannel.mockReturnValue({
     mutateAsync: queryMocks.mutateAsync,
     reset: vi.fn(),
+  });
+  queryMocks.useAllAccountUsersQuery.mockReturnValue({
+    data: [{ username: 'testuser1' }, { username: 'testuser2' }],
+    isLoading: false,
+    isError: false,
   });
 });
 
