@@ -278,7 +278,7 @@ describe('NotificationChannelListTable', () => {
     expect(screen.getByText(`Delete ${channel.label}?`)).toBeVisible();
 
     // Type the channel label to confirm
-    const input = screen.getByLabelText('Channel Label');
+    const input = screen.getByLabelText('Notification Channel Label');
     await user.type(input, channel.label);
     await user.click(screen.getByRole('button', { name: 'Delete' }));
     expect(screen.getByText(DELETE_CHANNEL_SUCCESS_MESSAGE)).toBeVisible();
@@ -313,7 +313,7 @@ describe('NotificationChannelListTable', () => {
     expect(screen.getByText(`Delete ${channel.label}?`)).toBeVisible();
 
     // Type the channel label to confirm
-    const input = screen.getByLabelText('Channel Label');
+    const input = screen.getByLabelText('Notification Channel Label');
     await user.type(input, channel.label);
     await user.click(screen.getByRole('button', { name: 'Delete' }));
 
