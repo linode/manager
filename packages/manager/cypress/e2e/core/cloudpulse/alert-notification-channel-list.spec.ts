@@ -41,11 +41,12 @@ const notificationChannels = notificationChannelFactory
   .buildList(26)
   .map((ch, i) => {
     const isEmail = i % 2 === 0;
-    const alerts = {
-      alert_count: isEmail ? 5 : 3,
-      url: `monitor/alert-channels/${i + 1}/alerts`,
+    const alerts = Array.from({ length: isEmail ? 5 : 3 }).map((_, idx) => ({
+      id: idx + 1,
+      label: `Alert-${idx + 1}`,
       type: 'alerts-definitions',
-    };
+      url: 'Sample',
+    }));
 
     if (isEmail) {
       return {
@@ -146,7 +147,7 @@ const VerifyChannelSortingParams = (
   );
 
   const order = sortOrderMap[sortOrder];
-  const orderBy = encodeURIComponent(LabelLookup[columnLabel]);
+  const orderBy = LabelLookup[columnLabel];
 
   cy.url().should(
     'endWith',
@@ -214,7 +215,16 @@ describe('Notification Channel Listing Page', () => {
         }
 
         // Alerts list
-        expect(item.alerts.alert_count).to.eq(expected.alerts.alert_count);
+        expect(item.alerts.length).to.eq(expected.alerts.length);
+
+        item.alerts.forEach((alert, aIndex) => {
+          const expAlert = expected.alerts[aIndex];
+
+          expect(alert.id).to.eq(expAlert.id);
+          expect(alert.label).to.eq(expAlert.label);
+          expect(alert.type).to.eq(expAlert.type);
+          expect(alert.url).to.eq(expAlert.url);
+        });
       });
     });
   });
@@ -244,9 +254,7 @@ describe('Notification Channel Listing Page', () => {
 
           cy.wrap($row).within(() => {
             cy.findByText(expected.label).should('be.visible');
-            cy.findByText(String(expected.alerts.alert_count)).should(
-              'be.visible'
-            );
+            cy.findByText(String(expected.alerts.length)).should('be.visible');
             cy.findByText('Email').should('be.visible');
             cy.get('td').eq(3).should('have.text', expected.created_by);
             cy.findByText(
@@ -276,20 +284,11 @@ describe('Notification Channel Listing Page', () => {
       {
         column: 'Alerts',
         ascending: [...notificationChannels]
-          .sort(
-            // Primary sort by `alert_count`. When two items have the same
-            // alert count, fall back to `a.id - b.id` as a deterministic
-            // tie-breaker so test expectations remain stable.
-            (a, b) => a.alerts.alert_count - b.alerts.alert_count
-          )
+          .sort((a, b) => a.alerts.length - b.alerts.length)
           .map((ch) => ch.id),
 
         descending: [...notificationChannels]
-          .sort(
-            // Primary sort by `alert_count` (desc). Tie-break with `a.id - b.id`
-            // to keep ordering deterministic for assertions.
-            (a, b) => b.alerts.alert_count - a.alerts.alert_count
-          )
+          .sort((a, b) => b.alerts.length - a.alerts.length)
           .map((ch) => ch.id),
       },
 
