@@ -1,8 +1,27 @@
 import { Notice } from '@linode/ui';
 import * as React from 'react';
 
+import { LandingHeader } from 'src/components/LandingHeader';
+
 export const MarketplaceLanding = () => {
   return (
-    <Notice variant="info">Partner Referral Catalog is coming soon...</Notice>
+    <>
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Partner Referral',
+              position: 1,
+            },
+            {
+              label: 'Catalog',
+              position: 2,
+            },
+          ],
+          pathname: '/cloud-marketplace/catalog',
+        }}
+      />
+      <Notice variant="info">Partner Referral Catalog is coming soon...</Notice>
+    </>
   );
 };
