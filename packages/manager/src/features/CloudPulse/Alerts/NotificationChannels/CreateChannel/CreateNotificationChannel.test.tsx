@@ -10,15 +10,21 @@ import { CreateNotificationChannel } from './CreateNotificationChannel';
 const queryMocks = vi.hoisted(() => ({
   mutateAsync: vi.fn().mockResolvedValue({}),
   navigate: vi.fn(),
+  useAllAccountUsersQuery: vi.fn(),
 }));
 
-vi.mock('src/queries/cloudpulse/alerts', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/alerts');
+vi.mock('src/queries/cloudpulse/alerts', () => ({
+  ...vi.importActual('src/queries/cloudpulse/alerts'),
+  useCreateNotificationChannel: vi.fn(() => ({
+    mutateAsync: queryMocks.mutateAsync,
+  })),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useCreateNotificationChannel: vi.fn(() => ({
-      mutateAsync: queryMocks.mutateAsync,
-    })),
+    useAllAccountUsersQuery: queryMocks.useAllAccountUsersQuery,
   };
 });
 
@@ -27,24 +33,6 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: vi.fn(() => queryMocks.navigate),
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useAccountUsersInfiniteQuery: vi.fn(() => ({
-      data: {
-        pages: [
-          { data: [{ username: 'testuser1' }, { username: 'testuser2' }] },
-        ],
-      },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
-      isLoading: false,
-    })),
   };
 });
 
@@ -57,8 +45,12 @@ const CHANNEL_NAME_VALUE = 'My Email Channel';
 
 describe('CreateNotificationChannel', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     queryMocks.mutateAsync.mockResolvedValue({});
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [{ username: 'testuser1' }, { username: 'testuser2' }],
+      isLoading: false,
+      isError: false,
+    });
   });
 
   it('should render the breadcrumb and form title', () => {

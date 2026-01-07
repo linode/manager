@@ -68,6 +68,10 @@ export const EditNotificationChannel = (
 
   const { control, handleSubmit, formState } = formMethods;
 
+  const handleRecipientsError = React.useCallback(() => {
+    formMethods.resetField('recipients', { defaultValue: [] });
+  }, [formMethods]);
+
   const onSubmit = handleSubmit(async (values) => {
     try {
       await updateChannel(filterEditChannelFormValues(channelId, values));
@@ -141,6 +145,7 @@ export const EditNotificationChannel = (
                 error={fieldState.error?.message}
                 onBlur={field.onBlur}
                 onChange={field.onChange}
+                onError={handleRecipientsError}
                 value={field.value ?? []}
               />
             )}
