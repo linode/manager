@@ -69,9 +69,8 @@ export const ProductSelectionCard = React.memo(
             key="company"
             sx={(theme) => ({
               color: theme.tokens.alias.Content.Text.Secondary.Default,
-              fontSize: theme.tokens.font.FontSize.Xxxs,
-              // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
-              fontWeight: theme.tokens.font.FontWeight.Semibold,
+              font: theme.font.semibold,
+              fontSize: theme.tokens.font.FontSize.Xxxs, // Must come after font
             })}
           >
             {companyName}
@@ -159,9 +158,8 @@ export const ProductSelectionCard = React.memo(
               label={productTag}
               sx={(theme) => ({
                 '& .MuiChip-label': {
-                  fontSize: theme.tokens.font.FontSize.Xxxs,
-                  // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
-                  fontWeight: theme.tokens.font.FontWeight.Bold,
+                  font: theme.font.bold,
+                  fontSize: theme.tokens.font.FontSize.Xxxs, // Must come after font
                   padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(6)}`,
                 },
                 backgroundColor:
