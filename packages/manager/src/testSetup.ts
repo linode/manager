@@ -68,16 +68,6 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 };
 
-// Fix TypeScript type pollution for window.location in tests
-// Cypress types (via Mocha) pollute the Window interface, making location
-// typed as 'string & Location' which is impossible to assign to.
-// This global declaration fixes it for Vitest tests.
-declare global {
-  interface Window {
-    location: Location;
-  }
-}
-
 /**
  ***************************************
  *  Custom matchers & matchers overrides
