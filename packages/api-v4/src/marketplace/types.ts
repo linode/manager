@@ -1,42 +1,59 @@
 export interface MarketplaceProductDetail {
   documentation: string;
-  overview: {
+  overview?: {
     description: string;
   };
-  pricing: string;
-  support: string;
+  pricing?: string;
+  support?: string;
 }
 
 export interface MarketplaceProduct {
   category_ids: number[];
+  created_at: string;
+  created_by: string;
   details?: MarketplaceProductDetail;
   id: number;
   info_banner?: string;
+  logo_url: string;
   name: string;
   partner_id: number;
   product_tags?: string[];
   short_description: string;
   title_tag?: string;
   type_id: number;
+  updated_at?: string;
+  updated_by?: string;
 }
 
 export interface MarketplaceCategory {
   category: string;
+  created_at: string;
+  created_by: string;
   id: number;
-  product_count: number;
+  products_count: number;
+  updated_at?: string;
+  updated_by?: string;
 }
 
 export interface MarketplaceType {
+  created_at: string;
+  created_by: string;
   id: number;
   name: string;
-  product_count: number;
+  products_count: number;
+  updated_at?: string;
+  updated_by?: string;
 }
 
 export interface MarketplacePartner {
+  created_at: string;
+  created_by: string;
   id: number;
+  logo_url_dark_mode?: string;
   logo_url_light_mode: string;
-  logo_url_night_mode?: string;
   name: string;
+  updated_at?: string;
+  updated_by?: string;
   url: string;
 }
 

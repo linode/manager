@@ -99,7 +99,7 @@ export const marketplaceQueries = createQueryKeys('marketplace', {
         queryKey: [filter],
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getMarketplaceTypes(params, filter),
+        queryFn: () => getMarketplacePartners(params, filter),
         queryKey: [params, filter],
       }),
     },

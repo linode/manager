@@ -1,14 +1,4 @@
-import {
-  APIError,
-  createPartnerReferral,
-  Filter,
-  MarketplaceCategory,
-  MarketplacePartner,
-  MarketplacePartnerReferralPayload,
-  MarketplaceProduct,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4';
+import { APIError, createPartnerReferral, ResourcePage } from '@linode/api-v4';
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -20,17 +10,25 @@ import {
 import { accountQueries } from '../account';
 import { marketplaceQueries } from './keys';
 
+import type {
+  Filter,
+  MarketplaceCategory,
+  MarketplacePartner,
+  MarketplacePartnerReferralPayload,
+  MarketplaceProduct,
+  Params,
+} from '@linode/api-v4';
+
 export const useMarketplaceProductsQuery = (
   params: Params,
   filter: Filter,
   enabled: boolean = false,
-) => {
+) =>
   useQuery<ResourcePage<MarketplaceProduct>, APIError[]>({
     ...marketplaceQueries.products._ctx.paginated(params, filter),
     enabled,
     placeholderData: keepPreviousData,
   });
-};
 
 export const useAllMarketplaceProductsQuery = (
   params: Params = {},
@@ -45,8 +43,8 @@ export const useAllMarketplaceProductsQuery = (
 export const useInfiniteMarketplaceProductsQuery = (
   filter: Filter,
   enabled: boolean,
-) => {
-  return useInfiniteQuery<ResourcePage<MarketplaceProduct>, APIError[]>({
+) =>
+  useInfiniteQuery<ResourcePage<MarketplaceProduct>, APIError[]>({
     ...marketplaceQueries.products._ctx.infinite(filter),
     enabled,
     getNextPageParam: ({ page, pages }) => {
@@ -58,7 +56,6 @@ export const useInfiniteMarketplaceProductsQuery = (
     initialPageParam: 1,
     retry: false,
   });
-};
 
 export const useMarketplaceProductQuery = (
   productId: number,
@@ -73,13 +70,12 @@ export const useMarketplaceCategoriesQuery = (
   params: Params,
   filter: Filter,
   enabled: boolean = false,
-) => {
+) =>
   useQuery<ResourcePage<MarketplaceCategory>, APIError[]>({
     ...marketplaceQueries.categories._ctx.paginated(params, filter),
     enabled,
     placeholderData: keepPreviousData,
   });
-};
 
 export const useAllMarketplaceCategoriesQuery = (
   params: Params = {},
@@ -94,8 +90,8 @@ export const useAllMarketplaceCategoriesQuery = (
 export const useInfiniteMarketplaceCategoriesQuery = (
   filter: Filter,
   enabled: boolean,
-) => {
-  return useInfiniteQuery<ResourcePage<MarketplaceCategory>, APIError[]>({
+) =>
+  useInfiniteQuery<ResourcePage<MarketplaceCategory>, APIError[]>({
     ...marketplaceQueries.categories._ctx.infinite(filter),
     enabled,
     getNextPageParam: ({ page, pages }) => {
@@ -107,19 +103,17 @@ export const useInfiniteMarketplaceCategoriesQuery = (
     initialPageParam: 1,
     retry: false,
   });
-};
 
 export const useMarketplacePartnersQuery = (
   params: Params,
   filter: Filter,
   enabled: boolean = false,
-) => {
+) =>
   useQuery<ResourcePage<MarketplacePartner>, APIError[]>({
     ...marketplaceQueries.partners._ctx.paginated(params, filter),
     enabled,
     placeholderData: keepPreviousData,
   });
-};
 
 export const useAllMarketplacePartnersQuery = (
   params: Params = {},
@@ -134,8 +128,8 @@ export const useAllMarketplacePartnersQuery = (
 export const useInfiniteMarketplacePartnersQuery = (
   filter: Filter,
   enabled: boolean,
-) => {
-  return useInfiniteQuery<ResourcePage<MarketplacePartner>, APIError[]>({
+) =>
+  useInfiniteQuery<ResourcePage<MarketplacePartner>, APIError[]>({
     ...marketplaceQueries.partners._ctx.infinite(filter),
     enabled,
     getNextPageParam: ({ page, pages }) => {
@@ -147,7 +141,6 @@ export const useInfiniteMarketplacePartnersQuery = (
     initialPageParam: 1,
     retry: false,
   });
-};
 
 export const useCreatePartnerReferralMutation = () => {
   const queryClient = useQueryClient();
