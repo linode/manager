@@ -526,7 +526,7 @@ const vpc = [
       data: [
         {
           region: 'ap-west',
-          available: false,
+          available: true,
           available_ipv6_prefix_lengths: [],
         },
         {

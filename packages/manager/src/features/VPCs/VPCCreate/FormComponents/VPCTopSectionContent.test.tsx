@@ -147,7 +147,7 @@ describe('VPC Top Section form content', () => {
     expect(IPv6CIDRRadios[3]).toBeChecked(); // /52
   });
 
-  it('does not show dual stack option and does not render VPC IPv6 Prefix Length options if there are none available or only /52 available', async () => {
+  it('does not show dual stack option and does not render VPC IPv6 Prefix Length options if there are none available', async () => {
     const account = accountFactory.build({
       capabilities: ['VPC Dual Stack'],
     });
@@ -159,7 +159,7 @@ describe('VPC Top Section form content', () => {
           makeResourcePage([
             regionVPCAvailabilityFactory.build({
               region: 'us-east',
-              available_ipv6_prefix_lengths: [52],
+              available_ipv6_prefix_lengths: [],
             }),
           ])
         )
