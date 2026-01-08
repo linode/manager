@@ -84,11 +84,11 @@ export const NetworkLoadBalancersLanding = () => {
               <TableCell>ID</TableCell>
             </Hidden>
             <TableCell>Listener Ports</TableCell>
-            <TableCell>Virtual IP (IPv4)</TableCell>
             <Hidden mdDown>
-              <TableCell>Virtual IP (IPv6)</TableCell>
+              <TableCell>Virtual IP (IPv4)</TableCell>
             </Hidden>
-            <TableCell>LKE-E Cluster</TableCell>
+            <TableCell>Virtual IP (IPv6)</TableCell>
+            <TableCell>Cluster</TableCell>
             <Hidden mdDown>
               <TableCell>Region</TableCell>
             </Hidden>
