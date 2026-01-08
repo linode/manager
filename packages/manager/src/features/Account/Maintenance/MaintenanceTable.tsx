@@ -73,9 +73,7 @@ export const MaintenanceTable = ({ type }: Props) => {
   const flags = useFlags();
 
   const pagination = usePaginationV2({
-    currentRoute: flags?.iamRbacPrimaryNavChanges
-      ? `/maintenance`
-      : `/account/maintenance`,
+    currentRoute: '/maintenance',
     preferenceKey: `${preferenceKey}-${type}`,
     queryParamsPrefix: type,
   });
@@ -86,9 +84,7 @@ export const MaintenanceTable = ({ type }: Props) => {
         order: 'desc',
         orderBy: 'status',
       },
-      from: flags?.iamRbacPrimaryNavChanges
-        ? `/maintenance`
-        : `/account/maintenance`,
+      from: '/maintenance',
     },
     preferenceKey: `${preferenceKey}-order-${type}`,
     prefix: type,
