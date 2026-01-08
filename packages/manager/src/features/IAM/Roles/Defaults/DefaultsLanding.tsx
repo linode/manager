@@ -8,6 +8,8 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { IAM_LABEL } from '../../Shared/constants';
+
 export const DefaultsLanding = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,6 +34,13 @@ export const DefaultsLanding = () => {
       <LandingHeader
         breadcrumbProps={{
           pathname: '/iam/roles/defaults',
+          crumbOverrides: [
+            {
+              label: IAM_LABEL,
+              linkTo: '/iam',
+              position: 1,
+            },
+          ],
         }}
         spacingBottom={4}
         title="Default Roles for Delegate Users"
