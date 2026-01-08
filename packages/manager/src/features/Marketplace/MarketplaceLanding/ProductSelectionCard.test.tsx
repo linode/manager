@@ -10,9 +10,11 @@ describe('ProductSelectionCard', () => {
   it('renders product name', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        logoUrl=""
+        data={{
+          logoUrl: '',
+          productName: 'Test Product',
+        }}
         onClick={() => {}}
-        productName="Test Product"
       />
     );
 
@@ -22,10 +24,12 @@ describe('ProductSelectionCard', () => {
   it('renders company name when provided', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        companyName="Test Company"
-        logoUrl=""
+        data={{
+          companyName: 'Test Company',
+          logoUrl: '',
+          productName: 'Test Product',
+        }}
         onClick={() => {}}
-        productName="Test Product"
       />
     );
 
@@ -35,10 +39,12 @@ describe('ProductSelectionCard', () => {
   it('renders description when provided', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        description="This is a test product description"
-        logoUrl=""
+        data={{
+          description: 'This is a test product description',
+          logoUrl: '',
+          productName: 'Test Product',
+        }}
         onClick={() => {}}
-        productName="Test Product"
       />
     );
 
@@ -49,10 +55,12 @@ describe('ProductSelectionCard', () => {
     const longDescription = Array(300).fill('word').join(' ');
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        description={longDescription}
-        logoUrl=""
+        data={{
+          description: longDescription,
+          logoUrl: '',
+          productName: 'Test Product',
+        }}
         onClick={() => {}}
-        productName="Test Product"
       />
     );
 
@@ -67,10 +75,12 @@ describe('ProductSelectionCard', () => {
   it('renders product tag chip when provided', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        logoUrl=""
+        data={{
+          logoUrl: '',
+          productName: 'Test Product',
+          productTag: 'New',
+        }}
         onClick={() => {}}
-        productName="Test Product"
-        productTag="New"
       />
     );
 
@@ -80,10 +90,12 @@ describe('ProductSelectionCard', () => {
   it('renders type chip when provided', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        logoUrl=""
+        data={{
+          logoUrl: '',
+          productName: 'Test Product',
+          type: 'SaaS & APIs',
+        }}
         onClick={() => {}}
-        productName="Test Product"
-        type="SaaS & APIs"
       />
     );
 
@@ -93,9 +105,11 @@ describe('ProductSelectionCard', () => {
   it('renders logo image when logoUrl is provided', () => {
     const { getByAltText } = renderWithTheme(
       <ProductSelectionCard
-        logoUrl="/test-logo.png"
+        data={{
+          logoUrl: '/test-logo.png',
+          productName: 'Test Product',
+        }}
         onClick={() => {}}
-        productName="Test Product"
       />
     );
 
@@ -108,9 +122,11 @@ describe('ProductSelectionCard', () => {
     const handleClick = vi.fn();
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
-        logoUrl=""
+        data={{
+          logoUrl: '',
+          productName: 'Test Product',
+        }}
         onClick={handleClick}
-        productName="Test Product"
       />
     );
 
@@ -122,10 +138,12 @@ describe('ProductSelectionCard', () => {
   it('renders disabled state correctly', () => {
     const { getByTestId } = renderWithTheme(
       <ProductSelectionCard
+        data={{
+          logoUrl: '',
+          productName: 'Test Product',
+        }}
         disabled
-        logoUrl=""
         onClick={() => {}}
-        productName="Test Product"
       />
     );
 
@@ -135,13 +153,15 @@ describe('ProductSelectionCard', () => {
   it('renders all elements together', () => {
     const { getByText, getByAltText } = renderWithTheme(
       <ProductSelectionCard
-        companyName="Test Company"
-        description="Full product description"
-        logoUrl="/logo.png"
+        data={{
+          companyName: 'Test Company',
+          description: 'Full product description',
+          logoUrl: '/logo.png',
+          productName: 'Complete Product',
+          productTag: 'New',
+          type: 'SaaS and APIs',
+        }}
         onClick={() => {}}
-        productName="Complete Product"
-        productTag="New"
-        type="SaaS and APIs"
       />
     );
 
@@ -156,9 +176,8 @@ describe('ProductSelectionCard', () => {
   it('does not render optional elements when not provided', () => {
     const { getByText, queryByText } = renderWithTheme(
       <ProductSelectionCard
-        logoUrl=""
+        data={{ logoUrl: '', productName: 'Minimal Product' }}
         onClick={() => {}}
-        productName="Minimal Product"
       />
     );
 

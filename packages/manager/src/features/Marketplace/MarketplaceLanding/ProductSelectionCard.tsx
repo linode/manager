@@ -6,7 +6,7 @@ import type { JSX } from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-export interface ProductSelectionCardProps {
+export interface ProductCardData {
   /**
    * Company name displayed below the product name
    */
@@ -16,18 +16,9 @@ export interface ProductSelectionCardProps {
    */
   description?: string;
   /**
-   * If true, the card will be disabled
-   * @default false
-   */
-  disabled?: boolean;
-  /**
    * URL or path to the product logo image
    */
   logoUrl: string;
-  /**
-   * Callback fired when the card is clicked
-   */
-  onClick?: () => void;
   /**
    * Product name/title
    */
@@ -42,22 +33,31 @@ export interface ProductSelectionCardProps {
   type?: string;
 }
 
+export interface ProductSelectionCardProps {
+  /**
+   * Product data to display
+   */
+  data: ProductCardData;
+  /**
+   * If true, the card will be disabled
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * Callback fired when the card is clicked
+   */
+  onClick?: () => void;
+}
+
 /**
  * A reusable product selection card component for displaying marketplace products.
  * Built on top of SelectionCard for consistency.
  */
 export const ProductSelectionCard = React.memo(
   (props: ProductSelectionCardProps) => {
-    const {
-      type,
-      companyName,
-      description,
-      disabled = false,
-      logoUrl,
-      onClick,
-      productName,
-      productTag,
-    } = props;
+    const { data, disabled = false, onClick } = props;
+    const { type, companyName, description, logoUrl, productName, productTag } =
+      data;
 
     const subheadings = React.useMemo(() => {
       const items: (JSX.Element | string | undefined)[] = [];
