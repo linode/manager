@@ -206,7 +206,7 @@ export const VPCTopSectionContent = (props: Props) => {
                     sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
                   />
                   {availableRegionIPv6PrefixLengths &&
-                    availableRegionIPv6PrefixLengths.length > 1 && (
+                    availableRegionIPv6PrefixLengths.length > 0 && (
                       <SelectionCard
                         checked={isDualStackSelected}
                         disabled={!permissions?.create_vpc}
