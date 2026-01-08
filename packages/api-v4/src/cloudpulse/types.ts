@@ -282,13 +282,14 @@ export interface Alert {
   updated_by: string;
 }
 
-interface NotificationChannelAlertInfo {
-  alert_count: number;
+interface NotificationChannelAlerts {
+  id: number;
+  label: string;
   type: 'alerts-definitions';
   url: string;
 }
 interface NotificationChannelBase {
-  alerts: NotificationChannelAlertInfo;
+  alerts: NotificationChannelAlerts[];
   channel_type: ChannelType;
   created: string;
   created_by: string;
