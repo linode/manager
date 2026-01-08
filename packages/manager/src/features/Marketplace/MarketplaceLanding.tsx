@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { BetaChip, Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -10,7 +10,11 @@ export const MarketplaceLanding = () => {
         breadcrumbProps={{
           crumbOverrides: [
             {
-              label: 'Partner Referral',
+              label: (
+                <>
+                  Partner Referral <BetaChip />
+                </>
+              ),
               position: 1,
             },
             {
