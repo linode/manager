@@ -40,7 +40,12 @@ describe('Linode Create Addons', () => {
 
   it('should hide the Private IP addon if interface generation is "linode"', () => {
     const { queryByText } = renderWithThemeAndHookFormContext({
-      component: <Addons interfaceGeneration="linode" />,
+      component: <Addons />,
+      useFormOptions: {
+        values: {
+          interface_generation: 'linode',
+        },
+      },
     });
 
     const privateIPLabel = queryByText('Private IP');
@@ -49,11 +54,16 @@ describe('Linode Create Addons', () => {
   });
 
   it('should show the Private IP addon if interface generation is not "linode"', () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: <Addons interfaceGeneration="legacy_config" />,
+    const { queryByText } = renderWithThemeAndHookFormContext({
+      component: <Addons />,
+      useFormOptions: {
+        values: {
+          interface_generation: 'legacy_config',
+        },
+      },
     });
 
-    const privateIPLabel = getByText('Private IP');
+    const privateIPLabel = queryByText('Private IP');
 
     expect(privateIPLabel).toBeVisible();
   });

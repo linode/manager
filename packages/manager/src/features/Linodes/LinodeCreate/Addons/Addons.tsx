@@ -6,17 +6,13 @@ import { useWatch } from 'react-hook-form';
 import { Backups } from './Backups';
 import { PrivateIP } from './PrivateIP';
 
-import type {
-  CreateLinodeRequest,
-  InterfaceGenerationType,
-} from '@linode/api-v4';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
-interface AddonsProps {
-  interfaceGeneration?: InterfaceGenerationType;
-}
-
-export const Addons = ({ interfaceGeneration }: AddonsProps) => {
-  const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
+export const Addons = () => {
+  const [regionId, interfaceGeneration] = useWatch<
+    CreateLinodeRequest,
+    ['region', 'interface_generation']
+  >({ name: ['region', 'interface_generation'] });
 
   const { data: regions } = useRegionsQuery();
 
