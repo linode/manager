@@ -33,7 +33,7 @@ describe('InterfaceGeneration', () => {
     await userEvent.hover(getByText('Network Interface Type'));
 
     await findByText(
-      'You account administrator has enforced that all new Linodes are created with Linode interfaces.'
+      'Your account administrator has enforced that all new Linodes are created with Linode interfaces.'
     );
 
     for (const radio of getAllByRole('radio')) {
@@ -66,7 +66,7 @@ describe('InterfaceGeneration', () => {
     await userEvent.hover(getByText('Network Interface Type'));
 
     await findByText(
-      'You account administrator has enforced that all new Linodes are created with legacy configuration interfaces.'
+      'Your account administrator has enforced that all new Linodes are created with legacy configuration interfaces.'
     );
 
     const radios = getAllByRole('radio');

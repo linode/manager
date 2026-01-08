@@ -10,14 +10,18 @@ import { NotificationRecipients } from './NotificationRecipients';
 import type { NotificationRecipientsProps } from './NotificationRecipients';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountUsersInfiniteQuery: vi.fn().mockReturnValue({}),
+  useAllAccountUsersQuery: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAccountUsersInfiniteQuery: queryMocks.useAccountUsersInfiniteQuery,
+    useAllAccountUsersQuery: queryMocks.useAllAccountUsersQuery,
   };
 });
 
@@ -35,13 +39,18 @@ const DESELECT_ALL = 'Deselect All';
 const ARIA_SELECTED = 'aria-selected';
 
 describe('NotificationRecipients component tests', () => {
-  it('should render the component with empty state', () => {
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: [] }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+  beforeEach(() => {
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [],
       isLoading: false,
+      isError: false,
+    });
+  });
+  it('should render the component with empty state', () => {
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      isError: false,
     });
 
     renderWithTheme(<NotificationRecipients {...props} />);
@@ -52,12 +61,10 @@ describe('NotificationRecipients component tests', () => {
   });
 
   it('should render loading state', () => {
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
       data: null,
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
       isLoading: true,
+      isError: false,
     });
 
     renderWithTheme(<NotificationRecipients {...props} />);
@@ -68,12 +75,10 @@ describe('NotificationRecipients component tests', () => {
   it('should be able to select all recipients', async () => {
     const mockUsers = accountUserFactory.buildList(2);
 
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: mockUsers,
       isLoading: false,
+      isError: false,
     });
 
     renderWithTheme(<NotificationRecipients {...props} />);
@@ -92,12 +97,10 @@ describe('NotificationRecipients component tests', () => {
   it('should be able to deselect all selected recipients', async () => {
     const mockUsers = accountUserFactory.buildList(2);
 
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: mockUsers,
       isLoading: false,
+      isError: false,
     });
 
     // Render with pre-selected users
@@ -129,40 +132,13 @@ describe('NotificationRecipients component tests', () => {
     expect(mockOnChange).toHaveBeenCalledWith([]);
   });
 
-  it('should disable Select All when search input is not empty', async () => {
-    const mockUsers = accountUserFactory.buildList(3);
-
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
-      isLoading: false,
-    });
-
-    renderWithTheme(<NotificationRecipients {...props} />);
-
-    const input = screen.getByPlaceholderText('Select recipients');
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await userEvent.type(input, 'test');
-
-    await waitFor(() => {
-      const selectAllOption = screen.queryByRole('option', {
-        name: SELECT_ALL,
-      });
-      expect(selectAllOption).not.toBeInTheDocument();
-    });
-  });
-
   it('should disable Select All when recipients exceed max limit', async () => {
     const mockUsers = accountUserFactory.buildList(15);
 
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: mockUsers,
       isLoading: false,
+      isError: false,
     });
 
     renderWithTheme(<NotificationRecipients {...props} />, {
@@ -192,12 +168,10 @@ describe('NotificationRecipients component tests', () => {
   it('should disable unselected options when max selections reached', async () => {
     const mockUsers = accountUserFactory.buildList(12);
 
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: mockUsers,
       isLoading: false,
+      isError: false,
     });
 
     // Render with 5 users already selected (max limit)
@@ -230,73 +204,11 @@ describe('NotificationRecipients component tests', () => {
     expect(unselectedOption).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should fetch next page on scroll to bottom', async () => {
-    const mockUsers = accountUserFactory.buildList(10);
-    const fetchNextPage = vi.fn();
-
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      hasNextPage: true,
-      isLoading: false,
-      isFetching: false,
-      fetchNextPage,
-    });
-
-    renderWithTheme(<NotificationRecipients {...props} />);
-
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-
-    const listbox = screen.getByRole('listbox');
-
-    // Simulate scroll to bottom
-    Object.defineProperty(listbox, 'scrollHeight', { value: 1000 });
-    Object.defineProperty(listbox, 'clientHeight', { value: 100 });
-    Object.defineProperty(listbox, 'scrollTop', { value: 900 });
-
-    listbox.dispatchEvent(new Event('scroll', { bubbles: true }));
-
-    await waitFor(() => {
-      expect(fetchNextPage).toHaveBeenCalled();
-    });
-  });
-
-  it('should not fetch next page when not at bottom', async () => {
-    const mockUsers = accountUserFactory.buildList(10);
-    const fetchNextPage = vi.fn();
-
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: mockUsers }] },
-      hasNextPage: true,
-      isLoading: false,
-      isFetching: false,
-      fetchNextPage,
-    });
-
-    renderWithTheme(<NotificationRecipients {...props} />);
-
-    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-
-    const listbox = screen.getByRole('listbox');
-
-    // Simulate scroll but not to bottom
-    Object.defineProperty(listbox, 'scrollHeight', { value: 1000 });
-    Object.defineProperty(listbox, 'clientHeight', { value: 100 });
-    Object.defineProperty(listbox, 'scrollTop', { value: 400 });
-
-    listbox.dispatchEvent(new Event('scroll', { bubbles: true }));
-
-    await waitFor(() => {
-      expect(fetchNextPage).not.toHaveBeenCalled();
-    });
-  });
-
   it('should use default max recipients limit when flag is not set', () => {
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: [] }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [],
       isLoading: false,
+      isError: false,
     });
 
     renderWithTheme(<NotificationRecipients {...props} />);
@@ -305,12 +217,10 @@ describe('NotificationRecipients component tests', () => {
   });
 
   it('should call onBlur when the field loses focus', async () => {
-    queryMocks.useAccountUsersInfiniteQuery.mockReturnValue({
-      data: { pages: [{ data: [] }] },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [],
       isLoading: false,
+      isError: false,
     });
 
     renderWithTheme(<NotificationRecipients {...props} />);
@@ -320,5 +230,16 @@ describe('NotificationRecipients component tests', () => {
     await userEvent.tab();
 
     expect(mockOnBlur).toHaveBeenCalled();
+  });
+
+  it('should render error message when API fails to load users', () => {
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: null,
+      isLoading: false,
+      isError: true,
+    });
+
+    renderWithTheme(<NotificationRecipients {...props} />);
+    expect(screen.getByText('Failed to fetch the users.')).toBeVisible();
   });
 });

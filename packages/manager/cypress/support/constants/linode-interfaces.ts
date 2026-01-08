@@ -44,7 +44,7 @@ export const linodeInterfacesLabelText = 'Linode Interfaces';
 export const betaLabelText = 'beta';
 
 export const linodeInterfacesDescriptionText1 =
-  'Linode Interfaces are the preferred option for VPCs and are managed directly through a Linode’s Network settings.';
+  "Managed directly through a Linode's Network settings. This is the recommended option.";
 
 export const linodeInterfacesDescriptionText2 =
   'Cloud Firewalls are assigned to individual VPC and public interfaces.';
@@ -53,7 +53,7 @@ export const legacyInterfacesLabelText =
   'Configuration Profile Interfaces (Legacy)';
 
 export const legacyInterfacesDescriptionText1 =
-  'Interfaces in the Configuration Profile are part of a Linode’s configuration.';
+  'Interfaces are part of the Linode’s Configuration Profile.';
 
 export const legacyInterfacesDescriptionText2 =
   'Cloud Firewalls are applied at the Linode level and automatically cover all non-VLAN interfaces in the Configuration Profile.';

@@ -18,6 +18,7 @@ const queryMocks = vi.hoisted(() => ({
   useNotificationChannelQuery: vi.fn(),
   useParams: vi.fn(),
   useUpdateNotificationChannel: vi.fn(),
+  useAllAccountUsersQuery: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -25,6 +26,14 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
   useNotificationChannelQuery: queryMocks.useNotificationChannelQuery,
   useUpdateNotificationChannel: queryMocks.useUpdateNotificationChannel,
 }));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllAccountUsersQuery: queryMocks.useAllAccountUsersQuery,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -42,6 +51,11 @@ describe('EditChannelLanding component tests', () => {
     queryMocks.useUpdateNotificationChannel.mockReturnValue({
       mutateAsync: vi.fn().mockResolvedValue({}),
       reset: vi.fn(),
+    });
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [{ username: 'testuser1' }, { username: 'testuser2' }],
+      isLoading: false,
+      isError: false,
     });
   });
 

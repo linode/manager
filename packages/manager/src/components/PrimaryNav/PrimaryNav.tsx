@@ -22,6 +22,7 @@ import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -54,13 +55,15 @@ export type NavEntity =
   | 'Longview'
   | 'Maintenance'
   | 'Managed'
-  | 'Marketplace'
+  | 'Marketplace' // TODO: Cloud Manager Marketplace - Remove marketplace references once 'Quick Deploy Apps' is fully rolled out
   | 'Metrics'
   | 'Monitor'
   | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Partner Referrals'
   | 'Placement Groups'
+  | 'Quick Deploy Apps'
   | 'Quotas'
   | 'Service Transfers'
   | 'StackScripts'
@@ -121,6 +124,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
   const {
     data: preferences,
     error: preferencesError,
@@ -176,8 +181,20 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 attr: { 'data-qa-one-click-nav-btn': true },
-                display: 'Marketplace',
+                display: !isMarketplaceV2FeatureEnabled
+                  ? 'Marketplace'
+                  : 'Quick Deploy Apps',
                 to: '/linodes/create/marketplace',
+              },
+              {
+                attr: {
+                  'data-qa-one-click-nav-btn': true,
+                  'data-pendo-id': 'menu-item-Cloud Marketplace',
+                },
+                display: 'Partner Referrals',
+                hide: !isMarketplaceV2FeatureEnabled,
+                isBeta: isMarketplaceV2FeatureEnabled,
+                to: '/cloud-marketplace/catalog',
               },
             ],
             name: 'Compute',
@@ -353,6 +370,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMBeta,
         isIAMEnabled,
         iamRbacPrimaryNavChanges,
+        isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]
