@@ -1,5 +1,7 @@
+import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import {
@@ -13,7 +15,10 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
+import {
+  convertToGmt,
+  defaultTimeDuration,
+} from '../Utils/CloudPulseDateTimePickerUtils';
 import { PARENT_ENTITY_REGION } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
@@ -62,6 +67,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       serviceType ? [serviceType] : []
     );
 
+    const { data: profile } = useProfile();
+
     const [filterData, setFilterData] = React.useState<FilterData>({
       id: {},
       label: {},
@@ -85,6 +92,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     const [showAppliedFilters, setShowAppliedFilters] =
       React.useState<boolean>(false);
+
+    const timezone =
+      profile?.timezone === 'GMT'
+        ? 'Etc/GMT' // this is present in timezone list for GMT
+        : (profile?.timezone ?? DateTime.local().zoneName);
 
     const toggleAppliedFilter = (isVisible: boolean) => {
       setShowAppliedFilters(isVisible);
@@ -116,8 +128,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
       (dashboard: Dashboard | undefined) => {
         setFilterData({ id: {}, label: {} });
         setDashboard(dashboard);
+        setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
       },
-      []
+      [timezone]
     );
 
     const handleTimeRangeChange = React.useCallback(
@@ -197,6 +210,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   gap={2}
                 >
                   <CloudPulseDateTimeRangePicker
+                    defaultValue={timeDuration}
                     handleStatsChange={handleTimeRangeChange}
                     savePreferences
                   />

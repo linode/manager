@@ -57,8 +57,26 @@ const customHTTPsDetailsSchema = object({
   endpoint_url: string().max(maxLength, maxLengthMessage).required(),
 });
 
+const hostRgx =
+  // eslint-disable-next-line sonarjs/slow-regex
+  /(?<bucket>[a-z0-9-.]+)\.(?:s3(?:-accesspoint)?\.[a-z0-9-]+\.amazonaws\.com|(?!devcloud\.)[a-z0-9-]+\.(?:devcloud\.)?linodeobjects\.com)/;
+
 const akamaiObjectStorageDetailsBaseSchema = object({
-  host: string().max(maxLength, maxLengthMessage).required('Host is required.'),
+  host: string()
+    .max(maxLength, maxLengthMessage)
+    .required('Host is required.')
+    .test(
+      'host-must-match-with-bucket-name-if-provided',
+      'Bucket name provided as a part of the host must be the same as the bucket.',
+      (value, ctx) => {
+        if (ctx.parent.bucket_name) {
+          const groups = hostRgx.exec(value)?.groups;
+          return groups ? groups.bucket === ctx.parent.bucket_name : true;
+        }
+
+        return true;
+      },
+    ),
   bucket_name: string()
     .required('Bucket name is required.')
     .min(3, 'Bucket name must be between 3 and 63 characters.')
@@ -71,7 +89,19 @@ const akamaiObjectStorageDetailsBaseSchema = object({
       /^(?!.*[.-]{2})[a-z0-9.-]+$/,
       'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.',
     )
-    .max(63, 'Bucket name must be between 3 and 63 characters.'),
+    .max(63, 'Bucket name must be between 3 and 63 characters.')
+    .test(
+      'bucket-name-same-in-host-if-provided',
+      'Bucket must match the bucket name used in the host prefix.',
+      (value, ctx) => {
+        if (ctx.parent.host) {
+          const groups = hostRgx.exec(ctx.parent.host)?.groups;
+          return groups ? groups.bucket === value : true;
+        }
+
+        return true;
+      },
+    ),
   path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)

@@ -59,7 +59,7 @@ describe('AddNotificationChannelDrawer component', () => {
     );
   });
   it('should render the label component with happy path and able to select an option', async () => {
-    const { findByRole, getByRole, getByTestId } = renderWithTheme(
+    const { findByRole, getByRole, getByTestId, findByText } = renderWithTheme(
       <AddNotificationChannelDrawer
         handleCloseDrawer={vi.fn()}
         isNotificationChannelsError={false}
@@ -93,6 +93,9 @@ describe('AddNotificationChannelDrawer component', () => {
         name: mockData[0].label,
       })
     ).toBeInTheDocument();
+
+    const type = await findByText(mockData[0].type);
+    expect(type).toBeVisible();
 
     await userEvent.click(
       await findByRole('option', {

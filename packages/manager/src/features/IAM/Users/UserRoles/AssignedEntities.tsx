@@ -9,6 +9,7 @@ import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';
 
 interface Props {
+  disabled?: boolean;
   onButtonClick: (roleName: AccountRoleType | EntityRoleType) => void;
   onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
   role: ExtendedRoleView;
@@ -18,6 +19,7 @@ export const AssignedEntities = ({
   onButtonClick,
   onRemoveAssignment,
   role,
+  disabled,
 }: Props) => {
   const theme = useTheme();
 
@@ -36,7 +38,7 @@ export const AssignedEntities = ({
 
   // We don't need to send all items to the TruncatedList component for performance reasons,
   // since past a certain count they will be hidden within the row.
-  const MAX_ITEMS_TO_RENDER = 15;
+  const MAX_ITEMS_TO_RENDER = 25;
   const entitiesToRender = sortedEntities.slice(0, MAX_ITEMS_TO_RENDER);
   const totalCount = sortedEntities.length;
 
@@ -54,13 +56,17 @@ export const AssignedEntities = ({
       >
         <Chip
           data-testid="entities"
-          deleteIcon={<CloseIcon data-testid="CloseIcon" />}
+          deleteIcon={
+            disabled ? undefined : <CloseIcon data-testid="CloseIcon" />
+          }
           label={
             entity.name.length > 30
               ? `${entity.name.slice(0, 20)}...`
               : entity.name
           }
-          onDelete={() => onRemoveAssignment(entity, role)}
+          onDelete={
+            disabled ? undefined : () => onRemoveAssignment(entity, role)
+          }
           sx={{
             backgroundColor:
               theme.name === 'light'

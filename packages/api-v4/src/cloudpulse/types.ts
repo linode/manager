@@ -41,11 +41,16 @@ export type MetricUnitType =
   | 'second';
 export type NotificationStatus = 'Disabled' | 'Enabled';
 export type ChannelType = 'email' | 'pagerduty' | 'slack' | 'webhook';
-export type AlertNotificationType = 'custom' | 'default';
+export type AlertNotificationType = 'system' | 'user';
 type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
+type EmailRecipientType =
+  | 'admin_users'
+  | 'read_users'
+  | 'read_write_users'
+  | 'user';
 export interface Dashboard {
   created: string;
   group_by?: string[];
@@ -277,41 +282,52 @@ export interface Alert {
   updated_by: string;
 }
 
-interface NotificationChannelAlerts {
-  id: number;
-  label: string;
+interface NotificationChannelAlertInfo {
+  alert_count: number;
   type: 'alerts-definitions';
   url: string;
 }
 interface NotificationChannelBase {
-  alerts: NotificationChannelAlerts[];
+  alerts: NotificationChannelAlertInfo;
   channel_type: ChannelType;
-  created_at: string;
+  created: string;
   created_by: string;
   id: number;
   label: string;
   status: NotificationStatus;
   type: AlertNotificationType;
-  updated_at: string;
+  updated: string;
   updated_by: string;
 }
 
 interface NotificationChannelEmail extends NotificationChannelBase {
   channel_type: AlertNotificationEmail;
-  content: {
+  content?: {
     email: {
       email_addresses: string[];
       message: string;
       subject: string;
     };
   };
+  details?: {
+    email: {
+      recipient_type: EmailRecipientType;
+      usernames: string[];
+    };
+  };
 }
 
 interface NotificationChannelSlack extends NotificationChannelBase {
   channel_type: AlertNotificationSlack;
-  content: {
+  content?: {
     slack: {
       message: string;
+      slack_channel: string;
+      slack_webhook_url: string;
+    };
+  };
+  details?: {
+    slack: {
       slack_channel: string;
       slack_webhook_url: string;
     };
@@ -320,7 +336,14 @@ interface NotificationChannelSlack extends NotificationChannelBase {
 
 interface NotificationChannelPagerDuty extends NotificationChannelBase {
   channel_type: AlertNotificationPagerDuty;
-  content: {
+  content?: {
+    pagerduty: {
+      attributes: string[];
+      description: string;
+      service_api_key: string;
+    };
+  };
+  details?: {
     pagerduty: {
       attributes: string[];
       description: string;
@@ -330,12 +353,27 @@ interface NotificationChannelPagerDuty extends NotificationChannelBase {
 }
 interface NotificationChannelWebHook extends NotificationChannelBase {
   channel_type: AlertNotificationWebHook;
-  content: {
+  content?: {
     webhook: {
       http_headers: {
         header_key: string;
         header_value: string;
       }[];
+      webhook_url: string;
+    };
+  };
+  details?: {
+    webhook: {
+      alert_body: {
+        body: string;
+        subject: string;
+      };
+      http_headers: {
+        header_key: string;
+        header_value: string;
+      }[];
+      method: 'GET' | 'POST' | 'PUT';
+      request_body: string;
       webhook_url: string;
     };
   };
@@ -410,4 +448,44 @@ export interface CloudPulseAlertsPayload {
    * Only included in Beta mode.
    */
   user_alerts?: number[];
+}
+
+interface EmailDetail {
+  email: {
+    usernames: string[];
+  };
+}
+
+export interface CreateNotificationChannelPayload {
+  /**
+   * The type of channel to create.
+   */
+  channel_type: ChannelType;
+  /**
+   * The details of the channel to create.
+   */
+  details: EmailDetail;
+  /**
+   * The label of the channel to create.
+   */
+  label: string;
+}
+
+export interface EditNotificationChannelPayload {
+  /**
+   * The details of the channel to edit.
+   */
+  details: EmailDetail;
+  /**
+   * The label of the channel to edit.
+   */
+  label: string;
+}
+
+export interface EditNotificationChannelPayloadWithId
+  extends EditNotificationChannelPayload {
+  /**
+   * The ID of the channel to edit.
+   */
+  channelId: number;
 }

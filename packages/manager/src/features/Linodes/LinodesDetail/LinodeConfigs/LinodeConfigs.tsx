@@ -3,7 +3,7 @@ import {
   useGrants,
   useLinodeQuery,
 } from '@linode/queries';
-import { Box, Button, Typography } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -28,23 +28,10 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
+import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './constants';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
 import { getUnableToUpgradeTooltipText } from './UpgradeInterfaces/utils';
-
-export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT = (
-  <>
-    <Typography>
-      Configuration Profile interfaces from a single profile can be upgraded to
-      Linode Interfaces.
-    </Typography>
-    <Typography mt={2}>
-      After the upgrade, the Linode can only use Linode Interfaces and cannot
-      revert to Configuration Profile interfaces. Use the dry-run feature to
-      review the changes before committing.
-    </Typography>
-  </>
-);
 
 const LinodeConfigs = () => {
   const theme = useTheme();

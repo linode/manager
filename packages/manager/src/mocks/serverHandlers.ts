@@ -21,6 +21,10 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  marketplaceCategoryFactory,
+  marketplacePartnersFactory,
+  marketplaceProductFactory,
+  marketplaceTypeFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
@@ -52,6 +56,7 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseConnectionPoolFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
@@ -210,6 +215,11 @@ const makeMockDatabase = (params: PathParams): Database => {
 
     db.ssl_connection = true;
   }
+
+  if (db.engine === 'postgresql') {
+    db.connection_pool_port = 100;
+  }
+
   const database = databaseFactory.build(db);
 
   if (database.platform !== 'rdbms-default') {
@@ -367,6 +377,11 @@ const databases = [
     const combinedList = [...engine1, ...engine2];
 
     return HttpResponse.json(makeResourcePage(combinedList));
+  }),
+
+  http.get('*/databases/postgresql/instances/:id/connection-pools', () => {
+    const connectionPools = databaseConnectionPoolFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage(connectionPools));
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
@@ -607,6 +622,43 @@ const netLoadBalancers = [
   ),
 ];
 
+const marketplace = [
+  http.get('*/v4beta/marketplace/products', () => {
+    const marketplaceProduct = marketplaceProductFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
+  }),
+  http.get('*/v4beta/marketplace/products/:productId', () => {
+    const marketplaceProductDetail = marketplaceProductFactory.build({
+      details: {
+        overview: {
+          description:
+            'This is a detailed description of the marketplace product.',
+        },
+        pricing: 'Pricing information goes here.',
+        documentation: 'Documentation link or information goes here.',
+        support: 'Support information goes here.',
+      },
+    });
+    return HttpResponse.json(marketplaceProductDetail);
+  }),
+  http.get('*/v4beta/marketplace/categories', () => {
+    const marketplaceCategory = marketplaceCategoryFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
+  }),
+  http.get('*/v4beta/marketplace/types', () => {
+    const marketplaceType = marketplaceTypeFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+  }),
+  http.get('*/v4beta/marketplace/partners', () => {
+    const marketplaceType = marketplacePartnersFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+  }),
+  http.post('*/v4beta/marketplace/referral', async () => {
+    await sleep(2000);
+    return HttpResponse.json({});
+  }),
+];
+
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
@@ -671,7 +723,11 @@ export const handlers = [
       // restricted: true,
       // user_type: 'default',
     });
-    return HttpResponse.json(profile);
+    return HttpResponse.json(profile, {
+      headers: {
+        'X-Customer-UUID': '51C68049-266E-451B-80ABFC92B5B9D576',
+      },
+    });
   }),
 
   http.put('*/profile', async ({ request }) => {
@@ -3563,9 +3619,32 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/monitor/alert-channels', () => {
-    return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(7))
+    const notificationChannels = notificationChannelFactory.buildList(3);
+    notificationChannels.push(
+      notificationChannelFactory.build({
+        label: 'Email test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        details: {
+          email: {
+            usernames: ['user1', 'user2'],
+            recipient_type: 'user',
+          },
+        },
+      })
     );
+    notificationChannels.push(
+      notificationChannelFactory.build({
+        label: 'System channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user5',
+        created_by: 'admin',
+        type: 'system',
+      })
+    );
+    notificationChannels.push(...notificationChannelFactory.buildList(75));
+    return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
@@ -4407,9 +4486,34 @@ export const handlers = [
   ...vpc,
   ...entities,
   ...netLoadBalancers,
+  ...marketplace,
   http.get('*/v4beta/maintenance/policies', () => {
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))
+    );
+  }),
+  http.post('*/v4beta/monitor/alert-channels', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.put('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.get('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(
+      notificationChannelFactory.build({
+        id: 5,
+        label: 'Email test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        type: 'user',
+        channel_type: 'email',
+        details: {
+          email: {
+            usernames: ['ChildUser', 'NonAdminUser'],
+          },
+        },
+      })
     );
   }),
 ];
