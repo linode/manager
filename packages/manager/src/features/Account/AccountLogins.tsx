@@ -15,7 +15,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -44,14 +43,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 const AccountLogins = () => {
   const { classes } = useStyles();
-  const flags = useFlags();
   const { data: permissions } = usePermissions('account', [
     'list_account_logins',
   ]);
   const pagination = usePaginationV2({
-    currentRoute: flags?.iamRbacPrimaryNavChanges
-      ? '/login-history'
-      : '/account/login-history',
+    currentRoute: '/login-history',
     preferenceKey: 'account-logins-pagination',
   });
 
@@ -61,9 +57,7 @@ const AccountLogins = () => {
         order: 'desc',
         orderBy: 'datetime',
       },
-      from: flags?.iamRbacPrimaryNavChanges
-        ? '/login-history'
-        : '/account/login-history',
+      from: '/login-history',
     },
     preferenceKey: `${preferenceKey}-order`,
   });

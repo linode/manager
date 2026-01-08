@@ -226,7 +226,6 @@ export interface Flags {
   iam: BetaFeatureFlag;
   iamDelegation: BaseFeatureFlag;
   iamLimitedAvailabilityBadges: boolean;
-  iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;

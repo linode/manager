@@ -10,7 +10,6 @@ import {
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -19,7 +18,6 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { UseNavigateResult } from '@tanstack/react-router';
 
 interface CreateUserDrawerProps {
-  iamRbacPrimaryNavChanges?: boolean;
   navigate: UseNavigateResult<'/account/users'>;
   onClose: () => void;
   open: boolean;
@@ -39,14 +37,8 @@ const withNavigation = (
 ) => {
   return (props: CreateUserDrawerProps) => {
     const navigate = useNavigate();
-    const { iamRbacPrimaryNavChanges } = useFlags();
-    return (
-      <WrappedComponent
-        {...props}
-        iamRbacPrimaryNavChanges={iamRbacPrimaryNavChanges}
-        navigate={navigate}
-      />
-    );
+
+    return <WrappedComponent {...props} navigate={navigate} />;
   };
 };
 
@@ -97,7 +89,7 @@ class CreateUserDrawerComponent extends React.Component<
   };
 
   onSubmit = () => {
-    const { onClose, refetch, navigate, iamRbacPrimaryNavChanges } = this.props;
+    const { onClose, refetch, navigate } = this.props;
     const { email, restricted, username } = this.state;
     this.setState({ errors: [], submitting: true });
     createUser({ email, restricted, username })
@@ -106,9 +98,7 @@ class CreateUserDrawerComponent extends React.Component<
         onClose();
         if (user.restricted) {
           navigate({
-            to: iamRbacPrimaryNavChanges
-              ? '/users/$username/permissions'
-              : '/account/users/$username/permissions',
+            to: '/users/$username/permissions',
             params: { username: user.username },
           });
         }
