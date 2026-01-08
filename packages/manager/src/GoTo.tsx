@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { usePermissions } from './features/IAM/hooks/usePermissions';
 import { useIsMarketplaceV2Enabled } from './features/Marketplace/utils';
+import { useIsNetworkLoadBalancerEnabled } from './features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useFlags } from './hooks/useFlags';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
@@ -26,6 +27,7 @@ export const GoTo = React.memo(() => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
@@ -57,6 +59,11 @@ export const GoTo = React.memo(() => {
       {
         display: 'VPC',
         href: '/vpcs',
+      },
+      {
+        display: 'Network Load Balancer',
+        hide: !isNetworkLoadBalancerEnabled,
+        href: '/netloadbalancers',
       },
       {
         display: 'NodeBalancers',
@@ -138,6 +145,7 @@ export const GoTo = React.memo(() => {
       isDatabasesEnabled,
       isManagedAccount,
       isMarketplaceV2FeatureEnabled,
+      isNetworkLoadBalancerEnabled,
       isPlacementGroupsEnabled,
       iamRbacPrimaryNavChanges,
     ]
