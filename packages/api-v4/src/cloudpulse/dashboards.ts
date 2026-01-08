@@ -1,4 +1,4 @@
-import { BETA_API_ROOT as API_ROOT } from 'src/constants';
+import { API_ROOT } from 'src/constants';
 
 import Request, { setMethod, setURL } from '../request';
 

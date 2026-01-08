@@ -63,7 +63,7 @@ describe('StreamEdit', () => {
     assertInputHasValue('Destination Name', 'Destination 1');
 
     // Host:
-    expect(screen.getByText('3000')).toBeVisible();
+    expect(screen.getByText('destinations-bucket-name.host.com')).toBeVisible();
     // Bucket:
     expect(screen.getByText('destinations-bucket-name')).toBeVisible();
     // Access Key ID:

@@ -15,6 +15,7 @@ type DTMSatellite = {
 };
 
 interface PageViewPayload {
+  euuid?: string;
   url: string;
 }
 
