@@ -60,10 +60,13 @@ const NetworkLoadBalancersListenerDetail = () => {
             component="span"
             disableFocusRipple
             size="large"
-            sx={{
-              marginRight: 1,
+            sx={(theme) => ({
+              [theme.breakpoints.down('md')]: {
+                marginRight: 0, // Smaller screens
+              },
+              marginRight: theme.spacingFunction(8),
               padding: 0,
-            }}
+            })}
             tabIndex={-1}
           >
             <KeyboardArrowLeft
