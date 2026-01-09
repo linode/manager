@@ -17,11 +17,10 @@ import type { Database } from '@linode/api-v4';
 
 interface ServiceURIProps {
   database: Database;
-  general?: boolean;
 }
 
 export const ServiceURI = (props: ServiceURIProps) => {
-  const { database, general } = props;
+  const { database } = props;
 
   const [hidePassword, setHidePassword] = useState(true);
   const [isCopying, setIsCopying] = useState(false);
@@ -42,9 +41,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         if (data) {
           // copy with username/password data
           copy(
-            general
-              ? `${database.engine}://${data?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`
-              : `postgres://${data?.username}:${data?.password}@${database.hosts?.primary}?sslmode=require`
+            `postgres://${data?.username}:${data?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`
           );
         } else {
           enqueueSnackbar(
@@ -67,21 +64,18 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const showBtnLoading =
     !isCopying && (credentialsLoading || credentialsFetching);
 
-  const generalServiceURI = `${database.engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
-  const postgresServiceURI = `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}?sslmode=require`;
+  const postgresServiceURI = `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`;
 
   return (
     <StyledGridContainer display="flex">
-      {!general && (
-        <Grid
-          size={{
-            md: 1.5,
-            xs: 3,
-          }}
-        >
-          <StyledLabelTypography>Service URI</StyledLabelTypography>
-        </Grid>
-      )}
+      <Grid
+        size={{
+          md: 1.5,
+          xs: 3,
+        }}
+      >
+        <StyledLabelTypography>Service URI</StyledLabelTypography>
+      </Grid>
       <Grid display="contents">
         <StyledValueGrid
           data-testid="service-uri"
@@ -115,21 +109,12 @@ export const ServiceURI = (props: ServiceURIProps) => {
             >
               {`{click to reveal password}`}
             </Button>
-          ) : general ? (
-            credentials?.password
           ) : (
             `${credentials?.username}:${credentials?.password}`
           )}
           @{database.hosts?.primary}:
-          {general ? (
-            `${database.port}/defaultdb?sslmode=require`
-          ) : (
-            <>
-              <StyledCode>{'{connection pool port}'}</StyledCode> /
-              <StyledCode>{'{connection pool label}'}</StyledCode> ? sslmode =
-              require
-            </>
-          )}
+          <StyledCode>{'{connection pool port}'}</StyledCode> /
+          <StyledCode>{'{connection pool label}'}</StyledCode>?sslmode=require
         </StyledValueGrid>
         {isCopying ? (
           <Button loading sx={{ paddingLeft: 2 }}>
@@ -139,7 +124,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
           <Grid alignContent="center" size="auto">
             <StyledCopyTooltip
               onClickCallback={handleCopy}
-              text={general ? generalServiceURI : postgresServiceURI}
+              text={postgresServiceURI}
             />
           </Grid>
         )}

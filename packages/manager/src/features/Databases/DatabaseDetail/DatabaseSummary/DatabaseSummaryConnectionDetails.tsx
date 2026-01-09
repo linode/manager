@@ -6,12 +6,12 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { DB_ROOT_USERNAME } from 'src/constants';
-import { ServiceURI } from 'src/features/Databases/DatabaseDetail/ServiceURI';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { isDefaultDatabase } from '../../utilities';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
+import { GeneralServiceURI } from '../GeneralServiceURI';
 import { StyledGridContainer } from './DatabaseSummaryClusterConfiguration.style';
 import { useStyles } from './DatabaseSummaryConnectionDetails.style';
 
@@ -121,23 +121,25 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Connection Details
       </Typography>
-      <StyledGridContainer container size={{ lg: 7, md: 10 }} spacing={0}>
-        <ConnectionDetailsRow label="Username">{username}</ConnectionDetailsRow>
-        <ConnectionDetailsRow label="Password">
+      <StyledGridContainer container size={{ lg: 10, md: 10 }} spacing={0}>
+        <ConnectionDetailsRow isSummaryTab label="Username">
+          {username}
+        </ConnectionDetailsRow>
+        <ConnectionDetailsRow isSummaryTab label="Password">
           {CredentialsContent}
         </ConnectionDetailsRow>
-        <ConnectionDetailsRow label="Database name">
+        <ConnectionDetailsRow isSummaryTab label="Database name">
           {isLegacy ? database.engine : 'defaultdb'}
         </ConnectionDetailsRow>
-        <ConnectionDetailsHostRows database={database} />
-        <ConnectionDetailsRow label="Port">
+        <ConnectionDetailsHostRows database={database} isSummaryTab />
+        <ConnectionDetailsRow isSummaryTab label="Port">
           {database.port}
         </ConnectionDetailsRow>
-        <ConnectionDetailsRow label="SSL">
+        <ConnectionDetailsRow isSummaryTab label="SSL">
           {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </ConnectionDetailsRow>
         {displayConnectionType && (
-          <ConnectionDetailsRow label="Connection Type">
+          <ConnectionDetailsRow isSummaryTab label="Connection Type">
             <Box
               sx={(theme: Theme) => ({
                 marginRight: theme.spacingFunction(20),
@@ -152,8 +154,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             </Link>
           </ConnectionDetailsRow>
         )}
-        <ConnectionDetailsRow label="Service URI">
-          <ServiceURI database={database} general />
+        <ConnectionDetailsRow isSummaryTab label="Service URI">
+          <GeneralServiceURI database={database} />
         </ConnectionDetailsRow>
       </StyledGridContainer>
     </>

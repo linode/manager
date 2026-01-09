@@ -20,6 +20,7 @@ import type { Database } from '@linode/api-v4/lib/databases/types';
 
 interface ConnectionDetailsHostRowsProps {
   database: Database;
+  isSummaryTab?: boolean;
 }
 
 type HostContentMode = 'default' | 'private' | 'public';
@@ -30,7 +31,7 @@ type HostContentMode = 'default' | 'private' | 'public';
 export const ConnectionDetailsHostRows = (
   props: ConnectionDetailsHostRowsProps
 ) => {
-  const { database } = props;
+  const { database, isSummaryTab } = props;
   const { classes } = useStyles();
 
   const sxTooltipIcon = {
@@ -136,21 +137,28 @@ export const ConnectionDetailsHostRows = (
 
   return (
     <>
-      <ConnectionDetailsRow label={hasVPC ? 'Private Host' : 'Host'}>
+      <ConnectionDetailsRow
+        isSummaryTab={isSummaryTab}
+        label={hasVPC ? 'Private Host' : 'Host'}
+      >
         {getHostContent(hasVPC ? 'private' : 'default')}
       </ConnectionDetailsRow>
       {hasPublicVPC && (
-        <ConnectionDetailsRow label="Public Host">
+        <ConnectionDetailsRow isSummaryTab={isSummaryTab} label="Public Host">
           {getHostContent('public')}
         </ConnectionDetailsRow>
       )}
       <ConnectionDetailsRow
+        isSummaryTab={isSummaryTab}
         label={hasVPC ? 'Private Read-only Host' : readonlyHostLabel}
       >
         {getReadOnlyHostContent(hasVPC ? 'private' : 'default')}
       </ConnectionDetailsRow>
       {hasPublicVPC && (
-        <ConnectionDetailsRow label="Public Read-only Host">
+        <ConnectionDetailsRow
+          isSummaryTab={isSummaryTab}
+          label="Public Read-only Host"
+        >
           {getReadOnlyHostContent('public')}
         </ConnectionDetailsRow>
       )}
