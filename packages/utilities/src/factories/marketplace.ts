@@ -19,13 +19,13 @@ export const marketplaceProductFactory =
     product_tags: ['tag1', 'tag2'],
     short_description:
       'This is a short description of the marketplace product.',
-    title_tag: 'Marketplace Product Title Tag',
+    tile_tag: '60 days free trial',
     type_id: Factory.each((id) => id),
   });
 
 export const marketplaceCategoryFactory =
   Factory.Sync.makeFactory<MarketplaceCategory>({
-    category: Factory.each((id) => `marketplace-category-${id}`),
+    name: Factory.each((id) => `marketplace-category-${id}`),
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
@@ -47,7 +47,7 @@ export const marketplacePartnersFactory =
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
-    logo_url_dark_mode: 'https://www.example.com/logo-night-mode.png',
+    logo_url_dark_mode: 'https://www.example.com/logo-dark-mode.png',
     logo_url_light_mode: 'https://www.example.com/logo-light-mode.png',
     name: Factory.each((id) => `marketplace-partner-${id}`),
     url: 'https://www.example.com',

@@ -1,5 +1,5 @@
 export interface MarketplaceProductDetail {
-  documentation: string;
+  documentation?: string;
   overview?: {
     description: string;
   };
@@ -19,17 +19,17 @@ export interface MarketplaceProduct {
   partner_id: number;
   product_tags?: string[];
   short_description: string;
-  title_tag?: string;
+  tile_tag?: string;
   type_id: number;
   updated_at?: string;
   updated_by?: string;
 }
 
 export interface MarketplaceCategory {
-  category: string;
   created_at: string;
   created_by: string;
   id: number;
+  name: string;
   products_count: number;
   updated_at?: string;
   updated_by?: string;
@@ -49,7 +49,7 @@ export interface MarketplacePartner {
   created_at: string;
   created_by: string;
   id: number;
-  logo_url_dark_mode?: string;
+  logo_url_dark_mode: string;
   logo_url_light_mode: string;
   name: string;
   updated_at?: string;
