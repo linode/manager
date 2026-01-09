@@ -91,7 +91,7 @@ export const ProductSelectionCard = React.memo(
             })}
             variant="body1"
           >
-            {truncate(description, 268)}
+            {truncate(description, 200)}
           </Typography>
         );
       }
