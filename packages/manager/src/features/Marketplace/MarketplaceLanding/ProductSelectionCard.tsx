@@ -2,7 +2,6 @@ import { Box, Chip, Typography } from '@linode/ui';
 import { truncate } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
-import type { JSX } from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
@@ -59,53 +58,33 @@ export const ProductSelectionCard = React.memo(
     const { type, companyName, description, logoUrl, productName, productTag } =
       data;
 
-    const subheadings = React.useMemo(() => {
-      const items: (JSX.Element | string | undefined)[] = [];
-
-      // Company name as first subheading
-      if (companyName) {
-        items.push(
-          <Typography
-            key="company"
-            sx={(theme) => ({
-              color: theme.tokens.alias.Content.Text.Secondary.Default,
-              font: theme.font.semibold,
-              fontSize: theme.tokens.font.FontSize.Xxxs, // Must come after font
-            })}
-          >
-            {companyName}
-          </Typography>
-        );
-      }
-
-      // Description
-      if (description) {
-        items.push(
-          <Typography
-            key="description"
-            sx={(theme) => ({
-              color: theme.tokens.alias.Content.Text.Primary.Default,
-              fontSize: theme.tokens.font.FontSize.Xs,
-              marginTop: theme.spacingFunction(12),
-              paddingBottom: type ? theme.spacingFunction(36) : 0, // Space for type chip at bottom
-            })}
-            variant="body1"
-          >
-            {truncate(description, 200)}
-          </Typography>
-        );
-      }
-
-      return items;
-    }, [companyName, description, type]);
-
-    // Add type chip (if available) as last element with absolute positioning at bottom
-    const subheadingsWithChip = React.useMemo(() => {
-      if (!type) {
-        return subheadings;
-      }
-      return [
-        ...subheadings,
+    const subheadings = React.useMemo(
+      () => [
+        // Company name as first subheading
+        <Typography
+          key="company"
+          sx={(theme) => ({
+            color: theme.tokens.alias.Content.Text.Secondary.Default,
+            font: theme.font.semibold,
+            fontSize: theme.tokens.font.FontSize.Xxxs, // Must come after font
+          })}
+        >
+          {companyName}
+        </Typography>,
+        // Description
+        <Typography
+          key="description"
+          sx={(theme) => ({
+            color: theme.tokens.alias.Content.Text.Primary.Default,
+            fontSize: theme.tokens.font.FontSize.Xs,
+            marginTop: theme.spacingFunction(12),
+            paddingBottom: theme.spacingFunction(36), // Always space for type chip at bottom
+          })}
+          variant="body1"
+        >
+          {truncate(description, 200)}
+        </Typography>,
+        // Type chip (as last element with absolute positioning at bottom)
         <Box
           key="category"
           sx={(theme) => ({
@@ -122,8 +101,9 @@ export const ProductSelectionCard = React.memo(
             })}
           />
         </Box>,
-      ];
-    }, [subheadings, type]);
+      ],
+      [companyName, description, type]
+    );
 
     // Render header row with logo and optional Product tag chip
     const renderHeader = React.useCallback(() => {
@@ -179,7 +159,7 @@ export const ProductSelectionCard = React.memo(
         heading={productName}
         onClick={onClick}
         renderIcon={renderHeader}
-        subheadings={subheadingsWithChip}
+        subheadings={subheadings}
         sxCardBase={(theme) => ({
           alignItems: 'flex-start',
           flexDirection: 'column',
