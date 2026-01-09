@@ -7,48 +7,28 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ProductSelectionCard } from './ProductSelectionCard';
 
 describe('ProductSelectionCard', () => {
-  it('renders product name', () => {
+  const baseData = {
+    companyName: 'Test Company',
+    description: 'This is a test product description',
+    logoUrl: '',
+    productName: 'Test Product',
+    type: 'SaaS & APIs',
+  };
+
+  it('renders all product name, company name, description and type chip', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
         data={{
-          logoUrl: '',
-          productName: 'Test Product',
+          ...baseData,
         }}
         onClick={() => {}}
       />
     );
 
     expect(getByText('Test Product')).toBeVisible();
-  });
-
-  it('renders company name when provided', () => {
-    const { getByText } = renderWithTheme(
-      <ProductSelectionCard
-        data={{
-          companyName: 'Test Company',
-          logoUrl: '',
-          productName: 'Test Product',
-        }}
-        onClick={() => {}}
-      />
-    );
-
     expect(getByText('Test Company')).toBeVisible();
-  });
-
-  it('renders description when provided', () => {
-    const { getByText } = renderWithTheme(
-      <ProductSelectionCard
-        data={{
-          description: 'This is a test product description',
-          logoUrl: '',
-          productName: 'Test Product',
-        }}
-        onClick={() => {}}
-      />
-    );
-
     expect(getByText('This is a test product description')).toBeVisible();
+    expect(getByText('SaaS & APIs')).toBeVisible();
   });
 
   it('truncates long descriptions and appends an ellipsis', () => {
@@ -56,9 +36,8 @@ describe('ProductSelectionCard', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
         data={{
+          ...baseData,
           description: longDescription,
-          logoUrl: '',
-          productName: 'Test Product',
         }}
         onClick={() => {}}
       />
@@ -76,8 +55,7 @@ describe('ProductSelectionCard', () => {
     const { getByText } = renderWithTheme(
       <ProductSelectionCard
         data={{
-          logoUrl: '',
-          productName: 'Test Product',
+          ...baseData,
           productTag: 'New',
         }}
         onClick={() => {}}
@@ -87,27 +65,12 @@ describe('ProductSelectionCard', () => {
     expect(getByText('New')).toBeVisible();
   });
 
-  it('renders type chip when provided', () => {
-    const { getByText } = renderWithTheme(
-      <ProductSelectionCard
-        data={{
-          logoUrl: '',
-          productName: 'Test Product',
-          type: 'SaaS & APIs',
-        }}
-        onClick={() => {}}
-      />
-    );
-
-    expect(getByText('SaaS & APIs')).toBeVisible();
-  });
-
   it('renders logo image when logoUrl is provided', () => {
     const { getByAltText } = renderWithTheme(
       <ProductSelectionCard
         data={{
+          ...baseData,
           logoUrl: '/test-logo.png',
-          productName: 'Test Product',
         }}
         onClick={() => {}}
       />
@@ -121,13 +84,7 @@ describe('ProductSelectionCard', () => {
   it('calls onClick when card is clicked', async () => {
     const handleClick = vi.fn();
     const { getByText } = renderWithTheme(
-      <ProductSelectionCard
-        data={{
-          logoUrl: '',
-          productName: 'Test Product',
-        }}
-        onClick={handleClick}
-      />
+      <ProductSelectionCard data={{ ...baseData }} onClick={handleClick} />
     );
 
     await userEvent.click(getByText('Test Product'));
@@ -138,10 +95,7 @@ describe('ProductSelectionCard', () => {
   it('renders disabled state correctly', () => {
     const { getByTestId } = renderWithTheme(
       <ProductSelectionCard
-        data={{
-          logoUrl: '',
-          productName: 'Test Product',
-        }}
+        data={{ ...baseData }}
         disabled
         onClick={() => {}}
       />
@@ -154,12 +108,11 @@ describe('ProductSelectionCard', () => {
     const { getByText, getByAltText } = renderWithTheme(
       <ProductSelectionCard
         data={{
-          companyName: 'Test Company',
+          ...baseData,
           description: 'Full product description',
           logoUrl: '/logo.png',
           productName: 'Complete Product',
           productTag: 'New',
-          type: 'SaaS and APIs',
         }}
         onClick={() => {}}
       />
@@ -169,22 +122,27 @@ describe('ProductSelectionCard', () => {
     expect(getByText('Test Company')).toBeVisible();
     expect(getByText('Full product description')).toBeVisible();
     expect(getByText('New')).toBeVisible();
-    expect(getByText('SaaS and APIs')).toBeVisible();
+    expect(getByText('SaaS & APIs')).toBeVisible();
     expect(getByAltText('Complete Product logo')).toBeVisible();
   });
 
   it('does not render optional elements when not provided', () => {
     const { getByText, queryByText } = renderWithTheme(
       <ProductSelectionCard
-        data={{ logoUrl: '', productName: 'Minimal Product' }}
+        data={{
+          ...baseData,
+          productName: 'Minimal Product',
+        }}
         onClick={() => {}}
       />
     );
 
     expect(getByText('Minimal Product')).toBeVisible();
+    expect(getByText('Test Company')).toBeVisible();
+    expect(getByText('This is a test product description')).toBeVisible();
+    expect(getByText('SaaS & APIs')).toBeVisible();
+
     // optional elements should not be in the document
-    expect(queryByText('Test Company')).not.toBeInTheDocument();
     expect(queryByText('New')).not.toBeInTheDocument();
-    expect(queryByText('SaaS and APIs')).not.toBeInTheDocument();
   });
 });

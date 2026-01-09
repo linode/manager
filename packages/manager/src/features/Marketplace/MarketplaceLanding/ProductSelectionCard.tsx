@@ -10,11 +10,11 @@ export interface ProductCardData {
   /**
    * Company name displayed below the product name
    */
-  companyName?: string;
+  companyName: string;
   /**
    * Product description text
    */
-  description?: string;
+  description: string;
   /**
    * URL or path to the product logo image
    */
@@ -30,7 +30,7 @@ export interface ProductCardData {
   /**
    * Bottom left type chip label (e.g., "SaaS and APIs")
    */
-  type?: string;
+  type: string;
 }
 
 export interface ProductSelectionCardProps {
