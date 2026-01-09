@@ -64,7 +64,9 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
     for (const slaacs of linodeInterface.vpc.ipv6.slaac) {
       if (slaacs.address) {
         ips.push(slaacs.address);
-        ips.push(slaacs.range);
+        if (slaacs.range) {
+          ips.push(slaacs.range);
+        }
       }
     }
 

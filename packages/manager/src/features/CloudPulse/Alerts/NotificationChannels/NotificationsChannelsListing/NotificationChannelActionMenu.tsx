@@ -11,6 +11,10 @@ export interface NotificationChannelActionHandlers {
    * Callback for show details action
    */
   handleDetails: () => void;
+  /**
+   * Callback for edit action
+   */
+  handleEdit: () => void;
 }
 
 export interface NotificationChannelActionMenuProps {

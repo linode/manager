@@ -14,10 +14,9 @@ import type { User } from '@linode/api-v4';
 
 interface Props {
   activeUser: User;
-  canUpdateUser: boolean;
 }
 
-export const UserEmailPanel = ({ canUpdateUser, activeUser }: Props) => {
+export const UserEmailPanel = ({ activeUser }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { profileUserName } = useDelegationRole();
 
@@ -54,7 +53,7 @@ export const UserEmailPanel = ({ canUpdateUser, activeUser }: Props) => {
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
   const disableEmailField =
-    profileUserName !== activeUser.username || isProxyUser || !canUpdateUser;
+    profileUserName !== activeUser.username || isProxyUser;
 
   return (
     <Paper>
@@ -79,11 +78,11 @@ export const UserEmailPanel = ({ canUpdateUser, activeUser }: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={!isDirty || !canUpdateUser}
+          disabled={!isDirty || disableEmailField}
           loading={isSubmitting}
           sx={{ mt: 2 }}
           tooltipText={
-            !canUpdateUser
+            disableEmailField
               ? 'You do not have permission to update this user.'
               : undefined
           }

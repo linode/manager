@@ -307,3 +307,9 @@ export const CREATE_CHANNEL_SUCCESS_MESSAGE =
 
 export const CREATE_CHANNEL_FAILED_MESSAGE =
   'Failed to create the notification channel. Verify the configuration details and try again.';
+
+export const UPDATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel updated successfully. All changes have been saved.';
+
+export const UPDATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to update the notification channel. Verify the details and try again.';

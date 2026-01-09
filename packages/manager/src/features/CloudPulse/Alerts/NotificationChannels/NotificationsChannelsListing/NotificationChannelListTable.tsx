@@ -53,6 +53,13 @@ export const NotificationChannelListTable = React.memo(
         params: { channelId: String(id) },
       });
     };
+
+    const handleEdit = ({ id }: NotificationChannel) => {
+      navigate({
+        to: '/alerts/notification-channels/edit/$channelId',
+        params: { channelId: id },
+      });
+    };
     const _error = error
       ? getAPIErrorOrDefault(
           error,
@@ -172,6 +179,7 @@ export const NotificationChannelListTable = React.memo(
                         <NotificationChannelTableRow
                           handlers={{
                             handleDetails: () => handleDetails(channel),
+                            handleEdit: () => handleEdit(channel),
                           }}
                           key={channel.id}
                           notificationChannel={channel}

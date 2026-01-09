@@ -7,13 +7,13 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { FormControlLabel, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import type { ChangeEvent } from 'react';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
-import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
@@ -36,7 +36,7 @@ const interfaceTypes = [
     label: 'VPC',
     purpose: 'vpc',
     description:
-      'Connects your Linode to a private, Layer 3–isolated network, enabling secure communication with other Linodes in the same VPC.',
+      'Connects your Linode to a private, Layer 3 isolated network, allowing secure communication with other Linodes in the same VPC.',
   },
   {
     label: 'VLAN',
@@ -122,48 +122,34 @@ export const InterfaceType = ({ index }: Props) => {
           />
         )}
       </Box>
-      <Typography id="network-connection-helper-text">
-        The default interface used by this Linode to route network traffic.
-        Additional interfaces can be added after the Linode is created.
-      </Typography>
       <RadioGroup
         aria-describedby="network-connection-helper-text"
         aria-labelledby="network-connection-label"
-        sx={{ display: 'block', marginBottom: '0px !important' }}
+        onChange={(_: ChangeEvent, value: InterfacePurpose) => onChange(value)}
+        value={field.value}
       >
-        <Grid container spacing={2}>
-          {interfaceTypes.map((interfaceType) => (
-            <SelectionCard
-              checked={disabled ? false : field.value === interfaceType.purpose}
-              disabled={disabled}
-              gridSize={{
-                md: 3,
-                sm: 12,
-                xs: 12,
-              }}
-              heading={interfaceType.label}
-              key={interfaceType.purpose}
-              onClick={() => onChange(interfaceType.purpose)}
-              renderIcon={() => (
-                <Radio
-                  checked={
-                    disabled ? false : field.value === interfaceType.purpose
-                  }
-                  disabled={disabled}
-                />
-              )}
-              renderVariant={() => (
+        {interfaceTypes.map((interfaceType) => (
+          <FormControlLabel
+            control={<Radio />}
+            data-qa-interface-type-option={interfaceType.purpose}
+            disabled={disabled}
+            key={interfaceType.purpose}
+            label={
+              <Stack direction="row" mt={1.25} spacing={0.5}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  {interfaceType.label}
+                </Typography>
                 <TooltipIcon
                   status="info"
-                  sxTooltipIcon={{ p: 0.5 }}
+                  sxTooltipIcon={{ p: 0, ml: 0.5 }}
                   text={interfaceType.description}
                 />
-              )}
-              subheadings={[]}
-              sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
-            />
-          ))}
-        </Grid>
+              </Stack>
+            }
+            sx={{ alignItems: 'flex-start' }}
+            value={disabled ? false : interfaceType.purpose}
+          />
+        ))}
       </RadioGroup>
     </FormControl>
   );
