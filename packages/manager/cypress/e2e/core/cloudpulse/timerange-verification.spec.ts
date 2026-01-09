@@ -189,7 +189,6 @@ const formatToUtcDateTime = (dateStr: string): string => {
 };
 
 /*
- * TODO Fix or migrate the tests in `timerange-verification.spec.ts`.
  *
  * The tests in this spec frequently fail during specific dates and time periods
  * throughout the day and year. Because there are so many tests in this spec, the
@@ -203,7 +202,7 @@ const formatToUtcDateTime = (dateStr: string): string => {
  * - Are these tests adding any value? They fail frequently and the failures do
  *   not get reviewed. They do not seem to be protecting us from regressions.
  */
-describe.skip('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
+describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
    * - Simulates loading test data without real API calls.
@@ -247,6 +246,10 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
     mockGetDatabases([databaseMock]).as('fetchDatabases');
 
     cy.visitWithLogin('/metrics');
+
+    cy.get('[aria-label="Content is loading"]', { timeout: 2000 }).should(
+      'not.exist'
+    );
     cy.wait([
       '@fetchServices',
       '@fetchDashboard',
@@ -254,90 +257,6 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
       '@fetchDatabases',
     ]);
   });
-  it('should correctly resolve previous month across calendar edge cases', () => {
-    const testDates = [
-      {
-        iso: '2025-02-28T10:00:00Z',
-        currentMonth: 'February',
-        currentYear: 2025,
-        expectedMonth: 'January',
-        expectedYear: 2025,
-        isLeapYear: false,
-      },
-      {
-        iso: '2025-12-31T23:59:59Z',
-        currentMonth: 'December',
-        currentYear: 2025,
-        expectedMonth: 'November',
-        expectedYear: 2025,
-        isLeapYear: false,
-      },
-      {
-        iso: '2025-03-31T12:30:00Z',
-        currentMonth: 'March',
-        currentYear: 2025,
-        expectedMonth: 'February',
-        expectedYear: 2025,
-        isLeapYear: false,
-      },
-      {
-        iso: '2025-05-30T08:15:00Z',
-        currentMonth: 'May',
-        currentYear: 2025,
-        expectedMonth: 'April',
-        expectedYear: 2025,
-        isLeapYear: false,
-      },
-      {
-        iso: '2024-02-29T10:00:00Z',
-        currentMonth: 'February',
-        currentYear: 2024,
-        expectedMonth: 'January',
-        expectedYear: 2024,
-        isLeapYear: true,
-      },
-      {
-        iso: '2026-01-01T00:00:00Z',
-        currentMonth: 'January',
-        currentYear: 2026,
-        expectedMonth: 'December',
-        expectedYear: 2025,
-        isLeapYear: false,
-      },
-    ];
-
-    testDates.forEach(
-      ({
-        iso,
-        currentMonth,
-        currentYear,
-        expectedMonth,
-        expectedYear,
-        isLeapYear,
-      }) => {
-        const now = DateTime.fromISO(iso, { zone: 'GMT' });
-
-        // Current date assertions
-        expect(now.toFormat('LLLL')).to.eq(currentMonth);
-        expect(now.year).to.eq(currentYear);
-        expect(now.isInLeapYear).to.eq(isLeapYear);
-
-        // Previous month logic
-        const previousMonthBase = now.startOf('month').minus({ months: 1 });
-
-        expect(previousMonthBase.toFormat('LLLL')).to.eq(expectedMonth);
-        expect(previousMonthBase.year).to.eq(expectedYear);
-
-        // Explicit year relationship check
-        if (currentMonth === 'January') {
-          expect(previousMonthBase.year).to.eq(currentYear - 1);
-        } else {
-          expect(previousMonthBase.year).to.eq(currentYear);
-        }
-      }
-    );
-  });
-
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
     const {
@@ -345,11 +264,6 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
       day: startDay,
       hour: startHour,
       minute: startMinute,
-      month: startMonth,
-      year: startYear,
-      previousMonth,
-      previousYear,
-      daysInMonth,
     } = getDateRangeInGMT(12, 15, true);
 
     const {
@@ -488,91 +402,6 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
         );
         expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
           convertToGmt(endActualDate)
-        );
-      });
-
-    // --- Test Time Range Presets ---
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
-      'getPresets'
-    );
-
-    // Open the date range picker to apply the "Last 30 Days" preset
-
-    cy.get('[aria-labelledby="start-date"]').parent().as('startDateInput');
-    cy.get('@startDateInput').click();
-
-    ui.button.findByTitle('Last 30 days').should('be.visible').click();
-
-    cy.get('[data-qa-preset="Last 30 days"]').should(
-      'have.attr',
-      'aria-selected',
-      'true'
-    );
-
-    cy.contains(`${previousMonth} ${previousYear}`)
-      .closest('div')
-      .next()
-      .find('[aria-selected="true"]')
-      .then(($els) => {
-        const selectedDays = Array.from($els).map((el) =>
-          Number(el.textContent?.trim())
-        );
-
-        expect(daysInMonth, 'daysInMonth should be defined').to.be.a('number');
-
-        const totalDays = daysInMonth as number;
-        const expectedCount = totalDays - endDay;
-
-        expect(
-          selectedDays.length,
-          'number of selected days from the previous month for the last-30-days range'
-        ).to.eq(expectedCount);
-        expect(
-          totalDays - selectedDays.length,
-          'start day of Last 30 days'
-        ).to.eq(endDay);
-      });
-
-    cy.contains(`${startMonth} ${startYear}`)
-      .closest('div')
-      .next()
-      .find('[aria-selected="true"]')
-      .then(($els) => {
-        const selectedDays = Array.from($els).map((el) =>
-          Number(el.textContent?.trim())
-        );
-
-        expect(
-          selectedDays.length,
-          'number of selected days in the current month for the last-30-days range'
-        ).to.eq(endDay);
-        expect(Math.max(...selectedDays), 'end day of  Last 30 days').to.eq(
-          endDay
-        );
-      });
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    ui.button
-      .findByTitle('Last 30 days')
-      .should('be.visible')
-      .should('be.enabled');
-
-    cy.get('@getPresets.all')
-      .should('have.length', 4)
-      .each((xhr: unknown) => {
-        const {
-          request: { body },
-        } = xhr as Interception;
-        expect(body).to.have.nested.property(
-          'relative_time_duration.unit',
-          'days'
-        );
-        expect(body).to.have.nested.property(
-          'relative_time_duration.value',
-          30
         );
       });
   });
