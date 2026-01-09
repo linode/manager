@@ -10,7 +10,6 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -34,11 +33,9 @@ export const UsersLanding = () => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { iamRbacPrimaryNavChanges } = useFlags();
-
   const pagination = usePaginationV2({
     initialPage: 1,
-    currentRoute: iamRbacPrimaryNavChanges ? '/users' : '/account/users',
+    currentRoute: '/users',
     preferenceKey: 'account-users-pagination',
   });
   const order = useOrderV2({
@@ -47,7 +44,7 @@ export const UsersLanding = () => {
         order: 'desc',
         orderBy: 'username',
       },
-      from: iamRbacPrimaryNavChanges ? '/users' : '/account/users',
+      from: '/users',
     },
     preferenceKey: 'account-users-order',
   });

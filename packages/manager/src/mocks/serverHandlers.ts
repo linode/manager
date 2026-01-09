@@ -524,6 +524,30 @@ const vpc = [
     const subnet = subnetFactory.build({ ...(body as any) });
     return HttpResponse.json(subnet);
   }),
+  http.get('*/v4beta/regions/vpc-availability', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          region: 'ap-west',
+          available: true,
+          available_ipv6_prefix_lengths: [],
+        },
+        {
+          region: 'in-maa',
+          available: true,
+          available_ipv6_prefix_lengths: [52],
+        },
+        {
+          region: 'us-southeast',
+          available: true,
+          available_ipv6_prefix_lengths: [48, 52],
+        },
+      ],
+      page: 1,
+      pages: 1,
+      results: 3,
+    });
+  }),
 ];
 
 const iam = [
@@ -3626,12 +3650,6 @@ export const handlers = [
         updated: '2023-11-05T04:00:00',
         updated_by: 'user3',
         created_by: 'admin',
-        details: {
-          email: {
-            usernames: ['user1', 'user2'],
-            recipient_type: 'user',
-          },
-        },
       })
     );
     notificationChannels.push(
