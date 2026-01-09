@@ -58,14 +58,12 @@ export const NotificationChannelListTable = React.memo(
     const { error, isLoading, notificationChannels, scrollToElement } = props;
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
-    const { mutateAsync: deleteChannel } = useDeleteNotificationChannel();
+    const { mutateAsync: deleteChannel, isPending: isDeleting } =
+      useDeleteNotificationChannel();
 
     const [selectedChannel, setSelectedChannel] =
       React.useState<NotificationChannel | null>(null);
-    const [deleteState, setDeleteState] = React.useState({
-      isDialogOpen: false,
-      isDeleting: false,
-    });
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
     const handleDetails = ({ id }: NotificationChannel) => {
       navigate({
@@ -83,7 +81,7 @@ export const NotificationChannelListTable = React.memo(
 
     const handleDelete = React.useCallback((channel: NotificationChannel) => {
       setSelectedChannel(channel);
-      setDeleteState((prev) => ({ ...prev, isDialogOpen: true }));
+      setIsDialogOpen(true);
     }, []);
 
     const handleDeleteConfirm = React.useCallback(() => {
@@ -91,7 +89,6 @@ export const NotificationChannelListTable = React.memo(
         return;
       }
 
-      setDeleteState((prev) => ({ ...prev, isDeleting: true }));
       const payload: DeleteChannelPayload = {
         channelId: selectedChannel.id,
       };
@@ -110,7 +107,7 @@ export const NotificationChannelListTable = React.memo(
           enqueueSnackbar(errorResponse[0].reason, { variant: 'error' });
         })
         .finally(() => {
-          setDeleteState({ isDialogOpen: false, isDeleting: false });
+          setIsDialogOpen(false);
         });
     }, [deleteChannel, enqueueSnackbar, selectedChannel]);
 
@@ -270,13 +267,13 @@ export const NotificationChannelListTable = React.memo(
                 }}
                 expand
                 label="Notification Channel Label"
-                loading={deleteState.isDeleting}
+                loading={isDeleting}
                 onClick={handleDeleteConfirm}
                 onClose={() => {
-                  setDeleteState((prev) => ({ ...prev, isDialogOpen: false }));
+                  setIsDialogOpen(false);
                   setSelectedChannel(null);
                 }}
-                open={deleteState.isDialogOpen}
+                open={isDialogOpen}
                 title={`Delete ${selectedChannel?.label ?? ''}?`}
               >
                 <Notice variant="warning">
