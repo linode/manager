@@ -116,7 +116,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       <Notice variant="warning">
         {isDefaultDelegationRolesForChildAccount ? (
           <Typography>
-            Delegated users won’t get the {role?.role_name} access on the{' '}
+            Delegate users won’t get the {role?.role_name} access on the{' '}
             {role?.entity_name} entity by default.
           </Typography>
         ) : (
