@@ -59,7 +59,7 @@ export const AccountDelegationsTable = ({
             style={{ width: '59%' }}
             sx={{ display: { sm: 'table-cell', xs: 'none' } }}
           >
-            Delegate Users
+            Users
           </TableCell>
           <TableCell style={{ width: '14%' }} />
         </TableRow>
