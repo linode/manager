@@ -106,8 +106,6 @@ describe('restricted user details pages', () => {
     mockAppendFeatureFlags({
       apl: false,
       dbaasV2: { beta: false, enabled: false },
-      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
-      iamRbacPrimaryNavChanges: true,
     });
   });
 

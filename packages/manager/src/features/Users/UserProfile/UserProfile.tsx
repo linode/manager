@@ -4,7 +4,6 @@ import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
@@ -12,12 +11,8 @@ import { UserEmailPanel } from './UserEmailPanel';
 import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
-  const { iamRbacPrimaryNavChanges } = useFlags();
-
   const { username } = useParams({
-    from: iamRbacPrimaryNavChanges
-      ? '/users/$username'
-      : '/account/users/$username',
+    from: '/users/$username',
   });
 
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
