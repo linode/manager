@@ -11,6 +11,7 @@ export * from './iam';
 export * from './images';
 export * from './linodes';
 export * from './locks';
+export * from './marketplace';
 export * from './netloadbalancers';
 export * from './networking';
 export * from './networktransfer';
