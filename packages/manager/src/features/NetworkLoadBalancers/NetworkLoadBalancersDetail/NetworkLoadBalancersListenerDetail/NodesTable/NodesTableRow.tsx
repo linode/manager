@@ -39,7 +39,7 @@ export const NodesTableRow = (props: NetworkLoadBalancerNode) => {
           {linode_id}
         </Link>
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ width: '15%' }}>
         {address_v6 ? (
           <IPAddress ips={[address_v6]} isHovered={isHovered} />
         ) : (

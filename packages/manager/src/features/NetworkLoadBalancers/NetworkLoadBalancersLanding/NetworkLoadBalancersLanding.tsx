@@ -84,11 +84,20 @@ export const NetworkLoadBalancersLanding = () => {
               <TableCell>ID</TableCell>
             </Hidden>
             <TableCell>Listener Ports</TableCell>
-            <TableCell>Virtual IP (IPv4)</TableCell>
             <Hidden mdDown>
-              <TableCell>Virtual IP (IPv6)</TableCell>
+              <TableCell sx={{ width: '10%' }}>Virtual IP (IPv4)</TableCell>
             </Hidden>
-            <TableCell>LKE-E Cluster</TableCell>
+            <TableCell
+              sx={(theme) => ({
+                [theme.breakpoints.down('md')]: {
+                  width: '25%', // Smaller screens
+                },
+                width: '15%', // Default width
+              })}
+            >
+              Virtual IP (IPv6)
+            </TableCell>
+            <TableCell>Cluster</TableCell>
             <Hidden mdDown>
               <TableCell>Region</TableCell>
             </Hidden>

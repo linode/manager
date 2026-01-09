@@ -11,6 +11,7 @@ import {
   filterPlansByGpuType,
   filterPlansByType,
   getAvailableTypes,
+  getGenerationRank,
   supportsTypeFiltering,
 } from './planFilters';
 
@@ -238,6 +239,34 @@ describe('planFilters utilities', () => {
       const result = filterPlansByGpuType(gpuPlans, 'all');
 
       expect(result).toEqual(gpuPlans);
+    });
+  });
+
+  describe('getGenerationRank', () => {
+    it('returns higher rank for newer generations', () => {
+      expect(getGenerationRank('g8-dedicated-4-2')).toBeGreaterThan(
+        getGenerationRank('g7-dedicated-4-2')
+      );
+      expect(getGenerationRank('g7-dedicated-4-2')).toBeGreaterThan(
+        getGenerationRank('g6-dedicated-2')
+      );
+    });
+
+    it('handles multi-digit generations correctly', () => {
+      expect(getGenerationRank('g10-dedicated-2')).toBeGreaterThan(
+        getGenerationRank('g8-dedicated-4-2')
+      );
+      expect(getGenerationRank('g11-dedicated-2')).toBeGreaterThan(
+        getGenerationRank('g10-dedicated-2')
+      );
+    });
+
+    it('returns 0 for unknown generations', () => {
+      expect(getGenerationRank('legacy-plan')).toBe(0);
+      expect(getGenerationRank('gg-xyz')).toBe(0);
+      expect(getGenerationRank('g-pqr')).toBe(0);
+      expect(getGenerationRank('x123')).toBe(0);
+      expect(getGenerationRank('')).toBe(0);
     });
   });
 });
