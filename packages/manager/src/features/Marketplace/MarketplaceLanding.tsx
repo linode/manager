@@ -12,7 +12,8 @@ export const MarketplaceLanding = () => {
             {
               label: (
                 <>
-                  Partner Referral <BetaChip />
+                  Partner Referrals
+                  <BetaChip />
                 </>
               ),
               position: 1,
