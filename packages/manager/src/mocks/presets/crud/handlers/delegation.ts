@@ -143,7 +143,9 @@ export const childAccountDelegates = (mockState: MockState) => [
       StrictResponse<APIErrorResponse | APIPaginatedResponse<string>>
     > => {
       const euuid = params.euuid as string;
-      const newUsernames = (await request.json()) as string[];
+      const { users: newUsernames } = (await request.json()) as {
+        users: string[];
+      };
 
       // Get current delegations
       const allDelegations = await mswDB.getAll('delegations');
