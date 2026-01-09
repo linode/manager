@@ -16,6 +16,7 @@ import type {
   MarketplacePartner,
   MarketplacePartnerReferralPayload,
   MarketplaceProduct,
+  MarketplaceType,
   Params,
 } from '@linode/api-v4';
 
@@ -93,6 +94,44 @@ export const useInfiniteMarketplaceCategoriesQuery = (
 ) =>
   useInfiniteQuery<ResourcePage<MarketplaceCategory>, APIError[]>({
     ...marketplaceQueries.categories._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+
+export const useMarketplaceTypesQuery = (
+  params: Params,
+  filter: Filter,
+  enabled: boolean = false,
+) =>
+  useQuery<ResourcePage<MarketplaceType>, APIError[]>({
+    ...marketplaceQueries.types._ctx.paginated(params, filter),
+    enabled,
+    placeholderData: keepPreviousData,
+  });
+
+export const useAllMarketplaceTypesQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled: boolean = false,
+) =>
+  useQuery<MarketplaceType[], APIError[]>({
+    ...marketplaceQueries.types._ctx.all(params, filter),
+    enabled,
+  });
+
+export const useInfiniteMarketplaceTypesQuery = (
+  filter: Filter,
+  enabled: boolean,
+) =>
+  useInfiniteQuery<ResourcePage<MarketplaceType>, APIError[]>({
+    ...marketplaceQueries.types._ctx.infinite(filter),
     enabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
