@@ -13,8 +13,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import { StyledGrid } from './EmailBounce.styles';
 
 import type { Theme } from '@mui/material/styles';
@@ -28,7 +26,6 @@ export const EmailBounceNotificationSection = React.memo(() => {
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: notifications } = useNotificationsQuery();
-  const flags = useFlags();
 
   const navigate = useNavigate();
 
@@ -57,9 +54,7 @@ export const EmailBounceNotificationSection = React.memo(() => {
         <EmailBounceNotification
           changeEmail={() =>
             navigate({
-              to: flags?.iamRbacPrimaryNavChanges
-                ? '/billing'
-                : '/account/billing',
+              to: '/billing',
               search: { contactDrawerOpen: true, focusEmail: true },
             })
           }

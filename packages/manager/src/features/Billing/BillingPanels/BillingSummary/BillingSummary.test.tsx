@@ -39,7 +39,7 @@ describe('BillingSummary', () => {
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/no balance/i);
@@ -56,7 +56,7 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/credit/i);
@@ -73,7 +73,7 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/Balance/i);
@@ -86,7 +86,7 @@ describe('BillingSummary', () => {
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     expect(screen.queryByText('Promotions')).not.toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     const getByTextWithMarkup = withMarkup(screen.getByText);
@@ -142,7 +142,7 @@ describe('BillingSummary', () => {
         promotions={promotions}
       />,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     expect(screen.queryByText('Applies to: All')).not.toBeInTheDocument();
@@ -155,27 +155,27 @@ describe('BillingSummary', () => {
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
   });
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', async () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByText, router } = renderWithTheme(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
 
     const paymentButton = getByText('Make a payment', { exact: false });
     await userEvent.click(paymentButton);
 
-    expect(getByTestId('drawer')).toBeVisible();
-    expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+    expect(router.state.location.pathname).toBe('/billing');
+    expect(router.state.location.searchStr).toBe('?action=make-payment');
   });
 
   it('does not display the "Add a promo code" button if user does not have create_promo_code permission', async () => {
@@ -184,7 +184,7 @@ describe('BillingSummary', () => {
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     expect(queryByText('Add a promo code')).not.toBeInTheDocument();
@@ -206,7 +206,7 @@ describe('BillingSummary', () => {
         />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
     expect(queryByText('Add a promo code')).toBeInTheDocument();
