@@ -10,13 +10,13 @@ describe('ProductSelectionCard', () => {
   const baseData = {
     companyName: 'Test Company',
     description: 'This is a test product description',
-    logoUrl: '',
+    logoUrl: '/test-logo.png',
     productName: 'Test Product',
     type: 'SaaS & APIs',
   };
 
-  it('renders all product name, company name, description and type chip', () => {
-    const { getByText } = renderWithTheme(
+  it('renders all - logo image, product name, company name, description and type chip', () => {
+    const { getByAltText, getByText } = renderWithTheme(
       <ProductSelectionCard
         data={{
           ...baseData,
@@ -24,6 +24,10 @@ describe('ProductSelectionCard', () => {
         onClick={() => {}}
       />
     );
+
+    const logo = getByAltText('Test Product logo');
+    expect(logo).toBeVisible();
+    expect(logo).toHaveAttribute('src', '/test-logo.png');
 
     expect(getByText('Test Product')).toBeVisible();
     expect(getByText('Test Company')).toBeVisible();
@@ -63,22 +67,6 @@ describe('ProductSelectionCard', () => {
     );
 
     expect(getByText('New')).toBeVisible();
-  });
-
-  it('renders logo image when logoUrl is provided', () => {
-    const { getByAltText } = renderWithTheme(
-      <ProductSelectionCard
-        data={{
-          ...baseData,
-          logoUrl: '/test-logo.png',
-        }}
-        onClick={() => {}}
-      />
-    );
-
-    const logo = getByAltText('Test Product logo');
-    expect(logo).toBeVisible();
-    expect(logo).toHaveAttribute('src', '/test-logo.png');
   });
 
   it('calls onClick when card is clicked', async () => {
