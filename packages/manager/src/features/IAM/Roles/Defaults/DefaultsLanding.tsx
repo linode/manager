@@ -1,3 +1,4 @@
+import { NewFeatureChip } from '@linode/ui';
 import { TabPanels } from '@reach/tabs';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -6,11 +7,19 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
+
+import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
+import { IAM_LABEL } from '../../Shared/constants';
 
 export const DefaultsLanding = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const flags = useFlags();
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const showLimitedAvailabilityBadges =
+    flags.iamLimitedAvailabilityBadges && isIAMEnabled && !isIAMBeta;
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
@@ -32,6 +41,20 @@ export const DefaultsLanding = () => {
       <LandingHeader
         breadcrumbProps={{
           pathname: '/iam/roles/defaults',
+          crumbOverrides: [
+            {
+              label: (
+                <>
+                  {IAM_LABEL}
+                  {showLimitedAvailabilityBadges ? (
+                    <NewFeatureChip sx={{ position: 'relative', top: -1 }} />
+                  ) : null}
+                </>
+              ),
+              linkTo: '/iam',
+              position: 1,
+            },
+          ],
         }}
         spacingBottom={4}
         title="Default Roles for Delegate Users"
