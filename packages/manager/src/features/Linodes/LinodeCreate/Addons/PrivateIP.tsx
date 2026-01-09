@@ -2,6 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import {
   Checkbox,
   FormControlLabel,
+  NewFeatureChip,
   Notice,
   Stack,
   Typography,
@@ -55,9 +56,18 @@ export const PrivateIP = () => {
             />
           )}
           <Typography component="span" display="block" variant="body1">
-            Use Private IP for a backend node to a NodeBalancer. Use VPC instead
-            for private communication between your Linodes.
+            Lets you connect with other Linodes in the same region over the data
+            center&apos;s private network, without using a public IPv4 address.
           </Typography>
+          <Notice variant="tip">
+            <Stack alignItems="center" direction="row" spacing={1}>
+              <NewFeatureChip />
+              <Typography>
+                You can use VPC for private networking instead. NodeBalancers
+                now connect to backend nodes without a private IPv4 address.
+              </Typography>
+            </Stack>
+          </Notice>
         </Stack>
       }
       onChange={field.onChange}
