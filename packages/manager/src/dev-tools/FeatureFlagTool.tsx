@@ -68,7 +68,6 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'IAM Limited Availability Badges',
   },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
-  { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
