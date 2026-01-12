@@ -53,7 +53,7 @@ describe('LinodeEntityDetailFooter', () => {
 
     const { getByRole } = renderWithTheme(
       <LinodeEntityDetailFooter {...props} />,
-      { flags: { iam: { enabled: true, beta: true } } }
+      { flags: { iam: { enabled: true } } }
     );
 
     await waitFor(() => {
