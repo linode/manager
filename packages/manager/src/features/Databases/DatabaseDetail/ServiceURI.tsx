@@ -25,6 +25,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
 
   const [hidePassword, setHidePassword] = useState(true);
   const [isCopying, setIsCopying] = useState(false);
+  const engine =
+    database.engine === 'postgresql' ? 'postgres' : database.engine;
 
   const {
     data: credentials,
@@ -64,7 +66,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     credentials: DatabaseCredentials | undefined
   ) => {
     if (isGeneralServiceURI) {
-      return `${database.engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
+      return `${engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
     }
     return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`;
   };
@@ -120,7 +122,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         }}
         whiteSpace="pre"
       >
-        {database.engine}://
+        {engine}://
         {credentialsError
           ? ErrorButton
           : hidePassword || (!credentialsError && !credentials)
@@ -174,13 +176,13 @@ export const ServiceURI = (props: ServiceURIProps) => {
   );
 };
 
-export const StyledCode = styled(Code, {
+const StyledCode = styled(Code, {
   label: 'StyledCode',
 })(() => ({
   margin: 0,
 }));
 
-export const StyledCopyTooltip = styled(CopyTooltip, {
+const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'StyledCopyTooltip',
 })(({ theme }) => ({
   alignSelf: 'center',

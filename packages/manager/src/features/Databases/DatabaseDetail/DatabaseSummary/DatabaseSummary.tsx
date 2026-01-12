@@ -7,7 +7,6 @@ import * as React from 'react';
 import ClusterConfiguration from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';
 import { useFlags } from 'src/hooks/useFlags';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import { ServiceURI } from '../ServiceURI';
@@ -17,18 +16,10 @@ export const DatabaseSummary = () => {
   const { database } = useDatabaseDetailContext();
   const flags = useFlags();
 
-  const pagination = usePaginationV2({
-    currentRoute: '/databases/$engine/$databaseId/summary',
-    initialPage: 1,
-    preferenceKey: `database-connection-pools-pagination`,
-  });
   const { data: connectionPools } = useDatabaseConnectionPoolsQuery(
     database.id,
     flags.databasePgBouncer,
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    }
+    {}
   );
 
   const showPgBouncerConnectionDetails =
