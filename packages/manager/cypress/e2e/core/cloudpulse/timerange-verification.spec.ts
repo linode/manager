@@ -295,7 +295,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .first()
       .should('be.visible', { timeout: 10000 }) // waits up to 10 seconds
       .as('timePickerButton');
-    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
     cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
@@ -310,8 +309,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
-    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
-
     cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
     cy.get(`[aria-label="${startMinute} minutes"]`).click();
@@ -322,13 +319,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
-    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
-
     cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
-    cy.findByLabelText('Select meridiem')
-      .as('startMeridiemSelect')
-      .scrollIntoView();
+    cy.findByLabelText('Select meridiem').as('startMeridiemSelect');
     cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Select end time ---
@@ -363,9 +356,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
-    cy.findByLabelText('Select meridiem')
-      .as('endMeridiemSelect')
-      .scrollIntoView();
+    cy.findByLabelText('Select meridiem').as('endMeridiemSelect');
     cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
 
     // --- Set timezone ---
