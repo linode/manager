@@ -26,7 +26,20 @@ export const marketplaceCatlogRoute = createRoute({
   )
 );
 
+export const marketplaceProductDetailsRoute = createRoute({
+  getParentRoute: () => marketplaceRoute,
+  parseParams: (params) => ({
+    productId: Number(params.productId),
+  }),
+  path: '/catalog/$productId',
+}).lazy(() =>
+  import(
+    'src/features/Marketplace/ProductDetails/productDetailsLazyRoute'
+  ).then((m) => m.productDetailsLazyRoute)
+);
+
 export const marketplaceRouteTree = marketplaceRoute.addChildren([
   marketplaceLandingRoute,
   marketplaceCatlogRoute,
+  marketplaceProductDetailsRoute,
 ]);

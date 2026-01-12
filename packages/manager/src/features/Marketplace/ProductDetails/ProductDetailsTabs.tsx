@@ -1,0 +1,145 @@
+import { Box, Typography } from '@linode/ui';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { Tab } from 'src/components/Tabs/Tab';
+import { TabList } from 'src/components/Tabs/TabList';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+
+import { StyledHtmlContent } from './HtmlContent.styles';
+import { sanitizeMarketplaceTabHtml } from './sanitizeHtml';
+
+import type { MarketplaceProductDetail } from '@linode/api-v4';
+
+interface Props {
+  details: MarketplaceProductDetail;
+}
+
+/**
+ * Styled components for Overview tab layout
+ */
+const OverviewContainer = styled(Box)(({ theme }) => ({
+  alignItems: 'flex-start',
+  alignSelf: 'stretch',
+  display: 'flex',
+  gap: '24px',
+  justifyContent: 'space-between',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+    gap: '48px',
+  },
+}));
+
+const VideoPlaceholder = styled(Box)(({ theme }) => ({
+  alignItems: 'center',
+  alignSelf: 'stretch',
+  aspectRatio: '3/2',
+  backgroundColor: theme.bg.bgPaper,
+  border: `1px dashed ${theme.tokens.alias.Border.Normal}`,
+  borderRadius: '12px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacingFunction(8),
+  height: '202px',
+  justifyContent: 'center',
+  padding: '10px',
+  [theme.breakpoints.down('md')]: {
+    order: -1,
+  },
+}));
+
+const ContentSection = styled(Box)(() => ({
+  flex: 1,
+  minWidth: 0,
+}));
+
+/**
+ * Play circle icon for video placeholder
+ */
+const PlayCircleIcon = () => (
+  <svg
+    fill="none"
+    height="64"
+    viewBox="0 0 64 64"
+    width="64"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g opacity="0.25">
+      <path
+        d="M25.334 43.9999L44.0006 31.9999L25.334 19.9999V43.9999ZM32.0006 58.6666C28.3118 58.6666 24.8451 57.9666 21.6007 56.5666C18.3562 55.1666 15.534 53.2666 13.134 50.8666C10.734 48.4666 8.83398 45.6444 7.43398 42.3999C6.03398 39.1555 5.33398 35.6888 5.33398 31.9999C5.33398 28.311 6.03398 24.8444 7.43398 21.5999C8.83398 18.3555 10.734 15.5333 13.134 13.1333C15.534 10.7333 18.3562 8.83325 21.6007 7.43325C24.8451 6.03325 28.3118 5.33325 32.0006 5.33325C35.6895 5.33325 39.1562 6.03325 42.4007 7.43325C45.6451 8.83325 48.4673 10.7333 50.8673 13.1333C53.2673 15.5333 55.1673 18.3555 56.5673 21.5999C57.9673 24.8444 58.6673 28.311 58.6673 31.9999C58.6673 35.6888 57.9673 39.1555 56.5673 42.3999C55.1673 45.6444 53.2673 48.4666 50.8673 50.8666C48.4673 53.2666 45.6451 55.1666 42.4007 56.5666C39.1562 57.9666 35.6895 58.6666 32.0006 58.6666ZM32.0006 53.3332C37.9562 53.3332 43.0006 51.2666 47.134 47.1333C51.2673 42.9999 53.334 37.9555 53.334 31.9999C53.334 26.0444 51.2673 20.9999 47.134 16.8666C43.0006 12.7333 37.9562 10.6666 32.0006 10.6666C26.0451 10.6666 21.0007 12.7333 16.8673 16.8666C12.734 20.9999 10.6673 26.0444 10.6673 31.9999C10.6673 37.9555 12.734 42.9999 16.8673 47.1333C21.0007 51.2666 26.0451 53.3332 32.0006 53.3332Z"
+        fill="#3D3D42"
+      />
+    </g>
+  </svg>
+);
+
+/**
+ * Component to render sanitized HTML content
+ */
+const HtmlContentRenderer = ({ content }: { content: string }) => {
+  const sanitizedContent = React.useMemo(
+    () => sanitizeMarketplaceTabHtml(content),
+    [content]
+  );
+
+  return (
+    <StyledHtmlContent dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+  );
+};
+
+/**
+ * ProductDetailsTabs component displays product information in tabs
+ */
+export const ProductDetailsTabs = ({ details }: Props) => {
+  const [currentTab, setCurrentTab] = React.useState(0);
+
+  const handleTabChange = (index: number) => {
+    setCurrentTab(index);
+  };
+
+  return (
+    <Tabs index={currentTab} onChange={handleTabChange}>
+      <TabList>
+        <Tab data-pendo-id="Cloud Marketplace Details-Overview">Overview</Tab>
+        <Tab data-pendo-id="Cloud Marketplace Details-Pricing">Pricing</Tab>
+        <Tab data-pendo-id="Cloud Marketplace Details-Documentation">
+          Documentation
+        </Tab>
+        <Tab data-pendo-id="Cloud Marketplace Details-Support">Support</Tab>
+      </TabList>
+      <TabPanels>
+        <SafeTabPanel index={0}>
+          <OverviewContainer>
+            <ContentSection>
+              <HtmlContentRenderer content={details.overview.description} />
+            </ContentSection>
+            <VideoPlaceholder>
+              <PlayCircleIcon />
+              <Typography
+                sx={(theme) => ({
+                  color: theme.tokens.alias.Content.Text.Secondary.Default,
+                  fontFamily: theme.font.bold,
+                  fontSize: theme.tokens.font.FontSize.Xs,
+                })}
+                variant="body1"
+              >
+                Video Coming Soon
+              </Typography>
+            </VideoPlaceholder>
+          </OverviewContainer>
+        </SafeTabPanel>
+        <SafeTabPanel index={1}>
+          <HtmlContentRenderer content={details.pricing.description} />
+        </SafeTabPanel>
+        <SafeTabPanel index={2}>
+          <HtmlContentRenderer content={details.documentation.description} />
+        </SafeTabPanel>
+        <SafeTabPanel index={3}>
+          <HtmlContentRenderer content={details.support.description} />
+        </SafeTabPanel>
+      </TabPanels>
+    </Tabs>
+  );
+};

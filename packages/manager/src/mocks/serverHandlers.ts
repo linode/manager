@@ -651,16 +651,166 @@ const marketplace = [
     const marketplaceProduct = marketplaceProductFactory.buildList(10);
     return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
   }),
-  http.get('*/v4beta/marketplace/products/:productId/details', () => {
+  http.get('*/v4beta/marketplace/products/:productId/details', ({ params }) => {
+    const productId = Number(params.productId);
     const marketplaceProductDetail = marketplaceProductFactory.build({
+      id: productId,
+      name: 'Akamai Cloud Computing',
+      short_description:
+        'Akamai provides cloud computing, security, and content delivery services that help businesses deliver exceptional digital experiences.',
+      tile_tag: 'Partner Spotlight',
+      product_tags: [
+        'Cloud Infrastructure',
+        'CDN',
+        'Security',
+        'Edge Computing',
+      ],
+      info_banner:
+        '<p><strong>Special Offer:</strong> Get started with a $100 credit for new customers. <a href="https://example.com/offer">Learn more</a></p>',
       details: {
         overview: {
-          description:
-            'This is a detailed description of the marketplace product.',
+          description: `
+            <h2>About Akamai Cloud Computing</h2>
+            <p>Akamai Technologies is a global content delivery network, cybersecurity, and cloud service company. Our intelligent edge platform surrounds everything, from the enterprise to the cloud, so customers and their businesses can be fast, smart, and secure.</p>
+            <h3>Key Features</h3>
+            <ul>
+              <li><strong>Global Edge Network:</strong> Over 4,100 points of presence across 135+ countries</li>
+              <li><strong>Enterprise Security:</strong> Protect your infrastructure from DDoS attacks and web threats</li>
+              <li><strong>Cloud Computing:</strong> Scalable compute, storage, and networking solutions</li>
+              <li><strong>Content Delivery:</strong> Fast, reliable content delivery at scale</li>
+            </ul>
+            <h3>Why Choose Akamai?</h3>
+            <p>With Akamai, you get access to one of the world's largest distributed computing platforms. Our solutions help you:</p>
+            <ol>
+              <li>Improve application performance and user experience</li>
+              <li>Protect against cyber threats and ensure compliance</li>
+              <li>Scale your infrastructure globally with ease</li>
+              <li>Reduce operational complexity and costs</li>
+            </ol>
+            <blockquote>
+              "Akamai has been instrumental in helping us scale our digital platform to serve millions of users worldwide." - Fortune 500 Customer
+            </blockquote>
+          `,
         },
-        pricing: 'Pricing information goes here.',
-        documentation: 'Documentation link or information goes here.',
-        support: 'Support information goes here.',
+        pricing: {
+          description: `
+            <h2>Pricing Plans</h2>
+            <p>Akamai offers flexible pricing options to meet your business needs. Choose the plan that works best for you.</p>
+            <h3>Compute Plans</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>vCPUs</th>
+                  <th>RAM</th>
+                  <th>Storage</th>
+                  <th>Price/Month</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Starter</td>
+                  <td>1</td>
+                  <td>2 GB</td>
+                  <td>50 GB SSD</td>
+                  <td>$10</td>
+                </tr>
+                <tr>
+                  <td>Professional</td>
+                  <td>4</td>
+                  <td>8 GB</td>
+                  <td>200 GB SSD</td>
+                  <td>$40</td>
+                </tr>
+                <tr>
+                  <td>Enterprise</td>
+                  <td>16</td>
+                  <td>32 GB</td>
+                  <td>500 GB SSD</td>
+                  <td>$160</td>
+                </tr>
+              </tbody>
+            </table>
+            <h3>Additional Services</h3>
+            <ul>
+              <li><strong>CDN:</strong> Starting at $0.01/GB transferred</li>
+              <li><strong>DDoS Protection:</strong> Starting at $200/month</li>
+              <li><strong>Web Application Firewall:</strong> Starting at $100/month</li>
+            </ul>
+            <p><em>Contact sales for custom enterprise pricing and volume discounts.</em></p>
+          `,
+        },
+        documentation: {
+          description: `
+            <h2>Documentation</h2>
+            <p>Get started with Akamai Cloud Computing using our comprehensive documentation and resources.</p>
+            <h3>Quick Start Guides</h3>
+            <ul>
+              <li><a href="https://example.com/docs/getting-started">Getting Started with Akamai Cloud</a></li>
+              <li><a href="https://example.com/docs/compute">Compute Instance Setup Guide</a></li>
+              <li><a href="https://example.com/docs/networking">Networking Configuration</a></li>
+              <li><a href="https://example.com/docs/storage">Object Storage Setup</a></li>
+            </ul>
+            <h3>API Reference</h3>
+            <p>Our REST API allows you to programmatically manage your cloud resources.</p>
+            <pre><code>curl -X GET "https://api.akamai.com/v1/instances" \\
+  -H "Authorization: Bearer YOUR_API_TOKEN" \\
+  -H "Content-Type: application/json"</code></pre>
+            <h3>SDKs and Tools</h3>
+            <ul>
+              <li><a href="https://example.com/sdk/python">Python SDK</a></li>
+              <li><a href="https://example.com/sdk/nodejs">Node.js SDK</a></li>
+              <li><a href="https://example.com/sdk/go">Go SDK</a></li>
+              <li><a href="https://example.com/cli">CLI Tool</a></li>
+            </ul>
+          `,
+        },
+        support: {
+          description: `
+            <h2>Support</h2>
+            <p>We're here to help you succeed with Akamai Cloud Computing.</p>
+            <h3>Support Channels</h3>
+            <ul>
+              <li><strong>Community Forum:</strong> <a href="https://community.akamai.com">community.akamai.com</a></li>
+              <li><strong>Documentation:</strong> <a href="https://docs.akamai.com">docs.akamai.com</a></li>
+              <li><strong>Email Support:</strong> support@akamai.com</li>
+              <li><strong>Phone Support:</strong> +1-800-AKAMAI (Enterprise customers)</li>
+            </ul>
+            <h3>Support Plans</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Response Time</th>
+                  <th>Channels</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Basic</td>
+                  <td>24 hours</td>
+                  <td>Email, Community</td>
+                  <td>Free</td>
+                </tr>
+                <tr>
+                  <td>Professional</td>
+                  <td>4 hours</td>
+                  <td>Email, Phone, Chat</td>
+                  <td>$99/month</td>
+                </tr>
+                <tr>
+                  <td>Enterprise</td>
+                  <td>1 hour</td>
+                  <td>24/7 Phone, Dedicated TAM</td>
+                  <td>Custom</td>
+                </tr>
+              </tbody>
+            </table>
+            <h3>Status Page</h3>
+            <p>Check the current status of Akamai services at <a href="https://status.akamai.com">status.akamai.com</a></p>
+          `,
+        },
       },
     });
     return HttpResponse.json(marketplaceProductDetail);
@@ -674,8 +824,11 @@ const marketplace = [
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.get('*/v4beta/marketplace/partners', () => {
-    const marketplaceType = marketplacePartnersFactory.buildList(5);
-    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+    const marketplacePartners = marketplacePartnersFactory.buildList(5, {
+      logo_url_light_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
+      logo_url_dark_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
+    });
+    return HttpResponse.json(makeResourcePage([...marketplacePartners]));
   }),
   http.post('*/v4beta/marketplace/referral', async () => {
     await sleep(2000);
