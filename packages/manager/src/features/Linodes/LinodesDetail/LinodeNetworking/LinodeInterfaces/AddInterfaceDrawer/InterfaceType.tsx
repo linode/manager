@@ -5,6 +5,8 @@ import {
   FormHelperText,
   Radio,
   RadioGroup,
+  Stack,
+  TooltipIcon,
 } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -16,7 +18,11 @@ import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/Lino
 import type { CreateInterfaceFormValues } from './utilities';
 import type { InterfacePurpose } from '@linode/api-v4';
 
-export const InterfaceType = () => {
+interface Props {
+  existingInterfaces?: InterfacePurpose[] | null;
+}
+export const InterfaceType = (props: Props) => {
+  const { existingInterfaces } = props;
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -72,7 +78,23 @@ export const InterfaceType = () => {
         sx={{ my: `0 !important` }}
         value={field.value ?? null}
       >
-        <FormControlLabel control={<Radio />} label="Public" value="public" />
+        <FormControlLabel
+          control={<Radio />}
+          disabled={existingInterfaces?.includes('public')}
+          label={
+            <Stack alignItems="center" direction="row" spacing={0.5}>
+              Public
+              {existingInterfaces?.includes('public') && (
+                <TooltipIcon
+                  status="info"
+                  sxTooltipIcon={{ p: 0, ml: '8px !important' }}
+                  text="Each Linode can only have one public interface"
+                />
+              )}
+            </Stack>
+          }
+          value="public"
+        />
         <FormControlLabel control={<Radio />} label="VPC" value="vpc" />
         <FormControlLabel control={<Radio />} label="VLAN" value="vlan" />
       </RadioGroup>

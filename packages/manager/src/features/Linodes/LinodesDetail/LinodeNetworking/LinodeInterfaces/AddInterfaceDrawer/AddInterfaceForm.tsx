@@ -1,6 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCreateLinodeInterfaceMutation } from '@linode/queries';
-import { Notice, Stack } from '@linode/ui';
+import {
+  useCreateLinodeInterfaceMutation,
+  useLinodeInterfacesQuery,
+} from '@linode/queries';
+import { Box, CircleProgress, Notice, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -32,6 +35,20 @@ export const AddInterfaceForm = (props: Props) => {
 
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
 
+  const { data: interfacesData, isPending: isLoadingInterfaces } =
+    useLinodeInterfacesQuery(linodeId);
+
+  const existingInterfaces =
+    interfacesData?.interfaces.map((networkInterface) => {
+      if (networkInterface.public) {
+        return 'public';
+      } else if (networkInterface.vlan) {
+        return 'vlan';
+      } else {
+        return 'vpc';
+      }
+    }) ?? [];
+  const isPublicInterfacePresent = existingInterfaces.includes('public');
   const form = useForm<CreateInterfaceFormValues>({
     defaultValues: {
       firewall_id: null,
@@ -78,6 +95,21 @@ export const AddInterfaceForm = (props: Props) => {
 
   const selectedInterfacePurpose = form.watch('purpose');
 
+  if (isLoadingInterfaces) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 'calc(100% - 100px)',
+        }}
+      >
+        <CircleProgress size="md" />
+      </Box>
+    );
+  }
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -94,13 +126,30 @@ export const AddInterfaceForm = (props: Props) => {
               variant="error"
             />
           )}
-          <InterfaceType />
+          <InterfaceType existingInterfaces={existingInterfaces} />
           {selectedInterfacePurpose === 'public' && <PublicInterface />}
           {selectedInterfacePurpose === 'vlan' && (
             <VLANInterface regionId={regionId} />
           )}
           {selectedInterfacePurpose === 'vpc' && (
-            <VPCInterface regionId={regionId} />
+            <Box>
+              {isPublicInterfacePresent && (
+                <Notice variant="warning">
+                  <Typography>
+                    This Linode already has a public interface. Having a both a
+                    VPC interface and a public interface is not recommnded. If
+                    you need public internet access, consider using the VPC’s
+                    <strong> Public access</strong> option instead.
+                  </Typography>
+                  <Typography paddingTop={2}>
+                    Each Linode includes one public IP address. To request
+                    additional public IPs, please note that they incur a monthly
+                    charge.
+                  </Typography>
+                </Notice>
+              )}
+              <VPCInterface regionId={regionId} />
+            </Box>
           )}
           {selectedInterfacePurpose !== 'vlan' && <InterfaceFirewall />}
           <Actions onClose={onClose} />
