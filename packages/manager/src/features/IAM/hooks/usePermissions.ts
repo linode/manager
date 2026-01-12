@@ -154,13 +154,15 @@ export function usePermissions<
     data: userAccountPermissions,
     isLoading: isUserAccountPermissionsLoading,
     ...restAccountPermissions
-  } = useUserAccountPermissions(accessType === 'account' && enabled);
+  } = useUserAccountPermissions(
+    isIAMEnabled && accessType === 'account' && enabled
+  );
 
   const {
     data: userEntityPermissions,
     isLoading: isUserEntityPermissionsLoading,
     ...restEntityPermissions
-  } = useUserEntityPermissions(accessType, _entityId!, enabled);
+  } = useUserEntityPermissions(accessType, _entityId!, isIAMEnabled && enabled);
 
   const usersPermissions =
     accessType === 'account' ? userAccountPermissions : userEntityPermissions;
