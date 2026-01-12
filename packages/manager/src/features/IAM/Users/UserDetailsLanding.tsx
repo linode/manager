@@ -67,7 +67,10 @@ export const UserDetailsLanding = () => {
                 <>
                   {IAM_LABEL}
                   {showLimitedAvailabilityBadges ? (
-                    <NewFeatureChip sx={{ position: 'relative', top: -1 }} />
+                    <NewFeatureChip
+                      component="span"
+                      sx={{ position: 'relative', top: -1 }}
+                    />
                   ) : null}
                 </>
               ),
