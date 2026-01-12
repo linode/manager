@@ -2226,8 +2226,8 @@ export const oneClickApps: Record<number, OCA> = {
     alt_name: 'Open-source AI web and chat interface',
     categories: ['Chat', 'LLM', 'AI'],
     colors: {
-      end: 'ffde2c',
-      start: '327eff',
+      end: 'ffd800',
+      start: 'e10500',
     },
     description:
       'Open WebUI is an open-source, self-hosted web interface for interacting with and managing large language models. It supports multiple AI backends, multi-user access, and extensible integrations, enabling secure and customizable deployment for local or remote model inference.',
