@@ -127,9 +127,9 @@ export const UpdateDelegationsDrawer = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography sx={{ marginBottom: theme.tokens.spacing.S16 }}>
             Add or remove users who should have access to the child account.
-            Delegate users removed from this list will lose the role assignment
-            on the child account and they won’t be visible in the user list on
-            the child account.
+            Users removed from this list will lose the role assignment on the
+            child account and they won’t be visible in the user list on the
+            child account.
           </Typography>
 
           {delegation && (

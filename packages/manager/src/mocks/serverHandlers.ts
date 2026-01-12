@@ -651,7 +651,7 @@ const marketplace = [
     const marketplaceProduct = marketplaceProductFactory.buildList(10);
     return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
   }),
-  http.get('*/v4beta/marketplace/products/:productId', () => {
+  http.get('*/v4beta/marketplace/products/:productId/details', () => {
     const marketplaceProductDetail = marketplaceProductFactory.build({
       details: {
         overview: {

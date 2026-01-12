@@ -82,7 +82,7 @@ describe('AccountDelegations', () => {
     });
 
     await waitFor(() => {
-      const emptyElement = screen.getByText(/No delegate users found/);
+      const emptyElement = screen.getByText(/No users added/);
       expect(emptyElement).toBeInTheDocument();
     });
   });

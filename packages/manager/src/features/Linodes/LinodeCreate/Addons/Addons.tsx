@@ -9,7 +9,10 @@ import { PrivateIP } from './PrivateIP';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Addons = () => {
-  const regionId = useWatch<CreateLinodeRequest, 'region'>({ name: 'region' });
+  const [regionId, interfaceGeneration] = useWatch<
+    CreateLinodeRequest,
+    ['region', 'interface_generation']
+  >({ name: ['region', 'interface_generation'] });
 
   const { data: regions } = useRegionsQuery();
 
@@ -20,6 +23,8 @@ export const Addons = () => {
 
   const isDistributedRegionSelected =
     selectedRegion?.site_type === 'distributed';
+
+  const shouldShowPrivateIP = interfaceGeneration !== 'linode';
 
   return (
     <Paper data-qa-add-ons>
@@ -33,7 +38,7 @@ export const Addons = () => {
         )}
         <Stack divider={<Divider />} spacing={2}>
           <Backups />
-          <PrivateIP />
+          {shouldShowPrivateIP && <PrivateIP />}
         </Stack>
       </Stack>
     </Paper>
