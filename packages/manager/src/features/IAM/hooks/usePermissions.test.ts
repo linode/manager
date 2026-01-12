@@ -110,7 +110,7 @@ describe('usePermissions', () => {
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
   });
 
-  it.only('returns correct map when IAM is disabled (uses grants)', () => {
+  it('returns correct map when IAM is disabled (uses grants)', () => {
     queryMocks.useIsIAMEnabled.mockReturnValue({ isIAMEnabled: false });
     queryMocks.useUserAccountPermissions.mockReturnValue({ data: null });
     queryMocks.useUserEntityPermissions.mockReturnValue({ data: null });
