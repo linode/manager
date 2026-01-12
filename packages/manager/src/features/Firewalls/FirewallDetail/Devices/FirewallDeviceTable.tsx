@@ -181,9 +181,12 @@ export const FirewallDeviceTable = React.memo(
                   disabled={disabled}
                   handleRemoveDevice={handleRemoveDevice}
                   isLinodeRelatedDevice={isLinodeRelatedDevice}
-                  isLinodeUpdatable={updatableLinodes?.some(
-                    (linode) => linode.id === thisDevice.entity.id
-                  )}
+                  isLinodeUpdatable={updatableLinodes?.some((linode) => {
+                    if (thisDevice.entity.type === 'linode_interface') {
+                      return linode.id === thisDevice.entity.parent_entity?.id;
+                    }
+                    return linode.id === thisDevice.entity.id;
+                  })}
                   isNodebalancerUpdatable={updatableNodebalancers?.some(
                     (nodebalancer) => nodebalancer.id === thisDevice.entity.id
                   )}

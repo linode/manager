@@ -39,6 +39,7 @@ vi.mock('../GroupBy/utils', async () => {
   };
 });
 const mockDashboard = dashboardFactory.build();
+const PRESET_BUTTON_ID = 'preset-button';
 
 describe('CloudPulseDashboardWithFilters component tests', () => {
   it('renders a CloudPulseDashboardWithFilters component with error placeholder', () => {
@@ -90,9 +91,9 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     const groupByIcon = screen.getByTestId('group-by');
     expect(groupByIcon).toBeEnabled();
 
-    const startDate = screen.getByText('Start Date');
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     const nodeTypeSelect = screen.getByTestId('node-type-select');
-    expect(startDate).toBeInTheDocument();
+    expect(presetButton).toBeInTheDocument();
     expect(nodeTypeSelect).toBeInTheDocument();
   });
 
@@ -141,9 +142,9 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="nodebalancer" />
     );
-    const startDate = screen.getByText('Start Date');
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     const portsSelect = screen.getByPlaceholderText('e.g., 80,443,3000');
-    expect(startDate).toBeInTheDocument();
+    expect(presetButton).toBeInTheDocument();
     expect(portsSelect).toBeInTheDocument();
   });
 
@@ -159,8 +160,8 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="firewall" />
     );
-    const startDate = screen.getByText('Start Date');
-    expect(startDate).toBeInTheDocument();
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Select a Linode Region')).toBeVisible();
     expect(screen.getByPlaceholderText('Select Interface Types')).toBeVisible();
     expect(screen.getByPlaceholderText('e.g., 1234,5678')).toBeVisible();
@@ -181,8 +182,8 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       />
     );
 
-    const startDate = screen.getByText('Start Date');
-    expect(startDate).toBeInTheDocument();
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
   });
 
   it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for objectstorage if region is not provided', () => {
@@ -212,8 +213,8 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters resource={1} serviceType="blockstorage" />
     );
 
-    const startDate = screen.getByText('Start Date');
-    expect(startDate).toBeInTheDocument();
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
   });
 
   it('renders a CloudPulseDashboardWithFilters component successfully for firewall nodebalancer', async () => {
@@ -240,8 +241,8 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters resource={1} serviceType="firewall" />
     );
 
-    const startDate = screen.getByText('Start Date');
-    expect(startDate).toBeInTheDocument();
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
     await userEvent.click(screen.getByPlaceholderText('Select a Dashboard'));
     await userEvent.click(screen.getByText('nodebalancer_firewall_dashbaord'));
     expect(

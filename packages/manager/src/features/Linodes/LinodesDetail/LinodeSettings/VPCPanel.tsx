@@ -18,10 +18,11 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv4Access';
+import { PublicAccess } from 'src/features/VPCs/components/PublicAccess';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -30,23 +31,34 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];
+  additionalIPv6RangesForVPC: ExtendedIP[];
   assignPublicIPv4Address: boolean;
+  assignPublicIPv6Address: boolean;
   autoassignIPv4WithinVPC: boolean;
+  autoassignIPv6WithinVPC: boolean;
   handleIPv4RangeChange: (ranges: ExtendedIP[]) => void;
+  handleIPv6RangeChange: (ranges: ExtendedIP[]) => void;
   handleSelectVPC: (vpcId: number) => void;
   handleSubnetChange: (subnetId: number | undefined) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
+  handleVPCIPv6Change: (IPv6: string) => void;
   publicIPv4Error?: string;
+  publicIPv6Error?: string;
   region: string | undefined;
   selectedSubnetId: null | number | undefined;
   selectedVPCId: null | number | undefined;
+  showIPv6Content: boolean;
   subnetError?: string;
   toggleAssignPublicIPv4Address: (ipv4Access: null | string) => void;
+  toggleAssignPublicIPv6Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
+  toggleAutoassignIPv6WithinVPCEnabled: () => void;
   vpcIdError?: string;
   vpcIPRangesError?: string;
   vpcIPv4AddressOfLinode: string | undefined;
   vpcIPv4Error?: string;
+  vpcIPv6AddressOfLinode: string | undefined;
+  vpcIPv6Error?: string;
 }
 
 const ERROR_GROUP_STRING = 'vpc-errors';
@@ -54,23 +66,34 @@ const ERROR_GROUP_STRING = 'vpc-errors';
 export const VPCPanel = (props: VPCPanelProps) => {
   const {
     additionalIPv4RangesForVPC,
+    additionalIPv6RangesForVPC,
     assignPublicIPv4Address,
+    assignPublicIPv6Address,
     autoassignIPv4WithinVPC,
+    autoassignIPv6WithinVPC,
     handleIPv4RangeChange,
+    handleIPv6RangeChange,
     handleSelectVPC,
     handleSubnetChange,
     handleVPCIPv4Change,
+    handleVPCIPv6Change,
     publicIPv4Error,
+    publicIPv6Error,
     region,
     selectedSubnetId,
     selectedVPCId,
+    showIPv6Content,
     subnetError,
     toggleAssignPublicIPv4Address,
+    toggleAssignPublicIPv6Address,
     toggleAutoassignIPv4WithinVPCEnabled,
+    toggleAutoassignIPv6WithinVPCEnabled,
     vpcIPRangesError,
     vpcIPv4AddressOfLinode,
     vpcIPv4Error,
     vpcIdError,
+    vpcIPv6AddressOfLinode,
+    vpcIPv6Error,
   } = props;
 
   const theme = useTheme();
@@ -95,10 +118,10 @@ export const VPCPanel = (props: VPCPanelProps) => {
   });
 
   React.useEffect(() => {
-    if (subnetError || vpcIPv4Error) {
+    if (subnetError || vpcIPv4Error || vpcIPv6Error) {
       scrollErrorIntoView(ERROR_GROUP_STRING);
     }
-  }, [subnetError, vpcIPv4Error]);
+  }, [subnetError, vpcIPv4Error, vpcIPv6Error]);
 
   const vpcs = vpcsData ?? [];
 
@@ -204,8 +227,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                         flexDirection="row"
                       >
                         <Typography noWrap={!isSmallBp}>
-                          Auto-assign a VPC IPv4 address for this Linode in the
-                          VPC
+                          Auto-assign VPC IPv4 address
                         </Typography>
                         <TooltipIcon
                           status="info"
@@ -220,39 +242,85 @@ export const VPCPanel = (props: VPCPanelProps) => {
                     errorGroup={ERROR_GROUP_STRING}
                     errorText={vpcIPv4Error}
                     label="VPC IPv4"
+                    noMarginTop={showIPv6Content}
                     onChange={(e) => handleVPCIPv4Change(e.target.value)}
                     required={!autoassignIPv4WithinVPC}
                     value={vpcIPv4AddressOfLinode}
                   />
                 )}
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  sx={(theme) => ({
-                    marginLeft: '2px',
-                    marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
-                  })}
-                >
-                  <PublicIPv4Access
-                    checked={assignPublicIPv4Address}
-                    isConfigInterface
-                    onChange={toggleAssignPublicIPv4Address}
-                  />
-                </Box>
-                {assignPublicIPv4Address && publicIPv4Error && (
-                  <Typography
-                    sx={(theme) => ({
-                      color: theme.color.red,
-                    })}
-                  >
-                    {publicIPv4Error}
-                  </Typography>
+                {showIPv6Content && (
+                  <>
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      flexDirection="row"
+                      sx={(theme) => ({
+                        marginLeft: '2px',
+                        paddingTop: theme.spacingFunction(8),
+                      })}
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={autoassignIPv6WithinVPC}
+                            onChange={toggleAutoassignIPv6WithinVPCEnabled}
+                          />
+                        }
+                        data-testid="vpc-ipv6-checkbox"
+                        label={
+                          <Box
+                            alignItems="center"
+                            display="flex"
+                            flexDirection="row"
+                          >
+                            <Typography noWrap={!isSmallBp}>
+                              Auto-assign VPC IPv6 address
+                            </Typography>
+                            <TooltipIcon
+                              status="info"
+                              text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
+                            />
+                          </Box>
+                        }
+                      />
+                    </Box>
+                    {!autoassignIPv6WithinVPC && (
+                      <TextField
+                        errorGroup={ERROR_GROUP_STRING}
+                        errorText={vpcIPv6Error}
+                        label="VPC IPv6"
+                        noMarginTop
+                        onChange={(e) => handleVPCIPv6Change(e.target.value)}
+                        value={vpcIPv6AddressOfLinode}
+                      />
+                    )}
+                  </>
                 )}
+                <PublicAccess
+                  allowPublicIPv4Access={assignPublicIPv4Address}
+                  allowPublicIPv6Access={assignPublicIPv6Address}
+                  handleAllowPublicIPv4AccessChange={
+                    toggleAssignPublicIPv4Address as unknown as (
+                      e: React.ChangeEvent<HTMLInputElement>
+                    ) => void // The type conversion is not ideal, but seems to be the least disruptive option
+                  }
+                  handleAllowPublicIPv6AccessChange={
+                    toggleAssignPublicIPv6Address
+                  }
+                  publicIPv4Error={publicIPv4Error}
+                  publicIPv6Error={publicIPv6Error}
+                  showIPv6Content={showIPv6Content}
+                  sx={{ margin: `${theme.spacingFunction(16)} 0` }}
+                  userCannotAssignLinodes={false}
+                />
                 <AssignIPRanges
                   handleIPRangeChange={handleIPv4RangeChange}
+                  handleIPv6RangeChange={handleIPv6RangeChange}
                   includeDescriptionInTooltip
                   ipRangesError={vpcIPRangesError}
                   ipv4Ranges={additionalIPv4RangesForVPC}
+                  ipv6Ranges={additionalIPv6RangesForVPC}
+                  showIPv6Fields={showIPv6Content}
                 />
               </>
             )}

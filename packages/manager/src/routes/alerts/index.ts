@@ -68,6 +68,47 @@ const cloudPulseAlertsDefinitionsCatchAllRoute = createRoute({
   },
 });
 
+const cloudPulseNotificationChannelsRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'notification-channels',
+}).lazy(() =>
+  import(
+    'src/features/CloudPulse/Alerts/NotificationChannels/NotificationsChannelsListing/cloudPulseAlertsNotificationChannelsListingLazyRoute'
+  ).then((m) => m.cloudPulseAlertsNotificationChannelsListingLazyRoute)
+);
+
+const cloudPulseNotificationChannelDetailRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'notification-channels/detail/$channelId',
+}).lazy(() =>
+  import(
+    'src/features/CloudPulse/Alerts/NotificationChannels/NotificationChannelDetail/cloudPulseAlertsNotificationChannelsDetailLazyRoute'
+  ).then((m) => m.cloudPulseAlertsNotificationChannelDetailLazyRoute)
+);
+
+export const cloudPulseNotificationChannelsCreateRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'notification-channels/create',
+}).lazy(() =>
+  import(
+    'src/features/CloudPulse/Alerts/NotificationChannels/CreateChannel/cloudPulseCreateNotificationChannelLazyRoute'
+  ).then((m) => m.cloudPulseCreateNotificationChannelLazyRoute)
+);
+
+const cloudPulseNotificationChannelEditRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'notification-channels/edit/$channelId',
+  params: {
+    parse: (rawParams) => ({
+      channelId: Number(rawParams.channelId),
+    }),
+  },
+}).lazy(() =>
+  import(
+    'src/features/CloudPulse/Alerts/NotificationChannels/EditChannel/cloudPulseAlertsNotificationChannelsEditLazyRoute'
+  ).then((m) => m.cloudPulseAlertsNotificationChannelEditLazyRoute)
+);
+
 export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
   cloudPulseAlertsIndexRoute,
   cloudPulseAlertsDefinitionsRoute.addChildren([
@@ -76,4 +117,9 @@ export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
     cloudPulseAlertsDefinitionsEditRoute,
   ]),
   cloudPulseAlertsDefinitionsCatchAllRoute,
+  cloudPulseNotificationChannelsRoute.addChildren([
+    cloudPulseNotificationChannelDetailRoute,
+    cloudPulseNotificationChannelsCreateRoute,
+    cloudPulseNotificationChannelEditRoute,
+  ]),
 ]);

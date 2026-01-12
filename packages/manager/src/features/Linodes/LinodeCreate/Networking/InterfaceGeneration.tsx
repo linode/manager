@@ -6,6 +6,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  TooltipIcon,
   Typography,
 } from '@linode/ui';
 import React from 'react';
@@ -22,9 +23,9 @@ const disabledReasonMap: Partial<
   Record<LinodeInterfaceAccountSetting, string>
 > = {
   legacy_config_only:
-    'You account administrator has enforced that all new Linodes are created with legacy configuration interfaces.',
+    'Your account administrator has enforced that all new Linodes are created with legacy configuration interfaces.',
   linode_only:
-    'You account administrator has enforced that all new Linodes are created with Linode interfaces.',
+    'Your account administrator has enforced that all new Linodes are created with Linode interfaces.',
 };
 
 export const InterfaceGeneration = () => {
@@ -56,7 +57,10 @@ export const InterfaceGeneration = () => {
         defaultExpanded={!disabled}
         name="Network Interface Type"
       >
-        <FormControl disabled={disabled} sx={{ my: '0px !important', mx: 0.5 }}>
+        <FormControl
+          disabled={disabled}
+          sx={{ mt: '0px !important', mb: 2, mx: 0.5 }}
+        >
           <RadioGroup
             aria-labelledby="interface-generation"
             onChange={field.onChange}
@@ -65,6 +69,7 @@ export const InterfaceGeneration = () => {
           >
             <FormControlLabel
               control={<Radio />}
+              data-qa-interfaces-option="linode"
               label={
                 <Stack mt={1.25} spacing={0.5}>
                   <Stack direction="row">
@@ -72,15 +77,21 @@ export const InterfaceGeneration = () => {
                       Linode Interfaces
                     </Typography>
                     <LinodeInterfaceFeatureStatusChip />
+                    <TooltipIcon
+                      status="info"
+                      sxTooltipIcon={{ p: 0, ml: 0.5 }}
+                      text={
+                        <>
+                          Managed directly through a Linode&apos;s Network
+                          settings. This is the recommended option.
+                          <br />
+                          <br />
+                          Cloud Firewalls are assigned to individual VPC and
+                          public interfaces.
+                        </>
+                      }
+                    />
                   </Stack>
-                  <Typography>
-                    Linode Interfaces are the preferred option for VPCs and are
-                    managed directly through a Linode’s Network settings.
-                  </Typography>
-                  <Typography>
-                    Cloud Firewalls are assigned to individual VPC and public
-                    interfaces.
-                  </Typography>
                 </Stack>
               }
               sx={{ alignItems: 'flex-start' }}
@@ -88,20 +99,27 @@ export const InterfaceGeneration = () => {
             />
             <FormControlLabel
               control={<Radio />}
+              data-qa-interfaces-option="legacy_config"
               label={
-                <Stack mt={1.25} spacing={0.5}>
+                <Stack direction="row" mt={1.25} spacing={0.5}>
                   <Typography sx={(theme) => ({ font: theme.font.bold })}>
                     Configuration Profile Interfaces (Legacy)
                   </Typography>
-                  <Typography>
-                    Interfaces in the Configuration Profile are part of a
-                    Linode’s configuration.
-                  </Typography>
-                  <Typography>
-                    Cloud Firewalls are applied at the Linode level and
-                    automatically cover all non-VLAN interfaces in the
-                    Configuration Profile.
-                  </Typography>
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{ p: 0, ml: 0.5 }}
+                    text={
+                      <>
+                        Interfaces are part of the Linode&apos;s Configuration
+                        Profile.
+                        <br />
+                        <br />
+                        Cloud Firewalls are applied at the Linode level and
+                        automatically cover all non-VLAN interfaces in the
+                        Configuration Profile.
+                      </>
+                    }
+                  />
                 </Stack>
               }
               sx={{ alignItems: 'flex-start' }}

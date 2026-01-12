@@ -146,6 +146,13 @@ export const channelTypeOptions: Item<string, ChannelType>[] = [
   },
 ];
 
+export const channelTypeMap: Record<ChannelType, string> = {
+  email: 'Email',
+  pagerduty: 'PagerDuty',
+  slack: 'Slack',
+  webhook: 'Webhook',
+};
+
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
@@ -294,3 +301,15 @@ export const entityLabelMap = {
 
 export const entityTypeTooltipText =
   'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.';
+
+export const CREATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel created successfully. You can now use it to deliver alert notifications.';
+
+export const CREATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to create the notification channel. Verify the configuration details and try again.';
+
+export const UPDATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel updated successfully. All changes have been saved.';
+
+export const UPDATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to update the notification channel. Verify the details and try again.';

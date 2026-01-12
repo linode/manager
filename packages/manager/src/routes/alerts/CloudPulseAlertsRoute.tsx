@@ -23,7 +23,14 @@ export const CloudPulseAlertsRoute = () => {
       title: 'Definitions',
       disabled: !flags.aclpAlerting?.alertDefinitions,
     },
+    {
+      to: '/alerts/notification-channels',
+      title: 'Notification Channels',
+      disabled: !flags.aclpAlerting?.notificationChannels,
+    },
   ]);
+
+  const visibleTabs = tabs.filter((tab) => !tab.disabled);
 
   if (!isACLPEnabled) {
     return <NotFound />;
@@ -39,14 +46,16 @@ export const CloudPulseAlertsRoute = () => {
         spacingBottom={4}
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
-        <TanStackTabLinkList tabs={tabs} />
+        <TanStackTabLinkList tabs={visibleTabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <SafeTabPanel index={0}>
-              <Paper>
-                <Outlet />
-              </Paper>
-            </SafeTabPanel>
+            {visibleTabs.map((_, index) => (
+              <SafeTabPanel index={index} key={index}>
+                <Paper>
+                  <Outlet />
+                </Paper>
+              </SafeTabPanel>
+            ))}
           </TabPanels>
         </React.Suspense>
       </Tabs>

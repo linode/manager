@@ -192,7 +192,7 @@ export interface ConfigInterfaceIPv4 {
 
 export interface IPv6SLAAC {
   address?: string;
-  range: string;
+  range?: string;
 }
 
 // The legacy interface type - for Configuration Profile Interfaces

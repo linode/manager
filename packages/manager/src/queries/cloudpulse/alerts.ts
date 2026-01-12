@@ -1,9 +1,11 @@
 import {
   addEntityToAlert,
   createAlertDefinition,
+  createNotificationChannel,
   deleteAlertDefinition,
   deleteEntityFromAlert,
   editAlertDefinition,
+  updateNotificationChannel,
   updateServiceAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
@@ -21,8 +23,10 @@ import type {
   Alert,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
+  CreateNotificationChannelPayload,
   DeleteAlertPayload,
   EditAlertPayloadWithService,
+  EditNotificationChannelPayloadWithId,
   EntityAlertUpdatePayload,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
@@ -257,4 +261,82 @@ export const useServiceAlertsMutation = (
       invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
     },
   });
+};
+
+export const useCreateNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NotificationChannel,
+    APIError[],
+    CreateNotificationChannelPayload
+  >({
+    mutationFn: (data) => createNotificationChannel(data),
+    onSuccess: async (newChannel) => {
+      const allChannelsKey =
+        queryFactory.notificationChannels._ctx.all().queryKey;
+      const oldChannels =
+        queryClient.getQueryData<NotificationChannel[]>(allChannelsKey);
+
+      // Use cached alerts list if available to avoid refetching from API.
+      if (oldChannels) {
+        queryClient.setQueryData<NotificationChannel[]>(allChannelsKey, [
+          ...oldChannels,
+          newChannel,
+        ]);
+      }
+    },
+  });
+};
+
+export const useUpdateNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NotificationChannel,
+    APIError[],
+    EditNotificationChannelPayloadWithId
+  >({
+    mutationFn: async (payload: EditNotificationChannelPayloadWithId) => {
+      const { channelId, details, label } = payload;
+      return updateNotificationChannel(channelId, {
+        details,
+        label,
+      });
+    },
+    onSuccess: (updatedChannel) => {
+      const allChannelsKey =
+        queryFactory.notificationChannels._ctx.all().queryKey;
+
+      queryClient.setQueryData<NotificationChannel[] | undefined>(
+        allChannelsKey,
+        (prev) => {
+          // nothing cached yet
+          if (!prev) return prev;
+
+          const idx = prev.findIndex(
+            (channel) => channel.id === updatedChannel.id
+          );
+          if (idx === -1) return prev;
+
+          // if no change keep referential equality
+          if (prev[idx] === updatedChannel) return prev;
+
+          const next = prev.slice();
+          next[idx] = updatedChannel;
+          return next;
+        }
+      );
+
+      queryClient.setQueryData<NotificationChannel>(
+        queryFactory.notificationChannels._ctx.channelById(updatedChannel.id)
+          .queryKey,
+        updatedChannel
+      );
+    },
+  });
+};
+
+export const useNotificationChannelQuery = (channelId: number) => {
+  return useQuery<NotificationChannel, APIError[]>(
+    queryFactory.notificationChannels._ctx.channelById(channelId)
+  );
 };
