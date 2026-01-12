@@ -3650,6 +3650,12 @@ export const handlers = [
         updated: '2023-11-05T04:00:00',
         updated_by: 'user3',
         created_by: 'admin',
+        details: {
+          email: {
+            usernames: ['user1', 'user2'],
+            recipient_type: 'user',
+          },
+        },
       })
     );
     notificationChannels.push(
