@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query';
 
 import { accountQueries } from '../account';
+import { queryPresets } from '../base';
 import { marketplaceQueries } from './keys';
 
 import type {
@@ -161,9 +162,19 @@ export const useAllMarketplacePartnersQuery = (
   filter: Filter = {},
   enabled: boolean = true,
 ) =>
-  useQuery<MarketplacePartner[], APIError[]>({
+  useQuery<Record<number, MarketplacePartner>, APIError[]>({
     ...marketplaceQueries.partners._ctx.all(params, filter),
     enabled,
+    ...queryPresets.longLived,
+    select: (partners: MarketplacePartner[]) => {
+      const partnersById: Record<number, MarketplacePartner> = {};
+      for (const partner of partners) {
+        partnersById[partner.id] = partner;
+      }
+      return {
+        partnersById,
+      };
+    },
   });
 
 export const useInfiniteMarketplacePartnersQuery = (

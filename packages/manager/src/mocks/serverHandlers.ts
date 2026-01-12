@@ -648,7 +648,7 @@ const netLoadBalancers = [
 
 const marketplace = [
   http.get('*/v4beta/marketplace/products', () => {
-    const marketplaceProduct = marketplaceProductFactory.buildList(10);
+    const marketplaceProduct = marketplaceProductFactory.buildList(30);
     return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
   }),
   http.get('*/v4beta/marketplace/products/:productId/details', () => {
@@ -666,15 +666,15 @@ const marketplace = [
     return HttpResponse.json(marketplaceProductDetail);
   }),
   http.get('*/v4beta/marketplace/categories', () => {
-    const marketplaceCategory = marketplaceCategoryFactory.buildList(5);
+    const marketplaceCategory = marketplaceCategoryFactory.buildList(30);
     return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
   }),
   http.get('*/v4beta/marketplace/types', () => {
-    const marketplaceType = marketplaceTypeFactory.buildList(5);
+    const marketplaceType = marketplaceTypeFactory.buildList(30);
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.get('*/v4beta/marketplace/partners', () => {
-    const marketplaceType = marketplacePartnersFactory.buildList(5);
+    const marketplaceType = marketplacePartnersFactory.buildList(30);
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.post('*/v4beta/marketplace/referral', async () => {
