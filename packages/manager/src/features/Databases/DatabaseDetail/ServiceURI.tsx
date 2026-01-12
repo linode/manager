@@ -13,14 +13,15 @@ import {
   StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
-import type { Database } from '@linode/api-v4';
+import type { Database, DatabaseCredentials } from '@linode/api-v4';
 
 interface ServiceURIProps {
   database: Database;
+  isGeneralServiceURI?: boolean;
 }
 
 export const ServiceURI = (props: ServiceURIProps) => {
-  const { database } = props;
+  const { database, isGeneralServiceURI = false } = props;
 
   const [hidePassword, setHidePassword] = useState(true);
   const [isCopying, setIsCopying] = useState(false);
@@ -39,10 +40,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
         setIsCopying(true);
         const { data } = await getDatabaseCredentials();
         if (data) {
-          // copy with username/password data
-          copy(
-            `postgres://${data?.username}:${data?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`
-          );
+          // copy with revealed credentials
+          copy(getServiceURIText(isGeneralServiceURI, data));
         } else {
           enqueueSnackbar(
             'There was an error retrieving cluster credentials. Please try again.',
@@ -60,11 +59,105 @@ export const ServiceURI = (props: ServiceURIProps) => {
     }
   };
 
+  const getServiceURIText = (
+    isGeneralServiceURI: boolean,
+    credentials: DatabaseCredentials | undefined
+  ) => {
+    if (isGeneralServiceURI) {
+      return `${database.engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
+    }
+    return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`;
+  };
+
+  const getCredentials = (isGeneralServiceURI: boolean) => {
+    return !isGeneralServiceURI
+      ? `${credentials?.username}:${credentials?.password}`
+      : credentials?.password;
+  };
+
   // hide loading state if the user clicks on the copy icon
   const showBtnLoading =
     !isCopying && (credentialsLoading || credentialsFetching);
 
-  const postgresServiceURI = `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`;
+  const ErrorButton = (
+    <Button
+      loading={showBtnLoading}
+      onClick={() => getDatabaseCredentials()}
+      sx={(theme) => ({
+        p: 0,
+        color: theme.tokens.alias.Content.Text.Negative,
+        '&:hover, &:focus': {
+          color: theme.tokens.alias.Content.Text.Negative,
+        },
+      })}
+    >
+      {`{error. click to retry}`}
+    </Button>
+  );
+
+  const RevealPasswordButton = (
+    <Button
+      loading={showBtnLoading}
+      onClick={() => {
+        setHidePassword(false);
+        getDatabaseCredentials();
+      }}
+      sx={{ p: 0 }}
+    >
+      {`{click to reveal password}`}
+    </Button>
+  );
+
+  const ServiceURIJSX = (isGeneralServiceURI: boolean) => (
+    <Grid display="contents">
+      <StyledValueGrid
+        data-testid="service-uri"
+        size="grow"
+        sx={{
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          p: isGeneralServiceURI ? '0' : null,
+        }}
+        whiteSpace="pre"
+      >
+        {database.engine}://
+        {credentialsError
+          ? ErrorButton
+          : hidePassword || (!credentialsError && !credentials)
+            ? RevealPasswordButton
+            : getCredentials(isGeneralServiceURI)}
+        {!isGeneralServiceURI ? (
+          <>
+            @{database.hosts?.primary}:
+            <StyledCode>{'{connection pool port}'}</StyledCode>/
+            <StyledCode>{'{connection pool label}'}</StyledCode>
+            ?sslmode=require
+          </>
+        ) : (
+          <>
+            @{database.hosts?.primary}:
+            {`${database.port}/defaultdb?sslmode=require`}
+          </>
+        )}
+      </StyledValueGrid>
+      {isCopying ? (
+        <Button loading sx={{ paddingLeft: 2 }}>
+          {' '}
+        </Button>
+      ) : (
+        <Grid alignContent="center" size="auto">
+          <StyledCopyTooltip
+            onClickCallback={handleCopy}
+            text={getServiceURIText(isGeneralServiceURI, credentials)}
+          />
+        </Grid>
+      )}
+    </Grid>
+  );
+
+  if (isGeneralServiceURI) {
+    return ServiceURIJSX(isGeneralServiceURI);
+  }
 
   return (
     <StyledGridContainer display="flex">
@@ -76,59 +169,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
       >
         <StyledLabelTypography>Service URI</StyledLabelTypography>
       </Grid>
-      <Grid display="contents">
-        <StyledValueGrid
-          data-testid="service-uri"
-          size="grow"
-          sx={{ overflowX: 'auto', overflowY: 'hidden' }}
-          whiteSpace="pre"
-        >
-          {database.engine}://
-          {credentialsError ? (
-            <Button
-              loading={showBtnLoading}
-              onClick={() => getDatabaseCredentials()}
-              sx={(theme) => ({
-                p: 0,
-                color: theme.tokens.alias.Content.Text.Negative,
-                '&:hover, &:focus': {
-                  color: theme.tokens.alias.Content.Text.Negative,
-                },
-              })}
-            >
-              {`{error. click to retry}`}
-            </Button>
-          ) : hidePassword || (!credentialsError && !credentials) ? (
-            <Button
-              loading={showBtnLoading}
-              onClick={() => {
-                setHidePassword(false);
-                getDatabaseCredentials();
-              }}
-              sx={{ p: 0 }}
-            >
-              {`{click to reveal password}`}
-            </Button>
-          ) : (
-            `${credentials?.username}:${credentials?.password}`
-          )}
-          @{database.hosts?.primary}:
-          <StyledCode>{'{connection pool port}'}</StyledCode> /
-          <StyledCode>{'{connection pool label}'}</StyledCode>?sslmode=require
-        </StyledValueGrid>
-        {isCopying ? (
-          <Button loading sx={{ paddingLeft: 2 }}>
-            {' '}
-          </Button>
-        ) : (
-          <Grid alignContent="center" size="auto">
-            <StyledCopyTooltip
-              onClickCallback={handleCopy}
-              text={postgresServiceURI}
-            />
-          </Grid>
-        )}
-      </Grid>
+      {ServiceURIJSX(isGeneralServiceURI)}
     </StyledGridContainer>
   );
 };

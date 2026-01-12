@@ -11,7 +11,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { isDefaultDatabase } from '../../utilities';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
-import { GeneralServiceURI } from '../GeneralServiceURI';
+import { ServiceURI } from '../ServiceURI';
 import { StyledGridContainer } from './DatabaseSummaryClusterConfiguration.style';
 import { useStyles } from './DatabaseSummaryConnectionDetails.style';
 
@@ -155,7 +155,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           </ConnectionDetailsRow>
         )}
         <ConnectionDetailsRow isSummaryTab label="Service URI">
-          <GeneralServiceURI database={database} />
+          <ServiceURI database={database} isGeneralServiceURI />
         </ConnectionDetailsRow>
       </StyledGridContainer>
     </>
