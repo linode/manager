@@ -74,7 +74,7 @@ describe('UserEntities', () => {
     });
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        is_account_admin: true,
+        list_entities: true,
       },
     });
   });

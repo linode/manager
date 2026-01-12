@@ -23,6 +23,7 @@ export const UserProfile = () => {
     'view_user',
     'update_user',
     'delete_user',
+    'list_user_permissions',
   ]);
 
   const {
@@ -32,14 +33,14 @@ export const UserProfile = () => {
   } = useAccountUser(username ?? '', permissions?.view_user);
   const { data: assignedRoles } = useUserRoles(
     username ?? '',
-    permissions?.view_user
+    permissions?.list_user_permissions
   );
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!permissions?.view_user) {
+  if (!permissions?.view_user || !permissions?.list_user_permissions) {
     return (
       <Notice variant="error">
         You do not have permission to view this user&apos;s details.

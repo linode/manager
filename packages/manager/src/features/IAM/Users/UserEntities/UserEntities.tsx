@@ -26,13 +26,13 @@ export const UserEntities = () => {
   const { data: permissions } = usePermissions('account', [
     'view_user',
     'list_entities',
-    'list_role_permissions',
+    'list_user_permissions',
   ]);
   const {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useUserRoles(username ?? '', permissions?.list_role_permissions);
+  } = useUserRoles(username ?? '', permissions?.list_user_permissions);
 
   const { error } = useAccountUser(username ?? '', permissions?.view_user);
 
