@@ -2224,7 +2224,7 @@ export const oneClickApps: Record<number, OCA> = {
     alt_description:
       'Self-hosted web interface for interacting with and managing LLMs.',
     alt_name: 'Open-source AI web and chat interface',
-    categories: ['Chat', 'LLM'],
+    categories: ['Chat', 'LLM', 'AI'],
     colors: {
       end: 'ffde2c',
       start: '327eff',
