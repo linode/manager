@@ -154,9 +154,11 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             </Link>
           </ConnectionDetailsRow>
         )}
-        <ConnectionDetailsRow isSummaryTab label="Service URI">
-          <ServiceURI database={database} isGeneralServiceURI />
-        </ConnectionDetailsRow>
+        {flags.databasePgBouncer && (
+          <ConnectionDetailsRow isSummaryTab label="Service URI">
+            <ServiceURI database={database} isGeneralServiceURI />
+          </ConnectionDetailsRow>
+        )}
       </StyledGridContainer>
     </>
   );

@@ -23,6 +23,7 @@ export const DatabaseSummary = () => {
   );
 
   const showPgBouncerConnectionDetails =
+    flags.databasePgBouncer &&
     database.engine === 'postgresql' &&
     connectionPools &&
     connectionPools.data.length > 0;
