@@ -273,9 +273,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       minute: endMinute,
     } = getDateRangeInGMT(12, 30);
 
-    cy.wait(1000);
+    cy.get('[aria-label="Content is loading"]', { timeout: 2000 }).should(
+      'not.exist'
+    );
     // --- Select start date ---
     ui.button.findByTitle('Last hour').as('startDateInput');
+
+    cy.get('@startDateInput').should('be.visible');
 
     cy.get('@startDateInput').scrollIntoView();
 
