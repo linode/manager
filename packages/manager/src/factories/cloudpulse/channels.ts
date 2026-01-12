@@ -4,14 +4,11 @@ import type { NotificationChannel } from '@linode/api-v4';
 
 export const notificationChannelFactory =
   Factory.Sync.makeFactory<NotificationChannel>({
-    alerts: [
-      {
-        id: Number(Factory.each((i) => i)),
-        label: String(Factory.each((id) => `Alert-${id}`)),
-        type: 'alerts-definitions',
-        url: 'Sample',
-      },
-    ],
+    alerts: {
+      type: 'alerts-definitions',
+      alert_count: 1,
+      url: 'monitor/alert-channels/{id}/alerts',
+    },
     channel_type: 'email',
     content: {
       email: {
@@ -20,12 +17,12 @@ export const notificationChannelFactory =
         subject: 'Sample Alert',
       },
     },
-    created_at: new Date().toISOString(),
+    created: new Date().toISOString(),
     created_by: 'user1',
     id: Factory.each((i) => i),
     label: Factory.each((id) => `Channel-${id}`),
     status: 'Enabled',
-    type: 'custom',
-    updated_at: new Date().toISOString(),
+    type: 'user',
+    updated: new Date().toISOString(),
     updated_by: 'user1',
   });

@@ -43,6 +43,24 @@ export const autocomplete = {
   },
 };
 
+export const cdsAutoComplete = {
+  /**
+   * Finds a cds select component within shadow DOM by its title and returns the Cypress chainable.
+   *
+   * @param cdsSelectLabel - Title of cds button to find
+   * @param role - Role of the element to find within the shadow DOM (e.g., 'combobox', 'listbox')
+   *
+   * @returns Cypress chainable.
+   */
+  findByLabel: (label: string, role: string): Cypress.Chainable => {
+    return cy
+      .get(`[data-qa-autocomplete="${label}"] cds-select`)
+      .shadow()
+      .find(`${role}`)
+      .should('be.visible');
+  },
+};
+
 /**
  * Autocomplete Popper UI element.
  *

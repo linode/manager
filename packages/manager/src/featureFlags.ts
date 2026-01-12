@@ -100,6 +100,16 @@ interface AclpFlag {
   enabled: boolean;
 
   /**
+   * This property indicates for which unit, we need to humanize the values e.g., count, iops etc.,
+   */
+  humanizableUnits?: string[];
+
+  /**
+   * This property indicates whether the feature is new or not
+   */
+  new?: boolean;
+
+  /**
    * This property indicates whether to show widget dimension filters or not
    */
   showWidgetDimensionFilters?: boolean;
@@ -151,8 +161,10 @@ interface AclpAlerting {
   alertDefinitions: boolean;
   beta: boolean;
   editDisabledStatuses?: AlertStatusType[];
+  maxEmailChannelRecipients?: number;
   notificationChannels: boolean;
   recentActivity: boolean;
+  systemChannelSupportedServices?: CloudPulseServiceType[]; // linode, dbaas, etc.
 }
 
 interface LimitsEvolution {
@@ -224,6 +236,7 @@ export interface Flags {
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
+  marketplaceV2: boolean;
   metadata: boolean;
   mtc: MTC;
   networkLoadBalancer: boolean;
@@ -344,12 +357,12 @@ export type ProductInformationBannerLocation =
   | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
-  | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
   | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Marketplace'
   | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
