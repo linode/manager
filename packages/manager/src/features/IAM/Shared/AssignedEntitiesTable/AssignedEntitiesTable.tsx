@@ -169,11 +169,11 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
 
   const handleRemoveAssignmentDialogClose = () => {
     setIsRemoveAssignmentDialogOpen(false);
-    // If we just deleted the last one on a page, reset to the first page.
+    // If we just deleted the last one on a page, reset to the previous page.
     const removedLastOnPage =
       filteredAndSortedRoles.length % pagination.pageSize === 1;
     if (removedLastOnPage) {
-      pagination.handlePageChange(1);
+      pagination.handlePageChange(pagination.page - 1);
     }
   };
 
