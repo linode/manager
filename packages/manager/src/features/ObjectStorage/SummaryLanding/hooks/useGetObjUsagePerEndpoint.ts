@@ -1,5 +1,4 @@
 import { quotaQueries, useQueries, useQuotasQuery } from '@linode/queries';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 
 import { getQuotasFilters } from 'src/features/Account/Quotas/utils';
@@ -10,12 +9,8 @@ import type { Filter } from '@linode/api-v4';
 const SERVICE = 'object-storage';
 
 export const useGetObjUsagePerEndpoint = (selectedLocation: string) => {
-  const flags = useFlags();
-
   const pagination = usePaginationV2({
-    currentRoute: flags?.iamRbacPrimaryNavChanges
-      ? '/quotas'
-      : '/account/quotas',
+    currentRoute: '/quotas',
     initialPage: 1,
     preferenceKey: 'quotas-table',
   });
