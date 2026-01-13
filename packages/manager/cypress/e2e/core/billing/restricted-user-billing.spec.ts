@@ -259,8 +259,7 @@ describe('restricted user billing flows', () => {
     assertEditBillingInfoDisabled(restrictedUserTooltip);
     assertAddPaymentMethodDisabled(restrictedUserTooltip);
     assertMakeAPaymentDisabled(
-      restrictedUserTooltip +
-        ` Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
+      `You don't have permissions to make a payment. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
     );
   });
 
@@ -289,8 +288,7 @@ describe('restricted user billing flows', () => {
     assertEditBillingInfoDisabled(restrictedUserTooltip);
     assertAddPaymentMethodDisabled(restrictedUserTooltip);
     assertMakeAPaymentDisabled(
-      restrictedUserTooltip +
-        ` Please contact your ${PARENT_USER} to request the necessary permissions.`
+      `You don't have permissions to make a payment. Please contact your ${PARENT_USER} to request the necessary permissions.`
     );
   });
 
