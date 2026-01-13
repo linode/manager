@@ -1,11 +1,6 @@
 import {
-  MarketplaceCategory,
-  MarketplaceProduct,
-  MarketplaceType,
-} from '@linode/api-v4';
-import {
-  useAllMarketplacePartnersQuery,
-  useAllMarketplaceTypesQuery,
+  useAllMarketplacePartnersMapQuery,
+  useAllMarketplaceTypesMapQuery,
   useInfiniteMarketplaceProductsQuery,
 } from '@linode/queries';
 import { useTheme } from '@linode/ui';
@@ -16,51 +11,33 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CategorySectionView } from './CategorySectionView';
 
+import type { ProductCardData } from './ProductSelectionCard';
+import type { MarketplaceCategory, MarketplaceProduct } from '@linode/api-v4';
+
 const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_INCREMENT = 6;
-const PAGE_SIZE = 30;
 
 export interface CategorySectionProps extends MarketplaceCategory {
   filteredProducts?: MarketplaceProduct[];
 }
 
-export interface ProductCardData {
-  data: {
-    companyName: string;
-    description: string;
-    logoUrl: string;
-    productName: string;
-    productTag?: string;
-    type: string;
-  };
+export interface ProductCardItem {
+  data: ProductCardData;
   id: number;
 }
 
-const useTypesMap = () => {
-  const { data: types, isLoading, error } = useAllMarketplaceTypesQuery();
-
-  return React.useMemo(() => {
-    if (isLoading || error || !types) {
-      return { typesMap: undefined, isLoading, error };
-    }
-
-    const map: Record<number, MarketplaceType> = {};
-    types.forEach((type) => {
-      map[type.id] = type;
-    });
-
-    return { typesMap: map, isLoading, error };
-  }, [types, isLoading, error]);
-};
-
 const useProductsDisplay = (
   categoryId: number,
-  products_count: number,
+  productsCount: number,
   filteredProducts?: MarketplaceProduct[]
 ) => {
   const [displayCount, setDisplayCount] = React.useState(
-    Math.min(products_count, INITIAL_DISPLAY_COUNT)
+    Math.min(productsCount, INITIAL_DISPLAY_COUNT)
   );
+
+  const productsQueryEnabled = filteredProducts
+    ? filteredProducts?.length === 0
+    : true;
 
   const {
     data: productsData,
@@ -69,8 +46,8 @@ const useProductsDisplay = (
     isFetchingNextPage,
     isLoading,
   } = useInfiniteMarketplaceProductsQuery(
-    { category: categoryId, pageSize: PAGE_SIZE },
-    !filteredProducts
+    { category: categoryId },
+    productsQueryEnabled
   );
 
   const products = React.useMemo(
@@ -108,9 +85,10 @@ export const CategorySection = (props: CategorySectionProps) => {
   } = useProductsDisplay(id, products_count, filteredProducts);
 
   const { data: partnersMap, isLoading: isPartnerLoading } =
-    useAllMarketplacePartnersQuery();
+    useAllMarketplacePartnersMapQuery();
 
-  const { typesMap, isLoading: isTypesLoading } = useTypesMap();
+  const { data: typesMap, isLoading: isTypesLoading } =
+    useAllMarketplaceTypesMapQuery();
 
   React.useEffect(() => {
     const shouldFetchMore =
@@ -160,7 +138,7 @@ export const CategorySection = (props: CategorySectionProps) => {
     navigate({ to: `/cloud-marketplace/catalog/${productId}` });
   };
 
-  const cardData: ProductCardData[] = productsToDisplay.map((product) => ({
+  const cardData: ProductCardItem[] = productsToDisplay.map((product) => ({
     id: product.id,
     data: {
       companyName: partnersMap?.[product.partner_id]?.name || '',

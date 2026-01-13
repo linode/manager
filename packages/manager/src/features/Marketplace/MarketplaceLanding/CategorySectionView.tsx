@@ -1,14 +1,16 @@
 import { Box, Button, ErrorState, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import * as React from 'react';
 
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Skeleton } from 'src/components/Skeleton';
 
-import { ProductCardData } from './CategorySection';
-import { ProductSelectionCard } from './ProductSelectionCard';
+import { ProductSelectionCard, StyledLogoBox } from './ProductSelectionCard';
+
+import type { ProductCardItem } from './CategorySection';
 
 export interface CategorySectionViewProps {
-  cardData: ProductCardData[];
+  cardData: ProductCardItem[];
   categoryName: string;
   displayCount: number;
   errorMessage: string;
@@ -25,27 +27,95 @@ const MarketplaceSkeletonGrid = ({
   productsDisplayedCount = 6,
 }: {
   productsDisplayedCount?: number;
-}) => (
-  <Grid container spacing={2}>
-    {Array.from({ length: productsDisplayedCount }).map((_, index) => (
-      <Box key={index} sx={{ width: 400, height: 280 }}>
-        <Skeleton
-          animation="wave"
-          height="100%"
-          sx={{ borderRadius: 2 }}
-          variant="rounded"
-          width="100%"
-        />
+}) => {
+  const renderIcon = React.useCallback(
+    () => (
+      <Box
+        sx={{
+          alignItems: 'flex-start',
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        {
+          <StyledLogoBox>
+            <Skeleton height="48px" variant="rounded" width="48px" />
+          </StyledLogoBox>
+        }
       </Box>
-    ))}
-  </Grid>
-);
+    ),
+    [productsDisplayedCount]
+  );
+
+  const heading = React.useMemo(
+    () => <StyledSkeleton width="60%" />,
+    [productsDisplayedCount]
+  );
+
+  const subHeadings = React.useMemo(
+    () => [
+      <StyledSkeleton key="company" width="40%" />,
+      <Box
+        key="description"
+        sx={(theme) => ({
+          marginTop: theme.spacingFunction(12),
+          paddingBottom: theme.spacingFunction(36), // Always space for type chip at bottom
+        })}
+      >
+        <StyledSkeleton />
+        <StyledSkeleton />
+        <StyledSkeleton width="50%" />
+      </Box>,
+      <Box
+        key="category"
+        sx={(theme) => ({
+          bottom: theme.spacingFunction(16),
+          left: theme.spacingFunction(20),
+          position: 'absolute',
+        })}
+      >
+        <StyledSkeleton height={20} width={80} />
+      </Box>,
+    ],
+    [productsDisplayedCount]
+  );
+  return (
+    <Grid container spacing={2}>
+      {Array.from({ length: productsDisplayedCount }).map((_) => (
+        <SelectionCard
+          heading={heading}
+          key="skeleton card"
+          renderIcon={renderIcon}
+          subheadings={subHeadings}
+          sxCardBase={(theme) => ({
+            alignItems: 'flex-start',
+            flexDirection: 'column',
+            minHeight: '280px',
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
+            position: 'relative',
+            gap: theme.spacingFunction(12),
+            '&:hover': {
+              borderColor: theme.borderColors.divider,
+            },
+          })}
+          sxCardBaseHeading={{ width: '100%' }}
+          sxCardBaseIcon={{
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            width: '100%',
+          }}
+        />
+      ))}
+    </Grid>
+  );
+};
 
 const ProductsGrid = ({
   cardData,
   onProductClick,
 }: {
-  cardData: ProductCardData[];
+  cardData: ProductCardItem[];
   onProductClick: (productId: number) => void;
 }) => (
   <Grid container spacing={2}>
@@ -106,3 +176,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
     </Stack>
   );
 };
+
+const StyledSkeleton = styled(Skeleton)({
+  borderRadius: '4px',
+});

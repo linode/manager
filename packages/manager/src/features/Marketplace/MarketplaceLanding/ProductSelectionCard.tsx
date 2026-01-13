@@ -178,7 +178,7 @@ export const ProductSelectionCard = React.memo(
   }
 );
 
-const StyledLogoBox = styled(Box)({
+export const StyledLogoBox = styled(Box)({
   height: '48px',
   maxWidth: '96px',
   overflow: 'hidden',
