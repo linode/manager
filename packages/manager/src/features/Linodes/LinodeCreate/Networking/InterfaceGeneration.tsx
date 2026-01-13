@@ -65,7 +65,7 @@ export const InterfaceGeneration = () => {
             aria-labelledby="interface-generation"
             onChange={field.onChange}
             sx={{ my: '0px !important' }}
-            value={field.value ?? 'legacy_config'}
+            value={field.value ?? 'linode'}
           >
             <FormControlLabel
               control={<Radio />}

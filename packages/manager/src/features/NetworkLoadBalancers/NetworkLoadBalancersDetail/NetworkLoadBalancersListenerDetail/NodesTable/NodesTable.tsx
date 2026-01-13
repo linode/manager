@@ -187,6 +187,7 @@ export const NodesTable = (props: NodesTableProps) => {
               direction={order}
               handleClick={handleOrderChange}
               label="address_v6"
+              sx={{ width: '15%' }}
             >
               VPC IPv6
             </TableSortCell>

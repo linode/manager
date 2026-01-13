@@ -93,6 +93,16 @@ describe('Create Linode', () => {
           linodeCreatePage.setLabel(linodeLabel);
           linodeCreatePage.selectImage('Debian 12');
           linodeCreatePage.selectRegionById(linodeRegion.id);
+
+          // For the "Dedicated 4 GB" plan under the "Dedicated CPU" plan type, use filter to select G6 Dedicated instead of relying on pagination
+          if (planConfig.planType === 'Dedicated CPU') {
+            ui.autocomplete.findByLabel('Dedicated Plans').click();
+
+            ui.autocompletePopper.find().within(() => {
+              cy.findByText('G6 Dedicated').should('be.visible').click();
+            });
+          }
+
           linodeCreatePage.selectPlan(
             planConfig.planType,
             planConfig.planLabel
