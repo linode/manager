@@ -20,10 +20,11 @@ describe('NotificationChannelTableRow', () => {
   it('should render a notification channel row with all fields', () => {
     const updated = new Date().toISOString();
     const channel = notificationChannelFactory.build({
-      alerts: [
-        { id: 1, label: 'Alert 1', type: 'alerts-definitions', url: 'url1' },
-        { id: 2, label: 'Alert 2', type: 'alerts-definitions', url: 'url2' },
-      ],
+      alerts: {
+        type: 'alerts-definitions',
+        alert_count: 2,
+        url: 'monitor/alert-channels/{id}/alerts',
+      },
       channel_type: 'email',
       created_by: 'user1',
       label: 'Test Channel',
@@ -144,7 +145,7 @@ describe('NotificationChannelTableRow', () => {
 
   it('should render zero alerts count when no alerts are associated', () => {
     const channel = notificationChannelFactory.build({
-      alerts: [],
+      alerts: { alert_count: 0 },
     });
 
     renderWithTheme(

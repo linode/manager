@@ -2,7 +2,7 @@ import type { NotificationChannel } from '@linode/api-v4';
 
 type ChannelListingTableLabel = {
   colName: string;
-  label: keyof NotificationChannel;
+  label: `${keyof NotificationChannel}:${string}` | keyof NotificationChannel;
 };
 
 export const ChannelListingTableLabelMap: ChannelListingTableLabel[] = [
@@ -12,7 +12,7 @@ export const ChannelListingTableLabelMap: ChannelListingTableLabel[] = [
   },
   {
     colName: 'Alerts',
-    label: 'alerts',
+    label: 'alerts:alert_count',
   },
   {
     colName: 'Channel Type',

@@ -651,7 +651,7 @@ const marketplace = [
     const marketplaceProduct = marketplaceProductFactory.buildList(10);
     return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
   }),
-  http.get('*/v4beta/marketplace/products/:productId', () => {
+  http.get('*/v4beta/marketplace/products/:productId/details', () => {
     const marketplaceProductDetail = marketplaceProductFactory.build({
       details: {
         overview: {
@@ -3650,7 +3650,17 @@ export const handlers = [
         updated: '2023-11-05T04:00:00',
         updated_by: 'user3',
         created_by: 'admin',
-        alerts: [],
+        details: {
+          email: {
+            usernames: ['user1', 'user2'],
+            recipient_type: 'user',
+          },
+        },
+        alerts: {
+          alert_count: 0,
+          type: 'alerts-definitions',
+          url: 'monitor/alert-channels/{id}/alerts',
+        },
       })
     );
     notificationChannels.push(

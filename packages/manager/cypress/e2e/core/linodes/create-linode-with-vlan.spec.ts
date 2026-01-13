@@ -319,6 +319,9 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
     // select existing VLAN.
     linodeCreatePage.selectInterface('vlan');
     // Confirm that mocked VLAN is shown in the Autocomplete, and then select it.
@@ -399,9 +402,6 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
-
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VLAN card
     linodeCreatePage.selectInterface('vlan');
@@ -485,6 +485,9 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
     // Select VLAN card
     linodeCreatePage.selectInterface('vlan');
 
@@ -566,9 +569,6 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
-
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VLAN card
     linodeCreatePage.selectInterface('vlan');
