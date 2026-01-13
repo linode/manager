@@ -60,6 +60,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'is_account_admin',
     'update_default_delegate_access',
+    'list_entities',
   ]);
 
   const { isDefaultDelegationRolesForChildAccount } =
@@ -106,7 +107,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     data: entities,
     error: entitiesError,
     isLoading: entitiesLoading,
-  } = useAllAccountEntities({});
+  } = useAllAccountEntities({
+    enabled: permissions?.list_entities,
+  });
 
   const {
     data: assignedUserRoles,
