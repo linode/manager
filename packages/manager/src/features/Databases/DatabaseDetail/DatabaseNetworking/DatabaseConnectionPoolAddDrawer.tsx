@@ -19,19 +19,10 @@ import { Controller, useForm } from 'react-hook-form';
 import type { ConnectionPool, PoolMode } from '@linode/api-v4';
 
 interface Props {
-  connectionPool?: ConnectionPool;
   databaseId: number;
   onClose: () => void;
   open: boolean;
 }
-
-type AddConnectionPoolFormValues = {
-  database: string;
-  label: string;
-  mode: PoolMode;
-  size: number;
-  username: string;
-};
 
 export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
   const { databaseId, onClose, open } = props;
@@ -52,7 +43,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
     handleSubmit,
     reset,
     setError,
-  } = useForm<AddConnectionPoolFormValues>({
+  } = useForm<ConnectionPool>({
     defaultValues: {
       database: 'defaultdb',
       label: '',
@@ -70,7 +61,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
     resetMutation?.();
   };
 
-  const onSubmit = async (values: AddConnectionPoolFormValues) => {
+  const onSubmit = async (values: ConnectionPool) => {
     const payload = {
       ...values,
       username: values.username === defaultUsername ? null : values.username,
