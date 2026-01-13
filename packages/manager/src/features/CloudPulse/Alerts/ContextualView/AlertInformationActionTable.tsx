@@ -157,6 +157,9 @@ export const AlertInformationActionTable = (
     resetToInitialState,
   } = useContextualAlertsState(alerts, entityId);
 
+  const isAccountOrRegionAlert = (alert: Alert) =>
+    alert.scope === 'region' || alert.scope === 'account';
+
   // Mutation to update alerts as per service type
   const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
@@ -325,9 +328,12 @@ export const AlertInformationActionTable = (
                           if (!(isEditMode || isCreateMode)) {
                             return null;
                           }
-                          const status = enabledAlerts[
-                            payloadAlertType(alert)
-                          ]?.includes(alert.id);
+                          // If alert is account or region level, enable it by default and if it is entity type alert, check if it is enabled for that entity
+                          const status =
+                            isAccountOrRegionAlert(alert) ||
+                            enabledAlerts[payloadAlertType(alert)]?.includes(
+                              alert.id
+                            );
 
                           return (
                             <AlertInformationActionRow
