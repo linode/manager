@@ -504,7 +504,9 @@ export const CreateCluster = () => {
                 </strong>
                 . To create a cluster, update this setting to allow the option
                 for Configuration Profile Interfaces.{' '}
-                <Link to={'/account-settings'}>Account settings</Link>
+                <Link to={'/account-settings#interface-type'}>
+                  Account settings
+                </Link>
               </Typography>
             </Notice>
           )}
