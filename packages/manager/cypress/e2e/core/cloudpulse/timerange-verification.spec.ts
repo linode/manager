@@ -133,12 +133,6 @@ const getLastMonthRange = (): DateTimeWithPreset => {
   };
 };
 
-const formatToUtcDateTime = (dateStr: string): string => {
-  return DateTime.fromISO(dateStr)
-    .toUTC() // 🌍 keep it in UTC
-    .toFormat('yyyy-MM-dd HH:mm');
-};
-
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
@@ -345,11 +339,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         const {
           request: { body },
         } = xhr as Interception;
-        expect(formatToUtcDateTime(body.absolute_time_duration.start)).to.equal(
-          ACTUAL_START_DATE_TIME
+        expect(body.absolute_time_duration.start).to.equal(
+          '2025-08-01T01:15:00Z'
         );
-        expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
-          ACTUAL_END_DATE_TIME
+        expect(body.absolute_time_duration.end).to.equal(
+          '2025-08-03T02:45:00Z'
         );
       });
   });
