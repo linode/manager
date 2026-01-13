@@ -243,7 +243,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
-                  title: 'Remove Assignment',
+                  title: isDefaultDelegationRolesForChildAccount
+                    ? 'Remove'
+                    : 'Remove Assignment',
                   tooltip: !permissionToCheck
                     ? 'You do not have permission to remove this assignment.'
                     : undefined,
