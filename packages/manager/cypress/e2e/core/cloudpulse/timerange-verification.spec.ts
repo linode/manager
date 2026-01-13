@@ -300,7 +300,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.get(`[aria-label="${startHour} hours"]`).click();
 
-    cy.wait(1000);
+    cy.wait(1500);
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
