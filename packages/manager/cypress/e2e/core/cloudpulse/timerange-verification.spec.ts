@@ -178,7 +178,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.visitWithLogin('/metrics');
 
-    cy.get('[aria-label="Content is loading"]', { timeout: 2000 }).should(
+    cy.get('[aria-label="Content is loading"]', { timeout: 1000 }).should(
       'not.exist'
     );
     cy.wait([
