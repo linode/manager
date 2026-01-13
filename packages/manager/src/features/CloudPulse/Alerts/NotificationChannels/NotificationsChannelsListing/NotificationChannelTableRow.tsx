@@ -67,7 +67,7 @@ export const NotificationChannelTableRow = (
         data-qa-notification-channel-action-cell={`notification-channel-${id}`}
       >
         <NotificationChannelActionMenu
-          alertsCount={alerts.length}
+          alertsCount={alerts.alert_count}
           channelLabel={label}
           handlers={handlers}
           notificationType={type}

@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { alertDefinitionFactory } from 'src/factories';
 import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -13,6 +12,9 @@ import {
   DELETE_CHANNEL_TOOLTIP_TEXT,
 } from '../../constants';
 import { NotificationChannelListTable } from './NotificationChannelListTable';
+
+const ALERT_TYPE = 'alerts-definitions';
+const ALERT_URL = 'monitor/alert-channels/{id}/alerts';
 
 const mockScrollToElement = vi.fn();
 
@@ -196,7 +198,12 @@ describe('NotificationChannelListTable', () => {
 
   it('should disable delete if the user channel has alerts and show tooltip', async () => {
     const channel = notificationChannelFactory.build({
-      alerts: alertDefinitionFactory.buildList(3),
+      alerts: {
+        type: ALERT_TYPE,
+        alert_count: 3,
+        url: ALERT_URL,
+      },
+      type: 'user',
     });
 
     renderWithTheme(
@@ -225,7 +232,11 @@ describe('NotificationChannelListTable', () => {
     const user = userEvent.setup();
     const channel = notificationChannelFactory.build({
       label: 'test_channel',
-      alerts: [],
+      alerts: {
+        type: ALERT_TYPE,
+        alert_count: 0,
+        url: ALERT_URL,
+      },
     });
 
     renderWithTheme(
@@ -251,7 +262,11 @@ describe('NotificationChannelListTable', () => {
     const user = userEvent.setup();
     const channel = notificationChannelFactory.build({
       label: 'Channel to be deleted',
-      alerts: [],
+      alerts: {
+        type: ALERT_TYPE,
+        alert_count: 0,
+        url: ALERT_URL,
+      },
     });
 
     renderWithTheme(
@@ -282,7 +297,11 @@ describe('NotificationChannelListTable', () => {
     const user = userEvent.setup();
     const channel = notificationChannelFactory.build({
       label: 'Channel to be deleted',
-      alerts: [],
+      alerts: {
+        alert_count: 0,
+        url: ALERT_URL,
+        type: ALERT_TYPE,
+      },
     });
 
     queryMocks.mutateAsync.mockRejectedValue([
