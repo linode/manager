@@ -59,8 +59,7 @@ describe('RolesLanding', () => {
     const mockPermissions = accountRolesFactory.build();
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        view_account: true,
-        is_account_admin: true,
+        list_role_permissions: true,
       },
     });
     queryMocks.useAccountRoles.mockReturnValue({
@@ -76,8 +75,7 @@ describe('RolesLanding', () => {
   it('should show an error message if user does not have permissions', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        view_account: false,
-        is_account_admin: false,
+        list_role_permissions: false,
       },
     });
 
@@ -90,8 +88,7 @@ describe('RolesLanding', () => {
   it('should not show the default roles panel for non-child accounts', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        view_account: true,
-        is_account_admin: true,
+        list_role_permissions: true,
       },
     });
     queryMocks.useProfile.mockReturnValue({ data: { user_type: 'parent' } });
@@ -109,8 +106,7 @@ describe('RolesLanding', () => {
   it('should show the default roles panel for child accounts', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        view_account: true,
-        is_account_admin: true,
+        list_role_permissions: true,
       },
     });
     queryMocks.useProfile.mockReturnValue({ data: { user_type: 'child' } });
