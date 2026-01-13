@@ -73,7 +73,7 @@ describe('UserRoles', () => {
     });
     queryMocks.usePermissions.mockReturnValue({
       data: {
-        is_account_admin: true,
+        view_user: true,
       },
     });
   });
