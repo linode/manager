@@ -51,7 +51,9 @@ export const AssignedRolesActionMenu = ({
       onClick: () => {
         handleUnassignRole(role);
       },
-      title: 'Unassign Role',
+      title: isDefaultDelegationRolesForChildAccount
+        ? 'Remove'
+        : 'Unassign Role',
       tooltip: !permissionToCheck
         ? 'You do not have permission to unassign this role.'
         : undefined,
@@ -91,7 +93,9 @@ export const AssignedRolesActionMenu = ({
       onClick: () => {
         handleUnassignRole(role);
       },
-      title: 'Unassign Role',
+      title: isDefaultDelegationRolesForChildAccount
+        ? 'Remove'
+        : 'Unassign Role',
     },
   ];
 
