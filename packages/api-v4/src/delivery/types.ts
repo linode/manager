@@ -57,7 +57,7 @@ export interface Destination extends DestinationCore, AuditData {
 
 export type DestinationDetails =
   | AkamaiObjectStorageDetails
-  | CustomHTTPsDetails;
+  | CustomHTTPSDetails;
 
 export interface AkamaiObjectStorageDetails {
   access_key_id: string;
@@ -74,7 +74,7 @@ export interface AkamaiObjectStorageDetailsExtended
 type ContentType = 'application/json' | 'application/json; charset=utf-8';
 type DataCompressionType = 'gzip' | 'None';
 
-export interface CustomHTTPsDetails {
+export interface CustomHTTPSDetails {
   authentication: Authentication;
   client_certificate_details?: ClientCertificateDetails;
   content_type: ContentType;
@@ -84,13 +84,19 @@ export interface CustomHTTPsDetails {
 }
 
 interface ClientCertificateDetails {
-  client_ca_certificate: string;
-  client_certificate: string;
-  client_private_key: string;
-  tls_hostname: string;
+  client_ca_certificate?: string;
+  client_certificate?: string;
+  client_private_key?: string;
+  tls_hostname?: string;
 }
 
-type AuthenticationType = 'basic' | 'none';
+export const authenticationType = {
+  Basic: 'basic',
+  None: 'none',
+} as const;
+
+export type AuthenticationType =
+  (typeof authenticationType)[keyof typeof authenticationType];
 
 interface Authentication {
   details?: AuthenticationDetails;
@@ -133,7 +139,7 @@ export interface AkamaiObjectStorageDetailsPayload
 
 export type DestinationDetailsPayload =
   | AkamaiObjectStorageDetailsPayload
-  | CustomHTTPsDetails;
+  | CustomHTTPSDetails;
 
 export interface CreateDestinationPayload {
   details: DestinationDetailsPayload;
