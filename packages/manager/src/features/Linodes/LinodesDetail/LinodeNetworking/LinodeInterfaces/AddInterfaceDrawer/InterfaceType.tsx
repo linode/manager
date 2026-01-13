@@ -15,11 +15,12 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
+import type { LinodeInterfaceType } from '../utilities';
 import type { CreateInterfaceFormValues } from './utilities';
 import type { InterfacePurpose } from '@linode/api-v4';
 
 interface Props {
-  existingInterfaces?: InterfacePurpose[] | null;
+  existingInterfaces?: LinodeInterfaceType[] | null;
 }
 export const InterfaceType = (props: Props) => {
   const { existingInterfaces } = props;
@@ -80,11 +81,11 @@ export const InterfaceType = (props: Props) => {
       >
         <FormControlLabel
           control={<Radio />}
-          disabled={existingInterfaces?.includes('public')}
+          disabled={existingInterfaces?.includes('Public')}
           label={
             <Stack alignItems="center" direction="row" spacing={0.5}>
               Public
-              {existingInterfaces?.includes('public') && (
+              {existingInterfaces?.includes('Public') && (
                 <TooltipIcon
                   status="info"
                   sxTooltipIcon={{ p: 0, ml: '8px !important' }}

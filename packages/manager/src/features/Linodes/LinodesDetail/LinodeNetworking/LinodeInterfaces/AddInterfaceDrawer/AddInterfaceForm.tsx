@@ -13,6 +13,7 @@ import {
   getLinodeInterfacePayload,
 } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
+import { getLinodeInterfaceType } from '../utilities';
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
@@ -39,16 +40,10 @@ export const AddInterfaceForm = (props: Props) => {
     useLinodeInterfacesQuery(linodeId);
 
   const existingInterfaces =
-    interfacesData?.interfaces.map((networkInterface) => {
-      if (networkInterface.public) {
-        return 'public';
-      } else if (networkInterface.vlan) {
-        return 'vlan';
-      } else {
-        return 'vpc';
-      }
-    }) ?? [];
-  const isPublicInterfacePresent = existingInterfaces.includes('public');
+    interfacesData?.interfaces.map((networkInterface) =>
+      getLinodeInterfaceType(networkInterface)
+    ) ?? [];
+  const isPublicInterfacePresent = existingInterfaces.includes('Public');
   const form = useForm<CreateInterfaceFormValues>({
     defaultValues: {
       firewall_id: null,
