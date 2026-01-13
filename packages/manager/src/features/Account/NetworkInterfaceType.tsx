@@ -75,7 +75,9 @@ export const NetworkInterfaceType = () => {
 
   return (
     <Paper data-testid="network-interface-type">
-      <Typography variant="h2">Network Interface Type</Typography>
+      <Typography id="interface-type" variant="h2">
+        Network Interface Type
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1}>
           <Typography variant="body1">
