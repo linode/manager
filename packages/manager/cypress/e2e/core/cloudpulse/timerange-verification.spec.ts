@@ -117,17 +117,29 @@ const mockProfile = profileFactory.build({
 const getDateRangeInGMT = (
   hour: number,
   minute: number = 0,
-  isStart: boolean = false
+  isStart: boolean = false,
+  dayInput?: number // optional day input
 ) => {
   const now = DateTime.now().setZone('GMT');
 
-  const targetDate = isStart
-    ? now.startOf('month').set({ hour, minute }).setZone('GMT')
-    : now.set({ hour, minute }).setZone('GMT');
+  let targetDate: DateTime;
+
+  if (isStart) {
+    // Start of month or custom day
+    targetDate = now.startOf('month').set({ hour, minute });
+    if (dayInput) {
+      targetDate = targetDate.set({ day: dayInput });
+    }
+  } else {
+    // Current month, set hour/minute
+    targetDate = now.set({ hour, minute });
+    if (dayInput) {
+      targetDate = targetDate.set({ day: dayInput });
+    }
+  }
 
   const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm');
 
-  // Correct: previous month must be based on a stable reference
   const previousMonthBase = now.minus({ months: 1 });
 
   return {
@@ -259,45 +271,53 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
     // --- Generate start and end date/time in GMT ---
+
+    const startDayOfMonth = 1;
+    const endDayOfMonth = 3;
+
     const {
       actualDate: startActualDate,
-      day: startDay,
       hour: startHour,
       minute: startMinute,
-    } = getDateRangeInGMT(12, 15, true);
+    } = getDateRangeInGMT(12, 15, true, startDayOfMonth);
 
     const {
       actualDate: endActualDate,
-      day: endDay,
       hour: endHour,
       minute: endMinute,
-    } = getDateRangeInGMT(12, 30);
+    } = getDateRangeInGMT(12, 30, false, endDayOfMonth);
 
-    // --- Select start date ---
-    ui.button.findByTitle('Last hour').as('startDateInput');
+    // --- Open date/time picker and reset previous selection ---
+    ui.button.findByTitle('Last hour').click();
 
-    cy.get('@startDateInput').should('be.visible');
+    ui.button.findByTitle('Reset').should('be.visible').click();
 
-    cy.get('@startDateInput').scrollIntoView();
-
-    cy.get('@startDateInput').click();
+    // --- Open date picker dialog and navigate to previous month ---
 
     cy.get('[role="dialog"]').within(() => {
-      cy.findAllByText(startDay).first().click();
-      cy.findAllByText(endDay).first().click();
+      // --- Navigate to previous month ---
+      cy.get('div[role="button"], button')
+        .filter(':visible') // visible buttons only
+        .first() // first button in the header should be "prev month"
+        .click();
+
+      // --- Select start and end day ---
+      cy.findAllByText(startDayOfMonth).first().click();
+      cy.findAllByText(endDayOfMonth).first().click();
     });
+    // --- Select start time ---
 
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
       .should('be.visible', { timeout: 10000 }) // waits up to 10 seconds
       .as('timePickerButton');
+
     cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
     cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-
     cy.get(`[aria-label="${startHour} hours"]`).click();
 
     cy.wait(1500);
@@ -375,7 +395,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .and('be.enabled')
       .click();
 
-    // --- Re-validate after apply ---
+    // --- validate after apply ---
     cy.get('[aria-labelledby="start-date"]').should(
       'have.value',
       `${startActualDate} PM`
@@ -390,7 +410,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // --- Select Node Type ---
     ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
 
-    // --- Validate API requests ---
+    // --- Validate API requests triggered for the selected range ---
     cy.wait(Array(4).fill('@getMetrics'));
     cy.get('@getMetrics.all')
       .should('have.length', 4)
