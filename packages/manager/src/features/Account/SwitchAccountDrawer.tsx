@@ -220,24 +220,38 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
-      {allChildAccounts && allChildAccounts.length !== 0 && (
-        <>
-          <DebouncedSearchTextField
-            clearable
-            debounceTime={250}
-            hideLabel
-            label="Search"
-            onSearch={setSearchQuery}
-            placeholder="Search"
-            sx={{ marginBottom: 3 }}
-            value={searchQuery}
-          />
-          {searchQuery && childAccounts && childAccounts.length === 0 && (
-            <Typography sx={{ fontStyle: 'italic' }}>
-              No search results
-            </Typography>
-          )}
-        </>
+      {isIAMDelegationEnabled &&
+        allChildAccounts &&
+        allChildAccounts.length !== 0 && (
+          <>
+            <DebouncedSearchTextField
+              clearable
+              debounceTime={250}
+              hideLabel
+              label="Search"
+              onSearch={setSearchQuery}
+              placeholder="Search"
+              sx={{ marginBottom: 3 }}
+              value={searchQuery}
+            />
+            {searchQuery && childAccounts && childAccounts.length === 0 && (
+              <Typography sx={{ fontStyle: 'italic' }}>
+                No search results
+              </Typography>
+            )}
+          </>
+        )}
+      {!isIAMDelegationEnabled && (
+        <DebouncedSearchTextField
+          clearable
+          debounceTime={250}
+          hideLabel
+          label="Search"
+          onSearch={setSearchQuery}
+          placeholder="Search"
+          sx={{ marginBottom: 3 }}
+          value={searchQuery}
+        />
       )}
       <ChildAccountList
         childAccounts={childAccounts}
