@@ -23,7 +23,7 @@ import {
 
 import type { EntitiesRole, ExtendedRoleView, RoleView } from './types';
 import type { AssignNewRoleFormValues } from './utilities';
-import type { EntityAccess } from '@linode/api-v4';
+import type { EntityAccess, IamUserRoles } from '@linode/api-v4';
 
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
@@ -224,6 +224,86 @@ describe('changeUserRole', () => {
       changeUserRole({
         access: entityAccess,
         assignedRoles: userPermissions,
+        initialRole,
+        newRole,
+      })
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with resource access', () => {
+    const assignedRoles: IamUserRoles = {
+      account_access: [],
+      entity_access: [
+        {
+          id: 12345678,
+          roles: ['linode_admin', 'linode_contributor'],
+          type: 'linode',
+        },
+      ],
+    };
+
+    const initialRole = 'linode_admin';
+    const newRole = 'linode_contributor';
+
+    const expectedRoles = {
+      account_access: [],
+      entity_access: [
+        {
+          id: 12345678,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+      ],
+    };
+    expect(
+      changeUserRole({
+        access: entityAccess,
+        assignedRoles,
+        initialRole,
+        newRole,
+      })
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with resource access', () => {
+    const assignedRoles: IamUserRoles = {
+      account_access: [],
+      entity_access: [
+        {
+          id: 12345678,
+          roles: ['linode_admin', 'linode_contributor'],
+          type: 'linode',
+        },
+        {
+          id: 1234,
+          roles: ['linode_admin'],
+          type: 'linode',
+        },
+      ],
+    };
+
+    const initialRole = 'linode_admin';
+    const newRole = 'linode_contributor';
+
+    const expectedRoles = {
+      account_access: [],
+      entity_access: [
+        {
+          id: 12345678,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+        {
+          id: 1234,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+      ],
+    };
+    expect(
+      changeUserRole({
+        access: entityAccess,
+        assignedRoles,
         initialRole,
         newRole,
       })
