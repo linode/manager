@@ -166,18 +166,7 @@ export const AlertInformationActionTable = (
   React.useEffect(() => {
     // To send initial state of alerts through toggle handler function (For Create Flow)
     if (!isEditMode && onToggleAlert) {
-      const accountOrRegionAlerts = alerts.filter((alert) =>
-        isAccountOrRegionAlert(alert)
-      );
-      const payload: CloudPulseAlertsPayload = {
-        system_alerts: accountOrRegionAlerts
-          .filter((alert) => alert.type === 'system')
-          .map((alert) => alert.id),
-        user_alerts: accountOrRegionAlerts
-          .filter((alert) => alert.type === 'user')
-          .map((alert) => alert.id),
-      };
-      onToggleAlert(payload);
+      onToggleAlert(enabledAlerts);
     }
 
     return () => {
