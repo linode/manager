@@ -131,7 +131,7 @@ export const AddInterfaceForm = (props: Props) => {
               {isPublicInterfacePresent && (
                 <Notice variant="warning">
                   <Typography>
-                    This Linode already has a public interface. Having a both a
+                    This Linode already has a public interface. Having both a
                     VPC interface and a public interface is not recommended. If
                     you need public internet access, consider using the VPC’s
                     <strong> Public access</strong> option instead.
