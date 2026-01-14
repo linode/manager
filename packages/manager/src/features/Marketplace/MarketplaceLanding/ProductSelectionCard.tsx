@@ -156,6 +156,7 @@ export const ProductSelectionCard = React.memo(
     return (
       <SelectionCard
         disabled={disabled}
+        gridSize={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}
         heading={productName}
         onClick={onClick}
         renderIcon={renderHeader}
@@ -167,11 +168,16 @@ export const ProductSelectionCard = React.memo(
           padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
           position: 'relative',
           gap: theme.spacingFunction(12),
+          backgroundColor: theme.tokens.alias.Background.Normal,
         })}
         sxCardBaseIcon={{
           alignItems: 'flex-start',
           justifyContent: 'flex-start',
           width: '100%',
+          '& img': {
+            maxHeight: '48px',
+            maxWidth: '96px',
+          },
         }}
       />
     );
