@@ -37,6 +37,27 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
     reset: resetMutation,
   } = useCreateDatabaseConnectionPoolMutation(databaseId);
 
+  /** Shared ErrorText component that displays formatted error messages below form field components that don't have the errorText property */
+  const SharedErrorText = (errorMessage: string | undefined) =>
+    errorMessage && (
+      <FormHelperText
+        error
+        role="alert"
+        sx={{ marginTop: theme.spacingFunction(4) }}
+      >
+        {errorMessage}
+      </FormHelperText>
+    );
+
+  /** Utility function to generate error styles for form field components that can't set them by default */
+  const makeErrorStyles = (errorMessage: string | undefined) => {
+    return errorMessage
+      ? {
+          border: `1px solid ${theme.tokens.component.Select.Error.Border}`,
+        }
+      : undefined;
+  };
+
   const {
     control,
     formState: { errors },
@@ -150,21 +171,9 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
                   }}
                   placeholder="Choose a Database Name"
                   selected={databaseNames.find((name) => name === database)}
-                  style={{
-                    border: fieldState.error?.message
-                      ? `1px solid ${theme.tokens.component.Select.Error.Border}`
-                      : undefined,
-                  }}
+                  style={makeErrorStyles(fieldState.error?.message)}
                 />
-                {fieldState.error?.message && (
-                  <FormHelperText
-                    error
-                    role="alert"
-                    sx={{ marginTop: theme.spacingFunction(4) }}
-                  >
-                    {fieldState.error?.message}
-                  </FormHelperText>
-                )}
+                {SharedErrorText(fieldState.error?.message)}
               </>
             )}
           />
@@ -197,28 +206,17 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
                   }}
                   placeholder="Choose a Pool Mode"
                   selected={poolModes.find((poolMode) => mode === poolMode)}
-                  style={{
-                    border: fieldState.error?.message
-                      ? `1px solid ${theme.tokens.component.Select.Error.Border}`
-                      : undefined,
-                  }}
+                  style={makeErrorStyles(fieldState.error?.message)}
                   valueFn={(poolMode: PoolMode) => {
                     return `${poolMode.charAt(0).toUpperCase()}${poolMode.slice(1)}`;
                   }}
                 />
-                {fieldState.error?.message && (
-                  <FormHelperText
-                    error
-                    role="alert"
-                    sx={{ marginTop: theme.spacingFunction(4) }}
-                  >
-                    {fieldState.error?.message}
-                  </FormHelperText>
-                )}
+                {SharedErrorText(fieldState.error?.message)}
               </>
             )}
           />
         </Box>
+
         <Box
           style={{
             marginTop: theme.spacingFunction(20),
@@ -276,22 +274,10 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
                   selected={usernames.find(
                     (usernameOption) => usernameOption === username
                   )}
-                  style={{
-                    border: fieldState.error?.message
-                      ? `1px solid ${theme.tokens.component.Select.Error.Border}`
-                      : undefined,
-                  }}
+                  style={makeErrorStyles(fieldState.error?.message)}
                   valueFn={(usernameOption: string) => `${usernameOption}`}
                 />
-                {fieldState.error?.message && (
-                  <FormHelperText
-                    error
-                    role="alert"
-                    sx={{ marginTop: theme.spacingFunction(4) }}
-                  >
-                    {fieldState.error?.message}
-                  </FormHelperText>
-                )}
+                {SharedErrorText(fieldState.error?.message)}
               </>
             )}
           />

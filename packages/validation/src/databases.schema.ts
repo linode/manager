@@ -230,8 +230,7 @@ export const createDatabaseConnectionPoolSchema = object({
     .required('Pool size is required')
     .typeError('Pool size is required and must be a number')
     .integer('Pool size must be a whole number')
-    .min(1, 'Pool size must be at least 1')
-    .max(1000, 'Pool size must not exceed 1000'),
+    .min(1, 'Pool size must be at least 1'),
   username: string().required('Username is required').nullable(),
 });
 
