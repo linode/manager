@@ -150,9 +150,18 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
                   }}
                   placeholder="Choose a Database Name"
                   selected={databaseNames.find((name) => name === database)}
+                  style={{
+                    border: fieldState.error?.message
+                      ? `1px solid ${theme.tokens.component.Select.Error.Border}`
+                      : undefined,
+                  }}
                 />
                 {fieldState.error?.message && (
-                  <FormHelperText error role="alert" sx={{ marginTop: 0 }}>
+                  <FormHelperText
+                    error
+                    role="alert"
+                    sx={{ marginTop: theme.spacingFunction(4) }}
+                  >
                     {fieldState.error?.message}
                   </FormHelperText>
                 )}
@@ -177,20 +186,36 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           <Controller
             control={control}
             name="mode"
-            render={({ field }) => (
-              <Select
-                {...field}
-                id="poolMode"
-                items={poolModes}
-                onChange={(e: CustomEvent) => {
-                  field.onChange(e.detail);
-                }}
-                placeholder="Choose a Pool Mode"
-                selected={poolModes.find((poolMode) => mode === poolMode)}
-                valueFn={(poolMode: PoolMode) => {
-                  return `${poolMode.charAt(0).toUpperCase()}${poolMode.slice(1)}`;
-                }}
-              />
+            render={({ field, fieldState }) => (
+              <>
+                <Select
+                  {...field}
+                  id="poolMode"
+                  items={poolModes}
+                  onChange={(e: CustomEvent) => {
+                    field.onChange(e.detail);
+                  }}
+                  placeholder="Choose a Pool Mode"
+                  selected={poolModes.find((poolMode) => mode === poolMode)}
+                  style={{
+                    border: fieldState.error?.message
+                      ? `1px solid ${theme.tokens.component.Select.Error.Border}`
+                      : undefined,
+                  }}
+                  valueFn={(poolMode: PoolMode) => {
+                    return `${poolMode.charAt(0).toUpperCase()}${poolMode.slice(1)}`;
+                  }}
+                />
+                {fieldState.error?.message && (
+                  <FormHelperText
+                    error
+                    role="alert"
+                    sx={{ marginTop: theme.spacingFunction(4) }}
+                  >
+                    {fieldState.error?.message}
+                  </FormHelperText>
+                )}
+              </>
             )}
           />
         </Box>
@@ -238,20 +263,36 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           <Controller
             control={control}
             name="username"
-            render={({ field }) => (
-              <Select
-                {...field}
-                id="username"
-                items={usernames}
-                onChange={(e: CustomEvent) => {
-                  field.onChange(e.detail);
-                }}
-                placeholder="Choose a Username"
-                selected={usernames.find(
-                  (usernameOption) => usernameOption === username
+            render={({ field, fieldState }) => (
+              <>
+                <Select
+                  {...field}
+                  id="username"
+                  items={usernames}
+                  onChange={(e: CustomEvent) => {
+                    field.onChange(e.detail);
+                  }}
+                  placeholder="Choose a Username"
+                  selected={usernames.find(
+                    (usernameOption) => usernameOption === username
+                  )}
+                  style={{
+                    border: fieldState.error?.message
+                      ? `1px solid ${theme.tokens.component.Select.Error.Border}`
+                      : undefined,
+                  }}
+                  valueFn={(usernameOption: string) => `${usernameOption}`}
+                />
+                {fieldState.error?.message && (
+                  <FormHelperText
+                    error
+                    role="alert"
+                    sx={{ marginTop: theme.spacingFunction(4) }}
+                  >
+                    {fieldState.error?.message}
+                  </FormHelperText>
                 )}
-                valueFn={(usernameOption: string) => `${usernameOption}`}
-              />
+              </>
             )}
           />
         </Box>
