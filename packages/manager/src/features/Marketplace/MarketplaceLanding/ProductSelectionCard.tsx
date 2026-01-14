@@ -85,24 +85,27 @@ export const ProductSelectionCard = React.memo(
           {truncate(description, 200)}
         </Typography>,
         // Type chip (as last element with absolute positioning at bottom)
-        <Box
-          key="category"
-          sx={(theme) => ({
-            bottom: theme.spacingFunction(16),
-            left: theme.spacingFunction(20),
-            position: 'absolute',
-          })}
-        >
-          type && (
-          <Chip
-            label={type}
-            size="small"
-            sx={(theme) => ({
-              backgroundColor: theme.tokens.alias.Background.Informativesubtle,
-            })}
-          />
-          )
-        </Box>,
+        ...(type
+          ? [
+              <Box
+                key="category"
+                sx={(theme) => ({
+                  bottom: theme.spacingFunction(16),
+                  left: theme.spacingFunction(20),
+                  position: 'absolute',
+                })}
+              >
+                <Chip
+                  label={type}
+                  size="small"
+                  sx={(theme) => ({
+                    backgroundColor:
+                      theme.tokens.alias.Background.Informativesubtle,
+                  })}
+                />
+              </Box>,
+            ]
+          : []),
       ],
       [companyName, description, type]
     );
