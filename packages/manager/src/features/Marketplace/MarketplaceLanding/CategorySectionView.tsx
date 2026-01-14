@@ -84,6 +84,7 @@ const MarketplaceSkeletonGrid = ({
     <Grid container spacing={2}>
       {Array.from({ length: productsDisplayedCount }).map((item) => (
         <SelectionCard
+          gridSize={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}
           heading={heading}
           key={`skeleton-${item}`}
           renderIcon={renderIcon}
@@ -98,6 +99,7 @@ const MarketplaceSkeletonGrid = ({
             '&:hover': {
               borderColor: theme.borderColors.divider,
             },
+            backgroundColor: theme.tokens.alias.Background.Normal,
           })}
           sxCardBaseHeading={{ width: '100%' }}
           sxCardBaseIcon={{

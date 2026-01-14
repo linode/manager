@@ -9,16 +9,28 @@ import * as React from 'react';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsMarketplaceV2Enabled } from '../utils';
 import { CategorySectionView } from './CategorySectionView';
 
 import type { ProductCardData } from './ProductSelectionCard';
-import type { MarketplaceCategory, MarketplaceProduct } from '@linode/api-v4';
+import type { Filter, MarketplaceCategory } from '@linode/api-v4';
 
 const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_INCREMENT = 6;
 
-export interface CategorySectionProps extends MarketplaceCategory {
-  filteredProducts?: MarketplaceProduct[];
+export interface GlobalFilters {
+  categortId?: number;
+  // IDs derived from search query matching category/type/partner names
+  searchDerivedCategoryIds?: number[];
+  searchDerivedPartnerIds?: number[];
+  searchDerivedTypeIds?: number[];
+  searchQuery: string;
+  typeId?: number;
+}
+
+export interface CategorySectionProps {
+  category: MarketplaceCategory;
+  filters: GlobalFilters;
 }
 
 export interface ProductCardItem {
@@ -29,15 +41,32 @@ export interface ProductCardItem {
 const useProductsDisplay = (
   categoryId: number,
   productsCount: number,
-  filteredProducts?: MarketplaceProduct[]
+  filters: GlobalFilters
 ) => {
   const [displayCount, setDisplayCount] = React.useState(
     Math.min(productsCount, INITIAL_DISPLAY_COUNT)
   );
 
-  const productsQueryEnabled = filteredProducts
-    ? filteredProducts?.length === 0
-    : true;
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
+  const apiFilter: Filter = {
+    category_id: categoryId,
+    ...(filters.searchQuery
+      ? {
+          '+or': [
+            { name: { '+contains': filters.searchQuery } },
+            { short_description: { '+contains': filters.searchQuery } },
+            // Include search-derived IDs in the OR condition (excluding duplicates)
+            ...(filters.searchDerivedTypeIds?.map((id) => ({ type_id: id })) ??
+              []),
+            ...(filters.searchDerivedPartnerIds?.map((id) => ({
+              partner_id: id,
+            })) ?? []),
+          ],
+        }
+      : {}),
+    ...(filters.typeId ? { type_id: filters.typeId } : {}),
+  };
 
   const {
     data: productsData,
@@ -46,16 +75,13 @@ const useProductsDisplay = (
     isFetchingNextPage,
     isLoading,
   } = useInfiniteMarketplaceProductsQuery(
-    { category_ids: categoryId },
-    productsQueryEnabled
+    apiFilter,
+    isMarketplaceV2FeatureEnabled ?? false
   );
 
   const products = React.useMemo(
-    () =>
-      productsData?.pages.flatMap((page) => page.data) ??
-      filteredProducts ??
-      [],
-    [productsData, filteredProducts]
+    () => productsData?.pages.flatMap((page) => page.data) ?? [],
+    [productsData]
   );
 
   return {
@@ -70,7 +96,7 @@ const useProductsDisplay = (
 };
 
 export const CategorySection = (props: CategorySectionProps) => {
-  const { name, id, products_count, filteredProducts } = props;
+  const { category, filters } = props;
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -82,37 +108,34 @@ export const CategorySection = (props: CategorySectionProps) => {
     fetchNextPage,
     isFetchingNextPage,
     isLoading: isProductsLoading,
-  } = useProductsDisplay(id, products_count, filteredProducts);
+  } = useProductsDisplay(category.id, category.products_count, filters);
 
   const { data: partnersMap, isLoading: isPartnerLoading } =
     useAllMarketplacePartnersMapQuery();
 
   const { data: typesMap, isLoading: isTypesLoading } =
     useAllMarketplaceTypesMapQuery();
-
   React.useEffect(() => {
     const shouldFetchMore =
-      !filteredProducts &&
       !isFetchingNextPage &&
       products.length > 0 &&
       displayCount >= products.length &&
-      products.length < products_count;
+      products.length < category.products_count;
 
     if (shouldFetchMore) {
       fetchNextPage();
     }
   }, [
-    filteredProducts,
     isFetchingNextPage,
     products.length,
     displayCount,
-    products_count,
+    category.products_count,
     fetchNextPage,
   ]);
 
   const isLoading = isProductsLoading || isPartnerLoading || isTypesLoading;
   const productsToDisplay = products.slice(0, displayCount);
-  const hasMoreProducts = products_count > displayCount;
+  const hasMoreProducts = category.products_count > displayCount;
 
   const getLogoUrl = (partnerId: number) => {
     const partner = partnersMap?.[partnerId];
@@ -124,12 +147,12 @@ export const CategorySection = (props: CategorySectionProps) => {
   };
 
   const getSkeletonCount = () => {
-    const remaining = products_count - displayCount;
+    const remaining = category.products_count - displayCount;
     return Math.min(remaining, LOAD_MORE_INCREMENT);
   };
 
   const handleLoadMore = () => {
-    const remaining = products_count - displayCount;
+    const remaining = category.products_count - displayCount;
     const increment = Math.min(remaining, LOAD_MORE_INCREMENT);
     setDisplayCount(displayCount + increment);
   };
@@ -153,14 +176,14 @@ export const CategorySection = (props: CategorySectionProps) => {
   const errorMessage = productsError
     ? getAPIErrorOrDefault(
         productsError,
-        `Error loading products for category ${name}`
+        `Error loading products for category ${category.name}`
       )[0].reason
     : '';
 
   return (
     <CategorySectionView
       cardData={cardData}
-      categoryName={name}
+      categoryName={category.name}
       displayCount={displayCount}
       errorMessage={errorMessage}
       hasMoreProducts={hasMoreProducts}

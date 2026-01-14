@@ -93,6 +93,7 @@ export const ProductSelectionCard = React.memo(
             position: 'absolute',
           })}
         >
+          type && (
           <Chip
             label={type}
             size="small"
@@ -100,6 +101,7 @@ export const ProductSelectionCard = React.memo(
               backgroundColor: theme.tokens.alias.Background.Informativesubtle,
             })}
           />
+          )
         </Box>,
       ],
       [companyName, description, type]

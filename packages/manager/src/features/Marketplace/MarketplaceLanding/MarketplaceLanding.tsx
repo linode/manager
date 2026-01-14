@@ -7,7 +7,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CategorySection } from './CategorySection';
 
-import type { MarketplaceProduct } from '@linode/api-v4';
+import type { GlobalFilters } from './CategorySection';
 
 export const MarketplaceLanding = () => {
   const {
@@ -15,8 +15,6 @@ export const MarketplaceLanding = () => {
     error,
     isLoading,
   } = useAllMarketplaceCategoriesQuery({}, {}, true);
-
-  const filteredProducts: MarketplaceProduct[] = [];
 
   if (isLoading) {
     return <CircleProgress />;
@@ -31,6 +29,8 @@ export const MarketplaceLanding = () => {
       />
     );
   }
+
+  const globalFilters: GlobalFilters = { searchQuery: '' };
 
   return (
     <>
@@ -59,9 +59,9 @@ export const MarketplaceLanding = () => {
           (category) =>
             category.products_count > 0 && (
               <CategorySection
+                category={category}
+                filters={globalFilters}
                 key={category.id}
-                {...category}
-                filteredProducts={filteredProducts}
               />
             )
         )}
@@ -69,3 +69,5 @@ export const MarketplaceLanding = () => {
     </>
   );
 };
+
+// search text: akamai category 6

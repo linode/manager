@@ -29,7 +29,7 @@ export const marketplaceCategoryFactory =
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
-    products_count: 5,
+    products_count: 10,
   });
 
 export const marketplaceTypeFactory = Factory.Sync.makeFactory<MarketplaceType>(

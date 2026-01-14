@@ -648,7 +648,7 @@ const netLoadBalancers = [
 
 const marketplace = [
   http.get('*/v4beta/marketplace/products', () => {
-    const marketplaceProduct = marketplaceProductFactory.buildList(30);
+    const marketplaceProduct = marketplaceProductFactory.buildList(35);
     return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
   }),
   http.get('*/v4beta/marketplace/products/:productId/details', () => {
@@ -666,11 +666,11 @@ const marketplace = [
     return HttpResponse.json(marketplaceProductDetail);
   }),
   http.get('*/v4beta/marketplace/categories', () => {
-    const marketplaceCategory = marketplaceCategoryFactory.buildList(30);
+    const marketplaceCategory = marketplaceCategoryFactory.buildList(35);
     return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
   }),
   http.get('*/v4beta/marketplace/types', () => {
-    const marketplaceType = marketplaceTypeFactory.buildList(30);
+    const marketplaceType = marketplaceTypeFactory.buildList(35);
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.get('*/v4beta/marketplace/partners', () => {
