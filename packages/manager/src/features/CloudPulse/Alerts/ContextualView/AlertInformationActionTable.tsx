@@ -149,13 +149,8 @@ export const AlertInformationActionTable = (
   const payloadAlertType = (alert: Alert) =>
     alert.type === 'system' ? 'system_alerts' : 'user_alerts';
 
-  const {
-    enabledAlerts,
-    setEnabledAlerts,
-    hasUnsavedChanges,
-    initialState,
-    resetToInitialState,
-  } = useContextualAlertsState(alerts, entityId);
+  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState } =
+    useContextualAlertsState(alerts, entityId);
 
   const isAccountOrRegionAlert = (alert: Alert) =>
     alert.scope === 'region' || alert.scope === 'account';
@@ -193,8 +188,7 @@ export const AlertInformationActionTable = (
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
-          // Reset the state to sync with the updated alerts from API
-          resetToInitialState();
+          onToggleAlert?.({}, false);
           invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
         })
         .catch(() => {
@@ -207,7 +201,7 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar, resetToInitialState]
+    [updateAlerts, enqueueSnackbar, onToggleAlert]
   );
 
   const handleToggleAlert = React.useCallback(
