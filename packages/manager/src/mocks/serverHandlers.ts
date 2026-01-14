@@ -3656,6 +3656,11 @@ export const handlers = [
             recipient_type: 'user',
           },
         },
+        alerts: {
+          alert_count: 0,
+          type: 'alerts-definitions',
+          url: 'monitor/alert-channels/{id}/alerts',
+        },
       })
     );
     notificationChannels.push(
@@ -4539,5 +4544,8 @@ export const handlers = [
         },
       })
     );
+  }),
+  http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
+    return HttpResponse.json({});
   }),
 ];
