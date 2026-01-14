@@ -54,7 +54,7 @@ export const MarketplaceLanding = () => {
           pathname: '/cloud-marketplace/catalog',
         }}
       />
-      <Stack spacing={3}>
+      <Stack spacing={4}>
         {categories?.map(
           (category) =>
             category.products_count > 0 && (
@@ -69,5 +69,3 @@ export const MarketplaceLanding = () => {
     </>
   );
 };
-
-// search text: akamai category 6

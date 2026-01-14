@@ -120,7 +120,7 @@ const ProductsGrid = ({
   cardData: ProductCardItem[];
   onProductClick: (productId: number) => void;
 }) => (
-  <Grid container spacing={2}>
+  <Grid container spacing={3}>
     {cardData.map((item) => (
       <ProductSelectionCard
         data={item.data}
