@@ -4,6 +4,7 @@ import {
   createNotificationChannel,
   deleteAlertDefinition,
   deleteEntityFromAlert,
+  deleteNotificationChannel,
   editAlertDefinition,
   updateNotificationChannel,
   updateServiceAlerts,
@@ -25,6 +26,7 @@ import type {
   CreateAlertDefinitionPayload,
   CreateNotificationChannelPayload,
   DeleteAlertPayload,
+  DeleteChannelPayload,
   EditAlertPayloadWithService,
   EditNotificationChannelPayloadWithId,
   EntityAlertUpdatePayload,
@@ -339,4 +341,27 @@ export const useNotificationChannelQuery = (channelId: number) => {
   return useQuery<NotificationChannel, APIError[]>(
     queryFactory.notificationChannels._ctx.channelById(channelId)
   );
+};
+
+export const useDeleteNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NotificationChannel, APIError[], DeleteChannelPayload>({
+    mutationFn: ({ channelId }) => deleteNotificationChannel(channelId),
+    onSuccess: (_, { channelId }) => {
+      queryClient.cancelQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+      queryClient.setQueryData<NotificationChannel[]>(
+        queryFactory.notificationChannels._ctx.all().queryKey,
+        (oldData) => {
+          return oldData?.filter(({ id }) => id !== channelId) ?? [];
+        }
+      );
+      queryClient.removeQueries({
+        queryKey:
+          queryFactory.notificationChannels._ctx.channelById(channelId)
+            .queryKey,
+      });
+    },
+  });
 };
