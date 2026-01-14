@@ -6,6 +6,7 @@ import {
   Drawer,
   FormHelperText,
   InputLabel,
+  Notice,
   TextField,
   Typography,
   useTheme,
@@ -38,7 +39,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
 
   const {
     control,
-    // formState: { errors },
+    formState: { errors },
     watch,
     handleSubmit,
     reset,
@@ -91,6 +92,9 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
       open={open}
       title="Add a New Connection Pool"
     >
+      {errors.root?.message && (
+        <Notice text={errors.root.message} variant="error" />
+      )}
       <Typography>
         Add a PgBouncer connection pool to minimize the use of your server
         resources.
