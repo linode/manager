@@ -166,6 +166,17 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
+  const handleRemoveRoleDialogClose = () => {
+    setIsUnassignRoleDialogOpen(false);
+
+    // If we just deleted the last one on a page, reset to the previous page.
+    const removedLastOnPage =
+      filteredAndSortedRoles.length % pagination.pageSize === 1;
+    if (removedLastOnPage) {
+      pagination.handlePageChange(pagination.page - 1);
+    }
+  };
+
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
   const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
@@ -447,7 +458,7 @@ export const AssignedRolesTable = () => {
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
-        onClose={() => setIsUnassignRoleDialogOpen(false)}
+        onClose={() => handleRemoveRoleDialogClose()}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />
