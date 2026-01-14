@@ -8,22 +8,25 @@ import {
 
 interface ConnectionDetailsRowProps {
   children: React.ReactNode;
+  isSummaryTab?: boolean;
   label: string;
 }
 
 export const ConnectionDetailsRow = (props: ConnectionDetailsRowProps) => {
-  const { children, label } = props;
+  const { children, label, isSummaryTab } = props;
   return (
     <>
       <Grid
         size={{
-          md: 4,
+          md: isSummaryTab ? 3 : 4,
           xs: 3,
         }}
       >
         <StyledLabelTypography>{label}</StyledLabelTypography>
       </Grid>
-      <StyledValueGrid size={{ md: 8, xs: 9 }}>{children}</StyledValueGrid>
+      <StyledValueGrid size={{ md: isSummaryTab ? 9 : 8, xs: 9 }}>
+        {children}
+      </StyledValueGrid>
     </>
   );
 };
