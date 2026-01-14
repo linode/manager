@@ -122,6 +122,11 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         Connection Details
       </Typography>
       <StyledGridContainer container size={{ lg: 10, md: 10 }} spacing={0}>
+        {flags.databasePgBouncer && (
+          <ConnectionDetailsRow isSummaryTab label="Service URI">
+            <ServiceURI database={database} isGeneralServiceURI />
+          </ConnectionDetailsRow>
+        )}
         <ConnectionDetailsRow isSummaryTab label="Username">
           {username}
         </ConnectionDetailsRow>
@@ -152,11 +157,6 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             >
               View Details
             </Link>
-          </ConnectionDetailsRow>
-        )}
-        {flags.databasePgBouncer && (
-          <ConnectionDetailsRow isSummaryTab label="Service URI">
-            <ServiceURI database={database} isGeneralServiceURI />
           </ConnectionDetailsRow>
         )}
       </StyledGridContainer>

@@ -68,7 +68,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     if (isGeneralServiceURI) {
       return `${engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
     }
-    return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}{connection pool port}/{connection pool label}?sslmode=require`;
+    return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}:${database.connection_pool_port}/{connection pool label}?sslmode=require`;
   };
 
   const getCredentials = (isGeneralServiceURI: boolean) => {
@@ -130,8 +130,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
             : getCredentials(isGeneralServiceURI)}
         {!isGeneralServiceURI ? (
           <>
-            @{database.hosts?.primary}:
-            <StyledCode>{'{connection pool port}'}</StyledCode>/
+            @{database.hosts?.primary}:{database.connection_pool_port}/
             <StyledCode>{'{connection pool label}'}</StyledCode>
             ?sslmode=require
           </>
