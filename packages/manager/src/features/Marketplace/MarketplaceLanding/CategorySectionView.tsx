@@ -82,10 +82,10 @@ const MarketplaceSkeletonGrid = ({
   );
   return (
     <Grid container spacing={2}>
-      {Array.from({ length: productsDisplayedCount }).map((_) => (
+      {Array.from({ length: productsDisplayedCount }).map((item) => (
         <SelectionCard
           heading={heading}
-          key="skeleton card"
+          key={`skeleton-${item}`}
           renderIcon={renderIcon}
           subheadings={subHeadings}
           sxCardBase={(theme) => ({

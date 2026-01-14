@@ -674,8 +674,8 @@ const marketplace = [
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.get('*/v4beta/marketplace/partners', () => {
-    const marketplaceType = marketplacePartnersFactory.buildList(30);
-    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+    const marketplacePartner = marketplacePartnersFactory.buildList(30);
+    return HttpResponse.json(makeResourcePage([...marketplacePartner]));
   }),
   http.post('*/v4beta/marketplace/referral', async () => {
     await sleep(2000);

@@ -46,7 +46,7 @@ const useProductsDisplay = (
     isFetchingNextPage,
     isLoading,
   } = useInfiniteMarketplaceProductsQuery(
-    { category: categoryId },
+    { category_ids: categoryId },
     productsQueryEnabled
   );
 
@@ -146,7 +146,7 @@ export const CategorySection = (props: CategorySectionProps) => {
       logoUrl: getLogoUrl(product.partner_id),
       productName: product.name,
       productTag: product.tile_tag,
-      type: typesMap?.[product.type_id]?.name ?? 'Application',
+      type: typesMap?.[product.type_id]?.name ?? '',
     },
   }));
 
@@ -160,7 +160,7 @@ export const CategorySection = (props: CategorySectionProps) => {
   return (
     <CategorySectionView
       cardData={cardData}
-      categoryName={name || 'Category 1'}
+      categoryName={name}
       displayCount={displayCount}
       errorMessage={errorMessage}
       hasMoreProducts={hasMoreProducts}
