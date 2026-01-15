@@ -224,6 +224,48 @@ describe('StreamEdit', () => {
               expect(editStreamSpy).toHaveBeenCalled();
             });
           });
+
+          describe('and stream has status: provisioning', () => {
+            it('should have disabled Edit Stream button and show info tooltip', async () => {
+              server.use(
+                http.get('*/monitor/streams/destinations', () => {
+                  return HttpResponse.json(makeResourcePage(mockDestinations));
+                }),
+                http.get(`*/monitor/streams/${streamId}`, () => {
+                  return HttpResponse.json({
+                    ...mockStream,
+                    status: 'provisioning',
+                  });
+                })
+              );
+
+              renderWithThemeAndHookFormContext({
+                component: <StreamEdit />,
+              });
+              const loadingElement = screen.queryByTestId(loadingTestId);
+              await waitForElementToBeRemoved(loadingElement);
+
+              const editStreamButton = screen.getByRole('button', {
+                name: saveStreamButtonText,
+              });
+
+              // Edit stream button should be disabled
+              expect(editStreamButton).toBeDisabled();
+
+              // Edit stream
+              await userEvent.hover(editStreamButton);
+
+              await waitFor(() => {
+                expect(screen.getByRole('tooltip')).toBeInTheDocument();
+              });
+
+              const disabledButtonTooltip = screen.getByText(
+                'You cannot save changes while the stream is provisioning.'
+              );
+
+              expect(disabledButtonTooltip).toBeInTheDocument();
+            });
+          });
         });
       });
 
