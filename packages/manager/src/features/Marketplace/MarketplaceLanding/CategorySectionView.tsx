@@ -19,7 +19,6 @@ export interface CategorySectionViewProps {
   isLoading: boolean;
   onLoadMore: () => void;
   onProductClick: (productId: number) => void;
-  productsError: boolean;
   skeletonCount: number;
 }
 
@@ -84,6 +83,7 @@ const MarketplaceSkeletonGrid = ({
     <Grid container spacing={2}>
       {Array.from({ length: productsDisplayedCount }).map((_, index) => (
         <SelectionCard
+          data-testid="marketplace-skeleton-card"
           gridSize={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}
           heading={heading}
           key={`skeleton-${index}`}
@@ -123,13 +123,16 @@ const ProductsGrid = ({
   onProductClick: (productId: number) => void;
 }) => (
   <Grid container spacing={3}>
-    {cardData.map((item) => (
-      <ProductSelectionCard
-        data={item.data}
-        key={item.id}
-        onClick={() => onProductClick(item.id)}
-      />
-    ))}
+    {cardData.map((item) => {
+      const { id, ...data } = item;
+      return (
+        <ProductSelectionCard
+          data={data}
+          key={id}
+          onClick={() => onProductClick(id)}
+        />
+      );
+    })}
   </Grid>
 );
 
@@ -139,7 +142,6 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
     isLoading,
     isFetchingNextPage,
     hasMoreProducts,
-    productsError,
     displayCount,
     cardData,
     skeletonCount,
@@ -148,7 +150,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
     onProductClick,
   } = props;
 
-  if (productsError) {
+  if (errorMessage) {
     return <ErrorState errorText={errorMessage} />;
   }
 

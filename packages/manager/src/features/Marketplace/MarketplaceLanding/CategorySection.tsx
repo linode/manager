@@ -33,8 +33,7 @@ export interface CategorySectionProps {
   filters: GlobalFilters;
 }
 
-export interface ProductCardItem {
-  data: ProductCardData;
+export interface ProductCardItem extends ProductCardData {
   id: number;
 }
 
@@ -162,15 +161,13 @@ export const CategorySection = (props: CategorySectionProps) => {
   };
 
   const cardData: ProductCardItem[] = productsToDisplay.map((product) => ({
+    companyName: partnersMap?.[product.partner_id]?.name || '',
+    description: product.short_description,
     id: product.id,
-    data: {
-      companyName: partnersMap?.[product.partner_id]?.name || '',
-      description: product.short_description,
-      logoUrl: getLogoUrl(product.partner_id),
-      productName: product.name,
-      productTag: product.tile_tag,
-      type: typesMap?.[product.type_id]?.name ?? '',
-    },
+    logoUrl: getLogoUrl(product.partner_id),
+    productName: product.name,
+    productTag: product.tile_tag,
+    type: typesMap?.[product.type_id]?.name ?? '',
   }));
 
   const errorMessage = productsError
@@ -191,7 +188,6 @@ export const CategorySection = (props: CategorySectionProps) => {
       isLoading={isLoading}
       onLoadMore={handleLoadMore}
       onProductClick={handleProductClick}
-      productsError={!!productsError}
       skeletonCount={getSkeletonCount()}
     />
   );
