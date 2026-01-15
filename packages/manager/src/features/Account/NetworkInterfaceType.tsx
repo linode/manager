@@ -177,7 +177,7 @@ export const NetworkInterfaceType = () => {
 const optionsTooltipText = (
   <Stack spacing={3}>
     {accountSettingInterfaceOptions.map((option) => (
-      <Stack key={option.label}>
+      <Stack key={option.value}>
         <Typography>
           <strong>{option.label}</strong>
         </Typography>
