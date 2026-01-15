@@ -82,11 +82,11 @@ const MarketplaceSkeletonGrid = ({
   );
   return (
     <Grid container spacing={2}>
-      {Array.from({ length: productsDisplayedCount }).map((item) => (
+      {Array.from({ length: productsDisplayedCount }).map((_, index) => (
         <SelectionCard
           gridSize={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}
           heading={heading}
-          key={`skeleton-${item}`}
+          key={`skeleton-${index}`}
           renderIcon={renderIcon}
           subheadings={subHeadings}
           sxCardBase={(theme) => ({
@@ -98,6 +98,8 @@ const MarketplaceSkeletonGrid = ({
             gap: theme.spacingFunction(12),
             '&:hover': {
               borderColor: theme.borderColors.divider,
+              backgroundColor: theme.tokens.alias.Background.Normal,
+              boxShadow: theme.tokens.alias.Elevation.S,
             },
             backgroundColor: theme.tokens.alias.Background.Normal,
           })}

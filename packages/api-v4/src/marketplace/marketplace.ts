@@ -18,14 +18,13 @@ import type {
 } from './types';
 import type { Filter, ResourcePage as Page, Params } from 'src/types';
 
-export const getMarketplaceProducts = (params?: Params, filters?: Filter) => {
-  return Request<Page<MarketplaceProduct>>(
+export const getMarketplaceProducts = (params?: Params, filters?: Filter) =>
+  Request<Page<MarketplaceProduct>>(
     setURL(`${BETA_API_ROOT}/marketplace/products`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
   );
-};
 
 export const getMarketplaceProduct = (productId: number) =>
   Request<MarketplaceProduct>(

@@ -1,5 +1,5 @@
 import { useAllMarketplaceCategoriesQuery } from '@linode/queries';
-import { BetaChip, CircleProgress, ErrorState, Stack } from '@linode/ui';
+import { BetaChip, Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -33,7 +33,14 @@ export const MarketplaceLanding = () => {
   const globalFilters: GlobalFilters = { searchQuery: '' };
 
   return (
-    <>
+    <Box
+      sx={(theme) => ({
+        px: {
+          sm: theme.spacingFunction(16),
+          xs: theme.spacingFunction(12),
+        },
+      })}
+    >
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -41,7 +48,7 @@ export const MarketplaceLanding = () => {
               label: (
                 <>
                   Partner Referrals
-                  <BetaChip />
+                  <BetaChip component={'span'} />
                 </>
               ),
               position: 1,
@@ -66,6 +73,6 @@ export const MarketplaceLanding = () => {
             )
         )}
       </Stack>
-    </>
+    </Box>
   );
 };

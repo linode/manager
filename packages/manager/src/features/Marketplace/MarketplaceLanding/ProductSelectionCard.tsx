@@ -173,6 +173,10 @@ export const ProductSelectionCard = React.memo(
           padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
           position: 'relative',
           gap: theme.spacingFunction(12),
+          '&:hover': {
+            borderColor: theme.borderColors.divider,
+            backgroundColor: theme.tokens.alias.Background.Normal,
+          },
           backgroundColor: theme.tokens.alias.Background.Normal,
         })}
         sxCardBaseIcon={{
