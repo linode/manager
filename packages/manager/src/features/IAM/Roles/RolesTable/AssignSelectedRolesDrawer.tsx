@@ -90,7 +90,7 @@ export const AssignSelectedRolesDrawer = ({
       '+order': 'asc',
       '+order_by': 'username',
     },
-    permissions.view_user
+    permissions?.view_user
   );
 
   const getUserOptions = useCallback(() => {
