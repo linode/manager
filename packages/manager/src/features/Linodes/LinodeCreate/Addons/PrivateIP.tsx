@@ -63,8 +63,9 @@ export const PrivateIP = () => {
             <Stack alignItems="center" direction="row" spacing={1}>
               <NewFeatureChip />
               <Typography>
-                You can use VPC for private networking instead. NodeBalancers
-                now connect to backend nodes without a private IPv4 address.
+                You can now establish network isolation and connections to
+                NodeBalancer backends through VPC. We recommend using VPC
+                instead of Private IPs.
               </Typography>
             </Stack>
           </Notice>

@@ -30,7 +30,7 @@ const interfaceTypes = [
     label: 'Public Internet',
     purpose: 'public',
     description:
-      'Connects your Linode to the internet, enabling traffic over the public IP address.',
+      'Connects your Linode to the internet and allows traffic through its public IP address.',
   },
   {
     label: 'VPC',
@@ -42,7 +42,7 @@ const interfaceTypes = [
     label: 'VLAN',
     purpose: 'vlan',
     description:
-      'Connects your Linode to a private Layer 2 network for local communication with other Linodes.',
+      'Connects your Linode to a private Layer 2 network, enabling local communication with other Linodes.',
   },
 ] as const;
 
@@ -108,7 +108,7 @@ export const InterfaceType = ({ index }: Props) => {
 
   return (
     <FormControl>
-      <Box alignItems="center" display="flex" flexDirection="row">
+      <Box alignItems="center" display="flex" flexDirection="row" mt={1}>
         <FormLabel id="network-connection-label">Network Connection</FormLabel>
         {disabled && (
           <TooltipIcon
@@ -143,6 +143,7 @@ export const InterfaceType = ({ index }: Props) => {
                   status="info"
                   sxTooltipIcon={{ p: 0, ml: 0.5 }}
                   text={interfaceType.description}
+                  tooltipPosition="right"
                 />
               </Stack>
             }

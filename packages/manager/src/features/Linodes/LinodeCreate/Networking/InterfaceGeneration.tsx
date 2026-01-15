@@ -9,12 +9,9 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { FormLabel } from '@mui/material';
 import React from 'react';
 import { useController } from 'react-hook-form';
-
-import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
-
-import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
@@ -45,89 +42,106 @@ export const InterfaceGeneration = () => {
   const disabled = disabledReason !== undefined;
 
   return (
-    <Box>
-      <ShowMoreExpansion
-        ButtonProps={{
-          TooltipProps: {
-            placement: 'right',
-          },
-          alwaysShowTooltip: disabled,
-          tooltipText: disabledReason,
-        }}
-        defaultExpanded={!disabled}
-        name="Network Interface Type"
+    <FormControl>
+      <Box alignItems="center" display="flex" flexDirection="row">
+        <FormLabel id="network-interface-label">
+          Network Interface Type
+        </FormLabel>
+        {disabled && (
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={{
+              padding: 0,
+              marginLeft: '8px',
+              marginBottom: '8px',
+            }}
+            text={disabledReason}
+          />
+        )}
+      </Box>
+      <RadioGroup
+        aria-labelledby="interface-generation"
+        onChange={field.onChange}
+        value={field.value ?? 'linode'}
       >
-        <FormControl
+        <FormControlLabel
+          control={<Radio />}
+          data-qa-interfaces-option="linode"
           disabled={disabled}
-          sx={{ mt: '0px !important', mb: 2, mx: 0.5 }}
-        >
-          <RadioGroup
-            aria-labelledby="interface-generation"
-            onChange={field.onChange}
-            sx={{ my: '0px !important' }}
-            value={field.value ?? 'linode'}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-interfaces-option="linode"
-              label={
-                <Stack mt={1.25} spacing={0.5}>
-                  <Stack direction="row">
-                    <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                      Linode Interfaces
+          label={
+            <Stack mt={1.25} spacing={0.5}>
+              <Stack direction="row">
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  Linode Interfaces (Recommended)
+                </Typography>
+                <TooltipIcon
+                  status="info"
+                  sxTooltipIcon={{
+                    p: 0,
+                    ml: 0.5,
+                  }}
+                  text={
+                    <Stack spacing={2}>
+                      <Typography>
+                        For VPC or public networking setups and when private IPs
+                        are not required.
+                      </Typography>
+                      <Typography>
+                        Linode Interfaces are directly associated with the
+                        compute instance for easier visibility and management.
+                      </Typography>
+                      <Typography>
+                        Different Cloud Firewalls can be assigned to each VPC
+                        and public interface.
+                      </Typography>
+                    </Stack>
+                  }
+                  tooltipPosition="right"
+                  width={280}
+                />
+              </Stack>
+            </Stack>
+          }
+          sx={{ alignItems: 'flex-start' }}
+          value="linode"
+        />
+        <FormControlLabel
+          control={<Radio />}
+          data-qa-interfaces-option="legacy_config"
+          disabled={disabled}
+          label={
+            <Stack direction="row" mt={1.25} spacing={0.5}>
+              <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                Configuration Profile Interfaces (Legacy)
+              </Typography>
+              <TooltipIcon
+                status="info"
+                sxTooltipIcon={{
+                  p: 0,
+                  ml: 0.5,
+                }}
+                text={
+                  <Stack spacing={2}>
+                    <Typography>For Linodes requiring a private IP.</Typography>
+                    <Typography>
+                      Configuration Profile Interfaces are a part of the
+                      configuration profile.
                     </Typography>
-                    <LinodeInterfaceFeatureStatusChip />
-                    <TooltipIcon
-                      status="info"
-                      sxTooltipIcon={{ p: 0, ml: 0.5 }}
-                      text={
-                        <>
-                          Managed directly through a Linode&apos;s Network
-                          settings. This is the recommended option.
-                          <br />
-                          <br />
-                          Cloud Firewalls are assigned to individual VPC and
-                          public interfaces.
-                        </>
-                      }
-                    />
+                    <Typography>
+                      The same Cloud Firewall is assigned to all non-VLAN
+                      interfaces on the Linode.
+                    </Typography>
                   </Stack>
-                </Stack>
-              }
-              sx={{ alignItems: 'flex-start' }}
-              value="linode"
-            />
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-interfaces-option="legacy_config"
-              label={
-                <Stack direction="row" mt={1.25} spacing={0.5}>
-                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                    Configuration Profile Interfaces (Legacy)
-                  </Typography>
-                  <TooltipIcon
-                    status="info"
-                    sxTooltipIcon={{ p: 0, ml: 0.5 }}
-                    text={
-                      <>
-                        Interfaces are part of the Linode&apos;s Configuration
-                        Profile.
-                        <br />
-                        <br />
-                        Cloud Firewalls are applied at the Linode level and
-                        automatically cover all non-VLAN interfaces in the
-                        Configuration Profile.
-                      </>
-                    }
-                  />
-                </Stack>
-              }
-              sx={{ alignItems: 'flex-start' }}
-              value="legacy_config"
-            />
-          </RadioGroup>
-        </FormControl>
-      </ShowMoreExpansion>
-    </Box>
+                }
+                tooltipPosition="right"
+                width={280}
+              />
+            </Stack>
+          }
+          sx={{ alignItems: 'flex-start' }}
+          value="legacy_config"
+        />
+      </RadioGroup>
+    </FormControl>
   );
 };
