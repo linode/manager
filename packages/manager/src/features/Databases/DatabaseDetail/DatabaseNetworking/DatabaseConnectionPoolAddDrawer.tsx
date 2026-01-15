@@ -106,7 +106,6 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
   const databaseNames = ['defaultdb']; // Currently the only option for the database name field, but more may be introduced later.
   const usernames = [defaultUsername, 'akmadmin'];
   const { mode, database, username } = watch();
-
   return (
     <Drawer
       onClose={handleOnClose}
@@ -140,6 +139,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
                 field.onChange(e.target.value);
               }}
               onClear={() => field.onChange('')}
+              placeholder="Enter a pool label"
             />
           )}
         />
@@ -164,12 +164,12 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
               <>
                 <Select
                   {...field}
+                  data-testid="database-name-select"
                   id="databaseName"
                   items={databaseNames}
                   onChange={(e: CustomEvent) => {
                     field.onChange(e.detail);
                   }}
-                  placeholder="Choose a Database Name"
                   selected={databaseNames.find((name) => name === database)}
                   style={makeErrorStyles(fieldState.error?.message)}
                 />
@@ -199,12 +199,12 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
               <>
                 <Select
                   {...field}
+                  data-testid="pool-mode-select"
                   id="poolMode"
                   items={poolModes}
                   onChange={(e: CustomEvent) => {
                     field.onChange(e.detail);
                   }}
-                  placeholder="Choose a Pool Mode"
                   selected={poolModes.find((poolMode) => mode === poolMode)}
                   style={makeErrorStyles(fieldState.error?.message)}
                   valueFn={(poolMode: PoolMode) => {
@@ -229,6 +229,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
               <TextField
                 id="poolSize"
                 {...field}
+                data-testid="pool-size-input"
                 errorText={fieldState.error?.message}
                 label="Pool Size"
                 onChange={(e) => {
@@ -265,12 +266,12 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
               <>
                 <Select
                   {...field}
+                  data-testid="username-select"
                   id="username"
                   items={usernames}
                   onChange={(e: CustomEvent) => {
                     field.onChange(e.detail);
                   }}
-                  placeholder="Choose a Username"
                   selected={usernames.find(
                     (usernameOption) => usernameOption === username
                   )}
