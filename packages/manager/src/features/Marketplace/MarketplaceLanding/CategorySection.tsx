@@ -19,7 +19,7 @@ const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_INCREMENT = 6;
 
 export interface GlobalFilters {
-  categortId?: number;
+  categoryId?: number;
   // IDs derived from search query matching category/type/partner names
   searchDerivedCategoryIds?: number[];
   searchDerivedPartnerIds?: number[];
