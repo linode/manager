@@ -390,21 +390,30 @@ const databases = [
   http.post(
     '*/databases/postgresql/instances/:id/connection-pools',
     async ({ request }) => {
-      // const body = await request.json();
-      // const payload: any = body;
+      const body = await request.json();
+      const payload: any = body;
 
-      // const connectionPool = databaseConnectionPoolFactory.build({
-      //   database: payload.database,
-      //   label: payload.label,
-      //   mode: payload.mode,
-      //   size: 10,
-      //   username: payload.username,
-      // });
-
-      // return HttpResponse.json(connectionPool);
+      const connectionPool = databaseConnectionPoolFactory.build({
+        database: payload.database,
+        label: payload.label,
+        mode: payload.mode,
+        size: payload.size,
+        username: payload.username,
+      });
       // For mocking error response
-      // return HttpResponse.json({ errors: [{ reason: 'Unable to create connection pool' }] }, { status: 400 });
-      return HttpResponse.json({});
+      // return HttpResponse.json(
+      //   {
+      //     errors: [
+      //       { field: 'label', reason: 'sample error text' },
+      //       { field: 'database', reason: 'sample error text' },
+      //       { field: 'mode', reason: 'sample error text' },
+      //       { field: 'size', reason: 'sample error text' },
+      //       { field: 'username', reason: 'sample error text' },
+      //     ],
+      //   },
+      //   { status: 400 }
+      // );
+      return HttpResponse.json(connectionPool);
     }
   ),
 

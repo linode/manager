@@ -102,10 +102,11 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
     }
   };
 
-  const poolModes: PoolMode[] = ['transaction', 'session', 'statement']; // Should this be exported?
+  const poolModes: PoolMode[] = ['transaction', 'session', 'statement'];
   const databaseNames = ['defaultdb']; // Currently the only option for the database name field, but more may be introduced later.
   const usernames = [defaultUsername, 'akmadmin'];
   const { mode, database, username } = watch();
+
   return (
     <Drawer
       onClose={handleOnClose}
