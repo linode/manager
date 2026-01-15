@@ -7,16 +7,18 @@ import {
   Button,
   CircleProgress,
   ErrorState,
+  Paper,
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
 import {
   InfoBanner,
   LogoContainer,
-  OuterContainer,
   ProductDetailsContainer,
   ProductDetailsSection,
   ProductInfoSection,
@@ -25,7 +27,6 @@ import {
   TagsContainer,
 } from './ProductDetails.styles';
 import { ProductDetailsTabs } from './ProductDetailsTabs';
-import { sanitizeMarketplaceBannerHtml } from './sanitizeHtml';
 
 import type { MarketplacePartner } from '@linode/api-v4';
 
@@ -50,7 +51,7 @@ export const ProductDetails = () => {
 
   const sanitizedInfoBanner = React.useMemo(() => {
     return product?.info_banner
-      ? sanitizeMarketplaceBannerHtml(product.info_banner)
+      ? sanitizeHTML({ sanitizingTier: 'flexible', text: product.info_banner })
       : '';
   }, [product?.info_banner]);
 
@@ -97,14 +98,13 @@ export const ProductDetails = () => {
   };
 
   return (
-    <OuterContainer>
-      {/* Breadcrumb - will be implemented in a future ticket */}
-      <Box>
-        <Typography color="textSecondary" variant="body2">
-          Breadcrumb placeholder
-        </Typography>
-      </Box>
-
+    <Paper
+      sx={{
+        alignItems: 'flex-start',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <ProductDetailsContainer>
         {/* Info Banner (conditional) */}
         {product.info_banner && (
@@ -138,8 +138,6 @@ export const ProductDetails = () => {
                 sx={(theme) => ({
                   color: theme.tokens.alias.Content.Text.Primary.Default,
                   font: theme.font.extrabold,
-                  fontSize: theme.tokens.font.FontSize.Xxl,
-                  lineHeight: theme.tokens.font.LineHeight.Xl,
                 })}
                 variant="h1"
               >
@@ -150,8 +148,6 @@ export const ProductDetails = () => {
                   sx={(theme) => ({
                     color: theme.tokens.alias.Content.Text.Secondary.Default,
                     font: theme.font.bold,
-                    fontSize: theme.tokens.font.FontSize.Xs,
-                    lineHeight: theme.tokens.font.LineHeight.Xs,
                   })}
                   variant="body1"
                 >
@@ -166,8 +162,6 @@ export const ProductDetails = () => {
                 alignSelf: 'stretch',
                 color: theme.tokens.component.Tile.Default.Text,
                 font: theme.font.normal,
-                fontSize: theme.tokens.font.FontSize.Xs,
-                lineHeight: theme.tokens.font.LineHeight.Xs,
                 maxWidth: '800px',
               })}
               variant="body1"
@@ -224,6 +218,6 @@ export const ProductDetails = () => {
           </Box>
         )}
       </ProductDetailsContainer>
-    </OuterContainer>
+    </Paper>
   );
 };

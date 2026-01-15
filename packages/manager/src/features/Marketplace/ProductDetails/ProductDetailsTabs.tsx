@@ -6,6 +6,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { StyledHtmlContent } from './HtmlContent.styles';
 import {
@@ -13,7 +14,6 @@ import {
   OverviewContainer,
   VideoPlaceholder,
 } from './ProductDetailsTabs.styles';
-import { sanitizeMarketplaceTabHtml } from './sanitizeHtml';
 
 import type { MarketplaceProductDetail } from '@linode/api-v4';
 
@@ -26,7 +26,7 @@ interface Props {
  */
 const HtmlContentRenderer = ({ content }: { content: string }) => {
   const sanitizedContent = React.useMemo(
-    () => sanitizeMarketplaceTabHtml(content),
+    () => sanitizeHTML({ sanitizingTier: 'flexible', text: content }),
     [content]
   );
 

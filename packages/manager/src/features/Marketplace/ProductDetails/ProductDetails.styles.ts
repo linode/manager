@@ -1,27 +1,15 @@
 import { Box, Chip, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-/**
- * Styled Components following Figma specifications
- */
-export const OuterContainer = styled(Box)(({ theme }) => ({
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  background: theme.bg.bgPaper,
-  border: `1px solid ${theme.borderColors.borderTable}`,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '32px',
-  padding: '24px 32px',
-}));
-
 export const ProductDetailsContainer = styled(Box)(() => ({
   alignItems: 'flex-start',
   alignSelf: 'stretch',
   display: 'flex',
   flexDirection: 'column',
   gap: '32px',
-  padding: '24px 32px',
+  paddingLeft: '8px',
+  paddingRight: '8px',
+  paddingTop: '8px',
 }));
 
 export const InfoBanner = styled(Notice)(() => ({
@@ -29,6 +17,7 @@ export const InfoBanner = styled(Notice)(() => ({
   display: 'flex',
   maxWidth: '630px',
   width: '100%',
+  marginBottom: 0,
 }));
 
 export const ProductInfoSection = styled(Box)(() => ({

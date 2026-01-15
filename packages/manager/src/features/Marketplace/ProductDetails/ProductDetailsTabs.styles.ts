@@ -29,6 +29,10 @@ export const VideoPlaceholder = styled(Box)(({ theme }) => ({
   height: '202px',
   justifyContent: 'center',
   padding: '10px',
+  svg: {
+    fill: theme.tokens.alias.Content.Icon.Primary.Default,
+    opacity: 0.25,
+  },
   [theme.breakpoints.down('md')]: {
     order: -1,
   },
