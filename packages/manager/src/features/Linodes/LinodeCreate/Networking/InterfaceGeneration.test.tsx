@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -84,14 +85,14 @@ describe('InterfaceGeneration', () => {
     });
 
     // Wait for radios to render
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Verify no disabled tooltip appears
-    expect(
-      queryByRole('button', {
-        name: /Your account administrator has enforced/,
-      })
-    ).toBeNull();
+    await waitFor(() => {
+      // Verify no disabled tooltip appears
+      expect(
+        queryByRole('button', {
+          name: /Your account administrator has enforced/,
+        })
+      ).toBeNull();
+    });
 
     // Verify both radio buttons are enabled
     const radios = getAllByRole('radio');
@@ -123,10 +124,10 @@ describe('InterfaceGeneration', () => {
     });
 
     // Wait for component to render
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Verify linode radio is selected by default
-    expect(getByDisplayValue('linode')).toBeChecked();
+    await waitFor(() => {
+      // Verify linode radio is selected by default
+      expect(getByDisplayValue('linode')).toBeChecked();
+    });
   });
 
   it('allows user to select legacy config interface when enabled', async () => {
@@ -148,9 +149,6 @@ describe('InterfaceGeneration', () => {
         },
       },
     });
-
-    // Wait for component to render
-    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const legacyConfigRadio = getByDisplayValue('legacy_config');
 
