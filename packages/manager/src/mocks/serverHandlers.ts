@@ -824,10 +824,7 @@ const marketplace = [
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.get('*/v4beta/marketplace/partners', () => {
-    const marketplacePartners = marketplacePartnersFactory.buildList(5, {
-      logo_url_light_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
-      logo_url_dark_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
-    });
+    const marketplacePartners = marketplacePartnersFactory.buildList(5);
     return HttpResponse.json(makeResourcePage([...marketplacePartners]));
   }),
   http.post('*/v4beta/marketplace/referral', async () => {

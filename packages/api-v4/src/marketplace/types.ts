@@ -1,14 +1,14 @@
 export interface MarketplaceProductDetail {
-  documentation: {
+  documentation?: {
     description: string;
   };
-  overview: {
+  overview?: {
     description: string;
   };
-  pricing: {
+  pricing?: {
     description: string;
   };
-  support: {
+  support?: {
     description: string;
   };
 }

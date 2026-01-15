@@ -47,8 +47,8 @@ export const marketplacePartnersFactory =
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
-    logo_url_dark_mode: 'https://www.example.com/logo-dark-mode.png',
-    logo_url_light_mode: 'https://www.example.com/logo-light-mode.png',
+    logo_url_dark_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
+    logo_url_light_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
     name: Factory.each((id) => `marketplace-partner-${id}`),
     url: 'https://www.example.com',
   });

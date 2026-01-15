@@ -5,88 +5,29 @@ import {
 import {
   Box,
   Button,
-  Chip,
   CircleProgress,
   ErrorState,
-  Notice,
   Typography,
 } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import {
+  InfoBanner,
+  LogoContainer,
+  OuterContainer,
+  ProductDetailsContainer,
+  ProductDetailsSection,
+  ProductInfoSection,
+  ProductTitleSection,
+  StyledChip,
+  TagsContainer,
+} from './ProductDetails.styles';
 import { ProductDetailsTabs } from './ProductDetailsTabs';
 import { sanitizeMarketplaceBannerHtml } from './sanitizeHtml';
 
 import type { MarketplacePartner } from '@linode/api-v4';
-
-/**
- * Styled Components following Figma specifications
- */
-const OuterContainer = styled(Box)(({ theme }) => ({
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  background: theme.bg.bgPaper,
-  border: `1px solid ${theme.borderColors.borderTable}`,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '32px',
-  padding: '24px 32px',
-}));
-
-const ProductDetailsContainer = styled(Box)(() => ({
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '32px',
-  padding: '24px 32px',
-}));
-
-const InfoBanner = styled(Notice)(() => ({
-  alignItems: 'flex-start',
-  display: 'flex',
-  maxWidth: '630px',
-  width: '100%',
-}));
-
-const ProductInfoSection = styled(Box)(() => ({
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  display: 'flex',
-  gap: '24px',
-}));
-
-const LogoContainer = styled(Box)(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  height: '96px',
-  justifyContent: 'center',
-  width: '96px',
-}));
-
-const ProductDetailsSection = styled(Box)(() => ({
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '16px',
-}));
-
-const ProductTitleSection = styled(Box)(() => ({
-  alignItems: 'flex-start',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '2px',
-}));
-
-const TagsContainer = styled(Box)(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '8px',
-}));
 
 /**
  * Main Product Details Component
@@ -144,11 +85,10 @@ export const ProductDetails = () => {
     );
   }
 
-  // Determine logo URL based on theme
+  // Determine logo URL based on theme (fallback to light mode if dark mode logo is unavailable)
   const logoUrl = partner
-    ? theme.palette.mode === 'dark' && partner.logo_url_dark_mode
-      ? partner.logo_url_dark_mode
-      : partner.logo_url_light_mode
+    ? (theme.name === 'dark' && partner.logo_url_dark_mode) ||
+      partner.logo_url_light_mode
     : '';
 
   // Contact sales handler placeholder - will be implemented in a future ticket
@@ -239,42 +179,26 @@ export const ProductDetails = () => {
             <TagsContainer>
               {/* Tile Tag */}
               {product.tile_tag && (
-                <Chip
+                <StyledChip
                   label={product.tile_tag}
                   sx={(theme) => ({
-                    '& .MuiChip-label': {
-                      fontSize: theme.tokens.font.FontSize.Xxxs,
-                      fontFamily: theme.font.bold,
-                      letterSpacing: '0.12px',
-                      lineHeight: '12px',
-                      padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(6)}`,
-                    },
                     backgroundColor:
                       theme.tokens.component.Badge.Positive.Subtle.Background,
                     color: theme.tokens.component.Badge.Positive.Subtle.Text,
-                    flexShrink: 0,
                   })}
                 />
               )}
 
               {/* Product Tags */}
               {product.product_tags?.map((tag: string, index: number) => (
-                <Chip
+                <StyledChip
                   key={index}
                   label={tag}
                   sx={(theme) => ({
-                    '& .MuiChip-label': {
-                      fontSize: theme.tokens.font.FontSize.Xxxs,
-                      fontFamily: theme.font.bold,
-                      letterSpacing: '0.12px',
-                      lineHeight: '12px',
-                      padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(6)}`,
-                    },
                     backgroundColor:
                       theme.tokens.component.Badge.Informative.Subtle
                         .Background,
                     color: theme.tokens.component.Badge.Informative.Subtle.Text,
-                    flexShrink: 0,
                   })}
                 />
               ))}
