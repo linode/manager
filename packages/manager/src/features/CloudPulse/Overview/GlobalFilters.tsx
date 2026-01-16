@@ -81,7 +81,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         preferences?.[DASHBOARD_ID] === dashboard?.id
       );
     },
-    []
+    [preferences]
   );
 
   const emitFilterChange = React.useCallback(
