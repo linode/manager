@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
+  ActionsPanel,
   Box,
-  Button,
   Drawer,
   FormHelperText,
   InputLabel,
@@ -121,11 +121,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
         resources.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box
-          style={{
-            marginTop: theme.spacingFunction(20),
-          }}
-        />
+        <Box mt={2.5} />
         <Controller
           control={control}
           name="label"
@@ -145,19 +141,8 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           )}
         />
 
-        <Box
-          style={{
-            marginTop: theme.spacingFunction(20),
-          }}
-        >
-          <InputLabel
-            htmlFor="databaseName"
-            style={{
-              marginBottom: theme.spacingFunction(8),
-            }}
-          >
-            Database Name
-          </InputLabel>
+        <Box mt={2.5}>
+          <InputLabel htmlFor="databaseName">Database Name</InputLabel>
           <Controller
             control={control}
             name="database"
@@ -180,19 +165,8 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           />
         </Box>
 
-        <Box
-          style={{
-            marginTop: theme.spacingFunction(20),
-          }}
-        >
-          <InputLabel
-            htmlFor="poolMode"
-            style={{
-              marginBottom: theme.spacingFunction(8),
-            }}
-          >
-            Pool Mode
-          </InputLabel>
+        <Box mt={2.5}>
+          <InputLabel htmlFor="poolMode">Pool Mode</InputLabel>
           <Controller
             control={control}
             name="mode"
@@ -218,11 +192,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           />
         </Box>
 
-        <Box
-          style={{
-            marginTop: theme.spacingFunction(20),
-          }}
-        >
+        <Box mt={2.5}>
           <Controller
             control={control}
             name="size"
@@ -233,6 +203,7 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
                 data-testid="pool-size-input"
                 errorText={fieldState.error?.message}
                 label="Pool Size"
+                min={1}
                 onChange={(e) => {
                   const value =
                     e.target.value.length > 0
@@ -247,19 +218,8 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           />
         </Box>
 
-        <Box
-          style={{
-            marginTop: theme.spacingFunction(20),
-          }}
-        >
-          <InputLabel
-            htmlFor="username"
-            style={{
-              marginBottom: theme.spacingFunction(8),
-            }}
-          >
-            Username
-          </InputLabel>
+        <Box mt={2.5}>
+          <InputLabel htmlFor="username">Username</InputLabel>
           <Controller
             control={control}
             name="username"
@@ -285,30 +245,18 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
           />
         </Box>
 
-        <Box
-          style={{
-            marginTop: theme.spacingFunction(50),
-            paddingTop: theme.spacingFunction(8),
-            paddingBottom: theme.spacingFunction(8),
-            display: 'flex',
-            justifyContent: 'flex-end',
+        <ActionsPanel
+          primaryButtonProps={{
+            label: 'Add Pool',
+            loading: submitInProgress,
+            type: 'submit',
+            'data-testid': 'add-connection-pool-button',
           }}
-        >
-          <Button buttonType="secondary" onClick={handleOnClose}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="primary"
-            data-testid="add-connection-pool-button"
-            loading={submitInProgress}
-            style={{
-              marginLeft: theme.spacingFunction(12),
-            }}
-            type="submit"
-          >
-            Add Pool
-          </Button>
-        </Box>
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: handleOnClose,
+          }}
+        />
       </form>
     </Drawer>
   );

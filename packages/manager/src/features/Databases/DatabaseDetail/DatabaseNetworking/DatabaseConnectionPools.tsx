@@ -90,6 +90,11 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           disabled={database.status !== 'active'}
           onClick={() => setIsAddPoolDrawerOpen(true)}
           TooltipProps={{ placement: 'top' }}
+          tooltipText={
+            database.status !== 'active'
+              ? 'To add a new connection pool, the database cluster must be active.'
+              : ''
+          }
         >
           Add Pool
         </Button>
