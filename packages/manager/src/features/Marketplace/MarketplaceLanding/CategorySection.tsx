@@ -161,7 +161,7 @@ export const CategorySection = (props: CategorySectionProps) => {
   };
 
   const cardData: ProductCardItem[] = productsToDisplay.map((product) => ({
-    companyName: partnersMap?.[product.partner_id]?.name || '',
+    companyName: partnersMap?.[product.partner_id]?.name ?? '',
     description: product.short_description,
     id: product.id,
     logoUrl: getLogoUrl(product.partner_id),
