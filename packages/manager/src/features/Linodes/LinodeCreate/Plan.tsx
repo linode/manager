@@ -63,7 +63,7 @@ export const Plan = () => {
       showLimits
       tabDisabledMessage={
         shouldDisablePremiumPlansTab
-          ? 'Premium CPUs are now called G7 Dedicated Plans.'
+          ? 'Premium CPUs are now called G7 Dedicated plans.'
           : undefined
       }
       types={types?.map(extendType) ?? []} // @todo don't extend type
