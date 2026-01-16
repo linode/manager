@@ -5,10 +5,7 @@ import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
-import {
-  PRODUCT_CARD_GRID_SIZE,
-  PRODUCT_CARD_STYLES,
-} from './productCardStyles';
+import { PRODUCT_CARD_GRID_SIZE, PRODUCT_CARD_STYLES } from './styles';
 
 export interface ProductCardData {
   /**
@@ -102,7 +99,6 @@ export const ProductSelectionCard = React.memo(
               >
                 <Chip
                   label={type}
-                  size="small"
                   sx={(theme) => ({
                     backgroundColor:
                       theme.tokens.alias.Background.Informativesubtle,

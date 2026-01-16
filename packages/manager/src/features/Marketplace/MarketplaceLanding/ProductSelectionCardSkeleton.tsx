@@ -5,11 +5,8 @@ import * as React from 'react';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Skeleton } from 'src/components/Skeleton';
 
-import {
-  PRODUCT_CARD_GRID_SIZE,
-  PRODUCT_CARD_STYLES,
-} from './productCardStyles';
 import { StyledLogoBox } from './ProductSelectionCard';
+import { PRODUCT_CARD_GRID_SIZE, PRODUCT_CARD_STYLES } from './styles';
 
 const StyledSkeleton = styled(Skeleton)({
   borderRadius: '4px',
