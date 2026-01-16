@@ -40,8 +40,6 @@ export const useAccountUsersInfiniteQuery = (
   filter: Filter = {},
   enabled = true,
 ) => {
-  const { data: profile } = useProfile();
-
   return useInfiniteQuery<ResourcePage<User>, APIError[]>({
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
@@ -51,7 +49,7 @@ export const useAccountUsersInfiniteQuery = (
     },
     initialPageParam: 1,
     ...accountQueries.users._ctx.infinite(filter),
-    enabled: enabled && !profile?.restricted,
+    enabled,
     placeholderData: keepPreviousData,
   });
 };
