@@ -215,7 +215,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     }
 
     if (!entities || !assignedRoles || filteredRoles.length === 0) {
-      return <TableRowEmpty colSpan={3} message={'No items to display.'} />;
+      return <TableRowEmpty colSpan={4} message={'No items to display.'} />;
     }
 
     if (assignedRoles && entities) {
@@ -243,7 +243,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
-                  title: 'Remove Assignment',
+                  title: isDefaultDelegationRolesForChildAccount
+                    ? 'Remove'
+                    : 'Remove Assignment',
                   tooltip: !permissionToCheck
                     ? 'You do not have permission to remove this assignment.'
                     : undefined,
