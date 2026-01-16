@@ -1,11 +1,9 @@
-import { Box, Button, ErrorState, Stack, Typography } from '@linode/ui';
-import { Grid, styled } from '@mui/material';
+import { Button, ErrorState, Stack, Typography } from '@linode/ui';
+import { Grid } from '@mui/material';
 import * as React from 'react';
 
-import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { Skeleton } from 'src/components/Skeleton';
-
-import { ProductSelectionCard, StyledLogoBox } from './ProductSelectionCard';
+import { ProductSelectionCard } from './ProductSelectionCard';
+import { ProductSelectionCardSkeleton } from './ProductSelectionCardSkeleton';
 
 import type { ProductCardItem } from './CategorySection';
 
@@ -22,98 +20,13 @@ export interface CategorySectionViewProps {
   skeletonCount: number;
 }
 
-const MarketplaceSkeletonGrid = ({
-  productsDisplayedCount = 6,
-}: {
-  productsDisplayedCount?: number;
-}) => {
-  const renderIcon = React.useCallback(
-    () => (
-      <Box
-        sx={{
-          alignItems: 'flex-start',
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        {
-          <StyledLogoBox>
-            <Skeleton height="48px" variant="rounded" width="48px" />
-          </StyledLogoBox>
-        }
-      </Box>
-    ),
-    [productsDisplayedCount]
-  );
-
-  const heading = React.useMemo(
-    () => <StyledSkeleton width="60%" />,
-    [productsDisplayedCount]
-  );
-
-  const subHeadings = React.useMemo(
-    () => [
-      <StyledSkeleton key="company" width="40%" />,
-      <Box
-        key="description"
-        sx={(theme) => ({
-          marginTop: theme.spacingFunction(12),
-          paddingBottom: theme.spacingFunction(36), // Always space for type chip at bottom
-        })}
-      >
-        <StyledSkeleton />
-        <StyledSkeleton />
-        <StyledSkeleton width="50%" />
-      </Box>,
-      <Box
-        key="category"
-        sx={(theme) => ({
-          bottom: theme.spacingFunction(16),
-          left: theme.spacingFunction(20),
-          position: 'absolute',
-        })}
-      >
-        <StyledSkeleton height={20} width={80} />
-      </Box>,
-    ],
-    [productsDisplayedCount]
-  );
-  return (
-    <Grid container spacing={2}>
-      {Array.from({ length: productsDisplayedCount }).map((_, index) => (
-        <SelectionCard
-          data-testid="marketplace-skeleton-card"
-          gridSize={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}
-          heading={heading}
-          key={`skeleton-${index}`}
-          renderIcon={renderIcon}
-          subheadings={subHeadings}
-          sxCardBase={(theme) => ({
-            alignItems: 'flex-start',
-            flexDirection: 'column',
-            minHeight: '280px',
-            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
-            position: 'relative',
-            gap: theme.spacingFunction(12),
-            '&:hover': {
-              borderColor: theme.borderColors.divider,
-              backgroundColor: theme.tokens.alias.Background.Normal,
-              boxShadow: theme.tokens.alias.Elevation.S,
-            },
-            backgroundColor: theme.tokens.alias.Background.Normal,
-          })}
-          sxCardBaseHeading={{ width: '100%' }}
-          sxCardBaseIcon={{
-            alignItems: 'flex-start',
-            justifyContent: 'flex-start',
-            width: '100%',
-          }}
-        />
-      ))}
-    </Grid>
-  );
-};
+const SkeletonGrid = ({ count }: { count: number }) => (
+  <Grid container spacing={3}>
+    {Array.from({ length: count }).map((_, index) => (
+      <ProductSelectionCardSkeleton key={`skeleton-${index}`} />
+    ))}
+  </Grid>
+);
 
 const ProductsGrid = ({
   cardData,
@@ -159,14 +72,12 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
       <Typography variant="h2">{categoryName}</Typography>
 
       {isLoading ? (
-        <MarketplaceSkeletonGrid productsDisplayedCount={displayCount} />
+        <SkeletonGrid count={displayCount} />
       ) : (
         <ProductsGrid cardData={cardData} onProductClick={onProductClick} />
       )}
 
-      {isFetchingNextPage && (
-        <MarketplaceSkeletonGrid productsDisplayedCount={skeletonCount} />
-      )}
+      {isFetchingNextPage && <SkeletonGrid count={skeletonCount} />}
 
       {!isFetchingNextPage && hasMoreProducts && (
         <Button
@@ -182,7 +93,3 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
     </Stack>
   );
 };
-
-const StyledSkeleton = styled(Skeleton)({
-  borderRadius: '4px',
-});

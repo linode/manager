@@ -21,10 +21,9 @@ const LOAD_MORE_INCREMENT = 6;
 export interface GlobalFilters {
   categoryId?: number;
   // IDs derived from search query matching category/type/partner names
-  searchDerivedCategoryIds?: number[];
   searchDerivedPartnerIds?: number[];
   searchDerivedTypeIds?: number[];
-  searchQuery: string;
+  searchQuery?: string;
   typeId?: number;
 }
 
@@ -114,6 +113,7 @@ export const CategorySection = (props: CategorySectionProps) => {
 
   const { data: typesMap, isLoading: isTypesLoading } =
     useAllMarketplaceTypesMapQuery();
+
   React.useEffect(() => {
     const shouldFetchMore =
       !isFetchingNextPage &&

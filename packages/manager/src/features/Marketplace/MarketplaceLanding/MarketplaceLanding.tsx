@@ -7,8 +7,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CategorySection } from './CategorySection';
 
-import type { GlobalFilters } from './CategorySection';
-
 export const MarketplaceLanding = () => {
   const {
     data: categories,
@@ -30,7 +28,8 @@ export const MarketplaceLanding = () => {
     );
   }
 
-  const globalFilters: GlobalFilters = { searchQuery: '' };
+  // @TODO: globalFilters will be populated in a follow-up PR from the search input and dropdown selections
+  const globalFilters = {};
 
   return (
     <Box
@@ -48,7 +47,7 @@ export const MarketplaceLanding = () => {
               label: (
                 <>
                   Partner Referrals
-                  <BetaChip component={'span'} />
+                  <BetaChip component="span" />
                 </>
               ),
               position: 1,

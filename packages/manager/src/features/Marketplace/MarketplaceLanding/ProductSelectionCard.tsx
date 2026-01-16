@@ -5,6 +5,11 @@ import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
+import {
+  PRODUCT_CARD_GRID_SIZE,
+  PRODUCT_CARD_STYLES,
+} from './productCardStyles';
+
 export interface ProductCardData {
   /**
    * Company name displayed below the product name
@@ -101,6 +106,7 @@ export const ProductSelectionCard = React.memo(
                   sx={(theme) => ({
                     backgroundColor:
                       theme.tokens.alias.Background.Informativesubtle,
+                    fontSize: theme.tokens.font.FontSize.Xxxs,
                   })}
                 />
               </Box>,
@@ -161,33 +167,13 @@ export const ProductSelectionCard = React.memo(
     return (
       <SelectionCard
         disabled={disabled}
-        gridSize={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 4 }}
+        gridSize={PRODUCT_CARD_GRID_SIZE}
         heading={productName}
         onClick={onClick}
         renderIcon={renderHeader}
         subheadings={subheadings}
-        sxCardBase={(theme) => ({
-          alignItems: 'flex-start',
-          flexDirection: 'column',
-          minHeight: '280px',
-          padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
-          position: 'relative',
-          gap: theme.spacingFunction(12),
-          '&:hover': {
-            borderColor: theme.borderColors.divider,
-            backgroundColor: theme.tokens.alias.Background.Normal,
-          },
-          backgroundColor: theme.tokens.alias.Background.Normal,
-        })}
-        sxCardBaseIcon={{
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          width: '100%',
-          '& img': {
-            maxHeight: '48px',
-            maxWidth: '96px',
-          },
-        }}
+        sxCardBase={PRODUCT_CARD_STYLES.cardBase}
+        sxCardBaseIcon={PRODUCT_CARD_STYLES.cardBaseIcon}
       />
     );
   }
