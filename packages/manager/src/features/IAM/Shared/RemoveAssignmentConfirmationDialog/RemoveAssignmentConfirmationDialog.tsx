@@ -6,7 +6,7 @@ import {
 } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
@@ -25,6 +25,8 @@ interface Props {
 
 export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role, username } = props;
+
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
@@ -52,6 +54,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
+    setIsRemoving(false);
     _onClose();
   };
 
@@ -64,7 +67,9 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     : assignedUserRoles;
 
   const onDelete = async () => {
-    if (!role || !assignedRoles) return;
+    if (!role || !assignedRoles || isRemoving) return;
+
+    setIsRemoving(true);
 
     const { role_name, entity_id, entity_type } = role;
 
@@ -88,14 +93,17 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     onClose();
   };
 
+  const isLoading = isPending || isRemoving;
+
   return (
     <ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
             label: 'Remove',
-            loading: isPending,
+            loading: isLoading,
             onClick: onDelete,
+            disabled: isLoading,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
