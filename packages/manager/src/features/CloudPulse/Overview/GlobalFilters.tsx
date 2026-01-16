@@ -32,7 +32,7 @@ export interface GlobalFilterProperties {
   ): void;
   handleDashboardChange(
     dashboard: Dashboard | undefined,
-    sameAsPreferences?: boolean
+    resetFiltersAndTimeDuration?: boolean
   ): void;
   handleGroupByChange: (selectedValues: string[]) => void;
   handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
