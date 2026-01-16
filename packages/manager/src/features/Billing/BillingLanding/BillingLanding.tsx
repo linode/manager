@@ -6,8 +6,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
+import { ADMINISTRATOR, PARENT_USER } from 'src/features/Account/constants';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -38,6 +38,7 @@ export const BillingLanding = () => {
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
 
+  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
@@ -70,10 +71,7 @@ export const BillingLanding = () => {
       disabled: isReadOnly || isAkamaiAccount,
       tooltipText: isAkamaiAccount
         ? 'This feature is not available for Akamai accounts.'
-        : getRestrictedResourceText({
-            isChildUser,
-            resourceType: 'Account',
-          }),
+        : `You don't have permissions to make a payment. Please contact your ${contactPerson} to request the necessary permissions.`,
     },
     createButtonText: 'Make a Payment',
     docsLabel: 'How Linode Billing Works',
