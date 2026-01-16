@@ -22,10 +22,6 @@ const defaultFormValues: Partial<LinodeCreateFormValues> = {
 };
 
 describe('InterfaceType', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('renders all interface type options', () => {
     const { getByText, getByRole } = renderWithThemeAndHookFormContext({
       component: <InterfaceType index={0} />,
