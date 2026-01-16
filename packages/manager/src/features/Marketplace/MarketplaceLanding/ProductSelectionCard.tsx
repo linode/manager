@@ -101,6 +101,7 @@ export const ProductSelectionCard = React.memo(
                   sx={(theme) => ({
                     backgroundColor:
                       theme.tokens.alias.Background.Informativesubtle,
+                    fontSize: theme.tokens.font.FontSize.Xxxs,
                   })}
                 />
               </Box>,
