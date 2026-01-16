@@ -120,6 +120,13 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
   cy.focused().type(label);
 
   cy.findByText('Dedicated CPU').should('be.visible').click();
+
+  // Use filter to select G6 Dedicated instead of relying on pagination
+  ui.autocomplete.findByLabel('Dedicated Plans').click();
+  ui.autocompletePopper.find().within(() => {
+    cy.findByText('G6 Dedicated').should('be.visible').click();
+  });
+
   cy.get('[id="g6-dedicated-2"]').click();
   cy.findByLabelText('Root Password').should('be.visible').type(password);
 };

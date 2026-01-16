@@ -255,6 +255,10 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
       queryClient.invalidateQueries({
         queryKey: delegationQueries.childAccountDelegates({ euuid }).queryKey,
       });
+      // Invalidate all my delegated child accounts since delegation may have changed
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.myDelegatedChildAccounts._ctx.all._def,
+      });
     },
   });
 };

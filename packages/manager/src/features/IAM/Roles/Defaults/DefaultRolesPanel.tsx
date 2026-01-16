@@ -16,7 +16,7 @@ export const DefaultRolesPanel = () => {
         <Box>
           <Typography variant="h2">Default Roles for Delegate Users</Typography>
           <Typography marginTop={2}>
-            View and manage roles to be assigned to new delegated users by
+            View and manage roles to be assigned to new delegate users by
             default.
           </Typography>
         </Box>

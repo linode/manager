@@ -22,6 +22,7 @@ import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -54,13 +55,15 @@ export type NavEntity =
   | 'Longview'
   | 'Maintenance'
   | 'Managed'
-  | 'Marketplace'
+  | 'Marketplace' // TODO: Cloud Manager Marketplace - Remove marketplace references once 'Quick Deploy Apps' is fully rolled out
   | 'Metrics'
   | 'Monitor'
   | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Partner Referrals'
   | 'Placement Groups'
+  | 'Quick Deploy Apps'
   | 'Quotas'
   | 'Service Transfers'
   | 'StackScripts'
@@ -111,15 +114,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.aclpAlerting?.recentActivity ||
       flags.aclpAlerting?.notificationChannels);
 
-  const { iamRbacPrimaryNavChanges, limitsEvolution } = flags;
+  const { limitsEvolution } = flags;
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled } = useIsIAMEnabled();
   const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
+
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
   const {
     data: preferences,
@@ -176,8 +181,20 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 attr: { 'data-qa-one-click-nav-btn': true },
-                display: 'Marketplace',
+                display: !isMarketplaceV2FeatureEnabled
+                  ? 'Marketplace'
+                  : 'Quick Deploy Apps',
                 to: '/linodes/create/marketplace',
+              },
+              {
+                attr: {
+                  'data-qa-one-click-nav-btn': true,
+                  'data-pendo-id': 'menu-item-Cloud Marketplace',
+                },
+                display: 'Partner Referrals',
+                hide: !isMarketplaceV2FeatureEnabled,
+                isBeta: isMarketplaceV2FeatureEnabled,
+                to: '/cloud-marketplace/catalog',
               },
             ],
             name: 'Compute',
@@ -265,36 +282,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             name: 'Monitor',
           },
           {
-            icon: <More />,
-            links: [
-              {
-                display: 'Betas',
-                hide: !flags.selfServeBetas,
-                to: '/betas',
-              },
-              {
-                display: 'Identity & Access',
-                hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
-                to: '/iam',
-                isBeta: isIAMBeta,
-                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
-              },
-              {
-                display: 'Account',
-                hide: iamRbacPrimaryNavChanges,
-                to: '/account',
-              },
-              {
-                display: 'Help & Support',
-                to: '/support',
-              },
-            ],
-            name: 'More',
-          },
-        ];
-
-        if (iamRbacPrimaryNavChanges) {
-          groups.splice(groups.length - 1, 0, {
             icon: <CoreUser />,
             links: [
               {
@@ -310,8 +297,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Identity & Access',
                 hide: !isIAMEnabled,
                 to: '/iam',
-                isBeta: isIAMBeta,
-                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
+                isNew: isIAMEnabled && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',
@@ -336,8 +322,23 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
             ],
             name: 'Administration',
-          });
-        }
+          },
+          {
+            icon: <More />,
+            links: [
+              {
+                display: 'Betas',
+                hide: !flags.selfServeBetas,
+                to: '/betas',
+              },
+              {
+                display: 'Help & Support',
+                to: '/support',
+              },
+            ],
+            name: 'More',
+          },
+        ];
 
         return groups;
       },
@@ -350,9 +351,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isACLPEnabled,
         isACLPLogsBeta,
         isACLPLogsEnabled,
-        isIAMBeta,
         isIAMEnabled,
-        iamRbacPrimaryNavChanges,
+        isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         limitsEvolution,
       ]

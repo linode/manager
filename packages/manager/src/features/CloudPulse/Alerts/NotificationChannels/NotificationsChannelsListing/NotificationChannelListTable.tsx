@@ -1,6 +1,7 @@
-import { TooltipIcon } from '@linode/ui';
+import { Notice, TooltipIcon, Typography } from '@linode/ui';
 import { GridLegacy, TableBody, TableHead } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -10,16 +11,26 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { useDeleteNotificationChannel } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import {
+  DELETE_CHANNEL_FAILED_MESSAGE,
+  DELETE_CHANNEL_SUCCESS_MESSAGE,
+} from '../../constants';
 import {
   ChannelAlertsTooltipText,
   ChannelListingTableLabelMap,
 } from './constants';
 import { NotificationChannelTableRow } from './NotificationChannelTableRow';
 
-import type { APIError, NotificationChannel } from '@linode/api-v4';
+import type {
+  APIError,
+  DeleteChannelPayload,
+  NotificationChannel,
+} from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface NotificationChannelListTableProps {
@@ -46,6 +57,13 @@ export const NotificationChannelListTable = React.memo(
   (props: NotificationChannelListTableProps) => {
     const { error, isLoading, notificationChannels, scrollToElement } = props;
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
+    const { mutateAsync: deleteChannel, isPending: isDeleting } =
+      useDeleteNotificationChannel();
+
+    const [selectedChannel, setSelectedChannel] =
+      React.useState<NotificationChannel | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
     const handleDetails = ({ id }: NotificationChannel) => {
       navigate({
@@ -53,6 +71,46 @@ export const NotificationChannelListTable = React.memo(
         params: { channelId: String(id) },
       });
     };
+
+    const handleEdit = ({ id }: NotificationChannel) => {
+      navigate({
+        to: '/alerts/notification-channels/edit/$channelId',
+        params: { channelId: id },
+      });
+    };
+
+    const handleDelete = React.useCallback((channel: NotificationChannel) => {
+      setSelectedChannel(channel);
+      setIsDialogOpen(true);
+    }, []);
+
+    const handleDeleteConfirm = React.useCallback(() => {
+      if (!selectedChannel) {
+        return;
+      }
+
+      const payload: DeleteChannelPayload = {
+        channelId: selectedChannel.id,
+      };
+
+      deleteChannel(payload)
+        .then(() => {
+          enqueueSnackbar(DELETE_CHANNEL_SUCCESS_MESSAGE, {
+            variant: 'success',
+          });
+        })
+        .catch((deleteError: APIError[]) => {
+          const errorResponse = getAPIErrorOrDefault(
+            deleteError,
+            DELETE_CHANNEL_FAILED_MESSAGE
+          );
+          enqueueSnackbar(errorResponse[0].reason, { variant: 'error' });
+        })
+        .finally(() => {
+          setIsDialogOpen(false);
+        });
+    }, [deleteChannel, enqueueSnackbar, selectedChannel]);
+
     const _error = error
       ? getAPIErrorOrDefault(
           error,
@@ -172,6 +230,8 @@ export const NotificationChannelListTable = React.memo(
                         <NotificationChannelTableRow
                           handlers={{
                             handleDetails: () => handleDetails(channel),
+                            handleEdit: () => handleEdit(channel),
+                            handleDelete: () => handleDelete(channel),
                           }}
                           key={channel.id}
                           notificationChannel={channel}
@@ -198,6 +258,31 @@ export const NotificationChannelListTable = React.memo(
                 pageSize={pageSize}
                 sx={{ border: 0 }}
               />
+              <TypeToConfirmDialog
+                entity={{
+                  action: 'deletion',
+                  name: selectedChannel?.label ?? '',
+                  primaryBtnText: 'Delete',
+                  type: 'Notification Channel',
+                }}
+                expand
+                label="Notification Channel Label"
+                loading={isDeleting}
+                onClick={handleDeleteConfirm}
+                onClose={() => {
+                  setIsDialogOpen(false);
+                  setSelectedChannel(null);
+                }}
+                open={isDialogOpen}
+                title={`Delete ${selectedChannel?.label ?? ''}?`}
+              >
+                <Notice variant="warning">
+                  <Typography>
+                    <strong>Warning:</strong> Deleting your Notification Channel
+                    will result in permanent data loss.
+                  </Typography>
+                </Notice>
+              </TypeToConfirmDialog>
             </>
           );
         }}

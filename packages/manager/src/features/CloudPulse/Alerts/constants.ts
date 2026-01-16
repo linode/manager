@@ -307,3 +307,18 @@ export const CREATE_CHANNEL_SUCCESS_MESSAGE =
 
 export const CREATE_CHANNEL_FAILED_MESSAGE =
   'Failed to create the notification channel. Verify the configuration details and try again.';
+
+export const UPDATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel updated successfully. All changes have been saved.';
+
+export const UPDATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to update the notification channel. Verify the details and try again.';
+
+export const DELETE_CHANNEL_TOOLTIP_TEXT =
+  'This channel is linked to active alerts. Please reassign or remove those alerts before deleting this channel.';
+
+export const DELETE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel deleted successfully.';
+
+export const DELETE_CHANNEL_FAILED_MESSAGE =
+  'Failed to delete the notification channel. Ensure it is not in use and try again.';

@@ -2,10 +2,25 @@ import { profileFactory } from '@linode/utilities';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { accountFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
+
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+  useAllListMyDelegatedChildAccountsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useProfile: queryMocks.useProfile,
+    useAllListMyDelegatedChildAccountsQuery:
+      queryMocks.useAllListMyDelegatedChildAccountsQuery,
+  };
+});
 
 const props = {
   onClose: vi.fn(),
@@ -14,6 +29,18 @@ const props = {
 };
 
 describe('SwitchAccountDrawer', () => {
+  beforeEach(() => {
+    queryMocks.useProfile.mockReturnValue({});
+    queryMocks.useAllListMyDelegatedChildAccountsQuery.mockReturnValue({
+      data: accountFactory.buildList(5, {
+        company: 'Test Account 1',
+        euuid: '123',
+      }),
+      isLoading: false,
+      isRefetching: false,
+    });
+  });
+
   it('should have a title', () => {
     const { getByText } = renderWithTheme(<SwitchAccountDrawer {...props} />);
     expect(getByText('Switch Account')).toBeInTheDocument();
@@ -36,11 +63,9 @@ describe('SwitchAccountDrawer', () => {
   });
 
   it('should include a link to switch back to the parent account if the active user is a proxy user', async () => {
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'proxy' }));
-      })
-    );
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'proxy' }),
+    });
 
     const { findByLabelText, getByText } = renderWithTheme(
       <SwitchAccountDrawer {...props} userType="proxy" />

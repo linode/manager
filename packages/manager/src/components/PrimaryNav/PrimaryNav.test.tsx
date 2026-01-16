@@ -22,7 +22,6 @@ const queryString = 'menu-item-Managed';
 
 const queryMocks = vi.hoisted(() => ({
   useIsIAMEnabled: vi.fn(() => ({
-    isIAMBeta: false,
     isIAMEnabled: false,
   })),
   usePreferences: vi.fn().mockReturnValue({}),
@@ -494,11 +493,9 @@ describe('PrimaryNav', () => {
     expect(queryByTestId('menu-item-Logs')).toBeNull();
   });
 
-  it('should show Administration links if iamRbacPrimaryNavChanges flag is enabled', async () => {
+  it('should show Administration links', async () => {
     const flags: Partial<Flags> = {
-      iamRbacPrimaryNavChanges: true,
       iam: {
-        beta: true,
         enabled: true,
       },
       limitsEvolution: {
@@ -509,7 +506,6 @@ describe('PrimaryNav', () => {
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
       isIAMEnabled: true,
     });
 
@@ -544,15 +540,12 @@ describe('PrimaryNav', () => {
 
   it('should hide Identity & Access link for non beta users', async () => {
     const flags: Partial<Flags> = {
-      iamRbacPrimaryNavChanges: true,
       iam: {
-        beta: true,
         enabled: false,
       },
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
       isIAMEnabled: false,
     });
 
@@ -566,47 +559,6 @@ describe('PrimaryNav', () => {
     await waitFor(() => {
       expect(
         screen.queryByRole('link', { name: 'Identity & Access' })
-      ).toBeNull();
-    });
-  });
-
-  it('should show Account link and hide Administration if iamRbacPrimaryNavChanges flag is disabled', async () => {
-    const flags: Partial<Flags> = {
-      iamRbacPrimaryNavChanges: false,
-      iam: {
-        beta: true,
-        enabled: true,
-      },
-    };
-
-    queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
-      isIAMEnabled: true,
-    });
-
-    renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
-
-    const adminLink = screen.queryByRole('button', { name: 'Administration' });
-    expect(adminLink).toBeNull();
-
-    await waitFor(() => {
-      expect(screen.queryByRole('link', { name: 'Billing' })).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Quotas' })).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Login History' })).toBeNull();
-      expect(
-        screen.queryByRole('link', { name: 'Service Transfers' })
-      ).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Maintenance' })).toBeNull();
-      expect(
-        screen.queryByRole('link', { name: 'Account' })
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('link', { name: 'Identity & Access' })
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('link', { name: 'Account Settings' })
       ).toBeNull();
     });
   });
@@ -630,10 +582,26 @@ describe('PrimaryNav', () => {
       flags,
     });
 
-    const databaseNavItem = await findByTestId(
+    const networkLoadbalancerNavItem = await findByTestId(
       'menu-item-Network Load Balancer'
     );
 
-    expect(databaseNavItem).toBeVisible();
+    expect(networkLoadbalancerNavItem).toBeVisible();
+  });
+
+  it('should show Partner Referral menu item if the user has the account capability and the flag is enabled', async () => {
+    const flags: Partial<Flags> = {
+      marketplaceV2: true,
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const partnerReferralNavItem = await findByTestId(
+      'menu-item-Partner Referrals'
+    );
+
+    expect(partnerReferralNavItem).toBeVisible();
   });
 });

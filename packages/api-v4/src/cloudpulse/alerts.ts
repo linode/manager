@@ -2,6 +2,7 @@ import {
   createAlertDefinitionSchema,
   createNotificationChannelPayloadSchema,
   editAlertDefinitionSchema,
+  editNotificationChannelPayloadSchema,
 } from '@linode/validation';
 
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -20,6 +21,7 @@ import type {
   CreateAlertDefinitionPayload,
   CreateNotificationChannelPayload,
   EditAlertDefinitionPayload,
+  EditNotificationChannelPayload,
   NotificationChannel,
 } from './types';
 
@@ -149,4 +151,32 @@ export const createNotificationChannel = (
     setURL(`${API_ROOT}/monitor/alert-channels`),
     setMethod('POST'),
     setData(data, createNotificationChannelPayloadSchema),
+  );
+
+export const getNotificationChannelById = (channelId: number) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('GET'),
+  );
+
+export const updateNotificationChannel = (
+  channelId: number,
+  data: EditNotificationChannelPayload,
+) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('PUT'),
+    setData(data, editNotificationChannelPayloadSchema),
+  );
+
+export const deleteNotificationChannel = (channelId: number) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('DELETE'),
   );

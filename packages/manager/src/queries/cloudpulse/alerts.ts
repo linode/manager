@@ -4,7 +4,9 @@ import {
   createNotificationChannel,
   deleteAlertDefinition,
   deleteEntityFromAlert,
+  deleteNotificationChannel,
   editAlertDefinition,
+  updateNotificationChannel,
   updateServiceAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
@@ -24,7 +26,9 @@ import type {
   CreateAlertDefinitionPayload,
   CreateNotificationChannelPayload,
   DeleteAlertPayload,
+  DeleteChannelPayload,
   EditAlertPayloadWithService,
+  EditNotificationChannelPayloadWithId,
   EntityAlertUpdatePayload,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
@@ -282,6 +286,82 @@ export const useCreateNotificationChannel = () => {
           newChannel,
         ]);
       }
+    },
+  });
+};
+
+export const useUpdateNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NotificationChannel,
+    APIError[],
+    EditNotificationChannelPayloadWithId
+  >({
+    mutationFn: async (payload: EditNotificationChannelPayloadWithId) => {
+      const { channelId, details, label } = payload;
+      return updateNotificationChannel(channelId, {
+        details,
+        label,
+      });
+    },
+    onSuccess: (updatedChannel) => {
+      const allChannelsKey =
+        queryFactory.notificationChannels._ctx.all().queryKey;
+
+      queryClient.setQueryData<NotificationChannel[] | undefined>(
+        allChannelsKey,
+        (prev) => {
+          // nothing cached yet
+          if (!prev) return prev;
+
+          const idx = prev.findIndex(
+            (channel) => channel.id === updatedChannel.id
+          );
+          if (idx === -1) return prev;
+
+          // if no change keep referential equality
+          if (prev[idx] === updatedChannel) return prev;
+
+          const next = prev.slice();
+          next[idx] = updatedChannel;
+          return next;
+        }
+      );
+
+      queryClient.setQueryData<NotificationChannel>(
+        queryFactory.notificationChannels._ctx.channelById(updatedChannel.id)
+          .queryKey,
+        updatedChannel
+      );
+    },
+  });
+};
+
+export const useNotificationChannelQuery = (channelId: number) => {
+  return useQuery<NotificationChannel, APIError[]>(
+    queryFactory.notificationChannels._ctx.channelById(channelId)
+  );
+};
+
+export const useDeleteNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NotificationChannel, APIError[], DeleteChannelPayload>({
+    mutationFn: ({ channelId }) => deleteNotificationChannel(channelId),
+    onSuccess: (_, { channelId }) => {
+      queryClient.cancelQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+      queryClient.setQueryData<NotificationChannel[]>(
+        queryFactory.notificationChannels._ctx.all().queryKey,
+        (oldData) => {
+          return oldData?.filter(({ id }) => id !== channelId) ?? [];
+        }
+      );
+      queryClient.removeQueries({
+        queryKey:
+          queryFactory.notificationChannels._ctx.channelById(channelId)
+            .queryKey,
+      });
     },
   });
 };

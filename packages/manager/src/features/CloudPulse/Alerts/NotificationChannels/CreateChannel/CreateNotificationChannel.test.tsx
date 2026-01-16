@@ -10,15 +10,21 @@ import { CreateNotificationChannel } from './CreateNotificationChannel';
 const queryMocks = vi.hoisted(() => ({
   mutateAsync: vi.fn().mockResolvedValue({}),
   navigate: vi.fn(),
+  useAllAccountUsersQuery: vi.fn(),
 }));
 
-vi.mock('src/queries/cloudpulse/alerts', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/alerts');
+vi.mock('src/queries/cloudpulse/alerts', () => ({
+  ...vi.importActual('src/queries/cloudpulse/alerts'),
+  useCreateNotificationChannel: vi.fn(() => ({
+    mutateAsync: queryMocks.mutateAsync,
+  })),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useCreateNotificationChannel: vi.fn(() => ({
-      mutateAsync: queryMocks.mutateAsync,
-    })),
+    useAllAccountUsersQuery: queryMocks.useAllAccountUsersQuery,
   };
 });
 
@@ -27,24 +33,6 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: vi.fn(() => queryMocks.navigate),
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useAccountUsersInfiniteQuery: vi.fn(() => ({
-      data: {
-        pages: [
-          { data: [{ username: 'testuser1' }, { username: 'testuser2' }] },
-        ],
-      },
-      fetchNextPage: vi.fn(),
-      hasNextPage: false,
-      isFetching: false,
-      isLoading: false,
-    })),
   };
 });
 
@@ -57,8 +45,12 @@ const CHANNEL_NAME_VALUE = 'My Email Channel';
 
 describe('CreateNotificationChannel', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     queryMocks.mutateAsync.mockResolvedValue({});
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: [{ username: 'testuser1' }, { username: 'testuser2' }],
+      isLoading: false,
+      isError: false,
+    });
   });
 
   it('should render the breadcrumb and form title', () => {
@@ -153,6 +145,26 @@ describe('CreateNotificationChannel', () => {
     await user.tab();
 
     await screen.findByText(REQUIRED_FIELD_ERROR);
+  });
+
+  it('should display validation error for name field with special characters', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CreateNotificationChannel />);
+
+    // Select a channel type
+    const channelTypeSelect = screen.getByTestId(CHANNEL_TYPE_SELECT_TESTID);
+    await user.click(
+      within(channelTypeSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
+    );
+    await user.click(screen.getByRole('option', { name: EMAIL_OPTION_LABEL }));
+
+    const nameInput = screen.getByLabelText(NAME_LABEL);
+    await user.type(nameInput, '*#&+:<>"?@%');
+    await user.tab();
+
+    await screen.findByText(
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+    );
   });
 
   it('should display validation error for recipients field with no value', async () => {

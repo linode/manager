@@ -73,12 +73,11 @@ describe('VPC Top Section form content', () => {
 
     const NetworkingIPStackRadios = screen.getAllByRole('radio');
     expect(NetworkingIPStackRadios[0]).toBeChecked(); // IPv4
-    expect(NetworkingIPStackRadios[1]).not.toBeChecked(); // Dual Stack
   });
 
   it('renders VPC IPv6 Prefix Length options with /52 selected if the selected region has multiple prefix lengths available', async () => {
     const account = accountFactory.build({
-      capabilities: ['VPC Dual Stack', 'VPC IPv6 Large Prefixes'],
+      capabilities: ['VPC Dual Stack'],
     });
 
     server.use(http.get('*/account', () => HttpResponse.json(account)));
@@ -148,7 +147,7 @@ describe('VPC Top Section form content', () => {
     expect(IPv6CIDRRadios[3]).toBeChecked(); // /52
   });
 
-  it('does not render VPC IPv6 Prefix Length options if there are none available or only /52 available', async () => {
+  it('does not show dual stack option and does not render VPC IPv6 Prefix Length options if there are none available', async () => {
     const account = accountFactory.build({
       capabilities: ['VPC Dual Stack'],
     });
@@ -160,7 +159,7 @@ describe('VPC Top Section form content', () => {
           makeResourcePage([
             regionVPCAvailabilityFactory.build({
               region: 'us-east',
-              available_ipv6_prefix_lengths: [52],
+              available_ipv6_prefix_lengths: [],
             }),
           ])
         )
@@ -189,10 +188,10 @@ describe('VPC Top Section form content', () => {
       expect(screen.getByText('IP Stack')).toBeVisible();
     });
 
-    const NetworkingIPStackRadios = screen.getAllByRole('radio');
-    await userEvent.click(NetworkingIPStackRadios[1]);
-    expect(NetworkingIPStackRadios[0]).not.toBeChecked(); // IPv4
-    expect(NetworkingIPStackRadios[1]).toBeChecked(); // Dual Stack
+    expect(screen.getByText('IPv4')).toBeVisible(); // IPv4
+    expect(
+      screen.queryByText('IPv4 + IPv6 (Dual Stack)')
+    ).not.toBeInTheDocument(); // Dual Stack
 
     expect(
       screen.queryByText('VPC IPv6 Prefix Length')

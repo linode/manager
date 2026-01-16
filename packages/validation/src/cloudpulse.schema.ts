@@ -135,10 +135,48 @@ export const editAlertDefinitionSchema = object({
 });
 
 export const createNotificationChannelPayloadSchema = object({
-  label: string().required(fieldErrorMessage),
+  label: string()
+    .required(fieldErrorMessage)
+    .matches(
+      /^[^*#&+:<>"?@%{}\\/]+$/,
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
+    )
+    .max(100, 'Name must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Name cannot start or end with a special character.',
+      (value) => {
+        return !specialStartEndRegex.test(value ?? '');
+      },
+    ),
   channel_type: string()
     .oneOf(['email', 'webhook', 'pagerduty', 'slack'])
     .required(fieldErrorMessage),
+  details: object({
+    email: object({
+      usernames: array()
+        .of(string())
+        .min(1, fieldErrorMessage)
+        .required(fieldErrorMessage),
+    }).required(),
+  }).required(),
+});
+
+export const editNotificationChannelPayloadSchema = object({
+  label: string()
+    .required(fieldErrorMessage)
+    .matches(
+      /^[^*#&+:<>"?@%{}\\/]+$/,
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
+    )
+    .max(100, 'Name must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Name cannot start or end with a special character.',
+      (value) => {
+        return !specialStartEndRegex.test(value ?? '');
+      },
+    ),
   details: object({
     email: object({
       usernames: array()
