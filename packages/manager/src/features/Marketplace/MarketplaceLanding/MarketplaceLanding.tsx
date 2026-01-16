@@ -38,6 +38,12 @@ export const MarketplaceLanding = () => {
           sm: theme.spacingFunction(16),
           xs: theme.spacingFunction(12),
         },
+        // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
+        '& [data-qa-entity-header]': {
+          [theme.breakpoints.down('md')]: {
+            marginLeft: `-${theme.spacingFunction(8)}`,
+          },
+        },
       })}
     >
       <LandingHeader
