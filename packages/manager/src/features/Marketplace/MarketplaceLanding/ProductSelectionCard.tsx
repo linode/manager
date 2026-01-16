@@ -169,13 +169,18 @@ export const ProductSelectionCard = React.memo(
         sxCardBase={(theme) => ({
           alignItems: 'flex-start',
           flexDirection: 'column',
-          minHeight: '280px',
+          minHeight: {
+            md: '280px',
+            sm: '320px',
+            xs: '300px',
+          },
           padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
           position: 'relative',
           gap: theme.spacingFunction(12),
           '&:hover': {
             borderColor: theme.borderColors.divider,
             backgroundColor: theme.tokens.alias.Background.Normal,
+            boxShadow: theme.tokens.alias.Elevation.S,
           },
           backgroundColor: theme.tokens.alias.Background.Normal,
         })}
