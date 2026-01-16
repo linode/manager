@@ -22,7 +22,6 @@ const queryString = 'menu-item-Managed';
 
 const queryMocks = vi.hoisted(() => ({
   useIsIAMEnabled: vi.fn(() => ({
-    isIAMBeta: false,
     isIAMEnabled: false,
   })),
   usePreferences: vi.fn().mockReturnValue({}),
@@ -497,7 +496,6 @@ describe('PrimaryNav', () => {
   it('should show Administration links', async () => {
     const flags: Partial<Flags> = {
       iam: {
-        beta: true,
         enabled: true,
       },
       limitsEvolution: {
@@ -508,7 +506,6 @@ describe('PrimaryNav', () => {
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
       isIAMEnabled: true,
     });
 
@@ -544,13 +541,11 @@ describe('PrimaryNav', () => {
   it('should hide Identity & Access link for non beta users', async () => {
     const flags: Partial<Flags> = {
       iam: {
-        beta: true,
         enabled: false,
       },
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
       isIAMEnabled: false,
     });
 
