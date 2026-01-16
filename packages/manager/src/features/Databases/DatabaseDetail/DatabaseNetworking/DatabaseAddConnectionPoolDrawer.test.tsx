@@ -5,7 +5,7 @@ import { describe, it } from 'vitest';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DatabaseConnectionPoolAddDrawer } from './DatabaseConnectionPoolAddDrawer';
+import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
 
 const mockProps = {
   databaseId: 123,
@@ -32,7 +32,7 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-describe('DatabaseConnectionPoolAddDrawer Component', () => {
+describe('DatabaseAddConnectionPoolDrawer Component', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     queryMocks.useCreateDatabaseConnectionPoolMutation.mockReturnValue({});
@@ -44,7 +44,7 @@ describe('DatabaseConnectionPoolAddDrawer Component', () => {
   });
 
   it('Should render the drawer title', () => {
-    renderWithTheme(<DatabaseConnectionPoolAddDrawer {...mockProps} />);
+    renderWithTheme(<DatabaseAddConnectionPoolDrawer {...mockProps} />);
 
     const addPoolDrawerTitle = screen.getByText('Add a New Connection Pool');
     expect(addPoolDrawerTitle).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('DatabaseConnectionPoolAddDrawer Component', () => {
       mode: 'transaction',
       username: null, // Test default 'Reuse inbound user' option which gets provided as null to the API
     };
-    renderWithTheme(<DatabaseConnectionPoolAddDrawer {...mockProps} />);
+    renderWithTheme(<DatabaseAddConnectionPoolDrawer {...mockProps} />);
     // Fill out and submit the form
     const poolLabelInput = screen.getByLabelText(poolLabel);
     const addPoolBtn = screen.getByText(addPoolBtnText);
@@ -82,7 +82,7 @@ describe('DatabaseConnectionPoolAddDrawer Component', () => {
       reset: vi.fn(),
     });
 
-    renderWithTheme(<DatabaseConnectionPoolAddDrawer {...mockProps} />);
+    renderWithTheme(<DatabaseAddConnectionPoolDrawer {...mockProps} />);
 
     // Fill out and submit the form
     const poolLabelInput = screen.getByLabelText(poolLabel);
@@ -115,7 +115,7 @@ describe('DatabaseConnectionPoolAddDrawer Component', () => {
       reset: vi.fn(),
     });
 
-    renderWithTheme(<DatabaseConnectionPoolAddDrawer {...mockProps} />);
+    renderWithTheme(<DatabaseAddConnectionPoolDrawer {...mockProps} />);
 
     // Fill out and submit the form
     const poolLabelInput = screen.getByLabelText(poolLabel);

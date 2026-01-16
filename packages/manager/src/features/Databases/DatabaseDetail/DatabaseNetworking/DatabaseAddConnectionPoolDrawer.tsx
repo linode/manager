@@ -25,11 +25,15 @@ interface Props {
   open: boolean;
 }
 
-export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
+const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
+const poolModes: PoolMode[] = ['transaction', 'session', 'statement'];
+const databaseNames = ['defaultdb']; // Currently the only option for the database name field, but more may be introduced later.
+const usernames = [defaultUsername, 'akmadmin'];
+
+export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
   const { databaseId, onClose, open } = props;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
 
   const {
     isPending: submitInProgress,
@@ -102,9 +106,6 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
     }
   };
 
-  const poolModes: PoolMode[] = ['transaction', 'session', 'statement'];
-  const databaseNames = ['defaultdb']; // Currently the only option for the database name field, but more may be introduced later.
-  const usernames = [defaultUsername, 'akmadmin'];
   const { mode, database, username } = watch();
 
   return (
@@ -121,25 +122,26 @@ export const DatabaseConnectionPoolAddDrawer = (props: Props) => {
         resources.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box mt={2.5} />
-        <Controller
-          control={control}
-          name="label"
-          render={({ field, fieldState }) => (
-            <TextField
-              clearable
-              {...field}
-              errorText={fieldState.error?.message}
-              id="poolLabel"
-              label="Pool Label"
-              onChange={(e) => {
-                field.onChange(e.target.value);
-              }}
-              onClear={() => field.onChange('')}
-              placeholder="Enter a pool label"
-            />
-          )}
-        />
+        <Box mt={2.5}>
+          <Controller
+            control={control}
+            name="label"
+            render={({ field, fieldState }) => (
+              <TextField
+                clearable
+                {...field}
+                errorText={fieldState.error?.message}
+                id="poolLabel"
+                label="Pool Label"
+                onChange={(e) => {
+                  field.onChange(e.target.value);
+                }}
+                onClear={() => field.onChange('')}
+                placeholder="Enter a pool label"
+              />
+            )}
+          />
+        </Box>
 
         <Box mt={2.5}>
           <InputLabel htmlFor="databaseName">Database Name</InputLabel>

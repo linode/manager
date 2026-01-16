@@ -28,7 +28,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
 import { ServiceURI } from '../ServiceURI';
-import { DatabaseConnectionPoolAddDrawer } from './DatabaseConnectionPoolAddDrawer';
+import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
 import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
 import { DatabaseConnectionPoolRow } from './DatabaseConnectionPoolRow';
 
@@ -42,6 +42,7 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
+  const isDatabaseInactive = database.status !== 'active';
 
   const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
     React.useState<null | string>();
@@ -87,12 +88,12 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
         <Button
           buttonType="outlined"
           className={classes.actionBtn}
-          disabled={database.status !== 'active'}
+          disabled={isDatabaseInactive}
           onClick={() => setIsAddPoolDrawerOpen(true)}
           TooltipProps={{ placement: 'top' }}
           tooltipText={
-            database.status !== 'active'
-              ? 'To add a new connection pool, the database cluster must be active.'
+            isDatabaseInactive
+              ? 'The database cluster must be active to add a new connection pool'
               : ''
           }
         >
@@ -186,7 +187,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
         open={Boolean(deletePoolLabelSelection)}
         poolLabel={deletePoolLabelSelection ?? ''}
       />
-      <DatabaseConnectionPoolAddDrawer
+      <DatabaseAddConnectionPoolDrawer
         databaseId={database.id}
         onClose={() => setIsAddPoolDrawerOpen(false)}
         open={isAddPoolDrawerOpen}

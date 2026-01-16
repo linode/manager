@@ -41,7 +41,7 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-describe('DatabaseManageNetworkingDrawer Component', () => {
+describe('DatabaseConnectionPools Component', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
