@@ -2,7 +2,6 @@ import { useRegionsQuery } from '@linode/queries';
 import {
   Checkbox,
   FormControlLabel,
-  NewFeatureChip,
   Notice,
   Stack,
   Typography,
@@ -59,15 +58,12 @@ export const PrivateIP = () => {
             Lets you connect with other Linodes in the same region over the data
             center&apos;s private network, without using a public IPv4 address.
           </Typography>
-          <Notice variant="tip">
-            <Stack alignItems="center" direction="row" spacing={1}>
-              <NewFeatureChip />
-              <Typography>
-                You can now establish network isolation and connections to
-                NodeBalancer backends through VPC. We recommend using VPC
-                instead of Private IPs.
-              </Typography>
-            </Stack>
+          <Notice marginTop="12px !important" variant="tip">
+            <Typography>
+              You can now establish network isolation and connections to
+              NodeBalancer backends through VPC. We recommend using VPC instead
+              of Private IPs.
+            </Typography>
           </Notice>
         </Stack>
       }
