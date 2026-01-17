@@ -32,7 +32,7 @@ export interface GlobalFilterProperties {
   ): void;
   handleDashboardChange(
     dashboard: Dashboard | undefined,
-    resetFiltersAndTimeDuration?: boolean
+    skipReset?: boolean
   ): void;
   handleGroupByChange: (selectedValues: string[]) => void;
   handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
@@ -81,7 +81,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         preferences?.[DASHBOARD_ID] === dashboard?.id
       );
     },
-    [preferences]
+    [preferences, handleDashboardChange]
   );
 
   const emitFilterChange = React.useCallback(

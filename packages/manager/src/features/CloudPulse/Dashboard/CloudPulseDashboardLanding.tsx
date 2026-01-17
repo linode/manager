@@ -83,9 +83,9 @@ export const CloudPulseDashboardLanding = () => {
   );
 
   const onDashboardChange = React.useCallback(
-    (dashboardObj: Dashboard, resetFiltersAndTimeDuration: boolean = false) => {
+    (dashboardObj: Dashboard, skipReset: boolean = false) => {
       setDashboard(dashboardObj);
-      if (!resetFiltersAndTimeDuration) {
+      if (!skipReset) {
         setFilterData({
           id: {},
           label: {},
