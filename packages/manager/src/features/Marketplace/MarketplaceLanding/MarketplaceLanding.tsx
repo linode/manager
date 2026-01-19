@@ -1,11 +1,54 @@
-import { BetaChip, Notice } from '@linode/ui';
+import { useAllMarketplaceCategoriesQuery } from '@linode/queries';
+import { BetaChip, Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { useIsMarketplaceV2Enabled } from '../utils';
+import { CategorySection } from './CategorySection';
 
 export const MarketplaceLanding = () => {
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
+  const {
+    data: categories,
+    error,
+    isLoading,
+  } = useAllMarketplaceCategoriesQuery({}, {}, isMarketplaceV2FeatureEnabled);
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading Marketplace.')[0].reason
+        }
+      />
+    );
+  }
+
+  // @TODO: globalFilters will be populated in a follow-up PR from the search input and dropdown selections
+  const globalFilters = {};
+
   return (
-    <>
+    <Box
+      sx={(theme) => ({
+        px: {
+          sm: theme.spacingFunction(16),
+          xs: theme.spacingFunction(12),
+        },
+        // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
+        '& [data-qa-entity-header]': {
+          [theme.breakpoints.down('md')]: {
+            marginLeft: `-${theme.spacingFunction(8)}`,
+          },
+        },
+      })}
+    >
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -13,7 +56,7 @@ export const MarketplaceLanding = () => {
               label: (
                 <>
                   Partner Referrals
-                  <BetaChip />
+                  <BetaChip component="span" />
                 </>
               ),
               position: 1,
@@ -26,7 +69,18 @@ export const MarketplaceLanding = () => {
           pathname: '/cloud-marketplace/catalog',
         }}
       />
-      <Notice variant="info">Partner Referral Catalog is coming soon...</Notice>
-    </>
+      <Stack spacing={4}>
+        {categories?.map(
+          (category) =>
+            category.products_count > 0 && (
+              <CategorySection
+                category={category}
+                filters={globalFilters}
+                key={category.id}
+              />
+            )
+        )}
+      </Stack>
+    </Box>
   );
 };
