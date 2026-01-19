@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query';
 
 import { accountQueries } from '../account';
+import { queryPresets } from '../base';
 import { marketplaceQueries } from './keys';
 
 import type {
@@ -128,6 +129,23 @@ export const useAllMarketplaceTypesQuery = (
     enabled,
   });
 
+export const useAllMarketplaceTypesMapQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled: boolean = true,
+) =>
+  useQuery<Record<number, MarketplaceType>, APIError[]>({
+    ...marketplaceQueries.types._ctx.all(params, filter),
+    enabled,
+    select: (types: MarketplaceType[]) => {
+      const typesById: Record<number, MarketplaceType> = {};
+      for (const type of types) {
+        typesById[type.id] = type;
+      }
+      return typesById;
+    },
+  });
+
 export const useInfiniteMarketplaceTypesQuery = (
   filter: Filter,
   enabled: boolean,
@@ -164,6 +182,24 @@ export const useAllMarketplacePartnersQuery = (
   useQuery<MarketplacePartner[], APIError[]>({
     ...marketplaceQueries.partners._ctx.all(params, filter),
     enabled,
+  });
+
+export const useAllMarketplacePartnersMapQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled: boolean = true,
+) =>
+  useQuery<Record<number, MarketplacePartner>, APIError[]>({
+    ...marketplaceQueries.partners._ctx.all(params, filter),
+    enabled,
+    ...queryPresets.longLived,
+    select: (partners: MarketplacePartner[]) => {
+      const partnersById: Record<number, MarketplacePartner> = {};
+      for (const partner of partners) {
+        partnersById[partner.id] = partner;
+      }
+      return partnersById;
+    },
   });
 
 export const useInfiniteMarketplacePartnersQuery = (
