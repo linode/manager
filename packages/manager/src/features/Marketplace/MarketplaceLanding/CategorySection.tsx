@@ -56,7 +56,7 @@ const useProductsDisplay = (
           '+or': [
             { name: { '+contains': filters.searchQuery } },
             { short_description: { '+contains': filters.searchQuery } },
-            // Include search-derived IDs in the OR condition (excluding duplicates)
+            // Include search-derived IDs in the OR condition
             ...(filters.searchDerivedTypeIds?.map((id) => ({ type_id: id })) ??
               []),
             ...(filters.searchDerivedPartnerIds?.map((id) => ({
