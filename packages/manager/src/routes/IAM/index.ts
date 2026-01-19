@@ -15,7 +15,8 @@ interface IamEntitiesSearchParams {
 }
 
 interface IamUsersSearchParams extends TableSearchParams {
-  query?: string;
+  company?: string;
+  query?: string; // to be deprecated once UIE-9292 is resolved
   users?: string;
 }
 
