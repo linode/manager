@@ -25,11 +25,11 @@ export const marketplaceProductFactory =
 
 export const marketplaceCategoryFactory =
   Factory.Sync.makeFactory<MarketplaceCategory>({
-    name: Factory.each((id) => `marketplace-category-${id}`),
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
-    products_count: Factory.each((id) => id * 10),
+    products_count: 10,
+    name: Factory.each((id) => `marketplace-category-${id}`),
   });
 
 export const marketplaceTypeFactory = Factory.Sync.makeFactory<MarketplaceType>(
@@ -37,7 +37,7 @@ export const marketplaceTypeFactory = Factory.Sync.makeFactory<MarketplaceType>(
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
-    products_count: Factory.each((id) => id * 5),
+    products_count: 10,
     name: Factory.each((id) => `marketplace-type-${id}`),
   },
 );
@@ -47,8 +47,8 @@ export const marketplacePartnersFactory =
     created_at: '2024-01-01T00:00:00',
     created_by: 'user1',
     id: Factory.each((id) => id),
-    logo_url_dark_mode: 'https://www.example.com/logo-dark-mode.png',
-    logo_url_light_mode: 'https://www.example.com/logo-light-mode.png',
+    logo_url_dark_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
+    logo_url_light_mode: 'https://www.akamai.com/site/akamai-logo-v5.svg',
     name: Factory.each((id) => `marketplace-partner-${id}`),
     url: 'https://www.example.com',
   });
