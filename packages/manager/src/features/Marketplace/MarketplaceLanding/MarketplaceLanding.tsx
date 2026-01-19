@@ -5,14 +5,17 @@ import * as React from 'react';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsMarketplaceV2Enabled } from '../utils';
 import { CategorySection } from './CategorySection';
 
 export const MarketplaceLanding = () => {
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
   const {
     data: categories,
     error,
     isLoading,
-  } = useAllMarketplaceCategoriesQuery({}, {}, true);
+  } = useAllMarketplaceCategoriesQuery({}, {}, isMarketplaceV2FeatureEnabled);
 
   if (isLoading) {
     return <CircleProgress />;
