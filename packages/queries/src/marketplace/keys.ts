@@ -30,7 +30,8 @@ export const marketplaceQueries = createQueryKeys('marketplace', {
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
           getMarketplaceProducts(
-            { page: pageParam as number, page_size: 25 },
+            // Default page_size for infinite products list is 30 as we are showing 6 products at a time
+            { page: pageParam as number, page_size: 30 },
             filter,
           ),
         queryKey: [filter],
