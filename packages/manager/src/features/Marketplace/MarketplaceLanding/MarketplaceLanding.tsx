@@ -1,21 +1,193 @@
-import { useAllMarketplaceCategoriesQuery } from '@linode/queries';
-import { BetaChip, Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
+import {
+  useAllMarketplaceCategoriesQuery,
+  useAllMarketplacePartnersQuery,
+  useAllMarketplaceTypesQuery,
+} from '@linode/queries';
+import {
+  Autocomplete,
+  BetaChip,
+  Box,
+  CircleProgress,
+  ErrorState,
+  LinkButton,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { Grid } from '@mui/material';
 import * as React from 'react';
+import { Waypoint } from 'react-waypoint';
 
+import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useIsMarketplaceV2Enabled } from '../utils';
 import { CategorySection } from './CategorySection';
 
+import type { MarketplaceCategory, MarketplaceType } from '@linode/api-v4';
+
+const CATEGORIES_PER_BATCH = 5;
+
 export const MarketplaceLanding = () => {
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [selectedCategoryId, setSelectedCategoryId] =
+    React.useState<MarketplaceCategory['id']>();
+  const [selectedTypeId, setSelectedTypeId] =
+    React.useState<MarketplaceType['id']>();
+
+  const [emptyCategoryCount, setEmptyCategoryCount] = React.useState(0);
+  const [loadedCategoryCount, setLoadedCategoryCount] = React.useState(0);
+  const [displayedCategoryCount, setDisplayedCategoryCount] =
+    React.useState(CATEGORIES_PER_BATCH);
 
   const {
     data: categories,
     error,
     isLoading,
   } = useAllMarketplaceCategoriesQuery({}, {}, isMarketplaceV2FeatureEnabled);
+
+  const { data: types } = useAllMarketplaceTypesQuery(
+    {},
+    {},
+    isMarketplaceV2FeatureEnabled
+  );
+
+  const { data: partners } = useAllMarketplacePartnersQuery(
+    {},
+    {},
+    isMarketplaceV2FeatureEnabled
+  );
+
+  const categoriesWithProducts = React.useMemo(
+    () =>
+      categories
+        ?.filter((category) => category.products_count > 0)
+        .sort((a, b) => b.products_count - a.products_count) ?? [],
+    [categories]
+  );
+
+  const categoryOptions = React.useMemo(
+    () =>
+      categoriesWithProducts.map((category) => ({
+        label: category.name,
+        value: category.id,
+      })),
+    [categoriesWithProducts]
+  );
+
+  const typeOptions = React.useMemo(
+    () =>
+      types
+        ?.filter((type) => type.products_count > 0)
+        .map((type) => ({
+          label: type.name,
+          value: type.id,
+        })) ?? [],
+    [types]
+  );
+
+  // Extract IDs from search query if it matches type, or partner names
+  const searchDerivedFilters = React.useMemo(() => {
+    if (!searchQuery.trim()) {
+      return { typeIds: [], partnerIds: [] };
+    }
+
+    const lowerQuery = searchQuery.toLowerCase();
+
+    const matchedTypeIds =
+      types
+        ?.filter((type) => type.name.toLowerCase().includes(lowerQuery))
+        .map((type) => type.id) ?? [];
+
+    const matchedPartnerIds =
+      partners
+        ?.filter((partner) => partner.name.toLowerCase().includes(lowerQuery))
+        .map((partner) => partner.id) ?? [];
+
+    return {
+      typeIds: matchedTypeIds,
+      partnerIds: matchedPartnerIds,
+    };
+  }, [searchQuery, types, partners]);
+
+  const globalFilters = {
+    searchQuery,
+    categoryId: selectedCategoryId,
+    typeId: selectedTypeId,
+    // Include derived IDs from search query
+    searchDerivedTypeIds: searchDerivedFilters.typeIds,
+    searchDerivedPartnerIds: searchDerivedFilters.partnerIds,
+  };
+
+  // Filter categories based on:
+  // 1. Selected category from dropdown (if set)
+  // 2. All categories (if no filters)
+  const filteredCategories = React.useMemo(() => {
+    if (selectedCategoryId) {
+      // Dropdown selection takes precedence
+      return categoriesWithProducts.filter(
+        (category) => category.id === selectedCategoryId
+      );
+    }
+
+    // No filters - show all categories
+    return categoriesWithProducts;
+  }, [selectedCategoryId, categoriesWithProducts]);
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedCategoryId(undefined);
+    setSelectedTypeId(undefined);
+  };
+
+  const hasFiltersApplied = Boolean(searchQuery || selectedTypeId);
+
+  // Reset counters when filters change
+  React.useEffect(() => {
+    setEmptyCategoryCount(0);
+    setLoadedCategoryCount(0);
+    setDisplayedCategoryCount(CATEGORIES_PER_BATCH);
+  }, [searchQuery, selectedCategoryId, selectedTypeId]);
+
+  const handleCategoryLoaded = React.useCallback((isEmpty: boolean) => {
+    setLoadedCategoryCount((prev) => prev + 1);
+    if (isEmpty) {
+      setEmptyCategoryCount((prev) => prev + 1);
+    }
+  }, []);
+
+  const handleFetchMore = () => {
+    setDisplayedCategoryCount((prev) => prev + CATEGORIES_PER_BATCH);
+  };
+
+  const displayedCategoriesToRender = filteredCategories.slice(
+    0,
+    displayedCategoryCount
+  );
+
+  // When filters are applied, fetch ALL categories to determine empty state correctly
+  // Otherwise only fetch the categories being displayed (lazy loading)
+  const categoriesToFetch = hasFiltersApplied
+    ? filteredCategories
+    : displayedCategoriesToRender;
+
+  const totalCategories = filteredCategories.length;
+
+  const hasMoreCategories =
+    displayedCategoriesToRender.length < totalCategories;
+
+  // Show empty state when:
+  // 1. No filters: totalCategories === 0 (no categories exist with products)
+  // 2. With filters: at least one category loaded and all loaded are empty
+  const showEmptyState =
+    !isLoading &&
+    (totalCategories === 0 ||
+      (hasFiltersApplied &&
+        loadedCategoryCount > 0 &&
+        loadedCategoryCount === emptyCategoryCount));
 
   if (isLoading) {
     return <CircleProgress />;
@@ -30,9 +202,6 @@ export const MarketplaceLanding = () => {
       />
     );
   }
-
-  // @TODO: globalFilters will be populated in a follow-up PR from the search input and dropdown selections
-  const globalFilters = {};
 
   return (
     <Box
@@ -69,16 +238,77 @@ export const MarketplaceLanding = () => {
           pathname: '/cloud-marketplace/catalog',
         }}
       />
+      <Grid container mb={2} spacing={2}>
+        <Grid size={{ xs: 12, sm: 12, md: 7 }}>
+          <DebouncedSearchTextField
+            fullWidth
+            hideLabel
+            inputSlotProps={{ sx: { maxWidth: 'unset !important' } }}
+            label="Search marketplace"
+            noMarginTop
+            onSearch={setSearchQuery}
+            placeholder="Search apps, products, and partners"
+            value={searchQuery}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
+          <Autocomplete
+            label="Category"
+            onChange={(_, selected) => setSelectedCategoryId(selected?.value)}
+            options={categoryOptions}
+            placeholder="Category"
+            textFieldProps={{
+              hideLabel: true,
+            }}
+            value={
+              categoryOptions.find((o) => o.value === selectedCategoryId) ??
+              null
+            }
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
+          <Autocomplete
+            label="Type"
+            onChange={(_, selected) => setSelectedTypeId(selected?.value)}
+            options={typeOptions}
+            placeholder="Type"
+            textFieldProps={{
+              hideLabel: true,
+            }}
+            value={typeOptions.find((o) => o.value === selectedTypeId) ?? null}
+          />
+        </Grid>
+      </Grid>
       <Stack spacing={4}>
-        {categories?.map(
-          (category) =>
-            category.products_count > 0 && (
-              <CategorySection
-                category={category}
-                filters={globalFilters}
-                key={category.id}
-              />
-            )
+        {categoriesToFetch.map((category) => (
+          <CategorySection
+            category={category}
+            filters={globalFilters}
+            key={category.id}
+            onLoaded={handleCategoryLoaded}
+          />
+        ))}
+        {hasMoreCategories && <Waypoint onEnter={handleFetchMore} />}
+        {showEmptyState && (
+          <ErrorState
+            compact
+            CustomIcon={EmptyStateCloud}
+            errorText={
+              <Box>
+                <Typography variant="h2">No results found</Typography>
+                <Typography>
+                  Looks like there&apos;s nothing here.
+                  {hasFiltersApplied &&
+                    " Try a new search and let's see what we find!"}
+                </Typography>
+                {hasFiltersApplied && (
+                  <LinkButton onClick={handleResetFilters} sx={{ mt: 2 }}>
+                    Reset filters
+                  </LinkButton>
+                )}
+              </Box>
+            }
+          />
         )}
       </Stack>
     </Box>

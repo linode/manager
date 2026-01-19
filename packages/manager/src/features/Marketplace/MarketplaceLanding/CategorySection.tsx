@@ -30,6 +30,7 @@ export interface GlobalFilters {
 export interface CategorySectionProps {
   category: MarketplaceCategory;
   filters: GlobalFilters;
+  onLoaded?: (isEmpty: boolean) => void;
 }
 
 export interface ProductCardItem extends ProductCardData {
@@ -47,6 +48,7 @@ const useProductsDisplay = (
 
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
+  // Always include category_id in the API filter
   const apiFilter: Filter = {
     category_id: categoryId,
     ...(filters.searchQuery
@@ -82,8 +84,12 @@ const useProductsDisplay = (
     [productsData]
   );
 
+  // Track total products fetched from API
+  const totalFetchedProducts = products.length;
+
   return {
     products,
+    totalFetchedProducts,
     displayCount,
     setDisplayCount,
     error,
@@ -94,12 +100,13 @@ const useProductsDisplay = (
 };
 
 export const CategorySection = (props: CategorySectionProps) => {
-  const { category, filters } = props;
+  const { category, filters, onLoaded } = props;
   const theme = useTheme();
   const navigate = useNavigate();
 
   const {
     products,
+    totalFetchedProducts,
     displayCount,
     setDisplayCount,
     error: productsError,
@@ -114,25 +121,34 @@ export const CategorySection = (props: CategorySectionProps) => {
   const { data: typesMap, isLoading: isTypesLoading } =
     useAllMarketplaceTypesMapQuery();
 
+  const isLoading = isProductsLoading || isPartnerLoading || isTypesLoading;
+
+  // Notify parent when loading completes
   React.useEffect(() => {
+    if (!isLoading && onLoaded) {
+      onLoaded(products.length === 0);
+    }
+  }, [isLoading, products.length]);
+
+  React.useEffect(() => {
+    // Fetch next page when we've displayed all current products
     const shouldFetchMore =
       !isFetchingNextPage &&
-      products.length > 0 &&
-      displayCount >= products.length &&
-      products.length < category.products_count;
+      totalFetchedProducts > 0 &&
+      displayCount >= totalFetchedProducts &&
+      totalFetchedProducts < category.products_count;
 
     if (shouldFetchMore) {
       fetchNextPage();
     }
   }, [
     isFetchingNextPage,
-    products.length,
+    totalFetchedProducts,
     displayCount,
     category.products_count,
     fetchNextPage,
   ]);
 
-  const isLoading = isProductsLoading || isPartnerLoading || isTypesLoading;
   const productsToDisplay = products.slice(0, displayCount);
   const hasMoreProducts = category.products_count > displayCount;
 
@@ -176,6 +192,11 @@ export const CategorySection = (props: CategorySectionProps) => {
         `Error loading products for category ${category.name}`
       )[0].reason
     : '';
+
+  // Don't render if no products after filtering (e.g., search results don't match this category)
+  if (!isLoading && products.length === 0) {
+    return null;
+  }
 
   return (
     <CategorySectionView
