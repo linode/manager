@@ -8,6 +8,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useNotificationChannelQuery } from 'src/queries/cloudpulse/alerts';
 
 import { getAlertBoxStyles } from '../../Utils/utils';
+import { NotificationChannelAlerts } from './NotificationChannelAlerts';
 import { NotificationChannelDetailOverview } from './NotificationChannelDetailOverview';
 import { NotificationChannelRecipients } from './NotificationChannelDetailRecipients';
 
@@ -72,28 +73,42 @@ export const NotificationChannelDetail = () => {
           crumbOverrides={overrides}
           pathname="/Notification Channels/Details"
         />
-        <Box display="flex" flexDirection="column" gap={2} mt={0} />
-        <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
+        <Box display="flex" flexDirection="column" gap={2} mt={0}>
           <Box
-            data-qa-section="Overview"
-            flexBasis="50%"
-            maxHeight={sectionMaxHeight}
-            sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
+            display="flex"
+            flexDirection={{ md: 'row', xs: 'column' }}
+            gap={2}
           >
-            <NotificationChannelDetailOverview
-              channelDetails={channelDetails}
-            />
+            <Box
+              data-qa-section="Overview"
+              flexBasis="50%"
+              maxHeight={sectionMaxHeight}
+              sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
+            >
+              <NotificationChannelDetailOverview
+                channelDetails={channelDetails}
+              />
+            </Box>
+            <Box
+              data-qa-section="Settings"
+              flexBasis="50%"
+              maxHeight={sectionMaxHeight}
+              sx={{
+                ...getAlertBoxStyles(theme),
+                overflow: 'auto',
+              }}
+            >
+              <NotificationChannelRecipients channelDetails={channelDetails} />
+            </Box>
           </Box>
           <Box
-            data-qa-section="Settings"
-            flexBasis="50%"
-            maxHeight={sectionMaxHeight}
+            data-qa-section="Associated Alerts"
             sx={{
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
           >
-            <NotificationChannelRecipients channelDetails={channelDetails} />
+            <NotificationChannelAlerts channelId={Number(channelId)} />
           </Box>
         </Box>
       </Stack>

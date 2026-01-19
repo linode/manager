@@ -31,6 +31,7 @@ import type {
   EditNotificationChannelPayloadWithId,
   EntityAlertUpdatePayload,
   NotificationChannel,
+  NotificationChannelAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
@@ -364,4 +365,10 @@ export const useDeleteNotificationChannel = () => {
       });
     },
   });
+};
+
+export const useAllAlertsByNotificationChannelIdQuery = (channelId: number) => {
+  return useQuery<NotificationChannelAlerts[], APIError[]>(
+    queryFactory.notificationChannelAlerts(channelId)
+  );
 };
