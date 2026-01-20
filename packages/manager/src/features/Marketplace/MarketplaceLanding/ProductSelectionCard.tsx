@@ -5,6 +5,8 @@ import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
+import { PRODUCT_CARD_GRID_SIZE, PRODUCT_CARD_STYLES } from './styles';
+
 export interface ProductCardData {
   /**
    * Company name displayed below the product name
@@ -85,22 +87,27 @@ export const ProductSelectionCard = React.memo(
           {truncate(description, 200)}
         </Typography>,
         // Type chip (as last element with absolute positioning at bottom)
-        <Box
-          key="category"
-          sx={(theme) => ({
-            bottom: theme.spacingFunction(16),
-            left: theme.spacingFunction(20),
-            position: 'absolute',
-          })}
-        >
-          <Chip
-            label={type}
-            size="small"
-            sx={(theme) => ({
-              backgroundColor: theme.tokens.alias.Background.Informativesubtle,
-            })}
-          />
-        </Box>,
+        ...(type
+          ? [
+              <Box
+                key="category"
+                sx={(theme) => ({
+                  bottom: theme.spacingFunction(16),
+                  left: theme.spacingFunction(20),
+                  position: 'absolute',
+                })}
+              >
+                <Chip
+                  label={type}
+                  sx={(theme) => ({
+                    backgroundColor:
+                      theme.tokens.alias.Background.Informativesubtle,
+                    fontSize: theme.tokens.font.FontSize.Xxxs,
+                  })}
+                />
+              </Box>,
+            ]
+          : []),
       ],
       [companyName, description, type]
     );
@@ -156,29 +163,19 @@ export const ProductSelectionCard = React.memo(
     return (
       <SelectionCard
         disabled={disabled}
+        gridSize={PRODUCT_CARD_GRID_SIZE}
         heading={productName}
         onClick={onClick}
         renderIcon={renderHeader}
         subheadings={subheadings}
-        sxCardBase={(theme) => ({
-          alignItems: 'flex-start',
-          flexDirection: 'column',
-          minHeight: '280px',
-          padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(20)}`,
-          position: 'relative',
-          gap: theme.spacingFunction(12),
-        })}
-        sxCardBaseIcon={{
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          width: '100%',
-        }}
+        sxCardBase={PRODUCT_CARD_STYLES.cardBase}
+        sxCardBaseIcon={PRODUCT_CARD_STYLES.cardBaseIcon}
       />
     );
   }
 );
 
-const StyledLogoBox = styled(Box)({
+export const StyledLogoBox = styled(Box)({
   height: '48px',
   maxWidth: '96px',
   overflow: 'hidden',
