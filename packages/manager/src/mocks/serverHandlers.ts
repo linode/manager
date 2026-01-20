@@ -666,16 +666,16 @@ const marketplace = [
     return HttpResponse.json(marketplaceProductDetail);
   }),
   http.get('*/v4beta/marketplace/categories', () => {
-    const marketplaceCategory = marketplaceCategoryFactory.buildList(5);
+    const marketplaceCategory = marketplaceCategoryFactory.buildList(10);
     return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
   }),
   http.get('*/v4beta/marketplace/types', () => {
-    const marketplaceType = marketplaceTypeFactory.buildList(5);
+    const marketplaceType = marketplaceTypeFactory.buildList(100);
     return HttpResponse.json(makeResourcePage([...marketplaceType]));
   }),
   http.get('*/v4beta/marketplace/partners', () => {
-    const marketplaceType = marketplacePartnersFactory.buildList(5);
-    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+    const marketplacePartner = marketplacePartnersFactory.buildList(100);
+    return HttpResponse.json(makeResourcePage([...marketplacePartner]));
   }),
   http.post('*/v4beta/marketplace/referral', async () => {
     await sleep(2000);
@@ -3646,6 +3646,7 @@ export const handlers = [
     const notificationChannels = notificationChannelFactory.buildList(3);
     notificationChannels.push(
       notificationChannelFactory.build({
+        id: 5,
         label: 'Email test channel',
         updated: '2023-11-05T04:00:00',
         updated_by: 'user3',
@@ -3672,8 +3673,67 @@ export const handlers = [
         type: 'system',
       })
     );
-    notificationChannels.push(...notificationChannelFactory.buildList(75));
+    notificationChannels.push(...notificationChannelFactory.buildList(3));
     return HttpResponse.json(makeResourcePage(notificationChannels));
+  }),
+  http.post('*/monitor/alert-channels', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.put('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.get('*/monitor/alert-channels/:id', ({ params }) => {
+    if (params.id === undefined) {
+      return HttpResponse.json({}, { status: 404 });
+    }
+    if (params.id === '5') {
+      return HttpResponse.json(
+        notificationChannelFactory.build({
+          id: 5,
+          label: 'Email test channel',
+          updated: '2023-11-05T04:00:00',
+          updated_by: 'user3',
+          created_by: 'admin',
+          type: 'user',
+          channel_type: 'email',
+          details: {
+            email: {
+              recipient_type: 'user',
+              usernames: [
+                'user1',
+                'user2',
+                'user3',
+                'user4',
+                'user5',
+                'user6',
+                'user7',
+                'user8',
+                'user9',
+                'user10',
+              ],
+            },
+          },
+        })
+      );
+    }
+    return HttpResponse.json(
+      notificationChannelFactory.build({
+        label: 'Test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        type: 'user',
+        channel_type: 'email',
+        details: {
+          email: {
+            usernames: ['ChildUser', 'NonAdminUser'],
+          },
+        },
+      })
+    );
+  }),
+  http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
+    return HttpResponse.json({});
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
@@ -4520,32 +4580,5 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))
     );
-  }),
-  http.post('*/v4beta/monitor/alert-channels', () => {
-    return HttpResponse.json(notificationChannelFactory.build());
-  }),
-  http.put('*/monitor/alert-channels/:id', () => {
-    return HttpResponse.json(notificationChannelFactory.build());
-  }),
-  http.get('*/monitor/alert-channels/:id', () => {
-    return HttpResponse.json(
-      notificationChannelFactory.build({
-        id: 5,
-        label: 'Email test channel',
-        updated: '2023-11-05T04:00:00',
-        updated_by: 'user3',
-        created_by: 'admin',
-        type: 'user',
-        channel_type: 'email',
-        details: {
-          email: {
-            usernames: ['ChildUser', 'NonAdminUser'],
-          },
-        },
-      })
-    );
-  }),
-  http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
-    return HttpResponse.json({});
   }),
 ];
