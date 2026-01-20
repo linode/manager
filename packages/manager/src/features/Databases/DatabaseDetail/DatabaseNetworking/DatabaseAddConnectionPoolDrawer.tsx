@@ -15,7 +15,7 @@ import { createDatabaseConnectionPoolSchema } from '@linode/validation';
 import { Select } from 'akamai-cds-react-components';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import type { ConnectionPool, PoolMode } from '@linode/api-v4';
 
@@ -65,7 +65,6 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
   const {
     control,
     formState: { errors },
-    watch,
     handleSubmit,
     reset,
     setError,
@@ -80,6 +79,10 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     mode: 'onBlur',
     resolver: yupResolver(createDatabaseConnectionPoolSchema),
   });
+
+  const mode = useWatch({ control, name: 'mode' });
+  const database = useWatch({ control, name: 'database' });
+  const username = useWatch({ control, name: 'username' });
 
   const handleOnClose = () => {
     onClose();
@@ -105,9 +108,6 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
       }
     }
   };
-
-  const { mode, database, username } = watch();
-
   return (
     <Drawer
       onClose={handleOnClose}

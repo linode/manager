@@ -93,7 +93,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           TooltipProps={{ placement: 'top' }}
           tooltipText={
             isDatabaseInactive
-              ? 'The database cluster must be active to add a new connection pool'
+              ? 'You can only add connection pools to active database clusters.'
               : ''
           }
         >
