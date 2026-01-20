@@ -97,10 +97,13 @@ export const MarketplaceLanding = () => {
 
     const lowerQuery = searchQuery.toLowerCase();
 
-    const matchedTypeIds =
-      types
-        ?.filter((type) => type.name.toLowerCase().includes(lowerQuery))
-        .map((type) => type.id) ?? [];
+    // If typeId is selected from the dropdown, do NOT derive type IDs from the search query.
+    // This prevents unnecessary AND conditions in API filtering.
+    const matchedTypeIds = selectedTypeId
+      ? []
+      : (types
+          ?.filter((type) => type.name.toLowerCase().includes(lowerQuery))
+          .map((type) => type.id) ?? []);
 
     const matchedPartnerIds =
       partners
@@ -111,14 +114,13 @@ export const MarketplaceLanding = () => {
       typeIds: matchedTypeIds,
       partnerIds: matchedPartnerIds,
     };
-  }, [searchQuery, types, partners]);
+  }, [searchQuery, types, partners, selectedTypeId]);
 
   const globalFilters = {
     searchQuery,
     categoryId: selectedCategoryId,
     typeId: selectedTypeId,
-    // Include derived IDs from search query
-    searchDerivedTypeIds: searchDerivedFilters.typeIds,
+    searchDerivedTypeIds: searchDerivedFilters.typeIds, // Only populated if no type is selected
     searchDerivedPartnerIds: searchDerivedFilters.partnerIds,
   };
 
