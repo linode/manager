@@ -240,7 +240,7 @@ export const MarketplaceLanding = () => {
           pathname: '/cloud-marketplace/catalog',
         }}
       />
-      <Grid container mb={2} spacing={2}>
+      <Grid container mb={3} spacing={2}>
         <Grid size={{ xs: 12, sm: 12, md: 7 }}>
           <DebouncedSearchTextField
             fullWidth
