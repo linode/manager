@@ -35,9 +35,18 @@ export const NotificationChannelAlerts = React.memo(
       isLoading: isChannelAlertsLoading,
     } = useAllAlertsByNotificationChannelIdQuery(channelId);
 
+    const associatedAlertsWithServiceLabels = React.useMemo(() => {
+      return channelAlerts?.map((alert) => ({
+        ...alert,
+        service_type_label: alert.service_type
+          ? getServiceTypeLabel(alert.service_type, serviceTypeList)
+          : undefined,
+      }));
+    }, [channelAlerts, serviceTypeList]);
+
     const { handleOrderChange, order, orderBy, sortedData } =
       useOrderV2<NotificationChannelAlertsType>({
-        data: channelAlerts,
+        data: associatedAlertsWithServiceLabels,
         initialRoute: {
           defaultOrder: {
             order: 'asc',
@@ -105,10 +114,10 @@ export const NotificationChannelAlerts = React.memo(
                 Alert Name
               </TableSortCell>
               <TableSortCell
-                active={orderBy === 'service_type'}
+                active={orderBy === 'service_type_label'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="service_type"
+                label="service_type_label"
               >
                 Service
               </TableSortCell>
