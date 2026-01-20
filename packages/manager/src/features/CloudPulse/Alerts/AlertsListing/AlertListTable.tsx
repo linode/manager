@@ -230,12 +230,28 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     }
   };
 
+  // Create a map for service value-to-label mapping to optimize sorting
+  const serviceValueToLabelMap = React.useMemo(() => {
+    return services.reduce<Record<string, string>>((map, { label, value }) => {
+      map[value] = label;
+      return map;
+    }, {});
+  }, [services]);
+
+  const alertsWithServiceLabels = React.useMemo(() => {
+    return alerts.map((alert) => ({
+      ...alert,
+      service_type_label:
+        serviceValueToLabelMap[alert.service_type] || alert.service_type,
+    }));
+  }, [alerts, serviceValueToLabelMap]);
+
   const { order, orderBy, handleOrderChange, sortedData } = useOrderV2({
-    data: alerts,
+    data: alertsWithServiceLabels,
     initialRoute: {
       defaultOrder: {
         order: 'asc',
-        orderBy: 'service_type',
+        orderBy: 'service_type_label',
       },
       from: '/alerts/definitions',
     },
