@@ -300,8 +300,9 @@ export const MarketplaceLanding = () => {
                 <Typography variant="h2">No results found</Typography>
                 <Typography>
                   Looks like there&apos;s nothing here.
-                  {hasFiltersApplied &&
-                    " Try a new search and let's see what we find!"}
+                  {hasFiltersApplied && (
+                    <> Try a new search and let&apos;s see what we find!</>
+                  )}
                 </Typography>
                 {hasFiltersApplied && (
                   <LinkButton onClick={handleResetFilters} sx={{ mt: 2 }}>
