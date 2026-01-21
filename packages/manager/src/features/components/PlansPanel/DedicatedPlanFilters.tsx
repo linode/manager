@@ -166,7 +166,7 @@ const DedicatedPlanFiltersComponent = React.memo(
             onChange={handleGenerationChange}
             options={GENERATION_OPTIONS}
             placeholder="Select a plan"
-            sx={{ width: 446 }}
+            sx={{ width: 360 }}
             value={selectedGenerationOption}
           />
 

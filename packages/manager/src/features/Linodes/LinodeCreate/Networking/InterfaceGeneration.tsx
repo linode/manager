@@ -13,6 +13,8 @@ import { FormLabel } from '@mui/material';
 import React from 'react';
 import { useController } from 'react-hook-form';
 
+import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
+
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
 
@@ -74,6 +76,7 @@ export const InterfaceGeneration = () => {
                 <Typography sx={(theme) => ({ font: theme.font.bold })}>
                   Linode Interfaces (Recommended)
                 </Typography>
+                <LinodeInterfaceFeatureStatusChip />
                 <TooltipIcon
                   status="info"
                   sxTooltipIcon={{

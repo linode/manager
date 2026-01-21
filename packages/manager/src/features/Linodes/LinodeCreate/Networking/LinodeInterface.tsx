@@ -45,9 +45,9 @@ export const LinodeInterface = ({ index }: Props) => {
         />
       )}
       <InterfaceType index={index} />
-      <InterfaceGeneration />
       {interfaceType === 'vlan' && <VLAN index={index} />}
       {interfaceType === 'vpc' && <VPC index={index} />}
+      <InterfaceGeneration />
       {interfaceGeneration === 'linode' && interfaceType !== 'vlan' && (
         <InterfaceFirewall index={index} />
       )}

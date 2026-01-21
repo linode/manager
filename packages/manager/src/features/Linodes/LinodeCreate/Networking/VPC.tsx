@@ -1,5 +1,12 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
-import { Autocomplete, Box, Divider, Stack, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Divider,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { LinkButton } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -8,6 +15,10 @@ import { PublicIPv4Access } from 'src/features/Linodes/LinodesDetail/LinodeNetwo
 import { PublicIPv6Access } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/PublicIPv6Access';
 import { VPCIPv4Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv4Address';
 import { VPCIPv6Address } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/VPCIPv6Address';
+import {
+  DualStackVPCRangesDescription,
+  VPCRangesDescription,
+} from 'src/features/VPCs/components/VPCRangesDescription';
 import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -164,7 +175,7 @@ export const VPC = ({ index }: Props) => {
             )}
           />
           {showIPv6Fields && (
-            <Box sx={{ mb: 2 }}>
+            <Box sx={{ mb: 1 }}>
               <Controller
                 control={control}
                 name={`linodeInterfaces.${index}.vpc.ipv6.slaac.0.range`}
@@ -186,9 +197,17 @@ export const VPC = ({ index }: Props) => {
           )}
           <Box>
             <Divider
-              sx={(theme) => ({ marginBottom: theme.spacingFunction(16) })}
+              sx={(theme) => ({
+                marginBottom: theme.spacingFunction(24),
+                maxWidth: '416px',
+              })}
             />
-            <Typography sx={(theme: Theme) => ({ font: theme.font.bold })}>
+            <Typography
+              sx={(theme: Theme) => ({
+                font: theme.font.bold,
+                marginBottom: 1,
+              })}
+            >
               Public access
             </Typography>
             <Controller
@@ -218,17 +237,54 @@ export const VPC = ({ index }: Props) => {
               />
             )}
             <Divider
-              sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}
+              spacingBottom={8}
+              spacingTop={16}
+              sx={{ maxWidth: '416px' }}
             />
           </Box>
         </Stack>
-        <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
-        {showIPv6Fields && (
-          <VPCIPv6Ranges
-            disabled={!regionSupportsVPCs}
-            interfaceIndex={index}
-          />
-        )}
+        <Box>
+          <Stack spacing={1.5}>
+            <Stack direction="row" spacing={1}>
+              {!showIPv6Fields && (
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  <Typography
+                    sx={(theme: Theme) => ({ font: theme.font.bold })}
+                  >
+                    Assign additional IPv4 ranges
+                  </Typography>
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{ p: 0 }}
+                    text={<VPCRangesDescription />}
+                  />
+                </Stack>
+              )}
+              {showIPv6Fields && (
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  <Typography
+                    sx={(theme: Theme) => ({ font: theme.font.bold })}
+                  >
+                    Assign additional IP ranges
+                  </Typography>
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{ p: 0 }}
+                    text={<DualStackVPCRangesDescription />}
+                  />
+                </Stack>
+              )}
+            </Stack>
+            <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
+            {showIPv6Fields && (
+              <VPCIPv6Ranges
+                disabled={!regionSupportsVPCs}
+                interfaceIndex={index}
+              />
+            )}
+          </Stack>
+          <Divider spacingTop={24} sx={{ maxWidth: '416px' }} />
+        </Box>
       </Stack>
       <VPCCreateDrawer
         onClose={() => setIsCreateDrawerOpen(false)}
