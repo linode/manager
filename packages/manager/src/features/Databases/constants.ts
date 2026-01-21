@@ -1,3 +1,5 @@
+import type { PoolMode } from '@linode/api-v4';
+
 // Various constants for the Databases
 
 // Copy
@@ -75,3 +77,5 @@ export const MANAGE_NETWORKING_LEARN_MORE_LINK =
 export const CONNECTION_POOL_LABEL_CELL_STYLES = {
   flex: '.5 1 20.5%',
 };
+
+export const POOL_MODES: PoolMode[] = ['transaction', 'session', 'statement'];

@@ -4,20 +4,19 @@ import {
   ActionsPanel,
   Box,
   Drawer,
-  FormHelperText,
-  InputLabel,
   Notice,
+  Select,
   TextField,
   Typography,
-  useTheme,
 } from '@linode/ui';
 import { createDatabaseConnectionPoolSchema } from '@linode/validation';
-import { Select } from 'akamai-cds-react-components';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import type { ConnectionPool, PoolMode } from '@linode/api-v4';
+import { POOL_MODES } from '../../constants';
+
+import type { ConnectionPool } from '@linode/api-v4';
 
 interface Props {
   databaseId: number;
@@ -26,13 +25,18 @@ interface Props {
 }
 
 const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
-const poolModes: PoolMode[] = ['transaction', 'session', 'statement'];
-const databaseNames = ['defaultdb']; // Currently the only option for the database name field, but more may be introduced later.
-const usernames = [defaultUsername, 'akmadmin'];
+const poolModeOptions = POOL_MODES.map((modeOption) => ({
+  label: `${modeOption.charAt(0).toUpperCase()}${modeOption.slice(1)}`,
+  value: modeOption,
+}));
+const databaseNamesOptions = [{ label: 'defaultdb', value: 'defaultdb' }]; // Currently the only option for the database name field, but more may be introduced later.
+const usernameOptions = [
+  { label: defaultUsername, value: defaultUsername },
+  { label: 'akmadmin', value: 'akmadmin' },
+]; // Currently the only options for the username field
 
 export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
   const { databaseId, onClose, open } = props;
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -40,27 +44,6 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     mutateAsync: createDatabaseConnectionPool,
     reset: resetMutation,
   } = useCreateDatabaseConnectionPoolMutation(databaseId);
-
-  /** Shared ErrorText component that displays formatted error messages below form field components that don't have the errorText property */
-  const SharedErrorText = (errorMessage: string | undefined) =>
-    errorMessage && (
-      <FormHelperText
-        error
-        role="alert"
-        sx={{ marginTop: theme.spacingFunction(4) }}
-      >
-        {errorMessage}
-      </FormHelperText>
-    );
-
-  /** Utility function to generate error styles for form field components that can't set them by default */
-  const makeErrorStyles = (errorMessage: string | undefined) => {
-    return errorMessage
-      ? {
-          border: `1px solid ${theme.tokens.component.Select.Error.Border}`,
-        }
-      : undefined;
-  };
 
   const {
     control,
@@ -108,6 +91,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
       }
     }
   };
+
   return (
     <Drawer
       onClose={handleOnClose}
@@ -144,52 +128,45 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
         </Box>
 
         <Box mt={2.5}>
-          <InputLabel htmlFor="databaseName">Database Name</InputLabel>
           <Controller
             control={control}
             name="database"
             render={({ field, fieldState }) => (
-              <>
-                <Select
-                  {...field}
-                  data-testid="database-name-select"
-                  id="databaseName"
-                  items={databaseNames}
-                  onChange={(e: CustomEvent) => {
-                    field.onChange(e.detail);
-                  }}
-                  selected={databaseNames.find((name) => name === database)}
-                  style={makeErrorStyles(fieldState.error?.message)}
-                />
-                {SharedErrorText(fieldState.error?.message)}
-              </>
+              <Select
+                label="Database Name"
+                {...field}
+                data-testid="database-name-select"
+                errorText={fieldState.error?.message}
+                id="databaseName"
+                onChange={(e, option) => {
+                  field.onChange(option.value);
+                }}
+                options={databaseNamesOptions}
+                value={databaseNamesOptions.find(
+                  (option) => option.value === database
+                )}
+              />
             )}
           />
         </Box>
 
         <Box mt={2.5}>
-          <InputLabel htmlFor="poolMode">Pool Mode</InputLabel>
           <Controller
             control={control}
             name="mode"
             render={({ field, fieldState }) => (
-              <>
-                <Select
-                  {...field}
-                  data-testid="pool-mode-select"
-                  id="poolMode"
-                  items={poolModes}
-                  onChange={(e: CustomEvent) => {
-                    field.onChange(e.detail);
-                  }}
-                  selected={poolModes.find((poolMode) => mode === poolMode)}
-                  style={makeErrorStyles(fieldState.error?.message)}
-                  valueFn={(poolMode: PoolMode) => {
-                    return `${poolMode.charAt(0).toUpperCase()}${poolMode.slice(1)}`;
-                  }}
-                />
-                {SharedErrorText(fieldState.error?.message)}
-              </>
+              <Select
+                label="Pool Mode"
+                {...field}
+                data-testid="pool-mode-select"
+                errorText={fieldState.error?.message}
+                id="poolMode"
+                onChange={(e, option) => {
+                  field.onChange(option.value);
+                }}
+                options={poolModeOptions}
+                value={poolModeOptions.find((option) => option.value === mode)}
+              />
             )}
           />
         </Box>
@@ -221,28 +198,24 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
         </Box>
 
         <Box mt={2.5}>
-          <InputLabel htmlFor="username">Username</InputLabel>
           <Controller
             control={control}
             name="username"
             render={({ field, fieldState }) => (
-              <>
-                <Select
-                  {...field}
-                  data-testid="username-select"
-                  id="username"
-                  items={usernames}
-                  onChange={(e: CustomEvent) => {
-                    field.onChange(e.detail);
-                  }}
-                  selected={usernames.find(
-                    (usernameOption) => usernameOption === username
-                  )}
-                  style={makeErrorStyles(fieldState.error?.message)}
-                  valueFn={(usernameOption: string) => `${usernameOption}`}
-                />
-                {SharedErrorText(fieldState.error?.message)}
-              </>
+              <Select
+                label="Username"
+                {...field}
+                data-testid="username-select"
+                errorText={fieldState.error?.message}
+                id="username"
+                onChange={(e, option) => {
+                  field.onChange(option.value);
+                }}
+                options={usernameOptions}
+                value={usernameOptions.find(
+                  (option) => option.value === username
+                )}
+              />
             )}
           />
         </Box>
