@@ -8,18 +8,29 @@ import { NotificationChannelDetail } from './NotificationChannelDetail';
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
-  useAlertsByNotificationChannelIdQuery: vi.fn(),
-  useAllAlertDefinitionsQuery: vi.fn(),
+  useAllAlertsByNotificationChannelIdQuery: vi.fn(),
+  useCloudPulseServiceTypes: vi.fn(),
   useNotificationChannelQuery: vi.fn(),
   useParams: vi.fn(),
 }));
 
+const hookMocks = vi.hoisted(() => ({
+  useOrderV2: vi.fn(),
+}));
+
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
-  useAlertsByNotificationChannelIdQuery:
-    queryMocks.useAlertsByNotificationChannelIdQuery,
-  useAllAlertDefinitionsQuery: queryMocks.useAllAlertDefinitionsQuery,
+  useAllAlertsByNotificationChannelIdQuery:
+    queryMocks.useAllAlertsByNotificationChannelIdQuery,
   useNotificationChannelQuery: queryMocks.useNotificationChannelQuery,
+}));
+
+vi.mock('src/queries/cloudpulse/services', () => ({
+  useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+}));
+
+vi.mock('src/hooks/useOrderV2', () => ({
+  useOrderV2: hookMocks.useOrderV2,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -31,25 +42,32 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 // Shared Setup
+const initialRoute = '/alerts/notification-channels/detail/1';
+
 beforeEach(() => {
   queryMocks.useParams.mockReturnValue({
     channelId: '1',
   });
 
-  queryMocks.useAlertsByNotificationChannelIdQuery.mockReturnValue({
+  queryMocks.useAllAlertsByNotificationChannelIdQuery.mockReturnValue({
     data: [],
     isError: false,
     isLoading: false,
   });
 
-  queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-    data: [],
-    isError: false,
-    isLoading: false,
+  queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+    data: { data: [] },
+    isFetching: false,
+  });
+
+  hookMocks.useOrderV2.mockReturnValue({
+    handleOrderChange: vi.fn(),
+    order: 'asc',
+    orderBy: 'label',
+    sortedData: [],
   });
 });
 
-const route = '/alerts/notification-channels/detail/1';
 describe('NotificationChannelDetail component tests', () => {
   it('should render the error state on channel API call failure', async () => {
     queryMocks.useNotificationChannelQuery.mockReturnValue({
@@ -59,7 +77,7 @@ describe('NotificationChannelDetail component tests', () => {
     });
 
     renderWithTheme(<NotificationChannelDetail />, {
-      initialRoute: route,
+      initialRoute,
     });
 
     // Assert error message is displayed
@@ -78,7 +96,7 @@ describe('NotificationChannelDetail component tests', () => {
     });
 
     const { getByTestId } = renderWithTheme(<NotificationChannelDetail />, {
-      initialRoute: route,
+      initialRoute,
     });
 
     expect(getByTestId('circle-progress')).toBeVisible();
@@ -88,6 +106,9 @@ describe('NotificationChannelDetail component tests', () => {
     const channelDetails = notificationChannelFactory.build({
       id: 1,
       label: 'Test Channel',
+      details: {
+        email: { recipient_type: 'user', usernames: ['user1', 'user2'] },
+      },
     });
 
     queryMocks.useNotificationChannelQuery.mockReturnValue({
@@ -97,7 +118,7 @@ describe('NotificationChannelDetail component tests', () => {
     });
 
     renderWithTheme(<NotificationChannelDetail />, {
-      initialRoute: route,
+      initialRoute,
     });
     const link = screen.getByTestId('link-text');
     expect(link).toBeVisible();
@@ -132,27 +153,29 @@ describe('NotificationChannelDetail component tests', () => {
       isLoading: false,
     });
 
-    queryMocks.useAlertsByNotificationChannelIdQuery.mockReturnValue({
-      data: [{ id: 100 }],
+    const alerts = [
+      {
+        id: 200,
+        label: 'Critical CPU Alert',
+        service_type: 'linode',
+      },
+    ];
+
+    queryMocks.useAllAlertsByNotificationChannelIdQuery.mockReturnValue({
+      data: alerts,
       isError: false,
       isLoading: false,
     });
 
-    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
-      data: [
-        {
-          id: 100,
-          label: 'Critical CPU Alert',
-          service_type: 'linode',
-          updated: '2024-12-15T10:00:00Z',
-        },
-      ],
-      isError: false,
-      isLoading: false,
+    hookMocks.useOrderV2.mockReturnValue({
+      handleOrderChange: vi.fn(),
+      order: 'asc',
+      orderBy: 'label',
+      sortedData: alerts,
     });
 
     renderWithTheme(<NotificationChannelDetail />, {
-      initialRoute: route,
+      initialRoute,
     });
 
     // Verify Overview section details
@@ -167,5 +190,7 @@ describe('NotificationChannelDetail component tests', () => {
     expect(screen.getByText(/Recipients/)).toBeVisible();
     expect(screen.getByText('admin')).toBeVisible();
     expect(screen.getByText('ops_team')).toBeVisible();
+    expect(screen.getByText('Associated Alerts')).toBeVisible();
+    expect(screen.getByText('Critical CPU Alert')).toBeVisible();
   });
 });
