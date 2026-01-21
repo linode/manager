@@ -1,6 +1,7 @@
 import { iamQueries } from '@linode/queries';
 import {
   useAccountRoles,
+  useGetChildAccountsQuery,
   useProfile,
   useUserAccountPermissions,
 } from '@linode/queries';
@@ -80,5 +81,14 @@ export const checkIAMEnabled = async (
 export const useIsIAMDelegationEnabled = () => {
   const flags = useFlags();
 
-  return { isIAMDelegationEnabled: flags.iamDelegation?.enabled ?? false };
+  // Check if the IAM Delegation feature is enabled
+  // Since we don't have a capability to check if the IAM Delegation feature is enabled, we check if the API is available,
+  // Which determines if the user has been migrated.
+  const { error, isLoading } = useGetChildAccountsQuery({});
+
+  return {
+    isLoading,
+    isIAMDelegationEnabled:
+      (flags.iamDelegation?.enabled && Boolean(!error)) ?? false,
+  };
 };
