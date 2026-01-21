@@ -288,16 +288,24 @@ export const MarketplaceLanding = () => {
             debounceTime={250}
             fullWidth
             hideLabel
-            inputSlotProps={{ sx: { maxWidth: 'unset !important' } }}
             label="Search marketplace"
             noMarginTop
             onSearch={onSearch}
             placeholder="Search apps, products, and partners"
+            slotProps={{
+              htmlInput: {
+                'data-pendo-id': 'Cloud Marketplace Catalog-Search',
+              },
+              input: {
+                sx: { maxWidth: 'unset !important' },
+              },
+            }}
             value={searchQuery ?? ''}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
           <Autocomplete
+            data-pendo-id="Cloud Marketplace Catalog-Category"
             label="Category"
             onChange={(_, selected) =>
               updateSearchParam('categoryId', selected?.value)
@@ -315,6 +323,7 @@ export const MarketplaceLanding = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
           <Autocomplete
+            data-pendo-id="Cloud Marketplace Catalog-Type"
             label="Type"
             onChange={(_, selected) =>
               updateSearchParam('typeId', selected?.value)
