@@ -1,3 +1,15 @@
+/**
+ * MSW Handlers for Resource Locks
+ *
+ * This module provides mock handlers for the Resource Lock API endpoints.
+ * Resource locks enable protection of cloud resources from accidental deletion.
+ *
+ * ## Extending to Other Resource Types
+ *
+ * To add lock support for a new resource type (e.g., volumes, nodebalancers):
+ * Update ENTITY_TYPE_CONFIG below with the new resource type mapping
+ *
+ */
 import { http } from 'msw';
 
 import { lockFactory } from 'src/factories';
@@ -11,13 +23,29 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
-import type { CreateLockPayload, LockType, ResourceLock } from '@linode/api-v4';
+import type {
+  CreateLockPayload,
+  Entity,
+  LockType,
+  ResourceLock,
+} from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
+
+/**
+ * Configuration mapping entity types to their database stores and url
+ * Add new resource types here to enable lock support
+ */
+const ENTITY_TYPE_CONFIG: Record<
+  string,
+  { store: keyof MockState; url: string }
+> = {
+  linode: { store: 'linodes', url: 'linodes/instances' },
+};
 
 /**
  * Helper function to validate lock creation business rules
@@ -28,13 +56,17 @@ const validateLockCreation = async (
 ): Promise<null | string> => {
   const { entity_id, entity_type, lock_type } = payload;
 
+  // Check if entity type is supported
+  const entityConfig = ENTITY_TYPE_CONFIG[entity_type];
+  if (!entityConfig) {
+    return `Unsupported entity type: ${entity_type}`;
+  }
+
   // Check if entity exists and is accessible
-  if (entity_type === 'linode') {
-    const linodes = await mswDB.getAll('linodes');
-    const linode = linodes?.find((l) => l.id === entity_id);
-    if (!linode) {
-      return 'The specified entity could not be found.';
-    }
+  const entities = await mswDB.getAll(entityConfig.store);
+  const entity = entities?.find((e: Entity) => e.id === entity_id);
+  if (!entity) {
+    return 'The specified entity could not be found.';
   }
 
   // Check if entity already has a lock of conflicting type
@@ -196,13 +228,19 @@ export const createLock = (mockState: MockState) => [
         return makeErrorResponse(validationError, 400);
       }
 
+      // Get entity configuration for URL building
+      const entityConfig = ENTITY_TYPE_CONFIG[payload.entity_type];
+      const entityUrl = entityConfig
+        ? `/v4beta/${entityConfig.url}/${payload.entity_id}`
+        : `/v4beta/${payload.entity_type}/${payload.entity_id}`;
+
       // Create the lock
       const lock = lockFactory.build({
         entity: {
           id: payload.entity_id,
           type: payload.entity_type,
           label: `${payload.entity_type}-${payload.entity_id}`,
-          url: `/v4beta/linodes/instances/${payload.entity_id}`,
+          url: entityUrl,
         },
         lock_type: payload.lock_type,
       });
@@ -215,15 +253,15 @@ export const createLock = (mockState: MockState) => [
           action: 'lock_create',
           entity: {
             id: createdLock.id,
-            label: `Lock ${createdLock.id}`,
-            type: 'linode',
-            url: `/v4beta/locks/${createdLock.id}`,
+            type: 'lock',
+            label: '',
+            url: '',
           },
           secondary_entity: {
             id: Number(payload.entity_id),
-            label: lock.entity.label || '',
+            label: lock.entity.label ?? null,
             type: payload.entity_type,
-            url: lock.entity.url || '',
+            url: lock.entity.url ?? '',
           },
         },
         mockState,
@@ -255,15 +293,15 @@ export const deleteLock = (mockState: MockState) => [
           action: 'lock_delete',
           entity: {
             id: lockId,
-            label: `Lock ${lockId}`,
-            type: 'linode',
-            url: `/v4beta/locks/${lockId}`,
+            type: 'lock',
+            label: '',
+            url: '',
           },
           secondary_entity: {
             id: Number(lock.entity.id),
-            label: lock.entity.label || '',
+            label: lock.entity.label ?? null,
             type: lock.entity.type,
-            url: lock.entity.url || '',
+            url: lock.entity.url ?? '',
           },
         },
         mockState,
