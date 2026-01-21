@@ -15,7 +15,34 @@ import { UserRow } from './UserRow';
 // we must use this.
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  useGetChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
+  useAccountUserGrants: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useGetChildAccountsQuery: queryMocks.useGetChildAccountsQuery,
+    useProfile: queryMocks.useProfile,
+    useAccountUserGrants: queryMocks.useAccountUserGrants,
+  };
+});
+
 describe('UserRow', () => {
+  beforeEach(() => {
+    queryMocks.useGetChildAccountsQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
+    });
+  });
+
   it('renders a username and email', async () => {
     const user = accountUserFactory.build();
 
@@ -51,18 +78,13 @@ describe('UserRow', () => {
     // Mock the additional user on the parent account.
     const user = accountUserFactory.build();
 
-    server.use(
-      // Mock the grants of the additional user on the parent account.
-      http.get('*/account/users/*/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { child_account_access: true } })
-        );
-      }),
-      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
-      })
-    );
+    queryMocks.useAccountUserGrants.mockReturnValue({
+      data: grantsFactory.build({ global: { child_account_access: true } }),
+    });
+
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
+    });
 
     const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
@@ -74,18 +96,13 @@ describe('UserRow', () => {
     // Mock the additional user on the parent account.
     const user = accountUserFactory.build();
 
-    server.use(
-      // Mock the grants of the additional user on the parent account.
-      http.get('*/account/users/*/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { child_account_access: false } })
-        );
-      }),
-      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
-      })
-    );
+    queryMocks.useAccountUserGrants.mockReturnValue({
+      data: grantsFactory.build({ global: { child_account_access: false } }),
+    });
+
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'parent' }),
+    });
 
     const { findByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
@@ -97,20 +114,13 @@ describe('UserRow', () => {
     // Mock the additional user on the parent account.
     const user = accountUserFactory.build();
 
-    server.use(
-      // Mock the grants of the additional user on the parent account.
-      http.get('*/account/users/*/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { child_account_access: true } })
-        );
-      }),
-      // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
-      http.get('*/profile', () => {
-        return HttpResponse.json(
-          profileFactory.build({ user_type: 'default' })
-        );
-      })
-    );
+    queryMocks.useAccountUserGrants.mockReturnValue({
+      data: grantsFactory.build({ global: { child_account_access: true } }),
+    });
+
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'default' }),
+    });
 
     const { queryByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
@@ -161,11 +171,9 @@ describe('UserRow', () => {
   });
   it('renders a timestamp of the last_login if it was successful', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      })
-    );
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ timezone: 'utc' }),
+    });
 
     const user = accountUserFactory.build({
       last_login: {
@@ -182,13 +190,12 @@ describe('UserRow', () => {
 
     expect(date).toBeVisible();
   });
+
   it('renders a timestamp and "Failed" of the last_login if it was failed', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      })
-    );
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ timezone: 'utc' }),
+    });
 
     const user = accountUserFactory.build({
       last_login: {

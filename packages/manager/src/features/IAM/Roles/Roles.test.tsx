@@ -12,6 +12,7 @@ const queryMocks = vi.hoisted(() => ({
   useAccountRoles: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
+  useGetChildAccountsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -20,6 +21,7 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useProfile: queryMocks.useProfile,
+    useGetChildAccountsQuery: queryMocks.useGetChildAccountsQuery,
   };
 });
 
@@ -41,6 +43,11 @@ vi.mock('src/features/IAM/hooks/usePermissions', async () => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  queryMocks.useGetChildAccountsQuery.mockReturnValue({
+    data: [],
+    isLoading: false,
+    error: null,
+  });
 });
 
 describe('RolesLanding', () => {

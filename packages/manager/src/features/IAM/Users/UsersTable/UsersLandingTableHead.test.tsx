@@ -2,7 +2,6 @@ import { profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -13,21 +12,23 @@ import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Order } from '@linode/utilities';
 
+const queryMocks = vi.hoisted(() => ({
+  useGetChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useGetChildAccountsQuery: queryMocks.useGetChildAccountsQuery,
+    useProfile: queryMocks.useProfile,
+  };
+});
+
 // Because the table row hides certain columns on small viewport sizes,
 // we must use this.
 beforeAll(() => mockMatchMedia());
-
-const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
-  };
-});
 
 const defaultProps = {
   order: {
@@ -38,20 +39,25 @@ const defaultProps = {
 };
 
 describe('UsersLandingTableHead', () => {
-  it('renders User type, Username, Email Address, and Last Login columns for a Child user when isIAMDelegationEnabled flag is enabled', async () => {
-    server.use(
-      // Mock the active profile for the child account.
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
-      })
-    );
+  beforeEach(() => {
+    queryMocks.useGetChildAccountsQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+  });
 
-    queryMocks.useFlags.mockReturnValue({
-      iamDelegation: { enabled: true },
+  it('renders User type, Username, Email Address, and Last Login columns for a Child user when isIAMDelegationEnabled flag is enabled', async () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'child' }),
     });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />)
+      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />, {
+        flags: {
+          iamDelegation: { enabled: true },
+        },
+      })
     );
 
     await waitFor(() => {
@@ -63,21 +69,16 @@ describe('UsersLandingTableHead', () => {
   });
 
   it('does not render User type column when isIAMDelegationEnabled flag is off and logged user is not a child', async () => {
-    server.use(
-      // Mock the active profile for the default account.
-      http.get('*/profile', () => {
-        return HttpResponse.json(
-          profileFactory.build({ user_type: 'default' })
-        );
-      })
-    );
-
-    queryMocks.useFlags.mockReturnValue({
-      iamDelegation: { enabled: false },
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'default' }),
     });
 
     const { getByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />)
+      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />, {
+        flags: {
+          iamDelegation: { enabled: false },
+        },
+      })
     );
 
     expect(queryByText('User Type')).not.toBeInTheDocument();

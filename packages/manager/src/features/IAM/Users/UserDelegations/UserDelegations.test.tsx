@@ -22,6 +22,7 @@ const queryMocks = vi.hoisted(() => ({
   useAllGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useGetChildAccountsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -30,6 +31,7 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAllGetDelegatedChildAccountsForUserQuery:
       queryMocks.useAllGetDelegatedChildAccountsForUserQuery,
+    useGetChildAccountsQuery: queryMocks.useGetChildAccountsQuery,
   };
 });
 
@@ -53,6 +55,11 @@ describe('UserDelegations', () => {
     });
     queryMocks.useSearch.mockReturnValue({
       query: '',
+    });
+    queryMocks.useGetChildAccountsQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
     });
   });
 
