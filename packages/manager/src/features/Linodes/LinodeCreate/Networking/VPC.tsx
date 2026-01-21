@@ -181,6 +181,7 @@ export const VPC = ({ index }: Props) => {
                 name={`linodeInterfaces.${index}.vpc.ipv6.slaac.0.range`}
                 render={({ field, fieldState }) => (
                   <VPCIPv6Address
+                    autoAssignValue="auto"
                     disabled={!regionSupportsVPCs}
                     errorMessage={
                       fieldState.error?.message ??
