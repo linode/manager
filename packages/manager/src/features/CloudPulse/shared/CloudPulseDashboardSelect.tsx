@@ -115,6 +115,7 @@ export const CloudPulseDashboardSelect = React.memo(
       // only call this code when the component is rendered initially
       if (
         (savePreferences || !!serviceType) &&
+        !dashboardsLoading &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
