@@ -5,7 +5,6 @@ import { vi } from 'vitest';
 
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DELEGATION_VALIDATION_ERROR } from '../Shared/constants';
 import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
 import type { ChildAccountWithDelegates, User } from '@linode/api-v4';
@@ -118,27 +117,32 @@ describe('UpdateDelegationsDrawer', () => {
     });
   });
 
-  it('should show error when no users are selected', async () => {
-    const emptyDelegation = {
-      ...mockChildAccountWithDelegates,
-      users: [],
-    };
+  it('allows sending an empty payload', async () => {
+    renderWithTheme(<UpdateDelegationsDrawer {...defaultProps} />);
 
-    renderWithTheme(
-      <UpdateDelegationsDrawer
-        delegation={emptyDelegation}
-        onClose={vi.fn()}
-        open={true}
-      />
-    );
+    const user = userEvent.setup();
 
-    // Try to submit without selecting any users
-    const submitButton = screen.getByRole('button', { name: 'Update' });
-    await userEvent.click(submitButton);
+    // Open the autocomplete and deselect the preselected user (user1)
+    const autocompleteInput = screen.getByRole('combobox');
+    await user.click(autocompleteInput);
 
     await waitFor(() => {
-      const errorElement = screen.getByText(DELEGATION_VALIDATION_ERROR);
-      expect(errorElement).toBeVisible();
+      // Ensure options are rendered
+      expect(screen.getByRole('option', { name: 'user1' })).toBeInTheDocument();
+    });
+
+    const user1Option = screen.getByRole('option', { name: 'user1' });
+    await user.click(user1Option); // toggles off the selected user
+
+    // Submit with no users selected
+    const submitButton = screen.getByRole('button', { name: /update/i });
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(mocks.mockMutateAsync).toHaveBeenCalledWith({
+        euuid: mockChildAccountWithDelegates.euuid,
+        users: [],
+      });
     });
   });
 });

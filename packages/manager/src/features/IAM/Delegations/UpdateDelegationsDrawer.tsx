@@ -15,10 +15,7 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../hooks/usePermissions';
-import {
-  DELEGATION_VALIDATION_ERROR,
-  INTERNAL_ERROR_NO_CHANGES_SAVED,
-} from '../Shared/constants';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
 
 import type { ChildAccount, ChildAccountWithDelegates } from '@linode/api-v4';
@@ -58,9 +55,12 @@ export const UpdateDelegationsDrawer = ({
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
 
-  const currentUsers = React.useMemo(() => {
+  const formattedCurrentUsers = React.useMemo(() => {
     if (delegation && 'users' in delegation && delegation.users) {
-      return delegation.users;
+      return delegation.users.map((username) => ({
+        label: username,
+        value: username,
+      }));
     }
     return [];
   }, [delegation]);
@@ -75,22 +75,23 @@ export const UpdateDelegationsDrawer = ({
 
   const form = useForm<UpdateDelegationsFormValues>({
     defaultValues: {
-      users: currentUsers.map((username) => ({
-        label: username,
-        value: username,
-      })),
+      users: [],
     },
   });
+
   const {
     control,
     formState: { errors, isSubmitting },
     handleSubmit,
     reset,
     setError,
-    watch,
   } = form;
 
-  watch('users');
+  // Reinitialize form values when the drawer opens or delegated users change
+  React.useEffect(() => {
+    if (!open) return;
+    reset({ users: formattedCurrentUsers }, { keepDirtyValues: true });
+  }, [open, formattedCurrentUsers, reset]);
 
   const onSubmit = async (values: UpdateDelegationsFormValues) => {
     if (!delegation) return;
@@ -174,9 +175,6 @@ export const UpdateDelegationsDrawer = ({
                 value={field.value}
               />
             )}
-            rules={{
-              required: DELEGATION_VALIDATION_ERROR,
-            }}
           />
 
           <ActionsPanel
