@@ -81,14 +81,19 @@ export const checkIAMEnabled = async (
 export const useIsIAMDelegationEnabled = () => {
   const flags = useFlags();
 
-  // Check if the IAM Delegation feature is enabled
-  // Since we don't have a capability to check if the IAM Delegation feature is enabled, we check if the API is available,
-  // Which determines if the user has been migrated.
   const { error, isLoading } = useGetChildAccountsQuery({});
+
+  const notFound = error?.some((e) => e.reason === 'Not found');
+
+  // Only enable if:
+  // 1. Flag is enabled
+  // 2. Query has completed
+  // 3. Either succeeded (no error) OR got an error that's NOT "Not found"
+  const isIAMDelegationEnabled =
+    flags.iamDelegation?.enabled && !isLoading && !notFound;
 
   return {
     isLoading,
-    isIAMDelegationEnabled:
-      (flags.iamDelegation?.enabled && Boolean(!error)) ?? false,
+    isIAMDelegationEnabled,
   };
 };
