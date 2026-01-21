@@ -2,10 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
   ActionsPanel,
-  Box,
   Drawer,
   Notice,
   Select,
+  Stack,
   TextField,
   Typography,
 } from '@linode/ui';
@@ -13,8 +13,6 @@ import { createDatabaseConnectionPoolSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-
-import { POOL_MODES } from '../../constants';
 
 import type { ConnectionPool } from '@linode/api-v4';
 
@@ -25,10 +23,11 @@ interface Props {
 }
 
 const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
-const poolModeOptions = POOL_MODES.map((modeOption) => ({
-  label: `${modeOption.charAt(0).toUpperCase()}${modeOption.slice(1)}`,
-  value: modeOption,
-}));
+const poolModeOptions = [
+  { label: 'Transaction', value: 'transaction' },
+  { label: 'Session', value: 'session' },
+  { label: 'Statement', value: 'statement' },
+];
 const databaseNamesOptions = [{ label: 'defaultdb', value: 'defaultdb' }]; // Currently the only option for the database name field, but more may be introduced later.
 const usernameOptions = [
   { label: defaultUsername, value: defaultUsername },
@@ -63,9 +62,10 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     resolver: yupResolver(createDatabaseConnectionPoolSchema),
   });
 
-  const mode = useWatch({ control, name: 'mode' });
-  const database = useWatch({ control, name: 'database' });
-  const username = useWatch({ control, name: 'username' });
+  const [mode, database, username] = useWatch({
+    control,
+    name: ['mode', 'database', 'username'],
+  });
 
   const handleOnClose = () => {
     onClose();
@@ -106,7 +106,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
         resources.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box mt={2.5}>
+        <Stack>
           <Controller
             control={control}
             name="label"
@@ -125,9 +125,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-        </Box>
 
-        <Box mt={2.5}>
           <Controller
             control={control}
             name="database"
@@ -148,9 +146,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-        </Box>
 
-        <Box mt={2.5}>
           <Controller
             control={control}
             name="mode"
@@ -169,9 +165,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-        </Box>
 
-        <Box mt={2.5}>
           <Controller
             control={control}
             name="size"
@@ -195,9 +189,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-        </Box>
 
-        <Box mt={2.5}>
           <Controller
             control={control}
             name="username"
@@ -218,7 +210,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-        </Box>
+        </Stack>
 
         <ActionsPanel
           primaryButtonProps={{
