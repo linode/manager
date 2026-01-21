@@ -1,11 +1,20 @@
 import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
-import { Box, Button, Paper, Select, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Paper,
+  Select,
+  Stack,
+  Typography,
+  useTheme,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Link } from 'src/components/Link';
+
 import { usePermissions } from '../IAM/hooks/usePermissions';
-import { LinodeInterfaceFeatureStatusChip } from '../Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type {
   AccountSettings,
@@ -18,29 +27,44 @@ type InterfaceSettingValues = Pick<
   'interfaces_for_new_linodes'
 >;
 
-const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] =
-  [
-    {
-      label: 'Linode Interfaces but allow Configuration Profile Interfaces',
-      value: 'linode_default_but_legacy_config_allowed',
-    },
-    {
-      label: 'Linode Interfaces Only',
-      value: 'linode_only',
-    },
-    {
-      label: 'Configuration Profile Interfaces but allow Linode Interfaces',
-      value: 'legacy_config_default_but_linode_allowed',
-    },
-    {
-      label: 'Configuration Profile Interfaces Only',
-      value: 'legacy_config_only',
-    },
-  ];
+interface AccountSettingInterfaceOptionType
+  extends SelectOption<LinodeInterfaceAccountSetting> {
+  tooltipText: string;
+}
+
+const accountSettingInterfaceOptions: AccountSettingInterfaceOptionType[] = [
+  {
+    label:
+      'Linode Interfaces (default) but allow Configuration Profile Interfaces',
+    value: 'linode_default_but_legacy_config_allowed',
+    tooltipText:
+      'Linode Interfaces are used by default unless you select Configuration Profile Interfaces. Linodes with Configuration Profile Interfaces can be upgraded to Linode Interfaces.',
+  },
+  {
+    label: 'Linode Interfaces Only',
+    value: 'linode_only',
+    tooltipText:
+      'Existing Linodes with Configuration Profile Interfaces will continue to work. You can upgrade these Linodes to use Linode Interfaces.',
+  },
+  {
+    label:
+      'Configuration Profile Interfaces (default) but allow Linode Interfaces',
+    value: 'legacy_config_default_but_linode_allowed',
+    tooltipText:
+      'Configuration Profile Interfaces are used by default unless you select Linode Interfaces. You can upgrade to Linode Interfaces at any time.',
+  },
+  {
+    label: 'Configuration Profile Interfaces Only',
+    value: 'legacy_config_only',
+    tooltipText:
+      'Existing Linodes with Linode Interfaces will continue to work. Upgrades to Linode Interfaces are not available.',
+  },
+];
 
 export const NetworkInterfaceType = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
+  const theme = useTheme();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
   const { data: permissions } = usePermissions('account', [
@@ -80,11 +104,18 @@ export const NetworkInterfaceType = () => {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1}>
-          <Typography variant="body1">
-            Choose whether to use Configuration Profile Interfaces or Linode
-            Interfaces
-            <LinodeInterfaceFeatureStatusChip fallback=" " sx={{ mx: 0.5 }} />
-            when creating new Linodes or upgrading existing ones.
+          <Typography>
+            When creating new Linodes or upgrading existing ones, select between
+            Configuration Profile Interfaces and Linode Interfaces.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/networking-interface">
+              Learn more
+            </Link>
+            .
+          </Typography>
+          <Typography mt={2}>
+            Linode Interfaces are recommended. However, use Configuration
+            Profile Interfaces with LKE or when a Linode needs a private IP
+            address.
           </Typography>
           <Controller
             control={control}
@@ -93,7 +124,7 @@ export const NetworkInterfaceType = () => {
               <Select
                 disabled={!permissions.update_account_settings}
                 errorText={fieldState.error?.message}
-                label="Interfaces for new Linodes"
+                label="Allowed interfaces for new Linodes"
                 onChange={(
                   _,
                   item: SelectOption<LinodeInterfaceAccountSetting>
@@ -101,11 +132,16 @@ export const NetworkInterfaceType = () => {
                   field.onChange(item?.value);
                 }}
                 options={accountSettingInterfaceOptions}
-                sx={(theme) => ({
-                  [theme.breakpoints.up('md')]: {
-                    minWidth: '480px',
+                sx={{
+                  [theme.breakpoints.up('sm')]: {
+                    '.MuiFormControl-root.MuiFormControl-fullWidth': {
+                      minWidth: '480px',
+                    },
                   },
-                })}
+                  '.MuiInputBase-root.MuiInput-root': {
+                    maxWidth: '480px',
+                  },
+                }}
                 textFieldProps={{
                   expand: true,
                   sx: {
@@ -114,7 +150,7 @@ export const NetworkInterfaceType = () => {
                   tooltipText: !permissions.update_account_settings
                     ? "You don't have permission to change this setting."
                     : optionsTooltipText,
-                  tooltipWidth: 410,
+                  tooltipWidth: 440,
                 }}
                 value={accountSettingInterfaceOptions.find(
                   (option) => option.value === field.value
@@ -139,49 +175,14 @@ export const NetworkInterfaceType = () => {
 };
 
 const optionsTooltipText = (
-  <Stack spacing={2}>
-    <Stack>
-      <Typography>
-        <strong>
-          Linode Interfaces but allow Configuration Profile Interfaces
-        </strong>
-      </Typography>
-      <Typography>
-        Use Linode Interfaces by default, unless Configuration Profile
-        Interfaces are explicitly selected. Linodes using Configuration Profile
-        Interfaces can be upgraded to use Linode Interfaces.
-      </Typography>
-    </Stack>
-    <Stack>
-      <Typography>
-        <strong>Linode Interfaces Only</strong>
-      </Typography>
-      <Typography>
-        Previously created Linodes using Configuration Profile Interfaces will
-        continue to function. Linodes using Configuration Profile Interfaces can
-        be upgraded to use Linode Interfaces.
-      </Typography>
-    </Stack>
-    <Stack>
-      <Typography>
-        <strong>
-          Configuration Profile Interfaces but allow Linode Interfaces
-        </strong>
-      </Typography>
-      <Typography>
-        Use Configuration Profile Interfaces by default, unless Linode
-        Interfaces are explicitly selected, and can be upgraded to use Linode
-        Interfaces.
-      </Typography>
-    </Stack>
-    <Stack>
-      <Typography>
-        <strong>Configuration Profile Interfaces Only</strong>
-      </Typography>
-      <Typography>
-        Previously created Linodes using Linode Interfaces will continue to
-        function. Linodes cannot be upgraded to use Linode Interfaces.
-      </Typography>
-    </Stack>
+  <Stack spacing={3}>
+    {accountSettingInterfaceOptions.map((option) => (
+      <Stack key={option.value}>
+        <Typography>
+          <strong>{option.label}</strong>
+        </Typography>
+        <Typography>{option.tooltipText}</Typography>
+      </Stack>
+    ))}
   </Stack>
 );

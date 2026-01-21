@@ -119,7 +119,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled } = useIsIAMEnabled();
   const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
@@ -297,8 +297,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Identity & Access',
                 hide: !isIAMEnabled,
                 to: '/iam',
-                isBeta: isIAMBeta,
-                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
+                isNew: isIAMEnabled && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',
@@ -352,7 +351,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isACLPEnabled,
         isACLPLogsBeta,
         isACLPLogsEnabled,
-        isIAMBeta,
         isIAMEnabled,
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,

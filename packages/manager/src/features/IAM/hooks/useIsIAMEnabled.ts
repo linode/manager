@@ -28,7 +28,6 @@ export const useIsIAMEnabled = () => {
     useUserAccountPermissions(flags?.iam?.enabled === true);
 
   return {
-    isIAMBeta: flags.iam?.beta,
     isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
     isLoading: isLoadingRoles || isLoadingPermissions,
     accountRoles: roles,

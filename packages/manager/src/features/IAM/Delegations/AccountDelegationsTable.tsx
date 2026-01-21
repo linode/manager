@@ -10,7 +10,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import { NO_DELEGATIONS_TEXT } from '../Shared/constants';
+import { NO_ITEMS_TO_DISPLAY_TEXT } from '../Shared/constants';
 import { AccountDelegationsTableRow } from './AccountDelegationsTableRow';
 
 import type {
@@ -70,7 +70,7 @@ export const AccountDelegationsTable = ({
           <TableRowError colSpan={numCols} message={error[0]?.reason} />
         )}
         {!isLoading && !error && (!delegations || delegations.length === 0) && (
-          <TableRowEmpty colSpan={numCols} message={NO_DELEGATIONS_TEXT} />
+          <TableRowEmpty colSpan={numCols} message={NO_ITEMS_TO_DISPLAY_TEXT} />
         )}
         {!isLoading &&
           !error &&
