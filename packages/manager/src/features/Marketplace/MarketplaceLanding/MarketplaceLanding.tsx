@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { Grid } from '@mui/material';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -25,18 +26,17 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsMarketplaceV2Enabled } from '../utils';
 import { CategorySection } from './CategorySection';
 
-import type { MarketplaceCategory, MarketplaceType } from '@linode/api-v4';
-
 const CATEGORIES_PER_BATCH = 5;
 
 export const MarketplaceLanding = () => {
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
-
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [selectedCategoryId, setSelectedCategoryId] =
-    React.useState<MarketplaceCategory['id']>();
-  const [selectedTypeId, setSelectedTypeId] =
-    React.useState<MarketplaceType['id']>();
+  const navigate = useNavigate();
+  const search = useSearch({ from: '/cloud-marketplace/catalog' });
+  const {
+    categoryId: selectedCategoryId,
+    query: searchQuery,
+    typeId: selectedTypeId,
+  } = search;
 
   const [emptyCategoryCount, setEmptyCategoryCount] = React.useState(0);
   const [loadedCategoryCount, setLoadedCategoryCount] = React.useState(0);
@@ -91,7 +91,7 @@ export const MarketplaceLanding = () => {
 
   // Extract IDs from search query if it matches type, or partner names
   const searchDerivedFilters = React.useMemo(() => {
-    if (!searchQuery.trim()) {
+    if (!searchQuery || !searchQuery.trim()) {
       return { typeIds: [], partnerIds: [] };
     }
 
@@ -140,9 +140,28 @@ export const MarketplaceLanding = () => {
   }, [selectedCategoryId, categoriesWithProducts]);
 
   const handleResetFilters = () => {
-    setSearchQuery('');
-    setSelectedCategoryId(undefined);
-    setSelectedTypeId(undefined);
+    navigate({
+      search: {},
+      to: '/cloud-marketplace/catalog',
+    });
+  };
+
+  const updateSearchParam = React.useCallback(
+    (key: keyof typeof search, value: number | string | undefined) => {
+      navigate({
+        search: (prev) => ({
+          ...prev,
+          [key]: value,
+        }),
+        to: '/cloud-marketplace/catalog',
+      });
+    },
+    [navigate]
+  );
+
+  const onSearch = (searchString: string) => {
+    // Pass undefined to remove query param if string is empty
+    updateSearchParam('query', searchString || undefined);
   };
 
   const hasFiltersApplied = Boolean(searchQuery || selectedTypeId);
@@ -243,20 +262,24 @@ export const MarketplaceLanding = () => {
       <Grid container mb={3} spacing={2}>
         <Grid size={{ xs: 12, sm: 12, md: 7 }}>
           <DebouncedSearchTextField
+            clearable
+            debounceTime={250}
             fullWidth
             hideLabel
             inputSlotProps={{ sx: { maxWidth: 'unset !important' } }}
             label="Search marketplace"
             noMarginTop
-            onSearch={setSearchQuery}
+            onSearch={onSearch}
             placeholder="Search apps, products, and partners"
-            value={searchQuery}
+            value={searchQuery ?? ''}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
           <Autocomplete
             label="Category"
-            onChange={(_, selected) => setSelectedCategoryId(selected?.value)}
+            onChange={(_, selected) =>
+              updateSearchParam('categoryId', selected?.value)
+            }
             options={categoryOptions}
             placeholder="Category"
             textFieldProps={{
@@ -271,7 +294,9 @@ export const MarketplaceLanding = () => {
         <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
           <Autocomplete
             label="Type"
-            onChange={(_, selected) => setSelectedTypeId(selected?.value)}
+            onChange={(_, selected) =>
+              updateSearchParam('typeId', selected?.value)
+            }
             options={typeOptions}
             placeholder="Type"
             textFieldProps={{
