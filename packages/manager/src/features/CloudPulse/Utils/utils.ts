@@ -127,13 +127,10 @@ export const useContextualAlertsState = (
       };
 
       alerts.forEach((alert) => {
-        const isAccountOrRegion =
-          alert.scope === 'region' || alert.scope === 'account';
-
-        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        // include alerts for which entityId is present in the alert's entity_ids
         const shouldInclude = entityId
-          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-          : isAccountOrRegion;
+          ? alert.entity_ids.includes(entityId)
+          : false;
 
         if (shouldInclude) {
           const payloadAlertType =

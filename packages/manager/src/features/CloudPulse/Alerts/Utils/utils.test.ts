@@ -263,7 +263,7 @@ describe('useContextualAlertsState', () => {
     });
   });
 
-  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
+  it('should include alerts that match entityId in initial states', () => {
     const entityId = '123';
     const alerts = [
       alertFactory.build({
@@ -280,13 +280,6 @@ describe('useContextualAlertsState', () => {
         entity_ids: [entityId],
         scope: 'entity',
       }),
-      alertFactory.build({
-        id: 3,
-        label: 'alert3',
-        type: 'system',
-        entity_ids: ['456'],
-        scope: 'region',
-      }),
     ];
 
     const { result } = renderHook(() =>
@@ -294,7 +287,6 @@ describe('useContextualAlertsState', () => {
     );
 
     expect(result.current.initialState.system_alerts).toContain(1);
-    expect(result.current.initialState.system_alerts).toContain(3);
     expect(result.current.initialState.user_alerts).toContain(2);
   });
 
