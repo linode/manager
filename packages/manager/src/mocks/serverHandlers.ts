@@ -3786,7 +3786,7 @@ export const handlers = [
           }),
         }),
         serviceTypesFactory.build({
-          label: 'Block Storage',
+          label: 'Volume',
           service_type: 'blockstorage',
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
@@ -3812,7 +3812,7 @@ export const handlers = [
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
-      blockstorage: 'Block Storage',
+      blockstorage: 'Volume',
       lke: 'LKE Enterprise',
     };
     const response = serviceTypesFactory.build({
