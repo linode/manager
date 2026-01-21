@@ -105,6 +105,7 @@ import {
   networkLoadBalancerNodeFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
+  notificationChannelAlertsFactory,
   notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
@@ -3735,6 +3736,19 @@ export const handlers = [
   http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
     return HttpResponse.json({});
   }),
+  http.get('*/monitor/alert-channels/:id/alerts', ({ params }) => {
+    if (params.id === 'undefined') {
+      return HttpResponse.json({}, { status: 404 });
+    }
+    if (params.id === '5') {
+      return HttpResponse.json(makeResourcePage([]));
+    }
+    const alerts = notificationChannelAlertsFactory.buildList(3);
+    const dbaasalerts = notificationChannelAlertsFactory.buildList(2, {
+      service_type: 'dbaas',
+    });
+    return HttpResponse.json(makeResourcePage([...alerts, ...dbaasalerts]));
+  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
@@ -3772,7 +3786,7 @@ export const handlers = [
           }),
         }),
         serviceTypesFactory.build({
-          label: 'Block Storage',
+          label: 'Volume',
           service_type: 'blockstorage',
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
@@ -3798,7 +3812,7 @@ export const handlers = [
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
-      blockstorage: 'Block Storage',
+      blockstorage: 'Volume',
       lke: 'LKE Enterprise',
     };
     const response = serviceTypesFactory.build({
