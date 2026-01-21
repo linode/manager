@@ -8,6 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as shared from '../../shared';
 import { FirewallPrefixListDrawer } from './FirewallPrefixListDrawer';
+import * as rulesShared from './shared';
 import { PREFIXLIST_MARKED_FOR_DELETION_TEXT } from './shared';
 
 import type { FirewallPrefixListDrawerProps } from './FirewallPrefixListDrawer';
@@ -34,6 +35,7 @@ vi.mock('@linode/utilities', async () => {
 });
 
 const spy = vi.spyOn(shared, 'useIsFirewallRulesetsPrefixlistsEnabled');
+const combineSpy = vi.spyOn(rulesShared, 'combinePrefixLists');
 
 //
 // Helper to compute expected UI values/text
@@ -45,38 +47,43 @@ const computeExpectedElements = (
   let title = 'Prefix List details';
   let button = 'Close';
   let label = 'Name:';
+  let hasBackNavigation = false;
 
   if (context?.type === 'ruleset' && context.modeViewedFrom === 'create') {
     title = `Add an ${capitalize(category)} Rule or Rule Set`;
     button = `Back to ${capitalize(category)} Rule Set`;
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   if (context?.type === 'rule' && context.modeViewedFrom === 'create') {
     title = `Add an ${capitalize(category)} Rule or Rule Set`;
     button = `Back to ${capitalize(category)} Rule`;
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   if (context?.type === 'ruleset' && context.modeViewedFrom === 'view') {
     title = `${capitalize(category)} Rule Set details`;
     button = 'Back to the Rule Set';
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   if (context?.type === 'rule' && context.modeViewedFrom === 'edit') {
     title = 'Edit Rule';
     button = 'Back to Rule';
     label = 'Prefix List Name:';
+    hasBackNavigation = true;
   }
 
   // Default values when there is no specific drawer context
   // (e.g., type === 'rule' and modeViewedFrom === undefined,
   // meaning the drawer is opened directly from the Firewall Table row)
-  return { title, button, label };
+  return { title, button, label, hasBackNavigation };
 };
 
-describe('PrefixListDrawer', () => {
+describe('FirewallPrefixListDrawer', () => {
   beforeEach(() => {
     spy.mockReturnValue({
       isFirewallRulesetsPrefixlistsFeatureEnabled: true,
@@ -143,26 +150,40 @@ describe('PrefixListDrawer', () => {
 
   it.each(drawerProps)(
     'renders correct UI for category:$category, contextType:$context.type and modeViewedFrom:$context.modeViewedFrom',
-    ({ category, context }) => {
+    ({ category, context, selectedPrefixListLabel }) => {
+      const mockData = firewallPrefixListFactory.build({
+        name: selectedPrefixListLabel,
+      });
       queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
-        data: [firewallPrefixListFactory.build()],
+        data: [mockData],
       });
 
-      const { getByText, getByRole } = renderWithTheme(
+      combineSpy.mockReturnValue([
+        ...rulesShared.SPECIAL_PREFIX_LISTS,
+        mockData,
+      ]);
+
+      const { getByText, getByRole, queryByLabelText } = renderWithTheme(
         <FirewallPrefixListDrawer
           category={category}
           context={context}
           isOpen={true}
           onClose={vi.fn()}
-          selectedPrefixListLabel="pl-test"
+          selectedPrefixListLabel={selectedPrefixListLabel}
         />
       );
 
       // Compute expectations
-      const { title, button, label } = computeExpectedElements(
-        category,
-        context
-      );
+      const { title, button, label, hasBackNavigation } =
+        computeExpectedElements(category, context);
+
+      // Back Navigation (Expected only for second-level drawers)
+      const backIconButton = queryByLabelText('back navigation');
+      if (hasBackNavigation) {
+        expect(backIconButton).toBeVisible();
+      } else {
+        expect(backIconButton).not.toBeInTheDocument();
+      }
 
       // Title
       expect(getByText(title)).toBeVisible();
@@ -200,12 +221,17 @@ describe('PrefixListDrawer', () => {
 
   it.each(deletionTestCases)('%s', async (_, deletedTimeStamp) => {
     const mockPrefixList = firewallPrefixListFactory.build({
+      name: 'pl-test',
       deleted: deletedTimeStamp,
     });
 
     queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
       data: [mockPrefixList],
     });
+    combineSpy.mockReturnValue([
+      ...rulesShared.SPECIAL_PREFIX_LISTS,
+      mockPrefixList,
+    ]);
 
     const { getByText, getByTestId, findByText, queryByText } = renderWithTheme(
       <FirewallPrefixListDrawer
@@ -340,6 +366,10 @@ describe('PrefixListDrawer', () => {
       queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
         data: [mockPrefixList],
       });
+      combineSpy.mockReturnValue([
+        ...rulesShared.SPECIAL_PREFIX_LISTS,
+        mockPrefixList,
+      ]);
 
       const { getByTestId } = renderWithTheme(
         <FirewallPrefixListDrawer
@@ -376,6 +406,99 @@ describe('PrefixListDrawer', () => {
           : 'no IP addresses';
         expect(within(ipv6Section).getByText(ipv6Content)).toBeVisible();
       }
+    }
+  );
+});
+
+describe('FirewallPrefixListDrawer - Special "<current>" Prefix Lists', () => {
+  beforeEach(() => {
+    spy.mockReturnValue({
+      isFirewallRulesetsPrefixlistsFeatureEnabled: true,
+      isFirewallRulesetsPrefixListsBetaEnabled: false,
+      isFirewallRulesetsPrefixListsLAEnabled: false,
+      isFirewallRulesetsPrefixListsGAEnabled: false,
+    });
+  });
+  const specialPrefixListDescription =
+    'System-defined PrefixLists, such as pl::vpcs:<current> and pl::subnets:<current>, for VPC interface firewalls are dynamic and update automatically. They manage access to and from the interface for addresses within the interface’s VPC or VPC subnet.';
+  const plRuleRef = { inIPv4Rule: true, inIPv6Rule: true };
+  const context: FirewallPrefixListDrawerProps['context'][] = [
+    {
+      type: 'rule',
+      plRuleRef,
+    },
+    {
+      modeViewedFrom: 'create',
+      type: 'ruleset',
+      plRuleRef,
+    },
+    { modeViewedFrom: 'edit', type: 'rule', plRuleRef },
+    { modeViewedFrom: 'view', type: 'ruleset', plRuleRef },
+  ];
+  const specialPLsTestCases = [
+    {
+      name: 'pl::vpcs:<current>',
+      description: specialPrefixListDescription,
+      context: context[0],
+    },
+    {
+      name: 'pl::subnets:<current>',
+      description: specialPrefixListDescription,
+      context: context[1],
+    },
+    {
+      name: 'pl::vpcs:<current>',
+      description: specialPrefixListDescription,
+      context: context[2],
+    },
+    {
+      name: 'pl::subnets:<current>',
+      description: specialPrefixListDescription,
+      context: context[3],
+    },
+  ];
+
+  it.each(specialPLsTestCases)(
+    'renders only Name and Description for special PL: $name, contextType: $context.type and modeViewedFrom: $context.modeViewedFrom',
+    ({ name, description, context }) => {
+      // API returns no matches, special PL logic must handle it
+      queryMocks.useAllFirewallPrefixListsQuery.mockReturnValue({
+        data: [],
+      });
+      combineSpy.mockReturnValue([...rulesShared.SPECIAL_PREFIX_LISTS]);
+
+      const { getByText, queryByText } = renderWithTheme(
+        <FirewallPrefixListDrawer
+          category="inbound"
+          context={context}
+          isOpen={true}
+          onClose={vi.fn()}
+          selectedPrefixListLabel={name}
+        />
+      );
+
+      const { label } = computeExpectedElements('inbound', context);
+
+      // Name and Description should be visible
+      expect(getByText(label)).toBeVisible(); // First label (Prefix List Name: OR Name:)
+      expect(getByText(name)).toBeVisible();
+
+      expect(getByText('Description:')).toBeVisible();
+      expect(getByText(description)).toBeVisible();
+
+      // All other fields must be hidden
+      const hiddenFields = [
+        'ID:',
+        'Type:',
+        'Visibility:',
+        'Version:',
+        'Created:',
+        'Updated:',
+      ];
+
+      hiddenFields.forEach((label) => {
+        expect(queryByText(label)).not.toBeInTheDocument();
+      });
     }
   );
 });

@@ -29,11 +29,9 @@ export const useAccountUsers = ({
   filters?: Filter;
   params?: Params;
 }) => {
-  const { data: profile } = useProfile();
-
   return useQuery<ResourcePage<User>, APIError[]>({
     ...accountQueries.users._ctx.paginated(params, filters),
-    enabled: enabled && !profile?.restricted,
+    enabled,
     placeholderData: keepPreviousData,
   });
 };
@@ -42,8 +40,6 @@ export const useAccountUsersInfiniteQuery = (
   filter: Filter = {},
   enabled = true,
 ) => {
-  const { data: profile } = useProfile();
-
   return useInfiniteQuery<ResourcePage<User>, APIError[]>({
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
@@ -53,7 +49,7 @@ export const useAccountUsersInfiniteQuery = (
     },
     initialPageParam: 1,
     ...accountQueries.users._ctx.infinite(filter),
-    enabled: enabled && !profile?.restricted,
+    enabled,
     placeholderData: keepPreviousData,
   });
 };
@@ -155,5 +151,16 @@ export const useCreateUserMutation = () => {
         user,
       );
     },
+  });
+};
+
+export const useAllAccountUsersQuery = (
+  enabled: boolean = true,
+  filters: Filter = {},
+  params: Params = {},
+) => {
+  return useQuery<User[], APIError[]>({
+    ...accountQueries.users._ctx.all(params, filters),
+    enabled,
   });
 };

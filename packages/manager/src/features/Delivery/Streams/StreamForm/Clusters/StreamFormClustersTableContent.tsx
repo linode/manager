@@ -40,7 +40,7 @@ export const StreamFormClusterTableContent = ({
   const selectedIds = field.value || [];
 
   const isAllSelected =
-    selectedIds.length === (idsWithLogsEnabled?.length ?? 0);
+    selectedIds.length > 0 && selectedIds.length === idsWithLogsEnabled?.length;
   const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
 
   const toggleAllClusters = () => {
@@ -66,7 +66,9 @@ export const StreamFormClusterTableContent = ({
               <Checkbox
                 aria-label="Toggle all clusters"
                 checked={isAllSelected}
-                disabled={isAutoAddAllClustersEnabled}
+                disabled={
+                  isAutoAddAllClustersEnabled || !idsWithLogsEnabled?.length
+                }
                 indeterminate={isIndeterminate}
                 onChange={toggleAllClusters}
                 sx={{ m: 0 }}

@@ -1,3 +1,23 @@
+## [2026-01-12] - v0.80.0
+
+
+### Changed:
+
+- Logs Destination Form - add matching host and bucket name validation ([#13176](https://github.com/linode/manager/pull/13176))
+- Use UpdateConfigProfileInterfacesSchema in UpdateLinodeConfigSchema for interfaces property ([#13209](https://github.com/linode/manager/pull/13209))
+
+## [2025-12-09] - v0.79.0
+
+
+### Changed:
+
+- Validate Bucket name in Destination Form for forbidden characters ([#13166](https://github.com/linode/manager/pull/13166))
+
+### Upcoming Features:
+
+- Update FirewallRuleTypeSchema to support ruleset ([#13079](https://github.com/linode/manager/pull/13079))
+- Added Database Connection Pool schemas ([#13148](https://github.com/linode/manager/pull/13148))
+
 ## [2025-11-04] - v0.78.0
 
 ### Upcoming Features:

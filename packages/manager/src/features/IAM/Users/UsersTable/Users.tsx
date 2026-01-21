@@ -41,7 +41,10 @@ export const UsersLanding = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const theme = useTheme();
-  const { data: permissions } = usePermissions('account', ['create_user']);
+  const { data: permissions } = usePermissions('account', [
+    'create_user',
+    'view_user',
+  ]);
   const pagination = usePaginationV2({
     currentRoute: '/iam/users',
     initialPage: 1,
@@ -163,6 +166,7 @@ export const UsersLanding = () => {
                 },
               }}
               debounceTime={250}
+              disabled={!permissions?.view_user}
               errorText={searchError?.message}
               hideLabel
               isSearching={isFetching}
@@ -199,8 +203,8 @@ export const UsersLanding = () => {
               disabled={!canCreateUser}
               onClick={() => setIsCreateDrawerOpen(true)}
               tooltipText={
-                canCreateUser
-                  ? 'You cannot create other users as a restricted user.'
+                !canCreateUser
+                  ? 'You do not have permission to create other users.'
                   : undefined
               }
             >

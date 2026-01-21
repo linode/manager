@@ -237,6 +237,8 @@ export const planTabInfoContent = {
     key: 'dedicated',
     title: 'Dedicated CPU',
     typography:
+      'Dedicated CPU instances are built for full-duty workloads needing consistent performance. Choose from different hardware generations — newer plans feature the latest hardware. Select Compute Optimized (1:2) for CPU-heavy tasks or General Purpose (1:4) for balanced workloads.',
+    typographyOld:
       'Dedicated CPU instances are good for full-duty workloads where consistent performance is important.',
   },
   gpu: {
@@ -504,7 +506,7 @@ export const useShouldDisablePremiumPlansTab = ({
   types: LinodeType[] | PlanSelectionType[] | undefined;
 }): boolean => {
   const { isGenerationalPlansEnabled, allowedPlans } =
-    useIsGenerationalPlansEnabled();
+    useIsGenerationalPlansEnabled(types, 'premium');
   // Check if any public premium plans are available.
   // We can omit "Premium HT" and "Premium nested" plans as customers don't deploy them using cloud manager.
   const arePublicPremiumPlansAvailable = types?.some(

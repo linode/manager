@@ -40,6 +40,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
   { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
+  { flag: 'marketplaceV2', label: 'MarketplaceV2' },
   { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
@@ -61,9 +62,12 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'Database Restrict Premium Plan Resize',
   },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
-  { flag: 'iam', label: 'Identity and Access Beta' },
+  { flag: 'iam', label: 'IAM enabled & Beta' },
+  {
+    flag: 'iamLimitedAvailabilityBadges',
+    label: 'IAM Limited Availability Badges',
+  },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
-  { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',

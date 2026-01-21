@@ -51,8 +51,8 @@ describe('DestinationEdit', () => {
     await waitFor(() => {
       assertInputHasValue('Destination Name', 'Destination 123');
     });
-    assertInputHasValue('Host', '3000');
-    assertInputHasValue('Bucket', 'Bucket Name');
+    assertInputHasValue('Host', 'destinations-bucket-name.host.com');
+    assertInputHasValue('Bucket', 'destinations-bucket-name');
     assertInputHasValue('Access Key ID', 'Access Id');
     assertInputHasValue('Secret Access Key', '');
     assertInputHasValue('Log Path Prefix', 'file');

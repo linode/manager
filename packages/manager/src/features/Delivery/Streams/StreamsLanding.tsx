@@ -73,7 +73,6 @@ export const StreamsLanding = () => {
   const {
     data: streams,
     isLoading,
-    isFetching,
     error,
   } = useStreamsQuery(
     {
@@ -180,7 +179,6 @@ export const StreamsLanding = () => {
     <Paper>
       <DeliveryTabHeader
         entity="Stream"
-        isSearching={isFetching}
         onButtonClick={navigateToCreate}
         onSearch={onSearch}
         onSelect={onSelect}
@@ -188,7 +186,6 @@ export const StreamsLanding = () => {
         selectList={streamStatusOptions}
         selectValue={search?.status}
       />
-
       {isLoading ? (
         <CircleProgress />
       ) : (
@@ -201,7 +198,10 @@ export const StreamsLanding = () => {
                   direction={order}
                   handleClick={handleOrderChange}
                   label="label"
-                  sx={{ width: '30%' }}
+                  sx={{
+                    width: '30%',
+                    maxWidth: '30%',
+                  }}
                 >
                   Name
                 </TableSortCell>
@@ -229,7 +229,7 @@ export const StreamsLanding = () => {
                 >
                   ID
                 </TableSortCell>
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableCell>Destination Type</TableCell>
                 </Hidden>
                 <Hidden lgDown>

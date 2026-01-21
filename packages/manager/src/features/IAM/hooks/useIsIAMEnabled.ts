@@ -28,7 +28,6 @@ export const useIsIAMEnabled = () => {
     useUserAccountPermissions(flags?.iam?.enabled === true);
 
   return {
-    isIAMBeta: flags.iam?.beta,
     isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
     isLoading: isLoadingRoles || isLoadingPermissions,
     accountRoles: roles,
@@ -50,12 +49,12 @@ export const checkIAMEnabled = async (
   flags: FlagSet,
   profile: Profile | undefined
 ): Promise<boolean> => {
-  if (!flags?.iam?.enabled) {
+  if (!flags?.iam?.enabled || !profile) {
     return false;
   }
 
   try {
-    if (profile?.username) {
+    if (profile.username) {
       // For restricted users ONLY, get permissions
       const permissions = await queryClient.ensureQueryData(
         queryOptions(iamQueries.user(profile.username)._ctx.accountPermissions)

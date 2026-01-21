@@ -1,3 +1,56 @@
+## [2026-01-12] - v0.155.0
+
+
+### Added:
+
+- `Akamai Cloud Pulse Logs LKE-E Audit ` to the `AccountCapability` type ([#13171](https://github.com/linode/manager/pull/13171))
+
+### Changed:
+
+- Use v4beta endpoints for /events and /events/<eventId> ([#13084](https://github.com/linode/manager/pull/13084))
+- Renamed updated_at, created_at to updated,created in NotificationChannelBase interface ([#13193](https://github.com/linode/manager/pull/13193))
+- Updated getDatabaseConnectionPools signature to accept params for pagination ([#13195](https://github.com/linode/manager/pull/13195))
+- AlertNotificationType from `custom | default` to `user | system`  ([#13203](https://github.com/linode/manager/pull/13203))
+- ACLP-Alerting: Notification Channel types to support API changes and backward compatibility  ([#13227](https://github.com/linode/manager/pull/13227))
+- Move to `v4 endpoint` instead of v4beta for `CloudPulse metrics` api calls ([#13239](https://github.com/linode/manager/pull/13239))
+
+### Upcoming Features:
+
+- Add new API endpoints and types for Resource Locking feature(RESPROT2) ([#13187](https://github.com/linode/manager/pull/13187))
+- Change range property of IPv6SLAAC to be optional ([#13209](https://github.com/linode/manager/pull/13209))
+- Add API endpoints for `Marketplace` ([#13215](https://github.com/linode/manager/pull/13215))
+- CloudPulse-Alerts: Add `CreateNotificationChannelPayload` in types.ts and add request function `createNotificationChannel` in alerts.ts ([#13225](https://github.com/linode/manager/pull/13225))
+- CloudPulse-Alerts: Add type for edition of notification channel payload ([#13235](https://github.com/linode/manager/pull/13235))
+
+## [2025-12-16] - v0.154.1
+
+
+### Added:
+
+- `Akamai Cloud Pulse Logs LKE-E Audit` to the `AccountCapability` type ([#13171](https://github.com/linode/manager/pull/13171))
+
+## [2025-12-09] - v0.154.0
+
+
+### Changed:
+
+- Update database restoreWithBackup data to include region ([#13097](https://github.com/linode/manager/pull/13097))
+- Add private_network to `DatabaseBackupsPayload` ([#13174](https://github.com/linode/manager/pull/13174))
+
+### Tech Stories:
+
+- Add `@types/node` as a devDependency ([#13119](https://github.com/linode/manager/pull/13119))
+
+### Upcoming Features:
+
+- Add new API endpoints and types for Network Load Balancers ([#13078](https://github.com/linode/manager/pull/13078))
+- Update FirewallRuleType to support ruleset ([#13079](https://github.com/linode/manager/pull/13079))
+- Add additional status types `enabling`, `disabling`, `provisioning` in CloudPulse alerts ([#13127](https://github.com/linode/manager/pull/13127))
+- CloudPulse-Metrics: Update `entity_ids` type in `CloudPulseMetricsRequest` for metrics api in endpoints dahsboard ([#13133](https://github.com/linode/manager/pull/13133))
+- Add `deleted` property to `FirewallPrefixList` type after API update ([#13146](https://github.com/linode/manager/pull/13146))
+- Added Database Connection Pool types and endpoints ([#13148](https://github.com/linode/manager/pull/13148))
+- Add 'Cloud Firewall Rule Set' to AccountCapability type ([#13156](https://github.com/linode/manager/pull/13156))
+
 ## [2025-11-18] - v0.153.0
 
 

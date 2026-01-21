@@ -209,6 +209,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
+                plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 regionsData={regionsData || []}
               />

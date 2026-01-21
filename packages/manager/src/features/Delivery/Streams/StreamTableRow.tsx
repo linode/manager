@@ -2,7 +2,6 @@ import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -10,6 +9,7 @@ import {
   getDestinationTypeOption,
   getStreamTypeOption,
 } from 'src/features/Delivery/deliveryUtils';
+import { LinkWithTooltipAndEllipsis } from 'src/features/Delivery/Shared/LinkWithTooltipAndEllipsis';
 import { StreamActionMenu } from 'src/features/Delivery/Streams/StreamActionMenu';
 
 import type { Stream, StreamStatus } from '@linode/api-v4';
@@ -26,12 +26,12 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
   return (
     <TableRow key={id}>
       <TableCell>
-        <Link
+        <LinkWithTooltipAndEllipsis
           pendoId="Logs Delivery Streams-Name"
           to={`/logs/delivery/streams/${id}/edit`}
         >
           {stream.label}
-        </Link>
+        </LinkWithTooltipAndEllipsis>
       </TableCell>
       <TableCell>{getStreamTypeOption(stream.type)?.label}</TableCell>
       <TableCell statusCell>
@@ -39,7 +39,7 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
         {humanizeStreamStatus(status)}
       </TableCell>
       <TableCell>{id}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell>
           {getDestinationTypeOption(stream.destinations[0]?.type)?.label}
         </TableCell>

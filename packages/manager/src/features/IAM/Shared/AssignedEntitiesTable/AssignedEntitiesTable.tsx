@@ -60,6 +60,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'is_account_admin',
     'update_default_delegate_access',
+    'list_entities',
   ]);
 
   const { isDefaultDelegationRolesForChildAccount } =
@@ -106,7 +107,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     data: entities,
     error: entitiesError,
     isLoading: entitiesLoading,
-  } = useAllAccountEntities({});
+  } = useAllAccountEntities({
+    enabled: permissions?.list_entities,
+  });
 
   const {
     data: assignedUserRoles,
@@ -169,11 +172,11 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
 
   const handleRemoveAssignmentDialogClose = () => {
     setIsRemoveAssignmentDialogOpen(false);
-    // If we just deleted the last one on a page, reset to the first page.
+    // If we just deleted the last one on a page, reset to the previous page.
     const removedLastOnPage =
       filteredAndSortedRoles.length % pagination.pageSize === 1;
     if (removedLastOnPage) {
-      pagination.handlePageChange(1);
+      pagination.handlePageChange(pagination.page - 1);
     }
   };
 
@@ -212,7 +215,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     }
 
     if (!entities || !assignedRoles || filteredRoles.length === 0) {
-      return <TableRowEmpty colSpan={3} message={'No items to display.'} />;
+      return <TableRowEmpty colSpan={4} message={'No items to display.'} />;
     }
 
     if (assignedRoles && entities) {
@@ -240,7 +243,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
-                  title: 'Remove Assignment',
+                  title: isDefaultDelegationRolesForChildAccount
+                    ? 'Remove'
+                    : 'Remove Assignment',
                   tooltip: !permissionToCheck
                     ? 'You do not have permission to remove this assignment.'
                     : undefined,
@@ -286,6 +291,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: theme.tokens.spacing.S12,
+          minHeight: theme.spacingFunction(40),
         }}
       >
         <DebouncedSearchTextField

@@ -30,7 +30,7 @@ const iamCatchAllRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/$invalidPath',
   beforeLoad: () => {
-    throw redirect({ to: '/iam/users' });
+    throw redirect({ to: '/iam/users', replace: true });
   },
 });
 
@@ -46,6 +46,20 @@ const iamTabsRoute = createRoute({
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'users',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags,
+      context.profile
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/users',
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UsersTable/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -56,7 +70,7 @@ const iamUsersCatchAllRoute = createRoute({
   getParentRoute: () => iamUsersRoute,
   path: '/$invalidPath',
   beforeLoad: () => {
-    throw redirect({ to: '/iam/users' });
+    throw redirect({ to: '/iam/users', replace: true });
   },
 });
 
@@ -72,15 +86,11 @@ const iamRolesRoute = createRoute({
 
     if (!isIAMEnabled) {
       throw redirect({
-        to: '/account/users',
+        to: '/users',
+        replace: true,
       });
     }
   },
-});
-
-const iamRolesIndexRoute = createRoute({
-  getParentRoute: () => iamRolesRoute,
-  path: '/',
 }).lazy(() =>
   import('src/features/IAM/Roles/rolesLandingLazyRoute').then(
     (m) => m.rolesLandingLazyRoute
@@ -98,6 +108,7 @@ const iamDefaultsTabsRoute = createRoute({
     if (userType !== 'child' || !isDelegationEnabled) {
       throw redirect({
         to: '/iam/roles',
+        replace: true,
       });
     }
   },
@@ -129,7 +140,7 @@ const iamRolesCatchAllRoute = createRoute({
   getParentRoute: () => iamRolesRoute,
   path: '/$invalidPath',
   beforeLoad: () => {
-    throw redirect({ to: '/iam/roles' });
+    throw redirect({ to: '/iam/roles', replace: true });
   },
 });
 
@@ -140,10 +151,24 @@ const iamDelegationsRoute = createRoute({
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
     const profile = context?.profile;
 
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags,
+      context.profile
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/users',
+        replace: true,
+      });
+    }
+
     const isChildAccount = profile?.user_type === 'child';
     if (!isDelegationEnabled || isChildAccount) {
       throw redirect({
         to: '/iam/users',
+        replace: true,
       });
     }
   },
@@ -157,7 +182,7 @@ const iamDelegationsCatchAllRoute = createRoute({
   getParentRoute: () => iamDelegationsRoute,
   path: '/$invalidPath',
   beforeLoad: () => {
-    throw redirect({ to: '/iam/delegations' });
+    throw redirect({ to: '/iam/delegations', replace: true });
   },
 });
 
@@ -238,6 +263,7 @@ const iamUserNameIndexRoute = createRoute({
     throw redirect({
       to: '/iam/users/$username/details',
       params: { username: params.username },
+      replace: true,
     });
   },
 }).lazy(() =>
@@ -260,6 +286,7 @@ const iamUserNameDetailsRoute = createRoute({
       throw redirect({
         to: '/account/users/$username/profile',
         params: { username },
+        replace: true,
       });
     }
   },
@@ -309,6 +336,7 @@ const iamUserNameEntitiesRoute = createRoute({
       throw redirect({
         to: '/account/users/$username',
         params: { username },
+        replace: true,
       });
     }
   },
@@ -331,6 +359,7 @@ const iamUserNameDelegationsRoute = createRoute({
       throw redirect({
         to: '/iam/users/$username/details',
         params: { username },
+        replace: true,
       });
     }
   },
@@ -349,6 +378,7 @@ const iamUserNameCatchAllRoute = createRoute({
       throw redirect({
         to: '/iam/users/$username',
         params: { username: params.username },
+        replace: true,
       });
     }
   },
@@ -361,6 +391,7 @@ const iamUserNameDetailsCatchAllRoute = createRoute({
     throw redirect({
       to: '/iam/users/$username/details',
       params: { username: params.username },
+      replace: true,
     });
   },
 });
@@ -372,6 +403,7 @@ const iamUserNameRolesCatchAllRoute = createRoute({
     throw redirect({
       to: '/iam/users/$username/roles',
       params: { username: params.username },
+      replace: true,
     });
   },
 });
@@ -383,6 +415,7 @@ const iamUserNameEntitiesCatchAllRoute = createRoute({
     throw redirect({
       to: '/iam/users/$username/entities',
       params: { username: params.username },
+      replace: true,
     });
   },
 });
@@ -390,7 +423,6 @@ const iamUserNameEntitiesCatchAllRoute = createRoute({
 export const iamRouteTree = iamRoute.addChildren([
   iamTabsRoute.addChildren([
     iamRolesRoute.addChildren([
-      iamRolesIndexRoute,
       iamDefaultsTabsRoute.addChildren([
         iamDefaultRolesRoute,
         iamDefaultEntityAccessRoute,

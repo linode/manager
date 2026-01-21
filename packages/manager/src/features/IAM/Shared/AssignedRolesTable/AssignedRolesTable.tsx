@@ -166,6 +166,17 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
+  const handleRemoveRoleDialogClose = () => {
+    setIsUnassignRoleDialogOpen(false);
+
+    // If we just deleted the last one on a page, reset to the previous page.
+    const removedLastOnPage =
+      filteredAndSortedRoles.length % pagination.pageSize === 1;
+    if (removedLastOnPage) {
+      pagination.handlePageChange(pagination.page - 1);
+    }
+  };
+
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
   const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
@@ -262,6 +273,7 @@ export const AssignedRolesTable = () => {
             ) : (
               <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                 <AssignedEntities
+                  disabled={!permissions.is_account_admin}
                   onButtonClick={handleViewEntities}
                   onRemoveAssignment={handleRemoveAssignment}
                   role={role}
@@ -375,6 +387,7 @@ export const AssignedRolesTable = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: theme.tokens.spacing.S12,
+          minHeight: theme.spacingFunction(40),
         }}
       >
         <Grid container direction="row" rowSpacing={1}>
@@ -445,7 +458,7 @@ export const AssignedRolesTable = () => {
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
-        onClose={() => setIsUnassignRoleDialogOpen(false)}
+        onClose={() => handleRemoveRoleDialogClose()}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />

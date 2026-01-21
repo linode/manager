@@ -22,7 +22,6 @@ const queryString = 'menu-item-Managed';
 
 const queryMocks = vi.hoisted(() => ({
   useIsIAMEnabled: vi.fn(() => ({
-    isIAMBeta: false,
     isIAMEnabled: false,
   })),
   usePreferences: vi.fn().mockReturnValue({}),
@@ -228,6 +227,7 @@ describe('PrimaryNav', () => {
       aclp: {
         beta: true,
         enabled: true,
+        new: true,
       },
       aclpAlerting: {
         accountAlertLimit: 10,
@@ -239,7 +239,7 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findAllByTestId, findByText } = renderWithTheme(
+    const { findAllByTestId, findByText, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
@@ -249,10 +249,55 @@ describe('PrimaryNav', () => {
     const monitorMetricsDisplayItem = await findByText('Metrics');
     const monitorAlertsDisplayItem = await findByText('Alerts');
     const betaChip = await findAllByTestId('betaChip');
+    const newFeatureChip = queryByTestId('newFeatureChip');
+    expect(newFeatureChip).toBeNull(); // when beta is true, only beta chip is shown not new chip
 
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeVisible();
     expect(betaChip).toHaveLength(2);
+  });
+
+  it('shoud show beta chip next to Metrics menu item if the user has the account capability and aclp feature flag has new true', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: true,
+        new: true,
+      },
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: true,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
+
+    const { findByText, findByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = await findByText('Metrics');
+    const monitorAlertsDisplayItem = await findByText('Alerts');
+    const newFeatureChip = await findByTestId('newFeatureChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(newFeatureChip).toBeVisible();
   });
 
   it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
@@ -448,11 +493,9 @@ describe('PrimaryNav', () => {
     expect(queryByTestId('menu-item-Logs')).toBeNull();
   });
 
-  it('should show Administration links if iamRbacPrimaryNavChanges flag is enabled', async () => {
+  it('should show Administration links', async () => {
     const flags: Partial<Flags> = {
-      iamRbacPrimaryNavChanges: true,
       iam: {
-        beta: true,
         enabled: true,
       },
       limitsEvolution: {
@@ -463,7 +506,6 @@ describe('PrimaryNav', () => {
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
       isIAMEnabled: true,
     });
 
@@ -498,15 +540,12 @@ describe('PrimaryNav', () => {
 
   it('should hide Identity & Access link for non beta users', async () => {
     const flags: Partial<Flags> = {
-      iamRbacPrimaryNavChanges: true,
       iam: {
-        beta: true,
         enabled: false,
       },
     };
 
     queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
       isIAMEnabled: false,
     });
 
@@ -520,47 +559,6 @@ describe('PrimaryNav', () => {
     await waitFor(() => {
       expect(
         screen.queryByRole('link', { name: 'Identity & Access' })
-      ).toBeNull();
-    });
-  });
-
-  it('should show Account link and hide Administration if iamRbacPrimaryNavChanges flag is disabled', async () => {
-    const flags: Partial<Flags> = {
-      iamRbacPrimaryNavChanges: false,
-      iam: {
-        beta: true,
-        enabled: true,
-      },
-    };
-
-    queryMocks.useIsIAMEnabled.mockReturnValue({
-      isIAMBeta: true,
-      isIAMEnabled: true,
-    });
-
-    renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
-
-    const adminLink = screen.queryByRole('button', { name: 'Administration' });
-    expect(adminLink).toBeNull();
-
-    await waitFor(() => {
-      expect(screen.queryByRole('link', { name: 'Billing' })).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Quotas' })).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Login History' })).toBeNull();
-      expect(
-        screen.queryByRole('link', { name: 'Service Transfers' })
-      ).toBeNull();
-      expect(screen.queryByRole('link', { name: 'Maintenance' })).toBeNull();
-      expect(
-        screen.queryByRole('link', { name: 'Account' })
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('link', { name: 'Identity & Access' })
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('link', { name: 'Account Settings' })
       ).toBeNull();
     });
   });
@@ -584,10 +582,26 @@ describe('PrimaryNav', () => {
       flags,
     });
 
-    const databaseNavItem = await findByTestId(
+    const networkLoadbalancerNavItem = await findByTestId(
       'menu-item-Network Load Balancer'
     );
 
-    expect(databaseNavItem).toBeVisible();
+    expect(networkLoadbalancerNavItem).toBeVisible();
+  });
+
+  it('should show Partner Referral menu item if the user has the account capability and the flag is enabled', async () => {
+    const flags: Partial<Flags> = {
+      marketplaceV2: true,
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const partnerReferralNavItem = await findByTestId(
+      'menu-item-Partner Referrals'
+    );
+
+    expect(partnerReferralNavItem).toBeVisible();
   });
 });

@@ -21,7 +21,7 @@ describe('NetworkInterfaces', () => {
     const { getByText } = renderWithTheme(<NetworkInterfaceType />);
 
     expect(getByText('Network Interface Type')).toBeVisible();
-    expect(getByText('Interfaces for new Linodes')).toBeVisible();
+    expect(getByText('Allowed interfaces for new Linodes')).toBeVisible();
     expect(getByText('Save')).toBeVisible();
   });
 
@@ -49,9 +49,9 @@ describe('NetworkInterfaces', () => {
       <NetworkInterfaceType />
     );
 
-    expect(getByLabelText('Interfaces for new Linodes')).toHaveAttribute(
-      'disabled'
-    );
+    expect(
+      getByLabelText('Allowed interfaces for new Linodes')
+    ).toHaveAttribute('disabled');
     expect(getByText('Save')).toHaveAttribute('aria-disabled', 'true');
   });
 });

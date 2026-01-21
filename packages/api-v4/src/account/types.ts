@@ -63,9 +63,11 @@ export const accountCapabilities = [
   'Akamai Cloud Load Balancer',
   'Akamai Cloud Pulse',
   'Akamai Cloud Pulse Logs',
+  'Akamai Cloud Pulse Logs LKE-E Audit',
   'Block Storage',
   'Block Storage Encryption',
   'Cloud Firewall',
+  'Cloud Firewall Rule Set',
   'CloudPulse',
   'Disk Encryption',
   'Kubernetes',
@@ -91,7 +93,6 @@ export const accountCapabilities = [
   'Vlans',
   'VPCs',
   'VPC Dual Stack',
-  'VPC IPv6 Large Prefixes',
 ] as const;
 
 export type AccountCapability = (typeof accountCapabilities)[number];

@@ -434,14 +434,6 @@ describe('getIsValidLinodeLabelCharacter', () => {
 });
 
 describe('getDefaultInterfaceGenerationFromAccountSetting', () => {
-  it('returns "legacy_config" for "legacy_config_default_but_linode_allowed"', () => {
-    expect(
-      getDefaultInterfaceGenerationFromAccountSetting(
-        'legacy_config_default_but_linode_allowed'
-      )
-    ).toBe('legacy_config');
-  });
-
   it('returns "legacy_config" for "legacy_config_only"', () => {
     expect(
       getDefaultInterfaceGenerationFromAccountSetting('legacy_config_only')
@@ -452,6 +444,14 @@ describe('getDefaultInterfaceGenerationFromAccountSetting', () => {
     expect(getDefaultInterfaceGenerationFromAccountSetting('linode_only')).toBe(
       'linode'
     );
+  });
+
+  it('returns "linode" for "legacy_config_default_but_linode_allowed"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting(
+        'legacy_config_default_but_linode_allowed'
+      )
+    ).toBe('linode');
   });
 
   it('returns "linode" for "linode_default_but_legacy_config_allowed"', () => {

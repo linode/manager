@@ -35,6 +35,12 @@ export const AssignedRolesActionMenu = ({
     ? permissions?.update_default_delegate_access
     : permissions?.is_account_admin;
 
+  const removeTooltip = !permissionToCheck
+    ? isDefaultDelegationRolesForChildAccount
+      ? 'You do not have permission to remove this role.'
+      : 'You do not have permission to unassign this role.'
+    : undefined;
+
   const accountMenu: Action[] = [
     {
       disabled: !permissionToCheck,
@@ -51,10 +57,10 @@ export const AssignedRolesActionMenu = ({
       onClick: () => {
         handleUnassignRole(role);
       },
-      title: 'Unassign Role',
-      tooltip: !permissionToCheck
-        ? 'You do not have permission to unassign this role.'
-        : undefined,
+      title: isDefaultDelegationRolesForChildAccount
+        ? 'Remove'
+        : 'Unassign Role',
+      tooltip: removeTooltip,
     },
   ];
 
@@ -91,7 +97,9 @@ export const AssignedRolesActionMenu = ({
       onClick: () => {
         handleUnassignRole(role);
       },
-      title: 'Unassign Role',
+      title: isDefaultDelegationRolesForChildAccount
+        ? 'Remove'
+        : 'Unassign Role',
     },
   ];
 

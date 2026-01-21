@@ -28,9 +28,9 @@ import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
 
 const interfaceTypeMap = {
   legacy_config_default_but_linode_allowed:
-    'Configuration Profile Interfaces but allow Linode Interfaces',
+    'Configuration Profile Interfaces (default) but allow Linode Interfaces',
   linode_default_but_legacy_config_allowed:
-    'Linode Interfaces but allow Configuration Profile Interfaces',
+    'Linode Interfaces (default) but allow Configuration Profile Interfaces',
   legacy_config_only: 'Configuration Profile Interfaces Only',
   linode_only: 'Linode Interfaces Only',
 };
@@ -54,7 +54,7 @@ describe('Account network settings', () => {
   describe('Network interface types', () => {
     /*
      * - Confirms that customers can update their account-level Linode interface type.
-     * - Confirms that "Interfaces for new Linodes" drop-down displays user's set value on page load.
+     * - Confirms that "Allowed interfaces for new Linodes" drop-down displays user's set value on page load.
      * - Confirms that save button is initially disabled, but becomes enabled upon changing the selection.
      * - Confirms that outgoing API request contains expected payload data for chosen interface type.
      * - Confirms that toast appears upon successful settings update operation.
@@ -81,7 +81,7 @@ describe('Account network settings', () => {
 
           // Confirm that selected interface type matches API response, and that
           // "Save" button is disabled by default.
-          cy.findByLabelText('Interfaces for new Linodes').should(
+          cy.findByLabelText('Allowed interfaces for new Linodes').should(
             'have.value',
             interfaceTypeMap[defaultInterface]
           );
@@ -89,7 +89,7 @@ describe('Account network settings', () => {
 
           // Confirm that changing selection causes "Save" button to become enabled,
           // then changing back causes it to become disabled again.
-          cy.findByLabelText('Interfaces for new Linodes').click();
+          cy.findByLabelText('Allowed interfaces for new Linodes').click();
           ui.autocompletePopper.find().within(() => {
             cy.findByText(interfaceTypeMap[otherInterfaces[0]])
               .should('be.visible')
@@ -97,7 +97,7 @@ describe('Account network settings', () => {
           });
           ui.button.findByTitle('Save').should('be.enabled');
 
-          cy.findByLabelText('Interfaces for new Linodes').click();
+          cy.findByLabelText('Allowed interfaces for new Linodes').click();
           ui.autocompletePopper.find().within(() => {
             cy.findByText(interfaceTypeMap[defaultInterface])
               .should('be.visible')
@@ -108,7 +108,7 @@ describe('Account network settings', () => {
           // Confirm that we can update our setting using every other choice,
           // and that the outgoing API request payload contains the expected value.
           otherInterfaces.forEach((otherInterface, index) => {
-            cy.findByLabelText('Interfaces for new Linodes').click();
+            cy.findByLabelText('Allowed interfaces for new Linodes').click();
             ui.autocompletePopper.find().within(() => {
               cy.findByText(interfaceTypeMap[otherInterface])
                 .should('be.visible')
@@ -161,7 +161,7 @@ describe('Account network settings', () => {
         .should('be.visible')
         .within(() => {
           cy.findByText('Network Interface Type').should('be.visible');
-          cy.findByLabelText('Interfaces for new Linodes')
+          cy.findByLabelText('Allowed interfaces for new Linodes')
             .should('be.visible')
             .click();
           ui.autocompletePopper.find().within(() => {

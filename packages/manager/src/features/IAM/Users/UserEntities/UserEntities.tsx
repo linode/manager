@@ -23,17 +23,18 @@ import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 export const UserEntities = () => {
   const theme = useTheme();
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { data: permissions } = usePermissions('account', [
+    'view_user',
+    'list_entities',
+    'list_user_permissions',
+  ]);
   const {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useUserRoles(username ?? '', permissions?.is_account_admin);
+  } = useUserRoles(username ?? '', permissions?.list_user_permissions);
 
-  const { error } = useAccountUser(
-    username ?? '',
-    permissions?.is_account_admin
-  );
+  const { error } = useAccountUser(username ?? '', permissions?.view_user);
 
   const hasAssignedRoles = assignedRoles
     ? assignedRoles.entity_access.length > 0
@@ -43,7 +44,7 @@ export const UserEntities = () => {
     return <CircleProgress />;
   }
 
-  if (!permissions?.is_account_admin) {
+  if (!permissions?.list_entities) {
     return (
       <Notice variant="error">
         You do not have permission to view this user&apos;s entities.

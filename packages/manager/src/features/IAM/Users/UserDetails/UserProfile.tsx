@@ -20,29 +20,27 @@ import { UsernamePanel } from './UsernamePanel';
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { data: permissions } = usePermissions('account', [
-    'is_account_admin',
+    'view_user',
     'update_user',
     'delete_user',
+    'list_user_permissions',
   ]);
-
-  const isAccountAdmin = permissions?.is_account_admin;
 
   const {
     data: user,
     error,
     isLoading,
-  } = useAccountUser(username ?? '', isAccountAdmin);
-  const { data: assignedRoles } = useUserRoles(username ?? '', isAccountAdmin);
-
-  // Only admin users get update_user and delete_user permissions, but doing a bit of defensive programming here to be safe.
-  const canUpdateUser = isAccountAdmin || permissions?.update_user;
-  const canDeleteUser = isAccountAdmin || permissions?.delete_user;
+  } = useAccountUser(username ?? '', permissions?.view_user);
+  const { data: assignedRoles } = useUserRoles(
+    username ?? '',
+    permissions?.list_user_permissions
+  );
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!isAccountAdmin) {
+  if (!permissions?.view_user || !permissions?.list_user_permissions) {
     return (
       <Notice variant="error">
         You do not have permission to view this user&apos;s details.
@@ -66,9 +64,15 @@ export const UserProfile = () => {
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
         <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
-        <UsernamePanel activeUser={user} canUpdateUser={canUpdateUser} />
-        <UserEmailPanel activeUser={user} canUpdateUser={canUpdateUser} />
-        <DeleteUserPanel activeUser={user} canDeleteUser={canDeleteUser} />
+        <UsernamePanel
+          activeUser={user}
+          canUpdateUser={permissions?.update_user}
+        />
+        <UserEmailPanel activeUser={user} />
+        <DeleteUserPanel
+          activeUser={user}
+          canDeleteUser={permissions?.delete_user}
+        />
       </Stack>
     </>
   );

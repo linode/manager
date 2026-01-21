@@ -21,6 +21,10 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  marketplaceCategoryFactory,
+  marketplacePartnersFactory,
+  marketplaceProductFactory,
+  marketplaceTypeFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
@@ -52,6 +56,7 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseConnectionPoolFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
@@ -100,6 +105,7 @@ import {
   networkLoadBalancerNodeFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
+  notificationChannelAlertsFactory,
   notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
@@ -150,6 +156,7 @@ import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
+import { SPECIAL_PREFIX_LIST_NAMES } from 'src/features/Firewalls/FirewallDetail/Rules/shared';
 
 import type {
   AccountMaintenance,
@@ -209,6 +216,11 @@ const makeMockDatabase = (params: PathParams): Database => {
 
     db.ssl_connection = true;
   }
+
+  if (db.engine === 'postgresql') {
+    db.connection_pool_port = 100;
+  }
+
   const database = databaseFactory.build(db);
 
   if (database.platform !== 'rdbms-default') {
@@ -368,6 +380,11 @@ const databases = [
     return HttpResponse.json(makeResourcePage(combinedList));
   }),
 
+  http.get('*/databases/postgresql/instances/:id/connection-pools', () => {
+    const connectionPools = databaseConnectionPoolFactory.buildList(5);
+    return HttpResponse.json(makeResourcePage(connectionPools));
+  }),
+
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
     const database = makeMockDatabase(params);
     return HttpResponse.json(database);
@@ -508,6 +525,30 @@ const vpc = [
     const subnet = subnetFactory.build({ ...(body as any) });
     return HttpResponse.json(subnet);
   }),
+  http.get('*/v4beta/regions/vpc-availability', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          region: 'ap-west',
+          available: true,
+          available_ipv6_prefix_lengths: [],
+        },
+        {
+          region: 'in-maa',
+          available: true,
+          available_ipv6_prefix_lengths: [52],
+        },
+        {
+          region: 'us-southeast',
+          available: true,
+          available_ipv6_prefix_lengths: [48, 52],
+        },
+      ],
+      page: 1,
+      pages: 1,
+      results: 3,
+    });
+  }),
 ];
 
 const iam = [
@@ -606,6 +647,43 @@ const netLoadBalancers = [
   ),
 ];
 
+const marketplace = [
+  http.get('*/v4beta/marketplace/products', () => {
+    const marketplaceProduct = marketplaceProductFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
+  }),
+  http.get('*/v4beta/marketplace/products/:productId/details', () => {
+    const marketplaceProductDetail = marketplaceProductFactory.build({
+      details: {
+        overview: {
+          description:
+            'This is a detailed description of the marketplace product.',
+        },
+        pricing: 'Pricing information goes here.',
+        documentation: 'Documentation link or information goes here.',
+        support: 'Support information goes here.',
+      },
+    });
+    return HttpResponse.json(marketplaceProductDetail);
+  }),
+  http.get('*/v4beta/marketplace/categories', () => {
+    const marketplaceCategory = marketplaceCategoryFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
+  }),
+  http.get('*/v4beta/marketplace/types', () => {
+    const marketplaceType = marketplaceTypeFactory.buildList(100);
+    return HttpResponse.json(makeResourcePage([...marketplaceType]));
+  }),
+  http.get('*/v4beta/marketplace/partners', () => {
+    const marketplacePartner = marketplacePartnersFactory.buildList(100);
+    return HttpResponse.json(makeResourcePage([...marketplacePartner]));
+  }),
+  http.post('*/v4beta/marketplace/referral', async () => {
+    await sleep(2000);
+    return HttpResponse.json({});
+  }),
+];
+
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
@@ -670,7 +748,11 @@ export const handlers = [
       // restricted: true,
       // user_type: 'default',
     });
-    return HttpResponse.json(profile);
+    return HttpResponse.json(profile, {
+      headers: {
+        'X-Customer-UUID': '51C68049-266E-451B-80ABFC92B5B9D576',
+      },
+    });
   }),
 
   http.put('*/profile', async ({ request }) => {
@@ -1403,14 +1485,25 @@ export const handlers = [
       const filter = JSON.parse(request.headers.get('x-filter') || '{}');
 
       if (filter['name']) {
-        const match =
-          prefixlists.find((pl) => pl.name === filter.name) ??
-          firewallPrefixListFactory.build({
-            name: filter['name'],
-            description: `${filter['name']} description`,
-          }); // fallback if not found
+        const existingPrefixList = prefixlists.find(
+          (pl) => pl.name === filter.name
+        );
 
-        return HttpResponse.json(makeResourcePage([match]));
+        // SPECIAL_PREFIX_LIST_NAMES may expand in the future if returned by the API
+        const isPrefixListSpecial = SPECIAL_PREFIX_LIST_NAMES.includes(
+          filter.name
+        );
+
+        const match = isPrefixListSpecial
+          ? [] // Special PLs: API currently returns empty; @TODO: update with actual response once API supports them
+          : [
+              existingPrefixList ??
+                firewallPrefixListFactory.build({
+                  name: filter.name,
+                  description: `${filter.name} description`,
+                }),
+            ];
+        return HttpResponse.json(makeResourcePage(match));
       }
     }
     return HttpResponse.json(makeResourcePage(prefixlists));
@@ -1439,6 +1532,7 @@ export const handlers = [
                   ipv4: [
                     'pl:system:resolvers:test',
                     'pl:system:test',
+                    'pl::vpcs:<current>', // special prefixlist
                     '192.168.1.200',
                     '192.168.1.201',
                   ],
@@ -1479,6 +1573,7 @@ export const handlers = [
                       'pl::supports-both-but-empty-both',
                       '172.31.255.255',
                       'pl::marked-for-deletion',
+                      'pl::vpcs:<current>', // special prefixlist
                     ],
                     ipv6: [
                       'pl::supports-both',
@@ -1491,6 +1586,7 @@ export const handlers = [
                       // our logic will treat them as a single entity within the ipv4 or ipv6 array.
                       'pl::vpcs:supports-both-2',
                       '2001:db8:85a3::8a2e:372:7336/128',
+                      'pl::subnets:<current>', // special prefixlist
                     ],
                   },
                   ports: '22, 53, 80, 100, 443, 3306',
@@ -3556,9 +3652,110 @@ export const handlers = [
     return HttpResponse.json({});
   }),
   http.get('*/monitor/alert-channels', () => {
-    return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(7))
+    const notificationChannels = notificationChannelFactory.buildList(3);
+    notificationChannels.push(
+      notificationChannelFactory.build({
+        id: 5,
+        label: 'Email test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        details: {
+          email: {
+            usernames: ['user1', 'user2'],
+            recipient_type: 'user',
+          },
+        },
+        alerts: {
+          alert_count: 0,
+          type: 'alerts-definitions',
+          url: 'monitor/alert-channels/{id}/alerts',
+        },
+      })
     );
+    notificationChannels.push(
+      notificationChannelFactory.build({
+        label: 'System channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user5',
+        created_by: 'admin',
+        type: 'system',
+      })
+    );
+    notificationChannels.push(...notificationChannelFactory.buildList(3));
+    return HttpResponse.json(makeResourcePage(notificationChannels));
+  }),
+  http.post('*/monitor/alert-channels', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.put('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.get('*/monitor/alert-channels/:id', ({ params }) => {
+    if (params.id === undefined) {
+      return HttpResponse.json({}, { status: 404 });
+    }
+    if (params.id === '5') {
+      return HttpResponse.json(
+        notificationChannelFactory.build({
+          id: 5,
+          label: 'Email test channel',
+          updated: '2023-11-05T04:00:00',
+          updated_by: 'user3',
+          created_by: 'admin',
+          type: 'user',
+          channel_type: 'email',
+          details: {
+            email: {
+              recipient_type: 'user',
+              usernames: [
+                'user1',
+                'user2',
+                'user3',
+                'user4',
+                'user5',
+                'user6',
+                'user7',
+                'user8',
+                'user9',
+                'user10',
+              ],
+            },
+          },
+        })
+      );
+    }
+    return HttpResponse.json(
+      notificationChannelFactory.build({
+        label: 'Test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        type: 'user',
+        channel_type: 'email',
+        details: {
+          email: {
+            usernames: ['ChildUser', 'NonAdminUser'],
+          },
+        },
+      })
+    );
+  }),
+  http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
+    return HttpResponse.json({});
+  }),
+  http.get('*/monitor/alert-channels/:id/alerts', ({ params }) => {
+    if (params.id === 'undefined') {
+      return HttpResponse.json({}, { status: 404 });
+    }
+    if (params.id === '5') {
+      return HttpResponse.json(makeResourcePage([]));
+    }
+    const alerts = notificationChannelAlertsFactory.buildList(3);
+    const dbaasalerts = notificationChannelAlertsFactory.buildList(2, {
+      service_type: 'dbaas',
+    });
+    return HttpResponse.json(makeResourcePage([...alerts, ...dbaasalerts]));
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
@@ -3597,7 +3794,7 @@ export const handlers = [
           }),
         }),
         serviceTypesFactory.build({
-          label: 'Block Storage',
+          label: 'Volume',
           service_type: 'blockstorage',
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
@@ -3623,7 +3820,7 @@ export const handlers = [
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
-      blockstorage: 'Block Storage',
+      blockstorage: 'Volume',
       lke: 'LKE Enterprise',
     };
     const response = serviceTypesFactory.build({
@@ -4400,6 +4597,7 @@ export const handlers = [
   ...vpc,
   ...entities,
   ...netLoadBalancers,
+  ...marketplace,
   http.get('*/v4beta/maintenance/policies', () => {
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))

@@ -39,6 +39,9 @@ export const DatabaseBackupsDialog = (props: Props) => {
     {
       fork: toDatabaseFork(database.id, date, time),
       region,
+      // Assign same VPC when forking to the same region, otherwise set VPC to null
+      private_network:
+        database.region === region ? database.private_network : null,
     }
   );
 
@@ -59,6 +62,9 @@ export const DatabaseBackupsDialog = (props: Props) => {
     });
   };
 
+  const isClusterWithVPCAndForkingToDifferentRegion =
+    database.private_network !== null && database.region !== region;
+
   return (
     <Dialog
       onClose={onClose}
@@ -66,6 +72,15 @@ export const DatabaseBackupsDialog = (props: Props) => {
       subtitle={formattedDate && `From ${formattedDate} (UTC)`}
       title={`Restore ${database.label}`}
     >
+      {isClusterWithVPCAndForkingToDifferentRegion && ( // Show warning when forking a cluster with VPC to a different region
+        <Notice variant="warning">
+          The database cluster is currently assigned to a VPC. When you restore
+          the cluster into a different region, it will not be assigned to a VPC
+          by default. If your workflow requires a VPC, go to the cluster’s
+          Networking tab after the restore is complete and assign the cluster to
+          a VPC.
+        </Notice>
+      )}
       <Typography sx={(theme) => ({ marginBottom: theme.spacingFunction(32) })}>
         Restoring a backup creates a fork from this backup. If you proceed and
         the fork is created successfully, you should remove the original
