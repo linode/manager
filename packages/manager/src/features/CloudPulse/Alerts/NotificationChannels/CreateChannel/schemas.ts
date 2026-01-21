@@ -4,7 +4,8 @@ import type { ChannelType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
-const specialStartEndRegex = /^[^a-zA-Z0-9]/;
+const specialStartRegex = /^[^a-zA-Z0-9]/;
+const specialEndRegex = /[^a-zA-Z0-9]$/;
 
 export const createNotificationChannelSchema = object({
   name: string()
@@ -18,7 +19,10 @@ export const createNotificationChannelSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !specialStartEndRegex.test(value ?? '');
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
       }
     ),
   type: mixed<ChannelType>()
