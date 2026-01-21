@@ -166,13 +166,6 @@ export const MarketplaceLanding = () => {
 
   const hasFiltersApplied = Boolean(searchQuery || selectedTypeId);
 
-  // Reset counters when filters change
-  React.useEffect(() => {
-    setEmptyCategoryCount(0);
-    setLoadedCategoryCount(0);
-    setDisplayedCategoryCount(CATEGORIES_PER_BATCH);
-  }, [searchQuery, selectedCategoryId, selectedTypeId]);
-
   const handleCategoryLoaded = React.useCallback((isEmpty: boolean) => {
     setLoadedCategoryCount((prev) => prev + 1);
     if (isEmpty) {
@@ -189,25 +182,54 @@ export const MarketplaceLanding = () => {
     displayedCategoryCount
   );
 
-  // When filters are applied, fetch ALL categories to determine empty state correctly
-  // Otherwise only fetch the categories being displayed (lazy loading)
-  const categoriesToFetch = hasFiltersApplied
-    ? filteredCategories
-    : displayedCategoriesToRender;
+  const categoriesToFetch = displayedCategoriesToRender;
 
   const totalCategories = filteredCategories.length;
 
   const hasMoreCategories =
     displayedCategoriesToRender.length < totalCategories;
 
+  // Reset counters when filters change
+  React.useEffect(() => {
+    setEmptyCategoryCount(0);
+    setLoadedCategoryCount(0);
+    setDisplayedCategoryCount(CATEGORIES_PER_BATCH);
+  }, [searchQuery, selectedCategoryId, selectedTypeId]);
+
+  // Auto-fetch next batch if current batch has no results when filters are applied.
+  // This avoids relying on waypoint scrolling to find results:
+  // - Keeps fetching batches until we find results or run out of categories
+  // - Once results appear, switches to normal waypoint (scroll) lazy loading
+  // - Shows empty state only after checking all categories
+  React.useEffect(() => {
+    const allCurrentBatchCategoriesEmpty =
+      hasFiltersApplied &&
+      loadedCategoryCount > 0 &&
+      loadedCategoryCount === emptyCategoryCount &&
+      loadedCategoryCount === displayedCategoryCount;
+
+    const hasMoreToFetch = displayedCategoryCount < totalCategories;
+
+    if (allCurrentBatchCategoriesEmpty && hasMoreToFetch) {
+      setDisplayedCategoryCount((prev) => prev + CATEGORIES_PER_BATCH);
+    }
+  }, [
+    hasFiltersApplied,
+    loadedCategoryCount,
+    emptyCategoryCount,
+    displayedCategoryCount,
+    totalCategories,
+  ]);
+
   // Show empty state when:
   // 1. No filters: totalCategories === 0 (no categories exist with products)
-  // 2. With filters: at least one category loaded and all loaded are empty
+  // 2. With filters: all categories loaded and all are empty
+  const allCategoriesLoaded = loadedCategoryCount === totalCategories;
   const showEmptyState =
     !isLoading &&
     (totalCategories === 0 ||
       (hasFiltersApplied &&
-        loadedCategoryCount > 0 &&
+        allCategoriesLoaded &&
         loadedCategoryCount === emptyCategoryCount));
 
   if (isLoading) {
