@@ -3,7 +3,6 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -17,18 +16,28 @@ import { UserRow } from './UserRow';
 beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({}),
+  useGetChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useFlags: queryMocks.useFlags,
+    useGetChildAccountsQuery: queryMocks.useGetChildAccountsQuery,
+    useProfile: queryMocks.useProfile,
   };
 });
 
 describe('UserRow', () => {
+  beforeEach(() => {
+    queryMocks.useGetChildAccountsQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+  });
+
   it('renders a username and email', async () => {
     const user = accountUserFactory.build();
 
@@ -39,24 +48,22 @@ describe('UserRow', () => {
     expect(getByText(user.username)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
   });
+
   it('renders username, email, and user type for a Child user when isIAMDelegationEnabled flag is enabled', async () => {
     const user = accountUserFactory.build({
       user_type: 'child',
     });
 
-    server.use(
-      // Mock the active profile for the child account.
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
-      })
-    );
-
-    queryMocks.useFlags.mockReturnValue({
-      iamDelegation: { enabled: true },
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'child' }),
     });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />, {
+        flags: {
+          iamDelegation: { enabled: true },
+        },
+      })
     );
 
     expect(getByText(user.username)).toBeVisible();
@@ -72,19 +79,16 @@ describe('UserRow', () => {
       user_type: 'delegate',
     });
 
-    server.use(
-      // Mock the active profile for the child account.
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
-      })
-    );
-
-    queryMocks.useFlags.mockReturnValue({
-      iamDelegation: { enabled: true },
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'child' }),
     });
 
     const { getByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={delegateUser} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={delegateUser} />, {
+        flags: {
+          iamDelegation: { enabled: true },
+        },
+      })
     );
 
     expect(getByText(delegateUser.username)).toBeVisible();
@@ -105,13 +109,12 @@ describe('UserRow', () => {
 
     expect(getByText('Never')).toBeVisible();
   });
+
   it('renders a timestamp of the last_login if it was successful', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      })
-    );
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ timezone: 'utc' }),
+    });
 
     const user = accountUserFactory.build({
       last_login: {
@@ -128,13 +131,12 @@ describe('UserRow', () => {
 
     expect(date).toBeVisible();
   });
+
   it('renders a timestamp and "Failed" of the last_login if it was failed', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      })
-    );
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ timezone: 'utc' }),
+    });
 
     const user = accountUserFactory.build({
       last_login: {
