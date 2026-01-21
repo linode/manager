@@ -317,26 +317,35 @@ export const MarketplaceLanding = () => {
         ))}
         {hasMoreCategories && <Waypoint onEnter={handleFetchMore} />}
         {showEmptyState && (
-          <ErrorState
-            compact
-            CustomIcon={EmptyStateCloud}
-            errorText={
-              <Box>
-                <Typography variant="h2">No results found</Typography>
-                <Typography>
-                  Looks like there&apos;s nothing here.
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              minHeight: 'calc(100vh - 400px)',
+            }}
+          >
+            <ErrorState
+              compact
+              CustomIcon={EmptyStateCloud}
+              errorText={
+                <Box>
+                  <Typography variant="h2">No results found</Typography>
+                  <Typography>
+                    Looks like there&apos;s nothing here.
+                    {hasFiltersApplied && (
+                      <> Try a new search and let&apos;s see what we find!</>
+                    )}
+                  </Typography>
                   {hasFiltersApplied && (
-                    <> Try a new search and let&apos;s see what we find!</>
+                    <LinkButton onClick={handleResetFilters} sx={{ mt: 2 }}>
+                      Reset filters
+                    </LinkButton>
                   )}
-                </Typography>
-                {hasFiltersApplied && (
-                  <LinkButton onClick={handleResetFilters} sx={{ mt: 2 }}>
-                    Reset filters
-                  </LinkButton>
-                )}
-              </Box>
-            }
-          />
+                </Box>
+              }
+            />
+          </Box>
         )}
       </Stack>
     </Box>
