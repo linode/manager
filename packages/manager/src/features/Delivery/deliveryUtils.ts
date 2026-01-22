@@ -97,3 +97,10 @@ export const getStreamDescription = (stream: Stream) => {
 export const getDestinationDescription = (destination: Destination) => {
   return `${getDestinationTypeOption(destination.type)?.label}`;
 };
+
+export const useIsLkeEAuditLogsTypeSelectionEnabled = (): boolean => {
+  const { data: account } = useAccount();
+  return !!account?.capabilities?.includes(
+    'Akamai Cloud Pulse Logs LKE-E Audit'
+  );
+};
