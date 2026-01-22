@@ -1,4 +1,7 @@
-import { iamQueries } from '@linode/queries';
+import {
+  iamQueries,
+  useGetDefaultDelegationAccessQuery,
+} from '@linode/queries';
 import {
   useAccountRoles,
   useGetChildAccountsQuery,
@@ -8,6 +11,8 @@ import {
 import { queryOptions } from '@tanstack/react-query';
 
 import { useFlags } from 'src/hooks/useFlags';
+
+import { useDelegationRole } from './useDelegationRole';
 
 import type { Profile } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
@@ -75,22 +80,39 @@ export const checkIAMEnabled = async (
 };
 
 /**
- * Returns whether or not features related to the IAM Delegation project
- * should be enabled.
+ * Returns whether or not features related to the IAM Delegation project should be enabled.
  */
 export const useIsIAMDelegationEnabled = () => {
+  const { isChildAccount, isParentAccount, isDelegateAccount } =
+    useDelegationRole();
   const flags = useFlags();
 
-  const { error, isLoading } = useGetChildAccountsQuery({});
+  const { error: childAccountsError, isLoading: childAccountsLoading } =
+    useGetChildAccountsQuery({
+      enabled: isParentAccount,
+    });
 
-  const notFound = error?.some((e) => e.reason === 'Not found');
+  const { error: defaultAccessError, isLoading: defaultAccessLoading } =
+    useGetDefaultDelegationAccessQuery({
+      enabled: isChildAccount,
+    });
+
+  const errors = [childAccountsError, defaultAccessError].filter(Boolean);
+
+  const notFound = errors?.some(
+    (e) => e?.[0]?.reason === 'Not found' || e?.[0]?.reason === 'Unauthorized'
+  );
+
+  const isLoading = childAccountsLoading || defaultAccessLoading;
 
   // Only enable if:
   // 1. Flag is enabled
-  // 2. Query has completed
-  // 3. Either succeeded (no error) OR got an error that's NOT "Not found"
+  // 2. For delegates: always enable (they have delegation access)
+  // 3. For parent/child accounts (non-delegates): enable only if queries completed and no "Not found"/"Unauthorized" errors
   const isIAMDelegationEnabled =
-    flags.iamDelegation?.enabled && !isLoading && !notFound;
+    flags.iamDelegation?.enabled &&
+    (isDelegateAccount ||
+      ((isParentAccount || isChildAccount) && !isLoading && !notFound));
 
   return {
     isLoading,
