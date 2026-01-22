@@ -166,9 +166,17 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const handleRemoveRoleDialogClose = () => {
-    setIsUnassignRoleDialogOpen(false);
-
+  /**
+   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
+   *
+   * @param drawerMode Optional mode indicating which dialog should be closed.
+   */
+  const handleDialogClose = (drawerMode?: DrawerModes) => {
+    if (drawerMode && drawerMode === 'change-role') {
+      setIsChangeRoleDrawerOpen(false);
+    } else {
+      setIsUnassignRoleDialogOpen(false);
+    }
     // If we just deleted the last one on a page, reset to the previous page.
     const removedLastOnPage =
       filteredAndSortedRoles.length % pagination.pageSize === 1;
@@ -453,12 +461,12 @@ export const AssignedRolesTable = () => {
       />
       <ChangeRoleDrawer
         mode={drawerMode}
-        onClose={() => setIsChangeRoleDrawerOpen(false)}
+        onClose={() => handleDialogClose(drawerMode)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
-        onClose={() => handleRemoveRoleDialogClose()}
+        onClose={() => handleDialogClose()}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />
