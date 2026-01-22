@@ -6,7 +6,6 @@ export interface ChildAccount {
 }
 
 export interface GetChildAccountsIamParams {
-  enabled?: boolean;
   params?: Params;
   users?: boolean;
 }

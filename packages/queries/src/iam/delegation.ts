@@ -128,14 +128,12 @@ export const delegationQueries = createQueryKeys('delegation', {
 export const useGetChildAccountsQuery = ({
   params,
   users,
-  enabled = true,
 }: GetChildAccountsIamParams): UseQueryResult<
   ResourcePage<ChildAccount | ChildAccountWithDelegates>,
   APIError[]
 > => {
   return useQuery({
     ...delegationQueries.childAccounts({ params, users }),
-    enabled,
   });
 };
 
