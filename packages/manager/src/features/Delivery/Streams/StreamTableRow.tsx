@@ -13,6 +13,7 @@ import { LinkWithTooltipAndEllipsis } from 'src/features/Delivery/Shared/LinkWit
 import { StreamActionMenu } from 'src/features/Delivery/Streams/StreamActionMenu';
 
 import type { Stream, StreamStatus } from '@linode/api-v4';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 import type { StreamHandlers } from 'src/features/Delivery/Streams/StreamActionMenu';
 
 interface StreamTableRowProps extends StreamHandlers {
@@ -22,6 +23,9 @@ interface StreamTableRowProps extends StreamHandlers {
 export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
   const { stream, onDelete, onDisableOrEnable, onEdit } = props;
   const { id, status } = stream;
+  const iconStatus = (
+    ['active', 'error', 'inactive'].includes(status) ? status : 'other'
+  ) as Status;
 
   return (
     <TableRow key={id}>
@@ -35,7 +39,7 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
       </TableCell>
       <TableCell>{getStreamTypeOption(stream.type)?.label}</TableCell>
       <TableCell statusCell>
-        <StatusIcon status={status} />
+        <StatusIcon pulse={false} status={iconStatus} />
         {humanizeStreamStatus(status)}
       </TableCell>
       <TableCell>{id}</TableCell>
@@ -70,6 +74,8 @@ const humanizeStreamStatus = (status: StreamStatus) => {
       return 'Active';
     case 'inactive':
       return 'Inactive';
+    case 'provisioning':
+      return 'Provisioning';
     default:
       return 'Unknown';
   }

@@ -1,5 +1,6 @@
 import {
   type CreateDestinationPayload,
+  streamStatus,
   type StreamStatus,
   streamType,
 } from '@linode/api-v4';
@@ -14,7 +15,7 @@ import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { type SubmitHandler, useFormContext, useWatch } from 'react-hook-form';
 
 import {
@@ -71,6 +72,18 @@ export const StreamForm = (props: StreamFormProps) => {
     control,
     name: 'destination',
   });
+
+  const selectedStreamStatus = useWatch({
+    control,
+    name: 'stream.status',
+  });
+  const submitButtonTooltip = useMemo(
+    () =>
+      selectedStreamStatus === streamStatus.Provisioning
+        ? 'You cannot save changes while the stream is provisioning.'
+        : undefined,
+    [selectedStreamStatus]
+  );
 
   useEffect(() => {
     setDestinationVerified(false);
@@ -194,7 +207,10 @@ export const StreamForm = (props: StreamFormProps) => {
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
           <FormSubmitBar
-            blockSubmit={!selectedDestinations?.length}
+            blockSubmit={
+              selectedStreamStatus === streamStatus.Provisioning ||
+              !selectedDestinations?.length
+            }
             connectionTested={destinationVerified}
             destinationType={destination?.type}
             disableTestConnection={disableTestConnection}
@@ -206,6 +222,7 @@ export const StreamForm = (props: StreamFormProps) => {
               scrollErrorIntoViewV2(formRef)
             )}
             onTestConnection={handleTestConnection}
+            submitButtonTooltip={submitButtonTooltip}
           />
         </Grid>
       </Grid>

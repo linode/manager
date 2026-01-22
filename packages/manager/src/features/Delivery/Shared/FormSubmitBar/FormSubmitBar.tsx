@@ -21,6 +21,7 @@ interface StreamFormSubmitBarProps {
   mode: FormMode;
   onSubmit: () => void;
   onTestConnection: () => void;
+  submitButtonTooltip?: string;
 }
 
 export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
@@ -35,6 +36,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
     isSubmitting,
     isTesting,
     disableTestConnection = false,
+    submitButtonTooltip,
   } = props;
 
   const capitalizedFormType = capitalize(formType);
@@ -108,6 +110,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
                 alignSelf: 'flex-end',
               },
             })}
+            tooltipText={submitButtonTooltip}
           >
             {buttonLabel}
           </Button>
