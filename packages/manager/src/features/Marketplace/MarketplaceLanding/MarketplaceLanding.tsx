@@ -38,8 +38,8 @@ export const MarketplaceLanding = () => {
     typeId: selectedTypeId,
   } = search;
 
-  const [emptyCategoryCount, setEmptyCategoryCount] = React.useState(0);
   const [loadedCategoryCount, setLoadedCategoryCount] = React.useState(0);
+  const [emptyCategoryCount, setEmptyCategoryCount] = React.useState(0);
   const [displayedCategoryCount, setDisplayedCategoryCount] =
     React.useState(CATEGORIES_PER_BATCH);
 
@@ -191,8 +191,8 @@ export const MarketplaceLanding = () => {
 
   // Reset counters when filters change
   React.useEffect(() => {
-    setEmptyCategoryCount(0);
     setLoadedCategoryCount(0);
+    setEmptyCategoryCount(0);
     setDisplayedCategoryCount(CATEGORIES_PER_BATCH);
   }, [searchQuery, selectedCategoryId, selectedTypeId]);
 
@@ -223,7 +223,7 @@ export const MarketplaceLanding = () => {
 
   // Show empty state when:
   // 1. No filters: totalCategories === 0 (no categories exist with products)
-  // 2. With filters: all categories loaded and all are empty
+  // 2. With filters: all categories loaded and all loaded categories are empty
   const allCategoriesLoaded = loadedCategoryCount === totalCategories;
   const showEmptyState =
     !isLoading &&

@@ -123,12 +123,35 @@ export const CategorySection = (props: CategorySectionProps) => {
 
   const isLoading = isProductsLoading || isPartnerLoading || isTypesLoading;
 
-  // Notify parent when loading completes
+  // Notify parent when loading completes (only once per filter change).
+  // This prevents duplicate notifications on refetches (for any reason) for the given filter
+  // that could cause inaccurate empty/error counters in the parent.
+  const hasNotifiedRef = React.useRef(false);
+  const prevFiltersRef = React.useRef(filters);
+
   React.useEffect(() => {
-    if (!isLoading && onLoaded) {
-      onLoaded(products.length === 0);
+    // Reset notification flag when filters change
+    if (
+      prevFiltersRef.current.searchQuery !== filters.searchQuery ||
+      prevFiltersRef.current.categoryId !== filters.categoryId ||
+      prevFiltersRef.current.typeId !== filters.typeId
+    ) {
+      hasNotifiedRef.current = false;
+      prevFiltersRef.current = filters;
     }
-  }, [isLoading, products.length]);
+
+    // Notify parent once loading is complete
+    if (!isLoading && onLoaded && !hasNotifiedRef.current) {
+      onLoaded(products.length === 0);
+      hasNotifiedRef.current = true;
+    }
+  }, [
+    isLoading,
+    products.length,
+    filters.searchQuery,
+    filters.categoryId,
+    filters.typeId,
+  ]);
 
   React.useEffect(() => {
     // Fetch next page when we've displayed all current products
