@@ -172,7 +172,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
             options={destinationNameOptions.filter(
               ({ type }) => type === selectedDestinationType
             )}
-            placeholder="Create or Select Destination Name"
+            placeholder="Select existing or enter new destination"
             renderOption={(props, option) => {
               const { id, ...optionProps } = props;
               return (
@@ -246,7 +246,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     <Paper>
       <Typography variant="h2">Delivery</Typography>
       <Typography sx={{ mt: theme.spacingFunction(12) }}>
-        Define a destination where you want this stream to send logs.
+        Set the destination for log delivery.
       </Typography>
       {isLoading && (
         <Box display="flex" justifyContent="center">
