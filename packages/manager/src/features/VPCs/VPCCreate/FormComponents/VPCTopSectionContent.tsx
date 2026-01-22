@@ -205,61 +205,64 @@ export const VPCTopSectionContent = (props: Props) => {
                     sxCardBase={{ gap: 0 }}
                     sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
                   />
-                  <SelectionCard
-                    checked={isDualStackSelected}
-                    disabled={!permissions?.create_vpc}
-                    gridSize={{
-                      md: isDrawer ? 12 : 3,
-                      sm: 12,
-                      xs: 12,
-                    }}
-                    heading="IPv4 + IPv6 (Dual Stack)"
-                    onClick={() => {
-                      field.onChange([
-                        {
-                          range: '/52',
-                        },
-                      ]);
-                      subnets?.forEach((subnet, idx) =>
-                        update(idx, {
-                          ...subnet,
-                          ipv6: subnet.ipv6 ?? [{ range: '/56' }],
-                        })
-                      );
-                    }}
-                    renderIcon={() => (
-                      <Radio
+                  {availableRegionIPv6PrefixLengths &&
+                    availableRegionIPv6PrefixLengths.length > 0 && (
+                      <SelectionCard
                         checked={isDualStackSelected}
                         disabled={!permissions?.create_vpc}
-                      />
-                    )}
-                    renderVariant={() => (
-                      <TooltipIcon
-                        status="info"
-                        sxTooltipIcon={{
-                          padding: '8px',
+                        gridSize={{
+                          md: isDrawer ? 12 : 3,
+                          sm: 12,
+                          xs: 12,
                         }}
-                        text={
-                          <Stack spacing={2}>
-                            <Typography>
-                              The VPC supports both IPv4 and IPv6 addresses.
-                            </Typography>
-                            <Typography>
-                              For IPv4, {RFC1918HelperText}
-                            </Typography>
-                            <Typography>
-                              For IPv6, the VPC is assigned an IPv6 prefix
-                              length of <Code>/52</Code> by default.
-                            </Typography>
-                          </Stack>
-                        }
-                        width={250}
+                        heading="IPv4 + IPv6 (Dual Stack)"
+                        onClick={() => {
+                          field.onChange([
+                            {
+                              range: '/52',
+                            },
+                          ]);
+                          subnets?.forEach((subnet, idx) =>
+                            update(idx, {
+                              ...subnet,
+                              ipv6: subnet.ipv6 ?? [{ range: '/56' }],
+                            })
+                          );
+                        }}
+                        renderIcon={() => (
+                          <Radio
+                            checked={isDualStackSelected}
+                            disabled={!permissions?.create_vpc}
+                          />
+                        )}
+                        renderVariant={() => (
+                          <TooltipIcon
+                            status="info"
+                            sxTooltipIcon={{
+                              padding: '8px',
+                            }}
+                            text={
+                              <Stack spacing={2}>
+                                <Typography>
+                                  The VPC supports both IPv4 and IPv6 addresses.
+                                </Typography>
+                                <Typography>
+                                  For IPv4, {RFC1918HelperText}
+                                </Typography>
+                                <Typography>
+                                  For IPv6, the VPC is assigned an IPv6 prefix
+                                  length of <Code>/52</Code> by default.
+                                </Typography>
+                              </Stack>
+                            }
+                            width={250}
+                          />
+                        )}
+                        subheadings={[]}
+                        sxCardBase={{ gap: 0 }}
+                        sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
                       />
                     )}
-                    subheadings={[]}
-                    sxCardBase={{ gap: 0 }}
-                    sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
-                  />
                 </Grid>
               </RadioGroup>
             )}

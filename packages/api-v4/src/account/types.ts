@@ -93,7 +93,6 @@ export const accountCapabilities = [
   'Vlans',
   'VPCs',
   'VPC Dual Stack',
-  'VPC IPv6 Large Prefixes',
 ] as const;
 
 export type AccountCapability = (typeof accountCapabilities)[number];
@@ -435,6 +434,8 @@ export const EventActionKeys = [
   'lke_pool_delete',
   'lke_pool_recycle',
   'lke_token_rotate',
+  'lock_create',
+  'lock_delete',
   'longviewclient_create',
   'longviewclient_delete',
   'longviewclient_update',

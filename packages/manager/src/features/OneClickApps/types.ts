@@ -28,14 +28,19 @@ export interface Colors {
 }
 
 export type AppCategory =
+  | 'AI'
   | 'App Creators'
+  | 'Chat'
   | 'Control Panels'
   | 'Databases'
   | 'Development'
   | 'Games'
+  | 'LLM'
   | 'Media and Entertainment'
+  | 'ML'
   | 'Monitoring'
   | 'Productivity'
   | 'Security'
   | 'Stacks'
+  | 'Vector Databases'
   | 'Website';
