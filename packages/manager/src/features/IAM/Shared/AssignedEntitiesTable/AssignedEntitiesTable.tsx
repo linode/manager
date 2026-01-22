@@ -170,8 +170,17 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     setSelectedRole(role);
   };
 
-  const handleRemoveAssignmentDialogClose = () => {
-    setIsRemoveAssignmentDialogOpen(false);
+  /**
+   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
+   *
+   * @param drawerMode Optional mode indicating which dialog should be closed.
+   */
+  const handleDialogClose = (drawerMode?: DrawerModes) => {
+    if (drawerMode && drawerMode === 'change-role-for-entity') {
+      setIsChangeRoleForEntityDrawerOpen(false);
+    } else {
+      setIsRemoveAssignmentDialogOpen(false);
+    }
     // If we just deleted the last one on a page, reset to the previous page.
     const removedLastOnPage =
       filteredAndSortedRoles.length % pagination.pageSize === 1;
@@ -364,13 +373,13 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       </Table>
       <ChangeRoleForEntityDrawer
         mode={drawerMode}
-        onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
+        onClose={() => handleDialogClose(drawerMode)}
         open={isChangeRoleForEntityDrawerOpen}
         role={selectedRole}
         username={username}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => handleRemoveAssignmentDialogClose()}
+        onClose={() => handleDialogClose()}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
         username={username}
