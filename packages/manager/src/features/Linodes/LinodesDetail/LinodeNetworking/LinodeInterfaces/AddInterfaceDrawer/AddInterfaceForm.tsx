@@ -43,7 +43,6 @@ export const AddInterfaceForm = (props: Props) => {
     interfacesData?.interfaces.map((networkInterface) =>
       getLinodeInterfaceType(networkInterface)
     ) ?? [];
-  const isPublicInterfacePresent = existingInterfaces.includes('Public');
   const form = useForm<CreateInterfaceFormValues>({
     defaultValues: {
       firewall_id: null,
@@ -105,6 +104,46 @@ export const AddInterfaceForm = (props: Props) => {
     );
   }
 
+  const additionalWarningMessage =
+    'Each Linode comes with one public IP address. Additional public IP addresses are available upon request and will incur a monthly charge.';
+
+  const getWarningNotice = () => {
+    if (
+      selectedInterfacePurpose === 'public' &&
+      existingInterfaces.includes('VPC')
+    ) {
+      return (
+        <Notice variant="warning">
+          <Typography>
+            This Linode already has a VPC interface. Having both a VPC interface
+            and a public interface is not recommended. If you need internet
+            access, consider using the VPC’s
+            <strong> Public access</strong> option instead.
+          </Typography>
+          <Typography paddingTop={2}>{additionalWarningMessage}</Typography>
+        </Notice>
+      );
+    }
+
+    if (
+      selectedInterfacePurpose === 'vpc' &&
+      existingInterfaces.includes('Public')
+    ) {
+      return (
+        <Notice variant="warning">
+          <Typography>
+            This Linode already has a public interface. Having both a VPC
+            interface and a public interface is not recommended. If you need
+            public internet access, consider using the VPC’s{' '}
+            <strong> Public access</strong> option instead.
+          </Typography>
+          <Typography paddingTop={2}>{additionalWarningMessage}</Typography>
+        </Notice>
+      );
+    }
+    return null;
+  };
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -122,30 +161,15 @@ export const AddInterfaceForm = (props: Props) => {
             />
           )}
           <InterfaceType existingInterfaces={existingInterfaces} />
+          {getWarningNotice()}
           {selectedInterfacePurpose === 'public' && <PublicInterface />}
           {selectedInterfacePurpose === 'vlan' && (
             <VLANInterface regionId={regionId} />
           )}
           {selectedInterfacePurpose === 'vpc' && (
-            <Box>
-              {isPublicInterfacePresent && (
-                <Notice variant="warning">
-                  <Typography>
-                    This Linode already has a public interface. Having both a
-                    VPC interface and a public interface is not recommended. If
-                    you need public internet access, consider using the VPC’s
-                    <strong> Public access</strong> option instead.
-                  </Typography>
-                  <Typography paddingTop={2}>
-                    Each Linode includes one public IP address. To request
-                    additional public IPs, please note that they incur a monthly
-                    charge.
-                  </Typography>
-                </Notice>
-              )}
-              <VPCInterface regionId={regionId} />
-            </Box>
+            <VPCInterface regionId={regionId} />
           )}
+
           {selectedInterfacePurpose !== 'vlan' && <InterfaceFirewall />}
           <Actions onClose={onClose} />
         </Stack>

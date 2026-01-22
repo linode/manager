@@ -1,4 +1,7 @@
-import { linodeInterfaceFactoryPublic } from '@linode/utilities';
+import {
+  linodeInterfaceFactoryPublic,
+  linodeInterfaceFactoryVPC,
+} from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -121,6 +124,27 @@ describe('AddInterfaceForm', () => {
     expect(
       getByText(/This Linode already has a public interface/)
     ).toBeVisible();
+  });
+
+  it('should show a warning notice on selection of Public option if a VPC interface already exists', async () => {
+    const mockVPCInterface = linodeInterfaceFactoryVPC.build();
+
+    server.use(
+      http.get('*/linode/instances/:linodeId/interfaces', () => {
+        return HttpResponse.json({
+          interfaces: [mockVPCInterface],
+        });
+      })
+    );
+
+    const { getByRole, findByRole, getByText } = renderWithTheme(
+      <AddInterfaceForm {...props} />
+    );
+
+    // Wait for the loading to complete and form to render
+    await findByRole('radio', { name: 'Public' });
+    await userEvent.click(getByRole('radio', { name: 'Public' }));
+    expect(getByText(/This Linode already has a VPC interface/)).toBeVisible();
   });
 
   it('should disable Public interface radio button if a Public interface already exists', async () => {
