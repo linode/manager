@@ -60,7 +60,11 @@ export const ChildAccountList = React.memo(
   }: ChildAccountListProps) => {
     const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-    if (errors.childAccountInfiniteError || errors.allChildAccountsError) {
+    const hasError = isIAMDelegationEnabled
+      ? errors.allChildAccountsError
+      : errors.childAccountInfiniteError;
+
+    if (hasError) {
       return (
         <Stack alignItems="center" gap={1} justifyContent="center">
           <ErrorStateCloud />
