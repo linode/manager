@@ -6,7 +6,7 @@ import {
 } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
@@ -26,8 +26,6 @@ interface Props {
 export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role, username } = props;
 
-  const [isRemoving, setIsRemoving] = useState(false);
-
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
@@ -35,13 +33,17 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
 
   const {
     error,
-    isPending,
+    isPending: isUserRolesPending,
     mutateAsync: updateUserRoles,
     reset,
   } = useUserRolesMutation(username ?? '');
 
-  const { mutateAsync: updateDefaultDelegationRoles } =
-    useUpdateDefaultDelegationAccessQuery();
+  const {
+    mutateAsync: updateDefaultDelegationRoles,
+    isPending: isDefaultDelegationRolesPending,
+  } = useUpdateDefaultDelegationAccessQuery();
+
+  const isPending = isUserRolesPending || isDefaultDelegationRolesPending;
 
   const { data: assignedUserRoles } = useUserRoles(
     username ?? '',
@@ -54,7 +56,6 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
-    setIsRemoving(false);
     _onClose();
   };
 
@@ -67,9 +68,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     : assignedUserRoles;
 
   const onDelete = async () => {
-    if (!role || !assignedRoles || isRemoving) return;
-
-    setIsRemoving(true);
+    if (!role || !assignedRoles || isPending) return;
 
     const { role_name, entity_id, entity_type } = role;
 
@@ -93,17 +92,15 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     onClose();
   };
 
-  const isLoading = isPending || isRemoving;
-
   return (
     <ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
             label: 'Remove',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
-            disabled: isLoading,
+            disabled: isPending,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
