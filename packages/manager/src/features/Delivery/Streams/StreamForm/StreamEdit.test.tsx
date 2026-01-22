@@ -54,7 +54,7 @@ describe('StreamEdit', () => {
     await waitForElementToBeRemoved(loadingElement);
 
     await waitFor(() => {
-      assertInputHasValue('Name', 'Stream 123');
+      assertInputHasValue('Stream Name', 'Stream 123');
     });
     assertInputHasValue('Stream Type', 'Audit Logs');
     await waitFor(() => {
@@ -83,7 +83,7 @@ describe('StreamEdit', () => {
     { timeout: 10000 },
     () => {
       const testConnectionButtonText = 'Test Connection';
-      const saveStreamButtonText = 'Save';
+      const saveStreamButtonText = 'Save Changes';
 
       const fillOutNewDestinationForm = async () => {
         const destinationNameInput = screen.getByLabelText('Destination Name');
@@ -199,7 +199,7 @@ describe('StreamEdit', () => {
             await waitForElementToBeRemoved(loadingElement);
 
             // Change name and leave existing destination
-            const streamNameInput = screen.getByLabelText('Name');
+            const streamNameInput = screen.getByLabelText('Stream Name');
             await userEvent.type(streamNameInput, 'Test');
 
             const testConnectionButton = screen.getByRole('button', {
