@@ -326,8 +326,12 @@ const resolveSearchRegions = (
   ];
 
   // If the user has specified an override region for this run, it takes precedent
-  // over any other specified criteria.
-  if (overrideRegion && detectOverrideRegion) {
+  // over any other specified criteria unless mock regions are passed in `options`.
+  if (
+    overrideRegion &&
+    detectOverrideRegion &&
+    (!options?.regions || options.regions.length === 0)
+  ) {
     // TODO Consider skipping instead of failing when test isn't applicable to override region.
     if (!regionHasCapabilities(overrideRegion, requiredCapabilities)) {
       throw new Error(

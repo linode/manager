@@ -22,14 +22,6 @@ const maintenanceCatchAllRoute = createRoute({
 const maintenanceIndexRoute = createRoute({
   getParentRoute: () => maintenanceRoute,
   path: '/',
-  beforeLoad: ({ context }) => {
-    if (!context?.flags?.iamRbacPrimaryNavChanges) {
-      throw redirect({
-        to: `/account/maintenance`,
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/Maintenance/maintenanceLandingLazyRoute').then(
     (m) => m.maintenanceLandingLandingLazyRoute
