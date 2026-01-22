@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useLocksQuery, useRegionsQuery } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -9,6 +9,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
@@ -36,6 +37,7 @@ export interface LinodeActionMenuProps extends LinodeHandlers {
   linodeRegion: string;
   linodeStatus: string;
   linodeType?: LinodeType;
+  locks?: string[];
 }
 
 interface ActionConfig {
@@ -49,16 +51,23 @@ interface ActionConfig {
 }
 
 export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
-  const { linodeId, linodeRegion, linodeStatus, linodeType } = props;
+  const { linodeId, linodeRegion, linodeStatus, linodeType, locks } = props;
 
   const navigate = useNavigate();
+  const flags = useFlags();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
+  const isResourceLockEnabled = flags.resourceLock?.linodes;
+  const { data: locksData } = useLocksQuery({}, {}, isResourceLockEnabled);
+  const isLocked = !!locks?.length;
+
   const { data: accountPermissions } = usePermissions('account', [
     'create_linode',
+    'create_lock',
+    'delete_lock',
   ]);
 
   const { data: permissions, isLoading } = usePermissions(
@@ -232,6 +241,40 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
         ? NO_PERMISSION_TOOLTIP_TEXT
         : hasHostMaintenance
           ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
+    },
+    {
+      condition: Boolean(isResourceLockEnabled),
+      disabled: isLocked
+        ? !accountPermissions.delete_lock
+        : !accountPermissions.create_lock,
+      isReadOnly: isLocked
+        ? !accountPermissions.delete_lock
+        : !accountPermissions.create_lock,
+      onClick: () => {
+        if (isLocked) {
+          // Find the lock ID for this Linode
+          const linodeLock = locksData?.data?.find(
+            (lock) =>
+              lock.entity.id === linodeId && lock.entity.type === 'linode'
+          );
+          if (linodeLock) {
+            sendLinodeActionMenuItemEvent('Unlock Linode');
+            // To be implemented in separate ticket
+          }
+        } else {
+          sendLinodeActionMenuItemEvent('Lock Linode');
+          // To be implemented in separate ticket
+        }
+      },
+      title: isLocked ? 'Unlock' : 'Lock',
+      tooltipAction: 'edit',
+      tooltipText: isLocked
+        ? !accountPermissions.delete_lock
+          ? NO_PERMISSION_TOOLTIP_TEXT
+          : undefined
+        : !accountPermissions.create_lock
+          ? NO_PERMISSION_TOOLTIP_TEXT
           : undefined,
     },
     {

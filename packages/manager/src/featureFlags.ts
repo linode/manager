@@ -189,6 +189,10 @@ interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
   la: boolean;
 }
 
+interface ResourceLockFlag {
+  linodes: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -249,6 +253,7 @@ export interface Flags {
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   referralBannerText: BannerContent;
+  resourceLock: ResourceLockFlag;
   secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
