@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCreateDatabaseConnectionPoolMutation } from '@linode/queries';
+import { useUpdateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -7,10 +7,8 @@ import {
   Select,
   Stack,
   TextField,
-  Typography,
 } from '@linode/ui';
-import { createDatabaseConnectionPoolSchema } from '@linode/validation';
-import { useSnackbar } from 'notistack';
+import { updateDatabaseConnectionPoolSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
@@ -22,22 +20,21 @@ import {
 } from 'src/features/Databases/constants';
 
 import type { ConnectionPool } from '@linode/api-v4';
-
 interface Props {
   databaseId: number;
   onClose: () => void;
   open: boolean;
+  pool: ConnectionPool;
 }
 
-export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
-  const { databaseId, onClose, open } = props;
-  const { enqueueSnackbar } = useSnackbar();
+export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
+  const { databaseId, onClose, open, pool } = props;
 
   const {
     isPending: submitInProgress,
-    mutateAsync: createDatabaseConnectionPool,
+    mutateAsync: updateDatabaseConnectionPool,
     reset: resetMutation,
-  } = useCreateDatabaseConnectionPoolMutation(databaseId);
+  } = useUpdateDatabaseConnectionPoolMutation(databaseId, pool.label);
 
   const {
     control,
@@ -45,21 +42,13 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     handleSubmit,
     reset,
     setError,
-  } = useForm<ConnectionPool>({
+  } = useForm<Partial<ConnectionPool>>({
     defaultValues: {
-      database: 'defaultdb',
-      label: '',
-      mode: 'transaction',
-      size: 10,
-      username: defaultUsername,
+      ...pool,
+      username: pool.username === null ? defaultUsername : pool.username,
     },
     mode: 'onBlur',
-    resolver: yupResolver(createDatabaseConnectionPoolSchema),
-  });
-
-  const [mode, database, username] = useWatch({
-    control,
-    name: ['mode', 'database', 'username'],
+    resolver: yupResolver(updateDatabaseConnectionPoolSchema),
   });
 
   const handleOnClose = () => {
@@ -68,17 +57,16 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     resetMutation?.();
   };
 
-  const onSubmit = async (values: ConnectionPool) => {
+  const onSubmit = async (_values: ConnectionPool) => {
+    // eslint-disable-next-line no-unused-vars
+    const { label, ...values } = _values; // remove label since it is not editable
     const payload = {
       ...values,
       username: values.username === defaultUsername ? null : values.username,
     }; // Provide inbound user as null in the API
 
     try {
-      await createDatabaseConnectionPool(payload);
-      enqueueSnackbar('Connection Pool added successfully.', {
-        variant: 'success',
-      });
+      await updateDatabaseConnectionPool(payload);
       handleOnClose();
     } catch (errors) {
       for (const error of errors) {
@@ -87,19 +75,16 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     }
   };
 
+  const [mode, database, username] = useWatch({
+    control,
+    name: ['mode', 'database', 'username'],
+  });
+
   return (
-    <Drawer
-      onClose={handleOnClose}
-      open={open}
-      title="Add a New Connection Pool"
-    >
+    <Drawer onClose={handleOnClose} open={open} title="Edit Connection Pool">
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
-      <Typography>
-        Add a PgBouncer connection pool to minimize the use of your server
-        resources.
-      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
           <Controller
@@ -107,20 +92,15 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             name="label"
             render={({ field, fieldState }) => (
               <TextField
-                clearable
-                {...field}
+                disabled
                 errorText={fieldState.error?.message}
                 id="poolLabel"
                 label="Pool Label"
-                onChange={(e) => {
-                  field.onChange(e.target.value);
-                }}
-                onClear={() => field.onChange('')}
                 placeholder="Enter a pool label"
+                value={field.value}
               />
             )}
           />
-
           <Controller
             control={control}
             name="database"
@@ -141,7 +121,6 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-
           <Controller
             control={control}
             name="mode"
@@ -160,7 +139,6 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-
           <Controller
             control={control}
             name="size"
@@ -184,7 +162,6 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
               />
             )}
           />
-
           <Controller
             control={control}
             name="username"
@@ -206,13 +183,12 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             )}
           />
         </Stack>
-
         <ActionsPanel
           primaryButtonProps={{
-            label: 'Add Pool',
+            label: 'Save',
             loading: submitInProgress,
             type: 'submit',
-            'data-testid': 'add-connection-pool-button',
+            'data-testid': 'save-connection-pool-button',
           }}
           secondaryButtonProps={{
             label: 'Cancel',

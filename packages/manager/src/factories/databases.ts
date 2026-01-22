@@ -248,7 +248,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   port: 3306,
   region: 'us-east',
   ssl_connection: false,
-  status: pickRandom(possibleStatuses),
+  status: 'active',
   total_disk_size_gb: 15,
   type: 'g6-nanode-1',
   updated: '2021-12-16T17:15:12',

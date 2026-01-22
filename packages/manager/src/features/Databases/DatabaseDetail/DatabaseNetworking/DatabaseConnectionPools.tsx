@@ -31,8 +31,9 @@ import { ServiceURI } from '../ServiceURI';
 import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
 import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
 import { DatabaseConnectionPoolRow } from './DatabaseConnectionPoolRow';
+import { DatabaseEditConnectionPoolDrawer } from './DatabaseEditConnectionPoolDrawer';
 
-import type { Database } from '@linode/api-v4';
+import type { ConnectionPool, Database } from '@linode/api-v4';
 
 interface Props {
   database: Database;
@@ -45,8 +46,10 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
   const isDatabaseInactive = database.status !== 'active';
 
   const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
-    React.useState<null | string>();
+    React.useState<null | string>(null);
   const [isAddPoolDrawerOpen, setIsAddPoolDrawerOpen] = React.useState(false);
+  const [editPoolSelection, setEditPoolSelection] =
+    React.useState<ConnectionPool | null>(null);
 
   const pagination = usePaginationV2({
     currentRoute: '/databases/$engine/$databaseId/networking',
@@ -154,6 +157,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
                 <DatabaseConnectionPoolRow
                   key={pool.label}
                   onDelete={() => setDeletePoolLabelSelection(pool.label)}
+                  onEdit={() => setEditPoolSelection(pool)}
                   pool={pool}
                 />
               ))
@@ -192,6 +196,14 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
         onClose={() => setIsAddPoolDrawerOpen(false)}
         open={isAddPoolDrawerOpen}
       />
+      {editPoolSelection && (
+        <DatabaseEditConnectionPoolDrawer
+          databaseId={database.id}
+          onClose={() => setEditPoolSelection(null)}
+          open={Boolean(editPoolSelection)}
+          pool={editPoolSelection}
+        />
+      )}
     </>
   );
 };

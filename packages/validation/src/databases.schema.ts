@@ -218,6 +218,11 @@ export const createDynamicAdvancedConfigSchema = (allConfigurations: any[]) => {
   });
 };
 
+const DatabaseConnectionPoolSize = number()
+  .typeError('Pool size is required and must be a number')
+  .integer('Pool size must be a whole number')
+  .min(1, 'The minimum pool size for this database is 1.');
+
 export const createDatabaseConnectionPoolSchema = object({
   database: string().required('Database is required'),
   mode: string()
@@ -226,17 +231,13 @@ export const createDatabaseConnectionPoolSchema = object({
   label: string()
     .required('Pool name is required')
     .max(63, 'Pool name must not exceed 63 characters'),
-  size: number()
-    .required('Pool size is required')
-    .typeError('Pool size is required and must be a number')
-    .integer('Pool size must be a whole number')
-    .min(1, 'The minimum pool size for this database is 1.'),
+  size: DatabaseConnectionPoolSize.required(),
   username: string().required('Username is required').nullable(),
 });
 
 export const updateDatabaseConnectionPoolSchema = object({
   database: string().optional(),
   mode: string().oneOf(['transaction', 'session', 'statement']).optional(),
-  size: number().optional(),
+  size: DatabaseConnectionPoolSize,
   username: string().nullable().optional(),
 });
