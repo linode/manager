@@ -22,9 +22,18 @@ describe('LinodeInterface (Linode Interfaces)', () => {
       component: <LinodeInterface index={0} />,
     });
 
-    expect(getByText('Public Internet')).toBeInTheDocument();
-    expect(getByText('VPC')).toBeInTheDocument();
-    expect(getByText('VLAN')).toBeInTheDocument();
+    expect(getByText('Public Internet')).toBeVisible();
+    expect(getByText('VPC')).toBeVisible();
+    expect(getByText('VLAN')).toBeVisible();
+  });
+
+  it('renders radios for the interfaces (Linode interface, Config profile)', () => {
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <LinodeInterface index={0} />,
+    });
+
+    expect(getByText(/Linode Interfaces/)).toBeVisible();
+    expect(getByText(/Configuration Profile Interfaces/)).toBeVisible();
   });
 
   it('renders a Firewall select if "VPC" is selected', async () => {
