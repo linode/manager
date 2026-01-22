@@ -74,7 +74,9 @@ export const eventHandlers: {
   },
   {
     filter: (event) =>
-      event.action.startsWith('linode') || event.action.startsWith('backups'),
+      event.action.startsWith('linode') ||
+      event.action.startsWith('backups') ||
+      event.action.startsWith('lock'),
     handler: linodeEventsHandler,
   },
   {
