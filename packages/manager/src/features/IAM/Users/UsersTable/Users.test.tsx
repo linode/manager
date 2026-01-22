@@ -13,12 +13,20 @@ beforeAll(() => mockMatchMedia());
 const navigate = vi.fn();
 
 const queryMocks = vi.hoisted(() => ({
-  useGetChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useFlags: vi.fn().mockReturnValue({}),
   useNavigate: vi.fn(() => navigate),
   useProfile: vi.fn().mockReturnValue({}),
   useAccountUsers: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -33,21 +41,12 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useGetChildAccountsQuery: queryMocks.useGetChildAccountsQuery,
     useProfile: queryMocks.useProfile,
     useAccountUsers: queryMocks.useAccountUsers,
   };
 });
 
 describe('Users', () => {
-  beforeEach(() => {
-    queryMocks.useGetChildAccountsQuery.mockReturnValue({
-      data: [],
-      isLoading: false,
-      error: null,
-    });
-  });
-
   it('renders only table and search filter if profile is not a child', async () => {
     const user = accountUserFactory.build();
     queryMocks.useAccountUsers.mockReturnValue({
@@ -89,14 +88,14 @@ describe('Users', () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ user_type: 'child' }),
     });
+    queryMocks.useFlags.mockReturnValue({
+      iamDelegation: { enabled: true },
+    });
 
     const { getByPlaceholderText, getByLabelText } = renderWithTheme(
       <UsersLanding />,
       {
         initialRoute: '/iam',
-        flags: {
-          iamDelegation: { enabled: true },
-        },
       }
     );
 
