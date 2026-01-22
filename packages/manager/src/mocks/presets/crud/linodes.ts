@@ -10,6 +10,7 @@ import {
 import {
   createLinode,
   deleteLinode,
+  deleteLinodeDisk,
   getLinodeBackups,
   getLinodeDisks,
   getLinodeFirewalls,
@@ -18,6 +19,7 @@ import {
   getLinodes,
   getLinodeStats,
   getLinodeTransfer,
+  rebuildLinode,
   shutDownLinode,
   updateLinode,
 } from 'src/mocks/presets/crud/handlers/linodes/linodes';
@@ -40,6 +42,8 @@ export const linodeCrudPreset: MockPresetCrud = {
     createLinode,
     updateLinode,
     deleteLinode,
+    rebuildLinode,
+    deleteLinodeDisk,
     getConfigs,
     getInterfaces,
     getLinodeStats,

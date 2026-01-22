@@ -12,6 +12,7 @@ import { entityCrudPreset } from '../crud/entities';
 import { firewallCrudPreset } from '../crud/firewalls';
 import { imagesCrudPreset } from '../crud/images';
 import { kubernetesCrudPreset } from '../crud/kubernetes';
+import { locksCrudPreset } from '../crud/locks';
 import { nodeBalancerCrudPreset } from '../crud/nodebalancers';
 import { permissionsCrudPreset } from '../crud/permissions';
 import { placementGroupsCrudPreset } from '../crud/placementGroups';
@@ -35,6 +36,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
     ...imagesCrudPreset.handlers,
     ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,
+    ...locksCrudPreset.handlers,
     ...permissionsCrudPreset.handlers,
     ...placementGroupsCrudPreset.handlers,
     ...quotasCrudPreset.handlers,
