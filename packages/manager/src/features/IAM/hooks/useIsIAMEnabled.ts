@@ -79,6 +79,10 @@ export const checkIAMEnabled = async (
  */
 export const useIsIAMDelegationEnabled = () => {
   const flags = useFlags();
+  const { isIAMEnabled } = useIsIAMEnabled();
 
-  return { isIAMDelegationEnabled: flags.iamDelegation?.enabled ?? false };
+  return {
+    isIAMDelegationEnabled:
+      (flags.iamDelegation?.enabled && isIAMEnabled) ?? false,
+  };
 };
