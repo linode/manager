@@ -18,6 +18,7 @@ export * from './lassie';
 export * from './linode';
 export * from './lish';
 export * from './lke';
+export * from './lock';
 export * from './longviewclient';
 export * from './managed';
 export * from './nodebalancer';
