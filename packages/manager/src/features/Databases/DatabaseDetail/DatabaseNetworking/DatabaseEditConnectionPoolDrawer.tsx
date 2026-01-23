@@ -9,6 +9,7 @@ import {
   TextField,
 } from '@linode/ui';
 import { updateDatabaseConnectionPoolSchema } from '@linode/validation';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
@@ -38,7 +39,7 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     handleSubmit,
     reset,
     setError,
@@ -58,7 +59,6 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
   };
 
   const onSubmit = async (_values: ConnectionPool) => {
-    // eslint-disable-next-line no-unused-vars
     const { label, ...values } = _values; // remove label since it is not editable
     const payload = {
       ...values,
@@ -67,6 +67,9 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
 
     try {
       await updateDatabaseConnectionPool(payload);
+      enqueueSnackbar(`Connection Pool ${label} edited successfully.`, {
+        variant: 'success',
+      });
       handleOnClose();
     } catch (errors) {
       for (const error of errors) {
@@ -187,6 +190,7 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
           primaryButtonProps={{
             label: 'Save',
             loading: submitInProgress,
+            disabled: !isDirty,
             type: 'submit',
             'data-testid': 'save-connection-pool-button',
           }}
