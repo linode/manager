@@ -203,6 +203,7 @@ export interface Flags {
   apl: boolean;
   aplGeneralAvailability: boolean;
   aplLkeE: boolean;
+  blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
