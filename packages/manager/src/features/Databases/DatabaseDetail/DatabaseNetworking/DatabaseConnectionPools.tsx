@@ -19,11 +19,15 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import {
   MIN_PAGE_SIZE,
   PAGE_SIZES,
 } from 'src/components/PaginationFooter/PaginationFooter.constants';
-import { CONNECTION_POOL_LABEL_CELL_STYLES } from 'src/features/Databases/constants';
+import {
+  CONNECTION_POOL_LABEL_CELL_STYLES,
+  MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
+} from 'src/features/Databases/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
@@ -82,7 +86,10 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           </Typography>
           <Typography sx={{ maxWidth: '500px' }}>
             Manage PgBouncer connection pools to minimize the use of your server
-            resources.
+            resources.{' '}
+            <Link to={MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK}>
+              Learn more.
+            </Link>
           </Typography>
         </Stack>
         <Button
