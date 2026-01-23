@@ -57,7 +57,7 @@ export const Footer = React.memo(() => {
             v{packageJson.version}
           </StyledLink>
           <StyledLink to={DEVELOPERS_LINK}>API Reference</StyledLink>
-          <StyledLink to={FEEDBACK_LINK}>Provide Feedback</StyledLink>
+          <StyledLink to={FEEDBACK_LINK}>Suggest Improvements</StyledLink>
         </Stack>
         <Stack
           direction="row"
