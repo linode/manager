@@ -68,7 +68,7 @@ export const computeLegendRowsBasedOnData = ({
   unit,
   isHumanizableUnit,
 }: ZoomStateData) => {
-  if (!legendRows) return undefined;
+  if (!legendRows || !data || !data.length) return undefined;
 
   // If not zoomed, return original rows unchanged
   if (zoom.left === 'dataMin' && zoom.right === 'dataMax') {

@@ -145,6 +145,15 @@ describe('computeLegendRowsBasedOnData', () => {
     expect(result).toBeUndefined();
   });
 
+  it('should return undefined when data is empty', () => {
+    const zoom: ZoomState = { left: 'dataMin', right: 'dataMax' };
+    const result = computeLegendRowsBasedOnData({
+      zoom,
+      data: [],
+    });
+    expect(result).toBeUndefined();
+  });
+
   it('should return original rows when not zoomed', () => {
     const zoom: ZoomState = { left: 'dataMin', right: 'dataMax' };
     const result = computeLegendRowsBasedOnData({

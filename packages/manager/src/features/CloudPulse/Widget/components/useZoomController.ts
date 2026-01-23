@@ -43,7 +43,7 @@ export const useZoomController = (zoomResetKey: string) => {
 
   const onMouseDown = React.useCallback((e: CategoricalChartState) => {
     const payload = e?.activePayload?.[0]?.payload;
-    if (!payload?.timestamp) return;
+    if (payload?.timestamp === undefined) return;
 
     // set the drag start timestamp
     dragStartRef.current = payload.timestamp;
@@ -55,7 +55,7 @@ export const useZoomController = (zoomResetKey: string) => {
     if (dragStart === null) return;
 
     const payload = e?.activePayload?.[0]?.payload;
-    if (!payload?.timestamp) return;
+    if (payload?.timestamp === undefined) return;
 
     if (!isDraggingRef.current) {
       isDraggingRef.current = true;
@@ -83,8 +83,8 @@ export const useZoomController = (zoomResetKey: string) => {
 
     setZoom((prev) => {
       if (
-        !prev.refAreaLeft ||
-        !prev.refAreaRight ||
+        prev.refAreaLeft === undefined ||
+        prev.refAreaRight === undefined ||
         prev.refAreaLeft === prev.refAreaRight
       ) {
         return {
