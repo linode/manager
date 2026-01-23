@@ -77,6 +77,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'VM Host Maintenance Policy',
   },
   { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
+  {
+    flag: 'objectStorageContextualMetrics',
+    label: 'Object Storage Contextual Metrics',
+  },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
