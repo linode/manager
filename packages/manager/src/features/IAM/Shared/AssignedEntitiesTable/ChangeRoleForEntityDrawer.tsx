@@ -39,6 +39,7 @@ import type { ExtendedEntityRole } from '../utilities';
 interface Props {
   mode: DrawerModes;
   onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   role: EntitiesRole | undefined;
   username?: string;
@@ -47,6 +48,7 @@ interface Props {
 export const ChangeRoleForEntityDrawer = ({
   mode,
   onClose,
+  onSuccess,
   open,
   role,
   username,
@@ -159,6 +161,7 @@ export const ChangeRoleForEntityDrawer = ({
         variant: 'success',
       });
 
+      onSuccess?.();
       handleClose();
     } catch (errors) {
       for (const error of errors) {

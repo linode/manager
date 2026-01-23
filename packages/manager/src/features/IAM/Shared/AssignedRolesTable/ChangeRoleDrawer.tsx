@@ -37,11 +37,18 @@ import type { RolesType } from '../utilities';
 interface Props {
   mode: DrawerModes;
   onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
 }
 
-export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
+export const ChangeRoleDrawer = ({
+  mode,
+  onClose,
+  onSuccess,
+  open,
+  role,
+}: Props) => {
   const theme = useTheme();
   const { username } = useParams({ strict: false });
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
@@ -147,6 +154,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
       await mutationFn(updatedUserRoles);
 
+      onSuccess?.();
       handleClose();
     } catch (errors) {
       setError('root', {

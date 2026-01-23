@@ -461,12 +461,14 @@ export const AssignedRolesTable = () => {
       />
       <ChangeRoleDrawer
         mode={drawerMode}
-        onClose={() => handleDialogClose(drawerMode)}
+        onClose={() => setIsChangeRoleDrawerOpen(false)}
+        onSuccess={() => handleDialogClose(drawerMode)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
-        onClose={() => handleDialogClose()}
+        onClose={() => setIsUnassignRoleDialogOpen(false)}
+        onSuccess={() => handleDialogClose()}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />

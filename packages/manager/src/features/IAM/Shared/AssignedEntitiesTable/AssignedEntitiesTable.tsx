@@ -373,13 +373,15 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       </Table>
       <ChangeRoleForEntityDrawer
         mode={drawerMode}
-        onClose={() => handleDialogClose(drawerMode)}
+        onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
+        onSuccess={() => handleDialogClose()}
         open={isChangeRoleForEntityDrawerOpen}
         role={selectedRole}
         username={username}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => handleDialogClose()}
+        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
+        onSuccess={() => handleDialogClose()}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
         username={username}
