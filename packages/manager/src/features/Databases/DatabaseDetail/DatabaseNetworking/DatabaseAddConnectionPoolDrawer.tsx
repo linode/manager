@@ -14,12 +14,15 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
+import { Link } from 'src/components/Link';
 import {
   databaseNamesOptions,
   defaultUsername,
   poolModeOptions,
   usernameOptions,
 } from 'src/features/Databases/constants';
+
+import { MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK } from '../../constants';
 
 import type { ConnectionPool } from '@linode/api-v4';
 
@@ -98,7 +101,8 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
       )}
       <Typography>
         Add a PgBouncer connection pool to minimize the use of your server
-        resources.
+        resources.{' '}
+        <Link to={MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK}>Learn more.</Link>
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
