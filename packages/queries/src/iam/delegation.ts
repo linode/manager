@@ -23,9 +23,11 @@ import type {
   APIError,
   ChildAccount,
   ChildAccountWithDelegates,
+  Filter,
   GetChildAccountDelegatesParams,
   GetChildAccountsIamParams,
   GetDelegatedChildAccountsForUserParams,
+  GetMyDelegatedChildAccountsParams,
   IamUserRoles,
   Params,
   ResourcePage,
@@ -61,19 +63,13 @@ export const delegationQueries = createQueryKeys('delegation', {
     queryFn: () => getChildAccountDelegates({ euuid, params }),
     queryKey: [euuid, params],
   }),
-  myDelegatedChildAccounts: {
-    contextQueries: {
-      all: (params: Params) => ({
-        queryFn: () => getAllMyDelegatedChildAccounts(params),
-        queryKey: [params],
-      }),
-      paginated: (params: Params) => ({
-        queryFn: () => getMyDelegatedChildAccounts({ params }),
-        queryKey: [params],
-      }),
-    },
-    queryKey: null,
-  },
+  myDelegatedChildAccounts: ({
+    params,
+    filter = {},
+  }: GetMyDelegatedChildAccountsParams) => ({
+    queryFn: () => getMyDelegatedChildAccounts({ params, filter }),
+    queryKey: [params, filter],
+  }),
   delegatedChildAccount: (euuid: string) => ({
     queryFn: () => getDelegatedChildAccount({ euuid }),
     queryKey: [euuid],
@@ -190,7 +186,7 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
       });
       // Invalidate all my delegated child accounts since delegation may have changed
       queryClient.invalidateQueries({
-        queryKey: delegationQueries.myDelegatedChildAccounts._ctx.all._def,
+        queryKey: delegationQueries.myDelegatedChildAccounts._def,
       });
     },
   });
@@ -205,27 +201,12 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
  */
 export const useGetMyDelegatedChildAccountsQuery = (
   params: Params,
+  filter: Filter,
+  enabled = true,
 ): UseQueryResult<ResourcePage<Account>, APIError[]> => {
   return useQuery({
-    ...delegationQueries.myDelegatedChildAccounts._ctx.paginated(params),
-  });
-};
-
-/**
- * List all my delegated child accounts (fetches all pages of child accounts where user has view_child_account permission)
- * - Purpose: Retrieve the full list of child accounts the current caller can manage via delegation, across all pages.
- * - Scope: Only child accounts where the caller has an active delegate and required view permission; returns all results, not paginated.
- * - Audience: Callers needing the complete set of accessible accounts for the current user.
- * - Data: Account[] (limited profile fields) for `GET /iam/delegation/profile/child-accounts` (all pages).
- * - Usage: Pass `enabled` to control query activation (e.g., only if IAM Delegation is enabled).
- */
-export const useAllListMyDelegatedChildAccountsQuery = ({
-  params = {},
-  enabled = true,
-}) => {
-  return useQuery({
+    ...delegationQueries.myDelegatedChildAccounts({ params, filter }),
     enabled,
-    ...delegationQueries.myDelegatedChildAccounts._ctx.all(params),
   });
 };
 
@@ -297,11 +278,3 @@ export const useUpdateDefaultDelegationAccessQuery = (): UseMutationResult<
     },
   });
 };
-
-/**
- * Fetches all my delegated child accounts for the current user (all pages).
- */
-const getAllMyDelegatedChildAccounts = (_params: Params = {}) =>
-  getAll<Account>((params) =>
-    getMyDelegatedChildAccounts({ params: { ...params, ..._params } }),
-  )().then((data) => data.data);

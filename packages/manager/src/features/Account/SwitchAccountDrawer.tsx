@@ -1,6 +1,6 @@
 import {
-  useAllListMyDelegatedChildAccountsQuery,
   useChildAccountsInfiniteQuery,
+  useGetMyDelegatedChildAccountsQuery,
 } from '@linode/queries';
 import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
@@ -99,10 +99,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     isLoading: allChildAccountsLoading,
     isRefetching: allChildAccountsIsRefetching,
     refetch: refetchAllChildAccounts,
-  } = useAllListMyDelegatedChildAccountsQuery({
-    params: {},
-    enabled: isIAMDelegationEnabled && isParentUserType,
-  });
+  } = useGetMyDelegatedChildAccountsQuery({}, filter, isIAMDelegationEnabled && isParentUserType);
 
   const refetchFn = isIAMDelegationEnabled
     ? refetchAllChildAccounts
@@ -147,7 +144,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         });
         onClose(event);
         location.reload();
-      } catch (error) {
+      } catch {
         // Error is handled by createTokenError.
       }
     },
@@ -167,11 +164,11 @@ export const SwitchAccountDrawer = (props: Props) => {
       if (searchQuery && allChildAccounts) {
         // Client-side filter: match company field with searchQuery (case-insensitive, contains)
         const normalizedQuery = searchQuery.toLowerCase();
-        return allChildAccounts.filter((account) =>
+        return allChildAccounts?.data.filter((account) =>
           account.company?.toLowerCase().includes(normalizedQuery)
         );
       }
-      return allChildAccounts;
+      return allChildAccounts?.data;
     }
     return data?.pages.flatMap((page) => page.data);
   }, [isIAMDelegationEnabled, searchQuery, allChildAccounts, data]);
@@ -209,7 +206,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       </Typography>
       {isIAMDelegationEnabled &&
         allChildAccounts &&
-        allChildAccounts.length !== 0 && (
+        allChildAccounts?.data.length !== 0 && (
           <>
             <DebouncedSearchTextField
               clearable
@@ -249,7 +246,9 @@ export const SwitchAccountDrawer = (props: Props) => {
         }
         errors={{
           childAccountInfiniteError,
-          allChildAccountsError,
+          allChildAccountsError: allChildAccountsError?.[0]
+            ? new Error(allChildAccountsError[0].reason)
+            : null,
         }}
         fetchNextPage={fetchNextPage}
         filter={filter}
