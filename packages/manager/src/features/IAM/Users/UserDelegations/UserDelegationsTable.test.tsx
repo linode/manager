@@ -42,7 +42,7 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-describe('UserDelegations', () => {
+describe('UserDelegationsTable', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
       username: 'test-user',
