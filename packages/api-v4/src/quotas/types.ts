@@ -20,7 +20,7 @@ export interface Quota {
   /**
    * Sets usage column to be n/a when value is false.
    */
-  has_usage: boolean;
+  has_usage?: boolean;
 
   /**
    * A unique identifier for the quota.

@@ -74,7 +74,9 @@ export const QuotasTable = (props: QuotasTableProps) => {
   // This will only fetch for the paginated set
   const quotaIdsHavingUsage =
     quotas?.data
-      .filter((quota) => quota.has_usage)
+      .filter(
+        (quota) => quota.has_usage === true || quota.has_usage === undefined
+      )
       .map((quota) => quota.quota_id) ?? [];
   const quotaUsageQueries = useQueries({
     queries: quotaIdsHavingUsage.map((quotaId) =>
@@ -152,7 +154,9 @@ export const QuotasTable = (props: QuotasTableProps) => {
             filteredQuotasWithUsage.map((quota, index) => {
               return (
                 <QuotasTableRow
-                  hasUsage={quota.has_usage}
+                  hasUsage={
+                    quota.has_usage === true || quota.has_usage === undefined
+                  }
                   index={index}
                   isDataPresent={quota.usage?.usage !== null}
                   key={quota.quota_id}
