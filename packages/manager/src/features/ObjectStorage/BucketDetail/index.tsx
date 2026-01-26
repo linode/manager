@@ -39,6 +39,7 @@ const BucketMetrics = React.lazy(() =>
 );
 
 const BUCKET_DETAILS_URL = '/object-storage/buckets/$clusterId/$bucketName';
+const ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT = ['E0', 'E1'];
 
 export const BucketDetailLanding = React.memo(() => {
   const { bucketName, clusterId } = useParams({
@@ -78,7 +79,10 @@ export const BucketDetailLanding = React.memo(() => {
     {
       title: 'Metrics',
       to: `${BUCKET_DETAILS_URL}/metrics`,
-      hide: !aclpServices?.objectstorage?.metrics?.enabled,
+      hide:
+        !endpoint_type ||
+        ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT.includes(endpoint_type) ||
+        !aclpServices?.objectstorage?.metrics?.enabled,
       chip: aclpServices?.objectstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);
