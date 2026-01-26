@@ -475,7 +475,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       return `preset:${preset}`;
     }
     if (!start || !end || !timeZone) {
-      return 'custom:invalid';
+      return 'custom:missing-params';
     }
 
     return `custom:${start},${end},${timeZone}`;

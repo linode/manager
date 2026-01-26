@@ -52,8 +52,12 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
 
   const isZoomEnabled = flags.aclp?.enableZoomInCharts ?? false; // default to false
 
-  const { zoom, isZoomed, zoomOut, zoomCallbacks } =
-    useZoomController(zoomResetKey);
+  const {
+    zoom,
+    isZoomed,
+    zoomOut: resetZoom,
+    zoomCallbacks,
+  } = useZoomController(zoomResetKey);
 
   const zoomedData = React.useMemo(() => {
     if (!isZoomEnabled) {
@@ -114,7 +118,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             <Button
               buttonType="primary"
               data-qa-buttons
-              onClick={zoomOut}
+              onClick={resetZoom}
               sx={(theme) => ({
                 height: '26px',
                 width: '84px',
