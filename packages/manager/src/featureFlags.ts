@@ -100,6 +100,11 @@ interface AclpFlag {
   enabled: boolean;
 
   /**
+   * This property indicates whether to enable zoom in charts or not
+   */
+  enableZoomInCharts?: boolean;
+
+  /**
    * This property indicates for which unit, we need to humanize the values e.g., count, iops etc.,
    */
   humanizableUnits?: string[];

@@ -172,6 +172,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [groupBy, setGroupBy] = React.useState<string[] | undefined>(
     props.widget.group_by
   );
+  const [isZoomed, setIsZoomed] = React.useState(false);
   const theme = useTheme();
 
   const {
@@ -401,6 +402,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     [savePref, updatePreferences, widget.label]
   );
+
+  const handleZoomStateChange = React.useCallback((zoomed: boolean) => {
+    setIsZoomed(zoomed);
+  }, []);
   const {
     data: metricsList,
     error,
@@ -428,6 +433,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
+      shouldRefresh: !isZoomed,
     }
   );
   let data: DataSet[] = [];
@@ -585,12 +591,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               metricsApiCallError === jweTokenExpiryError ||
               isJweTokenFetching
             } // keep loading until we are trying to fetch the refresh token
+            onZoomChange={handleZoomStateChange}
             showDot
             showLegend={data.length !== 0}
             timezone={timezone}
             unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
             variant={variant}
             xAxis={{ tickFormat, tickGap: 60 }}
+            zoomResetKey={
+              props.duration.preset ??
+              `${props.duration.start},${props.duration.end},${props.duration.timeZone}` // key to reset zoom when duration changes
+            }
           />
         </Paper>
       </Stack>
