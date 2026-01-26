@@ -417,6 +417,23 @@ const databases = [
     }
   ),
 
+  http.put(
+    '*/databases/postgresql/instances/:id/connection-pools/:label',
+    async ({ request }) => {
+      const body = await request.json();
+      const payload: any = body;
+
+      const connectionPool = databaseConnectionPoolFactory.build({
+        database: payload.database,
+        label: payload.label,
+        mode: payload.mode,
+        size: payload.size,
+        username: payload.username,
+      });
+      return HttpResponse.json(connectionPool);
+    }
+  ),
+
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
     const database = makeMockDatabase(params);
     return HttpResponse.json(database);
