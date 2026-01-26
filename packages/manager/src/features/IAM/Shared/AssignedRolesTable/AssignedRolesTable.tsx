@@ -185,6 +185,27 @@ export const AssignedRolesTable = () => {
     }
   };
 
+  /**
+   * Closes the Remove Assignment Confirmation Dialog and adjusts pagination if needed.
+   * @param selectedRole Optional role that was affected by the removal.
+   */
+  const handleRemoveAssignmentDialogClose = (
+    selectedRole?: ExtendedRoleView
+  ) => {
+    setIsRemoveAssignmentDialogOpen(false);
+    const removedLastOnPage =
+      filteredAndSortedRoles.length % pagination.pageSize === 1;
+
+    // If we just deleted the last role with only one entity on a page, reset to the previous page.
+    if (
+      selectedRole &&
+      selectedRole.entity_ids?.length === 1 &&
+      removedLastOnPage
+    ) {
+      pagination.handlePageChange(pagination.page - 1);
+    }
+  };
+
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
   const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
@@ -479,6 +500,7 @@ export const AssignedRolesTable = () => {
       />
       <RemoveAssignmentConfirmationDialog
         onClose={() => setIsRemoveAssignmentDialogOpen(false)}
+        onSuccess={() => handleRemoveAssignmentDialogClose(selectedRole)}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRoleDetails}
         username={username}
