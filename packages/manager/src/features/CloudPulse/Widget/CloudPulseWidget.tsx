@@ -468,6 +468,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
 
+  const zoomResetKey = React.useMemo(() => {
+    const { preset, start, end, timeZone } = props.duration;
+
+    if (preset) {
+      return `preset:${preset}`;
+    }
+    if (!start || !end || !timeZone) {
+      return 'custom:invalid';
+    }
+
+    return `custom:${start},${end},${timeZone}`;
+  }, [props.duration]);
+
   React.useEffect(() => {
     if (
       filteredSelections.length !== (dimensionFilters?.length ?? 0) &&
@@ -599,8 +612,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             variant={variant}
             xAxis={{ tickFormat, tickGap: 60 }}
             zoomResetKey={
-              props.duration.preset ??
-              `${props.duration.start},${props.duration.end},${props.duration.timeZone}` // key to reset zoom when duration changes
+              zoomResetKey // key to reset zoom when duration changes
             }
           />
         </Paper>
