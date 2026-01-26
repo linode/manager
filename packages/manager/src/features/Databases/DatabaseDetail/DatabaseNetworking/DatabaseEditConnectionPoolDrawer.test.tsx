@@ -94,7 +94,10 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
 
     renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
 
-    // Submit the filled form
+    // Edit and submit the filled form
+    const poolModeSelect = screen.getByLabelText('Pool Mode');
+    await userEvent.click(poolModeSelect);
+    await userEvent.click(screen.getByText('Statement'));
     const saveBtn = screen.getByText('Save');
     await userEvent.click(saveBtn);
 
@@ -117,7 +120,10 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
 
     renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
 
-    // Submit the filled form
+    // Edit and submit the filled form
+    const poolModeSelect = screen.getByLabelText('Pool Mode');
+    await userEvent.click(poolModeSelect);
+    await userEvent.click(screen.getByText('Statement'));
     const saveBtn = screen.getByText('Save');
     await userEvent.click(saveBtn);
 
