@@ -1,6 +1,6 @@
 import {
   useChildAccountsInfiniteQuery,
-  useGetMyDelegatedChildAccountsQuery,
+  useMyDelegatedChildAccountsInfiniteQuery,
 } from '@linode/queries';
 import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
@@ -96,10 +96,17 @@ export const SwitchAccountDrawer = (props: Props) => {
   const {
     data: allChildAccounts,
     error: allChildAccountsError,
-    isLoading: allChildAccountsLoading,
+    fetchNextPage: fetchNextPageIAM,
+    hasNextPage: hasNextPageIAM,
+    isFetchingNextPage: isFetchingNextPageIAM,
+    isInitialLoading: allChildAccountsLoading,
     isRefetching: allChildAccountsIsRefetching,
     refetch: refetchAllChildAccounts,
-  } = useGetMyDelegatedChildAccountsQuery({}, filter, isIAMDelegationEnabled && isParentUserType);
+  } = useMyDelegatedChildAccountsInfiniteQuery({
+    params: {},
+    filter,
+    enabled: isIAMDelegationEnabled && isParentUserType,
+  });
 
   const refetchFn = isIAMDelegationEnabled
     ? refetchAllChildAccounts
@@ -156,22 +163,16 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   const handleClose = () => {
     setIsSwitchingChildAccounts(false);
+    setSearchQuery('');
     onClose();
   };
 
   const childAccounts = useMemo(() => {
     if (isIAMDelegationEnabled) {
-      if (searchQuery && allChildAccounts) {
-        // Client-side filter: match company field with searchQuery (case-insensitive, contains)
-        const normalizedQuery = searchQuery.toLowerCase();
-        return allChildAccounts?.data.filter((account) =>
-          account.company?.toLowerCase().includes(normalizedQuery)
-        );
-      }
-      return allChildAccounts?.data;
+      return allChildAccounts?.pages.flatMap((page) => page.data);
     }
     return data?.pages.flatMap((page) => page.data);
-  }, [isIAMDelegationEnabled, searchQuery, allChildAccounts, data]);
+  }, [isIAMDelegationEnabled, allChildAccounts, data]);
 
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
@@ -204,32 +205,32 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
-      {isIAMDelegationEnabled &&
-        allChildAccounts &&
-        allChildAccounts?.data.length !== 0 && (
-          <>
-            <DebouncedSearchTextField
-              clearable
-              debounceTime={250}
-              hideLabel
-              label="Search"
-              onSearch={setSearchQuery}
-              placeholder="Search"
-              sx={{ marginBottom: 3 }}
-              value={searchQuery}
-            />
-            {searchQuery && childAccounts && childAccounts.length === 0 && (
-              <Typography sx={{ fontStyle: 'italic' }}>
-                No search results
-              </Typography>
-            )}
-          </>
-        )}
+      {isIAMDelegationEnabled && allChildAccounts && (
+        <>
+          <DebouncedSearchTextField
+            clearable
+            debounceTime={250}
+            hideLabel
+            key={`iam-search-${searchQuery}`}
+            label="Search"
+            onSearch={setSearchQuery}
+            placeholder="Search"
+            sx={{ marginBottom: 3 }}
+            value={searchQuery}
+          />
+          {searchQuery && childAccounts && childAccounts.length === 0 && (
+            <Typography sx={{ fontStyle: 'italic' }}>
+              No search results
+            </Typography>
+          )}
+        </>
+      )}
       {!isIAMDelegationEnabled && (
         <DebouncedSearchTextField
           clearable
           debounceTime={250}
           hideLabel
+          key={`non-iam-search-${searchQuery}`}
           label="Search"
           onSearch={setSearchQuery}
           placeholder="Search"
@@ -250,10 +251,14 @@ export const SwitchAccountDrawer = (props: Props) => {
             ? new Error(allChildAccountsError[0].reason)
             : null,
         }}
-        fetchNextPage={fetchNextPage}
+        fetchNextPage={
+          isIAMDelegationEnabled ? fetchNextPageIAM : fetchNextPage
+        }
         filter={filter}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={isIAMDelegationEnabled ? hasNextPageIAM : hasNextPage}
+        isFetchingNextPage={
+          isIAMDelegationEnabled ? isFetchingNextPageIAM : isFetchingNextPage
+        }
         isLoading={
           isInitialLoading ||
           isSubmitting ||
