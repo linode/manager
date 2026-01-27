@@ -487,7 +487,7 @@ describe('Notification Channel Listing Page', () => {
     ui.actionMenuItem
       .findByTitle('Delete')
       .should('be.visible')
-      .should('be.disabled'); // ✅ key assertion for channels with alerts
+      .should('be.disabled');
   });
 
   it('ensures system-type channels never show the Delete button', () => {
