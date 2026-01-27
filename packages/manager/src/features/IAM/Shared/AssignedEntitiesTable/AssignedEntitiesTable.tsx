@@ -184,7 +184,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     // If we just deleted the last one on a page, reset to the previous page.
     const removedLastOnPage =
       filteredAndSortedRoles.length % pagination.pageSize === 1;
-    if (removedLastOnPage) {
+    if (removedLastOnPage && pagination.page > 1) {
       pagination.handlePageChange(pagination.page - 1);
     }
   };
