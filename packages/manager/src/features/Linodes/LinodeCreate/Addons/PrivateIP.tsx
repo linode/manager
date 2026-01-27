@@ -55,9 +55,16 @@ export const PrivateIP = () => {
             />
           )}
           <Typography component="span" display="block" variant="body1">
-            Use Private IP for a backend node to a NodeBalancer. Use VPC instead
-            for private communication between your Linodes.
+            Lets you connect with other Linodes in the same region over the data
+            center&apos;s private network, without using a public IPv4 address.
           </Typography>
+          <Notice marginTop="12px !important" variant="tip">
+            <Typography>
+              You can now establish network isolation and connections to
+              NodeBalancer backends through VPC. We recommend using VPC instead
+              of Private IPs.
+            </Typography>
+          </Notice>
         </Stack>
       }
       onChange={field.onChange}

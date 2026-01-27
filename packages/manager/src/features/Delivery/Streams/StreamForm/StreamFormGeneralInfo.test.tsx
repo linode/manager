@@ -29,7 +29,7 @@ describe('StreamFormGeneralInfo', () => {
       });
 
       // Type test value inside the input
-      const nameInput = screen.getByPlaceholderText('Stream name');
+      const nameInput = screen.getByLabelText('Stream Name');
       await userEvent.type(nameInput, 'Test');
 
       await waitFor(() => {
@@ -119,7 +119,7 @@ describe('StreamFormGeneralInfo', () => {
       });
 
       // Type test value inside the input
-      const nameInput = screen.getByPlaceholderText('Stream name');
+      const nameInput = screen.getByLabelText('Stream Name');
       await userEvent.type(nameInput, 'Test');
 
       await waitFor(() => {
