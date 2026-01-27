@@ -30,6 +30,7 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  ResourceLock,
   Stream,
   Subnet,
   SupportReply,
@@ -140,6 +141,7 @@ export type MockPresetCrudGroup = {
     | 'IP Addresses'
     | 'Kubernetes'
     | 'Linodes'
+    | 'Locks'
     | 'NodeBalancers'
     | 'Permissions'
     | 'Placement Groups'
@@ -161,6 +163,7 @@ export type MockPresetCrudId =
   | 'ip-addresses:crud'
   | 'kubernetes:crud'
   | 'linodes:crud'
+  | 'locks:crud'
   | 'nodebalancers:crud'
   | 'permissions:crud'
   | 'placement-groups:crud'
@@ -226,6 +229,7 @@ export interface MockState {
   linodeInterfaces: [number, LinodeInterface][]; // number is Linode ID
   linodeIps: [number, LinodeIPsResponse][]; // number is Linode ID
   linodes: Linode[];
+  locks: ResourceLock[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];
   nodeBalancers: NodeBalancer[];

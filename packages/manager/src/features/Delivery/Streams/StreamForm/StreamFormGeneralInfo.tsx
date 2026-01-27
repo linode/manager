@@ -92,12 +92,11 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
             inputProps={{
               'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Name`,
             }}
-            label="Name"
+            label="Stream Name"
             onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Stream name"
             value={field.value}
           />
         )}

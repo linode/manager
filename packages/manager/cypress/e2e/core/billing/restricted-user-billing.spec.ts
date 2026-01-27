@@ -6,7 +6,6 @@ import { grantsFactory, profileFactory } from '@linode/utilities';
 import { paymentMethodFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetProfile,
   mockGetProfileGrants,
@@ -224,13 +223,6 @@ const assertMakeAPaymentEnabled = () => {
 describe('restricted user billing flows', () => {
   beforeEach(() => {
     mockGetPaymentMethods(mockPaymentMethods);
-    // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
-    mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: true,
-      iam: {
-        enabled: false,
-      },
-    });
   });
 
   /*
@@ -267,8 +259,7 @@ describe('restricted user billing flows', () => {
     assertEditBillingInfoDisabled(restrictedUserTooltip);
     assertAddPaymentMethodDisabled(restrictedUserTooltip);
     assertMakeAPaymentDisabled(
-      restrictedUserTooltip +
-        ` Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
+      `You don't have permissions to make a payment. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
     );
   });
 
@@ -297,8 +288,7 @@ describe('restricted user billing flows', () => {
     assertEditBillingInfoDisabled(restrictedUserTooltip);
     assertAddPaymentMethodDisabled(restrictedUserTooltip);
     assertMakeAPaymentDisabled(
-      restrictedUserTooltip +
-        ` Please contact your ${PARENT_USER} to request the necessary permissions.`
+      `You don't have permissions to make a payment. Please contact your ${PARENT_USER} to request the necessary permissions.`
     );
   });
 

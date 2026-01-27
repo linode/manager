@@ -48,6 +48,11 @@ export const streamStatusOptions: AutocompleteOption[] = [
     label: 'Inactive',
     pendoId: 'Logs Delivery Streams-Status Inactive',
   },
+  {
+    value: streamStatus.Provisioning,
+    label: 'Provisioning',
+    pendoId: 'Logs Delivery Streams-Status Provisioning',
+  },
 ];
 
 export type DestinationDetailsForm =

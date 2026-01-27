@@ -203,6 +203,7 @@ export interface Flags {
   apl: boolean;
   aplGeneralAvailability: boolean;
   aplLkeE: boolean;
+  blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -223,10 +224,9 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
-  iam: BetaFeatureFlag;
+  iam: BaseFeatureFlag;
   iamDelegation: BaseFeatureFlag;
   iamLimitedAvailabilityBadges: boolean;
-  iamRbacPrimaryNavChanges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
@@ -242,6 +242,7 @@ export interface Flags {
   networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
+  objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
   objSummaryPage: boolean;

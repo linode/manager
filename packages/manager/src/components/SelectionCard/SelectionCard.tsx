@@ -39,7 +39,7 @@ export interface SelectionCardProps {
    * The heading of the card.
    * @example Linode 1GB
    */
-  heading: string;
+  heading: JSX.Element | string;
   /**
    * An optional decoration to display next to the heading.
    * @example (Current)

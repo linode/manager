@@ -43,7 +43,6 @@ describe('useIsIAMEnabled', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isIAMBeta).toBe(true);
       expect(result.current.isIAMEnabled).toBe(true);
     });
   });
@@ -67,8 +66,6 @@ describe('useIsIAMEnabled', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isIAMBeta).toBe(false);
-      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(true);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
@@ -94,8 +91,6 @@ describe('useIsIAMEnabled', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isIAMBeta).toBe(false);
-      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
@@ -120,8 +115,6 @@ describe('useIsIAMEnabled', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isIAMBeta).toBe(true);
-      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);

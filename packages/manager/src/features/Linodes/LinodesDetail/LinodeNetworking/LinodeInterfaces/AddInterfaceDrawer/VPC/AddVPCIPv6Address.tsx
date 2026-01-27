@@ -27,6 +27,7 @@ export const AddVPCIPv6Address = () => {
         name="vpc.ipv6.slaac.0.range"
         render={({ field, fieldState }) => (
           <VPCIPv6Address
+            autoAssignValue="auto"
             errorMessage={fieldState.error?.message}
             fieldValue={field.value}
             onChange={field.onChange}

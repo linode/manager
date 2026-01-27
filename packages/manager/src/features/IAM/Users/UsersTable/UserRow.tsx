@@ -30,11 +30,11 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'delete_user',
     'is_account_admin',
-    'view_account',
+    'view_user',
   ]);
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const canViewUser = permissions.view_account;
+  const canViewUser = permissions.view_user;
 
   // Determine if the current user is a child account with isIAMDelegationEnabled enabled
   // If so, we need to show the 'User type' column in the table

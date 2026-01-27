@@ -24,6 +24,7 @@ export * from './images';
 export * from './kernels';
 export * from './kubernetesCluster';
 export * from './linodeConfigs';
+export * from './locks';
 export * from './longviewClient';
 export * from './longviewDisks';
 export * from './longviewProcess';

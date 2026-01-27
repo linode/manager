@@ -489,3 +489,18 @@ export interface EditNotificationChannelPayloadWithId
    */
   channelId: number;
 }
+
+export interface DeleteChannelPayload {
+  /**
+   * The ID of the channel to delete.
+   */
+  channelId: number;
+}
+
+export interface NotificationChannelAlerts {
+  id: number;
+  label: string;
+  service_type: CloudPulseServiceType;
+  type: 'alerts-definitions';
+  url: string;
+}
