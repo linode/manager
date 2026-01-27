@@ -69,26 +69,6 @@ export const filterPlansByGeneration = (
 // ============================================================================
 
 /**
- * Returns the numeric generation of a plan based on its ID.
- * Higher generation number = newer plan (shown first).
- *
- * Example:
- * - "g8-dedicated-4-2" -> 8
- * - "g1-accelerated-netint-vpu" -> 1
- * - "legacy-plan" -> 0
- */
-export const getGenerationRank = (planId: string): number => {
-  const generation = planId.split('-')[0]; // eg., "g8" or "legacy"
-
-  // Safe fallback: must start with "g"
-  if (!generation.startsWith('g')) return 0;
-
-  const num = Number(generation.slice(1));
-
-  return Number.isFinite(num) ? num : 0;
-};
-
-/**
  * Filter plans by type within a generation
  *
  * @param plans - Array of plans (should be pre-filtered by generation)
@@ -108,11 +88,9 @@ export const filterPlansByType = (
   generation: PlanFilterGeneration,
   type: PlanFilterType
 ): PlanWithAvailability[] => {
-  // "All" returns all plans, sorted from newest to oldest generations
+  // "All" returns all plans unchanged
   if (type === PLAN_FILTER_ALL) {
-    return [...plans].sort(
-      (a, b) => getGenerationRank(b.id) - getGenerationRank(a.id)
-    );
+    return plans;
   }
 
   // G7, G6, and "All" generation only have "All" option (no sub-types)

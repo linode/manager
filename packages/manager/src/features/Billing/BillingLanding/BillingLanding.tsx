@@ -1,14 +1,15 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { useNavigate } from '@tanstack/react-router';
+import { Navigate, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
-import { ADMINISTRATOR, PARENT_USER } from 'src/features/Account/constants';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
@@ -21,7 +22,9 @@ import { BillingDetail } from '../BillingDetail';
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
 export const BillingLanding = () => {
+  const flags = useFlags();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
@@ -33,12 +36,12 @@ export const BillingLanding = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
   const sessionContext = React.useContext(switchAccountSessionContext);
 
+  const isIAMRbacPrimaryNavChangesEnabled = flags?.iamRbacPrimaryNavChanges;
   const isAkamaiAccount = account?.billing_source === 'akamai';
   const isProxyUser = profile?.user_type === 'proxy';
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
 
-  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
@@ -48,6 +51,13 @@ export const BillingLanding = () => {
   const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
 
   const isReadOnly = !permissions.make_billing_payment || isChildUser;
+
+  if (
+    !isIAMRbacPrimaryNavChangesEnabled &&
+    location.pathname !== '/account/billing'
+  ) {
+    return <Navigate replace to="/account/billing" />;
+  }
 
   const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
     ? isParentUser
@@ -68,10 +78,11 @@ export const BillingLanding = () => {
       pathname: '/billing',
     },
     buttonDataAttrs: {
-      disabled: isReadOnly || isAkamaiAccount,
-      tooltipText: isAkamaiAccount
-        ? 'This feature is not available for Akamai accounts.'
-        : `You don't have permissions to make a payment. Please contact your ${contactPerson} to request the necessary permissions.`,
+      disabled: isReadOnly,
+      tooltipText: getRestrictedResourceText({
+        isChildUser,
+        resourceType: 'Account',
+      }),
     },
     createButtonText: 'Make a Payment',
     docsLabel: 'How Linode Billing Works',
@@ -87,10 +98,12 @@ export const BillingLanding = () => {
       />
     ) : undefined,
     onButtonClick: () =>
-      navigate({
-        to: '/billing',
-        search: { action: 'make-payment' },
-      }),
+      !isAkamaiAccount
+        ? navigate({
+            to: '/billing',
+            search: { action: 'make-payment' },
+          })
+        : {},
     title: 'Billing',
   };
 

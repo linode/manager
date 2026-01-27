@@ -1,7 +1,3 @@
-import {
-  linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVPC,
-} from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -15,23 +11,8 @@ import { AddInterfaceForm } from './AddInterfaceForm';
 const props = { linodeId: 0, onClose: vi.fn(), regionId: '' };
 
 describe('AddInterfaceForm', () => {
-  beforeEach(() => {
-    server.use(
-      http.get('*/linode/instances/:linodeId/interfaces', () => {
-        return HttpResponse.json({
-          interfaces: [],
-        });
-      })
-    );
-  });
-
-  it('renders radios for the interface types (Public, VPC, VLAN)', async () => {
-    const { getByRole, findByRole } = renderWithTheme(
-      <AddInterfaceForm {...props} />
-    );
-
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'VPC' });
+  it('renders radios for the interface types (Public, VPC, VLAN)', () => {
+    const { getByRole } = renderWithTheme(<AddInterfaceForm {...props} />);
 
     expect(getByRole('radio', { name: 'VPC' })).toBeInTheDocument();
     expect(getByRole('radio', { name: 'Public' })).toBeInTheDocument();
@@ -39,36 +20,30 @@ describe('AddInterfaceForm', () => {
   });
 
   it('renders a Firewall select if "VPC" is selected', async () => {
-    const { getByRole, getByLabelText, findByRole } = renderWithTheme(
+    const { getByRole, getByLabelText } = renderWithTheme(
       <AddInterfaceForm {...props} />
     );
 
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'VPC' });
     await userEvent.click(getByRole('radio', { name: 'VPC' }));
 
     expect(getByLabelText('Firewall')).toBeVisible();
   });
 
   it('renders a Firewall select if "Public" is selected', async () => {
-    const { getByRole, getByLabelText, findByRole } = renderWithTheme(
+    const { getByRole, getByLabelText } = renderWithTheme(
       <AddInterfaceForm {...props} />
     );
 
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'Public' });
     await userEvent.click(getByRole('radio', { name: 'Public' }));
 
     expect(getByLabelText('Firewall')).toBeVisible();
   });
 
   it('renders does not render a Firewall select if "VLAN" is selected', async () => {
-    const { getByRole, queryByLabelText, findByRole } = renderWithTheme(
+    const { getByRole, queryByLabelText } = renderWithTheme(
       <AddInterfaceForm {...props} />
     );
 
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'VLAN' });
     await userEvent.click(getByRole('radio', { name: 'VLAN' }));
 
     expect(queryByLabelText('Firewall')).toBeNull();
@@ -92,79 +67,12 @@ describe('AddInterfaceForm', () => {
       })
     );
 
-    const { getByRole, findByDisplayValue, findByRole } = renderWithTheme(
+    const { getByRole, findByDisplayValue } = renderWithTheme(
       <AddInterfaceForm {...props} />
     );
 
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'VPC' });
     await userEvent.click(getByRole('radio', { name: 'VPC' }));
 
     await findByDisplayValue(firewall.label);
-  });
-
-  it('should show a warning notice on selection of VPC option if a Public interface already exists', async () => {
-    const mockPublicInterface = linodeInterfaceFactoryPublic.build();
-
-    server.use(
-      http.get('*/linode/instances/:linodeId/interfaces', () => {
-        return HttpResponse.json({
-          interfaces: [mockPublicInterface],
-        });
-      })
-    );
-
-    const { getByRole, findByRole, getByText } = renderWithTheme(
-      <AddInterfaceForm {...props} />
-    );
-
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'VPC' });
-    await userEvent.click(getByRole('radio', { name: 'VPC' }));
-    expect(
-      getByText(/This Linode already has a public interface/)
-    ).toBeVisible();
-  });
-
-  it('should show a warning notice on selection of Public option if a VPC interface already exists', async () => {
-    const mockVPCInterface = linodeInterfaceFactoryVPC.build();
-
-    server.use(
-      http.get('*/linode/instances/:linodeId/interfaces', () => {
-        return HttpResponse.json({
-          interfaces: [mockVPCInterface],
-        });
-      })
-    );
-
-    const { getByRole, findByRole, getByText } = renderWithTheme(
-      <AddInterfaceForm {...props} />
-    );
-
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'Public' });
-    await userEvent.click(getByRole('radio', { name: 'Public' }));
-    expect(getByText(/This Linode already has a VPC interface/)).toBeVisible();
-  });
-
-  it('should disable Public interface radio button if a Public interface already exists', async () => {
-    const mockPublicInterface = linodeInterfaceFactoryPublic.build();
-
-    server.use(
-      http.get('*/linode/instances/:linodeId/interfaces', () => {
-        return HttpResponse.json({
-          interfaces: [mockPublicInterface],
-        });
-      })
-    );
-
-    const { getByRole, findByRole } = renderWithTheme(
-      <AddInterfaceForm {...props} />
-    );
-
-    // Wait for the loading to complete and form to render
-    await findByRole('radio', { name: 'Public' });
-
-    expect(getByRole('radio', { name: 'Public' })).toBeDisabled();
   });
 });

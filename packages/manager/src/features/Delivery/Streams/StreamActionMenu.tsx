@@ -32,7 +32,6 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
       },
       title: stream.status === streamStatus.Active ? 'Deactivate' : 'Activate',
       pendoId: `Logs Delivery Streams-${stream.status === streamStatus.Active ? 'Deactivate' : 'Activate'}`,
-      disabled: stream.status === streamStatus.Provisioning,
     },
     {
       onClick: () => {

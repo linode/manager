@@ -22,7 +22,6 @@ const queryMocks = vi.hoisted(() => ({
   useAllGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
-  useIsIAMDelegationEnabled: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -43,16 +42,6 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/useIsIAMEnabled', async () => {
-  const actual = await vi.importActual(
-    'src/features/IAM/hooks/useIsIAMEnabled'
-  );
-  return {
-    ...actual,
-    useIsIAMDelegationEnabled: queryMocks.useIsIAMDelegationEnabled,
-  };
-});
-
 describe('UserDelegations', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -64,9 +53,6 @@ describe('UserDelegations', () => {
     });
     queryMocks.useSearch.mockReturnValue({
       query: '',
-    });
-    queryMocks.useIsIAMDelegationEnabled.mockReturnValue({
-      isIAMDelegationEnabled: true,
     });
   });
 

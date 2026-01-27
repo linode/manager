@@ -19,8 +19,6 @@ import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
 import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 
 describe('Edit Destination', () => {
-  const saveChangesButtonText = 'Save Changes';
-
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpLogs: {
@@ -50,9 +48,7 @@ describe('Edit Destination', () => {
     );
 
     // Save button should be disabled before test connection
-    cy.findByRole('button', { name: saveChangesButtonText }).should(
-      'be.disabled'
-    );
+    cy.findByRole('button', { name: 'Save' }).should('be.disabled');
     // Test connection of the destination form
     mockTestConnection(400);
     ui.button
@@ -66,9 +62,7 @@ describe('Edit Destination', () => {
     );
 
     // Save button should be disabled after test connection failed
-    cy.findByRole('button', { name: saveChangesButtonText }).should(
-      'be.disabled'
-    );
+    cy.findByRole('button', { name: 'Save' }).should('be.disabled');
   });
 
   it('edit destination with correct data', () => {
@@ -81,9 +75,7 @@ describe('Edit Destination', () => {
     );
 
     // Save button should be disabled before test connection
-    cy.findByRole('button', { name: saveChangesButtonText }).should(
-      'be.disabled'
-    );
+    cy.findByRole('button', { name: 'Save' }).should('be.disabled');
     // Test connection of the destination form
     mockTestConnection();
     ui.button
@@ -100,7 +92,7 @@ describe('Edit Destination', () => {
     mockUpdateDestination(mockDestinationPayloadWithId, updatedDestination);
     mockGetDestinations([updatedDestination]);
     // Submit the destination edit form
-    cy.findByRole('button', { name: saveChangesButtonText })
+    cy.findByRole('button', { name: 'Save' })
       .should('be.enabled')
       .should('have.attr', 'type', 'button')
       .click();

@@ -8,10 +8,6 @@ import type { AlertNotificationType } from '@linode/api-v4';
 
 export interface NotificationChannelActionHandlers {
   /**
-   * Callback for delete action
-   */
-  handleDelete: () => void;
-  /**
    * Callback for show details action
    */
   handleDetails: () => void;
@@ -22,10 +18,6 @@ export interface NotificationChannelActionHandlers {
 }
 
 export interface NotificationChannelActionMenuProps {
-  /**
-   * Number of alerts associated with the notification channel
-   */
-  alertsCount: number;
   /**
    * The label of the Notification Channel
    */
@@ -42,14 +34,12 @@ export interface NotificationChannelActionMenuProps {
 export const NotificationChannelActionMenu = (
   props: NotificationChannelActionMenuProps
 ) => {
-  const { channelLabel, handlers, notificationType, alertsCount } = props;
+  const { channelLabel, handlers, notificationType } = props;
 
   return (
     <ActionMenu
       actionsList={
-        getNotificationChannelActionsList({ handlers, alertsCount })[
-          notificationType
-        ] || []
+        getNotificationChannelActionsList(handlers)[notificationType] || []
       }
       ariaLabel={`Action menu for Notification Channel ${channelLabel}`}
     />

@@ -22,6 +22,14 @@ const loginHistoryCatchAllRoute = createRoute({
 const loginHistoryIndexRoute = createRoute({
   getParentRoute: () => loginHistoryRoute,
   path: '/',
+  beforeLoad: ({ context }) => {
+    if (!context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/account/login-history`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/LoginHistory/loginHistoryLandingLazyRoute').then(
     (m) => m.loginHistoryLandingLazyRoute

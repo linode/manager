@@ -8,6 +8,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { User } from '@linode/api-v4';
 
@@ -18,6 +19,7 @@ interface Props {
 export const UsernamePanel = ({ user }: Props) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const isProxyUserProfile = user?.user_type === 'proxy';
 
@@ -40,7 +42,9 @@ export const UsernamePanel = ({ user }: Props) => {
 
       // Because the username changed, we need to update the username in the URL
       navigate({
-        to: '/users/$username',
+        to: iamRbacPrimaryNavChanges
+          ? '/users/$username'
+          : '/account/users/$username',
         params: { username: user.username },
       });
 

@@ -29,7 +29,7 @@ export const getMarketplaceProducts = (params?: Params, filters?: Filter) =>
 export const getMarketplaceProduct = (productId: number) =>
   Request<MarketplaceProduct>(
     setURL(
-      `${BETA_API_ROOT}/marketplace/products/${encodeURIComponent(productId)}/details`,
+      `${BETA_API_ROOT}/marketplace/products/${encodeURIComponent(productId)}`,
     ),
     setMethod('GET'),
   );

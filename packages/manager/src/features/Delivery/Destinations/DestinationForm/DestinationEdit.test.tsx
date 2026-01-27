@@ -60,7 +60,7 @@ describe('DestinationEdit', () => {
 
   describe('given Test Connection and Edit Destination buttons', () => {
     const testConnectionButtonText = 'Test Connection';
-    const saveDestinationButtonText = 'Save Changes';
+    const saveDestinationButtonText = 'Save';
     const editDestinationSpy = vi.fn();
     const verifyDestinationSpy = vi.fn();
 

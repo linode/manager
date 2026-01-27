@@ -37,34 +37,4 @@ describe('Linode Create Addons', () => {
       'Backups and Private IP are not available for distributed regions.'
     );
   });
-
-  it('should hide the Private IP addon if interface generation is "linode"', () => {
-    const { queryByText } = renderWithThemeAndHookFormContext({
-      component: <Addons />,
-      useFormOptions: {
-        values: {
-          interface_generation: 'linode',
-        },
-      },
-    });
-
-    const privateIPLabel = queryByText('Private IP');
-
-    expect(privateIPLabel).not.toBeInTheDocument();
-  });
-
-  it('should show the Private IP addon if interface generation is not "linode"', () => {
-    const { queryByText } = renderWithThemeAndHookFormContext({
-      component: <Addons />,
-      useFormOptions: {
-        values: {
-          interface_generation: 'legacy_config',
-        },
-      },
-    });
-
-    const privateIPLabel = queryByText('Private IP');
-
-    expect(privateIPLabel).toBeVisible();
-  });
 });

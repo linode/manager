@@ -1,7 +1,16 @@
-import { CloseIcon, IconButton, Notice, Stack, TextField } from '@linode/ui';
+import {
+  CloseIcon,
+  IconButton,
+  Notice,
+  Stack,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import { LinkButton } from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+
+import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -70,6 +79,11 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
         <LinkButton disabled={disabled} onClick={() => append({ range: '' })}>
           Add IPv4 Range
         </LinkButton>
+        <TooltipIcon
+          status="info"
+          sxTooltipIcon={{ p: 0.5 }}
+          text={<VPCRangesDescription />}
+        />
       </Stack>
     </Stack>
   );

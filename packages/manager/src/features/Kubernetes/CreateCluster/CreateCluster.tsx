@@ -1,5 +1,4 @@
 import {
-  useAccountSettings,
   useAllTypes,
   useMutateAccountAgreements,
   useRegionsQuery,
@@ -13,7 +12,6 @@ import {
   Select,
   Stack,
   TextField,
-  Typography,
 } from '@linode/ui';
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
@@ -33,7 +31,6 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -126,7 +123,6 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
-  const { data: accountSettings } = useAccountSettings();
   const { showAPL } = useAPLAvailability();
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
@@ -241,9 +237,6 @@ export const CreateCluster = () => {
   const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_lkes',
   });
-
-  const isInterfaceIncompatible =
-    accountSettings?.interfaces_for_new_linodes === 'linode_only';
 
   const {
     data: allTypes,
@@ -495,21 +488,6 @@ export const CreateCluster = () => {
               variant="error"
             />
           )}
-          {isInterfaceIncompatible && (
-            <Notice sx={{ marginBottom: 2 }} variant="warning">
-              <Typography>
-                Your account’s{' '}
-                <strong>
-                  Network Interface Type setting is incompatible with LKE
-                </strong>
-                . To create a cluster, update this setting to allow the option
-                for Configuration Profile Interfaces.{' '}
-                <Link to={'/account-settings#interface-type'}>
-                  Account settings
-                </Link>
-              </Typography>
-            </Notice>
-          )}
           <Paper data-qa-label-header>
             <TextField
               data-qa-label-input
@@ -722,7 +700,6 @@ export const CreateCluster = () => {
                 ? UNKNOWN_PRICE
                 : highAvailabilityPrice
             }
-            isInterfaceIncompatible={isInterfaceIncompatible}
             pools={nodePools}
             region={selectedRegion?.id}
             regionsData={regionsData}

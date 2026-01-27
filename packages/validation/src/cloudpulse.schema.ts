@@ -37,13 +37,12 @@ export const triggerConditionValidation = object({
     .typeError('The value should be a number.'),
 });
 
-const specialStartRegex = /^[^a-zA-Z0-9]/;
-const specialEndRegex = /[^a-zA-Z0-9]$/;
+const specialStartEndRegex = /^[^a-zA-Z0-9]/;
 export const createAlertDefinitionSchema = object({
   label: string()
     .required(fieldErrorMessage)
     .matches(
-      /^[^*#&+:<>"?@%{}\\/]+$/,
+      /^[^*#&+:<>"?@%{}\\\/]+$/,
       'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
     )
     .max(100, 'Name must be 100 characters or less.')
@@ -51,10 +50,7 @@ export const createAlertDefinitionSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !(
-          specialStartRegex.test(value ?? '') ||
-          specialEndRegex.test(value ?? '')
-        );
+        return !specialStartEndRegex.test(value ?? '');
       },
     ),
   description: string()
@@ -63,10 +59,7 @@ export const createAlertDefinitionSchema = object({
       'no-special-start-end',
       'Description cannot start or end with a special character.',
       (value) => {
-        return !(
-          specialStartRegex.test(value ?? '') ||
-          specialEndRegex.test(value ?? '')
-        );
+        return !specialStartEndRegex.test(value ?? '');
       },
     )
     .optional(),
@@ -100,10 +93,7 @@ export const editAlertDefinitionSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !(
-          specialStartRegex.test(value ?? '') ||
-          specialEndRegex.test(value ?? '')
-        );
+        return !specialStartEndRegex.test(value ?? '');
       },
     )
     .optional(),
@@ -113,10 +103,7 @@ export const editAlertDefinitionSchema = object({
       'no-special-start-end',
       'Description cannot start or end with a special character.',
       (value) => {
-        return !(
-          specialStartRegex.test(value ?? '') ||
-          specialEndRegex.test(value ?? '')
-        );
+        return !specialStartEndRegex.test(value ?? '');
       },
     )
     .optional(),
@@ -159,10 +146,7 @@ export const createNotificationChannelPayloadSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !(
-          specialStartRegex.test(value ?? '') ||
-          specialEndRegex.test(value ?? '')
-        );
+        return !specialStartEndRegex.test(value ?? '');
       },
     ),
   channel_type: string()
@@ -190,10 +174,7 @@ export const editNotificationChannelPayloadSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !(
-          specialStartRegex.test(value ?? '') ||
-          specialEndRegex.test(value ?? '')
-        );
+        return !specialStartEndRegex.test(value ?? '');
       },
     ),
   details: object({

@@ -1,6 +1,5 @@
 import type { MaintenancePolicySlug } from '../account/types';
 import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
-import type { LockType } from '../locks/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
@@ -45,7 +44,6 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  locks: LockType[];
   maintenance_policy?: MaintenancePolicySlug;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;

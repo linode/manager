@@ -16,8 +16,7 @@ import { VolumeDetailsHeader } from './VolumeDetailsHeader';
 export const VolumeDetails = () => {
   const navigate = useNavigate();
 
-  const { volumeSummaryPage, aclpServices, blockStorageContextualMetrics } =
-    useFlags();
+  const { volumeSummaryPage, aclpServices } = useFlags();
   const { volumeId } = useParams({ from: '/volumes/$volumeId' });
   const { data: volume, isLoading, error } = useVolumeQuery(volumeId);
   const { tabs, handleTabChange, tabIndex } = useTabs([
@@ -28,9 +27,7 @@ export const VolumeDetails = () => {
     {
       to: '/volumes/$volumeId/metrics',
       title: 'Metrics',
-      hide:
-        !aclpServices?.blockstorage?.metrics?.enabled ||
-        !blockStorageContextualMetrics,
+      hide: !aclpServices?.blockstorage?.metrics?.enabled,
       chip: aclpServices?.blockstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);

@@ -3,7 +3,6 @@ import { domainSeeder } from './domains';
 import { firewallSeeder } from './firewalls';
 import { kubernetesSeeder } from './kubernetes';
 import { linodesSeeder } from './linodes';
-import { locksSeeder } from './locks';
 import { ipAddressSeeder } from './networking';
 import { nodeBalancerSeeder } from './nodebalancers';
 import { placementGroupSeeder } from './placementGroups';
@@ -19,7 +18,6 @@ export const dbSeeders = [
   ipAddressSeeder,
   kubernetesSeeder,
   linodesSeeder,
-  locksSeeder,
   nodeBalancerSeeder,
   placementGroupSeeder,
   supportTicketsSeeder,
