@@ -123,12 +123,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     cy.get('[data-qa-tp="Linode Plan"]')
       .should('be.visible')
       .within(() => {
-        // For the Dedicated 8 GB, Use filter to select G6 Dedicated instead of relying on pagination
-        ui.autocomplete.findByLabel('Dedicated Plans').click();
-        ui.autocompletePopper.find().within(() => {
-          cy.findByText('G6 Dedicated').should('be.visible').click();
-        });
-
         cy.get('[data-qa-plan-row="Dedicated 8 GB"]').click();
       });
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
@@ -289,12 +283,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     cy.get('[data-qa-tp="Linode Plan"]')
       .should('be.visible')
       .within(() => {
-        // For the Dedicated 8 GB, Use filter to select G6 Dedicated instead of relying on pagination
-        ui.autocomplete.findByLabel('Dedicated Plans').click();
-        ui.autocompletePopper.find().within(() => {
-          cy.findByText('G6 Dedicated').should('be.visible').click();
-        });
-
         cy.get('[data-qa-plan-row="Dedicated 8 GB"]').click();
       });
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
@@ -444,12 +432,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     cy.get('[data-qa-tp="Linode Plan"]')
       .should('be.visible')
       .within(() => {
-        // For the Dedicated 8 GB, Use filter to select G6 Dedicated instead of relying on pagination
-        ui.autocomplete.findByLabel('Dedicated Plans').click();
-        ui.autocompletePopper.find().within(() => {
-          cy.findByText('G6 Dedicated').should('be.visible').click();
-        });
-
         cy.get('[data-qa-plan-row="Dedicated 8 GB"]').click();
       });
     cy.get('[type="password"]').should('be.visible').scrollIntoView();

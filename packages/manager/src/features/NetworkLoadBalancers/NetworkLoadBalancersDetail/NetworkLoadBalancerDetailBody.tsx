@@ -59,11 +59,11 @@ export const NetworkLoadBalancerDetailBody = (
               {regionLabel}
             </Box>
             <Box>
-              <StyledTypography>Cluster</StyledTypography>
+              <StyledTypography>LKE-E Cluster</StyledTypography>
               {lkeCluster ? (
                 <>
                   <Link
-                    accessibleAriaLabel={`Cluster ${lkeCluster.label}`}
+                    accessibleAriaLabel={`LKE-E Cluster ${lkeCluster.label}`}
                     className="secondaryLink"
                     to={`/kubernetes/clusters/${lkeCluster.id}`}
                   >

@@ -17,6 +17,12 @@ export const useVPCDualStack = (ipv6?: VPCIPv6[]) => {
     account?.capabilities ?? []
   );
 
+  const isEnterpriseCustomer = isFeatureEnabledV2(
+    'VPC IPv6 Large Prefixes',
+    Boolean(flags.vpcIpv6),
+    account?.capabilities ?? []
+  );
+
   const shouldDisplayIPv6 = isDualStackEnabled && isDualStackSelected;
   const recommendedIPv6 = shouldDisplayIPv6
     ? [
@@ -29,6 +35,7 @@ export const useVPCDualStack = (ipv6?: VPCIPv6[]) => {
   return {
     isDualStackEnabled,
     isDualStackSelected,
+    isEnterpriseCustomer,
     shouldDisplayIPv6,
     recommendedIPv6,
   };

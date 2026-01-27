@@ -10,14 +10,12 @@ import { http } from 'msw';
 
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
-  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../../../../indexedDB';
-import { getSubresourceLockError } from '../locks';
 import { addFirewallDevice } from './linodes';
 import { addInterfaceToSubnet, removeInterfaceFromSubnet } from './utils';
 
@@ -275,16 +273,6 @@ export const deleteLinodeInterface = (mockState: MockState) => [
 
       if (!linode || !linodeInterfaceTuple) {
         return makeNotFoundResponse();
-      }
-
-      // Check for subresource locks
-      const lockError = await getSubresourceLockError(
-        linodeId,
-        'linode',
-        'Linode Interface'
-      );
-      if (lockError) {
-        return makeErrorResponse(lockError, 400);
       }
 
       const linodeInterface = linodeInterfaceTuple[1];

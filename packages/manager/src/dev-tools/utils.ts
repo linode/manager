@@ -92,9 +92,9 @@ export const saveSeedsCountMap = (countMap: { [key: string]: number }) => {
 /**
  * Retrieves the presets map from local storage.
  */
-export const getExtraPresetsMap = (): Partial<{
+export const getExtraPresetsMap = (): {
   [K in MockPresetExtraId]: number;
-}> => {
+} => {
   const encodedPresetsMap = localStorage.getItem(LOCAL_STORAGE_PRESETS_MAP_KEY);
 
   return encodedPresetsMap ? JSON.parse(encodedPresetsMap) : {};

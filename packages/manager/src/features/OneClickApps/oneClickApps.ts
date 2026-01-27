@@ -2179,7 +2179,7 @@ export const oneClickApps: Record<number, OCA> = {
     alt_description:
       'Weaviate is an open-source vector database designed to store and index both data objects and their vector embeddings.',
     alt_name: 'Open-source vector database.',
-    categories: ['Vector Databases'],
+    categories: ['Databases'],
     colors: {
       end: 'c4d132',
       start: '53b83d',
@@ -2197,50 +2197,5 @@ export const oneClickApps: Record<number, OCA> = {
     summary:
       'AI-native vector database designed for building advanced AI applications.',
     website: 'https://docs.weaviate.io/weaviate',
-  },
-  1976719: {
-    alt_description:
-      'ChromaDB is an open-source vector database designed for building AI applications. It lets you easily store, index, and query embeddings.',
-    alt_name: 'Open-source vector database.',
-    categories: ['Vector Databases'],
-    colors: {
-      end: 'ffde2c',
-      start: '327eff',
-    },
-    description:
-      'ChromaDB is an open-source AI embedding database that makes it easy to build LLM apps by making knowledge, facts, and skills pluggable for LLMs.',
-    isNew: true,
-    logo_url: 'chroma.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/chromadb/',
-        title: 'Deploy ChromaDB through the Linode Marketplace',
-      },
-    ],
-    summary: 'Vector database designed for building advanced AI applications.',
-    website: 'https://docs.trychroma.com/docs/overview/introduction',
-  },
-  1980062: {
-    alt_description:
-      'Self-hosted web interface for interacting with and managing LLMs.',
-    alt_name: 'Open-source AI web and chat interface',
-    categories: ['Chat', 'LLM', 'AI'],
-    colors: {
-      end: 'ffd800',
-      start: 'e10500',
-    },
-    description:
-      'Open WebUI is an open-source, self-hosted web interface for interacting with and managing large language models. It supports multiple AI backends, multi-user access, and extensible integrations, enabling secure and customizable deployment for local or remote model inference.',
-    isNew: true,
-    logo_url: 'mistral.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mistral7b-instruct-with-openwebui/',
-        title:
-          'Deploy Mistral-7B Instruct with Open WebUI through the Linode Marketplace',
-      },
-    ],
-    summary: 'Open-source AI web and chat interface.',
-    website: 'https://docs.openwebui.com/getting-started/',
   },
 };

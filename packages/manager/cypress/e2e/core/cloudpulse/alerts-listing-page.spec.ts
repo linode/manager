@@ -235,7 +235,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       { ascending: [2, 4, 1, 3], column: 'status', descending: [1, 3, 2, 4] },
       {
         ascending: [1, 2, 3, 4],
-        column: 'service_type_label',
+        column: 'service_type',
         descending: [3, 4, 1, 2],
       },
       {

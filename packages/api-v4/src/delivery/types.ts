@@ -1,7 +1,6 @@
 export const streamStatus = {
   Active: 'active',
   Inactive: 'inactive',
-  Provisioning: 'provisioning',
 } as const;
 
 export type StreamStatus = (typeof streamStatus)[keyof typeof streamStatus];

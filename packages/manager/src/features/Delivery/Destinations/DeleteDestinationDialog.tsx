@@ -74,7 +74,8 @@ export const DeleteDestinationDialog = React.memo((props: Props) => {
       open={open}
       title="Delete Destination"
     >
-      Are you sure you want to delete &#34;{destination?.label}&#34;?
+      Are you sure you want to delete &#34;{destination?.label}&#34;
+      destination?
     </ConfirmationDialog>
   );
 });

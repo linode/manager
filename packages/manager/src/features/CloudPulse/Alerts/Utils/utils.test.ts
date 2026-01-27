@@ -1,8 +1,4 @@
-import {
-  linodeAlertsFactory,
-  linodeFactory,
-  regionFactory,
-} from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { act, renderHook } from '@testing-library/react';
 
 import { alertFactory, notificationChannelFactory, serviceTypesFactory } from 'src/factories';
@@ -17,7 +13,6 @@ import {
   convertSecondsToMinutes,
   convertSecondsToOptions,
   filterAlerts,
-  filterLinodeResources,
   filterRegionByServiceType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
@@ -263,7 +258,7 @@ describe('useContextualAlertsState', () => {
     });
   });
 
-  it('should include alerts that match entityId in initial states', () => {
+  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
     const entityId = '123';
     const alerts = [
       alertFactory.build({
@@ -280,6 +275,13 @@ describe('useContextualAlertsState', () => {
         entity_ids: [entityId],
         scope: 'entity',
       }),
+      alertFactory.build({
+        id: 3,
+        label: 'alert3',
+        type: 'system',
+        entity_ids: ['456'],
+        scope: 'region',
+      }),
     ];
 
     const { result } = renderHook(() =>
@@ -287,6 +289,7 @@ describe('useContextualAlertsState', () => {
     );
 
     expect(result.current.initialState.system_alerts).toContain(1);
+    expect(result.current.initialState.system_alerts).toContain(3);
     expect(result.current.initialState.user_alerts).toContain(2);
   });
 
@@ -550,20 +553,5 @@ describe('shouldUseContentsForEmail', () => {
       },
     });
     expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
-  });
-});
-
-describe('filterLinodeResources', () => {
-  it('should return the filtered linode resources', () => {
-    const linodes = [
-      linodeFactory.build({
-        alerts: {
-          system_alerts: [1, 2, 3, 4, 5],
-          user_alerts: [6, 7, 8, 9, 10],
-        },
-      }),
-      linodeFactory.build({ alerts: linodeAlertsFactory.build() }),
-    ];
-    expect(filterLinodeResources(linodes)).toEqual([linodes[0]]);
   });
 });

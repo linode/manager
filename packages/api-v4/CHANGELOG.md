@@ -1,20 +1,3 @@
-## [2026-01-26] - v0.156.0
-
-
-### Fixed:
-
-- IAM Delegation: fix payload for updateChildAccountDelegates ([#13260](https://github.com/linode/manager/pull/13260))
-
-### Tech Stories:
-
-- Clean up unused VPC IPv6 Large Prefixes tag ([#13245](https://github.com/linode/manager/pull/13245))
-
-### Upcoming Features:
-
-- CloudPulse-Alerts: Add `DeleteChannelPayload` type and request for deletion of a notification channel ([#13256](https://github.com/linode/manager/pull/13256))
-- Added locks property to Linode interface,added lock create and delete event keys, refactored Lock types ([#13286](https://github.com/linode/manager/pull/13286))
-- New type `NotificationChannelAlerts`, request `getAlertsByNotificationChannelId` to fetch alerts associated to a notification channel ([#13294](https://github.com/linode/manager/pull/13294))
-
 ## [2026-01-12] - v0.155.0
 
 

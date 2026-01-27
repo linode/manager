@@ -187,7 +187,9 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const flags = useFlags();
 
   const pagination = usePaginationV2({
-    currentRoute: '/billing',
+    currentRoute: flags?.iamRbacPrimaryNavChanges
+      ? '/billing'
+      : '/account/billing',
     preferenceKey: 'billing-activity-pagination',
   });
   const { handleOrderChange, order, orderBy } = useOrderV2({
@@ -196,7 +198,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
         order: 'desc',
         orderBy: 'amount',
       },
-      from: '/billing',
+      from: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
     },
     preferenceKey: 'billing-activity-order',
   });
@@ -282,7 +284,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   );
 
   const downloadPaymentPDF = React.useCallback(
-    async (paymentId: number) => {
+    (paymentId: number) => {
       const payment = payments?.find(
         (thisPayment) => thisPayment.id === paymentId
       );
@@ -305,7 +307,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
         taxes?.date,
         taxes?.country_tax
       );
-      const result = await printPayment(account, payment, countryTax);
+      const result = printPayment(account, payment, countryTax);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
@@ -558,6 +560,8 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
 export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
   const {
     canViewInvoiceDetails,
     date,
@@ -590,7 +594,15 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
     <TableRow data-testid={`${type}-${id}`} sx={sxRow}>
       <TableCell>
         {type === 'invoice' && canViewInvoiceDetails ? (
-          <Link to={`/billing/invoices/${id}`}>{label}</Link>
+          <Link
+            to={
+              iamRbacPrimaryNavChanges
+                ? `/billing/invoices/${id}`
+                : `/account/billing/invoices/${id}`
+            }
+          >
+            {label}
+          </Link>
         ) : (
           label
         )}

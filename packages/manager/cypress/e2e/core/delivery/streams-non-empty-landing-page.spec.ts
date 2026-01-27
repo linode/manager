@@ -64,7 +64,9 @@ function deleteStreamViaActionMenu(tableAlias: string, stream: Stream) {
       ui.actionMenuItem.findByTitle('Delete').click();
 
       // Find confirmation modal
-      cy.findByText(`Are you sure you want to delete "${stream.label}"?`);
+      cy.findByText(
+        `Are you sure you want to delete "${stream.label}" stream?`
+      );
       ui.button.findByTitle('Delete').click();
 
       cy.wait('@deleteStream');
@@ -113,7 +115,7 @@ function deactivateStreamViaActionMenu(tableAlias: string, stream: Stream) {
       // Deactivate stream
       ui.actionMenuItem.findByTitle('Deactivate').click();
 
-      ui.toast.assertMessage(`${stream.label} deactivated`);
+      ui.toast.assertMessage(`Stream ${stream.label} deactivated`);
     });
 }
 

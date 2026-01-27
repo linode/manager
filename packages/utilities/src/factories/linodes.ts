@@ -491,7 +491,6 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   label: Factory.each((i) => `linode-${i}`),
   lke_cluster_id: null,
-  locks: [],
   maintenance_policy: 'linode/migrate',
   placement_group: linodePlacementGroupPayloadFactory.build({
     id: 1,

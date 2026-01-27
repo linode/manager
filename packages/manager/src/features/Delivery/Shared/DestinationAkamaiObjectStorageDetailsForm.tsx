@@ -57,7 +57,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Host for the destination"
+            placeholder="Host"
             value={field.value}
           />
         )}
@@ -140,7 +140,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               label="Log Path Prefix"
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
-              placeholder="Prefix for log storage path"
+              placeholder="Log Path Prefix"
               sx={{ maxWidth: 416 }}
               value={field.value}
             />

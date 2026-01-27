@@ -23,7 +23,6 @@ import { Link } from 'src/components/Link';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
-import { usePermissions } from '../../hooks/usePermissions';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
@@ -76,22 +75,17 @@ export const AssignSelectedRolesDrawer = ({
       }
     : undefined;
 
-  const { data: permissions } = usePermissions('account', ['view_user']);
-
   const {
     data: accountUsers,
     fetchNextPage,
     hasNextPage,
     isFetching: isFetchingAccountUsers,
     isLoading: isLoadingAccountUsers,
-  } = useAccountUsersInfiniteQuery(
-    {
-      ...userSearchFilter,
-      '+order': 'asc',
-      '+order_by': 'username',
-    },
-    permissions?.view_user
-  );
+  } = useAccountUsersInfiniteQuery({
+    ...userSearchFilter,
+    '+order': 'asc',
+    '+order_by': 'username',
+  });
 
   const getUserOptions = useCallback(() => {
     const users = accountUsers?.pages.flatMap((page) => page.data);

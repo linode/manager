@@ -23,18 +23,6 @@ export const QuotaUsageBar = ({ limit, usage, resourceMetric }: Props) => {
       initialLimit: limit,
     });
 
-  function getUsageText() {
-    let convertedUsageString = convertedUsage.toLocaleString();
-    const convertedLimitString = convertedLimit.toLocaleString();
-
-    // Special case to display storage usage
-    if (convertedUsage === 0 && convertedResourceMetric === 'TB') {
-      convertedUsageString = '<0.01';
-    }
-
-    return `${convertedUsageString} of ${convertedLimitString} ${convertedResourceMetric} used`;
-  }
-
   return (
     <>
       <BarPercent
@@ -57,7 +45,11 @@ export const QuotaUsageBar = ({ limit, usage, resourceMetric }: Props) => {
         sx={{ mb: 1, mt: 2, padding: '3px' }}
         value={usage}
       />
-      <Typography sx={{ mb: 1, mt: -0.5 }}>{getUsageText()}</Typography>
+      <Typography sx={{ mb: 1, mt: -0.5 }}>
+        {`${convertedUsage?.toLocaleString() ?? 'unknown'} of ${
+          convertedLimit?.toLocaleString() ?? 'unknown'
+        } ${convertedResourceMetric} used`}
+      </Typography>
     </>
   );
 };

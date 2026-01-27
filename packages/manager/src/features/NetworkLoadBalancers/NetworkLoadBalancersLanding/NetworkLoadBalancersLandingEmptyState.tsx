@@ -30,7 +30,7 @@ export const NetworkLoadBalancersLandingEmptyState = () => {
         ]}
         icon={NetworkIcon}
         isEntity
-        subtitle="High capacity network load balancing service"
+        subtitle="High Capacity load balancing service"
         title="Network Load Balancer"
       >
         <Typography variant="subtitle1">

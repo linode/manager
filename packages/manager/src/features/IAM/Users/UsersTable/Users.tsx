@@ -43,7 +43,7 @@ export const UsersLanding = () => {
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', [
     'create_user',
-    'view_user',
+    'view_account',
   ]);
   const pagination = usePaginationV2({
     currentRoute: '/iam/users',
@@ -166,7 +166,7 @@ export const UsersLanding = () => {
                 },
               }}
               debounceTime={250}
-              disabled={!permissions?.view_user}
+              disabled={!permissions?.view_account}
               errorText={searchError?.message}
               hideLabel
               isSearching={isFetching}
