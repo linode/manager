@@ -259,13 +259,6 @@ describe('Payment Method Row', () => {
   });
 
   it('Opens "Make a Payment" drawer with the payment method preselected if "Make a Payment" action is clicked', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        make_billing_payment: true,
-        set_default_payment_method: false,
-        delete_payment_method: false,
-      },
-    });
     const paymentMethods = [
       paymentMethodFactory.build({
         type: 'paypal',
@@ -281,22 +274,23 @@ describe('Payment Method Row', () => {
      * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
      * and is required for this test. We may want to consider decoupling these components in the future.
      */
-    const { getByLabelText, getByText, router } = renderWithTheme(
-      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
-        <BillingSummary
-          balance={0}
-          balanceUninvoiced={0}
-          paymentMethods={paymentMethods}
-        />
-        <PaymentMethodRow
-          onDelete={vi.fn()}
-          paymentMethod={paymentMethods[1]}
-        />
-      </PayPalScriptProvider>,
-      {
-        initialRoute: '/billing',
-      }
-    );
+    const { getByLabelText, getByTestId, getByText, getAllByTestId } =
+      renderWithTheme(
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+          <BillingSummary
+            balance={0}
+            balanceUninvoiced={0}
+            paymentMethods={paymentMethods}
+          />
+          <PaymentMethodRow
+            onDelete={vi.fn()}
+            paymentMethod={paymentMethods[1]}
+          />
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
+      );
 
     const actionMenu = getByLabelText('Action menu for card ending in 1881');
     await userEvent.click(actionMenu);
@@ -306,12 +300,21 @@ describe('Payment Method Row', () => {
     await userEvent.click(makePaymentButton);
 
     await waitFor(() => {
-      expect(router.state.location.pathname).toBe('/billing');
+      expect(getByTestId('drawer')).toBeVisible();
     });
-    await waitFor(() => {
-      expect(router.state.location.searchStr).toBe(
-        '?action=make-payment&paymentMethodId=12'
-      );
-    });
+
+    expect(getByTestId('drawer-title')).toHaveTextContent('Make a Payment');
+
+    const expectedSelectionCard = getAllByTestId('selection-card')[1];
+
+    expect(expectedSelectionCard).toBeVisible();
+    expect(expectedSelectionCard).toHaveTextContent('1881');
+    expect(expectedSelectionCard).toHaveAttribute(
+      'data-qa-selection-card-checked',
+      'true'
+    );
+
+    // In the future, if we have access to the router's state,
+    // we can assert the search params.
   });
 });

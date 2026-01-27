@@ -4,53 +4,31 @@ import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
 import { ChildAccountList } from 'src/features/Account/SwitchAccounts/ChildAccountList';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import type { ChildAccountListProps } from './ChildAccountList';
-
-const queryMocks = vi.hoisted(() => ({
-  useProfile: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useProfile: queryMocks.useProfile,
-  };
-});
-
-const props: ChildAccountListProps = {
+const props = {
   currentTokenWithBearer: 'Bearer 123',
-  childAccounts: [],
   onClose: vi.fn(),
   onSwitchAccount: vi.fn(),
+  searchQuery: '',
   userType: undefined,
-  errors: {
-    childAccountInfiniteError: false,
-    allChildAccountsError: null,
-  },
-  fetchNextPage: vi.fn(),
-  filter: {},
-  hasNextPage: false,
-  isFetchingNextPage: false,
-  isLoading: false,
-  isSwitchingChildAccounts: false,
-  refetchFn: vi.fn(),
-  setIsSwitchingChildAccounts: vi.fn(),
 };
 
 it('should display a list of child accounts', async () => {
-  queryMocks.useProfile.mockReturnValue({
-    data: profileFactory.build({ user_type: 'parent' }),
-  });
-
-  const { findByTestId } = renderWithTheme(
-    <ChildAccountList
-      {...props}
-      childAccounts={accountFactory.buildList(5, { company: 'Child Co.' })}
-    />
+  server.use(
+    http.get('*/profile', () => {
+      return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
+    }),
+    http.get('*/account/child-accounts', () => {
+      return HttpResponse.json(
+        makeResourcePage(accountFactory.buildList(5, { company: 'Child Co.' }))
+      );
+    })
   );
+
+  const { findByTestId } = renderWithTheme(<ChildAccountList {...props} />);
 
   await waitFor(async () => {
     expect(await findByTestId('child-account-list')).not.toBeNull();

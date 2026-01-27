@@ -3,7 +3,6 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { InterfaceFirewall } from './InterfaceFirewall';
-import { InterfaceGeneration } from './InterfaceGeneration';
 import { InterfaceType } from './InterfaceType';
 import { VLAN } from './VLAN';
 import { VPC } from './VPC';
@@ -47,7 +46,6 @@ export const LinodeInterface = ({ index }: Props) => {
       <InterfaceType index={index} />
       {interfaceType === 'vlan' && <VLAN index={index} />}
       {interfaceType === 'vpc' && <VPC index={index} />}
-      <InterfaceGeneration />
       {interfaceGeneration === 'linode' && interfaceType !== 'vlan' && (
         <InterfaceFirewall index={index} />
       )}

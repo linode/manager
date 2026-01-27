@@ -1,10 +1,3 @@
-## [2026-01-26] - v0.20.0
-
-
-### Upcoming Features:
-
-- Add API queries for MarketplaceV2 ([#13255](https://github.com/linode/manager/pull/13255))
-
 ## [2026-01-12] - v0.19.0
 
 

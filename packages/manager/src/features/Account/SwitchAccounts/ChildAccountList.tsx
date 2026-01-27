@@ -1,4 +1,8 @@
 import {
+  useAllListMyDelegatedChildAccountsQuery,
+  useChildAccountsInfiniteQuery,
+} from '@linode/queries';
+import {
   Box,
   Button,
   CircleProgress,
@@ -7,27 +11,17 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
-import type { ChildAccount, Filter, UserType } from '@linode/api-v4';
+import type { Filter, UserType } from '@linode/api-v4';
 
-export interface ChildAccountListProps {
-  childAccounts: ChildAccount[] | undefined;
+interface ChildAccountListProps {
   currentTokenWithBearer: string;
-  errors: {
-    allChildAccountsError: Error | null;
-    childAccountInfiniteError: boolean;
-  };
-  fetchNextPage: () => void;
-  filter: Filter;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
   isLoading?: boolean;
-  isSwitchingChildAccounts: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
@@ -36,56 +30,87 @@ export interface ChildAccountListProps {
     onClose: () => void;
     userType: undefined | UserType;
   }) => void;
-  refetchFn: () => void;
-  setIsSwitchingChildAccounts: (isSwitchingChildAccounts: boolean) => void;
+  searchQuery: string;
   userType: undefined | UserType;
 }
 
 export const ChildAccountList = React.memo(
   ({
-    childAccounts,
     currentTokenWithBearer,
-    filter,
     isLoading,
-    isSwitchingChildAccounts,
-    setIsSwitchingChildAccounts,
     onClose,
     onSwitchAccount,
+    searchQuery,
     userType,
-    refetchFn,
-    errors,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
   }: ChildAccountListProps) => {
     const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-    const hasError = isIAMDelegationEnabled
-      ? errors.allChildAccountsError
-      : errors.childAccountInfiniteError;
+    const filter: Filter = {
+      ['+order']: 'asc',
+      ['+order_by']: 'company',
+      ...(searchQuery && { company: { '+contains': searchQuery } }),
+    };
 
-    if (hasError) {
-      return (
-        <Stack alignItems="center" gap={1} justifyContent="center">
-          <ErrorStateCloud />
-          <Typography>Unable to load data.</Typography>
-          <Typography>
-            Try again or contact support if the issue persists.
-          </Typography>
-          <Button
-            buttonType="primary"
-            onClick={() => refetchFn()}
-            sx={(theme) => ({
-              marginTop: theme.spacingFunction(16),
-            })}
-          >
-            Try again
-          </Button>
-        </Stack>
-      );
-    }
+    const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
+      useState<boolean>(false);
+    const {
+      data,
+      fetchNextPage,
+      hasNextPage,
+      isError,
+      isFetchingNextPage,
+      isInitialLoading,
+      isRefetching,
+      refetch: refetchChildAccounts,
+    } = useChildAccountsInfiniteQuery(
+      {
+        filter,
+        headers:
+          userType === 'proxy'
+            ? {
+                Authorization: currentTokenWithBearer,
+              }
+            : undefined,
+      },
+      isIAMDelegationEnabled === false
+    );
+    const {
+      data: allChildAccounts,
+      error: allChildAccountsError,
+      isLoading: allChildAccountsLoading,
+      isRefetching: allChildAccountsIsRefetching,
+      refetch: refetchAllChildAccounts,
+    } = useAllListMyDelegatedChildAccountsQuery({
+      params: {},
+      enabled: isIAMDelegationEnabled,
+    });
 
-    if (isLoading) {
+    const refetchFn = isIAMDelegationEnabled
+      ? refetchAllChildAccounts
+      : refetchChildAccounts;
+
+    const childAccounts = useMemo(() => {
+      if (isIAMDelegationEnabled) {
+        if (searchQuery && allChildAccounts) {
+          // Client-side filter: match company field with searchQuery (case-insensitive, contains)
+          const normalizedQuery = searchQuery.toLowerCase();
+          return allChildAccounts.filter((account) =>
+            account.company?.toLowerCase().includes(normalizedQuery)
+          );
+        }
+        return allChildAccounts;
+      }
+      return data?.pages.flatMap((page) => page.data);
+    }, [isIAMDelegationEnabled, searchQuery, allChildAccounts, data]);
+
+    if (
+      isInitialLoading ||
+      isLoading ||
+      isSwitchingChildAccounts ||
+      isRefetching ||
+      allChildAccountsLoading ||
+      allChildAccountsIsRefetching
+    ) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress size="md" />
@@ -93,11 +118,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (
-      !isIAMDelegationEnabled &&
-      childAccounts &&
-      childAccounts.length === 0
-    ) {
+    if (childAccounts && childAccounts.length === 0) {
       return (
         <Notice variant="info">
           There are no child accounts
@@ -109,18 +130,24 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (
-      isIAMDelegationEnabled &&
-      childAccounts &&
-      childAccounts.length === 0 &&
-      !Object.prototype.hasOwnProperty.call(filter, 'company')
-    ) {
+    if (isError || allChildAccountsError) {
       return (
-        <Notice variant="info">
-          You don&apos;t have access to other accounts. You must be added to a
-          delegation by your account administrator to have access to other
-          accounts.
-        </Notice>
+        <Stack alignItems="center" gap={1} justifyContent="center">
+          <ErrorStateCloud />
+          <Typography>Unable to load data.</Typography>
+          <Typography>
+            Try again or contact support if the issue persists.
+          </Typography>
+          <Button
+            buttonType="primary"
+            onClick={() => refetchFn()}
+            sx={(theme) => ({
+              marginTop: theme.spacing(2),
+            })}
+          >
+            Try again
+          </Button>
+        </Stack>
       );
     }
 
@@ -141,7 +168,7 @@ export const ChildAccountList = React.memo(
             });
           }}
           sx={(theme) => ({
-            marginBottom: theme.spacingFunction(16),
+            marginBottom: theme.spacing(2),
           })}
         >
           {childAccount.company}

@@ -470,12 +470,7 @@ describe('PdfGenerator', () => {
         });
 
         // Call the printPayment function
-        const pdfResult = await printPayment(
-          account,
-          payment,
-          countryTax,
-          timezone
-        );
+        const pdfResult = printPayment(account, payment, countryTax, timezone);
 
         // Expect the PDF generation to be successful
         expect(pdfResult.status).toEqual('success');

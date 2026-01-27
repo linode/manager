@@ -1,28 +1,32 @@
+import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { useDatabaseCredentialsQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
 import { Button } from 'akamai-cds-react-components';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { isDefaultDatabase } from '../../utilities';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
-import { ServiceURI } from '../ServiceURI';
 import { StyledGridContainer } from './DatabaseSummaryClusterConfiguration.style';
 import { useStyles } from './DatabaseSummaryConnectionDetails.style';
 
-import type { Database } from '@linode/api-v4/lib/databases/types';
+import type { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
   database: Database;
 }
 
-export const sxTooltipIcon = {
+const sxTooltipIcon = {
   marginLeft: '4px',
   padding: '0px',
 };
@@ -30,6 +34,7 @@ export const sxTooltipIcon = {
 export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const { database } = props;
   const { classes } = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
   const isLegacy = database.platform !== 'rdbms-default';
   const hasVPC = Boolean(database?.private_network?.vpc_id);
@@ -37,6 +42,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     flags.databaseVpc && isDefaultDatabase(database);
 
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
+  const [isCACertDownloading, setIsCACertDownloading] =
+    React.useState<boolean>(false);
 
   const {
     data: credentials,
@@ -65,7 +72,35 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     }
   }, [credentials, getDatabaseCredentials, showCredentials]);
 
+  const handleDownloadCACertificate = () => {
+    setIsCACertDownloading(true);
+    getSSLFields(database.engine, database.id)
+      .then((response: SSLFields) => {
+        // Convert to utf-8 from base64
+        try {
+          const decodedFile = window.atob(response.ca_certificate);
+          downloadFile(`${database.label}-ca-certificate.crt`, decodedFile);
+          setIsCACertDownloading(false);
+        } catch (e) {
+          enqueueSnackbar('Error parsing your CA Certificate file', {
+            variant: 'error',
+          });
+          setIsCACertDownloading(false);
+          return;
+        }
+      })
+      .catch((errorResponse: any) => {
+        const error = getErrorStringOrDefault(
+          errorResponse,
+          'Unable to download your CA Certificate'
+        );
+        setIsCACertDownloading(false);
+        enqueueSnackbar(error, { variant: 'error' });
+      });
+  };
+
   const disableShowBtn = ['failed', 'provisioning'].includes(database.status);
+  const disableDownloadCACertificateBtn = database.status === 'provisioning';
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
@@ -80,6 +115,31 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       </Button>
     );
   };
+
+  const caCertificateJSX = (
+    <>
+      <Button
+        className={classes.caCertBtn}
+        data-testid="download-ca-certificate"
+        disabled={disableDownloadCACertificateBtn}
+        onClick={handleDownloadCACertificate}
+        processing={isCACertDownloading}
+        variant="link"
+      >
+        <DownloadIcon />
+        Download CA Certificate
+      </Button>
+      {disableDownloadCACertificateBtn && (
+        <span className={classes.tooltipIcon}>
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={sxTooltipIcon}
+            text="Your Database Cluster is currently provisioning."
+          />
+        </span>
+      )}
+    </>
+  );
 
   const CredentialsContent = (
     <>
@@ -121,30 +181,23 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Connection Details
       </Typography>
-      <StyledGridContainer container size={{ lg: 10, md: 10 }} spacing={0}>
-        {flags.databasePgBouncer && (
-          <ConnectionDetailsRow isSummaryTab label="Service URI">
-            <ServiceURI database={database} isGeneralServiceURI />
-          </ConnectionDetailsRow>
-        )}
-        <ConnectionDetailsRow isSummaryTab label="Username">
-          {username}
-        </ConnectionDetailsRow>
-        <ConnectionDetailsRow isSummaryTab label="Password">
+      <StyledGridContainer container size={{ lg: 7, md: 10 }} spacing={0}>
+        <ConnectionDetailsRow label="Username">{username}</ConnectionDetailsRow>
+        <ConnectionDetailsRow label="Password">
           {CredentialsContent}
         </ConnectionDetailsRow>
-        <ConnectionDetailsRow isSummaryTab label="Database name">
+        <ConnectionDetailsRow label="Database name">
           {isLegacy ? database.engine : 'defaultdb'}
         </ConnectionDetailsRow>
-        <ConnectionDetailsHostRows database={database} isSummaryTab />
-        <ConnectionDetailsRow isSummaryTab label="Port">
+        <ConnectionDetailsHostRows database={database} />
+        <ConnectionDetailsRow label="Port">
           {database.port}
         </ConnectionDetailsRow>
-        <ConnectionDetailsRow isSummaryTab label="SSL">
+        <ConnectionDetailsRow label="SSL">
           {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </ConnectionDetailsRow>
         {displayConnectionType && (
-          <ConnectionDetailsRow isSummaryTab label="Connection Type">
+          <ConnectionDetailsRow label="Connection Type">
             <Box
               sx={(theme: Theme) => ({
                 marginRight: theme.spacingFunction(20),
@@ -160,6 +213,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           </ConnectionDetailsRow>
         )}
       </StyledGridContainer>
+      <div className={classes.actionBtnsCtn}>
+        {database.ssl_connection ? caCertificateJSX : null}
+      </div>
     </>
   );
 };

@@ -2,15 +2,13 @@ import {
   useNetworkLoadBalancerNodesQuery,
   useNetworkLoadBalancerQuery,
 } from '@linode/queries';
-import { Box, CircleProgress, ErrorState, IconButton } from '@linode/ui';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
 
 import { NLB_API_DOCS_LINK } from '../../constants';
 import { NetworkLoadBalancersListenerDetailBody } from './NetworkLoadBalancersListenerDetailBody';
@@ -43,63 +41,27 @@ const NetworkLoadBalancersListenerDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={`Listener ${listener.label}`} />
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          marginBottom: 3,
-          width: '100%',
+      <LandingHeader
+        breadcrumbProps={{
+          labelOptions: { noCap: true },
+          crumbOverrides: [
+            {
+              label: 'Network Load Balancer',
+              position: 1,
+            },
+            {
+              label: nlb.label,
+              position: 2,
+              linkTo: '/netloadbalancers/$id/listeners',
+            },
+          ],
+          pathname: `/netloadbalancers/${id}/listeners/${listenerId}`,
         }}
-      >
-        <Link
-          accessibleAriaLabel={`Back to ${nlb.label}`}
-          data-qa-back-to-nlb
-          to={`/netloadbalancers/${id}/listeners`}
-        >
-          <IconButton
-            component="span"
-            disableFocusRipple
-            size="large"
-            sx={(theme) => ({
-              [theme.breakpoints.down('md')]: {
-                marginRight: 0, // Smaller screens
-              },
-              marginRight: theme.spacingFunction(8),
-              padding: 0,
-            })}
-            tabIndex={-1}
-          >
-            <KeyboardArrowLeft
-              sx={{
-                height: 34,
-                width: 34,
-              }}
-            />
-          </IconButton>
-        </Link>
-        <LandingHeader
-          breadcrumbProps={{
-            labelOptions: { noCap: true },
-            crumbOverrides: [
-              {
-                label: 'Network Load Balancer',
-                position: 1,
-              },
-              {
-                label: nlb.label,
-                position: 2,
-                linkTo: '/netloadbalancers/$id/listeners',
-              },
-            ],
-            pathname: `/netloadbalancers/${id}/listeners/${listenerId}`,
-          }}
-          docsLabel="Docs"
-          docsLink={NLB_API_DOCS_LINK}
-          removeCrumbX={2}
-          spacingBottom={0}
-          title={`${listener.label}`}
-        />
-      </Box>
+        docsLabel="Docs"
+        docsLink={NLB_API_DOCS_LINK}
+        removeCrumbX={2}
+        title={`${listener.label}`}
+      />
       <EntityDetail
         body={
           <NetworkLoadBalancersListenerDetailBody

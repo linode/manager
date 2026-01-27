@@ -7,6 +7,7 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -16,7 +17,6 @@ import { PromoDisplay } from './PromoDisplay';
 
 import type { PaymentMethod } from '@linode/api-v4';
 import type { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import type { BillingSearch } from 'src/routes/billing';
 
 interface BillingSummaryProps {
   balance: number;
@@ -35,13 +35,15 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     'create_promo_code',
   ]);
 
+  const { iamRbacPrimaryNavChanges } = useFlags();
+
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
 
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
-  const url = '/billing';
+  const url = iamRbacPrimaryNavChanges ? '/billing' : '/account/billing';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
   const isBalanceOutsideGracePeriod = notifications?.some(
@@ -80,10 +82,6 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     setSelectedPaymentMethod(undefined);
     navigate({
       to: url,
-      search: (prev: BillingSearch) => ({
-        ...prev,
-        action: prev.action === 'make-payment' ? undefined : prev.action,
-      }),
     });
   }, [navigate]);
 

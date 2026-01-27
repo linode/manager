@@ -476,9 +476,6 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
-    // Switch to legacy Config Interfaces
-    linodeCreatePage.selectLegacyConfigInterfacesType();
-
     // Select VPC
     linodeCreatePage.selectInterface('vpc');
 
@@ -615,6 +612,9 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
+    // Switch to Linode Interfaces
+    linodeCreatePage.selectLinodeInterfacesType();
+
     // Select VPC option
     linodeCreatePage.selectInterface('vpc');
 
@@ -749,9 +749,6 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
-
-    // Switch to legacy Config Interfaces
-    linodeCreatePage.selectLegacyConfigInterfacesType();
 
     // Select VPC card
     linodeCreatePage.selectInterface('vpc');
@@ -935,6 +932,9 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
+
+    // Switch to Linode Interfaces
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VPC card
     linodeCreatePage.selectInterface('vpc');

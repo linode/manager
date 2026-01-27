@@ -13,18 +13,6 @@ import type {
   TableColumnHeader,
 } from './AlertInformationActionTable';
 
-const mockUpdateAlerts = vi.fn();
-
-vi.mock('src/queries/cloudpulse/useAlertsMutation', async () => {
-  const actual = await vi.importActual(
-    'src/queries/cloudpulse/useAlertsMutation'
-  );
-  return {
-    ...actual,
-    useAlertsMutation: () => mockUpdateAlerts,
-  };
-});
-
 const serviceType = 'linode';
 const entityId = '123';
 const entityName = 'test-instance';
@@ -33,27 +21,6 @@ const alerts = [
     entity_ids: [entityId],
     service_type: serviceType,
     status: 'enabled',
-  }),
-  alertFactory.build({
-    id: 9,
-    entity_ids: [],
-    service_type: serviceType,
-    type: 'user',
-    scope: 'entity',
-  }),
-  alertFactory.build({
-    id: 10,
-    entity_ids: [],
-    service_type: serviceType,
-    type: 'user',
-    scope: 'account',
-  }),
-  alertFactory.build({
-    id: 11,
-    entity_ids: [],
-    service_type: serviceType,
-    type: 'user',
-    scope: 'region',
   }),
 ];
 const columns: TableColumnHeader[] = [
@@ -72,11 +39,6 @@ const props: AlertInformationActionTableProps = {
 };
 
 describe('Alert Listing Reusable Table for contextual view', () => {
-  beforeEach(() => {
-    mockUpdateAlerts.mockClear();
-    mockUpdateAlerts.mockResolvedValue({});
-  });
-
   it('Should render alert table', async () => {
     renderWithTheme(<AlertInformationActionTable {...props} />);
 
@@ -149,25 +111,5 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
     const saveButton = screen.getByTestId('save-alerts');
     expect(saveButton).toBeDisabled();
-  });
-
-  it('Should send correct payload to the API when save button is clicked in edit mode', async () => {
-    renderWithTheme(<AlertInformationActionTable {...props} alerts={alerts} />);
-
-    // Toggle entity-level user alert with ID 2 to enable it
-    const userAlertRow = await screen.findByTestId('9');
-    await userEvent.click(await within(userAlertRow).findByRole('checkbox'));
-
-    const saveButton = screen.getByTestId('save-alerts');
-    expect(saveButton).not.toBeDisabled();
-    await userEvent.click(saveButton);
-
-    // Verify that account and region level alerts are not included in the payload
-    expect(mockUpdateAlerts).toHaveBeenCalledWith({
-      alerts: {
-        system_alerts: [1, 2, 3, 4, 5, 6, 7],
-        user_alerts: [9],
-      },
-    });
   });
 });

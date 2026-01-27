@@ -149,16 +149,23 @@ export const AlertInformationActionTable = (
   const payloadAlertType = (alert: Alert) =>
     alert.type === 'system' ? 'system_alerts' : 'user_alerts';
 
-  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState } =
-    useContextualAlertsState(alerts, entityId);
-
-  const isAccountOrRegionAlert = (alert: Alert) =>
-    alert.scope === 'region' || alert.scope === 'account';
+  const {
+    enabledAlerts,
+    setEnabledAlerts,
+    hasUnsavedChanges,
+    initialState,
+    resetToInitialState,
+  } = useContextualAlertsState(alerts, entityId);
 
   // Mutation to update alerts as per service type
   const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
   React.useEffect(() => {
+    // To send initial state of alerts through toggle handler function (For Create Flow)
+    if (!isEditMode && onToggleAlert) {
+      onToggleAlert(enabledAlerts);
+    }
+
     return () => {
       // Cleanup on unmount (For Edit flow)
       if (isEditMode && onToggleAlert) {
@@ -188,7 +195,8 @@ export const AlertInformationActionTable = (
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
-          onToggleAlert?.({}, false);
+          // Reset the state to sync with the updated alerts from API
+          resetToInitialState();
           invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
         })
         .catch(() => {
@@ -201,7 +209,7 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar, onToggleAlert]
+    [updateAlerts, enqueueSnackbar, resetToInitialState]
   );
 
   const handleToggleAlert = React.useCallback(
@@ -317,12 +325,9 @@ export const AlertInformationActionTable = (
                           if (!(isEditMode || isCreateMode)) {
                             return null;
                           }
-                          // If alert is account or region level, enable it by default and if it is entity type alert, check if it is enabled for that entity
-                          const status =
-                            isAccountOrRegionAlert(alert) ||
-                            enabledAlerts[payloadAlertType(alert)]?.includes(
-                              alert.id
-                            );
+                          const status = enabledAlerts[
+                            payloadAlertType(alert)
+                          ]?.includes(alert.id);
 
                           return (
                             <AlertInformationActionRow

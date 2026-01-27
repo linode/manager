@@ -37,7 +37,9 @@ export const InvoiceDetail = () => {
   const flags = useFlags();
 
   const { invoiceId } = useParams({
-    from: '/billing/invoices/$invoiceId',
+    from: flags?.iamRbacPrimaryNavChanges
+      ? '/billing/invoices/$invoiceId'
+      : '/account/billing/invoices/$invoiceId',
   });
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', [
@@ -148,7 +150,11 @@ export const InvoiceDetail = () => {
               <Link
                 accessibleAriaLabel="Back to Billing"
                 data-qa-back-to-billing
-                to="/billing"
+                to={
+                  flags?.iamRbacPrimaryNavChanges
+                    ? '/billing'
+                    : '/account/billing'
+                }
               >
                 <IconButton
                   component="span"

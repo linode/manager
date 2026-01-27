@@ -150,7 +150,7 @@ export const StreamsLanding = () => {
     })
       .then(() => {
         return enqueueSnackbar(
-          `${label} ${status === streamStatus.Active ? 'deactivated' : 'activated'}`,
+          `Stream  ${label} ${status === streamStatus.Active ? 'deactivated' : 'activated'}`,
           {
             variant: 'success',
           }

@@ -1,4 +1,5 @@
 import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
@@ -12,6 +13,10 @@ describe('Credit Card Expired Banner', () => {
     mockGetUserPreferences({
       dismissed_notifications: {},
     });
+    mockAppendFeatureFlags({
+      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
+      iamRbacPrimaryNavChanges: true,
+    }).as('getFeatureFlags');
   });
 
   it('appears when the expiration date is in the past', () => {

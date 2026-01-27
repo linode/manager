@@ -5,9 +5,12 @@ import {
   Notice,
   Stack,
   TextField,
+  TooltipIcon,
 } from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+
+import { VPCIPv6RangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -76,6 +79,11 @@ export const VPCIPv6Ranges = ({ disabled, interfaceIndex }: Props) => {
         <LinkButton disabled={disabled} onClick={() => append({ range: '' })}>
           Add IPv6 Range
         </LinkButton>
+        <TooltipIcon
+          status="info"
+          sxTooltipIcon={{ p: 0.5 }}
+          text={<VPCIPv6RangesDescription />}
+        />
       </Stack>
     </Stack>
   );

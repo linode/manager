@@ -45,7 +45,7 @@ export const BucketDetailLanding = React.memo(() => {
     from: BUCKET_DETAILS_URL,
   });
 
-  const { aclpServices, objectStorageContextualMetrics } = useFlags();
+  const { aclpServices } = useFlags();
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const {
@@ -78,9 +78,7 @@ export const BucketDetailLanding = React.memo(() => {
     {
       title: 'Metrics',
       to: `${BUCKET_DETAILS_URL}/metrics`,
-      hide:
-        !aclpServices?.objectstorage?.metrics?.enabled ||
-        !objectStorageContextualMetrics,
+      hide: !aclpServices?.objectstorage?.metrics?.enabled,
       chip: aclpServices?.objectstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);

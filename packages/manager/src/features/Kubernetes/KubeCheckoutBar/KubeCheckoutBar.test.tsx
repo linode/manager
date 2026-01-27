@@ -55,22 +55,6 @@ describe('KubeCheckoutBar', () => {
     );
   });
 
-  it('should disable create button if Network Interface Type setting is linode only', async () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: <KubeCheckoutBar {...props} isInterfaceIncompatible={true} />,
-      useFormOptions: {
-        defaultValues: {
-          nodePools: [nodePoolFactory.build()],
-        },
-      },
-    });
-
-    expect(getByText('Create Cluster').closest('button')).toHaveAttribute(
-      'aria-disabled',
-      'true'
-    );
-  });
-
   it('should render a section for each pool', async () => {
     const { queryAllByTestId } = renderWithThemeAndHookFormContext({
       component: <KubeCheckoutBar {...props} />,
