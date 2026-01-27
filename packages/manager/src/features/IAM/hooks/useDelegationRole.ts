@@ -6,12 +6,13 @@ import { useIsIAMDelegationEnabled } from './useIsIAMEnabled';
 import type { UserType } from '@linode/api-v4';
 
 type DelegationRole = {
-  isChildAccount: boolean;
-  isDefaultAccount: boolean;
-  isDelegateAccount: boolean;
-  isParentAccount: boolean;
+  isChildUserType: boolean;
+  isDefaultUserType: boolean;
+  isDelegateUserType: boolean;
+  isParentUserType: boolean;
   isProfileLoading: boolean;
-  isProxyAccount: boolean;
+  isProxyOrDelegateUserType: boolean;
+  isProxyUserType: boolean;
   profileUserName: string | undefined;
   profileUserType: undefined | UserType;
 };
@@ -20,11 +21,13 @@ export const useDelegationRole = (): DelegationRole => {
   const { data: profile, isLoading: isProfileLoading } = useProfile();
 
   return {
-    isProxyAccount: profile?.user_type === 'proxy',
-    isDefaultAccount: profile?.user_type === 'default',
-    isParentAccount: profile?.user_type === 'parent',
-    isChildAccount: profile?.user_type === 'child',
-    isDelegateAccount: profile?.user_type === 'delegate',
+    isProxyOrDelegateUserType:
+      profile?.user_type === 'proxy' || profile?.user_type === 'delegate',
+    isProxyUserType: profile?.user_type === 'proxy',
+    isDefaultUserType: profile?.user_type === 'default',
+    isParentUserType: profile?.user_type === 'parent',
+    isChildUserType: profile?.user_type === 'child',
+    isDelegateUserType: profile?.user_type === 'delegate',
     profileUserType: profile?.user_type,
     profileUserName: profile?.username,
     isProfileLoading,
@@ -42,13 +45,13 @@ export const useDelegationRole = (): DelegationRole => {
  */
 export const useIsDefaultDelegationRolesForChildAccount = () => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount } = useDelegationRole();
+  const { isChildUserType } = useDelegationRole();
   const location = useLocation();
 
   return {
     isDefaultDelegationRolesForChildAccount:
       (isIAMDelegationEnabled &&
-        isChildAccount &&
+        isChildUserType &&
         location.pathname.includes('/iam/roles/defaults')) ??
       false,
   };

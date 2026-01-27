@@ -82,7 +82,11 @@ export const useParentChildAuthentication = () => {
   }, [currentTokenWithBearer]);
 
   const updateCurrentToken = useCallback(
-    ({ userType }: { userType: Extract<UserType, 'parent' | 'proxy'> }) => {
+    ({
+      userType,
+    }: {
+      userType: Extract<UserType, 'delegate' | 'parent' | 'proxy'>;
+    }) => {
       updateCurrentTokenBasedOnUserType({ userType });
     },
     []

@@ -43,7 +43,7 @@ export const updateParentTokenInLocalStorage = ({
 export const isParentTokenValid = (): boolean => {
   const now = new Date().toISOString();
 
-  // From a proxy user, check whether parent token is still valid before switching.
+  // From a proxy or delegate user, check whether parent token is still valid before switching.
   if (
     now >
     new Date(getStorage('authentication/parent_token/expire')).toISOString()
@@ -55,7 +55,7 @@ export const isParentTokenValid = (): boolean => {
 
 /**
  * Set token information in the local storage.
- * This allows us to store a token for later use, such as switching between parent and proxy accounts.
+ * This allows us to store a token for later use, such as switching between parent and proxy or delegate accounts.
  */
 export const setTokenInLocalStorage = ({
   prefix,
@@ -81,7 +81,7 @@ export const setTokenInLocalStorage = ({
 export const updateCurrentTokenBasedOnUserType = ({
   userType,
 }: {
-  userType: 'parent' | 'proxy';
+  userType: 'delegate' | 'parent' | 'proxy';
 }) => {
   const storageKeyPrefix = `authentication/${userType}_token`;
 
