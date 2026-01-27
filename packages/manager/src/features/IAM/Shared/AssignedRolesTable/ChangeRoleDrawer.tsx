@@ -30,6 +30,7 @@ import {
   isAccountRole,
   isEntityRole,
 } from '../utilities';
+import { combineRoles } from './utils';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { RolesType } from '../utilities';
@@ -37,7 +38,7 @@ import type { RolesType } from '../utilities';
 interface Props {
   mode: DrawerModes;
   onClose: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (nextTotalCount: number) => void;
   open: boolean;
   role: ExtendedRoleView | undefined;
 }
@@ -154,7 +155,12 @@ export const ChangeRoleDrawer = ({
 
       await mutationFn(updatedUserRoles);
 
-      onSuccess?.();
+      // Calculate the next total roles count after the change.
+      // Passed to the parent to determine pagination updates
+      // (e.g., navigate back if the current page becomes empty).
+      const nextTotalRolesCount = combineRoles(updatedUserRoles).length;
+
+      onSuccess?.(nextTotalRolesCount);
       handleClose();
     } catch (errors) {
       setError('root', {

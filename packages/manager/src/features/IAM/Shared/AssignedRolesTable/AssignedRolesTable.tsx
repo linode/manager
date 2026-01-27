@@ -167,40 +167,48 @@ export const AssignedRolesTable = () => {
   };
 
   /**
-   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
-   *
-   * @param drawerMode Optional mode indicating which dialog should be closed.
+   * Closes the Unassign role dialog and adjusts pagination if needed.
    */
-  const handleDialogClose = (drawerMode?: DrawerModes) => {
-    if (drawerMode && drawerMode === 'change-role') {
-      setIsChangeRoleDrawerOpen(false);
-    } else {
-      setIsUnassignRoleDialogOpen(false);
+  const handleUnassignRoleDialogClose = () => {
+    setIsUnassignRoleDialogOpen(false);
+
+    if (hadOneRoleOnPage && pagination.page > 1) {
+      pagination.handlePageChange(pagination.page - 1);
     }
-    // If we just deleted the last one on a page, reset to the previous page.
-    const removedLastOnPage =
-      filteredAndSortedRoles.length % pagination.pageSize === 1;
-    if (removedLastOnPage) {
+  };
+
+  /**
+   * Closes the Change role dialog and adjusts pagination if needed.
+   */
+  const handleChangeRoleDialogClose = (newTotalRolesCount: number) => {
+    setIsChangeRoleDrawerOpen(false);
+
+    // Check if the change decreased the total roles by exactly one.
+    // This occurs when switching to a role the user already had,
+    // causing the two roles to merge into a single entry.
+    const decreasedByOne =
+      filteredAndSortedRoles.length - newTotalRolesCount === 1;
+
+    if (hadOneRoleOnPage && decreasedByOne && pagination.page > 1) {
       pagination.handlePageChange(pagination.page - 1);
     }
   };
 
   /**
    * Closes the Remove Assignment Confirmation Dialog and adjusts pagination if needed.
-   * @param selectedRole Optional role that was affected by the removal.
+   * @param selectedRole Role that was affected by the removal.
    */
   const handleRemoveAssignmentDialogClose = (
     selectedRole?: ExtendedRoleView
   ) => {
     setIsRemoveAssignmentDialogOpen(false);
-    const removedLastOnPage =
-      filteredAndSortedRoles.length % pagination.pageSize === 1;
 
     // If we just deleted the last role with only one entity on a page, reset to the previous page.
     if (
       selectedRole &&
       selectedRole.entity_ids?.length === 1 &&
-      removedLastOnPage
+      hadOneRoleOnPage &&
+      pagination.page > 1
     ) {
       pagination.handlePageChange(pagination.page - 1);
     }
@@ -367,6 +375,13 @@ export const AssignedRolesTable = () => {
     return filteredAndSortedRoles.length;
   }, [filteredAndSortedRoles]);
 
+  // Detect when the current page has exactly one role.
+  // If a delete or unassign removes it, the page becomes empty,
+  // so navigate back one page to avoid an empty view.
+  const hadOneRoleOnPage = React.useMemo(() => {
+    return filteredAndSortedRoles.length % pagination.pageSize === 1;
+  }, [filteredAndSortedRoles.length, pagination.pageSize]);
+
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
   }
@@ -483,13 +498,15 @@ export const AssignedRolesTable = () => {
       <ChangeRoleDrawer
         mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
-        onSuccess={() => handleDialogClose(drawerMode)}
+        onSuccess={(newTotalRolesCount: number) =>
+          handleChangeRoleDialogClose(newTotalRolesCount)
+        }
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
         onClose={() => setIsUnassignRoleDialogOpen(false)}
-        onSuccess={() => handleDialogClose()}
+        onSuccess={() => handleUnassignRoleDialogClose()}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />
