@@ -114,12 +114,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.aclpAlerting?.recentActivity ||
       flags.aclpAlerting?.notificationChannels);
 
-  const { limitsEvolution } = flags;
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = flags;
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
-  const { isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
   const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
@@ -282,6 +282,36 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             name: 'Monitor',
           },
           {
+            icon: <More />,
+            links: [
+              {
+                display: 'Betas',
+                hide: !flags.selfServeBetas,
+                to: '/betas',
+              },
+              {
+                display: 'Identity & Access',
+                hide: !isIAMEnabled || iamRbacPrimaryNavChanges,
+                to: '/iam',
+                isBeta: isIAMBeta,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
+              },
+              {
+                display: 'Account',
+                hide: iamRbacPrimaryNavChanges,
+                to: '/account',
+              },
+              {
+                display: 'Help & Support',
+                to: '/support',
+              },
+            ],
+            name: 'More',
+          },
+        ];
+
+        if (iamRbacPrimaryNavChanges) {
+          groups.splice(groups.length - 1, 0, {
             icon: <CoreUser />,
             links: [
               {
@@ -297,7 +327,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Identity & Access',
                 hide: !isIAMEnabled,
                 to: '/iam',
-                isNew: isIAMEnabled && showLimitedAvailabilityBadges,
+                isBeta: isIAMBeta,
+                isNew: !isIAMBeta && showLimitedAvailabilityBadges,
               },
               {
                 display: 'Quotas',
@@ -322,23 +353,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
             ],
             name: 'Administration',
-          },
-          {
-            icon: <More />,
-            links: [
-              {
-                display: 'Betas',
-                hide: !flags.selfServeBetas,
-                to: '/betas',
-              },
-              {
-                display: 'Help & Support',
-                to: '/support',
-              },
-            ],
-            name: 'More',
-          },
-        ];
+          });
+        }
 
         return groups;
       },
@@ -351,7 +367,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isACLPEnabled,
         isACLPLogsBeta,
         isACLPLogsEnabled,
+        isIAMBeta,
         isIAMEnabled,
+        iamRbacPrimaryNavChanges,
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         limitsEvolution,

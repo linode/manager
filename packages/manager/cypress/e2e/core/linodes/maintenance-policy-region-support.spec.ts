@@ -123,6 +123,12 @@ describe('maintenance policy region support - Linode Details > Settings', () => 
     cleanUp(['linodes', 'lke-clusters']);
   });
 
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iamRbacPrimaryNavChanges: false,
+    }).as('getFeatureFlags');
+  });
+
   it('disables maintenance policy selector when region does not support it', () => {
     // Mock a linode in a region that doesn't support maintenance policies
     const mockRegion = regionFactory.build({

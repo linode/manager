@@ -139,7 +139,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
     );
     expect(headerText).toBeVisible();
 
-    const paragraph = screen.getByText(/Delegate users won’t get the/i);
+    const paragraph = screen.getByText(/Delegated users won’t get the/i);
 
     expect(paragraph).toBeVisible();
     expect(paragraph).toHaveTextContent(mockRole.entity_name);

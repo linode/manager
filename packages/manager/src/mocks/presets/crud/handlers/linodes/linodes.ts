@@ -24,13 +24,8 @@ import { DateTime } from 'luxon';
 import { http } from 'msw';
 
 import { firewallDeviceFactory, linodeDiskFactory } from 'src/factories';
-import {
-  getLockErrorMessage,
-  getSubresourceLockError,
-} from 'src/mocks/presets/crud/handlers/locks';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
-  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -72,22 +67,8 @@ export const getLinodes = () => [
         return makeNotFoundResponse();
       }
 
-      // Get locks and add them to each linode
-      const resourceLocks = (await mswDB.getAll('locks')) || [];
-      const linodesWithLocks = linodes.map((linode) => {
-        const linodeLocks = resourceLocks.filter(
-          (lock) =>
-            lock.entity.id === linode.id && lock.entity.type === 'linode'
-        );
-        const locks = linodeLocks.map((lock) => lock.lock_type);
-        return {
-          ...linode,
-          locks,
-        };
-      });
-
       return makePaginatedResponse({
-        data: linodesWithLocks,
+        data: linodes,
         request,
       });
     }
@@ -103,19 +84,7 @@ export const getLinodes = () => [
         return makeNotFoundResponse();
       }
 
-      // Get locks for this linode
-      const resourceLocks = await mswDB.getAll('locks');
-      const linodeLocks =
-        resourceLocks?.filter(
-          (lock) => lock.entity.id === id && lock.entity.type === 'linode'
-        ) || [];
-
-      const locks = linodeLocks.map((lock) => lock.lock_type);
-
-      return makeResponse({
-        ...linode,
-        locks,
-      });
+      return makeResponse(linode);
     }
   ),
 ];
@@ -493,12 +462,6 @@ export const deleteLinode = (mockState: MockState) => [
       return makeNotFoundResponse();
     }
 
-    // Check for resource locks
-    const lockError = await getLockErrorMessage(id, 'linode', 'delete');
-    if (lockError) {
-      return makeErrorResponse(lockError, 400);
-    }
-
     queueEvents({
       event: {
         action: 'linode_shutdown',
@@ -732,57 +695,6 @@ export const shutDownLinode = (mockState: MockState) => [
       });
 
       return makeResponse(updatedLinode);
-    }
-  ),
-];
-
-// Linode Disks handlers
-export const deleteLinodeDisk = (mockState: MockState) => [
-  http.delete(
-    '*/v4*/linode/instances/:id/disks/:diskId',
-    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
-      const linodeId = Number(params.id);
-      const linode = await mswDB.get('linodes', linodeId);
-
-      if (!linode) {
-        return makeNotFoundResponse();
-      }
-
-      // Check for subresource locks
-      const lockError = await getSubresourceLockError(
-        linodeId,
-        'linode',
-        'Disk'
-      );
-      if (lockError) {
-        return makeErrorResponse(lockError, 400);
-      }
-
-      // For now, just return success since we don't store disk data in MSW
-      return makeResponse({});
-    }
-  ),
-];
-
-// Linode Rebuild handler
-export const rebuildLinode = (mockState: MockState) => [
-  http.post(
-    '*/v4*/linode/instances/:id/rebuild',
-    async ({ params }): Promise<StrictResponse<APIErrorResponse | Linode>> => {
-      const id = Number(params.id);
-      const linode = await mswDB.get('linodes', id);
-
-      if (!linode) {
-        return makeNotFoundResponse();
-      }
-
-      // Check for locks
-      const lockError = await getLockErrorMessage(id, 'linode', 'rebuild');
-      if (lockError) {
-        return makeErrorResponse(lockError, 400);
-      }
-
-      return makeResponse(linode);
     }
   ),
 ];

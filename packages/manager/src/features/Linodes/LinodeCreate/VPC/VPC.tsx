@@ -250,7 +250,6 @@ export const VPC = () => {
                         name="interfaces.0.ipv6.slaac.0.range"
                         render={({ field, fieldState }) => (
                           <VPCIPv6Address
-                            autoAssignValue={null}
                             errorMessage={fieldState.error?.message}
                             fieldValue={field.value}
                             onBlur={field.onBlur}

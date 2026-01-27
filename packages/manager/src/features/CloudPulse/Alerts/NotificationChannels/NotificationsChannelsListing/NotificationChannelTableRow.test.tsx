@@ -10,11 +10,9 @@ import { NotificationChannelTableRow } from './NotificationChannelTableRow';
 describe('NotificationChannelTableRow', () => {
   const mockHandleDetails = vi.fn();
   const mockHandleEdit = vi.fn();
-  const mockHandleDelete = vi.fn();
   const handlers = {
     handleDetails: mockHandleDetails,
     handleEdit: mockHandleEdit,
-    handleDelete: mockHandleDelete,
   };
 
   it('should render a notification channel row with all fields', () => {

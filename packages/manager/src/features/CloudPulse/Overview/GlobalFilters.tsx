@@ -30,10 +30,7 @@ export interface GlobalFilterProperties {
     filterValue: FilterValueType,
     labels: string[]
   ): void;
-  handleDashboardChange(
-    dashboard: Dashboard | undefined,
-    skipReset?: boolean
-  ): void;
+  handleDashboardChange(dashboard: Dashboard | undefined): void;
   handleGroupByChange: (selectedValues: string[]) => void;
   handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
@@ -76,12 +73,9 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         });
       }
       setSelectedDashboard(dashboard);
-      handleDashboardChange(
-        dashboard,
-        preferences?.[DASHBOARD_ID] === dashboard?.id
-      );
+      handleDashboardChange(dashboard);
     },
-    [preferences, handleDashboardChange]
+    []
   );
 
   const emitFilterChange = React.useCallback(

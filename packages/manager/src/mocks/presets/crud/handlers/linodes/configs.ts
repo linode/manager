@@ -6,9 +6,7 @@ import {
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { getSubresourceLockError } from 'src/mocks/presets/crud/handlers/locks';
 import {
-  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -167,16 +165,6 @@ export const deleteConfig = (mockState: MockState) => [
 
       if (!linode || !configFromDB || !configInterfaces) {
         return makeNotFoundResponse();
-      }
-
-      // Check for subresource locks
-      const lockError = await getSubresourceLockError(
-        id,
-        'linode',
-        'Configuration'
-      );
-      if (lockError) {
-        return makeErrorResponse(lockError, 400);
       }
 
       const ifacesBelongingToConfig = configInterfaces.filter(
@@ -384,16 +372,6 @@ export const deleteConfigInterface = (mockState: MockState) => [
 
       if (!linode || !config || !configInterfaceTuple) {
         return makeNotFoundResponse();
-      }
-
-      // Check for subresource locks
-      const lockError = await getSubresourceLockError(
-        linodeId,
-        'linode',
-        'Configuration Profile'
-      );
-      if (lockError) {
-        return makeErrorResponse(lockError, 400);
       }
 
       // if the config interface is part of a VPC, we must update the VPC as well

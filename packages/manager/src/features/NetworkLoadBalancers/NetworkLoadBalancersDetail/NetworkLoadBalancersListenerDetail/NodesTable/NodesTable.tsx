@@ -1,4 +1,5 @@
 import { useNetworkLoadBalancerNodesQuery } from '@linode/queries';
+import { getAPIFilterFromQuery } from '@linode/search';
 import {
   CircleProgress,
   Hidden,
@@ -46,14 +47,13 @@ export const NodesTable = (props: NodesTableProps) => {
     from: NLB_NODES_ROUTE,
     shouldThrow: false,
   });
-  const query = search?.query;
 
   const pagination = usePaginationV2({
     currentRoute: NLB_NODES_ROUTE,
     preferenceKey,
     searchParams: (prev) => ({
       ...prev,
-      query,
+      query: search?.query,
     }),
   });
 
@@ -68,29 +68,17 @@ export const NodesTable = (props: NodesTableProps) => {
     preferenceKey,
   });
 
+  const { filter: searchFilter, error: searchError } = getAPIFilterFromQuery(
+    search?.query,
+    {
+      searchableFieldsWithoutOperator: ['id', 'linode_id', 'address_v6'],
+    }
+  );
+
   const filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
-  };
-
-  const generateNodesXFilter = (searchText: string) => {
-    if (searchText === '') {
-      return filter;
-    }
-    return {
-      '+or': [
-        {
-          id: { '+contains': searchText },
-        },
-        {
-          linode_id: { '+contains': searchText },
-        },
-        {
-          address_v6: { '+contains': searchText },
-        },
-      ],
-      ...filter,
-    };
+    ...searchFilter,
   };
 
   const {
@@ -105,7 +93,7 @@ export const NodesTable = (props: NodesTableProps) => {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    generateNodesXFilter(query ?? '')
+    filter
   );
 
   const onSearch = (query: string) => {
@@ -113,7 +101,7 @@ export const NodesTable = (props: NodesTableProps) => {
       search: (prev) => ({
         ...prev,
         page: undefined,
-        query: query ?? undefined,
+        query: query ? query : undefined,
       }),
       to: `/netloadbalancers/${nlbId}/listeners/${listenerId}/nodes`,
     });
@@ -148,6 +136,7 @@ export const NodesTable = (props: NodesTableProps) => {
         <DebouncedSearchTextField
           clearable
           debounceTime={250}
+          errorText={searchError?.message}
           hideLabel
           isSearching={isFetching}
           label="Search"
@@ -187,7 +176,6 @@ export const NodesTable = (props: NodesTableProps) => {
               direction={order}
               handleClick={handleOrderChange}
               label="address_v6"
-              sx={{ width: '15%' }}
             >
               VPC IPv6
             </TableSortCell>

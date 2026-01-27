@@ -226,14 +226,10 @@ export const changeUserRole = ({
     return {
       ...assignedRoles,
       entity_access: assignedRoles.entity_access.map(
-        (entity: EntityAccess) => ({
-          ...entity,
-          roles: Array.from(
-            new Set(
-              entity.roles.map((role: EntityRoleType) =>
-                role === initialRole ? (newRole as EntityRoleType) : role
-              )
-            )
+        (resource: EntityAccess) => ({
+          ...resource,
+          roles: resource.roles.map((role: EntityRoleType) =>
+            role === initialRole ? (newRole as EntityRoleType) : role
           ),
         })
       ),

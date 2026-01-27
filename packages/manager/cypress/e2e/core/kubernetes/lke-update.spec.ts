@@ -1405,13 +1405,6 @@ describe('LKE cluster updates', () => {
         .findByTitle(`Add a Node Pool: ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
-          // For the "Dedicated 4 GB", use filter to select G6 Dedicated instead of relying on pagination
-          ui.autocomplete.findByLabel('Dedicated Plans').click();
-
-          ui.autocompletePopper.find().within(() => {
-            cy.findByText('G6 Dedicated').should('be.visible').click();
-          });
-
           cy.findByText('Dedicated 4 GB')
             .should('be.visible')
             .closest('tr')

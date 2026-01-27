@@ -3,6 +3,45 @@ import { makeStyles } from 'tss-react/mui';
 import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
+  actionBtnsCtn: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '10px',
+    padding: `${theme.spacing(1)} 0`,
+  },
+  caCertBtn: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      backgroundColor: 'transparent',
+      opacity: 0.7,
+    },
+    '&[disabled]': {
+      '& g': {
+        stroke: theme.tokens.color.Neutrals[30],
+      },
+      '&:hover': {
+        backgroundColor: 'inherit',
+        textDecoration: 'none',
+      },
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
+      color: theme.tokens.color.Neutrals[30],
+      cursor: 'default',
+    },
+    color: theme.palette.primary.main,
+    font: theme.font.bold,
+    fontSize: '0.875rem',
+    lineHeight: '1.125rem',
+    marginLeft: theme.spacing(),
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+  },
+  tooltipIcon: {
+    alignContent: 'center',
+  },
   connectionDetailsCtn: {
     '& p': {
       lineHeight: '1.5rem',

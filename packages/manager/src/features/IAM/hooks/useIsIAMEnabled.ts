@@ -28,6 +28,7 @@ export const useIsIAMEnabled = () => {
     useUserAccountPermissions(flags?.iam?.enabled === true);
 
   return {
+    isIAMBeta: flags.iam?.beta,
     isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
     isLoading: isLoadingRoles || isLoadingPermissions,
     accountRoles: roles,
@@ -79,10 +80,6 @@ export const checkIAMEnabled = async (
  */
 export const useIsIAMDelegationEnabled = () => {
   const flags = useFlags();
-  const { isIAMEnabled } = useIsIAMEnabled();
 
-  return {
-    isIAMDelegationEnabled:
-      (flags.iamDelegation?.enabled && isIAMEnabled) ?? false,
-  };
+  return { isIAMDelegationEnabled: flags.iamDelegation?.enabled ?? false };
 };

@@ -22,8 +22,6 @@ import { randomLabel } from 'support/util/random';
 import { kubernetesClusterFactory } from 'src/factories';
 
 describe('Edit Stream', () => {
-  const saveChangesButtonText = 'Save Changes';
-
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpLogs: {
@@ -50,14 +48,14 @@ describe('Edit Stream', () => {
       const updatedLabel = randomLabel();
 
       // Change the Name
-      cy.findByLabelText('Stream Name')
+      cy.findByLabelText('Name')
         .should('be.visible')
         .should('be.enabled')
         .should('have.value', mockAuditLogsStream.label);
 
       logsStreamForm.setLabel(updatedLabel);
 
-      cy.findByLabelText('Stream Name')
+      cy.findByLabelText('Name')
         .should('be.visible')
         .should('be.enabled')
         .should('have.value', updatedLabel);
@@ -69,7 +67,7 @@ describe('Edit Stream', () => {
         .should('have.attr', 'value', 'Audit Logs');
 
       // Save button should be enabled initially
-      ui.button.findByTitle(saveChangesButtonText).should('be.enabled');
+      ui.button.findByTitle('Save').should('be.enabled');
 
       // Test Connection should be disabled for existing destination
       ui.button.findByTitle('Test Connection').should('be.disabled');
@@ -84,7 +82,7 @@ describe('Edit Stream', () => {
       ui.button.findByTitle('Test Connection').should('be.enabled');
 
       // Save button should be disabled after changing destination
-      ui.button.findByTitle(saveChangesButtonText).should('be.disabled');
+      ui.button.findByTitle('Save').should('be.disabled');
 
       // Test connection with failure
       mockTestConnection(400);
@@ -95,7 +93,7 @@ describe('Edit Stream', () => {
       );
 
       // Save button should remain disabled after failed test
-      ui.button.findByTitle(saveChangesButtonText).should('be.disabled');
+      ui.button.findByTitle('Save').should('be.disabled');
 
       // Test connection with success
       mockTestConnection(200);
@@ -106,11 +104,11 @@ describe('Edit Stream', () => {
       );
 
       // Save button should now be enabled
-      ui.button.findByTitle(saveChangesButtonText).should('be.enabled');
+      ui.button.findByTitle('Save').should('be.enabled');
 
       // Submit the stream edit form - failure in creating destination
       mockCreateDestination({}, 400);
-      ui.button.findByTitle(saveChangesButtonText).should('be.enabled').click();
+      ui.button.findByTitle('Save').should('be.enabled').click();
 
       ui.toast.assertMessage(`There was an issue creating your destination`);
 
@@ -125,7 +123,7 @@ describe('Edit Stream', () => {
         mockAuditLogsStream
       ).as('updateStream');
 
-      ui.button.findByTitle(saveChangesButtonText).click();
+      ui.button.findByTitle('Save').click();
       cy.wait('@updateStream')
         .its('request.body')
         .then((body) => {
@@ -178,14 +176,14 @@ describe('Edit Stream', () => {
       const updatedLabel = randomLabel();
 
       // Change the Name
-      cy.findByLabelText('Stream Name')
+      cy.findByLabelText('Name')
         .should('be.visible')
         .should('be.enabled')
         .should('have.value', mockLKEAuditLogsStream.label);
 
       logsStreamForm.setLabel(updatedLabel);
 
-      cy.findByLabelText('Stream Name')
+      cy.findByLabelText('Name')
         .should('be.visible')
         .should('be.enabled')
         .should('have.value', updatedLabel);
@@ -231,7 +229,7 @@ describe('Edit Stream', () => {
       logsStreamForm.findClusterCheckbox('all').check();
 
       // Save button should be enabled
-      ui.button.findByTitle(saveChangesButtonText).should('be.enabled');
+      ui.button.findByTitle('Save').should('be.enabled');
 
       // Submit the stream edit form - failure
       mockUpdateStream(
@@ -248,7 +246,7 @@ describe('Edit Stream', () => {
         400
       ).as('updateStreamFail');
 
-      ui.button.findByTitle(saveChangesButtonText).click();
+      ui.button.findByTitle('Save').click();
       cy.wait('@updateStreamFail');
       ui.toast.assertMessage('There was an issue editing your stream');
 
@@ -266,7 +264,7 @@ describe('Edit Stream', () => {
         mockLKEAuditLogsStream
       ).as('updateStream');
 
-      ui.button.findByTitle(saveChangesButtonText).click();
+      ui.button.findByTitle('Save').click();
       cy.wait('@updateStream')
         .its('request.body')
         .then((body) => {

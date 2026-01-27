@@ -44,7 +44,7 @@ describe('UsersActionMenu', () => {
         permissions={{
           is_account_admin: true,
           delete_user: true,
-          view_user: true,
+          view_account: true,
         }}
         username="test_user"
       />
@@ -100,7 +100,7 @@ describe('UsersActionMenu', () => {
         permissions={{
           is_account_admin: true,
           delete_user: true,
-          view_user: true,
+          view_account: true,
         }}
         username="current_user"
       />

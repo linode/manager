@@ -220,7 +220,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       sx={{ padding: 0 }}
       tabDisabledMessage={
         shouldDisablePremiumPlansTab
-          ? 'Premium CPUs are now called G7 Dedicated plans.'
+          ? 'Premium CPUs are now called Dedicated G7 Plans.'
           : undefined
       }
       tabs={tabs}

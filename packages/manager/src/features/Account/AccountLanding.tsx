@@ -1,4 +1,5 @@
 import { useAccount, useProfile } from '@linode/queries';
+import { NotFound } from '@linode/ui';
 import {
   Outlet,
   useLocation,
@@ -38,7 +39,7 @@ export const AccountLanding = () => {
   });
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { limitsEvolution } = useFlags();
+  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
@@ -100,13 +101,16 @@ export const AccountLanding = () => {
   React.useEffect(() => {
     if (match.routeId === '/account/quotas' && !showQuotasTab) {
       navigate({
-        to: '/quotas',
+        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/billing',
       });
     }
-  }, [match.routeId, showQuotasTab, navigate]);
+  }, [match.routeId, showQuotasTab, navigate, iamRbacPrimaryNavChanges]);
 
   // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
   if (location.pathname === '/account') {
+    if (iamRbacPrimaryNavChanges) {
+      return <NotFound />;
+    }
     navigate({
       to: '/account/billing',
     });
@@ -149,7 +153,7 @@ export const AccountLanding = () => {
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
         navigate({
-          to: '/billing',
+          to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
           search: { action: 'make-payment' },
         });
     }

@@ -60,7 +60,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'is_account_admin',
     'update_default_delegate_access',
-    'list_entities',
   ]);
 
   const { isDefaultDelegationRolesForChildAccount } =
@@ -107,9 +106,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     data: entities,
     error: entitiesError,
     isLoading: entitiesLoading,
-  } = useAllAccountEntities({
-    enabled: permissions?.list_entities,
-  });
+  } = useAllAccountEntities({});
 
   const {
     data: assignedUserRoles,
@@ -170,22 +167,13 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     setSelectedRole(role);
   };
 
-  /**
-   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
-   *
-   * @param drawerMode Optional mode indicating which dialog should be closed.
-   */
-  const handleDialogClose = (drawerMode?: DrawerModes) => {
-    if (drawerMode && drawerMode === 'change-role-for-entity') {
-      setIsChangeRoleForEntityDrawerOpen(false);
-    } else {
-      setIsRemoveAssignmentDialogOpen(false);
-    }
-    // If we just deleted the last one on a page, reset to the previous page.
+  const handleRemoveAssignmentDialogClose = () => {
+    setIsRemoveAssignmentDialogOpen(false);
+    // If we just deleted the last one on a page, reset to the first page.
     const removedLastOnPage =
       filteredAndSortedRoles.length % pagination.pageSize === 1;
     if (removedLastOnPage) {
-      pagination.handlePageChange(pagination.page - 1);
+      pagination.handlePageChange(1);
     }
   };
 
@@ -224,7 +212,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     }
 
     if (!entities || !assignedRoles || filteredRoles.length === 0) {
-      return <TableRowEmpty colSpan={4} message={'No items to display.'} />;
+      return <TableRowEmpty colSpan={3} message={'No items to display.'} />;
     }
 
     if (assignedRoles && entities) {
@@ -252,9 +240,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
                   onClick: () => {
                     handleRemoveAssignment(el);
                   },
-                  title: isDefaultDelegationRolesForChildAccount
-                    ? 'Remove'
-                    : 'Remove Assignment',
+                  title: 'Remove Assignment',
                   tooltip: !permissionToCheck
                     ? 'You do not have permission to remove this assignment.'
                     : undefined,
@@ -373,13 +359,13 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       </Table>
       <ChangeRoleForEntityDrawer
         mode={drawerMode}
-        onClose={() => handleDialogClose(drawerMode)}
+        onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
         open={isChangeRoleForEntityDrawerOpen}
         role={selectedRole}
         username={username}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => handleDialogClose()}
+        onClose={() => handleRemoveAssignmentDialogClose()}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
         username={username}

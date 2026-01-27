@@ -20,7 +20,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { NO_DELEGATED_USERS_TEXT } from 'src/features/IAM/Shared/constants';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -140,10 +139,7 @@ export const UserDelegations = () => {
               }) => (
                 <>
                   {paginatedData?.length === 0 && (
-                    <TableRowEmpty
-                      colSpan={1}
-                      message={NO_DELEGATED_USERS_TEXT}
-                    />
+                    <TableRowEmpty colSpan={1} message="No accounts found" />
                   )}
                   {paginatedData?.map((childAccount) => (
                     <TableRow key={childAccount.euuid}>

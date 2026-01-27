@@ -22,6 +22,14 @@ const accountSettingsCatchAllRoute = createRoute({
 const accountSettingsIndexRoute = createRoute({
   getParentRoute: () => accountSettingsRoute,
   path: '/',
+  beforeLoad: ({ context }) => {
+    if (!context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/account/settings`,
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/AccountSettings/accountSettingsLandingLazyRoute').then(
     (m) => m.accountSettingsLandingLazyRoute

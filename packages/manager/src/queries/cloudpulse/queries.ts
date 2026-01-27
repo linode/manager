@@ -25,7 +25,6 @@ import {
 } from '../object-storage/requests';
 import { fetchCloudPulseMetrics } from './metrics';
 import {
-  getAllAlertsByNotificationChannelId,
   getAllAlertsRequest,
   getAllertsByServiceTypeRequest,
   getAllNotificationChannels,
@@ -104,10 +103,6 @@ export const queryFactory = createQueryKeys(key, {
     queryFn: () =>
       getMetricDefinitionsByServiceType(serviceType!, params, filter),
     queryKey: [serviceType],
-  }),
-  notificationChannelAlerts: (channelId: number) => ({
-    queryFn: () => getAllAlertsByNotificationChannelId(channelId),
-    queryKey: ['alerts', channelId],
   }),
   notificationChannels: {
     contextQueries: {

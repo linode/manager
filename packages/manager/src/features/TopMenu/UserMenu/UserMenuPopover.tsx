@@ -46,12 +46,16 @@ interface MenuLink {
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const { limitsEvolution, iamLimitedAvailabilityBadges } = useFlags();
+  const {
+    iamRbacPrimaryNavChanges,
+    limitsEvolution,
+    iamLimitedAvailabilityBadges,
+  } = useFlags();
   const theme = useTheme();
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -83,12 +87,14 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     },
     { display: 'OAuth Apps', to: '/profile/clients' },
     {
-      display: 'Preferences',
-      to: '/profile/preferences',
+      display: iamRbacPrimaryNavChanges ? 'Preferences' : 'Referrals',
+      to: iamRbacPrimaryNavChanges
+        ? '/profile/preferences'
+        : '/profile/referrals',
     },
     {
-      display: 'Referrals',
-      to: '/profile/referrals',
+      display: iamRbacPrimaryNavChanges ? 'Referrals' : 'My Settings',
+      to: iamRbacPrimaryNavChanges ? '/profile/referrals' : '/profile/settings',
     },
     { display: 'Log Out', to: '/logout' },
   ];
@@ -113,36 +119,57 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     () => [
       {
         display: 'Billing',
-        to: '/billing',
+        to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
       },
       {
-        display: isIAMEnabled ? 'Identity & Access' : 'Users & Grants',
-        to: isIAMEnabled ? '/iam' : '/users',
-        isNew: isIAMEnabled && iamLimitedAvailabilityBadges,
+        display:
+          iamRbacPrimaryNavChanges && isIAMEnabled
+            ? 'Identity & Access'
+            : 'Users & Grants',
+        to:
+          iamRbacPrimaryNavChanges && isIAMEnabled
+            ? '/iam'
+            : iamRbacPrimaryNavChanges && !isIAMEnabled
+              ? '/users'
+              : '/account/users',
+        isBeta: iamRbacPrimaryNavChanges && isIAMEnabled && isIAMBeta,
+        isNew: isIAMEnabled && !isIAMBeta && iamLimitedAvailabilityBadges,
       },
       {
         display: 'Quotas',
         hide: !limitsEvolution?.enabled,
-        to: '/quotas',
+        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/quotas',
       },
       {
         display: 'Login History',
-        to: '/login-history',
+        to: iamRbacPrimaryNavChanges
+          ? '/login-history'
+          : '/account/login-history',
       },
       {
         display: 'Service Transfers',
-        to: '/service-transfers',
+        to: iamRbacPrimaryNavChanges
+          ? '/service-transfers'
+          : '/account/service-transfers',
       },
       {
         display: 'Maintenance',
-        to: '/maintenance',
+        to: iamRbacPrimaryNavChanges ? '/maintenance' : '/account/maintenance',
       },
       {
-        display: 'Account Settings',
-        to: '/account-settings',
+        display: iamRbacPrimaryNavChanges ? 'Account Settings' : 'Settings',
+        to: iamRbacPrimaryNavChanges
+          ? '/account-settings'
+          : '/account/settings',
       },
     ],
-    [isIAMEnabled, limitsEvolution, iamLimitedAvailabilityBadges]
+    [
+      isIAMEnabled,
+      iamRbacPrimaryNavChanges,
+      limitsEvolution,
+      iamLimitedAvailabilityBadges,
+      isIAMBeta,
+    ]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -251,7 +278,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           </Grid>
         </Box>
         <Box>
-          <Heading>Administration</Heading>
+          <Heading>
+            {iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
+          </Heading>
           <Divider />
           <Stack
             gap={(theme) => theme.tokens.spacing.S8}

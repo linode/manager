@@ -72,7 +72,7 @@ describe('TypeToConfirm Component', () => {
     expect(
       queryByTestId('instructions-to-enable-or-disable')
     ).toBeInTheDocument();
-    expect(getByRole('link')).toHaveAttribute('href', '/profile/preferences');
+    expect(getByRole('link')).toHaveAttribute('href', '/profile/settings');
   });
 
   it('Should not display instructions when toggled to hidden', () => {

@@ -43,7 +43,7 @@ describe('StreamCreate', () => {
       const createStreamButtonText = 'Create Stream';
 
       const fillOutFormWithNewDestination = async () => {
-        const streamNameInput = screen.getByLabelText('Stream Name');
+        const streamNameInput = screen.getByLabelText('Name');
         await userEvent.type(streamNameInput, 'Test');
         const destinationNameInput = screen.getByLabelText('Destination Name');
         await userEvent.type(destinationNameInput, 'Test destination name');
@@ -143,7 +143,7 @@ describe('StreamCreate', () => {
             renderStreamCreate();
 
             // Fill out form and select existing destination
-            const streamNameInput = screen.getByLabelText('Stream Name');
+            const streamNameInput = screen.getByLabelText('Name');
             await userEvent.type(streamNameInput, 'Test');
             const destinationNameInput =
               screen.getByLabelText('Destination Name');

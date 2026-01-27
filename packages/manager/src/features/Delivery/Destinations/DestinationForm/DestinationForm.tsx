@@ -87,6 +87,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
                   onChange={(value) => {
                     field.onChange(value);
                   }}
+                  placeholder="Destination Name"
                   value={field.value}
                 />
               )}

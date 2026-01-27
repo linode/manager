@@ -97,7 +97,7 @@ describe('NetworkLoadBalancersDetail', () => {
     expect(getByText('Region')).toBeVisible();
     expect(getByText('US, Newark, NJ')).toBeVisible();
 
-    expect(getByText('Cluster')).toBeVisible();
+    expect(getByText('LKE-E Cluster')).toBeVisible();
     expect(getByText('None')).toBeVisible();
 
     expect(getByText('Network Load Balancer ID')).toBeVisible();
@@ -121,7 +121,7 @@ describe('NetworkLoadBalancersDetail', () => {
 
     const { getByText } = renderWithTheme(<NetworkLoadBalancersDetail />);
 
-    expect(getByText('Cluster')).toBeVisible();
+    expect(getByText('LKE-E Cluster')).toBeVisible();
     expect(getByText(nlbFactory.lke_cluster!.label)).toBeVisible();
     expect(
       getByText(`(ID: ${nlbFactory.lke_cluster!.id})`, {

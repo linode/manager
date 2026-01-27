@@ -1,22 +1,17 @@
-import {
-  useAllListMyDelegatedChildAccountsQuery,
-  useChildAccountsInfiniteQuery,
-} from '@linode/queries';
 import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
-import type { APIError, Filter, UserType } from '@linode/api-v4';
+import type { APIError, UserType } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -38,8 +33,8 @@ export const SwitchAccountDrawer = (props: Props) => {
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const [query, setQuery] = React.useState<string>('');
+
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
@@ -54,48 +49,6 @@ export const SwitchAccountDrawer = (props: Props) => {
   } = useParentChildAuthentication();
 
   const createTokenErrorReason = createTokenError?.[0]?.reason;
-
-  const filter: Filter = {
-    ['+order']: 'asc',
-    ['+order_by']: 'company',
-    ...(searchQuery && { company: { '+contains': searchQuery } }),
-  };
-
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isError: childAccountInfiniteError,
-    isFetchingNextPage,
-    isInitialLoading,
-    isRefetching,
-    refetch: refetchChildAccounts,
-  } = useChildAccountsInfiniteQuery(
-    {
-      filter,
-      headers:
-        userType === 'proxy'
-          ? {
-              Authorization: currentTokenWithBearer,
-            }
-          : undefined,
-    },
-    isIAMDelegationEnabled === false
-  );
-  const {
-    data: allChildAccounts,
-    error: allChildAccountsError,
-    isLoading: allChildAccountsLoading,
-    isRefetching: allChildAccountsIsRefetching,
-    refetch: refetchAllChildAccounts,
-  } = useAllListMyDelegatedChildAccountsQuery({
-    params: {},
-    enabled: isIAMDelegationEnabled,
-  });
-
-  const refetchFn = isIAMDelegationEnabled
-    ? refetchAllChildAccounts
-    : refetchChildAccounts;
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -167,30 +120,8 @@ export const SwitchAccountDrawer = (props: Props) => {
     location.reload();
   }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
 
-  const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
-    useState<boolean>(false);
-
-  const handleClose = () => {
-    setIsSwitchingChildAccounts(false);
-    onClose();
-  };
-
-  const childAccounts = useMemo(() => {
-    if (isIAMDelegationEnabled) {
-      if (searchQuery && allChildAccounts) {
-        // Client-side filter: match company field with searchQuery (case-insensitive, contains)
-        const normalizedQuery = searchQuery.toLowerCase();
-        return allChildAccounts.filter((account) =>
-          account.company?.toLowerCase().includes(normalizedQuery)
-        );
-      }
-      return allChildAccounts;
-    }
-    return data?.pages.flatMap((page) => page.data);
-  }, [isIAMDelegationEnabled, searchQuery, allChildAccounts, data]);
-
   return (
-    <Drawer onClose={handleClose} open={open} title="Switch Account">
+    <Drawer onClose={onClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
         <Notice text={createTokenErrorReason} variant="error" />
       )}
@@ -199,7 +130,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       )}
       <Typography
         sx={(theme) => ({
-          margin: `${theme.spacingFunction(24)} 0`,
+          margin: `${theme.spacing(3)} 0`,
         })}
       >
         Select an account to view and manage its settings and configurations
@@ -220,65 +151,24 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
-      {isIAMDelegationEnabled &&
-        allChildAccounts &&
-        allChildAccounts.length !== 0 && (
-          <>
-            <DebouncedSearchTextField
-              clearable
-              debounceTime={250}
-              hideLabel
-              label="Search"
-              onSearch={setSearchQuery}
-              placeholder="Search"
-              sx={{ marginBottom: 3 }}
-              value={searchQuery}
-            />
-            {searchQuery && childAccounts && childAccounts.length === 0 && (
-              <Typography sx={{ fontStyle: 'italic' }}>
-                No search results
-              </Typography>
-            )}
-          </>
-        )}
-      {!isIAMDelegationEnabled && (
-        <DebouncedSearchTextField
-          clearable
-          debounceTime={250}
-          hideLabel
-          label="Search"
-          onSearch={setSearchQuery}
-          placeholder="Search"
-          sx={{ marginBottom: 3 }}
-          value={searchQuery}
-        />
-      )}
+      <DebouncedSearchTextField
+        clearable
+        debounceTime={250}
+        hideLabel
+        label="Search"
+        onSearch={setQuery}
+        placeholder="Search"
+        sx={{ marginBottom: 3 }}
+        value={query}
+      />
       <ChildAccountList
-        childAccounts={childAccounts}
         currentTokenWithBearer={
           isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
         }
-        errors={{
-          childAccountInfiniteError,
-          allChildAccountsError,
-        }}
-        fetchNextPage={fetchNextPage}
-        filter={filter}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        isLoading={
-          isInitialLoading ||
-          isSubmitting ||
-          isSwitchingChildAccounts ||
-          isRefetching ||
-          allChildAccountsLoading ||
-          allChildAccountsIsRefetching
-        }
-        isSwitchingChildAccounts={isSwitchingChildAccounts}
+        isLoading={isSubmitting}
         onClose={onClose}
         onSwitchAccount={handleSwitchToChildAccount}
-        refetchFn={refetchFn}
-        setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+        searchQuery={query}
         userType={userType}
       />
     </Drawer>

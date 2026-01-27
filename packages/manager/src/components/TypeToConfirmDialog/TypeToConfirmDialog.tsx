@@ -37,7 +37,6 @@ interface EntityInfo {
     | 'Managed Credential'
     | 'Managed Service Monitor'
     | 'NodeBalancer'
-    | 'Notification Channel'
     | 'Placement Group'
     | 'Subnet'
     | 'Volume'

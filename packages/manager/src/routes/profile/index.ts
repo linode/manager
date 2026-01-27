@@ -98,6 +98,14 @@ const profileReferralsRoute = createRoute({
  */
 
 const profilePreferencesRoute = createRoute({
+  beforeLoad: ({ context }) => {
+    if (!context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/profile/settings`,
+        replace: true,
+      });
+    }
+  },
   getParentRoute: () => profileRoute,
   path: 'preferences',
   validateSearch: (search: ProfileSettingsSearchParams) => search,
@@ -108,18 +116,20 @@ const profilePreferencesRoute = createRoute({
 );
 
 const profileSettingsRoute = createRoute({
-  beforeLoad: () => {
-    throw redirect({
-      to: `/profile/preferences`,
-      replace: true,
-    });
+  beforeLoad: ({ context }) => {
+    if (context?.flags?.iamRbacPrimaryNavChanges) {
+      throw redirect({
+        to: `/profile/preferences`,
+        replace: true,
+      });
+    }
   },
   getParentRoute: () => profileRoute,
   path: 'settings',
   validateSearch: (search: ProfileSettingsSearchParams) => search,
 }).lazy(() =>
   import('src/features/Profile/Settings/settingsLazyRoute').then(
-    (m) => m.preferencesLazyRoute
+    (m) => m.settingsLazyRoute
   )
 );
 
