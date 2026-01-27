@@ -15,8 +15,12 @@ import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
+import {
+  getDestinationTypeOption,
+  useIsACLPLogsEnabled,
+} from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
+import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
 
@@ -35,12 +39,25 @@ interface DestinationName {
   type?: DestinationType;
 }
 
-const controlPaths = {
+const akamaiObjectStorageDetailsControlPaths = {
   accessKeyId: 'destination.details.access_key_id',
   accessKeySecret: 'destination.details.access_key_secret',
   bucketName: 'destination.details.bucket_name',
   host: 'destination.details.host',
   path: 'destination.details.path',
+} as const;
+
+const customHttpsDetailsControlPaths = {
+  authenticationType: 'destination.details.authentication.type',
+  basicAuthenticationPassword:
+    'destination.details.authentication.details.basic_authentication_password',
+  basicAuthenticationUser:
+    'destination.details.authentication.details.basic_authentication_user',
+  clientCertificateDetails: 'destination.details.client_certificate_details',
+  contentType: 'destination.details.content_type',
+  customHeaders: 'destination.details.custom_headers',
+  dataCompression: 'destination.details.data_compression',
+  endpointUrl: 'destination.details.endpoint_url',
 } as const;
 
 interface StreamFormDeliveryProps {
@@ -51,6 +68,7 @@ interface StreamFormDeliveryProps {
 export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
   const { mode, setDisableTestConnection } = props;
 
+  const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const theme = useTheme();
   const { control, setValue, clearErrors } =
     useFormContext<StreamAndDestinationFormType>();
@@ -91,8 +109,8 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     destinations?.find((destination) => destination.id === id);
 
   const restDestinationForm = () => {
-    Object.values(controlPaths).forEach((controlPath) =>
-      setValue(controlPath, '')
+    Object.values(akamaiObjectStorageDetailsControlPaths).forEach(
+      (controlPath) => setValue(controlPath, '')
     );
   };
 
@@ -104,11 +122,17 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
-            disabled
+            disabled={!isACLPLogsCustomHttpsEnabled}
             errorText={fieldState.error?.message}
             label="Destination Type"
             onBlur={field.onBlur}
             onChange={(_, { value }) => {
+              if (value === destinationType.CustomHttps) {
+                setValue(
+                  customHttpsDetailsControlPaths.authenticationType,
+                  'none'
+                );
+              }
               field.onChange(value);
             }}
             options={destinationTypeOptions}
@@ -172,7 +196,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
             options={destinationNameOptions.filter(
               ({ type }) => type === selectedDestinationType
             )}
-            placeholder="Create or Select Destination Name"
+            placeholder="Select existing or enter new destination"
             renderOption={(props, option) => {
               const { id, ...optionProps } = props;
               return (
@@ -226,7 +250,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         <>
           {creatingNewDestination && !selectedDestinations?.length && (
             <DestinationAkamaiObjectStorageDetailsForm
-              controlPaths={controlPaths}
+              controlPaths={akamaiObjectStorageDetailsControlPaths}
               entity="stream"
               mode={mode}
             />
@@ -239,6 +263,16 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
           )}
         </>
       )}
+      {isACLPLogsCustomHttpsEnabled &&
+        selectedDestinationType === destinationType.CustomHttps &&
+        creatingNewDestination &&
+        !selectedDestinations?.length && (
+          <DestinationCustomHttpsDetailsForm
+            controlPaths={customHttpsDetailsControlPaths}
+            entity="stream"
+            mode={mode}
+          />
+        )}
     </>
   );
 
@@ -246,7 +280,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     <Paper>
       <Typography variant="h2">Delivery</Typography>
       <Typography sx={{ mt: theme.spacingFunction(12) }}>
-        Define a destination where you want this stream to send logs.
+        Set the destination for log delivery.
       </Typography>
       {isLoading && (
         <Box display="flex" justifyContent="center">

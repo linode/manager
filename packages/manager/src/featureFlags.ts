@@ -120,6 +120,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    * This property indicates whether to bypass account capabilities check or not
    */
   bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether to show Custom HTTPS destination type
+   */
+  customHttpsEnabled?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -223,7 +227,7 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
-  iam: BetaFeatureFlag;
+  iam: BaseFeatureFlag;
   iamDelegation: BaseFeatureFlag;
   iamLimitedAvailabilityBadges: boolean;
   ipv6Sharing: boolean;

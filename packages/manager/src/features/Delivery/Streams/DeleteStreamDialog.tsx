@@ -73,7 +73,7 @@ export const DeleteStreamDialog = React.memo((props: Props) => {
       open={open}
       title="Delete Stream"
     >
-      Are you sure you want to delete &#34;{stream?.label}&#34; stream?
+      Are you sure you want to delete &#34;{stream?.label}&#34;?
     </ConfirmationDialog>
   );
 });

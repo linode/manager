@@ -20,9 +20,8 @@ export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
 
 // Delegation error messages
-export const NO_DELEGATIONS_TEXT = 'No users added.';
-export const DELEGATION_VALIDATION_ERROR =
-  'At least one user must be selected as a delegate.';
+export const NO_ITEMS_TO_DISPLAY_TEXT = 'No items to display.';
+export const NO_DELEGATED_USERS_TEXT = 'No users added.';
 
 // Links
 export const IAM_DOCS_LINK =

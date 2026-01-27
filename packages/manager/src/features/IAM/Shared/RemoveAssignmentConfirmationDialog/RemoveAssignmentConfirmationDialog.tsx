@@ -33,13 +33,17 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
 
   const {
     error,
-    isPending,
+    isPending: isUserRolesPending,
     mutateAsync: updateUserRoles,
     reset,
   } = useUserRolesMutation(username ?? '');
 
-  const { mutateAsync: updateDefaultDelegationRoles } =
-    useUpdateDefaultDelegationAccessQuery();
+  const {
+    mutateAsync: updateDefaultDelegationRoles,
+    isPending: isDefaultDelegationRolesPending,
+  } = useUpdateDefaultDelegationAccessQuery();
+
+  const isPending = isUserRolesPending || isDefaultDelegationRolesPending;
 
   const { data: assignedUserRoles } = useUserRoles(
     username ?? '',
@@ -64,7 +68,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     : assignedUserRoles;
 
   const onDelete = async () => {
-    if (!role || !assignedRoles) return;
+    if (!role || !assignedRoles || isPending) return;
 
     const { role_name, entity_id, entity_type } = role;
 
@@ -96,6 +100,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
             label: 'Remove',
             loading: isPending,
             onClick: onDelete,
+            disabled: isPending,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
@@ -113,21 +118,21 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
           : `Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`
       }
     >
-      <Notice variant="warning">
-        {isDefaultDelegationRolesForChildAccount ? (
-          <Typography>
-            Delegate users won’t get the {role?.role_name} access on the{' '}
-            {role?.entity_name} entity by default.
-          </Typography>
-        ) : (
+      {isDefaultDelegationRolesForChildAccount ? (
+        <Typography>
+          Delegate users won’t get the {role?.role_name} access on the{' '}
+          {role?.entity_name} entity by default.
+        </Typography>
+      ) : (
+        <Notice variant="warning">
           <Typography>
             You’re about to remove the <strong>{role?.entity_name}</strong>{' '}
             entity from the <strong>{role?.role_name}</strong> role for{' '}
             <strong>{username}</strong>. This change will be applied
             immediately.
           </Typography>
-        )}
-      </Notice>
+        </Notice>
+      )}
     </ConfirmationDialog>
   );
 };

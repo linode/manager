@@ -421,6 +421,9 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByLabelText('Firewall').should('be.visible');
     cy.get('[data-qa-autocomplete="Firewall"]').within(() => {
@@ -490,9 +493,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
-
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByLabelText('Public Interface Firewall').should('be.visible');
@@ -565,6 +565,9 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
+
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
 
     cy.findByText('Create Firewall').should('be.visible').click();
 
@@ -660,9 +663,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
-
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
 
     cy.findByText('Create Firewall').should('be.visible').click();
 
@@ -766,6 +766,9 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
     // Creating the linode without a firewall should display a warning.
     ui.button
       .findByTitle('Create Linode')
@@ -868,9 +871,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
 
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
-
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
 
     // Creating the linode without a firewall should display a warning.
     ui.button

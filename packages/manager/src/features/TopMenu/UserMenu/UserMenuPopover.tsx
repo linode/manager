@@ -51,7 +51,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -118,8 +118,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       {
         display: isIAMEnabled ? 'Identity & Access' : 'Users & Grants',
         to: isIAMEnabled ? '/iam' : '/users',
-        isBeta: isIAMEnabled && isIAMBeta,
-        isNew: isIAMEnabled && !isIAMBeta && iamLimitedAvailabilityBadges,
+        isNew: isIAMEnabled && iamLimitedAvailabilityBadges,
       },
       {
         display: 'Quotas',
@@ -143,7 +142,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         to: '/account-settings',
       },
     ],
-    [isIAMEnabled, limitsEvolution, iamLimitedAvailabilityBadges, isIAMBeta]
+    [isIAMEnabled, limitsEvolution, iamLimitedAvailabilityBadges]
   );
 
   const renderLink = (link: MenuLink) => {

@@ -35,6 +35,7 @@ export const EditVPCIPv6Address = (props: Props) => {
         name="vpc.ipv6.slaac.0.range"
         render={({ field, fieldState }) => (
           <VPCIPv6Address
+            autoAssignValue="auto"
             errorMessage={fieldState.error?.message}
             fieldValue={field.value}
             ipv6Address={linodeInterface.vpc?.ipv6?.slaac[0].range}

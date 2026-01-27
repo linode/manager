@@ -21,6 +21,7 @@ interface StreamFormSubmitBarProps {
   mode: FormMode;
   onSubmit: () => void;
   onTestConnection: () => void;
+  submitButtonTooltip?: string;
 }
 
 export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
@@ -35,13 +36,16 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
     isSubmitting,
     isTesting,
     disableTestConnection = false,
+    submitButtonTooltip,
   } = props;
 
   const capitalizedFormType = capitalize(formType);
   const enableSubmit = !blockSubmit || connectionTested;
   const buttonLabel = useMemo(
     () =>
-      mode === 'edit' ? 'Save' : `${capitalize(mode)} ${capitalizedFormType}`,
+      mode === 'edit'
+        ? 'Save Changes'
+        : `${capitalize(mode)} ${capitalizedFormType}`,
     [mode, capitalizedFormType]
   );
   const pagePendoId = useMemo(
@@ -108,6 +112,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
                 alignSelf: 'flex-end',
               },
             })}
+            tooltipText={submitButtonTooltip}
           >
             {buttonLabel}
           </Button>

@@ -21,10 +21,9 @@ export const logsStreamForm = {
    * @param label - stream label to set
    */
   setLabel: (label: string) => {
-    cy.findByLabelText('Name')
+    cy.findByLabelText('Stream Name')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Stream name')
       .clear();
     cy.focused().type(label);
   },
@@ -57,7 +56,11 @@ export const logsStreamForm = {
     cy.findByLabelText('Destination Name')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Create or Select Destination Name')
+      .should(
+        'have.attr',
+        'placeholder',
+        'Select existing or enter new destination'
+      )
       .clear();
     // Select the Destination Name
     ui.autocompletePopper
@@ -93,7 +96,11 @@ export const logsStreamForm = {
     cy.findByLabelText('Destination Name')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Create or Select Destination Name')
+      .should(
+        'have.attr',
+        'placeholder',
+        'Select existing or enter new destination'
+      )
       .clear();
     cy.focused().type(label);
     cy.findByText(new RegExp(`"${label}"`)).click();

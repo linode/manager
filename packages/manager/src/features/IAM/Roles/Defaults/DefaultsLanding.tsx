@@ -17,9 +17,9 @@ export const DefaultsLanding = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const flags = useFlags();
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled } = useIsIAMEnabled();
   const showLimitedAvailabilityBadges =
-    flags.iamLimitedAvailabilityBadges && isIAMEnabled && !isIAMBeta;
+    flags.iamLimitedAvailabilityBadges && isIAMEnabled;
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {

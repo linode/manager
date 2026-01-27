@@ -7,19 +7,21 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserDelegations } from './UserDelegations';
 
-const mockChildAccounts = [
-  {
-    company: 'Test Account 1',
-    euuid: '123',
-  },
-  {
-    company: 'Test Account 2',
-    euuid: '456',
-  },
-];
+const mockChildAccounts = {
+  data: [
+    {
+      company: 'Test Account 1',
+      euuid: '123',
+    },
+    {
+      company: 'Test Account 2',
+      euuid: '456',
+    },
+  ],
+};
 
 const queryMocks = vi.hoisted(() => ({
-  useAllGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
+  useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
 }));
@@ -28,8 +30,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAllGetDelegatedChildAccountsForUserQuery:
-      queryMocks.useAllGetDelegatedChildAccountsForUserQuery,
+    useGetDelegatedChildAccountsForUserQuery:
+      queryMocks.useGetDelegatedChildAccountsForUserQuery,
   };
 });
 
@@ -47,7 +49,7 @@ describe('UserDelegations', () => {
     queryMocks.useParams.mockReturnValue({
       username: 'test-user',
     });
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
       data: mockChildAccounts,
       isLoading: false,
     });
@@ -70,8 +72,8 @@ describe('UserDelegations', () => {
   });
 
   it('shows pagination when there are more than 25 child accounts', () => {
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: childAccountFactory.buildList(30),
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: { data: childAccountFactory.buildList(30), results: 30 },
       isLoading: false,
     });
 
@@ -87,13 +89,13 @@ describe('UserDelegations', () => {
     const paginationRow = screen.getByRole('navigation', {
       name: 'pagination navigation',
     });
-    expect(tabelRows).toHaveLength(27); // 25 rows + header row + pagination row
+    expect(tabelRows).toHaveLength(32); // 30 rows + header row + pagination row
     expect(paginationRow).toBeInTheDocument();
   });
 
   it('filters child accounts by search', async () => {
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: childAccountFactory.buildList(30),
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: { data: childAccountFactory.buildList(30), results: 30 },
       isLoading: false,
     });
 
