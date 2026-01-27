@@ -1,4 +1,4 @@
-import { useLocksQuery, useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -61,7 +61,6 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const isResourceLockEnabled = flags.resourceLock?.linodes;
-  const { data: locksData } = useLocksQuery({}, {}, isResourceLockEnabled);
   const isLocked = !!locks?.length;
 
   const { data: accountPermissions } = usePermissions('account', [
@@ -253,18 +252,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
         : !accountPermissions.create_lock,
       onClick: () => {
         if (isLocked) {
-          // Find the lock ID for this Linode
-          const linodeLock = locksData?.data?.find(
-            (lock) =>
-              lock.entity.id === linodeId && lock.entity.type === 'linode'
-          );
-          if (linodeLock) {
-            sendLinodeActionMenuItemEvent('Unlock Linode');
-            // To be implemented in separate ticket
-          }
+          sendLinodeActionMenuItemEvent('Unlock Linode');
+          // props.onOpenUnlockDialog();
         } else {
           sendLinodeActionMenuItemEvent('Lock Linode');
-          // To be implemented in separate ticket
+          // props.onOpenAddLockDialog();
         }
       },
       title: isLocked ? 'Unlock' : 'Lock',
