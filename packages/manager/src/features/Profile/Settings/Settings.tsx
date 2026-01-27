@@ -3,7 +3,6 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { MaskSensitiveData } from './MaskSensitiveData';
 import { Notifications } from './Notifications';
@@ -14,29 +13,22 @@ import { TypeToConfirm } from './TypeToConfirm';
 
 export const ProfileSettings = () => {
   const navigate = useNavigate();
-  const { iamRbacPrimaryNavChanges } = useFlags();
   const { preferenceEditor } = useSearch({
-    from: iamRbacPrimaryNavChanges
-      ? '/profile/preferences'
-      : '/profile/settings',
+    from: '/profile/preferences',
   });
 
   const isPreferenceEditorOpen = !!preferenceEditor;
 
   const handleClosePreferenceEditor = () => {
     navigate({
-      to: iamRbacPrimaryNavChanges
-        ? '/profile/preferences'
-        : '/profile/settings',
+      to: '/profile/preferences',
       search: { preferenceEditor: undefined },
     });
   };
 
   return (
     <>
-      <DocumentTitleSegment
-        segment={iamRbacPrimaryNavChanges ? 'Preferences' : 'My Settings'}
-      />
+      <DocumentTitleSegment segment="Preferences" />
       <Stack spacing={2}>
         <Notifications />
         <Theme />

@@ -12,7 +12,7 @@ export const AlertListingTableLabelMap = [
   },
   {
     colName: 'Service',
-    label: 'service_type',
+    label: 'service_type_label',
   },
   {
     colName: 'Created By',

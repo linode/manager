@@ -1,19 +1,10 @@
+import type { Entity } from '../account/types';
 import type { EntityType } from '../entities';
 
 /**
  * Types of locks that can be applied to a resource
  */
 export type LockType = 'cannot_delete' | 'cannot_delete_with_subresources';
-
-/**
- * Entity information attached to a lock
- */
-export interface LockEntity {
-  id: number | string;
-  label?: string;
-  type: EntityType;
-  url?: string;
-}
 
 /**
  * Request payload for creating a lock
@@ -34,7 +25,7 @@ export interface CreateLockPayload {
  */
 export interface ResourceLock {
   /** Information about the locked entity */
-  entity: LockEntity;
+  entity: Entity;
   /** Unique identifier for the lock */
   id: number;
   /** Type of lock applied */

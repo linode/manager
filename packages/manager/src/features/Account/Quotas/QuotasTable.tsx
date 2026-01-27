@@ -12,7 +12,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
@@ -32,12 +31,9 @@ interface QuotasTableProps {
 
 export const QuotasTable = (props: QuotasTableProps) => {
   const { selectedLocation, selectedService } = props;
-  const flags = useFlags();
   const navigate = useNavigate();
   const pagination = usePaginationV2({
-    currentRoute: flags?.iamRbacPrimaryNavChanges
-      ? '/quotas'
-      : '/account/quotas',
+    currentRoute: '/quotas',
     initialPage: 1,
     preferenceKey: 'quotas-table',
   });

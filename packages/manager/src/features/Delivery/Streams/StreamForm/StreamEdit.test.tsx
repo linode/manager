@@ -54,7 +54,7 @@ describe('StreamEdit', () => {
     await waitForElementToBeRemoved(loadingElement);
 
     await waitFor(() => {
-      assertInputHasValue('Name', 'Stream 123');
+      assertInputHasValue('Stream Name', 'Stream 123');
     });
     assertInputHasValue('Stream Type', 'Audit Logs');
     await waitFor(() => {
@@ -83,7 +83,7 @@ describe('StreamEdit', () => {
     { timeout: 10000 },
     () => {
       const testConnectionButtonText = 'Test Connection';
-      const saveStreamButtonText = 'Save';
+      const saveStreamButtonText = 'Save Changes';
 
       const fillOutNewDestinationForm = async () => {
         const destinationNameInput = screen.getByLabelText('Destination Name');
@@ -199,7 +199,7 @@ describe('StreamEdit', () => {
             await waitForElementToBeRemoved(loadingElement);
 
             // Change name and leave existing destination
-            const streamNameInput = screen.getByLabelText('Name');
+            const streamNameInput = screen.getByLabelText('Stream Name');
             await userEvent.type(streamNameInput, 'Test');
 
             const testConnectionButton = screen.getByRole('button', {
@@ -222,6 +222,48 @@ describe('StreamEdit', () => {
             expect(createDestinationSpy).not.toHaveBeenCalled();
             await waitFor(() => {
               expect(editStreamSpy).toHaveBeenCalled();
+            });
+          });
+
+          describe('and stream has status: provisioning', () => {
+            it('should have disabled Edit Stream button and show info tooltip', async () => {
+              server.use(
+                http.get('*/monitor/streams/destinations', () => {
+                  return HttpResponse.json(makeResourcePage(mockDestinations));
+                }),
+                http.get(`*/monitor/streams/${streamId}`, () => {
+                  return HttpResponse.json({
+                    ...mockStream,
+                    status: 'provisioning',
+                  });
+                })
+              );
+
+              renderWithThemeAndHookFormContext({
+                component: <StreamEdit />,
+              });
+              const loadingElement = screen.queryByTestId(loadingTestId);
+              await waitForElementToBeRemoved(loadingElement);
+
+              const editStreamButton = screen.getByRole('button', {
+                name: saveStreamButtonText,
+              });
+
+              // Edit stream button should be disabled
+              expect(editStreamButton).toBeDisabled();
+
+              // Edit stream
+              await userEvent.hover(editStreamButton);
+
+              await waitFor(() => {
+                expect(screen.getByRole('tooltip')).toBeInTheDocument();
+              });
+
+              const disabledButtonTooltip = screen.getByText(
+                'You cannot save changes while the stream is provisioning.'
+              );
+
+              expect(disabledButtonTooltip).toBeInTheDocument();
             });
           });
         });

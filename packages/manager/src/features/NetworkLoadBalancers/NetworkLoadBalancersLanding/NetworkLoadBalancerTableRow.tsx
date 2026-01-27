@@ -67,18 +67,26 @@ export const NetworkLoadBalancerTableRow = (props: NetworkLoadBalancer) => {
       <TableCell data-qa-ports>
         <PortsDisplay ports={portStrings} />
       </TableCell>
-      <TableCell data-qa-ipv4>
-        <IPAddress ips={[address_v4]} isHovered={isHovered} />
-      </TableCell>
       <Hidden mdDown>
-        <TableCell data-qa-ipv6>
-          {address_v6 ? (
-            <IPAddress ips={[address_v6]} isHovered={isHovered} />
-          ) : (
-            'None'
-          )}
+        <TableCell data-qa-ipv4 sx={{ width: '10%' }}>
+          <IPAddress ips={[address_v4]} isHovered={isHovered} />
         </TableCell>
       </Hidden>
+      <TableCell
+        data-qa-ipv6
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            width: '25%', // Smaller screens
+          },
+          width: '15%', // Default width
+        })}
+      >
+        {address_v6 ? (
+          <IPAddress ips={[address_v6]} isHovered={isHovered} />
+        ) : (
+          'None'
+        )}
+      </TableCell>
       <TableCell data-qa-lke-cluster>
         {lke_cluster ? (
           <Link

@@ -68,7 +68,7 @@ describe('Payment Info Panel', () => {
         <PaymentInformation {...props} loading={true} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
 
@@ -81,7 +81,7 @@ describe('Payment Info Panel', () => {
         <PaymentInformation {...props} loading={false} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
 
@@ -105,7 +105,7 @@ describe('Payment Info Panel', () => {
         <PaymentInformation {...props} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
 
@@ -122,7 +122,7 @@ describe('Payment Info Panel', () => {
         <PaymentInformation {...props} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
 
@@ -139,7 +139,7 @@ describe('Payment Info Panel', () => {
         <PaymentInformation {...props} isAkamaiCustomer={true} />
       </PayPalScriptProvider>,
       {
-        initialRoute: '/account/billing',
+        initialRoute: '/billing',
       }
     );
 
@@ -168,7 +168,7 @@ describe('Payment Info Panel', () => {
           />
         </PayPalScriptProvider>,
         {
-          initialRoute: '/account/billing',
+          initialRoute: '/billing',
         }
       );
 
@@ -195,7 +195,7 @@ describe('Payment Info Panel', () => {
           <PaymentInformation {...props} />
         </PayPalScriptProvider>,
         {
-          initialRoute: '/account/billing',
+          initialRoute: '/billing',
         }
       );
 

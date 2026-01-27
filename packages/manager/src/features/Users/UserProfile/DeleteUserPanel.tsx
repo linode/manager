@@ -4,7 +4,6 @@ import { useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { UserDeleteConfirmationDialog } from '../UserDeleteConfirmationDialog';
 
@@ -19,8 +18,6 @@ export const DeleteUserPanel = ({ user }: Props) => {
   const navigate = useNavigate();
 
   const { data: profile } = useProfile();
-
-  const { iamRbacPrimaryNavChanges } = useFlags();
 
   const isProxyUserProfile = user.user_type === 'proxy';
 
@@ -52,7 +49,7 @@ export const DeleteUserPanel = ({ user }: Props) => {
           onClose={() => setIsDeleteDialogOpen(false)}
           onSuccess={() =>
             navigate({
-              to: iamRbacPrimaryNavChanges ? '/users' : '/account/users',
+              to: '/users',
             })
           }
           open={isDeleteDialogOpen}

@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TransfersTable } from '../TransfersTable';
@@ -21,17 +20,14 @@ export const EntityTransfersLanding = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const flags = useFlags();
 
-  const url = flags?.iamRbacPrimaryNavChanges
-    ? '/service-transfers'
-    : '/account/service-transfers';
+  const URL = '/service-transfers';
 
   const handleCloseSuccessDialog = () => {
     setSuccessDialogOpen(false);
     setTransfer(undefined);
     navigate({
-      to: url,
+      to: URL,
       state: (prev) => ({ ...prev, transfer: undefined }),
     });
   };
@@ -53,19 +49,19 @@ export const EntityTransfersLanding = () => {
 
   const paginationPendingTransfers = usePaginationV2({
     initialPage,
-    currentRoute: url,
+    currentRoute: URL,
     preferenceKey: pendingTransfersTablePreferenceKey,
     queryParamsPrefix: pendingTransfersTablePreferenceKey,
   });
   const paginationReceivedTransfers = usePaginationV2({
     initialPage,
-    currentRoute: url,
+    currentRoute: URL,
     preferenceKey: receivedTransfersTablePreferenceKey,
     queryParamsPrefix: receivedTransfersTablePreferenceKey,
   });
   const paginationSentTransfers = usePaginationV2({
     initialPage,
-    currentRoute: url,
+    currentRoute: URL,
     preferenceKey: sentTransfersTablePreferenceKey,
     queryParamsPrefix: sentTransfersTablePreferenceKey,
   });
