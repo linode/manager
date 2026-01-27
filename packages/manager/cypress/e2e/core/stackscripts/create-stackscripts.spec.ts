@@ -80,9 +80,15 @@ const fillOutStackscriptForm = (
     cy.findByLabelText('Description').should('be.visible').click();
     cy.focused().type(description);
   }
-
-  ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
-  ui.autocompletePopper.findByTitle(targetImage).should('be.visible').click();
+  ui.autocomplete
+    .findByLabel('Target Images')
+    .should('be.visible')
+    .type(targetImage);
+  // need selector in case item label is same as category label
+  ui.autocompletePopper
+    .findByTitle(targetImage, { selector: 'li div p' })
+    .should('be.visible')
+    .click();
   ui.autocomplete.findByLabel('Target Images').click(); // Close autocomplete popper
 
   // Insert a script.
@@ -114,6 +120,13 @@ const fillOutLinodeForm = (label: string, regionName: string) => {
   cy.focused().type(label);
 
   cy.findByText('Dedicated CPU').should('be.visible').click();
+
+  // Use filter to select G6 Dedicated instead of relying on pagination
+  ui.autocomplete.findByLabel('Dedicated Plans').click();
+  ui.autocompletePopper.find().within(() => {
+    cy.findByText('G6 Dedicated').should('be.visible').click();
+  });
+
   cy.get('[id="g6-dedicated-2"]').click();
   cy.findByLabelText('Root Password').should('be.visible').type(password);
 };
@@ -187,7 +200,9 @@ describe('Create stackscripts', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     // use random image. can specify image w/ getImageByLabel, then set images option in chooseImage
-    const randomImage = chooseImage();
+    const randomImage = chooseImage({
+      capabilities: ['cloud-init', 'distributed-sites'],
+    });
     const stackscriptImage = randomImage.label;
     const linodeLabel = randomLabel();
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });

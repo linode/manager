@@ -14,7 +14,6 @@ import {
   mockInitiateEntityTransferError,
   mockReceiveEntityTransfer,
 } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -125,14 +124,6 @@ describe('Account service transfers', () => {
      * selecting Linodes from the list during service transfer initiation.
      */
     cleanUp(['service-transfers', 'linodes', 'lke-clusters']);
-  });
-
-  beforeEach(() => {
-    // Mock the iamRbacPrimaryNavChanges feature flag to be disabled.
-    mockAppendFeatureFlags({
-      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
-      iamRbacPrimaryNavChanges: true,
-    }).as('getFeatureFlags');
   });
 
   /*

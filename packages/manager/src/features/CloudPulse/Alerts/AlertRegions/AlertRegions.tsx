@@ -15,6 +15,7 @@ import {
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
+import { getFilterFn } from '../Utils/utils';
 import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
@@ -65,7 +66,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
-    { ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}) }
+    { ...(RESOURCE_FILTER_MAP[serviceType ?? ''] ?? {}) },
+    undefined,
+    getFilterFn(serviceType)
   );
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.

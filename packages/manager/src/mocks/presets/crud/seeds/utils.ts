@@ -31,6 +31,9 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
       await mswDB.deleteAll('linodes', mockState, 'seedState');
       await mswDB.deleteAll('linodeConfigs', mockState, 'seedState');
       break;
+    case 'locks:crud':
+      await mswDB.deleteAll('locks', mockState, 'seedState');
+      break;
     case 'nodebalancers:crud':
       await mswDB.deleteAll('nodeBalancers', mockState, 'seedState');
       await mswDB.deleteAll('nodeBalancerConfigs', mockState, 'seedState');
