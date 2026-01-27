@@ -13,7 +13,6 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 
-import { GlobalQuotasTable } from './GlobalQuotasTable/GlobalQuotasTable';
 import { QuotasTable } from './QuotasTable/QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
 
@@ -49,7 +48,14 @@ export const Quotas = () => {
       >
         <Typography variant="h2">Object Storage: global</Typography>
 
-        <GlobalQuotasTable />
+        <QuotasTable
+          isGlobalScope={true}
+          selectedLocation={null}
+          selectedService={{
+            label: 'Object Storage',
+            value: 'object-storage',
+          }}
+        />
       </Paper>
 
       <Paper
@@ -125,6 +131,7 @@ export const Quotas = () => {
             spacing={2}
           >
             <QuotasTable
+              isGlobalScope={false}
               selectedLocation={selectedLocation}
               selectedService={{
                 label: 'Object Storage',

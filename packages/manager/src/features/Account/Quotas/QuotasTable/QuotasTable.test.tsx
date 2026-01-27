@@ -41,6 +41,7 @@ describe('QuotasTable', () => {
   it('should render', async () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       <QuotasTable
+        isGlobalScope={false}
         selectedLocation={null}
         selectedService={{
           label: 'Linodes',
@@ -96,6 +97,7 @@ describe('QuotasTable', () => {
 
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
       <QuotasTable
+        isGlobalScope={false}
         selectedLocation={{
           label: 'NJ',
           value: 'us-east',

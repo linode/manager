@@ -13,7 +13,6 @@ import {
   convertResourceMetric,
   getQuotaError,
   pluralizeMetric,
-  QUOTA_ROW_MIN_HEIGHT,
 } from '../utils';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4';
@@ -29,6 +28,7 @@ interface QuotasTableRowProps {
   index: number;
   isDataPresent: boolean;
   quota: QuotaWithUsage;
+  quotaRowMinHeight: number;
   quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[];
   setConvertedResourceMetrics: (resourceMetric: {
     limit: number;
@@ -44,6 +44,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     isDataPresent,
     index,
     quota,
+    quotaRowMinHeight,
     quotaUsageQueries,
     setSelectedQuota,
     setSupportModalOpen,
@@ -82,7 +83,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
   };
 
   return (
-    <TableRow key={quota.quota_id} sx={{ height: QUOTA_ROW_MIN_HEIGHT }}>
+    <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
       <TableCell>
         <Box alignItems="center" display="flex" flexWrap="nowrap">
           <Typography
