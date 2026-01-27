@@ -81,6 +81,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'blockStorageContextualMetrics',
     label: 'Block Storage Contextual Metrics',
   },
+  {
+    flag: 'objectStorageContextualMetrics',
+    label: 'Object Storage Contextual Metrics',
+  },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
