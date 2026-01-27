@@ -33,7 +33,7 @@ export const UsersLanding = () => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { data: profile } = useProfile();
 
-  const { query } = useSearch({
+  const { query, users: usersParam } = useSearch({
     from: '/iam',
   });
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
@@ -72,8 +72,31 @@ export const UsersLanding = () => {
   const isChildWithDelegationEnabled =
     isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
 
+  const filterableOptions = [
+    ALL_USERS_OPTION,
+    {
+      label: 'Users',
+      value: 'users',
+    },
+    {
+      label: 'Delegate Users',
+      value: 'delegate',
+    },
+  ];
+
+  // Initialize userType based on URL parameter
+  const getInitialUserType = React.useMemo(() => {
+    if (!usersParam || usersParam === 'all') {
+      return ALL_USERS_OPTION;
+    }
+    return (
+      filterableOptions.find((option) => option.value === usersParam) ||
+      ALL_USERS_OPTION
+    );
+  }, [usersParam]);
+
   const [userType, setUserType] = React.useState<null | SelectOption>(
-    ALL_USERS_OPTION
+    getInitialUserType
   );
 
   const usersFilter: Filter = {
@@ -100,18 +123,6 @@ export const UsersLanding = () => {
       page_size: pagination.pageSize,
     },
   });
-
-  const filterableOptions = [
-    ALL_USERS_OPTION,
-    {
-      label: 'Users',
-      value: 'users',
-    },
-    {
-      label: 'Delegate Users',
-      value: 'delegate',
-    },
-  ];
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
