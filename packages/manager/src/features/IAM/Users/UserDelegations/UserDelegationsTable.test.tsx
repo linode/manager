@@ -7,29 +7,39 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserDelegationsTable } from './UserDelegationsTable';
 
-const mockChildAccounts = [
-  {
-    company: 'Test Account 1',
-    euuid: '123',
-  },
-  {
-    company: 'Test Account 2',
-    euuid: '456',
-  },
-];
+const mockChildAccounts = {
+  data: [
+    {
+      company: 'Test Account 1',
+      euuid: '123',
+    },
+    {
+      company: 'Test Account 2',
+      euuid: '456',
+    },
+  ],
+};
 
 const queryMocks = vi.hoisted(() => ({
-  useAllGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
+  useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi
+    .fn()
+    .mockReturnValue({ data: { roles: [{}] }, isLoading: false }),
+  useUserAccountPermissions: vi
+    .fn()
+    .mockReturnValue({ data: ['is_account_admin'], isLoading: false }),
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAllGetDelegatedChildAccountsForUserQuery:
-      queryMocks.useAllGetDelegatedChildAccountsForUserQuery,
+    useGetDelegatedChildAccountsForUserQuery:
+      queryMocks.useGetDelegatedChildAccountsForUserQuery,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserAccountPermissions: queryMocks.useUserAccountPermissions,
   };
 });
 
@@ -47,18 +57,29 @@ describe('UserDelegationsTable', () => {
     queryMocks.useParams.mockReturnValue({
       username: 'test-user',
     });
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
       data: mockChildAccounts,
       isLoading: false,
     });
     queryMocks.useSearch.mockReturnValue({
       query: '',
     });
+    // Ensure IAM is considered enabled via account permissions (avoids shape issues)
+    queryMocks.useUserAccountPermissions.mockReturnValue({
+      data: ['is_account_admin'],
+      isLoading: false,
+    });
+    // Avoid invoking getAllRoles with an unexpected roles shape
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+    });
   });
 
   it('renders the correct number of child accounts', () => {
     renderWithTheme(<UserDelegationsTable />, {
       flags: {
+        iam: { enabled: true },
         iamDelegation: {
           enabled: true,
         },
@@ -70,13 +91,14 @@ describe('UserDelegationsTable', () => {
   });
 
   it('shows pagination when there are more than 25 child accounts', () => {
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: childAccountFactory.buildList(30),
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: { data: childAccountFactory.buildList(30), results: 30 },
       isLoading: false,
     });
 
     renderWithTheme(<UserDelegationsTable />, {
       flags: {
+        iam: { enabled: true },
         iamDelegation: {
           enabled: true,
         },
@@ -87,18 +109,19 @@ describe('UserDelegationsTable', () => {
     const paginationRow = screen.getByRole('navigation', {
       name: 'pagination navigation',
     });
-    expect(tabelRows).toHaveLength(27); // 25 rows + header row + pagination row
+    expect(tabelRows).toHaveLength(32); // 30 rows + header row + pagination row
     expect(paginationRow).toBeInTheDocument();
   });
 
   it('filters child accounts by search', async () => {
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: childAccountFactory.buildList(30),
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: { data: childAccountFactory.buildList(30), results: 30 },
       isLoading: false,
     });
 
     renderWithTheme(<UserDelegationsTable />, {
       flags: {
+        iam: { enabled: true },
         iamDelegation: {
           enabled: true,
         },

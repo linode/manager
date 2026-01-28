@@ -1,4 +1,4 @@
-import { useAllGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
+import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
@@ -19,12 +19,12 @@ export const UserDelegations = () => {
     data: allDelegatedChildAccounts,
     isLoading,
     error,
-  } = useAllGetDelegatedChildAccountsForUserQuery({
+  } = useGetDelegatedChildAccountsForUserQuery({
     username,
   });
 
   const hasDelegatedChildAccounts = allDelegatedChildAccounts
-    ? allDelegatedChildAccounts.length > 0
+    ? allDelegatedChildAccounts.data.length > 0
     : false;
 
   if (isLoading) {
