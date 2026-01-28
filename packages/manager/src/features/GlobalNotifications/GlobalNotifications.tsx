@@ -24,10 +24,10 @@ export const GlobalNotifications = () => {
   const { data: profile } = useProfile();
   const sessionContext = React.useContext(switchAccountSessionContext);
   const sessionExpirationContext = React.useContext(_sessionExpirationContext);
-  const isChildUser = profile?.user_type === 'child';
-  const isProxyUser = profile?.user_type === 'proxy';
+  const isChildUserType = profile?.user_type === 'child';
+  const isProxyUserType = profile?.user_type === 'proxy';
   const { data: securityQuestions } = useSecurityQuestions({
-    enabled: isChildUser,
+    enabled: isChildUserType,
   });
   const suppliedMaintenances = flags.apiMaintenance?.maintenances; // The data (ID, and sometimes the title and body) we supply regarding maintenance events in LD.
 
@@ -58,7 +58,7 @@ export const GlobalNotifications = () => {
       <RegionStatusBanner />
       <AbuseTicketBanner />
       <ComplianceBanner />
-      {isProxyUser && (
+      {isProxyUserType && (
         <>
           <SwitchAccountSessionDialog
             isOpen={Boolean(sessionContext.isOpen)}
@@ -73,7 +73,7 @@ export const GlobalNotifications = () => {
         </>
       )}
       <ComplianceUpdateModal />
-      {isChildUser && !isVerified && (
+      {isProxyUserType && !isVerified && (
         <VerificationDetailsBanner
           hasSecurityQuestions={hasSecurityQuestions}
           hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}

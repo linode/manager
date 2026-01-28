@@ -40,8 +40,9 @@ export const SwitchAccountDrawer = (props: Props) => {
   >([]);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const isProxyOrDelegateUserType =
-    userType === 'proxy' || userType === 'delegate';
+  const isProxyUserType = userType === 'proxy';
+  const isDelegateUserType = userType === 'delegate';
+  const isProxyOrDelegateUserType = isProxyUserType || isDelegateUserType;
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
   const currentTokenWithBearer = storage.authentication.token.get() ?? '';
@@ -129,7 +130,9 @@ export const SwitchAccountDrawer = (props: Props) => {
           },
         });
 
-        updateCurrentToken({ userType: 'proxy' });
+        updateCurrentToken({
+          userType: isProxyUserType ? 'proxy' : 'delegate',
+        });
         onClose(event);
         location.reload();
       } catch (error) {
@@ -154,23 +157,30 @@ export const SwitchAccountDrawer = (props: Props) => {
     // Flag to prevent multiple clicks on the switch account link.
     setSubmitting(true);
 
-    // Revoke proxy token before switching to parent account.
+    // Revoke proxy or delegate token before switching to parent account.
     await revokeToken().catch(() => {
       /* Allow user account switching; tokens will expire naturally. */
     });
 
     updateCurrentToken({ userType: 'parent' });
 
-    // Reset flag for proxy user to display success toast once.
-    if (userType === 'proxy') {
+    // Reset flag for proxy or delegate user to display success toast once.
+    if (isProxyUserType) {
       setStorage('is_proxy_user_type', 'false');
-    } else if (userType === 'delegate') {
+    } else if (isDelegateUserType) {
       setStorage('is_delegate_user_type', 'false');
     }
 
     onClose();
     location.reload();
-  }, [onClose, revokeToken, validateParentToken, updateCurrentToken, userType]);
+  }, [
+    onClose,
+    revokeToken,
+    validateParentToken,
+    updateCurrentToken,
+    isProxyUserType,
+    isDelegateUserType,
+  ]);
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
     useState<boolean>(false);

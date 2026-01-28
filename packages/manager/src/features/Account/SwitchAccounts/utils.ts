@@ -8,7 +8,7 @@ export interface ProxyTokenCreationParams {
    */
   euuid: string;
   /**
-   * The parent token used to create the proxy token (includes 'Bearer' prefix).
+   * The parent token used to create the proxy or delegate token (includes 'Bearer' prefix).
    */
   token: string;
   /**

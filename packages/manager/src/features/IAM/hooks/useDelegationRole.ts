@@ -3,7 +3,7 @@ import { useLocation } from '@tanstack/react-router';
 
 import { useIsIAMDelegationEnabled } from './useIsIAMEnabled';
 
-import type { UserType } from '@linode/api-v4';
+import type { Profile, UserType } from '@linode/api-v4';
 
 type DelegationRole = {
   isChildUserType: boolean;
@@ -13,6 +13,7 @@ type DelegationRole = {
   isProfileLoading: boolean;
   isProxyOrDelegateUserType: boolean;
   isProxyUserType: boolean;
+  profile: Profile | undefined;
   profileUserName: string | undefined;
   profileUserType: undefined | UserType;
 };
@@ -30,6 +31,7 @@ export const useDelegationRole = (): DelegationRole => {
     isDelegateUserType: profile?.user_type === 'delegate',
     profileUserType: profile?.user_type,
     profileUserName: profile?.username,
+    profile,
     isProfileLoading,
   };
 };
