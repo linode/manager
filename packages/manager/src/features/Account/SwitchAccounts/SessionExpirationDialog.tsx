@@ -113,7 +113,9 @@ export const SessionExpirationDialog = React.memo(
         const proxyToken = await createToken(euuid);
 
         setTokenInLocalStorage({
-          prefix: 'authentication/proxy_token',
+          prefix: isProxyUserType
+            ? 'authentication/proxy_token'
+            : 'authentication/delegate_token',
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
@@ -137,7 +139,9 @@ export const SessionExpirationDialog = React.memo(
      */
     useEffect(() => {
       const checkTokenExpiry = () => {
-        const expiryString = getStorage('authentication/proxy_token/expire');
+        const expiryString = isProxyUserType
+          ? getStorage('authentication/proxy_token/expire')
+          : getStorage('authentication/delegate_token/expire');
 
         if (!expiryString) {
           return;

@@ -123,7 +123,9 @@ export const SwitchAccountDrawer = (props: Props) => {
         const proxyToken = await createToken(euuid);
 
         setTokenInLocalStorage({
-          prefix: 'authentication/proxy_token',
+          prefix: isProxyUserType
+            ? 'authentication/proxy_token'
+            : 'authentication/delegate_token',
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
