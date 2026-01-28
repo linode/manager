@@ -100,6 +100,7 @@ export const Default: Story = {
               transfer: 2000,
               vcpus: 1,
             }}
+            onOpenAddLockDialog={action('onOpenAddLockDialog')}
             onOpenDeleteDialog={action('onOpenDeleteDialog')}
             onOpenMigrateDialog={action('onOpenMigrateDialog')}
             onOpenPowerDialog={action('onOpenPowerDialog')}

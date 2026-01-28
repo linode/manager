@@ -29,6 +29,7 @@ export const LinodeExample: Story = {
         <h2 style={{ margin: 0 }}>Linode Details: </h2>
         <LinodeEntityDetail
           handlers={{
+            onOpenAddLockDialog: action('onOpenAddLockDialog'),
             onOpenDeleteDialog: action('onOpenDeleteDialog'),
             onOpenMigrateDialog: action('onOpenMigrateDialog'),
             onOpenPowerDialog: action('onOpenPowerDialog'),

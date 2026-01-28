@@ -10,12 +10,11 @@
  * Update ENTITY_TYPE_CONFIG below with the new resource type mapping
  *
  */
-import { http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { lockFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
-  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -37,6 +36,14 @@ import type {
 } from 'src/mocks/utilities/response';
 
 /**
+ * Validation error with optional field name for API error responses
+ */
+interface ValidationError {
+  field?: string;
+  reason: string;
+}
+
+/**
  * Configuration mapping entity types to their database stores and url
  * Add new resource types here to enable lock support
  */
@@ -53,20 +60,31 @@ const ENTITY_TYPE_CONFIG: Record<
 const validateLockCreation = async (
   payload: CreateLockPayload,
   mockState: MockState
-): Promise<null | string> => {
+): Promise<null | ValidationError> => {
   const { entity_id, entity_type, lock_type } = payload;
 
   // Check if entity type is supported
   const entityConfig = ENTITY_TYPE_CONFIG[entity_type];
   if (!entityConfig) {
-    return `Unsupported entity type: ${entity_type}`;
+    return { reason: `Unsupported entity type: ${entity_type}` };
   }
 
   // Check if entity exists and is accessible
   const entities = await mswDB.getAll(entityConfig.store);
   const entity = entities?.find((e: Entity) => e.id === entity_id);
   if (!entity) {
-    return 'The specified entity could not be found.';
+    return { reason: 'The specified entity could not be found.' };
+  }
+
+  // Check if Linode belongs to an LKE cluster
+  if (entity_type === 'linode' && entity) {
+    const linodeEntity = entity as { lke_cluster_id?: null | number };
+    if (linodeEntity.lke_cluster_id) {
+      return {
+        field: 'entity_id',
+        reason: 'Linode belongs to an LKE Cluster',
+      };
+    }
   }
 
   // Check if entity already has a lock of conflicting type
@@ -87,7 +105,11 @@ const validateLockCreation = async (
           lock.lock_type === 'cannot_delete_with_subresources'
       );
       if (hasDeleteLock) {
-        return 'This resource already has a lock. Only one delete protection lock is allowed at a time.';
+        return {
+          field: 'lock_type',
+          reason:
+            'This resource already has a lock. Only one delete protection lock is allowed at a time.',
+        };
       }
     }
   }
@@ -225,7 +247,17 @@ export const createLock = (mockState: MockState) => [
       // Validate the lock creation
       const validationError = await validateLockCreation(payload, mockState);
       if (validationError) {
-        return makeErrorResponse(validationError, 400);
+        return HttpResponse.json<APIErrorResponse>(
+          {
+            errors: [
+              {
+                ...(validationError.field && { field: validationError.field }),
+                reason: validationError.reason,
+              },
+            ],
+          },
+          { status: 400 }
+        );
       }
 
       // Get entity configuration for URL building
