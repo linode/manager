@@ -37,9 +37,14 @@ export const lockQueries = createQueryKeys('locks', {
  * @example
  * const { data, isLoading } = useLocksQuery();
  */
-export const useLocksQuery = (params: Params = {}, filter: Filter = {}) => {
+export const useLocksQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled: boolean = true,
+) => {
   return useQuery<ResourcePage<ResourceLock>, APIError[]>({
     ...lockQueries.locks._ctx.paginated(params, filter),
+    enabled,
   });
 };
 

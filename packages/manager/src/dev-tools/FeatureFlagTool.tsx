@@ -47,6 +47,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'privateImageSharing', label: 'Private Image Sharing' },
+  { flag: 'resourceLock', label: 'Resource Lock' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
