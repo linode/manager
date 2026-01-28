@@ -17,6 +17,7 @@ export interface Order {
 }
 
 interface Props {
+  isChildWithDelegationEnabled: boolean;
   order: Order;
 }
 
