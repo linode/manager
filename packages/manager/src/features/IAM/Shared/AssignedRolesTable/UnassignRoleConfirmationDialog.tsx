@@ -100,14 +100,24 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       error={getErrorMessage(error)}
       onClose={onClose}
       open={open}
-      title={`Unassign the ${role?.name} role?`}
+      title={
+        isDefaultDelegationRolesForChildAccount
+          ? `Remove the ${role?.name} role from the list?`
+          : `Unassign the ${role?.name} role?`
+      }
     >
-      <Notice variant="warning">
+      {isDefaultDelegationRolesForChildAccount ? (
         <Typography>
-          You’re about to remove the <strong>{role?.name}</strong> role from{' '}
-          <strong>{username}</strong>. The change will be applied immediately.
+          The role won’t be added to delegate users by default.
         </Typography>
-      </Notice>
+      ) : (
+        <Notice variant="warning">
+          <Typography>
+            You’re about to remove the <strong>{role?.name}</strong> role from{' '}
+            <strong>{username}</strong>. The change will be applied immediately.
+          </Typography>
+        </Notice>
+      )}
     </ConfirmationDialog>
   );
 };

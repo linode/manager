@@ -1,3 +1,44 @@
+## [2026-01-26] - v0.156.0
+
+
+### Fixed:
+
+- IAM Delegation: fix payload for updateChildAccountDelegates ([#13260](https://github.com/linode/manager/pull/13260))
+
+### Tech Stories:
+
+- Clean up unused VPC IPv6 Large Prefixes tag ([#13245](https://github.com/linode/manager/pull/13245))
+
+### Upcoming Features:
+
+- CloudPulse-Alerts: Add `DeleteChannelPayload` type and request for deletion of a notification channel ([#13256](https://github.com/linode/manager/pull/13256))
+- Added locks property to Linode interface,added lock create and delete event keys, refactored Lock types ([#13286](https://github.com/linode/manager/pull/13286))
+- New type `NotificationChannelAlerts`, request `getAlertsByNotificationChannelId` to fetch alerts associated to a notification channel ([#13294](https://github.com/linode/manager/pull/13294))
+
+## [2026-01-12] - v0.155.0
+
+
+### Added:
+
+- `Akamai Cloud Pulse Logs LKE-E Audit ` to the `AccountCapability` type ([#13171](https://github.com/linode/manager/pull/13171))
+
+### Changed:
+
+- Use v4beta endpoints for /events and /events/<eventId> ([#13084](https://github.com/linode/manager/pull/13084))
+- Renamed updated_at, created_at to updated,created in NotificationChannelBase interface ([#13193](https://github.com/linode/manager/pull/13193))
+- Updated getDatabaseConnectionPools signature to accept params for pagination ([#13195](https://github.com/linode/manager/pull/13195))
+- AlertNotificationType from `custom | default` to `user | system`  ([#13203](https://github.com/linode/manager/pull/13203))
+- ACLP-Alerting: Notification Channel types to support API changes and backward compatibility  ([#13227](https://github.com/linode/manager/pull/13227))
+- Move to `v4 endpoint` instead of v4beta for `CloudPulse metrics` api calls ([#13239](https://github.com/linode/manager/pull/13239))
+
+### Upcoming Features:
+
+- Add new API endpoints and types for Resource Locking feature(RESPROT2) ([#13187](https://github.com/linode/manager/pull/13187))
+- Change range property of IPv6SLAAC to be optional ([#13209](https://github.com/linode/manager/pull/13209))
+- Add API endpoints for `Marketplace` ([#13215](https://github.com/linode/manager/pull/13215))
+- CloudPulse-Alerts: Add `CreateNotificationChannelPayload` in types.ts and add request function `createNotificationChannel` in alerts.ts ([#13225](https://github.com/linode/manager/pull/13225))
+- CloudPulse-Alerts: Add type for edition of notification channel payload ([#13235](https://github.com/linode/manager/pull/13235))
+
 ## [2025-12-16] - v0.154.1
 
 

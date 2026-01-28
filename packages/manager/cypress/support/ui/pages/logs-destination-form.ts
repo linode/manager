@@ -16,7 +16,6 @@ export const logsDestinationForm = {
     cy.findByLabelText('Destination Name')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Destination Name')
       .clear();
     cy.focused().type(label);
   },
@@ -30,7 +29,7 @@ export const logsDestinationForm = {
     cy.findByLabelText('Host')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Host')
+      .should('have.attr', 'placeholder', 'Host for the destination')
       .clear();
     cy.focused().type(host);
   },

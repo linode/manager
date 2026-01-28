@@ -12,6 +12,7 @@ import { omitProps } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 
 import {
+  authenticationTypeOptions,
   destinationTypeOptions,
   streamTypeOptions,
 } from 'src/features/Delivery/Shared/types';
@@ -30,6 +31,7 @@ import type {
  */
 export const useIsACLPLogsEnabled = (): {
   isACLPLogsBeta: boolean;
+  isACLPLogsCustomHttpsEnabled: boolean;
   isACLPLogsEnabled: boolean;
 } => {
   const { data: account } = useAccount();
@@ -45,6 +47,7 @@ export const useIsACLPLogsEnabled = (): {
 
   return {
     isACLPLogsBeta: !!flags.aclpLogs?.beta,
+    isACLPLogsCustomHttpsEnabled: !!flags.aclpLogs?.customHttpsEnabled,
     isACLPLogsEnabled,
   };
 };
@@ -58,6 +61,13 @@ export const getStreamTypeOption = (
   streamTypeValue: string
 ): AutocompleteOption | undefined =>
   streamTypeOptions.find(({ value }) => value === streamTypeValue);
+
+export const getAuthenticationTypeOption = (
+  authenticationTypeValue: string
+): AutocompleteOption | undefined =>
+  authenticationTypeOptions.find(
+    ({ value }) => value === authenticationTypeValue
+  );
 
 export const isFormInEditMode = (mode: FormMode) => mode === 'edit';
 

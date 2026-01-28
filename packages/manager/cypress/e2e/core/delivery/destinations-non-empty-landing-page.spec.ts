@@ -61,9 +61,7 @@ function deleteDestinationViaActionMenu(
       ui.actionMenuItem.findByTitle('Delete').click();
 
       // Find confirmation modal
-      cy.findByText(
-        `Are you sure you want to delete "${destination.label}" destination?`
-      );
+      cy.findByText(`Are you sure you want to delete "${destination.label}"?`);
       ui.button.findByTitle('Delete').click();
 
       cy.wait('@deleteDestination');

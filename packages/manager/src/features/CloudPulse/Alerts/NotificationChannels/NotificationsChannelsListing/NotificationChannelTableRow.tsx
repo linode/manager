@@ -52,7 +52,7 @@ export const NotificationChannelTableRow = (
           {label}
         </Link>
       </TableCell>
-      <TableCell>{alerts.length}</TableCell>
+      <TableCell>{alerts.alert_count}</TableCell>
       <TableCell>{channelTypeMap[channel_type]}</TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
@@ -67,6 +67,7 @@ export const NotificationChannelTableRow = (
         data-qa-notification-channel-action-cell={`notification-channel-${id}`}
       >
         <NotificationChannelActionMenu
+          alertsCount={alerts.alert_count}
           channelLabel={label}
           handlers={handlers}
           notificationType={type}

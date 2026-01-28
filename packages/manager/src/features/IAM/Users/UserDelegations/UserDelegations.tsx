@@ -1,4 +1,4 @@
-import { useAllGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
+import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
@@ -10,7 +10,6 @@ import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -20,6 +19,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { NO_DELEGATED_USERS_TEXT } from 'src/features/IAM/Shared/constants';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -28,45 +28,12 @@ import type { Theme } from '@mui/material';
 export const UserDelegations = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { query } = useSearch({
+  const { company } = useSearch({
     from: '/iam/users/$username/delegations',
   });
   const navigate = useNavigate();
 
-  // TODO: UIE-9298 - Replace with API filtering
-  const {
-    data: allDelegatedChildAccounts,
-    isLoading: allDelegatedChildAccountsLoading,
-    error: allDelegatedChildAccountsError,
-  } = useAllGetDelegatedChildAccountsForUserQuery({
-    username,
-  });
-
-  const handleSearch = (value: string) => {
-    pagination.handlePageChange(1);
-    navigate({
-      to: '/iam/users/$username/delegations',
-      params: { username },
-      search: { query: value || undefined },
-    });
-  };
-
-  const childAccounts = React.useMemo(() => {
-    if (!allDelegatedChildAccounts) {
-      return [];
-    }
-
-    if (query?.trim() === '') {
-      return allDelegatedChildAccounts;
-    }
-
-    return allDelegatedChildAccounts.filter((childAccount) =>
-      childAccount.company.toLowerCase().includes(query?.toLowerCase() ?? '')
-    );
-  }, [allDelegatedChildAccounts, query]);
-
-  const { handleOrderChange, order, orderBy, sortedData } = useOrderV2({
-    data: childAccounts,
+  const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
         order: 'asc',
@@ -81,18 +48,53 @@ export const UserDelegations = () => {
     currentRoute: '/iam/users/$username/delegations',
     preferenceKey: 'user-delegations',
     initialPage: 1,
+    searchParams: (prev) => ({
+      ...prev,
+      company: company || undefined,
+    }),
   });
+
+  const filter = {
+    company: {
+      '+contains': company,
+    },
+    ['+order']: order,
+    ['+order_by']: orderBy,
+  };
+
+  const {
+    data: childAccounts,
+    isFetching: isFetchingChildAccounts,
+    isLoading: isLoadingChildAccounts,
+    error: errorChildAccounts,
+  } = useGetDelegatedChildAccountsForUserQuery({
+    params: {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    username,
+    filter,
+  });
+
+  const handleSearch = (value: string) => {
+    pagination.handlePageChange(1);
+    navigate({
+      to: '/iam/users/$username/delegations',
+      params: { username },
+      search: { company: value || undefined },
+    });
+  };
 
   if (!isIAMDelegationEnabled) {
     return null;
   }
 
-  if (allDelegatedChildAccountsLoading) {
+  if (isLoadingChildAccounts) {
     return <CircleProgress />;
   }
 
-  if (allDelegatedChildAccountsError) {
-    return <ErrorState errorText={allDelegatedChildAccountsError[0].reason} />;
+  if (errorChildAccounts) {
+    return <ErrorState errorText={errorChildAccounts[0].reason} />;
   }
 
   return (
@@ -103,12 +105,12 @@ export const UserDelegations = () => {
           clearable
           debounceTime={250}
           hideLabel
-          isSearching={allDelegatedChildAccountsLoading}
+          isSearching={isFetchingChildAccounts}
           label="Search"
           onSearch={handleSearch}
           placeholder="Search"
           sx={{ mt: 3 }}
-          value={query ?? ''}
+          value={company ?? ''}
         />
         <Table sx={{ mt: 2 }}>
           <TableHead>
@@ -124,54 +126,37 @@ export const UserDelegations = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <Paginate
-              data={sortedData ?? []}
-              page={pagination.page}
-              pageSize={pagination.pageSize}
-              pageSizeSetter={pagination.handlePageSizeChange}
-              updatePageUrl={pagination.handlePageChange}
-            >
-              {({
-                count,
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-              }) => (
-                <>
-                  {paginatedData?.length === 0 && (
-                    <TableRowEmpty colSpan={1} message="No accounts found" />
-                  )}
-                  {paginatedData?.map((childAccount) => (
-                    <TableRow key={childAccount.euuid}>
-                      <TableCell>{childAccount.company}</TableCell>
-                    </TableRow>
-                  ))}
-                  {count > 25 && (
-                    <TableRow>
-                      <TableCell
-                        colSpan={1}
-                        sx={(theme: Theme) => ({
-                          padding: 0,
-                          '& > div': {
-                            border: 'none',
-                            borderTop: `1px solid ${theme.borderColors.divider}`,
-                          },
-                        })}
-                      >
-                        <PaginationFooter
-                          count={count}
-                          eventCategory="DelegatedChildAccounts"
-                          handlePageChange={handlePageChange}
-                          handleSizeChange={handlePageSizeChange}
-                          page={pagination.page}
-                          pageSize={pagination.pageSize}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </>
-              )}
-            </Paginate>
+            {childAccounts?.data.length === 0 && (
+              <TableRowEmpty colSpan={1} message={NO_DELEGATED_USERS_TEXT} />
+            )}
+            {childAccounts?.data?.map((childAccount) => (
+              <TableRow key={childAccount.euuid}>
+                <TableCell>{childAccount.company}</TableCell>
+              </TableRow>
+            ))}
+            {(childAccounts?.results ?? 0) > pagination.pageSize && (
+              <TableRow>
+                <TableCell
+                  colSpan={1}
+                  sx={(theme: Theme) => ({
+                    padding: 0,
+                    '& > div': {
+                      border: 'none',
+                      borderTop: `1px solid ${theme.borderColors.divider}`,
+                    },
+                  })}
+                >
+                  <PaginationFooter
+                    count={childAccounts?.results ?? 0}
+                    eventCategory="DelegatedChildAccounts"
+                    handlePageChange={pagination.handlePageChange}
+                    handleSizeChange={pagination.handlePageSizeChange}
+                    page={pagination.page}
+                    pageSize={pagination.pageSize}
+                  />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Stack>
