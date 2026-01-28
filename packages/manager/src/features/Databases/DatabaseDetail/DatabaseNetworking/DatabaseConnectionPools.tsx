@@ -19,19 +19,25 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import {
   MIN_PAGE_SIZE,
   PAGE_SIZES,
 } from 'src/components/PaginationFooter/PaginationFooter.constants';
-import { CONNECTION_POOL_LABEL_CELL_STYLES } from 'src/features/Databases/constants';
+import {
+  CONNECTION_POOL_LABEL_CELL_STYLES,
+  MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
+} from 'src/features/Databases/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
 import { ServiceURI } from '../ServiceURI';
+import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
 import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
 import { DatabaseConnectionPoolRow } from './DatabaseConnectionPoolRow';
+import { DatabaseEditConnectionPoolDrawer } from './DatabaseEditConnectionPoolDrawer';
 
-import type { Database } from '@linode/api-v4';
+import type { ConnectionPool, Database } from '@linode/api-v4';
 
 interface Props {
   database: Database;
@@ -41,9 +47,13 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
+  const isDatabaseInactive = database.status !== 'active';
 
   const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
-    React.useState<null | string>();
+    React.useState<null | string>(null);
+  const [isAddPoolDrawerOpen, setIsAddPoolDrawerOpen] = React.useState(false);
+  const [editPoolSelection, setEditPoolSelection] =
+    React.useState<ConnectionPool | null>(null);
 
   const pagination = usePaginationV2({
     currentRoute: '/databases/$engine/$databaseId/networking',
@@ -79,15 +89,23 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           </Typography>
           <Typography sx={{ maxWidth: '500px' }}>
             Manage PgBouncer connection pools to minimize the use of your server
-            resources.
+            resources.{' '}
+            <Link to={MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK}>
+              Learn more.
+            </Link>
           </Typography>
         </Stack>
         <Button
           buttonType="outlined"
           className={classes.actionBtn}
-          disabled={true}
-          onClick={() => null}
+          disabled={isDatabaseInactive}
+          onClick={() => setIsAddPoolDrawerOpen(true)}
           TooltipProps={{ placement: 'top' }}
+          tooltipText={
+            isDatabaseInactive
+              ? 'You can only add connection pools to active database clusters.'
+              : ''
+          }
         >
           Add Pool
         </Button>
@@ -146,6 +164,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
                 <DatabaseConnectionPoolRow
                   key={pool.label}
                   onDelete={() => setDeletePoolLabelSelection(pool.label)}
+                  onEdit={() => setEditPoolSelection(pool)}
                   pool={pool}
                 />
               ))
@@ -179,6 +198,19 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
         open={Boolean(deletePoolLabelSelection)}
         poolLabel={deletePoolLabelSelection ?? ''}
       />
+      <DatabaseAddConnectionPoolDrawer
+        databaseId={database.id}
+        onClose={() => setIsAddPoolDrawerOpen(false)}
+        open={isAddPoolDrawerOpen}
+      />
+      {editPoolSelection && (
+        <DatabaseEditConnectionPoolDrawer
+          databaseId={database.id}
+          onClose={() => setEditPoolSelection(null)}
+          open={Boolean(editPoolSelection)}
+          pool={editPoolSelection}
+        />
+      )}
     </>
   );
 };
