@@ -141,6 +141,15 @@ export const linodeCreatePage = {
   },
 
   /**
+   * Selects an interface generation.
+   *
+   * @param generation - The interface generation to select.
+   */
+  selectInterfaceGeneration: (generation: 'legacy_config' | 'linode') => {
+    cy.get(`[data-qa-interfaces-option="${generation}"]`).click();
+  },
+
+  /**
    * Select the interfaces' type.
    *
    * @param type - Interfaces' type title to select.

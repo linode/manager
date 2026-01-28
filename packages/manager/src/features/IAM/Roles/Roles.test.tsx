@@ -114,6 +114,7 @@ describe('RolesLanding', () => {
     renderWithTheme(<RolesLanding />, {
       flags: {
         iamDelegation: { enabled: true },
+        iam: { enabled: true },
       },
     });
     expect(screen.getByText(DEFAULT_ROLES_PANEL_TEXT)).toBeInTheDocument();

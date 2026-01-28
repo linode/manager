@@ -207,6 +207,7 @@ export interface Flags {
   apl: boolean;
   aplGeneralAvailability: boolean;
   aplLkeE: boolean;
+  blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -245,6 +246,7 @@ export interface Flags {
   networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
+  objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
