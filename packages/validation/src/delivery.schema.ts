@@ -1,4 +1,13 @@
-import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+import {
+  array,
+  boolean,
+  lazy,
+  mixed,
+  number,
+  object,
+  string,
+  ValidationError,
+} from 'yup';
 
 import type { InferType, MixedSchema, Schema } from 'yup';
 
@@ -10,14 +19,16 @@ const maxLengthMessage = 'Length must be 255 characters or less.';
 const authenticationDetailsSchema = object({
   basic_authentication_user: string()
     .max(maxLength, maxLengthMessage)
-    .required(),
+    .required('Username is required for Basic Authentication.'),
   basic_authentication_password: string()
     .max(maxLength, maxLengthMessage)
-    .required(),
+    .required('Password is required for Basic Authentication.'),
 });
 
 const authenticationSchema = object({
-  type: string().oneOf(['basic', 'none']).required(),
+  type: string()
+    .oneOf(['basic', 'none'])
+    .required('Authentication is required.'),
   details: mixed()
     .defined()
     .when('type', {
@@ -28,33 +39,106 @@ const authenticationSchema = object({
           .nullable()
           .test(
             'null-or-undefined',
-            'For type `none` details should be `null` or `undefined`.',
+            'For none authentication details should be `null` or `undefined`.',
             (value) => !value,
           ),
     }) as Schema<InferType<typeof authenticationDetailsSchema> | undefined>,
 });
 
+const hasValue = (value: unknown) =>
+  typeof value === 'string' && value.trim().length > 0;
+
 const clientCertificateDetailsSchema = object({
-  tls_hostname: string().max(maxLength, maxLengthMessage).required(),
-  client_ca_certificate: string().required(),
-  client_certificate: string().required(),
-  client_private_key: string().required(),
-});
+  tls_hostname: string().max(maxLength, maxLengthMessage),
+  client_ca_certificate: string(),
+  client_certificate: string(),
+  client_private_key: string(),
+}).test(
+  'all-or-nothing-cert-details',
+  'If any certificate detail is provided, all are required.',
+  (value, context) => {
+    if (!value) {
+      return true;
+    }
+
+    const {
+      client_ca_certificate,
+      client_certificate,
+      client_private_key,
+      tls_hostname,
+    } = value;
+
+    const fields = [
+      tls_hostname,
+      client_ca_certificate,
+      client_certificate,
+      client_private_key,
+    ];
+    const hasAnyValue = fields.some(hasValue);
+    const hasAllValues = fields.every(hasValue);
+
+    if (!hasAnyValue || hasAllValues) {
+      return true;
+    }
+
+    const errors: ValidationError[] = [];
+    if (!hasValue(tls_hostname)) {
+      errors.push(
+        context.createError({
+          path: 'tls_hostname',
+          message:
+            'TLS Hostname is required when other certificate details are provided.',
+        }),
+      );
+    }
+    if (!hasValue(client_ca_certificate)) {
+      errors.push(
+        context.createError({
+          path: 'client_ca_certificate',
+          message:
+            'CA Certificate is required when other certificate details are provided.',
+        }),
+      );
+    }
+    if (!hasValue(client_certificate)) {
+      errors.push(
+        context.createError({
+          path: 'client_certificate',
+          message:
+            'Client Certificate is required when other certificate details are provided.',
+        }),
+      );
+    }
+    if (!hasValue(client_private_key)) {
+      errors.push(
+        context.createError({
+          path: 'client_private_key',
+          message:
+            'Client Key is required when other certificate details are provided.',
+        }),
+      );
+    }
+
+    return new ValidationError(errors);
+  },
+);
 
 const customHeaderSchema = object({
   name: string().max(maxLength, maxLengthMessage).required(),
   value: string().max(maxLength, maxLengthMessage).required(),
 });
 
-const customHTTPsDetailsSchema = object({
+const customHTTPSDetailsSchema = object({
   authentication: authenticationSchema.required(),
   client_certificate_details: clientCertificateDetailsSchema.optional(),
   content_type: string()
     .oneOf(['application/json', 'application/json; charset=utf-8'])
-    .required(),
+    .required('Content Type is required.'),
   custom_headers: array().of(customHeaderSchema).min(1).optional(),
   data_compression: string().oneOf(['gzip', 'None']).required(),
-  endpoint_url: string().max(maxLength, maxLengthMessage).required(),
+  endpoint_url: string()
+    .max(maxLength, maxLengthMessage)
+    .required('Endpoint URL is required.'),
 });
 
 const hostRgx =
@@ -123,14 +207,14 @@ const destinationSchemaBase = object().shape({
   type: string().oneOf(['akamai_object_storage', 'custom_https']).required(),
   details: mixed<
     | InferType<typeof akamaiObjectStorageDetailsBaseSchema>
-    | InferType<typeof customHTTPsDetailsSchema>
+    | InferType<typeof customHTTPSDetailsSchema>
   >()
     .defined()
     .required()
     .when('type', {
       is: 'akamai_object_storage',
       then: () => akamaiObjectStorageDetailsBaseSchema,
-      otherwise: () => customHTTPsDetailsSchema,
+      otherwise: () => customHTTPSDetailsSchema,
     }),
 });
 
@@ -139,14 +223,14 @@ export const destinationFormSchema = destinationSchemaBase;
 export const createDestinationSchema = destinationSchemaBase.shape({
   details: mixed<
     | InferType<typeof akamaiObjectStorageDetailsPayloadSchema>
-    | InferType<typeof customHTTPsDetailsSchema>
+    | InferType<typeof customHTTPSDetailsSchema>
   >()
     .defined()
     .required()
     .when('type', {
       is: 'akamai_object_storage',
       then: () => akamaiObjectStorageDetailsPayloadSchema,
-      otherwise: () => customHTTPsDetailsSchema,
+      otherwise: () => customHTTPSDetailsSchema,
     }),
 });
 
@@ -160,7 +244,7 @@ export const updateDestinationSchema = createDestinationSchema
         );
       }
       if ('client_certificate_details' in value) {
-        return customHTTPsDetailsSchema.noUnknown(
+        return customHTTPSDetailsSchema.noUnknown(
           'Object contains unknown fields for Custom HTTPS Details.',
         );
       }

@@ -1,5 +1,11 @@
 import { BETA_API_ROOT } from '../constants';
-import Request, { setData, setMethod, setParams, setURL } from '../request';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
 
 import type { Account } from '../account';
 import type { Token } from '../profile';
@@ -34,6 +40,7 @@ export const getChildAccountsIam = ({
 export const getDelegatedChildAccountsForUser = ({
   username,
   params,
+  filter,
 }: GetDelegatedChildAccountsForUserParams) =>
   Request<Page<ChildAccount>>(
     setURL(
@@ -41,6 +48,7 @@ export const getDelegatedChildAccountsForUser = ({
     ),
     setMethod('GET'),
     setParams(params),
+    setXFilter(filter),
   );
 
 export const getChildAccountDelegates = ({
