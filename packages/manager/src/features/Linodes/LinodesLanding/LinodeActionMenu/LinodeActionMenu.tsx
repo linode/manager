@@ -19,7 +19,7 @@ import {
 import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 
 import type { LinodeHandlers } from '../LinodesLanding';
-import type { LinodeBackups, LinodeType } from '@linode/api-v4';
+import type { LinodeBackups, LinodeType, LockType } from '@linode/api-v4';
 import type { ActionType } from 'src/features/Account/utils';
 
 const MAINTENANCE_TOOLTIP_TEXT =
@@ -37,7 +37,7 @@ export interface LinodeActionMenuProps extends LinodeHandlers {
   linodeRegion: string;
   linodeStatus: string;
   linodeType?: LinodeType;
-  locks?: string[];
+  locks?: LockType[];
 }
 
 interface ActionConfig {
