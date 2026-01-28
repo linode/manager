@@ -72,17 +72,20 @@ export const UsersLanding = () => {
   const isChildWithDelegationEnabled =
     isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
 
-  const filterableOptions = [
-    ALL_USERS_OPTION,
-    {
-      label: 'Users',
-      value: 'users',
-    },
-    {
-      label: 'Delegate Users',
-      value: 'delegate',
-    },
-  ];
+  const filterableOptions = React.useMemo(
+    () => [
+      ALL_USERS_OPTION,
+      {
+        label: 'Users',
+        value: 'users',
+      },
+      {
+        label: 'Delegate Users',
+        value: 'delegate',
+      },
+    ],
+    []
+  );
 
   // Initialize userType based on URL parameter
   const getInitialUserType = React.useMemo(() => {
@@ -93,7 +96,7 @@ export const UsersLanding = () => {
       filterableOptions.find((option) => option.value === usersParam) ||
       ALL_USERS_OPTION
     );
-  }, [usersParam]);
+  }, [usersParam, filterableOptions]);
 
   const [userType, setUserType] = React.useState<null | SelectOption>(
     getInitialUserType
