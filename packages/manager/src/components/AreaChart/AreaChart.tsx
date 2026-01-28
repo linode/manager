@@ -238,8 +238,8 @@ export const AreaChart = (props: AreaChartProps) => {
   } = props;
 
   const theme = useTheme();
-  const { onMouseDown, onMouseMove, onMouseUp } = zoomCallbacks || {};
-  const { referenceStart, referenceEnd } = referenceArea || {};
+  const { onMouseDown, onMouseMove, onMouseUp } = zoomCallbacks ?? {};
+  const { referenceStart, referenceEnd } = referenceArea ?? {};
 
   const [activeSeries, setActiveSeries] = React.useState<Array<string>>([]);
   const handleLegendClick = (dataKey: string) => {
