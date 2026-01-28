@@ -47,6 +47,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'privateImageSharing', label: 'Private Image Sharing' },
+  { flag: 'resourceLock', label: 'Resource Lock' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
@@ -77,6 +78,14 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'VM Host Maintenance Policy',
   },
   { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
+  {
+    flag: 'blockStorageContextualMetrics',
+    label: 'Block Storage Contextual Metrics',
+  },
+  {
+    flag: 'objectStorageContextualMetrics',
+    label: 'Object Storage Contextual Metrics',
+  },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];

@@ -11,12 +11,15 @@ import {
 } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import React from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
+import type {
+  CreateLinodeRequest,
+  LinodeInterfaceAccountSetting,
+} from '@linode/api-v4';
 
 const disabledReasonMap: Partial<
   Record<LinodeInterfaceAccountSetting, string>
@@ -28,6 +31,8 @@ const disabledReasonMap: Partial<
 };
 
 export const InterfaceGeneration = () => {
+  const { setValue } = useFormContext<CreateLinodeRequest>();
+
   const { field } = useController<
     LinodeCreateFormValues,
     'interface_generation'
@@ -63,7 +68,14 @@ export const InterfaceGeneration = () => {
       </Box>
       <RadioGroup
         aria-labelledby="interface-generation"
-        onChange={field.onChange}
+        onChange={(e, value) => {
+          field.onChange(e);
+
+          // If Linode Interfaces is selected, unset private IP because it's not compatible.
+          if (value === 'linode') {
+            setValue('private_ip', undefined);
+          }
+        }}
         value={field.value ?? 'linode'}
       >
         <FormControlLabel

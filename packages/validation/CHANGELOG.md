@@ -1,3 +1,10 @@
+## [2026-01-26] - v0.81.0
+
+
+### Fixed:
+
+- End character validation for name,description fields in ACLP-Alerting Create Alert form ([#13297](https://github.com/linode/manager/pull/13297))
+
 ## [2026-01-12] - v0.80.0
 
 

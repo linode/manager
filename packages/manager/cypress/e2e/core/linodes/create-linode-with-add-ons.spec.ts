@@ -67,7 +67,7 @@ describe('Create Linode with Add-ons', () => {
    * - Confirms that Private IP is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the private IPs to be enabled.
    */
-  it('can select private IP during Linode Create flow', () => {
+  it('can select private IP during Linode Create flow when using legacy config interfaces', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Linodes'] });
 
     const mockLinode = linodeFactory.build({
@@ -87,6 +87,7 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
     linodeCreatePage.checkEUAgreements();
+    linodeCreatePage.selectInterfaceGeneration('legacy_config');
     linodeCreatePage.checkPrivateIPs();
 
     // Confirm Private IP assignment indicator is shown in Linode summary.
