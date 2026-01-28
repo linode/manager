@@ -62,7 +62,7 @@ export const delegationQueries = createQueryKeys('delegation', {
     queryFn: () => getChildAccountDelegates({ euuid, params }),
     queryKey: [euuid, params],
   }),
-  myDelegatedChildAccountsInfinite: ({
+  myDelegatedChildAccounts: ({
     params,
     filter = {},
   }: GetMyDelegatedChildAccountsParams) => ({
@@ -189,34 +189,29 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
       });
       // Invalidate all my delegated child accounts since delegation may have changed
       queryClient.invalidateQueries({
-        queryKey: delegationQueries.myDelegatedChildAccountsInfinite._def,
+        queryKey: delegationQueries.myDelegatedChildAccounts._def,
       });
     },
   });
 };
 
 /**
- * List my delegated child accounts with infinite scroll (gets child accounts where user has view_child_account permission).
- * - Purpose: Get child accounts that the current authenticated user can manage via delegation with infinite scroll.
+ * List my delegated child accounts (gets child accounts where user has view_child_account permission).
+ * - Purpose: Get child accounts that the current authenticated user can manage via delegation with pagination.
  * - Scope: Only child accounts where the caller has an active delegate and required view permission.
  * - Audience: Needing to return accounts the caller can actually access with pagination.
  * - CRUD: GET /iam/delegation/profile/child-accounts
  */
-export const useMyDelegatedChildAccountsInfiniteQuery = ({
+export const useMyDelegatedChildAccountsQuery = ({
   params = {},
   filter = {},
   enabled = true,
-}) => {
-  return useInfiniteQuery<ResourcePage<Account>, APIError[]>({
+}: GetMyDelegatedChildAccountsParams & {
+  enabled?: boolean;
+}): UseQueryResult<ResourcePage<Account>, APIError[]> => {
+  return useQuery({
     enabled,
-    getNextPageParam: ({ page, pages }) => {
-      if (page === pages) {
-        return undefined;
-      }
-      return page + 1;
-    },
-    initialPageParam: 1,
-    ...delegationQueries.myDelegatedChildAccountsInfinite({ params, filter }),
+    ...delegationQueries.myDelegatedChildAccounts({ params, filter }),
   });
 };
 

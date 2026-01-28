@@ -1,6 +1,6 @@
 import {
   useChildAccountsInfiniteQuery,
-  useMyDelegatedChildAccountsInfiniteQuery,
+  useMyDelegatedChildAccountsQuery,
 } from '@linode/queries';
 import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
@@ -14,6 +14,7 @@ import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEv
 import { getStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
+import { ChildAccountsTable } from './SwitchAccounts/ChildAccountsTable';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
 import type { APIError, Filter, UserType } from '@linode/api-v4';
@@ -96,13 +97,10 @@ export const SwitchAccountDrawer = (props: Props) => {
   const {
     data: allChildAccounts,
     error: allChildAccountsError,
-    fetchNextPage: fetchNextPageIAM,
-    hasNextPage: hasNextPageIAM,
-    isFetchingNextPage: isFetchingNextPageIAM,
-    isInitialLoading: allChildAccountsLoading,
+    isLoading: allChildAccountsLoading,
     isRefetching: allChildAccountsIsRefetching,
     refetch: refetchAllChildAccounts,
-  } = useMyDelegatedChildAccountsInfiniteQuery({
+  } = useMyDelegatedChildAccountsQuery({
     params: {},
     filter,
     enabled: isIAMDelegationEnabled && isParentUserType,
@@ -169,7 +167,7 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   const childAccounts = useMemo(() => {
     if (isIAMDelegationEnabled) {
-      return allChildAccounts?.pages.flatMap((page) => page.data);
+      return allChildAccounts?.data || [];
     }
     return data?.pages.flatMap((page) => page.data);
   }, [isIAMDelegationEnabled, allChildAccounts, data]);
@@ -215,7 +213,7 @@ export const SwitchAccountDrawer = (props: Props) => {
             label="Search"
             onSearch={setSearchQuery}
             placeholder="Search"
-            sx={{ marginBottom: 3 }}
+            sx={{ marginBottom: 2 }}
             value={searchQuery}
           />
           {searchQuery && childAccounts && childAccounts.length === 0 && (
@@ -225,55 +223,67 @@ export const SwitchAccountDrawer = (props: Props) => {
           )}
         </>
       )}
-      {!isIAMDelegationEnabled && (
-        <DebouncedSearchTextField
-          clearable
-          debounceTime={250}
-          hideLabel
-          key={`non-iam-search-${searchQuery}`}
-          label="Search"
-          onSearch={setSearchQuery}
-          placeholder="Search"
-          sx={{ marginBottom: 3 }}
-          value={searchQuery}
+      {isIAMDelegationEnabled && (
+        <ChildAccountsTable
+          childAccounts={childAccounts}
+          currentTokenWithBearer={currentTokenWithBearer}
+          errors={{
+            childAccountInfiniteError,
+            allChildAccountsError: allChildAccountsError?.[0]
+              ? new Error(allChildAccountsError[0].reason)
+              : null,
+          }}
+          filter={filter}
+          isLoading={
+            isInitialLoading ||
+            isSubmitting ||
+            isSwitchingChildAccounts ||
+            isRefetching ||
+            allChildAccountsLoading ||
+            allChildAccountsIsRefetching
+          }
+          isSwitchingChildAccounts={isSwitchingChildAccounts}
+          onClose={onClose}
+          onSwitchAccount={handleSwitchToChildAccount}
+          refetchFn={refetchFn}
+          setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+          userType={userType}
         />
       )}
-      <ChildAccountList
-        childAccounts={childAccounts}
-        currentTokenWithBearer={
-          isProxyOrDelegateUserType
+      {!isIAMDelegationEnabled && (
+        <ChildAccountList
+          childAccounts={childAccounts}
+          currentTokenWithBearer={
+            isProxyOrDelegateUserType
             ? currentParentTokenWithBearer
             : currentTokenWithBearer
-        }
-        errors={{
-          childAccountInfiniteError,
-          allChildAccountsError: allChildAccountsError?.[0]
-            ? new Error(allChildAccountsError[0].reason)
-            : null,
-        }}
-        fetchNextPage={
-          isIAMDelegationEnabled ? fetchNextPageIAM : fetchNextPage
-        }
-        filter={filter}
-        hasNextPage={isIAMDelegationEnabled ? hasNextPageIAM : hasNextPage}
-        isFetchingNextPage={
-          isIAMDelegationEnabled ? isFetchingNextPageIAM : isFetchingNextPage
-        }
-        isLoading={
-          isInitialLoading ||
-          isSubmitting ||
-          isSwitchingChildAccounts ||
-          isRefetching ||
-          allChildAccountsLoading ||
-          allChildAccountsIsRefetching
-        }
-        isSwitchingChildAccounts={isSwitchingChildAccounts}
-        onClose={onClose}
-        onSwitchAccount={handleSwitchToChildAccount}
-        refetchFn={refetchFn}
-        setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
-        userType={userType}
-      />
+          }
+          errors={{
+            childAccountInfiniteError,
+            allChildAccountsError: allChildAccountsError?.[0]
+              ? new Error(allChildAccountsError[0].reason)
+              : null,
+          }}
+          fetchNextPage={fetchNextPage}
+          filter={filter}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          isLoading={
+            isInitialLoading ||
+            isSubmitting ||
+            isSwitchingChildAccounts ||
+            isRefetching ||
+            allChildAccountsLoading ||
+            allChildAccountsIsRefetching
+          }
+          isSwitchingChildAccounts={isSwitchingChildAccounts}
+          onClose={onClose}
+          onSwitchAccount={handleSwitchToChildAccount}
+          refetchFn={refetchFn}
+          setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+          userType={userType}
+        />
+      )}
     </Drawer>
   );
 };
