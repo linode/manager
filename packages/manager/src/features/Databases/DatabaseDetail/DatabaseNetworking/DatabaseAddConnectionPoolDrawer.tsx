@@ -2,9 +2,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
   ActionsPanel,
+  Autocomplete,
   Drawer,
   Notice,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -129,10 +129,11 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="database"
             render={({ field, fieldState }) => (
-              <Select
+              <Autocomplete
                 label="Database Name"
                 {...field}
                 data-testid="database-name-select"
+                disableClearable={true}
                 errorText={fieldState.error?.message}
                 id="databaseName"
                 onChange={(e, option) => {
@@ -150,10 +151,11 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="mode"
             render={({ field, fieldState }) => (
-              <Select
+              <Autocomplete
                 label="Pool Mode"
                 {...field}
                 data-testid="pool-mode-select"
+                disableClearable={true}
                 errorText={fieldState.error?.message}
                 id="poolMode"
                 onChange={(e, option) => {
@@ -193,10 +195,11 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="username"
             render={({ field, fieldState }) => (
-              <Select
+              <Autocomplete
                 label="Username"
                 {...field}
                 data-testid="username-select"
+                disableClearable={true}
                 errorText={fieldState.error?.message}
                 id="username"
                 onChange={(e, option) => {

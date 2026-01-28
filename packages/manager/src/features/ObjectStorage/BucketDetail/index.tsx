@@ -46,7 +46,7 @@ export const BucketDetailLanding = React.memo(() => {
     from: BUCKET_DETAILS_URL,
   });
 
-  const { aclpServices } = useFlags();
+  const { aclpServices, objectStorageContextualMetrics } = useFlags();
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
   const { isError: aclpServiceError } = useCloudPulseServiceByServiceType(
     'objectstorage',
@@ -83,7 +83,10 @@ export const BucketDetailLanding = React.memo(() => {
     {
       title: 'Metrics',
       to: `${BUCKET_DETAILS_URL}/metrics`,
-      hide: aclpServiceError || !aclpServices?.objectstorage?.metrics?.enabled,
+      hide:
+        aclpServiceError ||
+        !aclpServices?.objectstorage?.metrics?.enabled ||
+        !objectStorageContextualMetrics,
       chip: aclpServices?.objectstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);
