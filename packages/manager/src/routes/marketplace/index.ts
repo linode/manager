@@ -4,9 +4,9 @@ import { rootRoute } from '../root';
 import { MarketplaceRoute } from './MarketplaceRoute';
 
 export interface MarketplaceCatalogSearch {
-  categoryId?: number;
+  category?: string;
   query?: string;
-  typeId?: number;
+  type?: string;
 }
 
 export const marketplaceRoute = createRoute({
