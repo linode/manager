@@ -3735,7 +3735,6 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
   http.post('*/monitor/alert-channels', () => {
-    return HttpResponse.json({errors: [{ field: 'label', reason: 'Label is already taken.'}]}, {status: 400});
     return HttpResponse.json(notificationChannelFactory.build());
   }),
   http.put('*/monitor/alert-channels/:id', () => {
