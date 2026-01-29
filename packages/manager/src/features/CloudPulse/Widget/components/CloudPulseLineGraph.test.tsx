@@ -33,12 +33,14 @@ class ResizeObserver {
   unobserve() {}
 }
 
+const zoomResetKey = 'test-zoom';
+
 describe('CloudPulseLineGraph', () => {
   window.ResizeObserver = ResizeObserver;
 
   it('should render AreaChart when data is provided', () => {
     const { container, getByRole } = renderWithTheme(
-      <CloudPulseLineGraph {...mockData} />
+      <CloudPulseLineGraph {...mockData} zoomResetKey={zoomResetKey} />
     );
     const table = getByRole('table');
 
@@ -53,7 +55,11 @@ describe('CloudPulseLineGraph', () => {
 
   it('should show error state', () => {
     const { getByText } = renderWithTheme(
-      <CloudPulseLineGraph {...mockData} error="Test error" />
+      <CloudPulseLineGraph
+        {...mockData}
+        error="Test error"
+        zoomResetKey={zoomResetKey}
+      />
     );
 
     expect(getByText('Test error')).toBeInTheDocument();
@@ -66,7 +72,7 @@ describe('CloudPulseLineGraph', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <CloudPulseLineGraph {...emptyData} />
+      <CloudPulseLineGraph {...emptyData} zoomResetKey={zoomResetKey} />
     );
 
     expect(getByText('No data to display')).toBeInTheDocument();
