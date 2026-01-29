@@ -70,10 +70,28 @@ export const AccountDelegations = () => {
     filter,
   });
 
+  // Need to sort client-side as API does not support sorting yet,
+  // once it'd be fixed, we can remove this block - UIE-9459
+  const sortedDelegations = React.useMemo(() => {
+    if (!childAccountsWithDelegates?.data.length) return [];
+
+    return [...childAccountsWithDelegates.data].sort((a, b) => {
+      const aValue = a.company || '';
+      const bValue = b.company || '';
+
+      const comparison = aValue.localeCompare(bValue, undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+
+      return order === 'asc' ? comparison : -comparison;
+    });
+  }, [childAccountsWithDelegates, order]);
+
   const handleSearch = (value: string) => {
     pagination.handlePageChange(1);
     navigate({
-      to: '/iam/delegations',
+      to: DELEGATIONS_ROUTE,
       search: { company: value || undefined },
     });
   };
@@ -109,7 +127,7 @@ export const AccountDelegations = () => {
         />
       </Stack>
       <AccountDelegationsTable
-        delegations={childAccountsWithDelegates?.data}
+        delegations={sortedDelegations}
         error={error}
         handleOrderChange={handleOrderChange}
         isLoading={isLoading}
