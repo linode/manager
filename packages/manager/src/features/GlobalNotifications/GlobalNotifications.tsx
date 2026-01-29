@@ -1,4 +1,4 @@
-import { useProfile, useSecurityQuestions } from '@linode/queries';
+import { useSecurityQuestions } from '@linode/queries';
 import * as React from 'react';
 
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
@@ -9,6 +9,7 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import { useFlags } from 'src/hooks/useFlags';
 
 import { SessionExpirationDialog } from '../Account/SwitchAccounts/SessionExpirationDialog';
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
@@ -21,11 +22,10 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
 export const GlobalNotifications = () => {
   const flags = useFlags();
-  const { data: profile } = useProfile();
+  const { isChildUserType, isProxyOrDelegateUserType, profile } =
+    useDelegationRole();
   const sessionContext = React.useContext(switchAccountSessionContext);
   const sessionExpirationContext = React.useContext(_sessionExpirationContext);
-  const isChildUserType = profile?.user_type === 'child';
-  const isProxyUserType = profile?.user_type === 'proxy';
   const { data: securityQuestions } = useSecurityQuestions({
     enabled: isChildUserType,
   });
@@ -58,7 +58,7 @@ export const GlobalNotifications = () => {
       <RegionStatusBanner />
       <AbuseTicketBanner />
       <ComplianceBanner />
-      {isProxyUserType && (
+      {isProxyOrDelegateUserType && (
         <>
           <SwitchAccountSessionDialog
             isOpen={Boolean(sessionContext.isOpen)}
@@ -73,7 +73,7 @@ export const GlobalNotifications = () => {
         </>
       )}
       <ComplianceUpdateModal />
-      {isProxyUserType && !isVerified && (
+      {isChildUserType && !isVerified && (
         <VerificationDetailsBanner
           hasSecurityQuestions={hasSecurityQuestions}
           hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
