@@ -33,7 +33,7 @@ describe('AddLockDialog', () => {
 
     expect(getByText('Prevent deletion')).toBeVisible();
     expect(
-      getByText('Protects this Linode from being deleted or rebuilt.')
+      getByText('Prevents this Linode from being deleted or rebuilt.')
     ).toBeVisible();
 
     expect(
@@ -41,7 +41,7 @@ describe('AddLockDialog', () => {
     ).toBeVisible();
     expect(
       getByText(
-        'Protects this Linode and its attached resources (Disks, Configurations, IP Addresses, and Subinterfaces) from being deleted or rebuilt.'
+        'Prevents this Linode and its attached resources (Disks, Configurations, IP Addresses, and Subinterfaces) from being deleted or rebuilt.'
       )
     ).toBeVisible();
   });
@@ -50,7 +50,7 @@ describe('AddLockDialog', () => {
     const { getByRole } = renderWithTheme(<AddLockDialog {...defaultProps} />);
 
     const preventDeletionRadio = getByRole('radio', {
-      name: /Prevent deletion Protects this Linode from being deleted or rebuilt/i,
+      name: /Prevent deletion Prevents this Linode from being deleted or rebuilt/i,
     });
 
     expect(preventDeletionRadio).toBeChecked();
@@ -172,7 +172,7 @@ describe('AddLockDialog', () => {
 
     // The default option should be selected again
     const preventDeletionRadio = getByRole('radio', {
-      name: /Prevent deletion Protects this Linode from being deleted or rebuilt/i,
+      name: /Prevent deletion Prevents this Linode from being deleted or rebuilt/i,
     });
     expect(preventDeletionRadio).toBeChecked();
   });
