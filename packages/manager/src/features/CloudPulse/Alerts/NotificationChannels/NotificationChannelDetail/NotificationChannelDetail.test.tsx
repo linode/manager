@@ -15,7 +15,12 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 const hookMocks = vi.hoisted(() => ({
+  useFlags: vi.fn(),
   useOrderV2: vi.fn(),
+}));
+
+vi.mock('src/hooks/useFlags', () => ({
+  useFlags: hookMocks.useFlags,
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -58,6 +63,13 @@ beforeEach(() => {
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
     data: { data: [] },
     isFetching: false,
+  });
+
+  hookMocks.useFlags.mockReturnValue({
+    aclpServices: {
+      dbaas: { alerts: { enabled: true } },
+      linode: { alerts: { enabled: true } },
+    },
   });
 
   hookMocks.useOrderV2.mockReturnValue({
@@ -185,8 +197,10 @@ describe('NotificationChannelDetail component tests', () => {
     expect(screen.getByText('admin_user')).toBeVisible();
     expect(screen.getByText('ops_user')).toBeVisible();
 
-    // Verify Settings/Recipients section details
-    expect(screen.getByText('Settings')).toBeVisible();
+    // Verify Details/Recipients section details
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Details' })
+    ).toBeVisible();
     expect(screen.getByText(/Recipients/)).toBeVisible();
     expect(screen.getByText('admin')).toBeVisible();
     expect(screen.getByText('ops_team')).toBeVisible();
