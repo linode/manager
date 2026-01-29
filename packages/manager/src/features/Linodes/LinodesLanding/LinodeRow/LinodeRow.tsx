@@ -46,6 +46,7 @@ export const LinodeRow = (props: Props) => {
     id,
     ipv4,
     label,
+    locks,
     maintenance,
     region,
     status,
@@ -189,6 +190,7 @@ export const LinodeRow = (props: Props) => {
           linodeRegion={region}
           linodeStatus={status}
           linodeType={linodeType}
+          locks={locks}
           {...handlers}
         />
       </TableCell>

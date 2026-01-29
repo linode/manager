@@ -33,13 +33,17 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
 
   const {
     error,
-    isPending,
+    isPending: isUserRolesPending,
     mutateAsync: updateUserRoles,
     reset,
   } = useUserRolesMutation(username ?? '');
 
-  const { mutateAsync: updateDefaultDelegationRoles } =
-    useUpdateDefaultDelegationAccessQuery();
+  const {
+    mutateAsync: updateDefaultDelegationRoles,
+    isPending: isDefaultDelegationRolesPending,
+  } = useUpdateDefaultDelegationAccessQuery();
+
+  const isPending = isUserRolesPending || isDefaultDelegationRolesPending;
 
   const { data: assignedUserRoles } = useUserRoles(
     username ?? '',
@@ -64,7 +68,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     : assignedUserRoles;
 
   const onDelete = async () => {
-    if (!role || !assignedRoles) return;
+    if (!role || !assignedRoles || isPending) return;
 
     const { role_name, entity_id, entity_type } = role;
 
@@ -96,6 +100,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
             label: 'Remove',
             loading: isPending,
             onClick: onDelete,
+            disabled: isPending,
           }}
           secondaryButtonProps={{
             label: 'Cancel',

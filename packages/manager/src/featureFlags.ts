@@ -100,6 +100,11 @@ interface AclpFlag {
   enabled: boolean;
 
   /**
+   * This property indicates whether to enable zoom in charts or not
+   */
+  enableZoomInCharts?: boolean;
+
+  /**
    * This property indicates for which unit, we need to humanize the values e.g., count, iops etc.,
    */
   humanizableUnits?: string[];
@@ -120,6 +125,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    * This property indicates whether to bypass account capabilities check or not
    */
   bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether to show Custom HTTPS destination type
+   */
+  customHttpsEnabled?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -189,6 +198,10 @@ interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
   la: boolean;
 }
 
+interface ResourceLockFlag {
+  linodes: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -203,6 +216,7 @@ export interface Flags {
   apl: boolean;
   aplGeneralAvailability: boolean;
   aplLkeE: boolean;
+  blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -241,6 +255,7 @@ export interface Flags {
   networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
+  objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
@@ -249,6 +264,7 @@ export interface Flags {
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   referralBannerText: BannerContent;
+  resourceLock: ResourceLockFlag;
   secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
