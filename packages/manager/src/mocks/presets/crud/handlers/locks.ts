@@ -23,6 +23,7 @@ import {
 import { mswDB } from '../../../indexedDB';
 
 import type {
+  APIError,
   CreateLockPayload,
   Entity,
   LockType,
@@ -34,14 +35,6 @@ import type {
   APIErrorResponse,
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
-
-/**
- * Validation error with optional field name for API error responses
- */
-interface ValidationError {
-  field?: string;
-  reason: string;
-}
 
 /**
  * Configuration mapping entity types to their database stores and url
@@ -60,7 +53,7 @@ const ENTITY_TYPE_CONFIG: Record<
 const validateLockCreation = async (
   payload: CreateLockPayload,
   mockState: MockState
-): Promise<null | ValidationError> => {
+): Promise<APIError | null> => {
   const { entity_id, entity_type, lock_type } = payload;
 
   // Check if entity type is supported
