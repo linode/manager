@@ -72,6 +72,7 @@ export const AccountDelegations = () => {
 
   // Need to sort client-side as API does not support sorting yet,
   // once it'd be fixed, we can remove this block - UIE-9459
+  // Overall doesn't make a lot of sense since we sort data per page
   const sortedDelegations = React.useMemo(() => {
     if (!childAccountsWithDelegates?.data.length) return [];
 

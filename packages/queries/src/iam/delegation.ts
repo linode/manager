@@ -34,20 +34,6 @@ import type {
 } from '@linode/api-v4';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const getAllDelegationsRequest = (
-  _params: Params = {},
-  _users: boolean = true,
-) => {
-  return getAll<ChildAccount | ChildAccountWithDelegates>((params) => {
-    return getChildAccountsIam({
-      params: { ...params, ..._params },
-      users: _users,
-    });
-  })().then((data) => {
-    return data.data;
-  });
-};
-
 export const delegationQueries = createQueryKeys('delegation', {
   childAccounts: ({
     params,
@@ -57,10 +43,6 @@ export const delegationQueries = createQueryKeys('delegation', {
   }: GetChildAccountsIamParams) => ({
     queryFn: () => getChildAccountsIam({ params, users, enabled, filter }),
     queryKey: [params, users, enabled, filter],
-  }),
-  allChildAccounts: (params: Params = {}, users: boolean = true) => ({
-    queryFn: () => getAllDelegationsRequest(params, users),
-    queryKey: ['all', params, users],
   }),
   delegatedChildAccountsForUser: ({
     username,
@@ -122,25 +104,6 @@ export const useGetChildAccountsQuery = ({
     ...delegationQueries.childAccounts({ params, users, filter }),
     placeholderData: keepPreviousData,
     enabled,
-  });
-};
-
-/**
- * List ALL child accounts (fetches all data) - gets all child accounts without pagination
- * - Purpose: Get ALL child accounts under a parent account for client-side operations
- * - Scope: All child accounts for the parent (for sorting, filtering, etc.)
- * - Audience: Parent account administrators needing full dataset.
- * - CRUD: GET /iam/delegation/child-accounts?users=true (uses getAll utility)
- */
-export const useGetAllChildAccountsQuery = ({
-  params = {},
-  users = true,
-}: Partial<GetChildAccountsIamParams> = {}): UseQueryResult<
-  (ChildAccount | ChildAccountWithDelegates)[],
-  APIError[]
-> => {
-  return useQuery({
-    ...delegationQueries.allChildAccounts(params, users),
   });
 };
 
@@ -216,10 +179,6 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
       queryClient.invalidateQueries({
         queryKey: delegationQueries.childAccounts({ params: {}, users: true })
           .queryKey,
-      });
-      // Invalidate all child accounts
-      queryClient.invalidateQueries({
-        queryKey: delegationQueries.allChildAccounts._def,
       });
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
