@@ -40,6 +40,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   >([]);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const isParentUserType = userType === 'parent';
   const isProxyUserType = userType === 'proxy';
   const isDelegateUserType = userType === 'delegate';
   const isProxyOrDelegateUserType = isProxyUserType || isDelegateUserType;
@@ -91,7 +92,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     refetch: refetchAllChildAccounts,
   } = useAllListMyDelegatedChildAccountsQuery({
     params: {},
-    enabled: isIAMDelegationEnabled,
+    enabled: isIAMDelegationEnabled && isParentUserType,
   });
 
   const refetchFn = isIAMDelegationEnabled

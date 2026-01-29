@@ -62,7 +62,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
-    ? isParentUserType
+    ? isParentUserType || isProxyOrDelegateUserType
     : (isParentUserType && !isChildAccountAccessRestricted) ||
       isProxyOrDelegateUserType;
 
