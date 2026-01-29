@@ -1,17 +1,11 @@
-import {
-  useGetAllChildAccountsQuery,
-  // useGetAllChildAccountsQuery,
-  useGetChildAccountsQuery,
-} from '@linode/queries';
+import { useGetChildAccountsQuery } from '@linode/queries';
 import { CircleProgress, Paper, Stack } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-// import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -22,10 +16,9 @@ const DELEGATIONS_ROUTE = '/iam/delegations';
 
 export const AccountDelegations = () => {
   const navigate = useNavigate();
-  // const flags = useFlags();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const { query } = useSearch({
+  const { company } = useSearch({
     from: '/iam',
   });
   const theme = useTheme();
@@ -36,34 +29,19 @@ export const AccountDelegations = () => {
   const numColsLg = isLgDown ? 3 : 2;
   const numCols = isSmDown ? 2 : numColsLg;
 
-  // TODO: UIE-9292 - replace this with API filtering
-  const {
-    data: allChildAccountsWithDelegates,
-    // error,
-    // isLoading,
-  } = useGetAllChildAccountsQuery({
-    params: {},
-    users: true,
-  });
-
-  console.log('allChildAccountsWithDelegates', allChildAccountsWithDelegates);
-  const { company } = useSearch({
-    from: '/iam/delegations',
-  });
-
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
         order: 'asc',
         orderBy: 'company',
       },
-      from: '/iam/delegations',
+      from: DELEGATIONS_ROUTE,
     },
     preferenceKey: 'iam-delegations-pagination',
   });
 
   const pagination = usePaginationV2({
-    currentRoute: '/iam/delegations',
+    currentRoute: DELEGATIONS_ROUTE,
     preferenceKey: 'iam-delegations-pagination',
     initialPage: 1,
     searchParams: (prev) => ({
@@ -73,13 +51,9 @@ export const AccountDelegations = () => {
   });
 
   const filter = {
-    // company: {
-    //   '+contains': company,
-    // },
-    ['+order']: order,
-    ['+order_by']: orderBy,
-        ...(query && { company: { '+contains': query } }),
-
+    // ['+order']: order,
+    // ['+order_by']: orderBy,
+    ...(company && { company: { '+contains': company } }),
   };
 
   const {
@@ -96,76 +70,13 @@ export const AccountDelegations = () => {
     filter,
   });
 
-  console.log('childAccountsWithDelegates', childAccountsWithDelegates);
-
   const handleSearch = (value: string) => {
     pagination.handlePageChange(1);
     navigate({
       to: '/iam/delegations',
-      params: { users: true },
       search: { company: value || undefined },
     });
   };
-
-  // const pagination = usePaginationV2({
-  //   currentRoute: '/iam/delegations',
-  //   initialPage: 1,
-  //   preferenceKey: 'iam-delegations-pagination',
-  // });
-
-  // const { handleOrderChange, order, orderBy } = useOrderV2({
-  //   initialRoute: {
-  //     defaultOrder: {
-  //       order: 'asc',
-  //       orderBy: 'company',
-  //     },
-  //     from: '/iam/delegations',
-  //   },
-  //   preferenceKey: 'iam-delegations-order',
-  // });
-
-  // Apply search filter
-  const filteredDelegations = React.useMemo(() => {
-    if (!childAccountsWithDelegates) return [];
-    if (!query?.trim()) return childAccountsWithDelegates;
-
-    const searchTerm = query.toLowerCase().trim();
-    return childAccountsWithDelegates.filter((delegation) =>
-      delegation.company?.toLowerCase().includes(searchTerm)
-    );
-  }, [childAccountsWithDelegates, query]);
-
-  // Sort filtered data globally
-  const sortedDelegations = React.useMemo(() => {
-    if (!filteredDelegations.length) return [];
-
-    return [...filteredDelegations].sort((a, b) => {
-      const aValue = a.company || '';
-      const bValue = b.company || '';
-
-      const comparison = aValue.localeCompare(bValue, undefined, {
-        numeric: true,
-        sensitivity: 'base',
-      });
-
-      return order === 'asc' ? comparison : -comparison;
-    });
-  }, [filteredDelegations, order]);
-
-  const pagination = usePaginationV2({
-    currentRoute: '/iam/delegations',
-    initialPage: 1,
-    preferenceKey: 'iam-delegations-pagination',
-    clientSidePaginationData: sortedDelegations,
-  });
-
-  // const handleSearch = (value: string) => {
-  //   pagination.handlePageChange(1);
-  //   navigate({
-  //     to: DELEGATIONS_ROUTE,
-  //     search: { query: value || undefined },
-  //   });
-  // };
 
   if (isLoading) {
     return <CircleProgress />;
@@ -193,44 +104,26 @@ export const AccountDelegations = () => {
           isSearching={isFetching}
           label="Search"
           onSearch={handleSearch}
-          placeholder="Search11"
+          placeholder="Search"
           value={company ?? ''}
         />
       </Stack>
-
-      <Paginate
-        data={pagination.paginatedData}
+      <AccountDelegationsTable
+        delegations={childAccountsWithDelegates?.data}
+        error={error}
+        handleOrderChange={handleOrderChange}
+        isLoading={isLoading}
+        numCols={numCols}
+        order={order}
+        orderBy={orderBy}
+      />
+      <PaginationFooter
+        count={childAccountsWithDelegates?.results ?? 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-        pageSizeSetter={pagination.handlePageSizeChange}
-        updatePageUrl={pagination.handlePageChange}
-      >
-        {({
-          count,
-          data: paginatedData,
-          handlePageChange,
-          handlePageSizeChange,
-        }) => (
-          <>
-            <AccountDelegationsTable
-              delegations={paginatedData}
-              error={error}
-              handleOrderChange={handleOrderChange}
-              isLoading={isLoading}
-              numCols={numCols}
-              order={order}
-              orderBy={orderBy}
-            />
-            <PaginationFooter
-              count={count}
-              handlePageChange={handlePageChange}
-              handleSizeChange={handlePageSizeChange}
-              page={pagination.page}
-              pageSize={pagination.pageSize}
-            />
-          </>
-        )}
-      </Paginate>
+      />
     </Paper>
   );
 };
