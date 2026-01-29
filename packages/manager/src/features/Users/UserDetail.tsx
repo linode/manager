@@ -1,4 +1,4 @@
-import { useAccountUser } from '@linode/queries';
+import { useAccountUser, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
@@ -11,7 +11,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
-import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';
 
@@ -21,8 +20,8 @@ export const UserDetail = () => {
   });
 
   const location = useLocation();
-  const { isProxyOrDelegateUserType, profile } = useDelegationRole();
 
+  const { data: profile } = useProfile();
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
 
   const queryClient = useQueryClient();
@@ -37,6 +36,8 @@ export const UserDetail = () => {
       title: 'User Permissions',
     },
   ]);
+
+  const isProxyUser = user?.user_type === 'proxy';
 
   if (isLoading) {
     return <CircleProgress />;
@@ -64,7 +65,7 @@ export const UserDetail = () => {
         title={user?.username}
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
-        {!isProxyOrDelegateUserType && <TanStackTabLinkList tabs={tabs} />}
+        {!isProxyUser && <TanStackTabLinkList tabs={tabs} />}
         <TabPanels>
           <SafeTabPanel index={0}>
             <UserProfile />
