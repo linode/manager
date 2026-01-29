@@ -177,12 +177,6 @@ export const AssignedRolesTable = () => {
     } else {
       setIsUnassignRoleDialogOpen(false);
     }
-    // If we just deleted the last one on a page, reset to the previous page.
-    const removedLastOnPage =
-      filteredAndSortedRoles.length % pagination.pageSize === 1;
-    if (removedLastOnPage) {
-      pagination.handlePageChange(pagination.page - 1);
-    }
   };
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
@@ -261,11 +255,25 @@ export const AssignedRolesTable = () => {
     });
   }, [roles, query, entityType, order, orderBy, isInitialLoad]);
 
+  const filteredAndSortedRolesCount = filteredAndSortedRoles.length;
+
+  const maxPage = Math.max(
+    1,
+    Math.ceil(filteredAndSortedRolesCount / pagination.pageSize)
+  );
+  const currentPage = Math.min(pagination.page, maxPage);
+
+  React.useEffect(() => {
+    if (currentPage !== pagination.page) {
+      pagination.handlePageChange(currentPage);
+    }
+  }, [currentPage, pagination.page, pagination]);
+
   const memoizedTableItems: TableItem[] = React.useMemo(() => {
     return filteredAndSortedRoles
       .slice(
-        (pagination.page - 1) * pagination.pageSize,
-        pagination.page * pagination.pageSize
+        (currentPage - 1) * pagination.pageSize,
+        currentPage * pagination.pageSize
       )
       .map((role: ExtendedRoleView) => {
         const OuterTableCells = (
@@ -340,11 +348,7 @@ export const AssignedRolesTable = () => {
           label: role.name,
         };
       });
-  }, [filteredAndSortedRoles, pagination]);
-
-  const filteredAndSortedRolesCount = React.useMemo(() => {
-    return filteredAndSortedRoles.length;
-  }, [filteredAndSortedRoles]);
+  }, [filteredAndSortedRoles, currentPage, pagination.pageSize]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -486,7 +490,7 @@ export const AssignedRolesTable = () => {
           count={filteredAndSortedRolesCount}
           handlePageChange={pagination.handlePageChange}
           handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
+          page={currentPage}
           pageSize={pagination.pageSize}
         />
       )}
