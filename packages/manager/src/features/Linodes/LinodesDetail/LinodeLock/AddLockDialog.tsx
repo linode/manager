@@ -101,7 +101,7 @@ export const AddLockDialog = (props: Props) => {
             control={<Radio />}
             label={
               <LockOptionLabel
-                description="Protects this Linode from being deleted or rebuilt."
+                description="Prevents this Linode from being deleted or rebuilt."
                 title="Prevent deletion"
               />
             }
@@ -111,7 +111,7 @@ export const AddLockDialog = (props: Props) => {
             control={<Radio />}
             label={
               <LockOptionLabel
-                description="Protects this Linode and its attached resources (Disks, Configurations, IP Addresses, and Subinterfaces) from being deleted or rebuilt."
+                description="Prevents this Linode and its attached resources (Disks, Configurations, IP Addresses, and Subinterfaces) from being deleted or rebuilt."
                 title="Prevent deletion (including attached resources)"
               />
             }
