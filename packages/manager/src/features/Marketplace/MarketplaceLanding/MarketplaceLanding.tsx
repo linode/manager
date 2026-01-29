@@ -78,7 +78,7 @@ export const MarketplaceLanding = () => {
   };
 
   const updateSearchParam = React.useCallback(
-    (key: keyof typeof search, value: number | string | undefined) => {
+    (key: keyof typeof search, value: string | undefined) => {
       navigate({
         search: (prev) => ({
           ...prev,
@@ -162,18 +162,16 @@ export const MarketplaceLanding = () => {
             debounceTime={250}
             fullWidth
             hideLabel
+            inputSlotProps={{
+              sx: { maxWidth: 'unset !important' },
+              inputProps: {
+                'data-pendo-id': 'Cloud Marketplace Catalog-Search',
+              },
+            }}
             label="Search marketplace"
             noMarginTop
             onSearch={onSearch}
             placeholder="Search apps, products, and partners"
-            slotProps={{
-              htmlInput: {
-                'data-pendo-id': 'Cloud Marketplace Catalog-Search',
-              },
-              input: {
-                sx: { maxWidth: 'unset !important' },
-              },
-            }}
             value={searchQuery ?? ''}
           />
         </Grid>
