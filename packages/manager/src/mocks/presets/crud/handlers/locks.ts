@@ -69,17 +69,6 @@ const validateLockCreation = async (
     return { reason: 'The specified entity could not be found.' };
   }
 
-  // Check if Linode belongs to an LKE cluster
-  if (entity_type === 'linode' && entity) {
-    const linodeEntity = entity as { lke_cluster_id?: null | number };
-    if (linodeEntity.lke_cluster_id) {
-      return {
-        field: 'entity_id',
-        reason: 'Linode belongs to an LKE Cluster',
-      };
-    }
-  }
-
   // Check if entity already has a lock of conflicting type
   const existingLocks = await mswDB.getAll('locks');
   if (existingLocks) {
