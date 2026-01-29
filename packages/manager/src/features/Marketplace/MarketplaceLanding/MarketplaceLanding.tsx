@@ -117,10 +117,8 @@ export const MarketplaceLanding = () => {
 
   const hasFiltersApplied = Boolean(searchQuery || selectedType);
 
-  // Only show empty state if no categories match OR no results when filters are applied
-  const showEmptyState =
-    filteredCategories.length === 0 ||
-    (hasFiltersApplied && filteredProducts.length === 0);
+  // Show empty state if there are no products to display (either no products exist, or filters return no results)
+  const showEmptyState = filteredProducts.length === 0;
 
   return (
     <Box
