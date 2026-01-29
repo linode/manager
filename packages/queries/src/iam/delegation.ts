@@ -49,9 +49,14 @@ const getAllDelegationsRequest = (
 };
 
 export const delegationQueries = createQueryKeys('delegation', {
-  childAccounts: ({ params, users }: GetChildAccountsIamParams) => ({
-    queryFn: () => getChildAccountsIam({ params, users }),
-    queryKey: [params, users],
+  childAccounts: ({
+    params,
+    users,
+    enabled = true,
+    filter = {},
+  }: GetChildAccountsIamParams) => ({
+    queryFn: () => getChildAccountsIam({ params, users, enabled, filter }),
+    queryKey: [params, users, enabled, filter],
   }),
   allChildAccounts: (params: Params = {}, users: boolean = true) => ({
     queryFn: () => getAllDelegationsRequest(params, users),
@@ -107,12 +112,16 @@ export const delegationQueries = createQueryKeys('delegation', {
 export const useGetChildAccountsQuery = ({
   params,
   users,
-}: GetChildAccountsIamParams): UseQueryResult<
+  filter,
+  enabled = true,
+}: GetChildAccountsIamParams & { enabled?: boolean }): UseQueryResult<
   ResourcePage<ChildAccount | ChildAccountWithDelegates>,
   APIError[]
 > => {
   return useQuery({
-    ...delegationQueries.childAccounts({ params, users }),
+    ...delegationQueries.childAccounts({ params, users, filter }),
+    placeholderData: keepPreviousData,
+    enabled,
   });
 };
 

@@ -1,4 +1,8 @@
-import { useGetAllChildAccountsQuery } from '@linode/queries';
+import {
+  useGetAllChildAccountsQuery,
+  // useGetAllChildAccountsQuery,
+  useGetChildAccountsQuery,
+} from '@linode/queries';
 import { CircleProgress, Paper, Stack } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -7,17 +11,20 @@ import React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { useFlags } from 'src/hooks/useFlags';
+// import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useIsIAMDelegationEnabled } from '../hooks/useIsIAMEnabled';
 import { AccountDelegationsTable } from './AccountDelegationsTable';
 
 const DELEGATIONS_ROUTE = '/iam/delegations';
 
 export const AccountDelegations = () => {
   const navigate = useNavigate();
-  const flags = useFlags();
+  // const flags = useFlags();
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
   const { query } = useSearch({
     from: '/iam',
   });
@@ -31,12 +38,17 @@ export const AccountDelegations = () => {
 
   // TODO: UIE-9292 - replace this with API filtering
   const {
-    data: childAccountsWithDelegates,
-    error,
-    isLoading,
+    data: allChildAccountsWithDelegates,
+    // error,
+    // isLoading,
   } = useGetAllChildAccountsQuery({
     params: {},
     users: true,
+  });
+
+  console.log('allChildAccountsWithDelegates', allChildAccountsWithDelegates);
+  const { company } = useSearch({
+    from: '/iam/delegations',
   });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
@@ -47,8 +59,70 @@ export const AccountDelegations = () => {
       },
       from: '/iam/delegations',
     },
-    preferenceKey: 'iam-delegations-order',
+    preferenceKey: 'iam-delegations-pagination',
   });
+
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/delegations',
+    preferenceKey: 'iam-delegations-pagination',
+    initialPage: 1,
+    searchParams: (prev) => ({
+      ...prev,
+      company: company || undefined,
+    }),
+  });
+
+  const filter = {
+    // company: {
+    //   '+contains': company,
+    // },
+    ['+order']: order,
+    ['+order_by']: orderBy,
+        ...(query && { company: { '+contains': query } }),
+
+  };
+
+  const {
+    data: childAccountsWithDelegates,
+    isFetching,
+    isLoading,
+    error,
+  } = useGetChildAccountsQuery({
+    params: {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    users: true,
+    filter,
+  });
+
+  console.log('childAccountsWithDelegates', childAccountsWithDelegates);
+
+  const handleSearch = (value: string) => {
+    pagination.handlePageChange(1);
+    navigate({
+      to: '/iam/delegations',
+      params: { users: true },
+      search: { company: value || undefined },
+    });
+  };
+
+  // const pagination = usePaginationV2({
+  //   currentRoute: '/iam/delegations',
+  //   initialPage: 1,
+  //   preferenceKey: 'iam-delegations-pagination',
+  // });
+
+  // const { handleOrderChange, order, orderBy } = useOrderV2({
+  //   initialRoute: {
+  //     defaultOrder: {
+  //       order: 'asc',
+  //       orderBy: 'company',
+  //     },
+  //     from: '/iam/delegations',
+  //   },
+  //   preferenceKey: 'iam-delegations-order',
+  // });
 
   // Apply search filter
   const filteredDelegations = React.useMemo(() => {
@@ -85,17 +159,18 @@ export const AccountDelegations = () => {
     clientSidePaginationData: sortedDelegations,
   });
 
-  const handleSearch = (value: string) => {
-    navigate({
-      to: DELEGATIONS_ROUTE,
-      search: { query: value || undefined },
-    });
-  };
+  // const handleSearch = (value: string) => {
+  //   pagination.handlePageChange(1);
+  //   navigate({
+  //     to: DELEGATIONS_ROUTE,
+  //     search: { query: value || undefined },
+  //   });
+  // };
 
   if (isLoading) {
     return <CircleProgress />;
   }
-  if (!flags.iamDelegation?.enabled) {
+  if (!isIAMDelegationEnabled) {
     return null;
   }
   return (
@@ -115,10 +190,11 @@ export const AccountDelegations = () => {
           }}
           debounceTime={250}
           hideLabel
+          isSearching={isFetching}
           label="Search"
           onSearch={handleSearch}
-          placeholder="Search"
-          value={query ?? ''}
+          placeholder="Search11"
+          value={company ?? ''}
         />
       </Stack>
 

@@ -24,17 +24,24 @@ import type { IamUserRoles } from './types';
 export const getChildAccountsIam = ({
   params,
   users,
+  filter,
 }: GetChildAccountsIamParams) =>
   users
     ? Request<Page<ChildAccountWithDelegates>>(
         setURL(`${BETA_API_ROOT}/iam/delegation/child-accounts?users=true`),
         setMethod('GET'),
-        setParams({ ...params }),
+        // setParams({ ...params }),
+                setParams(params),
+
+        setXFilter(filter),
       )
     : Request<Page<ChildAccount>>(
         setURL(`${BETA_API_ROOT}/iam/delegation/child-accounts`),
         setMethod('GET'),
-        setParams({ ...params }),
+        // setParams({ ...params }),
+                        setParams(params),
+
+        setXFilter(filter),
       );
 
 export const getDelegatedChildAccountsForUser = ({
