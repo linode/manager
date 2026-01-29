@@ -8,7 +8,13 @@ import type { Category, Product } from './marketplace';
 import type { ProductCardData } from './ProductSelectionCard';
 
 export interface CategorySectionProps {
+  /**
+   * The unique name of the category this section represents.
+   */
   categoryName: Category;
+  /**
+   * The list of products belonging to this category.
+   */
   products: Product[];
 }
 
