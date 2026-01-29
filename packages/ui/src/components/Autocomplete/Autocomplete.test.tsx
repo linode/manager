@@ -79,6 +79,22 @@ describe('Autocomplete Component', () => {
     expect(errorElement).not.toBeInTheDocument();
   });
 
+  it('does not show the placeholder text when multi-select is enabled and one or more options are selected.', () => {
+    renderWithTheme(
+      <Autocomplete
+        label="Test Label"
+        multiple
+        onChange={handleSelectionChange}
+        options={options}
+        placeholder="Select an option"
+        value={[options[0]]}
+      />,
+    );
+
+    const inputElement = screen.queryByPlaceholderText('Select an option');
+    expect(inputElement).not.toBeInTheDocument();
+  });
+
   describe('renders all no options messages', () => {
     it('displays the loading message when loading prop is true', () => {
       renderWithTheme(
