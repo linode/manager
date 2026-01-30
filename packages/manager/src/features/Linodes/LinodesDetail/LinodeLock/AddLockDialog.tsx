@@ -97,7 +97,7 @@ export const AddLockDialog = (props: Props) => {
         value={lockType}
       >
         <Stack alignItems="flex-start" direction="column" spacing={2}>
-          <FormControlLabel
+          <RadioButtonAlignedFormControlLabel
             control={<Radio />}
             label={
               <LockOptionLabel
@@ -107,7 +107,7 @@ export const AddLockDialog = (props: Props) => {
             }
             value="cannot_delete"
           />
-          <FormControlLabel
+          <RadioButtonAlignedFormControlLabel
             control={<Radio />}
             label={
               <LockOptionLabel
@@ -144,6 +144,22 @@ const LockOptionLabel = ({ description, title }: LockOptionLabelProps) => {
     </span>
   );
 };
+
+/**
+ * Custom styled FormControlLabel to align the radio button with multi-line labels.
+ * Since our labels have a title and description (two lines), the MUI default alignment doesn't work for us.
+ * We use `alignItems: flex-start` to position the radio button at the top. The `marginTop: 10` on the label
+ * compensates for the radio button's internal padding, ensuring the label text aligns visually
+ * with the radio button.
+ */
+const RadioButtonAlignedFormControlLabel = styled(FormControlLabel)(
+  ({ theme }) => ({
+    alignItems: 'flex-start',
+    '& .MuiFormControlLabel-label': {
+      marginTop: 10,
+    },
+  })
+);
 
 const StyledHeading = styled(Typography)(({ theme }) => ({
   font: theme.tokens.alias.Typography.Heading.S,
