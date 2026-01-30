@@ -46,9 +46,12 @@ export const MarketplaceLanding = () => {
     return Array.from(uniqueTypes);
   }, []);
 
-  // Category dropdown options
+  // Category dropdown options (sorted alphabetically)
   const categoryOptions = React.useMemo(
-    () => categoriesWithProducts.map((cat) => ({ label: cat })),
+    () =>
+      [...categoriesWithProducts]
+        .sort((a, b) => a.localeCompare(b))
+        .map((cat) => ({ label: cat })),
     [categoriesWithProducts]
   );
 
@@ -57,18 +60,6 @@ export const MarketplaceLanding = () => {
     () => typesWithProducts.map((type) => ({ label: type })),
     [typesWithProducts]
   );
-
-  // Filter categories based on:
-  // 1. Selected category from dropdown (if set)
-  // 2. All categories (if no filters)
-  const filteredCategories = React.useMemo(() => {
-    if (selectedCategory) {
-      return categoriesWithProducts.filter((cat) => cat === selectedCategory);
-    }
-
-    // No filters - show all categories
-    return categoriesWithProducts;
-  }, [selectedCategory, categoriesWithProducts]);
 
   const handleResetFilters = () => {
     navigate({
@@ -114,6 +105,21 @@ export const MarketplaceLanding = () => {
     });
     return map;
   }, [filteredProducts]);
+
+  // Filter categories based on:
+  // 1. Selected category from dropdown (if set)
+  // 2. All categories, sorted by product count (if no filters)
+  const filteredCategories = React.useMemo(() => {
+    if (selectedCategory) {
+      return categoriesWithProducts.filter((cat) => cat === selectedCategory);
+    }
+    // No filters - show all categories, sorted by product count (highest to lowest)
+    return [...categoriesWithProducts].sort((a, b) => {
+      const countA = filteredProductsByCategory[a]?.length || 0;
+      const countB = filteredProductsByCategory[b]?.length || 0;
+      return countB - countA;
+    });
+  }, [selectedCategory, categoriesWithProducts, filteredProductsByCategory]);
 
   const hasFiltersApplied = Boolean(searchQuery || selectedType);
 
