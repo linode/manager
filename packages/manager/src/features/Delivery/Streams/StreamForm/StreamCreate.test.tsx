@@ -63,7 +63,9 @@ describe('StreamCreate', () => {
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+        const logPathPrefixInput = screen.getByLabelText(
+          'Log Path Prefix (optional)'
+        );
         await userEvent.type(logPathPrefixInput, 'Test');
       };
 
