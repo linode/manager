@@ -12,6 +12,7 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
+import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 const ObjectList = React.lazy(() =>
@@ -47,6 +48,10 @@ export const BucketDetailLanding = React.memo(() => {
 
   const { aclpServices, objectStorageContextualMetrics } = useFlags();
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
+  const { isError: aclpServiceError } = useCloudPulseServiceByServiceType(
+    'objectstorage',
+    true
+  );
 
   const {
     data: bucketsData,
@@ -79,6 +84,7 @@ export const BucketDetailLanding = React.memo(() => {
       title: 'Metrics',
       to: `${BUCKET_DETAILS_URL}/metrics`,
       hide:
+        aclpServiceError ||
         !aclpServices?.objectstorage?.metrics?.enabled ||
         !objectStorageContextualMetrics,
       chip: aclpServices?.objectstorage?.metrics?.beta ? <BetaChip /> : null,
