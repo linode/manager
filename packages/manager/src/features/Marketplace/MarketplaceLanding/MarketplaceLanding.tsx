@@ -19,7 +19,7 @@ import { PRODUCTS } from '../products';
 import { CategorySection } from './CategorySection';
 import { filterProducts } from './utils';
 
-import type { Category, Product } from '../shared';
+import type { Category, Product, Type } from '../shared';
 
 export const MarketplaceLanding = () => {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export const MarketplaceLanding = () => {
 
   // types that have at least one product
   const typesWithProducts = React.useMemo(() => {
-    const uniqueTypes = new Set<string>();
+    const uniqueTypes = new Set<Type>();
     PRODUCTS.forEach((product) => uniqueTypes.add(product.type.name));
     return Array.from(uniqueTypes);
   }, []);
