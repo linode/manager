@@ -67,7 +67,8 @@ export const useIsMarketplaceV2Enabled = () => {
 };
 
 export const getLogoUrl = (product: Product, theme: Theme) => {
+  const base = '/assets/marketplace/';
   return theme.name === 'light'
-    ? `/assets/marketplace/${product.partner.logoLightMode}`
-    : `/assets/marketplace/white/${product.partner.logoDarkMode}`;
+    ? `${base}${product.partner.logoLightMode}`
+    : `${base}${product.partner.logoDarkMode}`;
 };
