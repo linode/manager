@@ -222,12 +222,17 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             control={control}
             key={config.label}
             name={`configs.${index}.value`}
-            render={({ field }) => {
+            render={({ field, fieldState }) => {
+              const configName =
+                config.category === 'other'
+                  ? `engine_config.${config.label}`
+                  : `engine_config.${config.category}.${config.label}`;
               return (
                 <DatabaseConfigurationItem
                   configItem={config}
                   errorText={
-                    get(errors, `engine_config.${config.label}`)?.message
+                    fieldState.error?.message ||
+                    get(errors, configName)?.message
                   }
                   onBlur={field.onBlur}
                   onChange={field.onChange}
