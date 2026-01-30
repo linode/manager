@@ -91,6 +91,7 @@ export const LinodeDetailHeader = () => {
       navigate({ search: undefined });
     }
 
+    setAddLockDialogOpen(false);
     setPowerDialogOpen(false);
     setDeleteDialogOpen(false);
     setResizeDialogOpen(false);
