@@ -15,10 +15,11 @@ import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { LandingHeader } from 'src/components/LandingHeader';
 
+import { PRODUCTS } from '../products';
 import { CategorySection } from './CategorySection';
-import { filterProducts, PRODUCTS } from './marketplace';
+import { filterProducts } from './utils';
 
-import type { Category, Product } from './marketplace';
+import type { Category, Product } from '../shared';
 
 export const MarketplaceLanding = () => {
   const navigate = useNavigate();
