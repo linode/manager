@@ -107,13 +107,6 @@ export const AssignedRolesTable = () => {
   const assignedRolesLoading = isDefaultDelegationRolesForChildAccount
     ? defaultRolesLoading
     : userRolesLoading;
-  const pagination = usePaginationV2({
-    currentRoute: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/roles'
-      : '/iam/users/$username/roles',
-    initialPage: 1,
-    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
-  });
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -255,100 +248,94 @@ export const AssignedRolesTable = () => {
     });
   }, [roles, query, entityType, order, orderBy, isInitialLoad]);
 
-  const filteredAndSortedRolesCount = filteredAndSortedRoles.length;
+  const pagination = usePaginationV2({
+    currentRoute: isDefaultDelegationRolesForChildAccount
+      ? '/iam/roles/defaults/roles'
+      : '/iam/users/$username/roles',
+    initialPage: 1,
+    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+    clientSidePaginationData: filteredAndSortedRoles,
+  });
 
-  const maxPage = Math.max(
-    1,
-    Math.ceil(filteredAndSortedRolesCount / pagination.pageSize)
-  );
-  const currentPage = Math.min(pagination.page, maxPage);
-
-  React.useEffect(() => {
-    if (currentPage !== pagination.page) {
-      pagination.handlePageChange(currentPage);
-    }
-  }, [currentPage, pagination.page, pagination]);
+  const filteredAndSortedRolesCount = React.useMemo(() => {
+    return filteredAndSortedRoles.length;
+  }, [filteredAndSortedRoles]);
 
   const memoizedTableItems: TableItem[] = React.useMemo(() => {
-    return filteredAndSortedRoles
-      .slice(
-        (currentPage - 1) * pagination.pageSize,
-        currentPage * pagination.pageSize
-      )
-      .map((role: ExtendedRoleView) => {
-        const OuterTableCells = (
-          <>
-            {role.access === 'account_access' ? (
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <Typography>
-                  {role.entity_type === 'account'
-                    ? 'All Entities'
-                    : `All ${getFormattedEntityType(role.entity_type)}s`}
-                </Typography>
-              </TableCell>
-            ) : (
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <AssignedEntities
-                  disabled={!permissions.is_account_admin}
-                  onButtonClick={handleViewEntities}
-                  onRemoveAssignment={handleRemoveAssignment}
-                  role={role}
-                />
-              </TableCell>
-            )}
-            <TableCell actionCell>
-              <AssignedRolesActionMenu
-                handleChangeRole={handleChangeRole}
-                handleUnassignRole={handleUnassignRole}
-                handleUpdateEntities={handleUpdateEntities}
-                handleViewEntities={handleViewEntities}
-                permissions={permissions}
+    return pagination.paginatedData?.map((role: ExtendedRoleView) => {
+      const OuterTableCells = (
+        <>
+          {role.access === 'account_access' ? (
+            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <Typography>
+                {role.entity_type === 'account'
+                  ? 'All Entities'
+                  : `All ${getFormattedEntityType(role.entity_type)}s`}
+              </Typography>
+            </TableCell>
+          ) : (
+            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <AssignedEntities
+                disabled={!permissions.is_account_admin}
+                onButtonClick={handleViewEntities}
+                onRemoveAssignment={handleRemoveAssignment}
                 role={role}
               />
             </TableCell>
-          </>
-        );
+          )}
+          <TableCell actionCell>
+            <AssignedRolesActionMenu
+              handleChangeRole={handleChangeRole}
+              handleUnassignRole={handleUnassignRole}
+              handleUpdateEntities={handleUpdateEntities}
+              handleViewEntities={handleViewEntities}
+              permissions={permissions}
+              role={role}
+            />
+          </TableCell>
+        </>
+      );
 
-        const InnerTable = (
-          <Grid
+      const InnerTable = (
+        <Grid
+          sx={{
+            padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
+          }}
+        >
+          <Typography
             sx={{
-              padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
+              font: theme.tokens.alias.Typography.Label.Bold.S,
+              marginBottom: theme.tokens.spacing.S4,
             }}
           >
-            <Typography
-              sx={{
-                font: theme.tokens.alias.Typography.Label.Bold.S,
-                marginBottom: theme.tokens.spacing.S4,
-              }}
-            >
-              Description
-            </Typography>
-            <Typography
-              sx={{
-                marginBottom: theme.tokens.spacing.S8,
-              }}
-            >
-              {role.permissions.length ? (
-                role.description
-              ) : (
-                <>
-                  {getFacadeRoleDescription(role)}{' '}
-                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-                </>
-              )}
-            </Typography>
-            <Permissions permissions={role.permissions} />
-          </Grid>
-        );
+            Description
+          </Typography>
+          <Typography
+            sx={{
+              marginBottom: theme.tokens.spacing.S8,
+            }}
+          >
+            {role.permissions.length ? (
+              role.description
+            ) : (
+              <>
+                {getFacadeRoleDescription(role)}{' '}
+                <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
+              </>
+            )}
+          </Typography>
+          <Permissions permissions={role.permissions} />
+        </Grid>
+      );
 
-        return {
-          InnerTable,
-          OuterTableCells,
-          id: role.id,
-          label: role.name,
-        };
-      });
-  }, [filteredAndSortedRoles, currentPage, pagination.pageSize]);
+      return {
+        InnerTable,
+        OuterTableCells,
+        id: role.id,
+        label: role.name,
+      };
+    });
+  }, [filteredAndSortedRoles, pagination]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -490,7 +477,7 @@ export const AssignedRolesTable = () => {
           count={filteredAndSortedRolesCount}
           handlePageChange={pagination.handlePageChange}
           handleSizeChange={pagination.handlePageSizeChange}
-          page={currentPage}
+          page={pagination.page}
           pageSize={pagination.pageSize}
         />
       )}
