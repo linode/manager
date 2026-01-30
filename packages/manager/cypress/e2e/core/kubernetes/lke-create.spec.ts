@@ -1469,8 +1469,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
       validEnterprisePlanTabs.forEach((tab) => {
         ui.tabList.findTabByTitle(tab).should('be.visible');
       });
-      // Confirm the GPU tab is not visible in the plans panel for LKE-E.
-      ui.tabList.findTabByTitle('GPU').should('not.exist');
 
       // Add a node pool for each selected plan, and confirm that the
       // selected node pool plan is added to the checkout bar.
@@ -1910,106 +1908,51 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
     mockGetRegionAvailability(mockRegion.id, mockRegionAvailability).as(
       'getRegionAvailability'
     );
+    mockGetTieredKubernetesVersions('enterprise', [
+      latestEnterpriseTierKubernetesVersion,
+    ]).as('getEnterpriseTieredVersions');
   });
 
-  describe('standard tier', () => {
-    it('enabled feature flag includes blackwells', () => {
-      mockAppendFeatureFlags({
-        kubernetesBlackwellPlans: true,
-      }).as('getFeatureFlags');
-      cy.visitWithLogin('/kubernetes/create');
-      cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
+  it('both tiers should include blackwell GPUs', () => {
+    cy.visitWithLogin('/kubernetes/create');
+    cy.wait(['@getRegions', '@getLinodeTypes']);
 
-      ui.regionSelect.find().click();
-      ui.regionSelect.find().clear();
-      ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
-      cy.wait('@getRegionAvailability');
-      // Navigate to "GPU" tab
-      ui.tabList.findTabByTitle('GPU').scrollIntoView();
-      ui.tabList.findTabByTitle('GPU').should('be.visible').click();
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
+    cy.wait('@getRegionAvailability');
+    // Navigate to "GPU" tab
+    ui.tabList.findTabByTitle('GPU').scrollIntoView();
+    ui.tabList.findTabByTitle('GPU').should('be.visible').click();
 
-      cy.findByRole('table', {
-        name: 'List of Linode Plans',
-      }).within(() => {
-        cy.get('tbody tr')
-          .should('have.length', 4)
-          .each((row, index) => {
-            cy.wrap(row).within(() => {
-              cy.get('td')
-                .eq(0)
-                .within(() => {
-                  cy.findByText(mockBlackwellLinodeTypes[index].label).should(
-                    'be.visible'
-                  );
-                });
-              ui.button
-                .findByTitle('Configure Pool')
-                .should('be.visible')
-                .should('be.enabled');
-            });
+    cy.findByRole('table', {
+      name: 'List of Linode Plans',
+    }).within(() => {
+      cy.get('tbody tr')
+        .should('have.length', 4)
+        .each((row, index) => {
+          cy.wrap(row).within(() => {
+            cy.get('td')
+              .eq(0)
+              .within(() => {
+                cy.findByText(mockBlackwellLinodeTypes[index].label).should(
+                  'be.visible'
+                );
+              });
+            ui.button
+              .findByTitle('Configure Pool')
+              .should('be.visible')
+              .should('be.enabled');
           });
-      });
+        });
     });
 
-    it('disabled feature flag excludes blackwells', () => {
-      mockAppendFeatureFlags({
-        kubernetesBlackwellPlans: false,
-      }).as('getFeatureFlags');
-
-      cy.visitWithLogin('/kubernetes/create');
-      cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
-
-      ui.regionSelect.find().click();
-      ui.regionSelect.find().clear();
-      ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
-      cy.wait('@getRegionAvailability');
-      // Navigate to "GPU" tab
-      // "GPU" tab hidden
-      ui.tabList.findTabByTitle('GPU').should('not.exist');
-    });
-  });
-  describe('enterprise tier hides GPU tab', () => {
-    beforeEach(() => {
-      // necessary to prevent crash after selecting Enterprise button
-      mockGetTieredKubernetesVersions('enterprise', [
-        latestEnterpriseTierKubernetesVersion,
-      ]).as('getEnterpriseTieredVersions');
-    });
-    it('enabled feature flag', () => {
-      mockAppendFeatureFlags({
-        kubernetesBlackwellPlans: true,
-      }).as('getFeatureFlags');
-
-      cy.visitWithLogin('/kubernetes/create');
-      cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
-
-      cy.findByText('LKE Enterprise').click();
-      cy.wait(['@getEnterpriseTieredVersions']);
-      ui.regionSelect.find().click();
-      ui.regionSelect.find().clear();
-      ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
-      cy.wait('@getRegionAvailability');
-      // "GPU" tab hidden
-      ui.tabList.findTabByTitle('GPU').should('not.exist');
-    });
-
-    it('disabled feature flag', () => {
-      mockAppendFeatureFlags({
-        kubernetesBlackwellPlans: false,
-      }).as('getFeatureFlags');
-
-      cy.visitWithLogin('/kubernetes/create');
-      cy.wait(['@getFeatureFlags', '@getRegions', '@getLinodeTypes']);
-
-      ui.regionSelect.find().click();
-      ui.regionSelect.find().clear();
-      ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
-      cy.findByText('LKE Enterprise').click();
-      cy.wait(['@getEnterpriseTieredVersions']);
-      2;
-      // "GPU" tab hidden
-      ui.tabList.findTabByTitle('GPU').should('not.exist');
-    });
+    cy.findByText('LKE Enterprise').click();
+    cy.wait(['@getEnterpriseTieredVersions']);
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
+    ui.regionSelect.find().type(`${mockRegion.label}{enter}`);
+    ui.tabList.findTabByTitle('GPU').should('exist');
   });
 });
 
