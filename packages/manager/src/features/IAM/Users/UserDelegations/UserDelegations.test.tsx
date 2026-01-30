@@ -2,23 +2,11 @@ import { childAccountFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NO_ACCOUNT_DELEGATIONS_TEXT } from '../../Shared/constants';
 import { UserDelegations } from './UserDelegations';
-
-const mockChildAccounts = {
-  data: [
-    {
-      company: 'Test Account 1',
-      euuid: '123',
-    },
-    {
-      company: 'Test Account 2',
-      euuid: '456',
-    },
-  ],
-};
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
@@ -26,7 +14,6 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn().mockReturnValue(vi.fn()),
   useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
-  useUserAccountPermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -36,7 +23,6 @@ vi.mock('@linode/queries', async () => {
     useGetDelegatedChildAccountsForUserQuery:
       queryMocks.useGetDelegatedChildAccountsForUserQuery,
     useAccountRoles: queryMocks.useAccountRoles,
-    useUserAccountPermissions: queryMocks.useUserAccountPermissions,
   };
 });
 
@@ -57,14 +43,9 @@ describe('UserDelegations', () => {
     });
     queryMocks.useSearch.mockReturnValue({ query: '' });
     queryMocks.useNavigate.mockReturnValue(vi.fn());
-    // Ensure IAM is considered enabled via account permissions (avoids shape issues)
-    queryMocks.useUserAccountPermissions.mockReturnValue({
-      data: ['is_account_admin'],
-      isLoading: false,
-    });
-    // Avoid invoking getAllRoles with an unexpected roles shape
+    // Ensure IAM is considered enabled
     queryMocks.useAccountRoles.mockReturnValue({
-      data: undefined,
+      data: accountRolesFactory.build(),
       isLoading: false,
     });
   });
@@ -89,7 +70,8 @@ describe('UserDelegations', () => {
 
   it('should display table if user has delegations', async () => {
     queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: mockChildAccounts,
+      data: { data: childAccountFactory.buildList(2), results: 2 },
+
       isLoading: false,
     });
 
@@ -101,6 +83,7 @@ describe('UserDelegations', () => {
         },
       },
     });
+
     expect(screen.getByText('Account Delegations')).toBeVisible();
   });
 });

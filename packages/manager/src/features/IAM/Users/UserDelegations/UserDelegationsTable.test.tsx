@@ -3,6 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserDelegationsTable } from './UserDelegationsTable';
@@ -24,12 +25,7 @@ const queryMocks = vi.hoisted(() => ({
   useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
-  useAccountRoles: vi
-    .fn()
-    .mockReturnValue({ data: { roles: [{}] }, isLoading: false }),
-  useUserAccountPermissions: vi
-    .fn()
-    .mockReturnValue({ data: ['is_account_admin'], isLoading: false }),
+  useAccountRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -39,7 +35,6 @@ vi.mock('@linode/queries', async () => {
     useGetDelegatedChildAccountsForUserQuery:
       queryMocks.useGetDelegatedChildAccountsForUserQuery,
     useAccountRoles: queryMocks.useAccountRoles,
-    useUserAccountPermissions: queryMocks.useUserAccountPermissions,
   };
 });
 
@@ -64,14 +59,9 @@ describe('UserDelegationsTable', () => {
     queryMocks.useSearch.mockReturnValue({
       query: '',
     });
-    // Ensure IAM is considered enabled via account permissions (avoids shape issues)
-    queryMocks.useUserAccountPermissions.mockReturnValue({
-      data: ['is_account_admin'],
-      isLoading: false,
-    });
-    // Avoid invoking getAllRoles with an unexpected roles shape
+    // Ensure IAM is considered enabled
     queryMocks.useAccountRoles.mockReturnValue({
-      data: undefined,
+      data: accountRolesFactory.build(),
       isLoading: false,
     });
   });
