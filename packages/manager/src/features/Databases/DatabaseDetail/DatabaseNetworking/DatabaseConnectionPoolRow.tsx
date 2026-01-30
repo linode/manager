@@ -15,18 +15,22 @@ interface Props {
    */
   onDelete: (pool: ConnectionPool) => void;
   /**
+   * Function called when the edit button in the Action Menu is pressed.
+   */
+  onEdit: (pool: ConnectionPool) => void;
+  /**
    * Payment method type and data.
    */
   pool: ConnectionPool;
 }
 
 export const DatabaseConnectionPoolRow = (props: Props) => {
-  const { pool, onDelete } = props;
+  const { pool, onDelete, onEdit } = props;
 
   const connectionPoolActions: Action[] = [
     {
-      onClick: () => null,
-      title: 'Edit', // TODO: UIE-9395 Implement edit functionality
+      onClick: () => onEdit(pool),
+      title: 'Edit',
     },
     {
       onClick: () => onDelete(pool),

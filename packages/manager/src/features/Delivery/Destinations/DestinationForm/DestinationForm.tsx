@@ -1,4 +1,4 @@
-import { destinationType } from '@linode/api-v4';
+import { authenticationType, destinationType } from '@linode/api-v4';
 import { Autocomplete, Paper, TextField } from '@linode/ui';
 import { capitalize, scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -8,8 +8,12 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
-import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
+import {
+  getDestinationTypeOption,
+  useIsACLPLogsEnabled,
+} from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
+import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
@@ -28,6 +32,7 @@ interface DestinationFormProps {
 export const DestinationForm = (props: DestinationFormProps) => {
   const { mode, isSubmitting, onSubmit } = props;
 
+  const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const {
     verifyDestination,
     isPending: isVerifyingDestination,
@@ -36,7 +41,8 @@ export const DestinationForm = (props: DestinationFormProps) => {
   } = useVerifyDestination();
 
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { control, handleSubmit } = useFormContext<DestinationFormType>();
+  const { control, handleSubmit, setValue } =
+    useFormContext<DestinationFormType>();
   const destination = useWatch({
     control,
   }) as DestinationFormType;
@@ -56,10 +62,16 @@ export const DestinationForm = (props: DestinationFormProps) => {
               render={({ field }) => (
                 <Autocomplete
                   disableClearable
-                  disabled
+                  disabled={!isACLPLogsCustomHttpsEnabled}
                   label="Destination Type"
                   onBlur={field.onBlur}
                   onChange={(_, { value }) => {
+                    if (value === destinationType.CustomHttps) {
+                      setValue(
+                        'details.authentication.type',
+                        authenticationType.None
+                      );
+                    }
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
@@ -97,6 +109,13 @@ export const DestinationForm = (props: DestinationFormProps) => {
                 mode={mode}
               />
             )}
+            {isACLPLogsCustomHttpsEnabled &&
+              destination.type === destinationType.CustomHttps && (
+                <DestinationCustomHttpsDetailsForm
+                  entity="destination"
+                  mode={mode}
+                />
+              )}
           </Paper>
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
