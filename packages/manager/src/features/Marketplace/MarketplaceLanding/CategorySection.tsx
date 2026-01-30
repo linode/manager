@@ -2,10 +2,10 @@ import { useTheme } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { type Category, getLogoUrl } from '../shared';
+import { getLogoUrl } from '../shared';
 import { CategorySectionView } from './CategorySectionView';
 
-import type { Product } from '../shared';
+import type { Category, Product } from '../shared';
 import type { ProductCardData } from './ProductSelectionCard';
 
 export interface CategorySectionProps {
