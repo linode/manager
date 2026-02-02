@@ -1,21 +1,13 @@
-import {
-  useAllMarketplacePartnersQuery,
-  useMarketplaceProductQuery,
-} from '@linode/queries';
-import {
-  Box,
-  Button,
-  CircleProgress,
-  ErrorState,
-  Paper,
-  Typography,
-} from '@linode/ui';
+import { Box, Button, ErrorState, Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+import { Markdown } from 'src/components/Markdown/Markdown';
 
+import { getProductTabDetails } from '../data/details';
+import { getProductById } from '../products';
+import { getLogoUrl } from '../shared';
 import {
   InfoBanner,
   LogoContainer,
@@ -28,8 +20,6 @@ import {
 } from './ProductDetails.styles';
 import { ProductDetailsTabs } from './ProductDetailsTabs';
 
-import type { MarketplacePartner } from '@linode/api-v4';
-
 /**
  * Main Product Details Component
  */
@@ -39,58 +29,32 @@ export const ProductDetails = () => {
   });
   const theme = useTheme();
 
-  // Fetch partners using shared query (cached from parent page)
-  const { data: partners } = useAllMarketplacePartnersQuery();
+  const numericProductId = Number(productId);
 
-  // Fetch product details using shared query
-  const {
-    data: product,
-    error,
-    isLoading,
-  } = useMarketplaceProductQuery(Number(productId));
+  const product = React.useMemo(
+    () => getProductById(numericProductId),
+    [numericProductId]
+  );
 
-  const sanitizedInfoBanner = React.useMemo(() => {
-    return product?.info_banner
-      ? sanitizeHTML({ sanitizingTier: 'flexible', text: product.info_banner })
-      : '';
-  }, [product?.info_banner]);
+  // Tab content is optional. If not present for this product, we still show the page.
+  const details = getProductTabDetails(numericProductId);
 
-  // Find partner information
-  const partner = React.useMemo(() => {
-    if (!partners || !product) {
-      return null;
+  // Get logo URL based on theme
+  const logoUrl = React.useMemo(() => {
+    if (!product) {
+      return '';
     }
-    return partners.find(
-      (p: MarketplacePartner) => p.id === product.partner_id
-    );
-  }, [partners, product]);
+    return getLogoUrl(product, theme);
+  }, [product, theme]);
 
-  // Handle loading state
-  if (isLoading) {
-    return (
-      <Box display="flex" justifyContent="center" padding={4}>
-        <CircleProgress />
-      </Box>
-    );
-  }
-
-  // Handle error state
-  if (error || !product) {
+  // Handle invalid/unknown product id
+  if (!product) {
     return (
       <ErrorState
-        errorText={
-          error?.[0]?.reason ||
-          'Unable to load product details. Please try again later.'
-        }
+        errorText={'Unable to load product details. Please try again later.'}
       />
     );
   }
-
-  // Determine logo URL based on theme (fallback to light mode if dark mode logo is unavailable)
-  const logoUrl = partner
-    ? (theme.name === 'dark' && partner.logo_url_dark_mode) ||
-      partner.logo_url_light_mode
-    : '';
 
   // Contact sales handler placeholder - will be implemented in a future ticket
   const handleContactSales = () => {
@@ -107,9 +71,9 @@ export const ProductDetails = () => {
     >
       <ProductDetailsContainer>
         {/* Info Banner (conditional) */}
-        {product.info_banner && (
+        {product.infoBanner && (
           <InfoBanner variant="info">
-            <div dangerouslySetInnerHTML={{ __html: sanitizedInfoBanner }} />
+            <Markdown textOrMarkdown={product.infoBanner} />
           </InfoBanner>
         )}
 
@@ -143,7 +107,7 @@ export const ProductDetails = () => {
               >
                 {product.name}
               </Typography>
-              {partner && (
+              {product.partner && (
                 <Typography
                   sx={(theme) => ({
                     color: theme.tokens.alias.Content.Text.Secondary.Default,
@@ -151,7 +115,7 @@ export const ProductDetails = () => {
                   })}
                   variant="body1"
                 >
-                  {partner.name}
+                  {product.partner.name}
                 </Typography>
               )}
             </ProductTitleSection>
@@ -166,15 +130,15 @@ export const ProductDetails = () => {
               })}
               variant="body1"
             >
-              {product.short_description}
+              {product.shortDescription}
             </Typography>
 
             {/* Tags */}
             <TagsContainer>
               {/* Tile Tag */}
-              {product.tile_tag && (
+              {product.tileTag && (
                 <StyledChip
-                  label={product.tile_tag}
+                  label={product.tileTag}
                   sx={(theme) => ({
                     backgroundColor:
                       theme.tokens.component.Badge.Positive.Subtle.Background,
@@ -184,7 +148,7 @@ export const ProductDetails = () => {
               )}
 
               {/* Product Tags */}
-              {product.product_tags?.map((tag: string, index: number) => (
+              {product.productTags?.map((tag: string, index: number) => (
                 <StyledChip
                   key={index}
                   label={tag}
@@ -212,9 +176,9 @@ export const ProductDetails = () => {
         </ProductInfoSection>
 
         {/* Product Details Tabs */}
-        {product.details && (
+        {details && (
           <Box width="100%">
-            <ProductDetailsTabs details={product.details} />
+            <ProductDetailsTabs details={details} />
           </Box>
         )}
       </ProductDetailsContainer>

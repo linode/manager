@@ -137,3 +137,7 @@ export const PRODUCTS: Product[] = [
     categories: ['CDN Affiliated'],
   },
 ];
+
+export const getProductById = (productId: number): Product | undefined => {
+  return PRODUCTS.find((product) => product.id === productId);
+};
