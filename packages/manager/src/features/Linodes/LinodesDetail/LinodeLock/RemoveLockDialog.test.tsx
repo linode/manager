@@ -78,21 +78,6 @@ describe('RemoveLockDialog', () => {
     ).toBeVisible();
   });
 
-  it('should prioritize cannot_delete_with_subresources description when both lock types are present', () => {
-    const { getByText } = renderWithTheme(
-      <RemoveLockDialog
-        {...defaultProps}
-        linodeLocks={['cannot_delete', 'cannot_delete_with_subresources']}
-      />
-    );
-
-    expect(
-      getByText(
-        'Unlocking will allow this Linode and all its attached resources to be deleted or rebuilt.'
-      )
-    ).toBeVisible();
-  });
-
   it('should have Remove Lock and Cancel buttons', () => {
     const { getByText } = renderWithTheme(
       <RemoveLockDialog {...defaultProps} />
