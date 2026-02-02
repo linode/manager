@@ -22,6 +22,7 @@ import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
+import { AddLockDialog } from '../LinodeLock/AddLockDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
@@ -63,6 +64,7 @@ export const LinodeDetailHeader = () => {
   );
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
+  const [addLockDialogOpen, setAddLockDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(search.delete);
   const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(
     search.rebuild
@@ -89,6 +91,7 @@ export const LinodeDetailHeader = () => {
       navigate({ search: undefined });
     }
 
+    setAddLockDialogOpen(false);
     setPowerDialogOpen(false);
     setDeleteDialogOpen(false);
     setResizeDialogOpen(false);
@@ -134,6 +137,10 @@ export const LinodeDetailHeader = () => {
     setPowerAction(action);
   };
 
+  const onOpenAddLockDialog = () => {
+    setAddLockDialogOpen(true);
+  };
+
   const onOpenDeleteDialog = () => {
     setDeleteDialogOpen(true);
   };
@@ -155,6 +162,7 @@ export const LinodeDetailHeader = () => {
   };
 
   const handlers = {
+    onOpenAddLockDialog,
     onOpenDeleteDialog,
     onOpenMigrateDialog,
     onOpenPowerDialog,
@@ -218,6 +226,12 @@ export const LinodeDetailHeader = () => {
         linodeId={matchedLinodeId}
         linodeLabel={linode.label}
         onClose={closeDialogs}
+      />
+      <AddLockDialog
+        linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
+        onClose={closeDialogs}
+        open={Boolean(addLockDialogOpen)}
       />
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}

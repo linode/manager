@@ -1,6 +1,7 @@
 import type { BaseQueryParams, LinodeCreateType } from '@linode/utilities';
 
 export type DialogType =
+  | 'add_lock'
   | 'delete'
   | 'detach_vlan'
   | 'enable_backups'
