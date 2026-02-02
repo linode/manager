@@ -145,18 +145,26 @@ describe('clone linode', () => {
       // Change the way to check the clone progress due to M3-9860
       cy.wait('@cloneEvents').then((xhr) => {
         const eventData: Event[] = xhr.response?.body?.data;
-        const cloneEvent = eventData.filter(
-          (event: Event) => event['action'] === 'linode_clone'
+        const cloneEvents = eventData.filter(
+          (event: Event) =>
+            event['action'] === 'linode_clone' &&
+            event.entity &&
+            event.entity.label === newLinodeLabel
         );
-        cy.get('[id="menu-button--notification-events-menu"]')
-          .should('be.visible')
-          .click();
-        cy.get(`[data-qa-event="${cloneEvent[0]['id']}"]`).should('be.visible');
-        cy.get('[data-testid="linear-progress"]').should('be.visible');
-        // The progress bar should disappear when the clone is done.
-        cy.get('[data-testid="linear-progress"]', {
-          timeout: LINODE_CLONE_TIMEOUT,
-        }).should('not.exist');
+        const cloneEvent = cloneEvents[0];
+        if (cloneEvent) {
+          cy.get('[id="menu-button--notification-events-menu"]').as(
+            'btnEventsMenu'
+          );
+          cy.get('@btnEventsMenu').scrollIntoView();
+          cy.get('@btnEventsMenu').should('be.visible').click();
+          cy.get(`[data-qa-event="${cloneEvent['id']}"]`).should('be.visible');
+          cy.get('[data-testid="linear-progress"]').should('be.visible');
+          // The progress bar should disappear when the clone is done.
+          cy.get('[data-testid="linear-progress"]', {
+            timeout: LINODE_CLONE_TIMEOUT,
+          }).should('not.exist');
+        }
       });
 
       cy.visit('/linodes');
