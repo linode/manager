@@ -256,7 +256,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
           // props.onOpenUnlockDialog();
         } else {
           sendLinodeActionMenuItemEvent('Lock Linode');
-          // props.onOpenAddLockDialog();
+          props.onOpenAddLockDialog();
         }
       },
       title: isLocked ? 'Unlock' : 'Lock',
