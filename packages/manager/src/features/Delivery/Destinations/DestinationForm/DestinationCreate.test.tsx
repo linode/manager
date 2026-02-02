@@ -68,7 +68,9 @@ describe('DestinationCreate', () => {
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+        const logPathPrefixInput = screen.getByLabelText(
+          'Log Path Prefix (optional)'
+        );
         await userEvent.type(logPathPrefixInput, 'Test');
 
         expect(destinationNameInput).toHaveValue('Test');
@@ -101,7 +103,9 @@ describe('DestinationCreate', () => {
         expect(samplePath).toBeInTheDocument();
       });
       // Type the test value inside the input
-      const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+      const logPathPrefixInput = screen.getByLabelText(
+        'Log Path Prefix (optional)'
+      );
 
       await userEvent.type(logPathPrefixInput, 'test');
       // sample path should be created based on *log path* value
@@ -218,7 +222,9 @@ describe('DestinationCreate', () => {
       await userEvent.type(accessKeyIDInput, 'Test');
       const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
       await userEvent.type(secretAccessKeyInput, 'Test');
-      const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+      const logPathPrefixInput = screen.getByLabelText(
+        'Log Path Prefix (optional)'
+      );
       await userEvent.type(logPathPrefixInput, 'Test');
     };
 
