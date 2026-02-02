@@ -12,6 +12,7 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { UsersActionMenu } from './UsersActionMenu';
@@ -34,12 +35,14 @@ export const UserRow = ({ onDelete, user }: Props) => {
   ]);
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { isChildAccount, isDelegateAccount } = useDelegationRole();
+
   const canViewUser = permissions.view_user;
 
-  // Determine if the current user is a child account with isIAMDelegationEnabled enabled
+  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show the 'User type' column in the table
-  const isChildWithDelegationEnabled =
-    isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
+  const isChildOrDelegateWithDelegationEnabled =
+    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
@@ -58,7 +61,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
               {canViewUser ? (
                 <Link
                   to={
-                    isChildWithDelegationEnabled &&
+                    isChildOrDelegateWithDelegationEnabled &&
                     user.user_type === 'delegate'
                       ? `/iam/users/${user.username}/roles`
                       : `/iam/users/${user.username}/details`
@@ -75,7 +78,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
-      {isChildWithDelegationEnabled && (
+      {isChildOrDelegateWithDelegationEnabled && (
         <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
           <Typography>
             {user.user_type === 'child' ? 'User' : 'Delegate User'}
@@ -88,7 +91,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
           display: { sm: 'table-cell', xs: 'none' },
         }}
       >
-        {isChildWithDelegationEnabled ? (
+        {isChildOrDelegateWithDelegationEnabled ? (
           user.user_type === 'child' ? (
             <MaskableText isToggleable text={user.email} />
           ) : (
