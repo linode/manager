@@ -32,6 +32,8 @@ export const CardView = (props: RenderLinodesProps) => {
           <StyledSummaryGrid data-qa-linode-card={linode.id} size={{ xs: 12 }}>
             <LinodeEntityDetail
               handlers={{
+                onOpenAddLockDialog: () =>
+                  openDialog('add_lock', linode.id, linode.label),
                 onOpenDeleteDialog: () =>
                   openDialog('delete', linode.id, linode.label),
                 onOpenMigrateDialog: () =>
