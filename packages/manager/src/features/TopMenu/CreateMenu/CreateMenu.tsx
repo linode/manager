@@ -7,7 +7,7 @@ import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/utils';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 import {
