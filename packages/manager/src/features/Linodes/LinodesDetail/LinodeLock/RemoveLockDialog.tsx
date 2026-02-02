@@ -1,12 +1,13 @@
 import { deleteLock, getLocks } from '@linode/api-v4';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { LockType } from '@linode/api-v4';
+import type { APIError, LockType } from '@linode/api-v4';
 
 interface Props {
   linodeId: number;
@@ -30,23 +31,8 @@ export const RemoveLockDialog = (props: Props) => {
   const { linodeId, linodeLabel, linodeLocks, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
-
-  // Reset state when dialog opens
-  React.useEffect(() => {
-    if (open) {
-      setError(undefined);
-      setIsLoading(false);
-    }
-  }, [open]);
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    setError(undefined);
-
-    try {
-      // Fetch lock ID
+  const { error, isPending, mutate, reset } = useMutation<{}, APIError[]>({
+    mutationFn: async () => {
       const locksResponse = await getLocks(
         {},
         {
@@ -54,39 +40,55 @@ export const RemoveLockDialog = (props: Props) => {
         }
       );
 
-      const lock = locksResponse.data[0];
+      const locks = locksResponse.data;
 
-      if (!lock) {
-        setError('No lock found for this Linode.');
-        setIsLoading(false);
-        return;
+      if (locks.length === 0) {
+        throw [{ reason: 'No lock found for this Linode.' }];
       }
 
-      // Delete lock
+      // TODO: Currently only removes the first lock. If and when multiple locks are supported,
+      // this dialog should be enhanced to let users select which lock to remove.
+      const lock = locks[0];
+
       await deleteLock(lock.id);
 
+      return {};
+    },
+    onSuccess() {
       enqueueSnackbar(`Lock removed from ${linodeLabel}.`, {
         variant: 'success',
       });
       onClose();
-    } catch (err) {
-      setError(getAPIErrorOrDefault(err, 'Failed to remove lock.')[0].reason);
-      setIsLoading(false);
+    },
+  });
+
+  // Reset mutation state when dialog opens
+  React.useEffect(() => {
+    if (open) {
+      reset();
     }
+  }, [open, reset]);
+
+  const handleSubmit = () => {
+    mutate();
   };
+
+  const errorMessage = error
+    ? getAPIErrorOrDefault(error, 'Failed to remove lock.')[0].reason
+    : undefined;
 
   return (
     <ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isLoading,
+            disabled: isPending,
             label: 'Remove Lock',
-            loading: isLoading,
+            loading: isPending,
             onClick: handleSubmit,
           }}
           secondaryButtonProps={{
-            disabled: isLoading,
+            disabled: isPending,
             label: 'Cancel',
             onClick: onClose,
           }}
@@ -97,7 +99,7 @@ export const RemoveLockDialog = (props: Props) => {
       open={open}
       title="Remove Lock?"
     >
-      {error && <Notice text={error} variant="error" />}
+      {errorMessage && <Notice text={errorMessage} variant="error" />}
       <Typography>{getLockTypeDescription(linodeLocks)}</Typography>
     </ConfirmationDialog>
   );

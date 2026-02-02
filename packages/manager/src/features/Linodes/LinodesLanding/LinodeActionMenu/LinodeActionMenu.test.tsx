@@ -47,17 +47,10 @@ const queryMocks = vi.hoisted(() => ({
     },
   })),
   useNavigate: vi.fn(),
-  useFlags: vi.fn(() => ({
-    resourceLock: { linodes: false },
-  })),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
-}));
-
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: queryMocks.useFlags,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -289,10 +282,6 @@ describe('LinodeActionMenu', () => {
 
   describe('Lock/Unlock action', () => {
     it('should not show Lock action when feature flag is disabled', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: false },
-      });
-
       const { getByLabelText, queryByText } = renderWithTheme(
         <LinodeActionMenu {...props} />
       );
@@ -306,12 +295,9 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should show Lock action when feature flag is enabled and Linode is not locked', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
-
       const { getByLabelText, getByText } = renderWithTheme(
-        <LinodeActionMenu {...props} linodeLocks={[]} />
+        <LinodeActionMenu {...props} linodeLocks={[]} />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
@@ -322,12 +308,9 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should show Unlock action when feature flag is enabled and Linode is locked', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
-
       const { getByLabelText, getByText } = renderWithTheme(
-        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
@@ -338,9 +321,6 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should call onOpenRemoveLockDialog when Unlock is clicked', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
       queryMocks.userPermissions.mockReturnValue({
         data: {
           ...queryMocks.userPermissions().data,
@@ -354,7 +334,8 @@ describe('LinodeActionMenu', () => {
           {...props}
           linodeLocks={['cannot_delete']}
           onOpenRemoveLockDialog={onOpenRemoveLockDialog}
-        />
+        />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
@@ -366,9 +347,6 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should disable Lock action when user lacks create_lock permission', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
       queryMocks.userPermissions.mockReturnValue({
         data: {
           ...queryMocks.userPermissions().data,
@@ -377,7 +355,8 @@ describe('LinodeActionMenu', () => {
       });
 
       const { getByLabelText, getByTestId } = renderWithTheme(
-        <LinodeActionMenu {...props} linodeLocks={[]} />
+        <LinodeActionMenu {...props} linodeLocks={[]} />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
@@ -388,9 +367,6 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should disable Unlock action when user lacks delete_lock permission', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
       queryMocks.userPermissions.mockReturnValue({
         data: {
           ...queryMocks.userPermissions().data,
@@ -399,7 +375,8 @@ describe('LinodeActionMenu', () => {
       });
 
       const { getByLabelText, getByTestId } = renderWithTheme(
-        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
@@ -410,9 +387,6 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should enable Lock action when user has create_lock permission', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
       queryMocks.userPermissions.mockReturnValue({
         data: {
           ...queryMocks.userPermissions().data,
@@ -421,7 +395,8 @@ describe('LinodeActionMenu', () => {
       });
 
       const { getByLabelText, getByTestId } = renderWithTheme(
-        <LinodeActionMenu {...props} linodeLocks={[]} />
+        <LinodeActionMenu {...props} linodeLocks={[]} />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
@@ -432,9 +407,6 @@ describe('LinodeActionMenu', () => {
     });
 
     it('should enable Unlock action when user has delete_lock permission', async () => {
-      queryMocks.useFlags.mockReturnValue({
-        resourceLock: { linodes: true },
-      });
       queryMocks.userPermissions.mockReturnValue({
         data: {
           ...queryMocks.userPermissions().data,
@@ -443,7 +415,8 @@ describe('LinodeActionMenu', () => {
       });
 
       const { getByLabelText, getByTestId } = renderWithTheme(
-        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />,
+        { flags: { resourceLock: { linodes: true } } }
       );
 
       await userEvent.click(
