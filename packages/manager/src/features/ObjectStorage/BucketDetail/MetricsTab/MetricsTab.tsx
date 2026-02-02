@@ -4,14 +4,14 @@ import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboar
 
 interface Props {
   bucketName: string;
-  clusterId: string;
+  region: string;
 }
 
-export const MetricsTab = ({ bucketName, clusterId }: Props) => {
+export const MetricsTab = ({ bucketName, region }: Props) => {
   return (
     <CloudPulseDashboardWithFilters
       dashboardId={6}
-      region={clusterId}
+      region={region}
       resource={bucketName}
     />
   );
