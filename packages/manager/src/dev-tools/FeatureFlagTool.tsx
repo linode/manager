@@ -46,6 +46,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
+  {
+    flag: 'placementGroupPolicyUpdate',
+    label: 'Placement Group Policy Update',
+  },
   { flag: 'privateImageSharing', label: 'Private Image Sharing' },
   { flag: 'resourceLock', label: 'Resource Lock' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
