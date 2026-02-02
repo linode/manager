@@ -7,7 +7,7 @@ export const filterEditChannelFormValues = (
 ): EditNotificationChannelPayloadWithId => {
   return {
     channelId,
-    label: formValues.name,
+    label: formValues.label,
     details: {
       email: {
         usernames: formValues.recipients,

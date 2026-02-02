@@ -1,7 +1,7 @@
 import type { ChannelType } from '@linode/api-v4';
 
 export interface CreateNotificationChannelForm {
-  name: string;
+  label: string;
   recipients: string[];
   type: ChannelType | null;
 }
