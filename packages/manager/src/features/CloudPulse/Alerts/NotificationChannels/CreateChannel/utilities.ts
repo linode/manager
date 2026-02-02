@@ -11,6 +11,6 @@ export const filterCreateChannelFormValues = (
         usernames: formValues.recipients,
       },
     },
-    label: formValues.name,
+    label: formValues.label,
   };
 };
