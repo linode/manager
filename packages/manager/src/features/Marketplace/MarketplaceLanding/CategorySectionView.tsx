@@ -13,11 +13,9 @@ export interface CategorySectionViewProps {
   displayCount: number;
   errorMessage: string;
   hasMoreProducts: boolean;
-  isFetchingNextPage: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
   onLoadMore: () => void;
-  onProductClick: (productId: number) => void;
-  skeletonCount: number;
+  onProductClick: (productId: string) => void;
 }
 
 const SkeletonGrid = ({ count }: { count: number }) => (
@@ -33,7 +31,7 @@ const ProductsGrid = ({
   onProductClick,
 }: {
   cardData: ProductCardItem[];
-  onProductClick: (productId: number) => void;
+  onProductClick: (productId: string) => void;
 }) => (
   <Grid container spacing={3}>
     {cardData.map((item) => {
@@ -53,11 +51,9 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
   const {
     categoryName,
     isLoading,
-    isFetchingNextPage,
     hasMoreProducts,
     displayCount,
     cardData,
-    skeletonCount,
     errorMessage,
     onLoadMore,
     onProductClick,
@@ -77,9 +73,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
         <ProductsGrid cardData={cardData} onProductClick={onProductClick} />
       )}
 
-      {isFetchingNextPage && <SkeletonGrid count={skeletonCount} />}
-
-      {!isFetchingNextPage && hasMoreProducts && (
+      {hasMoreProducts && !isLoading && (
         <Button
           onClick={onLoadMore}
           sx={{

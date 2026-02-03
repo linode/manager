@@ -22,6 +22,7 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 
 import { EnableBackupsDialog } from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
+import { AddLockDialog } from '../LinodesDetail/LinodeLock/AddLockDialog';
 import { LinodeRebuildDialog } from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodesDetail/LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodesDetail/LinodeResize/LinodeResize';
@@ -54,6 +55,7 @@ import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
 
 interface State {
+  addLockDialogOpen: boolean;
   deleteDialogOpen: boolean;
   enableBackupsDialogOpen: boolean;
   groupByTag: boolean;
@@ -69,6 +71,7 @@ interface State {
 }
 
 export interface LinodeHandlers {
+  onOpenAddLockDialog: () => void;
   onOpenDeleteDialog: () => void;
   onOpenMigrateDialog: () => void;
   onOpenPowerDialog: (action: Action) => void;
@@ -109,6 +112,7 @@ type CombinedProps = LinodesLandingProps &
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
+    addLockDialogOpen: false,
     deleteDialogOpen: false,
     enableBackupsDialogOpen: false,
     groupByTag: false,
@@ -133,6 +137,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
   closeDialogs = () => {
     this.setState({
+      addLockDialogOpen: false,
       deleteDialogOpen: false,
       enableBackupsDialogOpen: false,
       linodeMigrateOpen: false,
@@ -143,8 +148,21 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     });
   };
 
+  openAddLockDialog = (linodeID: number, linodeLabel: string) => {
+    this.setState({
+      addLockDialogOpen: true,
+      selectedLinodeID: linodeID,
+      selectedLinodeLabel: linodeLabel,
+    });
+  };
+
   openDialog = (type: DialogType, linodeID: number, linodeLabel?: string) => {
     switch (type) {
+      case 'add_lock':
+        this.setState({
+          addLockDialogOpen: true,
+        });
+        break;
       case 'delete':
         this.setState({
           deleteDialogOpen: true,
@@ -217,6 +235,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         : undefined;
 
     const componentProps = {
+      openAddLockDialog: this.openAddLockDialog,
       openDialog: this.openDialog,
       openPowerActionDialog: this.openPowerDialog,
       someLinodesHaveMaintenance:
@@ -316,6 +335,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
               linodeLabel={this.state.selectedLinodeLabel}
               onClose={this.closeDialogs}
               open={this.state.deleteDialogOpen}
+            />
+            <AddLockDialog
+              linodeId={this.state.selectedLinodeID}
+              linodeLabel={this.state.selectedLinodeLabel}
+              onClose={this.closeDialogs}
+              open={this.state.addLockDialogOpen}
             />
           </React.Fragment>
         )}

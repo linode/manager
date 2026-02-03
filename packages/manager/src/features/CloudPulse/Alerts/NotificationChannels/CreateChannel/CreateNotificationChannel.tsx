@@ -33,7 +33,7 @@ const overrides: CrumbOverridesProps[] = [
 
 const initialValues: CreateNotificationChannelForm = {
   type: null,
-  name: '',
+  label: '',
   recipients: [],
 };
 
@@ -105,7 +105,7 @@ export const CreateNotificationChannel = () => {
               // Reset the name field when the channel type changes
               const handleChannelTypeChange = (value: ChannelType | null) => {
                 field.onChange(value);
-                resetField('name', { defaultValue: '' });
+                resetField('label', { defaultValue: '' });
                 resetField('recipients', { defaultValue: [] });
               };
 
@@ -124,7 +124,7 @@ export const CreateNotificationChannel = () => {
             <Controller
               control={control}
               key={channelTypeWatcher}
-              name="name"
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
                   {...field}

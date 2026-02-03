@@ -6,7 +6,10 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
+import {
+  getStreamTypeOption,
+  useIsLkeEAuditLogsTypeSelectionEnabled,
+} from 'src/features/Delivery/deliveryUtils';
 
 const sxTooltipIcon = {
   marginLeft: '4px',
@@ -43,6 +46,8 @@ export const PathSample = (props: PathSampleProps) => {
   });
 
   const { data: account } = useAccount();
+  const isLkeEAuditLogsTypeSelectionEnabled =
+    useIsLkeEAuditLogsTypeSelectionEnabled();
   const [month, day, year] = new Date().toLocaleDateString('en-US').split('/');
 
   const setStreamType = (): StreamType => {
@@ -92,7 +97,9 @@ export const PathSample = (props: PathSampleProps) => {
           text={
             <Stack spacing={2}>
               <Typography>Default paths:</Typography>
-              <Typography>{`${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{partition}/ {%Y/%m/%d/}`}</Typography>
+              {isLkeEAuditLogsTypeSelectionEnabled && (
+                <Typography>{`${getStreamTypeOption(streamType.LKEAuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{partition}/ {%Y/%m/%d/}`}</Typography>
+              )}
               <Typography>{`${getStreamTypeOption(streamType.AuditLogs)?.label} - {stream_type}/{log_type}/ {account}/{%Y/%m/%d/}`}</Typography>
             </Stack>
           }

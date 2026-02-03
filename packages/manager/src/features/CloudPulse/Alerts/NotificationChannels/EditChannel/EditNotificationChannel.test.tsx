@@ -218,7 +218,7 @@ describe('EditNotificationChannel component', () => {
 
   it('should show field-specific error when API returns field error', async () => {
     queryMocks.mutateAsync.mockRejectedValue([
-      { field: 'name', reason: 'Name already exists' },
+      { field: 'label', reason: 'Name already exists' },
     ]);
 
     const user = userEvent.setup();
