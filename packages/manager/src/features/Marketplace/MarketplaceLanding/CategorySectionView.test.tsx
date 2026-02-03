@@ -14,7 +14,7 @@ describe('CategorySectionView', () => {
       logoUrl: 'https://www.akamai.com/site/akamai-logo-v5.svg',
       productName: 'Akamai Compute',
       type: 'Saas & APIs',
-      id: 1,
+      id: 'akamai-compute',
     },
   ];
   const mockProps = {

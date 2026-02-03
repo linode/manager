@@ -15,7 +15,7 @@ export interface CategorySectionViewProps {
   hasMoreProducts: boolean;
   isLoading?: boolean;
   onLoadMore: () => void;
-  onProductClick: (productId: number) => void;
+  onProductClick: (productId: string) => void;
 }
 
 const SkeletonGrid = ({ count }: { count: number }) => (
@@ -31,7 +31,7 @@ const ProductsGrid = ({
   onProductClick,
 }: {
   cardData: ProductCardItem[];
-  onProductClick: (productId: number) => void;
+  onProductClick: (productId: string) => void;
 }) => (
   <Grid container spacing={3}>
     {cardData.map((item) => {
