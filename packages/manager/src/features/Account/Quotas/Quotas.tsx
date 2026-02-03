@@ -12,6 +12,7 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { QuotasTable } from './QuotasTable/QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
@@ -22,7 +23,7 @@ import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
   const navigate = useNavigate();
-
+  const { objectStorageGlobalQuotas } = useFlags();
   const [selectedLocation, setSelectedLocation] =
     React.useState<null | SelectOption<Quota['region_applied']>>(null);
   const locationData = useGetLocationsForQuotaService('object-storage');
@@ -40,23 +41,25 @@ export const Quotas = () => {
     <>
       <DocumentTitleSegment segment="Quotas" />
 
-      <Paper
-        sx={(theme: Theme) => ({
-          marginTop: theme.spacingFunction(16),
-        })}
-        variant="outlined"
-      >
-        <Typography variant="h2">Object Storage: global</Typography>
+      {objectStorageGlobalQuotas && (
+        <Paper
+          sx={(theme: Theme) => ({
+            marginTop: theme.spacingFunction(16),
+          })}
+          variant="outlined"
+        >
+          <Typography variant="h2">Object Storage: global</Typography>
 
-        <QuotasTable
-          isGlobalScope={true}
-          selectedLocation={null}
-          selectedService={{
-            label: 'Object Storage',
-            value: 'object-storage',
-          }}
-        />
-      </Paper>
+          <QuotasTable
+            isGlobalScope={true}
+            selectedLocation={null}
+            selectedService={{
+              label: 'Object Storage',
+              value: 'object-storage',
+            }}
+          />
+        </Paper>
+      )}
 
       <Paper
         sx={(theme: Theme) => ({
@@ -65,7 +68,9 @@ export const Quotas = () => {
         variant="outlined"
       >
         <Stack>
-          <Typography variant="h2">Object Storage: per-endpoint</Typography>
+          <Typography variant="h2">
+            Object Storage{objectStorageGlobalQuotas ? ': per-endpoint' : ''}
+          </Typography>
           <Box sx={{ display: 'flex' }}>
             <Notice spacingTop={16} variant="info">
               <Typography>
