@@ -63,7 +63,6 @@ export const DatabaseBackupsDialog = (props: Props) => {
         variant: 'success',
       });
       _onClose();
-      reset();
     });
   };
 
@@ -77,7 +76,7 @@ export const DatabaseBackupsDialog = (props: Props) => {
       subtitle={formattedDate && `From ${formattedDate} (UTC)`}
       title={`Restore ${database.label}`}
     >
-      {error ? (
+      {error && (
         <Notice
           text={
             getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
@@ -85,7 +84,7 @@ export const DatabaseBackupsDialog = (props: Props) => {
           }
           variant="error"
         />
-      ) : null}
+      )}
       {isClusterWithVPCAndForkingToDifferentRegion && ( // Show warning when forking a cluster with VPC to a different region
         <Notice variant="warning">
           The database cluster is currently assigned to a VPC. When you restore
