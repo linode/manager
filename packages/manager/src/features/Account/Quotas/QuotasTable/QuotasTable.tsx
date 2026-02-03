@@ -2,7 +2,6 @@ import { Dialog, ErrorState } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell/TableCell';
@@ -46,16 +45,12 @@ export const QuotasTable = (props: QuotasTableProps) => {
 
   const {
     data: quotasWithUsage,
-    quotas,
     errorMessage: quotasErrorMessage,
     queries: quotaUsageQueries,
     isFetching: isFetchingQuotas,
-    pagination,
   } = useGetQuotas(
     selectedLocation?.value,
     selectedService.value,
-    '/quotas',
-    `${collectionName}-table`,
     collectionName,
     isGlobalScope ? true : hasSelectedLocation
   );
@@ -136,18 +131,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
           )}
         </TableBody>
       </Table>
-
-      {selectedLocation && !isFetchingQuotas && (
-        <PaginationFooter
-          count={quotas?.results ?? 0}
-          eventCategory="quotas_table"
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          sx={{ '&.MuiBox-root': { marginTop: 0 } }}
-        />
-      )}
 
       <Dialog
         onClose={() => setSupportModalOpen(false)}

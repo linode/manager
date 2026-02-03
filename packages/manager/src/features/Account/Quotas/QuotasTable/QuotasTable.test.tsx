@@ -16,7 +16,7 @@ const queryMocks = vi.hoisted(() => ({
   },
   useQueries: vi.fn().mockReturnValue([]),
   useQuotaUsageQuery: vi.fn().mockReturnValue({}),
-  useQuotasQuery: vi.fn().mockReturnValue({}),
+  useAllQuotasQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -25,7 +25,7 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     quotaQueries: queryMocks.quotaQueries,
     useQuotaUsageQuery: queryMocks.useQuotaUsageQuery,
-    useQuotasQuery: queryMocks.useQuotasQuery,
+    useAllQuotasQuery: queryMocks.useAllQuotasQuery,
   };
 });
 
@@ -81,13 +81,8 @@ describe('QuotasTable', () => {
         isLoading: false,
       },
     ]);
-    queryMocks.useQuotasQuery.mockReturnValue({
-      data: {
-        data: quotas,
-        page: 1,
-        pages: 1,
-        results: 1,
-      },
+    queryMocks.useAllQuotasQuery.mockReturnValue({
+      data: quotas,
       isFetching: false,
     });
     queryMocks.useQuotaUsageQuery.mockReturnValue({

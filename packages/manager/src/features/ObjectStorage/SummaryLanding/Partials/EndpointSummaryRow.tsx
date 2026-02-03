@@ -19,14 +19,7 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
     data: quotaWithUsage,
     isFetching,
     isError,
-  } = useGetQuotas(
-    endpoint,
-    'object-storage',
-    '/object-storage/summary',
-    'object-storage-summary-table',
-    'quotas',
-    Boolean(endpoint)
-  );
+  } = useGetQuotas(endpoint, 'object-storage', 'quotas', Boolean(endpoint));
 
   if (isFetching) {
     return <TableRowLoading columns={3} />;
