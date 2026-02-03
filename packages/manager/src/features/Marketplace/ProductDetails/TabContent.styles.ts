@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
  * This provides consistent styling for all HTML elements across tabs
  * Styles follow Figma design specifications
  */
-export const StyledHtmlContent = styled('div')(({ theme }) => ({
+export const StyledTabContent = styled('div')(({ theme }) => ({
   '& a': {
     color: theme.palette.primary.main,
     textDecoration: 'none',

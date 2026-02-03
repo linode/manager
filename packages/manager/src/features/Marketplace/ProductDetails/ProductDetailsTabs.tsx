@@ -8,12 +8,12 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { StyledHtmlContent } from './HtmlContent.styles';
 import {
   ContentSection,
   OverviewContainer,
   VideoPlaceholder,
 } from './ProductDetailsTabs.styles';
+import { StyledTabContent } from './TabContent.styles';
 
 import type { ProductTabDetails } from './pages';
 
@@ -35,9 +35,9 @@ interface TabConfig {
  */
 const MarkdownContentRenderer = ({ content }: { content: string }) => {
   return (
-    <StyledHtmlContent>
+    <StyledTabContent>
       <Markdown textOrMarkdown={content} />
-    </StyledHtmlContent>
+    </StyledTabContent>
   );
 };
 

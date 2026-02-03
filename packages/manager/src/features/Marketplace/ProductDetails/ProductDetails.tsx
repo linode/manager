@@ -36,9 +36,6 @@ export const ProductDetails = () => {
     [numericProductId]
   );
 
-  // Tab content is optional. If not present for this product, we still show the page.
-  const details = getProductTabDetails(numericProductId);
-
   // Get logo URL based on theme
   const logoUrl = React.useMemo(() => {
     if (!product) {
@@ -56,6 +53,9 @@ export const ProductDetails = () => {
     );
   }
 
+  // Tab content is optional. If not present for this product, we still show the page.
+  const details = getProductTabDetails(numericProductId);
+
   // Contact sales handler placeholder - will be implemented in a future ticket
   const handleContactSales = () => {
     // Placeholder for contact sales functionality
@@ -63,11 +63,16 @@ export const ProductDetails = () => {
 
   return (
     <Paper
-      sx={{
+      sx={(theme) => ({
         alignItems: 'flex-start',
         display: 'flex',
         flexDirection: 'column',
-      }}
+        mx: {
+          md: 0,
+          sm: theme.spacingFunction(16),
+          xs: theme.spacingFunction(12),
+        },
+      })}
     >
       <ProductDetailsContainer>
         {/* Info Banner (conditional) */}
