@@ -55,7 +55,7 @@ describe('DestinationEdit', () => {
     assertInputHasValue('Bucket', 'destinations-bucket-name');
     assertInputHasValue('Access Key ID', 'Access Id');
     assertInputHasValue('Secret Access Key', '');
-    assertInputHasValue('Log Path Prefix', 'file');
+    assertInputHasValue('Log Path Prefix (optional)', 'file');
   });
 
   describe('given Test Connection and Edit Destination buttons', () => {

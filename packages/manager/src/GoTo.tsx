@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
-import { useIsMarketplaceV2Enabled } from './features/Marketplace/utils';
+import { useIsMarketplaceV2Enabled } from './features/Marketplace/shared';
 import { useIsNetworkLoadBalancerEnabled } from './features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';

@@ -1,11 +1,11 @@
 import { useDestinationsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
 import { TableBody, TableHead, TableRow } from '@mui/material';
-import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
