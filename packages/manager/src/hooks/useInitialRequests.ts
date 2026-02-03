@@ -1,20 +1,106 @@
 import { accountQueries, profileQueries } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
+
+import { getClientId } from 'src/OAuth/constants';
+import {
+  clearStorageAndRedirectToLogout,
+  getIsAdminToken,
+  getLoginURL,
+  redirectToLogin,
+} from 'src/OAuth/oauth';
+import { storage } from 'src/utilities/storage';
+
+import type { ApplicationState } from 'src/store';
 
 /**
  * This hook is responsible for making Cloud Manager's initial requests.
+ * It also verifies that the token in localStorage belongs to the same user
+ * as the Flask session cookie (via /oauth/verify).
+ *
  * It exposes a `isLoading` value so that we can render a loading page
- * as we make our inital requests.
+ * as we make our initial requests.
  */
 export const useInitialRequests = () => {
   const queryClient = useQueryClient();
 
+  const token = storage.authentication.token.get();
+  const tokenExists = Boolean(token);
+
+  const pendingUpload = useSelector(
+    (state: ApplicationState) => state.pendingUpload
+  );
+
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    makeInitialRequests();
-  }, []);
+    const isAuthCallback =
+      window.location.pathname === '/oauth/callback' ||
+      window.location.pathname === '/admin/callback';
+
+    if (isAuthCallback) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (!tokenExists && !pendingUpload) {
+      redirectToLogin();
+      return;
+    }
+
+    if (!tokenExists) {
+      setIsLoading(false);
+      return;
+    }
+
+    validateTokenAndSession();
+  }, [tokenExists, pendingUpload]);
+
+  const validateTokenAndSession = async () => {
+    const storedToken = storage.authentication.token.get();
+
+    if (!storedToken) {
+      makeInitialRequests();
+      return;
+    }
+
+    if (getIsAdminToken(storedToken)) {
+      makeInitialRequests();
+      return;
+    }
+
+    try {
+      const tokenValue = storedToken.replace(/^Bearer\s+/i, '');
+
+      const response = await fetch(
+        `${getLoginURL()}/oauth/verify?client_id=${getClientId()}`,
+        {
+          credentials: 'include',
+          headers: {
+            Authorization: `Bearer ${tokenValue}`,
+          },
+          method: 'POST',
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+
+        if (result.match === true) {
+          makeInitialRequests();
+          return;
+        }
+
+        clearStorageAndRedirectToLogout();
+        return;
+      }
+
+      clearStorageAndRedirectToLogout();
+    } catch (error) {
+      makeInitialRequests();
+    }
+  };
 
   /**
    * We make a series of requests for data on app load. The flow is:
