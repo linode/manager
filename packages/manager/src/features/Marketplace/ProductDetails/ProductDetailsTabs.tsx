@@ -15,10 +15,19 @@ import {
   VideoPlaceholder,
 } from './ProductDetailsTabs.styles';
 
-import type { ProductTabDetails } from '../data/details';
+import type { ProductTabDetails } from './pages';
 
 interface Props {
   details: ProductTabDetails;
+}
+
+/**
+ * Tab configuration for available detail sections
+ */
+interface TabConfig {
+  content: React.ReactNode;
+  label: string;
+  pendoId: string;
 }
 
 /**
@@ -33,15 +42,6 @@ const MarkdownContentRenderer = ({ content }: { content: string }) => {
 };
 
 /**
- * Tab configuration for available detail sections
- */
-interface TabConfig {
-  content: React.ReactNode;
-  label: string;
-  pendoId: string;
-}
-
-/**
  * ProductDetailsTabs component displays product information in tabs
  * Only renders tabs for sections that have content
  */
@@ -49,17 +49,18 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   const [index, setIndex] = React.useState(0);
   const tabs: TabConfig[] = [];
 
-  const hasDescription = (value?: { description: string }) => {
-    return Boolean(value?.description && value.description.trim().length > 0);
-  };
+  const overview = details.overview?.trim();
+  const pricing = details.pricing?.trim();
+  const documentation = details.documentation?.trim();
+  const support = details.support?.trim();
 
   // Overview Tab
-  if (hasDescription(details.overview)) {
+  if (overview) {
     tabs.push({
       content: (
         <OverviewContainer>
           <ContentSection>
-            <MarkdownContentRenderer content={details.overview!.description} />
+            <MarkdownContentRenderer content={overview} />
           </ContentSection>
           <VideoPlaceholder>
             <PlayCircleIcon />
@@ -82,11 +83,11 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   }
 
   // Pricing Tab
-  if (hasDescription(details.pricing)) {
+  if (pricing) {
     tabs.push({
       content: (
         <ContentSection>
-          <MarkdownContentRenderer content={details.pricing!.description} />
+          <MarkdownContentRenderer content={pricing} />
         </ContentSection>
       ),
       label: 'Pricing',
@@ -95,13 +96,11 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   }
 
   // Documentation Tab
-  if (hasDescription(details.documentation)) {
+  if (documentation) {
     tabs.push({
       content: (
         <ContentSection>
-          <MarkdownContentRenderer
-            content={details.documentation!.description}
-          />
+          <MarkdownContentRenderer content={documentation} />
         </ContentSection>
       ),
       label: 'Documentation',
@@ -110,11 +109,11 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   }
 
   // Support Tab
-  if (hasDescription(details.support)) {
+  if (support) {
     tabs.push({
       content: (
         <ContentSection>
-          <MarkdownContentRenderer content={details.support!.description} />
+          <MarkdownContentRenderer content={support} />
         </ContentSection>
       ),
       label: 'Support',

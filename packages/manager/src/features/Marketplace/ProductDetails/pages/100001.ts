@@ -6,9 +6,7 @@
 
 import type { ProductTabDetails } from '.';
 
-const details: ProductTabDetails = {
-  overview: {
-    description: `
+const overviewMarkdown = `
 ## SpinKube Overview
 
 SpinKube is an open source project that streamlines the experience of deploying and operating Wasm workloads on Kubernetes, using Spin Operator in tandem with runwasi and runtime class manager.
@@ -25,34 +23,33 @@ With SpinKube, you can leverage the advantages of using WebAssembly (Wasm) for y
 | :--- | :--- | :--- | :--- |
 | Feature 1 | Plan 1 | Plan 3 | Plan 5 |
 | Feature 2 | Plan 2 | Plan 4 | Plan 6 |
-    `.trim(),
-  },
+`.trim();
 
-  pricing: {
-    description: `
+const pricingMarkdown = `
 ## Pricing
 
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
-    `.trim(),
-  },
+`.trim();
 
-  documentation: {
-    description: `
+const documentationMarkdown = `
 ## Getting started with SpinKube
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacus arcu, rhoncus id rhoncus nec, dictum nec arcu. Duis et ullamcorper libero. Cras eget dui fermentum, commodo mauris at, ultrices dolor. Nunc eleifend, nibh ac malesuada scelerisque, mi velit mollis erat, quis condimentum dolor metus vel dolor. Praesent id metus ac sem sollicitudin cursus. Nunc eleifend dui placerat magna scelerisque auctor. Donec venenatis vulputate bibendum. Donec sagittis, dui vel fringilla sagittis, nisl arcu bibendum dolor, ac viverra mauris nisi sit amet justo. Aenean efficitur varius bibendum.
-    `.trim(),
-  },
+`.trim();
 
-  support: {
-    description: `
+const supportMarkdown = `
 ## Support
 
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
-    `.trim(),
-  },
+`.trim();
+
+const details: ProductTabDetails = {
+  overview: overviewMarkdown,
+  pricing: pricingMarkdown,
+  documentation: documentationMarkdown,
+  support: supportMarkdown,
 };
 
 export default details;

@@ -60,8 +60,8 @@ export const TagsContainer = styled(Box)(() => ({
 
 export const StyledChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-label': {
+    font: theme.font.bold,
     fontSize: theme.tokens.font.FontSize.Xxxs,
-    fontFamily: theme.font.bold,
     letterSpacing: '0.12px',
     lineHeight: '12px',
     padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(6)}`,

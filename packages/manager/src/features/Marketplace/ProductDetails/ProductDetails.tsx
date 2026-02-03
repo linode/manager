@@ -5,9 +5,9 @@ import * as React from 'react';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
 
-import { getProductTabDetails } from '../data/details';
 import { getProductById } from '../products';
 import { getLogoUrl } from '../shared';
+import { getProductTabDetails } from './pages';
 import {
   InfoBanner,
   LogoContainer,

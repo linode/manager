@@ -5,18 +5,10 @@ import product100001 from './100001';
  * Content is provided as Markdown strings which are rendered at runtime.
  */
 export interface ProductTabDetails {
-  documentation?: {
-    description: string;
-  };
-  overview?: {
-    description: string;
-  };
-  pricing?: {
-    description: string;
-  };
-  support?: {
-    description: string;
-  };
+  documentation?: string;
+  overview?: string;
+  pricing?: string;
+  support?: string;
 }
 
 /**
