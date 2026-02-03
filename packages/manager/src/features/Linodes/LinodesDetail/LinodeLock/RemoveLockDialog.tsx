@@ -43,7 +43,7 @@ export const RemoveLockDialog = (props: Props) => {
       const locks = locksResponse.data;
 
       if (locks.length === 0) {
-        throw [{ reason: 'No lock found for this Linode.' }];
+        throw [{ reason: 'No active lock found for this Linode.' }];
       }
 
       // TODO: Currently only removes the first lock. If and when multiple locks are supported,
