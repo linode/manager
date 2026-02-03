@@ -20,7 +20,7 @@ export interface CategorySectionProps {
 }
 
 export interface ProductCardItem extends ProductCardData {
-  id: number;
+  id: string;
 }
 
 const PRODUCTS_PER_BATCH = 6;
@@ -34,7 +34,7 @@ export const CategorySection = (props: CategorySectionProps) => {
   const productsToDisplay = products.slice(0, displayCount);
   const hasMoreProducts = products.length > displayCount;
 
-  const handleProductClick = (productId: number) => {
+  const handleProductClick = (productId: string) => {
     navigate({ to: `/cloud-marketplace/catalog/${productId}` });
   };
 
