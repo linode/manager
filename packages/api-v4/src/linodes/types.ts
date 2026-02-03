@@ -46,7 +46,13 @@ export interface Linode {
   label: string;
   lke_cluster_id: null | number;
   locks: LockType[];
-  maintenance_policy?: MaintenancePolicySlug;
+  /**
+   * The maintenance policy configured for this Linode.
+   *
+   * Will be `null` if the Maintenance Policy feature is not enabled or the Linode's
+   * region does not support maintenance policies.
+   */
+  maintenance_policy: MaintenancePolicySlug | null;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
@@ -75,6 +81,7 @@ export interface LinodeBackups {
 export type LinodeCapabilities =
   | 'Block Storage Encryption'
   | 'Block Storage Performance B1'
+  | 'Maintenance Policy'
   | 'SMTP Enabled';
 
 export type Window =
