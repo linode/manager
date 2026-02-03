@@ -7,7 +7,7 @@ import type { Product } from '../shared';
 describe('filterProducts', () => {
   const products: Product[] = [
     {
-      id: 1,
+      id: 'titan-edge',
       name: 'TITAN-Edge',
       shortDescription: 'Edge compute for media and entertainment',
       partner: {
@@ -20,7 +20,7 @@ describe('filterProducts', () => {
       categories: ['Media & Entertainment, Gaming', 'Compute'],
     },
     {
-      id: 2,
+      id: 'apimetrics',
       name: 'APImetrics',
       shortDescription: 'API monitoring and analytics',
       partner: {
@@ -33,7 +33,7 @@ describe('filterProducts', () => {
       categories: ['Development Tools'],
     },
     {
-      id: 3,
+      id: 'spinkube',
       name: 'SpinKube',
       shortDescription: 'Kubernetes operator for Spin apps',
       partner: {

@@ -17,6 +17,7 @@ export { default as InfoIcon } from './info.svg';
 export { default as LightBulbIcon } from './lightbulb.svg';
 export { default as LoadFailureIcon } from './load-failure.svg';
 export { default as PendingIcon } from './pending.svg';
+export { default as PlayCircleIcon } from './play-circle.svg';
 export { default as PlusSignIcon } from './plusSign.svg';
 export { default as RadioIcon } from './radio.svg';
 export { default as RadioIconRadioed } from './radioRadioed.svg';
