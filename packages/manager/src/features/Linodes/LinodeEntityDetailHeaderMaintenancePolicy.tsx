@@ -6,11 +6,11 @@ import * as React from 'react';
 import { statusTooltipIcons } from 'src/features/Linodes/LinodeEntityDetailHeaderMaintenancePolicy.utils';
 import { LinodeMaintenanceText } from 'src/features/Linodes/LinodeMaintenanceText';
 
-import type { MaintenancePolicySlug } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
 import type { LinodeMaintenance } from 'src/utilities/linodes';
 
 interface LinodeEntityDetailHeaderMaintenancePolicyProps {
-  linodeMaintenancePolicySet: MaintenancePolicySlug | undefined;
+  linodeMaintenancePolicySet: Linode['maintenance_policy'];
   maintenance: LinodeMaintenance | null;
 }
 
