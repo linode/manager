@@ -29,12 +29,7 @@ export const ProductDetails = () => {
   });
   const theme = useTheme();
 
-  const numericProductId = Number(productId);
-
-  const product = React.useMemo(
-    () => getProductById(numericProductId),
-    [numericProductId]
-  );
+  const product = React.useMemo(() => getProductById(productId), [productId]);
 
   // Get logo URL based on theme
   const logoUrl = React.useMemo(() => {
@@ -54,7 +49,7 @@ export const ProductDetails = () => {
   }
 
   // Tab content is optional. If not present for this product, we still show the page.
-  const details = getProductTabDetails(numericProductId);
+  const details = getProductTabDetails(productId);
 
   // Contact sales handler placeholder - will be implemented in a future ticket
   const handleContactSales = () => {

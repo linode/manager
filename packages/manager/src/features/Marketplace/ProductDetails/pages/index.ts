@@ -1,4 +1,4 @@
-import product100001 from './100001';
+import { akamaiCloudComputing } from './akamai-cloud-computing';
 
 /**
  * Tab content structure for product details page.
@@ -15,16 +15,16 @@ export interface ProductTabDetails {
  * Map of all product detail modules.
  * Each product's details are imported statically and available synchronously.
  */
-const detailsMap: Record<number, ProductTabDetails> = {
-  100001: product100001,
+const detailsMap: Record<string, ProductTabDetails> = {
+  'akamai-cloud-computing': akamaiCloudComputing,
   // Add more products here as you add their details files
 };
 
 /**
- * Looks up product tab details for a given numeric product ID.
+ * Looks up product tab details for a given product ID (slug).
  */
 export const getProductTabDetails = (
-  productId: number
+  productId: string
 ): ProductTabDetails | undefined => {
   return detailsMap[productId];
 };

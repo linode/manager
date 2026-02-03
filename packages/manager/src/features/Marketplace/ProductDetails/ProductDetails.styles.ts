@@ -1,15 +1,15 @@
 import { Box, Chip, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-export const ProductDetailsContainer = styled(Box)(() => ({
+export const ProductDetailsContainer = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   alignSelf: 'stretch',
   display: 'flex',
   flexDirection: 'column',
-  gap: '32px',
-  paddingLeft: '8px',
-  paddingRight: '8px',
-  paddingTop: '8px',
+  gap: theme.spacingFunction(32),
+  paddingLeft: theme.spacingFunction(8),
+  paddingRight: theme.spacingFunction(8),
+  paddingTop: theme.spacingFunction(8),
 }));
 
 export const InfoBanner = styled(Notice)(() => ({
@@ -20,42 +20,42 @@ export const InfoBanner = styled(Notice)(() => ({
   marginBottom: 0,
 }));
 
-export const ProductInfoSection = styled(Box)(() => ({
+export const ProductInfoSection = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   alignSelf: 'stretch',
   display: 'flex',
-  gap: '24px',
+  gap: theme.spacingFunction(24),
 }));
 
-export const LogoContainer = styled(Box)(() => ({
+export const LogoContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
   flexDirection: 'column',
-  height: '96px',
+  height: theme.spacingFunction(96),
   justifyContent: 'center',
-  width: '96px',
+  width: theme.spacingFunction(96),
 }));
 
-export const ProductDetailsSection = styled(Box)(() => ({
+export const ProductDetailsSection = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   alignSelf: 'stretch',
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px',
+  gap: theme.spacingFunction(16),
 }));
 
-export const ProductTitleSection = styled(Box)(() => ({
+export const ProductTitleSection = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   display: 'flex',
   flexDirection: 'column',
-  gap: '2px',
+  gap: theme.spacingFunction(2),
 }));
 
-export const TagsContainer = styled(Box)(() => ({
+export const TagsContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
   flexWrap: 'wrap',
-  gap: '8px',
+  gap: theme.spacingFunction(8),
 }));
 
 export const StyledChip = styled(Chip)(({ theme }) => ({

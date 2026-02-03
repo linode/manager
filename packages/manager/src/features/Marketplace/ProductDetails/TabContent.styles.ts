@@ -16,7 +16,7 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
   '& blockquote': {
     borderLeft: `4px solid ${theme.borderColors.borderTable}`,
     fontStyle: 'italic',
-    margin: '16px 0',
+    margin: `${theme.spacingFunction(16)} 0`,
     paddingLeft: theme.spacingFunction(16),
   },
   '& code': {
@@ -24,7 +24,7 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
     borderRadius: '3px',
     fontFamily: '"Courier New", Courier, monospace',
     fontSize: theme.tokens.font.FontSize.Xs,
-    padding: '2px 6px',
+    padding: `${theme.spacingFunction(2)} ${theme.spacingFunction(6)}`,
   },
   '& h1': {
     color: theme.tokens.alias.Content.Text.Primary.Default,
@@ -65,7 +65,7 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
   '& img': {
     display: 'block',
     height: 'auto',
-    margin: '16px 0',
+    margin: `${theme.spacingFunction(16)} 0`,
     maxWidth: '100%',
   },
   '& li': {
@@ -95,7 +95,7 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
     borderRadius: '4px',
     fontFamily: '"Courier New", Courier, monospace',
     fontSize: theme.tokens.font.FontSize.Xs,
-    margin: '16px 0',
+    margin: `${theme.spacingFunction(16)} 0`,
     overflowX: 'auto',
     padding: theme.spacingFunction(16),
   },
@@ -117,10 +117,10 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
     fontFamily: theme.font.normal,
     fontSize: theme.tokens.font.FontSize.Xs,
     fontStyle: 'normal',
-    gap: '8px',
-    height: '40px',
+    gap: theme.spacingFunction(8),
+    height: theme.spacingFunction(40),
     lineHeight: theme.tokens.font.LineHeight.Xs,
-    padding: '10px 12px',
+    padding: `${theme.spacingFunction(10)} ${theme.spacingFunction(12)}`,
     verticalAlign: 'middle',
   },
   '& th': {
@@ -131,9 +131,9 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
     flex: '1 0 0',
     fontFamily: theme.font.bold,
     fontSize: theme.tokens.font.FontSize.Xs,
-    gap: '8px',
+    gap: theme.spacingFunction(8),
     lineHeight: theme.tokens.font.LineHeight.Xs,
-    padding: '12px 16px 12px 12px',
+    padding: `${theme.spacingFunction(12)} ${theme.spacingFunction(16)} ${theme.spacingFunction(12)} ${theme.spacingFunction(12)}`,
     textAlign: 'left',
     verticalAlign: 'middle',
   },

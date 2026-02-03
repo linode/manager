@@ -1,5 +1,5 @@
 /**
- * Product tab details for id 100001.
+ * Product tab details for slug akamai-cloud-computing.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -45,11 +45,9 @@ const supportMarkdown = `
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 
-const details: ProductTabDetails = {
+export const akamaiCloudComputing: ProductTabDetails = {
   overview: overviewMarkdown,
   pricing: pricingMarkdown,
   documentation: documentationMarkdown,
   support: supportMarkdown,
 };
-
-export default details;
