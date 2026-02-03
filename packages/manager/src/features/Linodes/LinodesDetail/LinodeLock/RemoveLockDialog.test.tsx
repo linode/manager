@@ -162,7 +162,7 @@ describe('RemoveLockDialog', () => {
     await userEvent.click(getByText('Remove Lock'));
 
     await waitFor(() => {
-      expect(getByText('No lock found for this Linode.')).toBeVisible();
+      expect(getByText('No active lock found for this Linode.')).toBeVisible();
     });
   });
 
@@ -239,7 +239,7 @@ describe('RemoveLockDialog', () => {
     await userEvent.click(getByText('Remove Lock'));
 
     await waitFor(() => {
-      expect(getByText('No lock found for this Linode.')).toBeVisible();
+      expect(getByText('No active lock found for this Linode.')).toBeVisible();
     });
 
     // Close dialog
@@ -249,6 +249,6 @@ describe('RemoveLockDialog', () => {
     rerender(<RemoveLockDialog {...defaultProps} open={true} />);
 
     // Error should be cleared
-    expect(queryByText('No lock found for this Linode.')).toBeNull();
+    expect(queryByText('No active lock found for this Linode.')).toBeNull();
   });
 });
