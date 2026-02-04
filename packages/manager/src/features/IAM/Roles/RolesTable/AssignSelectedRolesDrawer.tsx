@@ -233,11 +233,6 @@ export const AssignSelectedRolesDrawer = ({
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                       },
-                      '& .MuiInputBase-root.Mui-focused .MuiInputBase-input': {
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      },
                     },
                   }}
                 />
