@@ -41,13 +41,6 @@ export const DeliveryTabHeader = ({
   const theme = useTheme();
 
   const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-  const customBreakpoint = 636;
-  const customXsDownBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down(customBreakpoint)
-  );
-  const customSmMdBetweenBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.between(customBreakpoint, 'md')
-  );
   const searchLabel = `Search for a ${entity}`;
 
   return (
@@ -66,23 +59,15 @@ export const DeliveryTabHeader = ({
           alignItems: 'center',
           display: 'flex',
           flexWrap: xsDown ? 'wrap' : 'nowrap',
-          gap: 3,
+          gap: `${theme.spacingFunction(24)} 0`,
           justifyContent:
             onSearch && searchValue !== undefined
               ? 'space-between'
               : 'flex-end',
           flex: '1 1 auto',
 
-          marginLeft: customSmMdBetweenBreakpoint
-            ? theme.spacingFunction(16)
-            : customXsDownBreakpoint
-              ? theme.spacingFunction(8)
-              : undefined,
-          marginRight: customSmMdBetweenBreakpoint
-            ? theme.spacingFunction(16)
-            : customXsDownBreakpoint
-              ? theme.spacingFunction(8)
-              : undefined,
+          marginLeft: 0,
+          marginRight: 0,
         }}
       >
         {onSearch && searchValue !== undefined && (
@@ -142,6 +127,9 @@ export const DeliveryTabHeader = ({
               data-pendo-id={`Logs Delivery ${entity}s-Create ${entity}`}
               disabled={disabledCreateButton}
               onClick={onButtonClick}
+              sx={{
+                whiteSpace: 'nowrap',
+              }}
               {...buttonDataAttrs}
             >
               {createButtonText ?? `Create ${entity}`}
@@ -157,7 +145,10 @@ const StyledActions = styled('div')(({ theme }) => ({
   display: 'flex',
   gap: theme.spacingFunction(24),
   justifyContent: 'flex-end',
-  marginLeft: 'auto',
+
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: 'auto',
+  },
 
   '& .MuiAutocomplete-root > .MuiBox-root': {
     display: 'flex',

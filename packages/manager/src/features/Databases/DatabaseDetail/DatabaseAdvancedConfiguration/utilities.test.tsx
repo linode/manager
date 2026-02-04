@@ -6,13 +6,11 @@ import {
   findConfigItem,
   formatConfigPayload,
   formatConfigValue,
-  getConfigAPIError,
   getDefaultConfigValue,
 } from './utilities';
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type {
-  APIError,
   DatabaseEngineConfig,
   DatabaseInstanceAdvancedConfig,
 } from '@linode/api-v4';
@@ -256,43 +254,5 @@ describe('getDefaultConfigValue', () => {
       type: 'integer',
     };
     expect(getDefaultConfigValue(config)).toBe(0);
-  });
-});
-
-describe('getConfigAPIError', () => {
-  const mockConfig: ConfigurationOption = {
-    label: 'connect_timeout',
-    category: 'mysql',
-    value: 100,
-    type: 'number',
-  };
-
-  const mockErrors: APIError[] = [
-    {
-      field: 'engine_config.mysql.connect_timeout',
-      reason: 'Invalid value for connect_timeout',
-    },
-    {
-      field: 'engine_config.mysql.default_time_zone',
-      reason: 'Invalid value for default_time_zone',
-    },
-  ];
-
-  it('should return the error reason if a matching error is found', () => {
-    const result = getConfigAPIError(mockConfig, mockErrors);
-    expect(result).toBe('Invalid value for connect_timeout');
-  });
-
-  it('should return undefined if no matching error is found', () => {
-    const result = getConfigAPIError(
-      { ...mockConfig, label: 'non_existent_config' },
-      mockErrors
-    );
-    expect(result).toBeUndefined();
-  });
-
-  it('should return undefined if updateDatabaseError is null', () => {
-    const result = getConfigAPIError(mockConfig, null);
-    expect(result).toBeUndefined();
   });
 });

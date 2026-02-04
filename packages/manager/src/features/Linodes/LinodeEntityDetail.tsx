@@ -154,6 +154,7 @@ export const LinodeEntityDetail = (props: Props) => {
             image={linode.image ?? 'Unknown Image'}
             imageVendor={imageVendor}
             isSummaryView={isSummaryView}
+            linodeCapabilities={linode.capabilities}
             linodeId={linode.id}
             linodeLabel={linode.label}
             linodeMaintenancePolicySet={

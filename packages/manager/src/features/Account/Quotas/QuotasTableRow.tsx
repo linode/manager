@@ -20,8 +20,9 @@ interface QuotaWithUsage extends Quota {
 }
 
 interface QuotasTableRowProps {
-  hasQuotaUsage: boolean;
+  hasUsage: boolean;
   index: number;
+  isDataPresent: boolean;
   quota: QuotaWithUsage;
   quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[];
   setConvertedResourceMetrics: (resourceMetric: {
@@ -36,7 +37,8 @@ const quotaRowMinHeight = 58;
 
 export const QuotasTableRow = (props: QuotasTableRowProps) => {
   const {
-    hasQuotaUsage,
+    hasUsage,
+    isDataPresent,
     index,
     quota,
     quotaUsageQueries,
@@ -122,18 +124,20 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
               <ErrorOutline />
               {getQuotaError(quotaUsageQueries, index)}
             </Typography>
-          ) : hasQuotaUsage ? (
+          ) : hasUsage && isDataPresent ? (
             <QuotaUsageBar
               limit={quota.quota_limit}
               resourceMetric={quota.resource_metric}
               usage={quota.usage?.usage ?? 0}
             />
-          ) : (
+          ) : hasUsage ? (
             <Typography>Data not available</Typography>
+          ) : (
+            <Typography>Not applicable</Typography>
           )}
         </Box>
       </TableCell>
-      {hasQuotaUsage ? (
+      {hasUsage ? (
         <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
           <ActionMenu
             actionsList={[requestIncreaseAction]}

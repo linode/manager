@@ -55,7 +55,7 @@ export const EditNotificationChannel = (
 
   const formMethods = useForm<CreateNotificationChannelForm>({
     defaultValues: {
-      name: channelData.label,
+      label: channelData.label,
       type: channelData.channel_type,
       recipients:
         channelData.channel_type === 'email'
@@ -124,7 +124,7 @@ export const EditNotificationChannel = (
           />
           <Controller
             control={control}
-            name="name"
+            name="label"
             render={({ field, fieldState }) => (
               <TextField
                 {...field}

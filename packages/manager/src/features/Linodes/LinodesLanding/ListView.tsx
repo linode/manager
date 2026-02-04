@@ -21,6 +21,8 @@ export const ListView = (props: RenderLinodesProps) => {
       {data.map((linode, idx: number) => (
         <LinodeRow
           handlers={{
+            onOpenAddLockDialog: () =>
+              openDialog('add_lock', linode.id, linode.label),
             onOpenDeleteDialog: () =>
               openDialog('delete', linode.id, linode.label),
             onOpenMigrateDialog: () =>

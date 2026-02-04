@@ -8,7 +8,7 @@ const specialStartRegex = /^[^a-zA-Z0-9]/;
 const specialEndRegex = /[^a-zA-Z0-9]$/;
 
 export const createNotificationChannelSchema = object({
-  name: string()
+  label: string()
     .required(fieldErrorMessage)
     .matches(
       /^[^*#&+:<>"?@%{}\\/]+$/,
