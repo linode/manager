@@ -48,13 +48,13 @@ const PaymentInformation = (props: Props) => {
   const queryClient = useQueryClient();
   const addPaymentMethodRouteMatch = search.action === 'add-payment-method';
 
-  const isChildUser = profile?.user_type === 'child';
+  const isChildUserType = profile?.user_type === 'child';
 
   const { data: permissions } = usePermissions('account', [
     'create_payment_method',
   ]);
 
-  const isReadOnly = !permissions?.create_payment_method || isChildUser;
+  const isReadOnly = !permissions?.create_payment_method || isChildUserType;
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -133,7 +133,7 @@ const PaymentInformation = (props: Props) => {
               }
               tooltipText={getRestrictedResourceText({
                 includeContactInfo: false,
-                isChildUser,
+                isChildUserType,
                 resourceType: 'Account',
               })}
             >
@@ -144,7 +144,7 @@ const PaymentInformation = (props: Props) => {
         {!isAkamaiCustomer ? (
           <PaymentMethods
             error={error}
-            isChildUser={isChildUser}
+            isChildUser={isChildUserType}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}
