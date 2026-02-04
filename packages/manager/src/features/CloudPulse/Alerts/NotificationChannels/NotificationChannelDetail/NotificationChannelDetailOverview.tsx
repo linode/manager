@@ -32,12 +32,12 @@ export const NotificationChannelDetailOverview = React.memo(
 
     return (
       <>
-        <Typography marginBottom={3} variant="h2">
+        <Typography marginBottom={2} variant="h2">
           Overview
         </Typography>
         <Grid
           container
-          spacing={1}
+          spacing={2}
           sx={{
             alignItems: 'center',
           }}
