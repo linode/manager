@@ -276,7 +276,7 @@ export const getDimensionFilterValueSchema = ({
   if (operator === 'in') {
     // here it is always autocomplete with comma separated values
     return string()
-      .test('max-comma-values', 'Select up to ${max} values', function (value) {
+      .test('max-comma-values', 'Maximum selections reached', function (value) {
         if (!value) return true;
 
         const { maxDimensionFilterValues } = this.options.context ?? {};
