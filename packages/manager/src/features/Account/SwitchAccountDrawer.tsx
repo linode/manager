@@ -40,7 +40,10 @@ export const SwitchAccountDrawer = (props: Props) => {
   >([]);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const isProxyUser = userType === 'proxy';
+  const isParentUserType = userType === 'parent';
+  const isProxyUserType = userType === 'proxy';
+  const isDelegateUserType = userType === 'delegate';
+  const isProxyOrDelegateUserType = isProxyUserType || isDelegateUserType;
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
   const currentTokenWithBearer = storage.authentication.token.get() ?? '';
@@ -73,12 +76,11 @@ export const SwitchAccountDrawer = (props: Props) => {
   } = useChildAccountsInfiniteQuery(
     {
       filter,
-      headers:
-        userType === 'proxy'
-          ? {
-              Authorization: currentTokenWithBearer,
-            }
-          : undefined,
+      headers: isProxyOrDelegateUserType
+        ? {
+            Authorization: currentTokenWithBearer,
+          }
+        : undefined,
     },
     isIAMDelegationEnabled === false
   );
@@ -90,7 +92,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     refetch: refetchAllChildAccounts,
   } = useAllListMyDelegatedChildAccountsQuery({
     params: {},
-    enabled: isIAMDelegationEnabled,
+    enabled: isIAMDelegationEnabled && isParentUserType,
   });
 
   const refetchFn = isIAMDelegationEnabled
@@ -105,10 +107,11 @@ export const SwitchAccountDrawer = (props: Props) => {
       onClose,
       userType,
     }: HandleSwitchToChildAccountProps) => {
-      const isProxyUser = userType === 'proxy';
+      const isProxyOrDelegateUserType =
+        userType === 'proxy' || userType === 'delegate';
 
       try {
-        if (isProxyUser) {
+        if (isProxyOrDelegateUserType) {
           // Revoke proxy token before switching accounts.
           await revokeToken().catch(() => {
             /* Allow user account switching; tokens will expire naturally. */
@@ -121,14 +124,18 @@ export const SwitchAccountDrawer = (props: Props) => {
         const proxyToken = await createToken(euuid);
 
         setTokenInLocalStorage({
-          prefix: 'authentication/proxy_token',
+          prefix: isProxyUserType
+            ? 'authentication/proxy_token'
+            : 'authentication/delegate_token',
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
           },
         });
 
-        updateCurrentToken({ userType: 'proxy' });
+        updateCurrentToken({
+          userType: isProxyUserType ? 'proxy' : 'delegate',
+        });
         onClose(event);
         location.reload();
       } catch (error) {
@@ -153,19 +160,30 @@ export const SwitchAccountDrawer = (props: Props) => {
     // Flag to prevent multiple clicks on the switch account link.
     setSubmitting(true);
 
-    // Revoke proxy token before switching to parent account.
+    // Revoke proxy or delegate token before switching to parent account.
     await revokeToken().catch(() => {
       /* Allow user account switching; tokens will expire naturally. */
     });
 
     updateCurrentToken({ userType: 'parent' });
 
-    // Reset flag for proxy user to display success toast once.
-    setStorage('is_proxy_user', 'false');
+    // Reset flag for proxy or delegate user to display success toast once.
+    if (isProxyUserType) {
+      setStorage('is_proxy_user_type', 'false');
+    } else if (isDelegateUserType) {
+      setStorage('is_delegate_user_type', 'false');
+    }
 
     onClose();
     location.reload();
-  }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
+  }, [
+    onClose,
+    revokeToken,
+    validateParentToken,
+    updateCurrentToken,
+    isProxyUserType,
+    isDelegateUserType,
+  ]);
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
     useState<boolean>(false);
@@ -203,7 +221,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         })}
       >
         Select an account to view and manage its settings and configurations
-        {isProxyUser && (
+        {isProxyOrDelegateUserType && (
           <>
             {' or '}
             <LinkButton
@@ -256,7 +274,9 @@ export const SwitchAccountDrawer = (props: Props) => {
       <ChildAccountList
         childAccounts={childAccounts}
         currentTokenWithBearer={
-          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
+          isProxyOrDelegateUserType
+            ? currentParentTokenWithBearer
+            : currentTokenWithBearer
         }
         errors={{
           childAccountInfiniteError,

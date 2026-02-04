@@ -1,5 +1,5 @@
 import { makePayment } from '@linode/api-v4/lib/account';
-import { accountQueries, useAccount, useProfile } from '@linode/queries';
+import { accountQueries, useAccount } from '@linode/queries';
 import {
   Button,
   Divider,
@@ -22,6 +22,7 @@ import { Currency } from 'src/components/Currency';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -89,7 +90,7 @@ export const PaymentDrawer = (props: Props) => {
     isLoading: accountLoading,
     refetch: accountRefetch,
   } = useAccount();
-  const { data: profile } = useProfile();
+  const { isChildUserType } = useDelegationRole();
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -113,13 +114,11 @@ export const PaymentDrawer = (props: Props) => {
 
   const minimumPayment = getMinimumPayment(account?.balance || 0);
   const paymentTooLow = +usd < +minimumPayment;
-
-  const isChildUser = profile?.user_type === 'child';
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
       globalGrantType: 'account_access',
       permittedGrantLevel: 'read_write',
-    }) || isChildUser;
+    }) || isChildUserType;
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(account?.balance || 0));
@@ -241,7 +240,7 @@ export const PaymentDrawer = (props: Props) => {
         {isReadOnly && (
           <Notice
             text={getRestrictedResourceText({
-              isChildUser,
+              isChildUserType,
               resourceType: 'Account',
             })}
             variant="error"

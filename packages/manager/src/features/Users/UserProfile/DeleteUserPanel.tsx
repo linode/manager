@@ -19,12 +19,13 @@ export const DeleteUserPanel = ({ user }: Props) => {
 
   const { data: profile } = useProfile();
 
-  const isProxyUserProfile = user.user_type === 'proxy';
+  const isProxyOrDelegateUserProfile =
+    user.user_type === 'proxy' || user.user_type === 'delegate';
 
   const tooltipText =
     profile?.username === user.username
       ? 'You can\u{2019}t delete the currently active user.'
-      : isProxyUserProfile
+      : isProxyOrDelegateUserProfile
         ? `You can\u{2019}t delete a ${PARENT_USER}.`
         : undefined;
 
@@ -35,7 +36,10 @@ export const DeleteUserPanel = ({ user }: Props) => {
         <Box>
           <Button
             buttonType="outlined"
-            disabled={profile?.username === user.username || isProxyUserProfile}
+            disabled={
+              profile?.username === user.username ||
+              isProxyOrDelegateUserProfile
+            }
             onClick={() => setIsDeleteDialogOpen(true)}
             tooltipText={tooltipText}
           >

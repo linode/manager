@@ -6,8 +6,8 @@ import { usePermissions } from '../IAM/hooks/usePermissions';
 import CloseAccountDialog from './CloseAccountDialog';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
   PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from './constants';
 
 export const CloseAccountSetting = () => {
@@ -17,7 +17,7 @@ export const CloseAccountSetting = () => {
 
   const { data: permissions } = usePermissions('account', ['cancel_account']);
 
-  // Disable the Close Account button for users with a Parent/Proxy/Child user type.
+  // Disable the Close Account button for users with a Parent/Proxy/Delegate/Child user type.
   const isCloseAccountDisabled = Boolean(profile?.user_type !== 'default');
 
   let closeAccountButtonTooltipText;
@@ -28,8 +28,11 @@ export const CloseAccountSetting = () => {
     case 'child':
       closeAccountButtonTooltipText = CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
       break;
+    case 'delegate':
+      closeAccountButtonTooltipText = DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+      break;
     case 'proxy':
-      closeAccountButtonTooltipText = PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
+      closeAccountButtonTooltipText = DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
       break;
     default:
       closeAccountButtonTooltipText = PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;

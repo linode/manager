@@ -35,14 +35,14 @@ export const UserRow = ({ onDelete, user }: Props) => {
   ]);
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount, isDelegateAccount } = useDelegationRole();
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
   const canViewUser = permissions.view_user;
 
   // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show the 'User type' column in the table
   const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
