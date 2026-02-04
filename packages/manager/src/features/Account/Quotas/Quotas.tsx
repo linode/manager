@@ -12,8 +12,9 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 
-import { QuotasTable } from './QuotasTable';
+import { QuotasTable } from './QuotasTable/QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
 
 import type { Quota } from '@linode/api-v4';
@@ -22,7 +23,7 @@ import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
   const navigate = useNavigate();
-
+  const { objectStorageGlobalQuotas } = useFlags();
   const [selectedLocation, setSelectedLocation] =
     React.useState<null | SelectOption<Quota['region_applied']>>(null);
   const locationData = useGetLocationsForQuotaService('object-storage');
@@ -39,6 +40,27 @@ export const Quotas = () => {
   return (
     <>
       <DocumentTitleSegment segment="Quotas" />
+
+      {objectStorageGlobalQuotas && (
+        <Paper
+          sx={(theme: Theme) => ({
+            marginTop: theme.spacingFunction(16),
+          })}
+          variant="outlined"
+        >
+          <Typography variant="h2">Object Storage: global</Typography>
+
+          <QuotasTable
+            isGlobalScope={true}
+            selectedLocation={null}
+            selectedService={{
+              label: 'Object Storage',
+              value: 'object-storage',
+            }}
+          />
+        </Paper>
+      )}
+
       <Paper
         sx={(theme: Theme) => ({
           marginTop: theme.spacingFunction(16),
@@ -46,7 +68,9 @@ export const Quotas = () => {
         variant="outlined"
       >
         <Stack>
-          <Typography variant="h2">Object Storage</Typography>
+          <Typography variant="h2">
+            Object Storage{objectStorageGlobalQuotas ? ': per-endpoint' : ''}
+          </Typography>
           <Box sx={{ display: 'flex' }}>
             <Notice spacingTop={16} variant="info">
               <Typography>
@@ -105,8 +129,14 @@ export const Quotas = () => {
             </Link>
             .
           </Typography>
-          <Stack direction="column" spacing={2}>
+
+          <Stack
+            data-testid="endpoint-quotas-table-container"
+            direction="column"
+            spacing={2}
+          >
             <QuotasTable
+              isGlobalScope={false}
               selectedLocation={selectedLocation}
               selectedService={{
                 label: 'Object Storage',
