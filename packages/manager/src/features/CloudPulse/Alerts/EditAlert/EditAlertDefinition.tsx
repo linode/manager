@@ -85,6 +85,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       entity_type: entityType,
     },
     mode: 'onBlur',
+    context: {
+      maxDimensionFilters:
+        flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined,
+    },
     resolver: yupResolver(
       getSchemaWithEntityIdValidation({
         aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],

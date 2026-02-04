@@ -114,7 +114,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const flags = useFlags();
 
   const maxDimensionFiltersValues =
-    flags.aclpAlerting?.maxDimensionFiltersValues ?? 5;
+    flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined;
 
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
