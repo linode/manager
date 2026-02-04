@@ -256,6 +256,7 @@ export interface Flags {
   nodebalancerVpc: boolean;
   objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
   privateImageSharing: boolean;
