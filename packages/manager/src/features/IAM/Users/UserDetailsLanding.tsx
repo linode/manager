@@ -1,4 +1,4 @@
-import { Chip, NewFeatureChip, styled } from '@linode/ui';
+import { NewFeatureChip } from '@linode/ui';
 import { Outlet, useLoaderData, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -20,6 +20,7 @@ import {
   USER_ENTITIES_LINK,
   USER_ROLES_LINK,
 } from '../Shared/constants';
+import { DelegateUserChip } from '../Shared/DelegateUserChip';
 
 export const UserDetailsLanding = () => {
   const flags = useFlags();
@@ -80,7 +81,7 @@ export const UserDetailsLanding = () => {
           labelOptions: {
             noCap: true,
             suffixComponent: isDelegateUserForChildAccount ? (
-              <StyledChip label="delegate user" />
+              <DelegateUserChip />
             ) : null,
           },
           pathname: location.pathname,
@@ -99,14 +100,3 @@ export const UserDetailsLanding = () => {
     </>
   );
 };
-
-const StyledChip = styled(Chip, {
-  label: 'StyledChip',
-})(({ theme }) => ({
-  textTransform: theme.tokens.font.Textcase.Uppercase,
-  marginLeft: theme.spacingFunction(4),
-  color: theme.tokens.component.Badge.Informative.Subtle.Text,
-  backgroundColor: theme.tokens.component.Badge.Informative.Subtle.Background,
-  font: theme.font.extrabold,
-  fontSize: theme.tokens.font.FontSize.Xxxs,
-}));
