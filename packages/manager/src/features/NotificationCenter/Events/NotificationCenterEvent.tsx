@@ -1,10 +1,10 @@
 import { useProfile } from '@linode/queries';
-import { Box, Tooltip, Typography } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
+import { Box, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
 import {
   formatProgressEvent,
   getEventMessage,
@@ -75,14 +75,10 @@ export const NotificationCenterEvent = React.memo(
           )}
           <Typography sx={{ fontSize: '0.8rem' }}>
             {progressEventDate} |{' '}
-            <Tooltip
-              placement="bottom"
-              title={username.length > 32 ? username : null}
-            >
-              <Typography sx={{ fontSize: '0.8rem', display: 'inline-block' }}>
-                {truncateEnd(username, 32)}
-              </Typography>
-            </Tooltip>
+            <TruncatedUsername
+              sx={{ fontSize: '0.8rem', display: 'inline-block' }}
+              username={username}
+            />
           </Typography>
         </Box>
       </NotificationEventStyledBox>

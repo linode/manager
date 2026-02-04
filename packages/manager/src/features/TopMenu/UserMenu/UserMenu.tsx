@@ -16,6 +16,7 @@ import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForDelegateUser } from 'src/components/AvatarForDelegateUser';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { getStorage, setStorage } from 'src/utilities/storage';
@@ -130,18 +131,10 @@ export const UserMenu = React.memo(() => {
             alignItems={'flex-start'}
             sx={{ display: { md: 'flex', xs: 'none' } }}
           >
-            <Tooltip
-              placement="top"
-              title={userName.length > 32 ? userName : null}
-            >
-              <Typography
-                sx={{
-                  font: theme.tokens.alias.Typography.Label.Semibold.S,
-                }}
-              >
-                {truncateEnd(userName, 32)}
-              </Typography>
-            </Tooltip>
+            <TruncatedUsername
+              sx={{ font: theme.tokens.alias.Typography.Label.Semibold.S }}
+              username={userName}
+            />
             {companyNameOrEmail && (
               <Typography
                 letterSpacing={

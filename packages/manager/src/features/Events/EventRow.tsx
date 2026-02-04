@@ -1,7 +1,6 @@
 import { useProfile } from '@linode/queries';
-import { Box, Tooltip, Typography } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -11,6 +10,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
 
 import {
   formatProgressEvent,
@@ -69,12 +69,7 @@ export const EventRow = (props: EventRowProps) => {
               username={username}
               width={24}
             />
-            <Tooltip
-              placement="top"
-              title={username.length > 32 ? username : null}
-            >
-              <Typography>{truncateEnd(username, 32)}</Typography>
-            </Tooltip>
+            <TruncatedUsername username={username} />
           </Box>
         </TableCell>
       </Hidden>
