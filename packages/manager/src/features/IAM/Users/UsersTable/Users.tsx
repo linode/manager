@@ -33,7 +33,7 @@ export const UsersLanding = () => {
   const navigate = useNavigate();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const { isChildAccount, isDelegateAccount } = useDelegationRole();
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
   const { query, users: usersParam } = useSearch({
     from: '/iam',
@@ -72,7 +72,7 @@ export const UsersLanding = () => {
   // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show both 'child' and 'delegate_user' users in the table
   const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
 
   const filterableOptions = React.useMemo(
     () => [

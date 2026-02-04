@@ -248,6 +248,7 @@ export const ExtraPresetProfileAndGrants = ({
                   <option value="child">Child</option>
                   <option value="parent">Parent</option>
                   <option value="proxy">Proxy</option>
+                  <option value="delegate">Delegate</option>
                   <option value="default">Default</option>
                 </select>
               </label>

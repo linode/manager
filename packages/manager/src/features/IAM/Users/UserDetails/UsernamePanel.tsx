@@ -20,7 +20,8 @@ export const UsernamePanel = ({ activeUser, canUpdateUser }: Props) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isProxyUser = activeUser?.user_type === 'proxy';
+  const isProxyOrDelegateUserType =
+    activeUser?.user_type === 'proxy' || activeUser?.user_type === 'delegate';
 
   const { mutateAsync } = useUpdateUserMutation(activeUser.username);
 
@@ -53,7 +54,7 @@ export const UsernamePanel = ({ activeUser, canUpdateUser }: Props) => {
 
   const tooltipForDisabledUsernameField = !canUpdateUser
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
-    : isProxyUser
+    : isProxyOrDelegateUserType
       ? RESTRICTED_FIELD_TOOLTIP
       : undefined;
 

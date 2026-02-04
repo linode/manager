@@ -15,8 +15,9 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
-import { AvatarForProxy } from 'src/components/AvatarForProxy';
+import { AvatarForDelegateUser } from 'src/components/AvatarForDelegateUser';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { UserMenuPopover } from './UserMenuPopover';
@@ -25,6 +26,8 @@ import { getCompanyNameOrEmail } from './utils';
 import type { Theme } from '@mui/material';
 
 export const UserMenu = React.memo(() => {
+  const { isProxyOrDelegateUserType, isProxyUserType, isDelegateUserType } =
+    useDelegationRole();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -36,7 +39,6 @@ export const UserMenu = React.memo(() => {
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isProxyUser = profile?.user_type === 'proxy';
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
@@ -46,7 +48,7 @@ export const UserMenu = React.memo(() => {
   });
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
-  const proxyHeaders = isProxyUser
+  const proxyHeaders = isProxyOrDelegateUserType
     ? {
         Authorization: getStorage(`authentication/parent_token/token`),
       }
@@ -54,7 +56,8 @@ export const UserMenu = React.memo(() => {
 
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
-  const userName = (isProxyUser ? parentProfile : profile)?.username ?? '';
+  const userName =
+    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -66,15 +69,30 @@ export const UserMenu = React.memo(() => {
 
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
-    if (isProxyUser && !getStorage('is_proxy_user')) {
+    if (
+      isProxyOrDelegateUserType &&
+      (!getStorage('is_proxy_user_type') ||
+        !getStorage('is_delegate_user_type'))
+    ) {
       // Flag for proxy user to display success toast once.
-      setStorage('is_proxy_user', 'true');
+      if (isProxyUserType) {
+        setStorage('is_proxy_user_type', 'true');
+      }
+      if (isDelegateUserType) {
+        setStorage('is_delegate_user_type', 'true');
+      }
 
       enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
         variant: 'success',
       });
     }
-  }, [isProxyUser, companyNameOrEmail, enqueueSnackbar]);
+  }, [
+    isProxyOrDelegateUserType,
+    companyNameOrEmail,
+    enqueueSnackbar,
+    isProxyUserType,
+    isDelegateUserType,
+  ]);
 
   const getEndIcon = () => {
     if (matchesSmDown) {
@@ -104,7 +122,9 @@ export const UserMenu = React.memo(() => {
           endIcon={!matchesMdDown && getEndIcon()}
           onClick={(e) => setAnchorEl(e.currentTarget)}
           open={open}
-          startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
+          startIcon={
+            isProxyOrDelegateUserType ? <AvatarForDelegateUser /> : <Avatar />
+          }
         >
           <Stack
             alignItems={'flex-start'}

@@ -28,7 +28,7 @@ export const UserDetailsLanding = () => {
     flags.iamLimitedAvailabilityBadges && isIAMEnabled;
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isParentAccount } = useDelegationRole();
+  const { isParentUserType } = useDelegationRole();
   const { isDelegateUserForChildAccount } = useLoaderData({
     from: '/iam/users/$username',
   });
@@ -50,7 +50,7 @@ export const UserDetailsLanding = () => {
     {
       to: `/iam/users/$username/delegations`,
       title: 'Account Delegations',
-      hide: !isIAMDelegationEnabled || !isParentAccount,
+      hide: !isIAMDelegationEnabled || !isParentUserType,
     },
   ]);
 

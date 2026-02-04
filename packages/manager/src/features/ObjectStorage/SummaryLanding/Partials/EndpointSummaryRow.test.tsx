@@ -16,7 +16,7 @@ const queryMocks = vi.hoisted(() => ({
     }),
   },
   useQueries: vi.fn().mockReturnValue([]),
-  useQuotasQuery: vi.fn().mockReturnValue({}),
+  useAllQuotasQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -24,7 +24,7 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     quotaQueries: queryMocks.quotaQueries,
-    useQuotasQuery: queryMocks.useQuotasQuery,
+    useAllQuotasQuery: queryMocks.useAllQuotasQuery,
   };
 });
 
@@ -39,6 +39,7 @@ vi.mock('@tanstack/react-query', async () => {
 const quotasMock = [
   quotaFactory.build({
     quota_id: `obj-buckets-${testEndpoint}`,
+    quota_type: 'obj-buckets',
     quota_name: 'Number of Buckets',
     endpoint_type: 'E1',
     s3_endpoint: testEndpoint,
@@ -48,6 +49,7 @@ const quotasMock = [
   }),
   quotaFactory.build({
     quota_id: `obj-bytes-${testEndpoint}`,
+    quota_type: 'obj-bytes',
     quota_name: 'Total Capacity',
     endpoint_type: 'E1',
     s3_endpoint: testEndpoint,
@@ -57,6 +59,7 @@ const quotasMock = [
   }),
   quotaFactory.build({
     quota_id: `obj-objects-${testEndpoint}`,
+    quota_type: 'obj-objects',
     quota_name: 'Number of Objects',
     endpoint_type: 'E1',
     s3_endpoint: testEndpoint,
@@ -98,13 +101,8 @@ describe('EndpointSummaryRow', () => {
       },
     ]);
 
-    queryMocks.useQuotasQuery.mockReturnValue({
-      data: {
-        data: quotasMock,
-        page: 1,
-        pages: 1,
-        results: 1,
-      },
+    queryMocks.useAllQuotasQuery.mockReturnValue({
+      data: quotasMock,
       isFetching: false,
     });
 
@@ -138,7 +136,7 @@ describe('EndpointSummaryRow', () => {
       },
     ]);
 
-    queryMocks.useQuotasQuery.mockReturnValue({
+    queryMocks.useAllQuotasQuery.mockReturnValue({
       isFetching: false,
       isError: true,
       error: errorMock,
@@ -172,13 +170,8 @@ describe('EndpointSummaryRow', () => {
       },
     ]);
 
-    queryMocks.useQuotasQuery.mockReturnValue({
-      data: {
-        data: quotasMock,
-        page: 1,
-        pages: 1,
-        results: 1,
-      },
+    queryMocks.useAllQuotasQuery.mockReturnValue({
+      data: quotasMock,
       isFetching: false,
     });
 
