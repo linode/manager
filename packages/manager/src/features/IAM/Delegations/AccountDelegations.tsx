@@ -39,12 +39,6 @@ export const AccountDelegations = () => {
     users: true,
   });
 
-  const pagination = usePaginationV2({
-    currentRoute: '/iam/delegations',
-    initialPage: 1,
-    preferenceKey: 'iam-delegations-pagination',
-  });
-
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -84,8 +78,14 @@ export const AccountDelegations = () => {
     });
   }, [filteredDelegations, order]);
 
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/delegations',
+    initialPage: 1,
+    preferenceKey: 'iam-delegations-pagination',
+    clientSidePaginationData: sortedDelegations,
+  });
+
   const handleSearch = (value: string) => {
-    pagination.handlePageChange(1);
     navigate({
       to: DELEGATIONS_ROUTE,
       search: { query: value || undefined },
@@ -123,7 +123,7 @@ export const AccountDelegations = () => {
       </Stack>
 
       <Paginate
-        data={sortedDelegations}
+        data={pagination.paginatedData}
         page={pagination.page}
         pageSize={pagination.pageSize}
         pageSizeSetter={pagination.handlePageSizeChange}
