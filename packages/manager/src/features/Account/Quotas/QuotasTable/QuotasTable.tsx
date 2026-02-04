@@ -48,12 +48,12 @@ export const QuotasTable = (props: QuotasTableProps) => {
     errorMessage: quotasErrorMessage,
     queries: quotaUsageQueries,
     isFetching: isFetchingQuotas,
-  } = useGetQuotas(
-    selectedLocation?.value,
-    selectedService.value,
+  } = useGetQuotas({
+    selectedLocation: selectedLocation?.value,
+    selectedService: selectedService.value,
     collectionName,
-    isGlobalScope ? true : hasSelectedLocation
-  );
+    enabled: isGlobalScope ? true : hasSelectedLocation,
+  });
 
   if (quotasErrorMessage) {
     return <ErrorState errorText={quotasErrorMessage} />;
