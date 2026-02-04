@@ -46,18 +46,6 @@ interface NotificationChannelAlertsProps {
   channelId: number;
 }
 
-const handleSortClick = (
-  orderBy: string,
-  handleOrderChange: (orderBy: string, order?: Order) => void,
-  handlePageChange: (page: number) => void,
-  order?: Order
-) => {
-  if (order) {
-    handleOrderChange(orderBy, order);
-    handlePageChange(1);
-  }
-};
-
 export const NotificationChannelAlerts = React.memo(
   (props: NotificationChannelAlertsProps) => {
     const { channelId } = props;
@@ -194,14 +182,12 @@ export const NotificationChannelAlerts = React.memo(
             page,
             pageSize,
           }) => {
-            const handleTableSort = (orderBy: string, order?: Order) =>
-              handleSortClick(
-                orderBy,
-                handleOrderChange,
-                handlePageChange,
-                order
-              );
-
+            const handleTableSort = (orderBy: string, order?: Order) => {
+              if (order) {
+                handleOrderChange(orderBy, order);
+                handlePageChange(1);
+              }
+            };
             return (
               <>
                 <Table data-qa="associated-alerts-table">

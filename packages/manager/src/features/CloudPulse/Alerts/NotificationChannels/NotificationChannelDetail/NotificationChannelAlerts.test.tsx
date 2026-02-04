@@ -1,4 +1,3 @@
-import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { notificationChannelAlertsFactory } from 'src/factories/cloudpulse/channels';
@@ -17,7 +16,6 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 const hookMocks = vi.hoisted(() => ({
-  useFlags: vi.fn(),
   useOrderV2: vi.fn(),
 }));
 
@@ -30,10 +28,6 @@ vi.mock('src/queries/cloudpulse/services', () => ({
   useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
 }));
 
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: hookMocks.useFlags,
-}));
-
 vi.mock('src/hooks/useOrderV2', () => ({
   useOrderV2: hookMocks.useOrderV2,
 }));
@@ -44,16 +38,13 @@ describe('NotificationChannelAlerts', () => {
   const alertNameText = 'Alert Name';
   const serviceTypeText = 'Service';
 
+  const mockFlags = {
+    aclpServices: {
+      dbaas: { alerts: { beta: true, enabled: true } },
+      linode: { alerts: { beta: true, enabled: true } },
+    },
+  };
   beforeEach(() => {
-    const flags = {
-      aclpServices: {
-        dbaas: { alerts: { beta: true, enabled: true } },
-        linode: { alerts: { beta: true, enabled: true } },
-      },
-    };
-
-    hookMocks.useFlags.mockReturnValue(flags);
-
     queryMocks.useCloudPulseServiceTypes.mockReturnValue({
       data: {
         data: mockServiceTypes,
@@ -80,10 +71,15 @@ describe('NotificationChannelAlerts', () => {
       isLoading: true,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText, getByTestId } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText(associatedAlertsText)).toBeVisible();
-    expect(screen.getByTestId('table-row-loading')).toBeInTheDocument();
+    expect(getByText(associatedAlertsText)).toBeVisible();
+    expect(getByTestId('table-row-loading')).toBeVisible();
   });
 
   it('should render error state when alerts query fails', () => {
@@ -96,10 +92,15 @@ describe('NotificationChannelAlerts', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText(associatedAlertsText)).toBeVisible();
-    expect(screen.getByText('Error loading alerts')).toBeVisible();
+    expect(getByText(associatedAlertsText)).toBeVisible();
+    expect(getByText('Error loading alerts')).toBeVisible();
   });
 
   it('should render notice when no alerts are associated', () => {
@@ -110,16 +111,19 @@ describe('NotificationChannelAlerts', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText(associatedAlertsText)).toBeVisible();
+    expect(getByText(associatedAlertsText)).toBeVisible();
     expect(
-      screen.getByText(
-        /No alerts are associated with this notification channel./
-      )
+      getByText(/No alerts are associated with this notification channel./)
     ).toBeVisible();
     expect(
-      screen.getByText(
+      getByText(
         /Add or assign alerts to start receiving notifications through this channel./
       )
     ).toBeVisible();
@@ -156,14 +160,19 @@ describe('NotificationChannelAlerts', () => {
       sortedData: alertsWithServiceLabel,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText(associatedAlertsText)).toBeVisible();
-    expect(screen.getByText(alertNameText)).toBeVisible();
-    expect(screen.getByText(serviceTypeText)).toBeVisible();
+    expect(getByText(associatedAlertsText)).toBeVisible();
+    expect(getByText(alertNameText)).toBeVisible();
+    expect(getByText(serviceTypeText)).toBeVisible();
 
     alerts.forEach((alert) => {
-      expect(screen.getByText(alert.label)).toBeVisible();
+      expect(getByText(alert.label)).toBeVisible();
     });
   });
 
@@ -207,11 +216,16 @@ describe('NotificationChannelAlerts', () => {
       sortedData: alertsWithServiceLabel,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText, queryByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText('CPU Alert')).toBeVisible();
-    expect(screen.queryByText('Database Alert')).not.toBeInTheDocument();
-    expect(screen.queryByText('Memory Alert')).not.toBeInTheDocument();
+    expect(getByText('CPU Alert')).toBeVisible();
+    expect(queryByText('Database Alert')).not.toBeInTheDocument();
+    expect(queryByText('Memory Alert')).not.toBeInTheDocument();
   });
 
   it('should filter alerts by service type', () => {
@@ -256,11 +270,16 @@ describe('NotificationChannelAlerts', () => {
       sortedData: alertsWithServiceLabel,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText, queryByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText('Database Alert 1')).toBeVisible();
-    expect(screen.getByText('Database Alert 2')).toBeVisible();
-    expect(screen.queryByText('Linode Alert')).not.toBeInTheDocument();
+    expect(getByText('Database Alert 1')).toBeVisible();
+    expect(getByText('Database Alert 2')).toBeVisible();
+    expect(queryByText('Linode Alert')).not.toBeInTheDocument();
   });
 
   it('should filter alerts by both search text and service type', () => {
@@ -309,14 +328,19 @@ describe('NotificationChannelAlerts', () => {
       sortedData: alertsWithServiceLabel,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
+    const { getByText, queryByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
 
-    expect(screen.getByText('Database CPU Alert')).toBeVisible();
-    expect(screen.queryByText('Database Memory Alert')).not.toBeInTheDocument();
-    expect(screen.queryByText('Linode CPU Alert')).not.toBeInTheDocument();
-    expect(screen.queryByText('Linode Memory Alert')).not.toBeInTheDocument();
+    expect(getByText('Database CPU Alert')).toBeVisible();
+    expect(queryByText('Database Memory Alert')).not.toBeInTheDocument();
+    expect(queryByText('Linode CPU Alert')).not.toBeInTheDocument();
+    expect(queryByText('Linode Memory Alert')).not.toBeInTheDocument();
   });
-  test('should render the Beta flag for the services in the service column', async () => {
+  it('should render the Beta flag for the services in the service column', async () => {
     const alerts = [
       notificationChannelAlertsFactory.build({
         label: 'Database CPU Alert',
@@ -357,7 +381,12 @@ describe('NotificationChannelAlerts', () => {
       sortedData: alertsWithServiceLabel,
     });
 
-    renderWithTheme(<NotificationChannelAlerts channelId={1} />);
-    expect(screen.getAllByText(/beta/i)).toHaveLength(alerts.length);
+    const { getAllByText } = renderWithTheme(
+      <NotificationChannelAlerts channelId={1} />,
+      {
+        flags: mockFlags,
+      }
+    );
+    expect(getAllByText(/beta/i)).toHaveLength(alerts.length);
   });
 });
