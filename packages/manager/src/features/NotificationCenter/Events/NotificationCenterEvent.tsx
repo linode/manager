@@ -73,10 +73,13 @@ export const NotificationCenterEvent = React.memo(
               value={event.percent_complete ?? 0}
             />
           )}
-          <Typography sx={{ fontSize: '0.8rem' }}>
+          <Typography sx={{ fontSize: theme.tokens.font.FontSize.Xxs }}>
             {progressEventDate} |{' '}
             <TruncatedUsername
-              sx={{ fontSize: '0.8rem', display: 'inline-block' }}
+              sx={{
+                fontSize: theme.tokens.font.FontSize.Xxs,
+                display: 'inline-block',
+              }}
               username={username}
             />
           </Typography>

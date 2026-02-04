@@ -132,7 +132,7 @@ export const UserMenu = React.memo(() => {
             sx={{ display: { md: 'flex', xs: 'none' } }}
           >
             <TruncatedUsername
-              sx={{ font: theme.tokens.alias.Typography.Label.Semibold.S }}
+              sx={{ font: theme.font.semibold }}
               username={userName}
             />
             {companyNameOrEmail && (
