@@ -87,10 +87,11 @@ export const MarketplaceLanding = () => {
     updateSearchParam('query', searchString || undefined);
   };
 
-  // Filter products here based on search and type filters. If no filters are set, shows all available products.
+  // Filter products here based on category, search and type filters. If no filters are set, shows all available products.
   const filteredProducts = React.useMemo(
-    () => filterProducts(PRODUCTS, { searchQuery, selectedType }),
-    [searchQuery, selectedType]
+    () =>
+      filterProducts(PRODUCTS, { selectedCategory, searchQuery, selectedType }),
+    [selectedCategory, searchQuery, selectedType]
   );
 
   // Group filtered products by category
@@ -107,22 +108,37 @@ export const MarketplaceLanding = () => {
     return map;
   }, [filteredProducts]);
 
+  // Get categories that have at least one filtered product
+  const categoriesWithFilteredProducts = React.useMemo(
+    () => Object.keys(filteredProductsByCategory) as Category[],
+    [filteredProductsByCategory]
+  );
+
   // Filter categories based on:
   // 1. Selected category from dropdown (if set)
-  // 2. All categories, sorted by product count (if no filters)
+  // 2. All categories that have filtered products, sorted by product count (if no category selected)
   const filteredCategories = React.useMemo(() => {
     if (selectedCategory) {
-      return categoriesWithProducts.filter((cat) => cat === selectedCategory);
+      return categoriesWithFilteredProducts.filter(
+        (cat) => cat === selectedCategory
+      );
     }
-    // No filters - show all categories, sorted by product count (highest to lowest)
-    return [...categoriesWithProducts].sort((a, b) => {
+
+    // Show all categories sorted by product count (highest to lowest)
+    return [...categoriesWithFilteredProducts].sort((a, b) => {
       const countA = filteredProductsByCategory[a]?.length || 0;
       const countB = filteredProductsByCategory[b]?.length || 0;
       return countB - countA;
     });
-  }, [selectedCategory, categoriesWithProducts, filteredProductsByCategory]);
+  }, [
+    selectedCategory,
+    categoriesWithFilteredProducts,
+    filteredProductsByCategory,
+  ]);
 
-  const hasFiltersApplied = Boolean(searchQuery || selectedType);
+  const hasFiltersApplied = Boolean(
+    searchQuery || selectedCategory || selectedType
+  );
 
   // Show empty state if there are no products to display (either no products exist, or filters return no results)
   const showEmptyState = filteredProducts.length === 0;
