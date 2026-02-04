@@ -1,6 +1,7 @@
 import { useProfile } from '@linode/queries';
-import { Box } from '@linode/ui';
+import { Box, Tooltip, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -56,7 +57,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-username-cell>
+        <TableCell data-qa-event-username-cell sx={{ width: '22%' }}>
           <Box alignItems="center" display="flex" gap={1}>
             <Avatar
               color={
@@ -68,7 +69,12 @@ export const EventRow = (props: EventRowProps) => {
               username={username}
               width={24}
             />
-            {username}
+            <Tooltip
+              placement="top"
+              title={username.length > 32 ? username : null}
+            >
+              <Typography>{truncateEnd(username, 32)}</Typography>
+            </Tooltip>
           </Box>
         </TableCell>
       </Hidden>
