@@ -3,10 +3,12 @@ import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
+import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useNotificationChannelQuery } from 'src/queries/cloudpulse/alerts';
 
+import { StyledPlaceholder } from '../../AlertsDetail/AlertDetail';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { NotificationChannelAlerts } from './NotificationChannelAlerts';
 import { NotificationChannelDetailOverview } from './NotificationChannelDetailOverview';
@@ -51,7 +53,7 @@ export const NotificationChannelDetail = () => {
     );
   }
 
-  if (isError || !channelDetails) {
+  if (isError) {
     return (
       <>
         <Breadcrumb
@@ -65,6 +67,23 @@ export const NotificationChannelDetail = () => {
     );
   }
 
+  if (!channelDetails) {
+    return (
+      <>
+        <Breadcrumb
+          crumbOverrides={overrides}
+          pathname="/Notification Channels/Details"
+        />
+        <Box alignContent="center" height={nonSuccessBoxHeight}>
+          <StyledPlaceholder
+            icon={AlertsIcon}
+            isEntity
+            title="No Data to display."
+          />
+        </Box>
+      </>
+    );
+  }
   return (
     <>
       <DocumentTitleSegment segment={`${channelDetails?.label}`} />
@@ -90,7 +109,7 @@ export const NotificationChannelDetail = () => {
               />
             </Box>
             <Box
-              data-qa-section="Settings"
+              data-qa-section="Details"
               flexBasis="50%"
               maxHeight={sectionMaxHeight}
               sx={{
