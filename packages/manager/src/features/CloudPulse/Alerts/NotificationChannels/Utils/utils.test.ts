@@ -10,13 +10,12 @@ import {
 
 describe('NotificationChannels utils', () => {
   describe('getNotificationChannelActionsList', () => {
+    const handlers = {
+      handleDelete: vi.fn(),
+      handleDetails: vi.fn(),
+      handleEdit: vi.fn(),
+    };
     it('should return proper actions for system channel type', () => {
-      const handlers = {
-        handleDelete: vi.fn(),
-        handleDetails: vi.fn(),
-        handleEdit: vi.fn(),
-      };
-
       const actions = getNotificationChannelActionsList({
         alertsCount: 0,
         handlers,
@@ -28,12 +27,6 @@ describe('NotificationChannels utils', () => {
     });
 
     it('should disable delete action and show tooltip when alertsCount > 0', () => {
-      const handlers = {
-        handleDelete: vi.fn(),
-        handleDetails: vi.fn(),
-        handleEdit: vi.fn(),
-      };
-
       const actions = getNotificationChannelActionsList({
         alertsCount: 2,
         handlers,
@@ -48,12 +41,6 @@ describe('NotificationChannels utils', () => {
     });
 
     it('should enable delete action when no alerts are associated', () => {
-      const handlers = {
-        handleDelete: vi.fn(),
-        handleDetails: vi.fn(),
-        handleEdit: vi.fn(),
-      };
-
       const actions = getNotificationChannelActionsList({
         alertsCount: 0,
         handlers,
