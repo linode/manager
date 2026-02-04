@@ -3,7 +3,11 @@
  */
 import { profileFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetAlertChannels } from 'support/intercepts/cloudpulse';
+import {
+  mockDeleteChannel,
+  mockDeleteChannelError,
+  mockGetAlertChannels,
+} from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
@@ -13,6 +17,12 @@ import {
   flagsFactory,
   notificationChannelFactory,
 } from 'src/factories';
+import {
+  channelTypeMap,
+  DELETE_CHANNEL_FAILED_MESSAGE,
+  DELETE_CHANNEL_SUCCESS_MESSAGE,
+  DELETE_CHANNEL_TOOLTIP_TEXT,
+} from 'src/features/CloudPulse/Alerts/constants';
 import {
   ChannelAlertsTooltipText,
   ChannelListingTableLabelMap,
@@ -29,6 +39,7 @@ const sortOrderMap = {
 const LabelLookup = Object.fromEntries(
   ChannelListingTableLabelMap.map((item) => [item.colName, item.label])
 );
+
 type SortOrder = 'ascending' | 'descending';
 
 interface VerifyChannelSortingParams {
@@ -37,60 +48,120 @@ interface VerifyChannelSortingParams {
   sortOrder: SortOrder;
 }
 
-const notificationChannels = notificationChannelFactory
-  .buildList(26)
-  .map((ch, i) => {
-    const isEmail = i % 2 === 0;
-    const alerts = {
-      alert_count: isEmail ? 5 : 3,
-      url: `monitor/alert-channels/${i + 1}/alerts`,
-      type: 'alerts-definitions',
-    };
+// Helper to generate alerts
+const generateAlerts = (numAlerts: number) => ({
+  alert_count: numAlerts,
+  type: 'alerts-definitions' as const,
+  url: '/monitor/alert-channels/alerts',
+});
 
-    if (isEmail) {
-      return {
-        ...ch,
-        id: i + 1,
-        label: `Channel-${i + 1}`,
-        type: 'user',
-        created_by: 'user',
-        updated_by: 'user',
-        channel_type: 'email',
-        updated: new Date(2024, 0, i + 1).toISOString(),
-        alerts,
-        content: {
-          email: {
-            email_addresses: [`test-${i + 1}@example.com`],
-            subject: 'Test Subject',
-            message: 'Test message',
-          },
-        },
-      } as NotificationChannel;
-    } else {
-      return {
-        ...ch,
-        id: i + 1,
-        label: `Channel-${i + 1}`,
-        type: 'system',
-        created_by: 'system',
-        updated_by: 'system',
-        channel_type: 'webhook',
-        updated: new Date(2024, 0, i + 1).toISOString(),
-        alerts,
-        content: {
-          webhook: {
-            webhook_url: `https://example.com/webhook/${i + 1}`,
-            http_headers: [
-              {
-                header_key: 'Authorization',
-                header_value: 'Bearer secret-token',
-              },
-            ],
-          },
-        },
-      } as NotificationChannel;
-    }
-  });
+const guaranteedChannels: NotificationChannel[] = [
+  notificationChannelFactory.build({
+    id: 1,
+    label: 'Email-System-0Alerts',
+    type: 'system',
+    channel_type: 'email',
+    alerts: generateAlerts(0),
+  }),
+  notificationChannelFactory.build({
+    id: 2,
+    label: 'Email-User-0Alerts',
+    type: 'user',
+    channel_type: 'email',
+    alerts: generateAlerts(0),
+  }),
+  notificationChannelFactory.build({
+    id: 3,
+    label: 'Webhook-System-3Alerts',
+    type: 'system',
+    channel_type: 'webhook',
+    alerts: generateAlerts(3),
+  }),
+  notificationChannelFactory.build({
+    id: 4,
+    label: 'Webhook-User-3Alerts',
+    type: 'user',
+    channel_type: 'webhook',
+    alerts: generateAlerts(3),
+  }),
+  notificationChannelFactory.build({
+    id: 5,
+    label: 'email-User-3Alerts',
+    type: 'user',
+    channel_type: 'email',
+    alerts: generateAlerts(3),
+  }),
+];
+
+// Generate remaining channels up to 26
+const remainingChannels: NotificationChannel[] = Array.from(
+  { length: 26 - guaranteedChannels.length },
+  (_, idx) => {
+    const id = guaranteedChannels.length + idx + 1;
+    const type: 'system' | 'user' = Math.random() < 0.5 ? 'user' : 'system';
+    const channelType: 'email' | 'webhook' =
+      Math.random() < 0.5 ? 'email' : 'webhook';
+    const alertsCount = Math.random() < 0.5 ? 0 : 3;
+
+    return notificationChannelFactory.build({
+      id,
+      label: `Channel-${id}`,
+      type,
+      channel_type: channelType,
+      alerts: generateAlerts(alertsCount),
+    });
+  }
+);
+
+const notificationChannels = [...guaranteedChannels, ...remainingChannels];
+
+/**
+ * Finds a notification channel by channel_type, owner type, and alerts length,
+ * and returns its NotificationChannel object.
+ *
+ * Throws an error if no matching channel is found.
+ * This guarantees the return type is always 'NotificationChannel'.
+ */
+const findChannel = (
+  // List of all notification channels to search
+  channels: NotificationChannel[],
+
+  channelType: NotificationChannel['channel_type'],
+
+  // Owner/type of the channel (e.g. 'user', 'system')
+  channelOwnerType: NotificationChannel['type'],
+
+  // Expected number of alerts (use 0 for "no alerts")
+  alertsLength: number
+): NotificationChannel => {
+  // Find the first channel that matches all criteria
+  const channel = channels.find(
+    (ch) =>
+      ch.channel_type === channelType &&
+      ch.type === channelOwnerType &&
+      // Special handling for zero alerts:
+      // alerts may be undefined or an empty array
+      (alertsLength === 0
+        ? !ch.alerts || ch.alerts.alert_count === 0
+        : ch.alerts?.alert_count === alertsLength)
+  );
+
+  // Fail fast if no matching channel is found
+  if (!channel) {
+    throw new Error(
+      `No channel found with channel_type=${channelType}, type=${channelOwnerType}, alertsLength=${alertsLength}`
+    );
+  }
+
+  // Safe to return: channel is guaranteed to exist
+  return channel;
+};
+const { label: userChannelLabel, id: userChannelId } = findChannel(
+  notificationChannels,
+  'email', // channel_type
+  'user', // channel owner/type
+  0 // alertsLength (0 = no alerts)
+);
 
 const isEmailContent = (
   content: NotificationChannel['content']
@@ -167,7 +238,7 @@ describe('Notification Channel Listing Page', () => {
     mockGetAlertChannels(notificationChannels).as(
       'getAlertNotificationChannels'
     );
-
+    mockDeleteChannel(userChannelId).as('deleteNotificationChannel');
     cy.visitWithLogin('/alerts/notification-channels');
 
     ui.pagination.findPageSizeSelect().click();
@@ -247,7 +318,9 @@ describe('Notification Channel Listing Page', () => {
             cy.findByText(String(expected.alerts.alert_count)).should(
               'be.visible'
             );
-            cy.findByText('Email').should('be.visible');
+            cy.findByText(channelTypeMap[expected.channel_type]).should(
+              'be.visible'
+            );
             cy.get('td').eq(3).should('have.text', expected.created_by);
             cy.findByText(
               formatDate(expected.updated, {
@@ -348,5 +421,152 @@ describe('Notification Channel Listing Page', () => {
       VerifyChannelSortingParams(column, 'ascending', ascending);
       VerifyChannelSortingParams(column, 'descending', descending);
     });
+  });
+
+  it('deletes a user-type email notification channel with no alerts', () => {
+    cy.findByPlaceholderText('Search for Notification Channels').as(
+      'searchInput'
+    );
+
+    cy.get('@searchInput').clear();
+    cy.get('@searchInput').type(userChannelLabel);
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Notification Channel ${userChannelLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    ui.dialog
+      .findByTitle(`Delete ${userChannelLabel}?`)
+      .should('be.visible')
+      .within(() => {
+        // Focus the "Alert Label" confirmation input
+        cy.findByLabelText('Notification Channel Label').click();
+
+        // Type the alert label to enable the Delete button
+        cy.focused().type(userChannelLabel);
+
+        // Click the Delete button to confirm
+        ui.buttonGroup
+          .findButtonByTitle('Delete')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
+    ui.toast.assertMessage(DELETE_CHANNEL_SUCCESS_MESSAGE);
+  });
+
+  it('disable deletion of a user-type email notification channel with alerts', () => {
+    // --- Arrange: Find a channel that has at least 1 alert ---
+    const { label: userChannelLabel } = findChannel(
+      notificationChannels,
+      'email', // channel_type
+      'user', // owner/type
+      3 // alertsLength: at least 1 alert
+    );
+
+    // --- Act: Search for the channel ---
+    cy.findByPlaceholderText('Search for Notification Channels').as(
+      'searchInput'
+    );
+
+    cy.get('@searchInput').clear();
+    cy.get('@searchInput').type(userChannelLabel);
+
+    // --- Act: Open action menu ---
+    ui.actionMenu
+      .findByTitle(`Action menu for Notification Channel ${userChannelLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.tooltip.findByText(DELETE_CHANNEL_TOOLTIP_TEXT).should('be.visible');
+
+    // --- Act: Click Delete action ---
+    ui.actionMenuItem
+      .findByTitle('Delete')
+      .should('be.visible')
+      .should('be.disabled');
+  });
+
+  it('ensures system-type channels never show the Delete button', () => {
+    // --- User-type email channel with alerts ---
+    const { label: systemChannelLabel } = findChannel(
+      notificationChannels,
+      'email', // channel_type
+      'system', // type/owner
+      0 // alertsLength = 0
+    );
+
+    // --- Act: Search for the channel ---
+    cy.findByPlaceholderText('Search for Notification Channels').as(
+      'searchInput'
+    );
+
+    cy.get('@searchInput').clear();
+    cy.get('@searchInput').type(systemChannelLabel);
+
+    // Open action menu
+    ui.actionMenu
+      .findByTitle(`Action menu for Notification Channel ${systemChannelLabel}`)
+      .should('be.visible')
+      .click();
+
+    // Delete button should NOT exist for system-type channels
+    cy.get('div[data-qa-action-menu="true"]') // targets the opened popover
+      .within(() => {
+        // Assert Delete button does NOT exist
+        cy.get('[data-qa-action-menu-item="Delete"]').should('not.exist');
+
+        // Optionally assert Show Details exists
+        cy.get('[data-qa-action-menu-item="Show Details"]').should(
+          'be.visible'
+        );
+      });
+  });
+  it('displays an error when deleting a notification channel fails', () => {
+    const notificationChannel = notificationChannelFactory.build({
+      id: 123,
+      label: 'Channel-error',
+      type: 'user',
+      created_by: 'user',
+      updated_by: 'user',
+      channel_type: 'email',
+      alerts: generateAlerts(0),
+    });
+    const userChannelLabel = notificationChannel.label;
+    mockGetAlertChannels([notificationChannel]);
+
+    // Arrange: Mock the DELETE API to return a 500 error
+    mockDeleteChannelError(123).as('deleteChannel');
+    cy.visitWithLogin('/alerts/notification-channels');
+
+    // Act: Attempt to delete the channel
+    ui.actionMenu
+      .findByTitle(`Action menu for Notification Channel ${userChannelLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    ui.dialog
+      .findByTitle(`Delete ${userChannelLabel}?`)
+      .should('be.visible')
+      .within(() => {
+        // Focus the "Alert Label" confirmation input
+        cy.findByLabelText('Notification Channel Label').click();
+
+        // Type the alert label to enable the Delete button
+        cy.focused().type(userChannelLabel);
+
+        // Click the Delete button to confirm
+        ui.buttonGroup
+          .findButtonByTitle('Delete')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
+    ui.toast.assertMessage(DELETE_CHANNEL_FAILED_MESSAGE);
   });
 });
