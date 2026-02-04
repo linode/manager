@@ -615,3 +615,52 @@ export const mockGetCloudPulseServiceByType = (
     makeResponse(service)
   );
 };
+
+/**
+ * Intercepts a DELETE request for a specific notification channel and mocks the backend response.
+ *
+ * This helper uses Cypress `cy.intercept()` to stub a DELETE API call to the
+ * alert channels endpoint (`/monitor/alert-channels/:id`) and returns a mocked
+ * response with the given status code. This allows tests to simulate both
+ * successful and failing delete operations without hitting a real backend.
+ *
+ * @param channelId - The ID of the notification channel to delete.
+ * @param statusCode - The HTTP status code to mock (default: 200).
+ *
+ * @returns A Cypress.Chainable that can be `as()` aliased and awaited with `cy.wait()`.
+ */
+export const mockDeleteChannel = (
+  channelId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/monitor/alert-channels/${channelId}`),
+    {
+      statusCode: 200,
+      body: {},
+    }
+  );
+};
+
+/**
+ * Mocks a DELETE request for a specific notification channel and simulates
+ * a server error response.
+ * This function uses Cypress's `cy.intercept()` to stub the DELETE API call
+ *
+ * @param channelId - The ID of the notification channel to delete.
+ * @returns Cypress.Chainable that can be aliased with `.as()` and awaited with `cy.wait()`.
+ */
+export const mockDeleteChannelError = (
+  channelId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`/monitor/alert-channels/${channelId}`),
+    {
+      statusCode: 500,
+      body: {
+        message: 'Internal server error',
+      },
+    }
+  );
+};

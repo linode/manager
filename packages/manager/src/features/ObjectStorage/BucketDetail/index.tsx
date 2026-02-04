@@ -49,10 +49,8 @@ export const BucketDetailLanding = React.memo(() => {
 
   const { aclpServices, objectStorageContextualMetrics } = useFlags();
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
-  const { isError: aclpServiceError } = useCloudPulseServiceByServiceType(
-    'objectstorage',
-    true
-  );
+  const { isError: aclpServiceError, isLoading: aclServiceLoading } =
+    useCloudPulseServiceByServiceType('objectstorage', true);
 
   const {
     data: bucketsData,
@@ -94,7 +92,7 @@ export const BucketDetailLanding = React.memo(() => {
     },
   ]);
 
-  if (isPending || isLoading) {
+  if (isPending || isLoading || aclServiceLoading) {
     return <CircleProgress />;
   }
 

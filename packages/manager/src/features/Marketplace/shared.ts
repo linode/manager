@@ -26,7 +26,7 @@ export type Type =
 
 export interface Product {
   categories: Category[];
-  id: number;
+  id: string;
   infoBanner?: string;
   name: string;
   partner: {
