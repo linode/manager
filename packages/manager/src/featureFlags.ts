@@ -170,6 +170,7 @@ interface AclpAlerting {
   alertDefinitions: boolean;
   beta: boolean;
   editDisabledStatuses?: AlertStatusType[];
+  maxDimensionFiltersValues?: number;
   maxEmailChannelRecipients?: number;
   notificationChannels: boolean;
   recentActivity: boolean;

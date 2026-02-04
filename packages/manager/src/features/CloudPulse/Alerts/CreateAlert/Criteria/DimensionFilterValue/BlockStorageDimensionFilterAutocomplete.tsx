@@ -4,7 +4,12 @@ import React from 'react';
 
 import { useBlockStorageFetchOptions } from './useBlockStorageFetchOptions';
 import { useCleanupStaleValues } from './useCleanupStaleValues';
-import { handleValueChange, resolveSelectedValues } from './utils';
+import {
+  handleValueChange,
+  isMaxSelectionsReached,
+  isOptionDisabled,
+  resolveSelectedValues,
+} from './utils';
 
 import type { DimensionFilterAutocompleteProps } from './constants';
 
@@ -26,6 +31,7 @@ export const BlockStorageDimensionFilterAutocomplete = (
     selectedRegions,
     serviceType,
     type,
+    maxSelections,
   } = props;
 
   const { data: regions } = useRegionsQuery();
@@ -47,13 +53,39 @@ export const BlockStorageDimensionFilterAutocomplete = (
     isLoading,
   });
 
+  const maxReached = React.useMemo(() => {
+    return isMaxSelectionsReached(
+      multiple ?? false,
+      fieldValue ?? '',
+      maxSelections
+    );
+  }, [fieldValue, maxSelections, multiple]);
+
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
+      disableSelectAll={
+        maxSelections !== undefined && multiple
+          ? values.length > maxSelections
+          : false
+      }
       errorText={
         errorText ?? (isError ? 'Failed to fetch the values.' : undefined)
+      }
+      getOptionDisabled={(option) => {
+        return isOptionDisabled({
+          maxReached,
+          value: fieldValue ?? undefined,
+          multiple: multiple ?? false,
+          option,
+        });
+      }}
+      helperText={
+        !errorText && maxSelections !== undefined && multiple
+          ? `Select up to ${maxSelections} values`
+          : undefined
       }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
