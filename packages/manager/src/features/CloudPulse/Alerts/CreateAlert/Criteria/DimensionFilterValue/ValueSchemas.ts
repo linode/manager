@@ -276,25 +276,29 @@ export const getDimensionFilterValueSchema = ({
   if (operator === 'in') {
     // here it is always autocomplete with comma separated values
     return string()
-      .test('max-comma-values', 'Maximum selections reached', function (value) {
-        if (!value) return true;
+      .test(
+        'max-comma-values',
+        'More than max values selected',
+        function (value) {
+          if (!value) return true;
 
-        const { maxDimensionFilterValues } = this.options.context ?? {};
+          const { maxDimensionFilterValues } = this.options.context ?? {};
 
-        if (!maxDimensionFilterValues) return true; // if not passed, skip the check
+          if (!maxDimensionFilterValues) return true; // if not passed, skip the check
 
-        const count = value
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean).length;
+          const count = value
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean).length;
 
-        return (
-          count <= maxDimensionFilterValues ||
-          this.createError({
-            message: `Select up to ${maxDimensionFilterValues} values`,
-          })
-        );
-      })
+          return (
+            count <= maxDimensionFilterValues ||
+            this.createError({
+              message: `Select up to ${maxDimensionFilterValues} values`,
+            })
+          );
+        }
+      )
       .concat(baseValueSchema);
   }
 
