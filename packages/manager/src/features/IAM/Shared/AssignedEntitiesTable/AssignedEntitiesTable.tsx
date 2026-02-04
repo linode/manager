@@ -73,14 +73,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
 
-  const pagination = usePaginationV2({
-    currentRoute: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/entity-access'
-      : `/iam/users/$username/entities`,
-    initialPage: 1,
-    preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
-  });
-
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
       setOrder(order === 'asc' ? 'desc' : 'asc');
@@ -181,12 +173,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     } else {
       setIsRemoveAssignmentDialogOpen(false);
     }
-    // If we just deleted the last one on a page, reset to the previous page.
-    const removedLastOnPage =
-      filteredAndSortedRoles.length % pagination.pageSize === 1;
-    if (removedLastOnPage) {
-      pagination.handlePageChange(pagination.page - 1);
-    }
   };
 
   const filteredRoles = getFilteredRoles({
@@ -207,6 +193,15 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       return order === 'asc' ? 1 : -1;
     }
     return 0;
+  });
+
+  const pagination = usePaginationV2({
+    currentRoute: isDefaultDelegationRolesForChildAccount
+      ? '/iam/roles/defaults/entity-access'
+      : `/iam/users/$username/entities`,
+    initialPage: 1,
+    preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
+    clientSidePaginationData: filteredAndSortedRoles,
   });
 
   const renderTableBody = () => {
@@ -230,59 +225,54 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     if (assignedRoles && entities) {
       return (
         <>
-          {filteredAndSortedRoles
-            .slice(
-              (pagination.page - 1) * pagination.pageSize,
-              pagination.page * pagination.pageSize
-            )
-            .map((el: EntitiesRole) => {
-              const actions: Action[] = [
-                {
-                  disabled: !permissionToCheck,
-                  onClick: () => {
-                    handleChangeRole(el, 'change-role-for-entity');
-                  },
-                  title: 'Change Role',
-                  tooltip: !permissionToCheck
-                    ? 'You do not have permission to change this role.'
-                    : undefined,
+          {pagination.paginatedData.map((el: EntitiesRole) => {
+            const actions: Action[] = [
+              {
+                disabled: !permissionToCheck,
+                onClick: () => {
+                  handleChangeRole(el, 'change-role-for-entity');
                 },
-                {
-                  disabled: !permissionToCheck,
-                  onClick: () => {
-                    handleRemoveAssignment(el);
-                  },
-                  title: isDefaultDelegationRolesForChildAccount
-                    ? 'Remove'
-                    : 'Remove Assignment',
-                  tooltip: !permissionToCheck
-                    ? 'You do not have permission to remove this assignment.'
-                    : undefined,
+                title: 'Change Role',
+                tooltip: !permissionToCheck
+                  ? 'You do not have permission to change this role.'
+                  : undefined,
+              },
+              {
+                disabled: !permissionToCheck,
+                onClick: () => {
+                  handleRemoveAssignment(el);
                 },
-              ];
+                title: isDefaultDelegationRolesForChildAccount
+                  ? 'Remove'
+                  : 'Remove Assignment',
+                tooltip: !permissionToCheck
+                  ? 'You do not have permission to remove this assignment.'
+                  : undefined,
+              },
+            ];
 
-              return (
-                <TableRow key={el.id}>
-                  <TableCell>
-                    <Typography>{el.entity_name}</Typography>
-                  </TableCell>
-                  <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                    <Typography>
-                      {getFormattedEntityType(el.entity_type)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                    <Typography>{el.role_name}</Typography>
-                  </TableCell>
-                  <TableCell actionCell>
-                    <ActionMenu
-                      actionsList={actions}
-                      ariaLabel={`Action menu for entity ${el.entity_name}`}
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            return (
+              <TableRow key={el.id}>
+                <TableCell>
+                  <Typography>{el.entity_name}</Typography>
+                </TableCell>
+                <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                  <Typography>
+                    {getFormattedEntityType(el.entity_type)}
+                  </Typography>
+                </TableCell>
+                <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                  <Typography>{el.role_name}</Typography>
+                </TableCell>
+                <TableCell actionCell>
+                  <ActionMenu
+                    actionsList={actions}
+                    ariaLabel={`Action menu for entity ${el.entity_name}`}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </>
       );
     }
@@ -384,7 +374,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
         role={selectedRole}
         username={username}
       />
-      {filteredRoles.length > PAGE_SIZES[0] && (
+      {pagination.paginatedData.length > PAGE_SIZES[0] && (
         <PaginationFooter
           count={filteredRoles.length}
           handlePageChange={pagination.handlePageChange}
