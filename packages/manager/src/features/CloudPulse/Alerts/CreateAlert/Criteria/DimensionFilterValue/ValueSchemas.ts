@@ -279,9 +279,9 @@ export const getDimensionFilterValueSchema = ({
       .test('max-comma-values', 'Select up to ${max} values', function (value) {
         if (!value) return true;
 
-        const { maxDimensionFilters } = this.options.context ?? {};
+        const { maxDimensionFilterValues } = this.options.context ?? {};
 
-        if (!maxDimensionFilters) return true; // if not passed, skip the check
+        if (!maxDimensionFilterValues) return true; // if not passed, skip the check
 
         const count = value
           .split(',')
@@ -289,9 +289,9 @@ export const getDimensionFilterValueSchema = ({
           .filter(Boolean).length;
 
         return (
-          count <= maxDimensionFilters ||
+          count <= maxDimensionFilterValues ||
           this.createError({
-            message: `Select up to ${maxDimensionFilters} values`,
+            message: `Select up to ${maxDimensionFilterValues} values`,
           })
         );
       })

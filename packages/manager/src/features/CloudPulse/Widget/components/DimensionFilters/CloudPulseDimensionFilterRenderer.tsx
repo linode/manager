@@ -97,7 +97,7 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       mode: 'onBlur',
       resolver: yupResolver(metricDimensionFiltersSchema),
       context: {
-        maxDimensionFilters:
+        maxDimensionFilterValues:
           flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined,
       },
     });

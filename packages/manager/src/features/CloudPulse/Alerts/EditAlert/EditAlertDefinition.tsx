@@ -86,7 +86,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     },
     mode: 'onBlur',
     context: {
-      maxDimensionFilters:
+      maxDimensionFilterValues:
         flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined,
     },
     resolver: yupResolver(
