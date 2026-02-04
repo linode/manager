@@ -21,8 +21,8 @@ export const filterProducts = (
   }
 ): Product[] => {
   let result = products;
-  // Apply category filter first if present
   if (filters.selectedCategory) {
+    // Apply category filter first if present
     result = result.filter((p) =>
       p.categories.includes(filters.selectedCategory as Category)
     );

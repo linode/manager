@@ -90,8 +90,8 @@ export const MarketplaceLanding = () => {
   // Filter products here based on category, search and type filters. If no filters are set, shows all available products.
   const filteredProducts = React.useMemo(
     () =>
-      filterProducts(PRODUCTS, { selectedCategory, searchQuery, selectedType }),
-    [selectedCategory, searchQuery, selectedType]
+      filterProducts(PRODUCTS, { searchQuery, selectedCategory, selectedType }),
+    [searchQuery, selectedCategory, selectedType]
   );
 
   // Group filtered products by category
