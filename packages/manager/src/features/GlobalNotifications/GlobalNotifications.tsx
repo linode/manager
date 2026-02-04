@@ -14,6 +14,7 @@ import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
 import { CreditCardExpiredBanner } from './CreditCardExpiredBanner';
 import { EmailBounceNotificationSection } from './EmailBounce';
+import { MarketplaceV2Banner } from './MarketplaceV2Banner';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
 import { DesignUpdateBanner } from './TokensUpdateBanner';
@@ -88,6 +89,7 @@ export const GlobalNotifications = () => {
       Object.keys(flags.taxCollectionBanner).length > 0 ? (
         <TaxCollectionBanner />
       ) : null}
+      {flags.marketplaceV2GlobalBanner ? <MarketplaceV2Banner /> : null}
     </>
   );
 };
