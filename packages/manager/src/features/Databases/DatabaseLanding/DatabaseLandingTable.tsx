@@ -11,7 +11,7 @@ import {
 import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import DatabaseSettingsDeleteClusterDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
+import { DatabaseSettingsDeleteClusterDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
 import { ManageAccessControlDrawer } from 'src/features/Databases/DatabaseDetail/ManageAccessControlDrawer';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
