@@ -2,9 +2,18 @@ import {
   useChildAccountsInfiniteQuery,
   useMyDelegatedChildAccountsQuery,
 } from '@linode/queries';
-import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
+import {
+  Button,
+  Drawer,
+  LinkButton,
+  Notice,
+  Stack,
+  Typography,
+  useTheme,
+} from '@linode/ui';
 import React, { useMemo, useState } from 'react';
 
+import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
@@ -35,10 +44,13 @@ interface HandleSwitchToChildAccountProps {
 
 export const SwitchAccountDrawer = (props: Props) => {
   const { onClose, open, userType } = props;
+  const theme = useTheme();
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const isParentUserType = userType === 'parent';
   const isProxyUserType = userType === 'proxy';
@@ -101,14 +113,13 @@ export const SwitchAccountDrawer = (props: Props) => {
     isRefetching: allChildAccountsIsRefetching,
     refetch: refetchAllChildAccounts,
   } = useMyDelegatedChildAccountsQuery({
-    params: {},
+    params: {
+      page,
+      page_size: pageSize,
+    },
     filter,
     enabled: isIAMDelegationEnabled && isParentUserType,
   });
-
-  const refetchFn = isIAMDelegationEnabled
-    ? refetchAllChildAccounts
-    : refetchChildAccounts;
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -159,6 +170,17 @@ export const SwitchAccountDrawer = (props: Props) => {
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
     useState<boolean>(false);
 
+  const isLoading =
+    isInitialLoading ||
+    isSubmitting ||
+    isSwitchingChildAccounts ||
+    isRefetching ||
+    allChildAccountsLoading ||
+    allChildAccountsIsRefetching;
+
+  const refetchFn = isIAMDelegationEnabled
+    ? refetchAllChildAccounts
+    : refetchChildAccounts;
   const handleClose = () => {
     setIsSwitchingChildAccounts(false);
     setSearchQuery('');
@@ -171,6 +193,15 @@ export const SwitchAccountDrawer = (props: Props) => {
     }
     return data?.pages.flatMap((page) => page.data);
   }, [isIAMDelegationEnabled, allChildAccounts, data]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1); // Reset to first page when page size changes
+  };
 
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
@@ -203,50 +234,67 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
-      {isIAMDelegationEnabled && allChildAccounts && (
+
+      {(childAccountInfiniteError || allChildAccountsError) && (
+        <Stack alignItems="center" gap={1} justifyContent="center">
+          <ErrorStateCloud />
+          <Typography>Unable to load data.</Typography>
+          <Typography>
+            Try again or contact support if the issue persists.
+          </Typography>
+          <Button
+            buttonType="primary"
+            onClick={() => refetchFn()}
+            sx={(theme) => ({
+              marginTop: theme.spacingFunction(16),
+            })}
+          >
+            Try again
+          </Button>
+        </Stack>
+      )}
+      {!(childAccountInfiniteError || allChildAccountsError) && (
         <>
           <DebouncedSearchTextField
             clearable
             debounceTime={250}
             hideLabel
-            key={`iam-search-${searchQuery}`}
+            key={`switch-search-${searchQuery}`}
             label="Search"
             onSearch={setSearchQuery}
             placeholder="Search"
-            sx={{ marginBottom: 2 }}
+            sx={{ marginBottom: theme.spacingFunction(12) }}
             value={searchQuery}
           />
-          {searchQuery && childAccounts && childAccounts.length === 0 && (
-            <Typography sx={{ fontStyle: 'italic' }}>
-              No search results
-            </Typography>
-          )}
+          {searchQuery &&
+            childAccounts &&
+            childAccounts.length === 0 &&
+            !isLoading && (
+              <Typography
+                sx={{
+                  fontStyle: 'italic',
+                  marginTop: theme.spacingFunction(6),
+                }}
+              >
+                No search results
+              </Typography>
+            )}
         </>
       )}
       {isIAMDelegationEnabled && (
         <ChildAccountsTable
           childAccounts={childAccounts}
           currentTokenWithBearer={currentTokenWithBearer}
-          errors={{
-            childAccountInfiniteError,
-            allChildAccountsError: allChildAccountsError?.[0]
-              ? new Error(allChildAccountsError[0].reason)
-              : null,
-          }}
-          filter={filter}
-          isLoading={
-            isInitialLoading ||
-            isSubmitting ||
-            isSwitchingChildAccounts ||
-            isRefetching ||
-            allChildAccountsLoading ||
-            allChildAccountsIsRefetching
-          }
+          isLoading={isLoading}
           isSwitchingChildAccounts={isSwitchingChildAccounts}
           onClose={onClose}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
           onSwitchAccount={handleSwitchToChildAccount}
-          refetchFn={refetchFn}
+          page={page}
+          pageSize={pageSize}
           setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+          totalResults={allChildAccounts?.results || 0}
           userType={userType}
         />
       )}
@@ -268,14 +316,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           filter={filter}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
-          isLoading={
-            isInitialLoading ||
-            isSubmitting ||
-            isSwitchingChildAccounts ||
-            isRefetching ||
-            allChildAccountsLoading ||
-            allChildAccountsIsRefetching
-          }
+          isLoading={isLoading}
           isSwitchingChildAccounts={isSwitchingChildAccounts}
           onClose={onClose}
           onSwitchAccount={handleSwitchToChildAccount}

@@ -1,4 +1,5 @@
-import { LinkButton } from '@linode/ui';
+import { Box, CircleProgress, LinkButton, useTheme } from '@linode/ui';
+import { Pagination } from 'akamai-cds-react-components';
 import {
   Table,
   TableBody,
@@ -7,22 +8,16 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-
-import type { Account, Filter, UserType } from '@linode/api-v4';
+import type { Account, UserType } from '@linode/api-v4';
 
 interface ChildAccountsTableProps {
   childAccounts?: Account[];
   currentTokenWithBearer?: string;
-  errors: {
-    allChildAccountsError: Error | null;
-    childAccountInfiniteError: boolean;
-  };
-  filter: Filter;
   isLoading: boolean;
   isSwitchingChildAccounts: boolean;
   onClose: () => void;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
   onSwitchAccount: ({
     currentTokenWithBearer,
     euuid,
@@ -36,8 +31,10 @@ interface ChildAccountsTableProps {
     onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
     userType: undefined | UserType;
   }) => void;
-  refetchFn: () => void;
+  page: number;
+  pageSize: number;
   setIsSwitchingChildAccounts: (value: boolean) => void;
+  totalResults: number;
   userType: undefined | UserType;
 }
 
@@ -45,42 +42,33 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
   const {
     childAccounts,
     currentTokenWithBearer,
-    errors,
     isLoading,
     isSwitchingChildAccounts,
     onClose,
     onSwitchAccount,
     setIsSwitchingChildAccounts,
     userType,
+    page,
+    pageSize,
+    totalResults,
+    onPageChange,
+    onPageSizeChange,
   } = props;
 
-  // const [page, setPage] = useState(1);
-  // const [pageSize, setPageSize] = useState(25);
+  const theme = useTheme();
+  const handlePageChange = (newPage: number) => {
+    onPageChange(newPage);
+  };
 
-  // const handlePageChange = (newPage: number) => {
-  //   setPage(newPage);
-  // };
-
-  // const handlePageSizeChange = (newPageSize: number) => {
-  //   setPageSize(newPageSize);
-  //   setPage(1); // Reset to first page when page size changes
-  // };
-
-  // const startIndex = (page - 1) * pageSize;
-  // const endIndex = startIndex + pageSize;
-  // const paginatedAccounts = childAccounts?.slice(startIndex, endIndex) || [];
-  // const totalCount = childAccounts?.length || 0;
+  const handlePageSizeChange = (newPageSize: number) => {
+    onPageSizeChange(newPageSize);
+  };
 
   if (isLoading) {
-    return <TableRowLoading columns={2} />;
-  }
-
-  if (errors.allChildAccountsError) {
     return (
-      <TableRowError
-        colSpan={2}
-        message={errors.allChildAccountsError.message}
-      />
+      <Box display="flex" justifyContent="center">
+        <CircleProgress size="md" />
+      </Box>
     );
   }
 
@@ -112,18 +100,21 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
           ))}
         </TableBody>
       </Table>
-      {/* {totalCount > pageSize && (
+      {totalResults > pageSize && (
         <Pagination
-          count={totalCount}
-          onPageChange={(_, newPage) => handlePageChange(newPage)}
-          onRowsPerPageChange={(event) =>
-            handlePageSizeChange(parseInt(event.target.value, 10))
+          count={totalResults}
+          onPageChange={(e: CustomEvent<number>) =>
+            handlePageChange(Number(e.detail))
           }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => handlePageSizeChange(Number(e.detail.pageSize))}
           page={page}
-          rowsPerPage={pageSize}
-          rowsPerPageOptions={[25, 50, 100]}
+          pageSize={pageSize}
+          pageSizes={[25, 50, 75, 100]}
+          style={{ marginTop: theme.spacingFunction(12) }}
         />
-      )} */}
+      )}
     </>
   );
 };
