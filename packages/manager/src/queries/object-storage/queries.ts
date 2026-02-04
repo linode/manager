@@ -168,8 +168,10 @@ export const useObjectStorageBuckets = (enabled = true) => {
   const clustersQueryEnabled = enabled && !isObjMultiClusterEnabled;
 
   // Endpoints contain all the regions that support Object Storage.
-  const { data: endpoints } = useObjectStorageEndpoints(endpointsQueryEnabled);
-  const { data: clusters } = useObjectStorageClusters(clustersQueryEnabled);
+  const { data: endpoints, isPending: isEndpointsPending } =
+    useObjectStorageEndpoints(endpointsQueryEnabled);
+  const { data: clusters, isPending: isClustersPending } =
+    useObjectStorageClusters(clustersQueryEnabled);
 
   const regions =
     isObjMultiClusterEnabled && !isObjectStorageGen2Enabled
@@ -178,11 +180,11 @@ export const useObjectStorageBuckets = (enabled = true) => {
 
   const queryEnabled =
     enabled &&
+    !isEndpointsPending &&
+    !isClustersPending &&
     ((isObjectStorageGen2Enabled && Boolean(endpoints)) ||
-      Boolean(regions) ||
-      (!isObjMultiClusterEnabled &&
-        !isObjectStorageGen2Enabled &&
-        Boolean(clusters)));
+      (isObjMultiClusterEnabled && Boolean(regions)) ||
+      Boolean(clusters));
 
   const queryFn = isObjectStorageGen2Enabled
     ? () => getAllBucketsFromEndpoints(endpoints)
