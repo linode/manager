@@ -64,16 +64,18 @@ export const ObjectStorageDimensionFilterAutocomplete = (
     );
   }, [fieldValue, maxSelections, multiple]);
 
+  const showHelperText = !errorText && maxSelections !== undefined && multiple;
+  const disableSelectAll =
+    maxSelections !== undefined && multiple
+      ? values.length > maxSelections
+      : false;
+
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
-      disableSelectAll={
-        maxSelections !== undefined && multiple
-          ? values.length > maxSelections
-          : false
-      }
+      disableSelectAll={disableSelectAll}
       errorText={
         errorText ??
         (isError ? 'Failed to fetch Object Storage endpoints.' : undefined)
@@ -87,9 +89,7 @@ export const ObjectStorageDimensionFilterAutocomplete = (
         });
       }}
       helperText={
-        !errorText && maxSelections !== undefined && multiple
-          ? `Select up to ${maxSelections} values`
-          : undefined
+        showHelperText ? `Select up to ${maxSelections} values` : undefined
       }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"

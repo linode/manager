@@ -44,16 +44,18 @@ export const DimensionFilterAutocomplete = (
       maxSelections
     );
   }, [fieldValue, maxSelections, multiple]);
+
+  const showHelperText = !errorText && maxSelections !== undefined && multiple;
+  const disableSelectAll =
+    maxSelections !== undefined && multiple
+      ? options.length > maxSelections
+      : false;
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
-      disableSelectAll={
-        maxSelections !== undefined && multiple
-          ? options.length > maxSelections
-          : false
-      }
+      disableSelectAll={disableSelectAll}
       errorText={errorText}
       getOptionDisabled={(option) => {
         return isOptionDisabled({
@@ -64,9 +66,7 @@ export const DimensionFilterAutocomplete = (
         });
       }}
       helperText={
-        !errorText && maxSelections !== undefined && multiple
-          ? `Select up to ${maxSelections} values`
-          : undefined
+        showHelperText ? `Select up to ${maxSelections} values` : undefined
       }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
