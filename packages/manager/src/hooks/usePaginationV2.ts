@@ -1,16 +1,18 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
+import React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 
 import type { RegisteredRouter, ToSubOptions } from '@tanstack/react-router';
 import type { TableSearchParams } from 'src/routes/types';
 
-export interface PaginationPropsV2 {
+export interface PaginationPropsV2<D = unknown> {
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
   page: number;
   pageSize: number;
+  paginatedData: D[];
 }
 
 export interface UsePaginationV2Props<T extends TableSearchParams> {
@@ -45,14 +47,17 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
   searchParams?: (prev: T) => T;
 }
 
-export const usePaginationV2 = <T extends TableSearchParams>({
+export const usePaginationV2 = <T extends TableSearchParams, D = unknown>({
+  clientSidePaginationData,
   currentRoute,
   defaultPageSize = MIN_PAGE_SIZE,
   initialPage = 1,
   preferenceKey,
   queryParamsPrefix,
   searchParams,
-}: UsePaginationV2Props<T>): PaginationPropsV2 => {
+}: UsePaginationV2Props<T> & {
+  clientSidePaginationData?: D[] | undefined;
+}): PaginationPropsV2<D> => {
   const { data: pageSizePreferences } = usePreferences(
     (preferences) => preferences?.pageSizes
   );
@@ -80,17 +85,20 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     ? Number(searchParamPageSize)
     : preferredPageSize;
 
-  const setPage = (page: number) => {
-    navigate<RegisteredRouter, string, string>({
-      search: (prev: TableSearchParams & T) => ({
-        ...prev,
-        ...(searchParams?.(prev) ?? {}),
-        [pageKey]: page,
-        ...(queryParamsPrefix ? {} : { page }),
-      }),
-      to: currentRoute,
-    });
-  };
+  const setPage = React.useCallback(
+    (page: number) => {
+      navigate<RegisteredRouter, string, string>({
+        search: (prev: TableSearchParams & T) => ({
+          ...prev,
+          ...(searchParams?.(prev) ?? {}),
+          [pageKey]: page,
+          ...(queryParamsPrefix ? {} : { page }),
+        }),
+        to: currentRoute,
+      });
+    },
+    [currentRoute, pageKey, queryParamsPrefix, searchParams, navigate]
+  );
 
   const setPageSize = (pageSize: number) => {
     navigate<RegisteredRouter, string, string>({
@@ -118,10 +126,33 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     }
   };
 
+  const totalCount = clientSidePaginationData?.length;
+  const maxPage =
+    totalCount !== undefined
+      ? Math.max(1, Math.ceil(totalCount / pageSize))
+      : page;
+  const clampedPage = Math.min(page, maxPage);
+
+  const paginatedData = React.useMemo(() => {
+    if (!clientSidePaginationData) return undefined;
+
+    return clientSidePaginationData.slice(
+      (clampedPage - 1) * pageSize,
+      clampedPage * pageSize
+    );
+  }, [clientSidePaginationData, clampedPage, pageSize]);
+
+  React.useEffect(() => {
+    if (paginatedData !== undefined && clampedPage !== page) {
+      setPage(clampedPage);
+    }
+  }, [clampedPage, page, paginatedData, setPage]);
+
   return {
     handlePageChange: setPage,
     handlePageSizeChange,
-    page,
+    page: clampedPage,
     pageSize,
+    paginatedData: paginatedData ?? [],
   };
 };

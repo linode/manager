@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
@@ -6,6 +5,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 
 export type SortOrder = 'asc' | 'desc';
@@ -22,12 +22,12 @@ interface Props {
 
 export const UsersLandingTableHead = ({ order }: Props) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { data: profile } = useProfile();
+  const { isChildAccount, isDelegateAccount } = useDelegationRole();
 
-  // Determine if the current user is a child account with isIAMDelegationEnabled enabled
+  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show the 'User Type' column in the table
-  const isChildWithDelegationEnabled =
-    isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
+  const isChildOrDelegateWithDelegationEnabled =
+    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
 
   return (
     <TableHead
@@ -45,7 +45,7 @@ export const UsersLandingTableHead = ({ order }: Props) => {
         >
           Username
         </TableSortCell>
-        {isChildWithDelegationEnabled && (
+        {isChildOrDelegateWithDelegationEnabled && (
           <TableCell
             style={{ width: '20%' }}
             sx={{ display: { lg: 'table-cell', xs: 'none' } }}
