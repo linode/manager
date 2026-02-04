@@ -18,10 +18,10 @@ interface Props {
 }
 
 const getLockTypeDescription = (linodeLocks: LockType[]): string => {
-  if (linodeLocks.includes('cannot_delete_with_subresources')) {
+  if (linodeLocks?.includes('cannot_delete_with_subresources')) {
     return 'Unlocking will allow this Linode and all its attached resources to be deleted or rebuilt.';
   }
-  if (linodeLocks.includes('cannot_delete')) {
+  if (linodeLocks?.includes('cannot_delete')) {
     return 'Unlocking will allow this Linode to be deleted or rebuilt.';
   }
   return '';
@@ -43,7 +43,9 @@ export const RemoveLockDialog = (props: Props) => {
       const locks = locksResponse.data;
 
       if (locks.length === 0) {
-        throw [{ reason: 'No active lock found for this Linode.' }];
+        return Promise.reject([
+          { reason: 'No active lock found for this Linode.' },
+        ]);
       }
 
       // TODO: Currently only removes the first lock. If and when multiple locks are supported,
