@@ -1,5 +1,6 @@
 import { useProfile } from '@linode/queries';
-import { Box, Typography } from '@linode/ui';
+import { Box, Tooltip, Typography } from '@linode/ui';
+import { truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -73,7 +74,15 @@ export const NotificationCenterEvent = React.memo(
             />
           )}
           <Typography sx={{ fontSize: '0.8rem' }}>
-            {progressEventDate} | {username}
+            {progressEventDate} |{' '}
+            <Tooltip
+              placement="bottom"
+              title={username.length > 32 ? username : null}
+            >
+              <Typography sx={{ fontSize: '0.8rem', display: 'inline-block' }}>
+                {truncateEnd(username, 32)}
+              </Typography>
+            </Tooltip>
           </Typography>
         </Box>
       </NotificationEventStyledBox>
