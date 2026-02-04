@@ -205,8 +205,9 @@ const iamUserNameRoute = createRoute({
       );
 
       const isChildAccount = profile?.user_type === 'child';
+      const isDelegateAccount = profile?.user_type === 'delegate';
 
-      if (!profile.restricted && isChildAccount) {
+      if (isChildAccount || isDelegateAccount) {
         let user: undefined | User;
         try {
           user = await context.queryClient.ensureQueryData(
@@ -217,11 +218,13 @@ const iamUserNameRoute = createRoute({
         }
 
         const isChildAccount = profile?.user_type === 'child';
+        const isDelegateAccount = profile?.user_type === 'delegate';
         const isDelegateUser = user.user_type === 'delegate';
 
-        // Determine if the current account is a child account with isIAMDelegationEnabled enabled
+        // Determine if the current account is a child or delegate profile with isIAMDelegationEnabled enabled
         // If so, we need to hide 'View User Details' and 'Account Delegations' tabs for delegate users
-        const isDelegateUserForChildAccount = isChildAccount && isDelegateUser;
+        const isDelegateUserForChildAccount =
+          (isChildAccount || isDelegateAccount) && isDelegateUser;
 
         // There is no detail view for delegate users in a child account
         if (
