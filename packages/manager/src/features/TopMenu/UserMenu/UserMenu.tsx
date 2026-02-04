@@ -130,13 +130,18 @@ export const UserMenu = React.memo(() => {
             alignItems={'flex-start'}
             sx={{ display: { md: 'flex', xs: 'none' } }}
           >
-            <Typography
-              sx={{
-                font: theme.tokens.alias.Typography.Label.Semibold.S,
-              }}
+            <Tooltip
+              placement="top"
+              title={userName.length > 32 ? userName : null}
             >
-              {userName}
-            </Typography>
+              <Typography
+                sx={{
+                  font: theme.tokens.alias.Typography.Label.Semibold.S,
+                }}
+              >
+                {truncateEnd(userName, 32)}
+              </Typography>
+            </Tooltip>
             {companyNameOrEmail && (
               <Typography
                 letterSpacing={
