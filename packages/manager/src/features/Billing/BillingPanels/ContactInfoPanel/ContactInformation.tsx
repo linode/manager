@@ -70,7 +70,7 @@ export const ContactInformation = React.memo((props: Props) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
-  const isChildUser = Boolean(profile?.user_type === 'child');
+  const isChildUserType = Boolean(profile?.user_type === 'child');
 
   const taxIdIsVerifyingNotification = notifications?.find((notification) => {
     return notification.type === 'tax_id_verifying';
@@ -78,7 +78,7 @@ export const ContactInformation = React.memo((props: Props) => {
 
   const { data: permissions } = usePermissions('account', ['update_account']);
 
-  const isReadOnly = !permissions.update_account || isChildUser;
+  const isReadOnly = !permissions.update_account || isChildUserType;
 
   const handleEditDrawerOpen = () => {
     navigate({
@@ -146,7 +146,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 onClick={handleEditDrawerOpen}
                 tooltipText={getRestrictedResourceText({
                   includeContactInfo: false,
-                  isChildUser,
+                  isChildUserType,
                   resourceType: 'Account',
                 })}
               >

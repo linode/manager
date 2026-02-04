@@ -1,7 +1,6 @@
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
-  useProfile,
 } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
@@ -18,7 +17,8 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+import { DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -47,8 +47,7 @@ const PREFERENCE_KEY = 'api-tokens';
 
 export const APITokenTable = (props: Props) => {
   const { title, type } = props;
-
-  const { data: profile } = useProfile();
+  const { isProxyOrDelegateUserType } = useDelegationRole();
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -80,8 +79,6 @@ export const APITokenTable = (props: Props) => {
     },
     { '+order': order, '+order_by': orderBy }
   );
-
-  const isProxyUser = Boolean(profile?.user_type === 'proxy');
 
   const [isCreateOpen, setIsCreateOpen] = React.useState<boolean>(false);
   const [isRevokeOpen, setIsRevokeOpen] = React.useState<boolean>(false);
@@ -170,7 +167,7 @@ export const APITokenTable = (props: Props) => {
         </TableCell>
         <TableCell actionCell>
           <APITokenMenu
-            isProxyUser={isProxyUser}
+            isProxyOrDelegateUserType={isProxyOrDelegateUserType}
             isThirdPartyAccessToken={title === 'Third Party Access Tokens'}
             openEditDrawer={openEditDrawer}
             openRevokeDialog={openRevokeDialog}
@@ -203,10 +200,12 @@ export const APITokenTable = (props: Props) => {
         {type === 'Personal Access Token' && (
           <Button
             buttonType="primary"
-            disabled={isProxyUser}
+            disabled={isProxyOrDelegateUserType}
             onClick={() => setIsCreateOpen(true)}
             tooltipText={
-              isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
+              isProxyOrDelegateUserType
+                ? DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT
+                : undefined
             }
           >
             Create a Personal Access Token

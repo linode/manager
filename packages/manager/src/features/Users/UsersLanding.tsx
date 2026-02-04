@@ -1,4 +1,4 @@
-import { useAccountUsers, useProfile } from '@linode/queries';
+import { useAccountUsers } from '@linode/queries';
 import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -14,6 +14,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
@@ -29,9 +30,15 @@ export const UsersLanding = () => {
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
-  const { data: profile } = useProfile();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const {
+    isProxyOrDelegateUserType,
+    isProxyUserType,
+    isChildUserType,
+    isParentUserType,
+    profile,
+  } = useDelegationRole();
 
   const pagination = usePaginationV2({
     initialPage: 1,
@@ -49,13 +56,13 @@ export const UsersLanding = () => {
     preferenceKey: 'account-users-order',
   });
 
-  const showProxyUserTable =
-    profile?.user_type === 'child' || profile?.user_type === 'proxy';
+  const showProxyOrDelegateUserTable =
+    isChildUserType || isProxyOrDelegateUserType;
 
   const usersFilter: Filter = {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
-    ['user_type']: showProxyUserTable ? 'child' : undefined,
+    ['user_type']: showProxyOrDelegateUserTable ? 'child' : undefined,
   };
 
   // Since this query is disabled for restricted users, use isInitialLoading.
@@ -80,8 +87,8 @@ export const UsersLanding = () => {
     error: proxyUserError,
     isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
-    enabled: showProxyUserTable && !isRestrictedUser,
-    filters: { user_type: 'proxy' },
+    enabled: showProxyOrDelegateUserTable && !isRestrictedUser,
+    filters: { user_type: isProxyUserType ? 'proxy' : 'delegate' },
   });
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
@@ -89,7 +96,7 @@ export const UsersLanding = () => {
   });
 
   const showChildAccountAccessCol = Boolean(
-    profile?.user_type === 'parent' && !isChildAccountAccessRestricted
+    isParentUserType && !isChildAccountAccessRestricted
   );
 
   // Parent/Child accounts include additional "child account access" column.
@@ -112,7 +119,7 @@ export const UsersLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Users & Grants" />
-      {showProxyUserTable && (
+      {showProxyOrDelegateUserTable && (
         <Typography
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
@@ -127,7 +134,7 @@ export const UsersLanding = () => {
           {PARENT_USER} Settings
         </Typography>
       )}
-      {showProxyUserTable && (
+      {showProxyOrDelegateUserTable && (
         <Table aria-label="List of Parent Users">
           <UsersLandingProxyTableHead order={order} />
           <TableBody>
@@ -145,12 +152,14 @@ export const UsersLanding = () => {
         sx={(theme) => ({
           alignItems: 'center',
           display: 'flex',
-          justifyContent: showProxyUserTable ? 'space-between' : 'flex-end',
+          justifyContent: showProxyOrDelegateUserTable
+            ? 'space-between'
+            : 'flex-end',
           marginBottom: theme.spacing(2),
           marginTop: theme.spacing(3),
         })}
       >
-        {showProxyUserTable && (
+        {showProxyOrDelegateUserTable && (
           <Typography
             sx={(theme) => ({
               [theme.breakpoints.down('md')]: {
