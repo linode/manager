@@ -118,7 +118,7 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
             sx={{ fontStyle: 'italic', textTransform: 'capitalize' }}
             variant="body1"
           >
-            no delegate users added
+            No Users Added
           </Typography>
         )}
       </TableCell>
