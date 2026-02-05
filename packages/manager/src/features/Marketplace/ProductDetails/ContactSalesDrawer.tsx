@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { createPartnerReferralSchema } from '@linode/validation';
-import { createFilterOptions, Grid, Theme } from '@mui/material';
+import { createFilterOptions, Grid } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -33,6 +33,7 @@ import type {
   Country,
   MarketplacePartnerReferralPayload,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   hideAddEmailButton: {
@@ -80,7 +81,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           label: getCountryName(country.name),
           ...country,
         })),
-    [countries]
+    []
   );
 
   const defaultCountry = countryList.find((c) => c.code === 'US');
@@ -119,7 +120,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
     resolver: yupResolver(createPartnerReferralSchema),
   });
 
-  const tc_consent = watch('tc_consent_given');
+  const tcConsent = watch('tc_consent_given');
 
   const dialingCodeFilterOptions = createFilterOptions({
     ignoreCase: true,
@@ -162,7 +163,8 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       <form onSubmit={onSubmit}>
         <Stack spacing={3}>
           <Typography>
-            Fill the form and our partner's sales team will reach out to you
+            Fill the form and our partner&apos;s sales team will reach out to
+            you
           </Typography>
           <FormControl>
             <FormLabel htmlFor="name">Name</FormLabel>
@@ -250,6 +252,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                         alignItems="center"
                         direction="row"
                         gap={1}
+                        key={key}
                         sx={{ width: '100%' }}
                       >
                         <Flag country={option.code.toLowerCase() as Country} />
@@ -314,6 +317,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                           alignItems="center"
                           direction="row"
                           gap={1}
+                          key={key}
                           sx={{ width: '100%' }}
                         >
                           <Flag
@@ -399,7 +403,9 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             )}
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="company-name">Your Company's Name</FormLabel>
+            <FormLabel htmlFor="company-name">
+              Your Company&apos;s Name
+            </FormLabel>
             <Controller
               control={control}
               name="company_name"
@@ -500,7 +506,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   id="tc_consent-checkbox"
                   onChange={field.onChange}
                   sx={(theme) => ({
-                    marginRight: theme.spacing(1),
+                    marginRight: theme.spacingFunction(8),
                     padding: 0,
                   })}
                 />
@@ -517,7 +523,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   {showConsentDetails && (
                     <Typography
                       sx={(theme) => ({
-                        marginBottom: theme.spacing(1),
+                        marginBottom: theme.spacingFunction(8),
                       })}
                     >
                       Akamai is seeking your consent to share the information
@@ -556,11 +562,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Submit',
-            disabled: isSubmitting || !tc_consent,
+            disabled: isSubmitting || !tcConsent,
             type: 'submit',
             tooltipText:
               'Please agree to share your information with the partner to proceed.',
-            alwaysShowTooltip: !tc_consent,
+            alwaysShowTooltip: !tcConsent,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
