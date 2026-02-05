@@ -729,7 +729,13 @@ const marketplace = [
   }),
   http.post('*/v4beta/marketplace/referral', async () => {
     await sleep(2000);
-    return HttpResponse.json({});
+    // return HttpResponse.json(
+    //   {
+    //     errors: [{ field: 'country_code', reason: 'OMG!' }],
+    //   },
+    //   { status: 400 }
+    // );
+    // return HttpResponse.json({});
   }),
 ];
 
