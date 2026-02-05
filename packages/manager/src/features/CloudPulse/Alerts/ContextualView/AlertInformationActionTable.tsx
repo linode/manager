@@ -347,7 +347,9 @@ export const AlertInformationActionTable = (
                     pageSize={pageSize}
                   />
                 </Box>
-                {isEditMode && (
+                {/* Show save button only in edit mode and not for linode service type.
+                    For linode service type, save is handled by the service owner component. */}
+                {isEditMode && serviceType !== 'linode' && (
                   <Box>
                     <Button
                       buttonType="primary"

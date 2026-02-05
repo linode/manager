@@ -24,6 +24,7 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
 } from '@linode/api-v4';
+import type { SxProps, Theme } from '@linode/ui';
 
 interface AlertReusableComponentProps {
   /**
@@ -52,6 +53,11 @@ interface AlertReusableComponentProps {
   ) => void;
 
   /**
+   * Custom sx styles for the Paper wrapper component
+   */
+  paperSx?: SxProps<Theme>;
+
+  /**
    * Region ID for the selected entity
    */
   regionId?: string;
@@ -67,6 +73,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     entityId,
     entityName,
     onToggleAlert,
+    paperSx,
     serviceType,
     regionId,
     isLegacyAlertAvailable,
@@ -100,7 +107,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   }
 
   return (
-    <Paper sx={{ p: entityId && serviceType !== 'linode' ? undefined : 0 }}>
+    <Paper sx={paperSx}>
       <Stack gap={3}>
         {entityId && serviceType !== 'linode' && (
           <Box display="flex" justifyContent="space-between">

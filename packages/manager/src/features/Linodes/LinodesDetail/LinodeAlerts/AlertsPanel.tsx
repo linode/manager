@@ -3,7 +3,6 @@ import {
   useLinodeUpdateMutation,
   useTypeQuery,
 } from '@linode/queries';
-import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
@@ -11,21 +10,20 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
-import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
 
 import type { AlertSectionProps } from './AlertSection';
 import type { Linode } from '@linode/api-v4';
+import type { SxProps, Theme } from '@linode/ui';
 
 interface Props {
   /**
-   * Whether the region supports ACLP alerts for Linodes
-   * Pass this from parent to avoid duplicate hook calls
+   * Whether ACLP alerting is enabled in the current region
+   * Combines ACLP flag check and region support
    */
-  isAclpAlertsSupportedRegion?: boolean;
+  isAclpAlertingInRegionEnabled?: boolean;
   isReadOnly?: boolean;
   /**
    * Optional Linode ID.
@@ -38,10 +36,15 @@ interface Props {
    * Receives `true` when there are unsaved changes, and `false` when the form is clean.
    */
   onUnsavedChangesUpdate?: (hasUnsavedChanges: boolean) => void;
+  /**
+   * Custom sx styles for the Paper wrapper component
+   */
+  paperSx?: SxProps<Theme>;
 }
 
 export const AlertsPanel = (props: Props) => {
-  const { isAclpAlertsSupportedRegion, isReadOnly, linodeId } = props;
+  const { isAclpAlertingInRegionEnabled, isReadOnly, linodeId, paperSx } =
+    props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(
@@ -61,11 +64,6 @@ export const AlertsPanel = (props: Props) => {
   );
 
   const isBareMetalInstance = type?.class === 'metal';
-
-  const { aclpServices } = useFlags();
-
-  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linodeId, 'beta');
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
   const isCreateFlow = !linodeId;
 
@@ -106,10 +104,7 @@ export const AlertsPanel = (props: Props) => {
             { variant: 'success' }
           );
         })
-        .catch(() => {})
-        .finally(() => {
-          setIsDialogOpen(false);
-        });
+        .catch(() => {});
     },
   });
 
@@ -305,11 +300,7 @@ export const AlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const handleSaveClick = () => {
-    if (!isLinodeAclpSubscribed) {
-      formik.handleSubmit();
-    } else {
-      setIsDialogOpen(true);
-    }
+    formik.handleSubmit();
   };
 
   React.useEffect(() => {
@@ -327,63 +318,41 @@ export const AlertsPanel = (props: Props) => {
   }, [formik.dirty]);
 
   return (
-    <>
-      {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
-      when user already subscribed to Beta/ACLP Mode and makes changes in the
-      Legacy mode Interface. */}
-      <AlertConfirmationDialog
-        handleCancel={() => setIsDialogOpen(false)}
-        handleConfirm={() => formik.handleSubmit()}
-        isLoading={isPending}
-        isOpen={isDialogOpen && isLinodeAclpSubscribed}
-        message={
-          <>
-            Are you sure you want to save legacy Alerts? <b>Alerts(Beta)</b>{' '}
-            settings will be disabled and replaced by legacy Alerts settings.
-          </>
-        }
-        primaryButtonLabel="Confirm"
-        title="Are you sure you want to save legacy Alerts?"
-      />
-      <Paper
-        sx={(theme) =>
-          isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
-        }
-      >
-        {/* Only show "Alerts" heading when not using ACLP (legacy standalone mode).
-            When ACLP is enabled AND region is supported, this component is rendered
-            inside an Accordion which already provides the heading. */}
-        {!(
-          aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegion
-        ) && (
-          <Typography
-            sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-            variant="h2"
-          >
-            Alerts
-          </Typography>
-        )}
+    <Paper sx={paperSx}>
+      {/* Only show "Alerts" heading in legacy standalone mode (not CreateFlow and ACLP not enabled).
+            When ACLP is enabled AND region is supported, this component is rendered inside an Accordion which already provides the heading.
+            In CreateFlow, the heading is not needed. */}
+      {!isCreateFlow && !isAclpAlertingInRegionEnabled && (
+        <Typography
+          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+          variant="h2"
+        >
+          Alerts
+        </Typography>
+      )}
 
-        {generalError && <Notice variant="error">{generalError}</Notice>}
-        {alertSections.map((alert, idx) => (
-          <React.Fragment key={`alert-${idx}`}>
-            <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
-            {idx !== alertSections.length - 1 ? <Divider /> : null}
-          </React.Fragment>
-        ))}
-        {!isCreateFlow && (
-          <StyledActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'alerts-save',
-              disabled: isReadOnly || !formik.dirty,
-              label: 'Save',
-              loading: isPending,
-              onClick: handleSaveClick,
-            }}
-          />
-        )}
-      </Paper>
-    </>
+      {generalError && <Notice variant="error">{generalError}</Notice>}
+      {alertSections.map((alert, idx) => (
+        <React.Fragment key={`alert-${idx}`}>
+          <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
+          {idx !== alertSections.length - 1 ? <Divider /> : null}
+        </React.Fragment>
+      ))}
+
+      {/* Show save button only in legacy standalone mode (not CreateFlow and ACLP not enabled).
+            When ACLP is enabled, save functionality is handled by the unified save button in parent component. */}
+      {!isCreateFlow && !isAclpAlertingInRegionEnabled && (
+        <StyledActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'alerts-save',
+            disabled: isReadOnly || !formik.dirty,
+            label: 'Save',
+            loading: isPending,
+            onClick: handleSaveClick,
+          }}
+        />
+      )}
+    </Paper>
   );
 };
 

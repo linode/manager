@@ -1,6 +1,14 @@
 import { useLinodeQuery } from '@linode/queries';
-import { useIsLinodeAclpSubscribed } from '@linode/shared';
-import { Accordion, ActionsPanel, BetaChip, Box, Typography } from '@linode/ui';
+import {
+  Accordion,
+  ActionsPanel,
+  BetaChip,
+  Box,
+  Divider,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useBlocker, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -11,13 +19,11 @@ import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { AlertsPanel } from './AlertsPanel';
 
 const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
-  const { isAlertsBetaMode } = useLinodeDetailContext();
 
   const { aclpServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
@@ -29,7 +35,9 @@ const LinodeAlerts = () => {
     regionId: linode?.region,
     type: 'alerts',
   });
-  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(id, 'beta');
+
+  const isAclpAlertingInRegionEnabled =
+    aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegionLinode;
 
   const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
     React.useState<boolean>(false);
@@ -101,60 +109,61 @@ const LinodeAlerts = () => {
         </Typography>
       </ConfirmationDialog>
       <Box>
-        {aclpServices?.linode?.alerts?.enabled &&
-          isAclpAlertsSupportedRegionLinode && (
-            // <AclpPreferenceToggle
-            //   isAlertsBetaMode={isAlertsBetaMode.get}
-            //   onAlertsModeChange={isAlertsBetaMode.set}
-            //   type="alerts"
-            // />
-            <DismissibleBanner
-              dismissible={false}
-              preferenceKey="alerts-preference-linode-details"
-              variant="info"
-            >
-              <Typography>
-                Try the <strong>Alerts (Beta)</strong>, featuring new options
-                like customizable alerts. You can switch back to legacy Alerts
-                at any time.
-              </Typography>
-            </DismissibleBanner>
-          )}
-        {aclpServices?.linode?.alerts?.enabled &&
-        isAclpAlertsSupportedRegionLinode ? (
-          <>
-            {/* Legacy ACLP Alerts View */}
-            <Accordion defaultExpanded heading="Alerts">
-              <AlertsPanel
-                isAclpAlertsSupportedRegion={isAclpAlertsSupportedRegionLinode}
-                isReadOnly={!permissions.update_linode}
-                linodeId={id}
-                onUnsavedChangesUpdate={(hasUnsavedChanges) => {
-                  setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
-                }}
-              />
-            </Accordion>
+        {isAclpAlertingInRegionEnabled && (
+          <DismissibleBanner
+            dismissible={false}
+            preferenceKey="alerts-preference-linode-details"
+            variant="info"
+          >
+            <Typography>
+              Try the <strong>Alerts (Beta)</strong>, featuring new options like
+              customizable alerts. You can switch back to legacy Alerts at any
+              time.
+            </Typography>
+          </DismissibleBanner>
+        )}
+        {isAclpAlertingInRegionEnabled ? (
+          <Paper>
+            <Stack divider={<Divider />}>
+              {/* Legacy ACLP Alerts View */}
+              <Accordion
+                defaultExpanded
+                detailProps={{ sx: { p: 0 } }}
+                heading="Legacy Alerts"
+              >
+                <AlertsPanel
+                  isAclpAlertingInRegionEnabled={isAclpAlertingInRegionEnabled}
+                  isReadOnly={!permissions.update_linode}
+                  linodeId={id}
+                  onUnsavedChangesUpdate={(hasUnsavedChanges) => {
+                    setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
+                  }}
+                  paperSx={(theme) => ({ p: theme.spacingFunction(16) })}
+                />
+              </Accordion>
 
-            {/* Beta ACLP Alerts View */}
-            <Accordion
-              defaultExpanded
-              heading="Alerts"
-              headingChip={
-                aclpServices?.linode?.alerts?.beta && isAlertsBetaMode.get ? (
-                  <BetaChip />
-                ) : null
-              }
-            >
-              <AlertReusableComponent
-                entityId={linodeId.toString()}
-                entityName={linode?.label ?? ''}
-                isLegacyAlertAvailable={!isLinodeAclpSubscribed}
-                onToggleAlert={(payload, hasUnsavedChanges) => {
-                  setHasAclpAlertsUnsavedChanges(hasUnsavedChanges ?? false);
-                }}
-                serviceType="linode"
-              />
-            </Accordion>
+              {/* Beta ACLP Alerts View */}
+              <Accordion
+                defaultExpanded
+                heading="Alerts"
+                headingChip={
+                  aclpServices?.linode?.alerts?.beta ? <BetaChip /> : null
+                }
+              >
+                <AlertReusableComponent
+                  entityId={linodeId.toString()}
+                  entityName={linode?.label ?? ''}
+                  onToggleAlert={(payload, hasUnsavedChanges) => {
+                    setHasAclpAlertsUnsavedChanges(hasUnsavedChanges ?? false);
+                  }}
+                  paperSx={(theme) => ({
+                    py: theme.spacingFunction(16),
+                    px: 0,
+                  })}
+                  serviceType="linode"
+                />
+              </Accordion>
+            </Stack>
 
             {/* Unified Save Button */}
             <ActionsPanel
@@ -163,12 +172,12 @@ const LinodeAlerts = () => {
                 disabled:
                   !hasLegacyAlertsUnsavedChanges &&
                   !hasAclpAlertsUnsavedChanges,
-                label: 'Save',
+                label: 'Save Alerts',
                 onClick: () => {},
               }}
-              sx={{ justifyContent: 'flex-start', mt: 2 }}
+              sx={{ justifyContent: 'flex-start' }}
             />
-          </>
+          </Paper>
         ) : (
           // Legacy Alerts View (standalone, uses Paper)
           <AlertsPanel
@@ -177,6 +186,7 @@ const LinodeAlerts = () => {
             onUnsavedChangesUpdate={(hasUnsavedChanges) => {
               setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
             }}
+            paperSx={(theme) => ({ pb: theme.spacingFunction(16) })}
           />
         )}
       </Box>

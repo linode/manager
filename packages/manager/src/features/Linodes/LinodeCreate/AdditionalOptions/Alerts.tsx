@@ -71,11 +71,12 @@ export const Alerts = ({
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}
+          paperSx={{ p: 0 }}
           serviceType="linode"
         />
       ) : (
         // Legacy Alerts View (read-only)
-        <AlertsPanel />
+        <AlertsPanel paperSx={{ p: 0 }} />
       )}
     </Accordion>
   );
