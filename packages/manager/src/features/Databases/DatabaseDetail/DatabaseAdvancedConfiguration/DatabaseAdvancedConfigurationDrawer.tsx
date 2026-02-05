@@ -15,13 +15,7 @@ import Grid from '@mui/material/Grid';
 import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Controller,
-  get,
-  useFieldArray,
-  useForm,
-  useWatch,
-} from 'react-hook-form';
+import { Controller, get, useFieldArray, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
@@ -100,8 +94,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     control,
     name: 'configs',
   });
-
-  const configs = useWatch({ control, name: 'configs' });
 
   useEffect(() => {
     if (existingConfigurations.length > 0 || open) {
@@ -212,12 +204,12 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             <CircleProgress size="sm" />
           </Stack>
         )}
-        {!isLoading && configs.length === 0 && (
+        {!isLoading && fields.length === 0 && (
           <Typography align="center">
             No advanced configurations have been added.
           </Typography>
         )}
-        {configs.map((config, index) => (
+        {fields.map((config, index) => (
           <Controller
             control={control}
             key={config.label}
@@ -246,7 +238,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             disabled: !isDirty,
-            label: hasRestartCluster(configs, existingConfigurations),
+            label: hasRestartCluster(fields, existingConfigurations),
             loading: isUpdating,
             type: 'submit',
             title: 'Save',

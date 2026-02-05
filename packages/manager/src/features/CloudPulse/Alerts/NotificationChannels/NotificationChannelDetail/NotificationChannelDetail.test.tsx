@@ -1,4 +1,3 @@
-import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
@@ -43,6 +42,12 @@ vi.mock('@tanstack/react-router', async () => {
 
 // Shared Setup
 const initialRoute = '/alerts/notification-channels/detail/1';
+const mockFlags = {
+  aclpServices: {
+    dbaas: { alerts: { enabled: true, beta: true } },
+    linode: { alerts: { enabled: true, beta: true } },
+  },
+};
 
 beforeEach(() => {
   queryMocks.useParams.mockReturnValue({
@@ -76,13 +81,14 @@ describe('NotificationChannelDetail component tests', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<NotificationChannelDetail />, {
+    const { getByText } = renderWithTheme(<NotificationChannelDetail />, {
+      flags: mockFlags,
       initialRoute,
     });
 
     // Assert error message is displayed
     expect(
-      screen.getByText(
+      getByText(
         'An error occurred while loading the notification channel. Please try again later.'
       )
     ).toBeVisible();
@@ -96,6 +102,7 @@ describe('NotificationChannelDetail component tests', () => {
     });
 
     const { getByTestId } = renderWithTheme(<NotificationChannelDetail />, {
+      flags: mockFlags,
       initialRoute,
     });
 
@@ -117,13 +124,17 @@ describe('NotificationChannelDetail component tests', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<NotificationChannelDetail />, {
-      initialRoute,
-    });
-    const link = screen.getByTestId('link-text');
+    const { getByTestId, getByRole } = renderWithTheme(
+      <NotificationChannelDetail />,
+      {
+        flags: mockFlags,
+        initialRoute,
+      }
+    );
+    const link = getByTestId('link-text');
     expect(link).toBeVisible();
     expect(link).toHaveTextContent('Notification Channels');
-    const breadcrumbLink = screen.getByRole('link', {
+    const breadcrumbLink = getByRole('link', {
       name: /notification channels/i,
     });
     expect(breadcrumbLink).toHaveAttribute(
@@ -174,23 +185,27 @@ describe('NotificationChannelDetail component tests', () => {
       sortedData: alerts,
     });
 
-    renderWithTheme(<NotificationChannelDetail />, {
-      initialRoute,
-    });
+    const { getByRole, getByText } = renderWithTheme(
+      <NotificationChannelDetail />,
+      {
+        flags: mockFlags,
+        initialRoute,
+      }
+    );
 
     // Verify Overview section details
-    expect(screen.getByText('Overview')).toBeVisible();
-    expect(screen.getByText('Email Notifications')).toBeVisible();
-    expect(screen.getByText('Email')).toBeVisible();
-    expect(screen.getByText('admin_user')).toBeVisible();
-    expect(screen.getByText('ops_user')).toBeVisible();
+    expect(getByText('Overview')).toBeVisible();
+    expect(getByText('Email Notifications')).toBeVisible();
+    expect(getByText('Email')).toBeVisible();
+    expect(getByText('admin_user')).toBeVisible();
+    expect(getByText('ops_user')).toBeVisible();
 
-    // Verify Settings/Recipients section details
-    expect(screen.getByText('Settings')).toBeVisible();
-    expect(screen.getByText(/Recipients/)).toBeVisible();
-    expect(screen.getByText('admin')).toBeVisible();
-    expect(screen.getByText('ops_team')).toBeVisible();
-    expect(screen.getByText('Associated Alerts')).toBeVisible();
-    expect(screen.getByText('Critical CPU Alert')).toBeVisible();
+    // Verify Details/Recipients section details
+    expect(getByRole('heading', { level: 2, name: 'Details' })).toBeVisible();
+    expect(getByText(/Recipients/)).toBeVisible();
+    expect(getByText('admin')).toBeVisible();
+    expect(getByText('ops_team')).toBeVisible();
+    expect(getByText('Associated Alerts')).toBeVisible();
+    expect(getByText('Critical CPU Alert')).toBeVisible();
   });
 });
