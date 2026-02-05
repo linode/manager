@@ -92,6 +92,12 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
                       userType,
                     });
                   }}
+                  sx={{
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    textAlign: 'left',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
                   {childAccount.company}
                 </LinkButton>
@@ -103,6 +109,7 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
       {totalResults > pageSize && (
         <Pagination
           count={totalResults}
+          itemsLabel="Accounts: "
           onPageChange={(e: CustomEvent<number>) =>
             handlePageChange(Number(e.detail))
           }

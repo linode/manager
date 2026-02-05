@@ -203,6 +203,9 @@ export const SwitchAccountDrawer = (props: Props) => {
     setPage(1); // Reset to first page when page size changes
   };
 
+  const hasError = isIAMDelegationEnabled
+    ? allChildAccountsError
+    : childAccountInfiniteError;
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
@@ -235,7 +238,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         .
       </Typography>
 
-      {(childAccountInfiniteError || allChildAccountsError) && (
+      {hasError && (
         <Stack alignItems="center" gap={1} justifyContent="center">
           <ErrorStateCloud />
           <Typography>Unable to load data.</Typography>
@@ -253,7 +256,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           </Button>
         </Stack>
       )}
-      {!(childAccountInfiniteError || allChildAccountsError) && (
+      {!hasError && (
         <>
           <DebouncedSearchTextField
             clearable
@@ -284,7 +287,11 @@ export const SwitchAccountDrawer = (props: Props) => {
       {isIAMDelegationEnabled && (
         <ChildAccountsTable
           childAccounts={childAccounts}
-          currentTokenWithBearer={currentTokenWithBearer}
+          currentTokenWithBearer={
+            isProxyOrDelegateUserType
+              ? currentParentTokenWithBearer
+              : currentTokenWithBearer
+          }
           isLoading={isLoading}
           isSwitchingChildAccounts={isSwitchingChildAccounts}
           onClose={onClose}
@@ -303,15 +310,9 @@ export const SwitchAccountDrawer = (props: Props) => {
           childAccounts={childAccounts}
           currentTokenWithBearer={
             isProxyOrDelegateUserType
-            ? currentParentTokenWithBearer
-            : currentTokenWithBearer
+              ? currentParentTokenWithBearer
+              : currentTokenWithBearer
           }
-          errors={{
-            childAccountInfiniteError,
-            allChildAccountsError: allChildAccountsError?.[0]
-              ? new Error(allChildAccountsError[0].reason)
-              : null,
-          }}
           fetchNextPage={fetchNextPage}
           filter={filter}
           hasNextPage={hasNextPage}

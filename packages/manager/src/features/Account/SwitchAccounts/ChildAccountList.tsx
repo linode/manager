@@ -9,10 +9,6 @@ import type { ChildAccount, Filter, UserType } from '@linode/api-v4';
 export interface ChildAccountListProps {
   childAccounts: ChildAccount[] | undefined;
   currentTokenWithBearer: string;
-  errors: {
-    allChildAccountsError: Error | null;
-    childAccountInfiniteError: boolean;
-  };
   fetchNextPage: () => void;
   filter: Filter;
   hasNextPage: boolean;
