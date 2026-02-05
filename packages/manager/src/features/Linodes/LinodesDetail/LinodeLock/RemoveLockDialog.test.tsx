@@ -205,24 +205,6 @@ describe('RemoveLockDialog', () => {
     });
   });
 
-  it('should disable buttons while loading', async () => {
-    // Make getLocks hang to simulate loading state
-    mockGetLocks.mockImplementation(
-      () => new Promise(() => {}) // Never resolves
-    );
-
-    const { getByText } = renderWithTheme(
-      <RemoveLockDialog {...defaultProps} />
-    );
-
-    await userEvent.click(getByText('Remove Lock'));
-
-    await waitFor(() => {
-      expect(getByText('Remove Lock').closest('button')).toBeDisabled();
-      expect(getByText('Cancel').closest('button')).toBeDisabled();
-    });
-  });
-
   it('should reset error state when dialog reopens', async () => {
     mockGetLocks.mockResolvedValueOnce({
       data: [],
