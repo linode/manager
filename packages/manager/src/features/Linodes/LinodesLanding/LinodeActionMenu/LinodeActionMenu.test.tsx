@@ -18,6 +18,7 @@ const props: LinodeActionMenuProps = {
   linodeRegion: 'us-east',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
+  onOpenAddLockDialog: vi.fn(),
   onOpenDeleteDialog: vi.fn(),
   onOpenMigrateDialog: vi.fn(),
   onOpenPowerDialog: vi.fn(),

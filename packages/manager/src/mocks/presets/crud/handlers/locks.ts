@@ -10,12 +10,11 @@
  * Update ENTITY_TYPE_CONFIG below with the new resource type mapping
  *
  */
-import { http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { lockFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
-  makeErrorResponse,
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
@@ -24,6 +23,7 @@ import {
 import { mswDB } from '../../../indexedDB';
 
 import type {
+  APIError,
   CreateLockPayload,
   Entity,
   LockType,
@@ -53,20 +53,20 @@ const ENTITY_TYPE_CONFIG: Record<
 const validateLockCreation = async (
   payload: CreateLockPayload,
   mockState: MockState
-): Promise<null | string> => {
+): Promise<APIError | null> => {
   const { entity_id, entity_type, lock_type } = payload;
 
   // Check if entity type is supported
   const entityConfig = ENTITY_TYPE_CONFIG[entity_type];
   if (!entityConfig) {
-    return `Unsupported entity type: ${entity_type}`;
+    return { reason: `Unsupported entity type: ${entity_type}` };
   }
 
   // Check if entity exists and is accessible
   const entities = await mswDB.getAll(entityConfig.store);
   const entity = entities?.find((e: Entity) => e.id === entity_id);
   if (!entity) {
-    return 'The specified entity could not be found.';
+    return { reason: 'The specified entity could not be found.' };
   }
 
   // Check if entity already has a lock of conflicting type
@@ -87,7 +87,11 @@ const validateLockCreation = async (
           lock.lock_type === 'cannot_delete_with_subresources'
       );
       if (hasDeleteLock) {
-        return 'This resource already has a lock. Only one delete protection lock is allowed at a time.';
+        return {
+          field: 'lock_type',
+          reason:
+            'This resource already has a lock. Only one delete protection lock is allowed at a time.',
+        };
       }
     }
   }
@@ -225,7 +229,17 @@ export const createLock = (mockState: MockState) => [
       // Validate the lock creation
       const validationError = await validateLockCreation(payload, mockState);
       if (validationError) {
-        return makeErrorResponse(validationError, 400);
+        return HttpResponse.json<APIErrorResponse>(
+          {
+            errors: [
+              {
+                ...(validationError.field && { field: validationError.field }),
+                reason: validationError.reason,
+              },
+            ],
+          },
+          { status: 400 }
+        );
       }
 
       // Get entity configuration for URL building

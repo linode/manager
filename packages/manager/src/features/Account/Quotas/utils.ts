@@ -17,6 +17,15 @@ import type {
 import type { SelectOption } from '@linode/ui';
 import type { UseQueryResult } from '@tanstack/react-query';
 
+const INCLUDED_OBJ_QUOTA_TYPES = [
+  'obj-bytes',
+  'obj-objects',
+  'obj-buckets',
+  'obj-total-ingress-throughput',
+  'obj-total-egress-throughput',
+  'obj-total-concurrent-requests',
+];
+
 type UseGetLocationsForQuotaService =
   | {
       isFetchingRegions: boolean;
@@ -79,6 +88,18 @@ interface GetQuotasFiltersProps {
   location: null | SelectOption<Quota['region_applied']>;
   service: SelectOption<QuotaType>;
 }
+
+export const getQuotaVisibilityFilter = (service: SelectOption<QuotaType>) => {
+  return {
+    isVisible(quota: Quota) {
+      if (service.value === 'object-storage') {
+        return INCLUDED_OBJ_QUOTA_TYPES.includes(quota.quota_type);
+      }
+
+      return true;
+    },
+  };
+};
 
 /**
  * Function to get the filters for the quotas query
@@ -190,6 +211,18 @@ export const convertResourceMetric = ({
       }).value,
       convertedResourceMetric: capitalize(limitReadable.unit),
       convertedLimit: limitReadable.value,
+    };
+  }
+
+  if (initialResourceMetric === 'byte_per_second') {
+    return {
+      convertedUsage: 0,
+      convertedResourceMetric: 'Gbps',
+      convertedLimit: readableBytes(initialLimit, {
+        unit: 'GB',
+        round: 0,
+        base10: true,
+      }).value,
     };
   }
 

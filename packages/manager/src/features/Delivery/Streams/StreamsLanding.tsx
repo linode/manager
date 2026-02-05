@@ -2,12 +2,12 @@ import { streamStatus } from '@linode/api-v4';
 import { useStreamsQuery, useUpdateStreamMutation } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import Table from '@mui/material/Table';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { DeliveryTabHeader } from 'src/features/Delivery/Shared/DeliveryTabHeader/DeliveryTabHeader';
