@@ -1,13 +1,8 @@
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-  useTypeQuery,
-} from '@linode/queries';
+import { useLinodeQuery, useTypeQuery } from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -15,10 +10,14 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { AlertSection } from './AlertSection';
 
 import type { AlertSectionProps } from './AlertSection';
-import type { Linode } from '@linode/api-v4';
+import type { APIError, Linode } from '@linode/api-v4';
 import type { SxProps, Theme } from '@linode/ui';
 
 interface Props {
+  /**
+   * API error to display
+   */
+  error?: APIError[] | null;
   /**
    * Whether ACLP alerting is enabled in the current region
    * Combines ACLP flag check and region support
@@ -26,11 +25,27 @@ interface Props {
   isAclpAlertingInRegionEnabled?: boolean;
   isReadOnly?: boolean;
   /**
+   * Loading state for save operation
+   */
+  isSaving?: boolean;
+  /**
    * Optional Linode ID.
    * - If provided, the Alerts Panel will be in the edit flow mode.
    * - If not provided, the Alerts Panel will be in the create flow mode (read-only).
    */
   linodeId?: number;
+  /**
+   * Callback to send legacy alerts payload to parent whenever form values change.
+   * Used when ACLP alerting is enabled so parent can combine legacy and ACLP alerts for unified save.
+   * Do not use together with onSave.
+   */
+  onGetLegacyAlerts?: (alerts: Linode['alerts']) => void;
+  /**
+   * Callback to save legacy alerts directly. When provided, AlertsPanel shows its own Save button.
+   * Used in standalone mode when ACLP alerting is not enabled.
+   * Do not use together with onGetLegacyAlerts.
+   */
+  onSave?: (alerts: Linode['alerts']) => Promise<void> | void;
   /**
    * Callback triggered when the Legacy Alerts form has unsaved changes.
    * Receives `true` when there are unsaved changes, and `false` when the form is clean.
@@ -43,20 +58,20 @@ interface Props {
 }
 
 export const AlertsPanel = (props: Props) => {
-  const { isAclpAlertingInRegionEnabled, isReadOnly, linodeId, paperSx } =
-    props;
-  const { enqueueSnackbar } = useSnackbar();
+  const {
+    error,
+    isAclpAlertingInRegionEnabled,
+    isSaving,
+    isReadOnly,
+    linodeId,
+    onSave,
+    paperSx,
+  } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined
   );
-
-  const {
-    error,
-    isPending,
-    mutateAsync: updateLinode,
-  } = useLinodeUpdateMutation(linodeId ?? -1);
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -89,22 +104,17 @@ export const AlertsPanel = (props: Props) => {
     validateOnChange: true,
     validationSchema: UpdateLinodeAlertsSchema,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
-      await updateLinode({
-        alerts: {
+      if (onSave) {
+        // Handle bare metal instances - they don't support CPU and network_in alerts
+        const alertsPayload: Linode['alerts'] = {
           cpu: isBareMetalInstance ? undefined : cpu,
           io,
           network_in: isBareMetalInstance ? undefined : network_in,
           network_out,
           transfer_quota,
-        },
-      })
-        .then(() => {
-          enqueueSnackbar(
-            `Successfully updated alert settings for ${linode?.label}`,
-            { variant: 'success' }
-          );
-        })
-        .catch(() => {});
+        };
+        await onSave(alertsPayload);
+      }
     },
   });
 
@@ -303,6 +313,13 @@ export const AlertsPanel = (props: Props) => {
     formik.handleSubmit();
   };
 
+  // Notify parent of current formik values whenever they change (for unified save)
+  React.useEffect(() => {
+    if (props.onGetLegacyAlerts) {
+      props.onGetLegacyAlerts(formik.values);
+    }
+  }, [formik.values, props.onGetLegacyAlerts]);
+
   React.useEffect(() => {
     if (props.onUnsavedChangesUpdate) {
       const hasUnsavedChanges = formik.dirty;
@@ -341,13 +358,13 @@ export const AlertsPanel = (props: Props) => {
 
       {/* Show save button only in legacy standalone mode (not CreateFlow and ACLP not enabled).
             When ACLP is enabled, save functionality is handled by the unified save button in parent component. */}
-      {!isCreateFlow && !isAclpAlertingInRegionEnabled && (
+      {!isCreateFlow && !isAclpAlertingInRegionEnabled && onSave && (
         <StyledActionsPanel
           primaryButtonProps={{
             'data-testid': 'alerts-save',
-            disabled: isReadOnly || !formik.dirty,
+            disabled: isReadOnly || !formik.dirty || isSaving,
             label: 'Save',
-            loading: isPending,
+            loading: isSaving,
             onClick: handleSaveClick,
           }}
         />

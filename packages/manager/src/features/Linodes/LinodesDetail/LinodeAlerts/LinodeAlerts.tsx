@@ -1,4 +1,4 @@
-import { useLinodeQuery } from '@linode/queries';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import {
   Accordion,
   ActionsPanel,
@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useBlocker, useParams } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -20,6 +21,9 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AlertsPanel } from './AlertsPanel';
+
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
 
 const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
@@ -39,10 +43,28 @@ const LinodeAlerts = () => {
   const isAclpAlertingInRegionEnabled =
     aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegionLinode;
 
+  const { enqueueSnackbar } = useSnackbar();
+
+  const {
+    error: mutationError,
+    isPending: isUpdatingLinode,
+    mutateAsync: updateLinode,
+  } = useLinodeUpdateMutation(id);
+
   const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
     React.useState<boolean>(false);
   const [hasAclpAlertsUnsavedChanges, setHasAclpAlertsUnsavedChanges] =
     React.useState<boolean>(false);
+
+  // Store current legacy alerts values
+  const [legacyAlerts, setLegacyAlerts] = React.useState<
+    Linode['alerts'] | undefined
+  >();
+
+  // Store current ACLP alerts payload
+  const [aclpAlertsPayload, setAclpAlertsPayload] = React.useState<
+    CloudPulseAlertsPayload | undefined
+  >();
 
   const { proceed, reset, status } = useBlocker({
     enableBeforeUnload:
@@ -78,6 +100,57 @@ const LinodeAlerts = () => {
       reset();
     }
   }, [status, reset]);
+
+  // Unified save handler for both legacy and ACLP alerts
+  const handleUnifiedSave = React.useCallback(async () => {
+    if (!legacyAlerts) {
+      enqueueSnackbar('Unable to retrieve legacy alerts data', {
+        variant: 'error',
+      });
+      return;
+    }
+
+    // Combine legacy alerts with ACLP alerts payload
+    // LinodeAlerts interface extends CloudPulseAlertsPayload, so we can merge them
+    const combinedAlertsPayload: Linode['alerts'] = {
+      ...legacyAlerts,
+      ...aclpAlertsPayload,
+    };
+
+    // Save combined alerts in a single API call
+    await updateLinode({
+      alerts: combinedAlertsPayload,
+    })
+      .then(() => {
+        enqueueSnackbar('Alert settings have been saved successfully', {
+          variant: 'success',
+        });
+
+        // Reset unsaved changes state
+        setHasLegacyAlertsUnsavedChanges(false);
+        setHasAclpAlertsUnsavedChanges(false);
+      })
+      .catch(() => {
+        // Error is handled by React Query and displayed via mutationError prop
+      });
+  }, [legacyAlerts, aclpAlertsPayload, updateLinode, enqueueSnackbar]);
+
+  // Handler for legacy alerts save in standalone mode
+  const handleLegacySave = React.useCallback(
+    async (alerts: Linode['alerts']) => {
+      await updateLinode({ alerts })
+        .then(() => {
+          enqueueSnackbar(
+            `Successfully updated alert settings for ${linode?.label}`,
+            { variant: 'success' }
+          );
+        })
+        .catch(() => {
+          // Error is handled by React Query and displayed via mutationError prop
+        });
+    },
+    [updateLinode, enqueueSnackbar, linode?.label]
+  );
 
   return (
     <>
@@ -132,9 +205,12 @@ const LinodeAlerts = () => {
                 heading="Legacy Alerts"
               >
                 <AlertsPanel
+                  error={mutationError}
                   isAclpAlertingInRegionEnabled={isAclpAlertingInRegionEnabled}
                   isReadOnly={!permissions.update_linode}
+                  isSaving={isUpdatingLinode}
                   linodeId={id}
+                  onGetLegacyAlerts={setLegacyAlerts}
                   onUnsavedChangesUpdate={(hasUnsavedChanges) => {
                     setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
                   }}
@@ -154,6 +230,7 @@ const LinodeAlerts = () => {
                   entityId={linodeId.toString()}
                   entityName={linode?.label ?? ''}
                   onToggleAlert={(payload, hasUnsavedChanges) => {
+                    setAclpAlertsPayload(payload);
                     setHasAclpAlertsUnsavedChanges(hasUnsavedChanges ?? false);
                   }}
                   paperSx={(theme) => ({
@@ -170,10 +247,12 @@ const LinodeAlerts = () => {
               primaryButtonProps={{
                 'data-testid': 'unified-alerts-save',
                 disabled:
-                  !hasLegacyAlertsUnsavedChanges &&
-                  !hasAclpAlertsUnsavedChanges,
+                  (!hasLegacyAlertsUnsavedChanges &&
+                    !hasAclpAlertsUnsavedChanges) ||
+                  isUpdatingLinode,
                 label: 'Save Alerts',
-                onClick: () => {},
+                loading: isUpdatingLinode,
+                onClick: handleUnifiedSave,
               }}
               sx={{ justifyContent: 'flex-start' }}
             />
@@ -181,8 +260,11 @@ const LinodeAlerts = () => {
         ) : (
           // Legacy Alerts View (standalone, uses Paper)
           <AlertsPanel
+            error={mutationError}
             isReadOnly={!permissions.update_linode}
+            isSaving={isUpdatingLinode}
             linodeId={id}
+            onSave={handleLegacySave}
             onUnsavedChangesUpdate={(hasUnsavedChanges) => {
               setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
             }}

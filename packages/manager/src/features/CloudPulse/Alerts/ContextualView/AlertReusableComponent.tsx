@@ -109,6 +109,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   return (
     <Paper sx={paperSx}>
       <Stack gap={3}>
+        {/* When entityId is available for non-linode services: Show header with title and Manage Alerts button */}
         {entityId && serviceType !== 'linode' && (
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
@@ -152,6 +153,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
                 hideLabel: true,
               }}
             />
+            {/* When entityId is available for linode service: Show Manage Alerts button in search/filter row (right-aligned) */}
             {entityId && serviceType === 'linode' && (
               <Button
                 buttonType="outlined"

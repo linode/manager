@@ -159,6 +159,10 @@ export const AlertInformationActionTable = (
   const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
   React.useEffect(() => {
+    // To send initial state of alerts through toggle handler function in edit mode.
+    if (isEditMode && onToggleAlert) {
+      onToggleAlert(enabledAlerts);
+    }
     return () => {
       // Cleanup on unmount (For Edit flow)
       if (isEditMode && onToggleAlert) {
