@@ -1,8 +1,16 @@
-import { Box, Button, ErrorState, Paper, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Button,
+  ErrorState,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
 
 import { getProductById } from '../products';
@@ -57,11 +65,8 @@ export const ProductDetails = () => {
   };
 
   return (
-    <Paper
+    <Box
       sx={(theme) => ({
-        alignItems: 'flex-start',
-        display: 'flex',
-        flexDirection: 'column',
         mx: {
           md: 0,
           sm: theme.spacingFunction(16),
@@ -69,119 +74,152 @@ export const ProductDetails = () => {
         },
       })}
     >
-      <ProductDetailsContainer>
-        {/* Info Banner (conditional) */}
-        {product.infoBanner && (
-          <InfoBanner variant="info">
-            <Markdown textOrMarkdown={product.infoBanner} />
-          </InfoBanner>
-        )}
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: (
+                <>
+                  Partner Referrals
+                  <BetaChip component="span" />
+                </>
+              ),
+              position: 1,
+            },
+            {
+              label: 'Catalog',
+              position: 2,
+            },
+            {
+              label: product.name,
+              position: 3,
+            },
+          ],
+          pathname: `/cloud-marketplace/catalog/${productId}`,
+        }}
+      />
+      <Paper
+        sx={{
+          alignItems: 'flex-start',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <ProductDetailsContainer>
+          {/* Info Banner (conditional) */}
+          {product.infoBanner && (
+            <InfoBanner variant="info">
+              <Markdown textOrMarkdown={product.infoBanner} />
+            </InfoBanner>
+          )}
 
-        {/* Product Info Section */}
-        <ProductInfoSection>
-          {/* Product Logo */}
-          <LogoContainer>
-            {logoUrl && (
-              <img
-                alt={`${product.name} logo`}
-                src={logoUrl}
-                style={{
-                  height: '100%',
-                  objectFit: 'contain',
-                  width: '100%',
-                }}
-              />
-            )}
-          </LogoContainer>
+          {/* Product Info Section */}
+          <ProductInfoSection>
+            {/* Product Logo */}
+            <LogoContainer>
+              {logoUrl && (
+                <img
+                  alt={`${product.name} logo`}
+                  src={logoUrl}
+                  style={{
+                    height: '100%',
+                    objectFit: 'contain',
+                    width: '100%',
+                  }}
+                />
+              )}
+            </LogoContainer>
 
-          {/* Product Details */}
-          <ProductDetailsSection>
-            {/* Product Name and Partner */}
-            <ProductTitleSection>
-              <Typography
-                sx={(theme) => ({
-                  color: theme.tokens.alias.Content.Text.Primary.Default,
-                  font: theme.font.extrabold,
-                })}
-                variant="h1"
-              >
-                {product.name}
-              </Typography>
-              {product.partner && (
+            {/* Product Details */}
+            <ProductDetailsSection>
+              {/* Product Name and Partner */}
+              <ProductTitleSection>
                 <Typography
                   sx={(theme) => ({
-                    color: theme.tokens.alias.Content.Text.Secondary.Default,
-                    font: theme.font.bold,
+                    color: theme.tokens.alias.Content.Text.Primary.Default,
+                    font: theme.font.extrabold,
                   })}
-                  variant="body1"
+                  variant="h1"
                 >
-                  {product.partner.name}
+                  {product.name}
                 </Typography>
-              )}
-            </ProductTitleSection>
+                {product.partner && (
+                  <Typography
+                    sx={(theme) => ({
+                      color: theme.tokens.alias.Content.Text.Secondary.Default,
+                      font: theme.font.bold,
+                    })}
+                    variant="body1"
+                  >
+                    {product.partner.name}
+                  </Typography>
+                )}
+              </ProductTitleSection>
 
-            {/* Description */}
-            <Typography
-              sx={(theme) => ({
-                alignSelf: 'stretch',
-                color: theme.tokens.component.Tile.Default.Text,
-                font: theme.font.normal,
-                maxWidth: '800px',
-              })}
-              variant="body1"
-            >
-              {product.shortDescription}
-            </Typography>
-
-            {/* Tags */}
-            <TagsContainer>
-              {/* Tile Tag */}
-              {product.tileTag && (
-                <StyledChip
-                  label={product.tileTag}
-                  sx={(theme) => ({
-                    backgroundColor:
-                      theme.tokens.component.Badge.Positive.Subtle.Background,
-                    color: theme.tokens.component.Badge.Positive.Subtle.Text,
-                  })}
-                />
-              )}
-
-              {/* Product Tags */}
-              {product.productTags?.map((tag: string, index: number) => (
-                <StyledChip
-                  key={index}
-                  label={tag}
-                  sx={(theme) => ({
-                    backgroundColor:
-                      theme.tokens.component.Badge.Informative.Subtle
-                        .Background,
-                    color: theme.tokens.component.Badge.Informative.Subtle.Text,
-                  })}
-                />
-              ))}
-            </TagsContainer>
-
-            {/* Contact Sales Button */}
-            <Box marginTop={1}>
-              <Button
-                buttonType="primary"
-                data-pendo-id={`Cloud Marketplace ${product.name}-Contact Sales`}
-                onClick={handleContactSales}
+              {/* Description */}
+              <Typography
+                sx={(theme) => ({
+                  alignSelf: 'stretch',
+                  color: theme.tokens.component.Tile.Default.Text,
+                  font: theme.font.normal,
+                  maxWidth: '800px',
+                })}
+                variant="body1"
               >
-                Contact Sales
-              </Button>
-            </Box>
-          </ProductDetailsSection>
-        </ProductInfoSection>
+                {product.shortDescription}
+              </Typography>
 
-        {/* Product Details Tabs */}
-        {details && (
-          <Box width="100%">
-            <ProductDetailsTabs details={details} />
-          </Box>
-        )}
-      </ProductDetailsContainer>
-    </Paper>
+              {/* Tags */}
+              <TagsContainer>
+                {/* Tile Tag */}
+                {product.tileTag && (
+                  <StyledChip
+                    label={product.tileTag}
+                    sx={(theme) => ({
+                      backgroundColor:
+                        theme.tokens.component.Badge.Positive.Subtle.Background,
+                      color: theme.tokens.component.Badge.Positive.Subtle.Text,
+                    })}
+                  />
+                )}
+
+                {/* Product Tags */}
+                {product.productTags?.map((tag: string, index: number) => (
+                  <StyledChip
+                    key={index}
+                    label={tag}
+                    sx={(theme) => ({
+                      backgroundColor:
+                        theme.tokens.component.Badge.Informative.Subtle
+                          .Background,
+                      color:
+                        theme.tokens.component.Badge.Informative.Subtle.Text,
+                    })}
+                  />
+                ))}
+              </TagsContainer>
+
+              {/* Contact Sales Button */}
+              <Box marginTop={1}>
+                <Button
+                  buttonType="primary"
+                  data-pendo-id={`Cloud Marketplace ${product.name}-Contact Sales`}
+                  onClick={handleContactSales}
+                >
+                  Contact Sales
+                </Button>
+              </Box>
+            </ProductDetailsSection>
+          </ProductInfoSection>
+
+          {/* Product Details Tabs */}
+          {details && (
+            <Box width="100%">
+              <ProductDetailsTabs details={details} />
+            </Box>
+          )}
+        </ProductDetailsContainer>
+      </Paper>
+    </Box>
   );
 };

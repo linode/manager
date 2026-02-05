@@ -1,4 +1,5 @@
 import { akamaiCloudComputing } from './akamai-cloud-computing';
+import { apimetrics } from './apimetrics';
 
 /**
  * Tab content structure for product details page.
@@ -17,6 +18,7 @@ export interface ProductTabDetails {
  */
 const detailsMap: Record<string, ProductTabDetails> = {
   'akamai-cloud-computing': akamaiCloudComputing,
+  apimetrics,
   // Add more products here as you add their details files
 };
 
