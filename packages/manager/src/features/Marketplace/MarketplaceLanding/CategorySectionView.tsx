@@ -79,9 +79,10 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
           sx={{
             justifyContent: 'start',
             paddingLeft: 0,
+            width: 'max-content',
           }}
         >
-          Load More...
+          Load more offers &gt;
         </Button>
       )}
     </Stack>
