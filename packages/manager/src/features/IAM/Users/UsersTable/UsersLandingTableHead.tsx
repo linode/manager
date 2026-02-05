@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import React from 'react';
 
 import { TableCell } from 'src/components/TableCell';

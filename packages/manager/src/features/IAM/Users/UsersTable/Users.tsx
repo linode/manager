@@ -134,7 +134,11 @@ export const UsersLanding = () => {
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const numColsLg = isLgDown ? (isChildWithDelegationEnabled ? 5 : 4) : 3;
+  const numColsLg = isLgDown
+    ? isChildOrDelegateWithDelegationEnabled
+      ? 5
+      : 4
+    : 3;
 
   const numCols = isSmDown ? 2 : numColsLg;
 

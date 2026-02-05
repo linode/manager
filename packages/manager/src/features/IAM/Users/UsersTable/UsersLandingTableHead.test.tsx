@@ -82,17 +82,11 @@ describe('UsersLandingTableHead', () => {
     });
 
     const { getByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(
-        <UsersLandingTableHead
-          {...defaultProps}
-          isChildWithDelegationEnabled={false}
-        />,
-        {
-          flags: {
-            iamDelegation: { enabled: false },
-          },
-        }
-      )
+      wrapWithTableBody(<UsersLandingTableHead {...defaultProps} />, {
+        flags: {
+          iamDelegation: { enabled: false },
+        },
+      })
     );
 
     expect(queryByText('User Type')).not.toBeInTheDocument();
