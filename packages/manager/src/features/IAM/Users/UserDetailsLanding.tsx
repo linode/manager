@@ -81,7 +81,7 @@ export const UserDetailsLanding = () => {
           labelOptions: {
             noCap: true,
             suffixComponent: isDelegateUserForChildAccount ? (
-              <DelegateUserChip />
+              <DelegateUserChip hideBelowSm={true} />
             ) : null,
           },
           pathname: location.pathname,
