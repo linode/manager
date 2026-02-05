@@ -4,7 +4,6 @@ import {
   useMutateAccount,
   useMutateAccountAgreements,
   useNotificationsQuery,
-  useProfile,
 } from '@linode/queries';
 import {
   ActionsPanel,
@@ -32,6 +31,7 @@ import {
   TAX_ID_AGREEMENT_TEXT,
   TAX_ID_HELPER_TEXT,
 } from 'src/features/Billing/constants';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -53,19 +53,17 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>(undefined);
-  const { data: profile } = useProfile();
+  const { isChildUserType, isParentUserType } = useDelegationRole();
   const [billingAgreementChecked, setBillingAgreementChecked] =
     React.useState(false);
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
-  const isChildUser = profile?.user_type === 'child';
-  const isParentUser = profile?.user_type === 'parent';
   const { data: permissions } = usePermissions('account', [
     'acknowledge_account_agreement',
     'update_account',
   ]);
-  const isAccountReadOnly = !permissions.update_account || isChildUser;
+  const isAccountReadOnly = !permissions.update_account || isChildUserType;
   const isAcknowledgeAgreementDisabled =
-    !permissions.acknowledge_account_agreement || isChildUser;
+    !permissions.acknowledge_account_agreement || isChildUserType;
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -86,7 +84,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
     async onSubmit(values) {
       const clonedValues = { ...values };
 
-      if (isParentUser) {
+      if (isParentUserType) {
         // This is a disabled field that we want to omit from payload.
         delete clonedValues.company;
       }
@@ -267,7 +265,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           <Grid size={12}>
             <Notice
               text={getRestrictedResourceText({
-                isChildUser,
+                isChildUserType,
                 resourceType: 'Account',
               })}
               variant="error"
@@ -330,7 +328,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         <Grid size={12}>
           <TextField
             data-qa-company
-            disabled={isAccountReadOnly || isParentUser}
+            disabled={isAccountReadOnly || isParentUserType}
             errorText={errorMap.company}
             label="Company Name"
             name="company"

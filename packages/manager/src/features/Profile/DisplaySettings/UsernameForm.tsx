@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useProfile, useUpdateUserMutation } from '@linode/queries';
+import { useUpdateUserMutation } from '@linode/queries';
 import { Button, TextField } from '@linode/ui';
 import { UpdateUserNameSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
@@ -7,6 +7,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
@@ -16,7 +17,7 @@ import type { Profile } from '@linode/api-v4';
 type Values = Pick<Profile, 'username'>;
 
 export const UsernameForm = () => {
-  const { data: profile } = useProfile();
+  const { profile, isProxyOrDelegateUserType } = useDelegationRole();
   const { mutateAsync: updateUser } = useUpdateUserMutation(
     profile?.username ?? ''
   );
@@ -39,7 +40,7 @@ export const UsernameForm = () => {
 
   const tooltipForDisabledUsernameField = !permissions.is_account_admin
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
-    : profile?.user_type === 'proxy'
+    : isProxyOrDelegateUserType
       ? RESTRICTED_FIELD_TOOLTIP
       : undefined;
 

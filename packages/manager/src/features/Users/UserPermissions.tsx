@@ -364,7 +364,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderBillingPerm = () => {
     const { grants, userType } = this.state;
     const isChildUser = userType === 'child';
-    const isProxyUser = userType === 'proxy';
+    const isProxyOrDelegateUser =
+      userType === 'proxy' || userType === 'delegate';
 
     if (!(grants && grants.global)) {
       return null;
@@ -397,7 +398,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={grants.global.account_access === null}
             data-qa-billing-access="None"
-            disabled={isProxyUser}
+            disabled={isProxyOrDelegateUser}
             heading="None"
             onClick={this.billingPermOnClick(null)}
             subheadings={['The user cannot view any billing information.']}
@@ -408,7 +409,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               (isChildUser && Boolean(this.state.grants?.global.account_access))
             }
             data-qa-billing-access="Read Only"
-            disabled={isProxyUser}
+            disabled={isProxyOrDelegateUser}
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
@@ -435,7 +436,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
-    const isProxyUser = this.state.userType === 'proxy';
+    const isProxyOrDelegateUser =
+      this.state.userType === 'proxy' || this.state.userType === 'delegate';
 
     return (
       <Box>
@@ -460,7 +462,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 }}
                 variant="h2"
               >
-                {isProxyUser ? PARENT_USER : 'General'} Permissions
+                {isProxyOrDelegateUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledFullAccountAccessToggleGrid>

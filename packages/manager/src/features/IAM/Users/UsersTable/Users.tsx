@@ -33,7 +33,7 @@ export const UsersLanding = () => {
   const navigate = useNavigate();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const { isChildAccount, isDelegateAccount } = useDelegationRole();
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
   const { query, users: usersParam } = useSearch({
     from: '/iam',
@@ -72,7 +72,7 @@ export const UsersLanding = () => {
   // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show both 'child' and 'delegate_user' users in the table
   const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
 
   const filterableOptions = React.useMemo(
     () => [
@@ -134,7 +134,11 @@ export const UsersLanding = () => {
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const numColsLg = isLgDown ? 4 : 3;
+  const numColsLg = isLgDown
+    ? isChildOrDelegateWithDelegationEnabled
+      ? 5
+      : 4
+    : 3;
 
   const numCols = isSmDown ? 2 : numColsLg;
 
@@ -159,8 +163,17 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
-  const canCreateUser = permissions.create_user;
+  const handleDeleteDialogClose = () => {
+    const removedLastOnPage =
+      users && users?.data.length % pagination.pageSize === 1;
 
+    setIsDeleteDialogOpen(false);
+    if (removedLastOnPage) {
+      pagination.handlePageChange(pagination.page - 1);
+    }
+  };
+
+  const canCreateUser = permissions.create_user;
   return (
     <React.Fragment>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -256,7 +269,7 @@ export const UsersLanding = () => {
         open={isCreateDrawerOpen}
       />
       <UserDeleteConfirmation
-        onClose={() => setIsDeleteDialogOpen(false)}
+        onClose={handleDeleteDialogClose}
         open={isDeleteDialogOpen}
         username={selectedUsername}
       />

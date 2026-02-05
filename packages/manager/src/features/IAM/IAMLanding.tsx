@@ -24,7 +24,7 @@ export const IdentityAccessLanding = React.memo(() => {
     flags.iamLimitedAvailabilityBadges && isIAMEnabled;
   const location = useLocation();
   const navigate = useNavigate();
-  const { isParentAccount } = useDelegationRole();
+  const { isParentUserType } = useDelegationRole();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
@@ -37,7 +37,7 @@ export const IdentityAccessLanding = React.memo(() => {
       title: 'Roles',
     },
     {
-      hide: !isIAMDelegationEnabled || !isParentAccount,
+      hide: !isIAMDelegationEnabled || !isParentUserType,
       to: `/iam/delegations`,
       title: 'Account Delegations',
     },

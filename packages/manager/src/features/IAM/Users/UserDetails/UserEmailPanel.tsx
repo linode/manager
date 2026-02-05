@@ -20,7 +20,8 @@ export const UserEmailPanel = ({ activeUser }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { profileUserName } = useDelegationRole();
 
-  const isProxyUser = activeUser?.user_type === 'proxy';
+  const isProxyOrDelegateUserType =
+    activeUser?.user_type === 'proxy' || activeUser?.user_type === 'delegate';
 
   const { mutateAsync: updateProfile } = useMutateProfile();
 
@@ -45,15 +46,18 @@ export const UserEmailPanel = ({ activeUser }: Props) => {
     }
   };
 
-  const disabledReason = isProxyUser
+  const disabledReason = isProxyOrDelegateUserType
     ? RESTRICTED_FIELD_TOOLTIP
-    : profileUserName !== activeUser.username
-      ? 'You can\u{2019}t change another user\u{2019}s email address.'
-      : undefined;
+    : activeUser.user_type === 'delegate' &&
+        profileUserName !== activeUser.username
+      ? 'E-mail addresses of delegate users are not displayed.'
+      : profileUserName !== activeUser.username
+        ? 'You can\u{2019}t change another user\u{2019}s email address.'
+        : undefined;
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
   const disableEmailField =
-    profileUserName !== activeUser.username || isProxyUser;
+    profileUserName !== activeUser.username || isProxyOrDelegateUserType;
 
   return (
     <Paper>

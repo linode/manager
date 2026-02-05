@@ -1,4 +1,4 @@
-import { useAccountLoginsQuery, useProfile } from '@linode/queries';
+import { useAccountLoginsQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import * as React from 'react';
@@ -18,6 +18,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import AccountLoginsTableRow from './AccountLoginsTableRow';
 import { getRestrictedResourceText } from './utils';
@@ -74,8 +75,7 @@ const AccountLogins = () => {
     },
     filter
   );
-  const { data: profile } = useProfile();
-  const isChildUser = profile?.user_type === 'child';
+  const { isChildUserType } = useDelegationRole();
   const canViewAccountLogins = permissions.list_account_logins;
 
   const renderTableContent = () => {
@@ -172,7 +172,7 @@ const AccountLogins = () => {
   ) : (
     <Notice
       text={getRestrictedResourceText({
-        isChildUser,
+        isChildUserType,
         resourceType: 'Account',
       })}
       variant="warning"
