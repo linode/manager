@@ -88,7 +88,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
 
   const [selectedCountry, setSelectedCountry] = React.useState<
     CountryItem | undefined
-  >(defaultCountry);
+  >(undefined);
 
   const [selectedPhoneCountry, setSelectedPhoneCountry] = React.useState<
     CountryItem | undefined
@@ -105,7 +105,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
     watch,
   } = useForm<MarketplacePartnerReferralPayload>({
     defaultValues: {
-      country_code: 'US',
+      country_code: '',
       email: profile?.email || '',
       additional_emails: [''],
       name: profile?.username || '',
@@ -177,7 +177,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormLabel htmlFor="email">Email address</FormLabel>
             <Controller
               control={control}
               name="email"
@@ -222,7 +222,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           />
           <FormControl>
             <FormLabel htmlFor="country_code">
-              Country <Typography component="span">(required)</Typography>
+              Region <Typography component="span">(required)</Typography>
             </FormLabel>
             <Controller
               control={control}
@@ -238,7 +238,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     option.label === value.label
                   }
                   keepSearchEnabledOnMobile
-                  label="Country"
+                  label="Region"
                   onBlur={field.onBlur}
                   onChange={(_event, country) => {
                     setSelectedCountry(country);
@@ -261,6 +261,13 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     </li>
                   )}
                   textFieldProps={{
+                    containerProps: {
+                      sx: {
+                        '& .MuiFormHelperText-root': {
+                          marginLeft: 0,
+                        },
+                      },
+                    },
                     dataAttrs: {
                       'data-qa-contact-country': true,
                     },
@@ -287,7 +294,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="phone-number">
-              Phone Number <Typography component="span">(required)</Typography>
+              Phone number <Typography component="span">(required)</Typography>
             </FormLabel>
             <Stack direction="row" sx={{ marginTop: 0, width: '100%' }}>
               <Controller
@@ -404,7 +411,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="company-name">
-              Your Company&apos;s Name
+              Your company&apos;s name
             </FormLabel>
             <Controller
               control={control}
@@ -459,7 +466,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="additional-comments">
-              Additional Comments
+              Additional comments
             </FormLabel>
             <Controller
               control={control}
@@ -497,7 +504,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                 sx={{
                   alignItems: 'flex-start',
                   display: 'flex',
-                  marginTop: (theme) => theme.spacing(2),
+                  marginTop: (theme) => theme.spacingFunction(16),
                 }}
               >
                 <Checkbox
@@ -513,7 +520,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                 <Box>
                   <Typography
                     sx={(theme) => ({
-                      marginBottom: theme.spacing(1),
+                      marginBottom: theme.spacingFunction(8),
                     })}
                   >
                     I consent to Akamai sharing the above information with the
