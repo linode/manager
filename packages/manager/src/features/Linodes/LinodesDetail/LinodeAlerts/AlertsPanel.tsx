@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
+import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -20,6 +21,11 @@ import type { AlertSectionProps } from './AlertSection';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
+  /**
+   * Whether the region supports ACLP alerts for Linodes
+   * Pass this from parent to avoid duplicate hook calls
+   */
+  isAclpAlertsSupportedRegion?: boolean;
   isReadOnly?: boolean;
   /**
    * Optional Linode ID.
@@ -35,7 +41,7 @@ interface Props {
 }
 
 export const AlertsPanel = (props: Props) => {
-  const { isReadOnly, linodeId } = props;
+  const { isAclpAlertsSupportedRegion, isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(
@@ -55,6 +61,8 @@ export const AlertsPanel = (props: Props) => {
   );
 
   const isBareMetalInstance = type?.class === 'metal';
+
+  const { aclpServices } = useFlags();
 
   const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linodeId, 'beta');
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
@@ -342,7 +350,12 @@ export const AlertsPanel = (props: Props) => {
           isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
         }
       >
-        {!isCreateFlow && (
+        {/* Only show "Alerts" heading when not using ACLP (legacy standalone mode).
+            When ACLP is enabled AND region is supported, this component is rendered
+            inside an Accordion which already provides the heading. */}
+        {!(
+          aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegion
+        ) && (
           <Typography
             sx={(theme) => ({ mb: theme.spacingFunction(12) })}
             variant="h2"
@@ -350,6 +363,7 @@ export const AlertsPanel = (props: Props) => {
             Alerts
           </Typography>
         )}
+
         {generalError && <Notice variant="error">{generalError}</Notice>}
         {alertSections.map((alert, idx) => (
           <React.Fragment key={`alert-${idx}`}>

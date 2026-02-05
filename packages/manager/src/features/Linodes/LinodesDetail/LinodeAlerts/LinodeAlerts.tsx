@@ -1,16 +1,16 @@
 import { useLinodeQuery } from '@linode/queries';
 import { useIsLinodeAclpSubscribed } from '@linode/shared';
-import { ActionsPanel, Box, Typography } from '@linode/ui';
+import { Accordion, ActionsPanel, BetaChip, Box, Typography } from '@linode/ui';
 import { useBlocker, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { AlertsPanel } from './AlertsPanel';
 
@@ -103,27 +103,74 @@ const LinodeAlerts = () => {
       <Box>
         {aclpServices?.linode?.alerts?.enabled &&
           isAclpAlertsSupportedRegionLinode && (
-            <AclpPreferenceToggle
-              isAlertsBetaMode={isAlertsBetaMode.get}
-              onAlertsModeChange={isAlertsBetaMode.set}
-              type="alerts"
-            />
+            // <AclpPreferenceToggle
+            //   isAlertsBetaMode={isAlertsBetaMode.get}
+            //   onAlertsModeChange={isAlertsBetaMode.set}
+            //   type="alerts"
+            // />
+            <DismissibleBanner
+              dismissible={false}
+              preferenceKey="alerts-preference-linode-details"
+              variant="info"
+            >
+              <Typography>
+                Try the <strong>Alerts (Beta)</strong>, featuring new options
+                like customizable alerts. You can switch back to legacy Alerts
+                at any time.
+              </Typography>
+            </DismissibleBanner>
           )}
         {aclpServices?.linode?.alerts?.enabled &&
-        isAclpAlertsSupportedRegionLinode &&
-        isAlertsBetaMode.get ? (
-          // Beta ACLP Alerts View
-          <AlertReusableComponent
-            entityId={linodeId.toString()}
-            entityName={linode?.label ?? ''}
-            isLegacyAlertAvailable={!isLinodeAclpSubscribed}
-            onToggleAlert={(_, hasUnsavedChanges) => {
-              setHasAclpAlertsUnsavedChanges(hasUnsavedChanges ?? false);
-            }}
-            serviceType="linode"
-          />
+        isAclpAlertsSupportedRegionLinode ? (
+          <>
+            {/* Legacy ACLP Alerts View */}
+            <Accordion defaultExpanded heading="Alerts">
+              <AlertsPanel
+                isAclpAlertsSupportedRegion={isAclpAlertsSupportedRegionLinode}
+                isReadOnly={!permissions.update_linode}
+                linodeId={id}
+                onUnsavedChangesUpdate={(hasUnsavedChanges) => {
+                  setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
+                }}
+              />
+            </Accordion>
+
+            {/* Beta ACLP Alerts View */}
+            <Accordion
+              defaultExpanded
+              heading="Alerts"
+              headingChip={
+                aclpServices?.linode?.alerts?.beta && isAlertsBetaMode.get ? (
+                  <BetaChip />
+                ) : null
+              }
+            >
+              <AlertReusableComponent
+                entityId={linodeId.toString()}
+                entityName={linode?.label ?? ''}
+                isLegacyAlertAvailable={!isLinodeAclpSubscribed}
+                onToggleAlert={(payload, hasUnsavedChanges) => {
+                  setHasAclpAlertsUnsavedChanges(hasUnsavedChanges ?? false);
+                }}
+                serviceType="linode"
+              />
+            </Accordion>
+
+            {/* Unified Save Button */}
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'unified-alerts-save',
+                disabled:
+                  !hasLegacyAlertsUnsavedChanges &&
+                  !hasAclpAlertsUnsavedChanges,
+                label: 'Save',
+                onClick: () => {},
+              }}
+              sx={{ justifyContent: 'flex-start', mt: 2 }}
+            />
+          </>
         ) : (
-          // Legacy Alerts View
+          // Legacy Alerts View (standalone, uses Paper)
           <AlertsPanel
             isReadOnly={!permissions.update_linode}
             linodeId={id}

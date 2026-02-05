@@ -100,9 +100,9 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   }
 
   return (
-    <Paper sx={{ p: entityId ? undefined : 0 }}>
+    <Paper sx={{ p: entityId && serviceType !== 'linode' ? undefined : 0 }}>
       <Stack gap={3}>
-        {entityId && (
+        {entityId && serviceType !== 'linode' && (
           <Box display="flex" justifyContent="space-between">
             <Box alignItems="center" display="flex" gap={0.5}>
               <Typography variant="h2">Alerts</Typography>
@@ -145,6 +145,17 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
                 hideLabel: true,
               }}
             />
+            {entityId && serviceType === 'linode' && (
+              <Button
+                buttonType="outlined"
+                data-qa-buttons="true"
+                data-testid="manage-alerts"
+                onClick={() => navigate({ to: '/alerts/definitions' })}
+                sx={{ marginLeft: 'auto' }}
+              >
+                Manage Alerts
+              </Button>
+            )}
           </Box>
 
           <AlertInformationActionTable
