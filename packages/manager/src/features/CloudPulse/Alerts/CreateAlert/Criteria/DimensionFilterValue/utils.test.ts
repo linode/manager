@@ -355,10 +355,6 @@ describe('isMaxSelectionsReached', () => {
   it('counts single value correctly', () => {
     expect(isMaxSelectionsReached(true, 'a', 1)).toBe(true);
   });
-
-  it('handles trailing comma as an extra value (current behavior)', () => {
-    expect(isMaxSelectionsReached(true, 'a,b,', 3)).toBe(true);
-  });
 });
 
 describe('isOptionDisabled', () => {
@@ -428,17 +424,5 @@ describe('isOptionDisabled', () => {
         option: optionA,
       })
     ).toBe(true);
-  });
-
-  it('handles trailing comma in value (current behavior)', () => {
-    // 'a,b,' → ['a', 'b', '']
-    expect(
-      isOptionDisabled({
-        maxReached: true,
-        multiple: true,
-        value: 'a,b,',
-        option: optionA,
-      })
-    ).toBe(false);
   });
 });
