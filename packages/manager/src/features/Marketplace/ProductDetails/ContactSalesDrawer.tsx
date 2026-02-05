@@ -406,6 +406,13 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  containerProps={{
+                    sx: {
+                      '& .MuiFormHelperText-root': {
+                        marginLeft: 0,
+                      },
+                    },
+                  }}
                   disabled={isSubmitting}
                   errorText={errors.company_name?.message}
                   hideLabel
@@ -426,6 +433,13 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  containerProps={{
+                    sx: {
+                      '& .MuiFormHelperText-root': {
+                        marginLeft: 0,
+                      },
+                    },
+                  }}
                   disabled={isSubmitting}
                   errorText={errors.account_executive_email?.message}
                   hideLabel
@@ -447,6 +461,13 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  containerProps={{
+                    sx: {
+                      '& .MuiFormHelperText-root': {
+                        marginLeft: 0,
+                      },
+                    },
+                  }}
                   disabled={isSubmitting}
                   errorText={errors.comments?.message}
                   hideLabel
