@@ -85,6 +85,15 @@ export const UserDetailsLanding = () => {
             ) : null,
           },
           pathname: location.pathname,
+          sx: {
+            flexWrap: 'nowrap',
+            '& > div:nth-of-type(3) h1': {
+              display: '-webkit-box',
+              '-webkit-line-clamp': '1',
+              '-webkit-box-orient': 'vertical',
+              overflow: 'hidden',
+            },
+          },
         }}
         docsLink={docsLink}
         removeCrumbX={4}
