@@ -240,10 +240,7 @@ export const UsersLanding = () => {
           </Grid>
         </Grid>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
-          <UsersLandingTableHead
-            isChildWithDelegationEnabled={isChildWithDelegationEnabled}
-            order={order}
-          />
+          <UsersLandingTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody
               error={error}

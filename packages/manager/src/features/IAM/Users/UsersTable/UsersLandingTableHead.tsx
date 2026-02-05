@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
@@ -17,7 +18,6 @@ export interface Order {
 }
 
 interface Props {
-  isChildWithDelegationEnabled: boolean;
   order: Order;
 }
 
