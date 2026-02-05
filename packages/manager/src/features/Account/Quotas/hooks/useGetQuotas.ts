@@ -2,6 +2,7 @@ import { quotaQueries, useAllQuotasQuery, useQueries } from '@linode/queries';
 import * as React from 'react';
 
 import {
+  getQuotaMapper,
   getQuotasFilters,
   getQuotaVisibilityFilter,
 } from 'src/features/Account/Quotas/utils';
@@ -27,6 +28,7 @@ export const useGetQuotas = ({
   });
 
   const visiblityFilter = getQuotaVisibilityFilter(selectedService);
+  const quotaMapper = getQuotaMapper(selectedService);
 
   const {
     data: quotas,
@@ -56,10 +58,9 @@ export const useGetQuotas = ({
     () =>
       quotas
         ?.filter((quota) => visiblityFilter.isVisible(quota))
-        .map((quota, index) => ({
-          ...quota,
-          usage: quotaUsageQueries?.[index]?.data,
-        })) ?? [],
+        .map((quota, index) =>
+          quotaMapper.mapQuota(quota, quotaUsageQueries?.[index]?.data || null)
+        ) ?? [],
     [quotas, quotaUsageQueries]
   );
 
