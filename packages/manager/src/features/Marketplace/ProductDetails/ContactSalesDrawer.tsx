@@ -299,7 +299,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     isOptionEqualToValue={(option, value) =>
                       option.label === value.label
                     }
-                    label=""
+                    label="Phone Number"
                     onBlur={field.onBlur}
                     onChange={(_, country) => {
                       setSelectedPhoneCountry(country);
@@ -328,16 +328,15 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       paper: {
                         sx: {
                           overflow: 'hidden',
+                          // Set the options width to cover the entire textfield when the drawer is at or above its designed width
                           width: {
-                            xs: '366px',
                             sm: '401px',
+                            xs: '366px',
                           },
-                          minWidth: '100%',
-                        },
-                      },
-                      listbox: {
-                        sx: {
-                          width: '100%',
+                          // When the drawer width is less than 445px, expand to drawer width (minus padding offset) on mobile
+                          '@media (max-width: 445px)': {
+                            width: 'calc(100vw - 79px)',
+                          },
                         },
                       },
                     }}
