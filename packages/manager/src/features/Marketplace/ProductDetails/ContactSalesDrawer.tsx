@@ -219,7 +219,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             }}
           />
           <FormControl>
-            <FormLabel id="country_code">
+            <FormLabel htmlFor="country_code">
               Country <Typography component="span">(required)</Typography>
             </FormLabel>
             <Controller
@@ -439,7 +439,9 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel id="additional-comments">Additional Comments</FormLabel>
+            <FormLabel htmlFor="additional-comments">
+              Additional Comments
+            </FormLabel>
             <Controller
               control={control}
               name="comments"
