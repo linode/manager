@@ -58,6 +58,10 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   } = props;
 
   const { data: ips } = useLinodeIPsQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId);
+  const isLinodeSubResourcesLocked =
+    !!linode?.locks?.length &&
+    linode.locks.includes('cannot_delete_with_subresources');
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );
@@ -111,6 +115,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             ipAddress={_ip}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
+            isLinodeSubResourcesLocked={isLinodeSubResourcesLocked}
             isOnlyPublicIP={isOnlyPublicIP}
             onEdit={handleOpenEditRDNS}
             onRemove={openRemoveIPDialog}
@@ -123,6 +128,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             ipAddress={_range}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
+            isLinodeSubResourcesLocked={isLinodeSubResourcesLocked}
             isOnlyPublicIP={isOnlyPublicIP}
             onEdit={() => handleOpenEditRDNSForRange(_range)}
             onRemove={openRemoveIPRangeDialog}
