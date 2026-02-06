@@ -17,6 +17,7 @@ import { getLinodeIconStatus } from './LinodesLanding/utils';
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Config, LinodeBackups, LinodeCapabilities } from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type { LockType } from '@linode/api-v4/lib/locks/types';
 import type { TypographyProps } from '@linode/ui';
 import type { LinodeMaintenance } from 'src/utilities/linodes';
 
@@ -44,6 +45,7 @@ export interface HeaderProps {
   linodeCapabilities: LinodeCapabilities[];
   linodeId: number;
   linodeLabel: string;
+  linodeLocks: LockType[];
   linodeMaintenancePolicySet: Linode['maintenance_policy'];
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
@@ -74,6 +76,7 @@ export const LinodeEntityDetailHeader = (
     linodeRegionDisplay,
     linodeStatus,
     linodeCapabilities,
+    linodeLocks,
     linodeMaintenancePolicySet,
     maintenance,
     openNotificationMenu,
@@ -184,6 +187,7 @@ export const LinodeEntityDetailHeader = (
           linodeBackups={backups}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
+          linodeLocks={linodeLocks}
           linodeRegion={linodeRegionDisplay}
           linodeStatus={linodeStatus}
           linodeType={type ?? undefined}
