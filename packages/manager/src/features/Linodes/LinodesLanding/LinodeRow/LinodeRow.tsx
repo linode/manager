@@ -187,10 +187,10 @@ export const LinodeRow = (props: Props) => {
           linodeBackups={backups}
           linodeId={id}
           linodeLabel={label}
+          linodeLocks={locks}
           linodeRegion={region}
           linodeStatus={status}
           linodeType={linodeType}
-          locks={locks}
           {...handlers}
         />
       </TableCell>
