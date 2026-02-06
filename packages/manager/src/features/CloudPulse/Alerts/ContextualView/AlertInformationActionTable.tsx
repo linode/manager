@@ -349,6 +349,11 @@ export const AlertInformationActionTable = (
                     handleSizeChange={handlePageSizeChange}
                     page={page}
                     pageSize={pageSize}
+                    sx={{
+                      // Prevents layout breaks and enables smooth collapse when table with this footer is used inside an Accordion.
+                      // Without this, the PaginationFooter causes layout shifts during the collapse transition.
+                      contain: 'layout',
+                    }}
                   />
                 </Box>
                 {/* Show save button only in edit mode and not for linode service type.
