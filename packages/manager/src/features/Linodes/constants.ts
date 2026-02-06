@@ -32,3 +32,19 @@ export const ALERTS_LEGACY_PROMPT =
 
 export const ALERTS_BETA_PROMPT =
   'Are you sure you want to save (Beta) Alerts?';
+
+// Lock-related constants
+export const LINODE_LOCKED_DELETE_TOOLTIP =
+  "You don't have permission to delete this linode.";
+
+export const LINODE_LOCKED_DELETE_CONFIG_TOOLTIP =
+  "You don't have permission to delete this configuration.";
+
+export const LINODE_LOCKED_DELETE_DISK_TOOLTIP =
+  "You don't have permission to delete this disk.";
+
+export const LINODE_LOCKED_DELETE_IP_TOOLTIP =
+  "You don't have permission to delete this IP Address.";
+
+export const LINODE_REBUILD_LOCKED_NOTICE_TEXT =
+  'This Linode is currently locked and cannot be rebuilt. Please remove the lock to proceed.';
