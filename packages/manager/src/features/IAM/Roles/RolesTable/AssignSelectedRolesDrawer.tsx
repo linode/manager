@@ -165,7 +165,7 @@ export const AssignSelectedRolesDrawer = ({
     <Drawer
       onClose={handleClose}
       open={open}
-      title={`Assign Role${selectedRoles.length > 1 ? `s` : ``}`}
+      title={`Assign Selected Role${selectedRoles.length > 1 ? `s` : ``} to Users`}
     >
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>

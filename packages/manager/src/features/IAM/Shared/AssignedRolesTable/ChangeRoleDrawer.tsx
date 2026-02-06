@@ -169,7 +169,9 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         <Typography sx={{ marginBottom: 2.5 }}>
           Select a role you want{' '}
           {role?.access === 'account_access'
-            ? 'to assign.'
+            ? isDefaultDelegationRolesForChildAccount
+              ? 'to assign by default to new delegate users.'
+              : 'to assign.'
             : 'the entities to be attached to.'}{' '}
           <Link to={ROLES_LEARN_MORE_LINK}>
             Learn more about roles and permissions
@@ -178,7 +180,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         </Typography>
 
         <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
-          Change from role <strong>{role?.name}</strong> to:
+          Change the role from <strong>{role?.name}</strong> to:
         </Typography>
 
         <Controller

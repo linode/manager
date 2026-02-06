@@ -206,13 +206,13 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
 
   const renderTableBody = () => {
     if (entitiesLoading || loading) {
-      return <TableRowLoading columns={3} rows={1} />;
+      return <TableRowLoading columns={4} rows={1} />;
     }
 
     if (entitiesError || error) {
       return (
         <TableRowError
-          colSpan={3}
+          colSpan={4}
           message="Unable to load the assigned entities. Please try again."
         />
       );
