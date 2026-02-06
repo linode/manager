@@ -348,7 +348,11 @@ export const AlertsPanel = (props: Props) => {
         </Typography>
       )}
 
-      {generalError && <Notice variant="error">{generalError}</Notice>}
+      {/* Only show this general error in standalone Legacy mode. When ACLP alerting is enabled in the region, 
+          it's displayed in the parent LinodeAlerts component instead */}
+      {!isAclpAlertingInRegionEnabled && generalError && (
+        <Notice variant="error">{generalError}</Notice>
+      )}
       {alertSections.map((alert, idx) => (
         <React.Fragment key={`alert-${idx}`}>
           <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />

@@ -5,6 +5,7 @@ import {
   BetaChip,
   Box,
   Divider,
+  Notice,
   Paper,
   Stack,
   Typography,
@@ -19,6 +20,7 @@ import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/Contextua
 import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
+import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertsPanel } from './AlertsPanel';
 
@@ -50,6 +52,10 @@ const LinodeAlerts = () => {
     isPending: isUpdatingLinode,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(id);
+
+  // Extract general error from mutation error (not specific to any field)
+  const hasAPIErrorFor = getAPIErrorFor({}, mutationError ?? undefined);
+  const generalError = hasAPIErrorFor('none');
 
   const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
     React.useState<boolean>(false);
@@ -197,12 +203,22 @@ const LinodeAlerts = () => {
         )}
         {isAclpAlertingInRegionEnabled ? (
           <Paper>
+            {/* Display general mutation error globally for unified save */}
+            {generalError && (
+              <Notice
+                sx={(theme) => ({ mb: theme.spacingFunction(8) })}
+                variant="error"
+              >
+                {generalError}
+              </Notice>
+            )}
             <Stack divider={<Divider />}>
               {/* Legacy ACLP Alerts View */}
               <Accordion
                 defaultExpanded
                 detailProps={{ sx: { p: 0 } }}
                 heading="Legacy Alerts"
+                summaryProps={{ sx: { p: 0 } }}
               >
                 <AlertsPanel
                   error={mutationError}
@@ -214,18 +230,23 @@ const LinodeAlerts = () => {
                   onUnsavedChangesUpdate={(hasUnsavedChanges) => {
                     setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
                   }}
-                  paperSx={(theme) => ({ p: theme.spacingFunction(16) })}
+                  paperSx={(theme) => ({
+                    px: 0,
+                    py: theme.spacingFunction(8),
+                  })}
                 />
               </Accordion>
 
               {/* Beta ACLP Alerts View */}
               <Accordion
                 defaultExpanded
+                detailProps={{ sx: { p: 0 } }}
                 disableGutters // Removes unnecessary default margins when stacking Accordions
                 heading="Alerts"
                 headingChip={
                   aclpServices?.linode?.alerts?.beta ? <BetaChip /> : null
                 }
+                summaryProps={{ sx: { p: 0 } }}
               >
                 <AlertReusableComponent
                   entityId={linodeId.toString()}
@@ -235,8 +256,8 @@ const LinodeAlerts = () => {
                     setHasAclpAlertsUnsavedChanges(hasUnsavedChanges ?? false);
                   }}
                   paperSx={(theme) => ({
-                    py: theme.spacingFunction(16),
                     px: 0,
+                    py: theme.spacingFunction(16),
                   })}
                   serviceType="linode"
                 />
