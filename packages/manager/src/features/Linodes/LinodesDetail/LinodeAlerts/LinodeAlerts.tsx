@@ -221,6 +221,7 @@ const LinodeAlerts = () => {
               {/* Beta ACLP Alerts View */}
               <Accordion
                 defaultExpanded
+                disableGutters // Removes unnecessary default margins when stacking Accordions
                 heading="Alerts"
                 headingChip={
                   aclpServices?.linode?.alerts?.beta ? <BetaChip /> : null
