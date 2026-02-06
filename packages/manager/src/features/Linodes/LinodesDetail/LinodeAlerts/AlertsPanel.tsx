@@ -337,8 +337,8 @@ export const AlertsPanel = (props: Props) => {
   return (
     <Paper sx={paperSx}>
       {/* Only show "Alerts" heading in legacy standalone mode (not CreateFlow and ACLP not enabled).
-            When ACLP is enabled AND region is supported, this component is rendered inside an Accordion which already provides the heading.
-            In CreateFlow, the heading is not needed. */}
+      When ACLP is enabled AND region is supported, this component is rendered inside an Accordion which already provides the heading.
+      In CreateFlow, the heading is not needed. */}
       {!isCreateFlow && !isAclpAlertingInRegionEnabled && (
         <Typography
           sx={(theme) => ({ mb: theme.spacingFunction(12) })}
@@ -348,8 +348,8 @@ export const AlertsPanel = (props: Props) => {
         </Typography>
       )}
 
-      {/* Only show this general error in standalone Legacy mode. When ACLP alerting is enabled in the region, 
-          it's displayed in the parent LinodeAlerts component instead */}
+      {/* Only show this general error in standalone Legacy mode. When ACLP alerting is enabled in the region,
+      it's displayed in the parent LinodeAlerts component instead */}
       {!isAclpAlertingInRegionEnabled && generalError && (
         <Notice variant="error">{generalError}</Notice>
       )}
@@ -361,7 +361,7 @@ export const AlertsPanel = (props: Props) => {
       ))}
 
       {/* Show save button only in legacy standalone mode (not CreateFlow and ACLP not enabled).
-            When ACLP is enabled, save functionality is handled by the unified save button in parent component. */}
+      When ACLP is enabled, save functionality is handled by the unified save button in parent LinodeAlerts component. */}
       {!isCreateFlow && !isAclpAlertingInRegionEnabled && onSave && (
         <StyledActionsPanel
           primaryButtonProps={{

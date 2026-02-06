@@ -25,7 +25,7 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { AlertsPanel } from './AlertsPanel';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
-import type { Linode } from '@linode/api-v4';
+import type { APIError, Linode } from '@linode/api-v4';
 
 const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
@@ -53,9 +53,12 @@ const LinodeAlerts = () => {
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(id);
 
+  // Helper to extract general error (non-field-specific) from API errors array
+  const getGeneralError = (errors?: APIError[]) =>
+    getAPIErrorFor({}, errors)('none');
+
   // Extract general error from mutation error (not specific to any field)
-  const hasAPIErrorFor = getAPIErrorFor({}, mutationError ?? undefined);
-  const generalError = hasAPIErrorFor('none');
+  const generalError = getGeneralError(mutationError ?? undefined);
 
   const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
     React.useState<boolean>(false);
@@ -136,8 +139,12 @@ const LinodeAlerts = () => {
         setHasLegacyAlertsUnsavedChanges(false);
         setHasAclpAlertsUnsavedChanges(false);
       })
-      .catch(() => {
-        // Error is handled by React Query and displayed via mutationError prop
+      .catch((errors) => {
+        // Show snackbar for general errors so users don't miss them when scrolled away from top
+        const generalErrorMessage = getGeneralError(errors);
+        if (generalErrorMessage) {
+          enqueueSnackbar(generalErrorMessage, { variant: 'error' });
+        }
       });
   }, [legacyAlerts, aclpAlertsPayload, updateLinode, enqueueSnackbar]);
 
