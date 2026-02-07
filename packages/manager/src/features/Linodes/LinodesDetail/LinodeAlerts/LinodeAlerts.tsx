@@ -20,7 +20,6 @@ import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/Contextua
 import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertsPanel } from './AlertsPanel';
 
@@ -53,12 +52,15 @@ const LinodeAlerts = () => {
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(id);
 
-  // Helper to extract general error (non-field-specific) from API errors array
-  const getGeneralError = (errors?: APIError[]) =>
-    getAPIErrorFor({}, errors)('none');
+  // Helper to extract general/root errors from API errors array
+  // Includes errors without a field property, or with field="alerts" (not field-specific like "alerts.cpu")
+  const getGeneralOrRootError = (errors?: APIError[]) => {
+    if (!errors) return undefined;
+    const rootError = errors.find((e) => !e.field || e.field === 'alerts');
+    return rootError?.reason;
+  };
 
-  // Extract general error from mutation error (not specific to any field)
-  const generalError = getGeneralError(mutationError ?? undefined);
+  const generalOrRootError = getGeneralOrRootError(mutationError ?? undefined);
 
   const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
     React.useState<boolean>(false);
@@ -140,10 +142,10 @@ const LinodeAlerts = () => {
         setHasAclpAlertsUnsavedChanges(false);
       })
       .catch((errors) => {
-        // Show snackbar for general errors so users don't miss them when scrolled away from top
-        const generalErrorMessage = getGeneralError(errors);
-        if (generalErrorMessage) {
-          enqueueSnackbar(generalErrorMessage, { variant: 'error' });
+        // Show snackbar for general/root errors so users don't miss them when scrolled away from top
+        const errorMessage = getGeneralOrRootError(errors);
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, { variant: 'error' });
         }
       });
   }, [legacyAlerts, aclpAlertsPayload, updateLinode, enqueueSnackbar]);
@@ -211,12 +213,12 @@ const LinodeAlerts = () => {
         {isAclpAlertingInRegionEnabled ? (
           <Paper>
             {/* Display general mutation error globally for unified save */}
-            {generalError && (
+            {generalOrRootError && (
               <Notice
                 sx={(theme) => ({ mb: theme.spacingFunction(8) })}
                 variant="error"
               >
-                {generalError}
+                {generalOrRootError}
               </Notice>
             )}
             <Stack divider={<Divider />}>
