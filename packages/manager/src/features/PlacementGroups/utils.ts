@@ -164,8 +164,6 @@ export const getMaxPGsPerCustomer = (
 export const useIsPlacementGroupPolicyUpdated = () => {
   const flags = useFlags();
 
-  // @TODO NB-VPC: check for customer tag/account capability when it exists
-
   return {
     isPlacementGroupPolicyUpdated: flags.placementGroupPolicyUpdate ?? false,
   };
