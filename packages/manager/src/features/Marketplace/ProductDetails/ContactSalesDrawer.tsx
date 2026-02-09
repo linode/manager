@@ -10,6 +10,7 @@ import {
   FormHelperText,
   InputAdornment,
   LinkButton,
+  Notice,
   Stack,
   TextField,
   Typography,
@@ -53,7 +54,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface ContactSalesDrawerProps {
+export interface ContactSalesDrawerProps {
   onClose: () => void;
   open: boolean;
   partnerName: string;
@@ -68,6 +69,7 @@ interface CountryItem {
 }
 
 export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
+  const MAX_ADDITIONAL_EMAILS = 2;
   const { classes } = useStyles();
   const { onClose, open, partnerName, productName } = props;
 
@@ -101,6 +103,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
     formState: { errors, isSubmitting },
     handleSubmit,
     reset,
+    setError,
     trigger,
     watch,
   } = useForm<MarketplacePartnerReferralPayload>({
@@ -134,6 +137,12 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
+      if (
+        values?.additional_emails?.length === 1 &&
+        values?.additional_emails[0].trim() === ''
+      ) {
+        delete values.additional_emails;
+      }
       await createPartnerReferral(values);
       enqueueSnackbar(
         'Your request has been received by Akamai. After we forward it to the partner, you will receive a confirmation email.',
@@ -141,25 +150,25 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       );
       reset();
       onClose();
-    } catch (error) {
-      const errorMessage = error
-        ? getAPIErrorOrDefault(error)?.[0].reason
+    } catch (errors) {
+      const errorMessage = errors
+        ? getAPIErrorOrDefault(errors)?.[0].reason
         : "Oops! Something went wrong and we couldn't send your contacts. Please try again in a moment, or refresh the page.";
-      enqueueSnackbar(errorMessage, { variant: 'error' });
-      onClose();
+      setError('root', { message: errorMessage });
     }
   });
 
   return (
     <Drawer
       data-testid="contact-sales-drawer"
-      onClose={() => {
-        reset();
-        onClose();
-      }}
+      onClose={onClose}
+      onTransitionExited={() => reset()}
       open={open}
       title={`Contact ${partnerName} sales`}
     >
+      {errors.root?.message && (
+        <Notice text={errors.root.message} variant="error" />
+      )}
       <form onSubmit={onSubmit}>
         <Stack spacing={3}>
           <Typography>
@@ -192,10 +201,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             render={({ field }) => {
               const emailErrors = errors.additional_emails;
               return (
+                // Using MultipleIPInput component for additional emails since it allows for easy addition and removal of multiple entries, and it can display individual error messages for each email address.
                 <MultipleIPInput
                   buttonText="Add email address"
                   className={
-                    field.value?.length === 2
+                    field.value?.length === MAX_ADDITIONAL_EMAILS
                       ? classes.hideAddEmailButton
                       : classes.addEmailButton
                   }
@@ -273,6 +283,10 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     },
                     hideLabel: true,
                     inputRef: field.ref,
+                    inputProps: {
+                      'data-pendo-id':
+                        'Cloud Marketplace Contact Sales-Region-Input',
+                    },
                     InputProps: {
                       startAdornment: selectedCountry && (
                         <InputAdornment position="start">
@@ -355,6 +369,10 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       error: !!errors.phone_country_code,
                       hideLabel: true,
                       inputRef: field.ref,
+                      inputProps: {
+                        'data-pendo-id':
+                          'Cloud Marketplace Contact Sales Phone number-Code-Input',
+                      },
                       InputProps: {
                         startAdornment: field.value && selectedPhoneCountry && (
                           <InputAdornment position="start">
@@ -380,6 +398,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   return (
                     <Box sx={{ flexGrow: 1 }}>
                       <TextField
+                        data-testid="phone-number-input"
                         error={!!errors?.phone}
                         fullWidth
                         hideLabel
@@ -389,6 +408,12 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                         name="phone_number"
                         onBlur={field.onBlur}
                         onChange={field.onChange}
+                        slotProps={{
+                          htmlInput: {
+                            'data-pendo-id':
+                              'Cloud Marketplace Contact Sales Phone number-Number',
+                          },
+                        }}
                         sx={{
                           '& .MuiInputBase-root:not(.Mui-focused):not(:hover):not(.Mui-error)':
                             {
@@ -426,12 +451,19 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       },
                     },
                   }}
+                  data-testid="company-name-input"
                   disabled={isSubmitting}
                   errorText={errors.company_name?.message}
                   hideLabel
                   id="company-name"
                   label="Your Company's Name"
                   placeholder="Enter a company name"
+                  slotProps={{
+                    htmlInput: {
+                      'data-pendo-id':
+                        'Cloud Marketplace Contact Sales-Company Name',
+                    },
+                  }}
                 />
               )}
             />
@@ -459,6 +491,12 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   id="account-executive-email"
                   label="Akamai account executive email"
                   placeholder="Enter Akamai executive email"
+                  slotProps={{
+                    htmlInput: {
+                      'data-pendo-id':
+                        'Cloud Marketplace Contact Sales-Acc Exe Email',
+                    },
+                  }}
                   type="email"
                 />
               )}
@@ -490,6 +528,12 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                   placeholder="Feel free to share any additional thoughts or questions here"
+                  slotProps={{
+                    htmlInput: {
+                      'data-pendo-id':
+                        'Cloud Marketplace Contact Sales-Comments',
+                    },
+                  }}
                   value={field.value}
                 />
               )}
@@ -509,6 +553,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               >
                 <Checkbox
                   checked={field.value}
+                  data-pendo-id={`Cloud Marketplace Contact Sales-Consent ${field.value ? 'Checked' : 'Unchecked'}`}
                   disabled={isSubmitting}
                   id="tc_consent-checkbox"
                   onChange={field.onChange}
@@ -548,6 +593,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     </Typography>
                   )}
                   <LinkButton
+                    data-pendo-id={`Cloud Marketplace Contact Sales-${showConsentDetails ? 'Show Details' : 'Hide Details'}`}
                     onClick={() => setShowConsentDetails(!showConsentDetails)}
                     sx={(theme) => ({
                       '&:hover': {
@@ -568,6 +614,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
         </Stack>
         <ActionsPanel
           primaryButtonProps={{
+            'data-pendo-id': 'Cloud Marketplace Contact Sales-Submit',
             label: 'Submit',
             disabled: isSubmitting || !tcConsent,
             type: 'submit',
@@ -576,6 +623,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             alwaysShowTooltip: !tcConsent,
           }}
           secondaryButtonProps={{
+            'data-pendo-id': 'Cloud Marketplace Contact Sales-Cancel',
             label: 'Cancel',
             onClick: onClose,
             buttonType: 'outlined',
