@@ -25,7 +25,7 @@ export const UsersActionMenu = (props: Props) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
-  const { isChildAccount, isParentAccount, profileUserName } =
+  const { isChildUserType, isParentUserType, profileUserName } =
     useDelegationRole();
 
   const isAccountAdmin = permissions.is_account_admin;
@@ -36,7 +36,7 @@ export const UsersActionMenu = (props: Props) => {
   // Determine if the current account is a child account with isIAMDelegationEnabled enabled
   // If so, we need to hide 'View User Details', 'Delete User', 'View Account Delegations' in the menu
   const shouldHideForChildDelegate =
-    isIAMDelegationEnabled && isChildAccount && isDelegateUser;
+    isIAMDelegationEnabled && isChildUserType && isDelegateUser;
 
   const actions: Action[] = [
     {
@@ -81,7 +81,7 @@ export const UsersActionMenu = (props: Props) => {
     },
     {
       disabled: false,
-      hidden: !isIAMDelegationEnabled || !isParentAccount,
+      hidden: !isIAMDelegationEnabled || !isParentUserType,
       onClick: () => {
         navigate({
           to: '/iam/users/$username/delegations',

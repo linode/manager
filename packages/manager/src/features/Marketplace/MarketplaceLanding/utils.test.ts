@@ -91,4 +91,65 @@ describe('filterProducts', () => {
     const filtered = filterProducts(products, { searchQuery: 'randomtext' });
     expect(filtered).toHaveLength(0);
   });
+
+  it('filters by category', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Kubernetes',
+    });
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0].name).toBe('SpinKube');
+  });
+
+  it('filters by category and search query: category first, then search', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Kubernetes',
+      searchQuery: 'spin',
+    });
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0].name).toBe('SpinKube');
+  });
+
+  it('filters by category and search query: returns empty when search does not match category products', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Kubernetes',
+      searchQuery: 'titan', // TITAN-Edge is not in Kubernetes category
+    });
+    expect(filtered).toHaveLength(0);
+  });
+
+  it('filters by category and type: category first, then type', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Development Tools',
+      selectedType: 'SaaS & APIs',
+    });
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0].name).toBe('APImetrics');
+  });
+
+  it('filters by category and type: returns empty when type does not match category products', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Development Tools',
+      selectedType: 'Virtual Machines', // No VM products in Development Tools
+    });
+    expect(filtered).toHaveLength(0);
+  });
+
+  it('filters by all three filters: category, type, and search', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Kubernetes',
+      selectedType: 'SaaS & APIs',
+      searchQuery: 'kube',
+    });
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0].name).toBe('SpinKube');
+  });
+
+  it('filters by all three filters: returns empty when all filters applied but no match', () => {
+    const filtered = filterProducts(products, {
+      selectedCategory: 'Kubernetes',
+      selectedType: 'SaaS & APIs',
+      searchQuery: 'titan', // TITAN-Edge is not in Kubernetes
+    });
+    expect(filtered).toHaveLength(0);
+  });
 });

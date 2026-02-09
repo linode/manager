@@ -20,7 +20,7 @@ describe('NotificationChannelRecipients', () => {
     renderWithTheme(<NotificationChannelRecipients channelDetails={channel} />);
 
     // Verify header
-    expect(screen.getByText('Settings')).toBeVisible();
+    expect(screen.getByText('Details')).toBeVisible();
     expect(screen.getByText(/Recipients/)).toBeVisible();
 
     // Verify all recipients are visible

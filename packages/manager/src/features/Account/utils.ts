@@ -26,7 +26,7 @@ export type ActionType =
 interface GetRestrictedResourceText {
   action?: ActionType | ActionType[];
   includeContactInfo?: boolean;
-  isChildUser?: boolean;
+  isChildUserType?: boolean;
   isSingular?: boolean;
   resourceType: GrantTypeMap;
 }
@@ -52,7 +52,7 @@ export type RestrictedGlobalGrantType =
 export const getRestrictedResourceText = ({
   action = 'edit',
   includeContactInfo = true,
-  isChildUser = false,
+  isChildUserType = false,
   isSingular = true,
   resourceType,
 }: GetRestrictedResourceText): string => {
@@ -60,7 +60,7 @@ export const getRestrictedResourceText = ({
     ? 'this ' + resourceType.replace(/s$/, '')
     : resourceType;
 
-  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
+  const contactPerson = isChildUserType ? PARENT_USER : ADMINISTRATOR;
 
   const actionText = formatAction(action);
 

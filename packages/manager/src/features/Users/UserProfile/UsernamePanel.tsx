@@ -19,7 +19,8 @@ export const UsernamePanel = ({ user }: Props) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const isProxyUserProfile = user?.user_type === 'proxy';
+  const isProxyOrDelegateUserProfile =
+    user?.user_type === 'proxy' || user?.user_type === 'delegate';
 
   const { mutateAsync } = useUpdateUserMutation(user.username);
 
@@ -50,7 +51,7 @@ export const UsernamePanel = ({ user }: Props) => {
     }
   };
 
-  const tooltipForDisabledUsernameField = isProxyUserProfile
+  const tooltipForDisabledUsernameField = isProxyOrDelegateUserProfile
     ? RESTRICTED_FIELD_TOOLTIP
     : undefined;
 
@@ -62,7 +63,7 @@ export const UsernamePanel = ({ user }: Props) => {
           name="username"
           render={({ field, fieldState }) => (
             <TextField
-              disabled={isProxyUserProfile}
+              disabled={isProxyOrDelegateUserProfile}
               errorText={fieldState.error?.message}
               label="Username"
               noMarginTop

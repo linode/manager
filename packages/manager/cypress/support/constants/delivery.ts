@@ -1,7 +1,10 @@
 import { destinationType, streamType } from '@linode/api-v4';
 import { randomLabel, randomString } from 'support/util/random';
 
-import { destinationFactory, streamFactory } from 'src/factories';
+import {
+  akamaiObjectStorageDestinationFactory,
+  streamFactory,
+} from 'src/factories';
 
 import type {
   CreateDestinationPayload,
@@ -22,11 +25,12 @@ export const mockDestinationPayload: CreateDestinationPayload = {
   },
 };
 
-export const mockDestination: Destination = destinationFactory.build({
-  id: 1290,
-  ...mockDestinationPayload,
-  version: '1.0',
-});
+export const mockDestination: Destination =
+  akamaiObjectStorageDestinationFactory.build({
+    id: 1290,
+    ...mockDestinationPayload,
+    version: '1.0',
+  });
 
 export const mockDestinationPayloadWithId = {
   id: mockDestination.id,

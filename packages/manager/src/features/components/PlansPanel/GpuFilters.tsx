@@ -32,6 +32,7 @@ const ALL_GPU_OPTIONS: SelectOption<PlanFilterGPU>[] = [
 ];
 
 interface GPUPlanFilterComponentProps {
+  disabled?: boolean;
   onResult: (result: PlanFilterRenderResult) => void;
   plans: PlanWithAvailability[];
   resetPagination: () => void;
@@ -39,7 +40,7 @@ interface GPUPlanFilterComponentProps {
 
 const GPUPlanFilterComponent = React.memo(
   (props: GPUPlanFilterComponentProps) => {
-    const { onResult, plans, resetPagination } = props;
+    const { disabled = false, onResult, plans, resetPagination } = props;
 
     // Local state - persists automatically because component stays mounted
     const [gpuType, setGpuType] =
@@ -112,6 +113,7 @@ const GPUPlanFilterComponent = React.memo(
           <Select
             aria-labelledby="plan-filter-gpu-label"
             data-testid="plan-filter-gpu"
+            disabled={disabled}
             id="plan-filter-gpu"
             label="GPU Plans"
             onChange={handleGpuTypeChange}
@@ -129,6 +131,7 @@ const GPUPlanFilterComponent = React.memo(
       };
     }, [
       GPU_OPTIONS_BASED_ON_AVAILABLE_PLANS,
+      disabled,
       filteredPlans,
       gpuType,
       handleGpuTypeChange,
@@ -152,8 +155,10 @@ export const createGPUPlanFilterRenderProp = () => {
     onResult,
     plans,
     resetPagination,
+    shouldDisableFilters = false,
   }: PlanFilterRenderArgs): React.ReactNode => (
     <GPUPlanFilterComponent
+      disabled={shouldDisableFilters}
       onResult={onResult}
       plans={plans}
       resetPagination={resetPagination}

@@ -2,14 +2,14 @@ import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import ProxyUserIcon from 'src/assets/icons/parent-child.svg';
+import DelegateUserIcon from 'src/assets/icons/parent-child.svg';
 
 interface Props {
   height?: number;
   width?: number;
 }
 
-export const AvatarForProxy = ({ height = 34, width = 34 }: Props) => {
+export const AvatarForDelegateUser = ({ height = 34, width = 34 }: Props) => {
   return (
     <Box
       sx={(theme) => ({
@@ -32,14 +32,14 @@ export const AvatarForProxy = ({ height = 34, width = 34 }: Props) => {
           width: `calc(${width}px - 6px)`,
         })}
       >
-        <StyledProxyUserIcon />
+        <StyledDelegateUserIcon />
       </Box>
     </Box>
   );
 };
 
-const StyledProxyUserIcon = styled(ProxyUserIcon, {
-  label: 'styledProxyUserIcon',
+const StyledDelegateUserIcon = styled(DelegateUserIcon, {
+  label: 'styledDelegateUserIcon',
 })(({ theme }) => ({
   bottom: 0,
   left: 0,

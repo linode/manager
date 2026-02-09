@@ -241,7 +241,6 @@ export interface Flags {
   iamDelegation: BaseFeatureFlag;
   iamLimitedAvailabilityBadges: boolean;
   ipv6Sharing: boolean;
-  kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
@@ -257,6 +256,7 @@ export interface Flags {
   nodebalancerVpc: boolean;
   objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
   privateImageSharing: boolean;
