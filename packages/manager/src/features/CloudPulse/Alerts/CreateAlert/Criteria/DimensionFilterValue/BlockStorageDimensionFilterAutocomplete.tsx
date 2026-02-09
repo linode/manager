@@ -26,9 +26,10 @@ export const BlockStorageDimensionFilterAutocomplete = (
     selectedRegions,
     serviceType,
     type,
+    handleError,
   } = props;
 
-  const { data: regions } = useRegionsQuery();
+  const { data: regions, isError: isRegionsError } = useRegionsQuery();
   const { values, isLoading, isError } = useBlockStorageFetchOptions({
     entities,
     dimensionLabel,
@@ -39,12 +40,20 @@ export const BlockStorageDimensionFilterAutocomplete = (
     serviceType,
   });
 
+  React.useEffect(() => {
+    const hasError = isError || isRegionsError;
+    if (handleError) {
+      handleError(hasError);
+    }
+  }, [isError, isRegionsError, handleError]);
+
   useCleanupStaleValues({
     options: values,
     fieldValue,
     multiple,
     onChange: fieldOnChange,
     isLoading,
+    isError,
   });
 
   return (

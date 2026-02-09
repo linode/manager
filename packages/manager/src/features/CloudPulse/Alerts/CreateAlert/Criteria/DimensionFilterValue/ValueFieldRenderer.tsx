@@ -44,7 +44,10 @@ interface ValueFieldRendererProps {
    * Error message to be displayed under the input field, if any.
    */
   errorText: string | undefined;
-
+  /**
+   * Callback triggered when a dependent API has an error.
+   */
+  handleError?: (hasError: boolean) => void;
   /**
    * The name of the field set in the form.
    */
@@ -97,6 +100,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     entities,
     entityType,
     errorText,
+    handleError,
     name,
     onBlur,
     onChange,
@@ -157,6 +161,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       dimensionLabel,
       disabled,
       errorText,
+      handleError,
       fieldOnBlur: onBlur,
       fieldOnChange: onChange,
       fieldValue: value,

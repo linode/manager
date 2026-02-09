@@ -429,6 +429,10 @@ export interface DimensionFilterAutocompleteProps {
    */
   fieldValue: null | string;
   /**
+   * Callback triggered when a dependent API has an error.
+   */
+  handleError?: (hasError: boolean) => void;
+  /**
    * To control single-select/multi-select in the Autocomplete.
    */
   multiple?: boolean;
