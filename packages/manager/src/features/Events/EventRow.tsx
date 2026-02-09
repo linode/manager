@@ -10,6 +10,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
 
 import {
   formatProgressEvent,
@@ -56,7 +57,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-username-cell>
+        <TableCell data-qa-event-username-cell sx={{ width: '22%' }}>
           <Box alignItems="center" display="flex" gap={1}>
             <Avatar
               color={
@@ -68,7 +69,7 @@ export const EventRow = (props: EventRowProps) => {
               username={username}
               width={24}
             />
-            {username}
+            <TruncatedUsername username={username} />
           </Box>
         </TableCell>
       </Hidden>

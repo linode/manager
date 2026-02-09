@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
 import {
   formatProgressEvent,
   getEventMessage,
@@ -72,8 +73,15 @@ export const NotificationCenterEvent = React.memo(
               value={event.percent_complete ?? 0}
             />
           )}
-          <Typography sx={{ fontSize: '0.8rem' }}>
-            {progressEventDate} | {username}
+          <Typography sx={{ fontSize: theme.tokens.font.FontSize.Xxs }}>
+            {progressEventDate} |{' '}
+            <TruncatedUsername
+              sx={{
+                fontSize: theme.tokens.font.FontSize.Xxs,
+                display: 'inline-block',
+              }}
+              username={username}
+            />
           </Typography>
         </Box>
       </NotificationEventStyledBox>
