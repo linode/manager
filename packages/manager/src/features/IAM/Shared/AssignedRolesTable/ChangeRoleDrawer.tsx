@@ -14,6 +14,7 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -146,6 +147,8 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
       });
 
       await mutationFn(updatedUserRoles);
+
+      enqueueSnackbar(`Role changed.`, { variant: 'success' });
 
       handleClose();
     } catch (errors) {
