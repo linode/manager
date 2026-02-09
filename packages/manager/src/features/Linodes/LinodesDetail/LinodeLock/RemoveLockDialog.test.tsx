@@ -50,7 +50,7 @@ describe('RemoveLockDialog', () => {
       <RemoveLockDialog {...defaultProps} />
     );
 
-    expect(getByText('Remove Lock?')).toBeVisible();
+    expect(getByText('Remove lock from test-linode?')).toBeVisible();
   });
 
   it('should display correct description for cannot_delete lock type', () => {
@@ -103,7 +103,7 @@ describe('RemoveLockDialog', () => {
       <RemoveLockDialog {...defaultProps} open={false} />
     );
 
-    expect(queryByText('Remove Lock?')).toBeNull();
+    expect(queryByText('Remove lock from test-linode?')).toBeNull();
   });
 
   it('should fetch locks and delete lock on submit', async () => {
