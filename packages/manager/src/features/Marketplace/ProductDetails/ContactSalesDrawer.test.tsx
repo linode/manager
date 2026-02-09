@@ -1,5 +1,5 @@
 import { profileFactory } from '@linode/utilities';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -41,7 +41,7 @@ describe('ContactSalesDrawer', () => {
       "Fill the form and our partner's sales team will reach out to you"
     );
 
-    expect(title).toBeInTheDocument();
+    expect(title).toBeVisible();
     expect(description).toBeVisible();
   });
 
@@ -57,8 +57,8 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    expect(getByText('my-user')).toBeInTheDocument();
-    expect(getByText('user@akamai.com')).toBeInTheDocument();
+    expect(getByText('my-user')).toBeVisible();
+    expect(getByText('user@akamai.com')).toBeVisible();
   });
 
   it('renders an empty additional email address field by default', () => {
@@ -70,8 +70,8 @@ describe('ContactSalesDrawer', () => {
       .querySelector('input')
       ?.getAttribute('value');
 
-    expect(getByText('Additional email addresses')).toBeInTheDocument();
-    expect(getByTestId('domain-transfer-input')).toBeInTheDocument();
+    expect(getByText('Additional email addresses')).toBeVisible();
+    expect(getByTestId('domain-transfer-input')).toBeVisible();
     expect(emailVal).toBe('');
   });
 
@@ -88,16 +88,14 @@ describe('ContactSalesDrawer', () => {
   });
 
   it('renders an removable text field on click of the "Add Email Address" button', async () => {
-    const { getByText, queryAllByTestId } = renderWithTheme(
+    const { getByText, getAllByTestId } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
     const addEmailButton = getByText('Add email address');
-    addEmailButton.click();
+    fireEvent.click(addEmailButton);
 
-    await waitFor(() => {
-      expect(queryAllByTestId('domain-transfer-input')).toHaveLength(2);
-    });
+    expect(getAllByTestId('domain-transfer-input')).toHaveLength(2);
   });
 
   it('should remove the additional email address field when the delete button is clicked', async () => {
@@ -120,7 +118,7 @@ describe('ContactSalesDrawer', () => {
   });
 
   it('renders an error message if the entered additional email address is invalid', async () => {
-    const { getByTestId, queryByText } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
@@ -133,7 +131,7 @@ describe('ContactSalesDrawer', () => {
     fireEvent.blur(additionalEmailInput);
 
     await waitFor(() => {
-      expect(queryByText('Please enter a valid email')).toBeVisible();
+      expect(getByText('Please enter a valid email')).toBeVisible();
     });
   });
 
@@ -144,8 +142,94 @@ describe('ContactSalesDrawer', () => {
 
     const regionInput = getByLabelText(/region/i) as HTMLInputElement;
 
-    expect(regionInput).toBeInTheDocument();
+    expect(regionInput).toBeVisible();
     expect(regionInput).toHaveValue('');
+  });
+
+  it('renders the selected region from the dropdown', async () => {
+    const { getByTestId, queryByRole } = renderWithTheme(
+      <ContactSalesDrawer {...mockProps} />
+    );
+
+    const regionInput = getByTestId('region-autocomplete');
+    const openButton = within(regionInput).getByRole('button', {
+      name: 'Open',
+    });
+
+    fireEvent.click(openButton);
+
+    await waitFor(async () => {
+      const regionOption = queryByRole('option', {
+        name: 'United States Of America',
+      });
+      if (regionOption) {
+        fireEvent.click(regionOption);
+      }
+    });
+
+    const selectedRegion = regionInput?.querySelector(
+      'input'
+    ) as HTMLInputElement;
+
+    expect(selectedRegion).toHaveValue('United States Of America');
+  });
+
+  it('shows an error message if a region is not selected on form submission', async () => {
+    const { getByText, queryByText } = renderWithTheme(
+      <ContactSalesDrawer {...mockProps} />
+    );
+
+    const tc_consentCheckbox = screen
+      .getByTestId('tc-consent-checkbox')
+      .querySelector('input') as HTMLInputElement;
+    fireEvent.click(tc_consentCheckbox);
+
+    const submitButton = getByText('Submit');
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(queryByText('Please select your region')).toBeVisible();
+    });
+  });
+
+  it('renders "+1" as the default country dialing code', async () => {
+    const { getByTestId } = renderWithTheme(
+      <ContactSalesDrawer {...mockProps} />
+    );
+    const countryCodeSelect = getByTestId('phone-country-code-autocomplete');
+    const countryCodeSelectValue = countryCodeSelect.querySelector(
+      'input'
+    ) as HTMLInputElement;
+    expect(countryCodeSelectValue).toHaveValue('+1');
+  });
+
+  it('renders the selected country dialing code from the dropdown', async () => {
+    const { getByTestId, queryByRole } = renderWithTheme(
+      <ContactSalesDrawer {...mockProps} />
+    );
+
+    const countryCodeInput = getByTestId('phone-country-code-autocomplete');
+    const openButton = within(countryCodeInput).getByRole('button', {
+      name: 'Open',
+    });
+
+    fireEvent.click(openButton);
+
+    await waitFor(async () => {
+      const countryCodeOption = queryByRole('option', {
+        name: /\+91/i,
+      });
+      if (countryCodeOption) {
+        fireEvent.click(countryCodeOption);
+      }
+    });
+
+    const selectedCountryCode = countryCodeInput?.querySelector(
+      'input'
+    ) as HTMLInputElement;
+
+    screen.debug(countryCodeInput);
+    expect(selectedCountryCode).toHaveValue('+91');
   });
 
   it('renders the phone number input field', async () => {
@@ -153,7 +237,7 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    expect(getByTestId('phone-number-input')).toBeInTheDocument();
+    expect(getByTestId('phone-number-input')).toBeVisible();
   });
 
   it('renders the company name text field', async () => {
@@ -163,7 +247,7 @@ describe('ContactSalesDrawer', () => {
 
     const companyNameInput = getByLabelText("Your company's name");
 
-    expect(companyNameInput).toBeInTheDocument();
+    expect(companyNameInput).toBeVisible();
   });
 
   it('renders the akamai executive email input field', async () => {
@@ -198,9 +282,12 @@ describe('ContactSalesDrawer', () => {
     const { getByTestId } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
-    const consentCheckbox = getByTestId('tc-consent-checkbox');
+    const consentCheckbox = getByTestId('tc-consent-checkbox').querySelector(
+      'input'
+    ) as HTMLInputElement;
 
-    expect(consentCheckbox).toBeInTheDocument();
+    screen.debug(consentCheckbox);
+
     expect(consentCheckbox).not.toBeChecked();
   });
 
@@ -210,7 +297,7 @@ describe('ContactSalesDrawer', () => {
     );
     const submitButton = getByText('Submit');
     expect(getByTestId('tc-consent-checkbox')).not.toBeChecked();
-    expect(submitButton).toBeInTheDocument();
+    expect(submitButton).toBeVisible();
     expect(submitButton).toBeDisabled();
   });
 
@@ -227,13 +314,11 @@ describe('ContactSalesDrawer', () => {
 
     fireEvent.click(consentCheckbox);
 
-    await waitFor(() => {
-      expect(getByText('Submit')).toBeEnabled();
-    });
+    expect(getByText('Submit')).toBeEnabled();
   });
 
   it('expands the terms and conditions when the "Show details" button is clicked', async () => {
-    const { getByText, queryByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
@@ -241,13 +326,11 @@ describe('ContactSalesDrawer', () => {
     expect(showDetailsButton).toBeVisible();
     fireEvent.click(showDetailsButton);
 
-    await waitFor(() => {
-      expect(queryByText('Hide details')).toBeVisible();
-    });
+    expect(getByText('Hide details')).toBeVisible();
   });
 
   it('hides the terms and conditions when the "Hide details" button is clicked', async () => {
-    const { getByText, queryByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
@@ -257,8 +340,6 @@ describe('ContactSalesDrawer', () => {
     const hideDetailsButton = getByText('Hide details');
     fireEvent.click(hideDetailsButton);
 
-    await waitFor(() => {
-      expect(queryByText('Show details')).toBeVisible();
-    });
+    expect(getByText('Show details')).toBeVisible();
   });
 });

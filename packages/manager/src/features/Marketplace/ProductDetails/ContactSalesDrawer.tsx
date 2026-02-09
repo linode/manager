@@ -239,6 +239,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               name="country_code"
               render={({ field }) => (
                 <Autocomplete
+                  data-testid="region-autocomplete"
                   disableClearable
                   disabled={isSubmitting}
                   errorText={errors.country_code?.message}
@@ -257,12 +258,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   options={countryList}
                   placeholder="Select a region from the list"
                   renderOption={({ key, ...props }, option) => (
-                    <li {...props}>
+                    <li {...props} key={key}>
                       <Stack
                         alignItems="center"
                         direction="row"
                         gap={1}
-                        key={key}
                         sx={{ width: '100%' }}
                       >
                         <Flag country={option.code.toLowerCase() as Country} />
@@ -316,6 +316,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                 name="phone_country_code"
                 render={({ field }) => (
                   <Autocomplete
+                    data-testid="phone-country-code-autocomplete"
                     disableClearable
                     filterOptions={dialingCodeFilterOptions}
                     getOptionLabel={(option) => option.dialingCode}
@@ -333,12 +334,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     options={countryList}
                     placeholder=""
                     renderOption={({ key, ...props }, option) => (
-                      <li {...props}>
+                      <li {...props} key={key}>
                         <Stack
                           alignItems="center"
                           direction="row"
                           gap={1}
-                          key={key}
                           sx={{ width: '100%' }}
                         >
                           <Flag
@@ -451,7 +451,6 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       },
                     },
                   }}
-                  data-testid="company-name-input"
                   disabled={isSubmitting}
                   errorText={errors.company_name?.message}
                   hideLabel
@@ -554,6 +553,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                 <Checkbox
                   checked={field.value}
                   data-pendo-id={`Cloud Marketplace Contact Sales-Consent ${field.value ? 'Checked' : 'Unchecked'}`}
+                  data-testid="tc-consent-checkbox"
                   disabled={isSubmitting}
                   id="tc_consent-checkbox"
                   onChange={field.onChange}
