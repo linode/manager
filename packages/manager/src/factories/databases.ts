@@ -461,6 +461,14 @@ export const postgresConfigResponse = {
       type: 'integer',
     },
   },
+  synchronous_replication: {
+    description:
+      'Synchronous replication type. Note that the service plan also needs to support synchronous replication.',
+    enum: ['quorum', 'off'],
+    requires_restart: false,
+    default: 'off',
+    type: 'string',
+  },
 };
 export const databaseEngineConfigFactory = Factory.each((i) =>
   adb10(i) ? mysqlConfigResponse : postgresConfigResponse

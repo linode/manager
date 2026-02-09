@@ -34,7 +34,7 @@ import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
 import type { RenderLinodesProps } from './DisplayLinodes';
-import type { Config } from '@linode/api-v4/lib/linodes';
+import type { Config, LockType } from '@linode/api-v4/lib/linodes';
 import type { OrderByProps } from 'src/components/OrderBy';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
@@ -56,6 +56,11 @@ interface DisplayGroupedLinodesProps
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
+  ) => void;
+  openRemoveLockDialog: (
+    linodeID: number,
+    linodeLabel: string,
+    linodeLocks: LockType[]
   ) => void;
   regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;
