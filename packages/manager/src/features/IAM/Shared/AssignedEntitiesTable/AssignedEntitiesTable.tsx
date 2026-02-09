@@ -204,6 +204,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     clientSidePaginationData: filteredAndSortedRoles,
   });
 
+  const filteredAndSortedRolesCount = React.useMemo(() => {
+    return filteredAndSortedRoles.length;
+  }, [filteredAndSortedRoles]);
+
   const renderTableBody = () => {
     if (entitiesLoading || loading) {
       return <TableRowLoading columns={4} rows={1} />;
@@ -374,9 +378,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
         role={selectedRole}
         username={username}
       />
-      {pagination.paginatedData.length > PAGE_SIZES[0] && (
+      {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
         <PaginationFooter
-          count={filteredRoles.length}
+          count={filteredAndSortedRolesCount}
           handlePageChange={pagination.handlePageChange}
           handleSizeChange={pagination.handlePageSizeChange}
           page={pagination.page}
