@@ -82,6 +82,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     handleSubmit,
     setError,
     reset,
+    watch,
   } = useForm<Configs>({
     defaultValues: { configs: existingConfigurations },
     mode: 'onBlur',
@@ -100,6 +101,8 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       reset({ configs: existingConfigurations });
     }
   }, [existingConfigurations, open]);
+
+  const configs = watch('configs');
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -204,12 +207,12 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             <CircleProgress size="sm" />
           </Stack>
         )}
-        {!isLoading && fields.length === 0 && (
+        {!isLoading && configs.length === 0 && (
           <Typography align="center">
             No advanced configurations have been added.
           </Typography>
         )}
-        {fields.map((config, index) => (
+        {configs.map((config, index) => (
           <Controller
             control={control}
             key={config.label}
@@ -238,7 +241,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             disabled: !isDirty,
-            label: hasRestartCluster(fields, existingConfigurations),
+            label: hasRestartCluster(configs, existingConfigurations),
             loading: isUpdating,
             type: 'submit',
             title: 'Save',

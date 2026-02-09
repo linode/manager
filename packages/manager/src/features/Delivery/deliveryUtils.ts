@@ -1,6 +1,7 @@
 import {
   type Destination,
   type DestinationDetailsPayload,
+  destinationType,
   isEmpty,
   type Stream,
   type StreamDetailsType,
@@ -13,11 +14,13 @@ import { isFeatureEnabledV2 } from '@linode/utilities';
 
 import {
   authenticationTypeOptions,
+  contentTypeOptions,
   destinationTypeOptions,
   streamTypeOptions,
 } from 'src/features/Delivery/Shared/types';
 import { useFlags } from 'src/hooks/useFlags';
 
+import type { CustomHTTPSDetails, DestinationType } from '@linode/api-v4';
 import type {
   AutocompleteOption,
   DestinationDetailsForm,
@@ -69,6 +72,11 @@ export const getAuthenticationTypeOption = (
     ({ value }) => value === authenticationTypeValue
   );
 
+export const getContentTypeOption = (
+  contentTypeValue: string
+): AutocompleteOption | undefined =>
+  contentTypeOptions.find(({ value }) => value === contentTypeValue);
+
 export const isFormInEditMode = (mode: FormMode) => mode === 'edit';
 
 export const getStreamPayloadDetails = (
@@ -91,9 +99,35 @@ export const getStreamPayloadDetails = (
 };
 
 export const getDestinationPayloadDetails = (
-  details: DestinationDetailsForm
+  details: DestinationDetailsForm,
+  type: DestinationType
 ): DestinationDetailsPayload => {
-  if ('path' in details && details.path === '') {
+  if (type === destinationType.CustomHttps) {
+    const propsToRemove: any[] = [];
+    const customHTTPSDetails = details as CustomHTTPSDetails;
+
+    if (!customHTTPSDetails.content_type) {
+      propsToRemove.push('content_type');
+    }
+
+    if (customHTTPSDetails.client_certificate_details) {
+      const certDetails = customHTTPSDetails.client_certificate_details;
+      const shouldRemoveCertDetails = [
+        certDetails.client_ca_certificate,
+        certDetails.client_certificate,
+        certDetails.client_private_key,
+        certDetails.tls_hostname,
+      ].some((val) => !val);
+
+      if (shouldRemoveCertDetails) {
+        propsToRemove.push('client_certificate_details');
+      }
+    }
+
+    if (propsToRemove.length > 0) {
+      return omitProps(customHTTPSDetails, propsToRemove) as CustomHTTPSDetails;
+    }
+  } else if ('path' in details && details.path === '') {
     return omitProps(details, ['path']);
   }
 

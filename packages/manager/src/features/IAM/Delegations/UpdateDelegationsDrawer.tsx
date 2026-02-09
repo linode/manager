@@ -41,7 +41,7 @@ export const UpdateDelegationsDrawer = ({
   }, [allParentAccounts]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Update Delegations">
+    <Drawer onClose={onClose} open={open} title="Update Delegation">
       {delegation && (
         <UpdateDelegationForm
           delegation={delegation}

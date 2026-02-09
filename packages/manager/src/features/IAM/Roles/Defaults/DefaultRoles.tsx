@@ -1,14 +1,20 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import { CircleProgress, Paper, Typography } from '@linode/ui';
+import { CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
-import { NO_ASSIGNED_DEFAULT_ROLES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_DEFAULT_ROLES_TEXT,
+} from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultRoles = () => {
-  const { data: defaultRolesData, isLoading: defaultRolesLoading } =
-    useGetDefaultDelegationAccessQuery({ enabled: true });
+  const {
+    data: defaultRolesData,
+    isLoading: defaultRolesLoading,
+    error,
+  } = useGetDefaultDelegationAccessQuery({ enabled: true });
   const hasAssignedRoles = defaultRolesData
     ? defaultRolesData.account_access.length > 0 ||
       defaultRolesData.entity_access.length > 0
@@ -17,6 +23,11 @@ export const DefaultRoles = () => {
   if (defaultRolesLoading) {
     return <CircleProgress />;
   }
+
+  if (error) {
+    return <ErrorState errorText={ERROR_STATE_TEXT} />;
+  }
+
   return (
     <Paper>
       {hasAssignedRoles ? (
