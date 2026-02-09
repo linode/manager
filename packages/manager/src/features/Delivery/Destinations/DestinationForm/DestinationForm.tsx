@@ -1,4 +1,9 @@
-import { authenticationType, destinationType } from '@linode/api-v4';
+import {
+  authenticationType,
+  dataCompressionType,
+  type DestinationType,
+  destinationType,
+} from '@linode/api-v4';
 import { Autocomplete, Paper, TextField } from '@linode/ui';
 import { capitalize, scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -29,6 +34,23 @@ interface DestinationFormProps {
   onSubmit: SubmitHandler<DestinationFormType>;
 }
 
+const customHttpsDetailsControlPaths = {
+  authenticationType: 'details.authentication.type',
+  basicAuthenticationPassword:
+    'details.authentication.details.basic_authentication_password',
+  basicAuthenticationUser:
+    'details.authentication.details.basic_authentication_user',
+  clientCaCertificate:
+    'details.client_certificate_details.client_ca_certificate',
+  clientCertificate: 'details.client_certificate_details.client_certificate',
+  clientPrivateKey: 'details.client_certificate_details.client_private_key',
+  tlsHostname: 'details.client_certificate_details.tls_hostname',
+  contentType: 'details.content_type',
+  customHeaders: 'details.custom_headers',
+  dataCompression: 'details.data_compression',
+  endpointUrl: 'details.endpoint_url',
+} as const;
+
 export const DestinationForm = (props: DestinationFormProps) => {
   const { mode, isSubmitting, onSubmit } = props;
 
@@ -41,7 +63,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
   } = useVerifyDestination();
 
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { control, handleSubmit, setValue } =
+  const { control, handleSubmit, getValues, reset } =
     useFormContext<DestinationFormType>();
   const destination = useWatch({
     control,
@@ -50,6 +72,27 @@ export const DestinationForm = (props: DestinationFormProps) => {
   useEffect(() => {
     setDestinationVerified(false);
   }, [destination, setDestinationVerified]);
+
+  const resetForm = (destType: DestinationType) => {
+    const currentValues = getValues();
+    const newDestinationDetails =
+      destType === destinationType.AkamaiObjectStorage
+        ? {
+            path: '',
+          }
+        : {
+            authentication: {
+              type: authenticationType.None,
+            },
+            data_compression: dataCompressionType.Gzip,
+          };
+
+    reset({
+      ...currentValues,
+      type: destType,
+      details: newDestinationDetails,
+    });
+  };
 
   return (
     <form id="destinationForm" ref={formRef}>
@@ -66,12 +109,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
                   label="Destination Type"
                   onBlur={field.onBlur}
                   onChange={(_, { value }) => {
-                    if (value === destinationType.CustomHttps) {
-                      setValue(
-                        'details.authentication.type',
-                        authenticationType.None
-                      );
-                    }
+                    resetForm(value as DestinationType);
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
@@ -112,6 +150,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
             {isACLPLogsCustomHttpsEnabled &&
               destination.type === destinationType.CustomHttps && (
                 <DestinationCustomHttpsDetailsForm
+                  controlPaths={customHttpsDetailsControlPaths}
                   entity="destination"
                   mode={mode}
                 />
