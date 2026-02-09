@@ -1,14 +1,26 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import { CircleProgress, Paper, Stack, Typography } from '@linode/ui';
+import {
+  CircleProgress,
+  ErrorState,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
-import { NO_ASSIGNED_DEFAULT_ENTITIES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
+} from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultEntityAccess = () => {
-  const { data: defaultAccess, isLoading: defaultAccessLoading } =
-    useGetDefaultDelegationAccessQuery({ enabled: true });
+  const {
+    data: defaultAccess,
+    isLoading: defaultAccessLoading,
+    error,
+  } = useGetDefaultDelegationAccessQuery({ enabled: true });
 
   const hasAssignedEntities = defaultAccess
     ? defaultAccess.entity_access.length > 0
@@ -16,6 +28,10 @@ export const DefaultEntityAccess = () => {
 
   if (defaultAccessLoading) {
     return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={ERROR_STATE_TEXT} />;
   }
 
   return (

@@ -5,6 +5,7 @@ import { Crumbs } from './Crumbs';
 
 import type { CrumbOverridesProps } from './Crumbs';
 import type { EditableProps, LabelProps } from './types';
+import type { SxProps, Theme } from '@linode/ui';
 
 export interface BreadcrumbProps {
   /**
@@ -43,6 +44,10 @@ export interface BreadcrumbProps {
    * A number indicating the position of the crumb to remove. Not zero indexed.
    */
   removeCrumbX?: number | number[];
+  /*
+   * Optional Styles
+   */
+  sx?: SxProps<Theme>;
 }
 
 /**
@@ -61,6 +66,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
     onEditHandlers,
     pathname,
     removeCrumbX,
+    sx,
   } = props;
 
   const url = pathname && pathname.slice(1);
@@ -87,7 +93,10 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
       {...breadcrumbDataAttrs}
     >
       <StyledPreContainerDiv
-        sx={{ ...(onEditHandlers !== undefined && { alignItems: 'center' }) }}
+        sx={{
+          ...(onEditHandlers !== undefined && { alignItems: 'center' }),
+          ...sx,
+        }}
       >
         <Crumbs
           crumbOverrides={crumbOverrides}
