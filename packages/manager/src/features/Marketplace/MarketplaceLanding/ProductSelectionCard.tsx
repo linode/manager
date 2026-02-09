@@ -167,7 +167,6 @@ export const ProductSelectionCard = React.memo(
         heading={productName}
         onClick={onClick}
         renderIcon={renderHeader}
-        role="button"
         subheadings={subheadings}
         sxCardBase={PRODUCT_CARD_STYLES.cardBase}
         sxCardBaseIcon={PRODUCT_CARD_STYLES.cardBaseIcon}
