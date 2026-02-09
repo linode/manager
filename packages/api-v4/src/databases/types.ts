@@ -90,7 +90,20 @@ export interface DatabaseCredentials {
   username: string;
 }
 
+export type HostEndpointRole =
+  | 'primary'
+  | 'primary-connection-pool'
+  | 'standby';
+
+interface HostEndpoint {
+  address: string;
+  port: number;
+  private_access: boolean;
+  role: HostEndpointRole;
+}
+
 interface DatabaseHosts {
+  endpoints: HostEndpoint[];
   primary: string;
   secondary?: string;
   standby?: string;
@@ -106,6 +119,7 @@ type MemberType = 'failover' | 'primary';
 export interface DatabaseInstance {
   allow_list: string[];
   cluster_size: ClusterSize;
+  /** @Deprecated replaced by hosts endpoints */
   connection_pool_port: null | number;
   connection_strings: ConnectionStrings[];
   created: string;
