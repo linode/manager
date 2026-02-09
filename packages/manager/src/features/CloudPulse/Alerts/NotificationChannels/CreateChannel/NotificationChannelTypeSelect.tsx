@@ -38,6 +38,7 @@ export const NotificationChannelTypeSelect = React.memo(
 
     return (
       <Autocomplete
+        data-qa-autocomplete="channel-type-select"
         data-testid="channel-type-select"
         disableClearable={disabled}
         disabled={disabled}
