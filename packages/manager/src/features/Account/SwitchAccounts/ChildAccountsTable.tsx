@@ -10,6 +10,7 @@ import React from 'react';
 
 import type { Account, UserType } from '@linode/api-v4';
 
+const DEFAULT_PAGE_SIZE = 25;
 interface ChildAccountsTableProps {
   childAccounts?: Account[];
   currentTokenWithBearer?: string;
@@ -106,7 +107,7 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
           ))}
         </TableBody>
       </Table>
-      {totalResults > pageSize && (
+      {totalResults > DEFAULT_PAGE_SIZE && (
         <Pagination
           count={totalResults}
           itemsLabel="Accounts: "

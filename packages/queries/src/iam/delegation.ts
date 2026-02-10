@@ -9,7 +9,6 @@ import {
   updateChildAccountDelegates,
   updateDefaultDelegationAccess,
 } from '@linode/api-v4';
-import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -28,7 +27,6 @@ import type {
   GetDelegatedChildAccountsForUserParams,
   GetMyDelegatedChildAccountsParams,
   IamUserRoles,
-  Params,
   ResourcePage,
   Token,
   UpdateChildAccountDelegatesParams,
