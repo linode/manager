@@ -61,14 +61,18 @@ export const CloudPulseDashboardSelect = React.memo(
     // Check if the integration service type is enabled
     const serviceType =
       integrationServiceType &&
-      aclpServices?.[integrationServiceType]?.metrics?.enabled
+      (integrationServiceType === 'netloadbalancer' ||
+        aclpServices?.[integrationServiceType]?.metrics?.enabled)
         ? integrationServiceType
         : undefined;
 
     // Get formatted enabled service types based on the LD flag
     const serviceTypes: CloudPulseServiceType[] = serviceType
       ? [serviceType]
-      : getEnabledServiceTypes(serviceTypesList, aclpServices);
+      : [
+          ...getEnabledServiceTypes(serviceTypesList, aclpServices),
+          'netloadbalancer',
+        ];
 
     const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
       (serviceTypesList?.data || [])

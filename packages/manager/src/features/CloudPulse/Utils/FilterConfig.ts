@@ -560,6 +560,103 @@ export const LKE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   ],
   serviceType: 'lke',
 };
+export const NETLOADBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
+  {
+    capability: capabilityServiceTypeMapping['netloadbalancer'],
+    filters: [
+      {
+        configuration: {
+          filterKey: 'region',
+          children: ['resource_id'],
+          filterType: 'string',
+          isFilterable: false,
+          isMetricsFilter: false,
+          name: 'Region',
+          priority: 1,
+          neededInViews: [CloudPulseAvailableViews.central],
+        },
+        name: 'Region',
+      },
+      {
+        configuration: {
+          dependency: ['region'],
+          filterKey: 'resource_id',
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          isMultiSelect: true,
+          name: 'Network Load Balancers',
+          neededInViews: [CloudPulseAvailableViews.central],
+          placeholder: 'Select Network Load Balancers',
+          priority: 2,
+        },
+        name: 'Network Load Balancers',
+      },
+      {
+        configuration: {
+          filterKey: 'ip_version',
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: false,
+          isOptional: true,
+          isMultiSelect: true,
+          name: 'IP Versions',
+          neededInViews: [
+            CloudPulseAvailableViews.central,
+            CloudPulseAvailableViews.service,
+          ],
+          options: [
+            {
+              id: 'v6',
+              label: 'IPv6',
+            },
+            {
+              id: 'v4',
+              label: 'IPv4',
+            },
+          ],
+          placeholder: 'Select IP Versions',
+          priority: 2,
+          type: CloudPulseSelectTypes.static,
+          dimensionKey: 'ip_version',
+        },
+        name: 'IP Versions',
+      },
+      {
+        configuration: {
+          filterKey: 'port',
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: false,
+          isOptional: true,
+          name: 'Ports',
+          dimensionKey: 'port',
+          neededInViews: [
+            CloudPulseAvailableViews.central,
+            CloudPulseAvailableViews.service,
+          ],
+          placeholder: 'e.g., 80,443,3000',
+          priority: 4,
+        },
+        name: 'Ports',
+      },
+      {
+        configuration: {
+          filterKey: 'relative_time_duration',
+          filterType: 'string',
+          isFilterable: true,
+          isMetricsFilter: true,
+          isMultiSelect: false,
+          name: TIME_DURATION,
+          neededInViews: [], // we will have a static time duration component, no need render from filter builder
+          placeholder: 'Select a Duration',
+          priority: 4,
+        },
+        name: TIME_DURATION,
+      },
+    ],
+    serviceType: 'nodebalancer',
+  };
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -567,6 +664,7 @@ export const FILTER_CONFIG: Readonly<
   [2, LINODE_CONFIG],
   [3, NODEBALANCER_CONFIG],
   [4, FIREWALL_CONFIG],
+  [5, NETLOADBALANCER_CONFIG],
   [6, OBJECTSTORAGE_CONFIG_BUCKET],
   [7, BLOCKSTORAGE_CONFIG],
   [8, FIREWALL_NODEBALANCER_CONFIG],

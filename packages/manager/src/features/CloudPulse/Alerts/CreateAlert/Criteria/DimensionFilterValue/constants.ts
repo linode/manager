@@ -10,9 +10,13 @@ import {
   CONFIGS_HELPER_TEXT,
   CONFIGS_ID_PLACEHOLDER_TEXT,
   INTERFACE_ID_HELPER_TEXT,
+  NODE_ID_HELPER_TEXT,
+  NODE_ID_PLACEHOLDER_TEXT,
   PORT_HELPER_TEXT,
   PORT_PLACEHOLDER_TEXT,
   PORTS_PLACEHOLDER_TEXT,
+  VIP_HELPER_TEXT,
+  VIP_PLACEHOLDER_TEXT,
 } from '../../../constants';
 
 import type { Item } from '../../../constants';
@@ -155,6 +159,52 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     '*': {
       type: 'textfield',
       inputType: 'number',
+    },
+  },
+  ip: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+      helperText: VIP_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+    },
+  },
+  node_id: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+      helperText: NODE_ID_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
     },
   },
   linode_id: {

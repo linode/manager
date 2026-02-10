@@ -9,6 +9,7 @@ import type {
   Firewall,
   KubernetesCluster,
   Linode,
+  NetworkLoadBalancer,
   NodeBalancer,
   ObjectStorageBucket,
   Volume,
@@ -64,6 +65,7 @@ export type QueryFunctionType =
   | Firewall[]
   | KubernetesCluster[]
   | Linode[]
+  | NetworkLoadBalancer[]
   | NodeBalancer[]
   | ObjectStorageBucket[]
   | Volume[];
