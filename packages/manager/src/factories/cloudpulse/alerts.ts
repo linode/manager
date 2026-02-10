@@ -652,6 +652,29 @@ export const firewallNodebalancerMetricCriteria =
       },
     ],
   });
+
+const networkLoadBalancerDimensions: Dimension[] = [
+  {
+    label: 'Port',
+    dimension_label: 'port',
+    values: [],
+  },
+  {
+    label: 'Protocol',
+    dimension_label: 'protocol',
+    values: ['tcp', 'udp'],
+  },
+  {
+    label: 'IP Version',
+    dimension_label: 'ip_version',
+    values: ['v6', 'v4'],
+  },
+  {
+    label: 'VIP',
+    dimension_label: 'ip',
+    values: [],
+  },
+];
 export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
   {
     label: 'Ingress Traffic Rate',
@@ -661,28 +684,7 @@ export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
     scrape_interval: '60s',
     is_alertable: true,
     available_aggregate_functions: ['sum'],
-    dimensions: [
-      {
-        label: 'Port',
-        dimension_label: 'port',
-        values: [],
-      },
-      {
-        label: 'Protocol',
-        dimension_label: 'protocol',
-        values: ['tcp', 'udp'],
-      },
-      {
-        label: 'IP Version',
-        dimension_label: 'ip_version',
-        values: ['v6', 'v4'],
-      },
-      {
-        label: 'VIP',
-        dimension_label: 'ip',
-        values: [],
-      },
-    ],
+    dimensions: networkLoadBalancerDimensions,
   },
   {
     label: 'Ingress Packets Rate',
@@ -692,28 +694,7 @@ export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
     scrape_interval: '60s',
     is_alertable: true,
     available_aggregate_functions: ['sum'],
-    dimensions: [
-      {
-        label: 'Port',
-        dimension_label: 'port',
-        values: [],
-      },
-      {
-        label: 'Protocol',
-        dimension_label: 'protocol',
-        values: ['tcp', 'udp'],
-      },
-      {
-        label: 'IP Version',
-        dimension_label: 'ip_version',
-        values: ['v6', 'v4'],
-      },
-      {
-        label: 'VIP',
-        dimension_label: 'ip',
-        values: [],
-      },
-    ],
+    dimensions: networkLoadBalancerDimensions,
   },
   {
     label: 'Ingress Traffic Rate Per backend',
@@ -724,26 +705,7 @@ export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
     is_alertable: true,
     available_aggregate_functions: ['sum'],
     dimensions: [
-      {
-        label: 'Port',
-        dimension_label: 'port',
-        values: [],
-      },
-      {
-        label: 'Protocol',
-        dimension_label: 'protocol',
-        values: ['tcp', 'udp'],
-      },
-      {
-        label: 'IP Version',
-        dimension_label: 'ip_version',
-        values: ['v6', 'v4'],
-      },
-      {
-        label: 'VIP',
-        dimension_label: 'ip',
-        values: [],
-      },
+      ...networkLoadBalancerDimensions,
       {
         label: 'Node ID',
         dimension_label: 'node_id',
@@ -760,26 +722,7 @@ export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
     is_alertable: true,
     available_aggregate_functions: ['sum'],
     dimensions: [
-      {
-        label: 'Port',
-        dimension_label: 'port',
-        values: [],
-      },
-      {
-        label: 'Protocol',
-        dimension_label: 'protocol',
-        values: ['tcp', 'udp'],
-      },
-      {
-        label: 'IP Version',
-        dimension_label: 'ip_version',
-        values: ['v6', 'v4'],
-      },
-      {
-        label: 'VIP',
-        dimension_label: 'ip',
-        values: [],
-      },
+      ...networkLoadBalancerDimensions,
       {
         label: 'Node ID',
         dimension_label: 'node_id',
