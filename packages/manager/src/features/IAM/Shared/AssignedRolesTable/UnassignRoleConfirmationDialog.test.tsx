@@ -49,7 +49,8 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
-    useUpdateDefaultDelegationAccessQuery: queryMocks.useUpdateDefaultDelegationAccessQuery,
+    useUpdateDefaultDelegationAccessQuery:
+      queryMocks.useUpdateDefaultDelegationAccessQuery,
   };
 });
 
