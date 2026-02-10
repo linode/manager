@@ -46,5 +46,8 @@ export const LINODE_LOCKED_DELETE_DISK_TOOLTIP =
 export const LINODE_LOCKED_DELETE_IP_TOOLTIP =
   "You don't have permission to delete this IP Address.";
 
+export const LINODE_LOCKED_DELETE_INTERFACE_TOOLTIP =
+  "You don't have permission to delete this interface.";
+
 export const LINODE_REBUILD_LOCKED_NOTICE_TEXT =
   'This Linode is currently locked and cannot be rebuilt. Please remove the lock to proceed.';

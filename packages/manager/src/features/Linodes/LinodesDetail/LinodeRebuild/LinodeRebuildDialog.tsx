@@ -2,7 +2,7 @@ import { useLinodeQuery } from '@linode/queries';
 import { Dialog, Notice } from '@linode/ui';
 import React from 'react';
 
-import { LINODE_LOCKED_DELETE_CONFIG_TOOLTIP } from 'src/features/Linodes/constants';
+import { LINODE_REBUILD_LOCKED_NOTICE_TEXT } from 'src/features/Linodes/constants';
 
 import { LinodeRebuildForm } from './LinodeRebuildForm';
 
@@ -37,7 +37,7 @@ export const LinodeRebuildDialog = (props: Props) => {
       {isLocked && (
         <Notice
           spacingBottom={16}
-          text={LINODE_LOCKED_DELETE_CONFIG_TOOLTIP}
+          text={LINODE_REBUILD_LOCKED_NOTICE_TEXT}
           variant="warning"
         />
       )}
