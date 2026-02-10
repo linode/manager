@@ -210,6 +210,12 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       : classes.addEmailButton
                   }
                   disabled={isSubmitting}
+                  inputProps={{
+                    inputProps: {
+                      'data-pendo-id':
+                        'Cloud Marketplace Contact Sales-Additional Email',
+                    },
+                  }}
                   ips={
                     field.value?.map((email, index) => ({
                       address: email,
@@ -278,9 +284,6 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                         },
                       },
                     },
-                    dataAttrs: {
-                      'data-qa-contact-country': true,
-                    },
                     hideLabel: true,
                     inputRef: field.ref,
                     inputProps: {
@@ -318,6 +321,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   <Autocomplete
                     data-testid="phone-country-code-autocomplete"
                     disableClearable
+                    disabled={isSubmitting}
                     filterOptions={dialingCodeFilterOptions}
                     getOptionLabel={(option) => option.dialingCode}
                     id="phone_country_code"
@@ -334,7 +338,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     options={countryList}
                     placeholder=""
                     renderOption={({ key, ...props }, option) => (
-                      <li {...props} key={key}>
+                      <li {...props} key={option.code}>
                         <Stack
                           alignItems="center"
                           direction="row"
@@ -374,7 +378,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                           'Cloud Marketplace Contact Sales Phone number-Code-Input',
                       },
                       InputProps: {
-                        startAdornment: field.value && selectedPhoneCountry && (
+                        startAdornment: selectedPhoneCountry && (
                           <InputAdornment position="start">
                             <Flag
                               country={
@@ -399,6 +403,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     <Box sx={{ flexGrow: 1 }}>
                       <TextField
                         data-testid="phone-number-input"
+                        disabled={isSubmitting}
                         error={!!errors?.phone}
                         fullWidth
                         hideLabel

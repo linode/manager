@@ -87,7 +87,7 @@ describe('ContactSalesDrawer', () => {
     }
   });
 
-  it('renders an removable text field on click of the "Add Email Address" button', async () => {
+  it('renders a removable text field on click of the "Add Email Address" button', async () => {
     const { getByText, getAllByTestId } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
