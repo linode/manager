@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 import { DestinationsLanding } from 'src/features/Delivery/Destinations/DestinationsLanding';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -36,8 +36,11 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-const destination = destinationFactory.build({ id: 1 });
-const destinations = [destination, ...destinationFactory.buildList(30)];
+const destination = akamaiObjectStorageDestinationFactory.build({ id: 1 });
+const destinations = [
+  destination,
+  ...akamaiObjectStorageDestinationFactory.buildList(30),
+];
 
 describe('Destinations Landing Table', () => {
   const renderComponent = () => {

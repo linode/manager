@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -16,7 +16,7 @@ import type { Flags } from 'src/featureFlags';
 
 const loadingTestId = 'circle-progress';
 
-const mockDestinations = destinationFactory
+const mockDestinations = akamaiObjectStorageDestinationFactory
   .buildList(5)
   .map((destination: Destination) => {
     if (destination.id === 3) {
@@ -167,10 +167,14 @@ describe('StreamFormDelivery', () => {
         await userEvent.click(destinationNameAutocomplete);
 
         // Select the "Destination 1" option
-        const firstDestination = await screen.findByText('Destination 1');
+        const firstDestination = await screen.findByText(
+          'Akamai Object Storage Destination 1'
+        );
         await userEvent.click(firstDestination);
 
-        expect(destinationNameAutocomplete).toHaveValue('Destination 1');
+        expect(destinationNameAutocomplete).toHaveValue(
+          'Akamai Object Storage Destination 1'
+        );
       });
 
       it('should render Destination Name input and allow to add a new option', async () => {
@@ -337,10 +341,14 @@ describe('StreamFormDelivery', () => {
         await userEvent.click(destinationNameAutocomplete);
 
         // Select the "Destination 3" option
-        const customHttpsDestination = await screen.findByText('Destination 3');
+        const customHttpsDestination = await screen.findByText(
+          'Akamai Object Storage Destination 3'
+        );
         await userEvent.click(customHttpsDestination);
 
-        expect(destinationNameAutocomplete).toHaveValue('Destination 3');
+        expect(destinationNameAutocomplete).toHaveValue(
+          'Akamai Object Storage Destination 3'
+        );
       });
 
       it('should render Destination Name input and allow to add a new option', async () => {
@@ -437,6 +445,185 @@ describe('StreamFormDelivery', () => {
           await userEvent.type(endpointUrlInput, 'Test');
 
           expect(endpointUrlInput.getAttribute('value')).toEqual('Test');
+        });
+
+        describe('Client Certificate fields', () => {
+          it('should render TLS Hostname input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const tlsHostnameInput = screen.getByLabelText('TLS Hostname');
+            await userEvent.type(tlsHostnameInput, 'test');
+
+            expect(tlsHostnameInput).toHaveValue('test');
+          });
+
+          it('should render CA Certificate input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const caCertificateInput = screen.getByLabelText('CA Certificate');
+            await userEvent.type(caCertificateInput, 'test');
+
+            expect(caCertificateInput).toHaveValue('test');
+          });
+
+          it('should render Client Certificate input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const clientCertificateInput =
+              screen.getByLabelText('Client Certificate');
+            await userEvent.type(clientCertificateInput, 'test');
+
+            expect(clientCertificateInput).toHaveValue('test');
+          });
+
+          it('should render Client Key input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const clientKeyInput = screen.getByLabelText('Client Key');
+            await userEvent.type(clientKeyInput, 'test');
+
+            expect(clientKeyInput).toHaveValue('test');
+          });
+        });
+
+        describe('HTTPS Headers fields', () => {
+          it('should render Content Type autocomplete and allow to select application/json', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const contentTypeAutocomplete =
+              screen.getByLabelText('Content Type');
+            expect(contentTypeAutocomplete).toHaveValue('');
+
+            await userEvent.click(contentTypeAutocomplete);
+            const jsonOption = await screen.findByText('application/json');
+            await userEvent.click(jsonOption);
+
+            expect(contentTypeAutocomplete).toHaveValue('application/json');
+          });
+
+          it('should render Content Type autocomplete and allow to select application/json; charset=utf-8', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const contentTypeAutocomplete =
+              screen.getByLabelText('Content Type');
+
+            await userEvent.click(contentTypeAutocomplete);
+            const jsonUtf8Option = await screen.findByText(
+              'application/json; charset=utf-8'
+            );
+            await userEvent.click(jsonUtf8Option);
+
+            expect(contentTypeAutocomplete).toHaveValue(
+              'application/json; charset=utf-8'
+            );
+          });
+
+          describe('Custom Headers', () => {
+            const addCustomHeaderButtonText = 'Add Custom Header';
+
+            it('should add a custom header when clicking Add Custom Header button and allow typing in Custom Header fields', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+              await userEvent.click(addCustomHeaderButton);
+
+              const headerNameInput = screen.getByLabelText('Name');
+              expect(headerNameInput).toBeInTheDocument();
+
+              const headerValueInput = screen.getByLabelText('Value');
+              expect(headerValueInput).toBeInTheDocument();
+
+              await userEvent.type(headerNameInput, 'X-Custom-Header');
+              expect(headerNameInput).toHaveValue('X-Custom-Header');
+
+              await userEvent.type(headerValueInput, 'custom-value');
+              expect(headerValueInput).toHaveValue('custom-value');
+            });
+
+            it('should update custom header title when Name is typed', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+              await userEvent.click(addCustomHeaderButton);
+
+              // Verify default title is shown initially
+              screen.getByText('Custom Header 1');
+
+              const headerNameInput = screen.getByLabelText('Name');
+              await userEvent.type(headerNameInput, 'Authorization');
+
+              // Verify default title is replaced with the typed name
+              expect(
+                screen.queryByText('Custom Header 1')
+              ).not.toBeInTheDocument();
+              screen.getByText('Authorization');
+            });
+
+            it('should remove custom header when clicking close button', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+              await userEvent.click(addCustomHeaderButton);
+
+              const headerNameInput = screen.getByLabelText('Name');
+              expect(headerNameInput).toBeInTheDocument();
+
+              const closeButton = screen.getByRole('button', { name: '' });
+              await userEvent.click(closeButton);
+
+              expect(screen.queryByLabelText('Name')).not.toBeInTheDocument();
+            });
+
+            it('should allow adding multiple custom headers', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+
+              await userEvent.click(addCustomHeaderButton);
+              screen.getByText('Custom Header 1');
+
+              await userEvent.click(addCustomHeaderButton);
+              expect(screen.getByText('Custom Header 2')).toBeInTheDocument();
+            });
+          });
         });
       });
     });
