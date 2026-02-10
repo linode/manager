@@ -64,7 +64,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
   }
 
   return (
-    <Stack spacing={2}>
+    <Stack data-qa-product-category={categoryName} spacing={2}>
       <Typography variant="h2">{categoryName}</Typography>
 
       {isLoading ? (
