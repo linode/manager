@@ -4136,6 +4136,11 @@ export const handlers = [
                 dimension_label: 'protocol',
                 values: ['ipv4', 'ipv6'],
               },
+              {
+                label: 'Test Dimension',
+                dimension_label: 'test',
+                values: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
+              },
             ],
           },
         ],
