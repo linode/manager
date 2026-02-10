@@ -35,7 +35,7 @@ export const ALERTS_BETA_PROMPT =
 
 // Lock-related constants
 export const LINODE_LOCKED_DELETE_TOOLTIP =
-  "You don't have permission to delete this linode.";
+  "You don't have permission to delete this Linode.";
 
 export const LINODE_LOCKED_DELETE_CONFIG_TOOLTIP =
   "You don't have permission to delete this configuration.";

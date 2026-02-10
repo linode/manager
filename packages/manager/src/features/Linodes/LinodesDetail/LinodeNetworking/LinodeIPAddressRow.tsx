@@ -60,8 +60,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   const { data: ips } = useLinodeIPsQuery(linodeId);
   const { data: linode } = useLinodeQuery(linodeId);
   const isLinodeSubResourcesLocked =
-    !!linode?.locks?.length &&
-    linode.locks.includes('cannot_delete_with_subresources');
+    linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );

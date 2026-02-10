@@ -26,8 +26,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const { data: linode } = useLinodeQuery(linodeId);
   const isLinodeSubResourcesLocked =
-    !!linode?.locks?.length &&
-    linode.locks.includes('cannot_delete_with_subresources');
+    linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
 
   const { data: permissions, isLoading } = usePermissions(
     'linode',

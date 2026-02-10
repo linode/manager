@@ -1,5 +1,5 @@
 import { useDeleteLinodeMutation, useLinodeQuery } from '@linode/queries';
-import { Accordion, Button, Notice, Tooltip, Typography } from '@linode/ui';
+import { Accordion, Button, Notice, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -38,31 +38,19 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
     });
   };
 
-  const deleteButton = (
-    <Button
-      buttonType="primary"
-      data-qa-delete-linode
-      disabled={isDisabled}
-      onClick={() => setOpen(true)}
-      style={{ marginBottom: 8 }}
-    >
-      Delete
-    </Button>
-  );
-
   return (
     <React.Fragment>
       <Accordion defaultExpanded heading="Delete Linode">
-        {isLocked ? (
-          <Tooltip
-            placement="bottom-start"
-            title={LINODE_LOCKED_DELETE_TOOLTIP}
-          >
-            <span>{deleteButton}</span>
-          </Tooltip>
-        ) : (
-          deleteButton
-        )}
+        <Button
+          buttonType="primary"
+          data-qa-delete-linode
+          disabled={isDisabled}
+          onClick={() => setOpen(true)}
+          style={{ marginBottom: 8 }}
+          tooltipText={LINODE_LOCKED_DELETE_TOOLTIP}
+        >
+          Delete
+        </Button>
         <Typography variant="body1">
           Deleting a Linode will result in permanent data loss.
         </Typography>
