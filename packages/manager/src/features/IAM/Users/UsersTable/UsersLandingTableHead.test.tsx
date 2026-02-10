@@ -45,6 +45,7 @@ const defaultProps = {
     order: 'asc' as Order,
     orderBy: 'username',
   },
+  isChildWithDelegationEnabled: true,
 };
 
 describe('UsersLandingTableHead', () => {

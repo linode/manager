@@ -140,7 +140,7 @@ export const UpdateDelegationForm = ({
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              label: 'Update',
+              label: 'Save Changes',
               loading: isSubmitting,
               type: 'submit',
               disabled: !permissions?.update_delegate_users,

@@ -38,6 +38,7 @@ describe('LinodeRow', () => {
           onOpenMigrateDialog: () => {},
           onOpenPowerDialog: () => {},
           onOpenRebuildDialog: () => {},
+          onOpenRemoveLockDialog: () => {},
           onOpenRescueDialog: () => {},
           onOpenResizeDialog: () => {},
         }}

@@ -34,6 +34,7 @@ export const LinodeExample: Story = {
             onOpenMigrateDialog: action('onOpenMigrateDialog'),
             onOpenPowerDialog: action('onOpenPowerDialog'),
             onOpenRebuildDialog: action('onOpenRebuildDialog'),
+            onOpenRemoveLockDialog: action('onOpenRemoveLockDialog'),
             onOpenRescueDialog: action('onOpenRescueDialog'),
             onOpenResizeDialog: action('onOpenResizeDialog'),
           }}

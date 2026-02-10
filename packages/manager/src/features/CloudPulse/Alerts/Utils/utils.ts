@@ -21,7 +21,12 @@ import type { AssociatedEntityType } from '../../shared/types';
 import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type { Firewall, Linode, MonitoringCapabilities } from '@linode/api-v4';
+import type {
+  Firewall,
+  Linode,
+  MonitoringCapabilities,
+  NotificationChannelAlerts,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 import type {
   AclpAlertServiceTypeConfig,
@@ -615,10 +620,12 @@ export const convertSecondsToOptions = (seconds: number): string => {
  * @param aclpServices list of services with their statuses
  * @returns list of alerts from enabled services
  */
-export const alertsFromEnabledServices = (
-  allAlerts: Alert[] | undefined,
+export const alertsFromEnabledServices = <
+  T extends Alert | NotificationChannelAlerts,
+>(
+  allAlerts: T[] | undefined,
   aclpServices: Partial<AclpServices> | undefined
-) => {
+): T[] | undefined => {
   // Return the alerts whose service type is enabled in the aclpServices flag
   return allAlerts?.filter(
     (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false

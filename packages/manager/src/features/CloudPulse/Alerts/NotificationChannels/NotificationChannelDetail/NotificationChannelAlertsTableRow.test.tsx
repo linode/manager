@@ -1,10 +1,25 @@
-import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { notificationChannelAlertsFactory } from 'src/factories/cloudpulse/channels';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { NotificationChannelAlertsTableRow } from './NotificationChannelAlertsTableRow';
+
+import type { AclpServices } from 'src/featureFlags';
+
+const aclpServicesFlag: Partial<AclpServices> = {
+  linode: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+  dbaas: {
+    alerts: { enabled: true, beta: true },
+    metrics: { enabled: true, beta: true },
+  },
+};
+const mockFlags = {
+  aclpServices: aclpServicesFlag,
+};
 
 describe('NotificationChannelAlertsTableRow', () => {
   it('should render alert with link', () => {
@@ -14,19 +29,22 @@ describe('NotificationChannelAlertsTableRow', () => {
       service_type: 'linode',
     });
 
-    renderWithTheme(
+    const { getByRole, getByText } = renderWithTheme(
       wrapWithTableBody(
         <NotificationChannelAlertsTableRow
           alert={alert}
           serviceTypeLabel="Linode"
         />
-      )
+      ),
+      {
+        flags: mockFlags,
+      }
     );
 
-    const link = screen.getByRole('link', { name: 'Test Alert' });
+    const link = getByRole('link', { name: 'Test Alert' });
     expect(link).toBeVisible();
     expect(link).toHaveAttribute('href', '/alerts/definitions/detail/linode/1');
-    expect(screen.getByText('Linode')).toBeVisible();
+    expect(getByText('Linode')).toBeVisible();
   });
 
   it('should render Service Type cell', () => {
@@ -36,18 +54,21 @@ describe('NotificationChannelAlertsTableRow', () => {
       service_type: 'dbaas',
     });
 
-    renderWithTheme(
+    const { getAllByRole, getByText } = renderWithTheme(
       wrapWithTableBody(
         <NotificationChannelAlertsTableRow
           alert={alert}
           serviceTypeLabel="Managed Databases"
         />
-      )
+      ),
+      {
+        flags: mockFlags,
+      }
     );
 
     // Should have two cells (Alert Name and Service Type)
-    expect(screen.getAllByRole('cell')).toHaveLength(2);
-    expect(screen.getByText('Managed Databases')).toBeVisible();
+    expect(getAllByRole('cell')).toHaveLength(2);
+    expect(getByText('Managed Databases')).toBeVisible();
   });
 
   it('should render multiple service types correctly', () => {
@@ -63,17 +84,20 @@ describe('NotificationChannelAlertsTableRow', () => {
       service_type: 'dbaas',
     });
 
-    const { rerender } = renderWithTheme(
+    const { getByText, rerender } = renderWithTheme(
       wrapWithTableBody(
         <NotificationChannelAlertsTableRow
           alert={linodeAlert}
           serviceTypeLabel="Linode"
         />
-      )
+      ),
+      {
+        flags: mockFlags,
+      }
     );
 
-    expect(screen.getByText('Linode Alert')).toBeVisible();
-    expect(screen.getByText('Linode')).toBeVisible();
+    expect(getByText('Linode Alert')).toBeVisible();
+    expect(getByText('Linode')).toBeVisible();
 
     rerender(
       wrapWithTableBody(
@@ -84,7 +108,7 @@ describe('NotificationChannelAlertsTableRow', () => {
       )
     );
 
-    expect(screen.getByText('Database Alert')).toBeVisible();
-    expect(screen.getByText('Managed Databases')).toBeVisible();
+    expect(getByText('Database Alert')).toBeVisible();
+    expect(getByText('Managed Databases')).toBeVisible();
   });
 });

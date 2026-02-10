@@ -22,7 +22,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
-import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
+import { DatabaseSettingsDeleteClusterDialog } from './DatabaseSettingsDeleteClusterDialog';
 import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';

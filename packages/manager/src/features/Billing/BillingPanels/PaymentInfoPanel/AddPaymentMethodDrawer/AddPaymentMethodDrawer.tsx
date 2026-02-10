@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import {
   Divider,
   Drawer,
@@ -13,6 +12,7 @@ import * as React from 'react';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { GooglePayChip } from '../GooglePayChip';
@@ -47,18 +47,17 @@ const sxTooltipIcon = {
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
-  const { data: profile } = useProfile();
+  const { isChildUserType } = useDelegationRole();
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
     PaymentMessage | undefined
   >(undefined);
-  const isChildUser = profile?.user_type === 'child';
 
   const { data: permissions } = usePermissions('account', [
     'create_payment_method',
   ]);
 
-  const isReadOnly = !permissions?.create_payment_method || isChildUser;
+  const isReadOnly = !permissions?.create_payment_method || isChildUserType;
 
   React.useEffect(() => {
     if (open) {
@@ -102,7 +101,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         <Grid size={12}>
           <Notice
             text={getRestrictedResourceText({
-              isChildUser,
+              isChildUserType,
               resourceType: 'Account',
             })}
             variant="error"
