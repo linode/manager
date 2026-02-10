@@ -1,5 +1,5 @@
 /**
- * Product tab details for slug apimetrics.
+ * Product tab details for slug api-metrics.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -56,21 +56,9 @@ const supportMarkdown = `
 ## Support
 
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
-
-### Key features
-
-* **Synthetic Monitoring:** Create advanced monitors with custom variables and simulate interactions to identify potential issues before they impact users, allowing for proactive management and continuous improvement.
-* **Service Workflow Management:** Design, test, and monitor complex API, browser and MCP sequences to ensure seamless integrations and operations across your tech stack. Validate against OAS for design drift and adhere to industry standards such as FDX, FHIR, and FAPI for compliance and interoperability.
-* **Immediate Issue Alerting:** Identify issues affecting availability, speed, and conformance to system expectations and obligations. Set alerts and view detailed call results and journey with comprehensive OpenTelemetry logs (native integrations with Trafficpeak, Datadog, Dynatrace, and more).
-
-APIContext is available as a SaaS platform, hosted on Akamai for optimal performance and reliability. This package includes unlimited endpoints, unlimited workflows, automatic retries, and tiered synthetic monitoring calls.
-
-* **API and Service uptime and performance monitoring**: APIContext provides advanced synthetic testing that goes beyond traditional uptime checks. It ensures that mission-critical APIs and services are not just available, but are performing optimally. Real-time insights pre-empt issues before they impact users.
-* **Regulatory compliance and reporting**: Regulatory demands for financial services and critical infrastructure in banking, finance, and other sectors are increasing. APIContext automates mandatory API performance reporting and ensures compliance with evolving standards like FAPI, FDX, PSD3, and others. This reduces the burden on internal teams and mitigates the risk of non-compliance.
-* **Close observability gaps**: APIContext assesses and benchmarks multi-system workflows across machine-driven workflows. This ensures that autonomous processes and agents can act with integrity and consistency to remediate issues quickly.
 `.trim();
 
-export const apimetrics: ProductTabDetails = {
+export const apiMetrics: ProductTabDetails = {
   overview: overviewMarkdown,
   documentation: documentationMarkdown,
   pricing: pricingMarkdown,

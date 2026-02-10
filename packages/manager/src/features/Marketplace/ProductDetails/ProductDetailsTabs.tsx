@@ -7,6 +7,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { allowedHTMLAttr, allowedHTMLTagsFlexible } from 'src/constants';
 
 import {
   ContentSection,
@@ -36,7 +37,13 @@ interface TabConfig {
 const MarkdownContentRenderer = ({ content }: { content: string }) => {
   return (
     <StyledTabContent>
-      <Markdown textOrMarkdown={content} />
+      <Markdown
+        sanitizeOptions={{
+          ALLOWED_ATTR: [...allowedHTMLAttr, 'target', 'src', 'alt', 'style'],
+          ALLOWED_TAGS: [...allowedHTMLTagsFlexible, 'img'],
+        }}
+        textOrMarkdown={content}
+      />
     </StyledTabContent>
   );
 };

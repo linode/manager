@@ -2,21 +2,190 @@ import type { Product } from './shared';
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'apimetrics',
+    categories: ['AI', 'Other Software and APIs'],
+    id: 'api-metrics',
     name: 'APImetrics',
+    partner: {
+      email: 'akamai@apicontext.com',
+      logoDarkMode: 'APIContext-dark.svg',
+      logoLightMode: 'APIContext-light.svg',
+      name: 'APIContext',
+      url: 'https://apicontext.com/',
+    },
     shortDescription:
       'Continuous synthetic tests monitor the performance & conformance of workflows across APIs, browsers, & MCP servers.',
-    partner: {
-      name: 'APIContext',
-      logoLightMode: 'APIContext-light.svg',
-      logoDarkMode: 'APIContext-dark.svg',
-      url: 'https://apicontext.com/',
-      email: 'akamai@apicontext.com',
-    },
     type: {
       name: 'SaaS & APIs',
     },
-    categories: ['AI', 'Other Software and APIs'],
+  },
+  {
+    categories: [
+      'Compute',
+      'Enterprise',
+      'Media & Entertainment, Gaming',
+      'Networking',
+      'Storage',
+    ],
+    id: 'edgegap',
+    name: 'Multiplayer game server hosting & orchestration',
+    partner: {
+      email: 'sales@edgegap.com',
+      logoDarkMode: 'edgegap-dark.svg',
+      logoLightMode: 'edgegap-light.svg',
+      name: 'Edgegap',
+      url: 'https://edgegap.com/platform/orchestration-hosting',
+    },
+    shortDescription:
+      "We help game studios automatically deploy servers globally on the world's largest regionless network. Instant distribution to all our locations at one universal price.",
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: ['Media & Entertainment, Gaming'],
+    id: 'hero-encoder',
+    name: 'HERO Encoder',
+    partner: {
+      logoDarkMode: 'mediaexcel-dark.svg',
+      logoLightMode: 'mediaexcel-light.svg',
+      name: 'Media Excel',
+      url: 'https://mediaexcel.com/products/hero-management-system/',
+    },
+    shortDescription:
+      'HERO is a high-performance video encoding and transcoding platform designed for live and file-based media workflows. It enables broadcasters, OTT platforms, and service providers to deliver premium video quality while reducing distribution, compute, and storage costs.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'AI',
+      'Data Analytics',
+      'Compute',
+      'Storage',
+      'Kubernetes',
+      'Development Tools',
+      'Enterprise',
+      'Other Software and APIs',
+    ],
+    id: 'myota',
+    name: 'Myota',
+    partner: {
+      email: 'sales@myota.io',
+      logoDarkMode: 'Myota-dark.svg',
+      logoLightMode: 'Myota-light.svg',
+      name: 'Myota, Inc.',
+      url: 'https://myota.io/akamai',
+    },
+    shortDescription:
+      'Myota provides S3-compatible cyberstorage that makes data 100% immune to ransomware and cloud outages. Automatically encrypts, shards, and spreads across locations, while lowering data storage cost by 50%.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: ['AI', 'Enterprise'],
+    id: 'rad-security',
+    name: 'RAD Security Platform',
+    partner: {
+      email: 'randy@rad.security',
+      logoDarkMode: 'rad-security-dark.svg',
+      logoLightMode: 'rad-security-light.svg',
+      name: 'RAD Security',
+      url: 'https://www.radsecurity.ai/platform',
+    },
+    shortDescription:
+      'Agentic AI for security teams - investigate faster, act smarter, and reduce risk across cloud, identity, and runtime.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'AI',
+      'Compute',
+      'Storage',
+      'Enterprise',
+      'CDN Affiliated',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'scaleflex',
+    name: 'Scaleflex Smart Media Cloud and DAM',
+    partner: {
+      email: 'sales@scaleflex.com',
+      logoDarkMode: 'scaleflex-dark.svg',
+      logoLightMode: 'scaleflex-light.svg',
+      name: 'Scaleflex',
+      url: 'https://www.scaleflex.com/visual-experience-platform',
+    },
+    shortDescription:
+      'Scaleflex is a Visual Experience Platform for high-volume retail, real estate, and travel websites. Running fully on Akamai Cloud Compute and CDN it centralizes, optimizes, and delivers AI-powered visual assets at scale for faster time to market and load times.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: ['Storage', 'Other Software and APIs'],
+    id: 'sftpgo',
+    name: 'SFTPGo',
+    partner: {
+      email: 'support@sftpgo.com',
+      logoDarkMode: 'sftpgo-dark.svg',
+      logoLightMode: 'sftpgo-light.svg',
+      name: 'Software Engineering S.R.L.',
+      url: 'https://sftpgo.com/saas',
+    },
+    shortDescription:
+      'MFT supporting SFTP, FTP and WebDAV. Features SSO WebClient for user access and WebAdmin for management. Includes S3-compatible storage or connect your own cloud backends',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'AI',
+      'Data Analytics',
+      'Data Sources',
+      'Enterprise',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'synadia',
+    name: 'Synadia Platform',
+    partner: {
+      email: 'info@synadia.com',
+      logoDarkMode: 'Synadia-dark.svg',
+      logoLightMode: 'Synadia-light.svg',
+      name: 'Synadia Communications, Inc.',
+      url: 'https://www.synadia.com/platform',
+    },
+    shortDescription:
+      'The Synadia Platform is a connective utility for building real-time data, messaging, and services that span from on-prem, edge to cloud with simplicity and security.',
+    type: {
+      name: 'Agentic Systems',
+    },
+  },
+  {
+    categories: [
+      'CDN Affiliated',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'vindral',
+    name: 'Vindral Live',
+    partner: {
+      email: 'info@vindral.com',
+      logoDarkMode: 'Vindral-dark.svg',
+      logoLightMode: 'Vindral-light.svg',
+      name: 'Vindral',
+      url: 'https://vindral.com/live/',
+    },
+    shortDescription:
+      'Vindral Live is a live streaming service that supports configurable ultra-low latency and synchronized playout. Ideal for iGaming, sports, events - anywhere you want interactivity.',
+    type: {
+      name: 'SaaS & APIs',
+    },
   },
 ];
 
