@@ -1,5 +1,6 @@
 import {
   authenticationType,
+  contentType,
   destinationType,
   streamStatus,
   streamType,
@@ -68,6 +69,17 @@ export const authenticationTypeOptions: AutocompleteOption[] = [
   {
     value: authenticationType.None,
     label: 'None',
+  },
+];
+
+export const contentTypeOptions: AutocompleteOption[] = [
+  {
+    value: contentType.Json,
+    label: contentType.Json,
+  },
+  {
+    value: contentType.JsonUtf8,
+    label: contentType.JsonUtf8,
   },
 ];
 
