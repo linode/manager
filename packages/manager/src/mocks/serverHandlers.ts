@@ -218,7 +218,7 @@ const makeMockDatabase = (params: PathParams): Database => {
   }
 
   if (db.engine === 'postgresql') {
-    db.connection_pool_port = 100; /** @Deprecated replaced by hosts endpoints */
+    db.connection_pool_port = 100; /** @Deprecated replaced by `endpoints` property */
   }
 
   const database = databaseFactory.build(db);
