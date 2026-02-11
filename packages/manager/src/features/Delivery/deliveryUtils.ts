@@ -30,12 +30,13 @@ import type {
 /**
  * Hook to determine if the ACLP Logs feature is enabled for the current user.
 
- * @returns {{ isACLPLogsEnabled: boolean, isACLPLogsBeta: boolean }} An object indicating if the feature is enabled and if it is in beta.
+ * @returns {{ isACLPLogsEnabled: boolean, isACLPLogsBeta: boolean, isACLPLogsNew: boolean, isACLPLogsCustomHttpsEnabled: boolean }}
  */
 export const useIsACLPLogsEnabled = (): {
   isACLPLogsBeta: boolean;
   isACLPLogsCustomHttpsEnabled: boolean;
   isACLPLogsEnabled: boolean;
+  isACLPLogsNew: boolean;
 } => {
   const { data: account } = useAccount();
   const flags = useFlags();
@@ -51,6 +52,7 @@ export const useIsACLPLogsEnabled = (): {
   return {
     isACLPLogsBeta: !!flags.aclpLogs?.beta,
     isACLPLogsCustomHttpsEnabled: !!flags.aclpLogs?.customHttpsEnabled,
+    isACLPLogsNew: !!flags.aclpLogs?.new,
     isACLPLogsEnabled,
   };
 };
