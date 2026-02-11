@@ -99,7 +99,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
 
   const {
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, touchedFields },
     handleSubmit,
     reset,
     setError,
@@ -337,7 +337,9 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     onChange={(_, country) => {
                       setSelectedPhoneCountry(country);
                       field.onChange(country?.dialingCode ?? null);
-                      trigger('phone');
+                      if (touchedFields.phone) {
+                        trigger('phone');
+                      }
                     }}
                     options={countryList}
                     placeholder=""
