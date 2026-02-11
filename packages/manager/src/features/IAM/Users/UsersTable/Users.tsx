@@ -63,8 +63,6 @@ export const UsersLanding = () => {
     preferenceKey: 'iam-account-users-order',
   });
 
-  const queryParams = new URLSearchParams(location.search);
-
   const { error: searchError, filter } = getAPIFilterFromQuery(query, {
     searchableFieldsWithoutOperator: ['username', 'email'],
   });
@@ -143,18 +141,14 @@ export const UsersLanding = () => {
   const numCols = isSmDown ? 2 : numColsLg;
 
   const handleSearch = (value: string) => {
-    queryParams.set('page', '1');
-    if (value) {
-      queryParams.set('query', value);
-    } else {
-      queryParams.delete('query');
-    }
+    const nextQuery = value === '' ? undefined : String(value);
     navigate({
       to: '/iam/users',
-      search: {
-        users: queryParams.get('users') ?? 'all',
-        query: value,
-      },
+      search: (prev) => ({
+        ...prev,
+        query: nextQuery,
+        page: 1,
+      }),
     });
   };
 
@@ -215,10 +209,10 @@ export const UsersLanding = () => {
                   setUserType(selected ?? null);
                   navigate({
                     to: '/iam/users',
-                    search: {
+                    search: (prev) => ({
+                      ...prev,
                       users: String(selected?.value ?? 'all'),
-                      query: queryParams.get('query') ?? '',
-                    },
+                    }),
                   });
                 }}
                 options={filterableOptions}
