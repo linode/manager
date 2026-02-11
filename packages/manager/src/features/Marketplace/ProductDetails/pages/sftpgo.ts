@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## **Overview Tab Content:**
-
 SFTPGo provides a fully managed, secure Managed File Transfer (MFT) solution designed for organizations that require professional file exchange without the burden of infrastructure management. Unlike standard shared hosting, SFTPGo delivers a dedicated and isolated installation for every customer, ensuring maximum security and performance. Each environment is automatically deployed in the user's selected region, providing a turnkey solution that is ready to use in minutes with simple, predictable pricing.
 
 The service supports a comprehensive suite of protocols, including SFTP, FTP, FTPS, and WebDAV, complemented by an intuitive WebClient for non-technical users. Every plan includes a dedicated S3-compatible storage quota, yet the platform remains storage-agnostic, allowing you to "Bring Your Own Storage" from providers like Azure Blob, GCS, or S3. Administrators can manage the entire system through a powerful WebAdmin interface, which offers granular access controls, real-time monitoring, and no software limits on the number of users or admins.
@@ -44,8 +42,6 @@ Experience a secure, dedicated MFT environment today with a 10-day free trial in
 `.trim();
 
 const documentationMarkdown = `
-## **Documentation Tab Content**
-
 | Specification | Details |
 | :---- | :---- |
 | **Deployment Model** | SaaS. Fully managed dedicated instances |
@@ -73,16 +69,12 @@ Following a successful file upload, the integrated event engine triggers predefi
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

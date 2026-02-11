@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## **Overview Tab Content:**
-
 Scaleflex delivers a Visual Experience Platform built to help brands turn massive volumes of images and videos into fast, high-converting digital experiences. The platform runs fully on Akamai Cloud Compute and CDN, ensuring global performance, resilience, and scale. It solves a simple but critical problem: how to manage, optimize, and deliver images and videos at speed, at scale, and with measurable business impact. Scaleflex is trusted by high-volume brands in e-commerce, travel, and real estate.
 
 Scaleflex offers two solutions: Smart Media Cloud, which provides dynamic media optimization and on-the-fly resizing for images and videos, extending Akamai Image Manager with AI capabilities and an integrated Asset Library. Key features include compression, transcoding, smart cropping, background removal, auto-tagging, auto-description, asset upload and search, and performance analytics. Digital Asset Management centralizes images and videos with advanced AI search, rich indexation, approval workflows, user permissions, media editing, and secure asset sharing through branded Portals. Both solutions are API-first, headless, MACH-compliant, and fully SaaS.
@@ -47,8 +45,6 @@ Interested? Book a demo with our team. In this demo, you will:
 `.trim();
 
 const documentationMarkdown = `
-## **Documentation Tab Content**
-
 | Specification | Details |
 | :---- | :---- |
 | Deployment Model | Cloud-native SaaS, composable MACH architecture with online hub and headless API access |
@@ -78,13 +74,11 @@ Full documentation under: [https://docs.scaleflex.com/](https://docs.scaleflex.c
 * **Multi-Channel Delivery:** The architecture focuses on performance, pushing optimized, "accelerated content" directly to Web Applications, E-Commerce platforms, and Mobile Apps, ensuring a consistent visual experience across all user endpoints.  
     
   ![Scaleflex Asset Lifecycle](/assets/marketplace/Scaleflex-Asset-lifecycle.jpeg)
-  
+
   ![Scaleflex Create with VXP](/assets/marketplace/Scaleflex-Create-with-VXP.jpeg)
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.

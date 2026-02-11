@@ -1,4 +1,5 @@
 import { apiMetrics } from './api-metrics';
+import { cambriaStream } from './cambria-stream';
 import { edgegap } from './edgegap';
 import { heroEncoder } from './hero-encoder';
 import { myota } from './myota';
@@ -6,7 +7,9 @@ import { radSecurity } from './rad-security';
 import { scaleflex } from './scaleflex';
 import { sftpgo } from './sftpgo';
 import { synadia } from './synadia';
+import { titan } from './titan';
 import { vindral } from './vindral';
+import { yospace } from './yospace';
 
 /**
  * Tab content structure for product details page.
@@ -25,6 +28,7 @@ export interface ProductTabDetails {
  */
 const detailsMap: Record<string, ProductTabDetails> = {
   'api-metrics': apiMetrics,
+  'cambria-stream': cambriaStream,
   edgegap,
   'hero-encoder': heroEncoder,
   myota,
@@ -32,7 +36,9 @@ const detailsMap: Record<string, ProductTabDetails> = {
   scaleflex,
   sftpgo,
   synadia,
+  titan,
   vindral,
+  yospace,
   // Add more products here as you add their details files
 };
 

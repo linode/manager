@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## Overview
-
 Myota is S3-compatible cyberstorage that makes data architecturally immune to ransomware and cloud outages. Traditional security sits on top of storage; when attackers get through, data remains vulnerable. Myota solves this by building protection into how data exists: files are automatically encrypted, sharded, and distributed across multiple independent locations. Attackers get useless fragments they can't reconstruct; authorized users get instant access.
 
 The patented Shard & Spread technology encrypts each file at write time using zero-knowledge encryption, then cryptographically shards the data, metadata, and encryption keys across geographically distributed repositories. If one location goes down or is compromised, data reconstructs automatically from available shards. Myota works as primary storage for applications, media, and analytics, or as an immutable backup target for platforms like Veeam and enterprise file sync solutions.
@@ -76,8 +74,6 @@ Ready to make your data architecturally immune to ransomware and cloud outages? 
 `.trim();
 
 const documentationMarkdown = `
-## Documentation
-
 | Specification | Details |
 | :---- | :---- |
 | **Deployment Model** | SaaS, integrates with Akamai Cloud and existing storage infrastructure |
@@ -162,16 +158,12 @@ Authorized users retrieve data instantly, even during partial outages.
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

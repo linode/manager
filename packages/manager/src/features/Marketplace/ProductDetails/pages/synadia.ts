@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## **Overview Tab Content:**
-
 Synadia Platform provides managed [NATS.io](http://nats.io) infrastructure for connecting distributed applications, services, and devices across Akamai Cloud, AWS, Azure and Google Cloud. 
 
 Built for edge-first and globally distributed systems, the platform uses an event-driven architecture to propagate data and service interactions across regions and environments in milliseconds. It supports streaming, request/reply, key-value, and object storage, with built-in replication and digital twins that keep data close to where it’s needed. Deploy rapidly as a managed global service or extend it directly into edge sites and customer environments via the Akamai global cloud infrastructure —without gateways, service meshes, or complex networking dependencies.
@@ -37,8 +35,6 @@ Ready to start your free trial of Synadia Platform on the Akamai Cloud? Contact 
 `.trim();
 
 const documentationMarkdown = `
-## **Documentation Tab Content**
-
 | Specification | Details |
 | :---- | :---- |
 | Deployment model | Managed BYOC on Akamai Cloud or self-hosted. |
@@ -60,16 +56,12 @@ This architecture enables a true “connectivity-first” model: events, streams
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

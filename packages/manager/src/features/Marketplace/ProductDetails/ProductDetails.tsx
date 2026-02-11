@@ -99,11 +99,12 @@ export const ProductDetails = () => {
         }}
       />
       <Paper
-        sx={{
+        sx={(theme) => ({
           alignItems: 'flex-start',
+          border: `1px solid ${theme.tokens.alias.Border.Normal}`,
           display: 'flex',
           flexDirection: 'column',
-        }}
+        })}
       >
         <ProductDetailsContainer>
           {/* Info Banner (conditional) */}

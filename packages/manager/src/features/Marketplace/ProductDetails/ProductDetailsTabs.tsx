@@ -93,7 +93,7 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   if (pricing) {
     tabs.push({
       content: (
-        <ContentSection>
+        <ContentSection sx={{ maxWidth: '800px' }}>
           <MarkdownContentRenderer content={pricing} />
         </ContentSection>
       ),
@@ -106,7 +106,7 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   if (documentation) {
     tabs.push({
       content: (
-        <ContentSection>
+        <ContentSection sx={{ maxWidth: '800px' }}>
           <MarkdownContentRenderer content={documentation} />
         </ContentSection>
       ),
@@ -119,7 +119,7 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   if (support) {
     tabs.push({
       content: (
-        <ContentSection>
+        <ContentSection sx={{ maxWidth: '800px' }}>
           <MarkdownContentRenderer content={support} />
         </ContentSection>
       ),

@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## Edgegap Overview
-
 Multiplayer game server hosting, solved.
 
 Edgegap is a modern, game server orchestration platform built on the world's first and largest edge network. We help game developers deploy, scale, and efficiently operate multiplayer games worldwide at a fraction of traditional orchestration costs.
@@ -52,8 +50,6 @@ For clients with complex backends or live traffic, Edgegap helps you migrate in 
 `.trim();
 
 const documentationMarkdown = `
-## Documentation
-
 | Specification | Details |
 | :---- | :---- |
 | **Network (Regions)** | 615+ locations worldwide, all available on demand |
@@ -72,16 +68,12 @@ const documentationMarkdown = `
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

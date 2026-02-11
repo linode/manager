@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## HERO Encoder Overview
-
 Media Excel’s HERO is a high-performance video encoding and transcoding platform designed for live and file-based media workflows. It enables broadcasters, OTT platforms, and service providers to deliver premium video quality while reducing distribution, compute, and storage costs.
 
 The HERO platform supports a wide range of codecs, including AVC, HEVC, AV1, and VVC, and is built for low latency streaming using modern protocols such as CMAF-CTE for HLS and DASH. Media Excel’s AI-powered DIVA optimization dynamically improves visual quality and reduces bitrate without requiring changes to downstream infrastructure. Our HERO ClearEdge preprocessing feature further enhances video quality.
@@ -46,8 +44,6 @@ Ready to reduce the cost of your encoding workflow by 30% on Akamai Connected Cl
 `.trim();
 
 const documentationMarkdown = `
-## Documentation
-
 | Specification | Details |
 | :---- | :---- |
 | **Deployment Model** | Cloud, Hybrid, On-prem |
@@ -72,16 +68,12 @@ HERO is pre-integrated with a broad ecosystem of media technology partners, incl
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

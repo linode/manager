@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## Overview
-
 RAD is a runtime-native security platform built to operate inside dynamic, containerized environments. It ingests signals from cloud infrastructure, workloads, identity providers, and data flows, then correlates them in real time to surface risk rather than static posture drift or theoretical exposures. The system is designed to analyze behavior as it happens, detect deviations from established baselines, and produce security outcomes with traceable logic.
 
 The platform includes RADBot, an AI-driven automation layer that performs continuous analysis across runtime, configuration, and identity data. It identifies blast radius, flags misconfigurations tied to active workloads, and reconstructs incidents without needing predefined rules. Findings are prioritized based on exploitability, business impact, and observed activity. Teams can interrogate the data directly through a natural language interface, with evidence attached to every conclusion.
@@ -52,8 +50,6 @@ Schedule a demo with our team to explore how agentic security can streamline you
 `.trim();
 
 const documentationMarkdown = `
-## Documentation
-
 All RAD Security Documentation may be found here: [https://docs.rad.security/](https://docs.rad.security/)
 
 | Specification | Details |
@@ -74,16 +70,12 @@ All RAD Security Documentation may be found here: [https://docs.rad.security/](h
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

@@ -7,8 +7,6 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-## APImetrics Overview
-
 Continuous synthetic tests from APIContext monitor the performance and conformance of your mission-critical workflows across APIs, browsers, MCP servers, and the entire digital delivery chain. Our platform ensures reliability from hundreds of global points of presence and utilizes deep telemetry to provide unparalleled insights.
 
 ### Key features
@@ -29,8 +27,6 @@ APIContext is available as a SaaS platform, hosted on Akamai for optimal perform
 `.trim();
 
 const documentationMarkdown = `
-## Documentation
-
 Full platform documentation can be found [here](https://docs.apimetrics.io/docs/getting-started-projects-and-apis).
 
 APIContext supports multiple deployment models:
@@ -45,16 +41,12 @@ APIContext supports multiple deployment models:
 `.trim();
 
 const pricingMarkdown = `
-## Pricing
-
 Pricing details will be discussed directly with the third-party provider Sales team after your request is received, and the third-party provider contacts you. Costs of the product you will be purchasing from the third-party provider will be charged by the third-party provider. For the referral motion, Akamai is not a party in the purchase contract.
 
 The full price of the product cost should be clarified between you and the third-party provider within the agreed upon terms and conditions of the purchase contract.
 `.trim();
 
 const supportMarkdown = `
-## Support
-
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 

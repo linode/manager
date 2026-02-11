@@ -19,6 +19,23 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
+    categories: ['Compute', 'Kubernetes', 'Media & Entertainment, Gaming'],
+    id: 'cambria-stream',
+    name: 'Cambria Stream',
+    partner: {
+      email: 'akitajima@capellasystems.net',
+      logoDarkMode: 'capella-logo-dark.svg',
+      logoLightMode: 'capella-logo-light.svg',
+      name: 'Capella Systems',
+      url: 'https://www.capellasystems.net/cambria-stream-and-packager',
+    },
+    shortDescription:
+      'Cambria Stream is a flexible, scalable Live and VOD encoding software for cloud and hybrid workflows, deployable via Docker and designed to scale with Kubernetes.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
     categories: [
       'Compute',
       'Enterprise',
@@ -167,6 +184,23 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
+    categories: ['Media & Entertainment, Gaming'],
+    id: 'titan',
+    name: 'Titan',
+    partner: {
+      email: 'inquiries@ateme.com',
+      logoDarkMode: 'ateme-dark.svg',
+      logoLightMode: 'ateme-light.svg',
+      name: 'Ateme',
+      url: 'https://www.ateme.com/product-titan-software/',
+    },
+    shortDescription:
+      'With Ateme video-processing solutions, from contribution to delivery, you offer your viewers a premium experience on any platform – DTH, DTT, cable-TV, IPTV and OTT.',
+    type: {
+      name: 'Virtual Machines',
+    },
+  },
+  {
     categories: [
       'CDN Affiliated',
       'Media & Entertainment, Gaming',
@@ -183,6 +217,23 @@ export const PRODUCTS: Product[] = [
     },
     shortDescription:
       'Vindral Live is a live streaming service that supports configurable ultra-low latency and synchronized playout. Ideal for iGaming, sports, events - anywhere you want interactivity.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: ['Media & Entertainment, Gaming'],
+    id: 'yospace',
+    name: 'Dynamic Ad Insertion',
+    partner: {
+      email: 'sales@yospace.com',
+      logoDarkMode: 'YoSpace-dark.svg',
+      logoLightMode: 'YoSpace-light.svg',
+      name: 'YOSPACE',
+      url: 'https://www.yospace.com/ssai',
+    },
+    shortDescription:
+      'Yospace is the most trusted provider of Dynamic Ad Insertion (DAI) technology in the world today.',
     type: {
       name: 'SaaS & APIs',
     },
