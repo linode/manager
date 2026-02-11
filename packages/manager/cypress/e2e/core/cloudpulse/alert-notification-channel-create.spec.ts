@@ -46,9 +46,14 @@ describe('CloudPulse Alerting - Notification Channel Creation Validation', () =>
    * Verifies server error handling during channel creation.
    */
   beforeEach(() => {
-    mockAppendFeatureFlags(flagsFactory.build());
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
+    const mockflags = flagsFactory.build({
+      aclpAlerting: {
+        notificationChannels: true,
+      },
+    });
+    mockAppendFeatureFlags(mockflags);
     mockGetAlertChannels(notificationChannels).as(
       'getAlertNotificationChannels'
     );
