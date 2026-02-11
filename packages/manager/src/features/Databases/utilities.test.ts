@@ -27,6 +27,7 @@ import type {
   AccountCapability,
   Database,
   Engine,
+  HostEndpointRole,
   PendingUpdates,
 } from '@linode/api-v4';
 
@@ -540,6 +541,14 @@ describe('getReadOnlyHost', () => {
       primary: 'primary.example.com',
       standby: 'standby.example.com',
       secondary: 'secondary.example.com',
+      endpoints: [
+        {
+          address: 'public-primary.example.com',
+          role: 'primary' as HostEndpointRole,
+          private_access: false,
+          port: 12345,
+        },
+      ],
     };
     db.hosts = mockHosts;
     const result = getReadOnlyHost(db);
@@ -552,6 +561,14 @@ describe('getReadOnlyHost', () => {
     const mockHosts = {
       primary: 'primary.example.com',
       secondary: 'secondary.example.com',
+      endpoints: [
+        {
+          address: 'public-primary.example.com',
+          role: 'primary' as HostEndpointRole,
+          private_access: false,
+          port: 12345,
+        },
+      ],
     };
     db.hosts = mockHosts;
     const result = getReadOnlyHost(db);

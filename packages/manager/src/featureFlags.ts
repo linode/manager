@@ -249,6 +249,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   marketplaceV2: boolean;
+  marketplaceV2GlobalBanner: boolean;
   metadata: boolean;
   mtc: MTC;
   networkLoadBalancer: boolean;
