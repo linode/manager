@@ -4073,31 +4073,6 @@ export const handlers = [
               {
                 dimension_label: 'device',
                 label: 'Device name',
-                values: ['lo', 'eth0'],
-              },
-              {
-                dimension_label: 'direction',
-                label: 'Direction of network transfer',
-                values: ['transmit', 'receive'],
-              },
-              {
-                dimension_label: 'LINODE_ID',
-                label: 'Linode ID',
-                values: null,
-              },
-            ],
-            label: 'Network Traffic',
-            metric: 'system_network_io_by_resource',
-            metric_type: 'counter',
-            scrape_interval: '30s',
-            unit: 'byte',
-          },
-          {
-            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-            dimensions: [
-              {
-                dimension_label: 'device',
-                label: 'Device name',
                 values: ['loop0', 'sda', 'sdb'],
               },
               {
