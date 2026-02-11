@@ -43,6 +43,7 @@ vi.mock('./utils', () => ({
   useGetLocationsForQuotaService: queryMocks.useGetLocationsForQuotaService,
   convertResourceMetric: queryMocks.convertResourceMetric,
   pluralizeMetric: queryMocks.pluralizeMetric,
+  QUOTA_ROW_MIN_HEIGHT: 58,
 }));
 
 describe('Quotas', () => {

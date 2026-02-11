@@ -15,6 +15,7 @@ const props: LinodeActionMenuProps = {
   linodeBackups: linodeBackupsFactory.build(),
   linodeId: 1,
   linodeLabel: 'test-linode',
+  linodeLocks: ['cannot_delete'],
   linodeRegion: 'us-east',
   linodeStatus: 'running',
   linodeType: extendedTypes[0],
@@ -23,6 +24,7 @@ const props: LinodeActionMenuProps = {
   onOpenMigrateDialog: vi.fn(),
   onOpenPowerDialog: vi.fn(),
   onOpenRebuildDialog: vi.fn(),
+  onOpenRemoveLockDialog: vi.fn(),
   onOpenRescueDialog: vi.fn(),
   onOpenResizeDialog: vi.fn(),
 };
@@ -39,6 +41,9 @@ const queryMocks = vi.hoisted(() => ({
       migrate_linode: false,
       delete_linode: false,
       generate_linode_lish_token: false,
+      create_linode: true,
+      create_lock: true,
+      delete_lock: true,
     },
   })),
   useNavigate: vi.fn(),
@@ -218,6 +223,9 @@ describe('LinodeActionMenu', () => {
         migrate_linode: false,
         delete_linode: false,
         generate_linode_lish_token: false,
+        create_linode: true,
+        create_lock: true,
+        delete_lock: true,
       },
     });
 
@@ -270,5 +278,152 @@ describe('LinodeActionMenu', () => {
 
     await userEvent.click(actionMenuButton);
     expect(getByTestId('Reboot')).not.toHaveAttribute('aria-disabled');
+  });
+
+  describe('Lock/Unlock action', () => {
+    it('should not show Lock action when feature flag is disabled', async () => {
+      const { getByLabelText, queryByText } = renderWithTheme(
+        <LinodeActionMenu {...props} />
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(queryByText('Lock')).toBeNull();
+      expect(queryByText('Unlock')).toBeNull();
+    });
+
+    it('should show Lock action when feature flag is enabled and Linode is not locked', async () => {
+      const { getByLabelText, getByText } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={[]} />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(getByText('Lock')).toBeVisible();
+    });
+
+    it('should show Unlock action when feature flag is enabled and Linode is locked', async () => {
+      const { getByLabelText, getByText } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(getByText('Unlock')).toBeVisible();
+    });
+
+    it('should call onOpenRemoveLockDialog when Unlock is clicked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          ...queryMocks.userPermissions().data,
+          delete_lock: true,
+        },
+      });
+
+      const onOpenRemoveLockDialog = vi.fn();
+      const { getByLabelText, getByText } = renderWithTheme(
+        <LinodeActionMenu
+          {...props}
+          linodeLocks={['cannot_delete']}
+          onOpenRemoveLockDialog={onOpenRemoveLockDialog}
+        />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+      await userEvent.click(getByText('Unlock'));
+
+      expect(onOpenRemoveLockDialog).toHaveBeenCalled();
+    });
+
+    it('should disable Lock action when user lacks create_lock permission', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          ...queryMocks.userPermissions().data,
+          create_lock: false,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={[]} />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(getByTestId('Lock')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should disable Unlock action when user lacks delete_lock permission', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          ...queryMocks.userPermissions().data,
+          delete_lock: false,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(getByTestId('Unlock')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should enable Lock action when user has create_lock permission', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          ...queryMocks.userPermissions().data,
+          create_lock: true,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={[]} />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(getByTestId('Lock')).not.toHaveAttribute('aria-disabled');
+    });
+
+    it('should enable Unlock action when user has delete_lock permission', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          ...queryMocks.userPermissions().data,
+          delete_lock: true,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />,
+        { flags: { resourceLock: { linodes: true } } }
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      expect(getByTestId('Unlock')).not.toHaveAttribute('aria-disabled');
+    });
   });
 });

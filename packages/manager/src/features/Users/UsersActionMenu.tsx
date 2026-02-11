@@ -11,12 +11,16 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  isProxyUser: boolean;
+  isProxyOrDelegateUser: boolean;
   onDelete: (username: string) => void;
   username: string;
 }
 
-export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
+export const UsersActionMenu = ({
+  isProxyOrDelegateUser,
+  onDelete,
+  username,
+}: Props) => {
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -68,7 +72,9 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
     },
   ];
 
-  const actions = isProxyUser ? proxyUserActions : nonProxyUserActions;
+  const actions = isProxyOrDelegateUser
+    ? proxyUserActions
+    : nonProxyUserActions;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment

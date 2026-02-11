@@ -336,6 +336,63 @@ describe('Linode Entity Detail', () => {
 
     expect(await findByTestId('linode-encryption-status')).toBeVisible();
   });
+
+  it('should display the Linode maintenance policy if it supports it and the flag is on', async () => {
+    const linode = linodeFactory.build({
+      maintenance_policy: 'linode/power_off_on',
+      capabilities: ['Maintenance Policy'],
+    });
+
+    server.use(
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(linode);
+      })
+    );
+
+    const { findByText, getByText } = renderWithTheme(
+      <LinodeEntityDetail handlers={handlers} id={linode.id} linode={linode} />,
+      {
+        flags: {
+          vmHostMaintenance: { enabled: true, beta: false, new: false },
+        },
+      }
+    );
+
+    expect(
+      await findByText('Maintenance Policy', { exact: false })
+    ).toBeVisible();
+
+    expect(getByText('Power Off / Power On')).toBeVisible();
+  });
+
+  it('should not display a maintenance policy if the linode does not have one', async () => {
+    const linode = linodeFactory.build({
+      maintenance_policy: null,
+      capabilities: [],
+    });
+
+    server.use(
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(linode);
+      })
+    );
+
+    const { findByText, queryByText } = renderWithTheme(
+      <LinodeEntityDetail handlers={handlers} id={linode.id} linode={linode} />,
+      {
+        flags: {
+          vmHostMaintenance: { enabled: true, beta: false, new: false },
+        },
+      }
+    );
+
+    // Ensure the Linode is loaded
+    await findByText(linode.ipv4[0]);
+
+    expect(
+      queryByText('Maintenance Policy', { exact: false })
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe('getSubnetsString function', () => {

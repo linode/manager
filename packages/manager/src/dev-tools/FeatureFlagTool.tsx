@@ -46,6 +46,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
+  { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
   {
     flag: 'placementGroupPolicyUpdate',
     label: 'Placement Group Policy Update',
@@ -92,6 +93,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
+  { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },
 ];
 
 interface RenderFlagItemProps {

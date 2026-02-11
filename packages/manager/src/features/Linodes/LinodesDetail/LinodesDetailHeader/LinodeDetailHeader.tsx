@@ -23,6 +23,7 @@ import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { AddLockDialog } from '../LinodeLock/AddLockDialog';
+import { RemoveLockDialog } from '../LinodeLock/RemoveLockDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
@@ -69,6 +70,8 @@ export const LinodeDetailHeader = () => {
   const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(
     search.rebuild
   );
+
+  const [removeLockDialogOpen, setRemoveLockDialogOpen] = React.useState(false);
   const [rescueDialogOpen, setRescueDialogOpen] = React.useState(search.rescue);
   const [resizeDialogOpen, setResizeDialogOpen] = React.useState(search.resize);
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
@@ -98,6 +101,7 @@ export const LinodeDetailHeader = () => {
     setMigrateDialogOpen(false);
     setRescueDialogOpen(false);
     setRebuildDialogOpen(false);
+    setRemoveLockDialogOpen(false);
     setEnableBackupsDialogOpen(false);
   };
 
@@ -153,6 +157,10 @@ export const LinodeDetailHeader = () => {
     setRebuildDialogOpen(true);
   };
 
+  const onOpenRemoveLockDialog = () => {
+    setRemoveLockDialogOpen(true);
+  };
+
   const onOpenRescueDialog = () => {
     setRescueDialogOpen(true);
   };
@@ -167,6 +175,7 @@ export const LinodeDetailHeader = () => {
     onOpenMigrateDialog,
     onOpenPowerDialog,
     onOpenRebuildDialog,
+    onOpenRemoveLockDialog,
     onOpenRescueDialog,
     onOpenResizeDialog,
   };
@@ -251,6 +260,13 @@ export const LinodeDetailHeader = () => {
         linodeLabel={linode.label}
         onClose={closeDialogs}
         open={Boolean(rebuildDialogOpen)}
+      />
+      <RemoveLockDialog
+        linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
+        linodeLocks={linode.locks}
+        onClose={closeDialogs}
+        open={Boolean(removeLockDialogOpen)}
       />
       <RescueDialog
         linodeId={matchedLinodeId}

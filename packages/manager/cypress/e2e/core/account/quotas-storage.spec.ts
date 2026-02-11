@@ -24,121 +24,132 @@ import { getQuotaIncreaseMessage } from 'src/features/Account/Quotas/utils';
 
 import type { Quota } from '@linode/api-v4';
 
+const mockFeatureFlags = {
+  limitsEvolution: {
+    enabled: true,
+    requestForIncreaseDisabledForInternalAccountsOnly: false,
+  },
+  objectStorageGlobalQuotas: false,
+};
+
 const placeholderText = 'Select an Object Storage S3 endpoint';
+
+const mockDomain = randomDomainName();
+
+const mockRegions = regionFactory.buildList(4, {
+  capabilities: ['Object Storage'],
+});
+
+const mockEndpoints = [
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E0',
+    region: mockRegions[0].id,
+    s3_endpoint: `${mockRegions[0].id}-1.${mockDomain}`,
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E1',
+    region: mockRegions[1].id,
+    s3_endpoint: `${mockRegions[1].id}-1.${mockDomain}`,
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E1',
+    region: mockRegions[2].id,
+    s3_endpoint: `${mockRegions[2].id}-1.${mockDomain}`,
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E2',
+    region: mockRegions[3].id,
+    s3_endpoint: `${mockRegions[3].id}-1.${mockDomain}`,
+  }),
+];
+
+const mockSelectedEndpoint = mockEndpoints[1];
+const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
+
+const mockQuotas = [
+  quotaFactory.build({
+    quota_id: `obj-bytes-${selectedDomain}`,
+    quota_type: 'obj-bytes',
+    description: randomLabel(50),
+    endpoint_type: mockSelectedEndpoint.endpoint_type,
+    quota_limit: 10,
+    quota_name: randomLabel(15),
+    resource_metric: 'byte',
+    s3_endpoint: selectedDomain,
+  }),
+  quotaFactory.build({
+    quota_id: `obj-buckets-${selectedDomain}`,
+    quota_type: 'obj-buckets',
+    description: randomLabel(50),
+    endpoint_type: mockSelectedEndpoint.endpoint_type,
+    quota_limit: 78,
+    quota_name: randomLabel(15),
+    resource_metric: 'bucket',
+    s3_endpoint: selectedDomain,
+  }),
+  quotaFactory.build({
+    quota_id: `obj-objects-${selectedDomain}`,
+    quota_type: 'obj-objects',
+    description: randomLabel(50),
+    endpoint_type: mockSelectedEndpoint.endpoint_type,
+    quota_limit: 400,
+    quota_name: randomLabel(15),
+    resource_metric: 'object',
+    s3_endpoint: selectedDomain,
+  }),
+];
+
+const mockQuotaUsages = [
+  quotaUsageFactory.build({
+    quota_limit: mockQuotas[0].quota_limit,
+    usage: Math.round(mockQuotas[0].quota_limit * 0.1),
+  }),
+  quotaUsageFactory.build({
+    quota_limit: mockQuotas[1].quota_limit,
+    usage: Math.round(mockQuotas[1].quota_limit * 0.1),
+  }),
+  quotaUsageFactory.build({
+    quota_limit: mockQuotas[2].quota_limit,
+    usage: Math.round(mockQuotas[2].quota_limit * 0.1),
+  }),
+];
+
 describe('Quota workflow tests', () => {
   beforeEach(() => {
-    // object storage mocks
-    const mockDomain = randomDomainName();
-    const mockRegions = regionFactory.buildList(4, {
-      capabilities: ['Object Storage'],
-    });
-    const mockEndpoints = [
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E0',
-        region: mockRegions[0].id,
-        s3_endpoint: `${mockRegions[0].id}-1.${mockDomain}`,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E1',
-        region: mockRegions[1].id,
-        s3_endpoint: `${mockRegions[1].id}-1.${mockDomain}`,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E1',
-        region: mockRegions[2].id,
-        s3_endpoint: `${mockRegions[2].id}-1.${mockDomain}`,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E2',
-        region: mockRegions[3].id,
-        s3_endpoint: `${mockRegions[3].id}-1.${mockDomain}`,
-      }),
-    ];
+    mockAppendFeatureFlags(mockFeatureFlags).as('getFeatureFlags');
 
-    const mockSelectedEndpoint = mockEndpoints[1];
-    const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
-    const mockQuotas = [
-      quotaFactory.build({
-        quota_id: `obj-bytes-${selectedDomain}`,
-        quota_type: 'obj-bytes',
-        description: randomLabel(50),
-        endpoint_type: mockSelectedEndpoint.endpoint_type,
-        quota_limit: 10,
-        quota_name: randomLabel(15),
-        resource_metric: 'byte',
-        s3_endpoint: selectedDomain,
-      }),
-      quotaFactory.build({
-        quota_id: `obj-buckets-${selectedDomain}`,
-        quota_type: 'obj-buckets',
-        description: randomLabel(50),
-        endpoint_type: mockSelectedEndpoint.endpoint_type,
-        quota_limit: 78,
-        quota_name: randomLabel(15),
-        resource_metric: 'bucket',
-        s3_endpoint: selectedDomain,
-      }),
-      quotaFactory.build({
-        quota_id: `obj-objects-${selectedDomain}`,
-        quota_type: 'obj-objects',
-        description: randomLabel(50),
-        endpoint_type: mockSelectedEndpoint.endpoint_type,
-        quota_limit: 400,
-        quota_name: randomLabel(15),
-        resource_metric: 'object',
-        s3_endpoint: selectedDomain,
-      }),
-    ];
-    const mockQuotaUsages = [
-      quotaUsageFactory.build({
-        quota_limit: mockQuotas[0].quota_limit,
-        usage: Math.round(mockQuotas[0].quota_limit * 0.1),
-      }),
-      quotaUsageFactory.build({
-        quota_limit: mockQuotas[1].quota_limit,
-        usage: Math.round(mockQuotas[1].quota_limit * 0.1),
-      }),
-      quotaUsageFactory.build({
-        quota_limit: mockQuotas[2].quota_limit,
-        usage: Math.round(mockQuotas[2].quota_limit * 0.1),
-      }),
-    ];
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+
     cy.wrap(selectedDomain).as('selectedDomain');
     cy.wrap(mockEndpoints).as('mockEndpoints');
     cy.wrap(mockQuotas).as('mockQuotas');
     cy.wrap(mockQuotaUsages).as('mockQuotaUsages');
+
+    mockGetObjectStorageQuotas(selectedDomain, mockQuotas).as('getQuotas');
+
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
       'bytes',
       mockQuotaUsages[0]
     );
+
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
       'buckets',
       mockQuotaUsages[1]
     );
+
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
       'objects',
       mockQuotaUsages[2]
     ).as('getQuotaUsages');
-    mockGetObjectStorageEndpoints(mockEndpoints).as(
-      'getObjectStorageEndpoints'
-    );
-    mockGetObjectStorageQuotas(selectedDomain, mockQuotas).as('getQuotas');
   });
 
   describe('Quota storage table', () => {
-    beforeEach(() => {
-      // TODO M3-10003 - Remove all limitsEvolution references once `limitsEvolution` feature flag is removed.
-      mockAppendFeatureFlags({
-        limitsEvolution: {
-          enabled: true,
-        },
-      }).as('getFeatureFlags');
-    });
-
-    it('Quotas and quota usages display properly', function () {
+    it('Quotas and quota usages display properly', () => {
       cy.visitWithLogin('/quotas');
 
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
@@ -154,10 +165,10 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
 
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
@@ -166,46 +177,49 @@ describe('Quota workflow tests', () => {
       cy.get('table[data-testid="table-endpoint-quotas"]')
         .find('tbody')
         .within(() => {
-          cy.get('tr').should('have.length', 3);
           cy.get('[data-testid="table-row-empty"]').should('not.exist');
-          cy.get('tr').should('have.length', 3);
-          cy.get('tr').each((row, rowIndex) => {
-            cy.wrap(row).within(() => {
-              cy.get('td')
-                .eq(0)
+
+          cy.get('tr')
+            .should('have.length', 3)
+            .each((_, rowIndex) => {
+              cy.get('tr')
+                .eq(rowIndex)
                 .within(() => {
-                  cy.findByText(this.mockQuotas[rowIndex].quota_name, {
-                    exact: false,
-                  }).should('be.visible');
-                  cy.get(
-                    `[aria-label="${this.mockQuotas[rowIndex].description}"]`
-                  ).should('be.visible');
-                });
-              cy.get('td')
-                .eq(1)
-                .within(() => {
-                  cy.findByText(this.mockQuotas[rowIndex].quota_limit, {
-                    exact: false,
-                  }).should('be.visible');
-                  cy.findByText(this.mockQuotas[rowIndex].resource_metric, {
-                    exact: false,
-                  }).should('be.visible');
-                });
-              cy.get('td')
-                .eq(2)
-                .within(() => {
-                  // quota usage
-                  const strUsage = `${this.mockQuotaUsages[rowIndex].usage} of ${this.mockQuotaUsages[rowIndex].quota_limit}`;
-                  cy.findByText(strUsage, { exact: false }).should(
-                    'be.visible'
-                  );
+                  cy.get('td')
+                    .eq(0)
+                    .within(() => {
+                      cy.findByText(mockQuotas[rowIndex].quota_name, {
+                        exact: false,
+                      }).should('be.visible');
+                      cy.get(
+                        `[aria-label="${mockQuotas[rowIndex].description}"]`
+                      ).should('be.visible');
+                    });
+                  cy.get('td')
+                    .eq(1)
+                    .within(() => {
+                      cy.findByText(mockQuotas[rowIndex].quota_limit, {
+                        exact: false,
+                      }).should('be.visible');
+                      cy.findByText(mockQuotas[rowIndex].resource_metric, {
+                        exact: false,
+                      }).should('be.visible');
+                    });
+                  cy.get('td')
+                    .eq(2)
+                    .within(() => {
+                      // quota usage
+                      const strUsage = `${mockQuotaUsages[rowIndex].usage} of ${mockQuotaUsages[rowIndex].quota_limit}`;
+                      cy.findByText(strUsage, {
+                        exact: false,
+                      }).should('be.visible');
+                    });
                 });
             });
-          });
         });
 
       // selecting new object storage endpoint triggers update of quotas and quota usages
-      const updatedEndpoint = this.mockEndpoints[this.mockEndpoints.length - 1];
+      const updatedEndpoint = mockEndpoints[mockEndpoints.length - 1];
       const updatedDomain = updatedEndpoint.s3_endpoint || '';
       const updatedQuotas = [
         quotaFactory.build({
@@ -253,21 +267,25 @@ describe('Quota workflow tests', () => {
           usage: Math.round(updatedQuotas[2].quota_limit * 0.1),
         }),
       ];
+
       mockGetObjectStorageQuotaUsages(
         updatedDomain,
         'bytes',
         updatedQuotaUsages[0]
       );
+
       mockGetObjectStorageQuotaUsages(
         updatedDomain,
         'buckets',
         updatedQuotaUsages[1]
       );
+
       mockGetObjectStorageQuotaUsages(
         updatedDomain,
         'objects',
         updatedQuotaUsages[2]
       ).as('getUpdatedQuotaUsages');
+
       mockGetObjectStorageQuotas(updatedDomain, updatedQuotas).as(
         'getUpdatedQuotas'
       );
@@ -290,46 +308,48 @@ describe('Quota workflow tests', () => {
       cy.get('table[data-testid="table-endpoint-quotas"]')
         .find('tbody')
         .within(() => {
-          cy.get('tr').should('have.length', 3);
           cy.get('[data-testid="table-row-empty"]').should('not.exist');
-          cy.get('tr').should('have.length', 3);
-          cy.get('tr').each((row, rowIndex) => {
-            cy.wrap(row).within(() => {
-              cy.get('td')
-                .eq(0)
+          cy.get('tr')
+            .should('have.length', 3)
+            .each((_, rowIndex) => {
+              cy.get('tr')
+                .eq(rowIndex)
                 .within(() => {
-                  cy.findByText(updatedQuotas[rowIndex].quota_name, {
-                    exact: false,
-                  }).should('be.visible');
-                  cy.get(
-                    `[aria-label="${updatedQuotas[rowIndex].description}"]`
-                  ).should('be.visible');
-                });
-              cy.get('td')
-                .eq(1)
-                .within(() => {
-                  cy.findByText(updatedQuotas[rowIndex].quota_limit, {
-                    exact: false,
-                  }).should('be.visible');
-                  cy.findByText(updatedQuotas[rowIndex].resource_metric, {
-                    exact: false,
-                  }).should('be.visible');
-                });
-              cy.get('td')
-                .eq(2)
-                .within(() => {
-                  // quota usage
-                  const strUsage = `${updatedQuotaUsages[rowIndex].usage} of ${updatedQuotaUsages[rowIndex].quota_limit}`;
-                  cy.findByText(strUsage, { exact: false }).should(
-                    'be.visible'
-                  );
+                  cy.get('td')
+                    .eq(0)
+                    .within(() => {
+                      cy.findByText(updatedQuotas[rowIndex].quota_name, {
+                        exact: false,
+                      }).should('be.visible');
+                      cy.get(
+                        `[aria-label="${updatedQuotas[rowIndex].description}"]`
+                      ).should('be.visible');
+                    });
+                  cy.get('td')
+                    .eq(1)
+                    .within(() => {
+                      cy.findByText(updatedQuotas[rowIndex].quota_limit, {
+                        exact: false,
+                      }).should('be.visible');
+                      cy.findByText(updatedQuotas[rowIndex].resource_metric, {
+                        exact: false,
+                      }).should('be.visible');
+                    });
+                  cy.get('td')
+                    .eq(2)
+                    .within(() => {
+                      // quota usage
+                      const strUsage = `${updatedQuotaUsages[rowIndex].usage} of ${updatedQuotaUsages[rowIndex].quota_limit}`;
+                      cy.findByText(strUsage, { exact: false }).should(
+                        'be.visible'
+                      );
+                    });
                 });
             });
-          });
         });
     });
 
-    it('Quota error results in error message being displayed', function () {
+    it('Quota error results in error message being displayed', () => {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
 
@@ -339,29 +359,24 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
       cy.wait('@getQuotasError');
-      cy.get('[data-qa-error-msg="true"]')
-        .should('be.visible')
-        .should('have.text', errorMsg);
+      cy.get('[data-testid="endpoint-quotas-table-container"]').within(() => {
+        cy.get('[data-qa-error-msg="true"]')
+          .should('be.visible')
+          .should('have.text', errorMsg);
+      });
     });
   });
 
   describe('Quota Request Increase workflow', () => {
-    beforeEach(() => {
-      mockAppendFeatureFlags({
-        limitsEvolution: {
-          enabled: true,
-          requestForIncreaseDisabledForInternalAccountsOnly: false,
-        },
-      }).as('getFeatureFlags');
-    });
+    beforeEach(() => {});
     // this test executed in context of internal user, using mockApiInternalUser()
-    it('Quota Request Increase workflow follows proper sequence', function () {
+    it('Quota Request Increase workflow follows proper sequence', () => {
       const mockProfile = profileFactory.build({
         email: 'mock-user@linode.com',
         restricted: false,
@@ -371,22 +386,22 @@ describe('Quota workflow tests', () => {
       const ticketSummary = 'Increase Object Storage Quota';
       const expectedResults = [
         {
-          newQuotaLimit: this.mockQuotas[0].quota_limit * 2,
+          newQuotaLimit: mockQuotas[0].quota_limit * 2,
           description: randomLabel(),
           metric: 'Bytes',
         },
         {
-          newQuotaLimit: this.mockQuotas[1].quota_limit * 2,
+          newQuotaLimit: mockQuotas[1].quota_limit * 2,
           description: randomLabel(),
           metric: 'Buckets',
         },
         {
-          newQuotaLimit: this.mockQuotas[2].quota_limit * 2,
+          newQuotaLimit: mockQuotas[2].quota_limit * 2,
           description: randomLabel(),
           metric: 'Objects',
         },
       ];
-      this.mockQuotas.forEach((mockQuota: Quota, index: number) => {
+      mockQuotas.forEach((mockQuota: Quota, index: number) => {
         cy.visitWithLogin('/account/quotas');
         cy.wait([
           '@getFeatureFlags',
@@ -418,9 +433,9 @@ describe('Quota workflow tests', () => {
         ui.autocomplete
           .findByLabel('Object Storage Endpoint')
           .should('be.visible')
-          .type(this.selectedDomain);
+          .type(selectedDomain);
         ui.autocompletePopper
-          .findByTitle(this.selectedDomain, { exact: false })
+          .findByTitle(selectedDomain, { exact: false })
           .should('be.visible')
           .click();
         cy.wait(['@getQuotas', '@getQuotaUsages']);
@@ -505,7 +520,7 @@ describe('Quota workflow tests', () => {
       });
     });
 
-    it('Quota error results in error message being displayed', function () {
+    it('Quota error results in error message being displayed', () => {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
       cy.visitWithLogin('/account/quotas');
@@ -515,22 +530,23 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
       cy.wait('@getQuotasError');
-      cy.get('[data-qa-error-msg="true"]')
-        .should('be.visible')
-        .should('have.text', errorMsg);
+
+      cy.get('[data-testid="endpoint-quotas-table-container"]').within(() => {
+        cy.get('[data-qa-error-msg="true"]')
+          .should('be.visible')
+          .should('have.text', errorMsg);
+      });
     });
 
     // this test executed in context of internal user, using mockApiInternalUser()
-    it('Quota Request Increase error results in error message being displayed', function () {
-      mockGetObjectStorageQuotas(this.selectedDomain, this.mockQuotas).as(
-        'getQuotas'
-      );
+    it('Quota Request Increase error results in error message being displayed', () => {
+      mockGetObjectStorageQuotas(selectedDomain, mockQuotas).as('getQuotas');
       mockApiInternalUser();
       const errorMessage = 'Ticket creation failed.';
       mockCreateSupportTicketError(errorMessage).as('createTicketError');
@@ -541,14 +557,14 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
       // Quotas increase request workflow
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[0].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[0].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -561,7 +577,7 @@ describe('Quota workflow tests', () => {
         .should('be.visible')
         .should('be.enabled')
         .clear();
-      cy.focused().type((this.mockQuotas[0].quota_limit + 1).toString());
+      cy.focused().type((mockQuotas[0].quota_limit + 1).toString());
       cy.findByLabelText('Description (required)')
         .should('be.visible')
         .should('be.enabled')
@@ -575,7 +591,7 @@ describe('Quota workflow tests', () => {
     });
   });
 
-  describe('Feature flag determines if Request Increase is enabled', function () {
+  describe('Feature flag determines if Request Increase is enabled', () => {
     it('Request Increase enabled for normal user when requestForIncreaseDisabledForAll is false and requestForIncreaseDisabledForInternalAccountsOnly is false', function () {
       mockAppendFeatureFlags({
         limitsEvolution: {
@@ -589,15 +605,15 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[1].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[1].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -623,15 +639,15 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[1].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[1].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -653,15 +669,15 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[1].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[1].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -684,15 +700,15 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[1].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[1].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -715,15 +731,15 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[1].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[1].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -747,15 +763,15 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .type(this.selectedDomain);
+        .type(selectedDomain);
       ui.autocompletePopper
-        .findByTitle(this.selectedDomain, { exact: false })
+        .findByTitle(selectedDomain, { exact: false })
         .should('be.visible')
         .click();
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
       ui.actionMenu
-        .findByTitle(`Action menu for quota ${this.mockQuotas[1].quota_name}`)
+        .findByTitle(`Action menu for quota ${mockQuotas[1].quota_name}`)
         .should('be.visible')
         .should('be.enabled')
         .click();

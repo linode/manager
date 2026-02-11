@@ -129,6 +129,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    * This property indicates whether to show Custom HTTPS destination type
    */
   customHttpsEnabled?: boolean;
+  /**
+   * This property indicates whether the feature is new or not
+   */
+  new?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -241,7 +245,6 @@ export interface Flags {
   iamDelegation: BaseFeatureFlag;
   iamLimitedAvailabilityBadges: boolean;
   ipv6Sharing: boolean;
-  kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
@@ -250,6 +253,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   marketplaceV2: boolean;
+  marketplaceV2GlobalBanner: boolean;
   metadata: boolean;
   mtc: MTC;
   networkLoadBalancer: boolean;
@@ -257,6 +261,7 @@ export interface Flags {
   nodebalancerVpc: boolean;
   objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
   placementGroupPolicyUpdate: boolean;
