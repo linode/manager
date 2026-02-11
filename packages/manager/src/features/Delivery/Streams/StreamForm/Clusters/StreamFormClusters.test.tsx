@@ -128,7 +128,7 @@ describe('StreamFormClusters', () => {
     );
   });
 
-  it('should filter clusters by region', async () => {
+  it('should filter clusters by region with search input', async () => {
     await renderComponentWithoutSelectedClusters();
     const input = screen.getByPlaceholderText('Search');
 
@@ -144,13 +144,28 @@ describe('StreamFormClusters', () => {
     );
   });
 
-  it('should filter clusters by log generation status', async () => {
+  it('should filter clusters by log generation status with search input', async () => {
     await renderComponentWithoutSelectedClusters();
     const input = screen.getByPlaceholderText('Search');
 
     // Type test value inside the search
     await userEvent.click(input);
     await userEvent.type(input, 'enabled');
+
+    await waitFor(() =>
+      expect(getColumnsValuesFromTable(3)).toEqual(['Enabled', 'Enabled'])
+    );
+  });
+
+  it('should filter clusters by log generation status with autocomplete', async () => {
+    await renderComponentWithoutSelectedClusters();
+    const input = screen.getByPlaceholderText('Log Generation');
+
+    await userEvent.click(input);
+    await userEvent.type(input, 'enabled');
+
+    const enabledOption = screen.getAllByText('Enabled')[0];
+    await userEvent.click(enabledOption);
 
     await waitFor(() =>
       expect(getColumnsValuesFromTable(3)).toEqual(['Enabled', 'Enabled'])

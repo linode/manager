@@ -106,7 +106,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
-  const { isACLPLogsEnabled, isACLPLogsBeta } = useIsACLPLogsEnabled();
+  const { isACLPLogsEnabled, isACLPLogsBeta, isACLPLogsNew } =
+    useIsACLPLogsEnabled();
 
   const isAlertsEnabled =
     isACLPEnabled &&
@@ -273,6 +274,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
                 isBeta: isACLPLogsBeta,
+                isNew: !isACLPLogsBeta && isACLPLogsNew,
               },
               {
                 display: 'Longview',
@@ -350,6 +352,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isPlacementGroupsEnabled,
         isACLPEnabled,
         isACLPLogsBeta,
+        isACLPLogsNew,
         isACLPLogsEnabled,
         isIAMEnabled,
         isMarketplaceV2FeatureEnabled,
