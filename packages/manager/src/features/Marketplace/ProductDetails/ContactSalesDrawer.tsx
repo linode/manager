@@ -341,7 +341,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     }}
                     options={countryList}
                     placeholder=""
-                    renderOption={({ key, ...props }, option) => (
+                    renderOption={(props, option) => (
                       <li {...props} key={option.code}>
                         <Stack
                           alignItems="center"
@@ -422,12 +422,6 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                             'data-pendo-id':
                               'Cloud Marketplace Contact Sales Phone number-Number',
                           },
-                        }}
-                        sx={{
-                          '& .MuiInputBase-root:not(.Mui-focused):not(:hover):not(.Mui-error)':
-                            {
-                              borderLeft: 0,
-                            },
                         }}
                         type="tel"
                         value={field.value}
