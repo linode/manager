@@ -655,7 +655,7 @@ export const NETLOADBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
         name: TIME_DURATION,
       },
     ],
-    serviceType: 'nodebalancer',
+    serviceType: 'netloadbalancer',
   };
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
