@@ -218,7 +218,7 @@ const makeMockDatabase = (params: PathParams): Database => {
   }
 
   if (db.engine === 'postgresql') {
-    db.connection_pool_port = 100;
+    db.connection_pool_port = 100; /** @Deprecated replaced by `endpoints` property */
   }
 
   const database = databaseFactory.build(db);
@@ -232,6 +232,14 @@ const makeMockDatabase = (params: PathParams): Database => {
     database.hosts = {
       primary: 'private-db-mysql-primary-0.b.linodeb.net',
       standby: 'private-db-mysql-standby-0.b.linodeb.net',
+      endpoints: [
+        {
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          role: 'primary',
+          private_access: true,
+          port: 12345,
+        },
+      ],
     };
   }
 
