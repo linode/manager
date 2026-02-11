@@ -47,6 +47,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginTop: 0,
     '& [class*="addIP"]': {
       paddingBottom: 0,
+      textTransform: 'none',
     },
     '& [class*="addIP"]:hover': {
       color: theme.tokens.alias.Content.Text.Link.Hover,
@@ -176,8 +177,8 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       <form onSubmit={onSubmit}>
         <Stack spacing={3}>
           <Typography>
-            Fill the form and our partner&apos;s sales team will reach out to
-            you
+            Complete the form and our partner&apos;s sales team will reach out
+            to you
           </Typography>
           <FormControl>
             <FormLabel htmlFor="name">Name</FormLabel>
@@ -207,7 +208,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               return (
                 // Using MultipleIPInput component for additional emails since it allows for easy addition and removal of multiple entries, and it can display individual error messages for each email address.
                 <MultipleIPInput
-                  buttonText="Add email address"
+                  buttonText="Add a second, additional email address"
                   className={
                     field.value?.length === MAX_ADDITIONAL_EMAILS
                       ? classes.hideAddEmailButton
