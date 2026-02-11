@@ -1,8 +1,6 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4/lib/placement-groups';
 import { useAccount } from '@linode/queries';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import type {
   CreatePlacementGroupPayload,
   Linode,
@@ -152,19 +150,4 @@ export const getMaxPGsPerCustomer = (
     region.placement_group_limits.maximum_pgs_per_customer;
 
   return maxPgsPerCustomer === null ? 'unlimited' : maxPgsPerCustomer;
-};
-
-/**
- * Returns whether or not features related to the Placement Group Policy Update
- * should be enabled.
- *
- * TODO: Clean up this flag after the Placement Group Policy Update is complete.
- */
-
-export const useIsPlacementGroupPolicyUpdated = () => {
-  const flags = useFlags();
-
-  return {
-    isPlacementGroupPolicyUpdated: flags.placementGroupPolicyUpdate ?? false,
-  };
 };

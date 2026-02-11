@@ -1,8 +1,7 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 import { placementGroupFactory } from 'src/factories';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getLinodesFromAllPlacementGroups,
@@ -11,7 +10,6 @@ import {
   hasPlacementGroupReachedCapacity,
   hasRegionReachedPlacementGroupCapacity,
   placementGroupTypeOptions,
-  useIsPlacementGroupPolicyUpdated,
   useIsPlacementGroupsEnabled,
 } from './utils';
 
@@ -257,31 +255,5 @@ describe('getMaxPGsPerCustomer', () => {
 
   it('returns undefined if the region is not provided', () => {
     expect(getMaxPGsPerCustomer(undefined)).toBeUndefined();
-  });
-});
-
-describe('useIsPlacementGroupPolicyUpdated', () => {
-  it('returns true if the feature is enabled', async () => {
-    const options = { flags: { placementGroupPolicyUpdate: true } };
-
-    const { result } = renderHook(() => useIsPlacementGroupPolicyUpdated(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
-
-    await waitFor(() => {
-      expect(result.current.isPlacementGroupPolicyUpdated).toBe(true);
-    });
-  });
-
-  it('returns false if the feature is NOT enabled', async () => {
-    const options = { flags: { placementGroupPolicyUpdate: false } };
-
-    const { result } = renderHook(() => useIsPlacementGroupPolicyUpdated(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
-    });
-
-    await waitFor(() => {
-      expect(result.current.isPlacementGroupPolicyUpdated).toBe(false);
-    });
   });
 });

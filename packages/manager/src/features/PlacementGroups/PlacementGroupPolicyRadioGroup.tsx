@@ -9,6 +9,7 @@ import {
 import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
   CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE,
@@ -17,7 +18,6 @@ import {
   PLACEMENT_GROUP_UPDATED_POLICY_FLEXIBLE,
   PLACEMENT_GROUP_UPDATED_POLICY_STRICT,
 } from './constants';
-import { useIsPlacementGroupPolicyUpdated } from './utils';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
@@ -39,7 +39,11 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
     value,
   } = props;
 
-  const { isPlacementGroupPolicyUpdated } = useIsPlacementGroupPolicyUpdated();
+  const flags = useFlags();
+
+  // TODO: Clean up this flag after the Placement Group Policy Update is complete.
+  const isPlacementGroupPolicyUpdated =
+    flags.placementGroupPolicyUpdate ?? false;
 
   return (
     <Box sx={{ pt: 2 }}>
