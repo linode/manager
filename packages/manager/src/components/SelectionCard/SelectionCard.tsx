@@ -64,7 +64,7 @@ export interface SelectionCardProps {
    */
   renderVariant?: () => JSX.Element | null;
   /**
-   * An optional prop to set the  ARIA role of the selection card.
+   * An optional prop to set the ARIA role of the selection card.
    * @default 'button' (when onClick is provided)
    */
   role?: string;

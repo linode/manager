@@ -1,4 +1,10 @@
-import { Button, ErrorState, Stack, Typography } from '@linode/ui';
+import {
+  Button,
+  ChevronRightIcon,
+  ErrorState,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
@@ -82,7 +88,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
             width: 'max-content',
           }}
         >
-          Load more offers &gt;
+          Load more offers <ChevronRightIcon />
         </Button>
       )}
     </Stack>

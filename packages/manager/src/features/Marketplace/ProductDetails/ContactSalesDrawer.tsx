@@ -88,9 +88,8 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
 
   const defaultCountry = countryList.find((c) => c.code === 'US');
 
-  const [selectedCountry, setSelectedCountry] = React.useState<
-    CountryItem | undefined
-  >(undefined);
+  const [selectedCountry, setSelectedCountry] =
+    React.useState<CountryItem | null>(null);
 
   const [selectedPhoneCountry, setSelectedPhoneCountry] = React.useState<
     CountryItem | undefined
@@ -135,6 +134,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   const { mutateAsync: createPartnerReferral } =
     useCreatePartnerReferralMutation();
 
+  const handleFormReset = () => {
+    reset();
+    setSelectedCountry(null);
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     try {
       if (
@@ -148,7 +152,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
         'Your request has been received by Akamai. After we forward it to the partner, you will receive a confirmation email.',
         { variant: 'success' }
       );
-      reset();
+      handleFormReset();
       onClose();
     } catch (errors) {
       const errorMessage = errors
@@ -162,7 +166,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
     <Drawer
       data-testid="contact-sales-drawer"
       onClose={onClose}
-      onTransitionExited={() => reset()}
+      onTransitionExited={() => handleFormReset()}
       open={open}
       title={`Contact ${partnerName} sales`}
     >
@@ -245,8 +249,8 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               name="country_code"
               render={({ field }) => (
                 <Autocomplete
+                  clearIcon={null}
                   data-testid="region-autocomplete"
-                  disableClearable
                   disabled={isSubmitting}
                   errorText={errors.country_code?.message}
                   getOptionLabel={(option) => getCountryName(option.name)}
@@ -259,7 +263,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   onBlur={field.onBlur}
                   onChange={(_event, country) => {
                     setSelectedCountry(country);
-                    field.onChange(country.code);
+                    field.onChange(country?.code ?? '');
                   }}
                   options={countryList}
                   placeholder="Select a region from the list"
@@ -304,7 +308,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     },
                     required: true,
                   }}
-                  value={selectedCountry}
+                  value={selectedCountry ?? null}
                 />
               )}
             />
