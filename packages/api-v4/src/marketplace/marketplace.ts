@@ -62,7 +62,7 @@ export const createPartnerReferral = (
   data: MarketplacePartnerReferralPayload,
 ) =>
   Request<{}>(
-    setURL(`${BETA_API_ROOT}/marketplace/referral`),
+    setURL(`${BETA_API_ROOT}/marketplace/contact`),
     setMethod('POST'),
     setData(data, createPartnerReferralSchema),
   );

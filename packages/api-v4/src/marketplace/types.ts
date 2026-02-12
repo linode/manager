@@ -65,8 +65,9 @@ export interface MarketplacePartnerReferralPayload {
   country_code: string;
   email: string;
   name: string;
-  partner_id: number;
+  partner_name: string;
   phone: string;
   phone_country_code: string;
+  product_name: string;
   tc_consent_given: boolean;
 }
