@@ -130,6 +130,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             name="database"
             render={({ field, fieldState }) => (
               <Autocomplete
+                autoHighlight
                 label="Database Name"
                 {...field}
                 data-testid="database-name-select"
@@ -152,6 +153,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             name="mode"
             render={({ field, fieldState }) => (
               <Autocomplete
+                autoHighlight
                 label="Pool Mode"
                 {...field}
                 data-testid="pool-mode-select"
@@ -196,6 +198,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             name="username"
             render={({ field, fieldState }) => (
               <Autocomplete
+                autoHighlight
                 label="Username"
                 {...field}
                 data-testid="username-select"

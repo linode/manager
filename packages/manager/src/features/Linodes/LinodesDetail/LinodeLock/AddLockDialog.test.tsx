@@ -22,7 +22,7 @@ describe('AddLockDialog', () => {
   it('should render the dialog with correct title and content', () => {
     const { getByText } = renderWithTheme(<AddLockDialog {...defaultProps} />);
 
-    expect(getByText('Add lock?')).toBeVisible();
+    expect(getByText('Add lock to my-linode?')).toBeVisible();
     expect(getByText('Choose the type of lock to apply.')).toBeVisible();
     expect(getByText('Apply Lock')).toBeVisible();
     expect(getByText('Cancel')).toBeVisible();
@@ -182,7 +182,7 @@ describe('AddLockDialog', () => {
       <AddLockDialog {...defaultProps} open={false} />
     );
 
-    expect(queryByText('Add lock?')).not.toBeInTheDocument();
+    expect(queryByText('Add lock to my-linode?')).not.toBeInTheDocument();
   });
 
   it('should not submit if linodeId is undefined', async () => {

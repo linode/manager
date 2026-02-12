@@ -7,6 +7,7 @@ import {
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -112,6 +113,8 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
         ...assignedRoles!,
         entity_access: entityAccess,
       });
+
+      enqueueSnackbar(`List of entities updated.`, { variant: 'success' });
 
       handleClose();
     } catch (errors) {

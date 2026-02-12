@@ -172,17 +172,19 @@ export const getQuotaIncreaseMessage = ({
   }
 
   return {
-    description: `**User**: ${profile.username}<br>\n**Email**: ${
-      profile.email
-    }<br>\n**Quota Name**: ${
-      quota.quota_name
-    }<br>\n**Current Quota**: ${convertedMetrics.limit?.toLocaleString()} ${
-      convertedMetrics.metric
-    }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
-      convertedMetrics.metric
-    }<br>\n**Needed in**: ${
-      neededIn
-    }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    description:
+      `**User**: ${profile.username}<br>\n**Email**: ${
+        profile.email
+      }<br>\n**Quota Name**: ${
+        quota.quota_name
+      }<br>\n**Current Quota**: ${convertedMetrics.limit?.toLocaleString()} ${
+        convertedMetrics.metric
+      }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
+        convertedMetrics.metric
+      }<br>\n**Needed in**: ${neededIn}<br>\n` +
+      (regionAppliedValue
+        ? `**${regionAppliedLabel}**: ${regionAppliedValue}`
+        : ''),
     neededIn: 'Fewer than 7 days',
     notes: '',
     quantity: String(quantity),

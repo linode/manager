@@ -8,12 +8,19 @@ import {
 
 import type { Filter, QuotaType } from '@linode/api-v4';
 
-export const useGetQuotas = (
-  selectedLocation: string,
-  selectedService: QuotaType,
-  collectionName: string,
-  enabled = true
-) => {
+interface Props {
+  collectionName: string;
+  enabled: boolean;
+  selectedLocation: string;
+  selectedService: QuotaType;
+}
+
+export const useGetQuotas = ({
+  selectedLocation,
+  selectedService,
+  collectionName,
+  enabled = true,
+}: Props) => {
   const filters: Filter = getQuotasFilters({
     location: { label: '', value: selectedLocation },
     service: { label: '', value: selectedService },

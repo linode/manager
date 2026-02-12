@@ -63,8 +63,6 @@ export const UsersLanding = () => {
     preferenceKey: 'iam-account-users-order',
   });
 
-  const queryParams = new URLSearchParams(location.search);
-
   const { error: searchError, filter } = getAPIFilterFromQuery(query, {
     searchableFieldsWithoutOperator: ['username', 'email'],
   });
@@ -134,23 +132,23 @@ export const UsersLanding = () => {
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const numColsLg = isLgDown ? 4 : 3;
+  const numColsLg = isLgDown
+    ? isChildOrDelegateWithDelegationEnabled
+      ? 5
+      : 4
+    : 3;
 
   const numCols = isSmDown ? 2 : numColsLg;
 
   const handleSearch = (value: string) => {
-    queryParams.set('page', '1');
-    if (value) {
-      queryParams.set('query', value);
-    } else {
-      queryParams.delete('query');
-    }
+    const nextQuery = value === '' ? undefined : String(value);
     navigate({
       to: '/iam/users',
-      search: {
-        users: queryParams.get('users') ?? 'all',
-        query: value,
-      },
+      search: (prev) => ({
+        ...prev,
+        query: nextQuery,
+        page: 1,
+      }),
     });
   };
 
@@ -159,8 +157,17 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
-  const canCreateUser = permissions.create_user;
+  const handleDeleteDialogClose = () => {
+    const removedLastOnPage =
+      users && users?.data.length % pagination.pageSize === 1;
 
+    setIsDeleteDialogOpen(false);
+    if (removedLastOnPage) {
+      pagination.handlePageChange(pagination.page - 1);
+    }
+  };
+
+  const canCreateUser = permissions.create_user;
   return (
     <React.Fragment>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -202,10 +209,10 @@ export const UsersLanding = () => {
                   setUserType(selected ?? null);
                   navigate({
                     to: '/iam/users',
-                    search: {
+                    search: (prev) => ({
+                      ...prev,
                       users: String(selected?.value ?? 'all'),
-                      query: queryParams.get('query') ?? '',
-                    },
+                    }),
                   });
                 }}
                 options={filterableOptions}
@@ -256,7 +263,7 @@ export const UsersLanding = () => {
         open={isCreateDrawerOpen}
       />
       <UserDeleteConfirmation
-        onClose={() => setIsDeleteDialogOpen(false)}
+        onClose={handleDeleteDialogClose}
         open={isDeleteDialogOpen}
         username={selectedUsername}
       />

@@ -4,6 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { LINODE_LOCKED_DELETE_TOOLTIP } from 'src/features/Linodes/constants';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
 interface Props {
@@ -26,6 +27,9 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
 
   const [open, setOpen] = React.useState<boolean>(false);
 
+  const isLocked = !!linode?.locks?.length;
+  const isDisabled = isReadOnly || isLocked;
+
   const onDelete = async () => {
     await deleteLinode();
     checkForNewEvents();
@@ -40,9 +44,10 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
         <Button
           buttonType="primary"
           data-qa-delete-linode
-          disabled={isReadOnly}
+          disabled={isDisabled}
           onClick={() => setOpen(true)}
           style={{ marginBottom: 8 }}
+          tooltipText={LINODE_LOCKED_DELETE_TOOLTIP}
         >
           Delete
         </Button>

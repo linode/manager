@@ -141,16 +141,13 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
           )}
         </Box>
       </TableCell>
-      {hasUsage ? (
-        <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
-          <ActionMenu
-            actionsList={[requestIncreaseAction]}
-            ariaLabel={`Action menu for quota ${quota.quota_name}`}
-          />
-        </TableCell>
-      ) : (
-        <TableCell />
-      )}
+
+      <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
+        <ActionMenu
+          actionsList={[requestIncreaseAction]}
+          ariaLabel={`Action menu for quota ${quota.quota_name}`}
+        />
+      </TableCell>
     </TableRow>
   );
 };

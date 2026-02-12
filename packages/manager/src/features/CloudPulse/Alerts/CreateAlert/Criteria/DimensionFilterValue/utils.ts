@@ -16,6 +16,25 @@ import type {
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 import type { FirewallEntity } from 'src/features/CloudPulse/shared/types';
 
+interface MaxSelectionControlProps {
+  /**
+   * Indicates if the maximum selections have been reached
+   */
+  maxReached: boolean;
+  /**
+   * Indicates whether multiple select is enabled
+   */
+  multiple: boolean;
+  /**
+   * The option item to check if it should be disabled
+   */
+  option: Item<string, string>;
+  /**
+   * The current value of the field as a comma-separated string
+   */
+  value?: string;
+}
+
 /**
  * Transform a dimension value using the appropriate transform function
  * @param serviceType - The cloud pulse service type
@@ -281,4 +300,55 @@ export const getBlockStorageLinodes = (
     label: transformDimensionValue('blockstorage', 'linode_id', linode.label),
     value: String(linode.id),
   }));
+};
+
+/**
+ * @param multiple - Indicates whether multiple select is enabled
+ * @param value - The value of the field as a comma-separated string
+ * @param maxSelections - The maximum number of selections allowed
+ * @returns - Boolean indicating if the maximum selections have been reached
+ */
+export const isMaxSelectionsReached = (
+  multiple: boolean,
+  value: string,
+  maxSelections?: number
+): boolean => {
+  if (!multiple || value === '' || maxSelections === undefined) {
+    return false;
+  }
+
+  const values = value?.split(',') || [];
+
+  return values.length >= maxSelections;
+};
+
+/**
+ * @param maxReached - The boolean indicating if max selections have been reached
+ * @param value -  The current value of the field as a comma-separated string
+ * @param multiple - Indicates whether multiple select is enabled
+ * @param option - The option item to check if it should be disabled
+ * @returns - Boolean indicating if the option should be disabled
+ */
+export const isOptionDisabled = ({
+  maxReached,
+  value,
+  multiple,
+  option,
+}: MaxSelectionControlProps): boolean => {
+  if (
+    !maxReached ||
+    option.label.trim() === 'Select All' ||
+    option.label.trim() === 'Deselect All'
+  ) {
+    return false;
+  }
+
+  const values = value?.split(',') || [];
+
+  // Allow already selected options (so user can unselect)
+  if (multiple) {
+    return !values.some((selected) => selected === option.value);
+  }
+
+  return false;
 };
