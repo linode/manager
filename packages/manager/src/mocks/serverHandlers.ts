@@ -102,6 +102,7 @@ import {
   mysqlConfigResponse,
   networkLoadBalancerFactory,
   networkLoadBalancerListenerFactory,
+  networkLoadBalancerMetricCriteria,
   networkLoadBalancerNodeFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
@@ -3869,6 +3870,12 @@ export const handlers = [
             scope: ['entity', 'account', 'region'],
           }),
         }),
+        serviceTypesFactory.build({
+          label: 'Network Load Balancers',
+          service_type: 'netloadbalancer',
+          regions: 'us-iad,us-east,eu-west',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3884,6 +3891,7 @@ export const handlers = [
       objectstorage: 'Object Storage',
       blockstorage: 'Volumes',
       lke: 'LKE Enterprise',
+      netloadbalancer: 'Network Load Balancers',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -4003,6 +4011,16 @@ export const handlers = [
           id: 9,
           label: 'LKE Enterprise Dashboard',
           service_type: 'lke',
+        })
+      );
+    }
+
+    if (params.serviceType === 'netloadbalancer') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 5,
+          service_type: 'netloadbalancer',
+          label: 'Network Load Balancer',
         })
       );
     }
@@ -4275,6 +4293,9 @@ export const handlers = [
       if (params.serviceType === 'blockstorage') {
         return HttpResponse.json({ data: blockStorageMetricRules });
       }
+      if (params.serviceType === 'netloadbalancer') {
+        return HttpResponse.json({ data: networkLoadBalancerMetricCriteria });
+      }
       return HttpResponse.json(response);
     }
   ),
@@ -4412,6 +4433,51 @@ export const handlers = [
     } else if (id === '10') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Endpoint Dashboard';
+    } else if (id === '5') {
+      widgets = [
+        {
+          metric: 'nlb_ingress_traffic',
+          unit: 'Bps',
+          label: 'Ingress Traffic Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_ingress_traffic',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nlb_ingress_packets',
+          unit: 'packets/s',
+          label: 'Ingress Packets Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_ingress_packets',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nlb_backend_ingress_traffic',
+          unit: 'Bps',
+          label: 'Ingress Traffic Rate Per backend',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_backend_ingress_traffic',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nlb_backend_ingress_packets',
+          unit: 'packets/s',
+          label: 'Ingress Packets Rate Per backend',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_backend_ingress_packets',
+          aggregate_function: 'sum',
+        },
+      ];
+      serviceType = 'netloadbalancer';
+      dashboardLabel = 'Network Load Balancer';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
