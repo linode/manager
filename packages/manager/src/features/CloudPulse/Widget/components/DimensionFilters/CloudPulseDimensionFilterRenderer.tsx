@@ -8,6 +8,8 @@ import {
   useWatch,
 } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { CloudPulseDimensionFilterFields } from './CloudPulseDimensionFilterFields';
 import { metricDimensionFiltersSchema } from './schema';
 
@@ -83,6 +85,8 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       associatedEntityType,
     } = props;
 
+    const flags = useFlags();
+
     const formMethods = useForm<MetricsDimensionFilterForm>({
       defaultValues: {
         dimension_filters:
@@ -92,6 +96,10 @@ export const CloudPulseDimensionFilterRenderer = React.memo(
       },
       mode: 'onBlur',
       resolver: yupResolver(metricDimensionFiltersSchema),
+      context: {
+        maxDimensionFilterValues:
+          flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined,
+      },
     });
     const { control, handleSubmit, formState, setValue, clearErrors } =
       formMethods;
