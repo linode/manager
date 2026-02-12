@@ -248,7 +248,7 @@ export const updateDestinationSchema = createDestinationSchema
           'Object contains unknown fields for Akamai Object Storage Details.',
         );
       }
-      if ('client_certificate_details' in value) {
+      if ('endpoint_url' in value) {
         return customHTTPSDetailsSchema.noUnknown(
           'Object contains unknown fields for Custom HTTPS Details.',
         );
