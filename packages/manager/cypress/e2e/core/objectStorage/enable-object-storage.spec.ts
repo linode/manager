@@ -19,7 +19,6 @@ import {
   mockCreateAccessKey,
   mockGetAccessKeys,
   mockGetBuckets,
-  mockGetClusters,
   mockGetObjectStorageTypes,
 } from 'support/intercepts/object-storage';
 import { mockGetProfile } from 'support/intercepts/profile';
@@ -98,29 +97,6 @@ describe('Object Storage enrollment', () => {
         capabilities: ['Object Storage'],
         id: 'id-cgk',
         label: 'Jakarta, ID',
-      }),
-    ];
-
-    // Clusters with special pricing are currently hardcoded rather than
-    // retrieved via API, so we have to mock the cluster API request to correspond
-    // with that hardcoded data.
-    //
-    // Because the IDs used in the mocks don't correspond with any actual clusters,
-    // we have to cast them as `ObjectStorageClusterID` to satisfy TypeScript.
-    const mockClusters: ObjectStorageCluster[] = [
-      // Regions with special pricing.
-      objectStorageClusterFactory.build({
-        id: 'br-gru-0' as ObjectStorageClusterID,
-        region: 'br-gru',
-      }),
-      objectStorageClusterFactory.build({
-        id: 'id-cgk-1' as ObjectStorageClusterID,
-        region: 'id-cgk',
-      }),
-      // A region that does not have special pricing.
-      objectStorageClusterFactory.build({
-        id: 'us-east-1',
-        region: 'us-east',
       }),
     ];
 
@@ -209,7 +185,6 @@ describe('Object Storage enrollment', () => {
       'getObjectStorageTypes'
     );
     mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
-    mockGetClusters(mockClusters).as('getClusters');
     mockGetBuckets([]).as('getBuckets');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccessKeys([]);
@@ -217,7 +192,6 @@ describe('Object Storage enrollment', () => {
     cy.visitWithLogin('/object-storage/buckets');
     cy.wait([
       '@getAccountSettings',
-      '@getClusters',
       '@getBuckets',
       '@getRegions',
     ]);
