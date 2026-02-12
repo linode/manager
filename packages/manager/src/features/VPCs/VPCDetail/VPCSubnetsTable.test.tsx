@@ -288,7 +288,10 @@ describe('VPC Subnets table', () => {
 
       await findByText('NodeBalancer');
       await findByText('Backend Status');
-      await findByText('VPC IPv4 Range');
+      await findByText('Frontend IPv4 Ranges');
+      await findByText('Frontend IPv6 Ranges');
+      await findByText('Backend IPv4 Ranges');
+      await findByText('Backend IPv6 Ranges');
     }
   );
 

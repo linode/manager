@@ -50,21 +50,26 @@ export const SummaryPanel = () => {
     flags.isNodebalancerVPCEnabled
   );
 
+  // "/nodebalancers/:id/vpcs" returns both frontend and backend VPC configs,
+  // but we only want to display the backend configs.
+  const nbBackendVpcConfigs =
+    vpcConfig?.data.filter((v) => v.purpose === 'backend') ?? [];
+
   const { data: vpcDetails } = useVPCQuery(
-    Number(vpcConfig?.data[0]?.vpc_id) || -1,
-    Boolean(vpcConfig?.data[0]?.vpc_id)
+    Number(nbBackendVpcConfigs[0]?.vpc_id) || -1,
+    Boolean(nbBackendVpcConfigs[0]?.vpc_id)
   );
 
-  const nbVPCConfigs = vpcConfig?.data ?? [];
   const subnets = vpcDetails?.subnets ?? [];
 
-  const mergedSubnets = nbVPCConfigs.map((config) => {
+  const mergedSubnets = nbBackendVpcConfigs.map((config) => {
     const subnet = subnets.find((s) => s.id === config.subnet_id);
 
     return {
       id: config.subnet_id,
       label: subnet?.label ?? `Subnet ${config.subnet_id}`,
       ipv4Range: config.ipv4_range,
+      ipv6Range: config.ipv6_range,
     };
   });
 
@@ -103,36 +108,14 @@ export const SummaryPanel = () => {
           <StyledTitle data-qa-title variant="h3">
             NodeBalancer Details
           </StyledTitle>
-          {nodebalancer.type === 'premium' && (
-            <StyledSection>
-              <Typography data-qa-type variant="body1">
-                <strong>Type: </strong>
-                Premium
-              </Typography>
-            </StyledSection>
-          )}
-          {nodebalancer.lke_cluster && (
-            <StyledSection>
-              <Typography data-qa-cluster variant="body1">
-                <strong>Cluster: </strong>
-                {clusterStatus === 'error' ? (
-                  <>
-                    <span style={{ textDecoration: 'line-through' }}>
-                      {nodebalancer.lke_cluster.label}
-                    </span>
-                    <span style={{ fontStyle: 'italic' }}> (deleted)</span>
-                  </>
-                ) : (
-                  <Link
-                    accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
-                    to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
-                  >
-                    {nodebalancer.lke_cluster.label}
-                  </Link>
-                )}
-              </Typography>
-            </StyledSection>
-          )}
+          <StyledSection>
+            <Typography data-qa-type variant="body1">
+              <strong>Type: </strong>
+              {nodebalancer.type === 'common' && 'Basic'}
+              {nodebalancer.type === 'premium' && 'Premium'}
+              {nodebalancer.type === 'premium_40GB' && 'Enterprise'}
+            </Typography>
+          </StyledSection>
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>
@@ -166,7 +149,7 @@ export const SummaryPanel = () => {
           <StyledSection>
             <Typography style={{ wordBreak: 'break-word' }} variant="body1">
               <strong>Host Name: </strong>
-              {nodebalancer.hostname}
+              {nodebalancer.hostname || 'None'}
             </Typography>
           </StyledSection>
           <StyledSection>
@@ -176,6 +159,131 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
+      {nodebalancer.lke_cluster && (
+        <StyledSummarySection>
+          <StyledTitle data-qa-title variant="h3">
+            LKE Cluster
+          </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-cluster variant="body1">
+              <strong>Cluster: </strong>
+              {clusterStatus === 'error' ? (
+                <>
+                  <span style={{ textDecoration: 'line-through' }}>
+                    {nodebalancer.lke_cluster.label}
+                  </span>
+                  <span style={{ fontStyle: 'italic' }}> (deleted)</span>
+                </>
+              ) : (
+                <Link
+                  accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
+                  to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
+                >
+                  {nodebalancer.lke_cluster.label}
+                </Link>
+              )}
+            </Typography>
+          </StyledSection>
+        </StyledSummarySection>
+      )}
+      <StyledSummarySection>
+        <StyledTitle data-qa-title variant="h3">
+          Frontend Configuration
+        </StyledTitle>
+        <StyledSection>
+          <StyledSection>
+            <Typography data-qa-type variant="body1">
+              <strong>Type: </strong>
+              {nodebalancer.frontend_address_type === 'public'
+                ? 'Public'
+                : nodebalancer.frontend_address_type === 'vpc'
+                  ? 'VPC'
+                  : ''}
+            </Typography>
+          </StyledSection>
+          <StyledIPGrouping data-qa-ip>
+            {nodebalancer?.ipv4 && (
+              <StyledSection>
+                <IPAddress
+                  ips={[nodebalancer?.ipv4]}
+                  isHovered={true}
+                  showMore
+                />
+              </StyledSection>
+            )}
+            {nodebalancer?.ipv6 && (
+              <StyledSection>
+                <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
+              </StyledSection>
+            )}
+          </StyledIPGrouping>
+        </StyledSection>
+      </StyledSummarySection>
+      {flags.isNodebalancerVPCEnabled &&
+        Boolean(nbBackendVpcConfigs?.length) && (
+          <StyledSummarySection>
+            <StyledTitle
+              data-qa-title
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+              variant="h3"
+            >
+              Backend Configuration - VPC
+            </StyledTitle>
+            <StyledSection>
+              <Typography data-qa-ports variant="body1">
+                <strong>VPC:</strong>{' '}
+                {nbBackendVpcConfigs?.map((vpc, i) => (
+                  <React.Fragment key={vpc.id}>
+                    <Link
+                      accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
+                      className="secondaryLink"
+                      to={`/vpcs/${vpc.vpc_id}`}
+                    >
+                      {vpcDetails?.label}
+                    </Link>
+                    {i < nbBackendVpcConfigs.length - 1 ? ', ' : ''}
+                  </React.Fragment>
+                ))}
+              </Typography>
+            </StyledSection>
+            <StyledSection>
+              <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+                <strong>Subnets:</strong>
+              </Typography>
+
+              {mergedSubnets.map((subnet) => (
+                <React.Fragment key={subnet.id}>
+                  <Typography
+                    style={{
+                      wordBreak: 'break-word',
+                      marginTop: '8px',
+                      marginBottom: '8px',
+                    }}
+                    variant="body1"
+                  >
+                    {`${subnet.label}`}
+                  </Typography>
+                  <StyledIPGrouping data-qa-ip>
+                    {subnet.ipv4Range && (
+                      <StyledSection>
+                        <IPAddress
+                          ips={[subnet.ipv4Range]}
+                          isHovered={true}
+                          showMore
+                        />
+                      </StyledSection>
+                    )}
+                    {subnet.ipv6Range && (
+                      <StyledSection>
+                        <IPAddress ips={[subnet.ipv6Range]} isHovered={true} />
+                      </StyledSection>
+                    )}
+                  </StyledIPGrouping>
+                </React.Fragment>
+              ))}
+            </StyledSection>
+          </StyledSummarySection>
+        )}
       {displayFirewallLink && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
@@ -190,68 +298,6 @@ export const SummaryPanel = () => {
               {linkText}
             </Link>
           </Typography>
-        </StyledSummarySection>
-      )}
-      <StyledSummarySection>
-        <StyledTitle data-qa-title variant="h3">
-          IP Addresses
-        </StyledTitle>
-        <StyledSection>
-          <StyledIPGrouping data-qa-ip>
-            {nodebalancer?.ipv4 && (
-              <IPAddress ips={[nodebalancer?.ipv4]} isHovered={true} showMore />
-            )}
-            {nodebalancer?.ipv6 && (
-              <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
-            )}
-          </StyledIPGrouping>
-        </StyledSection>
-      </StyledSummarySection>
-      {flags.isNodebalancerVPCEnabled && Boolean(vpcConfig?.data.length) && (
-        <StyledSummarySection>
-          <StyledTitle
-            data-qa-title
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
-            variant="h3"
-          >
-            VPC
-          </StyledTitle>
-          <StyledSection>
-            <Typography data-qa-ports variant="body1">
-              <strong>VPC:</strong>{' '}
-              {vpcConfig?.data.map((vpc, i) => (
-                <React.Fragment key={vpc.id}>
-                  <Link
-                    accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
-                    className="secondaryLink"
-                    to={`/vpcs/${vpc.vpc_id}`}
-                  >
-                    {vpcDetails?.label}
-                  </Link>
-                  {i < vpcConfig.data.length - 1 ? ', ' : ''}
-                </React.Fragment>
-              ))}
-            </Typography>
-          </StyledSection>
-          <StyledSection>
-            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
-              <strong>Subnets:</strong>
-            </Typography>
-
-            {mergedSubnets.map((subnet) => (
-              <React.Fragment key={subnet.id}>
-                <Typography
-                  style={{ wordBreak: 'break-word', marginTop: '8px' }}
-                  variant="body1"
-                >
-                  {`${subnet.label}:`}
-                </Typography>
-                <Typography style={{ wordBreak: 'break-word' }} variant="body1">
-                  {subnet.ipv4Range}
-                </Typography>
-              </React.Fragment>
-            ))}
-          </StyledSection>
         </StyledSummarySection>
       )}
       <StyledSummarySection>
@@ -289,7 +335,6 @@ const StyledSummarySection = styled(Paper, {
 })(({ theme }) => ({
   height: '93%',
   marginBottom: theme.spacing(2),
-  minHeight: '160px',
   padding: theme.spacing(2.5),
 }));
 

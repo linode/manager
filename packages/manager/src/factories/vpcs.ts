@@ -8,7 +8,18 @@ export const vpcFactory = Factory.Sync.makeFactory<VPC>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `vpc-${i}`),
   region: 'us-east',
-  subnets: [],
+  subnets: [
+    {
+      id: 1,
+      label: 'subnet-1',
+      ipv4: '10.0.0.0/24',
+      ipv6: [],
+      linodes: [],
+      nodebalancers: [],
+      created: '2025-10-24T14:09:38',
+      updated: '2025-10-24T14:09:38',
+    },
+  ],
   updated: '2023-07-12T16:08:53',
 });
 

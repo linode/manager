@@ -1,7 +1,7 @@
 import {
   nodeBalancerConfigFactory,
-  nodeBalancerConfigVPCFactory,
   nodeBalancerFactory,
+  nodeBalancerVPCFactory,
 } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -52,7 +52,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 const nodeBalancerDetails = 'NodeBalancer Details';
-const nbVpcConfig = nodeBalancerConfigVPCFactory.build();
+const nbVpcConfig = nodeBalancerVPCFactory.build();
 
 describe('SummaryPanel', () => {
   beforeEach(() => {
@@ -110,8 +110,8 @@ describe('SummaryPanel', () => {
     expect(getByText('Host Name:')).toBeVisible();
     expect(getByText('example.com')).toBeVisible();
     expect(getByText('Region:')).toBeVisible();
-    // Type should not display for non-premium NBs
-    expect(queryByText('Type:')).not.toBeInTheDocument();
+    // Type should be visible and default to Basic since the NB is not premium
+    expect(getByText('Basic')).toBeVisible();
     // Cluster should not display for if the NB is not associated with LKE or LKE-E
     expect(queryByText('Cluster:')).not.toBeInTheDocument();
 
@@ -120,17 +120,29 @@ describe('SummaryPanel', () => {
     expect(getByText('mock-firewall-1')).toBeVisible();
 
     // IP Address panel
-    expect(getByText('IP Addresses')).toBeVisible();
+    expect(getByText('Frontend Configuration')).toBeVisible();
     expect(getByText('0.0.0.0')).toBeVisible();
 
     // VPC Details Panel
-    expect(getByText('VPC')).toBeVisible();
+    expect(getByText('Backend Configuration - VPC')).toBeVisible();
     expect(getByText('Subnets:')).toBeVisible();
     expect(getByText(`${nbVpcConfig.ipv4_range}`)).toBeVisible();
 
     // Tags panel
     expect(getByText('Tags')).toBeVisible();
     expect(getByText('Add a tag')).toBeVisible();
+  });
+
+  it('displays type: Basic if the nodebalancer is non premium', () => {
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      data: nodeBalancerFactory.build({ type: 'common' }),
+    });
+
+    const { container } = renderWithTheme(<SummaryPanel />);
+
+    expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
+      'Type: Basic'
+    );
   });
 
   it('displays type: premium if the nodebalancer is premium', () => {
@@ -142,6 +154,18 @@ describe('SummaryPanel', () => {
 
     expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
       'Type: Premium'
+    );
+  });
+
+  it('displays type: Enterprise if the nodebalancer is premium_40GB', () => {
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      data: nodeBalancerFactory.build({ type: 'premium_40GB' }),
+    });
+
+    const { container } = renderWithTheme(<SummaryPanel />);
+
+    expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
+      'Type: Enterprise'
     );
   });
 
