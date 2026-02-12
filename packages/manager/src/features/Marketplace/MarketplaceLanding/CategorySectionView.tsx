@@ -81,6 +81,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
 
       {hasMoreProducts && !isLoading && (
         <Button
+          data-pendo-id="Cloud Marketplace Catalog-Load more offers"
           onClick={onLoadMore}
           sx={{
             justifyContent: 'start',

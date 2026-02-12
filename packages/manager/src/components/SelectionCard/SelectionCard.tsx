@@ -180,7 +180,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
       id={id}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
-      role={role ?? (onClick ? 'button' : undefined)}
+      role={role}
       size={gridSize ?? { lg: 4, sm: 6, xl: 3, xs: 12 }}
       sx={sxGrid}
       tabIndex={0}
