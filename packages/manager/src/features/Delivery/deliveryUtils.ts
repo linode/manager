@@ -20,7 +20,10 @@ import {
 } from 'src/features/Delivery/Shared/types';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { CustomHTTPSDetails, DestinationType } from '@linode/api-v4';
+import type {
+  CustomHTTPSDetailsExtended,
+  DestinationType,
+} from '@linode/api-v4';
 import type {
   AutocompleteOption,
   DestinationDetailsForm,
@@ -106,7 +109,7 @@ export const getDestinationPayloadDetails = (
 ): DestinationDetailsPayload => {
   if (type === destinationType.CustomHttps) {
     const propsToRemove: any[] = [];
-    const customHTTPSDetails = details as CustomHTTPSDetails;
+    const customHTTPSDetails = details as CustomHTTPSDetailsExtended;
 
     if (!customHTTPSDetails.content_type) {
       propsToRemove.push('content_type');
@@ -127,7 +130,10 @@ export const getDestinationPayloadDetails = (
     }
 
     if (propsToRemove.length > 0) {
-      return omitProps(customHTTPSDetails, propsToRemove) as CustomHTTPSDetails;
+      return omitProps(
+        customHTTPSDetails,
+        propsToRemove
+      ) as CustomHTTPSDetailsExtended;
     }
   } else if ('path' in details && details.path === '') {
     return omitProps(details, ['path']);

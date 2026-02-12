@@ -96,6 +96,12 @@ export interface CustomHTTPSDetails {
   endpoint_url: string;
 }
 
+export interface CustomHTTPSDetailsExtended extends CustomHTTPSDetails {
+  authentication: Authentication & {
+    details?: AuthenticationDetailsExtended;
+  };
+}
+
 interface ClientCertificateDetails {
   client_ca_certificate?: string;
   client_certificate?: string;
@@ -117,8 +123,11 @@ interface Authentication {
 }
 
 interface AuthenticationDetails {
-  basic_authentication_password: string;
   basic_authentication_user: string;
+}
+
+interface AuthenticationDetailsExtended extends AuthenticationDetails {
+  basic_authentication_password: string;
 }
 
 export interface CustomHeader {
@@ -152,7 +161,7 @@ export interface AkamaiObjectStorageDetailsPayload
 
 export type DestinationDetailsPayload =
   | AkamaiObjectStorageDetailsPayload
-  | CustomHTTPSDetails;
+  | CustomHTTPSDetailsExtended;
 
 export interface CreateDestinationPayload {
   details: DestinationDetailsPayload;
