@@ -4,7 +4,12 @@ import React from 'react';
 
 import { useCleanupStaleValues } from './useCleanupStaleValues';
 import { useObjectStorageFetchOptions } from './useObjectStorageFetchOptions';
-import { handleValueChange, resolveSelectedValues } from './utils';
+import {
+  handleValueChange,
+  isMaxSelectionsReached,
+  isOptionDisabled,
+  resolveSelectedValues,
+} from './utils';
 
 import type { DimensionFilterAutocompleteProps } from './constants';
 
@@ -30,6 +35,7 @@ export const ObjectStorageDimensionFilterAutocomplete = (
     serviceType,
     type,
     handleError,
+    maxSelections,
   } = props;
 
   const { data: regions, isError: isRegionsError } = useRegionsQuery();
@@ -58,15 +64,40 @@ export const ObjectStorageDimensionFilterAutocomplete = (
       handleError(hasError);
     }
   }, [isError, isRegionsError, handleError]);
+  const maxReached = React.useMemo(() => {
+    return isMaxSelectionsReached(
+      multiple ?? false,
+      fieldValue ?? '',
+      maxSelections
+    );
+  }, [fieldValue, maxSelections, multiple]);
+
+  const showHelperText = !errorText && maxSelections !== undefined && multiple;
+  const disableSelectAll =
+    maxSelections !== undefined && multiple
+      ? values.length > maxSelections
+      : false;
 
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
+      disableSelectAll={disableSelectAll}
       errorText={
         errorText ??
         (isError ? 'Failed to fetch Object Storage endpoints.' : undefined)
+      }
+      getOptionDisabled={(option) => {
+        return isOptionDisabled({
+          maxReached,
+          value: fieldValue ?? undefined,
+          multiple: multiple ?? false,
+          option,
+        });
+      }}
+      helperText={
+        showHelperText ? `Select up to ${maxSelections} values` : undefined
       }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"

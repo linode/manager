@@ -1,3 +1,4 @@
+import { NewFeatureChip } from '@linode/ui';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -11,6 +12,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useTabs } from 'src/hooks/useTabs';
 
 const Destinations = React.lazy(() =>
@@ -26,9 +28,14 @@ const Streams = React.lazy(() =>
 );
 
 export const DeliveryLanding = React.memo(() => {
+  const { isACLPLogsNew } = useIsACLPLogsEnabled();
+
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/logs/delivery',
+      labelOptions: {
+        suffixComponent: isACLPLogsNew ? <NewFeatureChip /> : undefined,
+      },
     },
     docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: 1,
