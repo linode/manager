@@ -51,7 +51,7 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-const nodeBalancerDetails = 'NodeBalancer Details';
+const nodeBalancerDetails = 'Details';
 const nbVpcConfig = nodeBalancerVPCFactory.build();
 
 describe('SummaryPanel', () => {

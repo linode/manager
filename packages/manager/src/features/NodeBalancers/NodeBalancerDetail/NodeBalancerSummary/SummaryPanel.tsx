@@ -106,7 +106,7 @@ export const SummaryPanel = () => {
       <StyledSummarySectionWrapper>
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
-            NodeBalancer Details
+            Details
           </StyledTitle>
           <StyledSection>
             <Typography data-qa-type variant="body1">
