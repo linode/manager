@@ -1,4 +1,8 @@
-import { destinationType } from '@linode/api-v4';
+import {
+  authenticationType,
+  dataCompressionType,
+  destinationType,
+} from '@linode/api-v4';
 import { useAllDestinationsQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -23,9 +27,13 @@ import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
+import { DestinationCustomHTTPSDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationCustomHTTPSDetailsSummary';
 
 import type {
   AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsExtended,
+  CustomHTTPSDetails,
+  CustomHTTPSDetailsExtended,
   DestinationType,
 } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
@@ -54,6 +62,13 @@ const customHttpsDetailsControlPaths = {
   basicAuthenticationUser:
     'destination.details.authentication.details.basic_authentication_user',
   clientCertificateDetails: 'destination.details.client_certificate_details',
+  clientCaCertificate:
+    'destination.details.client_certificate_details.client_ca_certificate',
+  clientCertificate:
+    'destination.details.client_certificate_details.client_certificate',
+  clientPrivateKey:
+    'destination.details.client_certificate_details.client_private_key',
+  tlsHostname: 'destination.details.client_certificate_details.tls_hostname',
   contentType: 'destination.details.content_type',
   customHeaders: 'destination.details.custom_headers',
   dataCompression: 'destination.details.data_compression',
@@ -70,7 +85,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
 
   const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const theme = useTheme();
-  const { control, setValue, clearErrors } =
+  const { control, setValue, getValues, reset } =
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
 
@@ -108,10 +123,40 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
   const findDestination = (id: number) =>
     destinations?.find((destination) => destination.id === id);
 
-  const restDestinationForm = () => {
-    Object.values(akamaiObjectStorageDetailsControlPaths).forEach(
-      (controlPath) => setValue(controlPath, '')
-    );
+  const resetDestinationForm = (
+    destType: DestinationType,
+    destinationLabel?: null | string
+  ) => {
+    const currentValues = getValues();
+    const newDestinationDetails =
+      destType === destinationType.AkamaiObjectStorage
+        ? {
+            path: '',
+          }
+        : {
+            authentication: {
+              type: authenticationType.None,
+            },
+            client_certificate_details: {
+              client_ca_certificate: '',
+              client_certificate: '',
+              client_private_key: '',
+              tls_hostname: '',
+            },
+            data_compression: dataCompressionType.Gzip,
+          };
+
+    reset({
+      stream: {
+        ...currentValues.stream,
+        destinations: [],
+      },
+      destination: {
+        ...currentValues.destination,
+        label: destinationLabel || '',
+        details: newDestinationDetails,
+      },
+    });
   };
 
   const getDestinationForm = () => (
@@ -127,13 +172,9 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
             label="Destination Type"
             onBlur={field.onBlur}
             onChange={(_, { value }) => {
-              if (value === destinationType.CustomHttps) {
-                setValue(
-                  customHttpsDetailsControlPaths.authenticationType,
-                  'none'
-                );
-              }
               field.onChange(value);
+              resetDestinationForm(value as DestinationType);
+              setCreatingNewDestination(false);
             }}
             options={destinationTypeOptions}
             textFieldProps={{
@@ -176,18 +217,24 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               const id = newValue?.id;
 
               if (id === undefined && selectedDestinations.length > 0) {
-                restDestinationForm();
+                resetDestinationForm(
+                  selectedDestinationType,
+                  (newValue?.label || newValue) as null | string
+                );
               }
 
-              setValue('stream.destinations', id ? [id] : []);
-              const selectedDestination = id ? findDestination(id) : undefined;
-              if (selectedDestination) {
-                setValue('destination.details', {
-                  ...selectedDestination.details,
-                  access_key_secret: '',
-                });
-              } else {
-                clearErrors('destination.details');
+              if (id) {
+                setValue('stream.destinations', [id]);
+                const selectedDestination = findDestination(id);
+                if (selectedDestination) {
+                  setValue(
+                    'destination.details',
+                    selectedDestinationType ===
+                      destinationType.AkamaiObjectStorage
+                      ? (selectedDestination.details as AkamaiObjectStorageDetailsExtended)
+                      : (selectedDestination.details as CustomHTTPSDetailsExtended)
+                  );
+                }
               }
 
               field.onChange(newValue?.label || newValue);
@@ -264,14 +311,22 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         </>
       )}
       {isACLPLogsCustomHttpsEnabled &&
-        selectedDestinationType === destinationType.CustomHttps &&
-        creatingNewDestination &&
-        !selectedDestinations?.length && (
-          <DestinationCustomHttpsDetailsForm
-            controlPaths={customHttpsDetailsControlPaths}
-            entity="stream"
-            mode={mode}
-          />
+        selectedDestinationType === destinationType.CustomHttps && (
+          <>
+            {creatingNewDestination && !selectedDestinations?.length && (
+              <DestinationCustomHttpsDetailsForm
+                controlPaths={customHttpsDetailsControlPaths}
+                entity="stream"
+                mode={mode}
+              />
+            )}
+            {selectedDestinations?.[0] && (
+              <DestinationCustomHTTPSDetailsSummary
+                {...(findDestination(selectedDestinations[0])
+                  ?.details as CustomHTTPSDetails)}
+              />
+            )}
+          </>
         )}
     </>
   );

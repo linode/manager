@@ -1,4 +1,10 @@
-import { Button, ErrorState, Stack, Typography } from '@linode/ui';
+import {
+  Button,
+  ChevronRightIcon,
+  ErrorState,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
@@ -64,7 +70,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
   }
 
   return (
-    <Stack spacing={2}>
+    <Stack data-qa-product-category={categoryName} spacing={2}>
       <Typography variant="h2">{categoryName}</Typography>
 
       {isLoading ? (
@@ -75,13 +81,15 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
 
       {hasMoreProducts && !isLoading && (
         <Button
+          data-pendo-id="Cloud Marketplace Catalog-Load more offers"
           onClick={onLoadMore}
           sx={{
             justifyContent: 'start',
             paddingLeft: 0,
+            width: 'max-content',
           }}
         >
-          Load More...
+          Load more offers <ChevronRightIcon />
         </Button>
       )}
     </Stack>

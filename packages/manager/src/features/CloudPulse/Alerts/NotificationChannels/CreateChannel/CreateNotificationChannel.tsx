@@ -32,9 +32,13 @@ const overrides: CrumbOverridesProps[] = [
 ];
 
 const initialValues: CreateNotificationChannelForm = {
-  type: null,
+  channel_type: null,
   label: '',
-  recipients: [],
+  details: {
+    email: {
+      usernames: [],
+    },
+  },
 };
 
 export const CreateNotificationChannel = () => {
@@ -58,7 +62,7 @@ export const CreateNotificationChannel = () => {
     setError,
   } = formMethods;
 
-  const channelTypeWatcher = useWatch({ control, name: 'type' });
+  const channelTypeWatcher = useWatch({ control, name: 'channel_type' });
 
   const { mutateAsync: createChannel } = useCreateNotificationChannel();
 
@@ -100,13 +104,13 @@ export const CreateNotificationChannel = () => {
           </Typography>
           <Controller
             control={control}
-            name="type"
+            name="channel_type"
             render={({ field, fieldState }) => {
               // Reset the name field when the channel type changes
               const handleChannelTypeChange = (value: ChannelType | null) => {
                 field.onChange(value);
                 resetField('label', { defaultValue: '' });
-                resetField('recipients', { defaultValue: [] });
+                resetField('details.email.usernames', { defaultValue: [] });
               };
 
               return (
@@ -140,7 +144,7 @@ export const CreateNotificationChannel = () => {
           {channelTypeWatcher === 'email' && (
             <Controller
               control={control}
-              name="recipients"
+              name="details.email.usernames"
               render={({ field, fieldState }) => (
                 <NotificationRecipients
                   error={fieldState.error?.message}

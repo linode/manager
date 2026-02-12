@@ -16,6 +16,7 @@ import { Markdown } from 'src/components/Markdown/Markdown';
 
 import { getProductById } from '../products';
 import { getLogoUrl } from '../shared';
+import { ContactSalesDrawer } from './ContactSalesDrawer';
 import { getProductTabDetails } from './pages';
 import {
   InfoBanner,
@@ -37,6 +38,7 @@ export const ProductDetails = () => {
     from: '/cloud-marketplace/catalog/$productId',
   });
   const theme = useTheme();
+  const [openContactSales, setOpenContactSales] = React.useState(false);
 
   const product = React.useMemo(() => getProductById(productId), [productId]);
 
@@ -67,7 +69,7 @@ export const ProductDetails = () => {
 
   // Contact sales handler placeholder - will be implemented in a future ticket
   const handleContactSales = () => {
-    // Placeholder for contact sales functionality
+    setOpenContactSales(true);
   };
 
   return (
@@ -234,6 +236,14 @@ export const ProductDetails = () => {
             </Box>
           )}
         </ProductDetailsContainer>
+        <ContactSalesDrawer
+          onClose={() => {
+            setOpenContactSales(false);
+          }}
+          open={openContactSales}
+          partnerName={product.partner.name}
+          productName={product.name}
+        />
       </Paper>
     </Box>
   );

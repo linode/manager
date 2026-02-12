@@ -8,7 +8,7 @@ export interface CompanyNameOrEmailOptions {
 /**
  * This util will determine a string displayed in the top and user menus that indicates the parent/child account that the user is viewing.
  *
- * @returns company name for parent/child/proxy users when available, email in the case of the restricted parent, or undefined for regular users
+ * @returns company name for parent/child/proxy/delegate users when available, email in the case of the restricted parent, or undefined for regular users
  */
 export const getCompanyNameOrEmail = ({
   company,
@@ -25,6 +25,6 @@ export const getCompanyNameOrEmail = ({
     return profile.email;
   }
 
-  // In all other parent/child/proxy cases, company will be available, as it is a required field.
+  // In all other parent/child/proxy/delegate cases, company will be available, as it is a required field.
   return company;
 };

@@ -22,12 +22,12 @@ interface Props {
 
 export const UsersLandingTableHead = ({ order }: Props) => {
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount, isDelegateAccount } = useDelegationRole();
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
   // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show the 'User Type' column in the table
   const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
 
   return (
     <TableHead

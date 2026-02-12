@@ -15,13 +15,7 @@ import Grid from '@mui/material/Grid';
 import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Controller,
-  get,
-  useFieldArray,
-  useForm,
-  useWatch,
-} from 'react-hook-form';
+import { Controller, get, useFieldArray, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
@@ -88,6 +82,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     handleSubmit,
     setError,
     reset,
+    watch,
   } = useForm<Configs>({
     defaultValues: { configs: existingConfigurations },
     mode: 'onBlur',
@@ -101,13 +96,13 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     name: 'configs',
   });
 
-  const configs = useWatch({ control, name: 'configs' });
-
   useEffect(() => {
     if (existingConfigurations.length > 0 || open) {
       reset({ configs: existingConfigurations });
     }
   }, [existingConfigurations, open]);
+
+  const configs = watch('configs');
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),

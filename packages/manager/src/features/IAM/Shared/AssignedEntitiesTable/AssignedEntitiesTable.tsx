@@ -204,15 +204,19 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     clientSidePaginationData: filteredAndSortedRoles,
   });
 
+  const filteredAndSortedRolesCount = React.useMemo(() => {
+    return filteredAndSortedRoles.length;
+  }, [filteredAndSortedRoles]);
+
   const renderTableBody = () => {
     if (entitiesLoading || loading) {
-      return <TableRowLoading columns={3} rows={1} />;
+      return <TableRowLoading columns={4} rows={1} />;
     }
 
     if (entitiesError || error) {
       return (
         <TableRowError
-          colSpan={3}
+          colSpan={4}
           message="Unable to load the assigned entities. Please try again."
         />
       );
@@ -374,9 +378,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
         role={selectedRole}
         username={username}
       />
-      {pagination.paginatedData.length > PAGE_SIZES[0] && (
+      {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
         <PaginationFooter
-          count={filteredRoles.length}
+          count={filteredAndSortedRolesCount}
           handlePageChange={pagination.handlePageChange}
           handleSizeChange={pagination.handlePageSizeChange}
           page={pagination.page}

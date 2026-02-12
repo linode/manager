@@ -52,7 +52,10 @@ export const DestinationCreate = () => {
     const formValues = form.getValues();
     const destination: CreateDestinationPayload = {
       ...formValues,
-      details: getDestinationPayloadDetails(formValues.details),
+      details: getDestinationPayloadDetails(
+        formValues.details,
+        formValues.type
+      ),
     };
 
     createDestination(destination)

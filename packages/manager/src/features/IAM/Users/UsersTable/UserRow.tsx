@@ -1,6 +1,6 @@
 import { useProfile } from '@linode/queries';
-import { Box, Chip, Stack, TooltipIcon, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { Box, Chip, Stack, Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -35,14 +35,14 @@ export const UserRow = ({ onDelete, user }: Props) => {
   ]);
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount, isDelegateAccount } = useDelegationRole();
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
   const canViewUser = permissions.view_user;
 
   // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show the 'User type' column in the table
   const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildAccount || isDelegateAccount);
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
@@ -57,22 +57,27 @@ export const UserRow = ({ onDelete, user }: Props) => {
             username={user.username}
           />
           <MaskableText isToggleable text={user.username}>
-            <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {canViewUser ? (
-                <Link
-                  to={
-                    isChildOrDelegateWithDelegationEnabled &&
-                    user.user_type === 'delegate'
-                      ? `/iam/users/${user.username}/roles`
-                      : `/iam/users/${user.username}/details`
-                  }
-                >
-                  {user.username}
-                </Link>
-              ) : (
-                user.username
-              )}
-            </Typography>
+            <Tooltip
+              placement="bottom"
+              title={user.username.length > 32 ? user.username : null}
+            >
+              <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {canViewUser ? (
+                  <Link
+                    to={
+                      isChildOrDelegateWithDelegationEnabled &&
+                      user.user_type === 'delegate'
+                        ? `/iam/users/${user.username}/roles`
+                        : `/iam/users/${user.username}/details`
+                    }
+                  >
+                    {truncateEnd(user.username, 32)}
+                  </Link>
+                ) : (
+                  truncateEnd(user.username, 32)
+                )}
+              </Typography>
+            </Tooltip>
           </MaskableText>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}

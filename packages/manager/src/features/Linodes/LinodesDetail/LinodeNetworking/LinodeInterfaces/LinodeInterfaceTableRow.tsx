@@ -54,7 +54,12 @@ export const LinodeInterfaceTableRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <LinodeInterfaceActionMenu handlers={handlers} id={id} type={type} />
+        <LinodeInterfaceActionMenu
+          handlers={handlers}
+          id={id}
+          linodeId={linodeId}
+          type={type}
+        />
       </TableCell>
     </TableRow>
   );

@@ -53,8 +53,8 @@ export const useParentChildAuthentication = () => {
             euuid,
             headers: {
               /**
-               * Headers are required for proxy users when obtaining a proxy token.
-               * For 'proxy' userType, use the stored parent token in the request.
+               * Headers are required for proxy or delegate users when obtaining a proxy or delegate token.
+               * For 'proxy' or 'delegate' userType, use the stored parent token in the request.
                */
               Authorization: getStorage('authentication/parent_token/token'),
             },
@@ -82,7 +82,11 @@ export const useParentChildAuthentication = () => {
   }, [currentTokenWithBearer]);
 
   const updateCurrentToken = useCallback(
-    ({ userType }: { userType: Extract<UserType, 'parent' | 'proxy'> }) => {
+    ({
+      userType,
+    }: {
+      userType: Extract<UserType, 'delegate' | 'parent' | 'proxy'>;
+    }) => {
       updateCurrentTokenBasedOnUserType({ userType });
     },
     []
