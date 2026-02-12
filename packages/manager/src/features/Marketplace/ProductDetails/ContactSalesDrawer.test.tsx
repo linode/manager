@@ -38,7 +38,7 @@ describe('ContactSalesDrawer', () => {
 
     const title = getByText(`Contact ${mockProps.partnerName} sales`);
     const description = getByText(
-      "Fill the form and our partner's sales team will reach out to you"
+      "Complete the form and our partner's sales team will reach out to you"
     );
 
     expect(title).toBeVisible();
@@ -75,24 +75,26 @@ describe('ContactSalesDrawer', () => {
     expect(emailVal).toBe('');
   });
 
-  it('renders the "Add Email Address" button when the additional email address value has less than 2 emails', () => {
+  it('renders the add email button when the additional email address value has less than 2 emails', () => {
     const { getAllByTestId, getByText } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
     const noOfEmails = getAllByTestId('domain-transfer-input').length;
     if (noOfEmails < 2) {
-      const addEmailButton = getByText('Add email address');
+      const addEmailButton = getByText(
+        'Add a second, additional email address'
+      );
       expect(addEmailButton).toBeVisible();
     }
   });
 
-  it('renders a removable text field on click of the "Add Email Address" button', async () => {
+  it('renders a removable text field on click of the add email button', async () => {
     const { getByText, getAllByTestId } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const addEmailButton = getByText('Add email address');
+    const addEmailButton = getByText('Add a second, additional email address');
     fireEvent.click(addEmailButton);
 
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(2);
@@ -103,7 +105,7 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const addEmailButton = getByText('Add email address');
+    const addEmailButton = getByText('Add a second, additional email address');
     fireEvent.click(addEmailButton);
 
     let additionalEmailInputs = queryAllByTestId('domain-transfer-input');
