@@ -74,7 +74,7 @@ export const AssignedRolesTable = () => {
   const { username } = useParams({ strict: false });
   const navigate = useNavigate();
   const theme = useTheme();
-  // Determine if we're on the default roles view based on delegation role and path
+
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
@@ -82,7 +82,6 @@ export const AssignedRolesTable = () => {
     query: queryParam,
     roleType: roleTypeParam,
     order: orderParam,
-    // orderBy: orderByParam,
   } = useSearch({
     from: isDefaultDelegationRolesForChildAccount
       ? '/iam/roles/defaults/roles'
@@ -219,8 +218,6 @@ export const AssignedRolesTable = () => {
   }, [assignedRoles, accountRoles, entities]);
 
   const selectedEntityTypeOption = React.useMemo<null | SelectOption>(() => {
-    // const value =
-    //   (roleTypeParam as string | undefined) ?? ALL_ROLES_OPTION.value;
     const value = roleTypeParam ?? ALL_ROLES_OPTION.value;
     return (
       filterableOptions.find((opt) => opt.value === value) || ALL_ROLES_OPTION
@@ -240,9 +237,6 @@ export const AssignedRolesTable = () => {
 
   const filteredAndSortedRoles = React.useMemo(() => {
     const rolesToFilter = getFilteredRoles({
-      // entityType: ((roleTypeParam as string | undefined) ?? 'all') as
-      //   | 'all'
-      //   | AccessType,
       entityType: roleTypeParam ?? 'all',
       getSearchableFields,
       query: queryParam ?? '',

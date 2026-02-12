@@ -8,9 +8,11 @@ import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../types';
-import type { AccessType, User } from '@linode/api-v4';
+import type { AccessType, EntityType, User } from '@linode/api-v4';
 
-interface IamEntitiesSearchParams {
+interface IamEntitiesSearchParams extends TableSearchParams {
+  entityType?: 'all' | EntityType;
+  query?: string;
   selectedRole?: string;
 }
 
@@ -138,6 +140,7 @@ const iamDefaultRolesRoute = createRoute({
 const iamDefaultEntityAccessRoute = createRoute({
   getParentRoute: () => iamDefaultsTabsRoute,
   path: 'entity-access',
+  validateSearch: (search: IamEntitiesSearchParams) => search,
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultEntityAccessLazyRoute').then(
     (m) => m.defaultEntityAccessLazyRoute

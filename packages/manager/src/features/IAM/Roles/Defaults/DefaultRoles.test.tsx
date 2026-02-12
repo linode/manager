@@ -14,6 +14,8 @@ const loadingTestId = 'circle-progress';
 const queryMocks = vi.hoisted(() => ({
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
   useLocation: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(() => vi.fn()),
   useIsDefaultDelegationRolesForChildAccount: vi
     .fn()
     .mockReturnValue({ isDefaultDelegationRolesForChildAccount: true }),
@@ -24,6 +26,8 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useLocation: queryMocks.useLocation,
+    useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -53,7 +57,6 @@ describe('DefaultRoles', () => {
       isLoading: false,
     });
     const { queryByTestId } = renderWithTheme(<DefaultRoles />);
-
     await waitForElementToBeRemoved(queryByTestId(loadingTestId));
     expect(screen.getByText('Default Roles for Delegate Users')).toBeVisible();
     expect(screen.getByRole('table')).toBeVisible();

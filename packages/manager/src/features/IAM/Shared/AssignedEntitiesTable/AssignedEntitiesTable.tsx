@@ -4,7 +4,7 @@ import {
 } from '@linode/queries';
 import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -62,31 +62,51 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     'update_default_delegate_access',
     'list_entities',
   ]);
+  const navigate = useNavigate();
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
-  const { selectedRole: selectedRoleSearchParam } = useSearch({
-    strict: false,
+  const {
+    query: queryParam,
+    entityType: entityTypeParam,
+    order: orderParam,
+    selectedRole: selectedRoleSearchParam,
+    orderBy: orderByParam,
+  } = useSearch({
+    from: isDefaultDelegationRolesForChildAccount
+      ? '/iam/roles/defaults/entity-access'
+      : '/iam/users/$username/entities',
   });
 
-  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
+  const order: 'asc' | 'desc' = orderParam === 'desc' ? 'desc' : 'asc';
+  const ORDERABLE_KEYS = ['entity_name', 'entity_type', 'role_name'] as const;
+  const isValidOrderBy = (v: unknown): v is OrderByKeys =>
+    ORDERABLE_KEYS.includes(v as OrderByKeys);
+  const orderBy: OrderByKeys = isValidOrderBy(orderByParam)
+    ? orderByParam
+    : 'entity_name';
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
-    if (orderBy === newOrderBy) {
-      setOrder(order === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrderBy(newOrderBy);
-      setOrder('asc');
-    }
+    const nextOrder: 'asc' | 'desc' =
+      orderBy === newOrderBy ? (order === 'asc' ? 'desc' : 'asc') : 'asc';
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? '/iam/roles/defaults/entity-access'
+        : '/iam/users/$username/entities',
+      params: isDefaultDelegationRolesForChildAccount
+        ? undefined
+        : { username: username || '' },
+      search: (prev) => ({
+        ...prev,
+        order: nextOrder,
+        orderBy: newOrderBy,
+      }),
+    });
   };
 
-  const [query, setQuery] = React.useState(selectedRoleSearchParam ?? '');
-
-  const [entityType, setEntityType] = React.useState<null | SelectOption>(
-    ALL_ENTITIES_OPTION
-  );
+  // Use the router `query` param, falling back to `selectedRole` for initial value
+  const appliedQuery = queryParam ?? selectedRoleSearchParam ?? '';
 
   const [drawerMode, setDrawerMode] =
     React.useState<DrawerModes>('assign-role');
@@ -149,6 +169,14 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     return { filterableOptions, roles };
   }, [assignedRoles, entities]);
 
+  const selectedEntityTypeOption = React.useMemo<null | SelectOption>(() => {
+    const value = entityTypeParam ?? ALL_ENTITIES_OPTION.value;
+    return (
+      filterableOptions.find((opt) => opt.value === value) ||
+      ALL_ENTITIES_OPTION
+    );
+  }, [filterableOptions, entityTypeParam]);
+
   const handleChangeRole = (role: EntitiesRole, mode: DrawerModes) => {
     setIsChangeRoleForEntityDrawerOpen(true);
     setSelectedRole(role);
@@ -176,9 +204,9 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
   };
 
   const filteredRoles = getFilteredRoles({
-    entityType: entityType?.value as 'all' | EntityType,
+    entityType: entityTypeParam ?? 'all',
     getSearchableFields,
-    query,
+    query: appliedQuery,
     roles,
   }) as EntitiesRole[];
 
@@ -310,23 +338,49 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           label="Filter"
           onSearch={(value) => {
             pagination.handlePageChange(1);
-            setQuery(value);
+            navigate({
+              to: isDefaultDelegationRolesForChildAccount
+                ? '/iam/roles/defaults/entity-access'
+                : '/iam/users/$username/entities',
+              params: isDefaultDelegationRolesForChildAccount
+                ? undefined
+                : { username: username || '' },
+              search: (prev) => ({
+                ...prev,
+                page: 1,
+                query: value !== '' ? value : undefined,
+              }),
+            });
           }}
           placeholder="Search"
           sx={{ height: 34 }}
-          value={query}
+          value={appliedQuery}
         />
         <Select
           hideLabel
           label="Select type"
           onChange={(_, selected) => {
+            const nextEntityType = (selected?.value ??
+              ALL_ENTITIES_OPTION.value) as 'all' | EntityType;
             pagination.handlePageChange(1);
-            setEntityType(selected ?? null);
+            navigate({
+              to: isDefaultDelegationRolesForChildAccount
+                ? '/iam/roles/defaults/entity-access'
+                : '/iam/users/$username/entities',
+              params: isDefaultDelegationRolesForChildAccount
+                ? undefined
+                : { username: username || '' },
+              search: (prev) => ({
+                ...prev,
+                page: 1,
+                entityType: nextEntityType,
+              }),
+            });
           }}
           options={filterableOptions}
           placeholder="All Entities"
           sx={{ minWidth: 250 }}
-          value={entityType}
+          value={selectedEntityTypeOption}
         />
       </Grid>
       <Table aria-label="Assigned Entities">

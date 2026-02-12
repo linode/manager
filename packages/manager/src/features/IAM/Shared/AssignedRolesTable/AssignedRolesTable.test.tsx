@@ -12,6 +12,8 @@ import { AssignedRolesTable } from './AssignedRolesTable';
 const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(() => vi.fn()),
+  useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
@@ -44,6 +46,8 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -125,14 +129,11 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
+    queryMocks.useSearch.mockReturnValue({ query: 'NonExistentRole' });
+
     renderWithTheme(<AssignedRolesTable />);
 
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'NonExistentRole');
-
-    await waitFor(() => {
-      expect(screen.getByText('No items to display.')).toBeVisible();
-    });
+    expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should filter roles based on search query', async () => {
@@ -150,8 +151,7 @@ describe('AssignedRolesTable', () => {
 
     renderWithTheme(<AssignedRolesTable />);
 
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'account_linode_admin');
+    queryMocks.useSearch.mockReturnValue({ query: 'account_linode_admin' });
 
     await waitFor(() => {
       expect(screen.queryByText('account_linode_admin')).toBeVisible();
@@ -173,9 +173,7 @@ describe('AssignedRolesTable', () => {
 
     renderWithTheme(<AssignedRolesTable />);
 
-    const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
-    await userEvent.type(autocomplete, 'Firewall Roles');
-
+    queryMocks.useSearch.mockReturnValue({ roleType: 'firewall' });
     await waitFor(() => {
       expect(screen.queryByText('account_firewall_creator')).toBeVisible();
     });
