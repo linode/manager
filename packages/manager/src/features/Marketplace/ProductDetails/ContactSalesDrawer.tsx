@@ -632,9 +632,6 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             'data-pendo-id': 'Cloud Marketplace Contact Sales-Cancel',
             label: 'Cancel',
             onClick: onClose,
-            sx: {
-              width: '70px',
-            },
           }}
         />
       </form>
