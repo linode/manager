@@ -162,6 +162,7 @@ export const ProductSelectionCard = React.memo(
 
     return (
       <SelectionCard
+        data-pendo-id={`Cloud Marketplace-${productName}`}
         disabled={disabled}
         gridSize={PRODUCT_CARD_GRID_SIZE}
         heading={productName}

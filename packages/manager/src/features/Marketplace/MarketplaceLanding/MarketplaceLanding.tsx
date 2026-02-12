@@ -4,6 +4,7 @@ import {
   Box,
   ErrorState,
   LinkButton,
+  SelectedIcon,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -207,6 +208,25 @@ export const MarketplaceLanding = () => {
             }
             options={categoryOptions}
             placeholder="Category"
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li
+                  {...props}
+                  data-pendo-id={`Cloud Marketplace Catalog-${option.label}`}
+                  data-qa-option
+                  key={props.key}
+                >
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                    }}
+                  >
+                    {option.label}
+                  </Box>
+                  <SelectedIcon visible={selected} />
+                </li>
+              );
+            }}
             textFieldProps={{
               hideLabel: true,
             }}
@@ -224,6 +244,25 @@ export const MarketplaceLanding = () => {
             }
             options={typeOptions}
             placeholder="Type"
+            renderOption={(props, option, { selected }) => {
+              return (
+                <li
+                  {...props}
+                  data-pendo-id={`Cloud Marketplace Catalog-${option.label}`}
+                  data-qa-option
+                  key={props.key}
+                >
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                    }}
+                  >
+                    {option.label}
+                  </Box>
+                  <SelectedIcon visible={selected} />
+                </li>
+              );
+            }}
             textFieldProps={{
               hideLabel: true,
             }}

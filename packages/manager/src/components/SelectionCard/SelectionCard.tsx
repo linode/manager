@@ -21,6 +21,10 @@ export interface SelectionCardProps {
    */
   className?: string;
   /**
+   * An optional data-pendo-id for analytics tracking
+   */
+  'data-pendo-id'?: string;
+  /**
    * An optional custom data-testid
    * @default selection-card
    */
@@ -167,6 +171,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
   const cardGrid = (
     <StyledGrid
       className={className}
+      data-pendo-id={props['data-pendo-id']}
       data-qa-selection-card
       data-qa-selection-card-checked={checked}
       data-testid={props['data-testid'] ?? 'selection-card'}
