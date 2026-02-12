@@ -13,6 +13,7 @@ import * as React from 'react';
 
 import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 
 import { PRODUCTS } from '../products';
@@ -142,6 +143,7 @@ export const MarketplaceLanding = () => {
         },
       })}
     >
+      <DocumentTitleSegment segment="Cloud Marketplace - Catalog" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

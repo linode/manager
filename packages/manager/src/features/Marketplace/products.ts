@@ -59,7 +59,13 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
-    categories: ['Media & Entertainment, Gaming'],
+    categories: [
+      'AI',
+      'Media & Entertainment, Gaming',
+      'Enterprise',
+      'CDN Affiliated',
+      'Other Software and APIs',
+    ],
     id: 'hero-encoder',
     name: 'HERO Encoder',
     partner: {

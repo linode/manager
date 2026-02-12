@@ -10,6 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
 
@@ -38,6 +39,11 @@ export const ProductDetails = () => {
   const theme = useTheme();
 
   const product = React.useMemo(() => getProductById(productId), [productId]);
+
+  // Scroll to top on mount to prevent inheriting scroll position from the landing page
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [productId]);
 
   // Get logo URL based on theme
   const logoUrl = React.useMemo(() => {
@@ -74,6 +80,7 @@ export const ProductDetails = () => {
         },
       })}
     >
+      <DocumentTitleSegment segment={`${product.name} - Details`} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -104,6 +111,10 @@ export const ProductDetails = () => {
           border: `1px solid ${theme.tokens.alias.Border.Normal}`,
           display: 'flex',
           flexDirection: 'column',
+          padding: theme.spacingFunction(24),
+          [theme.breakpoints.down('md')]: {
+            padding: theme.spacingFunction(16),
+          },
         })}
       >
         <ProductDetailsContainer>
@@ -138,7 +149,10 @@ export const ProductDetails = () => {
                 <Typography
                   sx={(theme) => ({
                     color: theme.tokens.alias.Content.Text.Primary.Default,
-                    font: theme.font.extrabold,
+                    font: theme.tokens.alias.Typography.Heading.Xxl,
+                    [theme.breakpoints.down('md')]: {
+                      font: theme.tokens.alias.Typography.Heading.L,
+                    },
                   })}
                   variant="h1"
                 >
