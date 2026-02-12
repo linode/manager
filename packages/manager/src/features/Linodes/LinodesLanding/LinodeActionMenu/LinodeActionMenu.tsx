@@ -203,7 +203,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.rebuild_linode || hasHostMaintenance,
+      disabled: !permissions.rebuild_linode || hasHostMaintenance || isLocked,
       isReadOnly: !permissions.rebuild_linode,
       onClick: props.onOpenRebuildDialog,
       title: 'Rebuild',
@@ -273,7 +273,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.delete_linode || hasHostMaintenance,
+      disabled: !permissions.delete_linode || hasHostMaintenance || isLocked,
       isReadOnly: !permissions.delete_linode,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');

@@ -49,6 +49,8 @@ export const LinodeRebuildForm = (props: Props) => {
     linode.id
   );
 
+  const isDisabled = !permissions.rebuild_linode || !!linode?.locks?.length;
+
   const { data: isTypeToConfirmEnabled } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true
   );
@@ -181,7 +183,7 @@ export const LinodeRebuildForm = (props: Props) => {
               linodeLabel={linode.label}
             />
           </Stack>
-          <Actions disabled={!permissions.rebuild_linode} />
+          <Actions disabled={isDisabled} />
         </Stack>
       </form>
     </FormProvider>
