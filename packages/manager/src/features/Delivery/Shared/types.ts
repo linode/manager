@@ -9,7 +9,7 @@ import {
 import type {
   AkamaiObjectStorageDetailsExtended,
   CreateDestinationPayload,
-  CustomHTTPSDetails,
+  CustomHTTPSDetailsExtended,
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
@@ -85,7 +85,7 @@ export const contentTypeOptions: AutocompleteOption[] = [
 
 export type DestinationDetailsForm =
   | AkamaiObjectStorageDetailsExtended
-  | CustomHTTPSDetails;
+  | CustomHTTPSDetailsExtended;
 
 export interface DestinationForm
   extends Omit<CreateDestinationPayload, 'details'> {
