@@ -83,7 +83,7 @@ describe('UpdateDelegationsDrawer', () => {
   it('renders the drawer with current delegates', () => {
     renderWithTheme(<UpdateDelegationsDrawer {...defaultProps} />);
 
-    const header = screen.getByRole('heading', { name: /update delegations/i });
+    const header = screen.getByRole('heading', { name: /update delegation/i });
     expect(header).toBeInTheDocument();
     const companyName = screen.getByText(/test company/i);
     expect(companyName).toBeInTheDocument();
@@ -106,7 +106,7 @@ describe('UpdateDelegationsDrawer', () => {
     const user2Option = screen.getByRole('option', { name: 'user2' });
     await user.click(user2Option);
 
-    const submitButton = screen.getByRole('button', { name: /update/i });
+    const submitButton = screen.getByRole('button', { name: /save changes/i });
     await user.click(submitButton);
 
     await waitFor(() => {
@@ -135,7 +135,7 @@ describe('UpdateDelegationsDrawer', () => {
     await user.click(user1Option); // toggles off the selected user
 
     // Submit with no users selected
-    const submitButton = screen.getByRole('button', { name: /update/i });
+    const submitButton = screen.getByRole('button', { name: /save changes/i });
     await user.click(submitButton);
 
     await waitFor(() => {

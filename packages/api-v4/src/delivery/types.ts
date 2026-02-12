@@ -72,13 +72,25 @@ export interface AkamaiObjectStorageDetailsExtended
   access_key_secret: string;
 }
 
-type ContentType = 'application/json' | 'application/json; charset=utf-8';
-type DataCompressionType = 'gzip' | 'None';
+export const contentType = {
+  Json: 'application/json',
+  JsonUtf8: 'application/json; charset=utf-8',
+} as const;
+
+export type ContentType = (typeof contentType)[keyof typeof contentType] | null;
+
+export const dataCompressionType = {
+  Gzip: 'gzip',
+  None: 'None',
+} as const;
+
+export type DataCompressionType =
+  (typeof dataCompressionType)[keyof typeof dataCompressionType];
 
 export interface CustomHTTPSDetails {
   authentication: Authentication;
   client_certificate_details?: ClientCertificateDetails;
-  content_type: ContentType;
+  content_type?: ContentType;
   custom_headers?: CustomHeader[];
   data_compression: DataCompressionType;
   endpoint_url: string;
@@ -109,7 +121,7 @@ interface AuthenticationDetails {
   basic_authentication_user: string;
 }
 
-interface CustomHeader {
+export interface CustomHeader {
   name: string;
   value: string;
 }

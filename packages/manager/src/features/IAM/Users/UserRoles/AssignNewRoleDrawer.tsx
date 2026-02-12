@@ -168,7 +168,7 @@ export const AssignNewRoleDrawer = ({
 
           <Typography sx={{ marginBottom: 2.5 }}>
             {isDefaultDelegationRolesForChildAccount
-              ? 'Select roles to be assigned to new delegate users by default. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'
+              ? 'Add a role you want to assign by default to new delegate users. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'
               : 'Select a role you want to assign to a user. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'}{' '}
             <Link to={ROLES_LEARN_MORE_LINK}>
               Learn more about roles and permissions
@@ -219,9 +219,7 @@ export const AssignNewRoleDrawer = ({
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              label: isDefaultDelegationRolesForChildAccount
-                ? 'Add Default Roles'
-                : 'Assign',
+              label: isDefaultDelegationRolesForChildAccount ? 'Add' : 'Assign',
               type: 'submit',
               loading:
                 isUserRolesPending ||
