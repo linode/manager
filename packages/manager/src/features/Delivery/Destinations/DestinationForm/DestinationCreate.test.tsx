@@ -103,7 +103,9 @@ describe('DestinationCreate', () => {
       it('should render Log Path Prefix input and allow to type text', async () => {
         renderDestinationCreate(flags);
 
-        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix (optional)');
+        const logPathPrefixInput = screen.getByLabelText(
+          'Log Path Prefix (optional)'
+        );
         await userEvent.type(logPathPrefixInput, 'test-path');
 
         expect(logPathPrefixInput).toHaveValue('test-path');
@@ -130,7 +132,9 @@ describe('DestinationCreate', () => {
           expect(samplePath).toBeInTheDocument();
         });
         // Type the test value inside the input
-        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix (optional)');
+        const logPathPrefixInput = screen.getByLabelText(
+          'Log Path Prefix (optional)'
+        );
 
         await userEvent.type(logPathPrefixInput, 'test');
         // sample path should be created based on *log path* value
@@ -165,7 +169,9 @@ describe('DestinationCreate', () => {
           const secretAccessKeyInput =
             screen.getByLabelText('Secret Access Key');
           await userEvent.type(secretAccessKeyInput, 'Test');
-          const logPathPrefixInput = screen.getByLabelText('Log Path Prefix (optional)');
+          const logPathPrefixInput = screen.getByLabelText(
+            'Log Path Prefix (optional)'
+          );
           await userEvent.type(logPathPrefixInput, 'Test');
         };
 
