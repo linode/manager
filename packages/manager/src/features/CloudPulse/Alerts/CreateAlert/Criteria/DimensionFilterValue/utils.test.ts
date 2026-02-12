@@ -8,6 +8,8 @@ import {
   getOperatorGroup,
   getStaticOptions,
   handleValueChange,
+  isMaxSelectionsReached,
+  isOptionDisabled,
   resolveSelectedValues,
   scopeBasedFilteredResources,
   transformDimensionValue,
@@ -323,5 +325,104 @@ describe('Utils', () => {
       });
       expect(result).toEqual(buckets);
     });
+  });
+});
+describe('isMaxSelectionsReached', () => {
+  it('returns false when multiple is false', () => {
+    expect(isMaxSelectionsReached(false, 'a,b,c', 2)).toBe(false);
+  });
+
+  it('returns false when value is empty string', () => {
+    expect(isMaxSelectionsReached(true, '', 2)).toBe(false);
+  });
+
+  it('returns false when maxSelections is undefined', () => {
+    expect(isMaxSelectionsReached(true, 'a,b,c', undefined)).toBe(false);
+  });
+
+  it('returns false when selections are less than maxSelections', () => {
+    expect(isMaxSelectionsReached(true, 'a,b', 3)).toBe(false);
+  });
+
+  it('returns true when selections equal maxSelections', () => {
+    expect(isMaxSelectionsReached(true, 'a,b,c', 3)).toBe(true);
+  });
+
+  it('returns true when selections exceed maxSelections', () => {
+    expect(isMaxSelectionsReached(true, 'a,b,c,d', 3)).toBe(true);
+  });
+
+  it('counts single value correctly', () => {
+    expect(isMaxSelectionsReached(true, 'a', 1)).toBe(true);
+  });
+});
+
+describe('isOptionDisabled', () => {
+  const optionA = { label: 'A', value: 'a' };
+  const optionB = { label: 'B', value: 'b' };
+
+  it('returns false when maxReached is false', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: false,
+        multiple: true,
+        value: 'a,b',
+        option: optionA,
+      })
+    ).toBe(false);
+  });
+
+  it('returns false when multiple is false even if maxReached is true', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: false,
+        value: 'a,b',
+        option: optionA,
+      })
+    ).toBe(false);
+  });
+
+  it('disables option when maxReached is true and option is NOT selected', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        value: 'a',
+        option: optionB, // already selected? NO
+      })
+    ).toBe(true);
+  });
+
+  it('does NOT disable option when maxReached is true and option IS selected', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        value: 'a,b',
+        option: optionA, // already selected
+      })
+    ).toBe(false);
+  });
+
+  it('handles undefined value safely', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        option: optionA,
+      })
+    ).toBe(true);
+  });
+
+  it('handles empty value string', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        value: '',
+        option: optionA,
+      })
+    ).toBe(true);
   });
 });

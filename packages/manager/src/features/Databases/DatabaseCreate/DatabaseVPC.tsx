@@ -104,6 +104,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
           name="private_network.vpc_id"
           render={({ field, fieldState }) => (
             <Autocomplete
+              autoHighlight
               data-testid="database-vpc-selector"
               disabled={disableVPCSelectors}
               errorText={vpcErrorMessage || fieldState.error?.message}
@@ -139,6 +140,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
             name="private_network.subnet_id"
             render={({ field, fieldState }) => (
               <Autocomplete
+                autoHighlight
                 data-testid="database-subnet-selector"
                 disabled={disableVPCSelectors}
                 errorText={fieldState.error?.message}

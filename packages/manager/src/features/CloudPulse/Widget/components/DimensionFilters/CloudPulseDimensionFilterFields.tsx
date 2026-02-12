@@ -67,7 +67,8 @@ export const CloudPulseDimensionFilterFields = React.memo(
       associatedEntityType,
     } = props;
 
-    const { control, setValue } = useFormContext<MetricsDimensionFilterForm>();
+    const { control, resetField } =
+      useFormContext<MetricsDimensionFilterForm>();
 
     const dataFieldOptions = React.useMemo(
       () =>
@@ -86,17 +87,14 @@ export const CloudPulseDimensionFilterFields = React.memo(
           value: null,
         };
         if (operation === 'selectOption') {
-          setValue(`${name}.dimension_label`, selected.value, {
-            shouldValidate: true,
-            shouldDirty: true,
+          resetField(name, {
+            defaultValue: { ...fieldValue, dimension_label: selected.value },
           });
-          setValue(`${name}.operator`, fieldValue.operator);
-          setValue(`${name}.value`, fieldValue.value);
         } else {
-          setValue(name, fieldValue);
+          resetField(name, { defaultValue: fieldValue });
         }
       },
-      [name, setValue]
+      [name, resetField]
     );
 
     const dimensionFieldWatcher = useWatch({
@@ -179,7 +177,7 @@ export const CloudPulseDimensionFilterFields = React.memo(
                   field.onChange(
                     operation === 'selectOption' ? newValue.value : null
                   );
-                  setValue(`${name}.value`, null);
+                  resetField(`${name}.value`, { defaultValue: null });
                 }}
                 options={dimensionOperatorOptions}
                 placeholder="Select an Operator"

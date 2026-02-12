@@ -1,6 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
+  Autocomplete,
   Box,
   Checkbox,
   CircleProgress,
@@ -52,6 +53,10 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const { gecko2 } = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
   const { data: regions } = useRegionsQuery();
+  const logGenerationOptions = [
+    { label: 'Enabled', value: true },
+    { label: 'Disabled', value: false },
+  ];
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
@@ -59,6 +64,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const [pageSize, setPageSize] = useState<number>(MIN_PAGE_SIZE);
   const [searchText, setSearchText] = useState<string>('');
   const [regionFilter, setRegionFilter] = useState<string>('');
+  const [logGenerationFilter, setLogGenerationFilter] = useState<boolean>();
 
   const {
     data: clusters = [],
@@ -133,7 +139,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   };
 
   const filteredClusters =
-    !searchText && !regionFilter
+    !searchText && !regionFilter && logGenerationFilter === undefined
       ? clusters
       : clusters.filter((cluster) => {
           const lowerSearch = searchText.toLowerCase();
@@ -151,7 +157,12 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
           }
 
           if (result && regionFilter) {
-            return cluster.region === regionFilter;
+            result = cluster.region === regionFilter;
+          }
+
+          if (result && logGenerationFilter) {
+            result =
+              cluster.control_plane.audit_logs_enabled === logGenerationFilter;
           }
 
           return result;
@@ -252,20 +263,32 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               placeholder="Search"
               value={searchText}
             />
-            <RegionSelect
-              currentCapability="Object Storage"
-              isGeckoLAEnabled={isGeckoLAEnabled}
-              label="Region"
-              onChange={(_, region) => {
-                setRegionFilter(region?.id ?? '');
-              }}
-              regionFilter="core"
-              regions={regions ?? []}
-              sx={{
-                width: '280px !important',
-              }}
-              value={regionFilter}
-            />
+            <StyledSelectsWrapper>
+              <RegionSelect
+                currentCapability="Object Storage"
+                isGeckoLAEnabled={isGeckoLAEnabled}
+                label=""
+                onChange={(_, region) => {
+                  setRegionFilter(region?.id ?? '');
+                }}
+                placeholder="Select Region"
+                regionFilter="core"
+                regions={regions ?? []}
+                sx={{
+                  width: '160px !important',
+                }}
+                value={regionFilter}
+              />
+              <Autocomplete
+                label=""
+                onChange={(_, option) => setLogGenerationFilter(option?.value)}
+                options={logGenerationOptions}
+                placeholder="Log Generation"
+                sx={{
+                  width: '160px !important',
+                }}
+              />
+            </StyledSelectsWrapper>
           </StyledGrid>
           <Box sx={{ mt: 2 }}>
             {!isAutoAddAllClustersEnabled &&
@@ -321,3 +344,12 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
     },
   },
 }));
+
+const StyledSelectsWrapper = styled('div')({
+  display: 'flex',
+  gap: '20px',
+
+  '& .MuiAutocomplete-root [data-testid="inputLabelWrapper"] ': {
+    width: 0,
+  },
+});

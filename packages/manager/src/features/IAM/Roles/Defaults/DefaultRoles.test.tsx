@@ -3,7 +3,10 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NO_ASSIGNED_DEFAULT_ROLES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_DEFAULT_ROLES_TEXT,
+} from '../../Shared/constants';
 import { DefaultRoles } from './DefaultRoles';
 
 const loadingTestId = 'circle-progress';
@@ -68,5 +71,17 @@ describe('DefaultRoles', () => {
 
     expect(screen.getByText(NO_ASSIGNED_DEFAULT_ROLES_TEXT)).toBeVisible();
     expect(screen.getByText('Add New Default Roles')).toBeVisible();
+  });
+
+  it('should show error state when api fails', () => {
+    queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
+      data: null,
+      error: [{ reason: 'An unexpected error occurred' }],
+      isLoading: false,
+      status: 'error',
+    });
+
+    renderWithTheme(<DefaultRoles />);
+    expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });
