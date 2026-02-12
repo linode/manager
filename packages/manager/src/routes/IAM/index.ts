@@ -8,7 +8,7 @@ import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../types';
-import type { User } from '@linode/api-v4';
+import type { AccessType, User } from '@linode/api-v4';
 
 interface IamEntitiesSearchParams {
   selectedRole?: string;
@@ -18,6 +18,11 @@ interface IamUsersSearchParams extends TableSearchParams {
   company?: string;
   query?: string; // to be deprecated once UIE-9292 is resolved
   users?: string;
+}
+
+interface IamUserRolesSearchParams extends TableSearchParams {
+  query?: string;
+  roleType?: 'all' | AccessType;
 }
 
 const iamRoute = createRoute({
@@ -78,6 +83,7 @@ const iamUsersCatchAllRoute = createRoute({
 const iamRolesRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'roles',
+  validateSearch: (search: IamUserRolesSearchParams) => search,
   beforeLoad: async ({ context }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
@@ -122,6 +128,7 @@ const iamDefaultsTabsRoute = createRoute({
 const iamDefaultRolesRoute = createRoute({
   getParentRoute: () => iamDefaultsTabsRoute,
   path: 'roles',
+  validateSearch: (search: IamUserRolesSearchParams) => search,
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultRolesLazyRoute').then(
     (m) => m.defaultRolesLazyRoute
@@ -303,6 +310,7 @@ const iamUserNameDetailsRoute = createRoute({
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
+  validateSearch: (search: IamUserRolesSearchParams) => search,
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
