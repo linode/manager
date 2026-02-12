@@ -429,6 +429,10 @@ export interface DimensionFilterAutocompleteProps {
    */
   fieldValue: null | string;
   /**
+   * The maximum number of selections allowed (for multi-select).
+   */
+  maxSelections?: number;
+  /**
    * To control single-select/multi-select in the Autocomplete.
    */
   multiple?: boolean;
