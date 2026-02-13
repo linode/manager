@@ -112,6 +112,7 @@ export const useAllAlertNotificationChannelsQuery = (
 ) => {
   return useQuery<NotificationChannel[], APIError[]>({
     ...queryFactory.notificationChannels._ctx.all(params, filter),
+    refetchInterval: 120000,
   });
 };
 
@@ -363,9 +364,10 @@ export const useUpdateNotificationChannel = () => {
 };
 
 export const useNotificationChannelQuery = (channelId: number) => {
-  return useQuery<NotificationChannel, APIError[]>(
-    queryFactory.notificationChannels._ctx.channelById(channelId)
-  );
+  return useQuery<NotificationChannel, APIError[]>({
+    ...queryFactory.notificationChannels._ctx.channelById(channelId),
+    refetchInterval: 120000,
+  });
 };
 
 export const useDeleteNotificationChannel = () => {
@@ -392,7 +394,8 @@ export const useDeleteNotificationChannel = () => {
 };
 
 export const useAllAlertsByNotificationChannelIdQuery = (channelId: number) => {
-  return useQuery<NotificationChannelAlerts[], APIError[]>(
-    queryFactory.notificationChannelAlerts(channelId)
-  );
+  return useQuery<NotificationChannelAlerts[], APIError[]>({
+    ...queryFactory.notificationChannelAlerts(channelId),
+    refetchInterval: 120000,
+  });
 };
