@@ -229,9 +229,9 @@ export const NotificationChannelAlerts = React.memo(
                         serviceTypeLabel={
                           alert.service_type
                             ? getServiceTypeLabel(
-                              alert.service_type,
-                              serviceTypeList
-                            )
+                                alert.service_type,
+                                serviceTypeList
+                              )
                             : undefined
                         }
                       />
