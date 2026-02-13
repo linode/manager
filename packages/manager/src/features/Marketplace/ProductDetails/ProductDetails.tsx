@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useMatchRoute, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -34,13 +34,16 @@ import { ProductDetailsTabs } from './ProductDetailsTabs';
  * Main Product Details Component
  */
 export const ProductDetails = () => {
-  const { productId } = useParams({ strict: false }) as { productId: string };
+  const { productId } = useParams({
+    from: '/cloud-marketplace/catalog/$productId',
+  });
   const theme = useTheme();
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
+  const matchRoute = useMatchRoute();
 
-  const isContactSalesOpen =
-    match.routeId === '/cloud-marketplace/catalog/$productId/contact-sales';
+  const isContactSalesOpen = Boolean(
+    matchRoute({ to: '/cloud-marketplace/catalog/$productId/contact-sales' })
+  );
 
   const product = React.useMemo(() => getProductById(productId), [productId]);
 
