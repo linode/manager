@@ -91,10 +91,10 @@ export const QuotasTable = (props: QuotasTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {hasSelectedLocation && isFetchingQuotas ? (
+          {isFetchingQuotas ? (
             <TableRowLoading
               columns={4}
-              rows={3}
+              rows={isGlobalScope ? 1 : 3}
               sx={{ height: QUOTA_ROW_MIN_HEIGHT }}
             />
           ) : !isGlobalScope && !hasSelectedLocation ? (

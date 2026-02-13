@@ -87,7 +87,7 @@ export const AddLockDialog = (props: Props) => {
       }
       onClose={onClose}
       open={open}
-      title="Add lock?"
+      title={`Add lock to ${linodeLabel ?? ''}?`}
     >
       {errorMessage && <Notice text={errorMessage} variant="error" />}
       <StyledHeading>Choose the type of lock to apply.</StyledHeading>

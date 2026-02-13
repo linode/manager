@@ -12,6 +12,7 @@ import {
   databaseQueries,
   firewallQueries,
   getAllLinodesRequest,
+  networkLoadBalancerQueries,
   nodebalancerQueries,
   volumeQueries,
 } from '@linode/queries';
@@ -141,6 +142,11 @@ export const queryFactory = createQueryKeys(key, {
         };
       case 'lke':
         return kubernetesQueries.lists._ctx.all;
+      case 'netloadbalancer':
+        return networkLoadBalancerQueries.netloadbalancers._ctx.all(
+          params,
+          filters
+        );
       case 'nodebalancer':
         return nodebalancerQueries.nodebalancers._ctx.all(params, filters);
       case 'objectstorage':

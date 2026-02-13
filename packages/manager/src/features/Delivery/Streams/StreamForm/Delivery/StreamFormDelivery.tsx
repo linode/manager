@@ -27,9 +27,13 @@ import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
+import { DestinationCustomHTTPSDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationCustomHTTPSDetailsSummary';
 
 import type {
   AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsExtended,
+  CustomHTTPSDetails,
+  CustomHTTPSDetailsExtended,
   DestinationType,
 } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
@@ -223,10 +227,13 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                 setValue('stream.destinations', [id]);
                 const selectedDestination = findDestination(id);
                 if (selectedDestination) {
-                  setValue('destination.details', {
-                    ...selectedDestination.details,
-                    access_key_secret: '',
-                  });
+                  setValue(
+                    'destination.details',
+                    selectedDestinationType ===
+                      destinationType.AkamaiObjectStorage
+                      ? (selectedDestination.details as AkamaiObjectStorageDetailsExtended)
+                      : (selectedDestination.details as CustomHTTPSDetailsExtended)
+                  );
                 }
               }
 
@@ -304,14 +311,22 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         </>
       )}
       {isACLPLogsCustomHttpsEnabled &&
-        selectedDestinationType === destinationType.CustomHttps &&
-        creatingNewDestination &&
-        !selectedDestinations?.length && (
-          <DestinationCustomHttpsDetailsForm
-            controlPaths={customHttpsDetailsControlPaths}
-            entity="stream"
-            mode={mode}
-          />
+        selectedDestinationType === destinationType.CustomHttps && (
+          <>
+            {creatingNewDestination && !selectedDestinations?.length && (
+              <DestinationCustomHttpsDetailsForm
+                controlPaths={customHttpsDetailsControlPaths}
+                entity="stream"
+                mode={mode}
+              />
+            )}
+            {selectedDestinations?.[0] && (
+              <DestinationCustomHTTPSDetailsSummary
+                {...(findDestination(selectedDestinations[0])
+                  ?.details as CustomHTTPSDetails)}
+              />
+            )}
+          </>
         )}
     </>
   );
