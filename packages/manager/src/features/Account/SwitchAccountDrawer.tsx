@@ -6,12 +6,12 @@ import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
+import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, setStorage, storage } from 'src/utilities/storage';
+import { getStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
@@ -34,7 +34,6 @@ interface HandleSwitchToChildAccountProps {
 
 export const SwitchAccountDrawer = (props: Props) => {
   const { onClose, open, userType } = props;
-  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
@@ -53,8 +52,17 @@ export const SwitchAccountDrawer = (props: Props) => {
     error: createTokenError,
     revokeToken,
     updateCurrentToken,
-    validateParentToken,
   } = useParentChildAuthentication();
+
+  const { handleSwitchToParentAccount, isSubmitting } =
+    useSwitchToParentAccount({
+      isDelegateUserType,
+      isProxyUserType,
+      onClose,
+      onTokenExpired: (error) => {
+        setIsParentTokenError([error]);
+      },
+    });
 
   const createTokenErrorReason = createTokenError?.[0]?.reason;
 
@@ -84,6 +92,7 @@ export const SwitchAccountDrawer = (props: Props) => {
     },
     isIAMDelegationEnabled === false
   );
+
   const {
     data: allChildAccounts,
     error: allChildAccountsError,
@@ -144,46 +153,6 @@ export const SwitchAccountDrawer = (props: Props) => {
     },
     [createToken, updateCurrentToken, revokeToken]
   );
-
-  const handleSwitchToParentAccount = React.useCallback(async () => {
-    if (!validateParentToken()) {
-      const expiredTokenError: APIError = {
-        field: 'token',
-        reason: PARENT_USER_SESSION_EXPIRED,
-      };
-
-      setIsParentTokenError([expiredTokenError]);
-
-      return;
-    }
-
-    // Flag to prevent multiple clicks on the switch account link.
-    setSubmitting(true);
-
-    // Revoke proxy or delegate token before switching to parent account.
-    await revokeToken().catch(() => {
-      /* Allow user account switching; tokens will expire naturally. */
-    });
-
-    updateCurrentToken({ userType: 'parent' });
-
-    // Reset flag for proxy or delegate user to display success toast once.
-    if (isProxyUserType) {
-      setStorage('is_proxy_user_type', 'false');
-    } else if (isDelegateUserType) {
-      setStorage('is_delegate_user_type', 'false');
-    }
-
-    onClose();
-    location.reload();
-  }, [
-    onClose,
-    revokeToken,
-    validateParentToken,
-    updateCurrentToken,
-    isProxyUserType,
-    isDelegateUserType,
-  ]);
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
     useState<boolean>(false);
