@@ -83,12 +83,12 @@ describe('AlertResources component tests', () => {
       isError: false,
       isLoading: true,
     });
-    const { getByTestId, queryByText } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <AlertResources {...alertResourcesProp} />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
-    expect(queryByText(searchPlaceholder)).not.toBeVisible();
-    expect(queryByText(regionPlaceholder)).not.toBeVisible();
+    expect(getByText(searchPlaceholder)).not.toBeVisible();
+    expect(getByText(regionPlaceholder)).not.toBeVisible();
   });
 
   it('should render error state if api call fails', () => {
