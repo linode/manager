@@ -1,15 +1,15 @@
 import { apiMetrics } from './api-metrics';
 import { cambriaStream } from './cambria-stream';
-import { edgegap } from './edgegap';
+import { dynamicAdInsertion } from './dynamic-ad-insertion';
 import { heroEncoder } from './hero-encoder';
+import { multiplayerGameServerHostingOrchestration } from './multiplayer-game-server-hosting-orchestration';
 import { myota } from './myota';
-import { radSecurity } from './rad-security';
-import { scaleflex } from './scaleflex';
+import { radSecurityPlatform } from './rad-security-platform';
+import { scaleflexSmartMediaCloudAndDam } from './scaleflex-smart-media-cloud-and-dam';
 import { sftpgo } from './sftpgo';
-import { synadia } from './synadia';
+import { synadiaPlatform } from './synadia-platform';
 import { titan } from './titan';
-import { vindral } from './vindral';
-import { yospace } from './yospace';
+import { vindralLive } from './vindral-live';
 
 /**
  * Tab content structure for product details page.
@@ -29,16 +29,17 @@ export interface ProductTabDetails {
 const detailsMap: Record<string, ProductTabDetails> = {
   'api-metrics': apiMetrics,
   'cambria-stream': cambriaStream,
-  edgegap,
+  'dynamic-ad-insertion': dynamicAdInsertion,
   'hero-encoder': heroEncoder,
+  'multiplayer-game-server-hosting-orchestration':
+    multiplayerGameServerHostingOrchestration,
   myota,
-  'rad-security': radSecurity,
-  scaleflex,
+  'rad-security-platform': radSecurityPlatform,
+  'scaleflex-smart-media-cloud-and-dam': scaleflexSmartMediaCloudAndDam,
   sftpgo,
-  synadia,
+  'synadia-platform': synadiaPlatform,
   titan,
-  vindral,
-  yospace,
+  'vindral-live': vindralLive,
   // Add more products here as you add their details files
 };
 
