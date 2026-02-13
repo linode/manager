@@ -9,11 +9,14 @@ import {
 import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
   CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE,
   PLACEMENT_GROUP_POLICY_FLEXIBLE,
   PLACEMENT_GROUP_POLICY_STRICT,
+  PLACEMENT_GROUP_UPDATED_POLICY_FLEXIBLE,
+  PLACEMENT_GROUP_UPDATED_POLICY_STRICT,
 } from './constants';
 
 import type { PlacementGroup } from '@linode/api-v4';
@@ -35,6 +38,13 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
     setFieldValue,
     value,
   } = props;
+
+  const flags = useFlags();
+
+  // TODO: Clean up this flag after the Placement Group Policy Update is complete.
+  const isPlacementGroupPolicyUpdated =
+    flags.placementGroupPolicyUpdate ?? false;
+
   return (
     <Box sx={{ pt: 2 }}>
       <Notice
@@ -56,7 +66,10 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
           disabled={disabledPlacementGroupCreateButton}
           label={
             <Typography>
-              <strong>Strict.</strong> {PLACEMENT_GROUP_POLICY_STRICT}
+              <strong>Strict.</strong>{' '}
+              {isPlacementGroupPolicyUpdated
+                ? PLACEMENT_GROUP_UPDATED_POLICY_STRICT
+                : PLACEMENT_GROUP_POLICY_STRICT}
             </Typography>
           }
           value={'strict'}
@@ -66,7 +79,10 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
           disabled={disabledPlacementGroupCreateButton}
           label={
             <Typography>
-              <strong>Flexible.</strong> {PLACEMENT_GROUP_POLICY_FLEXIBLE}
+              <strong>Flexible.</strong>{' '}
+              {isPlacementGroupPolicyUpdated
+                ? PLACEMENT_GROUP_UPDATED_POLICY_FLEXIBLE
+                : PLACEMENT_GROUP_POLICY_FLEXIBLE}
             </Typography>
           }
           sx={{ mt: 2 }}
