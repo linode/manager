@@ -55,6 +55,9 @@ interface Props {
   username?: string;
 }
 
+const DEFAULTS_ENTITIES_URL = '/iam/roles/defaults/entity-access';
+const USER_ENTITIES_URL = '/iam/users/$username/entities';
+
 export const AssignedEntitiesTable = ({ username }: Props) => {
   const theme = useTheme();
   const { data: permissions } = usePermissions('account', [
@@ -75,8 +78,8 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     orderBy: orderByParam,
   } = useSearch({
     from: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/entity-access'
-      : '/iam/users/$username/entities',
+      ? DEFAULTS_ENTITIES_URL
+      : USER_ENTITIES_URL,
   });
 
   const order: 'asc' | 'desc' = orderParam === 'desc' ? 'desc' : 'asc';
@@ -92,8 +95,8 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       orderBy === newOrderBy ? (order === 'asc' ? 'desc' : 'asc') : 'asc';
     navigate({
       to: isDefaultDelegationRolesForChildAccount
-        ? '/iam/roles/defaults/entity-access'
-        : '/iam/users/$username/entities',
+        ? DEFAULTS_ENTITIES_URL
+        : USER_ENTITIES_URL,
       params: isDefaultDelegationRolesForChildAccount
         ? undefined
         : { username: username || '' },
@@ -225,8 +228,8 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
 
   const pagination = usePaginationV2({
     currentRoute: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/entity-access'
-      : `/iam/users/$username/entities`,
+      ? DEFAULTS_ENTITIES_URL
+      : USER_ENTITIES_URL,
     initialPage: 1,
     preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
     clientSidePaginationData: filteredAndSortedRoles,
@@ -337,11 +340,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           hideLabel
           label="Filter"
           onSearch={(value) => {
-            pagination.handlePageChange(1);
             navigate({
               to: isDefaultDelegationRolesForChildAccount
-                ? '/iam/roles/defaults/entity-access'
-                : '/iam/users/$username/entities',
+                ? DEFAULTS_ENTITIES_URL
+                : USER_ENTITIES_URL,
               params: isDefaultDelegationRolesForChildAccount
                 ? undefined
                 : { username: username || '' },
@@ -362,11 +364,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           onChange={(_, selected) => {
             const nextEntityType = (selected?.value ??
               ALL_ENTITIES_OPTION.value) as 'all' | EntityType;
-            pagination.handlePageChange(1);
             navigate({
               to: isDefaultDelegationRolesForChildAccount
-                ? '/iam/roles/defaults/entity-access'
-                : '/iam/users/$username/entities',
+                ? DEFAULTS_ENTITIES_URL
+                : USER_ENTITIES_URL,
               params: isDefaultDelegationRolesForChildAccount
                 ? undefined
                 : { username: username || '' },

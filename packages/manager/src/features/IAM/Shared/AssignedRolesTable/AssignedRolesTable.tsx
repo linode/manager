@@ -70,6 +70,10 @@ const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Assigned Roles',
   value: 'all',
 };
+
+const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
+const USER_ROLES_URL = '/iam/users/$username/roles';
+
 export const AssignedRolesTable = () => {
   const { username } = useParams({ strict: false });
   const navigate = useNavigate();
@@ -84,8 +88,8 @@ export const AssignedRolesTable = () => {
     order: orderParam,
   } = useSearch({
     from: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/roles'
-      : '/iam/users/$username/roles',
+      ? DEFAULTS_ROLES_URL
+      : USER_ROLES_URL,
   });
   const order: 'asc' | 'desc' = orderParam === 'desc' ? 'desc' : 'asc';
   const orderBy: OrderByKeys = 'name';
@@ -122,8 +126,8 @@ export const AssignedRolesTable = () => {
     setIsInitialLoad(false);
     navigate({
       to: isDefaultDelegationRolesForChildAccount
-        ? '/iam/roles/defaults/roles'
-        : '/iam/users/$username/roles',
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
       params: isDefaultDelegationRolesForChildAccount
         ? undefined
         : { username: username || '' },
@@ -268,8 +272,8 @@ export const AssignedRolesTable = () => {
 
   const pagination = usePaginationV2({
     currentRoute: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/roles'
-      : '/iam/users/$username/roles',
+      ? DEFAULTS_ROLES_URL
+      : USER_ROLES_URL,
     initialPage: 1,
     preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
     clientSidePaginationData: filteredAndSortedRoles,
@@ -420,11 +424,10 @@ export const AssignedRolesTable = () => {
             hideLabel
             label="Filter"
             onSearch={(value) => {
-              pagination.handlePageChange(1);
               navigate({
                 to: isDefaultDelegationRolesForChildAccount
-                  ? '/iam/roles/defaults/roles'
-                  : '/iam/users/$username/roles',
+                  ? DEFAULTS_ROLES_URL
+                  : USER_ROLES_URL,
                 params: isDefaultDelegationRolesForChildAccount
                   ? undefined
                   : { username: username || '' },
@@ -444,11 +447,10 @@ export const AssignedRolesTable = () => {
             onChange={(_, selected) => {
               const nextRoleType = (selected?.value ??
                 ALL_ROLES_OPTION.value) as 'all' | AccessType;
-              pagination.handlePageChange(1);
               navigate({
                 to: isDefaultDelegationRolesForChildAccount
-                  ? '/iam/roles/defaults/roles'
-                  : '/iam/users/$username/roles',
+                  ? DEFAULTS_ROLES_URL
+                  : USER_ROLES_URL,
                 params: isDefaultDelegationRolesForChildAccount
                   ? undefined
                   : { username: username || '' },
