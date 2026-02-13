@@ -32,7 +32,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    error,
+    error: userRolesError,
     isPending: isUserRolesPending,
     mutateAsync: updateUserRoles,
     reset,
@@ -41,6 +41,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const {
     mutateAsync: updateDefaultDelegationRoles,
     isPending: isDefaultDelegationRolesPending,
+    error: defaultDelegationRolesError,
   } = useUpdateDefaultDelegationAccessQuery();
 
   const isPending = isUserRolesPending || isDefaultDelegationRolesPending;
@@ -78,19 +79,25 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       entity_id,
       entity_type
     );
+    try {
+      await mutationFn({
+        ...assignedRoles,
+        entity_access: updatedUserEntityRoles,
+      });
 
-    await mutationFn({
-      ...assignedRoles,
-      entity_access: updatedUserEntityRoles,
-    });
+      enqueueSnackbar(`Entity access removed`, {
+        variant: 'success',
+      });
 
-    enqueueSnackbar(`Entity access removed`, {
-      variant: 'success',
-    });
-
-    onSuccess?.();
-    onClose();
+      onSuccess?.();
+      onClose();
+    } catch {
+      // error is handled by react-query and shown via <ConfirmationDialog error=… />
+    }
   };
+  const error = isDefaultDelegationRolesForChildAccount
+    ? defaultDelegationRolesError
+    : userRolesError;
 
   return (
     <ConfirmationDialog
