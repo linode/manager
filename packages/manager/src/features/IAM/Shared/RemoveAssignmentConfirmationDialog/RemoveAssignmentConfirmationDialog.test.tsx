@@ -5,6 +5,7 @@ import React from 'react';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
 import type { EntitiesRole } from '../types';
@@ -29,6 +30,7 @@ const props = {
 const queryMocks = vi.hoisted(() => ({
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useUpdateDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
   useIsDefaultDelegationRolesForChildAccount: vi
     .fn()
     .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
@@ -45,6 +47,8 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
+    useUpdateDefaultDelegationAccessQuery:
+      queryMocks.useUpdateDefaultDelegationAccessQuery,
   };
 });
 
@@ -60,6 +64,10 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('RemoveAssignmentConfirmationDialog', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should render', async () => {
     renderWithTheme(
       <RemoveAssignmentConfirmationDialog {...props} username="test_user" />
@@ -144,5 +152,28 @@ describe('RemoveAssignmentConfirmationDialog', () => {
     expect(paragraph).toBeVisible();
     expect(paragraph).toHaveTextContent(mockRole.entity_name);
     expect(paragraph).toHaveTextContent(mockRole.role_name);
+  });
+
+  it('displays error message when there is an API error', async () => {
+    const apiError = [{ reason: 'Failed to load user roles' }];
+
+    queryMocks.useUpdateDefaultDelegationAccessQuery.mockReturnValue({
+      mutateAsync: vi.fn().mockRejectedValue(apiError),
+      isPending: false,
+      error: apiError,
+    });
+
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    const removeButton = screen.getByText('Remove');
+    expect(removeButton).toBeVisible();
+
+    await userEvent.click(removeButton);
+    await expect(
+      screen.getByText(INTERNAL_ERROR_NO_CHANGES_SAVED)
+    ).toBeVisible();
   });
 });
