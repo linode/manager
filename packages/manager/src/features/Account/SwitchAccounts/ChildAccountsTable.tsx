@@ -1,5 +1,5 @@
 import { Box, CircleProgress, LinkButton, useTheme } from '@linode/ui';
-import { Pagination } from 'akamai-cds-react-components';
+import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   Table,
   TableBody,
@@ -8,9 +8,10 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+
 import type { Account, UserType } from '@linode/api-v4';
 
-const DEFAULT_PAGE_SIZE = 25;
 interface ChildAccountsTableProps {
   childAccounts?: Account[];
   currentTokenWithBearer?: string;
@@ -107,7 +108,7 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
           ))}
         </TableBody>
       </Table>
-      {totalResults > DEFAULT_PAGE_SIZE && (
+      {totalResults > MIN_PAGE_SIZE && (
         <Pagination
           count={totalResults}
           itemsLabel="Accounts: "

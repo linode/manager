@@ -107,11 +107,11 @@ export const SwitchAccountDrawer = (props: Props) => {
   );
 
   const {
-    data: allChildAccounts,
-    error: allChildAccountsError,
-    isLoading: allChildAccountsLoading,
-    isRefetching: allChildAccountsIsRefetching,
-    refetch: refetchAllChildAccounts,
+    data: delegatedChildAccounts,
+    error: delegatedChildAccountsError,
+    isLoading: delegatedChildAccountsLoading,
+    isRefetching: delegatedChildAccountsIsRefetching,
+    refetch: refetchDelegatedChildAccounts,
   } = useMyDelegatedChildAccountsQuery({
     params: {
       page,
@@ -164,7 +164,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         // Error is handled by createTokenError.
       }
     },
-    [createToken, updateCurrentToken, revokeToken]
+    [createToken, isProxyUserType, updateCurrentToken, revokeToken]
   );
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
@@ -175,11 +175,11 @@ export const SwitchAccountDrawer = (props: Props) => {
     isSubmitting ||
     isSwitchingChildAccounts ||
     isRefetching ||
-    allChildAccountsLoading ||
-    allChildAccountsIsRefetching;
+    delegatedChildAccountsLoading ||
+    delegatedChildAccountsIsRefetching;
 
   const refetchFn = isIAMDelegationEnabled
-    ? refetchAllChildAccounts
+    ? refetchDelegatedChildAccounts
     : refetchChildAccounts;
   const handleClose = () => {
     setIsSwitchingChildAccounts(false);
@@ -189,10 +189,10 @@ export const SwitchAccountDrawer = (props: Props) => {
 
   const childAccounts = useMemo(() => {
     if (isIAMDelegationEnabled) {
-      return allChildAccounts?.data || [];
+      return delegatedChildAccounts?.data || [];
     }
     return data?.pages.flatMap((page) => page.data);
-  }, [isIAMDelegationEnabled, allChildAccounts, data]);
+  }, [isIAMDelegationEnabled, delegatedChildAccounts, data]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -203,8 +203,13 @@ export const SwitchAccountDrawer = (props: Props) => {
     setPage(1); // Reset to first page when page size changes
   };
 
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+    setPage(1); // Reset to first page when search query changes
+  };
+
   const hasError = isIAMDelegationEnabled
-    ? allChildAccountsError
+    ? delegatedChildAccountsError
     : childAccountInfiniteError;
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
@@ -264,7 +269,7 @@ export const SwitchAccountDrawer = (props: Props) => {
             hideLabel
             key={`switch-search-${searchQuery}`}
             label="Search"
-            onSearch={setSearchQuery}
+            onSearch={handleSearchQueryChange}
             placeholder="Search"
             sx={{ marginBottom: theme.spacingFunction(12) }}
             value={searchQuery}
@@ -301,7 +306,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           page={page}
           pageSize={pageSize}
           setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
-          totalResults={allChildAccounts?.results || 0}
+          totalResults={delegatedChildAccounts?.results || 0}
           userType={userType}
         />
       )}
