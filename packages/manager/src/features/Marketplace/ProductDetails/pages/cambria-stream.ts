@@ -10,7 +10,7 @@ Together, Cambria Stream and Cambria Cluster are well suited to enterprise envir
 ### **Key features**
 
 * **Scalable live encoding and packaging:** Encode and package live streams using modern formats including HLS, DASH, and CMAF, scaling horizontally to meet channel and event demand.
-* **High-performance file transcoding:** Transcode professional video formats including AVC, HEVC, HDR, and broadcast mezzanine inputs with consistent quality and predictable throughput**.**
+* **High-performance file transcoding:** Transcode professional video formats including AVC, HEVC, HDR, and broadcast mezzanine inputs with consistent quality and predictable throughput.
 * **Cloud, on-prem, and hybrid deployment:** Run the same software across customer-managed infrastructure, public cloud, or hybrid environments without architectural changes or retooling.
 * **Containerised and Kubernetes-ready:** Deploy using Docker and orchestrate at scale with Kubernetes for automated scheduling, resiliency, and efficient resource utilisation.
 * **Centralised orchestration and load balancing:** Use Cambria Cluster to distribute jobs, monitor nodes, and balance workloads across multiple transcoding instances and locations.
