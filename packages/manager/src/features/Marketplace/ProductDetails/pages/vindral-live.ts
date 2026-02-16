@@ -1,5 +1,5 @@
 /**
- * Product tab details for slug vindral.
+ * Product tab details for slug vindral-live.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -27,7 +27,7 @@ Vindral Live is used in broadcast, sports, iGaming, and other mission-critical e
 Vindral Live ensures deterministic playback timing so all viewers experience the same moment at the same time, even when streams originate from multiple camera feeds. Quick channel/angle switching is also an important aspect.
 
 **Live casino**
-Run live dealer and iGaming streams where fairness depends on all players seeing the same moment at the same time. Vindral Live provides controlled latency, down to 500ms, and synchronized delivery to prevent timing discrepancies between players, platforms, and operators. Together with Akamai’s infrastructure, the stability in growing regions for live casino is unmatched.
+Run live dealer and iGaming streams where fairness depends on all players seeing the same moment at the same time. Vindral Live provides controlled latency, down to 500ms, and synchronized delivery to prevent timing discrepancies between players, platforms, and operators. Together with Akamai's infrastructure, the stability in growing regions for live casino is unmatched.
 
 **Online auctions**
 Live bidding on online auctions requires ultra-low latency, roughly half a second glass-to-glass. Stream live auctions where bids are placed against a shared timeline. Vindral Live ensures predictable delivery so all participants see bids and outcomes consistently, reducing disputes caused by latency differences.
@@ -58,7 +58,7 @@ const documentationMarkdown = `
 | **Target Use Cases** | Broadcast, sports, iGaming, auctions, public safety, in-venue live streaming, interactive video |
 
 #### Fully managed
-Many integrations for auctions, events, and webinars use standard hardware encoders, laptops running OBS, or Vindral’s WebRTC sender, which can be integrated into a web application.The live signal is sent to the Vindral Live CDN and distributed globally. The player can be embedded using an iframe or integrated into applications using Vindral’s SDK. It supports a wide range of platforms, including Chrome, iOS Safari, Apple TV, Google TV, Fire OS, Tizen, and LG webOS.
+Many integrations for auctions, events, and webinars use standard hardware encoders, laptops running OBS, or Vindral's WebRTC sender, which can be integrated into a web application.The live signal is sent to the Vindral Live CDN and distributed globally. The player can be embedded using an iframe or integrated into applications using Vindral's SDK. It supports a wide range of platforms, including Chrome, iOS Safari, Apple TV, Google TV, Fire OS, Tizen, and LG webOS.
 
 ![Fully managed](/assets/marketplace/fully-managed.jpeg)
 
@@ -83,7 +83,7 @@ const supportMarkdown = `
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 
-export const vindral: ProductTabDetails = {
+export const vindralLive: ProductTabDetails = {
   overview: overviewMarkdown,
   documentation: documentationMarkdown,
   pricing: pricingMarkdown,
