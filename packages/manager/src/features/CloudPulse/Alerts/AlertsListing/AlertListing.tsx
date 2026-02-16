@@ -261,7 +261,9 @@ export const AlertListing = () => {
                   ? StyledListItem
                   : 'li';
               return (
-                <ListItem {...rest} data-qa-option key={key}>
+                <ListItem {...rest} data-qa-option key={key}
+                data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the label and option label as the identifier for the option element.
+                >
                   <Box flexGrow={1}>{option.label}</Box>{' '}
                   {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                   <SelectedIcon visible={selected} />
