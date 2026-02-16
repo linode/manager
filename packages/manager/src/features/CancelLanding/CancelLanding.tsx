@@ -9,10 +9,6 @@ import DarkThemeAkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 
 import type { Theme } from '@mui/material/styles';
 
-interface CancelLandingState {
-  surveyLink?: string;
-}
-
 const useStyles = makeStyles()((theme: Theme) => ({
   logo: {
     width: '100px',
@@ -42,7 +38,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
   const location = useLocation();
-  const locationState = location.state as CancelLandingState;
+  const locationState = location.state;
   const theme = useTheme();
 
   const surveyLink = locationState.surveyLink;
