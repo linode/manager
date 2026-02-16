@@ -41,6 +41,7 @@ describe('<BlockStorageDimensionFilterAutocomplete />', () => {
     serviceType: 'blockstorage',
     type: 'alerts',
     values: [],
+    handleError: vi.fn(),
   };
 
   beforeEach(() => {
