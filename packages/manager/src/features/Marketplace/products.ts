@@ -43,7 +43,7 @@ export const PRODUCTS: Product[] = [
       'Networking',
       'Storage',
     ],
-    id: 'edgegap',
+    id: 'multiplayer-game-server-hosting-orchestration',
     name: 'Multiplayer game server hosting & orchestration',
     partner: {
       email: 'sales@edgegap.com',
@@ -108,7 +108,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     categories: ['AI', 'Enterprise'],
-    id: 'rad-security',
+    id: 'rad-security-platform',
     name: 'RAD Security Platform',
     partner: {
       email: 'randy@rad.security',
@@ -133,7 +133,7 @@ export const PRODUCTS: Product[] = [
       'Media & Entertainment, Gaming',
       'Other Software and APIs',
     ],
-    id: 'scaleflex',
+    id: 'scaleflex-smart-media-cloud-and-dam',
     name: 'Scaleflex Smart Media Cloud and DAM',
     partner: {
       email: 'sales@scaleflex.com',
@@ -174,7 +174,7 @@ export const PRODUCTS: Product[] = [
       'Media & Entertainment, Gaming',
       'Other Software and APIs',
     ],
-    id: 'synadia',
+    id: 'synadia-platform',
     name: 'Synadia Platform',
     partner: {
       email: 'info@synadia.com',
@@ -212,7 +212,7 @@ export const PRODUCTS: Product[] = [
       'Media & Entertainment, Gaming',
       'Other Software and APIs',
     ],
-    id: 'vindral',
+    id: 'vindral-live',
     name: 'Vindral Live',
     partner: {
       email: 'info@vindral.com',
@@ -229,7 +229,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     categories: ['Media & Entertainment, Gaming'],
-    id: 'yospace',
+    id: 'dynamic-ad-insertion',
     name: 'Dynamic Ad Insertion',
     partner: {
       email: 'sales@yospace.com',

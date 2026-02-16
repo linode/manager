@@ -26,10 +26,6 @@ const props: ChildAccountListProps = {
   onClose: vi.fn(),
   onSwitchAccount: vi.fn(),
   userType: undefined,
-  errors: {
-    childAccountInfiniteError: false,
-    allChildAccountsError: null,
-  },
   fetchNextPage: vi.fn(),
   filter: {},
   hasNextPage: false,
