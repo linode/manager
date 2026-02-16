@@ -598,7 +598,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     </Typography>
                   )}
                   <LinkButton
-                    data-pendo-id={`Cloud Marketplace Contact Sales-${showConsentDetails ? 'Show Details' : 'Hide Details'}`}
+                    data-pendo-id={`Cloud Marketplace Contact Sales-${showConsentDetails ? 'Hide Details' : 'Show Details'}`}
                     onClick={() => setShowConsentDetails(!showConsentDetails)}
                     sx={(theme) => ({
                       '&:hover': {
