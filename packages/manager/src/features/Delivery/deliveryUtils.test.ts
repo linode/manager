@@ -24,6 +24,7 @@ import type {
   AkamaiObjectStorageDetailsExtended,
   AkamaiObjectStorageDetailsPayload,
   CustomHTTPSDetails,
+  CustomHTTPSDetailsExtended,
 } from '@linode/api-v4';
 
 describe('delivery utils functions', () => {
@@ -130,7 +131,7 @@ describe('delivery utils functions', () => {
     });
 
     describe('and CustomHttps destination type', () => {
-      const baseCustomHTTPSDetails: CustomHTTPSDetails = {
+      const baseCustomHTTPSDetails: CustomHTTPSDetailsExtended = {
         authentication: {
           type: 'none',
         },
@@ -139,7 +140,7 @@ describe('delivery utils functions', () => {
       };
 
       it('should return details unchanged when all optional fields are populated', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           content_type: 'application/json',
           client_certificate_details: {
@@ -159,7 +160,7 @@ describe('delivery utils functions', () => {
       });
 
       it('should omit content_type when it is null', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           content_type: null,
         };
@@ -173,7 +174,7 @@ describe('delivery utils functions', () => {
       });
 
       it('should omit client_certificate_details when all its properties are empty strings', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           client_certificate_details: {
             client_ca_certificate: '',
@@ -186,13 +187,13 @@ describe('delivery utils functions', () => {
         const result = getDestinationPayloadDetails(
           details,
           destinationType.CustomHttps
-        ) as CustomHTTPSDetails;
+        ) as CustomHTTPSDetailsExtended;
 
         expect(result.client_certificate_details).toBeUndefined();
       });
 
       it('should omit client_certificate_details when all its properties are not defined', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           client_certificate_details: {},
         };
@@ -200,13 +201,13 @@ describe('delivery utils functions', () => {
         const result = getDestinationPayloadDetails(
           details,
           destinationType.CustomHttps
-        ) as CustomHTTPSDetails;
+        ) as CustomHTTPSDetailsExtended;
 
         expect(result.client_certificate_details).toBeUndefined();
       });
 
       it('should omit client_certificate_details when any of its properties is empty', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           client_certificate_details: {
             client_ca_certificate: 'some-cert',
@@ -219,13 +220,13 @@ describe('delivery utils functions', () => {
         const result = getDestinationPayloadDetails(
           details,
           destinationType.CustomHttps
-        ) as CustomHTTPSDetails;
+        ) as CustomHTTPSDetailsExtended;
 
         expect(result.client_certificate_details).toBeUndefined();
       });
 
       it('should keep client_certificate_details when all properties have values', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           client_certificate_details: {
             client_ca_certificate: 'ca-cert',
@@ -238,7 +239,7 @@ describe('delivery utils functions', () => {
         const result = getDestinationPayloadDetails(
           details,
           destinationType.CustomHttps
-        ) as CustomHTTPSDetails;
+        ) as CustomHTTPSDetailsExtended;
 
         expect(result.client_certificate_details).toBeDefined();
         expect(result.client_certificate_details).toEqual(
@@ -247,7 +248,7 @@ describe('delivery utils functions', () => {
       });
 
       it('should omit both content_type and client_certificate_details when both are empty', () => {
-        const details: CustomHTTPSDetails = {
+        const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           content_type: null,
           client_certificate_details: {
@@ -261,7 +262,7 @@ describe('delivery utils functions', () => {
         const result = getDestinationPayloadDetails(
           details,
           destinationType.CustomHttps
-        ) as CustomHTTPSDetails;
+        ) as CustomHTTPSDetailsExtended;
 
         expect(result.content_type).toBeUndefined();
         expect(result.client_certificate_details).toBeUndefined();

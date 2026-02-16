@@ -7,9 +7,6 @@ export const ProductDetailsContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacingFunction(32),
-  paddingLeft: theme.spacingFunction(8),
-  paddingRight: theme.spacingFunction(8),
-  paddingTop: theme.spacingFunction(8),
 }));
 
 export const InfoBanner = styled(Notice)(() => ({
@@ -25,6 +22,10 @@ export const ProductInfoSection = styled(Box)(({ theme }) => ({
   alignSelf: 'stretch',
   display: 'flex',
   gap: theme.spacingFunction(24),
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+    gap: theme.spacingFunction(8),
+  },
 }));
 
 export const LogoContainer = styled(Box)(({ theme }) => ({

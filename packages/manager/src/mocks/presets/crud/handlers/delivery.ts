@@ -21,6 +21,7 @@ import type {
   AkamaiObjectStorageDetails,
   AkamaiObjectStorageDetailsPayload,
   CreateDestinationPayload,
+  CustomHTTPSDetailsExtended,
   Destination,
   Stream,
 } from '@linode/api-v4';
@@ -227,14 +228,10 @@ export const createDestinations = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
       const payload: CreateDestinationPayload = await request.clone().json();
-      const { label, type } = payload;
-      const details =
-        type === destinationType.AkamaiObjectStorage
-          ? omitProps(payload.details as AkamaiObjectStorageDetailsPayload, [
-              'access_key_secret',
-            ])
-          : payload.details;
+      const { label, type, details } = payload;
 
+      const authenticationDetails = (details as CustomHTTPSDetailsExtended)
+        .authentication?.details;
       const created = DateTime.now().toISO();
       const updated = DateTime.now().toISO();
 
@@ -244,7 +241,9 @@ export const createDestinations = (mockState: MockState) => [
               label,
               type,
               details: {
-                ...details,
+                ...omitProps(details as AkamaiObjectStorageDetailsPayload, [
+                  'access_key_secret',
+                ]),
                 ...{
                   path: (details as AkamaiObjectStorageDetails).path ?? null,
                 },
@@ -257,6 +256,14 @@ export const createDestinations = (mockState: MockState) => [
               type,
               details: {
                 ...details,
+                authentication: {
+                  ...(details as CustomHTTPSDetailsExtended).authentication,
+                  details: authenticationDetails
+                    ? omitProps(authenticationDetails, [
+                        'basic_authentication_password',
+                      ])
+                    : undefined,
+                },
               },
               created,
               updated,

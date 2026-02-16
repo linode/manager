@@ -4,30 +4,25 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { akamaiObjectStorageDestinationFactory } from 'src/factories';
+import {
+  akamaiObjectStorageDestinationFactory,
+  customHttpsDestinationFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamFormDelivery } from './StreamFormDelivery';
 
-import type { Destination, DestinationType } from '@linode/api-v4';
+import type { DestinationType } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const loadingTestId = 'circle-progress';
 
-const mockDestinations = akamaiObjectStorageDestinationFactory
-  .buildList(5)
-  .map((destination: Destination) => {
-    if (destination.id === 3) {
-      return {
-        ...destination,
-        type: destinationType.CustomHttps,
-      };
-    } else {
-      return destination;
-    }
-  });
+const mockDestinations = [
+  ...akamaiObjectStorageDestinationFactory.buildList(2),
+  ...customHttpsDestinationFactory.buildList(2),
+];
 
 describe('StreamFormDelivery', () => {
   const setDisableTestConnection = () => {};
@@ -340,14 +335,14 @@ describe('StreamFormDelivery', () => {
         // Open the dropdown
         await userEvent.click(destinationNameAutocomplete);
 
-        // Select the "Destination 3" option
+        // Select the "Custom HTTPS Destination 2" option
         const customHttpsDestination = await screen.findByText(
-          'Akamai Object Storage Destination 3'
+          'Custom HTTPS Destination 2'
         );
         await userEvent.click(customHttpsDestination);
 
         expect(destinationNameAutocomplete).toHaveValue(
-          'Akamai Object Storage Destination 3'
+          'Custom HTTPS Destination 2'
         );
       });
 

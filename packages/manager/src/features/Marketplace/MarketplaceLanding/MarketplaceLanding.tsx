@@ -14,6 +14,7 @@ import * as React from 'react';
 
 import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 
 import { PRODUCTS } from '../products';
@@ -176,9 +177,8 @@ export const MarketplaceLanding = () => {
   return (
     <Box
       sx={(theme) => ({
-        px: {
-          sm: theme.spacingFunction(16),
-          xs: theme.spacingFunction(12),
+        [theme.breakpoints.down('md')]: {
+          px: theme.spacingFunction(8),
         },
         // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
         '& [data-qa-entity-header]': {
@@ -188,6 +188,7 @@ export const MarketplaceLanding = () => {
         },
       })}
     >
+      <DocumentTitleSegment segment="Cloud Marketplace - Catalog" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [

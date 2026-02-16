@@ -68,6 +68,10 @@ export interface SelectionCardProps {
    */
   renderVariant?: () => JSX.Element | null;
   /**
+   * An optional prop to set the ARIA role of the selection card.
+   */
+  role?: string;
+  /**
    * An array of subheadings to display below the heading.
    * @example ['Linode 1GB', 'Linode 2GB', 'Linode 4GB']
    */
@@ -129,6 +133,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
     onClick,
     renderIcon,
     renderVariant,
+    role,
     subheadings,
     sxCardBase,
     sxCardBaseHeading,
@@ -179,6 +184,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
       id={id}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
+      role={role}
       size={gridSize ?? { lg: 4, sm: 6, xl: 3, xs: 12 }}
       sx={sxGrid}
       tabIndex={0}
