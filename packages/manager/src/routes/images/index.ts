@@ -4,9 +4,11 @@ import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
+import type { ImagesLibraryType } from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
+  subType?: ImagesLibraryType;
 }
 
 export interface ImageCreateDiskSearchParams {
@@ -42,6 +44,15 @@ const imagesRoute = createRoute({
 });
 
 const imagesIndexRoute = createRoute({
+  beforeLoad: ({ search, context }) => {
+    // When private image sharing is enabled, redirect to Images Library tab with default 'custom' sub-tab
+    if (!search.subType && context.isPrivateImageSharingEnabled) {
+      throw redirect({
+        to: '/images/images-library',
+        search: { subType: 'custom' },
+      });
+    }
+  },
   getParentRoute: () => imagesRoute,
   path: '/',
   validateSearch: (search: ImagesSearchParams) => search,
@@ -118,8 +129,49 @@ const imagesCreateUploadRoute = createRoute({
   )
 );
 
+// V2 routes - Images Library tab and Share Groups tab
+
+// Images Library tab - contains sub-tabs for 'My custom images', 'Shared with me', and 'Recovery images'
+const imagesLibraryRoute = createRoute({
+  beforeLoad: ({ search, context }) => {
+    if (!context.isPrivateImageSharingEnabled) {
+      throw redirect({
+        to: '/images',
+        search: (prev) => ({ ...prev, subType: undefined }),
+      });
+    }
+
+    if (!search.subType) {
+      throw redirect({
+        to: '/images/images-library',
+        search: { subType: 'custom' },
+      });
+    }
+  },
+  getParentRoute: () => imagesRoute,
+  path: 'images-library',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
+  )
+);
+
+// Share Groups tab - for managing image share groups
+const imagesShareGroupsRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  path: 'sharegroups',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
+  )
+);
+
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
+  imagesLibraryRoute,
+  imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
     imagesCreateDiskRoute,

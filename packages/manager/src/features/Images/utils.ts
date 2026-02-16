@@ -5,6 +5,20 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
 
+export type ImagesLibraryType = 'custom' | 'recovery' | 'shared';
+
+/**
+ * Configuration for image sub-tabs within the Images Library tab.
+ */
+export interface ImagesLibrarySubTab {
+  /** Whether this tab represents a beta feature */
+  isBeta?: boolean;
+  /** Display title for the tab */
+  title: string;
+  /** The type this tab represents */
+  type: ImagesLibraryType;
+}
+
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
   return image?.label ?? linode.image;
@@ -54,4 +68,29 @@ export const useIsPrivateImageSharingEnabled = () => {
 
   // @TODO Private Image Sharing: check for customer tag/account capability when it exists
   return { isPrivateImageSharingEnabled: flags.privateImageSharing ?? false };
+};
+
+/**
+ * Returns the index of the currently selected sub-tab from an array of sub-tabs.
+ *
+ * @param subTabs - Array of sub-tabs with `type` and `title` properties.
+ * @param selectedTab - The type of currently selected sub-tab. Currently, this value comes from 'type' query param on the Images Library tab.
+ *
+ * @returns the index of the selected sub-tab
+ */
+export const getImagesLibrarySubTabIndex = (
+  subTabs: ImagesLibrarySubTab[],
+  selectedTab: ImagesLibraryType | undefined
+) => {
+  if (selectedTab === undefined) {
+    return 0;
+  }
+
+  const tabIndex = subTabs.findIndex((tab) => tab.type === selectedTab);
+
+  if (tabIndex === -1) {
+    return 0;
+  }
+
+  return tabIndex;
 };
