@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Notice, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -70,8 +70,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const entityType =
     serviceType === 'firewall'
       ? alertDetails.rule_criteria.rules[0]?.label.includes(
-          entityLabelMap['nodebalancer']
-        )
+        entityLabelMap['nodebalancer']
+      )
         ? 'nodebalancer'
         : 'linode'
       : undefined;
@@ -113,6 +113,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     error: serviceMetadataError,
   } = useCloudPulseServiceByServiceType(serviceType ?? '', !!serviceType);
 
+  const hasAPIError = useWatch({ control, name: 'hasAPIError' });
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
@@ -180,6 +181,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
+      {hasAPIError && (
+        <Notice
+          sx={{ marginTop: 2 }}
+          text="Some alert settings couldn't be loaded. Available data is shown but editing is disabled. Try reloading the page or check back later."
+          variant="warning"
+        />
+      )}
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Typography marginTop={2} variant="h2">
@@ -250,6 +258,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
               label: 'Submit',
               loading: formState.isSubmitting,
               type: 'submit',
+              disabled: hasAPIError,
             }}
             secondaryButtonProps={{
               label: 'Cancel',
