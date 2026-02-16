@@ -194,10 +194,13 @@ export const Autocomplete = <
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
-          <ListItem {...props} data-qa-option key={props.key} 
-              data-pendo-id={rest.getOptionLabel
-                ? rest.getOptionLabel(option)
-                : option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
+          <ListItem
+            {...props}
+            data-pendo-id={
+              rest.getOptionLabel ? rest.getOptionLabel(option) : option.label
+            } // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
+            data-qa-option
+            key={props.key}
           >
             <>
               <Box
