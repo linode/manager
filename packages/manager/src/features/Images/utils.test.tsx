@@ -7,8 +7,11 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   getEventsForImages,
   getImageLabelForLinode,
+  getImagesLibrarySubTabIndex,
   useIsPrivateImageSharingEnabled,
 } from './utils';
+
+import type { ImagesLibrarySubTab } from './utils';
 
 describe('getImageLabelForLinode', () => {
   it('handles finding an image and getting the label', () => {
@@ -87,5 +90,32 @@ describe('useIsPrivateImageSharingEnabled', () => {
     await waitFor(() => {
       expect(result.current.isPrivateImageSharingEnabled).toBe(false);
     });
+  });
+});
+
+describe('getImagesLibrarySubTabIndex', () => {
+  const subTabs: ImagesLibrarySubTab[] = [
+    { type: 'custom', title: 'My custom images' },
+    { type: 'shared', title: 'Shared with me', isBeta: true },
+    { type: 'recovery', title: 'Recovery images' },
+  ];
+
+  it('returns 0 if selectedTab is undefined', () => {
+    expect(getImagesLibrarySubTabIndex(subTabs, undefined)).toBe(0);
+  });
+
+  it('returns the correct index when selectedTab matches a tab key', () => {
+    expect(getImagesLibrarySubTabIndex(subTabs, 'custom')).toBe(0);
+    expect(getImagesLibrarySubTabIndex(subTabs, 'shared')).toBe(1);
+    expect(getImagesLibrarySubTabIndex(subTabs, 'recovery')).toBe(2);
+  });
+
+  it('returns 0 if selectedTab does not exist in subTabs', () => {
+    // @ts-expect-error intentionally passing an unexpected value
+    expect(getImagesLibrarySubTabIndex(subTabs, 'hey')).toBe(0);
+  });
+
+  it('works with an empty subTabs array', () => {
+    expect(getImagesLibrarySubTabIndex([], 'custom')).toBe(0);
   });
 });
