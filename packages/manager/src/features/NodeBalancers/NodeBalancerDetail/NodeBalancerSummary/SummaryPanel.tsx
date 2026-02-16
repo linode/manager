@@ -51,27 +51,26 @@ export const SummaryPanel = () => {
   );
 
   // "/nodebalancers/:id/vpcs" returns both frontend and backend VPC configs,
-  // but we only want to display the backend configs.
-  const nbBackendVpcConfigs =
-    vpcConfig?.data.filter((v) => v.purpose === 'backend') ?? [];
+  // but we only want to display the backend configs and
+  // a nodebalancer can have only one backend VPC.
+  const nbBackendVpcConfig =
+    vpcConfig?.data.filter((v) => v.purpose === 'backend')[0] ?? null;
 
   const { data: vpcDetails } = useVPCQuery(
-    Number(nbBackendVpcConfigs[0]?.vpc_id) || -1,
-    Boolean(nbBackendVpcConfigs[0]?.vpc_id)
+    Number(nbBackendVpcConfig?.vpc_id) || -1,
+    Boolean(nbBackendVpcConfig?.vpc_id)
   );
 
   const subnets = vpcDetails?.subnets ?? [];
 
-  const mergedSubnets = nbBackendVpcConfigs.map((config) => {
-    const subnet = subnets.find((s) => s.id === config.subnet_id);
+  const subnet = subnets.find((s) => s.id === nbBackendVpcConfig?.subnet_id);
 
-    return {
-      id: config.subnet_id,
-      label: subnet?.label ?? `Subnet ${config.subnet_id}`,
-      ipv4Range: config.ipv4_range,
-      ipv6Range: config.ipv6_range,
-    };
-  });
+  const subnetWithConfigData = {
+    id: nbBackendVpcConfig?.subnet_id,
+    label: subnet?.label ?? `Subnet ${nbBackendVpcConfig?.subnet_id}`,
+    ipv4Range: nbBackendVpcConfig?.ipv4_range,
+    ipv6Range: nbBackendVpcConfig?.ipv6_range,
+  };
 
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
   const { status: clusterStatus } = useKubernetesClusterQuery({
@@ -191,99 +190,94 @@ export const SummaryPanel = () => {
           Frontend Configuration
         </StyledTitle>
         <StyledSection>
+          <Typography data-qa-type variant="body1">
+            <strong>Type: </strong>
+            {nodebalancer.frontend_address_type === 'public'
+              ? 'Public'
+              : nodebalancer.frontend_address_type === 'vpc'
+                ? 'VPC'
+                : ''}
+          </Typography>
+        </StyledSection>
+        <StyledIPGrouping data-qa-ip>
+          {nodebalancer?.ipv4 && (
+            <StyledSection>
+              <IPAddress ips={[nodebalancer?.ipv4]} isHovered={true} showMore />
+            </StyledSection>
+          )}
+          {nodebalancer?.ipv6 && (
+            <StyledSection>
+              <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
+            </StyledSection>
+          )}
+        </StyledIPGrouping>
+      </StyledSummarySection>
+      {flags.isNodebalancerVPCEnabled && nbBackendVpcConfig && (
+        <StyledSummarySection>
+          <StyledTitle
+            data-qa-title
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            variant="h3"
+          >
+            Backend Configuration - VPC
+          </StyledTitle>
           <StyledSection>
-            <Typography data-qa-type variant="body1">
-              <strong>Type: </strong>
-              {nodebalancer.frontend_address_type === 'public'
-                ? 'Public'
-                : nodebalancer.frontend_address_type === 'vpc'
-                  ? 'VPC'
-                  : ''}
+            <Typography data-qa-ports variant="body1">
+              <strong>VPC:</strong>{' '}
+              {nbBackendVpcConfig && (
+                <React.Fragment key={nbBackendVpcConfig.id}>
+                  <Link
+                    accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
+                    className="secondaryLink"
+                    to={`/vpcs/${nbBackendVpcConfig.vpc_id}`}
+                  >
+                    {vpcDetails?.label}
+                  </Link>
+                </React.Fragment>
+              )}
             </Typography>
           </StyledSection>
-          <StyledIPGrouping data-qa-ip>
-            {nodebalancer?.ipv4 && (
-              <StyledSection>
-                <IPAddress
-                  ips={[nodebalancer?.ipv4]}
-                  isHovered={true}
-                  showMore
-                />
-              </StyledSection>
-            )}
-            {nodebalancer?.ipv6 && (
-              <StyledSection>
-                <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
-              </StyledSection>
-            )}
-          </StyledIPGrouping>
-        </StyledSection>
-      </StyledSummarySection>
-      {flags.isNodebalancerVPCEnabled &&
-        Boolean(nbBackendVpcConfigs?.length) && (
-          <StyledSummarySection>
-            <StyledTitle
-              data-qa-title
-              sx={{ display: 'flex', justifyContent: 'space-between' }}
-              variant="h3"
-            >
-              Backend Configuration - VPC
-            </StyledTitle>
-            <StyledSection>
-              <Typography data-qa-ports variant="body1">
-                <strong>VPC:</strong>{' '}
-                {nbBackendVpcConfigs?.map((vpc, i) => (
-                  <React.Fragment key={vpc.id}>
-                    <Link
-                      accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
-                      className="secondaryLink"
-                      to={`/vpcs/${vpc.vpc_id}`}
-                    >
-                      {vpcDetails?.label}
-                    </Link>
-                    {i < nbBackendVpcConfigs.length - 1 ? ', ' : ''}
-                  </React.Fragment>
-                ))}
-              </Typography>
-            </StyledSection>
-            <StyledSection>
-              <Typography style={{ wordBreak: 'break-word' }} variant="body1">
-                <strong>Subnets:</strong>
-              </Typography>
+          <StyledSection>
+            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+              <strong>Subnets:</strong>
+            </Typography>
 
-              {mergedSubnets.map((subnet) => (
-                <React.Fragment key={subnet.id}>
-                  <Typography
-                    style={{
-                      wordBreak: 'break-word',
-                      marginTop: '8px',
-                      marginBottom: '8px',
-                    }}
-                    variant="body1"
-                  >
-                    {`${subnet.label}`}
-                  </Typography>
-                  <StyledIPGrouping data-qa-ip>
-                    {subnet.ipv4Range && (
-                      <StyledSection>
-                        <IPAddress
-                          ips={[subnet.ipv4Range]}
-                          isHovered={true}
-                          showMore
-                        />
-                      </StyledSection>
-                    )}
-                    {subnet.ipv6Range && (
-                      <StyledSection>
-                        <IPAddress ips={[subnet.ipv6Range]} isHovered={true} />
-                      </StyledSection>
-                    )}
-                  </StyledIPGrouping>
-                </React.Fragment>
-              ))}
-            </StyledSection>
-          </StyledSummarySection>
-        )}
+            {subnetWithConfigData && (
+              <React.Fragment key={subnetWithConfigData.id}>
+                <Typography
+                  style={{
+                    wordBreak: 'break-word',
+                    marginTop: '8px',
+                    marginBottom: '8px',
+                  }}
+                  variant="body1"
+                >
+                  {`${subnetWithConfigData.label}`}
+                </Typography>
+                <StyledIPGrouping data-qa-ip>
+                  {subnetWithConfigData.ipv4Range && (
+                    <StyledSection>
+                      <IPAddress
+                        ips={[subnetWithConfigData.ipv4Range]}
+                        isHovered={true}
+                        showMore
+                      />
+                    </StyledSection>
+                  )}
+                  {subnetWithConfigData.ipv6Range && (
+                    <StyledSection>
+                      <IPAddress
+                        ips={[subnetWithConfigData.ipv6Range]}
+                        isHovered={true}
+                      />
+                    </StyledSection>
+                  )}
+                </StyledIPGrouping>
+              </React.Fragment>
+            )}
+          </StyledSection>
+        </StyledSummarySection>
+      )}
       {displayFirewallLink && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">

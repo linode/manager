@@ -16,32 +16,32 @@ export const NodeBalancerVPC = ({ nodeBalancerId }: Props) => {
     useNodeBalancerVPCConfigsBetaQuery(nodeBalancerId, Boolean(nodeBalancerId));
 
   // NodeBalancerVPCConfigsBetaQuery returns both frontend and backend VPC configs,
-  // but we only want to display the backend configs.
-  const nbBackendVpcConfigs =
-    vpcConfig?.data.filter((v) => v.purpose === 'backend') ?? [];
+  // but we only want to display the backend configs and
+  // a nodebalancer can have only one backend VPC.
+  const nbBackendVpcConfig =
+    vpcConfig?.data.filter((v) => v.purpose === 'backend')[0] ?? null;
 
   const { data: vpcDetails, isLoading: isVPCDetailsLoading } = useVPCQuery(
-    Number(nbBackendVpcConfigs[0]?.vpc_id),
-    Boolean(nbBackendVpcConfigs[0]?.vpc_id)
+    Number(nbBackendVpcConfig?.vpc_id),
+    Boolean(nbBackendVpcConfig?.vpc_id)
   );
 
   if (isVPCConfigLoading || isVPCDetailsLoading) {
     return <Skeleton />;
   }
 
-  if (nbBackendVpcConfigs.length === 0) {
+  if (!nbBackendVpcConfig) {
     return 'None';
   }
 
-  return nbBackendVpcConfigs.map((vpc, i) => (
-    <React.Fragment key={vpc?.id}>
+  return (
+    <React.Fragment key={nbBackendVpcConfig?.id}>
       <Link
-        accessibleAriaLabel={`NodeBalancer Port ${vpc?.id}`}
-        to={`/vpcs/${vpc?.id}`}
+        accessibleAriaLabel={`VPC ${nbBackendVpcConfig?.vpc_id}`}
+        to={`/vpcs/${nbBackendVpcConfig?.vpc_id}`}
       >
         {vpcDetails?.label}
       </Link>
-      {i < nbBackendVpcConfigs.length - 1 ? ', ' : ''}
     </React.Fragment>
-  ));
+  );
 };

@@ -26,7 +26,6 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAllNodeBalancerConfigsQuery: queryMocks.useAllNodeBalancerConfigsQuery,
     useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,
     useNodeBalancerVPCConfigsBetaQuery:
       queryMocks.useNodeBalancerVPCConfigsBetaQuery,
@@ -43,11 +42,6 @@ describe('SubnetNodeBalancerRow', () => {
   };
 
   const subnetId = 456;
-
-  const configs = [
-    { nodes_status: { up: 3, down: 1 } },
-    { nodes_status: { up: 2, down: 2 } },
-  ];
 
   const firewalls = makeResourcePage(
     firewallFactory.buildList(1, { label: 'mock-firewall' })
@@ -91,9 +85,6 @@ describe('SubnetNodeBalancerRow', () => {
   it('renders nodebalancer row with data', async () => {
     queryMocks.useNodeBalancerQuery.mockReturnValue({
       data: nodebalancer,
-    });
-    queryMocks.useAllNodeBalancerConfigsQuery.mockReturnValue({
-      data: configs,
     });
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: firewalls,
