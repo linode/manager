@@ -1,5 +1,5 @@
 /**
- * Product tab details for slug rad-security.
+ * Product tab details for slug rad-security-platform.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -15,7 +15,7 @@ RAD integrates cleanly into existing environments. It connects to your stack thr
 
 ### Key features
 
-* **Identify real risk instead of noise** - Correlate runtime behavior, config changes, and identity activity to surface what’s exploitable, not just what’s misconfigured.
+* **Identify real risk instead of noise** - Correlate runtime behavior, config changes, and identity activity to surface what's exploitable, not just what's misconfigured.
 * **Investigate incidents in seconds** - Use RADBot to reconstruct attack paths, find root cause, and gather evidence without pivoting between tools.
 * **Track sensitive data in motion** - Monitor how PII moves through services and APIs in real time to catch violations early and support continuous compliance.
 * **Shrink response time with smart automation** - Trigger remediation workflows, generate reports, and escalate tickets based on prioritized, contextual findings.
@@ -46,7 +46,7 @@ Frameworks like SOC 2 and ISO 27001 require not just controls, but proof of enfo
 
 AI models and LLM integrations are showing up across cloud environments without oversight. RAD fingerprints AI activity in runtime, flags unsanctioned model usage, and tracks sensitive data flows to and from inference pipelines. This gives platform and security teams control over AI sprawl without blocking innovation.
 
-Schedule a demo with our team to explore how agentic security can streamline your investigations, reduce alert fatigue, and deliver real-time risk insight across your cloud stack. We’ll walk you through key workflows, answer technical questions, and show exactly how RAD fits into your environment.
+Schedule a demo with our team to explore how agentic security can streamline your investigations, reduce alert fatigue, and deliver real-time risk insight across your cloud stack. We'll walk you through key workflows, answer technical questions, and show exactly how RAD fits into your environment.
 `.trim();
 
 const documentationMarkdown = `
@@ -79,7 +79,7 @@ const supportMarkdown = `
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 
-export const radSecurity: ProductTabDetails = {
+export const radSecurityPlatform: ProductTabDetails = {
   overview: overviewMarkdown,
   documentation: documentationMarkdown,
   pricing: pricingMarkdown,
