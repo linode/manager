@@ -17,6 +17,7 @@ export interface ChildAccountWithDelegates extends ChildAccount {
 }
 
 export interface GetMyDelegatedChildAccountsParams {
+  filter?: Filter;
   params?: Params;
 }
 

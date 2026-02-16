@@ -147,9 +147,8 @@ export const MarketplaceLanding = () => {
   return (
     <Box
       sx={(theme) => ({
-        px: {
-          sm: theme.spacingFunction(16),
-          xs: theme.spacingFunction(12),
+        [theme.breakpoints.down('md')]: {
+          px: theme.spacingFunction(8),
         },
         // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
         '& [data-qa-entity-header]': {

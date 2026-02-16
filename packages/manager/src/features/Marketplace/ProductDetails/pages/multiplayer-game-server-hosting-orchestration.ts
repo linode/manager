@@ -1,5 +1,5 @@
 /**
- * Product tab details for slug edgegap.
+ * Product tab details for slug multiplayer-game-server-hosting-orchestration.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -13,7 +13,7 @@ Edgegap is a modern, game server orchestration platform built on the world's fir
 
 Instant, global distribution at one universal price – no tiers, no regional variations, 100% compute-based pricing, and no commitments. Pay only when players play.
 
-Edgegap’s platform includes edge server hosting and orchestration, automated matchmaking to group players, server browser to enable players to list and join servers and fleet management of persistent servers for social games and MMOs. Everything your multiplayer needs for hosting.
+Edgegap's platform includes edge server hosting and orchestration, automated matchmaking to group players, server browser to enable players to list and join servers and fleet management of persistent servers for social games and MMOs. Everything your multiplayer needs for hosting.
 
 Integration takes minutes and gives you access to our patented orchestrator that delivers 58% latency reduction on average for eSports-level online play, scales up to 14M CCU in 60 minutes to deliver on the biggest game launches, and deploys game servers in 3 seconds on average from cold start for seamless matchmaking to game launch.
 
@@ -62,7 +62,7 @@ const documentationMarkdown = `
 | **Compliance – Security** | SOC 1, SOC2, and SOC 3 (upon request) |
 | **Compliance – Regional**  | GDPR, EU-US Privacy Shield, Swiss-US Privacy Shield, HIPAA (upon request), FedRAMP (upon request) |
 
-### “Fully details” variation (with some modifications)
+### "Fully details" variation (with some modifications)
 
 ![Edgegap Architecture](/assets/marketplace/eg-architecture.jpeg)
 `.trim();
@@ -77,7 +77,7 @@ const supportMarkdown = `
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 
-export const edgegap: ProductTabDetails = {
+export const multiplayerGameServerHostingOrchestration: ProductTabDetails = {
   overview: overviewMarkdown,
   documentation: documentationMarkdown,
   pricing: pricingMarkdown,
