@@ -162,7 +162,7 @@ export const NotificationChannelAlerts = React.memo(
               return (
                 <ListItem
                   {...rest}
-                  data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the label and option label as the identifier for the option element.
+                  data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
                   data-qa-option
                   key={key}
                 >
