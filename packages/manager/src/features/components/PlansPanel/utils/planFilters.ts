@@ -10,9 +10,11 @@ import {
   G8_DEDICATED_COMPUTE_OPTIMIZED_SLUGS,
   G8_DEDICATED_GENERAL_PURPOSE_SLUGS,
   PLAN_FILTER_ALL,
+  PLAN_FILTER_ALL_AVAILABLE,
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from '../constants';
+import { getIsPlanDisabled } from '../utils';
 
 import type {
   PlanFilterGeneration,
@@ -49,6 +51,11 @@ export const filterPlansByGeneration = (
   // The plans array is already filtered to only dedicated plans by the parent component
   if (generation === 'all') {
     return plans;
+  }
+
+  //For "Available", return only plans that are not disabled
+  if (generation === 'available') {
+    return plans.filter((plan) => !getIsPlanDisabled(plan));
   }
 
   // For G8, use explicit slug list for precise filtering
@@ -108,11 +115,20 @@ export const filterPlansByType = (
   generation: PlanFilterGeneration,
   type: PlanFilterType
 ): PlanWithAvailability[] => {
-  // "All" returns all plans, sorted from newest to oldest generations
+  // "All" returns all plans, sorted based on availability, from newest to oldest generations
   if (type === PLAN_FILTER_ALL) {
-    return [...plans].sort(
-      (a, b) => getGenerationRank(b.id) - getGenerationRank(a.id)
-    );
+    return [...plans].sort((a, b) => {
+      const isPlanADisabled = getIsPlanDisabled(a);
+      const isPlanBDisabled = getIsPlanDisabled(b);
+
+      // 1️⃣ Primary sort: Availability (available plans first)
+      if (isPlanADisabled !== isPlanBDisabled) {
+        return Number(isPlanADisabled) - Number(isPlanBDisabled);
+      }
+
+      // 2️⃣ Secondary sort: Generation (newest generation first)
+      return getGenerationRank(b.id) - getGenerationRank(a.id);
+    });
   }
 
   // G7, G6, and "All" generation only have "All" option (no sub-types)
@@ -213,6 +229,10 @@ export const filterPlansByGpuType = (
   // The plans array is already filtered to only GPU plans by the parent component
   if (!gpuType || gpuType === PLAN_FILTER_ALL) {
     return plans;
+  }
+  // For "Available", return only plans that are not disabled
+  if (gpuType === PLAN_FILTER_ALL_AVAILABLE) {
+    return plans.filter((plan) => !getIsPlanDisabled(plan));
   }
   return plans.filter((plan) => plan.id.includes(gpuType));
 };

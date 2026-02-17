@@ -8,19 +8,22 @@
  * TabPanels keep all tabs mounted in the DOM (only visibility changes).
  */
 
-import { Select } from '@linode/ui';
+import { Autocomplete, Select } from '@linode/ui';
 import * as React from 'react';
 
 import {
   PLAN_FILTER_ALL,
+  PLAN_FILTER_ALL_AVAILABLE,
   PLAN_FILTER_GENERATION_G6,
   PLAN_FILTER_GENERATION_G7,
   PLAN_FILTER_GENERATION_G8,
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from './constants';
+import { getIsPlanDisabled } from './utils';
 import {
   applyDedicatedPlanFilters,
+  filterPlansByGeneration,
   supportsTypeFiltering,
 } from './utils/planFilters';
 
@@ -32,8 +35,13 @@ import type { PlanWithAvailability } from './types';
 import type { PlanFilterGeneration, PlanFilterType } from './types/planFilters';
 import type { SelectOption } from '@linode/ui';
 
+type GenerationOptionWithDisabled = SelectOption<PlanFilterGeneration> & {
+  isDisabled: boolean;
+};
+
 const GENERATION_OPTIONS: SelectOption<PlanFilterGeneration>[] = [
-  { label: 'All', value: PLAN_FILTER_ALL },
+  { label: 'All Available Plans', value: PLAN_FILTER_ALL_AVAILABLE },
+  { label: 'All Plans', value: PLAN_FILTER_ALL },
   { label: 'G8 Dedicated', value: PLAN_FILTER_GENERATION_G8 },
   { label: 'G7 Dedicated', value: PLAN_FILTER_GENERATION_G7 },
   { label: 'G6 Dedicated', value: PLAN_FILTER_GENERATION_G6 },
@@ -61,10 +69,44 @@ const DedicatedPlanFiltersComponent = React.memo(
     const { disabled = false, onResult, plans, resetPagination } = props;
 
     // Local state - persists automatically because component stays mounted
-    const [generation, setGeneration] =
-      React.useState<PlanFilterGeneration>(PLAN_FILTER_ALL);
+    const [generation, setGeneration] = React.useState<PlanFilterGeneration>(
+      PLAN_FILTER_ALL_AVAILABLE
+    );
 
     const [type, setType] = React.useState<PlanFilterType>(PLAN_FILTER_ALL);
+
+    const generationOptions: GenerationOptionWithDisabled[] =
+      React.useMemo(() => {
+        const options = GENERATION_OPTIONS.map((option) => ({
+          ...option,
+          isDisabled: filterPlansByGeneration(plans, option.value).every(
+            (plan) => getIsPlanDisabled(plan)
+          ),
+        }));
+        const generationRank = {
+          [PLAN_FILTER_GENERATION_G8]: 3,
+          [PLAN_FILTER_GENERATION_G7]: 2,
+          [PLAN_FILTER_GENERATION_G6]: 1,
+        };
+        // Sort options: available first, then all, then by generation (G8 > G7 > G6)
+        return options.sort((a, b) => {
+          // "available" always comes first
+          if (a.value === 'available') return -1;
+          if (b.value === 'available') return 1;
+
+          // "all" always comes second
+          if (a.value === 'all') return -1;
+          if (b.value === 'all') return 1;
+
+          // enabled options before disabled
+          if (a.isDisabled !== b.isDisabled) {
+            return Number(a.isDisabled) - Number(b.isDisabled);
+          }
+
+          // generation order g8 > g7 > g6
+          return generationRank[b.value] - generationRank[a.value];
+        });
+      }, [plans]);
 
     const typeFilteringSupported = supportsTypeFiltering(generation);
 
@@ -74,7 +116,7 @@ const DedicatedPlanFiltersComponent = React.memo(
 
     // Disable type filter if:
     // 1. Panel is disabled, OR
-    // 2. Selected generation doesn't support type filtering (G7, G6, All)
+    // 2. Selected generation doesn't support type filtering (G7, G6, All, All Available)
     const isTypeSelectDisabled = disabled || !typeFilteringSupported;
 
     // Track previous filters to detect changes for pagination reset
@@ -102,14 +144,9 @@ const DedicatedPlanFiltersComponent = React.memo(
     }, [generation, resetPagination, type]);
 
     const handleGenerationChange = React.useCallback(
-      (
-        _event: React.SyntheticEvent,
-        option: null | SelectOption<number | string>
-      ) => {
-        // When clearing, default to "All" instead of undefined
-        const newGeneration =
-          (option?.value as PlanFilterGeneration | undefined) ??
-          PLAN_FILTER_ALL;
+      (_event: React.SyntheticEvent, option: GenerationOptionWithDisabled) => {
+        // When clearing, default to "All Available" instead of undefined
+        const newGeneration = option?.value ?? PLAN_FILTER_ALL_AVAILABLE;
         setGeneration(newGeneration);
 
         // Reset type filter when generation changes
@@ -136,7 +173,9 @@ const DedicatedPlanFiltersComponent = React.memo(
     }, [generation, plans, type, typeFilteringSupported]);
 
     const selectedGenerationOption = React.useMemo(() => {
-      return GENERATION_OPTIONS.find((opt) => opt.value === generation) ?? null;
+      return (
+        generationOptions.find((opt) => opt.value === generation) ?? undefined
+      );
     }, [generation]);
 
     const selectedTypeOption = React.useMemo(() => {
@@ -156,15 +195,22 @@ const DedicatedPlanFiltersComponent = React.memo(
             marginTop: -16,
           }}
         >
-          <Select
+          <Autocomplete
             aria-labelledby="plan-filter-generation-label"
-            clearable
             data-testid="plan-filter-generation"
+            disableClearable
             disabled={disabled}
+            getOptionDisabled={(option) => option.isDisabled || false}
             id="plan-filter-generation"
+            isOptionEqualToValue={(option, value) => {
+              if (!option || !value) {
+                return false;
+              }
+              return option.value === value.value;
+            }}
             label="Dedicated Plans"
             onChange={handleGenerationChange}
-            options={GENERATION_OPTIONS}
+            options={generationOptions}
             placeholder="Select a plan"
             sx={{ width: 360 }}
             value={selectedGenerationOption}
@@ -188,7 +234,7 @@ const DedicatedPlanFiltersComponent = React.memo(
       return {
         filteredPlans,
         filterUI,
-        hasActiveFilters: generation !== PLAN_FILTER_ALL,
+        hasActiveFilters: generation !== PLAN_FILTER_ALL_AVAILABLE,
       };
     }, [
       disabled,
