@@ -9,17 +9,17 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { getImagesLibrarySubTabIndex } from '../../utils';
+import { getImageLibrarySubTabIndex } from '../../utils';
 
-import type { ImagesLibrarySubTab } from '../../utils';
+import type { ImageLibrarySubTab } from '../../utils';
 
-export const ImagesLibraryTabs = () => {
+export const ImageLibraryTabs = () => {
   const navigate = useNavigate();
 
   const search = useSearch({ from: '/images' });
 
-  const subTabs: ImagesLibrarySubTab[] = [
-    { type: 'custom', title: 'My custom images' },
+  const subTabs: ImageLibrarySubTab[] = [
+    { type: 'custom', title: 'Owned by me' },
     {
       type: 'shared',
       title: 'Shared with me',
@@ -28,13 +28,13 @@ export const ImagesLibraryTabs = () => {
     { type: 'recovery', title: 'Recovery images' },
   ];
 
-  const subTabIndex = getImagesLibrarySubTabIndex(subTabs, search.subType);
+  const subTabIndex = getImageLibrarySubTabIndex(subTabs, search.subType);
 
   const onTabChange = (index: number) => {
     // - Update the "subType" query param.
-    // - This switches between "My custom images", "Shared with me" and "Recovery images" sub-tabs within the Images Library tab.
+    // - This switches between "My custom images", "Shared with me" and "Recovery images" sub-tabs within the Image Library tab.
     navigate({
-      to: `/images/images-library`,
+      to: `/images/image-library`,
       search: (prev) => ({
         ...prev,
         subType: subTabs[index].type,
