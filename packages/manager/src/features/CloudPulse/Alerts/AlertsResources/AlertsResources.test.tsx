@@ -79,16 +79,16 @@ describe('AlertResources component tests', () => {
   });
   it('should render circle progress if api calls are in fetching state', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodes,
+      data: undefined,
       isError: false,
       isLoading: true,
     });
-    const { getByTestId, queryByText } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <AlertResources {...alertResourcesProp} />
     );
     expect(getByTestId('circle-progress')).toBeInTheDocument();
-    expect(queryByText(searchPlaceholder)).not.toBeInTheDocument();
-    expect(queryByText(regionPlaceholder)).not.toBeInTheDocument();
+    expect(getByText(searchPlaceholder)).not.toBeVisible();
+    expect(getByText(regionPlaceholder)).not.toBeVisible();
   });
 
   it('should render error state if api call fails', () => {
