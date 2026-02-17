@@ -1,5 +1,5 @@
 /**
- * Product tab details for slug synadia.
+ * Product tab details for slug synadia-platform.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -9,7 +9,7 @@ import type { ProductTabDetails } from '.';
 const overviewMarkdown = `
 Synadia Platform provides managed [NATS.io](http://nats.io) infrastructure for connecting distributed applications, services, and devices across Akamai Cloud, AWS, Azure and Google Cloud. 
 
-Built for edge-first and globally distributed systems, the platform uses an event-driven architecture to propagate data and service interactions across regions and environments in milliseconds. It supports streaming, request/reply, key-value, and object storage, with built-in replication and digital twins that keep data close to where it’s needed. Deploy rapidly as a managed global service or extend it directly into edge sites and customer environments via the Akamai global cloud infrastructure —without gateways, service meshes, or complex networking dependencies.
+Built for edge-first and globally distributed systems, the platform uses an event-driven architecture to propagate data and service interactions across regions and environments in milliseconds. It supports streaming, request/reply, key-value, and object storage, with built-in replication and digital twins that keep data close to where it's needed. Deploy rapidly as a managed global service or extend it directly into edge sites and customer environments via the Akamai global cloud infrastructure —without gateways, service meshes, or complex networking dependencies.
 
 ### **Key features**
 
@@ -50,7 +50,7 @@ The Synadia Platform, running on Akamai, enables a globally connected NATS super
 
 Leaf node clusters extend this fabric outward to edge locations, branch offices, devices, or specialized environments. These leaf nodes securely connect back to the supercluster, allowing local workloads to publish and consume events with minimal latency while still participating in the global system.
 
-This architecture enables a true “connectivity-first” model: events, streams, and services can flow transparently between core regions and the edge without complex gateways, brokers, or manual replication. The result is a resilient, self-healing, and scalable event fabric that supports real-time, streaming, and request/reply patterns everywhere—from central clouds to the far edge.  
+This architecture enables a true "connectivity-first" model: events, streams, and services can flow transparently between core regions and the edge without complex gateways, brokers, or manual replication. The result is a resilient, self-healing, and scalable event fabric that supports real-time, streaming, and request/reply patterns everywhere—from central clouds to the far edge.  
 
 ![Synadia Architecture on Akamai](/assets/marketplace/synadia-akamai-arch.jpeg)
 `.trim();
@@ -65,7 +65,7 @@ const supportMarkdown = `
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 
-export const synadia: ProductTabDetails = {
+export const synadiaPlatform: ProductTabDetails = {
   overview: overviewMarkdown,
   documentation: documentationMarkdown,
   pricing: pricingMarkdown,

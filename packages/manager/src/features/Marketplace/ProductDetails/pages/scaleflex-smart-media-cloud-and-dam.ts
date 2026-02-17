@@ -1,5 +1,5 @@
 /**
- * Product tab details for slug scaleflex.
+ * Product tab details for slug scaleflex-smart-media-cloud-and-dam.
  *
  * Content is provided as Markdown strings which are rendered at runtime.
  */
@@ -11,7 +11,7 @@ Scaleflex delivers a Visual Experience Platform built to help brands turn massiv
 
 Scaleflex offers two solutions: Smart Media Cloud, which provides dynamic media optimization and on-the-fly resizing for images and videos, extending Akamai Image Manager with AI capabilities and an integrated Asset Library. Key features include compression, transcoding, smart cropping, background removal, auto-tagging, auto-description, asset upload and search, and performance analytics. Digital Asset Management centralizes images and videos with advanced AI search, rich indexation, approval workflows, user permissions, media editing, and secure asset sharing through branded Portals. Both solutions are API-first, headless, MACH-compliant, and fully SaaS.
 
-What makes Scaleflex different is its native, end-to-end integration with Akamai’s edge and cloud infrastructure, including Akamai Connected Cloud. This architecture lets teams manage assets once and deliver optimized, marketplace-ready, accessible media everywhere, instantly. Ideal for organizations managing millions of assets and billions of transformations, Scaleflex turns visual complexity into a performance advantage.
+What makes Scaleflex different is its native, end-to-end integration with Akamai's edge and cloud infrastructure, including Akamai Connected Cloud. This architecture lets teams manage assets once and deliver optimized, marketplace-ready, accessible media everywhere, instantly. Ideal for organizations managing millions of assets and billions of transformations, Scaleflex turns visual complexity into a performance advantage.
 
 ### **Key features**
 
@@ -28,7 +28,7 @@ What makes Scaleflex different is its native, end-to-end integration with Akamai
 E-commerce teams struggling with millions of SKUs use the Ingestion and Centralization features to organize massive libraries without the chaos of duplicate files or lost assets.
 
 **Boosting Core Web Vitals & Mobile SEO**  
-Marketing and Tech teams use Real-Time Optimization to ensure their site passes Google’s speed requirements (LCP) and delivers content instantly to AI crawlers, maximizing visibility in both search rankings and AI-generated answers (GEO).
+Marketing and Tech teams use Real-Time Optimization to ensure their site passes Google's speed requirements (LCP) and delivers content instantly to AI crawlers, maximizing visibility in both search rankings and AI-generated answers (GEO).
 
 **Automated Multi-Vendors Product Feed and User-Generated Content Moderation**  
 Community managers use AI workflows to instantly filter and approve customer-uploaded photos, ensuring brand safety without needing a human to review every single image.
@@ -61,14 +61,14 @@ Full documentation under: [https://docs.scaleflex.com/](https://docs.scaleflex.c
 
 * [General 1-Pager Scaleflex DAM + Akamai](https://assets.scaleflex.com/Partners/Akamai%20Technologies%2C%20Inc/Scaleflex%20-%20Short%20-%20Visual%20Experience%20Platform%20with%20Akamai.pdf?vh=782aa1&func=proxy) (PDF)  
 * [Scaleflex Visual Experience Platform](https://www.youtube.com/watch?v=AzVWhgqXotQ) (Video)  
-* [Yuka’s Cofounder & CTO on Scaling Visual Performance with Scaleflex](https://www.youtube.com/watch?v=psl-VjuTn60) (Video)  
+* [Yuka's Cofounder & CTO on Scaling Visual Performance with Scaleflex](https://www.youtube.com/watch?v=psl-VjuTn60) (Video)  
 * [AI-Assisted Solutions for E-Commerce](https://www.youtube.com/watch?v=18kACnt_Coc) (Video)  
 * [AI-Assisted Travel Solutions](https://www.youtube.com/watch?v=IxNTv3u60Lg) (Video)  
 * [AI-Assisted Tool for Maximizing Real Estate Listings](https://www.youtube.com/watch?v=SrpmNbclGq0) (Video)  
     
   ![Scaleflex VXP Architecture](/assets/marketplace/Scaleflex-vxp-architecture.jpeg)  
     
-* **Modular Platform:** At the heart of the system is the VXP Platform, comprising four integrated powerhouses: two core modules (Digital Asset Management & Smart Media Cloud/Dynamic Media Optimization) and two supporting modules (Portals & Visual AI) following each customer’s needs.  
+* **Modular Platform:** At the heart of the system is the VXP Platform, comprising four integrated powerhouses: two core modules (Digital Asset Management & Smart Media Cloud/Dynamic Media Optimization) and two supporting modules (Portals & Visual AI) following each customer's needs.  
 * **Universal Input & Collaboration:** The platform aggregates creative output from Internal Teams (Marketing, IT, Designers) and External Partners (Agencies, Distributors) via Hubs, Portals, and APIs, fostering a unified workflow.  
 * **Seamless Integration Ecosystem:** The VXP is designed to be "headless" and interoperable, connecting bidirectionally via APIs, Webhooks, and Plugins to essential business software including CMS, PIM, ERP, and Creative Apps.  
 * **Multi-Channel Delivery:** The architecture focuses on performance, pushing optimized, "accelerated content" directly to Web Applications, E-Commerce platforms, and Mobile Apps, ensuring a consistent visual experience across all user endpoints.  
@@ -90,7 +90,7 @@ const supportMarkdown = `
 For product support, reach out to the vendor directly. You can find contact information in the product documentation and on the vendor's website.
 `.trim();
 
-export const scaleflex: ProductTabDetails = {
+export const scaleflexSmartMediaCloudAndDam: ProductTabDetails = {
   overview: overviewMarkdown,
   documentation: documentationMarkdown,
   pricing: pricingMarkdown,

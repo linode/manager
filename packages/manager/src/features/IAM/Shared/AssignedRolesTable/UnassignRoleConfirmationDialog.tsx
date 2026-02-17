@@ -42,14 +42,17 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
     ? defaultRolesData
     : userRolesData;
   const {
-    error,
+    error: userRolesError,
     isPending,
     mutateAsync: updateUserRoles,
     reset,
   } = useUserRolesMutation(username);
 
-  const { mutateAsync: updateDefaultRoles, isPending: isDefaultRolesPending } =
-    useUpdateDefaultDelegationAccessQuery();
+  const {
+    mutateAsync: updateDefaultRoles,
+    isPending: isDefaultRolesPending,
+    error: defaultDelegationRolesError,
+  } = useUpdateDefaultDelegationAccessQuery();
 
   const mutationFn = isDefaultDelegationRolesForChildAccount
     ? updateDefaultRoles
@@ -69,17 +72,24 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       assignedRoles,
       initialRole,
     });
+    try {
+      await mutationFn(updatedUserRoles);
 
-    await mutationFn(updatedUserRoles);
-
-    enqueueSnackbar(`Role ${role?.name} has been deleted successfully.`, {
-      variant: 'success',
-    });
-    if (onSuccess) {
-      onSuccess();
+      enqueueSnackbar(`Role ${role?.name} has been deleted successfully.`, {
+        variant: 'success',
+      });
+      if (onSuccess) {
+        onSuccess();
+      }
+      onClose();
+    } catch {
+      // error is handled by react-query and shown via <ConfirmationDialog error=… />
     }
-    onClose();
   };
+
+  const error = isDefaultDelegationRolesForChildAccount
+    ? defaultDelegationRolesError
+    : userRolesError;
 
   return (
     <ConfirmationDialog
@@ -89,6 +99,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
             label: 'Remove',
             loading: isPending || isDefaultRolesPending,
             onClick: onDelete,
+            disabled: isPending || isDefaultRolesPending,
           }}
           secondaryButtonProps={{
             label: 'Cancel',

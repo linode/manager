@@ -40,6 +40,7 @@ describe('<ObjectStorageDimensionFilterAutocomplete />', () => {
     selectedRegions: ['us-east'],
     serviceType: 'objectstorage',
     type: 'alerts',
+    handleError: vi.fn(),
   };
 
   beforeEach(() => {
