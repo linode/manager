@@ -54,7 +54,7 @@ export const SummaryPanel = () => {
   // but we only want to display the backend configs and
   // a nodebalancer can have only one backend VPC.
   const nbBackendVpcConfig =
-    vpcConfig?.data.filter((v) => v.purpose === 'backend')[0] ?? null;
+    vpcConfig?.data.find((v) => v.purpose === 'backend') ?? null;
 
   const { data: vpcDetails } = useVPCQuery(
     Number(nbBackendVpcConfig?.vpc_id) || -1,
@@ -190,7 +190,7 @@ export const SummaryPanel = () => {
           Frontend Configuration
         </StyledTitle>
         <StyledSection>
-          <Typography data-qa-type variant="body1">
+          <Typography data-qa-frontend-type variant="body1">
             <strong>Type: </strong>
             {nodebalancer.frontend_address_type === 'public'
               ? 'Public'
@@ -224,17 +224,15 @@ export const SummaryPanel = () => {
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>VPC:</strong>{' '}
-              {nbBackendVpcConfig && (
-                <React.Fragment key={nbBackendVpcConfig.id}>
-                  <Link
-                    accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
-                    className="secondaryLink"
-                    to={`/vpcs/${nbBackendVpcConfig.vpc_id}`}
-                  >
-                    {vpcDetails?.label}
-                  </Link>
-                </React.Fragment>
-              )}
+              <React.Fragment key={nbBackendVpcConfig.id}>
+                <Link
+                  accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
+                  className="secondaryLink"
+                  to={`/vpcs/${nbBackendVpcConfig.vpc_id}`}
+                >
+                  {vpcDetails?.label}
+                </Link>
+              </React.Fragment>
             </Typography>
           </StyledSection>
           <StyledSection>

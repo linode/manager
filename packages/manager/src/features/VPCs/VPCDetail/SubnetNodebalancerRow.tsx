@@ -11,9 +11,9 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-const LOADING_TEXT = 'Loading...';
-
 import type { APIError, Firewall, NodeBalancerVpcConfig } from '@linode/api-v4';
+
+const LOADING_TEXT = 'Loading...';
 interface Props {
   hover?: boolean;
   nodeBalancerId: number;

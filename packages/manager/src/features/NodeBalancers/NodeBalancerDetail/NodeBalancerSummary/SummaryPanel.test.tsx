@@ -13,12 +13,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { SummaryPanel } from './SummaryPanel';
 
 const queryMocks = vi.hoisted(() => ({
-  useAllNodeBalancerConfigsQuery: vi.fn().mockReturnValue({ data: undefined }),
-  useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
-  useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
-  useNodeBalancerVPCConfigsBetaQuery: vi
-    .fn()
-    .mockReturnValue({ data: undefined }),
+  useAllNodeBalancerConfigsQuery: vi.fn().mockReturnValue({ data: null }),
+  useNodeBalancerQuery: vi.fn().mockReturnValue({ data: null }),
+  useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: null }),
+  useNodeBalancerVPCConfigsBetaQuery: vi.fn().mockReturnValue({ data: null }),
   useParams: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
     data: {
@@ -79,7 +77,7 @@ describe('SummaryPanel', () => {
 
   it('does not render anything if there is no nodebalancer', () => {
     queryMocks.useAllNodeBalancerConfigsQuery.mockReturnValue({
-      data: undefined,
+      data: null,
     });
     const { queryByText } = renderWithTheme(<SummaryPanel />);
 
@@ -88,7 +86,7 @@ describe('SummaryPanel', () => {
 
   it('does not render anything if there are no configs', () => {
     queryMocks.useNodeBalancerQuery.mockReturnValue({
-      data: undefined,
+      data: null,
     });
     const { queryByText } = renderWithTheme(<SummaryPanel />);
 
@@ -104,7 +102,7 @@ describe('SummaryPanel', () => {
     expect(getByText(nodeBalancerDetails)).toBeVisible();
     expect(getByText('Ports:')).toBeVisible();
     expect(getByText('Backend Status:')).toBeVisible();
-    expect(getByText('0 up, 2 down'));
+    expect(getByText('0 up, 2 down')).toBeVisible();
     expect(getByText('Transferred:')).toBeVisible();
     expect(getByText('0 bytes')).toBeVisible();
     expect(getByText('Host Name:')).toBeVisible();
@@ -138,11 +136,14 @@ describe('SummaryPanel', () => {
       data: nodeBalancerFactory.build({ type: 'common' }),
     });
 
-    const { container } = renderWithTheme(<SummaryPanel />);
-
-    expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
-      'Type: Basic'
-    );
+    const { getByText } = renderWithTheme(<SummaryPanel />);
+    const typeElement = getByText((_, element) => {
+      return (
+        !!element?.hasAttribute('data-qa-type') &&
+        element?.textContent === 'Type: Basic'
+      );
+    });
+    expect(typeElement).toBeVisible();
   });
 
   it('displays type: premium if the nodebalancer is premium', () => {
@@ -150,11 +151,15 @@ describe('SummaryPanel', () => {
       data: nodeBalancerFactory.build({ type: 'premium' }),
     });
 
-    const { container } = renderWithTheme(<SummaryPanel />);
+    const { getByText } = renderWithTheme(<SummaryPanel />);
 
-    expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
-      'Type: Premium'
-    );
+    const typeElement = getByText((_, element) => {
+      return (
+        !!element?.hasAttribute('data-qa-type') &&
+        element?.textContent === 'Type: Premium'
+      );
+    });
+    expect(typeElement).toBeVisible();
   });
 
   it('displays type: Enterprise if the nodebalancer is premium_40GB', () => {
@@ -162,14 +167,18 @@ describe('SummaryPanel', () => {
       data: nodeBalancerFactory.build({ type: 'premium_40GB' }),
     });
 
-    const { container } = renderWithTheme(<SummaryPanel />);
+    const { getByText } = renderWithTheme(<SummaryPanel />);
 
-    expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
-      'Type: Enterprise'
-    );
+    const typeElement = getByText((_, element) => {
+      return (
+        !!element?.hasAttribute('data-qa-type') &&
+        element?.textContent === 'Type: Enterprise'
+      );
+    });
+    expect(typeElement).toBeVisible();
   });
 
-  it('displays link to cluster if it exists', () => {
+  it('displays link to cluster if it exists', async () => {
     queryMocks.useNodeBalancerQuery.mockReturnValue({
       data: nodeBalancerFactory.build({
         lke_cluster: {
@@ -181,11 +190,19 @@ describe('SummaryPanel', () => {
       }),
     });
 
-    const { container, getByText } = renderWithTheme(<SummaryPanel />);
+    server.use(
+      http.get('*/lke/clusters/:clusterId', () => {
+        return HttpResponse.json({ id: 1, label: 'lke-123' });
+      })
+    );
+
+    const { getByText } = renderWithTheme(<SummaryPanel />);
 
     expect(getByText('Cluster:')).toBeVisible();
-    const clusterLink = container.querySelector('[data-qa-cluster] a');
-    expect(clusterLink).toHaveTextContent('lke-123');
+    const clusterLink = await waitFor(() => {
+      return getByText('lke-123');
+    });
+    expect(clusterLink).toBeVisible();
     expect(clusterLink).toHaveAttribute(
       'href',
       '/kubernetes/clusters/1/summary'
@@ -210,16 +227,18 @@ describe('SummaryPanel', () => {
       })
     );
 
-    const { container } = renderWithTheme(<SummaryPanel />);
+    const { getByText } = renderWithTheme(<SummaryPanel />);
 
-    await waitFor(() => {
-      const clusterLink = container.querySelector('[data-qa-cluster]');
-      expect(clusterLink).toHaveTextContent('Cluster: lke-123 (deleted)');
-      expect(clusterLink).not.toHaveAttribute(
-        'href',
-        '/kubernetes/clusters/1/summary'
-      );
+    const clusterElement = await waitFor(() => {
+      return getByText((_, element) => {
+        return (
+          !!element?.hasAttribute('data-qa-cluster') &&
+          element?.textContent === 'Cluster: lke-123 (deleted)'
+        );
+      });
     });
+    expect(clusterElement).toBeVisible();
+    expect(clusterElement).not.toHaveAttribute('href');
   });
 
   it('should disable "Add a tag" if user does not have permission', () => {
