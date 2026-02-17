@@ -205,6 +205,13 @@ export const applyDedicatedPlanFilters = (
 // GPU Filtering
 // ============================================================================
 
+export const getGpuRank = (planId: string): number => {
+  if (planId.includes('rtxpro6000')) return 3;
+  if (planId.includes('rtx4000')) return 2;
+  if (planId.includes('rtx6000')) return 1;
+  return 0;
+};
+
 /**
  * Filter plans by gpu type
  *
@@ -228,7 +235,18 @@ export const filterPlansByGpuType = (
   // For "All", return all plans as-is
   // The plans array is already filtered to only GPU plans by the parent component
   if (!gpuType || gpuType === PLAN_FILTER_ALL) {
-    return plans;
+    return [...plans].sort((a, b) => {
+      const isPlanADisabled = getIsPlanDisabled(a);
+      const isPlanBDisabled = getIsPlanDisabled(b);
+
+      // 1️⃣ Primary sort: Availability (available plans first)
+      if (isPlanADisabled !== isPlanBDisabled) {
+        return Number(isPlanADisabled) - Number(isPlanBDisabled);
+      }
+
+      // 2️⃣ Secondary sort: Generation (newest generation first)
+      return getGpuRank(b.id) - getGpuRank(a.id);
+    });
   }
   // For "Available", return only plans that are not disabled
   if (gpuType === PLAN_FILTER_ALL_AVAILABLE) {
