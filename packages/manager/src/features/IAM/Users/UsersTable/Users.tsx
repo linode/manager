@@ -202,6 +202,7 @@ export const UsersLanding = () => {
             />
             {isChildOrDelegateWithDelegationEnabled && (
               <Select
+                disabled={!permissions?.view_user}
                 hideLabel
                 label="Select user type"
                 onChange={(_, selected) => {
