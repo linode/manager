@@ -106,7 +106,10 @@ export const StreamForm = (props: StreamFormProps) => {
       try {
         const destinationPayload: CreateDestinationPayload = {
           ...destination,
-          details: getDestinationPayloadDetails(destination.details),
+          details: getDestinationPayloadDetails(
+            destination.details,
+            destination.type
+          ),
         };
         const { id } = await createDestination(destinationPayload);
         destinationId = id;

@@ -1,12 +1,15 @@
+import { useLinodeQuery } from '@linode/queries';
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { LINODE_LOCKED_DELETE_INTERFACE_TOOLTIP } from 'src/features/Linodes/constants';
 
 import type { LinodeInterfaceType } from './utilities';
 
 interface Props {
   handlers: InterfaceActionHandlers;
   id: number;
+  linodeId: number;
   type: LinodeInterfaceType;
 }
 
@@ -17,7 +20,11 @@ export interface InterfaceActionHandlers {
 }
 
 export const LinodeInterfaceActionMenu = (props: Props) => {
-  const { handlers, id, type } = props;
+  const { handlers, id, linodeId, type } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
+  const isLinodeSubResourcesLocked =
+    linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
 
   const editOptions =
     type === 'VLAN'
@@ -34,7 +41,14 @@ export const LinodeInterfaceActionMenu = (props: Props) => {
       title: 'Edit',
       ...editOptions,
     },
-    { onClick: () => handlers.onDelete(id), title: 'Delete' },
+    {
+      disabled: isLinodeSubResourcesLocked,
+      onClick: () => handlers.onDelete(id),
+      title: 'Delete',
+      tooltip: isLinodeSubResourcesLocked
+        ? LINODE_LOCKED_DELETE_INTERFACE_TOOLTIP
+        : undefined,
+    },
   ];
 
   return (

@@ -161,6 +161,72 @@ describe('LinodeActionMenu', () => {
       await userEvent.click(getByLabelText(/^Action menu for/));
       expect(getByTestId('Clone')).toHaveAttribute('aria-disabled', 'true');
     });
+
+    it('should disable Delete and Rebuild actions when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          shutdown_linode: true,
+          reboot_linode: true,
+          clone_linode: true,
+          resize_linode: true,
+          rebuild_linode: true,
+          rescue_linode: true,
+          migrate_linode: true,
+          delete_linode: true,
+          generate_linode_lish_token: true,
+          create_linode: true,
+          create_lock: true,
+          delete_lock: true,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={['cannot_delete']} />
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      // Delete should be disabled when locked
+      expect(getByTestId('Delete')).toHaveAttribute('aria-disabled', 'true');
+
+      // Rebuild should be disabled when locked
+      expect(getByTestId('Rebuild')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should enable Delete and Rebuild actions when Linode is not locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          shutdown_linode: true,
+          reboot_linode: true,
+          clone_linode: true,
+          resize_linode: true,
+          rebuild_linode: true,
+          rescue_linode: true,
+          migrate_linode: true,
+          delete_linode: true,
+          generate_linode_lish_token: true,
+          create_linode: true,
+          create_lock: true,
+          delete_lock: true,
+        },
+      });
+
+      const { getByLabelText, getByTestId } = renderWithTheme(
+        <LinodeActionMenu {...props} linodeLocks={[]} />
+      );
+
+      await userEvent.click(
+        getByLabelText(`Action menu for Linode ${props.linodeLabel}`)
+      );
+
+      // Delete should not be disabled when not locked
+      expect(getByTestId('Delete')).not.toHaveAttribute('aria-disabled');
+
+      // Rebuild should not be disabled when not locked
+      expect(getByTestId('Rebuild')).not.toHaveAttribute('aria-disabled');
+    });
   });
 
   describe('buildQueryStringForLinodeClone', () => {

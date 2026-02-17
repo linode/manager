@@ -4,14 +4,17 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 import { StreamCreate } from 'src/features/Delivery/Streams/StreamForm/StreamCreate';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 const mockDestinations = [
-  destinationFactory.build({ id: 1, label: 'Destination 1' }),
+  akamaiObjectStorageDestinationFactory.build({
+    id: 1,
+    label: 'Destination 1',
+  }),
 ];
 
 describe('StreamCreate', () => {

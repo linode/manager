@@ -1,5 +1,6 @@
 import {
   authenticationType,
+  contentType,
   destinationType,
   streamStatus,
   streamType,
@@ -8,7 +9,7 @@ import {
 import type {
   AkamaiObjectStorageDetailsExtended,
   CreateDestinationPayload,
-  CustomHTTPSDetails,
+  CustomHTTPSDetailsExtended,
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
@@ -71,9 +72,20 @@ export const authenticationTypeOptions: AutocompleteOption[] = [
   },
 ];
 
+export const contentTypeOptions: AutocompleteOption[] = [
+  {
+    value: contentType.Json,
+    label: contentType.Json,
+  },
+  {
+    value: contentType.JsonUtf8,
+    label: contentType.JsonUtf8,
+  },
+];
+
 export type DestinationDetailsForm =
   | AkamaiObjectStorageDetailsExtended
-  | CustomHTTPSDetails;
+  | CustomHTTPSDetailsExtended;
 
 export interface DestinationForm
   extends Omit<CreateDestinationPayload, 'details'> {

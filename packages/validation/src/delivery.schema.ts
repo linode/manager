@@ -56,7 +56,7 @@ const clientCertificateDetailsSchema = object({
 }).test(
   'all-or-nothing-cert-details',
   'If any certificate detail is provided, all are required.',
-  (value, context) => {
+  function (value, context) {
     if (!value) {
       return true;
     }
@@ -85,36 +85,36 @@ const clientCertificateDetailsSchema = object({
     if (!hasValue(tls_hostname)) {
       errors.push(
         context.createError({
-          path: 'tls_hostname',
+          path: `${this.path}.tls_hostname`,
           message:
-            'TLS Hostname is required when other certificate details are provided.',
+            'TLS Hostname is required when other Client Certificate details are provided.',
         }),
       );
     }
     if (!hasValue(client_ca_certificate)) {
       errors.push(
         context.createError({
-          path: 'client_ca_certificate',
+          path: `${this.path}.client_ca_certificate`,
           message:
-            'CA Certificate is required when other certificate details are provided.',
+            'CA Certificate is required when other Client Certificate details are provided.',
         }),
       );
     }
     if (!hasValue(client_certificate)) {
       errors.push(
         context.createError({
-          path: 'client_certificate',
+          path: `${this.path}.client_certificate`,
           message:
-            'Client Certificate is required when other certificate details are provided.',
+            'Client Certificate is required when other Client Certificate details are provided.',
         }),
       );
     }
     if (!hasValue(client_private_key)) {
       errors.push(
         context.createError({
-          path: 'client_private_key',
+          path: `${this.path}.client_private_key`,
           message:
-            'Client Key is required when other certificate details are provided.',
+            'Client Key is required when other Client Certificate details are provided.',
         }),
       );
     }
@@ -124,8 +124,12 @@ const clientCertificateDetailsSchema = object({
 );
 
 const customHeaderSchema = object({
-  name: string().max(maxLength, maxLengthMessage).required(),
-  value: string().max(maxLength, maxLengthMessage).required(),
+  name: string()
+    .max(maxLength, maxLengthMessage)
+    .required('Custom Header Name is required.'),
+  value: string()
+    .max(maxLength, maxLengthMessage)
+    .required('Custom Header Value is required'),
 });
 
 const customHTTPSDetailsSchema = object({
@@ -133,7 +137,8 @@ const customHTTPSDetailsSchema = object({
   client_certificate_details: clientCertificateDetailsSchema.optional(),
   content_type: string()
     .oneOf(['application/json', 'application/json; charset=utf-8'])
-    .required('Content Type is required.'),
+    .nullable()
+    .optional(),
   custom_headers: array().of(customHeaderSchema).min(1).optional(),
   data_compression: string().oneOf(['gzip', 'None']).required(),
   endpoint_url: string()
@@ -243,7 +248,7 @@ export const updateDestinationSchema = createDestinationSchema
           'Object contains unknown fields for Akamai Object Storage Details.',
         );
       }
-      if ('client_certificate_details' in value) {
+      if ('endpoint_url' in value) {
         return customHTTPSDetailsSchema.noUnknown(
           'Object contains unknown fields for Custom HTTPS Details.',
         );

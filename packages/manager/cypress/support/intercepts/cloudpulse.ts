@@ -664,3 +664,48 @@ export const mockDeleteChannelError = (
     }
   );
 };
+
+/**
+ * Mocks successful creation of an alert channel (200).
+ * Intercepts POST requests to create alert channels and returns the provided channel object.
+ *
+ * @param {NotificationChannel} channel - The notification channel object to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockCreateAlertChannelSuccess = (
+  channel: NotificationChannel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeResponse(channel) // defaults to 200
+  );
+};
+
+/**
+ * Mocks error responses when creating alert channels.
+ * Intercepts POST requests to create alert channels and returns an error response.
+ *
+ * @param {Object | string} errorPayload - Either an object with field and reason properties for validation errors,
+ *                                         or a string error message for server errors.
+ * @param {number} statusCode - The HTTP status code for the error response (default is 400).
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ *
+ * @example
+ * // Mock a validation error (400)
+ * mockCreateAlertChannelError({ field: 'name', reason: 'Required' }, 400);
+ *
+ * @example
+ * // Mock a server error (500)
+ * mockCreateAlertChannelError('Internal server error', 500);
+ */
+export const mockCreateAlertChannelError = (
+  errorPayload: string | { field: string; reason: string },
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeErrorResponse(errorPayload, statusCode)
+  );
+};

@@ -1,6 +1,8 @@
 import { useLinodeQuery } from '@linode/queries';
-import { Dialog } from '@linode/ui';
+import { Dialog, Notice } from '@linode/ui';
 import React from 'react';
+
+import { LINODE_REBUILD_LOCKED_NOTICE_TEXT } from 'src/features/Linodes/constants';
 
 import { LinodeRebuildForm } from './LinodeRebuildForm';
 
@@ -20,6 +22,8 @@ export const LinodeRebuildDialog = (props: Props) => {
     isLoading,
   } = useLinodeQuery(linodeId ?? -1, linodeId !== undefined);
 
+  const isLocked = !!linode?.locks?.length;
+
   return (
     <Dialog
       error={error?.[0].reason}
@@ -30,6 +34,13 @@ export const LinodeRebuildDialog = (props: Props) => {
       open={open}
       title={`Rebuild Linode ${linodeLabel}`}
     >
+      {isLocked && (
+        <Notice
+          spacingBottom={16}
+          text={LINODE_REBUILD_LOCKED_NOTICE_TEXT}
+          variant="warning"
+        />
+      )}
       {linode && <LinodeRebuildForm linode={linode} onSuccess={onClose} />}
     </Dialog>
   );

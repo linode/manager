@@ -6,6 +6,8 @@ export interface ChildAccount {
 }
 
 export interface GetChildAccountsIamParams {
+  enabled?: boolean;
+  filter?: Filter;
   params?: Params;
   users?: boolean;
 }
@@ -15,6 +17,7 @@ export interface ChildAccountWithDelegates extends ChildAccount {
 }
 
 export interface GetMyDelegatedChildAccountsParams {
+  filter?: Filter;
   params?: Params;
 }
 

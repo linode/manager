@@ -44,6 +44,10 @@ interface AlertRegionsProps {
    */
   serviceType: CloudPulseServiceType | null;
   /**
+   * Callback to set error flag on API failure
+   */
+  setError?: (hasError: boolean) => void;
+  /**
    * The selected regions.
    */
   value?: string[];
@@ -57,12 +61,17 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     errorText,
     mode,
     scrollElement,
+    setError,
   } = props;
   const [searchText, setSearchText] = React.useState<string>('');
-  const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
+  const {
+    data: regions,
+    isLoading: isRegionsLoading,
+    isError: isRegionsError,
+  } = useRegionsQuery();
   const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
-  const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
+  const { data: resources, isLoading: isResourcesLoading, isError } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
@@ -70,6 +79,13 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     undefined,
     getFilterFn(serviceType)
   );
+
+  React.useEffect(() => {
+    const hasError = isError || isRegionsError;
+    if (setError) {
+      setError(hasError);
+    }
+  }, [setError, isError, isRegionsError]);
 
   const titleRef = React.useRef<HTMLDivElement>(null); // Reference to the component title, used for scrolling to the title when the table's page size or page number changes.
 
