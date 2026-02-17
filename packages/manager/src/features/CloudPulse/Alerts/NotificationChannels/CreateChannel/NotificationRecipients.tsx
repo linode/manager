@@ -81,6 +81,7 @@ export const NotificationRecipients = React.memo(
 
     return (
       <Autocomplete
+        data-qa-autocomplete="recipients-select"
         data-testid="recipients-select"
         disableSelectAll={recipientsLimitReached}
         errorText={
