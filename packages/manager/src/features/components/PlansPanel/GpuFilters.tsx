@@ -16,7 +16,7 @@ import {
   PLAN_FILTER_GPU_RTX_PRO_6000,
 } from './constants';
 import { getIsPlanDisabled } from './utils';
-import { filterPlansByGpuType } from './utils/planFilters';
+import { filterPlansByGpuType, getGpuRank } from './utils/planFilters';
 
 import type {
   PlanFilterRenderArgs,
@@ -84,11 +84,6 @@ const GPUPlanFilterComponent = React.memo(
         },
         []
       );
-      const generationRank = {
-        [PLAN_FILTER_GPU_RTX_PRO_6000]: 3,
-        [PLAN_FILTER_GPU_RTX_4000_ADA]: 2,
-        [PLAN_FILTER_GPU_RTX_6000]: 1,
-      };
       // Sort options: available first, then all, then by generation (Blackwell > Ada > Quadro)
       return options.sort((a, b) => {
         // "available" always comes first
@@ -105,7 +100,7 @@ const GPUPlanFilterComponent = React.memo(
         }
 
         // generation order blackwell > ada > quadro
-        return generationRank[b.value] - generationRank[a.value];
+        return getGpuRank(b.value) - getGpuRank(a.value);
       });
     }, [plans]);
 
@@ -134,9 +129,10 @@ const GPUPlanFilterComponent = React.memo(
       []
     );
 
-    const filteredPlans = React.useMemo(() => {
-      return filterPlansByGpuType(plans, gpuType);
-    }, [gpuType, plans]);
+    const filteredPlans = React.useMemo(
+      () => filterPlansByGpuType(plans, gpuType),
+      [gpuType, plans]
+    );
 
     const selectedGpuType = React.useMemo(() => {
       return (
@@ -193,8 +189,6 @@ const GPUPlanFilterComponent = React.memo(
     return null;
   }
 );
-
-GPUPlanFilterComponent.displayName = 'GPUPlanFilterComponent';
 
 export const createGPUPlanFilterRenderProp = () => {
   return ({

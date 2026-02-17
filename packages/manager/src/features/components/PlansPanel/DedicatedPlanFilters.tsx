@@ -24,6 +24,7 @@ import { getIsPlanDisabled } from './utils';
 import {
   applyDedicatedPlanFilters,
   filterPlansByGeneration,
+  getGenerationRank,
   supportsTypeFiltering,
 } from './utils/planFilters';
 
@@ -83,11 +84,6 @@ const DedicatedPlanFiltersComponent = React.memo(
             (plan) => getIsPlanDisabled(plan)
           ),
         }));
-        const generationRank = {
-          [PLAN_FILTER_GENERATION_G8]: 3,
-          [PLAN_FILTER_GENERATION_G7]: 2,
-          [PLAN_FILTER_GENERATION_G6]: 1,
-        };
         // Sort options: available first, then all, then by generation (G8 > G7 > G6)
         return options.sort((a, b) => {
           // "available" always comes first
@@ -104,7 +100,7 @@ const DedicatedPlanFiltersComponent = React.memo(
           }
 
           // generation order g8 > g7 > g6
-          return generationRank[b.value] - generationRank[a.value];
+          return getGenerationRank(b.value) - getGenerationRank(a.value);
         });
       }, [plans]);
 
