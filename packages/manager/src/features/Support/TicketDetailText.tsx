@@ -7,6 +7,8 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
 
+import { SUPPORT_TICKET_SANITIZE_OPTIONS } from './sanitizeOptions';
+
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -52,7 +54,10 @@ export const TicketDetailText = (props: Props) => {
   return (
     <Grid className={classes.root} container spacing={2}>
       <Grid style={{ width: '100%' }}>
-        <Markdown textOrMarkdown={ticketReplyBody} />
+        <Markdown
+          sanitizeOptions={SUPPORT_TICKET_SANITIZE_OPTIONS}
+          textOrMarkdown={ticketReplyBody}
+        />
       </Grid>
       {truncatedText !== text && (
         <IconButton

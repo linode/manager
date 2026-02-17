@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
+import { SUPPORT_TICKET_SANITIZE_OPTIONS } from 'src/features/Support/sanitizeOptions';
 
 import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
 
@@ -254,7 +255,10 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                 {summary}
               </Typography>
               <Markdown textOrMarkdown={quotaIncreaseDescription} />{' '}
-              <Markdown textOrMarkdown={notes ?? ''} />
+              <Markdown
+                sanitizeOptions={SUPPORT_TICKET_SANITIZE_OPTIONS}
+                textOrMarkdown={notes ?? ''}
+              />
             </Stack>
           </Accordion>
           <ActionsPanel
