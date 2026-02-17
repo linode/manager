@@ -4,11 +4,11 @@ import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
-import type { ImagesLibraryType } from 'src/features/Images/utils';
+import type { ImageLibraryType } from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
-  subType?: ImagesLibraryType;
+  subType?: ImageLibraryType;
 }
 
 export interface ImageCreateDiskSearchParams {
@@ -45,10 +45,10 @@ const imagesRoute = createRoute({
 
 const imagesIndexRoute = createRoute({
   beforeLoad: ({ search, context }) => {
-    // When private image sharing is enabled, redirect to Images Library tab with default 'custom' sub-tab
+    // When private image sharing is enabled, redirect to Image Library tab with default 'custom' sub-tab
     if (!search.subType && context.isPrivateImageSharingEnabled) {
       throw redirect({
-        to: '/images/images-library',
+        to: '/images/image-library',
         search: { subType: 'custom' },
       });
     }
@@ -129,10 +129,10 @@ const imagesCreateUploadRoute = createRoute({
   )
 );
 
-// V2 routes - Images Library tab and Share Groups tab
+// V2 routes - Image Library tab and Share Groups tab
 
-// Images Library tab - contains sub-tabs for 'My custom images', 'Shared with me', and 'Recovery images'
-const imagesLibraryRoute = createRoute({
+// Image Library tab - contains sub-tabs for 'My custom images', 'Shared with me', and 'Recovery images'
+const imageLibraryRoute = createRoute({
   beforeLoad: ({ search, context }) => {
     if (!context.isPrivateImageSharingEnabled) {
       throw redirect({
@@ -143,13 +143,13 @@ const imagesLibraryRoute = createRoute({
 
     if (!search.subType) {
       throw redirect({
-        to: '/images/images-library',
+        to: '/images/image-library',
         search: { subType: 'custom' },
       });
     }
   },
   getParentRoute: () => imagesRoute,
-  path: 'images-library',
+  path: 'image-library',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
   import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
@@ -170,7 +170,7 @@ const imagesShareGroupsRoute = createRoute({
 
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
-  imagesLibraryRoute,
+  imageLibraryRoute,
   imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
