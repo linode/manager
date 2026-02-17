@@ -53,7 +53,7 @@ export const filterPlansByGeneration = (
     return plans;
   }
 
-  //For "Available", return only plans that are not disabled
+  // For "Available", return only plans that are not disabled
   if (generation === 'available') {
     return plans.filter((plan) => !getIsPlanDisabled(plan));
   }
