@@ -32,7 +32,7 @@ export const ImageLibraryTabs = () => {
 
   const onTabChange = (index: number) => {
     // - Update the "subType" query param.
-    // - This switches between "My custom images", "Shared with me" and "Recovery images" sub-tabs within the Image Library tab.
+    // - This switches between "Owned by me", "Shared with me" and "Recovery images" sub-tabs within the Image Library tab.
     navigate({
       to: `/images/image-library`,
       search: (prev) => ({
