@@ -95,7 +95,7 @@ describe('useIsPrivateImageSharingEnabled', () => {
 
 describe('getImageLibrarySubTabIndex', () => {
   const subTabs: ImageLibrarySubTab[] = [
-    { type: 'custom', title: 'My custom images' },
+    { type: 'custom', title: 'Owned by me' },
     { type: 'shared', title: 'Shared with me', isBeta: true },
     { type: 'recovery', title: 'Recovery images' },
   ];

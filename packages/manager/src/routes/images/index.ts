@@ -131,7 +131,7 @@ const imagesCreateUploadRoute = createRoute({
 
 // V2 routes - Image Library tab and Share Groups tab
 
-// Image Library tab - contains sub-tabs for 'My custom images', 'Shared with me', and 'Recovery images'
+// Image Library tab - contains sub-tabs for 'Owned by me', 'Shared with me', and 'Recovery images'
 const imageLibraryRoute = createRoute({
   beforeLoad: ({ search, context }) => {
     if (!context.isPrivateImageSharingEnabled) {
