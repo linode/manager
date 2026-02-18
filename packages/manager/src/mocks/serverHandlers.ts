@@ -3394,7 +3394,7 @@ export const handlers = [
       ...alertFactory.buildList(2, {
         created_by: 'user1',
         service_type: 'linode',
-        status: 'in progress',
+        status: 'provisioning',
         tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
@@ -3470,7 +3470,6 @@ export const handlers = [
       ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
-      ...alertFactory.buildList(3, { status: 'in progress', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3588,7 +3587,6 @@ export const handlers = [
             status: pickRandom([
               'enabled',
               'disabled',
-              'in progress',
               'enabling',
               'disabling',
               'provisioning',
