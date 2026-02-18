@@ -95,7 +95,7 @@ describe('useIsPrivateImageSharingEnabled', () => {
 
 describe('getImageLibrarySubTabIndex', () => {
   const subTabs: ImageLibrarySubTab[] = [
-    { type: 'custom', title: 'Owned by me' },
+    { type: 'owned', title: 'Owned by me' },
     { type: 'shared', title: 'Shared with me', isBeta: true },
     { type: 'recovery', title: 'Recovery images' },
   ];
@@ -105,7 +105,7 @@ describe('getImageLibrarySubTabIndex', () => {
   });
 
   it('returns the correct index when selectedTab matches a tab key', () => {
-    expect(getImageLibrarySubTabIndex(subTabs, 'custom')).toBe(0);
+    expect(getImageLibrarySubTabIndex(subTabs, 'owned')).toBe(0);
     expect(getImageLibrarySubTabIndex(subTabs, 'shared')).toBe(1);
     expect(getImageLibrarySubTabIndex(subTabs, 'recovery')).toBe(2);
   });
@@ -116,6 +116,6 @@ describe('getImageLibrarySubTabIndex', () => {
   });
 
   it('works with an empty subTabs array', () => {
-    expect(getImageLibrarySubTabIndex([], 'custom')).toBe(0);
+    expect(getImageLibrarySubTabIndex([], 'owned')).toBe(0);
   });
 });

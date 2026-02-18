@@ -24,7 +24,7 @@ export const ImagesRoute = () => {
       if (isPrivateImageSharingEnabled && location.pathname === '/images') {
         navigate({
           to: '/images/image-library',
-          search: { subType: 'custom' },
+          search: { subType: 'owned' },
           replace: true,
         });
       } else if (
