@@ -430,7 +430,7 @@ export const extractPlansInformation = ({
 /**
  *
  * A utility function to determine if a plan should be disabled based on criteria:
- * -belonging to a disabled class
+ * - belonging to a disabled class
  * - having limited availability (API based)
  * - being a 512GB plan (hard coded)
  *

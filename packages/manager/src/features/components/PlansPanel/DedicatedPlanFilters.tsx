@@ -141,7 +141,7 @@ const DedicatedPlanFiltersComponent = React.memo(
 
     const handleGenerationChange = React.useCallback(
       (_event: React.SyntheticEvent, option: GenerationOptionWithDisabled) => {
-        // When clearing, default to "All Available" instead of undefined
+        // if option is undefined, default to "All Available" instead
         const newGeneration = option?.value ?? PLAN_FILTER_ALL_AVAILABLE;
         setGeneration(newGeneration);
 
