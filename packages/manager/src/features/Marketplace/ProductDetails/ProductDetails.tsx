@@ -15,7 +15,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
 
 import { getProductById } from '../products';
-import { getLogoUrl } from '../shared';
+import { getLogoUrl, marketplaceContainerStyles } from '../shared';
 import { ContactSalesDrawer } from './ContactSalesDrawer';
 import { getProductTabDetails } from './pages';
 import {
@@ -88,15 +88,7 @@ export const ProductDetails = () => {
   };
 
   return (
-    <Box
-      sx={(theme) => ({
-        mx: {
-          md: 0,
-          sm: theme.spacingFunction(16),
-          xs: theme.spacingFunction(12),
-        },
-      })}
-    >
+    <Box sx={marketplaceContainerStyles}>
       <DocumentTitleSegment
         segment={
           isContactSalesOpen

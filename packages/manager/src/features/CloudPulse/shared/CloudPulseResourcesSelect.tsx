@@ -143,6 +143,7 @@ export const CloudPulseResourcesSelect = React.memo(
       <Autocomplete
         autoHighlight
         clearOnBlur
+        data-pendo-id={label || 'Resources'} // Adding data-pendo-id for better tracking in Pendo analytics, using the label prop to create a unique identifier for the select element.
         data-testid="resource-select"
         disabled={disabled}
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
@@ -198,6 +199,7 @@ export const CloudPulseResourcesSelect = React.memo(
             <ListItem
               {...rest}
               aria-disabled={isMaxSelectionsReached}
+              data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
               data-qa-option
               key={key}
             >

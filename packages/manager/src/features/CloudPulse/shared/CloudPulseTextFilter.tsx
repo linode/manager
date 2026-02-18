@@ -118,6 +118,7 @@ export const CloudPulseTextFilter = React.memo(
     return (
       <TextField
         autoComplete="off"
+        data-testid={`${filterKey}-input`} // Adding data-testid for better tracking in testing, using the filterKey as the identifier for the text field element.
         disabled={disabled}
         errorText={errorText}
         helperText={!errorText ? HELPER_TEXT[filterKey] : undefined}
