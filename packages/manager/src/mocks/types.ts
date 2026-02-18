@@ -26,6 +26,7 @@ import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
+  NodeBalancerVpcConfig,
   Notification,
   PlacementGroup,
   Region,
@@ -232,6 +233,7 @@ export interface MockState {
   locks: ResourceLock[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];
+  nodeBalancerVPCs: NodeBalancerVpcConfig[];
   nodeBalancers: NodeBalancer[];
   notificationQueue: Notification[];
   placementGroups: PlacementGroup[];

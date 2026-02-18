@@ -1,7 +1,7 @@
 import {
-  useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodeBalancersFirewallsQuery,
+  useNodeBalancerVPCConfigsBetaQuery,
 } from '@linode/queries';
 import { Box, CircleProgress, Typography } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
@@ -11,17 +11,19 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import type { APIError, Firewall, NodeBalancerConfig } from '@linode/api-v4';
+import type { APIError, Firewall, NodeBalancerVpcConfig } from '@linode/api-v4';
+
+const LOADING_TEXT = 'Loading...';
 interface Props {
   hover?: boolean;
-  ipv4: string;
   nodeBalancerId: number;
+  subnetId: number;
 }
 
 export const SubnetNodeBalancerRow = ({
   nodeBalancerId,
   hover = false,
-  ipv4,
+  subnetId,
 }: Props) => {
   const {
     data: nodebalancer,
@@ -29,42 +31,47 @@ export const SubnetNodeBalancerRow = ({
     isLoading: nodebalancerLoading,
   } = useNodeBalancerQuery(nodeBalancerId);
   const {
-    data: configs,
-    isLoading: isConfigsLoading,
-    error: configsError,
-  } = useAllNodeBalancerConfigsQuery(Number(nodeBalancerId));
-  const {
     data: attachedFirewallData,
     isLoading,
     error,
   } = useNodeBalancersFirewallsQuery(Number(nodeBalancerId));
 
-  const getNodebalancerStatus = (
-    data: NodeBalancerConfig[],
+  const {
+    data: vpcConfigs,
+    error: vpcConfigsError,
+    isLoading: isVpcConfigsLoading,
+  } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(nodeBalancerId),
+    Boolean(nodeBalancerId)
+  );
+
+  const frontendVpcConfig = vpcConfigs?.data.find(
+    (config) => config.purpose === 'frontend' && config.subnet_id === subnetId
+  );
+
+  const backendVpcConfig = vpcConfigs?.data.find(
+    (config) => config.purpose === 'backend' && config.subnet_id === subnetId
+  );
+
+  const getVpcIpCellString = (
+    data: NodeBalancerVpcConfig | undefined,
+    ipProperty: 'ipv4_range' | 'ipv6_range',
     loading: boolean,
     error?: APIError[]
   ): React.JSX.Element | string => {
     if (loading) {
-      return 'Loading...';
+      return LOADING_TEXT;
     }
 
     if (error) {
-      return 'Error retrieving Status';
+      return 'Error retrieving IP';
     }
 
-    const down = data?.reduce((acc: number, config) => {
-      return acc + config.nodes_status.down;
-    }, 0);
+    if (!data || data.subnet_id !== subnetId) {
+      return '—';
+    }
 
-    const up = data?.reduce((acc: number, config) => {
-      return acc + config.nodes_status.up;
-    }, 0);
-
-    return (
-      <>
-        {up} up - {down} down
-      </>
-    );
+    return data[ipProperty] ?? '—';
   };
 
   const getFirewallsCellString = (
@@ -73,7 +80,7 @@ export const SubnetNodeBalancerRow = ({
     error?: APIError[]
   ): React.JSX.Element | string => {
     if (loading) {
-      return 'Loading...';
+      return LOADING_TEXT;
     }
 
     if (error) {
@@ -142,14 +149,38 @@ export const SubnetNodeBalancerRow = ({
           {nodebalancer?.label}
         </Link>
       </TableCell>
-      <TableCell capitalizationOverride statusCell>
-        {getNodebalancerStatus(
-          configs ?? [],
-          isConfigsLoading,
-          configsError ?? undefined
+      <TableCell>
+        {getVpcIpCellString(
+          frontendVpcConfig,
+          'ipv4_range',
+          isVpcConfigsLoading,
+          vpcConfigsError ?? undefined
         )}
       </TableCell>
-      <TableCell>{ipv4}</TableCell>
+      <TableCell>
+        {getVpcIpCellString(
+          frontendVpcConfig,
+          'ipv6_range',
+          isVpcConfigsLoading,
+          vpcConfigsError ?? undefined
+        )}
+      </TableCell>
+      <TableCell>
+        {getVpcIpCellString(
+          backendVpcConfig,
+          'ipv4_range',
+          isVpcConfigsLoading,
+          vpcConfigsError ?? undefined
+        )}
+      </TableCell>
+      <TableCell>
+        {getVpcIpCellString(
+          backendVpcConfig,
+          'ipv6_range',
+          isVpcConfigsLoading,
+          vpcConfigsError ?? undefined
+        )}
+      </TableCell>
       <TableCell colSpan={2}>
         {getFirewallsCellString(
           attachedFirewallData?.data ?? [],
@@ -163,9 +194,11 @@ export const SubnetNodeBalancerRow = ({
 
 export const SubnetNodebalancerTableRowHead = (
   <TableRow>
-    <TableCell sx={{ width: '24%' }}>NodeBalancer</TableCell>
-    <TableCell sx={{ width: '18%' }}>Backend Status</TableCell>
-    <TableCell sx={{ width: '30%' }}>VPC IPv4 Range</TableCell>
-    <TableCell>Firewalls</TableCell>
+    <TableCell sx={{ width: '20%' }}>NodeBalancer</TableCell>
+    <TableCell sx={{ width: '15%' }}>Frontend IPv4</TableCell>
+    <TableCell sx={{ width: '20%' }}>Frontend IPv6</TableCell>
+    <TableCell sx={{ width: '15%' }}>Backend IPv4 Ranges</TableCell>
+    <TableCell sx={{ width: '20%' }}>Backend IPv6 Ranges</TableCell>
+    <TableCell>Firewall</TableCell>
   </TableRow>
 );
