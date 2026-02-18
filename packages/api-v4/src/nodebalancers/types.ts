@@ -10,7 +10,7 @@ type UDPStickiness = 'none' | 'session' | 'source_ip';
 
 export type Stickiness = TCPStickiness | UDPStickiness;
 
-type NodeBalancerType = 'common' | 'premium';
+type NodeBalancerType = 'common' | 'premium' | 'premium_40GB';
 
 export interface LKEClusterInfo {
   id: number;
@@ -33,6 +33,8 @@ export interface NodeBalancer {
    */
   client_udp_sess_throttle?: number;
   created: string;
+  frontend_address_type: 'public' | 'vpc';
+  frontend_vpc_subnet_id: null | number;
   hostname: string;
   id: number;
   ipv4: string;
@@ -145,6 +147,7 @@ export interface NodeBalancerVpcConfig {
   ipv4_range: null | string;
   ipv6_range: null | string;
   nodebalancer_id: number;
+  purpose: 'backend' | 'frontend';
   subnet_id: number;
   vpc_id: number;
 }

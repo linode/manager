@@ -26,6 +26,7 @@ import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
+  NodeBalancerVpcConfig,
   Notification,
   PlacementGroup,
   Region,
@@ -131,6 +132,7 @@ export interface MockPresetExtra extends MockPresetBase {
  */
 export type MockPresetCrudGroup = {
   id:
+    | 'Account'
     | 'Child Accounts'
     | 'CloudNATs'
     | 'Delivery'
@@ -152,6 +154,7 @@ export type MockPresetCrudGroup = {
     | 'VPCs';
 };
 export type MockPresetCrudId =
+  | 'account:crud'
   | 'child-accounts-for-user:crud'
   | 'child-accounts:crud'
   | 'cloudnats:crud'
@@ -232,6 +235,7 @@ export interface MockState {
   locks: ResourceLock[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];
+  nodeBalancerVPCs: NodeBalancerVpcConfig[];
   nodeBalancers: NodeBalancer[];
   notificationQueue: Notification[];
   placementGroups: PlacementGroup[];

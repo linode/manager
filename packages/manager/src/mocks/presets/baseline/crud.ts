@@ -5,6 +5,7 @@ import {
 } from 'src/mocks/presets/crud/handlers/events';
 import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
+import { accountCrudPreset } from '../crud/account';
 import { cloudNATCrudPreset } from '../crud/cloudnats';
 import { childAccountsCrudPreset } from '../crud/delegation';
 import { domainCrudPreset } from '../crud/domains';
@@ -27,6 +28,7 @@ import type { MockPresetBaseline } from 'src/mocks/types';
 export const baselineCrudPreset: MockPresetBaseline = {
   group: { id: 'General' },
   handlers: [
+    ...accountCrudPreset.handlers,
     ...childAccountsCrudPreset.handlers,
     ...cloudNATCrudPreset.handlers,
     ...domainCrudPreset.handlers,

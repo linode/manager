@@ -8,7 +8,6 @@ export * from './images';
 export * from './linodeConfigInterface';
 export * from './linodeInterface';
 export * from './linodes';
-export * from './marketplace';
 export * from './nodebalancer';
 export * from './profile';
 export * from './regions';
