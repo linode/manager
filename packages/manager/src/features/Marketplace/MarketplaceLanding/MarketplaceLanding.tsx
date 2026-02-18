@@ -18,6 +18,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 
 import { PRODUCTS } from '../products';
+import { marketplaceContainerStyles } from '../shared';
 import { CategorySection } from './CategorySection';
 import { filterProducts } from './utils';
 
@@ -175,19 +176,7 @@ export const MarketplaceLanding = () => {
   const showEmptyState = filteredProducts.length === 0;
 
   return (
-    <Box
-      sx={(theme) => ({
-        [theme.breakpoints.down('md')]: {
-          px: theme.spacingFunction(8),
-        },
-        // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
-        '& [data-qa-entity-header]': {
-          [theme.breakpoints.down('md')]: {
-            marginLeft: `-${theme.spacingFunction(8)}`,
-          },
-        },
-      })}
-    >
+    <Box sx={marketplaceContainerStyles}>
       <DocumentTitleSegment segment="Cloud Marketplace - Catalog" />
       <LandingHeader
         breadcrumbProps={{
