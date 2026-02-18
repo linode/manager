@@ -68,8 +68,10 @@ export const PlanInformation = (props: PlanInformationProps) => {
   };
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
+
   const showBlackwellLimitedAvailabilityBanner =
-    plans &&
+    hasSelectedRegion &&
+    plans?.length &&
     filterPlansByGpuType(
       plans as PlanWithAvailability[],
       PLAN_FILTER_GPU_RTX_PRO_6000

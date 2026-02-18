@@ -172,7 +172,7 @@ const DedicatedPlanFiltersComponent = React.memo(
       return (
         generationOptions.find((opt) => opt.value === generation) ?? undefined
       );
-    }, [generation]);
+    }, [generation, generationOptions]);
 
     const selectedTypeOption = React.useMemo(() => {
       const displayType = typeFilteringSupported ? type : PLAN_FILTER_ALL;
