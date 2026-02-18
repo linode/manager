@@ -224,6 +224,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             backgroundColor: theme.tokens.alias.Background.Normal,
             paddingX: theme.tokens.spacing.S24,
             paddingY: theme.tokens.spacing.S16,
+            maxWidth: 304,
           }),
         },
       }}
