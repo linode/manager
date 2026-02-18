@@ -446,7 +446,7 @@ export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
     planIsTooSmallForAPL,
   } = plan;
 
-  if (
+  return (
     planBelongsToDisabledClass ||
     planHasLimitedAvailability ||
     planIsDisabled512Gb ||
@@ -454,10 +454,7 @@ export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
     planIsSmallerThanUsage ||
     planIsTooSmall ||
     planIsTooSmallForAPL
-  ) {
-    return true;
-  }
-  return false;
+  );
 };
 
 /**
