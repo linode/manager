@@ -1,6 +1,6 @@
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export type Category =
   | 'AI'
@@ -72,3 +72,20 @@ export const getLogoUrl = (product: Product, theme: Theme) => {
     ? `${base}${product.partner.logoLightMode}`
     : `${base}${product.partner.logoDarkMode}`;
 };
+
+/**
+ * Common container styles for Marketplace pages (Landing and Product Details)
+ */
+export const marketplaceContainerStyles: SxProps<Theme> = (theme) => ({
+  mx: {
+    md: 0,
+    sm: theme.spacingFunction(16), // tablet
+    xs: theme.spacingFunction(12), // mobile
+  },
+  // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the content
+  '& [data-qa-entity-header]': {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: `-${theme.spacingFunction(8)}`,
+    },
+  },
+});

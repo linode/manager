@@ -388,9 +388,9 @@ export const VPCSubnetsTable = (props: Props) => {
               <TableBody>
                 {subnet.nodebalancers.map((nb) => (
                   <SubnetNodeBalancerRow
-                    ipv4={nb.ipv4_range}
                     key={nb.id}
                     nodeBalancerId={nb.id}
+                    subnetId={subnet.id}
                   />
                 ))}
               </TableBody>
