@@ -107,7 +107,12 @@ interface AlertToggleOptions extends AlertActionOptions {
   confirmationText: string;
   successMessage: string;
 }
-const statusList: AlertStatusType[] = ['enabled', 'disabled', 'failed'];
+const statusList: AlertStatusType[] = [
+  'enabled',
+  'disabled',
+  'provisioning',
+  'failed',
+];
 const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 
 /**
