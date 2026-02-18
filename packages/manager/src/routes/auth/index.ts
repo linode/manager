@@ -13,15 +13,10 @@ interface OAuthCallbackSearch {
   state?: string;
 }
 
-interface CancelLandingSearch {
-  survey_link?: string;
-}
-
 const cancelLandingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'cancel',
   component: CancelLanding,
-  validateSearch: (search: CancelLandingSearch) => search,
 });
 
 const logoutRoute = createRoute({
