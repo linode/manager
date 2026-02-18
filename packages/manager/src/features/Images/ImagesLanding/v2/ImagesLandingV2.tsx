@@ -10,7 +10,7 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
 const ImageLibraryTabs = React.lazy(() =>
-  import('./ImagesLibraryTabs').then((module) => ({
+  import('./ImageLibraryTabs').then((module) => ({
     default: module.ImageLibraryTabs,
   }))
 );
