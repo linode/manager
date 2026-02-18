@@ -168,9 +168,37 @@ const imagesShareGroupsRoute = createRoute({
   )
 );
 
+const imageActionRouteV2 = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in imageActions)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/images',
+      });
+    }
+  },
+  getParentRoute: () => imageLibraryRoute,
+  params: {
+    parse: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+    stringify: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+  },
+  path: '$imageId/$action',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
+  )
+);
+
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
-  imageLibraryRoute,
+  imageLibraryRoute.addChildren([imageActionRouteV2]),
   imagesShareGroupsRoute,
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,

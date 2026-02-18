@@ -78,7 +78,7 @@ export const IMAGES_CONFIG: Omit<
   'recovery' | 'shared'
 > = {
   custom: {
-    title: 'My Custom Images',
+    title: 'Owned by me',
     description: (
       <>
         These are{' '}
