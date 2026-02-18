@@ -292,8 +292,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     hideLabel: true,
                     inputRef: field.ref,
                     inputProps: {
-                      'data-pendo-id':
-                        'Cloud Marketplace Contact Sales-Region-Input',
+                      'data-pendo-id': 'Cloud Marketplace Contact Sales-Region',
                     },
                     InputProps: {
                       startAdornment: selectedCountry && (
@@ -382,7 +381,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       inputRef: field.ref,
                       inputProps: {
                         'data-pendo-id':
-                          'Cloud Marketplace Contact Sales Phone number-Code-Input',
+                          'Cloud Marketplace Contact Sales-Country Code',
                       },
                       InputProps: {
                         startAdornment: selectedPhoneCountry && (
@@ -423,7 +422,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                         slotProps={{
                           htmlInput: {
                             'data-pendo-id':
-                              'Cloud Marketplace Contact Sales Phone number-Number',
+                              'Cloud Marketplace Contact Sales-Phone Number',
                           },
                         }}
                         type="tel"
@@ -599,7 +598,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     </Typography>
                   )}
                   <LinkButton
-                    data-pendo-id={`Cloud Marketplace Contact Sales-${showConsentDetails ? 'Show Details' : 'Hide Details'}`}
+                    data-pendo-id={`Cloud Marketplace Contact Sales-${showConsentDetails ? 'Hide Details' : 'Show Details'}`}
                     onClick={() => setShowConsentDetails(!showConsentDetails)}
                     sx={(theme) => ({
                       '&:hover': {

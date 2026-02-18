@@ -71,6 +71,7 @@ describe('<ValueFieldRenderer />', () => {
     operator: EQ,
     value: null,
     values: null,
+    handleError: vi.fn(),
   };
 
   it('renders a TextField if config type is textfield', () => {
