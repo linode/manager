@@ -29,6 +29,14 @@ export const CloudPulseModifyAlertRegions = React.memo(
       });
     };
     const titleRef = React.useRef<HTMLDivElement>(null);
+
+    const setError = React.useCallback(
+      (isError: boolean) => {
+        setValue('hasAPIError', isError);
+      },
+      [setValue]
+    );
+
     return (
       <Controller
         control={control}
@@ -49,6 +57,7 @@ export const CloudPulseModifyAlertRegions = React.memo(
                 handleChange={handleRegionsChange}
                 scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher}
+                setError={setError}
                 value={field.value}
               />
             </Box>

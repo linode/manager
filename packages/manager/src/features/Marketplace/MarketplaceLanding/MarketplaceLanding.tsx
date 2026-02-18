@@ -4,6 +4,7 @@ import {
   Box,
   ErrorState,
   LinkButton,
+  SelectedIcon,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -21,6 +22,7 @@ import { CategorySection } from './CategorySection';
 import { filterProducts } from './utils';
 
 import type { Category, Product, Type } from '../shared';
+import type { AutocompleteRenderOptionState } from '@mui/material';
 
 export const MarketplaceLanding = () => {
   const navigate = useNavigate();
@@ -88,6 +90,34 @@ export const MarketplaceLanding = () => {
     updateSearchParam('query', searchString || undefined);
   };
 
+  const renderAutocompleteOption = React.useCallback(
+    (prefix: string) =>
+      (
+        props: React.HTMLAttributes<HTMLLIElement> & { key: string },
+        option: { label: string },
+        state: AutocompleteRenderOptionState
+      ) => {
+        const { key, ...rest } = props;
+        return (
+          <li
+            {...rest}
+            data-pendo-id={`Cloud Marketplace Catalog-${option.label}`}
+            key={`${prefix}-${key}`}
+          >
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {option.label}
+            </Box>
+            <SelectedIcon visible={state.selected} />
+          </li>
+        );
+      },
+    []
+  );
+
   // Filter products here based on category, search and type filters. If no filters are set, shows all available products.
   const filteredProducts = React.useMemo(
     () =>
@@ -147,9 +177,8 @@ export const MarketplaceLanding = () => {
   return (
     <Box
       sx={(theme) => ({
-        px: {
-          sm: theme.spacingFunction(16),
-          xs: theme.spacingFunction(12),
+        [theme.breakpoints.down('md')]: {
+          px: theme.spacingFunction(8),
         },
         // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
         '& [data-qa-entity-header]': {
@@ -209,6 +238,7 @@ export const MarketplaceLanding = () => {
             }
             options={categoryOptions}
             placeholder="Category"
+            renderOption={renderAutocompleteOption('category')}
             textFieldProps={{
               hideLabel: true,
             }}
@@ -226,6 +256,7 @@ export const MarketplaceLanding = () => {
             }
             options={typeOptions}
             placeholder="Type"
+            renderOption={renderAutocompleteOption('type')}
             textFieldProps={{
               hideLabel: true,
             }}
