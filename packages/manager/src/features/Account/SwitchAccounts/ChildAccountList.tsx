@@ -2,8 +2,6 @@ import { Box, CircleProgress, LinkButton, Notice, Stack } from '@linode/ui';
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-
 import type { ChildAccount, Filter, UserType } from '@linode/api-v4';
 
 export interface ChildAccountListProps {
@@ -43,8 +41,6 @@ export const ChildAccountList = React.memo(
     fetchNextPage,
     isFetchingNextPage,
   }: ChildAccountListProps) => {
-    const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-
     if (isLoading) {
       return (
         <Box display="flex" justifyContent="center">
@@ -53,11 +49,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (
-      !isIAMDelegationEnabled &&
-      childAccounts &&
-      childAccounts.length === 0
-    ) {
+    if (childAccounts && childAccounts.length === 0) {
       return (
         <Notice variant="info">
           There are no child accounts
@@ -65,21 +57,6 @@ export const ChildAccountList = React.memo(
             ? ' that match this query'
             : undefined}
           .
-        </Notice>
-      );
-    }
-
-    if (
-      isIAMDelegationEnabled &&
-      childAccounts &&
-      childAccounts.length === 0 &&
-      !Object.prototype.hasOwnProperty.call(filter, 'company')
-    ) {
-      return (
-        <Notice variant="info">
-          You don&apos;t have access to other accounts. You must be added to a
-          delegation by your account administrator to have access to other
-          accounts.
         </Notice>
       );
     }

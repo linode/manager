@@ -297,6 +297,7 @@ export const SwitchAccountDrawer = (props: Props) => {
               ? currentParentTokenWithBearer
               : currentTokenWithBearer
           }
+          filter={filter}
           isLoading={isLoading}
           isSwitchingChildAccounts={isSwitchingChildAccounts}
           onClose={onClose}
