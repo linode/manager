@@ -39,7 +39,7 @@ export const useDelegationRole = (): DelegationRole => {
 /**
  * isDefaultDelegationRolesForChildAccount is true if:
  * - IAM Delegation is enabled for the account
- * - The current user is a child or delegateaccount
+ * - The current user is a child or delegate account
  * - The current route includes '/iam/roles/defaults'
  *
  * This flag is used to determine if the component should show or fetch/update delegated default roles
