@@ -250,7 +250,7 @@ export const LinodeCreate = () => {
       <DocumentTitleSegment segment="Create a Linode" />
       {linodeCreateBanner?.enabled && (
         <DismissibleBanner
-          preferenceKey="linode-create-vm-host-maintenance-notice"
+          preferenceKey="linode-create-banner"
           spacingBottom={8}
           variant="info"
         >

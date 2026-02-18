@@ -121,12 +121,12 @@ export const filterPlansByType = (
       const isPlanADisabled = getIsPlanDisabled(a);
       const isPlanBDisabled = getIsPlanDisabled(b);
 
-      // 1️⃣ Primary sort: Availability (available plans first)
+      // Primary sort: Availability (available plans first)
       if (isPlanADisabled !== isPlanBDisabled) {
         return Number(isPlanADisabled) - Number(isPlanBDisabled);
       }
 
-      // 2️⃣ Secondary sort: Generation (newest generation first)
+      // Secondary sort: Generation (newest generation first)
       return getGenerationRank(b.id) - getGenerationRank(a.id);
     });
   }
@@ -234,7 +234,7 @@ export const getGpuRank = (planId: string): number => {
  * // Returns all plans with GPU type 'gpu-rtx4000'
  *
  * const allDedicatedPlans = filterPlansByGpuType(allPlans, 'all');
- * // Returns all plans as-is(already filtered by plan type in parent) sorted based on the latest generation
+ * // Returns all plans as-is (already filtered by plan type in parent) sorted based on the latest generation
  * ```
  */
 export const filterPlansByGpuType = (
