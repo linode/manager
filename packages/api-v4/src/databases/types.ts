@@ -99,7 +99,7 @@ export type HostEndpointRole =
 interface HostEndpoint {
   address: string;
   port: number;
-  private_access: boolean;
+  public_access: boolean;
   role: HostEndpointRole;
 }
 

@@ -220,22 +220,80 @@ const makeMockDatabase = (params: PathParams): Database => {
 
   const database = databaseFactory.build(db);
 
-  if (database.platform !== 'rdbms-default') {
-    delete database.private_network;
-  }
+  database.private_network = {
+    public_access: true,
+    subnet_id: 123,
+    vpc_id: 10,
+  };
 
-  if (database.platform === 'rdbms-default' && !!database.private_network) {
+  // database.private_network = null;
+
+  // database.hosts = {
+  //   primary: 'public-db-mysql-primary-0.b.linodeb.net',
+  //   endpoints: [
+  //     {
+  //       role: 'primary',
+  //       address: 'public-db-mysql-primary-0.b.linodeb.net',
+  //       port: 15847,
+  //       public_access: true,
+  //     },
+  //   ],
+  // };
+
+  if (database.private_network) {
     // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
     database.hosts = {
       primary: 'private-db-mysql-primary-0.b.linodeb.net',
       standby: 'private-db-mysql-standby-0.b.linodeb.net',
       endpoints: [
         {
-          address: 'private-db-mysql-primary-0.b.linodeb.net',
           role: 'primary',
-          private_access: true,
-          port: 12345,
+          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          port: 15847,
+          public_access: true,
         },
+        {
+          role: 'primary',
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          port: 15847,
+          public_access: false,
+        },
+        {
+          role: 'standby',
+          address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
+          port: 15847,
+          public_access: true,
+        },
+        {
+          role: 'standby',
+          address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
+          port: 15847,
+          public_access: false,
+        },
+        {
+          role: 'primary-connection-pool',
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          port: 15848,
+          public_access: false,
+        },
+        // {
+        //   role: 'standby-connection-pool',
+        //   address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
+        //   port: 15848,
+        //   public_access: false,
+        // },
+        // {
+        //   role: 'primary-connection-pool',
+        //   address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
+        //   port: 15848,
+        //   public_access: true,
+        // },
+        // {
+        //   role: 'standby-connection-pool',
+        //   address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
+        //   port: 15848,
+        //   public_access: true,
+        // },
       ],
     };
   }
