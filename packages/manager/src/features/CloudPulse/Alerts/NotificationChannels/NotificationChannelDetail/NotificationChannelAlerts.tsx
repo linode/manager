@@ -160,7 +160,12 @@ export const NotificationChannelAlerts = React.memo(
                   ? StyledListItem
                   : 'li';
               return (
-                <ListItem {...rest} data-qa-option key={key}>
+                <ListItem
+                  {...rest}
+                  data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
+                  data-qa-option
+                  key={key}
+                >
                   <Box flexGrow={1}>{option.label}</Box>{' '}
                   {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                   <SelectedIcon visible={selected} />

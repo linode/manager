@@ -129,6 +129,7 @@ export const CloudPulseGroupByDrawer = React.memo(
           key={key}
           {...rest}
           aria-disabled={!isSelectAllORDeselectAllOption && isDisabled}
+          data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
         >
           <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
           <SelectedIcon visible={isSelected} />
