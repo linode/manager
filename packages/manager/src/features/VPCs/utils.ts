@@ -151,7 +151,7 @@ export const getVPCInterfacePayload = (inputs: {
 
   if (isLinodeInterface) {
     return {
-      firewall_id: firewallId,
+      firewall_id: firewallId!,
       vpc: {
         subnet_id: subnetId ?? -1,
         ipv4: {

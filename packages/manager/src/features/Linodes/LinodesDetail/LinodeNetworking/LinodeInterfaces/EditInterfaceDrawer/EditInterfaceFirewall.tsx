@@ -33,6 +33,7 @@ export const EditInterfaceFirewall = ({ showSuccessNotice }: Props) => {
           <FirewallSelect
             errorText={fieldState.error?.message}
             onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
+            showNoFirewallOption={false}
             value={field.value}
           />
         )}

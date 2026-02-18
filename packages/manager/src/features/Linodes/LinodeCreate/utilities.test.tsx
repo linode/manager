@@ -1,11 +1,4 @@
-import {
-  createLinodeRequestFactory,
-  getIsLegacyInterfaceArray,
-  linodeConfigInterfaceFactory,
-  linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVlan,
-  linodeInterfaceFactoryVPC,
-} from '@linode/utilities';
+import { createLinodeRequestFactory } from '@linode/utilities';
 
 import {
   getDefaultInterfaceGenerationFromAccountSetting,
@@ -364,26 +357,6 @@ describe('getInterfacesPayload', () => {
   });
 });
 
-describe('getIsLegacyInterfaceArray', () => {
-  it('determines the given interfaces are legacy', () => {
-    const legacyInterfaces = linodeConfigInterfaceFactory.buildList(3);
-    expect(getIsLegacyInterfaceArray(legacyInterfaces)).toBe(true);
-    expect(getIsLegacyInterfaceArray(undefined)).toBe(true);
-    expect(getIsLegacyInterfaceArray([])).toBe(true);
-  });
-
-  it('returns false if the given interfaces are new Linode Interfaces', () => {
-    const linodeInterfacesVlan = linodeInterfaceFactoryVlan.buildList(3);
-    expect(getIsLegacyInterfaceArray(linodeInterfacesVlan)).toBe(false);
-
-    const linodeInterfacesVPC = linodeInterfaceFactoryVPC.buildList(3);
-    expect(getIsLegacyInterfaceArray(linodeInterfacesVPC)).toBe(false);
-
-    const linodeInterfacesPublic = linodeInterfaceFactoryPublic.buildList(3);
-    expect(getIsLegacyInterfaceArray(linodeInterfacesPublic)).toBe(false);
-  });
-});
-
 describe('getLinodeLabelFromLabelParts', () => {
   it('should join items', () => {
     expect(getLinodeLabelFromLabelParts(['my-linode', 'us-east'])).toBe(
@@ -489,6 +462,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               vpc: null,
               default_route: null,
               vlan: null,
+              firewall_id: null,
             },
           ],
           'linode'
@@ -545,6 +519,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               public: null,
               default_route: null,
               vlan: { vlan_label: 'my-vlan-1' },
+              firewall_id: null,
             },
           ],
           'linode'
@@ -565,6 +540,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               vpc: null,
               vlan: null,
               default_route: null,
+              firewall_id: null,
             },
             {
               vpc: null,
@@ -572,6 +548,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               public: null,
               default_route: null,
               vlan: { vlan_label: 'my-vlan-1' },
+              firewall_id: null,
             },
           ],
           'linode'

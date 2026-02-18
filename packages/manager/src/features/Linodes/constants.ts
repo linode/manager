@@ -51,3 +51,6 @@ export const LINODE_LOCKED_DELETE_INTERFACE_TOOLTIP =
 
 export const LINODE_REBUILD_LOCKED_NOTICE_TEXT =
   'This Linode is currently locked and cannot be rebuilt. Please remove the lock to proceed.';
+
+export const WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION =
+  'This Linode, or its Linode interface, is not secured with a Cloud Firewall. Add a firewall to help protect your resources and simplify security management.';

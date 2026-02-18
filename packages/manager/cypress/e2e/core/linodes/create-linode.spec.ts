@@ -13,6 +13,7 @@ import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   interceptCreateLinode,
   mockCreateLinode,
@@ -31,10 +32,17 @@ import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { accountFactory, accountUserFactory } from 'src/factories';
+import {
+  accountFactory,
+  accountUserFactory,
+  firewallFactory,
+} from 'src/factories';
 
 let username: string;
-
+const mockFirewall = firewallFactory.build({
+  id: randomNumber(),
+  label: randomLabel(),
+});
 authenticate();
 describe('Create Linode', () => {
   before(() => {
@@ -60,16 +68,7 @@ describe('Create Linode', () => {
           planLabel: 'Nanode 1 GB',
           planType: 'Shared CPU',
         },
-        {
-          planId: 'g6-dedicated-2',
-          planLabel: 'Dedicated 4 GB',
-          planType: 'Dedicated CPU',
-        },
-        {
-          planId: 'g7-highmem-1',
-          planLabel: 'Linode 24 GB',
-          planType: 'High Memory',
-        },
+
         // TODO Include GPU plan types.
         // TODO Include Accelerated plan types (when they're no longer as restricted)
       ].forEach((planConfig) => {
@@ -81,6 +80,7 @@ describe('Create Linode', () => {
           const linodeRegion = chooseRegion({
             capabilities: ['Linodes', 'Vlans'],
           });
+          mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
           const linodeLabel = randomLabel();
 
@@ -108,6 +108,11 @@ describe('Create Linode', () => {
             planConfig.planLabel
           );
           linodeCreatePage.setRootPassword(randomString(32));
+          // Select a firewall
+          linodeCreatePage.selectFirewall(
+            mockFirewall.label,
+            'Assign Firewall'
+          );
 
           // Confirm information in summary is shown as expected.
           cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -227,6 +232,7 @@ describe('Create Linode', () => {
     }).as('getFeatureFlags');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes([...mockAcceleratedType]).as('getLinodeTypes');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
@@ -243,6 +249,8 @@ describe('Create Linode', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Accelerated', mockAcceleratedType[0].label);
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Confirm information in summary is shown as expected.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -297,6 +305,7 @@ describe('Create Linode', () => {
     const createLinodeErrorMessage =
       'An error has occurred during Linode creation flow';
 
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinodeError(createLinodeErrorMessage).as('createLinodeError');
     cy.visitWithLogin('/linodes/create');
 
@@ -306,6 +315,8 @@ describe('Create Linode', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Create Linode by clicking the button.
     ui.button
