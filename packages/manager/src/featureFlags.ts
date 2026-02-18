@@ -439,4 +439,5 @@ interface GenerationalPlansFlag extends BaseFeatureFlag {
 
 interface LinodeCreateBanner extends BaseFeatureFlag {
   message?: string;
+  pendo_id?: string;
 }

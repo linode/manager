@@ -253,6 +253,9 @@ export const LinodeCreate = () => {
           preferenceKey="linode-create-banner"
           spacingBottom={8}
           variant="info"
+          {...(linodeCreateBanner?.enabled && {
+            'data-pendo-id': linodeCreateBanner?.pendo_id,
+          })}
         >
           <Typography
             dangerouslySetInnerHTML={{
