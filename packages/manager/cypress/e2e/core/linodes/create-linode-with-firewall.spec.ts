@@ -424,17 +424,8 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     // Switch to legacy Config Interfaces
     linodeCreatePage.selectLegacyConfigInterfacesType();
 
-    // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByLabelText('Firewall').should('be.visible');
-    cy.get('[data-qa-autocomplete="Firewall"]').within(() => {
-      cy.get('[data-testid="textfield-input"]').click();
-      cy.focused().type(`${mockFirewall.label}`);
-    });
-
-    ui.autocompletePopper
-      .findByTitle(mockFirewall.label)
-      .should('be.visible')
-      .click();
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -494,17 +485,10 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
-    // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByLabelText('Public Interface Firewall').should('be.visible');
-    cy.get('[data-qa-autocomplete="Public Interface Firewall"]').within(() => {
-      cy.get('[data-testid="textfield-input"]').click();
-      cy.focused().type(`${mockFirewall.label}`);
-    });
-
-    ui.autocompletePopper
-      .findByTitle(mockFirewall.label)
-      .should('be.visible')
-      .click();
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -593,17 +577,7 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
       `Firewall ${mockFirewall.label} successfully created`
     );
 
-    // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByLabelText('Firewall').should('be.visible');
-    cy.get('[data-qa-autocomplete="Firewall"]').within(() => {
-      cy.get('[data-testid="textfield-input"]').click();
-      cy.focused().type(`${mockFirewall.label}`);
-    });
-
-    ui.autocompletePopper
-      .findByTitle(mockFirewall.label)
-      .should('be.visible')
-      .click();
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -688,17 +662,10 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
       `Firewall ${mockFirewall.label} successfully created`
     );
 
-    // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByLabelText('Public Interface Firewall').should('be.visible');
-    cy.get('[data-qa-autocomplete="Public Interface Firewall"]').within(() => {
-      cy.get('[data-testid="textfield-input"]').click();
-      cy.focused().type(`${mockFirewall.label}`);
-    });
-
-    ui.autocompletePopper
-      .findByTitle(mockFirewall.label)
-      .should('be.visible')
-      .click();
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -768,6 +735,9 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
 
     // Switch to legacy Config Interfaces
     linodeCreatePage.selectLegacyConfigInterfacesType();
+
+    // Select Firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Creating the linode without a firewall should display a warning.
     ui.button

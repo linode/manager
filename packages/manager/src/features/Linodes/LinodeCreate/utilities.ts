@@ -25,6 +25,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type {
   AccountSettings,
+  CreateLinodeInterfacePayload,
   CreateLinodeRequest,
   FirewallSettings,
   InterfaceGenerationType,
@@ -97,8 +98,8 @@ export const getLinodeCreatePayload = (
     if (shouldUseNewInterfaces) {
       values.interfaces = formValues.linodeInterfaces.map(
         getLinodeInterfacePayload
-      );
-      values.firewall_id = undefined;
+      ) as CreateLinodeInterfacePayload[];
+      values.firewall_id = -1;
     } else {
       values.interfaces = formValues.backup_id
         ? undefined

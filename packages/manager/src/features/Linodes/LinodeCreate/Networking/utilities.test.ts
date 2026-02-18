@@ -50,6 +50,7 @@ describe('getLinodeInterfacesPayload', () => {
           vpc_id: 1,
         },
       }),
+      firewall_id: null,
       purpose: 'public' as const,
     };
 
@@ -66,6 +67,7 @@ describe('getLinodeInterfacePayload', () => {
     const networkInterface = {
       ...linodeInterfaceFactoryPublic.build(),
       purpose: 'public' as const,
+      firewall_id: null,
     };
 
     expect(getLinodeInterfacePayload(networkInterface)).toEqual({
@@ -78,6 +80,7 @@ describe('getLinodeInterfacePayload', () => {
     const networkInterface = {
       ...vpcInterface,
       purpose: 'vpc' as const,
+      firewall_id: null,
     };
 
     const newInterface = {
@@ -86,6 +89,7 @@ describe('getLinodeInterfacePayload', () => {
     };
     expect(getLinodeInterfacePayload(networkInterface)).toEqual({
       ...newInterface,
+      firewall_id: null,
     });
   });
 });

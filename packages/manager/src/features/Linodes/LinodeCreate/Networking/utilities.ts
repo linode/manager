@@ -19,7 +19,9 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
 /**
  * We extend the new `CreateLinodeInterfacePayload` to add extra state we need to track
  */
-export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
+export interface LinodeCreateInterface
+  extends Omit<CreateLinodeInterfacePayload, 'firewall_id'> {
+  firewall_id: null | number;
   purpose: InterfacePurpose;
   vpc: null | VPC;
 }
@@ -52,13 +54,19 @@ export const getCleanedLinodeInterfaceValues = (
  */
 export const getLinodeInterfacePayload = (
   networkInterface: LinodeCreateInterface
-): CreateLinodeInterfacePayload => {
+): Omit<CreateLinodeInterfacePayload, 'firewall_id'> & {
+  firewall_id: null | number;
+} => {
   // ensure only one interface type is present
   const cleanedValues = getCleanedLinodeInterfaceValues(networkInterface);
 
   if (cleanedValues.vpc) {
     const vpcValues = omitProps(cleanedValues.vpc, ['vpc_id']);
-    return { ...omitProps(cleanedValues, ['purpose']), vpc: vpcValues };
+    return {
+      ...omitProps(cleanedValues, ['purpose']),
+      firewall_id: cleanedValues.firewall_id,
+      vpc: vpcValues,
+    };
   }
 
   // The API errors saying address is invalid if we pass an empty string.
@@ -68,7 +76,10 @@ export const getLinodeInterfacePayload = (
     cleanedValues.vlan.ipam_address = null;
   }
 
-  return omitProps(cleanedValues, ['purpose']);
+  return {
+    ...omitProps(cleanedValues, ['purpose']),
+    firewall_id: cleanedValues.firewall_id,
+  };
 };
 
 /**
