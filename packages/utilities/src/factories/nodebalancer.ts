@@ -12,10 +12,18 @@ import type {
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   client_conn_throttle: 0,
   created: '2019-12-12T00:00:00',
+  frontend_address_type: Factory.each((i) => {
+    if (i % 2 === 0) {
+      return 'vpc';
+    } else {
+      return 'public';
+    }
+  }),
+  frontend_vpc_subnet_id: null,
   hostname: 'example.com',
   id: Factory.each((id) => id),
   ipv4: '0.0.0.0',
-  ipv6: null,
+  ipv6: '2600:3c11:e954:1::1',
   label: Factory.each((i) => `nodebalancer-id-${i}`),
   region: 'us-east',
   tags: [],
@@ -25,8 +33,28 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
     total: 0,
   },
   updated: '2019-12-13T00:00:00',
-  lke_cluster: null,
-  type: 'common',
+  lke_cluster: Factory.each((i) => {
+    if (i % 2 === 0) {
+      return {
+        id: 1,
+        type: 'lkecluster',
+        label: 'cluster-1',
+        url: '/v4/lke/clusters/1',
+      };
+    } else {
+      return null;
+    }
+  }),
+  type: Factory.each((i) => {
+    if (i === 1) {
+      return 'premium_40GB';
+    }
+    if (i % 2 === 0) {
+      return 'premium';
+    } else {
+      return 'common';
+    }
+  }),
 });
 
 export const nodeBalancerConfigFactory =
@@ -67,14 +95,15 @@ export const nodeBalancerConfigNodeFactory =
     vpc_config_id: null,
   });
 
-export const nodeBalancerConfigVPCFactory =
+export const nodeBalancerVPCFactory =
   Factory.Sync.makeFactory<NodeBalancerVpcConfig>({
     id: Factory.each((i) => i),
     ipv4_range: Factory.each((i) => `192.168.${i}.0/30`),
     ipv6_range: null,
-    nodebalancer_id: Factory.each((i) => 1000 + i),
-    subnet_id: Factory.each((i) => 2000 + i),
-    vpc_id: Factory.each((i) => 3000 + i),
+    nodebalancer_id: Factory.each((i) => i),
+    subnet_id: Factory.each((i) => i),
+    vpc_id: Factory.each((i) => i),
+    purpose: 'backend',
   });
 
 export const nodeBalancerStatsFactory =
