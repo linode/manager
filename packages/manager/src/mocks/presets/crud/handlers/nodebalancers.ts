@@ -24,6 +24,7 @@ import type {
   NodeBalancerConfig,
   NodeBalancerConfigNode,
   NodeBalancerStats,
+  NodeBalancerVpcConfig,
   PriceType,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -92,6 +93,35 @@ export const getNodeBalancers = (mockState: MockState) => [
       }
 
       const configs = nodeBalancerConfigs.filter(
+        (config) => config.nodebalancer_id === nodeBalancerId
+      );
+
+      return makePaginatedResponse({
+        data: configs,
+        request,
+      });
+    }
+  ),
+
+  http.get(
+    '*/v4beta/nodebalancers/:id/vpcs',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<
+        APIErrorResponse | APIPaginatedResponse<NodeBalancerVpcConfig>
+      >
+    > => {
+      const nodeBalancerId = Number(params.id);
+      const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
+      const nodeBalancerVPCs = await mswDB.getAll('nodeBalancerVPCs');
+
+      if (!nodeBalancer || !nodeBalancerVPCs) {
+        return makeNotFoundResponse();
+      }
+
+      const configs = nodeBalancerVPCs.filter(
         (config) => config.nodebalancer_id === nodeBalancerId
       );
 
