@@ -134,7 +134,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
           {showBlackwellLimitedAvailabilityBanner && (
             <Notice
-              dataTestId="blackwell-limited-availability-banner"
+              dataTestId={blackwellLimitedAvailabilityBannerTestId}
               spacingBottom={8}
               variant="info"
             >
@@ -212,6 +212,8 @@ export const PlanInformation = (props: PlanInformationProps) => {
 };
 
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
+export const blackwellLimitedAvailabilityBannerTestId =
+  'blackwell-limited-availability-banner';
 
 interface ClassDescriptionCopyProps extends ExtendedPlanType {
   /**

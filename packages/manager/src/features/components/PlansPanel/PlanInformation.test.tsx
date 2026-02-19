@@ -6,6 +6,7 @@ import { planSelectionTypeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
+  blackwellLimitedAvailabilityBannerTestId,
   limitedAvailabilityBannerTestId,
   PlanInformation,
 } from './PlanInformation';
@@ -88,7 +89,6 @@ describe('PlanInformation', () => {
       planIsDisabled512Gb: false,
       planIsSmallerThanUsage: false,
       planIsTooSmall: false,
-      planIsTooSmallForAPL: undefined,
     });
     renderWithTheme(
       <PlanInformation
@@ -101,7 +101,7 @@ describe('PlanInformation', () => {
     );
 
     const blackwellLimitedAvailabilityBanner = screen.getByTestId(
-      'blackwell-limited-availability-banner'
+      blackwellLimitedAvailabilityBannerTestId
     );
     expect(blackwellLimitedAvailabilityBanner).toBeInTheDocument();
   });
@@ -115,7 +115,6 @@ describe('PlanInformation', () => {
       planIsDisabled512Gb: false,
       planIsSmallerThanUsage: false,
       planIsTooSmall: false,
-      planIsTooSmallForAPL: undefined,
     });
     renderWithTheme(
       <PlanInformation
@@ -128,7 +127,7 @@ describe('PlanInformation', () => {
     );
 
     const blackwellLimitedAvailabilityBanner = screen.queryByTestId(
-      'blackwell-limited-availability-banner'
+      blackwellLimitedAvailabilityBannerTestId
     );
     expect(blackwellLimitedAvailabilityBanner).not.toBeInTheDocument();
   });
@@ -142,7 +141,6 @@ describe('PlanInformation', () => {
       planIsDisabled512Gb: false,
       planIsSmallerThanUsage: false,
       planIsTooSmall: false,
-      planIsTooSmallForAPL: undefined,
     });
     renderWithTheme(
       <PlanInformation
@@ -155,7 +153,7 @@ describe('PlanInformation', () => {
     );
 
     const blackwellLimitedAvailabilityBanner = screen.queryByTestId(
-      'blackwell-limited-availability-banner'
+      blackwellLimitedAvailabilityBannerTestId
     );
     expect(blackwellLimitedAvailabilityBanner).not.toBeInTheDocument();
   });
