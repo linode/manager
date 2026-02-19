@@ -160,7 +160,7 @@ const imageLibraryRoute = createRoute({
 // Share Groups tab - for managing image share groups
 const imagesShareGroupsRoute = createRoute({
   getParentRoute: () => imagesRoute,
-  path: 'sharegroups',
+  path: 'share-groups',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
   import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
