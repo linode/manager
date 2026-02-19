@@ -2179,7 +2179,7 @@ export const oneClickApps: Record<number, OCA> = {
     alt_description:
       'Weaviate is an open-source vector database designed to store and index both data objects and their vector embeddings.',
     alt_name: 'Open-source vector database.',
-    categories: ['Vector Databases'],
+    categories: ['Databases', 'Vector Databases', 'AI'],
     colors: {
       end: 'c4d132',
       start: '53b83d',
@@ -2202,7 +2202,7 @@ export const oneClickApps: Record<number, OCA> = {
     alt_description:
       'ChromaDB is an open-source vector database designed for building AI applications. It lets you easily store, index, and query embeddings.',
     alt_name: 'Open-source vector database.',
-    categories: ['Vector Databases'],
+    categories: ['Databases', 'Vector Databases', 'AI'],
     colors: {
       end: 'ffde2c',
       start: '327eff',
