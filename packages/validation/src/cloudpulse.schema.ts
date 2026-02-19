@@ -136,7 +136,6 @@ export const editAlertDefinitionSchema = object({
     .oneOf([
       'enabled',
       'disabled',
-      'in progress',
       'failed',
       'provisioning',
       'disabling',
