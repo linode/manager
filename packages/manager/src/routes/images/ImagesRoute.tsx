@@ -14,6 +14,10 @@ export const ImagesRoute = () => {
   const location = useLocation();
   const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
 
+  // --------------
+  // NOTE: This might not be strictly required, but useEffect ensures that there's no stale state
+  // when feature flags are toggled at runtime so the user doesn't have to reload the application manually to see the correct state.
+  // ---------------
   // Handle navigation between legacy /images and new tabbed UI based on feature flag.
   // Redirects to the appropriate route on initial load and when the feature flag toggles at runtime.
   // - When flag is ON: /images redirects to /images/image-library
