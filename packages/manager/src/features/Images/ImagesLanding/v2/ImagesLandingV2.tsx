@@ -23,7 +23,7 @@ export const ImagesLandingV2 = () => {
     },
     {
       title: 'Share Groups',
-      to: '/images/sharegroups',
+      to: '/images/share-groups',
       chip: <BetaChip />,
     },
   ]);
