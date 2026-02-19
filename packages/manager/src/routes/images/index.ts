@@ -1,5 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { imageLibrarySubTabs } from 'src/features/Images/ImagesLanding/v2/imageLibraryTabsConfig';
+
 import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
@@ -141,7 +143,10 @@ const imageLibraryRoute = createRoute({
       });
     }
 
-    if (!search.subType) {
+    if (
+      !search.subType ||
+      !imageLibrarySubTabs.map((tab) => tab.type).includes(search.subType)
+    ) {
       throw redirect({
         to: '/images/image-library',
         search: { subType: 'owned' },
@@ -159,6 +164,13 @@ const imageLibraryRoute = createRoute({
 
 // Share Groups tab - for managing image share groups
 const imagesShareGroupsRoute = createRoute({
+  beforeLoad: ({ context }) => {
+    if (!context.isPrivateImageSharingEnabled) {
+      throw redirect({
+        to: '/images',
+      });
+    }
+  },
   getParentRoute: () => imagesRoute,
   path: 'share-groups',
   validateSearch: (search: ImagesSearchParams) => search,

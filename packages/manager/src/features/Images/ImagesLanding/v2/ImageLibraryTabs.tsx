@@ -15,9 +15,9 @@ import { DeleteImageDialog } from '../DeleteImageDialog';
 import { EditImageDrawer } from '../EditImageDrawer';
 import { ManageImageReplicasForm } from '../ImageRegions/ManageImageRegionsForm';
 import { RebuildImageDrawer } from '../RebuildImageDrawer';
+import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 import { ImagesView } from './ImagesView';
 
-import type { ImageLibrarySubTab } from '../../utils';
 import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
 import type { Image } from '@linode/api-v4';
 import type { ImageAction } from 'src/routes/images';
@@ -94,16 +94,6 @@ export const ImageLibraryTabs = () => {
     onManageRegions: handleManageRegions,
     onRebuild: handleRebuild,
   };
-
-  const subTabs: ImageLibrarySubTab[] = [
-    { type: 'owned', title: 'Owned by me' },
-    {
-      type: 'shared',
-      title: 'Shared with me',
-      isBeta: true,
-    },
-    { type: 'recovery', title: 'Recovery images' },
-  ];
 
   const subTabIndex = getImageLibrarySubTabIndex(subTabs, search.subType);
 
