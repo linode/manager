@@ -63,7 +63,7 @@ describe('ChildAccountsTable', () => {
       />
     );
 
-    expect(getByTestId('child-accounts-table-pagination')).toBeInTheDocument();
+    expect(getByTestId('child-accounts-table-pagination')).toBeVisible();
   });
 
   it('should display an empty state when no child accounts are found', async () => {
