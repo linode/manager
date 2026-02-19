@@ -9,6 +9,7 @@ import {
   MANUAL_IMAGES_PREFERENCE_KEY,
 } from '../../constants';
 
+import type { ImageLibrarySubTab } from '../../utils';
 import type { ImageLibraryType } from '../../utils';
 import type { Image } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
@@ -48,6 +49,16 @@ export interface ImageConfig {
   title: string;
   type: Image['type'];
 }
+
+export const imageLibrarySubTabs: ImageLibrarySubTab[] = [
+  { type: 'owned', title: 'Owned by me' },
+  {
+    type: 'shared',
+    title: 'Shared with me',
+    isBeta: true,
+  },
+  { type: 'recovery', title: 'Recovery images' },
+];
 
 const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
   { header: 'Image', label: 'label', sortable: true },

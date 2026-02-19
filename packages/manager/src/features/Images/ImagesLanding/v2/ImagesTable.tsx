@@ -23,7 +23,10 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { ImageRow } from '../ImageRow';
 
 import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
-import type { ImageConfig, ImageViewTableColConfig } from './imagesConfig';
+import type {
+  ImageConfig,
+  ImageViewTableColConfig,
+} from './imageLibraryTabsConfig';
 import type { APIError, Event, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Order } from 'src/hooks/useOrderV2';

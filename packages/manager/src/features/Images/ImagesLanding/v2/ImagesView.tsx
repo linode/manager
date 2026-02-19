@@ -16,7 +16,7 @@ import {
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
 import { getEventsForImages } from '../../utils';
-import { IMAGES_CONFIG } from './imagesConfig';
+import { IMAGES_CONFIG } from './imageLibraryTabsConfig';
 import { ImagesTable } from './ImagesTable';
 
 import type { ImageLibraryType } from '../../utils';
