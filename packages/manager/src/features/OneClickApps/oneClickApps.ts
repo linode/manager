@@ -68,7 +68,7 @@ export const oneClickApps: Record<number, OCA> = {
   401702: {
     alt_description: 'React and Node.js stack.',
     alt_name: 'Web stack',
-    categories: [],
+    categories: ['Stacks'],
     colors: {
       end: '256291',
       start: '30383a',
@@ -479,7 +479,7 @@ export const oneClickApps: Record<number, OCA> = {
     alt_description:
       'Video / media library storage and sharing across TVs, phones, computers, and more.',
     alt_name: 'Media server',
-    categories: [],
+    categories: ['Media and Entertainment'],
     colors: {
       end: '332c37',
       start: 'e5a00d',
@@ -2235,11 +2235,11 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Open-source AI web and chat interface.',
     website: 'https://docs.openwebui.com/getting-started/',
   },
-    1972184: {
+  1972184: {
     alt_description:
       'PostgreSQL extension for vector similarity search and AI embeddings.',
     alt_name: 'Open-source vector database extension',
-    categories: ['Databases', 'Vector Databases','AI'],
+    categories: ['Databases', 'Vector Databases', 'AI'],
     colors: {
       end: '336791',
       start: '4ea8de',
@@ -2251,18 +2251,18 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/pgvector',
-        title:
-          'Deploy pgvector through the Linode Marketplace',
+        title: 'Deploy pgvector through the Linode Marketplace',
       },
     ],
-    summary: 'PostgreSQL extension for vector similarity search and AI workloads.',
+    summary:
+      'PostgreSQL extension for vector similarity search and AI workloads.',
     website: 'https://github.com/pgvector/pgvector',
   },
   2011033: {
     alt_description:
       'Open-source vector database built for scalable AI similarity search.',
     alt_name: 'Open-source vector database',
-    categories: ['Databases', 'Vector Databases','AI'],
+    categories: ['Databases', 'Vector Databases', 'AI'],
     colors: {
       end: '00bfa6',
       start: '1f2937',
@@ -2274,11 +2274,11 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/milvus',
-        title:
-          'Deploy Milvus through the Linode Marketplace',
+        title: 'Deploy Milvus through the Linode Marketplace',
       },
     ],
-    summary: 'High-performance open-source vector database for AI applications.',
+    summary:
+      'High-performance open-source vector database for AI applications.',
     website: 'https://milvus.io/',
   },
   2011885: {
@@ -2297,8 +2297,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/gpt-oss-with-openwebui',
-        title:
-          'Deploy GPT-OSS through the Linode Marketplace',
+        title: 'Deploy GPT-OSS through the Linode Marketplace',
       },
     ],
     summary: 'Open-source large language model for self-hosted AI workloads.',
@@ -2320,11 +2319,11 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/gemma3',
-        title:
-          'Deploy Gemma 3 through the Linode Marketplace',
+        title: 'Deploy Gemma 3 through the Linode Marketplace',
       },
     ],
-    summary: 'Efficient open large language model for self-hosted AI applications.',
+    summary:
+      'Efficient open large language model for self-hosted AI applications.',
     website: 'https://ai.google.dev/gemma',
   },
   2015845: {
@@ -2343,11 +2342,11 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/qwen/',
-        title:
-          'Deploy Qwen with Open WebUI through the Linode Marketplace',
+        title: 'Deploy Qwen with Open WebUI through the Linode Marketplace',
       },
     ],
-    summary: 'Open large language model for reasoning, coding, and chat applications.',
+    summary:
+      'Open large language model for reasoning, coding, and chat applications.',
     website: 'https://qwenlm.github.io/',
   },
 };
