@@ -146,9 +146,9 @@ export const SwitchAccountDrawer = (props: Props) => {
         const proxyToken = await createToken(euuid);
 
         setTokenInLocalStorage({
-          prefix: isProxyUserType
-            ? 'authentication/proxy_token'
-            : 'authentication/delegate_token',
+          prefix: isIAMDelegationEnabled
+            ? 'authentication/delegate_token'
+            : 'authentication/proxy_token',
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
@@ -156,7 +156,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         });
 
         updateCurrentToken({
-          userType: isProxyUserType ? 'proxy' : 'delegate',
+          userType: isIAMDelegationEnabled ? 'delegate' : 'proxy',
         });
         onClose(event);
         location.reload();
