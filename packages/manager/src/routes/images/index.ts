@@ -45,11 +45,11 @@ const imagesRoute = createRoute({
 
 const imagesIndexRoute = createRoute({
   beforeLoad: ({ search, context }) => {
-    // When private image sharing is enabled, redirect to Image Library tab with default 'custom' sub-tab
+    // When private image sharing is enabled, redirect to Image Library tab with default 'owned' sub-tab
     if (!search.subType && context.isPrivateImageSharingEnabled) {
       throw redirect({
         to: '/images/image-library',
-        search: { subType: 'custom' },
+        search: { subType: 'owned' },
       });
     }
   },
@@ -144,7 +144,7 @@ const imageLibraryRoute = createRoute({
     if (!search.subType) {
       throw redirect({
         to: '/images/image-library',
-        search: { subType: 'custom' },
+        search: { subType: 'owned' },
       });
     }
   },
@@ -160,7 +160,7 @@ const imageLibraryRoute = createRoute({
 // Share Groups tab - for managing image share groups
 const imagesShareGroupsRoute = createRoute({
   getParentRoute: () => imagesRoute,
-  path: 'sharegroups',
+  path: 'share-groups',
   validateSearch: (search: ImagesSearchParams) => search,
 }).lazy(() =>
   import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(

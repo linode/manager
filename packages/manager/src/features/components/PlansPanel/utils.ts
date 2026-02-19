@@ -408,29 +408,8 @@ export const extractPlansInformation = ({
   );
 
   const allDisabledPlans = plansForThisLinodeTypeClass.reduce((acc, plan) => {
-    const {
-      planBelongsToDisabledClass,
-      planHasLimitedAvailability,
-      planIsDisabled512Gb,
-      planResizeNotSupported,
-      planIsSmallerThanUsage,
-      planIsTooSmall,
-      planIsTooSmallForAPL,
-    } = plan;
-
-    // Determine if the plan should be disabled due to
-    // - belonging to a disabled class
-    // - having limited availability (API based)
-    // - being a 512GB plan (hard coded)
-    if (
-      planBelongsToDisabledClass ||
-      planHasLimitedAvailability ||
-      planIsDisabled512Gb ||
-      planResizeNotSupported ||
-      planIsSmallerThanUsage ||
-      planIsTooSmall ||
-      planIsTooSmallForAPL
-    ) {
+    const isPlanDisabled = getIsPlanDisabled(plan);
+    if (isPlanDisabled) {
       return [...acc, plan];
     }
 
@@ -446,6 +425,36 @@ export const extractPlansInformation = ({
     hasMajorityOfPlansDisabled,
     plansForThisLinodeTypeClass,
   };
+};
+
+/**
+ *
+ * A utility function to determine if a plan should be disabled based on criteria:
+ * - belonging to a disabled class
+ * - having limited availability (API based)
+ * - being a 512GB plan (hard coded)
+ *
+ */
+export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
+  const {
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIsDisabled512Gb,
+    planResizeNotSupported,
+    planIsSmallerThanUsage,
+    planIsTooSmall,
+    planIsTooSmallForAPL,
+  } = plan;
+
+  return (
+    planBelongsToDisabledClass ||
+    planHasLimitedAvailability ||
+    planIsDisabled512Gb ||
+    planResizeNotSupported ||
+    planIsSmallerThanUsage ||
+    planIsTooSmall ||
+    planIsTooSmallForAPL
+  );
 };
 
 /**

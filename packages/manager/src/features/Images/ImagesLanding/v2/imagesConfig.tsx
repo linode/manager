@@ -77,7 +77,7 @@ export const IMAGES_CONFIG: Omit<
   Record<ImageLibraryType, ImageConfig>,
   'recovery' | 'shared'
 > = {
-  custom: {
+  owned: {
     title: 'Owned by me',
     description: (
       <>
@@ -94,7 +94,7 @@ export const IMAGES_CONFIG: Omit<
     orderDefault: MANUAL_IMAGES_DEFAULT_ORDER,
     preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
     docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/images',
-    isEnabled: (subType) => subType === 'custom',
+    isEnabled: (subType) => subType === 'owned',
     columns: CUSTOM_IMAGES_TABLE_COLUMNS,
     buttonProps: {
       buttonText: 'Create Image',

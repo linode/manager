@@ -96,7 +96,7 @@ export const ImageLibraryTabs = () => {
   };
 
   const subTabs: ImageLibrarySubTab[] = [
-    { type: 'custom', title: 'Owned by me' },
+    { type: 'owned', title: 'Owned by me' },
     {
       type: 'shared',
       title: 'Shared with me',
@@ -139,8 +139,8 @@ export const ImageLibraryTabs = () => {
           <TabPanels>
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.type}-content`}>
-                {tab.type === 'custom' && (
-                  <ImagesView handlers={handlers} type="custom" />
+                {tab.type === 'owned' && (
+                  <ImagesView handlers={handlers} type="owned" />
                 )}
                 {tab.type === 'shared' && (
                   <Notice variant="info">
