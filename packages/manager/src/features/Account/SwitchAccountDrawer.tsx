@@ -99,7 +99,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       filter,
       headers: isProxyOrDelegateUserType
         ? {
-            Authorization: currentTokenWithBearer,
+            Authorization: currentParentTokenWithBearer,
           }
         : undefined,
     },
