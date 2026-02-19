@@ -17,7 +17,7 @@ export const ImagesRoute = () => {
   // Handle navigation between legacy /images and new tabbed UI based on feature flag.
   // Redirects to the appropriate route on initial load and when the feature flag toggles at runtime.
   // - When flag is ON: /images redirects to /images/image-library
-  // - When flag is OFF: /images/image-library or /images/sharegroups redirect back to /images (legacy)
+  // - When flag is OFF: /images/image-library or /images/share-groups redirect back to /images (legacy)
   useEffect(() => {
     if (location.pathname.startsWith('/images')) {
       // Redirect to Image Library tab when feature flag is enabled
@@ -31,7 +31,7 @@ export const ImagesRoute = () => {
         // Redirect to legacy route when feature flag is disabled
         !isPrivateImageSharingEnabled &&
         (location.pathname.startsWith('/images/image-library') ||
-          location.pathname.startsWith('/images/sharegroups'))
+          location.pathname.startsWith('/images/share-groups'))
       ) {
         navigate({ to: '/images', replace: true });
       }
