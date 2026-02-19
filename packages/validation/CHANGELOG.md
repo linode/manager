@@ -1,3 +1,18 @@
+## [2026-02-25] - v0.82.0
+
+
+### Changed:
+
+- Adjust Custom HTTPS Destination validation ([#13274](https://github.com/linode/manager/pull/13274))
+- Adjust Custom HTTPS Destination validation: certificate details, custom headers, content type ([#13331](https://github.com/linode/manager/pull/13331))
+- Delivery Logs - change destination type detection in updateDestinationSchema ([#13380](https://github.com/linode/manager/pull/13380))
+
+### Upcoming Features:
+
+- Updated validation rules for createDatabaseConnectionPoolSchema ([#13276](https://github.com/linode/manager/pull/13276))
+- Update database connection pool size ([#13304](https://github.com/linode/manager/pull/13304))
+- Update the validation schema to match the API ([#13368](https://github.com/linode/manager/pull/13368))
+
 ## [2026-01-26] - v0.81.0
 
 
