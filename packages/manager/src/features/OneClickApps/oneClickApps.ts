@@ -2014,7 +2014,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Netfoundry Edge Router is a software gateway that enables secure, zero-trust, high-performance connectivity between local networks, cloud environments, and applications.',
-    isNew: false,   
+    isNew: false,
     logo_url: 'netfoundry.svg',
     related_guides: [
       {
@@ -2059,7 +2059,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Memgraph is a high-performance, in-memory graph database designed for real-time analytics and streaming data. It uses the Cypher query language and supports powerful graph algorithms out of the box. With built-in support for streaming data, Memgraph makes it easy to build apps that respond instantly to changes in complex connected data.',
-    isNew: false,    
+    isNew: false,
     logo_url: 'memgraph.svg',
     related_guides: [
       {
@@ -2082,7 +2082,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Neo4j is a high-performance, open-source property graph database designed to store and query data as a network of connected nodes and relationships. It is optimized for handling complex, interconnected data and supports the Cypher query language for expressive and efficient graph queries.',
-    isNew: false,    
+    isNew: false,
     logo_url: 'neo4j.svg',
     related_guides: [
       {
