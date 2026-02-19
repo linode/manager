@@ -251,6 +251,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             sx={(theme) => ({
               color: theme.tokens.alias.Content.Text.Primary.Default,
               font: theme.tokens.alias.Typography.Label.Bold.L,
+              overflowWrap: 'break-word',
             })}
           >
             {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
