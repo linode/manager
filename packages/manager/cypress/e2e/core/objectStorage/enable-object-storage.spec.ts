@@ -5,7 +5,6 @@ import { profileFactory, regionFactory } from '@linode/utilities';
 import {
   accountFactory,
   accountSettingsFactory,
-  objectStorageClusterFactory,
   objectStorageKeyFactory,
 } from '@src/factories';
 import {
@@ -28,8 +27,6 @@ import { randomLabel } from 'support/util/random';
 
 import type {
   AccountSettings,
-  ObjectStorageCluster,
-  ObjectStorageClusterID,
   PriceType,
   Region,
 } from '@linode/api-v4';
