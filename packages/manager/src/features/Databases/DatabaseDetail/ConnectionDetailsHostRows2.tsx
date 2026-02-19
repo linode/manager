@@ -1,19 +1,11 @@
-import { TooltipIcon, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-
-import {
-  SUMMARY_HOST_TOOLTIP_COPY,
-  SUMMARY_PRIVATE_HOST_COPY,
-} from '../constants';
+import { ConnectionDetailsHostDisplay } from './ConnectionDetailsHostDisplay';
 import { ConnectionDetailsRow } from './ConnectionDetailsRow';
 import { useStyles } from './DatabaseSummary/DatabaseSummaryConnectionDetails.style';
 
-import type {
-  Database,
-  HostEndpoint,
-} from '@linode/api-v4/lib/databases/types';
+import type { Database } from '@linode/api-v4/lib/databases/types';
 
 interface ConnectionDetailsHostRowsProps {
   database: Database;
@@ -32,37 +24,6 @@ export const ConnectionDetailsHostRows2 = (
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database?.private_network?.public_access;
 
-  const getHostDisplay = (host: HostEndpoint) => {
-    return (
-      <>
-        {host?.address}
-        <CopyTooltip
-          className={classes.inlineCopyToolTip}
-          text={host.address}
-        />
-        <TooltipIcon
-          componentsProps={{
-            tooltip: {
-              style: {
-                minWidth: 285,
-              },
-            },
-          }}
-          status="info"
-          sxTooltipIcon={{
-            marginLeft: '4px',
-            padding: '0px',
-          }}
-          text={
-            !host?.public_access
-              ? SUMMARY_PRIVATE_HOST_COPY
-              : SUMMARY_HOST_TOOLTIP_COPY
-          }
-        />
-      </>
-    );
-  };
-
   const getPrimaryHostContent = (mode?: 'private' | 'public') => {
     const isPublic = mode === 'private' ? false : true;
     const primaryHost = database.hosts?.endpoints.find(
@@ -80,7 +41,7 @@ export const ConnectionDetailsHostRows2 = (
       );
     }
 
-    return getHostDisplay(primaryHost);
+    return <ConnectionDetailsHostDisplay host={primaryHost} />;
   };
 
   const getReadOnlyHostContent = (mode?: 'private' | 'public') => {
@@ -94,7 +55,7 @@ export const ConnectionDetailsHostRows2 = (
       return 'N/A';
     }
 
-    return getHostDisplay(readOnlyHost);
+    return <ConnectionDetailsHostDisplay host={readOnlyHost} />;
   };
 
   return (
