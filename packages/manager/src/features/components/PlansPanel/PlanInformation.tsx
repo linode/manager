@@ -69,13 +69,22 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
 
-  const showBlackwellLimitedAvailabilityBanner =
+  const blackwellGpuPlans =
     hasSelectedRegion &&
+    planType === 'gpu' &&
     plans?.length &&
     filterPlansByGpuType(
       plans as PlanWithAvailability[],
       PLAN_FILTER_GPU_RTX_PRO_6000
-    ).every((plan) => getIsPlanDisabled(plan));
+    );
+
+  const showBlackwellLimitedAvailabilityBanner = Boolean(
+    blackwellGpuPlans &&
+      blackwellGpuPlans?.length &&
+      blackwellGpuPlans.every((plan: PlanWithAvailability) =>
+        getIsPlanDisabled(plan)
+      )
+  );
 
   const showLimitedAvailabilityBanner =
     hasSelectedRegion &&
@@ -124,7 +133,11 @@ export const PlanInformation = (props: PlanInformationProps) => {
             regionsData={regionsData || []}
           />
           {showBlackwellLimitedAvailabilityBanner && (
-            <Notice spacingBottom={8} variant="info">
+            <Notice
+              dataTestId={blackwellLimitedAvailabilityBannerTestId}
+              spacingBottom={8}
+              variant="info"
+            >
               <Typography
                 fontSize="1rem"
                 sx={(theme) => ({ font: theme.font.bold })}
@@ -199,6 +212,8 @@ export const PlanInformation = (props: PlanInformationProps) => {
 };
 
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
+export const blackwellLimitedAvailabilityBannerTestId =
+  'blackwell-limited-availability-banner';
 
 interface ClassDescriptionCopyProps extends ExtendedPlanType {
   /**
