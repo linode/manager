@@ -1,10 +1,11 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
 import type { ExtendedRoleView } from '../types';
@@ -31,6 +32,15 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({ username: 'test_user' }),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useUpdateDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
+}));
+
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -39,6 +49,8 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
+    useUpdateDefaultDelegationAccessQuery:
+      queryMocks.useUpdateDefaultDelegationAccessQuery,
   };
 });
 
@@ -63,6 +75,7 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('UnassignRoleConfirmationDialog', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
     });
@@ -139,5 +152,28 @@ describe('UnassignRoleConfirmationDialog', () => {
         ],
       });
     });
+  });
+
+  it('displays error message when there is an API error', async () => {
+    const apiError = [{ reason: 'Failed to load user roles' }];
+
+    queryMocks.useUpdateDefaultDelegationAccessQuery.mockReturnValue({
+      mutateAsync: vi.fn().mockRejectedValue(apiError),
+      isPending: false,
+      error: apiError,
+    });
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+
+    renderWithTheme(<UnassignRoleConfirmationDialog {...props} />);
+
+    const removeButton = screen.getByText('Remove');
+    expect(removeButton).toBeVisible();
+
+    await userEvent.click(removeButton);
+    await expect(
+      screen.getByText(INTERNAL_ERROR_NO_CHANGES_SAVED)
+    ).toBeVisible();
   });
 });

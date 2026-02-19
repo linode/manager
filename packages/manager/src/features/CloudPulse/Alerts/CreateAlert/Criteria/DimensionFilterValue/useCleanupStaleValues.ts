@@ -11,15 +11,17 @@ export const useCleanupStaleValues = ({
   multiple,
   onChange,
   isLoading,
+  isError,
 }: {
   fieldValue: null | string | string[];
+  isError?: boolean;
   isLoading?: boolean;
   multiple?: boolean;
   onChange: (value: null | string | string[]) => void;
   options: Item<string, string>[];
 }) => {
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading || isError) {
       return;
     }
 
@@ -50,5 +52,5 @@ export const useCleanupStaleValues = ({
         }
       }
     }
-  }, [options, fieldValue, multiple, onChange, isLoading]);
+  }, [options, fieldValue, multiple, onChange, isLoading, isError]);
 };

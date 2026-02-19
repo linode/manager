@@ -21,10 +21,6 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
-  marketplaceCategoryFactory,
-  marketplacePartnersFactory,
-  marketplaceProductFactory,
-  marketplaceTypeFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
@@ -706,36 +702,6 @@ const netLoadBalancers = [
 ];
 
 const marketplace = [
-  http.get('*/v4beta/marketplace/products', () => {
-    const marketplaceProduct = marketplaceProductFactory.buildList(10);
-    return HttpResponse.json(makeResourcePage([...marketplaceProduct]));
-  }),
-  http.get('*/v4beta/marketplace/products/:productId/details', () => {
-    const marketplaceProductDetail = marketplaceProductFactory.build({
-      details: {
-        overview: {
-          description:
-            'This is a detailed description of the marketplace product.',
-        },
-        pricing: 'Pricing information goes here.',
-        documentation: 'Documentation link or information goes here.',
-        support: 'Support information goes here.',
-      },
-    });
-    return HttpResponse.json(marketplaceProductDetail);
-  }),
-  http.get('*/v4beta/marketplace/categories', () => {
-    const marketplaceCategory = marketplaceCategoryFactory.buildList(10);
-    return HttpResponse.json(makeResourcePage([...marketplaceCategory]));
-  }),
-  http.get('*/v4beta/marketplace/types', () => {
-    const marketplaceType = marketplaceTypeFactory.buildList(100);
-    return HttpResponse.json(makeResourcePage([...marketplaceType]));
-  }),
-  http.get('*/v4beta/marketplace/partners', () => {
-    const marketplacePartner = marketplacePartnersFactory.buildList(100);
-    return HttpResponse.json(makeResourcePage([...marketplacePartner]));
-  }),
   http.post('*/v4beta/marketplace/referral', async () => {
     await sleep(2000);
     return HttpResponse.json({});
@@ -3428,7 +3394,7 @@ export const handlers = [
       ...alertFactory.buildList(2, {
         created_by: 'user1',
         service_type: 'linode',
-        status: 'in progress',
+        status: 'provisioning',
         tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
@@ -3504,7 +3470,6 @@ export const handlers = [
       ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
-      ...alertFactory.buildList(3, { status: 'in progress', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3622,7 +3587,6 @@ export const handlers = [
             status: pickRandom([
               'enabled',
               'disabled',
-              'in progress',
               'enabling',
               'disabling',
               'provisioning',

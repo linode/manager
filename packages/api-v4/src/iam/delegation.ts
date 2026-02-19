@@ -81,11 +81,13 @@ export const updateChildAccountDelegates = ({
 
 export const getMyDelegatedChildAccounts = ({
   params,
+  filter,
 }: GetMyDelegatedChildAccountsParams) =>
   Request<Page<Account>>(
     setURL(`${BETA_API_ROOT}/iam/delegation/profile/child-accounts`),
     setMethod('GET'),
     setParams(params),
+    setXFilter(filter),
   );
 
 export const getDelegatedChildAccount = ({ euuid }: { euuid: string }) =>

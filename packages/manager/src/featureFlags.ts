@@ -248,6 +248,7 @@ export interface Flags {
   ipv6Sharing: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
+  linodeCreateBanner: LinodeCreateBanner;
   linodeDiskEncryption: boolean;
   linodeInterfaces: LinodeInterfacesFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
@@ -265,6 +266,7 @@ export interface Flags {
   objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  placementGroupPolicyUpdate: boolean;
   privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
@@ -433,4 +435,9 @@ export type AclpServices = {
 
 interface GenerationalPlansFlag extends BaseFeatureFlag {
   allowedPlans: string[];
+}
+
+interface LinodeCreateBanner extends BaseFeatureFlag {
+  message?: string;
+  pendo_id?: string;
 }

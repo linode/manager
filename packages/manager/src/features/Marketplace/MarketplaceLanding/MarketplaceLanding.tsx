@@ -4,6 +4,7 @@ import {
   Box,
   ErrorState,
   LinkButton,
+  SelectedIcon,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -13,13 +14,16 @@ import * as React from 'react';
 
 import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 
 import { PRODUCTS } from '../products';
+import { marketplaceContainerStyles } from '../shared';
 import { CategorySection } from './CategorySection';
 import { filterProducts } from './utils';
 
 import type { Category, Product, Type } from '../shared';
+import type { AutocompleteRenderOptionState } from '@mui/material';
 
 export const MarketplaceLanding = () => {
   const navigate = useNavigate();
@@ -87,6 +91,34 @@ export const MarketplaceLanding = () => {
     updateSearchParam('query', searchString || undefined);
   };
 
+  const renderAutocompleteOption = React.useCallback(
+    (prefix: string) =>
+      (
+        props: React.HTMLAttributes<HTMLLIElement> & { key: string },
+        option: { label: string },
+        state: AutocompleteRenderOptionState
+      ) => {
+        const { key, ...rest } = props;
+        return (
+          <li
+            {...rest}
+            data-pendo-id={`Cloud Marketplace Catalog-${option.label}`}
+            key={`${prefix}-${key}`}
+          >
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {option.label}
+            </Box>
+            <SelectedIcon visible={state.selected} />
+          </li>
+        );
+      },
+    []
+  );
+
   // Filter products here based on category, search and type filters. If no filters are set, shows all available products.
   const filteredProducts = React.useMemo(
     () =>
@@ -144,20 +176,8 @@ export const MarketplaceLanding = () => {
   const showEmptyState = filteredProducts.length === 0;
 
   return (
-    <Box
-      sx={(theme) => ({
-        px: {
-          sm: theme.spacingFunction(16),
-          xs: theme.spacingFunction(12),
-        },
-        // Adjust Breadcrumb's marginLeft on screens < md to keep it aligned with the Products
-        '& [data-qa-entity-header]': {
-          [theme.breakpoints.down('md')]: {
-            marginLeft: `-${theme.spacingFunction(8)}`,
-          },
-        },
-      })}
-    >
+    <Box sx={marketplaceContainerStyles}>
+      <DocumentTitleSegment segment="Cloud Marketplace - Catalog" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -207,6 +227,7 @@ export const MarketplaceLanding = () => {
             }
             options={categoryOptions}
             placeholder="Category"
+            renderOption={renderAutocompleteOption('category')}
             textFieldProps={{
               hideLabel: true,
             }}
@@ -224,6 +245,7 @@ export const MarketplaceLanding = () => {
             }
             options={typeOptions}
             placeholder="Type"
+            renderOption={renderAutocompleteOption('type')}
             textFieldProps={{
               hideLabel: true,
             }}

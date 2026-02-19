@@ -306,7 +306,6 @@ export const filterAlerts = (props: FilterAlertsProps): Alert[] => {
     alerts?.filter(({ label, status, type, scope, regions }) => {
       return (
         (status === 'enabled' ||
-          status === 'in progress' ||
           status === 'provisioning' ||
           status === 'enabling') &&
         (!selectedType || type === selectedType) &&
