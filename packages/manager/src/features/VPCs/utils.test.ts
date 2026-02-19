@@ -90,11 +90,11 @@ describe('getUniqueResourcesFromSubnets', () => {
       }),
     ];
 
-    expect(getUniqueResourcesFromSubnets(subnets0)).toBe(0);
-    expect(getUniqueResourcesFromSubnets(subnets1)).toBe(8);
-    expect(getUniqueResourcesFromSubnets(subnets2)).toBe(4);
+    expect(getUniqueResourcesFromSubnets(subnets0, false)).toBe(0);
+    expect(getUniqueResourcesFromSubnets(subnets1, false)).toBe(8);
+    expect(getUniqueResourcesFromSubnets(subnets2, false)).toBe(4);
     // updated factory for generating linode ids, so unique linodes will be different
-    expect(getUniqueResourcesFromSubnets(subnets3)).toBe(16);
+    expect(getUniqueResourcesFromSubnets(subnets3, false)).toBe(16);
   });
 });
 

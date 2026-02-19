@@ -42,6 +42,7 @@ export interface CreateSubnetPayload {
 
 export interface Subnet extends CreateSubnetPayload {
   created: string;
+  databases: SubnetAssignedDatabaseData[];
   id: number;
   linodes: SubnetAssignedLinodeData[];
   nodebalancers: SubnetAssignedNodeBalancerData[];
@@ -66,6 +67,12 @@ export interface SubnetAssignedLinodeData {
 export interface SubnetAssignedNodeBalancerData {
   id: number;
   ipv4_range: string;
+}
+
+export interface SubnetAssignedDatabaseData {
+  id: number;
+  ipv4_range: string;
+  ipv6_ranges: null | { range: string }[];
 }
 
 export interface VPCIP {

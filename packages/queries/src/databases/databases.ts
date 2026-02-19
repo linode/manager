@@ -42,9 +42,14 @@ import type {
   UpdateDatabasePayload,
 } from '@linode/api-v4';
 
-export const useDatabaseQuery = (engine: Engine, id: number) =>
+export const useDatabaseQuery = (
+  engine: Engine,
+  id: number,
+  isEnabled = true,
+) =>
   useQuery<Database, APIError[]>({
     ...databaseQueries.database(engine, id),
+    enabled: isEnabled,
     // @TODO Consider removing polling
     // The refetchInterval will poll the API for this Database. We will do this
     // to ensure we have up to date information. We do this polling because the events
@@ -56,13 +61,14 @@ export const useDatabasesQuery = (
   params: Params,
   filter: Filter,
   isEnabled: boolean | undefined,
+  refetchInterval: false | number,
 ) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
     enabled: isEnabled,
     placeholderData: keepPreviousData,
     // @TODO Consider removing polling
-    refetchInterval: 20000,
+    refetchInterval,
   });
 
 export const useDatabasesInfiniteQuery = (filter: Filter, enabled: boolean) => {
