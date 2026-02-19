@@ -10,7 +10,10 @@ import {
 import { ConnectionDetailsRow } from './ConnectionDetailsRow';
 import { useStyles } from './DatabaseSummary/DatabaseSummaryConnectionDetails.style';
 
-import type { Database } from '@linode/api-v4/lib/databases/types';
+import type {
+  Database,
+  HostEndpoint,
+} from '@linode/api-v4/lib/databases/types';
 
 interface ConnectionDetailsHostRowsProps {
   database: Database;
@@ -26,30 +29,48 @@ export const ConnectionDetailsHostRows2 = (
   const { database, isSummaryTab } = props;
   const { classes } = useStyles();
 
-  const sxTooltipIcon = {
-    marginLeft: '4px',
-    padding: '0px',
-  };
-
-  const hostTooltipComponentProps = {
-    tooltip: {
-      style: {
-        minWidth: 285,
-      },
-    },
-  };
-
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database?.private_network?.public_access;
 
+  const getHostDisplay = (host: HostEndpoint) => {
+    return (
+      <>
+        {host?.address}
+        <CopyTooltip
+          className={classes.inlineCopyToolTip}
+          text={host.address}
+        />
+        <TooltipIcon
+          componentsProps={{
+            tooltip: {
+              style: {
+                minWidth: 285,
+              },
+            },
+          }}
+          status="info"
+          sxTooltipIcon={{
+            marginLeft: '4px',
+            padding: '0px',
+          }}
+          text={
+            !host?.public_access
+              ? SUMMARY_PRIVATE_HOST_COPY
+              : SUMMARY_HOST_TOOLTIP_COPY
+          }
+        />
+      </>
+    );
+  };
+
   const getPrimaryHostContent = (mode?: 'private' | 'public') => {
     const isPublic = mode === 'private' ? false : true;
-    const primaryHostName = database.hosts?.endpoints.find(
+    const primaryHost = database.hosts?.endpoints.find(
       (endpoint) =>
         endpoint.role === 'primary' && endpoint.public_access === isPublic
-    )?.address;
+    );
 
-    if (!primaryHostName) {
+    if (!primaryHost) {
       return (
         <Typography>
           <span className={classes.provisioningText}>
@@ -59,23 +80,7 @@ export const ConnectionDetailsHostRows2 = (
       );
     }
 
-    return (
-      <>
-        {primaryHostName}
-        <CopyTooltip
-          className={classes.inlineCopyToolTip}
-          text={primaryHostName}
-        />
-        <TooltipIcon
-          componentsProps={hostTooltipComponentProps}
-          status="info"
-          sxTooltipIcon={sxTooltipIcon}
-          text={
-            !isPublic ? SUMMARY_PRIVATE_HOST_COPY : SUMMARY_HOST_TOOLTIP_COPY
-          }
-        />
-      </>
-    );
+    return getHostDisplay(primaryHost);
   };
 
   const getReadOnlyHostContent = (mode?: 'private' | 'public') => {
@@ -89,25 +94,7 @@ export const ConnectionDetailsHostRows2 = (
       return 'N/A';
     }
 
-    return (
-      <>
-        {readOnlyHost?.address}
-        <CopyTooltip
-          className={classes.inlineCopyToolTip}
-          text={readOnlyHost.address}
-        />
-        <TooltipIcon
-          componentsProps={hostTooltipComponentProps}
-          status="info"
-          sxTooltipIcon={sxTooltipIcon}
-          text={
-            !readOnlyHost?.public_access
-              ? SUMMARY_PRIVATE_HOST_COPY
-              : SUMMARY_HOST_TOOLTIP_COPY
-          }
-        />
-      </>
-    );
+    return getHostDisplay(readOnlyHost);
   };
 
   return (

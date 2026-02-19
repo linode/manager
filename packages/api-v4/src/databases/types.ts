@@ -96,7 +96,7 @@ export type HostEndpointRole =
   | 'standby'
   | 'standby-connection-pool';
 
-interface HostEndpoint {
+export interface HostEndpoint {
   address: string;
   port: number;
   public_access: boolean;

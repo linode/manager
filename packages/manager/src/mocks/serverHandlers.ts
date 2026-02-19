@@ -220,25 +220,25 @@ const makeMockDatabase = (params: PathParams): Database => {
 
   const database = databaseFactory.build(db);
 
-  database.private_network = {
-    public_access: true,
-    subnet_id: 123,
-    vpc_id: 10,
-  };
-
+  // No VPC
   // database.private_network = null;
-
   // database.hosts = {
-  //   primary: 'public-db-mysql-primary-0.b.linodeb.net',
+  //   primary: 'db-mysql-primary-0.b.linodeb.net',
   //   endpoints: [
   //     {
   //       role: 'primary',
-  //       address: 'public-db-mysql-primary-0.b.linodeb.net',
+  //       address: 'db-mysql-primary-0.b.linodeb.net',
   //       port: 15847,
   //       public_access: true,
   //     },
   //   ],
   // };
+
+  database.private_network = {
+    public_access: true,
+    subnet_id: 123,
+    vpc_id: 10,
+  };
 
   if (database.private_network) {
     // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
@@ -1579,12 +1579,12 @@ export const handlers = [
         const match = isPrefixListSpecial
           ? [] // Special PLs: API currently returns empty; @TODO: update with actual response once API supports them
           : [
-              existingPrefixList ??
-                firewallPrefixListFactory.build({
-                  name: filter.name,
-                  description: `${filter.name} description`,
-                }),
-            ];
+            existingPrefixList ??
+            firewallPrefixListFactory.build({
+              name: filter.name,
+              description: `${filter.name} description`,
+            }),
+          ];
         return HttpResponse.json(makeResourcePage(match));
       }
     }
@@ -1638,46 +1638,46 @@ export const handlers = [
     const firewall =
       params.firewallId === '1001'
         ? firewallFactory.build({
-            id: 1001,
-            label: 'firewall with rule and ruleset reference',
-            rules: firewallRulesFactory.build({
-              inbound: [
-                { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
-                { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
-                ...firewallRuleFactory.buildList(1, {
-                  addresses: {
-                    ipv4: [
-                      'pl::supports-both',
-                      'pl:system:supports-only-ipv4',
-                      '192.168.1.213',
-                      '192.168.1.214',
-                      'pl::vpcs:supports-both-1',
-                      'pl::supports-both-but-empty-both',
-                      '172.31.255.255',
-                      'pl::marked-for-deletion',
-                      'pl::vpcs:<current>', // special prefixlist
-                    ],
-                    ipv6: [
-                      'pl::supports-both',
-                      'pl::supports-only-ipv6',
-                      'pl::supports-both-but-ipv6-empty',
-                      'pl::vpcs:supports-both-2',
-                      '2001:db8:85a3::8a2e:370:7334/128',
-                      '2001:db8:85a3::8a2e:371:7335/128',
-                      // Duplicate PrefixList entries like the below one, may not appear, but if they do,
-                      // our logic will treat them as a single entity within the ipv4 or ipv6 array.
-                      'pl::vpcs:supports-both-2',
-                      '2001:db8:85a3::8a2e:372:7336/128',
-                      'pl::subnets:<current>', // special prefixlist
-                    ],
-                  },
-                  ports: '22, 53, 80, 100, 443, 3306',
-                  protocol: 'UDP',
-                  action: 'ACCEPT',
-                }),
-              ],
-            }),
-          })
+          id: 1001,
+          label: 'firewall with rule and ruleset reference',
+          rules: firewallRulesFactory.build({
+            inbound: [
+              { ruleset: 123 }, // Referenced Ruleset to the Firewall (ID 123)
+              { ruleset: 123456789 }, // Referenced Ruleset to the Firewall (ID 123456789)
+              ...firewallRuleFactory.buildList(1, {
+                addresses: {
+                  ipv4: [
+                    'pl::supports-both',
+                    'pl:system:supports-only-ipv4',
+                    '192.168.1.213',
+                    '192.168.1.214',
+                    'pl::vpcs:supports-both-1',
+                    'pl::supports-both-but-empty-both',
+                    '172.31.255.255',
+                    'pl::marked-for-deletion',
+                    'pl::vpcs:<current>', // special prefixlist
+                  ],
+                  ipv6: [
+                    'pl::supports-both',
+                    'pl::supports-only-ipv6',
+                    'pl::supports-both-but-ipv6-empty',
+                    'pl::vpcs:supports-both-2',
+                    '2001:db8:85a3::8a2e:370:7334/128',
+                    '2001:db8:85a3::8a2e:371:7335/128',
+                    // Duplicate PrefixList entries like the below one, may not appear, but if they do,
+                    // our logic will treat them as a single entity within the ipv4 or ipv6 array.
+                    'pl::vpcs:supports-both-2',
+                    '2001:db8:85a3::8a2e:372:7336/128',
+                    'pl::subnets:<current>', // special prefixlist
+                  ],
+                },
+                ports: '22, 53, 80, 100, 443, 3306',
+                protocol: 'UDP',
+                action: 'ACCEPT',
+              }),
+            ],
+          }),
+        })
         : firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
@@ -1908,12 +1908,12 @@ export const handlers = [
     const buckets =
       region !== 'ap-west' && region !== 'us-iad'
         ? objectStorageBucketFactoryGen2.buildList(1, {
-            cluster: `${region}-1`,
-            endpoint_type: randomEndpointType,
-            hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
-            label: `obj-bucket-${randomBucketNumber}`,
-            region,
-          })
+          cluster: `${region}-1`,
+          endpoint_type: randomEndpointType,
+          hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+          label: `obj-bucket-${randomBucketNumber}`,
+          region,
+        })
         : [];
     if (region === 'ap-west') {
       buckets.push(
@@ -2291,9 +2291,9 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-          ];
+          ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
+          ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
+        ];
 
     if (request.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
@@ -2506,9 +2506,9 @@ export const handlers = [
       const grantsResponse = grantsFactory.build({
         global: parentAccountNonAdminUser.restricted
           ? {
-              cancel_account: false,
-              child_account_access: true,
-            }
+            cancel_account: false,
+            child_account_access: true,
+          }
           : undefined,
       });
       return HttpResponse.json(grantsResponse);
@@ -3124,19 +3124,19 @@ export const handlers = [
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
       ...(['no-osl-1', 'us-iad', 'us-iad-2'].includes(selectedRegion)
         ? [
-            regionAvailabilityFactory.build({
-              available: true, // In supported regions, this can be `true` (plan available) or `false` (plan sold-out).
-              plan: 'g8-premium-128-ht',
-              region: selectedRegion,
-            }),
-          ]
+          regionAvailabilityFactory.build({
+            available: true, // In supported regions, this can be `true` (plan available) or `false` (plan sold-out).
+            plan: 'g8-premium-128-ht',
+            region: selectedRegion,
+          }),
+        ]
         : [
-            regionAvailabilityFactory.build({
-              available: false, // In unsupported region, this will always be `false` (Plan not offered/not available).
-              plan: 'g8-premium-128-ht',
-              region: selectedRegion,
-            }),
-          ]),
+          regionAvailabilityFactory.build({
+            available: false, // In unsupported region, this will always be `false` (Plan not offered/not available).
+            plan: 'g8-premium-128-ht',
+            region: selectedRegion,
+          }),
+        ]),
     ]);
   }),
 
