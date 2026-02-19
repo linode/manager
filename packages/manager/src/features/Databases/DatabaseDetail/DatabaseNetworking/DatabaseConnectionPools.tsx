@@ -19,20 +19,25 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Link } from 'src/components/Link';
 import {
   MIN_PAGE_SIZE,
   PAGE_SIZES,
 } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import {
+  CONNECTION_POOL_LABEL_CELL_STYLES,
+  MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
+} from 'src/features/Databases/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import {
-  makeSettingsItemStyles,
-  StyledActionMenuWrapper,
-} from '../../shared.styles';
+import { makeSettingsItemStyles } from '../../shared.styles';
+import { ServiceURI } from '../ServiceURI';
+import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
+import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
+import { DatabaseConnectionPoolRow } from './DatabaseConnectionPoolRow';
+import { DatabaseEditConnectionPoolDrawer } from './DatabaseEditConnectionPoolDrawer';
 
-import type { Database } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import type { ConnectionPool, Database } from '@linode/api-v4';
 
 interface Props {
   database: Database;
@@ -42,9 +47,13 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
-  const poolLabelCellStyles = {
-    flex: '.5 1 20.5%',
-  };
+  const isDatabaseInactive = database.status !== 'active';
+
+  const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
+    React.useState<null | string>(null);
+  const [isAddPoolDrawerOpen, setIsAddPoolDrawerOpen] = React.useState(false);
+  const [editPoolSelection, setEditPoolSelection] =
+    React.useState<ConnectionPool | null>(null);
 
   const pagination = usePaginationV2({
     currentRoute: '/databases/$engine/$databaseId/networking',
@@ -60,17 +69,6 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
     page: pagination.page,
     page_size: pagination.pageSize,
   });
-
-  const connectionPoolActions: Action[] = [
-    {
-      onClick: () => null,
-      title: 'Edit', // TODO: UIE-9395 Implement edit functionality
-    },
-    {
-      onClick: () => null, // TODO: UIE-9430 Implement delete functionality
-      title: 'Delete',
-    },
-  ];
 
   if (connectionPoolsLoading) {
     return <CircleProgress />;
@@ -91,19 +89,30 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           </Typography>
           <Typography sx={{ maxWidth: '500px' }}>
             Manage PgBouncer connection pools to minimize the use of your server
-            resources.
+            resources.{' '}
+            <Link to={MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK}>
+              Learn more.
+            </Link>
           </Typography>
         </Stack>
         <Button
           buttonType="outlined"
           className={classes.actionBtn}
-          disabled={true}
-          onClick={() => null}
+          disabled={isDatabaseInactive}
+          onClick={() => setIsAddPoolDrawerOpen(true)}
           TooltipProps={{ placement: 'top' }}
+          tooltipText={
+            isDatabaseInactive
+              ? 'You can only add connection pools to active database clusters.'
+              : ''
+          }
         >
           Add Pool
         </Button>
       </div>
+      {connectionPools && connectionPools.data.length > 0 && (
+        <ServiceURI database={database} />
+      )}
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table
           aria-label={'List of Connection pools'}
@@ -123,7 +132,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
               }
               headerborder
             >
-              <TableHeaderCell style={poolLabelCellStyles}>
+              <TableHeaderCell style={CONNECTION_POOL_LABEL_CELL_STYLES}>
                 Pool Label
               </TableHeaderCell>
               <Hidden smDown>
@@ -152,32 +161,12 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
               </TableRow>
             ) : (
               connectionPools?.data.map((pool) => (
-                <TableRow key={`connection-pool-row-${pool.label}`} zebra>
-                  <TableCell style={poolLabelCellStyles}>
-                    {pool.label}
-                  </TableCell>
-                  <Hidden smDown>
-                    <TableCell>
-                      {`${pool.mode.charAt(0).toUpperCase()}${pool.mode.slice(1)}`}
-                    </TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>{pool.size}</TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>
-                      {pool.username === null
-                        ? 'Reuse inbound user'
-                        : pool.username}
-                    </TableCell>
-                  </Hidden>
-                  <StyledActionMenuWrapper>
-                    <ActionMenu
-                      actionsList={connectionPoolActions}
-                      ariaLabel={`Action menu for connection pool ${pool.label}`}
-                    />
-                  </StyledActionMenuWrapper>
-                </TableRow>
+                <DatabaseConnectionPoolRow
+                  key={pool.label}
+                  onDelete={() => setDeletePoolLabelSelection(pool.label)}
+                  onEdit={() => setEditPoolSelection(pool)}
+                  pool={pool}
+                />
               ))
             )}
           </TableBody>
@@ -201,6 +190,25 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
             borderTop: 0,
             marginTop: '0',
           }}
+        />
+      )}
+      <DatabaseConnectionPoolDeleteDialog
+        databaseId={database.id}
+        onClose={() => setDeletePoolLabelSelection(null)}
+        open={Boolean(deletePoolLabelSelection)}
+        poolLabel={deletePoolLabelSelection ?? ''}
+      />
+      <DatabaseAddConnectionPoolDrawer
+        databaseId={database.id}
+        onClose={() => setIsAddPoolDrawerOpen(false)}
+        open={isAddPoolDrawerOpen}
+      />
+      {editPoolSelection && (
+        <DatabaseEditConnectionPoolDrawer
+          databaseId={database.id}
+          onClose={() => setEditPoolSelection(null)}
+          open={Boolean(editPoolSelection)}
+          pool={editPoolSelection}
         />
       )}
     </>

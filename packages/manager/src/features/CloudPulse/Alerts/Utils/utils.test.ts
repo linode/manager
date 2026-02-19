@@ -1,7 +1,15 @@
-import { regionFactory } from '@linode/utilities';
+import {
+  linodeAlertsFactory,
+  linodeFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { act, renderHook } from '@testing-library/react';
 
-import { alertFactory, serviceTypesFactory } from 'src/factories';
+import {
+  alertFactory,
+  notificationChannelFactory,
+  serviceTypesFactory,
+} from 'src/factories';
 
 import { useContextualAlertsState } from '../../Utils/utils';
 import { transformDimensionValue } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
@@ -13,10 +21,12 @@ import {
   convertSecondsToMinutes,
   convertSecondsToOptions,
   filterAlerts,
+  filterLinodeResources,
   filterRegionByServiceType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
+  shouldUseContentsForEmail,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -257,7 +267,7 @@ describe('useContextualAlertsState', () => {
     });
   });
 
-  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
+  it('should include alerts that match entityId in initial states', () => {
     const entityId = '123';
     const alerts = [
       alertFactory.build({
@@ -274,13 +284,6 @@ describe('useContextualAlertsState', () => {
         entity_ids: [entityId],
         scope: 'entity',
       }),
-      alertFactory.build({
-        id: 3,
-        label: 'alert3',
-        type: 'system',
-        entity_ids: ['456'],
-        scope: 'region',
-      }),
     ];
 
     const { result } = renderHook(() =>
@@ -288,7 +291,6 @@ describe('useContextualAlertsState', () => {
     );
 
     expect(result.current.initialState.system_alerts).toContain(1);
-    expect(result.current.initialState.system_alerts).toContain(3);
     expect(result.current.initialState.user_alerts).toContain(2);
   });
 
@@ -495,5 +497,77 @@ describe('transformDimensionValue', () => {
     expect(
       transformDimensionValue('linode', 'unknown_dimension', 'test_value')
     ).toBe('Test_value');
+  });
+});
+
+describe('shouldUseContentsForEmail', () => {
+  it('should return false for email channel with valid usernames in details', () => {
+    const notificationChannel = notificationChannelFactory.build({
+      channel_type: 'email',
+      details: {
+        email: {
+          usernames: ['user1', 'user2'],
+        },
+      },
+    });
+    expect(shouldUseContentsForEmail(notificationChannel)).toBe(false);
+  });
+
+  it('should return true for email channel with undefined details', () => {
+    const notificationChannel = notificationChannelFactory.build({
+      channel_type: 'email',
+      details: undefined,
+    });
+    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
+  });
+
+  it('should return true for email channel with undefined details.email', () => {
+    const notificationChannel = notificationChannelFactory.build({
+      channel_type: 'email',
+      details: {
+        email: undefined,
+      },
+    });
+    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
+  });
+
+  it('should return true for email channel with undefined usernames', () => {
+    const notificationChannel = notificationChannelFactory.build({
+      channel_type: 'email',
+      details: {
+        email: {
+          usernames: undefined,
+        },
+      },
+    });
+    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
+  });
+
+  it('should return true for email channel with empty usernames array', () => {
+    const notificationChannel = notificationChannelFactory.build({
+      channel_type: 'email',
+      details: {
+        email: {
+          usernames: [],
+          recipient_type: 'admin_users',
+        },
+      },
+    });
+    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
+  });
+});
+
+describe('filterLinodeResources', () => {
+  it('should return the filtered linode resources', () => {
+    const linodes = [
+      linodeFactory.build({
+        alerts: {
+          system_alerts: [1, 2, 3, 4, 5],
+          user_alerts: [6, 7, 8, 9, 10],
+        },
+      }),
+      linodeFactory.build({ alerts: linodeAlertsFactory.build() }),
+    ];
+    expect(filterLinodeResources(linodes)).toEqual([linodes[0]]);
   });
 });

@@ -15,7 +15,8 @@ interface IamEntitiesSearchParams {
 }
 
 interface IamUsersSearchParams extends TableSearchParams {
-  query?: string;
+  company?: string;
+  query?: string; // to be deprecated once UIE-9292 is resolved
   users?: string;
 }
 
@@ -46,6 +47,20 @@ const iamTabsRoute = createRoute({
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'users',
+  beforeLoad: async ({ context }) => {
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags,
+      context.profile
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/users',
+        replace: true,
+      });
+    }
+  },
 }).lazy(() =>
   import('src/features/IAM/Users/UsersTable/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -72,16 +87,11 @@ const iamRolesRoute = createRoute({
 
     if (!isIAMEnabled) {
       throw redirect({
-        to: '/account/users',
+        to: '/users',
         replace: true,
       });
     }
   },
-});
-
-const iamRolesIndexRoute = createRoute({
-  getParentRoute: () => iamRolesRoute,
-  path: '/',
 }).lazy(() =>
   import('src/features/IAM/Roles/rolesLandingLazyRoute').then(
     (m) => m.rolesLandingLazyRoute
@@ -142,6 +152,19 @@ const iamDelegationsRoute = createRoute({
     const isDelegationEnabled = context?.flags?.iamDelegation?.enabled;
     const profile = context?.profile;
 
+    const isIAMEnabled = await checkIAMEnabled(
+      context.queryClient,
+      context.flags,
+      context.profile
+    );
+
+    if (!isIAMEnabled) {
+      throw redirect({
+        to: '/users',
+        replace: true,
+      });
+    }
+
     const isChildAccount = profile?.user_type === 'child';
     if (!isDelegationEnabled || isChildAccount) {
       throw redirect({
@@ -182,8 +205,9 @@ const iamUserNameRoute = createRoute({
       );
 
       const isChildAccount = profile?.user_type === 'child';
+      const isDelegateAccount = profile?.user_type === 'delegate';
 
-      if (!profile.restricted && isChildAccount) {
+      if (isChildAccount || isDelegateAccount) {
         let user: undefined | User;
         try {
           user = await context.queryClient.ensureQueryData(
@@ -194,11 +218,13 @@ const iamUserNameRoute = createRoute({
         }
 
         const isChildAccount = profile?.user_type === 'child';
+        const isDelegateAccount = profile?.user_type === 'delegate';
         const isDelegateUser = user.user_type === 'delegate';
 
-        // Determine if the current account is a child account with isIAMDelegationEnabled enabled
+        // Determine if the current account is a child or delegate profile with isIAMDelegationEnabled enabled
         // If so, we need to hide 'View User Details' and 'Account Delegations' tabs for delegate users
-        const isDelegateUserForChildAccount = isChildAccount && isDelegateUser;
+        const isDelegateUserForChildAccount =
+          (isChildAccount || isDelegateAccount) && isDelegateUser;
 
         // There is no detail view for delegate users in a child account
         if (
@@ -401,7 +427,6 @@ const iamUserNameEntitiesCatchAllRoute = createRoute({
 export const iamRouteTree = iamRoute.addChildren([
   iamTabsRoute.addChildren([
     iamRolesRoute.addChildren([
-      iamRolesIndexRoute,
       iamDefaultsTabsRoute.addChildren([
         iamDefaultRolesRoute,
         iamDefaultEntityAccessRoute,

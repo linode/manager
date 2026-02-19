@@ -43,6 +43,7 @@ export interface Props {
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
+  isInterfaceIncompatible?: boolean;
   pools: CreateNodePoolData[];
   region: string | undefined;
   regionsData: Region[];
@@ -58,6 +59,7 @@ export const KubeCheckoutBar = (props: Props) => {
     hasAgreed,
     highAvailability,
     highAvailabilityPrice,
+    isInterfaceIncompatible,
     pools,
     region,
     regionsData,
@@ -98,7 +100,8 @@ export const KubeCheckoutBar = (props: Props) => {
     needsAPool ||
       gdprConditions ||
       (haConditions && !enterprisePrice) ||
-      !region
+      !region ||
+      isInterfaceIncompatible
   );
 
   if (isLoading) {

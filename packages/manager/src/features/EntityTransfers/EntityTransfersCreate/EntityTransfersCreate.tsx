@@ -9,7 +9,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { sendEntityTransferCreateEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -30,7 +29,6 @@ import type { QueryClient } from '@tanstack/react-query';
 
 export const EntityTransfersCreate = () => {
   const navigate = useNavigate();
-  const flags = useFlags();
   const { error, isPending, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
 
@@ -79,9 +77,7 @@ export const EntityTransfersCreate = () => {
           queryKey: [entityTransfersQueryKey],
         });
         navigate({
-          to: flags?.iamRbacPrimaryNavChanges
-            ? '/service-transfers'
-            : '/account/service-transfers',
+          to: '/service-transfers',
           state: (prev) => ({ ...prev, transfer }),
         });
       },
@@ -96,7 +92,7 @@ export const EntityTransfersCreate = () => {
           crumbOverrides: [
             {
               label: 'Service Transfers',
-              position: flags?.iamRbacPrimaryNavChanges ? 1 : 2,
+              position: 1,
             },
           ],
           labelOptions: { noCap: true },

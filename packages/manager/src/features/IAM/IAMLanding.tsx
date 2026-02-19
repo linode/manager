@@ -19,12 +19,12 @@ import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
 
 export const IdentityAccessLanding = React.memo(() => {
   const flags = useFlags();
-  const { isIAMBeta, isIAMEnabled } = useIsIAMEnabled();
+  const { isIAMEnabled } = useIsIAMEnabled();
   const showLimitedAvailabilityBadges =
-    flags.iamLimitedAvailabilityBadges && isIAMEnabled && !isIAMBeta;
+    flags.iamLimitedAvailabilityBadges && isIAMEnabled;
   const location = useLocation();
   const navigate = useNavigate();
-  const { isParentAccount } = useDelegationRole();
+  const { isParentUserType } = useDelegationRole();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
@@ -37,7 +37,7 @@ export const IdentityAccessLanding = React.memo(() => {
       title: 'Roles',
     },
     {
-      hide: !isIAMDelegationEnabled || !isParentAccount,
+      hide: !isIAMDelegationEnabled || !isParentUserType,
       to: `/iam/delegations`,
       title: 'Account Delegations',
     },

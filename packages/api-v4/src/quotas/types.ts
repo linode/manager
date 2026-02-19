@@ -18,6 +18,11 @@ export interface Quota {
   endpoint_type?: ObjectStorageEndpointTypes;
 
   /**
+   * Sets usage column to be n/a when value is false.
+   */
+  has_usage?: boolean;
+
+  /**
    * A unique identifier for the quota.
    */
   quota_id: string;
@@ -32,6 +37,11 @@ export interface Quota {
    * Customer facing label describing the quota.
    */
   quota_name: string;
+
+  /**
+   * Customer facing id describing the quota.
+   */
+  quota_type: string;
 
   /**
    * The region slug to which this limit applies.

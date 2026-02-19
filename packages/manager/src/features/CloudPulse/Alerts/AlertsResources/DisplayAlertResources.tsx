@@ -226,7 +226,7 @@ export const DisplayAlertResources = React.memo(
                           }}
                           title={
                             maxSelectionCount !== undefined &&
-                            isRootCheckBoxDisabled ? (
+                              isRootCheckBoxDisabled ? (
                               <AlertMaxSelectionText
                                 maxSelectionCount={maxSelectionCount}
                               />
@@ -301,7 +301,7 @@ export const DisplayAlertResources = React.memo(
                                 }}
                                 title={
                                   isItemCheckboxDisabled &&
-                                  maxSelectionCount !== undefined ? (
+                                    maxSelectionCount !== undefined ? (
                                     <AlertMaxSelectionText
                                       maxSelectionCount={maxSelectionCount}
                                     />
@@ -339,7 +339,7 @@ export const DisplayAlertResources = React.memo(
                       message="Table data is unavailable. Please try again later."
                     />
                   )}
-                  {paginatedData.length === 0 && (
+                  {!isDataLoadingError && paginatedData.length === 0 && (
                     <TableRow>
                       <TableCell
                         align="center"

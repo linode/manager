@@ -1,3 +1,18 @@
+## [2026-01-26] - v0.81.0
+
+
+### Fixed:
+
+- End character validation for name,description fields in ACLP-Alerting Create Alert form ([#13297](https://github.com/linode/manager/pull/13297))
+
+## [2026-01-12] - v0.80.0
+
+
+### Changed:
+
+- Logs Destination Form - add matching host and bucket name validation ([#13176](https://github.com/linode/manager/pull/13176))
+- Use UpdateConfigProfileInterfacesSchema in UpdateLinodeConfigSchema for interfaces property ([#13209](https://github.com/linode/manager/pull/13209))
+
 ## [2025-12-09] - v0.79.0
 
 

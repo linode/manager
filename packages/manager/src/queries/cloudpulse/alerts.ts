@@ -1,9 +1,12 @@
 import {
   addEntityToAlert,
   createAlertDefinition,
+  createNotificationChannel,
   deleteAlertDefinition,
   deleteEntityFromAlert,
+  deleteNotificationChannel,
   editAlertDefinition,
+  updateNotificationChannel,
   updateServiceAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
@@ -21,10 +24,14 @@ import type {
   Alert,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
+  CreateNotificationChannelPayload,
   DeleteAlertPayload,
+  DeleteChannelPayload,
   EditAlertPayloadWithService,
+  EditNotificationChannelPayloadWithId,
   EntityAlertUpdatePayload,
   NotificationChannel,
+  NotificationChannelAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
@@ -55,6 +62,14 @@ export const useCreateAlertDefinition = (serviceType: string) => {
         queryKey: queryFactory.alerts._ctx.alertsByServiceType(
           newAlert.service_type
         ).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
       });
     },
   });
@@ -97,6 +112,7 @@ export const useAllAlertNotificationChannelsQuery = (
 ) => {
   return useQuery<NotificationChannel[], APIError[]>({
     ...queryFactory.notificationChannels._ctx.all(params, filter),
+    refetchInterval: 120000,
   });
 };
 
@@ -136,6 +152,14 @@ export const useEditAlertDefinition = () => {
         queryKey: queryFactory.alerts._ctx.alertsByServiceType(
           data.service_type
         ).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
       });
     },
   });
@@ -234,6 +258,14 @@ export const useDeleteAlertDefinitionMutation = () => {
         queryKey:
           queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
       });
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
+      });
+
       queryClient.removeQueries({
         queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
           serviceType,
@@ -256,5 +288,114 @@ export const useServiceAlertsMutation = (
     onSuccess(_, payload) {
       invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
     },
+  });
+};
+
+export const useCreateNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NotificationChannel,
+    APIError[],
+    CreateNotificationChannelPayload
+  >({
+    mutationFn: (data) => createNotificationChannel(data),
+    onSuccess: async (newChannel) => {
+      const allChannelsKey =
+        queryFactory.notificationChannels._ctx.all().queryKey;
+      const oldChannels =
+        queryClient.getQueryData<NotificationChannel[]>(allChannelsKey);
+
+      // Use cached alerts list if available to avoid refetching from API.
+      if (oldChannels) {
+        queryClient.setQueryData<NotificationChannel[]>(allChannelsKey, [
+          ...oldChannels,
+          newChannel,
+        ]);
+      }
+    },
+  });
+};
+
+export const useUpdateNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    NotificationChannel,
+    APIError[],
+    EditNotificationChannelPayloadWithId
+  >({
+    mutationFn: async (payload: EditNotificationChannelPayloadWithId) => {
+      const { channelId, details, label } = payload;
+      return updateNotificationChannel(channelId, {
+        details,
+        label,
+      });
+    },
+    onSuccess: (updatedChannel) => {
+      const allChannelsKey =
+        queryFactory.notificationChannels._ctx.all().queryKey;
+
+      queryClient.setQueryData<NotificationChannel[] | undefined>(
+        allChannelsKey,
+        (prev) => {
+          // nothing cached yet
+          if (!prev) return prev;
+
+          const idx = prev.findIndex(
+            (channel) => channel.id === updatedChannel.id
+          );
+          if (idx === -1) return prev;
+
+          // if no change keep referential equality
+          if (prev[idx] === updatedChannel) return prev;
+
+          const next = prev.slice();
+          next[idx] = updatedChannel;
+          return next;
+        }
+      );
+
+      queryClient.setQueryData<NotificationChannel>(
+        queryFactory.notificationChannels._ctx.channelById(updatedChannel.id)
+          .queryKey,
+        updatedChannel
+      );
+    },
+  });
+};
+
+export const useNotificationChannelQuery = (channelId: number) => {
+  return useQuery<NotificationChannel, APIError[]>({
+    ...queryFactory.notificationChannels._ctx.channelById(channelId),
+    refetchInterval: 120000,
+  });
+};
+
+export const useDeleteNotificationChannel = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NotificationChannel, APIError[], DeleteChannelPayload>({
+    mutationFn: ({ channelId }) => deleteNotificationChannel(channelId),
+    onSuccess: (_, { channelId }) => {
+      queryClient.cancelQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+      queryClient.setQueryData<NotificationChannel[]>(
+        queryFactory.notificationChannels._ctx.all().queryKey,
+        (oldData) => {
+          return oldData?.filter(({ id }) => id !== channelId) ?? [];
+        }
+      );
+      queryClient.removeQueries({
+        queryKey:
+          queryFactory.notificationChannels._ctx.channelById(channelId)
+            .queryKey,
+      });
+    },
+  });
+};
+
+export const useAllAlertsByNotificationChannelIdQuery = (channelId: number) => {
+  return useQuery<NotificationChannelAlerts[], APIError[]>({
+    ...queryFactory.notificationChannelAlerts(channelId),
+    refetchInterval: 120000,
   });
 };

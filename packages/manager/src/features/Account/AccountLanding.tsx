@@ -1,5 +1,4 @@
-import { useAccount, useProfile } from '@linode/queries';
-import { NotFound } from '@linode/ui';
+import { useAccount } from '@linode/queries';
 import {
   Outlet,
   useLocation,
@@ -24,6 +23,7 @@ import { useTabs } from 'src/hooks/useTabs';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../IAM/hooks/useIsIAMEnabled';
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import { SwitchAccountButton } from './SwitchAccountButton';
@@ -38,8 +38,13 @@ export const AccountLanding = () => {
     strict: false,
   });
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
-  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
+  const {
+    isProxyOrDelegateUserType,
+    isChildUserType,
+    isParentUserType,
+    profileUserType,
+  } = useDelegationRole();
+  const { limitsEvolution } = useFlags();
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
@@ -49,13 +54,10 @@ export const AccountLanding = () => {
   const sessionContext = React.useContext(switchAccountSessionContext);
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
-  const isProxyUser = profile?.user_type === 'proxy';
-  const isChildUser = profile?.user_type === 'child';
-  const isParentUser = profile?.user_type === 'parent';
 
   const showQuotasTab = limitsEvolution?.enabled ?? false;
 
-  const isReadOnly = !permissions.make_billing_payment || isChildUser;
+  const isReadOnly = !permissions.make_billing_payment || isChildUserType;
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
@@ -63,7 +65,9 @@ export const AccountLanding = () => {
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({
+    isProxyOrDelegateUserType,
+  });
 
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
@@ -101,16 +105,13 @@ export const AccountLanding = () => {
   React.useEffect(() => {
     if (match.routeId === '/account/quotas' && !showQuotasTab) {
       navigate({
-        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/billing',
+        to: '/quotas',
       });
     }
-  }, [match.routeId, showQuotasTab, navigate, iamRbacPrimaryNavChanges]);
+  }, [match.routeId, showQuotasTab, navigate]);
 
   // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
   if (location.pathname === '/account') {
-    if (iamRbacPrimaryNavChanges) {
-      return <NotFound />;
-    }
     navigate({
       to: '/account/billing',
     });
@@ -128,8 +129,9 @@ export const AccountLanding = () => {
 
   const isBillingTabSelected = getTabIndex('/account/billing') === tabIndex;
   const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
-    ? isParentUser
-    : (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
+    ? isParentUserType
+    : (!isChildAccountAccessRestricted && isParentUserType) ||
+      isProxyOrDelegateUserType;
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
@@ -138,7 +140,7 @@ export const AccountLanding = () => {
     buttonDataAttrs: {
       disabled: isReadOnly,
       tooltipText: getRestrictedResourceText({
-        isChildUser,
+        isChildUserType,
         resourceType: 'Account',
       }),
     },
@@ -153,7 +155,7 @@ export const AccountLanding = () => {
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
         navigate({
-          to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+          to: '/billing',
           search: { action: 'make-payment' },
         });
     }
@@ -185,7 +187,7 @@ export const AccountLanding = () => {
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        userType={profile?.user_type}
+        userType={profileUserType}
       />
     </React.Fragment>
   );

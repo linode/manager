@@ -1,5 +1,4 @@
 import { streamType } from '@linode/api-v4';
-import { useAccount } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -16,6 +15,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {
   getStreamTypeOption,
   isFormInEditMode,
+  useIsLkeEAuditLogsTypeSelectionEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { streamTypeOptions } from 'src/features/Delivery/Shared/types';
 
@@ -36,10 +36,8 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
 
   const theme = useTheme();
   const { control, setValue } = useFormContext<StreamAndDestinationFormType>();
-  const { data: account } = useAccount();
-  const isLkeEAuditLogsTypeSelectionDisabled = !account?.capabilities?.includes(
-    'Akamai Cloud Pulse Logs LKE-E Audit'
-  );
+  const isLkeEAuditLogsTypeSelectionDisabled =
+    !useIsLkeEAuditLogsTypeSelectionEnabled();
 
   const capitalizedMode = capitalize(mode);
   const description = {
@@ -92,12 +90,11 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
             inputProps={{
               'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Name`,
             }}
-            label="Name"
+            label="Stream Name"
             onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Stream name"
             value={field.value}
           />
         )}

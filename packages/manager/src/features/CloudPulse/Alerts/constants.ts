@@ -133,7 +133,6 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
   failed: 'error',
-  'in progress': 'other',
   provisioning: 'other',
   disabling: 'other',
   enabling: 'other',
@@ -182,7 +181,6 @@ export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
   failed: 'Failed',
-  'in progress': 'In Progress',
   disabling: 'Disabling',
   enabling: 'Enabling',
   provisioning: 'Provisioning',
@@ -254,6 +252,13 @@ export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
 export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
 
+export const VIP_PLACEHOLDER_TEXT = 'Enter VIP address';
+export const NODE_ID_PLACEHOLDER_TEXT = 'Enter Node ID';
+export const NODE_ID_HELPER_TEXT =
+  'Enter one or more Node IDs separated by commas.';
+export const VIP_HELPER_TEXT =
+  'Enter one or more VIP addresses separated by commas.';
+
 export const CONFIGS_HELPER_TEXT =
   'Enter one or more configuration IDs separated by commas.';
 
@@ -301,3 +306,24 @@ export const entityLabelMap = {
 
 export const entityTypeTooltipText =
   'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.';
+
+export const CREATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel created successfully. You can now use it to deliver alert notifications.';
+
+export const CREATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to create the notification channel. Verify the configuration details and try again.';
+
+export const UPDATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel updated successfully. All changes have been saved.';
+
+export const UPDATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to update the notification channel. Verify the details and try again.';
+
+export const DELETE_CHANNEL_TOOLTIP_TEXT =
+  'This channel is linked to active alerts. Please reassign or remove those alerts before deleting this channel.';
+
+export const DELETE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel deleted successfully.';
+
+export const DELETE_CHANNEL_FAILED_MESSAGE =
+  'Failed to delete the notification channel. Ensure it is not in use and try again.';

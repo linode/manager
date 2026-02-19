@@ -7,7 +7,7 @@ import {
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
-import { destinationFactory } from 'src/factories';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 
 import type { Destination } from '@linode/api-v4';
 
@@ -61,9 +61,7 @@ function deleteDestinationViaActionMenu(
       ui.actionMenuItem.findByTitle('Delete').click();
 
       // Find confirmation modal
-      cy.findByText(
-        `Are you sure you want to delete "${destination.label}" destination?`
-      );
+      cy.findByText(`Are you sure you want to delete "${destination.label}"?`);
       ui.button.findByTitle('Delete').click();
 
       cy.wait('@deleteDestination');
@@ -97,7 +95,7 @@ function editDestinationViaActionMenu(
 const mockDestinations: Destination[] = new Array(3)
   .fill(null)
   .map((_item: null, index: number): Destination => {
-    return destinationFactory.build({
+    return akamaiObjectStorageDestinationFactory.build({
       label: `Destination ${index}`,
     });
   });

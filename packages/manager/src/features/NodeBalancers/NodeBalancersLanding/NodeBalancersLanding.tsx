@@ -126,7 +126,7 @@ export const NodeBalancersLanding = () => {
               <TableCell>Transferred</TableCell>
               <TableCell>Ports</TableCell>
             </Hidden>
-            <TableCell>IP Address</TableCell>
+            <TableCell>Frontend IP</TableCell>
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'region'}

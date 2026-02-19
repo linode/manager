@@ -20,30 +20,27 @@ import { UsernamePanel } from './UsernamePanel';
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { data: permissions } = usePermissions('account', [
-    'is_account_admin',
-    'view_account',
+    'view_user',
+    'update_user',
+    'delete_user',
+    'list_user_permissions',
   ]);
-
-  const isAccountAdmin = permissions?.is_account_admin;
 
   const {
     data: user,
     error,
     isLoading,
-  } = useAccountUser(
-    username ?? '',
-    isAccountAdmin || permissions?.view_account
-  );
+  } = useAccountUser(username ?? '', permissions?.view_user);
   const { data: assignedRoles } = useUserRoles(
     username ?? '',
-    isAccountAdmin || permissions?.view_account
+    permissions?.list_user_permissions
   );
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!(isAccountAdmin || permissions?.view_account)) {
+  if (!permissions?.view_user || !permissions?.list_user_permissions) {
     return (
       <Notice variant="error">
         You do not have permission to view this user&apos;s details.
@@ -67,9 +64,15 @@ export const UserProfile = () => {
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
         <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
-        <UsernamePanel activeUser={user} canUpdateUser={isAccountAdmin} />
-        <UserEmailPanel activeUser={user} canUpdateUser={isAccountAdmin} />
-        <DeleteUserPanel activeUser={user} canDeleteUser={isAccountAdmin} />
+        <UsernamePanel
+          activeUser={user}
+          canUpdateUser={permissions?.update_user}
+        />
+        <UserEmailPanel activeUser={user} />
+        <DeleteUserPanel
+          activeUser={user}
+          canDeleteUser={permissions?.delete_user}
+        />
       </Stack>
     </>
   );

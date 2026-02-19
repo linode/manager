@@ -1,5 +1,5 @@
 import { useAccount, useRegionsQuery } from '@linode/queries';
-import { isFeatureEnabledV2 } from '@linode/utilities';
+import { isFeatureEnabledV2, roundTo } from '@linode/utilities';
 import React from 'react';
 
 import { convertData } from 'src/features/Longview/shared/formatters';
@@ -127,13 +127,10 @@ export const useContextualAlertsState = (
       };
 
       alerts.forEach((alert) => {
-        const isAccountOrRegion =
-          alert.scope === 'region' || alert.scope === 'account';
-
-        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        // include alerts for which entityId is present in the alert's entity_ids
         const shouldInclude = entityId
-          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-          : isAccountOrRegion;
+          ? alert.entity_ids.includes(entityId)
+          : false;
 
         if (shouldInclude) {
           const payloadAlertType =
@@ -675,4 +672,27 @@ export const arraysEqual = (
     [...a].sort((x, y) => x - y),
     [...b].sort((x, y) => x - y)
   );
+};
+
+/**
+ * @param value The numeric value to humanize
+ * @returns The humanized string representation of the value
+ */
+export const humanizeLargeData = (value: number) => {
+  if (value >= 1000000000000) {
+    return +(value / 1000000000000).toFixed(1) + 'T';
+  }
+  if (value >= 1000000000) {
+    return +(value / 1000000000).toFixed(1) + 'B';
+  }
+  if (value >= 1000000) {
+    return +(value / 1000000).toFixed(1) + 'M';
+  }
+  if (value >= 100000) {
+    return +(value / 1000).toFixed(0) + 'K';
+  }
+  if (value >= 1000) {
+    return +(value / 1000).toFixed(1) + 'K';
+  }
+  return `${roundTo(value, 2)}`;
 };

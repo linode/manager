@@ -48,7 +48,7 @@ export const LinodeCLIPanel = ({
               'Install and Configure the Linode CLI'
             );
           }}
-          to="https://techdocs.akamai.com/cloud-computing/docs/install-and-configure-the-cli"
+          to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-cli"
         >
           Install and Configure the Linode CLI
         </Link>{' '}

@@ -103,6 +103,7 @@ export const NO_REGION_MESSAGE: Record<number, string> = {
   7: 'No volumes configured in any regions.',
   8: 'No firewalls configured in any Nodebalancer regions.',
   9: 'No LKE clusters configured in any regions.',
+  5: 'No Network Load Balancers configured in any regions.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {

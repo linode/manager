@@ -29,6 +29,7 @@ import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
 import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
+import { marketplaceRouteTree } from './marketplace';
 import { cloudPulseMetricsRouteTree } from './metrics';
 import { networkLoadBalancersRouteTree } from './networkLoadBalancer';
 import { nodeBalancersRouteTree } from './nodeBalancers';
@@ -80,6 +81,7 @@ export const routeTree = rootRoute.addChildren([
   longviewRouteTree,
   maintenanceRouteTree,
   managedRouteTree,
+  marketplaceRouteTree,
   networkLoadBalancersRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
@@ -119,5 +121,8 @@ declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
     router: typeof router;
+  }
+  interface HistoryState {
+    surveyLink?: string;
   }
 }

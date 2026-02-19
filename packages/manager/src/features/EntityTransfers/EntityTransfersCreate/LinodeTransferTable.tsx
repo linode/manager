@@ -11,7 +11,6 @@ import * as React from 'react';
 import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { extendType } from 'src/utilities/extendType';
 
@@ -37,14 +36,11 @@ export const LinodeTransferTable = React.memo((props: Props) => {
     selectedLinodes,
     disabled,
   } = props;
-  const flags = useFlags();
 
   const [searchText, setSearchText] = React.useState('');
 
   const pagination = usePaginationV2({
-    currentRoute: flags?.iamRbacPrimaryNavChanges
-      ? '/service-transfers/create'
-      : '/account/service-transfers/create',
+    currentRoute: '/service-transfers/create',
     initialPage: 1,
     preferenceKey: 'linode-transfer-table',
   });

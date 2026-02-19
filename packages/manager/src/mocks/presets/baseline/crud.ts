@@ -5,6 +5,7 @@ import {
 } from 'src/mocks/presets/crud/handlers/events';
 import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
+import { accountCrudPreset } from '../crud/account';
 import { cloudNATCrudPreset } from '../crud/cloudnats';
 import { childAccountsCrudPreset } from '../crud/delegation';
 import { domainCrudPreset } from '../crud/domains';
@@ -12,6 +13,7 @@ import { entityCrudPreset } from '../crud/entities';
 import { firewallCrudPreset } from '../crud/firewalls';
 import { imagesCrudPreset } from '../crud/images';
 import { kubernetesCrudPreset } from '../crud/kubernetes';
+import { locksCrudPreset } from '../crud/locks';
 import { nodeBalancerCrudPreset } from '../crud/nodebalancers';
 import { permissionsCrudPreset } from '../crud/permissions';
 import { placementGroupsCrudPreset } from '../crud/placementGroups';
@@ -26,6 +28,7 @@ import type { MockPresetBaseline } from 'src/mocks/types';
 export const baselineCrudPreset: MockPresetBaseline = {
   group: { id: 'General' },
   handlers: [
+    ...accountCrudPreset.handlers,
     ...childAccountsCrudPreset.handlers,
     ...cloudNATCrudPreset.handlers,
     ...domainCrudPreset.handlers,
@@ -35,6 +38,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
     ...imagesCrudPreset.handlers,
     ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,
+    ...locksCrudPreset.handlers,
     ...permissionsCrudPreset.handlers,
     ...placementGroupsCrudPreset.handlers,
     ...quotasCrudPreset.handlers,

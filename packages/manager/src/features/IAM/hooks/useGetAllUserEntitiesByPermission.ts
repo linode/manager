@@ -11,10 +11,6 @@ import {
 
 import { entityPermissionMapFrom } from './adapters/permissionAdapters';
 import { useIsIAMEnabled } from './useIsIAMEnabled';
-import {
-  BETA_ACCESS_TYPE_SCOPE,
-  LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE,
-} from './usePermissions';
 
 import type {
   APIError,
@@ -115,7 +111,7 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
   filter = {},
   params = {},
 }: UseGetEntitiesByPermissionProps) => {
-  const { isIAMBeta, isIAMEnabled, profile } = useIsIAMEnabled();
+  const { isIAMEnabled, profile } = useIsIAMEnabled();
 
   // Get entities by permission (Restricted IAM users only)
   const {
@@ -130,23 +126,10 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
   });
 
   /**
-   * Determine if we should use IAM permissions or legacy permissions
-   */
-  const useBetaPermissions =
-    isIAMEnabled &&
-    isIAMBeta &&
-    BETA_ACCESS_TYPE_SCOPE.includes(entityType) &&
-    LA_ACCOUNT_ADMIN_PERMISSIONS_TO_EXCLUDE.some((blacklistedPermission) =>
-      permission.includes(blacklistedPermission)
-    ) === false;
-  const useLAPermissions = isIAMEnabled && !isIAMBeta;
-  const shouldUseIAMPermissions = useBetaPermissions || useLAPermissions;
-
-  /**
    * Extract entity IDs from the entities by permission data
    */
   const entityIds =
-    shouldUseIAMPermissions && profile?.restricted
+    isIAMEnabled && profile?.restricted
       ? entitiesByPermission?.map((e) => e.id)
       : undefined;
 
@@ -159,7 +142,7 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
    * Legacy grants for non-IAM users
    */
   const { data: grants, isLoading: grantsLoading } = useGrants(
-    !shouldUseIAMPermissions && profile?.restricted && enabled
+    !isIAMEnabled && profile?.restricted && enabled
   );
 
   /**
@@ -168,7 +151,7 @@ export const useGetAllUserEntitiesByPermission = <T extends FullEntityType>({
    * In case a filter was used, we also return it to be used for client-side filtering
    * ex: we also pass this filter to the LinodeSelect to avoid caching two different queries (with and without filter)
    */
-  if (shouldUseIAMPermissions) {
+  if (isIAMEnabled) {
     return {
       ...entityQuery,
       filter,

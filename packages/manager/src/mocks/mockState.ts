@@ -42,6 +42,8 @@ export const emptyStore: MockState = {
   linodeInterfaces: [],
   linodeIps: [],
   linodes: [],
+  locks: [],
+  nodeBalancerVPCs: [],
   nodeBalancerConfigNodes: [],
   nodeBalancerConfigs: [],
   nodeBalancers: [],

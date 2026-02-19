@@ -10,7 +10,9 @@ beforeAll(() => mockMatchMedia());
 
 const mocks = vi.hoisted(() => ({
   mockNavigate: vi.fn(),
-  mockUseGetAllChildAccountsQuery: vi.fn(),
+  mockUseGetChildAccountsQuery: vi.fn(),
+  useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -18,6 +20,8 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: () => mocks.mockNavigate,
+    useParams: mocks.useParams,
+    useSearch: mocks.useSearch,
   };
 });
 
@@ -25,7 +29,7 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useGetAllChildAccountsQuery: mocks.mockUseGetAllChildAccountsQuery,
+    useGetChildAccountsQuery: mocks.mockUseGetChildAccountsQuery,
   };
 });
 
@@ -45,8 +49,9 @@ const mockDelegations = [
 describe('AccountDelegations', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.mockUseGetAllChildAccountsQuery.mockReturnValue({
-      data: mockDelegations,
+    mocks.mockUseGetChildAccountsQuery.mockReturnValue({
+      data: { data: mockDelegations, results: mockDelegations.length },
+      isLoading: false,
     });
   });
 
@@ -54,6 +59,7 @@ describe('AccountDelegations', () => {
     renderWithTheme(<AccountDelegations />, {
       flags: {
         iamDelegation: { enabled: true },
+        iam: { enabled: true },
       },
       initialRoute: '/iam',
     });
@@ -72,17 +78,18 @@ describe('AccountDelegations', () => {
   });
 
   it('should render empty state when no delegations', async () => {
-    mocks.mockUseGetAllChildAccountsQuery.mockReturnValue({
-      data: [],
+    mocks.mockUseGetChildAccountsQuery.mockReturnValue({
+      data: { data: [], results: 0 },
+      isLoading: false,
     });
 
     renderWithTheme(<AccountDelegations />, {
-      flags: { iamDelegation: { enabled: true } },
+      flags: { iamDelegation: { enabled: true }, iam: { enabled: true } },
       initialRoute: '/iam',
     });
 
     await waitFor(() => {
-      const emptyElement = screen.getByText(/No delegate users found/);
+      const emptyElement = screen.getByText(/No items to display/);
       expect(emptyElement).toBeInTheDocument();
     });
   });

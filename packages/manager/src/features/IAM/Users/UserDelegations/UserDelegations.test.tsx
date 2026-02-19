@@ -1,35 +1,28 @@
 import { childAccountFactory } from '@linode/utilities';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { NO_ACCOUNT_DELEGATIONS_TEXT } from '../../Shared/constants';
 import { UserDelegations } from './UserDelegations';
 
-const mockChildAccounts = [
-  {
-    company: 'Test Account 1',
-    euuid: '123',
-  },
-  {
-    company: 'Test Account 2',
-    euuid: '456',
-  },
-];
-
 const queryMocks = vi.hoisted(() => ({
-  useAllGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn().mockReturnValue(vi.fn()),
+  useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAllGetDelegatedChildAccountsForUserQuery:
-      queryMocks.useAllGetDelegatedChildAccountsForUserQuery,
+    useGetDelegatedChildAccountsForUserQuery:
+      queryMocks.useGetDelegatedChildAccountsForUserQuery,
+    useAccountRoles: queryMocks.useAccountRoles,
   };
 });
 
@@ -39,6 +32,7 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -47,83 +41,49 @@ describe('UserDelegations', () => {
     queryMocks.useParams.mockReturnValue({
       username: 'test-user',
     });
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: mockChildAccounts,
+    queryMocks.useSearch.mockReturnValue({ query: '' });
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    // Ensure IAM is considered enabled
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
       isLoading: false,
-    });
-    queryMocks.useSearch.mockReturnValue({
-      query: '',
     });
   });
 
-  it('renders the correct number of child accounts', () => {
+  it('should display no roles text if no roles are assigned to user', async () => {
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: { data: childAccountFactory.buildList(0), results: 0 },
+      isLoading: false,
+    });
+
     renderWithTheme(<UserDelegations />, {
       flags: {
+        iam: { enabled: true },
+        iamDelegation: {
+          enabled: true,
+        },
+      },
+    });
+    expect(screen.getByText('This list is empty')).toBeVisible();
+    expect(screen.getByText(NO_ACCOUNT_DELEGATIONS_TEXT)).toBeVisible();
+  });
+
+  it('should display table if user has delegations', async () => {
+    queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
+      data: { data: childAccountFactory.buildList(2), results: 2 },
+
+      isLoading: false,
+    });
+
+    renderWithTheme(<UserDelegations />, {
+      flags: {
+        iam: { enabled: true },
         iamDelegation: {
           enabled: true,
         },
       },
     });
 
-    screen.getByText('Test Account 1');
-    screen.getByText('Test Account 2');
-  });
-
-  it('shows pagination when there are more than 25 child accounts', () => {
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: childAccountFactory.buildList(30),
-      isLoading: false,
-    });
-
-    renderWithTheme(<UserDelegations />, {
-      flags: {
-        iamDelegation: {
-          enabled: true,
-        },
-      },
-    });
-
-    const tabelRows = screen.getAllByRole('row');
-    const paginationRow = screen.getByRole('navigation', {
-      name: 'pagination navigation',
-    });
-    expect(tabelRows).toHaveLength(27); // 25 rows + header row + pagination row
-    expect(paginationRow).toBeInTheDocument();
-  });
-
-  it('filters child accounts by search', async () => {
-    queryMocks.useAllGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: childAccountFactory.buildList(30),
-      isLoading: false,
-    });
-
-    renderWithTheme(<UserDelegations />, {
-      flags: {
-        iamDelegation: {
-          enabled: true,
-        },
-      },
-    });
-
-    const paginationRow = screen.getByRole('navigation', {
-      name: 'pagination navigation',
-    });
-
-    screen.getByText('child-account-31');
-    screen.getByText('child-account-32');
-
-    expect(paginationRow).toBeInTheDocument();
-
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'child-account-31');
-
-    screen.getByText('child-account-31');
-
-    await waitFor(() => {
-      expect(screen.queryByText('Child Account 32')).not.toBeInTheDocument();
-    });
-    await waitFor(() => {
-      expect(paginationRow).not.toBeInTheDocument();
-    });
+    expect(screen.getByText('Account Delegations')).toBeVisible();
   });
 });

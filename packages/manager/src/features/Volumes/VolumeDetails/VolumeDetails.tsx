@@ -9,6 +9,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
+import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 
 import { VolumeDrawers } from '../VolumeDrawers/VolumeDrawers';
 import { VolumeDetailsHeader } from './VolumeDetailsHeader';
@@ -16,7 +17,11 @@ import { VolumeDetailsHeader } from './VolumeDetailsHeader';
 export const VolumeDetails = () => {
   const navigate = useNavigate();
 
-  const { volumeSummaryPage, aclpServices } = useFlags();
+  const { volumeSummaryPage, aclpServices, blockStorageContextualMetrics } =
+    useFlags();
+  const { isError: aclpServiceError, isLoading: aclServiceLoading } =
+    useCloudPulseServiceByServiceType('blockstorage', true);
+
   const { volumeId } = useParams({ from: '/volumes/$volumeId' });
   const { data: volume, isLoading, error } = useVolumeQuery(volumeId);
   const { tabs, handleTabChange, tabIndex } = useTabs([
@@ -27,7 +32,10 @@ export const VolumeDetails = () => {
     {
       to: '/volumes/$volumeId/metrics',
       title: 'Metrics',
-      hide: !aclpServices?.blockstorage?.metrics?.enabled,
+      hide:
+        aclpServiceError ||
+        !blockStorageContextualMetrics ||
+        !aclpServices?.blockstorage?.metrics?.enabled,
       chip: aclpServices?.blockstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);
@@ -36,7 +44,7 @@ export const VolumeDetails = () => {
     return <ErrorState errorText={error?.[0].reason ?? 'Not found'} />;
   }
 
-  if (isLoading || !volume) {
+  if (isLoading || aclServiceLoading || !volume) {
     return <CircleProgress />;
   }
 

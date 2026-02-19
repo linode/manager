@@ -26,10 +26,12 @@ import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
+  NodeBalancerVpcConfig,
   Notification,
   PlacementGroup,
   Region,
   RegionAvailability,
+  ResourceLock,
   Stream,
   Subnet,
   SupportReply,
@@ -130,6 +132,7 @@ export interface MockPresetExtra extends MockPresetBase {
  */
 export type MockPresetCrudGroup = {
   id:
+    | 'Account'
     | 'Child Accounts'
     | 'CloudNATs'
     | 'Delivery'
@@ -140,6 +143,7 @@ export type MockPresetCrudGroup = {
     | 'IP Addresses'
     | 'Kubernetes'
     | 'Linodes'
+    | 'Locks'
     | 'NodeBalancers'
     | 'Permissions'
     | 'Placement Groups'
@@ -150,6 +154,7 @@ export type MockPresetCrudGroup = {
     | 'VPCs';
 };
 export type MockPresetCrudId =
+  | 'account:crud'
   | 'child-accounts-for-user:crud'
   | 'child-accounts:crud'
   | 'cloudnats:crud'
@@ -161,6 +166,7 @@ export type MockPresetCrudId =
   | 'ip-addresses:crud'
   | 'kubernetes:crud'
   | 'linodes:crud'
+  | 'locks:crud'
   | 'nodebalancers:crud'
   | 'permissions:crud'
   | 'placement-groups:crud'
@@ -226,8 +232,10 @@ export interface MockState {
   linodeInterfaces: [number, LinodeInterface][]; // number is Linode ID
   linodeIps: [number, LinodeIPsResponse][]; // number is Linode ID
   linodes: Linode[];
+  locks: ResourceLock[];
   nodeBalancerConfigNodes: NodeBalancerConfigNode[];
   nodeBalancerConfigs: NodeBalancerConfig[];
+  nodeBalancerVPCs: NodeBalancerVpcConfig[];
   nodeBalancers: NodeBalancer[];
   notificationQueue: Notification[];
   placementGroups: PlacementGroup[];

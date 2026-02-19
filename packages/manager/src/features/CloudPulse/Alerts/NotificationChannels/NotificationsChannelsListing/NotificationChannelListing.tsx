@@ -1,4 +1,5 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, Button, Stack } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -13,6 +14,8 @@ export const NotificationChannelListing = () => {
     error,
     isLoading,
   } = useAllAlertNotificationChannelsQuery();
+
+  const navigate = useNavigate();
 
   const [searchText, setSearchText] = React.useState<string>('');
 
@@ -33,8 +36,11 @@ export const NotificationChannelListing = () => {
   return (
     <Stack spacing={3}>
       <Box
-        alignItems="flex-start"
+        alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
+        flexDirection={{ lg: 'row', md: 'column', sm: 'column', xs: 'column' }}
+        flexWrap="wrap"
+        gap={3}
         justifyContent="space-between"
         ref={topRef}
       >
@@ -47,6 +53,25 @@ export const NotificationChannelListing = () => {
           sx={{ width: '270px' }}
           value={searchText}
         />
+        <Button
+          buttonType="primary"
+          data-qa-button="create-channel"
+          data-qa-buttons="true"
+          disabled={isLoading}
+          onClick={() => {
+            navigate({ to: '/alerts/notification-channels/create' });
+          }}
+          sx={{
+            height: '34px',
+            paddingBottom: 0,
+            paddingTop: 0,
+            whiteSpace: 'noWrap',
+            width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
+          }}
+          variant="contained"
+        >
+          Create Channel
+        </Button>
       </Box>
       <NotificationChannelListTable
         error={error ?? undefined}

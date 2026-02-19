@@ -1,6 +1,7 @@
 export const streamStatus = {
   Active: 'active',
   Inactive: 'inactive',
+  Provisioning: 'provisioning',
 } as const;
 
 export type StreamStatus = (typeof streamStatus)[keyof typeof streamStatus];
@@ -57,7 +58,7 @@ export interface Destination extends DestinationCore, AuditData {
 
 export type DestinationDetails =
   | AkamaiObjectStorageDetails
-  | CustomHTTPsDetails;
+  | CustomHTTPSDetails;
 
 export interface AkamaiObjectStorageDetails {
   access_key_id: string;
@@ -71,26 +72,50 @@ export interface AkamaiObjectStorageDetailsExtended
   access_key_secret: string;
 }
 
-type ContentType = 'application/json' | 'application/json; charset=utf-8';
-type DataCompressionType = 'gzip' | 'None';
+export const contentType = {
+  Json: 'application/json',
+  JsonUtf8: 'application/json; charset=utf-8',
+} as const;
 
-export interface CustomHTTPsDetails {
+export type ContentType = (typeof contentType)[keyof typeof contentType] | null;
+
+export const dataCompressionType = {
+  Gzip: 'gzip',
+  None: 'None',
+} as const;
+
+export type DataCompressionType =
+  (typeof dataCompressionType)[keyof typeof dataCompressionType];
+
+export interface CustomHTTPSDetails {
   authentication: Authentication;
   client_certificate_details?: ClientCertificateDetails;
-  content_type: ContentType;
+  content_type?: ContentType;
   custom_headers?: CustomHeader[];
   data_compression: DataCompressionType;
   endpoint_url: string;
 }
 
-interface ClientCertificateDetails {
-  client_ca_certificate: string;
-  client_certificate: string;
-  client_private_key: string;
-  tls_hostname: string;
+export interface CustomHTTPSDetailsExtended extends CustomHTTPSDetails {
+  authentication: Authentication & {
+    details?: AuthenticationDetailsExtended;
+  };
 }
 
-type AuthenticationType = 'basic' | 'none';
+interface ClientCertificateDetails {
+  client_ca_certificate?: string;
+  client_certificate?: string;
+  client_private_key?: string;
+  tls_hostname?: string;
+}
+
+export const authenticationType = {
+  Basic: 'basic',
+  None: 'none',
+} as const;
+
+export type AuthenticationType =
+  (typeof authenticationType)[keyof typeof authenticationType];
 
 interface Authentication {
   details?: AuthenticationDetails;
@@ -98,11 +123,14 @@ interface Authentication {
 }
 
 interface AuthenticationDetails {
-  basic_authentication_password: string;
   basic_authentication_user: string;
 }
 
-interface CustomHeader {
+interface AuthenticationDetailsExtended extends AuthenticationDetails {
+  basic_authentication_password: string;
+}
+
+export interface CustomHeader {
   name: string;
   value: string;
 }
@@ -133,7 +161,7 @@ export interface AkamaiObjectStorageDetailsPayload
 
 export type DestinationDetailsPayload =
   | AkamaiObjectStorageDetailsPayload
-  | CustomHTTPsDetails;
+  | CustomHTTPSDetailsExtended;
 
 export interface CreateDestinationPayload {
   details: DestinationDetailsPayload;

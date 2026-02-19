@@ -40,12 +40,19 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
   { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
+  { flag: 'marketplaceV2', label: 'MarketplaceV2' },
   { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
+  { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
+  {
+    flag: 'placementGroupPolicyUpdate',
+    label: 'Placement Group Policy Update',
+  },
   { flag: 'privateImageSharing', label: 'Private Image Sharing' },
+  { flag: 'resourceLock', label: 'Resource Lock' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
@@ -67,7 +74,6 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'IAM Limited Availability Badges',
   },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
-  { flag: 'iamRbacPrimaryNavChanges', label: 'IAM Primary Nav Changes' },
   {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
@@ -77,8 +83,17 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'VM Host Maintenance Policy',
   },
   { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
+  {
+    flag: 'blockStorageContextualMetrics',
+    label: 'Block Storage Contextual Metrics',
+  },
+  {
+    flag: 'objectStorageContextualMetrics',
+    label: 'Object Storage Contextual Metrics',
+  },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
+  { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },
 ];
 
 interface RenderFlagItemProps {

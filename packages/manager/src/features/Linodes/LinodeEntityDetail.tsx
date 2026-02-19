@@ -154,8 +154,10 @@ export const LinodeEntityDetail = (props: Props) => {
             image={linode.image ?? 'Unknown Image'}
             imageVendor={imageVendor}
             isSummaryView={isSummaryView}
+            linodeCapabilities={linode.capabilities}
             linodeId={linode.id}
             linodeLabel={linode.label}
+            linodeLocks={linode.locks}
             linodeMaintenancePolicySet={
               linode.maintenance?.maintenance_policy_set ??
               linode.maintenance_policy // Attempt to use ongoing maintenance policy. Otherwise, fallback to policy set on Linode.

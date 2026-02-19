@@ -13,13 +13,13 @@ import { DefaultRolesPanel } from './Defaults/DefaultRolesPanel';
 export const RolesLanding = () => {
   const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
     'account',
-    ['view_account', 'is_account_admin']
+    ['list_role_permissions']
   );
   const { data: accountRoles, isLoading } = useAccountRoles(
-    permissions?.view_account
+    permissions?.list_role_permissions
   );
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount, isProfileLoading } = useDelegationRole();
+  const { isChildUserType, isProfileLoading } = useDelegationRole();
 
   const { roles } = React.useMemo(() => {
     if (!accountRoles) {
@@ -33,7 +33,7 @@ export const RolesLanding = () => {
     return <CircleProgress />;
   }
 
-  if (!(permissions?.view_account || permissions?.is_account_admin)) {
+  if (!permissions?.list_role_permissions) {
     return (
       <Notice variant="error">You do not have permission to view roles.</Notice>
     );
@@ -41,7 +41,7 @@ export const RolesLanding = () => {
 
   return (
     <>
-      {isChildAccount && isIAMDelegationEnabled && <DefaultRolesPanel />}
+      {isChildUserType && isIAMDelegationEnabled && <DefaultRolesPanel />}
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
         <Typography variant="h2">Roles</Typography>
         <RolesTable roles={roles} />

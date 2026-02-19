@@ -5,11 +5,15 @@ import React from 'react';
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
+import { useEuuidFromHttpHeader } from './useEuuidFromHttpHeader';
+
 /**
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.
+ * The EUUID is read from the profile data (injected by the injectEuuidToProfile interceptor).
  */
 export const useAdobeAnalytics = () => {
   const location = useLocation();
+  const { euuid } = useEuuidFromHttpHeader();
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script
@@ -26,6 +30,7 @@ export const useAdobeAnalytics = () => {
           // Fire the first page view for the landing page
           window._satellite.track('page view', {
             url: window.location.pathname,
+            ...(euuid && { euuid }),
           });
         })
         .catch(() => {
@@ -36,11 +41,13 @@ export const useAdobeAnalytics = () => {
 
   React.useEffect(() => {
     /**
-     * Send pageviews when location changes
+     * Send pageviews when location changes.
+     * Includes EUUID (Enterprise UUID) if available from the profile response.
      */
     if (window._satellite) {
       window._satellite.track('page view', {
         url: location.pathname,
+        ...(euuid && { euuid }),
       });
     }
   }, [location.pathname]); // Listen to location changes

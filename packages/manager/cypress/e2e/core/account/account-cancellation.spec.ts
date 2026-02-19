@@ -29,8 +29,8 @@ import {
 import { accountFactory } from 'src/factories/account';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
   PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from 'src/features/Account/constants';
 
 import type { CancelAccount } from '@linode/api-v4';
@@ -302,7 +302,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
+          .findByText(DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });

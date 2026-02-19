@@ -1,4 +1,4 @@
-import type { Params } from 'src/types';
+import type { Filter, Params } from 'src/types';
 
 export interface ChildAccount {
   company: string;
@@ -6,6 +6,8 @@ export interface ChildAccount {
 }
 
 export interface GetChildAccountsIamParams {
+  enabled?: boolean;
+  filter?: Filter;
   params?: Params;
   users?: boolean;
 }
@@ -15,11 +17,13 @@ export interface ChildAccountWithDelegates extends ChildAccount {
 }
 
 export interface GetMyDelegatedChildAccountsParams {
+  filter?: Filter;
   params?: Params;
 }
 
 export interface GetDelegatedChildAccountsForUserParams {
   enabled?: boolean;
+  filter?: Filter;
   params?: Params;
   username: string;
 }

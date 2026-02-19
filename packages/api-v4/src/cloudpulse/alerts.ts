@@ -1,6 +1,8 @@
 import {
   createAlertDefinitionSchema,
+  createNotificationChannelPayloadSchema,
   editAlertDefinitionSchema,
+  editNotificationChannelPayloadSchema,
 } from '@linode/validation';
 
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -17,8 +19,11 @@ import type {
   Alert,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
+  CreateNotificationChannelPayload,
   EditAlertDefinitionPayload,
+  EditNotificationChannelPayload,
   NotificationChannel,
+  NotificationChannelAlerts,
 } from './types';
 
 export const createAlertDefinition = (
@@ -138,4 +143,55 @@ export const updateServiceAlerts = (
     ),
     setMethod('PUT'),
     setData(payload),
+  );
+
+export const createNotificationChannel = (
+  data: CreateNotificationChannelPayload,
+) =>
+  Request<NotificationChannel>(
+    setURL(`${API_ROOT}/monitor/alert-channels`),
+    setMethod('POST'),
+    setData(data, createNotificationChannelPayloadSchema),
+  );
+
+export const getNotificationChannelById = (channelId: number) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('GET'),
+  );
+
+export const updateNotificationChannel = (
+  channelId: number,
+  data: EditNotificationChannelPayload,
+) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('PUT'),
+    setData(data, editNotificationChannelPayloadSchema),
+  );
+
+export const deleteNotificationChannel = (channelId: number) =>
+  Request<NotificationChannel>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
+    ),
+    setMethod('DELETE'),
+  );
+
+export const getAlertsByNotificationChannelId = (
+  channelId: number,
+  params?: Params,
+  filters?: Filter,
+) =>
+  Request<ResourcePage<NotificationChannelAlerts>>(
+    setURL(
+      `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}/alerts`,
+    ),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
   );

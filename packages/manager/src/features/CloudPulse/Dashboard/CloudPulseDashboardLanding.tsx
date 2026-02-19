@@ -1,13 +1,17 @@
-import { Box, Paper } from '@linode/ui';
+import { useProfile } from '@linode/queries';
+import { Box, NewFeatureChip, Paper } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
+import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
@@ -29,6 +33,8 @@ export interface DashboardProp {
 }
 
 export const CloudPulseDashboardLanding = () => {
+  const { data: profile } = useProfile();
+  const flags = useFlags();
   const [filterData, setFilterData] = React.useState<FilterData>({
     id: {},
     label: {},
@@ -44,6 +50,11 @@ export const CloudPulseDashboardLanding = () => {
 
   const [showAppliedFilters, setShowAppliedFilters] =
     React.useState<boolean>(false);
+
+  const timezone =
+    profile?.timezone === 'GMT'
+      ? 'Etc/GMT' // this is present in timezone list for GMT
+      : (profile?.timezone ?? DateTime.local().zoneName);
 
   const toggleAppliedFilter = (isVisible: boolean) => {
     setShowAppliedFilters(isVisible);
@@ -71,13 +82,19 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
 
-  const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
-    setDashboard(dashboardObj);
-    setFilterData({
-      id: {},
-      label: {},
-    }); // clear the filter values on dashboard change
-  }, []);
+  const onDashboardChange = React.useCallback(
+    (dashboardObj: Dashboard, skipReset: boolean = false) => {
+      setDashboard(dashboardObj);
+      if (!skipReset) {
+        setFilterData({
+          id: {},
+          label: {},
+        }); // clear the filter values on dashboard change
+        setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
+      }
+    },
+    [timezone]
+  );
   const onTimeDurationChange = React.useCallback(
     (timeDurationObj: DateTimeWithPreset) => {
       setTimeDuration(timeDurationObj);
@@ -88,7 +105,12 @@ export const CloudPulseDashboardLanding = () => {
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Dashboards" />
       <LandingHeader
-        breadcrumbProps={{ pathname: '/metrics' }}
+        breadcrumbProps={{
+          pathname: '/metrics',
+          labelOptions: {
+            suffixComponent: flags.aclp?.new ? <NewFeatureChip /> : undefined,
+          },
+        }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />

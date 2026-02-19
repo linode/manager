@@ -99,13 +99,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     }
 
     return (
-      !type.id.includes('dedicated-edge') &&
-      !type.id.includes('nanode-edge') &&
-      // Filter out GPU types for enterprise; otherwise, return the rest of the types.
-      // TODO: remove this once GPU plans are supported in LKE-E (Q3 2025)
-      (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true) &&
-      // Filter out Blackwell plans for kubernetes (for now)
-      !(type.id.includes('blackwell') && !flags.kubernetesBlackwellPlans)
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
     );
   });
 
@@ -220,7 +214,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       sx={{ padding: 0 }}
       tabDisabledMessage={
         shouldDisablePremiumPlansTab
-          ? 'Premium CPUs are now called Dedicated G7 Plans.'
+          ? 'Premium CPUs are now called G7 Dedicated plans.'
           : undefined
       }
       tabs={tabs}

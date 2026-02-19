@@ -98,9 +98,11 @@ import {
   mysqlConfigResponse,
   networkLoadBalancerFactory,
   networkLoadBalancerListenerFactory,
+  networkLoadBalancerMetricCriteria,
   networkLoadBalancerNodeFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
+  notificationChannelAlertsFactory,
   notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
@@ -211,6 +213,11 @@ const makeMockDatabase = (params: PathParams): Database => {
 
     db.ssl_connection = true;
   }
+
+  if (db.engine === 'postgresql') {
+    db.connection_pool_port = 100; /** @Deprecated replaced by `endpoints` property */
+  }
+
   const database = databaseFactory.build(db);
 
   if (database.platform !== 'rdbms-default') {
@@ -222,6 +229,14 @@ const makeMockDatabase = (params: PathParams): Database => {
     database.hosts = {
       primary: 'private-db-mysql-primary-0.b.linodeb.net',
       standby: 'private-db-mysql-standby-0.b.linodeb.net',
+      endpoints: [
+        {
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          role: 'primary',
+          private_access: true,
+          port: 12345,
+        },
+      ],
     };
   }
 
@@ -372,8 +387,57 @@ const databases = [
 
   http.get('*/databases/postgresql/instances/:id/connection-pools', () => {
     const connectionPools = databaseConnectionPoolFactory.buildList(5);
+    // For mocking error response
+    // return HttpResponse.json({ errors: [{ reason: 'Unable to retrieve connection pools' }] }, { status: 400 });
     return HttpResponse.json(makeResourcePage(connectionPools));
   }),
+
+  http.post(
+    '*/databases/postgresql/instances/:id/connection-pools',
+    async ({ request }) => {
+      const body = await request.json();
+      const payload: any = body;
+
+      const connectionPool = databaseConnectionPoolFactory.build({
+        database: payload.database,
+        label: payload.label,
+        mode: payload.mode,
+        size: payload.size,
+        username: payload.username,
+      });
+      // For mocking error response
+      // return HttpResponse.json(
+      //   {
+      //     errors: [
+      //       { field: 'label', reason: 'sample error text' },
+      //       { field: 'database', reason: 'sample error text' },
+      //       { field: 'mode', reason: 'sample error text' },
+      //       { field: 'size', reason: 'sample error text' },
+      //       { field: 'username', reason: 'sample error text' },
+      //     ],
+      //   },
+      //   { status: 400 }
+      // );
+      return HttpResponse.json(connectionPool);
+    }
+  ),
+
+  http.put(
+    '*/databases/postgresql/instances/:id/connection-pools/:label',
+    async ({ request }) => {
+      const body = await request.json();
+      const payload: any = body;
+
+      const connectionPool = databaseConnectionPoolFactory.build({
+        database: payload.database,
+        label: payload.label,
+        mode: payload.mode,
+        size: payload.size,
+        username: payload.username,
+      });
+      return HttpResponse.json(connectionPool);
+    }
+  ),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
     const database = makeMockDatabase(params);
@@ -515,6 +579,30 @@ const vpc = [
     const subnet = subnetFactory.build({ ...(body as any) });
     return HttpResponse.json(subnet);
   }),
+  http.get('*/v4beta/regions/vpc-availability', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          region: 'ap-west',
+          available: true,
+          available_ipv6_prefix_lengths: [],
+        },
+        {
+          region: 'in-maa',
+          available: true,
+          available_ipv6_prefix_lengths: [52],
+        },
+        {
+          region: 'us-southeast',
+          available: true,
+          available_ipv6_prefix_lengths: [48, 52],
+        },
+      ],
+      page: 1,
+      pages: 1,
+      results: 3,
+    });
+  }),
 ];
 
 const iam = [
@@ -613,6 +701,13 @@ const netLoadBalancers = [
   ),
 ];
 
+const marketplace = [
+  http.post('*/v4beta/marketplace/referral', async () => {
+    await sleep(2000);
+    return HttpResponse.json({});
+  }),
+];
+
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
@@ -677,7 +772,11 @@ export const handlers = [
       // restricted: true,
       // user_type: 'default',
     });
-    return HttpResponse.json(profile);
+    return HttpResponse.json(profile, {
+      headers: {
+        'X-Customer-UUID': '51C68049-266E-451B-80ABFC92B5B9D576',
+      },
+    });
   }),
 
   http.put('*/profile', async ({ request }) => {
@@ -822,6 +921,13 @@ export const handlers = [
     const linodesWithFirewalls = linodeFactory.buildList(10, {
       region: 'ap-west',
     });
+    const linodesWithAclpAlerts = linodeFactory.buildList(10, {
+      region: 'ap-west',
+      alerts: {
+        system_alerts: [1, 2, 3, 4, 5],
+        user_alerts: [6, 7, 8, 9, 10],
+      },
+    });
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
       image: 'metadata-test-image',
       label: 'metadata-test-image',
@@ -909,6 +1015,7 @@ export const handlers = [
     });
     const linodes = [
       ...linodesWithFirewalls,
+      ...linodesWithAclpAlerts,
       ...mtcLinodes,
       ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
@@ -3287,7 +3394,7 @@ export const handlers = [
       ...alertFactory.buildList(2, {
         created_by: 'user1',
         service_type: 'linode',
-        status: 'in progress',
+        status: 'provisioning',
         tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
@@ -3363,7 +3470,6 @@ export const handlers = [
       ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
-      ...alertFactory.buildList(3, { status: 'in progress', type: 'user' }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -3481,7 +3587,6 @@ export const handlers = [
             status: pickRandom([
               'enabled',
               'disabled',
-              'in progress',
               'enabling',
               'disabling',
               'provisioning',
@@ -3572,10 +3677,22 @@ export const handlers = [
     const notificationChannels = notificationChannelFactory.buildList(3);
     notificationChannels.push(
       notificationChannelFactory.build({
+        id: 5,
         label: 'Email test channel',
         updated: '2023-11-05T04:00:00',
         updated_by: 'user3',
         created_by: 'admin',
+        details: {
+          email: {
+            usernames: ['user1', 'user2'],
+            recipient_type: 'user',
+          },
+        },
+        alerts: {
+          alert_count: 0,
+          type: 'alerts-definitions',
+          url: 'monitor/alert-channels/{id}/alerts',
+        },
       })
     );
     notificationChannels.push(
@@ -3587,8 +3704,85 @@ export const handlers = [
         type: 'system',
       })
     );
-    notificationChannels.push(...notificationChannelFactory.buildList(75));
+    notificationChannels.push(...notificationChannelFactory.buildList(3));
     return HttpResponse.json(makeResourcePage(notificationChannels));
+  }),
+  http.post('*/monitor/alert-channels', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.put('*/monitor/alert-channels/:id', () => {
+    return HttpResponse.json(notificationChannelFactory.build());
+  }),
+  http.get('*/monitor/alert-channels/:id', ({ params }) => {
+    if (params.id === undefined) {
+      return HttpResponse.json({}, { status: 404 });
+    }
+    if (params.id === '5') {
+      return HttpResponse.json(
+        notificationChannelFactory.build({
+          id: 5,
+          label: 'Email test channel',
+          updated: '2023-11-05T04:00:00',
+          updated_by: 'user3',
+          created_by: 'admin',
+          type: 'user',
+          channel_type: 'email',
+          details: {
+            email: {
+              recipient_type: 'user',
+              usernames: [
+                'reallyreallylongusername1',
+                'user2',
+                'longusernameuser3',
+                'longusernameuser4',
+                'user5',
+                'longusernameuser6',
+                'longusernameuser7',
+                'user8',
+                'user9',
+                'user10',
+              ],
+            },
+          },
+        })
+      );
+    }
+    return HttpResponse.json(
+      notificationChannelFactory.build({
+        label: 'Test channel',
+        updated: '2023-11-05T04:00:00',
+        updated_by: 'user3',
+        created_by: 'admin',
+        type: 'user',
+        channel_type: 'email',
+        details: {
+          email: {
+            usernames: ['ChildUser', 'NonAdminUser'],
+          },
+        },
+      })
+    );
+  }),
+  http.delete('*/v4beta/monitor/alert-channels/:channelId', () => {
+    return HttpResponse.json({});
+  }),
+  http.get('*/monitor/alert-channels/:id/alerts', ({ params }) => {
+    if (params.id === 'undefined') {
+      return HttpResponse.json({}, { status: 404 });
+    }
+    if (params.id === '5') {
+      return HttpResponse.json(makeResourcePage([]));
+    }
+    const alerts = notificationChannelAlertsFactory.buildList(84);
+    const dbaasalerts = notificationChannelAlertsFactory.buildList(2, {
+      service_type: 'dbaas',
+    });
+    const volumeAlerts = notificationChannelAlertsFactory.buildList(3, {
+      service_type: 'blockstorage',
+    });
+    alerts.push(...volumeAlerts);
+    alerts.push(...dbaasalerts);
+    return HttpResponse.json(makeResourcePage(alerts));
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
@@ -3627,7 +3821,7 @@ export const handlers = [
           }),
         }),
         serviceTypesFactory.build({
-          label: 'Block Storage',
+          label: 'Volumes',
           service_type: 'blockstorage',
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
@@ -3639,6 +3833,12 @@ export const handlers = [
           alert: serviceAlertFactory.build({
             scope: ['entity', 'account', 'region'],
           }),
+        }),
+        serviceTypesFactory.build({
+          label: 'Network Load Balancers',
+          service_type: 'netloadbalancer',
+          regions: 'us-iad,us-east,eu-west',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
       ],
     };
@@ -3653,8 +3853,9 @@ export const handlers = [
       nodebalancer: 'NodeBalancers',
       firewall: 'Firewalls',
       objectstorage: 'Object Storage',
-      blockstorage: 'Block Storage',
+      blockstorage: 'Volumes',
       lke: 'LKE Enterprise',
+      netloadbalancer: 'Network Load Balancers',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -3778,6 +3979,16 @@ export const handlers = [
       );
     }
 
+    if (params.serviceType === 'netloadbalancer') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 5,
+          service_type: 'netloadbalancer',
+          label: 'Network Load Balancer',
+        })
+      );
+    }
+
     return HttpResponse.json(response);
   }),
   http.get(
@@ -3852,31 +4063,6 @@ export const handlers = [
               {
                 dimension_label: 'device',
                 label: 'Device name',
-                values: ['lo', 'eth0'],
-              },
-              {
-                dimension_label: 'direction',
-                label: 'Direction of network transfer',
-                values: ['transmit', 'receive'],
-              },
-              {
-                dimension_label: 'LINODE_ID',
-                label: 'Linode ID',
-                values: null,
-              },
-            ],
-            label: 'Network Traffic',
-            metric: 'system_network_io_by_resource',
-            metric_type: 'counter',
-            scrape_interval: '30s',
-            unit: 'byte',
-          },
-          {
-            available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-            dimensions: [
-              {
-                dimension_label: 'device',
-                label: 'Device name',
                 values: ['loop0', 'sda', 'sdb'],
               },
               {
@@ -3914,6 +4100,11 @@ export const handlers = [
                 label: 'Protocol',
                 dimension_label: 'protocol',
                 values: ['ipv4', 'ipv6'],
+              },
+              {
+                label: 'Test Dimension',
+                dimension_label: 'test',
+                values: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
               },
             ],
           },
@@ -4066,6 +4257,9 @@ export const handlers = [
       if (params.serviceType === 'blockstorage') {
         return HttpResponse.json({ data: blockStorageMetricRules });
       }
+      if (params.serviceType === 'netloadbalancer') {
+        return HttpResponse.json({ data: networkLoadBalancerMetricCriteria });
+      }
       return HttpResponse.json(response);
     }
   ),
@@ -4203,6 +4397,51 @@ export const handlers = [
     } else if (id === '10') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Endpoint Dashboard';
+    } else if (id === '5') {
+      widgets = [
+        {
+          metric: 'nlb_ingress_traffic',
+          unit: 'Bps',
+          label: 'Ingress Traffic Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_ingress_traffic',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nlb_ingress_packets',
+          unit: 'packets/s',
+          label: 'Ingress Packets Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_ingress_packets',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nlb_backend_ingress_traffic',
+          unit: 'Bps',
+          label: 'Ingress Traffic Rate Per backend',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_backend_ingress_traffic',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'nlb_backend_ingress_packets',
+          unit: 'packets/s',
+          label: 'Ingress Packets Rate Per backend',
+          color: 'default',
+          size: 12,
+          chart_type: 'line',
+          y_label: 'nlb_backend_ingress_packets',
+          aggregate_function: 'sum',
+        },
+      ];
+      serviceType = 'netloadbalancer';
+      dashboardLabel = 'Network Load Balancer';
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
@@ -4430,6 +4669,7 @@ export const handlers = [
   ...vpc,
   ...entities,
   ...netLoadBalancers,
+  ...marketplace,
   http.get('*/v4beta/maintenance/policies', () => {
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))

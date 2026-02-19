@@ -110,7 +110,7 @@ interface AlertToggleOptions extends AlertActionOptions {
 const statusList: AlertStatusType[] = [
   'enabled',
   'disabled',
-  'in progress',
+  'provisioning',
   'failed',
 ];
 const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
@@ -235,7 +235,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       { ascending: [2, 4, 1, 3], column: 'status', descending: [1, 3, 2, 4] },
       {
         ascending: [1, 2, 3, 4],
-        column: 'service_type',
+        column: 'service_type_label',
         descending: [3, 4, 1, 2],
       },
       {
