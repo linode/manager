@@ -1952,6 +1952,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '1D678F',
     },
     description: `Fast, open-source unified analytics engine for large-scale data processing.`,
+    isNew: false,
     logo_url: 'apachespark.svg',
     related_guides: [
       {
@@ -1992,6 +1993,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '9BF0E1',
     },
     description: `Platform for building developer portals designed to simplify and unify software development processes.`,
+    isNew: false,
     logo_url: 'backstage.svg',
     related_guides: [
       {
@@ -2012,6 +2014,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Netfoundry Edge Router is a software gateway that enables secure, zero-trust, high-performance connectivity between local networks, cloud environments, and applications.',
+    isNew: false,   
     logo_url: 'netfoundry.svg',
     related_guides: [
       {
@@ -2033,6 +2036,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'ArangoDB is a multi-model database that combines the power of graphs, documents, and key-value pairs in a single engine. It provides ACID transactions, flexible data modeling, and powerful query capabilities with AQL (ArangoDB Query Language). Perfect for applications requiring complex data relationships, real-time analytics, and scalable performance.',
+    isNew: false,
     logo_url: 'arangodb.svg',
     related_guides: [
       {
@@ -2055,6 +2059,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Memgraph is a high-performance, in-memory graph database designed for real-time analytics and streaming data. It uses the Cypher query language and supports powerful graph algorithms out of the box. With built-in support for streaming data, Memgraph makes it easy to build apps that respond instantly to changes in complex connected data.',
+    isNew: false,    
     logo_url: 'memgraph.svg',
     related_guides: [
       {
@@ -2077,6 +2082,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Neo4j is a high-performance, open-source property graph database designed to store and query data as a network of connected nodes and relationships. It is optimized for handling complex, interconnected data and supports the Cypher query language for expressive and efficient graph queries.',
+    isNew: false,    
     logo_url: 'neo4j.svg',
     related_guides: [
       {
@@ -2115,6 +2121,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'ffffff',
     },
     description: `Cribl Stream is an observability pipeline that helps organizations collect, reduce, enrich, and route telemetry data in real-time. It connects with 80+ sources and destinations, enabling you to handle data from any source to any analytics tool. Cribl Stream helps reduce data volume and optimize log processing to cut costs, enhance data security with encryption and access controls, and transform data using AI-powered tools. The platform scales from small to enterprise-level deployments and acts as a universal data management layer, giving organizations more control and efficiency in handling their telemetry data across various systems.`,
+    isNew: false,
     logo_url: 'cribl.svg',
     related_guides: [
       {
@@ -2134,6 +2141,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '648c19',
     },
     description: `Jaeger all-in-one is a complete distributed tracing solution deployed as a single Docker container that includes the Jaeger UI, Collector, Query service, Agent, and in-memory storage. This integrated setup is designed for development, testing, and quick deployment scenarios where you need full tracing capabilities without complex distributed architecture. Jaeger helps developers track request flows across microservices, identify performance bottlenecks, analyze service dependencies, and troubleshoot errors in distributed applications. The all-in-one image supports various tracing protocols including Zipkin and Jaeger's own formats, making it ideal for getting started with distributed tracing.`,
+    isNew: false,
     logo_url: 'jaeger.svg',
     related_guides: [
       {
