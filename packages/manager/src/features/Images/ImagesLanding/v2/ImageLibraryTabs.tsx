@@ -10,23 +10,12 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { getImageLibrarySubTabIndex } from '../../utils';
-
-import type { ImageLibrarySubTab } from '../../utils';
+import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 
 export const ImageLibraryTabs = () => {
   const navigate = useNavigate();
 
   const search = useSearch({ from: '/images' });
-
-  const subTabs: ImageLibrarySubTab[] = [
-    { type: 'owned', title: 'Owned by me' },
-    {
-      type: 'shared',
-      title: 'Shared with me',
-      isBeta: true,
-    },
-    { type: 'recovery', title: 'Recovery images' },
-  ];
 
   const subTabIndex = getImageLibrarySubTabIndex(subTabs, search.subType);
 
