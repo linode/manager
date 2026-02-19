@@ -11,6 +11,7 @@ import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
+  PLAN_FILTER_GPU_RTX_PRO_6000,
   PREMIUM_COMPUTE_INSTANCES_LINK,
   SHARED_COMPUTE_INSTANCES_LINK,
   TRANSFER_COSTS_LINK,
@@ -18,9 +19,10 @@ import {
 import { MetalNotice } from './MetalNotice';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 import { PlanNoticeTypography } from './PlansAvailabilityNotice.styles';
-import { planTabInfoContent } from './utils';
+import { getIsPlanDisabled, planTabInfoContent } from './utils';
+import { filterPlansByGpuType } from './utils/planFilters';
 
-import type { PlanSelectionType } from './types';
+import type { PlanSelectionType, PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
@@ -66,6 +68,14 @@ export const PlanInformation = (props: PlanInformationProps) => {
   };
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
+
+  const showBlackwellLimitedAvailabilityBanner =
+    hasSelectedRegion &&
+    plans?.length &&
+    filterPlansByGpuType(
+      plans as PlanWithAvailability[],
+      PLAN_FILTER_GPU_RTX_PRO_6000
+    ).every((plan) => getIsPlanDisabled(plan));
 
   const showLimitedAvailabilityBanner =
     hasSelectedRegion &&
@@ -113,6 +123,24 @@ export const PlanInformation = (props: PlanInformationProps) => {
             planType={planType}
             regionsData={regionsData || []}
           />
+          {showBlackwellLimitedAvailabilityBanner && (
+            <Notice spacingBottom={8} variant="info">
+              <Typography
+                fontSize="1rem"
+                sx={(theme) => ({ font: theme.font.bold })}
+              >
+                <strong>
+                  NVIDIA RTX PRO 6000 Blackwell GPU plans are currently
+                  unavailable
+                </strong>{' '}
+                in this region or globally unavailable. Try another region or{' '}
+                <Link to="/support/tickets?dialogOpen=true">
+                  contact Support
+                </Link>{' '}
+                for assistance.
+              </Typography>
+            </Notice>
+          )}
         </>
       ) : null}
       {planType === 'accelerated' && (
