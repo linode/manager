@@ -36,7 +36,10 @@ export interface ImageConfig {
   columns: ImageViewTableColConfig[];
   description: React.ReactNode;
   docsLink?: string;
-  emptyMessage: string;
+  emptyMessage: {
+    instruction: string;
+    main: string;
+  };
   eventCategory: string;
   isEnabled: (subType: ImageLibraryType | undefined) => boolean;
   orderByDefault: string;
@@ -106,7 +109,11 @@ export const IMAGES_CONFIG: Omit<
       }),
     },
     eventCategory: 'Custom Images Table',
-    emptyMessage: 'No Custom Images to display.',
+    emptyMessage: {
+      main: 'No Custom Images to display.',
+      instruction:
+        'Click \u2018Create Image\u2019 to create your first custom image',
+    },
   },
-  // "shared", and 'revcovery' images config will go here...
+  // "shared", and 'recovery' images config will go here...
 };

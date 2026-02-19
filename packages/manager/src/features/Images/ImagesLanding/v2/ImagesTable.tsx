@@ -1,4 +1,11 @@
-import { Box, Button, Hidden, Paper, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Hidden,
+  Paper,
+  Typography,
+  ZeroStateSearchNarrowIcon,
+} from '@linode/ui';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -16,7 +23,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { ImageRow } from '../ImageRow';
 
 import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
-import type { ImageViewTableColConfig } from './imagesConfig';
+import type { ImageConfig, ImageViewTableColConfig } from './imagesConfig';
 import type { APIError, Event, Image } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Order } from 'src/hooks/useOrderV2';
@@ -35,7 +42,7 @@ interface HeaderProps {
 
 interface ImagesTableProps {
   columns: ImageViewTableColConfig[];
-  emptyMessage: string;
+  emptyMessage: ImageConfig['emptyMessage'];
   error?: APIError[] | null;
   eventCategory: string;
   events: {
@@ -164,7 +171,23 @@ export const ImagesTable = (props: ImagesTableProps) => {
           {images?.length === 0 && (
             <TableRowEmpty
               colSpan={columns.length + 1}
-              message={emptyMessage}
+              message={
+                <Box
+                  sx={(theme) => ({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: theme.spacingFunction(4),
+                    p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
+                  })}
+                >
+                  <ZeroStateSearchNarrowIcon />
+                  <Typography variant="h3">{emptyMessage.main}</Typography>
+                  <Typography variant="body1">
+                    {emptyMessage.instruction}
+                  </Typography>
+                </Box>
+              }
             />
           )}
           {error && query && (
