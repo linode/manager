@@ -171,7 +171,7 @@ export const ImagesTable = (props: ImagesTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {images?.length === 0 && (
+          {!error && images?.length === 0 && (
             <TableRowEmpty
               colSpan={columns.length + 1}
               message={
@@ -186,9 +186,11 @@ export const ImagesTable = (props: ImagesTableProps) => {
                 >
                   <ZeroStateSearchNarrowIcon />
                   <Typography variant="h3">{emptyMessage.main}</Typography>
-                  <Typography variant="body1">
-                    {emptyMessage.instruction}
-                  </Typography>
+                  {!query && (
+                    <Typography variant="body1">
+                      {emptyMessage.instruction}
+                    </Typography>
+                  )}
                 </Box>
               }
             />

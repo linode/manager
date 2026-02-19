@@ -121,7 +121,7 @@ export const IMAGES_CONFIG: Omit<
     },
     eventCategory: 'Custom Images Table',
     emptyMessage: {
-      main: 'No Custom Images to display.',
+      main: 'No custom images to display',
       instruction:
         'Click \u2018Create Image\u2019 to create your first custom image',
     },
