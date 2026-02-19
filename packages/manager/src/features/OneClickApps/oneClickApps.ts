@@ -1952,7 +1952,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: '1D678F',
     },
     description: `Fast, open-source unified analytics engine for large-scale data processing.`,
-    isNew: true,
     logo_url: 'apachespark.svg',
     related_guides: [
       {
@@ -1993,7 +1992,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: '9BF0E1',
     },
     description: `Platform for building developer portals designed to simplify and unify software development processes.`,
-    isNew: true,
     logo_url: 'backstage.svg',
     related_guides: [
       {
@@ -2014,7 +2012,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Netfoundry Edge Router is a software gateway that enables secure, zero-trust, high-performance connectivity between local networks, cloud environments, and applications.',
-    isNew: true,
     logo_url: 'netfoundry.svg',
     related_guides: [
       {
@@ -2036,7 +2033,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'ArangoDB is a multi-model database that combines the power of graphs, documents, and key-value pairs in a single engine. It provides ACID transactions, flexible data modeling, and powerful query capabilities with AQL (ArangoDB Query Language). Perfect for applications requiring complex data relationships, real-time analytics, and scalable performance.',
-    isNew: true,
     logo_url: 'arangodb.svg',
     related_guides: [
       {
@@ -2059,7 +2055,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Memgraph is a high-performance, in-memory graph database designed for real-time analytics and streaming data. It uses the Cypher query language and supports powerful graph algorithms out of the box. With built-in support for streaming data, Memgraph makes it easy to build apps that respond instantly to changes in complex connected data.',
-    isNew: true,
     logo_url: 'memgraph.svg',
     related_guides: [
       {
@@ -2082,7 +2077,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Neo4j is a high-performance, open-source property graph database designed to store and query data as a network of connected nodes and relationships. It is optimized for handling complex, interconnected data and supports the Cypher query language for expressive and efficient graph queries.',
-    isNew: true,
     logo_url: 'neo4j.svg',
     related_guides: [
       {
@@ -2121,7 +2115,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'ffffff',
     },
     description: `Cribl Stream is an observability pipeline that helps organizations collect, reduce, enrich, and route telemetry data in real-time. It connects with 80+ sources and destinations, enabling you to handle data from any source to any analytics tool. Cribl Stream helps reduce data volume and optimize log processing to cut costs, enhance data security with encryption and access controls, and transform data using AI-powered tools. The platform scales from small to enterprise-level deployments and acts as a universal data management layer, giving organizations more control and efficiency in handling their telemetry data across various systems.`,
-    isNew: true,
     logo_url: 'cribl.svg',
     related_guides: [
       {
@@ -2141,7 +2134,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: '648c19',
     },
     description: `Jaeger all-in-one is a complete distributed tracing solution deployed as a single Docker container that includes the Jaeger UI, Collector, Query service, Agent, and in-memory storage. This integrated setup is designed for development, testing, and quick deployment scenarios where you need full tracing capabilities without complex distributed architecture. Jaeger helps developers track request flows across microservices, identify performance bottlenecks, analyze service dependencies, and troubleshoot errors in distributed applications. The all-in-one image supports various tracing protocols including Zipkin and Jaeger's own formats, making it ideal for getting started with distributed tracing.`,
-    isNew: true,
     logo_url: 'jaeger.svg',
     related_guides: [
       {
@@ -2242,5 +2234,120 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Open-source AI web and chat interface.',
     website: 'https://docs.openwebui.com/getting-started/',
+  },
+    1972184: {
+    alt_description:
+      'PostgreSQL extension for vector similarity search and AI embeddings.',
+    alt_name: 'Open-source vector database extension',
+    categories: ['Databases', 'Vector Databases','AI'],
+    colors: {
+      end: '336791',
+      start: '4ea8de',
+    },
+    description:
+      'pgvector is an open-source PostgreSQL extension that enables vector similarity search directly within your database. It allows you to store embeddings and perform efficient nearest neighbor queries, making it ideal for AI applications such as semantic search, recommendation systems, and retrieval-augmented generation (RAG).',
+    isNew: true,
+    logo_url: 'pgvector.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/pgvector',
+        title:
+          'Deploy pgvector through the Linode Marketplace',
+      },
+    ],
+    summary: 'PostgreSQL extension for vector similarity search and AI workloads.',
+    website: 'https://github.com/pgvector/pgvector',
+  },
+  2011033: {
+    alt_description:
+      'Open-source vector database built for scalable AI similarity search.',
+    alt_name: 'Open-source vector database',
+    categories: ['Databases', 'Vector Databases','AI'],
+    colors: {
+      end: '00bfa6',
+      start: '1f2937',
+    },
+    description:
+      'Milvus is an open-source vector database designed for high-performance similarity search and AI workloads. It enables you to store, index, and search massive embedding datasets efficiently, making it ideal for semantic search, recommendation systems, computer vision, and retrieval-augmented generation (RAG) applications.',
+    isNew: true,
+    logo_url: 'milvus.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/milvus',
+        title:
+          'Deploy Milvus through the Linode Marketplace',
+      },
+    ],
+    summary: 'High-performance open-source vector database for AI applications.',
+    website: 'https://milvus.io/',
+  },
+  2011885: {
+    alt_description:
+      'Open-source large language model for self-hosted AI inference.',
+    alt_name: 'Open-source LLM',
+    categories: ['Chat', 'LLM', 'AI'],
+    colors: {
+      end: '111827',
+      start: '10b981',
+    },
+    description:
+      'GPT-OSS is an open-source large language model designed for self-hosted AI inference and application development. It enables organizations to deploy powerful text generation, chat, and reasoning capabilities on their own infrastructure, supporting use cases such as chatbots, code generation, content creation, and AI-powered automation.',
+    isNew: true,
+    logo_url: 'gptoss.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/gpt-oss-with-openwebui',
+        title:
+          'Deploy GPT-OSS through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open-source large language model for self-hosted AI workloads.',
+    website: 'https://github.com/open-source-gpt/gpt-oss',
+  },
+  1997012: {
+    alt_description:
+      'Lightweight open large language model optimized for efficient AI inference.',
+    alt_name: 'Open large language model',
+    categories: ['Chat', 'LLM', 'AI'],
+    colors: {
+      end: '1a73e8',
+      start: '34a853',
+    },
+    description:
+      'Gemma 3 is an open large language model designed for efficient, high-performance AI inference across a variety of workloads. Optimized for text generation, chat, and reasoning tasks, it enables developers to deploy scalable AI applications such as assistants, code generation tools, and content automation directly on their own infrastructure.',
+    isNew: true,
+    logo_url: 'gemma3.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/gemma3',
+        title:
+          'Deploy Gemma 3 through the Linode Marketplace',
+      },
+    ],
+    summary: 'Efficient open large language model for self-hosted AI applications.',
+    website: 'https://ai.google.dev/gemma',
+  },
+  2015845: {
+    alt_description:
+      'Open large language model series for advanced reasoning, coding, and chat.',
+    alt_name: 'Open large language model',
+    categories: ['Chat', 'LLM', 'AI'],
+    colors: {
+      end: '1f2937',
+      start: '7c3aed',
+    },
+    description:
+      'Qwen is an open large language model series designed for high-performance text generation, reasoning, and coding tasks. It supports chat-based interactions, instruction following, and advanced AI application development, making it well-suited for assistants, code generation tools, automation workflows, and enterprise AI deployments.',
+    isNew: true,
+    logo_url: 'qwen.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/qwen/',
+        title:
+          'Deploy Qwen with Open WebUI through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open large language model for reasoning, coding, and chat applications.',
+    website: 'https://qwenlm.github.io/',
   },
 };
