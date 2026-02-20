@@ -38,7 +38,7 @@ describe('AppDetailDrawer', () => {
     expect(website).toHaveAttribute('href', 'https://wordpress.org/');
 
     // Verify guide renders with link
-    const guide = getByText('Deploy WordPress through the Linode Marketplace');
+    const guide = getByText('Deploy WordPress');
     expect(guide).toBeVisible();
     expect(guide).toHaveAttribute(
       'href',
