@@ -26,8 +26,10 @@ export interface ChildAccountsTableProps {
     euuid,
     event,
     onClose,
+    company,
     userType,
   }: {
+    company?: string;
     currentTokenWithBearer?: string;
     euuid: string;
     event: React.MouseEvent<HTMLElement>;
@@ -107,6 +109,7 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
                     onSwitchAccount({
                       currentTokenWithBearer,
                       euuid: childAccount.euuid,
+                      company: childAccount.company,
                       event,
                       onClose,
                       userType,

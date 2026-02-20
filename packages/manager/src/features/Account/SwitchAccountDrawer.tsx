@@ -20,13 +20,15 @@ import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/us
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, storage } from 'src/utilities/storage';
+import { getStorage, setStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { ChildAccountsTable } from './SwitchAccounts/ChildAccountsTable';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
 import type { APIError, Filter, UserType } from '@linode/api-v4';
+
+const SWITCH_ACCOUNT_COMPANY_KEY = 'switch_account/company_name';
 
 interface Props {
   onClose: () => void;
@@ -35,6 +37,7 @@ interface Props {
 }
 
 interface HandleSwitchToChildAccountProps {
+  company?: string;
   currentTokenWithBearer?: string;
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
@@ -128,11 +131,12 @@ export const SwitchAccountDrawer = (props: Props) => {
       event,
       onClose,
       userType,
+      company,
     }: HandleSwitchToChildAccountProps) => {
       const isProxyOrDelegateUserType =
         userType === 'proxy' || userType === 'delegate';
-
       try {
+        setStorage(SWITCH_ACCOUNT_COMPANY_KEY, company ?? '');
         if (isProxyOrDelegateUserType) {
           // Revoke proxy token before switching accounts.
           await revokeToken().catch(() => {
@@ -162,6 +166,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         location.replace('/linodes');
       } catch {
         // Error is handled by createTokenError.
+        setStorage(SWITCH_ACCOUNT_COMPANY_KEY, '');
       }
     },
     [createToken, isProxyUserType, updateCurrentToken, revokeToken]

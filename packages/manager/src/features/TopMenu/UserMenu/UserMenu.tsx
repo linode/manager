@@ -43,8 +43,10 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
+  const switchAccountCompanyName = getStorage('switch_account/company_name');
+
   const companyNameOrEmail = getCompanyNameOrEmail({
-    company: account?.company,
+    company: account?.company ? account?.company : switchAccountCompanyName,
     profile,
   });
 
