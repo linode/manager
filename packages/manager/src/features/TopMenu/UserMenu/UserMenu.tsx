@@ -57,8 +57,7 @@ export const UserMenu = React.memo(() => {
 
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
-  const userName =
-    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
+  const userName = (isProxyUserType ? parentProfile : profile)?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')

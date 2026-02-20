@@ -17,6 +17,7 @@ const queryMocks = vi.hoisted(() => ({
   useIsDefaultDelegationRolesForChildAccount: vi
     .fn()
     .mockReturnValue({ isDefaultDelegationRolesForChildAccount: true }),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -35,11 +36,28 @@ vi.mock('@linode/queries', async () => {
       queryMocks.useGetDefaultDelegationAccessQuery,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 describe('DefaultRoles', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    queryMocks.usePermissions.mockReturnValue({
+      data: { view_default_delegate_access: true },
+      isLoading: false,
+    });
+  });
   it('should render', async () => {
     queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
       data: {
@@ -83,5 +101,22 @@ describe('DefaultRoles', () => {
 
     renderWithTheme(<DefaultRoles />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
+  });
+
+  it('should not render if user does not have permissions', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        view_default_delegate_access: false,
+      },
+      isLoading: false,
+    });
+
+    renderWithTheme(<DefaultRoles />);
+
+    expect(
+      screen.queryByText(
+        'You do not have permission to view default roles for delegate users.'
+      )
+    ).toBeVisible();
   });
 });
