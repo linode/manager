@@ -106,7 +106,9 @@ const iamDefaultsTabsRoute = createRoute({
     const profile = context?.profile;
     const userType = profile?.user_type;
 
-    if (userType !== 'child' || !isDelegationEnabled) {
+    const isChildOrDelegate = userType === 'child' || userType === 'delegate';
+
+    if (!isChildOrDelegate || !isDelegationEnabled) {
       throw redirect({
         to: '/iam/roles',
         replace: true,

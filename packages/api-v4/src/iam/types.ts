@@ -125,6 +125,7 @@ export type AccountAdmin =
   | 'view_account_login'
   | 'view_account_settings'
   | 'view_child_account'
+  | 'view_default_delegate_access'
   | 'view_enrolled_beta_program'
   | 'view_lock'
   | 'view_network_usage'
