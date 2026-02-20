@@ -220,7 +220,7 @@ const makeMockDatabase = (params: PathParams): Database => {
 
   const database = databaseFactory.build(db);
 
-  // No VPC
+  // Uncomment the lines below to mock a database cluster without a VPC configuration
   // database.private_network = null;
   // database.hosts = {
   //   primary: 'db-mysql-primary-0.b.linodeb.net',
