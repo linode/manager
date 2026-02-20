@@ -62,10 +62,14 @@ export const useAccountUser = (username: string, enabled: boolean = true) => {
   });
 };
 
-export const useAccountUserGrants = (username: string) => {
-  return useQuery<Grants, APIError[]>(
-    accountQueries.users._ctx.user(username)._ctx.grants,
-  );
+export const useAccountUserGrants = (
+  username: string,
+  enabled: boolean = true,
+) => {
+  return useQuery<Grants, APIError[]>({
+    ...accountQueries.users._ctx.user(username)._ctx.grants,
+    enabled,
+  });
 };
 
 export const useUpdateUserMutation = (username: string) => {
