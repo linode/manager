@@ -315,10 +315,12 @@ export const DatabaseBackups = () => {
                 buttonType="primary"
                 data-qa-settings-button="restore"
                 disabled={
-                  versionOption === 'dateTime' &&
-                  (!date || !time || !!errors.time)
+                  Boolean(unableToRestoreCopy) ||
+                  (versionOption === 'dateTime' &&
+                    (!date || !time || !!errors.time))
                 }
                 onClick={() => setIsRestoreDialogOpen(true)}
+                tooltipText={unableToRestoreCopy}
               >
                 Restore
               </Button>

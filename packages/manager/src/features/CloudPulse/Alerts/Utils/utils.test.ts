@@ -5,7 +5,11 @@ import {
 } from '@linode/utilities';
 import { act, renderHook } from '@testing-library/react';
 
-import { alertFactory, notificationChannelFactory, serviceTypesFactory } from 'src/factories';
+import {
+  alertFactory,
+  notificationChannelFactory,
+  serviceTypesFactory,
+} from 'src/factories';
 
 import { useContextualAlertsState } from '../../Utils/utils';
 import { transformDimensionValue } from '../CreateAlert/Criteria/DimensionFilterValue/utils';

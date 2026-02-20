@@ -1,5 +1,4 @@
 import { profileFactory } from '@linode/utilities';
-import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
@@ -42,37 +41,37 @@ describe('NotificationChannelDetailOverview', () => {
       updated_by: 'jane_smith',
     });
 
-    renderWithTheme(
+    const { getByText } = renderWithTheme(
       <NotificationChannelDetailOverview channelDetails={channel} />
     );
 
-    expect(screen.getByText('Overview')).toBeVisible();
-    expect(screen.getByText('Name:')).toBeVisible();
-    expect(screen.getByText('Production Alerts')).toBeVisible();
-    expect(screen.getByText('Channel Type:')).toBeVisible();
-    expect(screen.getByText('Email')).toBeVisible();
-    expect(screen.getByText('Created by:')).toBeVisible();
-    expect(screen.getByText('john_doe')).toBeVisible();
-    expect(screen.getByText('Creation Time:')).toBeVisible();
+    expect(getByText('Overview')).toBeVisible();
+    expect(getByText('Name:')).toBeVisible();
+    expect(getByText('Production Alerts')).toBeVisible();
+    expect(getByText('Channel Type:')).toBeVisible();
+    expect(getByText('Email')).toBeVisible();
+    expect(getByText('Created by:')).toBeVisible();
+    expect(getByText('john_doe')).toBeVisible();
+    expect(getByText('Creation Time:')).toBeVisible();
     expect(
-      screen.getByText(
+      getByText(
         formatDate(created, {
           format: 'MMM dd, yyyy, h:mm a',
           timezone: mockProfile.timezone,
         })
       )
     ).toBeVisible();
-    expect(screen.getByText('Last Modified:')).toBeVisible();
+    expect(getByText('Last Modified:')).toBeVisible();
     expect(
-      screen.getByText(
+      getByText(
         formatDate(updated, {
           format: dateTimeFormat,
           timezone: mockProfile.timezone,
         })
       )
     ).toBeVisible();
-    expect(screen.getByText('Last Modified by:')).toBeVisible();
-    expect(screen.getByText('jane_smith')).toBeVisible();
+    expect(getByText('Last Modified by:')).toBeVisible();
+    expect(getByText('jane_smith')).toBeVisible();
   });
 
   it('should format dates with user timezone', () => {
@@ -89,12 +88,12 @@ describe('NotificationChannelDetailOverview', () => {
       updated,
     });
 
-    renderWithTheme(
+    const { getByText } = renderWithTheme(
       <NotificationChannelDetailOverview channelDetails={channel} />
     );
 
     expect(
-      screen.getByText(
+      getByText(
         formatDate(created, {
           format: dateTimeFormat,
           timezone: customProfile.timezone,
@@ -102,7 +101,7 @@ describe('NotificationChannelDetailOverview', () => {
       )
     ).toBeVisible();
     expect(
-      screen.getByText(
+      getByText(
         formatDate(updated, {
           format: dateTimeFormat,
           timezone: customProfile.timezone,

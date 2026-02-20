@@ -250,6 +250,7 @@ export const CloudPulseCustomSelect = React.memo(
     return (
       <Autocomplete
         autoHighlight
+        data-testid={`${filterKey}-select`}
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}

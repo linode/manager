@@ -15,7 +15,7 @@ import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 
 import { appTokenFactory } from 'src/factories/oauth';
-import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+import { DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 import type { Token } from '@linode/api-v4';
 
@@ -370,7 +370,7 @@ describe('Personal access tokens', () => {
       });
 
     ui.tooltip
-      .findByText(PROXY_USER_RESTRICTED_TOOLTIP_TEXT)
+      .findByText(DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT)
       .should('be.visible');
 
     // Confirm that token has not been renamed, initiate revocation.
@@ -405,7 +405,7 @@ describe('Personal access tokens', () => {
       .click();
 
     ui.tooltip
-      .findByText(PROXY_USER_RESTRICTED_TOOLTIP_TEXT)
+      .findByText(DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT)
       .should('be.visible');
 
     // Confirm that token is removed from list after revoking.

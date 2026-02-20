@@ -5,12 +5,12 @@ export const filterCreateChannelFormValues = (
   formValues: CreateNotificationChannelForm
 ): CreateNotificationChannelPayload => {
   return {
-    channel_type: formValues.type ?? 'email',
+    channel_type: formValues.channel_type ?? 'email',
     details: {
       email: {
-        usernames: formValues.recipients,
+        usernames: formValues.details.email.usernames,
       },
     },
-    label: formValues.name,
+    label: formValues.label,
   };
 };

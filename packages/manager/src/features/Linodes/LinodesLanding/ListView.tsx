@@ -7,7 +7,8 @@ import { LinodeRow } from './LinodeRow/LinodeRow';
 import type { RenderLinodesProps } from './DisplayLinodes';
 
 export const ListView = (props: RenderLinodesProps) => {
-  const { data, openDialog, openPowerActionDialog } = props;
+  const { data, openDialog, openPowerActionDialog, openRemoveLockDialog } =
+    props;
 
   // This won't happen in the normal Linodes Landing context (a custom empty
   // state is shown higher up in the tree). This is specifically for the case of
@@ -21,6 +22,8 @@ export const ListView = (props: RenderLinodesProps) => {
       {data.map((linode, idx: number) => (
         <LinodeRow
           handlers={{
+            onOpenAddLockDialog: () =>
+              openDialog('add_lock', linode.id, linode.label),
             onOpenDeleteDialog: () =>
               openDialog('delete', linode.id, linode.label),
             onOpenMigrateDialog: () =>
@@ -29,6 +32,8 @@ export const ListView = (props: RenderLinodesProps) => {
               openPowerActionDialog(action, linode.id, linode.label, []),
             onOpenRebuildDialog: () =>
               openDialog('rebuild', linode.id, linode.label),
+            onOpenRemoveLockDialog: () =>
+              openRemoveLockDialog(linode.id, linode.label, linode.locks),
             onOpenRescueDialog: () =>
               openDialog('rescue', linode.id, linode.label),
             onOpenResizeDialog: () =>

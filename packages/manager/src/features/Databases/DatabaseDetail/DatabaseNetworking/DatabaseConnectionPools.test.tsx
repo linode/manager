@@ -41,7 +41,7 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-describe('DatabaseManageNetworkingDrawer Component', () => {
+describe('DatabaseConnectionPools Component', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
@@ -129,5 +129,25 @@ describe('DatabaseManageNetworkingDrawer Component', () => {
     renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />);
     const serviceURIText = screen.queryByText('Service URI');
     expect(serviceURIText).not.toBeInTheDocument();
+  });
+
+  it('should disable the Add Pool button when the database cluster is not active', () => {
+    const provisioningDatabase = databaseFactory.build({
+      platform: 'rdbms-default',
+      private_network: null,
+      engine: 'postgresql',
+      id: 1,
+      status: 'provisioning',
+    });
+    queryMocks.useDatabaseConnectionPoolsQuery.mockReturnValue({
+      data: makeResourcePage([]),
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <DatabaseConnectionPools database={provisioningDatabase} />
+    );
+    const addPoolBtn = screen.getByRole('button');
+    expect(addPoolBtn).toBeDisabled();
   });
 });

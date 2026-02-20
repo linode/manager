@@ -1,4 +1,10 @@
-import { Button, ErrorState, Stack, Typography } from '@linode/ui';
+import {
+  Button,
+  ChevronRightIcon,
+  ErrorState,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
@@ -13,11 +19,9 @@ export interface CategorySectionViewProps {
   displayCount: number;
   errorMessage: string;
   hasMoreProducts: boolean;
-  isFetchingNextPage: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
   onLoadMore: () => void;
-  onProductClick: (productId: number) => void;
-  skeletonCount: number;
+  onProductClick: (productId: string) => void;
 }
 
 const SkeletonGrid = ({ count }: { count: number }) => (
@@ -33,7 +37,7 @@ const ProductsGrid = ({
   onProductClick,
 }: {
   cardData: ProductCardItem[];
-  onProductClick: (productId: number) => void;
+  onProductClick: (productId: string) => void;
 }) => (
   <Grid container spacing={3}>
     {cardData.map((item) => {
@@ -53,11 +57,9 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
   const {
     categoryName,
     isLoading,
-    isFetchingNextPage,
     hasMoreProducts,
     displayCount,
     cardData,
-    skeletonCount,
     errorMessage,
     onLoadMore,
     onProductClick,
@@ -68,7 +70,7 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
   }
 
   return (
-    <Stack spacing={2}>
+    <Stack data-qa-product-category={categoryName} spacing={2}>
       <Typography variant="h2">{categoryName}</Typography>
 
       {isLoading ? (
@@ -77,17 +79,17 @@ export const CategorySectionView = (props: CategorySectionViewProps) => {
         <ProductsGrid cardData={cardData} onProductClick={onProductClick} />
       )}
 
-      {isFetchingNextPage && <SkeletonGrid count={skeletonCount} />}
-
-      {!isFetchingNextPage && hasMoreProducts && (
+      {hasMoreProducts && !isLoading && (
         <Button
+          data-pendo-id="Cloud Marketplace Catalog-Load more offers"
           onClick={onLoadMore}
           sx={{
             justifyContent: 'start',
             paddingLeft: 0,
+            width: 'max-content',
           }}
         >
-          Load More...
+          Load more offers <ChevronRightIcon />
         </Button>
       )}
     </Stack>

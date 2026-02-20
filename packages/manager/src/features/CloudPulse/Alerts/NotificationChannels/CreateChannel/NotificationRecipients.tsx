@@ -81,6 +81,7 @@ export const NotificationRecipients = React.memo(
 
     return (
       <Autocomplete
+        data-qa-autocomplete="recipients-select"
         data-testid="recipients-select"
         disableSelectAll={recipientsLimitReached}
         errorText={
@@ -131,6 +132,7 @@ export const NotificationRecipients = React.memo(
             <ListItem
               {...rest}
               aria-disabled={isMaxSelectionsReached}
+              data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the label as the identifier for the option element.
               data-qa-option
               key={key}
             >

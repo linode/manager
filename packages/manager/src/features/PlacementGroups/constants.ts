@@ -33,11 +33,18 @@ export const PLACEMENT_GROUPS_DOCS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/work-with-placement-groups';
 
 // Text Copy
+// @TODO - Clean up the deprecated constants after the `Placement Group Policy Update` feature flag is removed
 export const PLACEMENT_GROUP_POLICY_STRICT =
   'Allows the addition of more compute instances to the group as long as the placement group remains compliant.';
 
 export const PLACEMENT_GROUP_POLICY_FLEXIBLE =
   "Allows the addition of more compute instances to the group even if it breaks the placement group's compliance.";
+
+export const PLACEMENT_GROUP_UPDATED_POLICY_STRICT =
+  'Linodes are spread across separate physical hosts. New Linodes can only be added when the placement group remains compliant. Up to 5 Linodes can be added to a strict placement group.';
+
+export const PLACEMENT_GROUP_UPDATED_POLICY_FLEXIBLE =
+  'Linodes are spread across multiple physical hosts whenever possible, though strict separation is not guaranteed. Up to 250 Linodes can be added to a flexible placement group.';
 
 // Migrations
 export const PLACEMENT_GROUP_MIGRATION_INBOUND_MESSAGE =

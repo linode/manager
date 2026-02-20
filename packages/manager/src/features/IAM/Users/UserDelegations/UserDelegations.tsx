@@ -1,184 +1,51 @@
-import { useAllGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
+import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
+import React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
 import {
-  CircleProgress,
-  ErrorState,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
-import * as React from 'react';
-
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import Paginate from 'src/components/Paginate';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { NO_DELEGATED_USERS_TEXT } from 'src/features/IAM/Shared/constants';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-
-import type { Theme } from '@mui/material';
+  ERROR_STATE_TEXT,
+  NO_ACCOUNT_DELEGATIONS_TEXT,
+} from '../../Shared/constants';
+import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
+import { UserDelegationsTable } from './UserDelegationsTable';
 
 export const UserDelegations = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { query } = useSearch({
-    from: '/iam/users/$username/delegations',
-  });
-  const navigate = useNavigate();
 
-  // TODO: UIE-9298 - Replace with API filtering
   const {
     data: allDelegatedChildAccounts,
-    isLoading: allDelegatedChildAccountsLoading,
-    error: allDelegatedChildAccountsError,
-  } = useAllGetDelegatedChildAccountsForUserQuery({
+    isLoading,
+    error,
+  } = useGetDelegatedChildAccountsForUserQuery({
     username,
   });
 
-  const handleSearch = (value: string) => {
-    pagination.handlePageChange(1);
-    navigate({
-      to: '/iam/users/$username/delegations',
-      params: { username },
-      search: { query: value || undefined },
-    });
-  };
+  const hasDelegatedChildAccounts = allDelegatedChildAccounts
+    ? allDelegatedChildAccounts.data.length > 0
+    : false;
 
-  const childAccounts = React.useMemo(() => {
-    if (!allDelegatedChildAccounts) {
-      return [];
-    }
-
-    if (query?.trim() === '') {
-      return allDelegatedChildAccounts;
-    }
-
-    return allDelegatedChildAccounts.filter((childAccount) =>
-      childAccount.company.toLowerCase().includes(query?.toLowerCase() ?? '')
-    );
-  }, [allDelegatedChildAccounts, query]);
-
-  const { handleOrderChange, order, orderBy, sortedData } = useOrderV2({
-    data: childAccounts,
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'company',
-      },
-      from: '/iam/users/$username/delegations',
-    },
-    preferenceKey: 'user-delegations',
-  });
-
-  const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username/delegations',
-    preferenceKey: 'user-delegations',
-    initialPage: 1,
-  });
-
-  if (!isIAMDelegationEnabled) {
-    return null;
-  }
-
-  if (allDelegatedChildAccountsLoading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (allDelegatedChildAccountsError) {
-    return <ErrorState errorText={allDelegatedChildAccountsError[0].reason} />;
+  if (error) {
+    return <ErrorState errorText={ERROR_STATE_TEXT} />;
   }
 
   return (
-    <Paper>
-      <Stack>
-        <Typography variant="h2">Account Delegations</Typography>
-        <DebouncedSearchTextField
-          clearable
-          debounceTime={250}
-          hideLabel
-          isSearching={allDelegatedChildAccountsLoading}
-          label="Search"
-          onSearch={handleSearch}
-          placeholder="Search"
-          sx={{ mt: 3 }}
-          value={query ?? ''}
+    <>
+      <DocumentTitleSegment segment={`${username} - User Delegations`} />
+      {hasDelegatedChildAccounts ? (
+        <UserDelegationsTable />
+      ) : (
+        <NoAssignedRoles
+          hasAssignNewRoleDrawer={false}
+          text={NO_ACCOUNT_DELEGATIONS_TEXT}
         />
-        <Table sx={{ mt: 2 }}>
-          <TableHead>
-            <TableRow>
-              <TableSortCell
-                active={orderBy === 'company'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label={'company'}
-              >
-                Account
-              </TableSortCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <Paginate
-              data={sortedData ?? []}
-              page={pagination.page}
-              pageSize={pagination.pageSize}
-              pageSizeSetter={pagination.handlePageSizeChange}
-              updatePageUrl={pagination.handlePageChange}
-            >
-              {({
-                count,
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-              }) => (
-                <>
-                  {paginatedData?.length === 0 && (
-                    <TableRowEmpty
-                      colSpan={1}
-                      message={NO_DELEGATED_USERS_TEXT}
-                    />
-                  )}
-                  {paginatedData?.map((childAccount) => (
-                    <TableRow key={childAccount.euuid}>
-                      <TableCell>{childAccount.company}</TableCell>
-                    </TableRow>
-                  ))}
-                  {count > 25 && (
-                    <TableRow>
-                      <TableCell
-                        colSpan={1}
-                        sx={(theme: Theme) => ({
-                          padding: 0,
-                          '& > div': {
-                            border: 'none',
-                            borderTop: `1px solid ${theme.borderColors.divider}`,
-                          },
-                        })}
-                      >
-                        <PaginationFooter
-                          count={count}
-                          eventCategory="DelegatedChildAccounts"
-                          handlePageChange={handlePageChange}
-                          handleSizeChange={handlePageSizeChange}
-                          page={pagination.page}
-                          pageSize={pagination.pageSize}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </>
-              )}
-            </Paginate>
-          </TableBody>
-        </Table>
-      </Stack>
-    </Paper>
+      )}
+    </>
   );
 };

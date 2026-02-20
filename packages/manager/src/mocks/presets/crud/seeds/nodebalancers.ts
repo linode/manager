@@ -2,6 +2,7 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
+  nodeBalancerVPCFactory,
 } from '@linode/utilities';
 
 import { getSeedsCountMap } from 'src/dev-tools/utils';
@@ -32,6 +33,13 @@ export const nodeBalancerSeeder: MockSeeder = {
       ),
     });
 
+    const nodeBalancerVPCSeeds = seedWithUniqueIds<'nodeBalancerVPCs'>({
+      dbEntities: await mswDB.getAll('nodeBalancerVPCs'),
+      seedEntities: nodeBalancerSeeds.map((nb) =>
+        nodeBalancerVPCFactory.build({ nodebalancer_id: nb.id })
+      ),
+    });
+
     const nodeBalancerConfigNodeSeeds =
       seedWithUniqueIds<'nodeBalancerConfigNodes'>({
         dbEntities: await mswDB.getAll('nodeBalancerConfigNodes'),
@@ -54,6 +62,7 @@ export const nodeBalancerSeeder: MockSeeder = {
       nodeBalancerConfigs: mockState.nodeBalancerConfigs.concat(
         nodeBalancerConfigSeeds
       ),
+      nodeBalancerVPCs: mockState.nodeBalancerVPCs.concat(nodeBalancerVPCSeeds),
       nodeBalancers: mockState.nodeBalancers.concat(nodeBalancerSeeds),
     };
 

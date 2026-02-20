@@ -7,14 +7,14 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 import { DestinationEdit } from 'src/features/Delivery/Destinations/DestinationForm/DestinationEdit';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 const destinationId = 123;
-const mockDestination = destinationFactory.build({
+const mockDestination = akamaiObjectStorageDestinationFactory.build({
   id: destinationId,
   label: `Destination ${destinationId}`,
 });
@@ -55,7 +55,7 @@ describe('DestinationEdit', () => {
     assertInputHasValue('Bucket', 'destinations-bucket-name');
     assertInputHasValue('Access Key ID', 'Access Id');
     assertInputHasValue('Secret Access Key', '');
-    assertInputHasValue('Log Path Prefix', 'file');
+    assertInputHasValue('Log Path Prefix (optional)', 'file');
   });
 
   describe('given Test Connection and Edit Destination buttons', () => {

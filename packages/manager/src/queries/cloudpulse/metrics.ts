@@ -22,6 +22,7 @@ export const useCloudPulseMetricsQuery = (
     isFiltersLoading?: boolean;
     isFlags: boolean;
     label: string;
+    shouldRefresh?: boolean;
     timeStamp: number | undefined;
     url: string;
   }
@@ -39,7 +40,7 @@ export const useCloudPulseMetricsQuery = (
     ),
 
     enabled: !!obj.isFlags && !obj.isFiltersLoading,
-    refetchInterval: 120000,
+    refetchInterval: obj.shouldRefresh ? 120000 : false,
     refetchOnWindowFocus: false,
     retry: 0,
   });

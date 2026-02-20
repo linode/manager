@@ -1,6 +1,8 @@
 import { TextField } from '@linode/ui';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { BlockStorageDimensionFilterAutocomplete } from './BlockStorageDimensionFilterAutocomplete';
 import {
   MULTISELECT_PLACEHOLDER_TEXT,
@@ -44,7 +46,10 @@ interface ValueFieldRendererProps {
    * Error message to be displayed under the input field, if any.
    */
   errorText: string | undefined;
-
+  /**
+   * Callback triggered when a dependent API has an error.
+   */
+  handleError?: (hasError: boolean) => void;
   /**
    * The name of the field set in the form.
    */
@@ -97,17 +102,24 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     entities,
     entityType,
     errorText,
+    handleError,
     name,
     onBlur,
     onChange,
     operator,
     scope,
-    selectedRegions,
-    serviceType,
-    type = 'alerts',
     value,
     values,
+    type = 'alerts',
+    selectedRegions,
+    serviceType,
   } = props;
+
+  const flags = useFlags();
+
+  const maxDimensionFiltersValues =
+    flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined;
+
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
   let dimensionConfig: Record<OperatorGroup, ValueFieldConfig>;
@@ -157,6 +169,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       dimensionLabel,
       disabled,
       errorText,
+      handleError,
       fieldOnBlur: onBlur,
       fieldOnChange: onChange,
       fieldValue: value,
@@ -165,6 +178,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
       placeholderText: config.placeholder ?? autocompletePlaceholder,
       serviceType: serviceType ?? null,
       type,
+      maxSelections: maxDimensionFiltersValues,
     };
 
     // Determine custom fetch behaviour if there are same dimension_labels across service types

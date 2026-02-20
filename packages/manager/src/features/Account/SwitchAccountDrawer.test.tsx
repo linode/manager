@@ -9,7 +9,7 @@ import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
-  useAllListMyDelegatedChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useGetListMyDelegatedChildAccountsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -17,8 +17,8 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
-    useAllListMyDelegatedChildAccountsQuery:
-      queryMocks.useAllListMyDelegatedChildAccountsQuery,
+    useGetListMyDelegatedChildAccountsQuery:
+      queryMocks.useGetListMyDelegatedChildAccountsQuery,
   };
 });
 
@@ -31,7 +31,7 @@ const props = {
 describe('SwitchAccountDrawer', () => {
   beforeEach(() => {
     queryMocks.useProfile.mockReturnValue({});
-    queryMocks.useAllListMyDelegatedChildAccountsQuery.mockReturnValue({
+    queryMocks.useGetListMyDelegatedChildAccountsQuery.mockReturnValue({
       data: accountFactory.buildList(5, {
         company: 'Test Account 1',
         euuid: '123',
