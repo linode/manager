@@ -99,7 +99,10 @@ export const KubernetesPlansPanel = (props: Props) => {
     }
 
     return (
-      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+      !type.id.includes('dedicated-edge') &&
+      !type.id.includes('nanode-edge') &&
+      // Filter out Blackwell plans for kubernetes (for now)
+      !(type.id.includes('blackwell') && !flags.kubernetesBlackwellPlans)
     );
   });
 
