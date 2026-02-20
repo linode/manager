@@ -17,8 +17,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets } from '../base';
-
 import type {
   Account,
   APIError,
@@ -101,7 +99,6 @@ export const useGetChildAccountsQuery = ({
 > => {
   return useQuery({
     ...delegationQueries.childAccounts({ params, users, filter }),
-    ...queryPresets.shortLived,
     enabled,
   });
 };
@@ -176,8 +173,7 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
     onSuccess(_data, { euuid }) {
       // Invalidate all child accounts
       queryClient.invalidateQueries({
-        queryKey: delegationQueries.childAccounts({ params: {}, users: true })
-          .queryKey,
+        queryKey: delegationQueries.childAccounts._def,
       });
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
