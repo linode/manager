@@ -91,7 +91,7 @@ export const AssignedRolesTable = () => {
       ? DEFAULTS_ROLES_URL
       : USER_ROLES_URL,
   });
-  const order: 'asc' | 'desc' = orderParam === 'desc' ? 'desc' : 'asc';
+  const order: 'asc' | 'desc' = orderParam ?? 'asc';
   const orderBy: OrderByKeys = 'name';
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
   const { data: permissions } = usePermissions('account', [
@@ -128,9 +128,10 @@ export const AssignedRolesTable = () => {
       to: isDefaultDelegationRolesForChildAccount
         ? DEFAULTS_ROLES_URL
         : USER_ROLES_URL,
-      params: isDefaultDelegationRolesForChildAccount
-        ? undefined
-        : { username: username || '' },
+      params:
+        isDefaultDelegationRolesForChildAccount && !username
+          ? undefined
+          : username,
       search: (prev) => ({
         ...prev,
         order: nextOrder,
@@ -428,9 +429,10 @@ export const AssignedRolesTable = () => {
                 to: isDefaultDelegationRolesForChildAccount
                   ? DEFAULTS_ROLES_URL
                   : USER_ROLES_URL,
-                params: isDefaultDelegationRolesForChildAccount
-                  ? undefined
-                  : { username: username || '' },
+                params:
+                  isDefaultDelegationRolesForChildAccount && !username
+                    ? undefined
+                    : username,
                 search: (prev) => ({
                   ...prev,
                   page: 1,

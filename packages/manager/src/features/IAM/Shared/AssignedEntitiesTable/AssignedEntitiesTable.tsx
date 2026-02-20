@@ -82,7 +82,8 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       : USER_ENTITIES_URL,
   });
 
-  const order: 'asc' | 'desc' = orderParam === 'desc' ? 'desc' : 'asc';
+  const order: 'asc' | 'desc' = orderParam ?? 'asc';
+
   const ORDERABLE_KEYS = ['entity_name', 'entity_type', 'role_name'] as const;
   const isValidOrderBy = (v: unknown): v is OrderByKeys =>
     ORDERABLE_KEYS.includes(v as OrderByKeys);
@@ -344,9 +345,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
               to: isDefaultDelegationRolesForChildAccount
                 ? DEFAULTS_ENTITIES_URL
                 : USER_ENTITIES_URL,
-              params: isDefaultDelegationRolesForChildAccount
-                ? undefined
-                : { username: username || '' },
+              params:
+                isDefaultDelegationRolesForChildAccount && !username
+                  ? undefined
+                  : username,
               search: (prev) => ({
                 ...prev,
                 page: 1,
@@ -368,9 +370,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
               to: isDefaultDelegationRolesForChildAccount
                 ? DEFAULTS_ENTITIES_URL
                 : USER_ENTITIES_URL,
-              params: isDefaultDelegationRolesForChildAccount
-                ? undefined
-                : { username: username || '' },
+              params:
+                isDefaultDelegationRolesForChildAccount && !username
+                  ? undefined
+                  : username,
               search: (prev) => ({
                 ...prev,
                 page: 1,
