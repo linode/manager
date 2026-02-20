@@ -2247,7 +2247,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/pgvector',
-        title: 'Deploy pgvector through the Linode Marketplace',
+        title: 'Deploy pgvector',
       },
     ],
     summary:
@@ -2270,7 +2270,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/milvus',
-        title: 'Deploy Milvus through the Linode Marketplace',
+        title: 'Deploy Milvus',
       },
     ],
     summary:
@@ -2293,7 +2293,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/gpt-oss-with-openwebui',
-        title: 'Deploy GPT-OSS through the Linode Marketplace',
+        title: 'Deploy GPT-OSS',
       },
     ],
     summary: 'Open-source large language model for self-hosted AI workloads.',
@@ -2315,7 +2315,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/gemma3',
-        title: 'Deploy Gemma 3 through the Linode Marketplace',
+        title: 'Deploy Gemma 3',
       },
     ],
     summary:
@@ -2338,7 +2338,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/qwen/',
-        title: 'Deploy Qwen with Open WebUI through the Linode Marketplace',
+        title: 'Deploy Qwen with Open WebUI',
       },
     ],
     summary:
