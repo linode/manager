@@ -63,6 +63,14 @@ export const useCreateAlertDefinition = (serviceType: string) => {
           newAlert.service_type
         ).queryKey,
       });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
+      });
     },
   });
 };
@@ -104,6 +112,7 @@ export const useAllAlertNotificationChannelsQuery = (
 ) => {
   return useQuery<NotificationChannel[], APIError[]>({
     ...queryFactory.notificationChannels._ctx.all(params, filter),
+    refetchInterval: 120000,
   });
 };
 
@@ -143,6 +152,14 @@ export const useEditAlertDefinition = () => {
         queryKey: queryFactory.alerts._ctx.alertsByServiceType(
           data.service_type
         ).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
       });
     },
   });
@@ -241,6 +258,14 @@ export const useDeleteAlertDefinitionMutation = () => {
         queryKey:
           queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
       });
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
+      });
+
       queryClient.removeQueries({
         queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
           serviceType,
@@ -339,9 +364,10 @@ export const useUpdateNotificationChannel = () => {
 };
 
 export const useNotificationChannelQuery = (channelId: number) => {
-  return useQuery<NotificationChannel, APIError[]>(
-    queryFactory.notificationChannels._ctx.channelById(channelId)
-  );
+  return useQuery<NotificationChannel, APIError[]>({
+    ...queryFactory.notificationChannels._ctx.channelById(channelId),
+    refetchInterval: 120000,
+  });
 };
 
 export const useDeleteNotificationChannel = () => {
@@ -368,7 +394,8 @@ export const useDeleteNotificationChannel = () => {
 };
 
 export const useAllAlertsByNotificationChannelIdQuery = (channelId: number) => {
-  return useQuery<NotificationChannelAlerts[], APIError[]>(
-    queryFactory.notificationChannelAlerts(channelId)
-  );
+  return useQuery<NotificationChannelAlerts[], APIError[]>({
+    ...queryFactory.notificationChannelAlerts(channelId),
+    refetchInterval: 120000,
+  });
 };

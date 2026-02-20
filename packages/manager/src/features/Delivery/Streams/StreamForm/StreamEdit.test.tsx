@@ -7,7 +7,10 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory, streamFactory } from 'src/factories';
+import {
+  akamaiObjectStorageDestinationFactory,
+  streamFactory,
+} from 'src/factories';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -15,7 +18,9 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 const streamId = 123;
-const mockDestinations = [destinationFactory.build({ id: 1 })];
+const mockDestinations = [
+  akamaiObjectStorageDestinationFactory.build({ id: 1 }),
+];
 const mockStream = streamFactory.build({
   id: streamId,
   label: `Stream ${streamId}`,
@@ -60,7 +65,10 @@ describe('StreamEdit', () => {
     await waitFor(() => {
       assertInputHasValue('Destination Type', 'Akamai Object Storage');
     });
-    assertInputHasValue('Destination Name', 'Destination 1');
+    assertInputHasValue(
+      'Destination Name',
+      'Akamai Object Storage Destination 1'
+    );
 
     // Host:
     expect(screen.getByText('destinations-bucket-name.host.com')).toBeVisible();
@@ -104,7 +112,9 @@ describe('StreamEdit', () => {
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+        const logPathPrefixInput = screen.getByLabelText(
+          'Log Path Prefix (optional)'
+        );
         await userEvent.type(logPathPrefixInput, 'Test');
       };
 

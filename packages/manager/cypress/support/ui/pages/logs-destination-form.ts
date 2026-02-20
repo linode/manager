@@ -43,7 +43,6 @@ export const logsDestinationForm = {
     cy.findByLabelText('Bucket')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Bucket')
       .clear();
     cy.focused().type(bucketName);
   },
@@ -57,7 +56,6 @@ export const logsDestinationForm = {
     cy.findByLabelText('Access Key ID')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Access Key ID')
       .clear();
     cy.focused().type(accessKeyId);
   },
@@ -71,7 +69,6 @@ export const logsDestinationForm = {
     cy.findByLabelText('Secret Access Key')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Secret Access Key')
       .clear();
     cy.focused().type(secretAccessKey);
   },

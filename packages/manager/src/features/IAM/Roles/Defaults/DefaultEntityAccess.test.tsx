@@ -3,7 +3,10 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NO_ASSIGNED_DEFAULT_ENTITIES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
+} from '../../Shared/constants';
 import { DefaultEntityAccess } from './DefaultEntityAccess';
 
 const queryMocks = vi.hoisted(() => ({
@@ -76,5 +79,17 @@ describe('DefaultEntityAccess', () => {
     renderWithTheme(<DefaultEntityAccess />);
 
     expect(screen.getByText(NO_ASSIGNED_DEFAULT_ENTITIES_TEXT)).toBeVisible();
+  });
+
+  it('should show error state when api fails', () => {
+    queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
+      data: null,
+      error: [{ reason: 'An unexpected error occurred' }],
+      isLoading: false,
+      status: 'error',
+    });
+
+    renderWithTheme(<DefaultEntityAccess />);
+    expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });

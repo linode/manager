@@ -261,7 +261,12 @@ export const AlertListing = () => {
                   ? StyledListItem
                   : 'li';
               return (
-                <ListItem {...rest} data-qa-option key={key}>
+                <ListItem
+                  {...rest}
+                  data-pendo-id={option.label}
+                  data-qa-option
+                  key={key}
+                >
                   <Box flexGrow={1}>{option.label}</Box>{' '}
                   {aclpServices?.[option.value]?.alerts?.beta && <BetaChip />}
                   <SelectedIcon visible={selected} />

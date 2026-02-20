@@ -65,7 +65,7 @@ describe('planFilters utilities', () => {
     label: 'RTX PRO 6000 Blackwell x1',
   });
 
-  const gpuPlans = [rtx4000Plan, rtx6000Plan, rtxPro6000Plan];
+  const gpuPlans = [rtxPro6000Plan, rtx4000Plan, rtx6000Plan];
 
   describe('filterPlansByGeneration', () => {
     it('returns only G8 plans that exist in the allow-list', () => {

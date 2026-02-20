@@ -15,7 +15,7 @@ import Grid from '@mui/material/Grid';
 import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, get, useFieldArray, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
@@ -31,14 +31,12 @@ import {
   convertExistingConfigsToArray,
   findConfigItem,
   formatConfigPayload,
-  getConfigAPIError,
   getDefaultConfigValue,
   hasRestartCluster,
 } from './utilities';
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type {
-  APIError,
   Database,
   DatabaseInstance,
   UpdateDatabasePayload,
@@ -51,7 +49,7 @@ interface Props {
   open: boolean;
 }
 
-interface FormValues {
+interface Configs {
   configs: ConfigurationOption[];
 }
 
@@ -61,9 +59,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const [selectedConfig, setSelectedConfig] =
     useState<ConfigurationOption | null>(null);
-  const [updateDatabaseError, setUpdateDatabaseError] = useState<
-    APIError[] | null
-  >(null);
 
   const formContainerRef = React.useRef<HTMLFormElement>(null);
   const { isPending: isUpdating, mutateAsync: updateDatabase } =
@@ -83,17 +78,16 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const {
     control,
-    formState: { isDirty },
+    formState: { isDirty, errors },
     handleSubmit,
+    setError,
     reset,
     watch,
-  } = useForm<FormValues>({
+  } = useForm<Configs>({
     defaultValues: { configs: existingConfigurations },
     mode: 'onBlur',
     resolver: yupResolver(
-      createDynamicAdvancedConfigSchema(
-        configurations
-      ) as ObjectSchema<FormValues>
+      createDynamicAdvancedConfigSchema(configurations) as ObjectSchema<Configs>
     ),
   });
 
@@ -102,13 +96,13 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     name: 'configs',
   });
 
-  const configs = watch('configs');
-
   useEffect(() => {
     if (existingConfigurations.length > 0 || open) {
       reset({ configs: existingConfigurations });
     }
   }, [existingConfigurations, open]);
+
+  const configs = watch('configs');
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -140,11 +134,11 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const handleClose = () => {
     reset();
-    setUpdateDatabaseError(null);
     setSelectedConfig(null);
     onClose();
   };
-  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+
+  const onSubmit: SubmitHandler<Configs> = async (formData) => {
     const payload: UpdateDatabasePayload = {
       engine_config: formatConfigPayload(formData.configs, configurations),
     };
@@ -155,8 +149,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
           variant: 'success',
         });
       })
-      .catch((error) => {
-        setUpdateDatabaseError(error);
+      .catch((errors) => {
+        for (const error of errors) {
+          setError(error?.field ?? 'root', { message: error.reason });
+        }
         scrollErrorIntoViewV2(formContainerRef);
       });
   };
@@ -164,9 +160,9 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   return (
     <Drawer onClose={handleClose} open={open} title="Advanced Configuration">
       <form onSubmit={handleSubmit(onSubmit)} ref={formContainerRef}>
-        {Boolean(updateDatabaseError) && !updateDatabaseError?.[0].field && (
+        {errors.root?.message && (
           <Notice spacingBottom={16} spacingTop={16} variant="error">
-            {updateDatabaseError?.[0].reason}
+            {errors.root.message}
           </Notice>
         )}
         <Typography>
@@ -222,17 +218,18 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             key={config.label}
             name={`configs.${index}.value`}
             render={({ field, fieldState }) => {
+              const configName =
+                config.category === 'other'
+                  ? `engine_config.${config.label}`
+                  : `engine_config.${config.category}.${config.label}`;
               return (
                 <DatabaseConfigurationItem
                   configItem={config}
                   errorText={
                     fieldState.error?.message ||
-                    getConfigAPIError(config, updateDatabaseError)
+                    get(errors, configName)?.message
                   }
-                  onBlur={() => {
-                    setUpdateDatabaseError(null);
-                    field.onBlur();
-                  }}
+                  onBlur={field.onBlur}
                   onChange={field.onChange}
                   onRemove={() => handleRemoveConfig(index)}
                 />

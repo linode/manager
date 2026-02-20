@@ -19,6 +19,7 @@ import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
+import type { LockType } from '@linode/api-v4/lib/locks';
 import type { OrderByProps } from 'src/components/OrderBy';
 import type { PaginationProps } from 'src/components/Paginate';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -31,6 +32,7 @@ export interface RenderLinodesProps
   data: DisplayLinodesProps['data'];
   openDialog: DisplayLinodesProps['openDialog'];
   openPowerActionDialog: DisplayLinodesProps['openPowerActionDialog'];
+  openRemoveLockDialog: DisplayLinodesProps['openRemoveLockDialog'];
   showHead?: boolean;
 }
 
@@ -48,6 +50,11 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
     linodeID: number,
     linodeLabel: string,
     linodeConfigs: Config[]
+  ) => void;
+  openRemoveLockDialog: (
+    linodeID: number,
+    linodeLabel: string,
+    linodeLocks: LockType[]
   ) => void;
   regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;

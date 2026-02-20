@@ -32,14 +32,19 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    error,
-    isPending,
+    error: userRolesError,
+    isPending: isUserRolesPending,
     mutateAsync: updateUserRoles,
     reset,
   } = useUserRolesMutation(username ?? '');
 
-  const { mutateAsync: updateDefaultDelegationRoles } =
-    useUpdateDefaultDelegationAccessQuery();
+  const {
+    mutateAsync: updateDefaultDelegationRoles,
+    isPending: isDefaultDelegationRolesPending,
+    error: defaultDelegationRolesError,
+  } = useUpdateDefaultDelegationAccessQuery();
+
+  const isPending = isUserRolesPending || isDefaultDelegationRolesPending;
 
   const { data: assignedUserRoles } = useUserRoles(
     username ?? '',
@@ -64,7 +69,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
     : assignedUserRoles;
 
   const onDelete = async () => {
-    if (!role || !assignedRoles) return;
+    if (!role || !assignedRoles || isPending) return;
 
     const { role_name, entity_id, entity_type } = role;
 
@@ -74,19 +79,25 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       entity_id,
       entity_type
     );
+    try {
+      await mutationFn({
+        ...assignedRoles,
+        entity_access: updatedUserEntityRoles,
+      });
 
-    await mutationFn({
-      ...assignedRoles,
-      entity_access: updatedUserEntityRoles,
-    });
+      enqueueSnackbar(`Entity access removed`, {
+        variant: 'success',
+      });
 
-    enqueueSnackbar(`Entity access removed`, {
-      variant: 'success',
-    });
-
-    onSuccess?.();
-    onClose();
+      onSuccess?.();
+      onClose();
+    } catch {
+      // error is handled by react-query and shown via <ConfirmationDialog error=… />
+    }
   };
+  const error = isDefaultDelegationRolesForChildAccount
+    ? defaultDelegationRolesError
+    : userRolesError;
 
   return (
     <ConfirmationDialog
@@ -96,6 +107,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
             label: 'Remove',
             loading: isPending,
             onClick: onDelete,
+            disabled: isPending,
           }}
           secondaryButtonProps={{
             label: 'Cancel',

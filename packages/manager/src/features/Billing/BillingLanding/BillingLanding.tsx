@@ -1,4 +1,4 @@
-import { useAccount, useProfile } from '@linode/queries';
+import { useAccount } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -15,6 +15,7 @@ import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnaly
 import { PlatformMaintenanceBanner } from '../../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
 import { SwitchAccountButton } from '../../Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from '../../Account/SwitchAccountDrawer';
+import { useDelegationRole } from '../../IAM/hooks/useDelegationRole';
 import { usePermissions } from '../../IAM/hooks/usePermissions';
 import { BillingDetail } from '../BillingDetail';
 
@@ -22,9 +23,14 @@ import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
 export const BillingLanding = () => {
   const navigate = useNavigate();
+  const {
+    isProxyOrDelegateUserType,
+    isChildUserType,
+    isParentUserType,
+    profileUserType,
+  } = useDelegationRole();
 
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
 
   const { data: permissions } = usePermissions('account', [
     'make_billing_payment',
@@ -34,24 +40,24 @@ export const BillingLanding = () => {
   const sessionContext = React.useContext(switchAccountSessionContext);
 
   const isAkamaiAccount = account?.billing_source === 'akamai';
-  const isProxyUser = profile?.user_type === 'proxy';
-  const isChildUser = profile?.user_type === 'child';
-  const isParentUser = profile?.user_type === 'parent';
 
-  const contactPerson = isChildUser ? PARENT_USER : ADMINISTRATOR;
+  const contactPerson = isChildUserType ? PARENT_USER : ADMINISTRATOR;
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({
+    isProxyOrDelegateUserType,
+  });
 
-  const isReadOnly = !permissions.make_billing_payment || isChildUser;
+  const isReadOnly = !permissions.make_billing_payment || isChildUserType;
 
   const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
-    ? isParentUser
-    : (!isChildAccountAccessRestricted && isParentUser) || isProxyUser;
+    ? isParentUserType
+    : (!isChildAccountAccessRestricted && isParentUserType) ||
+      isProxyOrDelegateUserType;
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
@@ -104,7 +110,7 @@ export const BillingLanding = () => {
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        userType={profile?.user_type}
+        userType={profileUserType}
       />
     </>
   );

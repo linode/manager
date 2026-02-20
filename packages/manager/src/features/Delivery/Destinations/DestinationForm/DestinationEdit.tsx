@@ -83,7 +83,10 @@ export const DestinationEdit = () => {
     const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
       ...omitProps(formValues, ['type']),
-      details: getDestinationPayloadDetails(formValues.details),
+      details: getDestinationPayloadDetails(
+        formValues.details,
+        formValues.type
+      ),
     };
 
     updateDestination(destination)

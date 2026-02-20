@@ -11,6 +11,8 @@ export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity acces
 
 export const NO_ASSIGNED_DEFAULT_ENTITIES_TEXT = `There are no default entity access roles assigned yet. Once you assign the default role on specific entities, these entities will show up here.`;
 
+export const NO_ACCOUNT_DELEGATIONS_TEXT = `The user is not added to any account delegations. Once the user is added to an account delegation for specific child accounts, their list will show up here.`;
+
 export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were saved.`;
 
 export const LAST_ACCOUNT_ADMIN_ERROR =
