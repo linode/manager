@@ -62,13 +62,28 @@ describe('Create Linode', () => {
   describe('End-to-end', () => {
     // Run an end-to-end test to create a basic Linode for each plan type described below.
     describe('By plan type', () => {
+      beforeEach(() => {
+        mockAppendFeatureFlags({
+          linodeInterfaces: { enabled: true },
+        });
+        mockGetFirewalls([mockFirewall]).as('getFirewalls');
+      });
       [
         {
           planId: 'g6-nanode-1',
           planLabel: 'Nanode 1 GB',
           planType: 'Shared CPU',
         },
-
+        {
+          planId: 'g6-dedicated-2',
+          planLabel: 'Dedicated 4 GB',
+          planType: 'Dedicated CPU',
+        },
+        {
+          planId: 'g7-highmem-1',
+          planLabel: 'Linode 24 GB',
+          planType: 'High Memory',
+        },
         // TODO Include GPU plan types.
         // TODO Include Accelerated plan types (when they're no longer as restricted)
       ].forEach((planConfig) => {
@@ -110,8 +125,8 @@ describe('Create Linode', () => {
           linodeCreatePage.setRootPassword(randomString(32));
           // Select a firewall
           linodeCreatePage.selectFirewall(
-            mockFirewall.label,
-            'Assign Firewall'
+            'No firewall - traffic is unprotected (not recommended)',
+            'Public Interface Firewall'
           );
 
           // Confirm information in summary is shown as expected.
