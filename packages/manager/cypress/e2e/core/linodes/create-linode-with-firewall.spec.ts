@@ -736,9 +736,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     // Switch to legacy Config Interfaces
     linodeCreatePage.selectLegacyConfigInterfacesType();
 
-    // Select Firewall
-    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
-
     // Creating the linode without a firewall should display a warning.
     ui.button
       .findByTitle('Create Linode')

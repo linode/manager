@@ -68,6 +68,12 @@ export const getLinodeCreateResolver = (
       values.metadata = undefined;
     }
 
+    // For the Clone Linode flow, we need not send firewall_id in the payload as API will take care of assigning the firewall_id based on the source Linode's configuration.
+    if (tab === 'Clone Linode' && !values.firewall_id) {
+      // The Clone Linode flow does not have the firewall_id field under interfaces object, so we set firewall_id to -1 to bypass the firewall requirement in the validation schema.
+      values.firewall_id = -1;
+    }
+
     const { errors } = await yupResolver(
       schema,
       {},
