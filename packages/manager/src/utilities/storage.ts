@@ -51,6 +51,7 @@ export const clearStorage = (key: string) => {
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
 const TOKEN = 'authentication/token';
+const CHILD_ACCOUNT_EUUID = 'authentication/child_account_euuid';
 const NONCE = 'authentication/nonce';
 const CODE_VERIFIER = 'authentication/code-verifier';
 const SCOPES = 'authentication/scopes';
@@ -107,6 +108,7 @@ export const supportTicketStorageDefaults: SupportTicketFormFields = {
 
 export interface Storage {
   authentication: {
+    childAccountEuid: AuthGetAndSet;
     codeVerifier: AuthGetAndSet;
     expire: AuthGetAndSet;
     nonce: AuthGetAndSet;
@@ -149,6 +151,11 @@ export interface Storage {
 
 export const storage: Storage = {
   authentication: {
+    childAccountEuid: {
+      get: () => getStorage(CHILD_ACCOUNT_EUUID),
+      set: (v) => setStorage(CHILD_ACCOUNT_EUUID, v),
+      clear: () => clearStorage(CHILD_ACCOUNT_EUUID),
+    },
     codeVerifier: {
       get: () => getStorage(CODE_VERIFIER),
       set: (v) => setStorage(CODE_VERIFIER, v),

@@ -155,6 +155,8 @@ export const SwitchAccountDrawer = (props: Props) => {
           },
         });
 
+        storage.authentication.childAccountEuid.set(euuid);
+
         updateCurrentToken({
           userType: isIAMDelegationEnabled ? 'delegate' : 'proxy',
         });
@@ -170,7 +172,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         // Error is handled by createTokenError.
       }
     },
-    [createToken, updateCurrentToken, revokeToken, isIAMDelegationEnabled]
+    [createToken, isIAMDelegationEnabled, updateCurrentToken, revokeToken]
   );
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =

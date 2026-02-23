@@ -12,7 +12,7 @@ import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { parseAPIDate } from 'src/utilities/date';
-import { getStorage, setStorage } from 'src/utilities/storage';
+import { getStorage, setStorage, storage } from 'src/utilities/storage';
 
 interface SessionExpirationDialogProps {
   isOpen: boolean;
@@ -36,7 +36,8 @@ export const SessionExpirationDialog = React.memo(
     const [logoutLoading, setLogoutLoading] = React.useState(false);
     const navigate = useNavigate();
     const { data: account } = useAccount();
-    const euuid = account?.euuid ?? '';
+    const childAccountEuuid = getStorage('authentication/child_account_euuid');
+    const euuid = account?.euuid ?? childAccountEuuid ?? '';
 
     const {
       createToken,
@@ -93,6 +94,7 @@ export const SessionExpirationDialog = React.memo(
       });
 
       updateCurrentToken({ userType: 'parent' });
+      storage.authentication.childAccountEuid.clear();
 
       // Reset flag for proxy or delegate user to display success toast once.
       if (isProxyUserType) {

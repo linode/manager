@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
-import { setStorage } from 'src/utilities/storage';
+import { setStorage, storage } from 'src/utilities/storage';
 
 import { useParentChildAuthentication } from './useParentChildAuthentication';
 
@@ -46,6 +46,7 @@ export const useSwitchToParentAccount = ({
       });
 
       updateCurrentToken({ userType: 'parent' });
+      storage.authentication.childAccountEuid.clear();
 
       // Reset flag for proxy or delegate user to display success toast once.
       if (isProxyUserType) {
