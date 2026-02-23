@@ -159,7 +159,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           userType: isProxyUserType ? 'proxy' : 'delegate',
         });
         onClose(event);
-        location.reload();
+        location.replace('/linodes');
       } catch {
         // Error is handled by createTokenError.
       }
