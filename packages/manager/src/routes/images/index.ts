@@ -50,7 +50,7 @@ const imagesRoute = createRoute({
 
 const imagesIndexRoute = createRoute({
   beforeLoad: ({ context }) => {
-    // When private image sharing is enabled, redirect to Image Library tab with default 'owned' sub-tab
+    // When private image sharing is enabled, redirect to Image Library tab with default 'owned-by-me' sub-tab
     if (context.isPrivateImageSharingEnabled) {
       throw redirect({
         to: '/images/image-library/$imageType',
