@@ -1,5 +1,5 @@
 import { BetaChip, Notice, Stack } from '@linode/ui';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -9,25 +9,27 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { getImageLibrarySubTabIndex } from '../../utils';
+import { getImageLibrarySubTabIndex } from '../../../utils';
 import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 
 export const ImageLibraryTabs = () => {
   const navigate = useNavigate();
 
-  const search = useSearch({ from: '/images' });
+  const params = useParams({
+    from: '/images/image-library/$imageType',
+    shouldThrow: false,
+  });
 
-  const subTabIndex = getImageLibrarySubTabIndex(subTabs, search.subType);
+  const subTabIndex = getImageLibrarySubTabIndex(subTabs, params?.imageType);
 
   const onTabChange = (index: number) => {
     // - Update the "subType" query param.
     // - This switches between "Owned by me", "Shared with me" and "Recovery images" sub-tabs within the Image Library tab.
     navigate({
-      to: `/images/image-library`,
-      search: (prev) => ({
-        ...prev,
-        subType: subTabs[index].type,
-      }),
+      to: `/images/image-library/$imageType`,
+      params: {
+        imageType: subTabs[index].type,
+      },
     });
   };
 
@@ -45,16 +47,16 @@ export const ImageLibraryTabs = () => {
           <TabPanels>
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.type}-content`}>
-                {tab.type === 'owned' && (
+                {tab.type === 'owned-by-me' && (
                   // <ImagesView handlers={handlers} type="owned" />
                   <Notice variant="info">Custom Images</Notice>
                 )}
-                {tab.type === 'shared' && (
+                {tab.type === 'shared-with-me' && (
                   <Notice variant="info">
                     Share with me is coming soon...
                   </Notice>
                 )}
-                {tab.type === 'recovery' && (
+                {tab.type === 'recovery-images' && (
                   // <ImagesView handlers={handlers} type="recovery" />
                   <Notice variant="info">Recovery Images</Notice>
                 )}

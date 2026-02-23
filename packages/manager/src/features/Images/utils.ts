@@ -5,7 +5,10 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
 
-export type ImageLibraryType = 'owned' | 'recovery' | 'shared';
+export type ImageLibraryType =
+  | 'owned-by-me'
+  | 'recovery-images'
+  | 'shared-with-me';
 
 /**
  * Configuration for image sub-tabs within the Image Library tab.
