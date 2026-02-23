@@ -10,7 +10,6 @@ import type { ImageLibraryType } from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
-  subType?: ImageLibraryType;
 }
 
 export interface ImageCreateDiskSearchParams {
