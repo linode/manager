@@ -78,7 +78,7 @@ const documentationMarkdown = `
 | :---- | :---- |
 | **Deployment Model** | SaaS, integrates with Akamai Cloud and existing storage infrastructure |
 | **API Compatibility** | Full S3 API compatible |
-| **Supported Storage Targets** | Akamai Cloud (Linode Object Storage), AWS S3, Azure Blob, Google Cloud, Oracle Cloud Infrastructure (OCI), IBM Cloud, Min.io, on-prem object storage |
+| **Supported Storage Targets** | Akamai Cloud (Linode Object Storage), AWS S3, Azure Blob, Google Cloud, Oracle Cloud Infrastructure (OCI), IBM Cloud, Min io, on-prem object storage |
 | **Encryption** | Zero-knowledge AES-256 encryption at write time, post-quantum cryptography |
 | **Data Protection** | Shard & Spread™ distributes encrypted fragments across independent storage locations |
 | **Immutability** | Architectural WORM enforcement at shard level, no admin override |

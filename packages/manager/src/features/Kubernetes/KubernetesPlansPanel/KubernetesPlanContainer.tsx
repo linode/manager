@@ -5,7 +5,10 @@ import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { PLAN_PANEL_PAGE_SIZE_OPTIONS } from 'src/features/components/PlansPanel/constants';
+import {
+  PLAN_FILTER_NO_RESULTS_MESSAGE,
+  PLAN_PANEL_PAGE_SIZE_OPTIONS,
+} from 'src/features/components/PlansPanel/constants';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -244,7 +247,9 @@ export const KubernetesPlanContainer = (
   const plansToDisplay = effectiveFilterResult?.filteredPlans ?? plans;
   const tableEmptyState = shouldDisplayNoRegionSelectedMessage
     ? null
-    : (effectiveFilterResult?.emptyState ?? null);
+    : plansToDisplay.length === 0
+      ? { message: PLAN_FILTER_NO_RESULTS_MESSAGE }
+      : null;
 
   // Feature gate: if pagination is disabled, render the old way
   if (!isGenerationalPlansEnabled) {

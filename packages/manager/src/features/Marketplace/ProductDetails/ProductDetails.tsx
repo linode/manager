@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useParams } from '@tanstack/react-router';
+import { useMatchRoute, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -15,7 +15,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
 
 import { getProductById } from '../products';
-import { getLogoUrl } from '../shared';
+import { getLogoUrl, marketplaceContainerStyles } from '../shared';
 import { ContactSalesDrawer } from './ContactSalesDrawer';
 import { getProductTabDetails } from './pages';
 import {
@@ -38,7 +38,12 @@ export const ProductDetails = () => {
     from: '/cloud-marketplace/catalog/$productId',
   });
   const theme = useTheme();
-  const [openContactSales, setOpenContactSales] = React.useState(false);
+  const navigate = useNavigate();
+  const matchRoute = useMatchRoute();
+
+  const isContactSalesOpen = Boolean(
+    matchRoute({ to: '/cloud-marketplace/catalog/$productId/contact-sales' })
+  );
 
   const product = React.useMemo(() => getProductById(productId), [productId]);
 
@@ -67,22 +72,30 @@ export const ProductDetails = () => {
   // Tab content is optional. If not present for this product, we still show the page.
   const details = getProductTabDetails(productId);
 
-  // Contact sales handler placeholder - will be implemented in a future ticket
+  // Contact sales handler - navigates to contact-sales URL to open drawer
   const handleContactSales = () => {
-    setOpenContactSales(true);
+    navigate({
+      params: { productId },
+      to: '/cloud-marketplace/catalog/$productId/contact-sales',
+    });
+  };
+
+  const handleCloseContactSales = () => {
+    navigate({
+      params: { productId },
+      to: '/cloud-marketplace/catalog/$productId',
+    });
   };
 
   return (
-    <Box
-      sx={(theme) => ({
-        mx: {
-          md: 0,
-          sm: theme.spacingFunction(16),
-          xs: theme.spacingFunction(12),
-        },
-      })}
-    >
-      <DocumentTitleSegment segment={`${product.name} - Details`} />
+    <Box sx={marketplaceContainerStyles}>
+      <DocumentTitleSegment
+        segment={
+          isContactSalesOpen
+            ? `${product.name} - Contact Sales`
+            : `${product.name} - Details`
+        }
+      />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -99,11 +112,8 @@ export const ProductDetails = () => {
               label: 'Catalog',
               position: 2,
             },
-            {
-              label: product.name,
-              position: 3,
-            },
           ],
+          labelTitle: product.name,
           pathname: `/cloud-marketplace/catalog/${productId}`,
         }}
       />
@@ -237,10 +247,8 @@ export const ProductDetails = () => {
           )}
         </ProductDetailsContainer>
         <ContactSalesDrawer
-          onClose={() => {
-            setOpenContactSales(false);
-          }}
-          open={openContactSales}
+          onClose={handleCloseContactSales}
+          open={isContactSalesOpen}
           partnerName={product.partner.name}
           productName={product.name}
         />

@@ -6,7 +6,7 @@ import {
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -70,22 +70,34 @@ const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Assigned Roles',
   value: 'all',
 };
+
+const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
+const USER_ROLES_URL = '/iam/users/$username/roles';
+
 export const AssignedRolesTable = () => {
   const { username } = useParams({ strict: false });
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+
+  const {
+    query: queryParam,
+    roleType: roleTypeParam,
+    order: orderParam,
+  } = useSearch({
+    from: isDefaultDelegationRolesForChildAccount
+      ? DEFAULTS_ROLES_URL
+      : USER_ROLES_URL,
+  });
+  const order: 'asc' | 'desc' = orderParam ?? 'asc';
+  const orderBy: OrderByKeys = 'name';
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
   const { data: permissions } = usePermissions('account', [
     'is_account_admin',
     'update_default_delegate_access',
   ]);
-
-  // Determine if we're on the default roles view based on delegation role and path
-  const { isDefaultDelegationRolesForChildAccount } =
-    useIsDefaultDelegationRolesForChildAccount();
 
   const permissionToCheck = isDefaultDelegationRolesForChildAccount
     ? permissions?.update_default_delegate_access
@@ -109,13 +121,23 @@ export const AssignedRolesTable = () => {
     : userRolesLoading;
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
-    if (orderBy === newOrderBy) {
-      setOrder(order === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrderBy(newOrderBy);
-      setOrder('asc');
-    }
+    const nextOrder: 'asc' | 'desc' =
+      orderBy === newOrderBy ? (order === 'asc' ? 'desc' : 'asc') : 'asc';
     setIsInitialLoad(false);
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
+      params:
+        isDefaultDelegationRolesForChildAccount && !username
+          ? undefined
+          : username,
+      search: (prev) => ({
+        ...prev,
+        order: nextOrder,
+        orderBy: newOrderBy,
+      }),
+    });
   };
 
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
@@ -200,11 +222,12 @@ export const AssignedRolesTable = () => {
     return { filterableOptions, roles };
   }, [assignedRoles, accountRoles, entities]);
 
-  const [query, setQuery] = React.useState('');
-
-  const [entityType, setEntityType] = React.useState<null | SelectOption>(
-    ALL_ROLES_OPTION
-  );
+  const selectedEntityTypeOption = React.useMemo<null | SelectOption>(() => {
+    const value = roleTypeParam ?? ALL_ROLES_OPTION.value;
+    return (
+      filterableOptions.find((opt) => opt.value === value) || ALL_ROLES_OPTION
+    );
+  }, [filterableOptions, roleTypeParam]);
 
   const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     const selectedRole = roleName;
@@ -219,9 +242,9 @@ export const AssignedRolesTable = () => {
 
   const filteredAndSortedRoles = React.useMemo(() => {
     const rolesToFilter = getFilteredRoles({
-      entityType: entityType?.value as 'all' | AccessType,
+      entityType: roleTypeParam ?? 'all',
       getSearchableFields,
-      query,
+      query: queryParam ?? '',
       roles,
     }) as RoleView[];
 
@@ -246,12 +269,12 @@ export const AssignedRolesTable = () => {
       }
       return 0;
     });
-  }, [roles, query, entityType, order, orderBy, isInitialLoad]);
+  }, [roles, queryParam, roleTypeParam, order, orderBy, isInitialLoad]);
 
   const pagination = usePaginationV2({
     currentRoute: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/roles'
-      : '/iam/users/$username/roles',
+      ? DEFAULTS_ROLES_URL
+      : USER_ROLES_URL,
     initialPage: 1,
     preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
     clientSidePaginationData: filteredAndSortedRoles,
@@ -402,23 +425,48 @@ export const AssignedRolesTable = () => {
             hideLabel
             label="Filter"
             onSearch={(value) => {
-              pagination.handlePageChange(1);
-              setQuery(value);
+              navigate({
+                to: isDefaultDelegationRolesForChildAccount
+                  ? DEFAULTS_ROLES_URL
+                  : USER_ROLES_URL,
+                params:
+                  isDefaultDelegationRolesForChildAccount && !username
+                    ? undefined
+                    : username,
+                search: (prev) => ({
+                  ...prev,
+                  page: 1,
+                  query: value !== '' ? value : undefined,
+                }),
+              });
             }}
             placeholder="Search"
-            value={query}
+            value={queryParam ?? ''}
           />
           <Select
             hideLabel
             label="Select type"
             onChange={(_, selected) => {
-              pagination.handlePageChange(1);
-              setEntityType(selected ?? null);
+              const nextRoleType = (selected?.value ??
+                ALL_ROLES_OPTION.value) as 'all' | AccessType;
+              navigate({
+                to: isDefaultDelegationRolesForChildAccount
+                  ? DEFAULTS_ROLES_URL
+                  : USER_ROLES_URL,
+                params: isDefaultDelegationRolesForChildAccount
+                  ? undefined
+                  : { username: username || '' },
+                search: (prev) => ({
+                  ...prev,
+                  page: 1,
+                  roleType: nextRoleType,
+                }),
+              });
             }}
             options={filterableOptions}
             placeholder="All Assigned Roles"
             sx={{ minWidth: 250 }}
-            value={entityType}
+            value={selectedEntityTypeOption}
           />
         </Grid>
         <Grid sx={{ alignSelf: 'flex-start' }}>

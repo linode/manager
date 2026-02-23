@@ -2,14 +2,17 @@ import { Notice } from '@linode/ui';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
+import { planSelectionTypeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
+  blackwellLimitedAvailabilityBannerTestId,
   limitedAvailabilityBannerTestId,
   PlanInformation,
 } from './PlanInformation';
 
 import type { PlanInformationProps } from './PlanInformation';
+import type { PlanSelectionType } from './types';
 
 const mockProps: PlanInformationProps = {
   flow: 'linode',
@@ -75,5 +78,83 @@ describe('PlanInformation', () => {
     const warningNotice = screen.getByText('This is a Warning Notice');
     expect(infoNotice).toBeInTheDocument();
     expect(warningNotice).toBeInTheDocument();
+  });
+
+  it('should inform the user about Blackwell plans having limited availability when appropriate', () => {
+    const mockPlan = planSelectionTypeFactory.build({
+      class: 'gpu',
+      id: 'g3-gpu-rtxpro6000-blackwell-1',
+      planBelongsToDisabledClass: false,
+      planHasLimitedAvailability: true,
+      planIsDisabled512Gb: false,
+      planIsSmallerThanUsage: false,
+      planIsTooSmall: false,
+    });
+    renderWithTheme(
+      <PlanInformation
+        {...mockProps}
+        hasMajorityOfPlansDisabled={true}
+        isSelectedRegionEligibleForPlan={true}
+        plans={[mockPlan as PlanSelectionType]}
+        planType="gpu"
+      />
+    );
+
+    const blackwellLimitedAvailabilityBanner = screen.getByTestId(
+      blackwellLimitedAvailabilityBannerTestId
+    );
+    expect(blackwellLimitedAvailabilityBanner).toBeInTheDocument();
+  });
+
+  it('does not inform the user about Blackwell plans having limited availability when user does not have access to blackwell plans', () => {
+    const mockPlan = planSelectionTypeFactory.build({
+      class: 'gpu',
+      id: 'g3-gpu-rtx4000',
+      planBelongsToDisabledClass: false,
+      planHasLimitedAvailability: true,
+      planIsDisabled512Gb: false,
+      planIsSmallerThanUsage: false,
+      planIsTooSmall: false,
+    });
+    renderWithTheme(
+      <PlanInformation
+        {...mockProps}
+        hasMajorityOfPlansDisabled={true}
+        isSelectedRegionEligibleForPlan={true}
+        plans={[mockPlan as PlanSelectionType]}
+        planType="gpu"
+      />
+    );
+
+    const blackwellLimitedAvailabilityBanner = screen.queryByTestId(
+      blackwellLimitedAvailabilityBannerTestId
+    );
+    expect(blackwellLimitedAvailabilityBanner).not.toBeInTheDocument();
+  });
+
+  it('does not inform the user about Blackwell plans having limited availability when user has access to blackwell plans and are available', () => {
+    const mockPlan = planSelectionTypeFactory.build({
+      class: 'gpu',
+      id: 'g3-gpu-rtxpro6000-blackwell-1',
+      planBelongsToDisabledClass: false,
+      planHasLimitedAvailability: false,
+      planIsDisabled512Gb: false,
+      planIsSmallerThanUsage: false,
+      planIsTooSmall: false,
+    });
+    renderWithTheme(
+      <PlanInformation
+        {...mockProps}
+        hasMajorityOfPlansDisabled={true}
+        isSelectedRegionEligibleForPlan={true}
+        plans={[mockPlan as PlanSelectionType]}
+        planType="gpu"
+      />
+    );
+
+    const blackwellLimitedAvailabilityBanner = screen.queryByTestId(
+      blackwellLimitedAvailabilityBannerTestId
+    );
+    expect(blackwellLimitedAvailabilityBanner).not.toBeInTheDocument();
   });
 });

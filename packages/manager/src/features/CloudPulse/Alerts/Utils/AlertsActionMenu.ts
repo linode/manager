@@ -41,7 +41,6 @@ export const getAlertTypeToActionsList = (
     },
     {
       disabled:
-        alertStatus === 'in progress' ||
         alertStatus === 'failed' ||
         alertStatus === 'provisioning' ||
         alertStatus === 'enabling' ||
