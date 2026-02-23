@@ -225,7 +225,7 @@ const iamUserNameRoute = createRoute({
         let user: undefined | User;
         try {
           user = await context.queryClient.ensureQueryData(
-            queryOptions(accountQueries.users._ctx.user(username)) // there is happening a /grants call which is 400 for account_admin
+            queryOptions(accountQueries.users._ctx.user(username))
           );
         } catch (error) {
           return error[0].reason;
