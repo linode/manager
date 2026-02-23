@@ -103,7 +103,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           }
         : undefined,
     },
-    isIAMDelegationEnabled === false
+    isIAMDelegationEnabled === false && isParentUserType
   );
 
   const {

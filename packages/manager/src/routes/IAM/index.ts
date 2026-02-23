@@ -178,7 +178,9 @@ const iamDelegationsRoute = createRoute({
     }
 
     const isChildAccount = profile?.user_type === 'child';
-    if (!isDelegationEnabled || isChildAccount) {
+    const isDelegateAccount = profile?.user_type === 'delegate';
+    const isChildOrDelegate = isChildAccount || isDelegateAccount;
+    if (!isDelegationEnabled || isChildOrDelegate) {
       throw redirect({
         to: '/iam/users',
         replace: true,
@@ -223,7 +225,7 @@ const iamUserNameRoute = createRoute({
         let user: undefined | User;
         try {
           user = await context.queryClient.ensureQueryData(
-            queryOptions(accountQueries.users._ctx.user(username))
+            queryOptions(accountQueries.users._ctx.user(username)) // there is happening a /grants call which is 400 for account_admin
           );
         } catch (error) {
           return error[0].reason;
