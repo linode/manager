@@ -15,17 +15,17 @@ import {
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
 
-import { getEventsForImages } from '../../utils';
+import { getEventsForImages } from '../../../utils';
 import { IMAGES_CONFIG } from './imageLibraryTabsConfig';
 import { ImagesTable } from './ImagesTable';
 
-import type { ImageLibraryType } from '../../utils';
-import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
+import type { ImageLibraryType } from '../../../utils';
+import type { Handlers as ImageHandlers } from '../../ImagesActionMenu';
 import type { Filter } from '@linode/api-v4';
 
 interface Props {
   handlers: ImageHandlers;
-  type: Exclude<ImageLibraryType, 'recovery' | 'shared'>;
+  type: Exclude<ImageLibraryType, 'recovery-images' | 'shared-with-me'>;
 }
 
 export const ImagesView = (props: Props) => {
@@ -67,7 +67,7 @@ export const ImagesView = (props: Props) => {
   );
 
   const pagination = usePaginationV2({
-    currentRoute: '/images/image-library',
+    currentRoute: '/images/image-library/$imageType',
     preferenceKey: config.preferenceKey,
     searchParams: (prev) => ({
       ...prev,
@@ -85,7 +85,7 @@ export const ImagesView = (props: Props) => {
         order: config.orderDefault,
         orderBy: config.orderByDefault,
       },
-      from: '/images/image-library',
+      from: '/images/image-library/$imageType',
     },
     preferenceKey: config.preferenceKey,
     prefix: config.type,
@@ -113,7 +113,7 @@ export const ImagesView = (props: Props) => {
       type: config.type,
     },
     {
-      enabled: config.isEnabled(search.subType),
+      enabled: config.isEnabled(type),
       // Refetch custom (manual) images every 30 seconds.
       // We do this because we have no /v4/account/events we can use
       // to update Image region statuses. We should make the API
@@ -144,7 +144,8 @@ export const ImagesView = (props: Props) => {
         page: undefined,
         query: query || undefined,
       }),
-      to: '/images/image-library',
+      to: '/images/image-library/$imageType',
+      params: { imageType: type },
     });
   };
 

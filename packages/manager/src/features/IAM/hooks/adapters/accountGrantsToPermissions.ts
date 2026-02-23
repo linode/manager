@@ -89,5 +89,6 @@ export const accountGrantsToPermissions = (
     update_default_delegate_access: true,
     view_child_account: true,
     create_child_account_token: true,
+    view_default_delegate_access: true,
   } as Record<AccountAdmin, boolean>;
 };

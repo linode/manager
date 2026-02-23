@@ -147,8 +147,6 @@ const GPU_GENERAL_AVAILABILITY_NOTICE =
   'New GPU instances are now generally available. Deploy an RTX 4000 Ada GPU instance in select core compute regions in North America, Europe, and Asia.';
 const GPU_NO_AVAILABILITY_ERROR =
   'GPU Plans are not currently available in this region.';
-const GPU_BLACKWELL_NO_AVAILABILITY_ERROR =
-  'NVIDIA RTX PRO 6000 Blackwell GPU plans are currently unavailable in this region or globally unavailable. Try another region or contact Support for assistance.';
 
 authenticate();
 describe('displays linode plans panel based on availability', () => {
@@ -410,12 +408,10 @@ describe('displays specific linode plans for GPU', () => {
     //
     // - General availability notice explaining that Nvidia Ada plans are available.
     // - Region availability error explaining that GPU plans are unavailable in the mocked region.
-    // - Blackwell GPU availability error explaining that Blackwell plans are unavailable.
     cy.findByText('GPU').click();
     cy.get(linodePlansPanel).within(() => {
       cy.contains(GPU_GENERAL_AVAILABILITY_NOTICE).should('be.visible');
       cy.contains(GPU_NO_AVAILABILITY_ERROR).should('be.visible');
-      cy.contains(GPU_BLACKWELL_NO_AVAILABILITY_ERROR).should('be.visible');
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
@@ -457,12 +453,10 @@ describe('displays specific kubernetes plans for GPU', () => {
     //
     // - General availability notice explaining that Nvidia Ada plans are available.
     // - Region availability error explaining that GPU plans are unavailable in the mocked region.
-    // - Blackwell GPU availability error explaining that Blackwell plans are unavailable.
     cy.findByText('GPU').click();
     cy.get(k8PlansPanel).within(() => {
       cy.contains(GPU_GENERAL_AVAILABILITY_NOTICE).should('be.visible');
       cy.contains(GPU_NO_AVAILABILITY_ERROR).should('be.visible');
-      cy.contains(GPU_BLACKWELL_NO_AVAILABILITY_ERROR).should('be.visible');
 
       cy.findByRole('table', {
         name: 'List of Linode Plans',

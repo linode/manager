@@ -1,6 +1,6 @@
 import { imageQueries, useImageQuery, useQueryClient } from '@linode/queries';
 import { BetaChip, Drawer, Notice, Stack } from '@linode/ui';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -10,27 +10,30 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { getImageLibrarySubTabIndex } from '../../utils';
-import { DeleteImageDialog } from '../DeleteImageDialog';
-import { EditImageDrawer } from '../EditImageDrawer';
-import { ManageImageReplicasForm } from '../ImageRegions/ManageImageRegionsForm';
-import { RebuildImageDrawer } from '../RebuildImageDrawer';
+import { getImageLibrarySubTabIndex } from '../../../utils';
+import { DeleteImageDialog } from '../../DeleteImageDialog';
+import { EditImageDrawer } from '../../EditImageDrawer';
+import { ManageImageReplicasForm } from '../../ImageRegions/ManageImageRegionsForm';
+import { RebuildImageDrawer } from '../../RebuildImageDrawer';
 import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 import { ImagesView } from './ImagesView';
 
-import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
+import type { Handlers as ImageHandlers } from '../../ImagesActionMenu';
 import type { Image } from '@linode/api-v4';
 import type { ImageAction } from 'src/routes/images';
 
 export const ImageLibraryTabs = () => {
   const navigate = useNavigate();
 
-  const params = useParams({
-    from: '/images/image-library/$imageId/$action',
+  const imageActionParams = useParams({
+    from: '/images/image-library/$imageType/$imageId/$action',
     shouldThrow: false,
   });
 
-  const search = useSearch({ from: '/images' });
+  const imageTypeParams = useParams({
+    from: '/images/image-library/$imageType',
+    shouldThrow: false,
+  });
 
   const queryClient = useQueryClient();
 
@@ -38,13 +41,20 @@ export const ImageLibraryTabs = () => {
     data: selectedImage,
     isLoading: isFetchingSelectedImage,
     error: selectedImageError,
-  } = useImageQuery(params?.imageId ?? '', !!params?.imageId);
+  } = useImageQuery(
+    imageActionParams?.imageId ?? '',
+    !!imageActionParams?.imageId
+  );
 
   const actionHandler = (image: Image, action: ImageAction) => {
     navigate({
-      params: { action, imageId: image.id },
+      params: {
+        action,
+        imageId: image.id,
+        imageType: imageActionParams?.imageType ?? 'owned-by-me',
+      },
       search: (prev) => prev,
-      to: '/images/image-library/$imageId/$action',
+      to: '/images/image-library/$imageType/$imageId/$action',
     });
   };
 
@@ -61,10 +71,7 @@ export const ImageLibraryTabs = () => {
   };
 
   const handleCloseDialog = () => {
-    navigate({
-      search: (prev) => ({ ...prev, subType: search.subType }),
-      to: '/images/image-library',
-    });
+    navigate({ search: (prev) => prev, to: '/images/image-library' });
   };
 
   const handleManageRegions = (image: Image) => {
@@ -95,23 +102,19 @@ export const ImageLibraryTabs = () => {
     onRebuild: handleRebuild,
   };
 
-  const subTabIndex = getImageLibrarySubTabIndex(subTabs, search.subType);
+  const subTabIndex = getImageLibrarySubTabIndex(
+    subTabs,
+    imageTypeParams?.imageType
+  );
 
   const onTabChange = (index: number) => {
-    // - Update the "subType" query param.
+    // - Update the "imageType" param.
     // - This switches between "Owned by me", "Shared with me" and "Recovery images" sub-tabs within the Image Library tab.
     navigate({
-      to: `/images/image-library`,
-      search: (prev) => ({
-        ...prev,
-        subType: subTabs[index].type,
-        // Reset search, pagination and sorting query params
-        query: undefined,
-        page: undefined,
-        pageSize: undefined,
-        'manual-order': undefined,
-        'manual-orderBy': undefined,
-      }),
+      to: `/images/image-library/$imageType`,
+      params: {
+        imageType: subTabs[index].type,
+      },
     });
   };
 
@@ -129,16 +132,16 @@ export const ImageLibraryTabs = () => {
           <TabPanels>
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.type}-content`}>
-                {tab.type === 'owned' && (
-                  <ImagesView handlers={handlers} type="owned" />
+                {tab.type === 'owned-by-me' && (
+                  <ImagesView handlers={handlers} type="owned-by-me" />
                 )}
-                {tab.type === 'shared' && (
+                {tab.type === 'shared-with-me' && (
                   <Notice variant="info">
                     Share with me is coming soon...
                   </Notice>
                 )}
-                {tab.type === 'recovery' && (
-                  // <ImagesView handlers={handlers} type="recovery" />
+                {tab.type === 'recovery-images' && (
+                  // <ImagesView handlers={handlers} type="recovery-images" />
                   <Notice variant="info">Recovery Images</Notice>
                 )}
               </SafeTabPanel>
@@ -151,20 +154,20 @@ export const ImageLibraryTabs = () => {
         imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
-        open={params?.action === 'edit'}
+        open={imageActionParams?.action === 'edit'}
       />
       <RebuildImageDrawer
         image={selectedImage}
         imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
-        open={params?.action === 'rebuild'}
+        open={imageActionParams?.action === 'rebuild'}
       />
       <Drawer
         error={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
-        open={params?.action === 'manage-replicas'}
+        open={imageActionParams?.action === 'manage-replicas'}
         title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
       >
         <ManageImageReplicasForm
@@ -173,9 +176,9 @@ export const ImageLibraryTabs = () => {
         />
       </Drawer>
       <DeleteImageDialog
-        imageId={params?.imageId}
+        imageId={imageActionParams?.imageId}
         onClose={handleCloseDialog}
-        open={params?.action === 'delete'}
+        open={imageActionParams?.action === 'delete'}
       />
     </Stack>
   );

@@ -6,8 +6,8 @@ import {
   Typography,
   ZeroStateSearchNarrowIcon,
 } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -20,15 +20,14 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import { ImageRow } from '../ImageRow';
+import { ImageRow } from '../../ImageRow';
 
-import type { Handlers as ImageHandlers } from '../ImagesActionMenu';
+import type { Handlers as ImageHandlers } from '../../ImagesActionMenu';
 import type {
   ImageConfig,
   ImageViewTableColConfig,
 } from './imageLibraryTabsConfig';
 import type { APIError, Event, Image } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 import type { Order } from 'src/hooks/useOrderV2';
 
 interface HeaderProps {
@@ -67,20 +66,26 @@ interface ImagesTableProps {
   query?: string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  imageTable: {
+export const StyledImageTable = styled(Paper, { label: 'StyledImageTable' })(
+  ({ theme }) => ({
     marginBottom: theme.spacingFunction(24),
     padding: 0,
-  },
-  imageTableHeader: {
-    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
-    borderBottom: 0,
-    padding: theme.spacingFunction(8),
-    paddingLeft: theme.spacingFunction(12),
-  },
-  imageTableSubheader: {
-    marginTop: theme.spacingFunction(8),
-  },
+  })
+);
+
+export const StyledImageTableHeader = styled('div', {
+  label: 'StyledImageTableHeader',
+})(({ theme }) => ({
+  border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+  borderBottom: 0,
+  padding: theme.spacingFunction(8),
+  paddingLeft: theme.spacingFunction(12),
+}));
+
+export const StyledImageTableSubheader = styled(Typography, {
+  label: 'StyledImageTableSubheader',
+})(({ theme }) => ({
+  marginTop: theme.spacingFunction(8),
 }));
 
 export const ImagesTable = (props: ImagesTableProps) => {
@@ -100,12 +105,10 @@ export const ImagesTable = (props: ImagesTableProps) => {
     emptyMessage,
   } = props;
 
-  const { classes } = useStyles();
-
   return (
-    <Paper className={classes.imageTable}>
+    <StyledImageTable>
       {headerProps && headerProps.title && (
-        <div className={classes.imageTableHeader}>
+        <StyledImageTableHeader>
           <Box
             sx={{
               display: 'flex',
@@ -134,11 +137,11 @@ export const ImagesTable = (props: ImagesTableProps) => {
             </Box>
           </Box>
           {headerProps.description && (
-            <Typography className={classes.imageTableSubheader}>
+            <StyledImageTableSubheader>
               {headerProps.description}
-            </Typography>
+            </StyledImageTableSubheader>
           )}
-        </div>
+        </StyledImageTableHeader>
       )}
       <Table>
         <TableHead>
@@ -219,6 +222,6 @@ export const ImagesTable = (props: ImagesTableProps) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-    </Paper>
+    </StyledImageTable>
   );
 };

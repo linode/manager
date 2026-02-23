@@ -15,7 +15,7 @@ const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
   useQueryWithPermissions: vi.fn().mockReturnValue({}),
   useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
-  useSearch: vi.fn(),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
@@ -59,20 +59,13 @@ describe('ImageLibraryTabs', () => {
     queryMocks.useLocation.mockReturnValue({
       pathname: '/images/image-library',
     });
-    queryMocks.useSearch.mockReturnValue({});
   });
 
-  describe('For Custom (Owned by me) Images', () => {
-    beforeEach(() => {
-      queryMocks.useSearch.mockReturnValue({
-        subType: 'owned',
-      });
-    });
-
+  // For Custom Images (Owned by me)
+  describe('For Custom Images (Owned by me)', () => {
     it("should render 'Owned by me' tab", async () => {
       const { getByText } = renderWithTheme(<ImageLibraryTabs />, {
-        initialRoute: '/images/image-library',
-        initialEntries: ['/images/image-library?subType=owned'],
+        initialRoute: '/images/image-library/owned-by-me',
       });
 
       expect(getByText('Owned by me')).toBeVisible();
@@ -96,8 +89,7 @@ describe('ImageLibraryTabs', () => {
       const { getByText, findByLabelText, router } = renderWithTheme(
         <ImageLibraryTabs />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me/',
         }
       );
 
@@ -108,7 +100,7 @@ describe('ImageLibraryTabs', () => {
       await userEvent.click(getByText('Edit'));
 
       expect(router.state.location.pathname).toBe(
-        `/images/image-library/${encodeURIComponent(image.id)}/edit`
+        `/images/image-library/owned-by-me/${encodeURIComponent(image.id)}/edit`
       );
     });
 
@@ -129,8 +121,7 @@ describe('ImageLibraryTabs', () => {
       const { router, getByText, findByLabelText } = renderWithTheme(
         <ImageLibraryTabs />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me/',
         }
       );
 
@@ -141,7 +132,7 @@ describe('ImageLibraryTabs', () => {
       await userEvent.click(getByText('Rebuild an Existing Linode'));
 
       expect(router.state.location.pathname).toBe(
-        `/images/image-library/${encodeURIComponent(image.id)}/rebuild`
+        `/images/image-library/owned-by-me/${encodeURIComponent(image.id)}/rebuild`
       );
     });
 
@@ -164,8 +155,7 @@ describe('ImageLibraryTabs', () => {
 
       const { findByLabelText, getByText, queryAllByTestId, router } =
         renderWithTheme(<ImageLibraryTabs />, {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me/',
         });
 
       const loadingElement = queryAllByTestId(loadingTestId);
@@ -201,8 +191,7 @@ describe('ImageLibraryTabs', () => {
       const { router, findByLabelText, getByText } = renderWithTheme(
         <ImageLibraryTabs />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me/',
         }
       );
 
@@ -213,14 +202,14 @@ describe('ImageLibraryTabs', () => {
       await userEvent.click(getByText('Delete'));
 
       expect(router.state.location.pathname).toBe(
-        `/images/image-library/${encodeURIComponent(image.id)}/delete`
+        `/images/image-library/owned-by-me/${encodeURIComponent(image.id)}/delete`
       );
     });
   });
 
   it('should render Owned (custom), Shared and Recovery tabs under Images Library Tab', async () => {
     const { getByText } = renderWithTheme(<ImageLibraryTabs />, {
-      initialRoute: '/images',
+      initialRoute: '/images/image-library',
     });
 
     expect(getByText('Owned by me', { selector: 'button' })).toBeVisible();

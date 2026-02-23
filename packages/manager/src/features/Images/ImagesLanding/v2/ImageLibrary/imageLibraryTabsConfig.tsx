@@ -7,10 +7,9 @@ import {
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
-} from '../../constants';
+} from '../../../constants';
 
-import type { ImageLibrarySubTab } from '../../utils';
-import type { ImageLibraryType } from '../../utils';
+import type { ImageLibrarySubTab, ImageLibraryType } from '../../../utils';
 import type { Image } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
 
@@ -51,13 +50,13 @@ export interface ImageConfig {
 }
 
 export const imageLibrarySubTabs: ImageLibrarySubTab[] = [
-  { type: 'owned', title: 'Owned by me' },
+  { type: 'owned-by-me', title: 'Owned by me' },
   {
-    type: 'shared',
+    type: 'shared-with-me',
     title: 'Shared with me',
     isBeta: true,
   },
-  { type: 'recovery', title: 'Recovery images' },
+  { type: 'recovery-images', title: 'Recovery images' },
 ];
 
 const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
@@ -89,9 +88,9 @@ const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
 
 export const IMAGES_CONFIG: Omit<
   Record<ImageLibraryType, ImageConfig>,
-  'recovery' | 'shared'
+  'recovery-images' | 'shared-with-me'
 > = {
-  owned: {
+  'owned-by-me': {
     title: 'Owned by me',
     description: (
       <>
@@ -108,7 +107,7 @@ export const IMAGES_CONFIG: Omit<
     orderDefault: MANUAL_IMAGES_DEFAULT_ORDER,
     preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
     docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/images',
-    isEnabled: (subType) => subType === 'owned',
+    isEnabled: (subType) => subType === 'owned-by-me',
     columns: CUSTOM_IMAGES_TABLE_COLUMNS,
     buttonProps: {
       buttonText: 'Create Image',
@@ -126,5 +125,5 @@ export const IMAGES_CONFIG: Omit<
         'Click \u2018Create Image\u2019 to create your first custom image',
     },
   },
-  // "shared", and 'recovery' images config will go here...
+  // "shared-with-me", and 'recovery-images' images config will go here...
 };

@@ -14,7 +14,7 @@ const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({ data: { create_image: false } }),
   useQueryWithPermissions: vi.fn().mockReturnValue({}),
   useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
-  useSearch: vi.fn(),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
@@ -70,13 +70,7 @@ describe('ImagesView component', () => {
 
   // For Custom Images (Owned by me)
   describe('For Custom Images (Owned by me)', () => {
-    beforeEach(() => {
-      queryMocks.useSearch.mockReturnValue({
-        subType: 'owned',
-      });
-    });
-
-    it("should render 'My custom images' tab with items", async () => {
+    it("should render 'Owned by me' tab with items", async () => {
       server.use(
         http.get('*/images', () => {
           const images = imageFactory.buildList(3, {
@@ -90,10 +84,9 @@ describe('ImagesView component', () => {
       );
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView handlers={mockHandlers} type="owned" />,
+        <ImagesView handlers={mockHandlers} type="owned-by-me" />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me',
         }
       );
 
@@ -112,7 +105,7 @@ describe('ImagesView component', () => {
       expect(getByText('Image ID')).toBeVisible();
     });
 
-    it("should render 'My custom images' (manual) empty state", async () => {
+    it("should render 'Owned by me' (manual) empty state", async () => {
       server.use(
         http.get('*/images', ({ request }) => {
           return HttpResponse.json(
@@ -126,14 +119,13 @@ describe('ImagesView component', () => {
       );
 
       const { findByText } = renderWithTheme(
-        <ImagesView handlers={mockHandlers} type="owned" />,
+        <ImagesView handlers={mockHandlers} type="owned-by-me" />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me',
         }
       );
 
-      expect(await findByText('No Custom Images to display.')).toBeVisible();
+      expect(await findByText('No custom images to display')).toBeVisible();
     });
 
     it('disables the action menu buttons if user does not have permissions to edit images', async () => {
@@ -160,10 +152,9 @@ describe('ImagesView component', () => {
       );
 
       const { findByLabelText } = renderWithTheme(
-        <ImagesView handlers={mockHandlers} type="owned" />,
+        <ImagesView handlers={mockHandlers} type="owned-by-me" />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me',
         }
       );
 
@@ -194,10 +185,9 @@ describe('ImagesView component', () => {
       });
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView handlers={mockHandlers} type="owned" />,
+        <ImagesView handlers={mockHandlers} type="owned-by-me" />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me',
         }
       );
 
@@ -218,10 +208,9 @@ describe('ImagesView component', () => {
       });
 
       const { getByText, queryAllByTestId } = renderWithTheme(
-        <ImagesView handlers={mockHandlers} type="owned" />,
+        <ImagesView handlers={mockHandlers} type="owned-by-me" />,
         {
-          initialRoute: '/images/image-library',
-          initialEntries: ['/images/image-library?subType=owned'],
+          initialRoute: '/images/image-library/owned-by-me',
         }
       );
 

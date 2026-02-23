@@ -5,7 +5,10 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
 
-export type ImageLibraryType = 'owned' | 'recovery' | 'shared';
+export type ImageLibraryType =
+  | 'owned-by-me'
+  | 'recovery-images'
+  | 'shared-with-me';
 
 /**
  * Configuration for image sub-tabs within the Image Library tab.
@@ -74,7 +77,8 @@ export const useIsPrivateImageSharingEnabled = () => {
  * Returns the index of the currently selected sub-tab from an array of sub-tabs.
  *
  * @param subTabs - Array of sub-tabs with `type` and `title` properties.
- * @param selectedTab - The type of currently selected sub-tab. Currently, this value comes from 'type' query param on the Image Library tab.
+ * @param selectedTab - The type of currently selected sub-tab.
+ * Currently, this value comes from 'imageType' param on the Image Library tab.
  *
  * @returns the index of the selected sub-tab
  */
@@ -93,4 +97,17 @@ export const getImageLibrarySubTabIndex = (
   }
 
   return tabIndex;
+};
+
+export const getImageTypeToImageLibraryType = (
+  imageType: Image['type']
+): ImageLibraryType => {
+  switch (imageType) {
+    case 'automatic':
+      return 'recovery-images';
+    case 'manual':
+      return 'owned-by-me';
+    default:
+      return 'shared-with-me';
+  }
 };
