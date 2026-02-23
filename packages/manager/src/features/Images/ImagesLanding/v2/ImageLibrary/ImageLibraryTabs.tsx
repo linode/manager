@@ -23,7 +23,7 @@ export const ImageLibraryTabs = () => {
   const subTabIndex = getImageLibrarySubTabIndex(subTabs, params?.imageType);
 
   const onTabChange = (index: number) => {
-    // - Update the "subType" query param.
+    // - Update the "imageType" param.
     // - This switches between "Owned by me", "Shared with me" and "Recovery images" sub-tabs within the Image Library tab.
     navigate({
       to: `/images/image-library/$imageType`,
@@ -48,7 +48,7 @@ export const ImageLibraryTabs = () => {
             {subTabs.map((tab, idx) => (
               <SafeTabPanel index={idx} key={`images-${tab.type}-content`}>
                 {tab.type === 'owned-by-me' && (
-                  // <ImagesView handlers={handlers} type="owned" />
+                  // <ImagesView handlers={handlers} type="owned-by-me" />
                   <Notice variant="info">Custom Images</Notice>
                 )}
                 {tab.type === 'shared-with-me' && (
@@ -57,7 +57,7 @@ export const ImageLibraryTabs = () => {
                   </Notice>
                 )}
                 {tab.type === 'recovery-images' && (
-                  // <ImagesView handlers={handlers} type="recovery" />
+                  // <ImagesView handlers={handlers} type="recovery-images" />
                   <Notice variant="info">Recovery Images</Notice>
                 )}
               </SafeTabPanel>

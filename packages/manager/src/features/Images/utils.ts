@@ -77,7 +77,8 @@ export const useIsPrivateImageSharingEnabled = () => {
  * Returns the index of the currently selected sub-tab from an array of sub-tabs.
  *
  * @param subTabs - Array of sub-tabs with `type` and `title` properties.
- * @param selectedTab - The type of currently selected sub-tab. Currently, this value comes from 'type' query param on the Image Library tab.
+ * @param selectedTab - The type of currently selected sub-tab.
+ * Currently, this value comes from 'imageType' param on the Image Library tab.
  *
  * @returns the index of the selected sub-tab
  */
