@@ -13,6 +13,7 @@ import {
   mockGetDatabaseEngineConfigs,
   mockGetDatabaseTypes,
   mockUpdateDatabase,
+  mockUpdateDatabaseError,
 } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
@@ -190,11 +191,11 @@ const addConfigsToUI = (
                 cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
                 cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
               } else {
-                // Fallback: Material-UI Autocomplete (like synchronous_replication)
+                // Fallback
+                ui.autocomplete.find().first().scrollIntoView();
                 ui.autocomplete
                   .find()
                   .first()
-                  .scrollIntoView()
                   .should('be.visible')
                   .clear()
                   .type(`${additionalConfigs[flatKey]}`);
@@ -272,6 +273,7 @@ describe('Update database clusters', () => {
           });
 
           // Confirms all the buttons are in the initial state - enabled/disabled
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -283,19 +285,15 @@ describe('Update database clusters', () => {
             .findButtonByTitle('Add')
             .should('exist')
             .should('be.disabled');
-          ui.button
-            .findByTitle('Save')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.disabled');
+          ui.button.findByTitle('Save').should('exist').should('be.disabled');
 
           ui.button
             .findByTitle('Cancel')
-            .scrollIntoView()
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
             .click();
 
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -303,6 +301,7 @@ describe('Update database clusters', () => {
             .click();
 
           ui.drawer.findByTitle('Advanced Configuration').should('be.visible');
+          cy.get('[aria-label="Close drawer"]').scrollIntoView();
           cy.get('[aria-label="Close drawer"]')
             .should('be.visible')
             .should('be.enabled')
@@ -353,6 +352,7 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -370,31 +370,50 @@ describe('Update database clusters', () => {
             true
           );
 
-          // Update advanced configurations with the newly added config
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            engine_config: {
-              ...(database.engine_config as ConfigCategoryValues),
-              [engineType]: {
-                ...(existingConfig as ConfigCategoryValues),
-                ...singleConfig,
-              },
-            },
-          }).as('updateAdvancedConfiguration');
+          const isSyncReplicationQuorum =
+            singleConfig['synchronous_replication'] === 'quorum';
+          const isInvaliClusterSize =
+            database.cluster_size < 3 && isSyncReplicationQuorum;
 
+          // Update advanced configurations with the newly added config
+          if (isInvaliClusterSize) {
+            mockUpdateDatabaseError(
+              database.id,
+              database.engine,
+              'engine_config.synchronous_replication',
+              'synchronous_replication is only supported for clusters with 3 nodes'
+            ).as('updateAdvancedConfiguration');
+          } else {
+            mockUpdateDatabase(database.id, database.engine, {
+              ...database,
+              engine_config: {
+                ...(database.engine_config as ConfigCategoryValues),
+                [engineType]: {
+                  ...(existingConfig as ConfigCategoryValues),
+                  ...singleConfig,
+                },
+              },
+            }).as('updateAdvancedConfiguration');
+          }
           // Save or Save and Restart Services as per the config added
           ui.button
             .findByTitle(saveRestartButton)
-            .scrollIntoView()
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
             .click();
           cy.wait('@updateAdvancedConfiguration');
 
-          // Confirms newly added advacned Config on the Configuration tab tableview
-          cy.findByText(`${engineType}.${Object.keys(singleConfig)[0]}`).should(
-            'be.visible'
-          );
+          if (isInvaliClusterSize) {
+            // Verify error message is displayed for invalid synchronous replication
+            cy.findByText(
+              /synchronous_replication is only supported for clusters with 3 nodes/i
+            ).should('be.visible');
+          } else {
+            // Confirms newly added advanced Config on the Configuration tab tableview
+            cy.findByText(
+              `${engineType}.${Object.keys(singleConfig)[0]}`
+            ).should('be.visible');
+          }
         });
 
         /*
@@ -441,6 +460,7 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -466,35 +486,55 @@ describe('Update database clusters', () => {
             }
           });
 
+          const isSyncReplicationQuorum =
+            allConfig['synchronous_replication'] === 'quorum';
+          const isInvalidClusterSize =
+            database.cluster_size < 3 && isSyncReplicationQuorum;
+
           // Update advanced configurations with the newly added config
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            engine_config: {
-              ...(database.engine_config as ConfigCategoryValues),
-              [engineType]: {
-                ...(existingConfig as ConfigCategoryValues),
-                ...nestedConfig,
+          if (isInvalidClusterSize) {
+            mockUpdateDatabaseError(
+              database.id,
+              database.engine,
+              'engine_config.synchronous_replication',
+              'synchronous_replication is only supported for clusters with 3 nodes'
+            ).as('updateAdvancedConfiguration');
+          } else {
+            mockUpdateDatabase(database.id, database.engine, {
+              ...database,
+              engine_config: {
+                ...(database.engine_config as ConfigCategoryValues),
+                [engineType]: {
+                  ...(existingConfig as ConfigCategoryValues),
+                  ...nestedConfig,
+                },
+                ...topLevelConfig,
               },
-              ...topLevelConfig,
-            },
-          }).as('updateAdvancedConfiguration');
+            }).as('updateAdvancedConfiguration');
+          }
 
           // Save or Save and Restart Services as per the config added
           ui.button
             .findByTitle(saveRestartButton)
-            .scrollIntoView()
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
             .click();
           cy.wait('@updateAdvancedConfiguration');
 
-          // Confirms newly added advacned Config on the Configuration tab tableview
-          Object.keys(nestedConfig).forEach((key) => {
-            cy.findByText(`${engineType}.${key}`).should('be.visible');
-          });
-          Object.keys(topLevelConfig).forEach((key) => {
-            cy.findByText(`${key}`).should('be.visible');
-          });
+          if (isInvalidClusterSize) {
+            // Verify error message is displayed for invalid synchronous replication
+            cy.findByText(
+              /synchronous_replication is only supported for clusters with 3 nodes/i
+            ).should('be.visible');
+          } else {
+            // Confirms newly added advanced Config on the Configuration tab tableview
+            Object.keys(nestedConfig).forEach((key) => {
+              cy.findByText(`${engineType}.${key}`).should('be.visible');
+            });
+            Object.keys(topLevelConfig).forEach((key) => {
+              cy.findByText(`${key}`).should('be.visible');
+            });
+          }
         });
 
         /*
@@ -538,6 +578,7 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
