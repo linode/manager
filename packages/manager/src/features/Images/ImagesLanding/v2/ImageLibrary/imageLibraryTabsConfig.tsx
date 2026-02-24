@@ -130,7 +130,6 @@ export const IMAGES_CONFIG: Omit<
     orderByDefault: MANUAL_IMAGES_DEFAULT_ORDER_BY,
     orderDefault: MANUAL_IMAGES_DEFAULT_ORDER,
     preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
-    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/images',
     isEnabled: (subType) => subType === 'owned-by-me',
     columns: CUSTOM_IMAGES_TABLE_COLUMNS,
     buttonProps: {
