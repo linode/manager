@@ -221,4 +221,119 @@ describe('ImagesView component', () => {
       expect(createButton).toBeEnabled();
     });
   });
+
+  // For Recovery Images
+  describe('For Recovery Images', () => {
+    it("should render 'Recovery images tab' with items", async () => {
+      server.use(
+        http.get('*/images', () => {
+          const images = imageFactory.buildList(3, {
+            regions: [
+              { region: 'us-east', status: 'available' },
+              { region: 'us-southeast', status: 'pending' },
+            ],
+          });
+          return HttpResponse.json(makeResourcePage(images));
+        })
+      );
+
+      const { getByText, queryAllByTestId } = renderWithTheme(
+        <ImagesView handlers={mockHandlers} type="recovery-images" />,
+        {
+          initialRoute: '/images/image-library/recovery-images',
+        }
+      );
+
+      const loadingElement = queryAllByTestId(loadingTestId);
+      await waitForElementToBeRemoved(loadingElement);
+
+      // Recovery Images table should render
+      getByText('Recovery Images');
+
+      // Static text and table column headers
+      expect(getByText('Image')).toBeVisible();
+      expect(getByText('Status')).toBeVisible();
+      expect(getByText('Size')).toBeVisible();
+      expect(getByText('Created')).toBeVisible();
+      expect(getByText('Expires')).toBeVisible();
+    });
+
+    it("should render 'Recovery images' (automatic) empty state", async () => {
+      queryMocks.useSearch.mockReturnValue({
+        subType: 'recovery',
+      });
+
+      server.use(
+        http.get('*/images', ({ request }) => {
+          return HttpResponse.json(
+            makeResourcePage(
+              request.headers.get('x-filter')?.includes('manual')
+                ? [imageFactory.build({ type: 'manual' })]
+                : []
+            )
+          );
+        })
+      );
+
+      const { findByText } = renderWithTheme(
+        <ImagesView handlers={mockHandlers} type="recovery-images" />,
+        {
+          initialRoute: '/images/image-library/recovery-images',
+        }
+      );
+
+      expect(await findByText('No recovery images to display')).toBeVisible();
+    });
+
+    it('disables the action menu buttons if user does not have permissions to edit images', async () => {
+      queryMocks.usePermissions.mockReturnValue({
+        data: { create_image: false },
+      });
+      const image = imageFactory.build({
+        id: 'private/99999',
+        label: 'vi-test-image',
+      });
+      queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+        availableLinodes: [],
+      });
+
+      server.use(
+        http.get('*/images', ({ request }) => {
+          const filter = request.headers.get('x-filter');
+
+          if (filter?.includes('automatic')) {
+            return HttpResponse.json(makeResourcePage([image]));
+          }
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { findByLabelText } = renderWithTheme(
+        <ImagesView handlers={mockHandlers} type="recovery-images" />,
+        {
+          initialRoute: '/images/image-library/recovery-images',
+        }
+      );
+
+      const actionMenu = await findByLabelText(
+        `Action menu for Image ${image.label}`
+      );
+
+      await userEvent.click(actionMenu);
+
+      const disabledEditText = await findByLabelText(
+        "You don't have permissions to edit this Image. Please contact your account administrator to request the necessary permissions."
+      );
+      const disabledDeleteText = await findByLabelText(
+        "You don't have permissions to delete this Image. Please contact your account administrator to request the necessary permissions."
+      );
+      const disabledLinodeCreationText = await findByLabelText(
+        "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+      );
+
+      expect(disabledEditText).toBeVisible();
+      expect(disabledDeleteText).toBeVisible();
+      expect(disabledLinodeCreationText).toBeVisible();
+    });
+  });
 });
