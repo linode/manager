@@ -13,7 +13,16 @@ const mocks = vi.hoisted(() => ({
   mockUseGetChildAccountsQuery: vi.fn(),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: mocks.usePermissions,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -51,6 +60,10 @@ describe('AccountDelegations', () => {
     vi.clearAllMocks();
     mocks.mockUseGetChildAccountsQuery.mockReturnValue({
       data: { data: mockDelegations, results: mockDelegations.length },
+      isLoading: false,
+    });
+    mocks.usePermissions.mockReturnValue({
+      data: { list_all_child_accounts: true },
       isLoading: false,
     });
   });
@@ -92,5 +105,24 @@ describe('AccountDelegations', () => {
       const emptyElement = screen.getByText(/No items to display/);
       expect(emptyElement).toBeInTheDocument();
     });
+  });
+
+  it('should not render if user does not have permissions', () => {
+    mocks.usePermissions.mockReturnValue({
+      data: {
+        list_all_child_accounts: false,
+      },
+      isLoading: false,
+    });
+
+    renderWithTheme(<AccountDelegations />, {
+      flags: { iamDelegation: { enabled: true }, iam: { enabled: true } },
+      initialRoute: '/iam',
+    });
+    expect(
+      screen.queryByText(
+        'You do not have permission to view account delegations.'
+      )
+    ).toBeVisible();
   });
 });
