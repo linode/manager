@@ -224,6 +224,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             backgroundColor: theme.tokens.alias.Background.Normal,
             paddingX: theme.tokens.spacing.S24,
             paddingY: theme.tokens.spacing.S16,
+            maxWidth: 304,
           }),
         },
       }}
@@ -250,6 +251,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             sx={(theme) => ({
               color: theme.tokens.alias.Content.Text.Primary.Default,
               font: theme.tokens.alias.Typography.Label.Bold.L,
+              overflowWrap: 'break-word',
             })}
           >
             {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
