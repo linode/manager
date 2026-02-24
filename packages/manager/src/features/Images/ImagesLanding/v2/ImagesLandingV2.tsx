@@ -29,6 +29,7 @@ export const ImagesLandingV2 = () => {
           pathname: 'Images',
           removeCrumbX: 1,
         }}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         spacingBottom={16}
         title="Images"
       />
