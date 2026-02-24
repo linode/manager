@@ -16,6 +16,7 @@ const queryMocks = vi.hoisted(() => ({
   useQueryWithPermissions: vi.fn().mockReturnValue({}),
   useLinodesPermissionsCheck: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useParams: vi.fn(),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
@@ -29,6 +30,7 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useLocation: queryMocks.useLocation,
     useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -63,6 +65,10 @@ describe('ImageLibraryTabs', () => {
 
   // For Custom Images (Owned by me)
   describe('For Custom Images (Owned by me)', () => {
+    beforeEach(() => {
+      queryMocks.useParams.mockReturnValue({ imageType: 'owned-by-me' });
+    });
+
     it("should render 'Owned by me' tab", async () => {
       const { getByText } = renderWithTheme(<ImageLibraryTabs />, {
         initialRoute: '/images/image-library/owned-by-me',
@@ -203,6 +209,156 @@ describe('ImageLibraryTabs', () => {
 
       expect(router.state.location.pathname).toBe(
         `/images/image-library/owned-by-me/${encodeURIComponent(image.id)}/delete`
+      );
+    });
+  });
+
+  // For Recovery Images
+  describe('For Recovery Images', () => {
+    beforeEach(() => {
+      queryMocks.useParams.mockReturnValue({ imageType: 'recovery-images' });
+    });
+
+    it("should render 'Recovery images' tab", async () => {
+      const { getByText } = renderWithTheme(<ImageLibraryTabs />, {
+        initialRoute: '/images/image-library/recovery-images',
+      });
+
+      expect(getByText('Recovery images')).toBeVisible();
+    });
+
+    // Test Images Action navigations for RECOVERY IMAGES
+    it('should allow opening the Edit Image drawer', async () => {
+      const image = imageFactory.build({ type: 'automatic' });
+
+      server.use(
+        http.get('*/images', ({ request }) => {
+          const filter = request.headers.get('x-filter');
+
+          if (filter?.includes('automatic')) {
+            return HttpResponse.json(makeResourcePage([image]));
+          }
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { getByText, findByLabelText, router } = renderWithTheme(
+        <ImageLibraryTabs />,
+        {
+          initialRoute: '/images/image-library/recovery-images',
+        }
+      );
+
+      const actionMenu = await findByLabelText(
+        `Action menu for Image ${image.label}`
+      );
+      await userEvent.click(actionMenu);
+      await userEvent.click(getByText('Edit'));
+
+      expect(router.state.location.pathname).toBe(
+        `/images/image-library/recovery-images/${encodeURIComponent(image.id)}/edit`
+      );
+    });
+
+    it('should allow opening the Restore Image drawer', async () => {
+      const image = imageFactory.build();
+
+      server.use(
+        http.get('*/images', ({ request }) => {
+          const filter = request.headers.get('x-filter');
+
+          if (filter?.includes('automatic')) {
+            return HttpResponse.json(makeResourcePage([image]));
+          }
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { router, getByText, findByLabelText } = renderWithTheme(
+        <ImageLibraryTabs />,
+        {
+          initialRoute: '/images/image-library/recovery-images',
+        }
+      );
+
+      const actionMenu = await findByLabelText(
+        `Action menu for Image ${image.label}`
+      );
+      await userEvent.click(actionMenu);
+      await userEvent.click(getByText('Rebuild an Existing Linode'));
+
+      expect(router.state.location.pathname).toBe(
+        `/images/image-library/recovery-images/${encodeURIComponent(image.id)}/rebuild`
+      );
+    });
+
+    it('should allow deploying to a new Linode', async () => {
+      const image = imageFactory.build();
+      queryMocks.useLinodesPermissionsCheck.mockReturnValue({
+        availableLinodes: [linodeFactory.build()],
+      });
+
+      server.use(
+        http.get('*/images', ({ request }) => {
+          const filter = request.headers.get('x-filter');
+
+          if (filter?.includes('automatic')) {
+            return HttpResponse.json(makeResourcePage([image]));
+          }
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { findByLabelText, getByText, queryAllByTestId, router } =
+        renderWithTheme(<ImageLibraryTabs />, {
+          initialRoute: '/images/image-library/recovery-images',
+        });
+
+      const loadingElement = queryAllByTestId(loadingTestId);
+      await waitForElementToBeRemoved(loadingElement);
+
+      const actionMenu = await findByLabelText(
+        `Action menu for Image ${image.label}`
+      );
+      await userEvent.click(actionMenu);
+      await userEvent.click(getByText('Deploy to New Linode'));
+
+      expect(router.state.location.pathname).toBe('/linodes/create/images');
+
+      expect(router.state.location.search).toStrictEqual({
+        imageID: image.id,
+      });
+    });
+
+    it('should allow deleting an image', async () => {
+      const image = imageFactory.build();
+
+      server.use(
+        http.get('*/images', ({ request }) => {
+          const filter = request.headers.get('x-filter');
+
+          if (filter?.includes('automatic')) {
+            return HttpResponse.json(makeResourcePage([image]));
+          }
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { router, findByLabelText, getByText } = renderWithTheme(
+        <ImageLibraryTabs />,
+        {
+          initialRoute: '/images/image-library/recovery-images',
+        }
+      );
+
+      const actionMenu = await findByLabelText(
+        `Action menu for Image ${image.label}`
+      );
+      await userEvent.click(actionMenu);
+      await userEvent.click(getByText('Delete'));
+
+      expect(router.state.location.pathname).toBe(
+        `/images/image-library/recovery-images/${encodeURIComponent(image.id)}/delete`
       );
     });
   });
