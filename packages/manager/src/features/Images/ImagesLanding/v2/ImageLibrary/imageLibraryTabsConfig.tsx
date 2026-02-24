@@ -99,7 +99,9 @@ export const IMAGES_CONFIG: Omit<
           encrypted
         </Link>{' '}
         images you manually uploaded or captured from an existing compute
-        instance disk.
+        instance disk. You can deploy an image to a compute instance in any
+        region. If you deploy the instance in a different region from where the
+        image is stored, you may experience slower linode deployment times.
       </>
     ),
     type: 'manual',
