@@ -15,6 +15,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
 import { makeSettingsItemStyles } from '../../shared.styles';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
+import { ConnectionDetailsHostRows2 } from '../ConnectionDetailsHostRows2';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
 import { StyledGridContainer } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
@@ -122,8 +123,11 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             </ConnectionDetailsRow>
           </>
         )}
-
-        <ConnectionDetailsHostRows database={database} />
+        {flags.hostnameEndpoints ? (
+          <ConnectionDetailsHostRows2 database={database} />
+        ) : (
+          <ConnectionDetailsHostRows database={database} />
+        )}
         {hasVPCConfigured && (
           <ConnectionDetailsRow label="Public Access">
             {database?.private_network?.public_access ? 'Yes' : 'No'}
