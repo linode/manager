@@ -70,9 +70,10 @@ export const UserMenu = React.memo(() => {
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
     if (
-      isProxyOrDelegateUserType &&
-      (!getStorage('is_proxy_user_type') ||
-        !getStorage('is_delegate_user_type'))
+      (isProxyOrDelegateUserType &&
+        isProxyUserType &&
+        !getStorage('is_proxy_user_type')) ||
+      (isDelegateUserType && !getStorage('is_delegate_user_type'))
     ) {
       // Flag for proxy user to display success toast once.
       if (isProxyUserType) {

@@ -11,6 +11,7 @@ import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -25,11 +26,13 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import type { Theme } from '@mui/material';
 
+const USER_DELEGATION_ROUTE = '/iam/users/$username/delegations';
+
 export const UserDelegationsTable = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { company } = useSearch({
-    from: '/iam/users/$username/delegations',
+    from: USER_DELEGATION_ROUTE,
   });
   const navigate = useNavigate();
 
@@ -39,13 +42,13 @@ export const UserDelegationsTable = () => {
         order: 'asc',
         orderBy: 'company',
       },
-      from: '/iam/users/$username/delegations',
+      from: USER_DELEGATION_ROUTE,
     },
     preferenceKey: 'user-delegations',
   });
 
   const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username/delegations',
+    currentRoute: USER_DELEGATION_ROUTE,
     preferenceKey: 'user-delegations',
     initialPage: 1,
     searchParams: (prev) => ({
@@ -79,7 +82,7 @@ export const UserDelegationsTable = () => {
   const handleSearch = (value: string) => {
     pagination.handlePageChange(1);
     navigate({
-      to: '/iam/users/$username/delegations',
+      to: USER_DELEGATION_ROUTE,
       params: { username },
       search: { company: value || undefined },
     });
@@ -134,7 +137,7 @@ export const UserDelegationsTable = () => {
                 <TableCell>{childAccount.company}</TableCell>
               </TableRow>
             ))}
-            {(childAccounts?.results ?? 0) > pagination.pageSize && (
+            {(childAccounts?.results ?? 0) > MIN_PAGE_SIZE && (
               <TableRow>
                 <TableCell
                   colSpan={1}

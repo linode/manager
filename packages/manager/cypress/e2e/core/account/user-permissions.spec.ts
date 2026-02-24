@@ -222,6 +222,7 @@ describe('User permission management', () => {
 
     // Restrict account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUserUpdated);
+    mockGetUser(mockUserUpdated);
     mockGetUserGrants(mockUser.username, mockUserGrantsUpdated);
     cy.get('[data-qa="toggle-full-account-access"]')
       .should('be.visible')

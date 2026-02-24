@@ -1,3 +1,11 @@
+## [2026-02-25] - v0.24.0
+
+
+### Added:
+
+- Added play icon ([#13271](https://github.com/linode/manager/pull/13271))
+- Add Pendo Id for uniquely identifying options in `Autocomplete` ([#13402](https://github.com/linode/manager/pull/13402))
+
 ## [2025-11-04] - v0.23.0
 
 
