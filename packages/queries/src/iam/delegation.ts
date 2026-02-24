@@ -99,7 +99,6 @@ export const useGetChildAccountsQuery = ({
 > => {
   return useQuery({
     ...delegationQueries.childAccounts({ params, users, filter }),
-    placeholderData: keepPreviousData,
     enabled,
   });
 };
@@ -174,8 +173,7 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
     onSuccess(_data, { euuid }) {
       // Invalidate all child accounts
       queryClient.invalidateQueries({
-        queryKey: delegationQueries.childAccounts({ params: {}, users: true })
-          .queryKey,
+        queryKey: delegationQueries.childAccounts._def,
       });
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
