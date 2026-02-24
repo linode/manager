@@ -1,3 +1,10 @@
+## [2026-02-25] - v0.21.0
+
+
+### Tech Stories:
+
+- Clean up unused marketplace v2 queries ([#13396](https://github.com/linode/manager/pull/13396))
+
 ## [2026-01-26] - v0.20.0
 
 
