@@ -165,6 +165,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
@@ -244,6 +246,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       cy.visitWithLogin('/');
       cy.trackPageVisit().as('pageVisit');
@@ -320,6 +324,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount, mockAlternateChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       cy.visitWithLogin('/');
       cy.trackPageVisit().as('pageVisit');
@@ -399,6 +405,8 @@ describe('Parent/Child account switching', () => {
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       // Visit billing page with `authentication/parent_token/*` local storage
       // data set to mock values.
@@ -490,6 +498,8 @@ describe('Parent/Child account switching', () => {
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       // Visit billing page with `authentication/parent_token/*` local storage
       // data set to mock values.
@@ -661,6 +671,8 @@ describe('Parent/Child account switching', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
       mockGetChildAccountsError('An unknown error has occurred', 500);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetUser(mockParentUser);
 
       cy.visitWithLogin('/account/billing');
