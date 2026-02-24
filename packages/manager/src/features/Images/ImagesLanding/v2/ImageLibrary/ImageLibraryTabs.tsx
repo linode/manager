@@ -74,7 +74,9 @@ export const ImageLibraryTabs = () => {
     navigate({
       search: (prev) => prev,
       to: '/images/image-library/$imageType',
-      params: { imageType: imageTypeParams?.imageType ?? 'owned-by-me' },
+      params: {
+        imageType: imageTypeParams?.imageType ?? 'owned-by-me',
+      },
     });
   };
 

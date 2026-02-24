@@ -17,14 +17,14 @@ import type { Image } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
 
 export interface ImageViewTableColConfig {
-  /** Column header */
-  header: React.ReactNode | string;
-
   /** Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
   hiddenOn?: Exclude<keyof HiddenProps, 'children'>;
 
   /** Field name for sorting (required if sortable is `true`) */
   label?: string;
+
+  /** Column name */
+  name: React.ReactNode | string;
 
   /** Enable sorting for this column */
   sortable?: boolean;
@@ -63,47 +63,47 @@ export const imageLibrarySubTabs: ImageLibrarySubTab[] = [
 ];
 
 const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
-  { header: 'Image', label: 'label', sortable: true },
+  { name: 'Image', label: 'label', sortable: true },
   {
-    header: 'Status',
+    name: 'Status',
     hiddenOn: 'smDown',
   },
   {
-    header: 'Replicated in',
+    name: 'Replicated in',
     hiddenOn: 'smDown',
   },
-  { header: 'Original Image', label: 'size', sortable: true },
+  { name: 'Original Image', label: 'size', sortable: true },
   {
-    header: 'All Replicas',
+    name: 'All Replicas',
     hiddenOn: 'mdDown',
   },
   {
-    header: 'Created',
+    name: 'Created',
     label: 'created',
     sortable: true,
     hiddenOn: 'mdDown',
   },
   {
-    header: 'Image ID',
+    name: 'Image ID',
     hiddenOn: 'mdDown',
   },
 ];
 
 const RECOVERY_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
-  { header: 'Image', label: 'label', sortable: true },
+  { name: 'Image', label: 'label', sortable: true },
   {
-    header: 'Status',
+    name: 'Status',
     hiddenOn: 'smDown',
   },
-  { header: 'Size', label: 'size', sortable: true },
+  { name: 'Size', label: 'size', sortable: true },
   {
-    header: 'Created',
+    name: 'Created',
     label: 'created',
     sortable: true,
     hiddenOn: 'smDown',
   },
   {
-    header: 'Expires',
+    name: 'Expires',
     hiddenOn: 'smDown',
   },
 ];
