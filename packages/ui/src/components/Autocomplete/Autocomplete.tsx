@@ -116,6 +116,11 @@ export const Autocomplete = <
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
 
+  const isValueAnArray =
+    multiple &&
+    ((Array.isArray(value) && value.length > 0) ||
+      (Array.isArray(defaultValue) && defaultValue.length > 0));
+
   return (
     <MuiAutocomplete
       ChipProps={{ deleteIcon: <CloseIcon /> }}
@@ -141,43 +146,46 @@ export const Autocomplete = <
       PopperComponent={CustomPopper}
       popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       renderInput={
-        renderInput
-          ? renderInput
-          : (params) => (
-              <TextField
-                errorText={errorText}
-                helperText={helperText}
-                inputId={params.id}
-                label={label}
-                loading={loading}
-                noMarginTop={noMarginTop}
-                placeholder={placeholder ?? 'Select an option'}
-                required={textFieldProps?.InputProps?.required}
-                tooltipText={textFieldProps?.tooltipText}
-                {...params}
-                {...textFieldProps}
-                InputProps={{
-                  ...params.InputProps,
-                  ...textFieldProps?.InputProps,
-                  endAdornment: (
-                    <>
-                      {loading && (
-                        <InputAdornment position="end">
-                          <CircleProgress noPadding size="xs" />
-                        </InputAdornment>
-                      )}
-                      {textFieldProps?.InputProps?.endAdornment}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-                inputProps={{
-                  ...params.inputProps,
-                  ...textFieldProps?.inputProps,
-                  readOnly: isReadonly && !keepSearchEnabledOnMobile,
-                }}
-              />
-            )
+        renderInput ??
+        ((params: AutocompleteRenderInputParams) => (
+          <TextField
+            errorText={errorText}
+            helperText={helperText}
+            inputId={params.id}
+            label={label}
+            loading={loading}
+            noMarginTop={noMarginTop}
+            // MUI Autocomplete shows placeholder even after options are selected in multi-select mode.
+            // The below logic hides the placeholder once at least one option is selected in multi-select mode.
+            placeholder={
+              isValueAnArray ? '' : (placeholder ?? 'Select an option')
+            }
+            required={textFieldProps?.InputProps?.required}
+            tooltipText={textFieldProps?.tooltipText}
+            {...params}
+            {...textFieldProps}
+            InputProps={{
+              ...params.InputProps,
+              ...textFieldProps?.InputProps,
+              endAdornment: (
+                <>
+                  {loading && (
+                    <InputAdornment position="end">
+                      <CircleProgress noPadding size="xs" />
+                    </InputAdornment>
+                  )}
+                  {textFieldProps?.InputProps?.endAdornment}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+            inputProps={{
+              ...params.inputProps,
+              ...textFieldProps?.inputProps,
+              readOnly: isReadonly && !keepSearchEnabledOnMobile,
+            }}
+          />
+        ))
       }
       renderOption={(props, option, state, ownerState) => {
         const isSelectAllOption = option === selectAllOption;
@@ -186,7 +194,14 @@ export const Autocomplete = <
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
-          <ListItem {...props} data-qa-option key={props.key}>
+          <ListItem
+            {...props}
+            data-pendo-id={
+              rest.getOptionLabel ? rest.getOptionLabel(option) : option.label
+            } // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
+            data-qa-option
+            key={props.key}
+          >
             <>
               <Box
                 sx={{

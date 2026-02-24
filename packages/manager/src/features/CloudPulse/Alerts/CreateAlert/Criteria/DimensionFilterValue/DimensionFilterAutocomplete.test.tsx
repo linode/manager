@@ -31,6 +31,7 @@ describe('<DimensionFilterAutocomplete />', () => {
     selectedRegions: [],
     serviceType: 'nodebalancer',
     values: mockOptions.map((o) => o.value),
+    handleError: vi.fn(),
     type: 'alerts',
   };
 

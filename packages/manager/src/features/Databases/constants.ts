@@ -71,7 +71,24 @@ export const ADVANCED_CONFIG_LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters';
 export const MANAGE_NETWORKING_LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#manage-networking';
+export const MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#manage-pgbouncer-connection-pools';
 
+// Styles
 export const CONNECTION_POOL_LABEL_CELL_STYLES = {
   flex: '.5 1 20.5%',
 };
+
+export const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
+export const poolModeOptions = [
+  { label: 'Transaction', value: 'transaction' },
+  { label: 'Session', value: 'session' },
+  { label: 'Statement', value: 'statement' },
+];
+export const databaseNamesOptions = [
+  { label: 'defaultdb', value: 'defaultdb' },
+]; // Currently the only option for the database name field, but more may be introduced later.
+export const usernameOptions = [
+  { label: defaultUsername, value: defaultUsername },
+  { label: 'akmadmin', value: 'akmadmin' },
+]; // Currently the only options for the username field

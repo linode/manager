@@ -1,6 +1,5 @@
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type {
-  APIError,
   ConfigCategoryValues,
   ConfigurationItem,
   DatabaseEngineConfig,
@@ -214,25 +213,6 @@ export const getDefaultConfigValue = (config: ConfigurationOption) => {
       : config?.type === 'number' || config?.type === 'integer'
         ? (config.minimum ?? 0)
         : '';
-};
-
-/**
- * Finds the API error for a specific configuration.
- */
-export const getConfigAPIError = (
-  config: ConfigurationOption,
-  updateDatabaseError: APIError[] | null
-): string | undefined => {
-  if (!updateDatabaseError || !Array.isArray(updateDatabaseError)) {
-    return undefined;
-  }
-
-  const error = updateDatabaseError.find(
-    (error) =>
-      error.field === `engine_config.${config.category}.${config.label}`
-  );
-
-  return error?.reason;
 };
 
 /**

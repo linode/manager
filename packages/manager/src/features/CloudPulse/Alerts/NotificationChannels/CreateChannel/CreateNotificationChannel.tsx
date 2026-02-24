@@ -32,9 +32,13 @@ const overrides: CrumbOverridesProps[] = [
 ];
 
 const initialValues: CreateNotificationChannelForm = {
-  type: null,
-  name: '',
-  recipients: [],
+  channel_type: null,
+  label: '',
+  details: {
+    email: {
+      usernames: [],
+    },
+  },
 };
 
 export const CreateNotificationChannel = () => {
@@ -58,7 +62,7 @@ export const CreateNotificationChannel = () => {
     setError,
   } = formMethods;
 
-  const channelTypeWatcher = useWatch({ control, name: 'type' });
+  const channelTypeWatcher = useWatch({ control, name: 'channel_type' });
 
   const { mutateAsync: createChannel } = useCreateNotificationChannel();
 
@@ -90,23 +94,30 @@ export const CreateNotificationChannel = () => {
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb
+        breadcrumbDataAttrs={{
+          'data-qa-breadcrumb': true,
+        }}
         crumbOverrides={overrides}
         pathname="/NotificationChannels/Create Channel"
       />
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
-          <Typography marginTop={2} variant="h2">
+          <Typography
+            data-qa-header="Channel Settings"
+            marginTop={2}
+            variant="h2"
+          >
             Channel Settings
           </Typography>
           <Controller
             control={control}
-            name="type"
+            name="channel_type"
             render={({ field, fieldState }) => {
               // Reset the name field when the channel type changes
               const handleChannelTypeChange = (value: ChannelType | null) => {
                 field.onChange(value);
-                resetField('name', { defaultValue: '' });
-                resetField('recipients', { defaultValue: [] });
+                resetField('label', { defaultValue: '' });
+                resetField('details.email.usernames', { defaultValue: [] });
               };
 
               return (
@@ -124,7 +135,7 @@ export const CreateNotificationChannel = () => {
             <Controller
               control={control}
               key={channelTypeWatcher}
-              name="name"
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
                   {...field}
@@ -140,7 +151,7 @@ export const CreateNotificationChannel = () => {
           {channelTypeWatcher === 'email' && (
             <Controller
               control={control}
-              name="recipients"
+              name="details.email.usernames"
               render={({ field, fieldState }) => (
                 <NotificationRecipients
                   error={fieldState.error?.message}

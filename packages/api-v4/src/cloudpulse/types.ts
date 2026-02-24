@@ -9,6 +9,7 @@ export type CloudPulseServiceType =
   | 'firewall'
   | 'linode'
   | 'lke'
+  | 'netloadbalancer'
   | 'nodebalancer'
   | 'objectstorage';
 export type AlertClass = 'dedicated' | 'shared';
@@ -26,7 +27,6 @@ export type AlertStatusType =
   | 'enabled'
   | 'enabling'
   | 'failed'
-  | 'in progress'
   | 'provisioning';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -428,6 +428,7 @@ export const capabilityServiceTypeMapping: Record<
   objectstorage: 'Object Storage',
   blockstorage: 'Block Storage',
   lke: 'Kubernetes',
+  netloadbalancer: 'Network LoadBalancer',
 };
 
 /**

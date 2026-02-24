@@ -7,6 +7,8 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { linodeQueries } from '../linodes';
+
 import type { APIError, Filter, Params, ResourcePage } from '@linode/api-v4';
 import type {
   CreateLockPayload,
@@ -37,9 +39,14 @@ export const lockQueries = createQueryKeys('locks', {
  * @example
  * const { data, isLoading } = useLocksQuery();
  */
-export const useLocksQuery = (params: Params = {}, filter: Filter = {}) => {
+export const useLocksQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled: boolean = true,
+) => {
   return useQuery<ResourcePage<ResourceLock>, APIError[]>({
     ...lockQueries.locks._ctx.paginated(params, filter),
+    enabled,
   });
 };
 
@@ -76,11 +83,14 @@ export const useCreateLockMutation = () => {
 
   return useMutation<ResourceLock, APIError[], CreateLockPayload>({
     mutationFn: (payload) => createLock(payload),
-    onSuccess: () => {
+    onSuccess: (lock) => {
       // Invalidate all lock queries
       queryClient.invalidateQueries({
         queryKey: lockQueries.locks.queryKey,
       });
+      // Invalidate all linode queries
+      queryClient.invalidateQueries(linodeQueries.linodes);
+      queryClient.invalidateQueries(linodeQueries.linode(lock.entity.id));
     },
   });
 };
@@ -92,18 +102,23 @@ export const useCreateLockMutation = () => {
  *
  * @example
  * const { mutate: deleteLock } = useDeleteLockMutation();
- * deleteLock(123);
+ * deleteLock({ lockId: 123, entityId: 456 });
  */
 export const useDeleteLockMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], number>({
-    mutationFn: (lockId) => deleteLock(lockId),
-    onSuccess: () => {
+  return useMutation<{}, APIError[], { entityId?: number; lockId: number }>({
+    mutationFn: ({ lockId }) => deleteLock(lockId),
+    onSuccess: (_, variables) => {
       // Invalidate all lock queries
       queryClient.invalidateQueries({
         queryKey: lockQueries.locks.queryKey,
       });
+      // Invalidate all linode queries
+      queryClient.invalidateQueries(linodeQueries.linodes);
+      if (variables.entityId) {
+        queryClient.invalidateQueries(linodeQueries.linode(variables.entityId));
+      }
     },
   });
 };

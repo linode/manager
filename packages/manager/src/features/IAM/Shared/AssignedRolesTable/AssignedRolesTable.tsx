@@ -107,13 +107,6 @@ export const AssignedRolesTable = () => {
   const assignedRolesLoading = isDefaultDelegationRolesForChildAccount
     ? defaultRolesLoading
     : userRolesLoading;
-  const pagination = usePaginationV2({
-    currentRoute: isDefaultDelegationRolesForChildAccount
-      ? '/iam/roles/defaults/roles'
-      : '/iam/users/$username/roles',
-    initialPage: 1,
-    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
-  });
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -176,12 +169,6 @@ export const AssignedRolesTable = () => {
       setIsChangeRoleDrawerOpen(false);
     } else {
       setIsUnassignRoleDialogOpen(false);
-    }
-    // If we just deleted the last one on a page, reset to the previous page.
-    const removedLastOnPage =
-      filteredAndSortedRoles.length % pagination.pageSize === 1;
-    if (removedLastOnPage) {
-      pagination.handlePageChange(pagination.page - 1);
     }
   };
 
@@ -261,90 +248,94 @@ export const AssignedRolesTable = () => {
     });
   }, [roles, query, entityType, order, orderBy, isInitialLoad]);
 
-  const memoizedTableItems: TableItem[] = React.useMemo(() => {
-    return filteredAndSortedRoles
-      .slice(
-        (pagination.page - 1) * pagination.pageSize,
-        pagination.page * pagination.pageSize
-      )
-      .map((role: ExtendedRoleView) => {
-        const OuterTableCells = (
-          <>
-            {role.access === 'account_access' ? (
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <Typography>
-                  {role.entity_type === 'account'
-                    ? 'All Entities'
-                    : `All ${getFormattedEntityType(role.entity_type)}s`}
-                </Typography>
-              </TableCell>
-            ) : (
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <AssignedEntities
-                  disabled={!permissions.is_account_admin}
-                  onButtonClick={handleViewEntities}
-                  onRemoveAssignment={handleRemoveAssignment}
-                  role={role}
-                />
-              </TableCell>
-            )}
-            <TableCell actionCell>
-              <AssignedRolesActionMenu
-                handleChangeRole={handleChangeRole}
-                handleUnassignRole={handleUnassignRole}
-                handleUpdateEntities={handleUpdateEntities}
-                handleViewEntities={handleViewEntities}
-                permissions={permissions}
-                role={role}
-              />
-            </TableCell>
-          </>
-        );
-
-        const InnerTable = (
-          <Grid
-            sx={{
-              padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
-            }}
-          >
-            <Typography
-              sx={{
-                font: theme.tokens.alias.Typography.Label.Bold.S,
-                marginBottom: theme.tokens.spacing.S4,
-              }}
-            >
-              Description
-            </Typography>
-            <Typography
-              sx={{
-                marginBottom: theme.tokens.spacing.S8,
-              }}
-            >
-              {role.permissions.length ? (
-                role.description
-              ) : (
-                <>
-                  {getFacadeRoleDescription(role)}{' '}
-                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-                </>
-              )}
-            </Typography>
-            <Permissions permissions={role.permissions} />
-          </Grid>
-        );
-
-        return {
-          InnerTable,
-          OuterTableCells,
-          id: role.id,
-          label: role.name,
-        };
-      });
-  }, [filteredAndSortedRoles, pagination]);
+  const pagination = usePaginationV2({
+    currentRoute: isDefaultDelegationRolesForChildAccount
+      ? '/iam/roles/defaults/roles'
+      : '/iam/users/$username/roles',
+    initialPage: 1,
+    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+    clientSidePaginationData: filteredAndSortedRoles,
+  });
 
   const filteredAndSortedRolesCount = React.useMemo(() => {
     return filteredAndSortedRoles.length;
   }, [filteredAndSortedRoles]);
+
+  const memoizedTableItems: TableItem[] = React.useMemo(() => {
+    return pagination.paginatedData?.map((role: ExtendedRoleView) => {
+      const OuterTableCells = (
+        <>
+          {role.access === 'account_access' ? (
+            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <Typography>
+                {role.entity_type === 'account'
+                  ? 'All Entities'
+                  : `All ${getFormattedEntityType(role.entity_type)}s`}
+              </Typography>
+            </TableCell>
+          ) : (
+            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <AssignedEntities
+                disabled={!permissions.is_account_admin}
+                onButtonClick={handleViewEntities}
+                onRemoveAssignment={handleRemoveAssignment}
+                role={role}
+              />
+            </TableCell>
+          )}
+          <TableCell actionCell>
+            <AssignedRolesActionMenu
+              handleChangeRole={handleChangeRole}
+              handleUnassignRole={handleUnassignRole}
+              handleUpdateEntities={handleUpdateEntities}
+              handleViewEntities={handleViewEntities}
+              permissions={permissions}
+              role={role}
+            />
+          </TableCell>
+        </>
+      );
+
+      const InnerTable = (
+        <Grid
+          sx={{
+            padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
+          }}
+        >
+          <Typography
+            sx={{
+              font: theme.tokens.alias.Typography.Label.Bold.S,
+              marginBottom: theme.tokens.spacing.S4,
+            }}
+          >
+            Description
+          </Typography>
+          <Typography
+            sx={{
+              marginBottom: theme.tokens.spacing.S8,
+            }}
+          >
+            {role.permissions.length ? (
+              role.description
+            ) : (
+              <>
+                {getFacadeRoleDescription(role)}{' '}
+                <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
+              </>
+            )}
+          </Typography>
+          <Permissions permissions={role.permissions} />
+        </Grid>
+      );
+
+      return {
+        InnerTable,
+        OuterTableCells,
+        id: role.id,
+        label: role.name,
+      };
+    });
+  }, [filteredAndSortedRoles, pagination]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;

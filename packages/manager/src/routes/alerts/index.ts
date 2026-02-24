@@ -109,6 +109,16 @@ const cloudPulseNotificationChannelEditRoute = createRoute({
   ).then((m) => m.cloudPulseAlertsNotificationChannelEditLazyRoute)
 );
 
+const cloudPulseNotificationChannelsCatchAllRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'notification-channels/$invalidPath',
+  beforeLoad: ({ params }) => {
+    if (!['create', 'detail', 'edit'].includes(params.invalidPath)) {
+      throw redirect({ to: '/alerts/notification-channels' });
+    }
+  },
+});
+
 export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
   cloudPulseAlertsIndexRoute,
   cloudPulseAlertsDefinitionsRoute.addChildren([
@@ -122,4 +132,5 @@ export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
     cloudPulseNotificationChannelsCreateRoute,
     cloudPulseNotificationChannelEditRoute,
   ]),
+  cloudPulseNotificationChannelsCatchAllRoute,
 ]);

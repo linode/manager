@@ -7,7 +7,7 @@ import {
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
-import { destinationFactory } from 'src/factories';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 
 import type { Destination } from '@linode/api-v4';
 
@@ -95,7 +95,7 @@ function editDestinationViaActionMenu(
 const mockDestinations: Destination[] = new Array(3)
   .fill(null)
   .map((_item: null, index: number): Destination => {
-    return destinationFactory.build({
+    return akamaiObjectStorageDestinationFactory.build({
       label: `Destination ${index}`,
     });
   });

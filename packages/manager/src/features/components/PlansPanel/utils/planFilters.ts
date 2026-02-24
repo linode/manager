@@ -10,9 +10,11 @@ import {
   G8_DEDICATED_COMPUTE_OPTIMIZED_SLUGS,
   G8_DEDICATED_GENERAL_PURPOSE_SLUGS,
   PLAN_FILTER_ALL,
+  PLAN_FILTER_ALL_AVAILABLE,
   PLAN_FILTER_TYPE_COMPUTE_OPTIMIZED,
   PLAN_FILTER_TYPE_GENERAL_PURPOSE,
 } from '../constants';
+import { getIsPlanDisabled } from '../utils';
 
 import type {
   PlanFilterGeneration,
@@ -49,6 +51,11 @@ export const filterPlansByGeneration = (
   // The plans array is already filtered to only dedicated plans by the parent component
   if (generation === 'all') {
     return plans;
+  }
+
+  // For "Available", return only plans that are not disabled
+  if (generation === 'available') {
+    return plans.filter((plan) => !getIsPlanDisabled(plan));
   }
 
   // For G8, use explicit slug list for precise filtering
@@ -92,7 +99,7 @@ export const getGenerationRank = (planId: string): number => {
  * Filter plans by type within a generation
  *
  * @param plans - Array of plans (should be pre-filtered by generation)
- * @param generation - The generation context ('all', 'g8', 'g7', or 'g6')
+ * @param generation - The generation context ('all', 'available', 'g8', 'g7', or 'g6')
  * @param type - The type to filter by ('all', 'compute-optimized', 'general-purpose')
  * @returns Filtered array of plans matching the type
  *
@@ -108,11 +115,20 @@ export const filterPlansByType = (
   generation: PlanFilterGeneration,
   type: PlanFilterType
 ): PlanWithAvailability[] => {
-  // "All" returns all plans, sorted from newest to oldest generations
+  // "All" returns all plans, sorted based on availability, from newest to oldest generations
   if (type === PLAN_FILTER_ALL) {
-    return [...plans].sort(
-      (a, b) => getGenerationRank(b.id) - getGenerationRank(a.id)
-    );
+    return [...plans].sort((a, b) => {
+      const isPlanADisabled = getIsPlanDisabled(a);
+      const isPlanBDisabled = getIsPlanDisabled(b);
+
+      // Primary sort: Availability (available plans first)
+      if (isPlanADisabled !== isPlanBDisabled) {
+        return Number(isPlanADisabled) - Number(isPlanBDisabled);
+      }
+
+      // Secondary sort: Generation (newest generation first)
+      return getGenerationRank(b.id) - getGenerationRank(a.id);
+    });
   }
 
   // G7, G6, and "All" generation only have "All" option (no sub-types)
@@ -190,6 +206,22 @@ export const applyDedicatedPlanFilters = (
 // ============================================================================
 
 /**
+ * Return a numeric rank for a GPU based on plan ID.
+ * Higher rank = latest gpu(shown first).
+ *
+ * Example:
+ * - "g3-gpu-rtxpro6000-blackwell-1"" -> 3
+ * - "g2-gpu-rtx4000a1-s" -> 2
+ * - "g1-gpu-rtx6000-1" -> 1
+ * - "legacy-plan" -> 0
+ */
+export const getGpuRank = (planId: string): number => {
+  if (planId.includes('rtxpro6000')) return 3;
+  if (planId.includes('rtx4000')) return 2;
+  if (planId.includes('rtx6000')) return 1;
+  return 0;
+};
+/**
  * Filter plans by gpu type
  *
  * @param plans - Array of all plans (mostly pre-filtered by plan type/class)
@@ -202,7 +234,7 @@ export const applyDedicatedPlanFilters = (
  * // Returns all plans with GPU type 'gpu-rtx4000'
  *
  * const allDedicatedPlans = filterPlansByGpuType(allPlans, 'all');
- * // Returns all plans as-is (already filtered by plan type in parent)
+ * // Returns all plans as-is (already filtered by plan type in parent) sorted based on the latest generation
  * ```
  */
 export const filterPlansByGpuType = (
@@ -210,9 +242,29 @@ export const filterPlansByGpuType = (
   gpuType?: PlanFilterGPU
 ): PlanWithAvailability[] => {
   // For "All", return all plans as-is
+  // For "available", return only plans that are not disabled, sorted in order of blackwell > ada > quadro
   // The plans array is already filtered to only GPU plans by the parent component
   if (!gpuType || gpuType === PLAN_FILTER_ALL) {
-    return plans;
+    return [...plans].sort((a, b) => {
+      const isPlanADisabled = getIsPlanDisabled(a);
+      const isPlanBDisabled = getIsPlanDisabled(b);
+
+      // Primary sort: Availability (available plans first)
+      if (isPlanADisabled !== isPlanBDisabled) {
+        return Number(isPlanADisabled) - Number(isPlanBDisabled);
+      }
+
+      // Secondary sort: Generation (newest generation first)
+      return getGpuRank(b.id) - getGpuRank(a.id);
+    });
+  }
+  // For "Available", return only plans that are not disabled
+  if (gpuType === PLAN_FILTER_ALL_AVAILABLE) {
+    return plans
+      .filter((plan) => !getIsPlanDisabled(plan))
+      .sort((a, b) => {
+        return getGenerationRank(b.id) - getGenerationRank(a.id);
+      });
   }
   return plans.filter((plan) => plan.id.includes(gpuType));
 };

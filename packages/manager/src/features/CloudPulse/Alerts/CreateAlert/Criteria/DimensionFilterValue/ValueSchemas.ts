@@ -272,5 +272,35 @@ export const getDimensionFilterValueSchema = ({
   if (['endswith', 'startswith'].includes(operator)) {
     return string().max(100, LENGTH_ERROR_MESSAGE).concat(baseValueSchema);
   }
+
+  if (operator === 'in') {
+    // here it is always autocomplete with comma separated values
+    return string()
+      .test(
+        'max-comma-values',
+        'More than max values selected',
+        function (value) {
+          if (!value) return true;
+
+          const { maxDimensionFilterValues } = this.options.context ?? {};
+
+          if (!maxDimensionFilterValues) return true; // if not passed, skip the check
+
+          const count = value
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean).length;
+
+          return (
+            count <= maxDimensionFilterValues ||
+            this.createError({
+              message: `Select up to ${maxDimensionFilterValues} values`,
+            })
+          );
+        }
+      )
+      .concat(baseValueSchema);
+  }
+
   return baseValueSchema;
 };

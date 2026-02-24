@@ -19,7 +19,7 @@ export const RolesLanding = () => {
     permissions?.list_role_permissions
   );
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildAccount, isProfileLoading } = useDelegationRole();
+  const { isChildUserType, isProfileLoading } = useDelegationRole();
 
   const { roles } = React.useMemo(() => {
     if (!accountRoles) {
@@ -41,7 +41,7 @@ export const RolesLanding = () => {
 
   return (
     <>
-      {isChildAccount && isIAMDelegationEnabled && <DefaultRolesPanel />}
+      {isChildUserType && isIAMDelegationEnabled && <DefaultRolesPanel />}
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
         <Typography variant="h2">Roles</Typography>
         <RolesTable roles={roles} />

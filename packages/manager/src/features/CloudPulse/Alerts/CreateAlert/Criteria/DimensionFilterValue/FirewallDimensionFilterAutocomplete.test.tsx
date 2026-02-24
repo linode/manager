@@ -39,6 +39,7 @@ describe('<FirewallDimensionFilterAutocomplete />', () => {
     serviceType: 'firewall',
     type: 'alerts',
     entityType: 'linode',
+    handleError: vi.fn(),
   };
 
   beforeEach(() => {
