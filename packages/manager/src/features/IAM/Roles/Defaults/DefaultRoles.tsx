@@ -1,7 +1,14 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import { CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
+import {
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import {
   ERROR_STATE_TEXT,
@@ -10,18 +17,33 @@ import {
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultRoles = () => {
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
+    'account',
+    ['view_default_delegate_access']
+  );
   const {
     data: defaultRolesData,
     isLoading: defaultRolesLoading,
     error,
-  } = useGetDefaultDelegationAccessQuery({ enabled: true });
+  } = useGetDefaultDelegationAccessQuery({
+    enabled: permissions?.view_default_delegate_access,
+  });
+
   const hasAssignedRoles = defaultRolesData
     ? defaultRolesData.account_access.length > 0 ||
       defaultRolesData.entity_access.length > 0
     : false;
 
-  if (defaultRolesLoading) {
+  if (defaultRolesLoading || isPermissionsLoading) {
     return <CircleProgress />;
+  }
+
+  if (!permissions?.view_default_delegate_access) {
+    return (
+      <Notice variant="error">
+        You do not have permission to view default roles for delegate users.
+      </Notice>
+    );
   }
 
   if (error) {

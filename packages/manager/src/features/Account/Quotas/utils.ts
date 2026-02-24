@@ -92,6 +92,10 @@ interface GetQuotasFiltersProps {
   service: SelectOption<QuotaType>;
 }
 
+export interface QuotaWithUsage extends Quota {
+  usage: null | QuotaUsage;
+}
+
 export const getQuotaVisibilityFilter = (service: QuotaType) => {
   return {
     isVisible(quota: Quota) {
@@ -103,6 +107,25 @@ export const getQuotaVisibilityFilter = (service: QuotaType) => {
       }
 
       return true;
+    },
+  };
+};
+
+export const getQuotaMapper = (service: QuotaType) => {
+  return {
+    mapQuota(quota: Quota, usage: null | QuotaUsage): QuotaWithUsage {
+      if (service === 'object-storage') {
+        return {
+          ...quota,
+          quota_name: quota.quota_name.replace(' (per endpoint)', ''),
+          usage,
+        };
+      }
+
+      return {
+        ...quota,
+        usage,
+      };
     },
   };
 };

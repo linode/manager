@@ -22,12 +22,7 @@ import type {
 } from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
-const statusList: AlertStatusType[] = [
-  'enabled',
-  'disabled',
-  'in progress',
-  'failed',
-];
+const statusList: AlertStatusType[] = ['enabled', 'disabled', 'failed'];
 const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 const tagSequence = ['LinodeTags', 'DBaaSTags', 'bothTags', 'No Tags'];
 

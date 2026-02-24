@@ -15,13 +15,10 @@ import {
   pluralizeMetric,
 } from '../utils';
 
+import type { QuotaWithUsage } from '../utils';
 import type { Quota, QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-
-interface QuotaWithUsage extends Quota {
-  usage?: QuotaUsage;
-}
 
 interface QuotasTableRowProps {
   hasUsage: boolean;

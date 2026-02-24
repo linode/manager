@@ -215,8 +215,8 @@ importers:
         specifier: ^5.5.0
         version: 5.5.0
       akamai-cds-react-components:
-        specifier: 0.0.1-alpha.19
-        version: 0.0.1-alpha.19(@linode/design-language-system@5.3.2)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 0.1.0
+        version: 0.1.0(@linode/design-language-system@5.3.2)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       algoliasearch:
         specifier: ^4.14.3
         version: 4.24.0
@@ -1823,16 +1823,16 @@ packages:
     peerDependencies:
       eslint: ^9
 
-  '@lit-labs/ssr-dom-shim@1.4.0':
-    resolution: {integrity: sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==}
+  '@lit-labs/ssr-dom-shim@1.5.1':
+    resolution: {integrity: sha512-Aou5UdlSpr5whQe8AA/bZG0jMj96CoJIWbGfZ91qieWu5AWUMKw8VR/pAkQkJYvBNhmCcWnZlyyk5oze8JIqYA==}
 
   '@lit/react@1.0.8':
     resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==}
     peerDependencies:
       '@types/react': 17 || 18 || 19
 
-  '@lit/reactive-element@2.1.1':
-    resolution: {integrity: sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==}
+  '@lit/reactive-element@2.1.2':
+    resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
 
   '@lukemorales/query-key-factory@1.3.4':
     resolution: {integrity: sha512-A3frRDdkmaNNQi6mxIshsDk4chRXWoXa05US8fBo4kci/H+lVmujS6QrwQLLGIkNIRFGjMqp2uKjC4XsLdydRw==}
@@ -3355,16 +3355,16 @@ packages:
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
-  akamai-cds-react-components@0.0.1-alpha.19:
-    resolution: {integrity: sha512-YNQPeP4i65qKA5bjOb4ti0ciwQOYZqsKlJ9f14g7xeJCHamyqxPuHIGsOTvykhKyFoXLL8+kejDS52H5vLvVug==}
+  akamai-cds-react-components@0.1.0:
+    resolution: {integrity: sha512-3j4RUS2gsEvTvGVihG48oxfZ+sFRGM+6zfB04UNIVrxsIa5QLYhA4C6RKqmuEqKlsQhgSeg/XkcKJh4vKmW3Qw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
 
-  akamai-cds-web-components@0.0.1-alpha.19:
-    resolution: {integrity: sha512-8xzQjUtNgpbmINt72deakR96vWDJekfjWMt7DJ3DWumlhXDzekf2hm3Q8++hObjKVx6KgXpUDOGzAdU5yMKeiQ==}
+  akamai-cds-web-components@0.1.0:
+    resolution: {integrity: sha512-Ia8JIqr0dV1yuFAaEiP1KfTOZVNLIc0OhWIcnmPb7lnUUOtKfLSB3bbUyYhcm0xag+hLCBxo+Ds+axE9ZL55uw==}
     peerDependencies:
-      '@linode/design-language-system': ^5.2.0
+      '@linode/design-language-system': ^5.3.2
 
   algoliasearch@4.24.0:
     resolution: {integrity: sha512-bf0QV/9jVejssFBmz2HQLxUadxk574t4iwjCKp5E7NBzwKkrDEhKPISIIjAU/p6K5qDx3qoeh4+26zWN1jmw3g==}
@@ -5197,14 +5197,14 @@ packages:
     resolution: {integrity: sha512-iyAZCeyD+c1gPyE9qpFu8af0Y+MRtmKOncdGoA2S5EY8iFq99dmmvkNnHiWo+pj0s7yH7l3KPIgee77tKpXPWQ==}
     engines: {node: '>=18.0.0'}
 
-  lit-element@4.2.1:
-    resolution: {integrity: sha512-WGAWRGzirAgyphK2urmYOV72tlvnxw7YfyLDgQ+OZnM9vQQBQnumQ7jUJe6unEzwGU3ahFOjuz1iz1jjrpCPuw==}
+  lit-element@4.2.2:
+    resolution: {integrity: sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==}
 
-  lit-html@3.3.1:
-    resolution: {integrity: sha512-S9hbyDu/vs1qNrithiNyeyv64c9yqiW9l+DBgI18fL+MTvOtWoFR0FWiyq1TxaYef5wNlpEmzlXoBlZEO+WjoA==}
+  lit-html@3.3.2:
+    resolution: {integrity: sha512-Qy9hU88zcmaxBXcc10ZpdK7cOLXvXpRoBxERdtqV9QOrfpMZZ6pSYP91LhpPtap3sFMUiL7Tw2RImbe0Al2/kw==}
 
-  lit@3.3.1:
-    resolution: {integrity: sha512-Ksr/8L3PTapbdXJCk+EJVB78jDodUMaP54gD24W186zGRARvwrsPfS60wae/SSCTCNZVPd1chXqio1qHQmu4NA==}
+  lit@3.3.2:
+    resolution: {integrity: sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ==}
 
   load-tsconfig@0.2.5:
     resolution: {integrity: sha512-IXO6OCs9yg8tMKzfPZ1YmheJbZCiEsnBdcB03l0OcfK9prKnJb96siuHCr5Fl37/yo9DnKU+TLpxzTUspw9shg==}
@@ -7978,15 +7978,15 @@ snapshots:
     dependencies:
       eslint: 9.31.0(jiti@2.4.2)
 
-  '@lit-labs/ssr-dom-shim@1.4.0': {}
+  '@lit-labs/ssr-dom-shim@1.5.1': {}
 
   '@lit/react@1.0.8(@types/react@19.1.6)':
     dependencies:
       '@types/react': 19.1.6
 
-  '@lit/reactive-element@2.1.1':
+  '@lit/reactive-element@2.1.2':
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.4.0
+      '@lit-labs/ssr-dom-shim': 1.5.1
 
   '@lukemorales/query-key-factory@1.3.4(@tanstack/query-core@5.51.24)(@tanstack/react-query@5.51.24(react@19.1.0))':
     dependencies:
@@ -9495,20 +9495,20 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  akamai-cds-react-components@0.0.1-alpha.19(@linode/design-language-system@5.3.2)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  akamai-cds-react-components@0.1.0(@linode/design-language-system@5.3.2)(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@lit/react': 1.0.8(@types/react@19.1.6)
-      akamai-cds-web-components: 0.0.1-alpha.19(@linode/design-language-system@5.3.2)
+      akamai-cds-web-components: 0.1.0(@linode/design-language-system@5.3.2)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     transitivePeerDependencies:
       - '@linode/design-language-system'
       - '@types/react'
 
-  akamai-cds-web-components@0.0.1-alpha.19(@linode/design-language-system@5.3.2):
+  akamai-cds-web-components@0.1.0(@linode/design-language-system@5.3.2):
     dependencies:
       '@linode/design-language-system': 5.3.2
-      lit: 3.3.1
+      lit: 3.3.2
 
   algoliasearch@4.24.0:
     dependencies:
@@ -11620,21 +11620,21 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
-  lit-element@4.2.1:
+  lit-element@4.2.2:
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.4.0
-      '@lit/reactive-element': 2.1.1
-      lit-html: 3.3.1
+      '@lit-labs/ssr-dom-shim': 1.5.1
+      '@lit/reactive-element': 2.1.2
+      lit-html: 3.3.2
 
-  lit-html@3.3.1:
+  lit-html@3.3.2:
     dependencies:
       '@types/trusted-types': 2.0.7
 
-  lit@3.3.1:
+  lit@3.3.2:
     dependencies:
-      '@lit/reactive-element': 2.1.1
-      lit-element: 4.2.1
-      lit-html: 3.3.1
+      '@lit/reactive-element': 2.1.2
+      lit-element: 4.2.2
+      lit-html: 3.3.2
 
   load-tsconfig@0.2.5: {}
 

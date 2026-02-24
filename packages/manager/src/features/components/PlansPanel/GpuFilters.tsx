@@ -5,16 +5,18 @@
  * uses local React state to manage filter selections.
  */
 
-import { Select } from '@linode/ui';
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
 import {
   PLAN_FILTER_ALL,
+  PLAN_FILTER_ALL_AVAILABLE,
   PLAN_FILTER_GPU_RTX_4000_ADA,
   PLAN_FILTER_GPU_RTX_6000,
   PLAN_FILTER_GPU_RTX_PRO_6000,
 } from './constants';
-import { filterPlansByGpuType } from './utils/planFilters';
+import { getIsPlanDisabled } from './utils';
+import { filterPlansByGpuType, getGpuRank } from './utils/planFilters';
 
 import type {
   PlanFilterRenderArgs,
@@ -24,8 +26,12 @@ import type { PlanWithAvailability } from './types';
 import type { PlanFilterGPU } from './types/planFilters';
 import type { SelectOption } from '@linode/ui';
 
+type GPUOptionWithDisabled = SelectOption<PlanFilterGPU> & {
+  isDisabled: boolean;
+};
 const ALL_GPU_OPTIONS: SelectOption<PlanFilterGPU>[] = [
-  { label: 'All', value: PLAN_FILTER_ALL },
+  { label: 'All Available Plans', value: PLAN_FILTER_ALL_AVAILABLE },
+  { label: 'All Plans', value: PLAN_FILTER_ALL },
   { label: 'RTX PRO 6000 Blackwell', value: PLAN_FILTER_GPU_RTX_PRO_6000 },
   { label: 'RTX 4000 Ada', value: PLAN_FILTER_GPU_RTX_4000_ADA },
   { label: 'Quadro RTX 6000', value: PLAN_FILTER_GPU_RTX_6000 },
@@ -43,8 +49,9 @@ const GPUPlanFilterComponent = React.memo(
     const { disabled = false, onResult, plans, resetPagination } = props;
 
     // Local state - persists automatically because component stays mounted
-    const [gpuType, setGpuType] =
-      React.useState<PlanFilterGPU>(PLAN_FILTER_ALL);
+    const [gpuType, setGpuType] = React.useState<PlanFilterGPU>(
+      PLAN_FILTER_ALL_AVAILABLE
+    );
 
     const previousFilters = React.useRef<{
       gpuType?: PlanFilterGPU;
@@ -52,12 +59,48 @@ const GPUPlanFilterComponent = React.memo(
 
     // Compute available GPU options based on plans
     const GPU_OPTIONS_BASED_ON_AVAILABLE_PLANS = React.useMemo(() => {
-      return ALL_GPU_OPTIONS.filter((option) => {
-        if (option.value === 'all') {
-          return true;
+      const options = ALL_GPU_OPTIONS.reduce(
+        (acc: GPUOptionWithDisabled[], option) => {
+          if (
+            option.value === PLAN_FILTER_ALL ||
+            option.value === PLAN_FILTER_ALL_AVAILABLE
+          ) {
+            acc.push({
+              ...option,
+              isDisabled: false,
+            });
+          } else {
+            const filteredPlans = filterPlansByGpuType(plans, option.value);
+            if (filteredPlans.length > 0) {
+              acc.push({
+                ...option,
+                isDisabled: filteredPlans.every((plan) =>
+                  getIsPlanDisabled(plan)
+                ),
+              });
+            }
+          }
+          return acc;
+        },
+        []
+      );
+      // Sort options: available first, then all, then by generation (Blackwell > Ada > Quadro)
+      return options.sort((a, b) => {
+        // "available" always comes first
+        if (a.value === 'available') return -1;
+        if (b.value === 'available') return 1;
+
+        // "all" always comes second
+        if (a.value === 'all') return -1;
+        if (b.value === 'all') return 1;
+
+        // enabled options before disabled
+        if (a.isDisabled !== b.isDisabled) {
+          return Number(a.isDisabled) - Number(b.isDisabled);
         }
-        const filteredPlans = filterPlansByGpuType(plans, option.value);
-        return filteredPlans.length > 0;
+
+        // generation order blackwell > ada > quadro
+        return getGpuRank(b.value) - getGpuRank(a.value);
       });
     }, [plans]);
 
@@ -79,26 +122,23 @@ const GPUPlanFilterComponent = React.memo(
     }, [gpuType, resetPagination]);
 
     const handleGpuTypeChange = React.useCallback(
-      (
-        _event: React.SyntheticEvent,
-        option: null | SelectOption<number | string>
-      ) => {
-        const newGpuType =
-          (option?.value as PlanFilterGPU | undefined) ?? PLAN_FILTER_ALL;
+      (_event: React.SyntheticEvent, option: GPUOptionWithDisabled) => {
+        const newGpuType = option?.value ?? PLAN_FILTER_ALL_AVAILABLE;
         setGpuType(newGpuType);
       },
       []
     );
 
-    const filteredPlans = React.useMemo(() => {
-      return filterPlansByGpuType(plans, gpuType);
-    }, [gpuType, plans]);
+    const filteredPlans = React.useMemo(
+      () => filterPlansByGpuType(plans, gpuType),
+      [gpuType, plans]
+    );
 
     const selectedGpuType = React.useMemo(() => {
       return (
         GPU_OPTIONS_BASED_ON_AVAILABLE_PLANS.find(
           (opt) => opt.value === gpuType
-        ) ?? null
+        ) ?? undefined
       );
     }, [gpuType, GPU_OPTIONS_BASED_ON_AVAILABLE_PLANS]);
 
@@ -110,10 +150,12 @@ const GPUPlanFilterComponent = React.memo(
             marginTop: -16,
           }}
         >
-          <Select
+          <Autocomplete
             aria-labelledby="plan-filter-gpu-label"
             data-testid="plan-filter-gpu"
+            disableClearable
             disabled={disabled}
+            getOptionDisabled={(option) => option.isDisabled || false}
             id="plan-filter-gpu"
             label="GPU Plans"
             onChange={handleGpuTypeChange}
@@ -127,7 +169,7 @@ const GPUPlanFilterComponent = React.memo(
       return {
         filteredPlans,
         filterUI,
-        hasActiveFilters: gpuType !== PLAN_FILTER_ALL,
+        hasActiveFilters: gpuType !== PLAN_FILTER_ALL_AVAILABLE,
       };
     }, [
       GPU_OPTIONS_BASED_ON_AVAILABLE_PLANS,
@@ -147,8 +189,6 @@ const GPUPlanFilterComponent = React.memo(
     return null;
   }
 );
-
-GPUPlanFilterComponent.displayName = 'GPUPlanFilterComponent';
 
 export const createGPUPlanFilterRenderProp = () => {
   return ({

@@ -101,7 +101,7 @@ export const WidgetFilterGroupByRenderer = (
           aria-label="Group By Dashboard Metrics"
           color="inherit"
           data-qa-selected={isSelected}
-          data-testid="group-by"
+          data-testid="widget-group-by"
           disabled={isDisabled}
           onClick={() => setOpen(true)}
           size="small"

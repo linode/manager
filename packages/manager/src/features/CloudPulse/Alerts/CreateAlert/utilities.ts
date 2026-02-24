@@ -26,6 +26,7 @@ export const filterFormValues = (
     'rule_criteria',
     'trigger_conditions',
     'entity_type',
+    'hasAPIError',
   ]);
   const severity = formValues.severity ?? 1;
   const entityIds = formValues.entity_ids;
@@ -60,6 +61,8 @@ export const filterEditFormValues = (
     'severity',
     'rule_criteria',
     'trigger_conditions',
+    'entity_type',
+    'hasAPIError',
   ]);
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;

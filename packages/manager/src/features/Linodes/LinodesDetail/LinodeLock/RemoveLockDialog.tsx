@@ -98,7 +98,7 @@ export const RemoveLockDialog = (props: Props) => {
       }
       onClose={onClose}
       open={open}
-      title="Remove Lock?"
+      title={`Remove lock from ${linodeLabel ?? ''}?`}
     >
       {localError && <Notice text={localError} variant="error" />}
       <Typography>{getLockTypeDescription(linodeLocks)}</Typography>

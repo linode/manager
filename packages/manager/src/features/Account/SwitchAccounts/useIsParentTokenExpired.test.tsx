@@ -77,7 +77,8 @@ describe('useIsParentTokenExpired', () => {
 
   it('should react to isProxyUser changes', () => {
     const { rerender, result } = renderHook(
-      ({ isProxyOrDelegateUserType }) => useIsParentTokenExpired({ isProxyOrDelegateUserType }),
+      ({ isProxyOrDelegateUserType }) =>
+        useIsParentTokenExpired({ isProxyOrDelegateUserType }),
       {
         initialProps: { isProxyOrDelegateUserType: false },
         wrapper,
