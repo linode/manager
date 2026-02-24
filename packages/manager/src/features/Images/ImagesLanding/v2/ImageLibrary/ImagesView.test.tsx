@@ -232,6 +232,7 @@ describe('ImagesView component', () => {
               { region: 'us-east', status: 'available' },
               { region: 'us-southeast', status: 'pending' },
             ],
+            type: 'automatic',
           });
           return HttpResponse.json(makeResourcePage(images));
         })
@@ -259,19 +260,9 @@ describe('ImagesView component', () => {
     });
 
     it("should render 'Recovery images' (automatic) empty state", async () => {
-      queryMocks.useSearch.mockReturnValue({
-        subType: 'recovery',
-      });
-
       server.use(
-        http.get('*/images', ({ request }) => {
-          return HttpResponse.json(
-            makeResourcePage(
-              request.headers.get('x-filter')?.includes('manual')
-                ? [imageFactory.build({ type: 'manual' })]
-                : []
-            )
-          );
+        http.get('*/images', () => {
+          return HttpResponse.json(makeResourcePage([]));
         })
       );
 
