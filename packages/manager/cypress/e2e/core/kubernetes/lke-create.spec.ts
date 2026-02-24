@@ -1914,6 +1914,9 @@ describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => 
   });
 
   it('both tiers should include blackwell GPUs', () => {
+    mockAppendFeatureFlags({
+      kubernetesBlackwellPlans: true,
+    }).as('getFeatureFlags');
     cy.visitWithLogin('/kubernetes/create');
     cy.wait(['@getRegions', '@getLinodeTypes']);
 

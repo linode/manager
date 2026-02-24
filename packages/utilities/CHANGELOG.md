@@ -1,3 +1,10 @@
+## [2026-02-25] - v0.15.0
+
+
+### Tech Stories:
+
+- Clean up unused marketplace v2 factories ([#13396](https://github.com/linode/manager/pull/13396))
+
 ## [2026-01-12] - v0.14.0
 
 
