@@ -14,7 +14,7 @@ import type { PlanWithAvailability } from '../types';
 /**
  * Available plan generations for Dedicated CPU filtering
  */
-export type PlanFilterGeneration = 'all' | 'g6' | 'g7' | 'g8';
+export type PlanFilterGeneration = 'all' | 'available' | 'g6' | 'g7' | 'g8';
 
 /**
  * Available plan types for filtering within a generation
@@ -26,6 +26,7 @@ export type PlanFilterType = 'all' | 'compute-optimized' | 'general-purpose';
  */
 export type PlanFilterGPU =
   | 'all'
+  | 'available'
   | 'gpu-rtx4000'
   | 'gpu-rtx6000'
   | 'gpu-rtxpro6000';

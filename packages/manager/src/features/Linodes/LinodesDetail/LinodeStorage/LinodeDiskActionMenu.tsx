@@ -1,8 +1,10 @@
+import { useLinodeQuery } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { LINODE_LOCKED_DELETE_DISK_TOOLTIP } from 'src/features/Linodes/constants';
 
 import type { Disk, Linode } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -21,6 +23,10 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const { disk, linodeId, linodeStatus, onDelete, onRename, onResize } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
+  const isLinodeSubResourcesLocked =
+    linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
 
   const { data: permissions, isLoading } = usePermissions(
     'linode',
@@ -90,12 +96,17 @@ export const LinodeDiskActionMenu = (props: Props) => {
       title: 'Clone',
     },
     {
-      disabled: !permissions.delete_linode || linodeStatus !== 'offline',
+      disabled:
+        !permissions.delete_linode ||
+        linodeStatus !== 'offline' ||
+        isLinodeSubResourcesLocked,
       onClick: onDelete,
       title: 'Delete',
-      tooltip: !permissions.delete_linode
-        ? noPermissionTooltip
-        : poweredOnTooltip,
+      tooltip: isLinodeSubResourcesLocked
+        ? LINODE_LOCKED_DELETE_DISK_TOOLTIP
+        : !permissions.delete_linode
+          ? noPermissionTooltip
+          : poweredOnTooltip,
     },
   ];
 

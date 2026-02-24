@@ -23,10 +23,12 @@ interface Props {
 
 export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
-  const { data: grants } = useAccountUserGrants(user.username);
+  const { data: grants } = useAccountUserGrants(user.username, user.restricted);
   const { data: profile } = useProfile();
 
-  const isProxyUser = Boolean(user.user_type === 'proxy');
+  const isProxyOrDelegateUser = Boolean(
+    user.user_type === 'proxy' || user.user_type === 'delegate'
+  );
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
   return (
@@ -62,7 +64,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
           </TableCell>
         </Hidden>
       )}
-      {!isProxyUser && (
+      {!isProxyOrDelegateUser && (
         <Hidden lgDown>
           <TableCell>
             <LastLogin last_login={user.last_login} />
@@ -71,7 +73,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
       )}
       <TableCell actionCell>
         <UsersActionMenu
-          isProxyUser={isProxyUser}
+          isProxyOrDelegateUser={isProxyOrDelegateUser}
           onDelete={onDelete}
           username={user.username}
         />

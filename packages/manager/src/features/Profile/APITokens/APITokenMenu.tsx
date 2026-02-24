@@ -4,14 +4,14 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+import { DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 import type { Token } from '@linode/api-v4/lib/profile';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  isProxyUser: boolean;
+  isProxyOrDelegateUserType: boolean;
   isThirdPartyAccessToken: boolean;
   openEditDrawer: (token: Token) => void;
   openRevokeDialog: (token: Token, type: string) => void;
@@ -25,7 +25,7 @@ export const APITokenMenu = (props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
-    isProxyUser,
+    isProxyOrDelegateUserType,
     isThirdPartyAccessToken,
     openEditDrawer,
     openRevokeDialog,
@@ -43,12 +43,14 @@ export const APITokenMenu = (props: Props) => {
     },
     !isThirdPartyAccessToken
       ? {
-          disabled: isProxyUser,
+          disabled: isProxyOrDelegateUserType,
           onClick: () => {
             openEditDrawer(token);
           },
           title: 'Rename',
-          tooltip: isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined,
+          tooltip: isProxyOrDelegateUserType
+            ? DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT
+            : undefined,
         }
       : null,
     {

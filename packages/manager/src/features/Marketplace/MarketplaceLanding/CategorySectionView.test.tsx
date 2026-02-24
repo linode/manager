@@ -14,7 +14,7 @@ describe('CategorySectionView', () => {
       logoUrl: 'https://www.akamai.com/site/akamai-logo-v5.svg',
       productName: 'Akamai Compute',
       type: 'Saas & APIs',
-      id: 1,
+      id: 'akamai-compute',
     },
   ];
   const mockProps = {
@@ -23,11 +23,9 @@ describe('CategorySectionView', () => {
     displayCount: 1,
     errorMessage: '',
     hasMoreProducts: false,
-    isFetchingNextPage: false,
     isLoading: false,
     onLoadMore: vi.fn(),
     onProductClick: vi.fn(),
-    skeletonCount: 1,
   };
 
   it('renders Category name', () => {
@@ -49,6 +47,7 @@ describe('CategorySectionView', () => {
     const propsWithMoreProducts = {
       ...mockProps,
       hasMoreProducts: true,
+      isLoading: false,
     };
 
     const { getByRole } = renderWithTheme(
@@ -60,35 +59,27 @@ describe('CategorySectionView', () => {
     expect(loadMoreButton).toBeVisible();
   });
 
-  it('does not render the load more button if `hasMoreProducts` is false ', () => {
+  it('does not render the load more button if `hasMoreProducts` is false or loading', () => {
     const propsWithoutMoreProducts = {
       ...mockProps,
       hasMoreProducts: false,
+      isLoading: false,
     };
-
-    const { queryByRole } = renderWithTheme(
-      <CategorySectionView {...propsWithoutMoreProducts} />
-    );
-    const loadMoreButton = queryByRole('button', {
-      name: /Load More.../i,
-    });
-    expect(loadMoreButton).toBeNull();
-  });
-
-  it('does not render the load more button while fetching next page', () => {
-    const propsFetchingNextPage = {
+    const propsLoading = {
       ...mockProps,
       hasMoreProducts: true,
-      isFetchingNextPage: true,
+      isLoading: true,
     };
 
-    const { queryByRole } = renderWithTheme(
-      <CategorySectionView {...propsFetchingNextPage} />
+    const { queryByRole: queryByRoleNoMore } = renderWithTheme(
+      <CategorySectionView {...propsWithoutMoreProducts} />
     );
-    const loadMoreButtonWhileFetching = queryByRole('button', {
-      name: /Load More.../i,
-    });
-    expect(loadMoreButtonWhileFetching).toBeNull();
+    expect(queryByRoleNoMore('button', { name: /Load More.../i })).toBeNull();
+
+    const { queryByRole: queryByRoleLoading } = renderWithTheme(
+      <CategorySectionView {...propsLoading} />
+    );
+    expect(queryByRoleLoading('button', { name: /Load More.../i })).toBeNull();
   });
 
   it('renders the correct product details', () => {
@@ -108,14 +99,13 @@ describe('CategorySectionView', () => {
       ...mockProps,
       cardData: [],
       isLoading: true,
-      skeletonCount: 6,
     };
 
     const { getAllByTestId } = renderWithTheme(
       <CategorySectionView {...loadingProps} />
     );
     const items = getAllByTestId('marketplace-skeleton-card');
-    expect(items).toHaveLength(mockProps.skeletonCount);
+    expect(items.length).toBeGreaterThan(0);
   });
 
   it('renders the error message when there is an error', () => {

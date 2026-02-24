@@ -17,13 +17,18 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import {
   useIsIAMDelegationEnabled,
   useIsIAMEnabled,
 } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
+import {
+  sendSwitchAccountEvent,
+  sendSwitchToParentAccountEvent,
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
@@ -47,10 +52,28 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
   const { limitsEvolution, iamLimitedAvailabilityBadges } = useFlags();
+  const {
+    isProxyOrDelegateUserType,
+    isParentUserType,
+    isDelegateUserType,
+    isProxyUserType,
+    profile,
+  } = useDelegationRole();
   const theme = useTheme();
 
+  const { handleSwitchToParentAccount, isSubmitting } =
+    useSwitchToParentAccount({
+      isDelegateUserType,
+      isProxyUserType,
+      onClose,
+      onTokenExpired: () => {
+        sessionContext.updateState({
+          isOpen: true,
+        });
+      },
+    });
+
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
@@ -59,12 +82,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const isProxyUser = profile?.user_type === 'proxy';
-
   const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
-    ? profile?.user_type === 'parent'
-    : (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
-      profile?.user_type === 'proxy';
+    ? isParentUserType || isProxyOrDelegateUserType
+    : (isParentUserType && !isChildAccountAccessRestricted) ||
+      isProxyOrDelegateUserType;
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
@@ -94,7 +115,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   ];
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
-  const proxyHeaders = isProxyUser
+  const proxyHeaders = isProxyOrDelegateUserType
     ? {
         Authorization: getStorage(`authentication/parent_token/token`),
       }
@@ -105,9 +126,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     profile,
   });
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
-  const userName = (isProxyUser ? parentProfile : profile)?.username ?? '';
+  const userName =
+    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
 
-  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({
+    isProxyOrDelegateUserType,
+  });
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -174,6 +198,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       });
     }
 
+    if (isDelegateUserType) {
+      sendSwitchToParentAccountEvent();
+      return handleSwitchToParentAccount();
+    }
+
     onDrawerOpen(true);
   };
 
@@ -231,8 +260,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             <SwitchAccountButton
               buttonType="outlined"
               data-testid="switch-account-button"
+              disabled={isSubmitting}
               onClick={() => {
-                sendSwitchAccountEvent('User Menu');
+                if (!isDelegateUserType) {
+                  sendSwitchAccountEvent('User Menu');
+                }
                 handleAccountSwitch();
               }}
             />

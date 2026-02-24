@@ -1,4 +1,4 @@
-import { useAccountUsers, useProfile } from '@linode/queries';
+import { useAccountUsers } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Button, Paper, Select } from '@linode/ui';
 import { Grid, useMediaQuery } from '@mui/material';
@@ -13,6 +13,7 @@ import { TableBody } from 'src/components/TableBody';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
@@ -31,9 +32,10 @@ const ALL_USERS_OPTION: SelectOption = {
 export const UsersLanding = () => {
   const navigate = useNavigate();
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { data: profile } = useProfile();
 
-  const { query } = useSearch({
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
+
+  const { query, users: usersParam } = useSearch({
     from: '/iam',
   });
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
@@ -61,26 +63,52 @@ export const UsersLanding = () => {
     preferenceKey: 'iam-account-users-order',
   });
 
-  const queryParams = new URLSearchParams(location.search);
-
   const { error: searchError, filter } = getAPIFilterFromQuery(query, {
     searchableFieldsWithoutOperator: ['username', 'email'],
   });
 
-  // Determine if the current user is a child account with isIAMDelegationEnabled enabled
+  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
   // If so, we need to show both 'child' and 'delegate_user' users in the table
-  const isChildWithDelegationEnabled =
-    isIAMDelegationEnabled && Boolean(profile?.user_type === 'child');
+  const isChildOrDelegateWithDelegationEnabled =
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
+
+  const filterableOptions = React.useMemo(
+    () => [
+      ALL_USERS_OPTION,
+      {
+        label: 'Users',
+        value: 'users',
+      },
+      {
+        label: 'Delegate Users',
+        value: 'delegate',
+      },
+    ],
+    []
+  );
+
+  // Initialize userType based on URL parameter
+  const getInitialUserType = React.useMemo(() => {
+    if (!usersParam || usersParam === 'all') {
+      return ALL_USERS_OPTION;
+    }
+    return (
+      filterableOptions.find((option) => option.value === usersParam) ||
+      ALL_USERS_OPTION
+    );
+  }, [usersParam, filterableOptions]);
 
   const [userType, setUserType] = React.useState<null | SelectOption>(
-    ALL_USERS_OPTION
+    getInitialUserType
   );
 
   const usersFilter: Filter = {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
     ...filter,
-    ...(isChildWithDelegationEnabled && userType && userType.value !== 'all'
+    ...(isChildOrDelegateWithDelegationEnabled &&
+    userType &&
+    userType.value !== 'all'
       ? {
           user_type: userType.value === 'users' ? 'child' : 'delegate',
         }
@@ -101,38 +129,26 @@ export const UsersLanding = () => {
     },
   });
 
-  const filterableOptions = [
-    ALL_USERS_OPTION,
-    {
-      label: 'Users',
-      value: 'users',
-    },
-    {
-      label: 'Delegate Users',
-      value: 'delegate',
-    },
-  ];
-
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const numColsLg = isLgDown ? 4 : 3;
+  const numColsLg = isLgDown
+    ? isChildOrDelegateWithDelegationEnabled
+      ? 5
+      : 4
+    : 3;
 
   const numCols = isSmDown ? 2 : numColsLg;
 
   const handleSearch = (value: string) => {
-    queryParams.set('page', '1');
-    if (value) {
-      queryParams.set('query', value);
-    } else {
-      queryParams.delete('query');
-    }
+    const nextQuery = value === '' ? undefined : String(value);
     navigate({
       to: '/iam/users',
-      search: {
-        users: queryParams.get('users') ?? 'all',
-        query: value,
-      },
+      search: (prev) => ({
+        ...prev,
+        query: nextQuery,
+        page: 1,
+      }),
     });
   };
 
@@ -141,8 +157,17 @@ export const UsersLanding = () => {
     setSelectedUsername(username);
   };
 
-  const canCreateUser = permissions.create_user;
+  const handleDeleteDialogClose = () => {
+    const removedLastOnPage =
+      users && users?.data.length % pagination.pageSize === 1;
 
+    setIsDeleteDialogOpen(false);
+    if (removedLastOnPage) {
+      pagination.handlePageChange(pagination.page - 1);
+    }
+  };
+
+  const canCreateUser = permissions.create_user;
   return (
     <React.Fragment>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -175,7 +200,7 @@ export const UsersLanding = () => {
               placeholder="Filter"
               value={query ?? ''}
             />
-            {isChildWithDelegationEnabled && (
+            {isChildOrDelegateWithDelegationEnabled && (
               <Select
                 hideLabel
                 label="Select user type"
@@ -184,10 +209,10 @@ export const UsersLanding = () => {
                   setUserType(selected ?? null);
                   navigate({
                     to: '/iam/users',
-                    search: {
+                    search: (prev) => ({
+                      ...prev,
                       users: String(selected?.value ?? 'all'),
-                      query: queryParams.get('query') ?? '',
-                    },
+                    }),
                   });
                 }}
                 options={filterableOptions}
@@ -238,7 +263,7 @@ export const UsersLanding = () => {
         open={isCreateDrawerOpen}
       />
       <UserDeleteConfirmation
-        onClose={() => setIsDeleteDialogOpen(false)}
+        onClose={handleDeleteDialogClose}
         open={isDeleteDialogOpen}
         username={selectedUsername}
       />

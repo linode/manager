@@ -16,13 +16,11 @@ export const DestinationAkamaiObjectStorageDetailsSummary = (
       <LabelValue
         data-testid="access-key-id"
         label="Access Key ID"
-        smHideTooltip={true}
         value="*****************"
       />
       <LabelValue
         data-testid="secret-access-key"
         label="Secret Access Key"
-        smHideTooltip={true}
         value="*****************"
       />
       {!!path && <LabelValue label="Log Path" value={path} />}

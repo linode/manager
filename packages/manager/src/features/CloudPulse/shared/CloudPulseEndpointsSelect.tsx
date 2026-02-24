@@ -238,6 +238,7 @@ export const CloudPulseEndpointsSelect = React.memo(
               aria-disabled={
                 hasRestrictedSelections ? isMaxSelectionsReached : false
               }
+              data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
               data-qa-option
               key={key}
             >

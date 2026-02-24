@@ -77,7 +77,6 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Bucket"
             value={field.value}
           />
         )}
@@ -95,7 +94,6 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             label="Access Key ID"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
-            placeholder="Access Key ID"
             value={field.value}
           />
         )}
@@ -113,7 +111,6 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             label="Secret Access Key"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
-            placeholder="Secret Access Key"
             value={field.value}
           />
         )}
@@ -140,6 +137,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               label="Log Path Prefix"
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
+              optional
               placeholder="Prefix for log storage path"
               sx={{ maxWidth: 416 }}
               value={field.value}

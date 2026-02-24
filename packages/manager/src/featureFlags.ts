@@ -100,6 +100,11 @@ interface AclpFlag {
   enabled: boolean;
 
   /**
+   * This property indicates whether to enable zoom in charts or not
+   */
+  enableZoomInCharts?: boolean;
+
+  /**
    * This property indicates for which unit, we need to humanize the values e.g., count, iops etc.,
    */
   humanizableUnits?: string[];
@@ -120,6 +125,14 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    * This property indicates whether to bypass account capabilities check or not
    */
   bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether to show Custom HTTPS destination type
+   */
+  customHttpsEnabled?: boolean;
+  /**
+   * This property indicates whether the feature is new or not
+   */
+  new?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -161,6 +174,7 @@ interface AclpAlerting {
   alertDefinitions: boolean;
   beta: boolean;
   editDisabledStatuses?: AlertStatusType[];
+  maxDimensionFiltersValues?: number;
   maxEmailChannelRecipients?: number;
   notificationChannels: boolean;
   recentActivity: boolean;
@@ -187,6 +201,10 @@ interface MTC {
 interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
   ga: boolean;
   la: boolean;
+}
+
+interface ResourceLockFlag {
+  linodes: boolean;
 }
 
 export interface Flags {
@@ -231,12 +249,14 @@ export interface Flags {
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
+  linodeCreateBanner: LinodeCreateBanner;
   linodeDiskEncryption: boolean;
   linodeInterfaces: LinodeInterfacesFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   marketplaceV2: boolean;
+  marketplaceV2GlobalBanner: boolean;
   metadata: boolean;
   mtc: MTC;
   networkLoadBalancer: boolean;
@@ -244,13 +264,16 @@ export interface Flags {
   nodebalancerVpc: boolean;
   objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  placementGroupPolicyUpdate: boolean;
   privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   referralBannerText: BannerContent;
+  resourceLock: ResourceLockFlag;
   secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
@@ -413,4 +436,9 @@ export type AclpServices = {
 
 interface GenerationalPlansFlag extends BaseFeatureFlag {
   allowedPlans: string[];
+}
+
+interface LinodeCreateBanner extends BaseFeatureFlag {
+  message?: string;
+  pendo_id?: string;
 }

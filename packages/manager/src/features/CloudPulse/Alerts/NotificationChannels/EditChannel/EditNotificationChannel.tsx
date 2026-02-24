@@ -55,12 +55,16 @@ export const EditNotificationChannel = (
 
   const formMethods = useForm<CreateNotificationChannelForm>({
     defaultValues: {
-      name: channelData.label,
-      type: channelData.channel_type,
-      recipients:
-        channelData.channel_type === 'email'
-          ? (channelData.details?.email.usernames ?? [])
-          : [],
+      label: channelData.label,
+      channel_type: channelData.channel_type,
+      details: {
+        email: {
+          usernames:
+            channelData.channel_type === 'email'
+              ? (channelData.details?.email.usernames ?? [])
+              : [],
+        },
+      },
     },
     mode: 'onBlur',
     resolver: yupResolver(createNotificationChannelSchema),
@@ -69,7 +73,7 @@ export const EditNotificationChannel = (
   const { control, handleSubmit, formState } = formMethods;
 
   const handleRecipientsError = React.useCallback(() => {
-    formMethods.resetField('recipients', { defaultValue: [] });
+    formMethods.resetField('details.email.usernames', { defaultValue: [] });
   }, [formMethods]);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -112,7 +116,7 @@ export const EditNotificationChannel = (
           </Typography>
           <Controller
             control={control}
-            name="type"
+            name="channel_type"
             render={({ field, fieldState }) => (
               <NotificationChannelTypeSelect
                 disabled
@@ -124,7 +128,7 @@ export const EditNotificationChannel = (
           />
           <Controller
             control={control}
-            name="name"
+            name="label"
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
@@ -139,7 +143,7 @@ export const EditNotificationChannel = (
           />
           <Controller
             control={control}
-            name="recipients"
+            name="details.email.usernames"
             render={({ field, fieldState }) => (
               <NotificationRecipients
                 error={fieldState.error?.message}

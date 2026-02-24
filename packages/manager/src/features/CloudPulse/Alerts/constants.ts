@@ -133,7 +133,6 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
   failed: 'error',
-  'in progress': 'other',
   provisioning: 'other',
   disabling: 'other',
   enabling: 'other',
@@ -182,7 +181,6 @@ export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
   failed: 'Failed',
-  'in progress': 'In Progress',
   disabling: 'Disabling',
   enabling: 'Enabling',
   provisioning: 'Provisioning',
@@ -253,6 +251,13 @@ export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
 export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
+
+export const VIP_PLACEHOLDER_TEXT = 'Enter VIP address';
+export const NODE_ID_PLACEHOLDER_TEXT = 'Enter Node ID';
+export const NODE_ID_HELPER_TEXT =
+  'Enter one or more Node IDs separated by commas.';
+export const VIP_HELPER_TEXT =
+  'Enter one or more VIP addresses separated by commas.';
 
 export const CONFIGS_HELPER_TEXT =
   'Enter one or more configuration IDs separated by commas.';

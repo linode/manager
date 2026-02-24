@@ -7,8 +7,16 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Quotas } from './Quotas';
 
+import type { Quota, QuotaUsage } from '@linode/api-v4';
+
 const queryMocks = vi.hoisted(() => ({
   getQuotasFilters: vi.fn().mockReturnValue({}),
+  getQuotaVisibilityFilter: vi
+    .fn()
+    .mockReturnValue({ isVisible: (quota: Quota) => true }),
+  getQuotaMapper: vi
+    .fn()
+    .mockReturnValue({ mapQuota: (quota: Quota, usage: QuotaUsage) => quota }),
   useFlags: vi.fn().mockReturnValue({}),
   useGetLocationsForQuotaService: vi.fn().mockReturnValue({}),
   useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
@@ -34,9 +42,12 @@ vi.mock('@linode/queries', async () => {
 
 vi.mock('./utils', () => ({
   getQuotasFilters: queryMocks.getQuotasFilters,
+  getQuotaVisibilityFilter: queryMocks.getQuotaVisibilityFilter,
+  getQuotaMapper: queryMocks.getQuotaMapper,
   useGetLocationsForQuotaService: queryMocks.useGetLocationsForQuotaService,
   convertResourceMetric: queryMocks.convertResourceMetric,
   pluralizeMetric: queryMocks.pluralizeMetric,
+  QUOTA_ROW_MIN_HEIGHT: 58,
 }));
 
 describe('Quotas', () => {
