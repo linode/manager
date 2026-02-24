@@ -41,7 +41,7 @@ interface HeaderProps {
     tooltipText?: string;
   };
   description?: React.ReactNode;
-  docsLink?: string;
+  docsLink?: ImageConfig['docsLink'];
   title: string;
 }
 
@@ -102,7 +102,8 @@ export const ImagesTable = (props: ImagesTableProps) => {
               {headerProps.docsLink && (
                 <DocsLink
                   analyticsLabel={headerProps.title}
-                  href={headerProps.docsLink}
+                  href={headerProps.docsLink.href}
+                  label={headerProps.docsLink.label}
                 />
               )}
               {headerProps.buttonProps && (

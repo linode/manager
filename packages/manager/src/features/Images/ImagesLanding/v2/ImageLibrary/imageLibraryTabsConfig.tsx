@@ -38,7 +38,7 @@ export interface ImageConfig {
   };
   columns: ImageViewTableColConfig[];
   description: React.ReactNode;
-  docsLink?: string;
+  docsLink?: { href: string; label?: string };
   emptyMessage: {
     instruction?: string;
     main: string;
@@ -165,6 +165,10 @@ export const IMAGES_CONFIG: Omit<
     eventCategory: 'Recovery Images Table',
     emptyMessage: {
       main: 'No recovery images to display',
+    },
+    docsLink: {
+      label: 'Recover a deleted Linode',
+      href: 'https://techdocs.akamai.com/cloud-computing/docs/images#recover-a-deleted',
     },
   },
   // "shared-with-me" images config will go here
