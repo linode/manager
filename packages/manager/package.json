@@ -65,7 +65,7 @@
     "libphonenumber-js": "^1.10.6",
     "logic-query-parser": "^0.0.5",
     "luxon": "3.4.4",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "md5": "^2.2.1",
     "notistack": "^3.0.1",
     "qrcode.react": "^4.2.0",
