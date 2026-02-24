@@ -40,7 +40,7 @@ export interface ImageConfig {
   description: React.ReactNode;
   docsLink?: string;
   emptyMessage: {
-    instruction: null | string;
+    instruction?: string;
     main: string;
   };
   eventCategory: string;
@@ -165,7 +165,6 @@ export const IMAGES_CONFIG: Omit<
     eventCategory: 'Recovery Images Table',
     emptyMessage: {
       main: 'No recovery images to display',
-      instruction: null,
     },
   },
   // "shared-with-me" images config will go here
