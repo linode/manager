@@ -121,8 +121,9 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       }
     : undefined;
 
+  const switchAccountCompanyName = getStorage('switch_account/company_name');
   const companyNameOrEmail = getCompanyNameOrEmail({
-    company: account?.company,
+    company: account?.company ? account?.company : switchAccountCompanyName,
     profile,
   });
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });

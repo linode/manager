@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
-import { setStorage } from 'src/utilities/storage';
+import { clearStorage, setStorage } from 'src/utilities/storage';
 
 import { useParentChildAuthentication } from './useParentChildAuthentication';
 
@@ -38,7 +38,8 @@ export const useSwitchToParentAccount = ({
 
     // Flag to prevent multiple clicks on the switch account button.
     setSubmitting(true);
-
+    // Clean up the company name in storage to prevent it from being used in the parent account after switching back from a child account.
+    clearStorage('switch_account/company_name');
     try {
       // Revoke proxy or delegate token before switching to parent account.
       await revokeToken().catch(() => {
