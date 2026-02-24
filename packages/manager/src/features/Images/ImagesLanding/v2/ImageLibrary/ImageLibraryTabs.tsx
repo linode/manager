@@ -51,7 +51,7 @@ export const ImageLibraryTabs = () => {
       params: {
         action,
         imageId: image.id,
-        imageType: imageActionParams?.imageType ?? 'owned-by-me',
+        imageType: imageTypeParams?.imageType ?? 'owned-by-me',
       },
       search: (prev) => prev,
       to: '/images/image-library/$imageType/$imageId/$action',
