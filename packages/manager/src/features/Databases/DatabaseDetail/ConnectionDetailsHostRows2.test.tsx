@@ -6,8 +6,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConnectionDetailsHostRows2 } from './ConnectionDetailsHostRows2';
 
-import type { Database } from '@linode/api-v4/lib/databases';
-
 const DEFAULT_PRIMARY = 'db-mysql-default-primary.net';
 const DEFAULT_STANDBY = 'db-mysql-default-standby.net';
 
@@ -37,7 +35,7 @@ describe('ConnectionDetailsHostRows2', () => {
       },
       platform: 'rdbms-default',
       private_network: null, // No VPC configured, so Host and Read-only Host fields render
-    }) as Database;
+    });
 
     renderWithTheme(<ConnectionDetailsHostRows2 database={database} />);
 
@@ -74,7 +72,7 @@ describe('ConnectionDetailsHostRows2', () => {
     const database = databaseFactory.build({
       hosts: undefined,
       platform: 'rdbms-default',
-    }) as Database;
+    });
 
     const { getByText } = renderWithTheme(
       <ConnectionDetailsHostRows2 database={database} />
@@ -113,7 +111,7 @@ describe('ConnectionDetailsHostRows2', () => {
         subnet_id: 1,
         vpc_id: 123,
       }, // VPC configuration with public access set to false
-    }) as Database;
+    });
 
     renderWithTheme(<ConnectionDetailsHostRows2 database={database} />);
 
@@ -161,7 +159,7 @@ describe('ConnectionDetailsHostRows2', () => {
         subnet_id: 1,
         vpc_id: 123,
       }, // VPC configuration with public access set to true
-    }) as Database;
+    });
 
     renderWithTheme(<ConnectionDetailsHostRows2 database={database} />);
 
