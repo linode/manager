@@ -10,7 +10,6 @@ import { useParentChildAuthentication } from 'src/features/Account/SwitchAccount
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { parseAPIDate } from 'src/utilities/date';
 import { getStorage, setStorage, storage } from 'src/utilities/storage';
 
@@ -121,11 +120,6 @@ export const SessionExpirationDialog = React.memo(
           : 'authentication/proxy_token';
         const tokenUserType = isIAMDelegationEnabled ? 'delegate' : 'proxy';
 
-        const tokenPrefix = isIAMDelegationEnabled
-          ? 'authentication/delegate_token'
-          : 'authentication/proxy_token';
-        const tokenUserType = isIAMDelegationEnabled ? 'delegate' : 'proxy';
-
         setTokenInLocalStorage({
           prefix: tokenPrefix,
           token: {
@@ -135,7 +129,6 @@ export const SessionExpirationDialog = React.memo(
         });
 
         updateCurrentToken({
-          userType: tokenUserType,
           userType: tokenUserType,
         });
         onClose();
