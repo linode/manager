@@ -34,7 +34,6 @@ export const UsersLanding = () => {
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const {
     isProxyOrDelegateUserType,
-    isProxyUserType,
     isChildUserType,
     isParentUserType,
     profile,
@@ -88,7 +87,7 @@ export const UsersLanding = () => {
     isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
     enabled: showProxyOrDelegateUserTable && !isRestrictedUser,
-    filters: { user_type: isProxyUserType ? 'proxy' : 'delegate' },
+    filters: { user_type: 'proxy' },
   });
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
