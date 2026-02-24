@@ -156,7 +156,6 @@ export const ImagesLanding = () => {
     {
       ...manualImagesFilter,
       is_public: false,
-      type: 'manual',
     },
     {
       // Refetch custom images every 30 seconds.

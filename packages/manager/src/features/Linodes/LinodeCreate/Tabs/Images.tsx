@@ -6,10 +6,12 @@ import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsPrivateImageSharingEnabled } from 'src/features/Images/utils';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -26,10 +28,12 @@ export const Images = () => {
     getValues,
     setValue,
   } = useFormContext<LinodeCreateFormValues>();
+
   const { field, fieldState } = useController({
     control,
     name: 'image',
   });
+
   const queryClient = useQueryClient();
 
   const { data: permissions } = usePermissions('account', ['create_linode']);
@@ -39,6 +43,8 @@ export const Images = () => {
   const { data: regions } = useRegionsQuery();
 
   const selectedRegion = regions?.find((r) => r.id === regionId);
+
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
 
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
@@ -88,17 +94,26 @@ export const Images = () => {
       <Region />
       <Paper>
         <Typography variant="h2">Choose an Image</Typography>
-        <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>
-          <ImageSelect
-            disabled={!permissions.create_linode}
+        {isPrivateImageSharingEnabled ? (
+          <ImageSelectTable
+            currentRoute={'/linodes/create/images'}
             errorText={fieldState.error?.message}
-            onBlur={field.onBlur}
-            onChange={onChange}
-            siteType={selectedRegion?.site_type}
-            value={field.value ?? null}
-            variant="private"
+            onSelect={onChange}
+            selectedImageId={field.value}
           />
-        </Box>
+        ) : (
+          <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>
+            <ImageSelect
+              disabled={!permissions.create_linode}
+              errorText={fieldState.error?.message}
+              onBlur={field.onBlur}
+              onChange={onChange}
+              siteType={selectedRegion?.site_type}
+              value={field.value ?? null}
+              variant="private"
+            />
+          </Box>
+        )}
       </Paper>
     </Stack>
   );
