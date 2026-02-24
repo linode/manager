@@ -51,7 +51,7 @@ export const ImageLibraryTabs = () => {
       params: {
         action,
         imageId: image.id,
-        imageType: imageActionParams?.imageType ?? 'owned-by-me',
+        imageType: imageTypeParams?.imageType ?? 'owned-by-me',
       },
       search: (prev) => prev,
       to: '/images/image-library/$imageType/$imageId/$action',
@@ -71,7 +71,11 @@ export const ImageLibraryTabs = () => {
   };
 
   const handleCloseDialog = () => {
-    navigate({ search: (prev) => prev, to: '/images/image-library' });
+    navigate({
+      search: (prev) => prev,
+      to: '/images/image-library/$imageType',
+      params: { imageType: imageTypeParams?.imageType ?? 'owned-by-me' },
+    });
   };
 
   const handleManageRegions = (image: Image) => {
@@ -141,8 +145,7 @@ export const ImageLibraryTabs = () => {
                   </Notice>
                 )}
                 {tab.type === 'recovery-images' && (
-                  // <ImagesView handlers={handlers} type="recovery-images" />
-                  <Notice variant="info">Recovery Images</Notice>
+                  <ImagesView handlers={handlers} type="recovery-images" />
                 )}
               </SafeTabPanel>
             ))}

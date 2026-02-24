@@ -170,7 +170,7 @@ export const ImagesTable = (props: ImagesTableProps) => {
                 >
                   <ZeroStateSearchNarrowIcon />
                   <Typography variant="h3">{emptyMessage.main}</Typography>
-                  {!query && (
+                  {!query && emptyMessage.instruction && (
                     <Typography variant="body1">
                       {emptyMessage.instruction}
                     </Typography>

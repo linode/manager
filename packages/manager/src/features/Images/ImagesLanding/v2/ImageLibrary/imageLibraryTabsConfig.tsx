@@ -4,6 +4,9 @@ import { Link } from 'src/components/Link';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import {
+  AUTOMATIC_IMAGES_DEFAULT_ORDER,
+  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+  AUTOMATIC_IMAGES_PREFERENCE_KEY,
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
@@ -37,7 +40,7 @@ export interface ImageConfig {
   description: React.ReactNode;
   docsLink?: string;
   emptyMessage: {
-    instruction: string;
+    instruction: null | string;
     main: string;
   };
   eventCategory: string;
@@ -86,9 +89,28 @@ const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
   },
 ];
 
+const RECOVERY_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
+  { header: 'Image', label: 'label', sortable: true },
+  {
+    header: 'Status',
+    hiddenOn: 'smDown',
+  },
+  { header: 'Size', label: 'size', sortable: true },
+  {
+    header: 'Created',
+    label: 'created',
+    sortable: true,
+    hiddenOn: 'smDown',
+  },
+  {
+    header: 'Expires',
+    hiddenOn: 'smDown',
+  },
+];
+
 export const IMAGES_CONFIG: Omit<
   Record<ImageLibraryType, ImageConfig>,
-  'recovery-images' | 'shared-with-me'
+  'shared-with-me'
 > = {
   'owned-by-me': {
     title: 'Owned by me',
@@ -127,5 +149,25 @@ export const IMAGES_CONFIG: Omit<
         'Click \u2018Create Image\u2019 to create your first custom image',
     },
   },
-  // "shared-with-me", and 'recovery-images' images config will go here...
+  'recovery-images': {
+    title: 'Recovery Images',
+    description: (
+      <>
+        These are images we automatically capture when Linode disks are deleted.
+        They will be deleted after the indicated expiration date.
+      </>
+    ),
+    type: 'automatic',
+    orderByDefault: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+    orderDefault: AUTOMATIC_IMAGES_DEFAULT_ORDER,
+    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
+    isEnabled: (subType) => subType === 'recovery-images',
+    columns: RECOVERY_IMAGES_TABLE_COLUMNS,
+    eventCategory: 'Recovery Images Table',
+    emptyMessage: {
+      main: 'No recovery images to display',
+      instruction: null,
+    },
+  },
+  // "shared-with-me" images config will go here
 };
