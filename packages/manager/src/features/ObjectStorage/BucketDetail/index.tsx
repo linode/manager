@@ -148,7 +148,10 @@ export const BucketDetailLanding = React.memo(() => {
 
             {!!metricsTabIndex && (
               <SafeTabPanel index={metricsTabIndex}>
-                <BucketMetrics bucketName={bucketName} region={bucket.region} />
+                <BucketMetrics
+                  hostname={bucket.hostname}
+                  region={bucket.region}
+                />
               </SafeTabPanel>
             )}
           </TabPanels>
