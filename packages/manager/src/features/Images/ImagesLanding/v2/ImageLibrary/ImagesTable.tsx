@@ -137,10 +137,10 @@ export const ImagesTable = (props: ImagesTableProps) => {
                     key={idx}
                     label={col.label}
                   >
-                    {col.header}
+                    {col.name}
                   </TableSortCell>
                 ) : (
-                  <TableCell key={idx}>{col.header}</TableCell>
+                  <TableCell key={idx}>{col.name}</TableCell>
                 );
 
               return col.hiddenOn ? (

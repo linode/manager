@@ -71,7 +71,13 @@ export const ImageLibraryTabs = () => {
   };
 
   const handleCloseDialog = () => {
-    navigate({ search: (prev) => prev, to: '/images/image-library' });
+    navigate({
+      search: (prev) => prev,
+      to: '/images/image-library/$imageType',
+      params: {
+        imageType: imageTypeParams?.imageType ?? 'owned-by-me',
+      },
+    });
   };
 
   const handleManageRegions = (image: Image) => {
