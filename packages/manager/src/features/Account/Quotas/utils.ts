@@ -251,7 +251,6 @@ export const convertResourceMetric = ({
       convertedResourceMetric: 'Gbps',
       convertedLimit: readableBytes(initialLimit, {
         unit: 'GB',
-        round: 0,
         base10: true,
       }).value,
     };
