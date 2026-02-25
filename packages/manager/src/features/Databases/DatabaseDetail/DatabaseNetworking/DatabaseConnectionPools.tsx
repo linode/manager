@@ -32,6 +32,7 @@ import {
 import {
   StyledGridContainer,
   StyledLabelTypography,
+  StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -85,6 +86,9 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
     );
   }
 
+  const hasVPC = Boolean(database?.private_network?.vpc_id);
+  const hasPublicVPC = hasVPC && database.private_network?.public_access;
+
   return (
     <>
       <div className={classes.topSection}>
@@ -116,16 +120,37 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
         </Button>
       </div>
       {connectionPools && connectionPools.data.length > 0 && (
-        <StyledGridContainer display="flex">
+        <StyledGridContainer container size={12} spacing={0}>
           <Grid
             size={{
-              md: 1.5,
+              md: 2,
               xs: 3,
             }}
           >
-            <StyledLabelTypography>Service URI</StyledLabelTypography>
+            <StyledLabelTypography>
+              {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
+            </StyledLabelTypography>
           </Grid>
-          <ServiceURI database={database} />
+          <StyledValueGrid size={{ md: 10, xs: 8 }}>
+            <ServiceURI database={database} />
+          </StyledValueGrid>
+          {hasPublicVPC && (
+            <>
+              <Grid
+                size={{
+                  md: 2,
+                  xs: 3,
+                }}
+              >
+                <StyledLabelTypography>
+                  Private Service URI
+                </StyledLabelTypography>
+              </Grid>
+              <StyledValueGrid size={{ md: 10, xs: 8 }}>
+                <ServiceURI database={database} showPrivateVPC />
+              </StyledValueGrid>
+            </>
+          )}
         </StyledGridContainer>
       )}
       <div style={{ overflowX: 'auto', width: '100%' }}>

@@ -13,11 +13,16 @@ import type { Database, DatabaseCredentials } from '@linode/api-v4';
 
 interface ServiceURIProps {
   database: Database;
-  generalServiceURI?: string;
+  isGeneralServiceURI?: boolean;
+  showPrivateVPC?: boolean;
 }
 
 export const ServiceURI = (props: ServiceURIProps) => {
-  const { database, generalServiceURI } = props;
+  const {
+    database,
+    isGeneralServiceURI = false,
+    showPrivateVPC = false,
+  } = props;
 
   const [hidePassword, setHidePassword] = useState(true);
   const [isCopying, setIsCopying] = useState(false);
@@ -32,6 +37,26 @@ export const ServiceURI = (props: ServiceURIProps) => {
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id, !hidePassword);
 
+  const hasVPC = Boolean(database?.private_network?.vpc_id);
+  const hasPublicVPC = hasVPC && database.private_network?.public_access;
+  // If there is a VPC, use VPC public access unless we want to explicitly show private access, otherwise default to public
+  const publicAccess =
+    hasPublicVPC && showPrivateVPC
+      ? false
+      : hasVPC
+        ? database.private_network?.public_access
+        : true;
+
+  const primaryHost = database.hosts?.endpoints.find(
+    (endpoint) =>
+      endpoint.role === 'primary' && endpoint.public_access === publicAccess
+  );
+  const primaryConnectionPoolHost = database.hosts?.endpoints.find(
+    (endpoint) =>
+      endpoint.role === 'primary-connection-pool' &&
+      endpoint.public_access === publicAccess
+  );
+
   const handleCopy = async () => {
     if (!credentials) {
       try {
@@ -39,7 +64,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         const { data } = await getDatabaseCredentials();
         if (data) {
           // copy with revealed credentials
-          copy(getServiceURIText(data, generalServiceURI));
+          copy(getServiceURIText(data, isGeneralServiceURI));
         } else {
           enqueueSnackbar(
             'There was an error retrieving cluster credentials. Please try again.',
@@ -59,12 +84,12 @@ export const ServiceURI = (props: ServiceURIProps) => {
 
   const getServiceURIText = (
     credentials: DatabaseCredentials | undefined,
-    generalServiceURI?: string
+    isGeneralServiceURI?: boolean
   ) => {
-    if (generalServiceURI) {
-      return `${engine}://${credentials?.password}${generalServiceURI}`;
+    if (isGeneralServiceURI) {
+      return `${engine}://${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?sslmode=require`;
     }
-    return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}:${database.connection_pool_port}/{connection pool label}?sslmode=require`;
+    return `postgres://${credentials?.username}:${credentials?.password}@${primaryConnectionPoolHost?.address}:${primaryConnectionPoolHost?.port}/{connection pool label}?sslmode=require`;
   };
 
   const getCredentials = (isGeneralServiceURI: boolean) => {
@@ -114,7 +139,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         sx={{
           overflowX: 'auto',
           overflowY: 'hidden',
-          p: generalServiceURI ? '0' : null,
+          p: isGeneralServiceURI ? '0' : null,
         }}
         whiteSpace="pre"
       >
@@ -123,12 +148,16 @@ export const ServiceURI = (props: ServiceURIProps) => {
           ? ErrorButton
           : hidePassword || (!credentialsError && !credentials)
             ? RevealPasswordButton
-            : getCredentials(Boolean(generalServiceURI))}
-        {generalServiceURI ? (
-          generalServiceURI
+            : getCredentials(isGeneralServiceURI)}
+        {isGeneralServiceURI ? (
+          <>
+            @{primaryHost?.address}:
+            {`${primaryHost?.port}/defaultdb?sslmode=require`}
+          </>
         ) : (
           <>
-            @{database.hosts?.primary}:{database.connection_pool_port}/
+            @{primaryConnectionPoolHost?.address}:
+            {primaryConnectionPoolHost?.port}/
             <StyledCode>{'{connection pool label}'}</StyledCode>
             ?sslmode=require
           </>
@@ -142,7 +171,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
             onClickCallback={handleCopy}
-            text={getServiceURIText(credentials, generalServiceURI)}
+            text={getServiceURIText(credentials, isGeneralServiceURI)}
           />
         </Grid>
       )}

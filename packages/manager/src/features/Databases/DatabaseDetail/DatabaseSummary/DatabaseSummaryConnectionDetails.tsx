@@ -117,6 +117,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     </>
   );
 
+  const hasPublicVPC = hasVPC && database.private_network?.public_access;
+
   return (
     <>
       <Typography className={classes.header} variant="h3">
@@ -124,10 +126,19 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       </Typography>
       <StyledGridContainer container size={{ lg: 10, md: 10 }} spacing={0}>
         {flags.databasePgBouncer && (
-          <ConnectionDetailsRow isSummaryTab label="Service URI">
+          <ConnectionDetailsRow
+            isSummaryTab
+            label={`${hasPublicVPC ? 'Public Service URI' : 'Service URI'} `}
+          >
+            <ServiceURI database={database} isGeneralServiceURI />
+          </ConnectionDetailsRow>
+        )}
+        {flags.databasePgBouncer && hasPublicVPC && (
+          <ConnectionDetailsRow isSummaryTab label="Private Service URI">
             <ServiceURI
               database={database}
-              generalServiceURI={`@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`}
+              isGeneralServiceURI
+              showPrivateVPC={true}
             />
           </ConnectionDetailsRow>
         )}

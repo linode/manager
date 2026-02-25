@@ -203,9 +203,7 @@ export const databaseInstanceFactory =
     members: {
       '2.2.2.2': 'primary',
     },
-    platform: Factory.each((i) =>
-      adb10(i) ? 'rdbms-legacy' : 'rdbms-default'
-    ),
+    platform: 'rdbms-default',
     region: Factory.each((i) => possibleRegions[i % possibleRegions.length]),
     status: Factory.each((i) => possibleStatuses[i % possibleStatuses.length]),
     type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
@@ -277,7 +275,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     '2.2.2.2': 'primary',
   },
   oldest_restore_time: '2024-09-15T17:15:12',
-  platform: Factory.each((i) => (adb10(i) ? 'rdbms-legacy' : 'rdbms-default')),
+  platform: 'rdbms-default',
   private_network: null,
   port: 3306,
   region: 'us-east',

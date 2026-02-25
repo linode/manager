@@ -8,6 +8,7 @@ import ClusterConfiguration from 'src/features/Databases/DatabaseDetail/Database
 import {
   StyledGridContainer,
   StyledLabelTypography,
+  StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';
 import { useFlags } from 'src/hooks/useFlags';
@@ -31,6 +32,9 @@ export const DatabaseSummary = () => {
     database.engine === 'postgresql' &&
     connectionPools &&
     connectionPools.data.length > 0;
+
+  const hasVPC = Boolean(database?.private_network?.vpc_id);
+  const hasPublicVPC = hasVPC && database.private_network?.public_access;
 
   return (
     <Paper>
@@ -61,16 +65,37 @@ export const DatabaseSummary = () => {
             <Typography mb={2} variant="h3">
               PgBouncer Connection Details
             </Typography>
-            <StyledGridContainer display="flex">
+            <StyledGridContainer container size={12} spacing={0}>
               <Grid
                 size={{
-                  md: 1.5,
+                  md: 2,
                   xs: 3,
                 }}
               >
-                <StyledLabelTypography>Service URI</StyledLabelTypography>
+                <StyledLabelTypography>
+                  {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
+                </StyledLabelTypography>
               </Grid>
-              <ServiceURI database={database} />
+              <StyledValueGrid size={{ md: 10, xs: 8 }}>
+                <ServiceURI database={database} />
+              </StyledValueGrid>
+              {hasPublicVPC && (
+                <>
+                  <Grid
+                    size={{
+                      md: 2,
+                      xs: 3,
+                    }}
+                  >
+                    <StyledLabelTypography>
+                      Private Service URI
+                    </StyledLabelTypography>
+                  </Grid>
+                  <StyledValueGrid size={{ md: 10, xs: 8 }}>
+                    <ServiceURI database={database} showPrivateVPC />
+                  </StyledValueGrid>
+                </>
+              )}
             </StyledGridContainer>
           </Grid>
         )}

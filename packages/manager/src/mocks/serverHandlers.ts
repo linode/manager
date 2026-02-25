@@ -241,32 +241,53 @@ const makeMockDatabase = (params: PathParams): Database => {
         {
           role: 'primary',
           address: 'public-db-mysql-primary-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: true,
         },
         {
           role: 'primary',
           address: 'private-db-mysql-primary-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: false,
         },
         {
           role: 'standby',
           address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: true,
         },
         {
           role: 'standby',
           address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: false,
         },
         {
           role: 'primary-connection-pool',
-          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          address:
+            'private-db-postgres-primary-connection-pool-0.b.linodeb.net',
           port: 15848,
           public_access: false,
+        },
+        {
+          role: 'standby-connection-pool',
+          address:
+            'private-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+          port: 15848,
+          public_access: false,
+        },
+        {
+          role: 'primary-connection-pool',
+          address: 'public-db-postgres-primary-connection-pool-0.b.linodeb.net',
+          port: 15848,
+          public_access: true,
+        },
+        {
+          role: 'standby-connection-pool',
+          address:
+            'public-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+          port: 15848,
+          public_access: true,
         },
       ],
     };
@@ -280,7 +301,20 @@ const makeMockDatabase = (params: PathParams): Database => {
   //     {
   //       role: 'primary',
   //       address: 'db-mysql-primary-0.b.linodeb.net',
-  //       port: 15847,
+  //       port: 3306,
+  //       public_access: true,
+  //     },
+  //     {
+  //       role: 'primary-connection-pool',
+  //       address: 'public-db-postgres-primary-connection-pool-0.b.linodeb.net',
+  //       port: 15848,
+  //       public_access: true,
+  //     },
+  //     {
+  //       role: 'standby-connection-pool',
+  //       address:
+  //         'public-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+  //       port: 15848,
   //       public_access: true,
   //     },
   //   ],
