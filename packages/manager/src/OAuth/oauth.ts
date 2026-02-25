@@ -5,7 +5,7 @@ import {
 } from '@linode/utilities';
 import * as Sentry from '@sentry/react';
 
-import { clearStorage, clearUserInput, storage } from 'src/utilities/storage';
+import { clearUserInput, storage } from 'src/utilities/storage';
 
 import { getAppRoot, getClientId, getLoginURL } from './constants';
 import { generateCodeChallenge, generateCodeVerifier } from './pkce';
@@ -45,7 +45,6 @@ function clearNonceAndCodeVerifierFromLocalStorage() {
 function clearAllAuthDataFromLocalStorage() {
   clearNonceAndCodeVerifierFromLocalStorage();
   clearAuthDataFromLocalStorage();
-  clearStorage('switch_account/company_name');
 }
 
 export function clearStorageAndRedirectToLogout() {
@@ -106,7 +105,6 @@ export async function logout() {
 
   clearUserInput();
   clearAuthDataFromLocalStorage();
-  clearStorage('switch_account/company_name');
 
   if (token) {
     const tokenWithoutPrefix = token.split(' ')[1];

@@ -121,9 +121,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       }
     : undefined;
 
-  const switchAccountCompanyName = getStorage('switch_account/company_name');
   const companyNameOrEmail = getCompanyNameOrEmail({
-    company: account?.company ? account?.company : switchAccountCompanyName,
+    company: account?.company,
     profile,
   });
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
@@ -237,8 +236,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
-          {canSwitchBetweenParentOrProxyAccount && (
+        <Stack
+          display="flex"
+          gap={(theme) => (companyNameOrEmail ? theme.tokens.spacing.S8 : 0)}
+        >
+          {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail && (
             <Typography
               sx={(theme) => ({
                 color: theme.tokens.alias.Content.Text.Primary.Default,
@@ -255,8 +257,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               overflowWrap: 'break-word',
             })}
           >
-            {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
-              ? companyNameOrEmail
+            {canSwitchBetweenParentOrProxyAccount
+              ? companyNameOrEmail || null
               : userName}
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (

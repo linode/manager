@@ -43,10 +43,8 @@ export const UserMenu = React.memo(() => {
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
 
-  const switchAccountCompanyName = getStorage('switch_account/company_name');
-
   const companyNameOrEmail = getCompanyNameOrEmail({
-    company: account?.company ? account?.company : switchAccountCompanyName,
+    company: account?.company,
     profile,
   });
 
@@ -85,9 +83,10 @@ export const UserMenu = React.memo(() => {
         setStorage('is_delegate_user_type', 'true');
       }
 
-      enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
-        variant: 'success',
-      });
+      const message = companyNameOrEmail
+        ? `Account switched to ${companyNameOrEmail}.`
+        : 'Account switched.';
+      enqueueSnackbar(message, { variant: 'success' });
     }
   }, [
     isProxyOrDelegateUserType,
