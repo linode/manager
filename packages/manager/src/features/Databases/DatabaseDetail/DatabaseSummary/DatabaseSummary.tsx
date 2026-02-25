@@ -5,6 +5,10 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import ClusterConfiguration from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration';
+import {
+  StyledGridContainer,
+  StyledLabelTypography,
+} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -57,7 +61,17 @@ export const DatabaseSummary = () => {
             <Typography mb={2} variant="h3">
               PgBouncer Connection Details
             </Typography>
-            <ServiceURI database={database} />
+            <StyledGridContainer display="flex">
+              <Grid
+                size={{
+                  md: 1.5,
+                  xs: 3,
+                }}
+              >
+                <StyledLabelTypography>Service URI</StyledLabelTypography>
+              </Grid>
+              <ServiceURI database={database} />
+            </StyledGridContainer>
           </Grid>
         )}
       </Grid>

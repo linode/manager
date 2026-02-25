@@ -125,7 +125,10 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <StyledGridContainer container size={{ lg: 10, md: 10 }} spacing={0}>
         {flags.databasePgBouncer && (
           <ConnectionDetailsRow isSummaryTab label="Service URI">
-            <ServiceURI database={database} isGeneralServiceURI />
+            <ServiceURI
+              database={database}
+              generalServiceURI={`@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`}
+            />
           </ConnectionDetailsRow>
         )}
         <ConnectionDetailsRow isSummaryTab label="Username">

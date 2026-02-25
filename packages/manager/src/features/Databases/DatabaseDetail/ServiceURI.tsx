@@ -7,21 +7,17 @@ import React, { useState } from 'react';
 
 import { Code } from 'src/components/Code/Code';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import {
-  StyledGridContainer,
-  StyledLabelTypography,
-  StyledValueGrid,
-} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
 import type { Database, DatabaseCredentials } from '@linode/api-v4';
 
 interface ServiceURIProps {
   database: Database;
-  isGeneralServiceURI?: boolean;
+  generalServiceURI?: string;
 }
 
 export const ServiceURI = (props: ServiceURIProps) => {
-  const { database, isGeneralServiceURI = false } = props;
+  const { database, generalServiceURI } = props;
 
   const [hidePassword, setHidePassword] = useState(true);
   const [isCopying, setIsCopying] = useState(false);
@@ -43,7 +39,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         const { data } = await getDatabaseCredentials();
         if (data) {
           // copy with revealed credentials
-          copy(getServiceURIText(isGeneralServiceURI, data));
+          copy(getServiceURIText(data, generalServiceURI));
         } else {
           enqueueSnackbar(
             'There was an error retrieving cluster credentials. Please try again.',
@@ -62,11 +58,11 @@ export const ServiceURI = (props: ServiceURIProps) => {
   };
 
   const getServiceURIText = (
-    isGeneralServiceURI: boolean,
-    credentials: DatabaseCredentials | undefined
+    credentials: DatabaseCredentials | undefined,
+    generalServiceURI?: string
   ) => {
-    if (isGeneralServiceURI) {
-      return `${engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
+    if (generalServiceURI) {
+      return `${engine}://${credentials?.password}${generalServiceURI}`;
     }
     return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}:${database.connection_pool_port}/{connection pool label}?sslmode=require`;
   };
@@ -110,7 +106,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     </Button>
   );
 
-  const ServiceURIJSX = (isGeneralServiceURI: boolean) => (
+  return (
     <Grid display="contents">
       <StyledValueGrid
         data-testid="service-uri"
@@ -118,7 +114,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         sx={{
           overflowX: 'auto',
           overflowY: 'hidden',
-          p: isGeneralServiceURI ? '0' : null,
+          p: generalServiceURI ? '0' : null,
         }}
         whiteSpace="pre"
       >
@@ -127,17 +123,14 @@ export const ServiceURI = (props: ServiceURIProps) => {
           ? ErrorButton
           : hidePassword || (!credentialsError && !credentials)
             ? RevealPasswordButton
-            : getCredentials(isGeneralServiceURI)}
-        {!isGeneralServiceURI ? (
+            : getCredentials(Boolean(generalServiceURI))}
+        {generalServiceURI ? (
+          generalServiceURI
+        ) : (
           <>
             @{database.hosts?.primary}:{database.connection_pool_port}/
             <StyledCode>{'{connection pool label}'}</StyledCode>
             ?sslmode=require
-          </>
-        ) : (
-          <>
-            @{database.hosts?.primary}:
-            {`${database.port}/defaultdb?sslmode=require`}
           </>
         )}
       </StyledValueGrid>
@@ -149,33 +142,15 @@ export const ServiceURI = (props: ServiceURIProps) => {
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
             onClickCallback={handleCopy}
-            text={getServiceURIText(isGeneralServiceURI, credentials)}
+            text={getServiceURIText(credentials, generalServiceURI)}
           />
         </Grid>
       )}
     </Grid>
   );
-
-  if (isGeneralServiceURI) {
-    return ServiceURIJSX(isGeneralServiceURI);
-  }
-
-  return (
-    <StyledGridContainer display="flex">
-      <Grid
-        size={{
-          md: 1.5,
-          xs: 3,
-        }}
-      >
-        <StyledLabelTypography>Service URI</StyledLabelTypography>
-      </Grid>
-      {ServiceURIJSX(isGeneralServiceURI)}
-    </StyledGridContainer>
-  );
 };
 
-const StyledCode = styled(Code, {
+export const StyledCode = styled(Code, {
   label: 'StyledCode',
 })(() => ({
   margin: 0,

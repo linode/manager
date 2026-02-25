@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
@@ -28,6 +29,10 @@ import {
   CONNECTION_POOL_LABEL_CELL_STYLES,
   MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
 } from 'src/features/Databases/constants';
+import {
+  StyledGridContainer,
+  StyledLabelTypography,
+} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
@@ -111,7 +116,17 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
         </Button>
       </div>
       {connectionPools && connectionPools.data.length > 0 && (
-        <ServiceURI database={database} />
+        <StyledGridContainer display="flex">
+          <Grid
+            size={{
+              md: 1.5,
+              xs: 3,
+            }}
+          >
+            <StyledLabelTypography>Service URI</StyledLabelTypography>
+          </Grid>
+          <ServiceURI database={database} />
+        </StyledGridContainer>
       )}
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table

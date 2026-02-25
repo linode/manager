@@ -97,7 +97,10 @@ describe('ServiceURI', () => {
       data: mockCredentials,
     });
     const { container } = renderWithTheme(
-      <ServiceURI database={mockDatabase} isGeneralServiceURI />
+      <ServiceURI
+        database={mockDatabase}
+        generalServiceURI={`@${mockDatabase.hosts?.primary}:${mockDatabase.port}/defaultdb?sslmode=require`}
+      />
     );
 
     const revealPasswordBtn = screen.getByRole('button', {
@@ -120,7 +123,12 @@ describe('ServiceURI', () => {
       data: mockCredentials,
       refetch: vi.fn(),
     });
-    renderWithTheme(<ServiceURI database={mockDatabase} isGeneralServiceURI />);
+    renderWithTheme(
+      <ServiceURI
+        database={mockDatabase}
+        generalServiceURI={`@${mockDatabase.hosts?.primary}:${mockDatabase.port}/defaultdb?sslmode=require`}
+      />
+    );
 
     const revealPasswordBtn = screen.getByRole('button', {
       name: '{click to reveal password}',
