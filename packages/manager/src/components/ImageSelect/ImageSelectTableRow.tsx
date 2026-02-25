@@ -1,12 +1,16 @@
-import { FormControlLabel, Radio } from '@linode/ui';
+import { FormControlLabel, ListItem, Radio } from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
 import React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import {
+  PlanTextTooltip,
+  StyledFormattedRegionList,
+} from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Image } from '@linode/api-v4';
+import type { Image, ImageRegion } from '@linode/api-v4';
 
 interface Props {
   image: Image;
@@ -49,6 +53,18 @@ export const ImageSelectTableRow = (props: Props) => {
     return '—';
   };
 
+  const FormattedRegionList = () => (
+    <StyledFormattedRegionList>
+      {regions.map((region: ImageRegion, idx) => {
+        return (
+          <ListItem disablePadding key={`${region.region}-${idx}`}>
+            {region.region}
+          </ListItem>
+        );
+      })}
+    </StyledFormattedRegionList>
+  );
+
   return (
     <TableRow key={id}>
       <TableCell noWrap>
@@ -61,9 +77,14 @@ export const ImageSelectTableRow = (props: Props) => {
         />
       </TableCell>
       <TableCell noWrap>
-        {regions?.length > 0
-          ? pluralize('Region', 'Regions', regions.length)
-          : '—'}
+        <PlanTextTooltip
+          displayText={
+            regions.length > 0
+              ? pluralize('Region', 'Regions', regions.length)
+              : '—'
+          }
+          tooltipText={<FormattedRegionList />}
+        />
       </TableCell>
       <TableCell noWrap>{getShareGroupDisplay()}</TableCell>
       <TableCell noWrap>{getSizeDisplay()}</TableCell>

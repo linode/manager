@@ -5,7 +5,14 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Autocomplete, Box, Notice, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  IconButton,
+  Notice,
+  Stack,
+  TooltipIcon,
+} from '@linode/ui';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -18,6 +25,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { SHARE_GROUP_COLUMN_HEADER_TOOLTIP } from 'src/features/Images/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { ImageSelectTableRow } from './ImageSelectTableRow';
@@ -174,7 +182,23 @@ export const ImageSelectTable = (props: Props) => {
             <TableRow>
               <TableCell sx={{ paddingLeft: '58px' }}>Image</TableCell>
               <TableCell>Replicated in</TableCell>
-              <TableCell>Share Group</TableCell>
+              <TableCell>
+                <Stack alignItems="center" direction="row">
+                  Share Group
+                  {
+                    <IconButton aria-label="Share group" size="small">
+                      <TooltipIcon
+                        status="info"
+                        sxTooltipIcon={{
+                          padding: '4px',
+                        }}
+                        text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
+                        tooltipPosition="right"
+                      />
+                    </IconButton>
+                  }
+                </Stack>
+              </TableCell>
               <TableCell>Size</TableCell>
               <TableCell>Created</TableCell>
               <TableCell>Image ID</TableCell>
