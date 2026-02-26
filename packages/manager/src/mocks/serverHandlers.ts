@@ -260,6 +260,12 @@ const makeMockDatabase = (params: PathParams): Database => {
         },
         {
           role: 'primary-connection-pool',
+          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          port: 15848,
+          public_access: true,
+        },
+        {
+          role: 'primary-connection-pool',
           address: 'private-db-mysql-primary-0.b.linodeb.net',
           port: 15848,
           public_access: false,

@@ -1,5 +1,5 @@
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Button } from '@linode/ui';
+import { Button, TooltipIcon } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { enqueueSnackbar } from 'notistack';
@@ -139,7 +139,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         sx={{
           overflowX: 'auto',
           overflowY: 'hidden',
-          p: isGeneralServiceURI ? '0' : null,
+          p: '0',
         }}
         whiteSpace="pre"
       >
@@ -172,6 +172,20 @@ export const ServiceURI = (props: ServiceURIProps) => {
           <StyledCopyTooltip
             onClickCallback={handleCopy}
             text={getServiceURIText(credentials, isGeneralServiceURI)}
+          />
+        </Grid>
+      )}
+      {hasPublicVPC && showPrivateVPC && (
+        <Grid>
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={{
+              marginLeft: '2px',
+              padding: '0px',
+            }}
+            text={
+              'Private endpoints are resolvable only for resources within the VPC Subnet. Public endpoints are resolvable outside the VPC.'
+            }
           />
         </Grid>
       )}
