@@ -9,5 +9,52 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
+    <script type="text/javascript">
+      function initEmbeddedMessaging() {
+      try {
+        const checkInterval = window.setInterval(() => {
+          const enableLiveChat = window.sessionStorage.getItem('EnableLiveChat') === 'true';
+          if (enableLiveChat) {
+            window.clearInterval(checkInterval);
+            window.addEventListener("message", (event) => {
+            const { action, data } = event.data;
+            if (action === "prechatLoaded") {
+              console.debug("Received from iframe:", data);
+              const dataMap = {
+              JWE_Token: "<Token>",
+              Subject: window.__supportChatSubject || "<Subject>",
+              Description: "<Description>"
+              };
+              event.source.postMessage(
+              { action: "hiddenParameters", data: dataMap },
+              event.origin
+              );
+            }
+            });
+            window.addEventListener("onEmbeddedMessagingButtonCreated", (event) => {
+              embeddedservice_bootstrap.utilAPI.launchChat();
+            });
+            embeddedservice_bootstrap.settings.language = "en_US";
+            embeddedservice_bootstrap.init(
+            "00DWH000002hLKz",
+            "Compute_Chat_Support",
+            "REDACTED",
+            {
+              scrt2URL:
+              "REDACTED"
+            }
+            );
+          }
+        }, 500);
+      } catch (err) {
+        console.error("Error loading Embedded Messaging: ", err);
+      }
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="REDACTED"
+      onload="initEmbeddedMessaging()">
+    </script>
   </body>
 </html>

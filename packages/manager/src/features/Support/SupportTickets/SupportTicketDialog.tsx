@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
-import { useLocation } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -147,8 +147,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTicketType,
     prefilledTitle,
   } = props;
+  const liveChat = true;
 
   const location = useLocation();
+  const navigate = useNavigate();
   const locationState = location.state as SupportTicketLocationState;
 
   // Collect prefilled data from props or Link parameters.
@@ -277,6 +279,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles(newFiles);
   };
 
+  const handleStartLiveChat = async () => {
+    window.sessionStorage.setItem('EnableLiveChat', 'true');
+    props.onClose();
+    window.setTimeout(() => resetDialog(true), 500);
+    await navigate({ to: '/support' });
+  };
+
   /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
    * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
    * any upload errors. Also tracks loading state of each individual file. */
@@ -348,6 +357,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const { onSuccess } = props;
+
+    if (liveChat && entityType === 'general') {
+      await handleStartLiveChat();
+      return;
+    }
 
     const _description = formatDescription(values, ticketType);
 
@@ -459,31 +473,32 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   />
                 )}
               />
-              {hasSeverityCapability && (
-                <Controller
-                  control={form.control}
-                  name="selectedSeverity"
-                  render={({ field }) => (
-                    <Autocomplete
-                      autoHighlight
-                      data-qa-ticket-severity
-                      label="Severity"
-                      onChange={(e, severity) =>
-                        field.onChange(
-                          severity !== null ? severity.value : undefined
-                        )
-                      }
-                      options={SEVERITY_OPTIONS}
-                      sx={{ maxWidth: 'initial' }}
-                      textFieldProps={{
-                        tooltipPosition: 'right',
-                        tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
-                      }}
-                      value={selectedSeverityOption ?? null}
-                    />
-                  )}
-                />
-              )}
+              {hasSeverityCapability &&
+                !(liveChat && entityType === 'general') && (
+                  <Controller
+                    control={form.control}
+                    name="selectedSeverity"
+                    render={({ field }) => (
+                      <Autocomplete
+                        autoHighlight
+                        data-qa-ticket-severity
+                        label="Severity"
+                        onChange={(e, severity) =>
+                          field.onChange(
+                            severity !== null ? severity.value : undefined
+                          )
+                        }
+                        options={SEVERITY_OPTIONS}
+                        sx={{ maxWidth: 'initial' }}
+                        textFieldProps={{
+                          tooltipPosition: 'right',
+                          tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
+                        }}
+                        value={selectedSeverityOption ?? null}
+                      />
+                    )}
+                  />
+                )}
             </>
           )}
           {ticketType === 'smtp' && <SupportTicketSMTPFields />}
@@ -497,32 +512,36 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields />
               )}
-              <Box mt={1}>
-                <Controller
-                  control={form.control}
-                  name="description"
-                  render={({ field, fieldState }) => (
-                    <TabbedReply
-                      error={fieldState.error?.message}
-                      handleChange={field.onChange}
-                      placeholder={
-                        'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
-                      }
-                      required
-                      value={description}
+              {!(liveChat && entityType === 'general') && (
+                <>
+                  <Box mt={1}>
+                    <Controller
+                      control={form.control}
+                      name="description"
+                      render={({ field, fieldState }) => (
+                        <TabbedReply
+                          error={fieldState.error?.message}
+                          handleChange={field.onChange}
+                          placeholder={
+                            "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                          }
+                          required
+                          value={description}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-              <Accordion
-                detailProps={{ sx: { p: 0.25 } }}
-                heading="Formatting Tips"
-                summaryProps={{ sx: { paddingX: 0.25 } }}
-                sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
-              >
-                <MarkdownReference />
-              </Accordion>
-              <AttachFileForm files={files} updateFiles={updateFiles} />
+                  </Box>
+                  <Accordion
+                    detailProps={{ sx: { p: 0.25 } }}
+                    heading="Formatting Tips"
+                    summaryProps={{ sx: { paddingX: 0.25 } }}
+                    sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
+                  >
+                    <MarkdownReference />
+                  </Accordion>
+                  <AttachFileForm files={files} updateFiles={updateFiles} />
+                </>
+              )}
               {form.formState.errors.root && (
                 <Notice
                   data-qa-notice
@@ -536,9 +555,15 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              label: 'Open Ticket',
+              label:
+                liveChat && entityType === 'general'
+                  ? 'Start a Live Chat'
+                  : 'Open Ticket',
               loading: submitting,
-              onClick: handleSubmit,
+              onClick:
+                liveChat && entityType === 'general'
+                  ? handleStartLiveChat
+                  : handleSubmit,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
