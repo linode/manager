@@ -214,10 +214,6 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
 
-  if (db.engine === 'postgresql') {
-    db.connection_pool_port = 100; /** @Deprecated replaced by `endpoints` property */
-  }
-
   const database = databaseFactory.build(db);
 
   // Mock a database cluster with a public VPC Configuration
