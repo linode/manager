@@ -1,6 +1,6 @@
 import {
+  useAllImagesQuery,
   useAllTagsQuery,
-  useImagesQuery,
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
@@ -12,22 +12,32 @@ import {
   Notice,
   Stack,
   TooltipIcon,
+  useTheme,
 } from '@linode/ui';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Pagination } from 'akamai-cds-react-components/Pagination';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from 'akamai-cds-react-components/Table';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { SHARE_GROUP_COLUMN_HEADER_TOOLTIP } from 'src/features/Images/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import {
+  DEFAULT_CLIENT_SIDE_PAGE_SIZE,
+  IMAGE_SELECT_TABLE_COLUMNS_COUNT,
+  IMAGE_SELECT_TABLE_PREFERENCE_KEY,
+  TABLE_CELL_BASE_STYLE,
+} from './constants';
 import { ImageSelectTableRow } from './ImageSelectTableRow';
 
 import type { Filter, Image } from '@linode/api-v4';
@@ -55,25 +65,18 @@ interface Props {
 
 type OptionType = { label: string; value: string };
 
-const COLUMNS = 6;
-const PREFERENCE_KEY = 'image-select-table';
-
 export const ImageSelectTable = (props: Props) => {
   const { currentRoute, errorText, onSelect, selectedImageId } = props;
 
+  const theme = useTheme();
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<null | string>(null);
   const [selectedRegion, setSelectedRegion] = useState<null | string>(null);
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { data: profile } = useProfile();
   const { data: tags } = useAllTagsQuery();
   const { data: regions } = useRegionsQuery();
-
-  const pagination = usePaginationV2({
-    currentRoute,
-    initialPage: 1,
-    preferenceKey: PREFERENCE_KEY,
-  });
 
   const { filter: searchFilter, error: filterError } = getAPIFilterFromQuery(
     query,
@@ -99,21 +102,26 @@ export const ImageSelectTable = (props: Props) => {
   });
 
   const {
-    data,
+    data: imagesData,
     error: imagesError,
     isFetching,
     isLoading,
-  } = useImagesQuery(
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
+  } = useAllImagesQuery(
+    {},
     {
       ...combinedFilter,
       is_public: false,
       type: 'manual',
     }
   );
+
+  const pagination = usePaginationV2({
+    clientSidePaginationData: imagesData,
+    currentRoute,
+    defaultPageSize: DEFAULT_CLIENT_SIDE_PAGE_SIZE,
+    initialPage: 1,
+    preferenceKey: IMAGE_SELECT_TABLE_PREFERENCE_KEY,
+  });
 
   const tagOptions =
     tags?.map((tag) => ({ label: tag.label, value: tag.label })) ?? [];
@@ -127,11 +135,25 @@ export const ImageSelectTable = (props: Props) => {
   const selectedRegionOption =
     regionOptions.find((r) => r.value === selectedRegion) ?? null;
 
+  const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+    pagination.handlePageChange(Number(event.detail));
+  };
+
+  const handlePageSizeChange = (event: CustomEvent<{ pageSize: number }>) => {
+    const newSize = event.detail.pageSize;
+    pagination.handlePageSizeChange(newSize);
+  };
+
   return (
     <Stack pt={1} spacing={2}>
       {errorText && <Notice text={errorText} variant="error" />}
-      <Stack alignItems="center" direction="row" flexWrap="wrap" gap={2}>
-        <Box sx={{ flex: 1, minWidth: 200 }}>
+      <Stack
+        alignItems={matchesSmDown ? 'stretch' : 'center'}
+        direction={matchesSmDown ? 'column' : 'row'}
+        flexWrap="wrap"
+        gap={2}
+      >
+        <Box sx={{ flex: 1, minWidth: 200, maxWidth: 350 }}>
           <DebouncedSearchTextField
             clearable
             debounceTime={250}
@@ -147,7 +169,7 @@ export const ImageSelectTable = (props: Props) => {
             value={query}
           />
         </Box>
-        <Box sx={{ flex: 1, minWidth: 150 }}>
+        <Box sx={{ flex: 1, minWidth: 150, maxWidth: 250 }}>
           <Autocomplete
             label=""
             noMarginTop
@@ -161,7 +183,7 @@ export const ImageSelectTable = (props: Props) => {
             value={selectedTagOption}
           />
         </Box>
-        <Box sx={{ flex: 1, minWidth: 150 }}>
+        <Box sx={{ flex: 1, minWidth: 150, maxWidth: 250 }}>
           <Autocomplete
             label=""
             noMarginTop
@@ -179,10 +201,25 @@ export const ImageSelectTable = (props: Props) => {
       <Box>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell sx={{ paddingLeft: '58px' }}>Image</TableCell>
-              <TableCell>Replicated in</TableCell>
-              <TableCell>
+            <TableRow
+              headerbackground={
+                theme.tokens.component.Table.HeaderNested.Background
+              }
+              headerborder
+            >
+              <TableHeaderCell
+                style={{
+                  paddingLeft: '58px',
+                  whiteSpace: 'nowrap',
+                  ...TABLE_CELL_BASE_STYLE,
+                }}
+              >
+                Image
+              </TableHeaderCell>
+              <TableHeaderCell>Replicated in</TableHeaderCell>
+              <TableHeaderCell
+                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+              >
                 <Stack alignItems="center" direction="row">
                   Share Group
                   {
@@ -198,28 +235,43 @@ export const ImageSelectTable = (props: Props) => {
                     </IconButton>
                   }
                 </Stack>
-              </TableCell>
-              <TableCell>Size</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell>Image ID</TableCell>
+              </TableHeaderCell>
+              <TableHeaderCell
+                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+              >
+                Size
+              </TableHeaderCell>
+              <TableHeaderCell
+                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+              >
+                Created
+              </TableHeaderCell>
+              <TableHeaderCell
+                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+              >
+                Image ID
+              </TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {isLoading && (
-              <TableRowLoading columns={COLUMNS} rows={pagination.pageSize} />
+              <TableRowLoading
+                columns={IMAGE_SELECT_TABLE_COLUMNS_COUNT}
+                rows={pagination.pageSize}
+              />
             )}
             {imagesError && (
               <TableRowError
-                colSpan={COLUMNS}
+                colSpan={IMAGE_SELECT_TABLE_COLUMNS_COUNT}
                 message={imagesError[0].reason}
               />
             )}
-            {!isLoading && !imagesError && data?.results === 0 && (
-              <TableRowEmpty colSpan={COLUMNS} />
+            {!isLoading && !imagesError && imagesData?.length === 0 && (
+              <TableRowEmpty colSpan={IMAGE_SELECT_TABLE_COLUMNS_COUNT} />
             )}
             {!isLoading &&
               !imagesError &&
-              data?.data.map((image) => (
+              pagination.paginatedData.map((image) => (
                 <ImageSelectTableRow
                   image={image}
                   key={image.id}
@@ -230,12 +282,13 @@ export const ImageSelectTable = (props: Props) => {
               ))}
           </TableBody>
         </Table>
-        <PaginationFooter
-          count={data?.results ?? 0}
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
+        <Pagination
+          count={imagesData?.length ?? 0}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
           page={pagination.page}
           pageSize={pagination.pageSize}
+          style={{ border: 0 }}
         />
       </Box>
     </Stack>

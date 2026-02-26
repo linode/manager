@@ -1,14 +1,15 @@
 import { FormControlLabel, ListItem, Radio } from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
+import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import {
   PlanTextTooltip,
   StyledFormattedRegionList,
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { formatDate } from 'src/utilities/formatDate';
+
+import { TABLE_CELL_BASE_STYLE } from './constants';
 
 import type { Image, ImageRegion } from '@linode/api-v4';
 
@@ -66,8 +67,8 @@ export const ImageSelectTableRow = (props: Props) => {
   );
 
   return (
-    <TableRow key={id}>
-      <TableCell noWrap>
+    <TableRow key={id} rowborder>
+      <TableCell style={{ ...TABLE_CELL_BASE_STYLE }}>
         <FormControlLabel
           checked={selected}
           control={<Radio />}
@@ -76,7 +77,13 @@ export const ImageSelectTableRow = (props: Props) => {
           sx={{ gap: 2 }}
         />
       </TableCell>
-      <TableCell noWrap>
+      <TableCell
+        style={{
+          whiteSpace: 'nowrap',
+          paddingLeft: '58px',
+          ...TABLE_CELL_BASE_STYLE,
+        }}
+      >
         <PlanTextTooltip
           displayText={
             regions.length > 0
@@ -86,10 +93,18 @@ export const ImageSelectTableRow = (props: Props) => {
           tooltipText={<FormattedRegionList />}
         />
       </TableCell>
-      <TableCell noWrap>{getShareGroupDisplay()}</TableCell>
-      <TableCell noWrap>{getSizeDisplay()}</TableCell>
-      <TableCell noWrap>{formatDate(created, { timezone })}</TableCell>
-      <TableCell noWrap>{id}</TableCell>
+      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
+        {getShareGroupDisplay()}
+      </TableCell>
+      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
+        {getSizeDisplay()}
+      </TableCell>
+      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
+        {formatDate(created, { timezone })}
+      </TableCell>
+      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
+        {id}
+      </TableCell>
     </TableRow>
   );
 };
