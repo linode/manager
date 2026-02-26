@@ -159,12 +159,18 @@ export const SwitchAccountDrawer = (props: Props) => {
           userType: isIAMDelegationEnabled ? 'delegate' : 'proxy',
         });
         onClose(event);
-        location.replace('/linodes');
+
+        // Only redirect to /linodes for IAM delegate users
+        if (isIAMDelegationEnabled) {
+          location.replace('/linodes');
+        } else {
+          location.reload();
+        }
       } catch {
         // Error is handled by createTokenError.
       }
     },
-    [createToken, isProxyUserType, updateCurrentToken, revokeToken]
+    [createToken, updateCurrentToken, revokeToken, isIAMDelegationEnabled]
   );
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
