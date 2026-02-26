@@ -222,8 +222,8 @@ describe('ImagesView component', () => {
     });
   });
 
-  // For Recovery Images
-  describe('For Recovery Images', () => {
+  // For Recovery images
+  describe('For Recovery images', () => {
     it("should render 'Recovery images tab' with items", async () => {
       server.use(
         http.get('*/images', () => {
@@ -248,8 +248,8 @@ describe('ImagesView component', () => {
       const loadingElement = queryAllByTestId(loadingTestId);
       await waitForElementToBeRemoved(loadingElement);
 
-      // Recovery Images table should render
-      getByText('Recovery Images');
+      // Recovery images table should render
+      getByText('Recovery images');
 
       // Static text and table column headers
       expect(getByText('Image')).toBeVisible();

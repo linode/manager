@@ -63,8 +63,8 @@ describe('ImageLibraryTabs', () => {
     });
   });
 
-  // For Custom Images (Owned by me)
-  describe('For Custom Images (Owned by me)', () => {
+  // For Custom images (Owned by me)
+  describe('For Custom images (Owned by me)', () => {
     beforeEach(() => {
       queryMocks.useParams.mockReturnValue({ imageType: 'owned-by-me' });
     });
@@ -77,7 +77,7 @@ describe('ImageLibraryTabs', () => {
       expect(getByText('Owned by me')).toBeVisible();
     });
 
-    // Test Image action navigations for CUSTOM IMAGES (Owned by me)
+    // Test Image action navigations for CUSTOM images (Owned by me)
     it('should allow opening the Edit Image drawer', async () => {
       const image = imageFactory.build();
 
@@ -213,8 +213,8 @@ describe('ImageLibraryTabs', () => {
     });
   });
 
-  // For Recovery Images
-  describe('For Recovery Images', () => {
+  // For Recovery images
+  describe('For Recovery images', () => {
     beforeEach(() => {
       queryMocks.useParams.mockReturnValue({ imageType: 'recovery-images' });
     });
@@ -227,7 +227,7 @@ describe('ImageLibraryTabs', () => {
       expect(getByText('Recovery images')).toBeVisible();
     });
 
-    // Test Images Action navigations for RECOVERY IMAGES
+    // Test Images Action navigations for RECOVERY images
     it('should allow opening the Edit Image drawer', async () => {
       const image = imageFactory.build({ type: 'automatic' });
 

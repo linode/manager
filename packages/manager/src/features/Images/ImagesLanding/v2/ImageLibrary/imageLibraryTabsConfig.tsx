@@ -149,7 +149,7 @@ export const IMAGES_CONFIG: Omit<
     },
   },
   'recovery-images': {
-    title: 'Recovery Images',
+    title: 'Recovery images',
     description: (
       <>
         These are images we automatically capture when Linode disks are deleted.
