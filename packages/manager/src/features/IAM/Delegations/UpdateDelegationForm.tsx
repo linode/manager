@@ -33,6 +33,7 @@ interface DelegationsFormProps {
   formattedCurrentUsers: UserOption[];
   onClose: () => void;
 }
+
 export const UpdateDelegationForm = ({
   delegation,
   formattedCurrentUsers,
