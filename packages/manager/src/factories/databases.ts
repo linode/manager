@@ -418,13 +418,6 @@ export const mysqlConfigResponse = {
       type: 'boolean',
     },
   },
-  service_log: {
-    description:
-      'Store logs for the service so that they are available in the HTTP API and console.',
-    example: true,
-    requires_restart: false,
-    type: ['boolean', 'null'],
-  },
 };
 
 export const postgresConfigResponse = {

@@ -184,23 +184,27 @@ const addConfigsToUI = (
 
           // Type value for non-boolean configs
           if (value.type !== 'boolean') {
-            cy.get('form').then(($form) => {
-              // Try to find the input by name within the form
-              if ($form.find(`[name="${flatKey}"]`).length) {
-                cy.get(`[name="${flatKey}"]`).scrollIntoView();
-                cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
-                cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
-              } else {
-                // Fallback
-                ui.autocomplete.find().first().scrollIntoView();
-                ui.autocomplete
-                  .find()
-                  .first()
-                  .should('be.visible')
-                  .clear()
-                  .type(`${additionalConfigs[flatKey]}`);
-              }
-            });
+            cy.contains(flatKey).scrollIntoView();
+            cy.contains(flatKey)
+              .should('be.visible')
+              .parent()
+              .within(() => {
+                if (value.enum) {
+                  cy.get('[data-qa-autocomplete] input').click();
+                  cy.get('[data-qa-autocomplete] input').clear();
+                  cy.get('[data-qa-autocomplete] input').type(
+                    `${additionalConfigs[flatKey]}`
+                  );
+                  ui.autocompletePopper
+                    .findByTitle(`${additionalConfigs[flatKey]}`)
+                    .click();
+                } else {
+                  cy.get(`[name="${flatKey}"]`).clear();
+                  cy.get(`[name="${flatKey}"]`).type(
+                    `${additionalConfigs[flatKey]}`
+                  );
+                }
+              });
           }
         });
     });
@@ -253,7 +257,7 @@ describe('Update database clusters', () => {
           );
 
           mockGetAccount(accountFactory.build()).as('getAccount');
-          mockGetDatabase(database).as('getDatabase').debug();
+          mockGetDatabase(database).as('getDatabase');
           mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockGetDatabaseEngineConfigs(database.engine, mockConfigs);
 
@@ -291,9 +295,10 @@ describe('Update database clusters', () => {
             .findByTitle('Cancel')
             .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
 
-          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -301,11 +306,12 @@ describe('Update database clusters', () => {
             .click();
 
           ui.drawer.findByTitle('Advanced Configuration').should('be.visible');
-          cy.get('[aria-label="Close drawer"]').scrollIntoView();
           cy.get('[aria-label="Close drawer"]')
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
         });
 
         /*
@@ -400,7 +406,9 @@ describe('Update database clusters', () => {
             .findByTitle(saveRestartButton)
             .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
           cy.wait('@updateAdvancedConfiguration');
 
           if (isInvaliClusterSize) {
@@ -518,7 +526,9 @@ describe('Update database clusters', () => {
             .findByTitle(saveRestartButton)
             .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
           cy.wait('@updateAdvancedConfiguration');
 
           if (isInvalidClusterSize) {
