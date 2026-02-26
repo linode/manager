@@ -76,7 +76,7 @@ export const DatabaseSummary = () => {
                   {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
                 </StyledLabelTypography>
               </Grid>
-              <StyledValueGrid size={{ md: 10, xs: 8 }}>
+              <StyledValueGrid size={{ md: 10, xs: 9 }}>
                 <ServiceURI database={database} />
               </StyledValueGrid>
               {hasPublicVPC && (
@@ -91,7 +91,7 @@ export const DatabaseSummary = () => {
                       Private Service URI
                     </StyledLabelTypography>
                   </Grid>
-                  <StyledValueGrid size={{ md: 10, xs: 8 }}>
+                  <StyledValueGrid size={{ md: 10, xs: 9 }}>
                     <ServiceURI database={database} showPrivateVPC />
                   </StyledValueGrid>
                 </>
