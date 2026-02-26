@@ -9,7 +9,8 @@ import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import type { RenderLinodesProps } from './DisplayLinodes';
 
 export const CardView = (props: RenderLinodesProps) => {
-  const { data, openDialog, openPowerActionDialog } = props;
+  const { data, openDialog, openPowerActionDialog, openRemoveLockDialog } =
+    props;
 
   const { data: profile } = useProfile();
 
@@ -42,6 +43,8 @@ export const CardView = (props: RenderLinodesProps) => {
                   openPowerActionDialog(action, linode.id, linode.label, []),
                 onOpenRebuildDialog: () =>
                   openDialog('rebuild', linode.id, linode.label),
+                onOpenRemoveLockDialog: () =>
+                  openRemoveLockDialog(linode.id, linode.label, linode.locks),
                 onOpenRescueDialog: () =>
                   openDialog('rescue', linode.id, linode.label),
                 onOpenResizeDialog: () =>

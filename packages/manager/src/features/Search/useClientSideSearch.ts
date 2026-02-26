@@ -28,6 +28,7 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
+import { useIsPrivateImageSharingEnabled } from '../Images/utils';
 import { search } from './utils';
 
 import type { SearchableEntityType } from './search.interfaces';
@@ -42,6 +43,8 @@ interface Props {
  * based on a user's seach query.
  */
 export const useClientSideSearch = ({ enabled, query }: Props) => {
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
+
   const {
     data: domains,
     error: domainsError,
@@ -102,7 +105,10 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
 
   const searchableDomains = domains?.map(domainToSearchableItem) ?? [];
   const searchableVolumes = volumes?.map(volumeToSearchableItem) ?? [];
-  const searchableImages = privateImages?.map(imageToSearchableItem) ?? [];
+  const searchableImages =
+    privateImages?.map((img) =>
+      imageToSearchableItem(img, isPrivateImageSharingEnabled)
+    ) ?? [];
   const searchableNodebalancers = nodebals?.map(nodeBalToSearchableItem) ?? [];
   const searchableFirewalls = firewalls?.map(firewallToSearchableItem) ?? [];
   const searchableDatabases = databases?.map(databaseToSearchableItem) ?? [];

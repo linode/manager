@@ -10,6 +10,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { isDefaultDatabase } from '../../utilities';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
+import { ConnectionDetailsHostRows2 } from '../ConnectionDetailsHostRows2';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
 import { ServiceURI } from '../ServiceURI';
 import { StyledGridContainer } from './DatabaseSummaryClusterConfiguration.style';
@@ -136,7 +137,11 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         <ConnectionDetailsRow isSummaryTab label="Database name">
           {isLegacy ? database.engine : 'defaultdb'}
         </ConnectionDetailsRow>
-        <ConnectionDetailsHostRows database={database} isSummaryTab />
+        {flags.hostnameEndpoints ? (
+          <ConnectionDetailsHostRows2 database={database} isSummaryTab />
+        ) : (
+          <ConnectionDetailsHostRows database={database} isSummaryTab />
+        )}
         <ConnectionDetailsRow isSummaryTab label="Port">
           {database.port}
         </ConnectionDetailsRow>

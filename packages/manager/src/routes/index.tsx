@@ -106,6 +106,7 @@ export const router = createRouter({
     isACLPEnabled: false,
     isDatabasesEnabled: false,
     isPlacementGroupsEnabled: false,
+    isPrivateImageSharingEnabled: false,
     profile: undefined,
     queryClient: new QueryClient(),
   },
@@ -121,5 +122,8 @@ declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
     router: typeof router;
+  }
+  interface HistoryState {
+    surveyLink?: string;
   }
 }

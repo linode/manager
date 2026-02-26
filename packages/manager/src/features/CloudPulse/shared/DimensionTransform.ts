@@ -44,4 +44,7 @@ export const DIMENSION_TRANSFORM_CONFIG: Partial<
   blockstorage: {
     linode_id: TRANSFORMS.original,
   },
+  netloadbalancer: {
+    protocol: TRANSFORMS.uppercase,
+  },
 };

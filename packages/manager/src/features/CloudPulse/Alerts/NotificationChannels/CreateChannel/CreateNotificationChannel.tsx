@@ -94,12 +94,19 @@ export const CreateNotificationChannel = () => {
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb
+        breadcrumbDataAttrs={{
+          'data-qa-breadcrumb': true,
+        }}
         crumbOverrides={overrides}
         pathname="/NotificationChannels/Create Channel"
       />
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
-          <Typography marginTop={2} variant="h2">
+          <Typography
+            data-qa-header="Channel Settings"
+            marginTop={2}
+            variant="h2"
+          >
             Channel Settings
           </Typography>
           <Controller

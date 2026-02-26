@@ -17,7 +17,10 @@ export const useVerifyDestination = () => {
     try {
       const payload = {
         ...destination,
-        details: getDestinationPayloadDetails(destination.details),
+        details: getDestinationPayloadDetails(
+          destination.details,
+          destination.type
+        ),
       };
       await callVerifyDestination(payload);
 

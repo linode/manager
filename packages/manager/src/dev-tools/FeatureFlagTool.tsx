@@ -36,6 +36,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'generationalPlansv2', label: 'Generational compute plans' },
+  { flag: 'hostnameEndpoints', label: 'Hostname Endpoints' },
+  { flag: 'kubernetesBlackwellPlans', label: 'Kubernetes Blackwell Plans' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
@@ -47,6 +49,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
+  {
+    flag: 'placementGroupPolicyUpdate',
+    label: 'Placement Group Policy Update',
+  },
   { flag: 'privateImageSharing', label: 'Private Image Sharing' },
   { flag: 'resourceLock', label: 'Resource Lock' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
@@ -89,6 +95,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
+  { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },
 ];
 
 interface RenderFlagItemProps {

@@ -124,7 +124,7 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
       </TableCell>
       <TableCell sx={{ textAlign: 'right', whiteSpace: 'nowrap', pr: 0 }}>
         <InlineMenuAction
-          actionText="Update Delegations"
+          actionText="Update Delegation"
           buttonHeight={40}
           disabled={!permissions.update_delegate_users}
           onClick={handleUpdateDelegations}

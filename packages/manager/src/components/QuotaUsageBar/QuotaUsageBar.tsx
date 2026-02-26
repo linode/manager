@@ -28,7 +28,8 @@ export const QuotaUsageBar = ({ limit, usage, resourceMetric }: Props) => {
     const convertedLimitString = convertedLimit.toLocaleString();
 
     // Special case to display storage usage
-    if (convertedUsage === 0 && convertedResourceMetric === 'TB') {
+    if (convertedUsage === 0 && usage > 0) {
+      // assumes that the minimum converted non-zero value is expressed with an accuracy of 2 decimal places
       convertedUsageString = '<0.01';
     }
 

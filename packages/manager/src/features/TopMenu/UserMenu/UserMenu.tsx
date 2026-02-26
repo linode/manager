@@ -16,6 +16,7 @@ import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForDelegateUser } from 'src/components/AvatarForDelegateUser';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { getStorage, setStorage } from 'src/utilities/storage';
@@ -56,8 +57,7 @@ export const UserMenu = React.memo(() => {
 
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
-  const userName =
-    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
+  const userName = (isProxyUserType ? parentProfile : profile)?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -70,9 +70,10 @@ export const UserMenu = React.memo(() => {
   React.useEffect(() => {
     // Run after we've switched to a proxy user.
     if (
-      isProxyOrDelegateUserType &&
-      (!getStorage('is_proxy_user_type') ||
-        !getStorage('is_delegate_user_type'))
+      (isProxyOrDelegateUserType &&
+        isProxyUserType &&
+        !getStorage('is_proxy_user_type')) ||
+      (isDelegateUserType && !getStorage('is_delegate_user_type'))
     ) {
       // Flag for proxy user to display success toast once.
       if (isProxyUserType) {
@@ -130,13 +131,10 @@ export const UserMenu = React.memo(() => {
             alignItems={'flex-start'}
             sx={{ display: { md: 'flex', xs: 'none' } }}
           >
-            <Typography
-              sx={{
-                font: theme.tokens.alias.Typography.Label.Semibold.S,
-              }}
-            >
-              {userName}
-            </Typography>
+            <TruncatedUsername
+              sx={{ font: theme.font.semibold }}
+              username={userName}
+            />
             {companyNameOrEmail && (
               <Typography
                 letterSpacing={

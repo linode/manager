@@ -80,6 +80,7 @@ export const G8_DEDICATED_ALL_SLUGS = [
 
 export const PLAN_FILTER_ALL = 'all';
 // Filter option values
+export const PLAN_FILTER_ALL_AVAILABLE = 'available';
 export const PLAN_FILTER_GENERATION_G8 = 'g8';
 export const PLAN_FILTER_GENERATION_G7 = 'g7';
 export const PLAN_FILTER_GENERATION_G6 = 'g6';

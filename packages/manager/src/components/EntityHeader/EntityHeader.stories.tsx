@@ -60,6 +60,7 @@ export const Default: Story = {
             }}
             linodeId={12434}
             linodeLabel="linode-001"
+            linodeLocks={['cannot_delete']}
             linodeRegion="us-east"
             linodeStatus="running"
             linodeType={{
@@ -105,6 +106,7 @@ export const Default: Story = {
             onOpenMigrateDialog={action('onOpenMigrateDialog')}
             onOpenPowerDialog={action('onOpenPowerDialog')}
             onOpenRebuildDialog={action('onOpenRebuildDialog')}
+            onOpenRemoveLockDialog={action('onOpenRemoveLockDialog')}
             onOpenRescueDialog={action('onOpenRescueDialog')}
             onOpenResizeDialog={action('onOpenResizeDialog')}
           />

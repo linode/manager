@@ -137,6 +137,9 @@ export const StyledTabContent = styled('div')(({ theme }) => ({
     textAlign: 'left',
     verticalAlign: 'middle',
   },
+  '& th:first-of-type': {
+    width: '25%',
+  },
   '& ul': {
     listStyleType: 'disc',
     margin: 0,

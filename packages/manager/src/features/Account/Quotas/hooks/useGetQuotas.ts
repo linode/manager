@@ -2,24 +2,33 @@ import { quotaQueries, useAllQuotasQuery, useQueries } from '@linode/queries';
 import * as React from 'react';
 
 import {
+  getQuotaMapper,
   getQuotasFilters,
   getQuotaVisibilityFilter,
 } from 'src/features/Account/Quotas/utils';
 
 import type { Filter, QuotaType } from '@linode/api-v4';
 
-export const useGetQuotas = (
-  selectedLocation: string,
-  selectedService: QuotaType,
-  collectionName: string,
-  enabled = true
-) => {
+interface Props {
+  collectionName: string;
+  enabled: boolean;
+  selectedLocation: string;
+  selectedService: QuotaType;
+}
+
+export const useGetQuotas = ({
+  selectedLocation,
+  selectedService,
+  collectionName,
+  enabled = true,
+}: Props) => {
   const filters: Filter = getQuotasFilters({
     location: { label: '', value: selectedLocation },
     service: { label: '', value: selectedService },
   });
 
   const visiblityFilter = getQuotaVisibilityFilter(selectedService);
+  const quotaMapper = getQuotaMapper(selectedService);
 
   const {
     data: quotas,
@@ -49,10 +58,9 @@ export const useGetQuotas = (
     () =>
       quotas
         ?.filter((quota) => visiblityFilter.isVisible(quota))
-        .map((quota, index) => ({
-          ...quota,
-          usage: quotaUsageQueries?.[index]?.data,
-        })) ?? [],
+        .map((quota, index) =>
+          quotaMapper.mapQuota(quota, quotaUsageQueries?.[index]?.data || null)
+        ) ?? [],
     [quotas, quotaUsageQueries]
   );
 

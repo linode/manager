@@ -1,6 +1,6 @@
 import { Button, H1Header, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { redirect, useSearch } from '@tanstack/react-router';
+import { redirect, useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -37,10 +37,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
-  const search = useSearch({ from: '/cancel' });
+  const location = useLocation();
+  const locationState = location.state;
   const theme = useTheme();
 
-  const surveyLink = search.survey_link;
+  const surveyLink = locationState.surveyLink;
 
   if (!surveyLink) {
     throw redirect({ to: '/' });

@@ -1,47 +1,48 @@
-import { Autocomplete, TextField } from '@linode/ui';
+import { authenticationType } from '@linode/api-v4';
+import { Autocomplete, Divider, TextField, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
-import { getAuthenticationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { authenticationTypeOptions } from 'src/features/Delivery/Shared/types';
+import {
+  getAuthenticationTypeOption,
+  getContentTypeOption,
+} from 'src/features/Delivery/deliveryUtils';
+import { CustomHeaders } from 'src/features/Delivery/Shared/CustomHeaders';
+import {
+  authenticationTypeOptions,
+  contentTypeOptions,
+} from 'src/features/Delivery/Shared/types';
 
 import type { FormMode, FormType } from 'src/features/Delivery/Shared/types';
 
 interface DestinationCustomHttpsDetailsFormProps {
-  controlPaths?: {
+  controlPaths: {
+    authenticationDetails: string;
     authenticationType: string;
     basicAuthenticationPassword: string;
     basicAuthenticationUser: string;
-    clientCertificateDetails: string;
+    clientCaCertificate: string;
+    clientCertificate: string;
+    clientPrivateKey: string;
     contentType: string;
     customHeaders: string;
     dataCompression: string;
     endpointUrl: string;
+    tlsHostname: string;
   };
   entity: FormType;
   mode: FormMode;
 }
 
-const defaultPaths = {
-  authenticationType: 'details.authentication.type',
-  basicAuthenticationPassword:
-    'details.authentication.details.basic_authentication_password',
-  basicAuthenticationUser:
-    'details.authentication.details.basic_authentication_user',
-  clientCertificateDetails: 'details.client_certificate_details',
-  contentType: 'details.content_type',
-  customHeaders: 'details.custom_headers',
-  dataCompression: 'details.data_compression',
-  endpointUrl: 'details.endpoint_url',
-};
-
 export const DestinationCustomHttpsDetailsForm = (
   props: DestinationCustomHttpsDetailsFormProps
 ) => {
-  const { controlPaths = defaultPaths } = props;
+  const { controlPaths } = props;
+  const theme = useTheme();
 
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   const selectedAuthenticationType = useWatch({
     control,
@@ -60,6 +61,9 @@ export const DestinationCustomHttpsDetailsForm = (
             label="Authentication"
             onBlur={field.onBlur}
             onChange={(_, { value }) => {
+              if (value === authenticationType.None) {
+                setValue(controlPaths.authenticationDetails, undefined);
+              }
               field.onChange(value);
             }}
             options={authenticationTypeOptions}
@@ -81,7 +85,6 @@ export const DestinationCustomHttpsDetailsForm = (
                 onChange={(value) => {
                   field.onChange(value);
                 }}
-                placeholder="Username"
                 value={field.value}
               />
             )}
@@ -96,7 +99,6 @@ export const DestinationCustomHttpsDetailsForm = (
                 label="Password"
                 onBlur={field.onBlur}
                 onChange={(value) => field.onChange(value)}
-                placeholder="Password"
                 value={field.value}
               />
             )}
@@ -115,11 +117,111 @@ export const DestinationCustomHttpsDetailsForm = (
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Endpoint URL"
             value={field.value}
           />
         )}
       />
+      <Divider sx={{ my: 3 }} />
+      <Typography sx={{ mt: 0 }} variant="h2">
+        Additional Options
+      </Typography>
+      <Typography sx={{ mt: 2 }} variant="h3">
+        Client Certificate&nbsp;
+        <span
+          style={{ fontWeight: theme.tokens.font.FontWeight.Regular.Normal }}
+        >
+          (optional)
+        </span>
+      </Typography>
+      <Controller
+        control={control}
+        name={controlPaths.tlsHostname}
+        render={({ field, fieldState }) => (
+          <TextField
+            errorText={fieldState.error?.message}
+            label="TLS Hostname"
+            multiline
+            onBlur={field.onBlur}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            value={field.value}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name={controlPaths.clientCaCertificate}
+        render={({ field, fieldState }) => (
+          <TextField
+            errorText={fieldState.error?.message}
+            label="CA Certificate"
+            multiline
+            onBlur={field.onBlur}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            value={field.value}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name={controlPaths.clientCertificate}
+        render={({ field, fieldState }) => (
+          <TextField
+            errorText={fieldState.error?.message}
+            label="Client Certificate"
+            multiline
+            onBlur={field.onBlur}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            value={field.value}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name={controlPaths.clientPrivateKey}
+        render={({ field, fieldState }) => (
+          <TextField
+            errorText={fieldState.error?.message}
+            label="Client Key"
+            multiline
+            onBlur={field.onBlur}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            value={field.value}
+          />
+        )}
+      />
+      <Typography sx={{ mt: 2 }} variant="h3">
+        HTTPS Headers&nbsp;
+        <span
+          style={{ fontWeight: theme.tokens.font.FontWeight.Regular.Normal }}
+        >
+          (optional)
+        </span>
+      </Typography>
+      <Controller
+        control={control}
+        name={controlPaths.contentType}
+        render={({ field, fieldState }) => (
+          <Autocomplete
+            errorText={fieldState.error?.message}
+            label="Content Type"
+            onBlur={field.onBlur}
+            onChange={(_, value) => {
+              field.onChange(value?.value || null);
+            }}
+            options={contentTypeOptions}
+            value={field.value ? getContentTypeOption(field.value) : null}
+          />
+        )}
+      />
+      <CustomHeaders controlPath={controlPaths.customHeaders} />
     </>
   );
 };

@@ -34,6 +34,7 @@ export interface LinodeActionMenuProps extends LinodeHandlers {
   linodeBackups: LinodeBackups;
   linodeId: number;
   linodeLabel: string;
+  linodeLocks: LockType[];
   linodeRegion: string;
   linodeStatus: string;
   linodeType?: LinodeType;
@@ -51,7 +52,8 @@ interface ActionConfig {
 }
 
 export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
-  const { linodeId, linodeRegion, linodeStatus, linodeType, locks } = props;
+  const { linodeId, linodeRegion, linodeStatus, linodeType, linodeLocks } =
+    props;
 
   const navigate = useNavigate();
   const flags = useFlags();
@@ -61,7 +63,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const isResourceLockEnabled = flags.resourceLock?.linodes;
-  const isLocked = !!locks?.length;
+  const isLocked = !!linodeLocks?.length;
 
   const { data: accountPermissions } = usePermissions('account', [
     'create_linode',
@@ -201,7 +203,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.rebuild_linode || hasHostMaintenance,
+      disabled: !permissions.rebuild_linode || hasHostMaintenance || isLocked,
       isReadOnly: !permissions.rebuild_linode,
       onClick: props.onOpenRebuildDialog,
       title: 'Rebuild',
@@ -253,7 +255,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: () => {
         if (isLocked) {
           sendLinodeActionMenuItemEvent('Unlock Linode');
-          // props.onOpenUnlockDialog();
+          props.onOpenRemoveLockDialog();
         } else {
           sendLinodeActionMenuItemEvent('Lock Linode');
           props.onOpenAddLockDialog();
@@ -271,7 +273,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.delete_linode || hasHostMaintenance,
+      disabled: !permissions.delete_linode || hasHostMaintenance || isLocked,
       isReadOnly: !permissions.delete_linode,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');
