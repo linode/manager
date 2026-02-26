@@ -24,6 +24,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { AlertsPanel } from './AlertsPanel';
 
+import type { AlertsPanelHandle } from './AlertsPanel';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 import type { APIError, Linode } from '@linode/api-v4';
 
@@ -68,10 +69,8 @@ const LinodeAlerts = () => {
   const [hasAclpAlertsUnsavedChanges, setHasAclpAlertsUnsavedChanges] =
     React.useState<boolean>(false);
 
-  // Store current legacy alerts values
-  const [legacyAlerts, setLegacyAlerts] = React.useState<
-    Linode['alerts'] | undefined
-  >();
+  // Ref to access AlertsPanel methods
+  const legacyAlertsPanelRef = React.useRef<AlertsPanelHandle>(null);
 
   // Store current ACLP alerts payload
   const [aclpAlertsPayload, setAclpAlertsPayload] = React.useState<
@@ -117,41 +116,41 @@ const LinodeAlerts = () => {
 
   // Unified save handler for both legacy and ACLP alerts
   const handleUnifiedSave = React.useCallback(async () => {
-    if (!legacyAlerts) {
-      enqueueSnackbar('Unable to retrieve legacy alerts data', {
+    if (!legacyAlertsPanelRef.current) {
+      enqueueSnackbar('Unable to access legacy alerts form', {
         variant: 'error',
       });
       return;
     }
 
-    // Combine legacy alerts with ACLP alerts payload
-    // LinodeAlerts interface extends CloudPulseAlertsPayload, so we can merge them
+    const { values: legacyAlertsValues, errors } =
+      await legacyAlertsPanelRef.current.validateFormAndGetValues();
+
+    // If there are validation errors in the legacy alerts form, scroll into ACLP Enabled view.
+    if (errors && Object.keys(errors).length > 0) {
+      scrollErrorIntoViewV2(aclpEnabledViewRef);
+      return;
+    }
+
     const combinedAlertsPayload: Linode['alerts'] = {
-      ...legacyAlerts,
+      ...legacyAlertsValues,
       ...aclpAlertsPayload,
     };
-
-    // Save combined alerts in a single API call
-    await updateLinode({
-      alerts: combinedAlertsPayload,
-    })
+    await updateLinode({ alerts: combinedAlertsPayload })
       .then(() => {
         enqueueSnackbar('Alert settings have been saved successfully', {
           variant: 'success',
         });
-
-        // Reset unsaved changes state
         setHasLegacyAlertsUnsavedChanges(false);
         setHasAclpAlertsUnsavedChanges(false);
       })
       .catch((errors) => {
-        // Show snackbar for general/root errors so users don't miss them when scrolled away from top
         const errorMessage = getGeneralOrRootError(errors);
         if (errorMessage && aclpEnabledViewRef.current) {
           scrollErrorIntoViewV2(aclpEnabledViewRef);
         }
       });
-  }, [legacyAlerts, aclpAlertsPayload, updateLinode, enqueueSnackbar]);
+  }, [aclpAlertsPayload, updateLinode, enqueueSnackbar]);
 
   // Handler for legacy alerts save in standalone mode
   const handleLegacySave = React.useCallback(
@@ -238,7 +237,6 @@ const LinodeAlerts = () => {
                   isReadOnly={!permissions.update_linode}
                   isSaving={isUpdatingLinode}
                   linodeId={id}
-                  onGetLegacyAlerts={setLegacyAlerts}
                   onUnsavedChangesUpdate={(hasUnsavedChanges) => {
                     setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
                   }}
@@ -246,6 +244,7 @@ const LinodeAlerts = () => {
                     px: 0,
                     py: theme.spacingFunction(8),
                   })}
+                  ref={legacyAlertsPanelRef}
                 />
               </Accordion>
 
