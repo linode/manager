@@ -264,30 +264,9 @@ const makeMockDatabase = (params: PathParams): Database => {
         },
         {
           role: 'primary-connection-pool',
-          address:
-            'private-db-postgres-primary-connection-pool-0.b.linodeb.net',
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
           port: 15848,
           public_access: false,
-        },
-        {
-          role: 'standby-connection-pool',
-          address:
-            'private-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
-          port: 15848,
-          public_access: false,
-        },
-        {
-          role: 'primary-connection-pool',
-          address: 'public-db-postgres-primary-connection-pool-0.b.linodeb.net',
-          port: 15848,
-          public_access: true,
-        },
-        {
-          role: 'standby-connection-pool',
-          address:
-            'public-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
-          port: 15848,
-          public_access: true,
         },
       ],
     };
@@ -306,14 +285,7 @@ const makeMockDatabase = (params: PathParams): Database => {
   //     },
   //     {
   //       role: 'primary-connection-pool',
-  //       address: 'public-db-postgres-primary-connection-pool-0.b.linodeb.net',
-  //       port: 15848,
-  //       public_access: true,
-  //     },
-  //     {
-  //       role: 'standby-connection-pool',
-  //       address:
-  //         'public-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+  //       address: 'public-db-mysql-primary-0.b.linodeb.net',
   //       port: 15848,
   //       public_access: true,
   //     },

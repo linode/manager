@@ -121,7 +121,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           Add Pool
         </Button>
       </div>
-      {flags.hostnameEndpoints &&
+      {flags?.hostnameEndpoints &&
         connectionPools &&
         connectionPools.data.length > 0 && (
           <StyledGridContainer container size={12} spacing={0}>

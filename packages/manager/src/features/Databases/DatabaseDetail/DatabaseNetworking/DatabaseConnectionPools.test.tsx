@@ -14,6 +14,23 @@ import { DatabaseConnectionPools } from './DatabaseConnectionPools';
 const mockDatabase = databaseFactory.build({
   platform: 'rdbms-default',
   private_network: null,
+  hosts: {
+    primary: 'db-mysql-primary-0.b.linodeb.net',
+    endpoints: [
+      {
+        role: 'primary',
+        address: 'db-mysql-primary-0.b.linodeb.net',
+        port: 15847,
+        public_access: true,
+      },
+      {
+        role: 'primary-connection-pool',
+        address: 'public-db-mysql-primary-0.b.linodeb.net',
+        port: 15848,
+        public_access: true,
+      },
+    ],
+  },
   engine: 'postgresql',
   id: 1,
 });
@@ -30,6 +47,7 @@ const mockConnectionPool = databaseConnectionPoolFactory.build({
 const queryMocks = vi.hoisted(() => {
   return {
     useDatabaseConnectionPoolsQuery: vi.fn(),
+    useFlags: vi.fn().mockReturnValue({}),
   };
 });
 
@@ -38,6 +56,14 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useDatabaseConnectionPoolsQuery: queryMocks.useDatabaseConnectionPoolsQuery,
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
   };
 });
 
@@ -109,10 +135,13 @@ describe('DatabaseConnectionPools Component', () => {
     expect(errorStateText).toBeInTheDocument();
   });
 
-  it('should render service URI component if there are connection pools', () => {
+  it('should render service URI component if there are connection pools and hostnameEndpoints flag is true', () => {
     queryMocks.useDatabaseConnectionPoolsQuery.mockReturnValue({
       data: makeResourcePage([mockConnectionPool]),
       isLoading: false,
+    });
+    queryMocks.useFlags.mockReturnValue({
+      hostnameEndpoints: true,
     });
 
     renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />);
