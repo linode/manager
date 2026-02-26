@@ -1,5 +1,9 @@
-import { useUpdateChildAccountDelegatesQuery } from '@linode/queries';
+import {
+  useAccountUsersInfiniteQuery,
+  useUpdateChildAccountDelegatesQuery,
+} from '@linode/queries';
 import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -9,7 +13,11 @@ import { usePermissions } from '../hooks/usePermissions';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
 
-import type { ChildAccount, ChildAccountWithDelegates } from '@linode/api-v4';
+import type {
+  ChildAccount,
+  ChildAccountWithDelegates,
+  Filter,
+} from '@linode/api-v4';
 
 interface UpdateDelegationsFormValues {
   users: UserOption[];
@@ -23,22 +31,36 @@ interface UserOption {
 interface DelegationsFormProps {
   delegation: ChildAccount | ChildAccountWithDelegates;
   formattedCurrentUsers: UserOption[];
-  isLoading: boolean;
   onClose: () => void;
-  userOptions: UserOption[];
 }
 export const UpdateDelegationForm = ({
   delegation,
   formattedCurrentUsers,
-  isLoading,
   onClose,
-  userOptions,
 }: DelegationsFormProps) => {
   const theme = useTheme();
+  const [inputValue, setInputValue] = React.useState<string>('');
+  const debouncedInputValue = useDebouncedValue(inputValue);
 
   const { data: permissions } = usePermissions('account', [
     'update_delegate_users',
   ]);
+
+  const apiFilter: Filter = {
+    user_type: 'parent',
+    username: { '+contains': debouncedInputValue },
+  };
+
+  const { data, error, fetchNextPage, hasNextPage, isFetching } =
+    useAccountUsersInfiniteQuery(apiFilter);
+
+  const users =
+    data?.pages.flatMap((page) => {
+      return page.data.map((user) => ({
+        label: user.username,
+        value: user.username,
+      }));
+    }) ?? [];
 
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
@@ -112,23 +134,40 @@ export const UpdateDelegationForm = ({
             render={({ field, fieldState }) => (
               <Autocomplete
                 data-testid="delegates-autocomplete"
-                errorText={fieldState.error?.message}
+                errorText={fieldState.error?.message ?? error?.[0].reason}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
                 label={'Delegate Users'}
-                loading={isLoading}
+                loading={isFetching}
                 multiple
                 noMarginTop
                 onChange={(_, newValue) => {
                   field.onChange(newValue || []);
                 }}
-                options={userOptions}
+                onInputChange={(_, value) => {
+                  setInputValue(value);
+                }}
+                options={users}
                 placeholder={getPlaceholder(
                   'delegates',
                   field.value.length,
-                  userOptions.length
+                  users?.length ?? 0
                 )}
+                slotProps={{
+                  listbox: {
+                    onScroll: (event: React.SyntheticEvent) => {
+                      const listboxNode = event.currentTarget;
+                      if (
+                        listboxNode.scrollTop + listboxNode.clientHeight >=
+                          listboxNode.scrollHeight &&
+                        hasNextPage
+                      ) {
+                        fetchNextPage();
+                      }
+                    },
+                  },
+                }}
                 textFieldProps={{
                   hideLabel: true,
                 }}

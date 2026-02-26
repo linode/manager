@@ -1,4 +1,3 @@
-import { useAccountUsers } from '@linode/queries';
 import { Drawer } from '@linode/ui';
 import React from 'react';
 
@@ -17,11 +16,6 @@ export const UpdateDelegationsDrawer = ({
   onClose,
   open,
 }: Props) => {
-  const { data: allParentAccounts, isLoading } = useAccountUsers({
-    enabled: open,
-    filters: { user_type: 'parent' },
-  });
-
   const formattedCurrentUsers = React.useMemo(() => {
     if (delegation && 'users' in delegation && delegation.users) {
       return delegation.users.map((username) => ({
@@ -32,23 +26,13 @@ export const UpdateDelegationsDrawer = ({
     return [];
   }, [delegation]);
 
-  const userOptions = React.useMemo(() => {
-    if (!allParentAccounts?.data) return [];
-    return allParentAccounts.data.map((user) => ({
-      label: user.username,
-      value: user.username,
-    }));
-  }, [allParentAccounts]);
-
   return (
     <Drawer onClose={onClose} open={open} title="Update Delegation">
       {delegation && (
         <UpdateDelegationForm
           delegation={delegation}
           formattedCurrentUsers={formattedCurrentUsers}
-          isLoading={isLoading}
           onClose={onClose}
-          userOptions={userOptions}
         />
       )}
     </Drawer>
