@@ -23,7 +23,6 @@ import { VLANInterface } from './VLAN/VLANInterface';
 import { VPCInterface } from './VPC/VPCInterface';
 
 import type { CreateInterfaceFormValues } from './utilities';
-import type { CreateLinodeInterfacePayload } from '@linode/api-v4';
 
 interface Props {
   linodeId: number;
@@ -64,7 +63,10 @@ export const AddInterfaceForm = (props: Props) => {
       const { errors, values } = await yupResolver(
         CreateLinodeInterfaceFormSchema
       )(
-        valuesWithOnlySelectedInterface as CreateInterfaceFormValues,
+        {
+          ...valuesWithOnlySelectedInterface,
+          firewall_id: valuesWithOnlySelectedInterface.firewall_id!,
+        },
         context,
         options
       );
@@ -79,10 +81,7 @@ export const AddInterfaceForm = (props: Props) => {
 
   const onSubmit = async (values: CreateInterfaceFormValues) => {
     try {
-      const payload = getLinodeInterfacePayload(
-        values
-      ) as CreateLinodeInterfacePayload;
-      await mutateAsync(payload);
+      await mutateAsync(getLinodeInterfacePayload(values));
 
       enqueueSnackbar('Successfully added network interface.', {
         variant: 'success',

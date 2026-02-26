@@ -123,6 +123,6 @@ describe('FirewallSelect', () => {
       <FirewallSelect value={NO_FIREWALL_ID} />
     );
 
-    expect(await findByDisplayValue(NO_FIREWALL_LABEL)).toBeInTheDocument();
+    await findByDisplayValue(NO_FIREWALL_LABEL);
   });
 });

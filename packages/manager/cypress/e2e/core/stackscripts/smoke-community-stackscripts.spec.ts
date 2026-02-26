@@ -399,6 +399,12 @@ describe('Community Stackscripts integration tests', () => {
         cy.get('[data-qa-radio]').click({ force: true });
       });
 
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
+
     // Input root password
     // Weak or fair root password cannot rebuild the linode
     cy.get('[id="root-password"]').clear();
@@ -429,11 +435,6 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[id="root-password"]').type(rootPassword);
     interceptCreateLinode().as('createLinode');
 
-    // Select a firewall
-    linodeCreatePage.selectFirewall(
-      mockFirewall.label,
-      'Public Interface Firewall'
-    );
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')

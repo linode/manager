@@ -720,9 +720,7 @@ export const CreateVPCInterfaceSchema = object({
 });
 
 export const CreateLinodeInterfaceSchema = object({
-  firewall_id: number()
-    .nullable()
-    .required('Select an option or create a new Firewall.'),
+  firewall_id: number().nullable(),
   default_route: object({
     ipv4: boolean(),
     ipv6: boolean(),
@@ -874,9 +872,7 @@ export const CreateLinodeSchema = object({
           }),
     }),
   metadata: MetadataSchema.notRequired().default(undefined),
-  firewall_id: number()
-    .nullable()
-    .required('Select an option or create a new Firewall.'),
+  firewall_id: number().nullable(),
   placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
   maintenance_policy: string()

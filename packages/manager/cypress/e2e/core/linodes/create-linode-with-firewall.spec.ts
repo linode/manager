@@ -424,7 +424,7 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     // Switch to legacy Config Interfaces
     linodeCreatePage.selectLegacyConfigInterfacesType();
 
-    // Select a firewall for the VPC interface
+    // Select a firewall
     linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
