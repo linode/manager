@@ -198,6 +198,34 @@ const imageLibraryTypeRoute = createRoute({
   validateSearch: (search: ImagesSearchParams) => search,
 });
 
+const imageActionRouteV2 = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in imageActions)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/images',
+      });
+    }
+  },
+  getParentRoute: () => imageLibraryTypeRoute,
+  params: {
+    parse: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+    stringify: ({ action, imageId }: ImageActionRouteParams) => ({
+      action,
+      imageId,
+    }),
+  },
+  path: '$imageId/$action',
+  validateSearch: (search: ImagesSearchParams) => search,
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/v2/imagesLandingV2LazyRoute').then(
+    (m) => m.imagesLandingV2LazyRoute
+  )
+);
+
 // Share Groups tab
 const shareGroupsLandingRoute = createRoute({
   getParentRoute: () => imagesRoute,
@@ -229,7 +257,9 @@ const shareGroupsIndexRoute = createRoute({
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
   imageLibraryLandingRoute.addChildren([
-    imageLibraryIndexRoute.addChildren([imageLibraryTypeRoute]),
+    imageLibraryIndexRoute.addChildren([
+      imageLibraryTypeRoute.addChildren([imageActionRouteV2]),
+    ]),
   ]),
   shareGroupsLandingRoute.addChildren([shareGroupsIndexRoute]),
   imagesCreateRoute.addChildren([
