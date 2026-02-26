@@ -515,7 +515,6 @@ export const createLinodeRequestFactory =
     label: Factory.each((i) => `linode-${i}`),
     region: 'us-southeast',
     root_pass: 'linode-root-password',
-    firewall_id: -1,
     type: 'g6-standard-1',
   });
 

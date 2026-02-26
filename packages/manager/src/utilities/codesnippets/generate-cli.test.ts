@@ -41,7 +41,6 @@ const linodeDataForCLI = `
   --label ${linodeRequest.label} \\
   --region ${linodeRequest.region} \\
   --root_pass ${linodeRequest.root_pass} \\
-  --firewall_id -1 \\
   --type ${linodeRequest.type} \\
   --authorized_users Linny \\
   --authorized_users Gritty \\
