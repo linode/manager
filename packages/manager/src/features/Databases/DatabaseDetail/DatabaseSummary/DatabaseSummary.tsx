@@ -55,7 +55,7 @@ export const DatabaseSummary = () => {
         >
           <ConnectionDetails database={database} />
         </Grid>
-        {showPgBouncerConnectionDetails && (
+        {flags.hostnameEndpoints && showPgBouncerConnectionDetails && (
           <Grid
             size={{
               md: 12,

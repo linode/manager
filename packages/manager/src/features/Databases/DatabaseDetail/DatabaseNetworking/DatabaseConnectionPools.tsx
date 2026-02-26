@@ -34,6 +34,7 @@ import {
   StyledLabelTypography,
   StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
@@ -53,6 +54,7 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
+  const flags = useFlags();
   const isDatabaseInactive = database.status !== 'active';
 
   const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
@@ -119,40 +121,42 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           Add Pool
         </Button>
       </div>
-      {connectionPools && connectionPools.data.length > 0 && (
-        <StyledGridContainer container size={12} spacing={0}>
-          <Grid
-            size={{
-              md: 2,
-              xs: 3,
-            }}
-          >
-            <StyledLabelTypography>
-              {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
-            </StyledLabelTypography>
-          </Grid>
-          <StyledValueGrid size={{ md: 10, xs: 8 }}>
-            <ServiceURI database={database} />
-          </StyledValueGrid>
-          {hasPublicVPC && (
-            <>
-              <Grid
-                size={{
-                  md: 2,
-                  xs: 3,
-                }}
-              >
-                <StyledLabelTypography>
-                  Private Service URI
-                </StyledLabelTypography>
-              </Grid>
-              <StyledValueGrid size={{ md: 10, xs: 8 }}>
-                <ServiceURI database={database} showPrivateVPC />
-              </StyledValueGrid>
-            </>
-          )}
-        </StyledGridContainer>
-      )}
+      {flags.hostnameEndpoints &&
+        connectionPools &&
+        connectionPools.data.length > 0 && (
+          <StyledGridContainer container size={12} spacing={0}>
+            <Grid
+              size={{
+                md: 2,
+                xs: 3,
+              }}
+            >
+              <StyledLabelTypography>
+                {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
+              </StyledLabelTypography>
+            </Grid>
+            <StyledValueGrid size={{ md: 10, xs: 8 }}>
+              <ServiceURI database={database} />
+            </StyledValueGrid>
+            {hasPublicVPC && (
+              <>
+                <Grid
+                  size={{
+                    md: 2,
+                    xs: 3,
+                  }}
+                >
+                  <StyledLabelTypography>
+                    Private Service URI
+                  </StyledLabelTypography>
+                </Grid>
+                <StyledValueGrid size={{ md: 10, xs: 8 }}>
+                  <ServiceURI database={database} showPrivateVPC />
+                </StyledValueGrid>
+              </>
+            )}
+          </StyledGridContainer>
+        )}
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table
           aria-label={'List of Connection pools'}
