@@ -123,11 +123,11 @@ const LinodeAlerts = () => {
       return;
     }
 
-    const { values: legacyAlertsValues, errors } =
+    const { values: legacyAlertsValues, errors: legacyAlertsErrors } =
       await legacyAlertsPanelRef.current.validateFormAndGetValues();
 
     // If there are validation errors in the legacy alerts form, scroll into ACLP Enabled view.
-    if (errors && Object.keys(errors).length > 0) {
+    if (legacyAlertsErrors && Object.keys(legacyAlertsErrors).length > 0) {
       scrollErrorIntoViewV2(aclpEnabledViewRef);
       return;
     }
@@ -145,8 +145,7 @@ const LinodeAlerts = () => {
         setHasAclpAlertsUnsavedChanges(false);
       })
       .catch((errors) => {
-        const errorMessage = getGeneralOrRootError(errors);
-        if (errorMessage && aclpEnabledViewRef.current) {
+        if (errors && aclpEnabledViewRef.current) {
           scrollErrorIntoViewV2(aclpEnabledViewRef);
         }
       });
