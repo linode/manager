@@ -129,20 +129,19 @@ export const ImagesTable = (props: ImagesTableProps) => {
         <TableHead>
           <TableRow>
             {columns.map((col, idx) => {
-              const cell =
-                col.sortable && col.label ? (
-                  <TableSortCell
-                    active={orderBy === col.label}
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    key={idx}
-                    label={col.label}
-                  >
-                    {col.name}
-                  </TableSortCell>
-                ) : (
-                  <TableCell key={idx}>{col.name}</TableCell>
-                );
+              const cell = col.sortableProps ? (
+                <TableSortCell
+                  active={orderBy === col.sortableProps.label}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  key={idx}
+                  label={col.sortableProps.label}
+                >
+                  {col.name}
+                </TableSortCell>
+              ) : (
+                <TableCell key={idx}>{col.name}</TableCell>
+              );
 
               return col.hiddenOn ? (
                 <Hidden key={idx} {...{ [col.hiddenOn]: true }}>
