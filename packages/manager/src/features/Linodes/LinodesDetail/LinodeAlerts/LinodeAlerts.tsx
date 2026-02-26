@@ -10,6 +10,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useBlocker, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -76,6 +77,8 @@ const LinodeAlerts = () => {
   const [aclpAlertsPayload, setAclpAlertsPayload] = React.useState<
     CloudPulseAlertsPayload | undefined
   >();
+
+  const aclpEnabledViewRef = React.useRef<HTMLDivElement>(null);
 
   const { proceed, reset, status } = useBlocker({
     enableBeforeUnload:
@@ -144,8 +147,8 @@ const LinodeAlerts = () => {
       .catch((errors) => {
         // Show snackbar for general/root errors so users don't miss them when scrolled away from top
         const errorMessage = getGeneralOrRootError(errors);
-        if (errorMessage) {
-          enqueueSnackbar(errorMessage, { variant: 'error' });
+        if (errorMessage && aclpEnabledViewRef.current) {
+          scrollErrorIntoViewV2(aclpEnabledViewRef);
         }
       });
   }, [legacyAlerts, aclpAlertsPayload, updateLinode, enqueueSnackbar]);
@@ -211,7 +214,7 @@ const LinodeAlerts = () => {
           </DismissibleBanner>
         )}
         {isAclpAlertingInRegionEnabled ? (
-          <Paper>
+          <Paper ref={aclpEnabledViewRef}>
             {/* Display general mutation error globally for unified save */}
             {generalOrRootError && (
               <Notice
