@@ -36,6 +36,7 @@ interface DestinationFormProps {
 
 const customHttpsDetailsControlPaths = {
   authenticationType: 'details.authentication.type',
+  authenticationDetails: 'details.authentication.details',
   basicAuthenticationPassword:
     'details.authentication.details.basic_authentication_password',
   basicAuthenticationUser:

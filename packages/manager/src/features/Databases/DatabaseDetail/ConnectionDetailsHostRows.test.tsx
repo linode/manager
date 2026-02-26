@@ -17,6 +17,10 @@ const PRIVATE_STANDBY = `private-${DEFAULT_STANDBY}`;
 const LEGACY_PRIMARY = 'db-mysql-legacy-primary.net';
 const LEGACY_SECONDARY = 'db-mysql-legacy-secondary.net';
 
+/**
+ * @TODO - delete this file after API releases hostname endpoint changes
+ */
+
 describe('ConnectionDetailsHostRows', () => {
   it('should display Host and Read-only Host fields for a default database with no VPC configured', () => {
     const database = databaseFactory.build({
