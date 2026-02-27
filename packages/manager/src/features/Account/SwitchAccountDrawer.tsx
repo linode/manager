@@ -155,8 +155,6 @@ export const SwitchAccountDrawer = (props: Props) => {
           },
         });
 
-        storage.authentication.childAccountEuid.set(euuid);
-
         updateCurrentToken({
           userType: isIAMDelegationEnabled ? 'delegate' : 'proxy',
         });
