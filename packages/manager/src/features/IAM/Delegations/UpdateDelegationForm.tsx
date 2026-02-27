@@ -1,5 +1,6 @@
 import {
   useAccountUsersInfiniteQuery,
+  useAllAccountUsersQuery,
   useUpdateChildAccountDelegatesQuery,
 } from '@linode/queries';
 import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
@@ -41,6 +42,7 @@ export const UpdateDelegationForm = ({
 }: DelegationsFormProps) => {
   const theme = useTheme();
   const [inputValue, setInputValue] = React.useState<string>('');
+  const [allUserSelected, setAllUserSelected] = React.useState<boolean>(false);
   const debouncedInputValue = useDebouncedValue(inputValue);
 
   const { data: permissions } = usePermissions('account', [
@@ -55,13 +57,26 @@ export const UpdateDelegationForm = ({
   const { data, error, fetchNextPage, hasNextPage, isFetching } =
     useAccountUsersInfiniteQuery(apiFilter);
 
+  const {
+    data: allUsers,
+    isFetching: isFetchingAllUsers,
+    refetch: refetchAllUsers,
+  } = useAllAccountUsersQuery(allUserSelected, {
+    user_type: 'parent',
+  });
+
   const users =
-    data?.pages.flatMap((page) => {
-      return page.data.map((user) => ({
-        label: user.username,
-        value: user.username,
-      }));
-    }) ?? [];
+    allUserSelected && allUsers
+      ? allUsers.map((user) => ({
+          label: user.username,
+          value: user.username,
+        }))
+      : (data?.pages.flatMap((page) => {
+          return page.data.map((user) => ({
+            label: user.username,
+            value: user.username,
+          }));
+        }) ?? []);
 
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
@@ -78,6 +93,7 @@ export const UpdateDelegationForm = ({
     handleSubmit,
     reset,
     setError,
+    setValue,
   } = form;
 
   const onSubmit = async (values: UpdateDelegationsFormValues) => {
@@ -99,9 +115,21 @@ export const UpdateDelegationForm = ({
     }
   };
 
+  const onSelectAllClick = async () => {
+    setAllUserSelected(true);
+    const { data } = await refetchAllUsers();
+    if (data) {
+      setValue(
+        'users',
+        data.map((user) => ({ label: user.username, value: user.username }))
+      );
+    }
+  };
+
   const handleClose = () => {
     reset();
     onClose();
+    setAllUserSelected(false);
   };
 
   return (
@@ -135,12 +163,13 @@ export const UpdateDelegationForm = ({
             render={({ field, fieldState }) => (
               <Autocomplete
                 data-testid="delegates-autocomplete"
+                disabled={isFetchingAllUsers}
                 errorText={fieldState.error?.message ?? error?.[0].reason}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
                 label={'Delegate Users'}
-                loading={isFetching}
+                loading={isFetching || isFetchingAllUsers}
                 multiple
                 noMarginTop
                 onChange={(_, newValue) => {
@@ -148,6 +177,11 @@ export const UpdateDelegationForm = ({
                 }}
                 onInputChange={(_, value) => {
                   setInputValue(value);
+                }}
+                onSelectAllClick={(isSelectAllActive) => {
+                  if (isSelectAllActive && !allUserSelected) {
+                    onSelectAllClick();
+                  }
                 }}
                 options={users}
                 placeholder={getPlaceholder(
