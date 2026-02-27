@@ -21,8 +21,8 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 import {
+  DEFAULT_PAGE_SIZES,
   MIN_PAGE_SIZE,
-  PAGE_SIZES,
 } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import {
   CONNECTION_POOL_LABEL_CELL_STYLES,
@@ -183,7 +183,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
           page={pagination.page}
           pageSize={pagination.pageSize}
-          pageSizes={PAGE_SIZES}
+          pageSizes={DEFAULT_PAGE_SIZES}
           style={{
             borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
             borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
