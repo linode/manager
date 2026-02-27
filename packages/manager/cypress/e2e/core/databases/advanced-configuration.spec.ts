@@ -184,27 +184,24 @@ const addConfigsToUI = (
 
           // Type value for non-boolean configs
           if (value.type !== 'boolean') {
-            cy.contains(flatKey).scrollIntoView();
-            cy.contains(flatKey)
-              .should('be.visible')
-              .parent()
-              .within(() => {
-                if (value.enum) {
-                  cy.get('[data-qa-autocomplete] input').click();
-                  cy.get('[data-qa-autocomplete] input').clear();
-                  cy.get('[data-qa-autocomplete] input').type(
-                    `${additionalConfigs[flatKey]}`
-                  );
-                  ui.autocompletePopper
-                    .findByTitle(`${additionalConfigs[flatKey]}`)
-                    .click();
-                } else {
-                  cy.get(`[name="${flatKey}"]`).clear();
-                  cy.get(`[name="${flatKey}"]`).type(
-                    `${additionalConfigs[flatKey]}`
-                  );
-                }
-              });
+            if (value.enum) {
+              cy.findByText(flatKey).scrollIntoView();
+              cy.findByText(flatKey)
+                .parent()
+                .within(() => {
+                  ui.autocomplete.find().click();
+                  ui.autocomplete.find().clear();
+                  ui.autocomplete.find().type(`${additionalConfigs[flatKey]}`);
+                });
+              ui.autocompletePopper
+                .findByTitle(`${additionalConfigs[flatKey]}`)
+                .click();
+            } else {
+              cy.get(`[name="${flatKey}"]`).scrollIntoView();
+              cy.get(`[name="${flatKey}"]`).should('be.visible');
+              cy.get(`[name="${flatKey}"]`).clear();
+              cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
+            }
           }
         });
     });
