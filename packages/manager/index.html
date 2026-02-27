@@ -38,10 +38,10 @@
             embeddedservice_bootstrap.init(
             "00DWH000002hLKz",
             "Compute_Chat_Support",
-            "REDACTED",
+            "%REACT_APP_CHAT_DEPLOYMENT_URL%",
             {
               scrt2URL:
-              "REDACTED"
+              "%REACT_APP_CHAT_SCRT2_URL%"
             }
             );
           }
@@ -53,7 +53,7 @@
     </script>
     <script
       type="text/javascript"
-      src="REDACTED"
+      src="%REACT_APP_CHAT_BOOTSTRAP_JS_URL%"
       onload="initEmbeddedMessaging()">
     </script>
   </body>
