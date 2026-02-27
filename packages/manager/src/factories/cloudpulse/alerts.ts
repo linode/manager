@@ -772,3 +772,27 @@ export const logsMetricCriteria: MetricDefinition[] = [
     dimensions: logsDimensions,
   },
 ];
+
+export const logsAlertMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Successful Upload Count',
+    metric: 'success_upload_count',
+    unit: 'Count',
+    aggregate_function: 'sum',
+    operator: 'eq',
+    threshold: 1500,
+    dimension_filters: [
+      {
+        label: 'Status Code',
+        dimension_label: 'status_code',
+        operator: 'in',
+        value: '203,402',
+      },
+      {
+        label: 'Status Code',
+        dimension_label: 'status_code',
+        operator: 'eq',
+        value: '503',
+      },
+    ],
+  });
