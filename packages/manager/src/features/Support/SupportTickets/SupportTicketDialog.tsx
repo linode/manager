@@ -281,6 +281,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleStartLiveChat = async () => {
     window.sessionStorage.setItem('EnableLiveChat', 'true');
+    window.dispatchEvent(new Event('manager:enable-live-chat'));
     props.onClose();
     window.setTimeout(() => resetDialog(true), 500);
     await navigate({ to: '/support' });
