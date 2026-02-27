@@ -28,8 +28,7 @@
             console.debug("Received from iframe:", data);
             const dataMap = {
               JWE_Token: "<Token>",
-              Subject: window.__supportChatSubject || "<Subject>",
-              Description: "<Description>"
+              Subject: window.__supportChatSubject || "<Subject>"
             };
             event.source.postMessage(
               { action: "hiddenParameters", data: dataMap },
