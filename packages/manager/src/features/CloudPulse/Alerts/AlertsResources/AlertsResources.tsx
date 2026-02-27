@@ -205,7 +205,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(
-      serviceType && (serviceType === 'firewall' || supportedRegionIds?.length)
+      serviceType &&
+      (serviceType === 'firewall' ||
+        serviceType === 'logs' ||
+        supportedRegionIds?.length)
     ), // Enable query only if serviceType and supportedRegionIds are available, in case of firewall only serviceType is needed
     serviceType,
     {},

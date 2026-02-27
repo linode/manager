@@ -15,6 +15,10 @@ import {
   PORT_HELPER_TEXT,
   PORT_PLACEHOLDER_TEXT,
   PORTS_PLACEHOLDER_TEXT,
+  STATUS_CODE_HELPER_TEXT,
+  STATUS_CODE_PLACEHOLDER_TEXT,
+  STATUS_CODES_HELPER_TEXT,
+  STATUS_CODES_PLACEHOLDER_TEXT,
   VIP_HELPER_TEXT,
   VIP_PLACEHOLDER_TEXT,
 } from '../../../constants';
@@ -364,6 +368,34 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     '*': {
       type: 'textfield',
       inputType: 'text',
+    },
+  },
+  status_code: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
+      placeholder: STATUS_CODE_PLACEHOLDER_TEXT,
+      helperText: STATUS_CODE_HELPER_TEXT,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'number',
+      min: 0,
+      max: Number.MAX_SAFE_INTEGER,
+      placeholder: STATUS_CODE_PLACEHOLDER_TEXT,
+      helperText: STATUS_CODE_HELPER_TEXT,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: STATUS_CODES_PLACEHOLDER_TEXT,
+      helperText: STATUS_CODES_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'number',
     },
   },
   emptyValue: {
