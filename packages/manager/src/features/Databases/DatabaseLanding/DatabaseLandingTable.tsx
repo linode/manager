@@ -10,6 +10,10 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
+import {
+  DEFAULT_PAGE_SIZES,
+  MIN_PAGE_SIZE,
+} from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { DatabaseSettingsDeleteClusterDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
@@ -54,8 +58,6 @@ const DatabaseLandingTable = ({
     preferenceKey,
     queryParamsPrefix: dbPlatformType,
   });
-  const PAGE_SIZES = [25, 50, 75, 100];
-  const MIN_PAGE_SIZE = 25;
 
   const [selectedDatabase, setSelectedDatabase] =
     React.useState<DatabaseInstance>({} as DatabaseInstance);
@@ -245,7 +247,7 @@ const DatabaseLandingTable = ({
           ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
           page={pagination.page}
           pageSize={pagination.pageSize}
-          pageSizes={PAGE_SIZES}
+          pageSizes={DEFAULT_PAGE_SIZES}
           style={{
             borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
             borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
