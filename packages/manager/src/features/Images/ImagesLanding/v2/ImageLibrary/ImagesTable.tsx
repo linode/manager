@@ -20,7 +20,8 @@ import { TableSortCell } from 'src/components/TableSortCell';
 
 import { ImageRow } from '../../ImageRow';
 import {
-  StyledImageTable,
+  StyledImageContainer,
+  StyledImageTableContainer,
   StyledImageTableHeader,
   StyledImageTableSubheader,
 } from './ImagesTable.styles';
@@ -41,7 +42,7 @@ interface HeaderProps {
     tooltipText?: string;
   };
   description?: React.ReactNode;
-  docsLink?: string;
+  docsLink?: ImageConfig['docsLink'];
   title: string;
 }
 
@@ -87,7 +88,7 @@ export const ImagesTable = (props: ImagesTableProps) => {
   } = props;
 
   return (
-    <StyledImageTable>
+    <StyledImageContainer>
       {headerProps && headerProps.title && (
         <StyledImageTableHeader>
           <Box
@@ -98,11 +99,19 @@ export const ImagesTable = (props: ImagesTableProps) => {
             }}
           >
             <Typography variant="h3">{headerProps.title}</Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                minHeight: 40, // Ensures consistent height even if only one child
+              }}
+            >
               {headerProps.docsLink && (
                 <DocsLink
                   analyticsLabel={headerProps.title}
-                  href={headerProps.docsLink}
+                  href={headerProps.docsLink.href}
+                  label={headerProps.docsLink.label}
                 />
               )}
               {headerProps.buttonProps && (
@@ -124,18 +133,18 @@ export const ImagesTable = (props: ImagesTableProps) => {
           )}
         </StyledImageTableHeader>
       )}
-      <Table>
-        <TableHead>
-          <TableRow>
-            {columns.map((col, idx) => {
-              const cell =
-                col.sortable && col.label ? (
+      <StyledImageTableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {columns.map((col, idx) => {
+                const cell = col.sortableProps ? (
                   <TableSortCell
-                    active={orderBy === col.label}
+                    active={orderBy === col.sortableProps.label}
                     direction={order}
                     handleClick={handleOrderChange}
                     key={idx}
-                    label={col.label}
+                    label={col.sortableProps.label}
                   >
                     {col.name}
                   </TableSortCell>
@@ -143,66 +152,67 @@ export const ImagesTable = (props: ImagesTableProps) => {
                   <TableCell key={idx}>{col.name}</TableCell>
                 );
 
-              return col.hiddenOn ? (
-                <Hidden key={idx} {...{ [col.hiddenOn]: true }}>
-                  {cell}
-                </Hidden>
-              ) : (
-                cell
-              );
-            })}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {!error && images?.length === 0 && (
-            <TableRowEmpty
-              colSpan={columns.length + 1}
-              message={
-                <Box
-                  sx={(theme) => ({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: theme.spacingFunction(4),
-                    p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
-                  })}
-                >
-                  <ZeroStateSearchNarrowIcon />
-                  <Typography variant="h3">{emptyMessage.main}</Typography>
-                  {!query && (
-                    <Typography variant="body1">
-                      {emptyMessage.instruction}
-                    </Typography>
-                  )}
-                </Box>
-              }
-            />
-          )}
-          {error && query && (
-            <TableRowError
-              colSpan={columns.length + 1}
-              message={error[0].reason}
-            />
-          )}
-          {images?.map((image) => (
-            <ImageRow
-              event={events[image.id]}
-              handlers={handlers}
-              image={image}
-              key={image.id}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={pagination.count}
-        eventCategory={eventCategory}
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-      />
-    </StyledImageTable>
+                return col.hiddenOn ? (
+                  <Hidden key={idx} {...{ [col.hiddenOn]: true }}>
+                    {cell}
+                  </Hidden>
+                ) : (
+                  cell
+                );
+              })}
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!error && images?.length === 0 && (
+              <TableRowEmpty
+                colSpan={columns.length + 1}
+                message={
+                  <Box
+                    sx={(theme) => ({
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: theme.spacingFunction(4),
+                      p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
+                    })}
+                  >
+                    <ZeroStateSearchNarrowIcon />
+                    <Typography variant="h3">{emptyMessage.main}</Typography>
+                    {!query && emptyMessage.instruction && (
+                      <Typography variant="body1">
+                        {emptyMessage.instruction}
+                      </Typography>
+                    )}
+                  </Box>
+                }
+              />
+            )}
+            {error && query && (
+              <TableRowError
+                colSpan={columns.length + 1}
+                message={error[0].reason}
+              />
+            )}
+            {images?.map((image) => (
+              <ImageRow
+                event={events[image.id]}
+                handlers={handlers}
+                image={image}
+                key={image.id}
+              />
+            ))}
+          </TableBody>
+        </Table>
+        <PaginationFooter
+          count={pagination.count}
+          eventCategory={eventCategory}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
+      </StyledImageTableContainer>
+    </StyledImageContainer>
   );
 };
