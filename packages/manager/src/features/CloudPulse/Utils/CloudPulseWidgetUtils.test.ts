@@ -1,13 +1,17 @@
 import { formatPercentage } from '@linode/utilities';
 
+import { widgetFactory } from 'src/factories';
+
 import {
   generateGraphData,
   generateMaxUnit,
   getDimensionName,
+  getEntityIds,
   getLabelName,
   getTimeDurationFromPreset,
   mapResourceIdToName,
 } from './CloudPulseWidgetUtils';
+import * as utilities from './utils';
 
 import type {
   DimensionNameProperties,
@@ -97,52 +101,90 @@ describe('getLabelName method', () => {
   });
 });
 
-it('test generateGraphData with metrics data', () => {
-  const mockMetricsResponse: CloudPulseMetricsResponse = {
-    data: {
-      result: [
-        {
-          metric: { entity_id: '1' },
-          values: [[1234567890, '50']],
-        },
-      ],
-      result_type: 'matrix',
-    },
-    isPartial: false,
-    stats: {
-      series_fetched: 1,
-    },
-    status: 'success',
-  };
+describe('generateGraphData method', () => {
+  it('test generateGraphData with metrics data', () => {
+    const mockMetricsResponse: CloudPulseMetricsResponse = {
+      data: {
+        result: [
+          {
+            metric: { entity_id: '1' },
+            values: [[1234567890, '50']],
+          },
+        ],
+        result_type: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        series_fetched: 1,
+      },
+      status: 'success',
+    };
 
-  const result = generateGraphData({
-    label: 'Graph',
-    metricsList: mockMetricsResponse,
-    resources: [{ id: '1', label: 'linode-1' }],
-    status: 'success',
-    unit: '%',
-    serviceType: 'linode',
-    groupBy: ['entity_id'],
+    const result = generateGraphData({
+      label: 'Graph',
+      metricsList: mockMetricsResponse,
+      resources: [{ id: '1', label: 'linode-1' }],
+      status: 'success',
+      unit: '%',
+      serviceType: 'linode',
+      groupBy: ['entity_id'],
+      humanizableUnits: [],
+    });
+
+    expect(result.areas[0].dataKey).toBe('linode-1');
+    expect(result.dimensions).toEqual([
+      {
+        'linode-1': 50,
+        timestamp: 1234567890000,
+      },
+    ]);
+
+    expect(result.legendRowsData[0].data).toEqual({
+      average: 50,
+      last: 50,
+      length: 1,
+      max: 50,
+      total: 50,
+    });
+    expect(result.legendRowsData[0].format).toBeDefined();
+    expect(result.legendRowsData[0].legendTitle).toBe('linode-1');
+    expect(result.unit).toBe('%');
   });
 
-  expect(result.areas[0].dataKey).toBe('linode-1');
-  expect(result.dimensions).toEqual([
-    {
-      'linode-1': 50,
-      timestamp: 1234567890000,
-    },
-  ]);
+  it('test makes legend rows humanizable when unit is in humanizableUnits', () => {
+    const spy = vi.spyOn(utilities, 'humanizeLargeData');
+    const mockMetricsResponse: CloudPulseMetricsResponse = {
+      data: {
+        result: [
+          {
+            metric: { entity_id: '1' },
+            values: [[1234567890, '50000']],
+          },
+        ],
+        result_type: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        series_fetched: 1,
+      },
+      status: 'success',
+    };
 
-  expect(result.legendRowsData[0].data).toEqual({
-    average: 50,
-    last: 50,
-    length: 1,
-    max: 50,
-    total: 50,
+    const result = generateGraphData({
+      label: 'Graph',
+      metricsList: mockMetricsResponse,
+      resources: [{ id: '1', label: 'linode-1' }],
+      status: 'success',
+      unit: 'Count',
+      serviceType: 'linode',
+      groupBy: ['entity_id'],
+      humanizableUnits: ['Count'],
+    });
+
+    expect(result.legendRowsData[0].format).toBeDefined();
+    result.legendRowsData[0].format(50000);
+    expect(spy).toHaveBeenCalledWith(50000);
   });
-  expect(result.legendRowsData[0].format).toBeDefined();
-  expect(result.legendRowsData[0].legendTitle).toBe('linode-1');
-  expect(result.unit).toBe('%');
 });
 
 describe('getDimensionName method', () => {
@@ -213,6 +255,23 @@ describe('getDimensionName method', () => {
     expect(result).toBe('123');
   });
 
+  it('returns the associated nodebalancer label as is when key is nodebalancer_id', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      resources: [
+        {
+          id: '123',
+          label: 'firewall-1',
+          entities: { a: 'nodebalancer-1' },
+        },
+      ],
+      serviceType: 'firewall',
+      metric: { nodebalancer_id: 'a' },
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('nodebalancer-1');
+  });
+
   it('returns the transformed dimension value according to the service type', () => {
     const props = {
       ...baseProps,
@@ -235,6 +294,41 @@ describe('getDimensionName method', () => {
     const result = getDimensionName(props);
     expect(result).toBe('linode-1 | test | primary-1');
   });
+
+  it('returns the linode label when key is linode_id and service type is firewall', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      metric: { linode_id: '123' },
+      serviceType: 'firewall',
+      resources: [
+        {
+          id: '123',
+          label: 'Firewall-1',
+          entities: { '123': 'linode-1' },
+        },
+      ],
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1');
+  });
+
+  it('returns the volume linode label when key is linode_id and service type is blockstorage', () => {
+    const props: DimensionNameProperties = {
+      ...baseProps,
+      metric: { linode_id: '123' },
+      serviceType: 'blockstorage',
+      resources: [
+        {
+          id: '123',
+          label: 'Volume-1',
+          volumeLinodeId: '123',
+          volumeLinodeLabel: 'linode-1',
+        },
+      ],
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1');
+  });
 });
 
 it('test mapResourceIdToName method', () => {
@@ -250,15 +344,37 @@ it('test mapResourceIdToName method', () => {
 
 describe('getTimeDurationFromPreset method', () => {
   it('should return correct time duration for Last Day preset', () => {
-    const result = getTimeDurationFromPreset('last day');
+    const result = getTimeDurationFromPreset('Last day');
     expect(result).toStrictEqual({
       unit: 'days',
       value: 1,
     });
   });
 
-  it('shoult return undefined of invalid preset', () => {
+  it('should return undefined for invalid preset', () => {
     const result = getTimeDurationFromPreset('15min');
     expect(result).toBe(undefined);
+  });
+
+  describe('getEntityIds method', () => {
+    it('should return entity ids for linode service type', () => {
+      const result = getEntityIds(
+        [{ id: '123', label: 'linode-1' }],
+        ['123'],
+        widgetFactory.build(),
+        'linode'
+      );
+      expect(result).toEqual([123]);
+    });
+
+    it('should return entity ids for objectstorage buckets dashboard', () => {
+      const result = getEntityIds(
+        [{ id: 'bucket-1', label: 'bucket-name-1' }],
+        ['bucket-1'],
+        widgetFactory.build(),
+        'objectstorage'
+      );
+      expect(result).toEqual(['bucket-1']);
+    });
   });
 });

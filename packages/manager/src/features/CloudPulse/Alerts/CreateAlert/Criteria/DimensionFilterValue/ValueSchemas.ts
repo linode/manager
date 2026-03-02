@@ -242,9 +242,8 @@ const multipleInterfacesSchema = string()
 
 const baseValueSchema = string()
   .nullable()
-  .transform((value) => (value === null ? '' : value)) // normalize null to empty string to avoid the empty string case for TextField components
   .required(fieldErrorMessage)
-  .test('nonEmpty', fieldErrorMessage, (value) => value !== '');
+  .test('nonEmpty', fieldErrorMessage, (value) => value !== null);
 
 interface GetValueSchemaParams {
   dimensionLabel: string;
@@ -271,7 +270,37 @@ export const getDimensionFilterValueSchema = ({
     return interfaceSchema.concat(baseValueSchema);
   }
   if (['endswith', 'startswith'].includes(operator)) {
-    return baseValueSchema.concat(string().max(100, LENGTH_ERROR_MESSAGE));
+    return string().max(100, LENGTH_ERROR_MESSAGE).concat(baseValueSchema);
   }
+
+  if (operator === 'in') {
+    // here it is always autocomplete with comma separated values
+    return string()
+      .test(
+        'max-comma-values',
+        'More than max values selected',
+        function (value) {
+          if (!value) return true;
+
+          const { maxDimensionFilterValues } = this.options.context ?? {};
+
+          if (!maxDimensionFilterValues) return true; // if not passed, skip the check
+
+          const count = value
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean).length;
+
+          return (
+            count <= maxDimensionFilterValues ||
+            this.createError({
+              message: `Select up to ${maxDimensionFilterValues} values`,
+            })
+          );
+        }
+      )
+      .concat(baseValueSchema);
+  }
+
   return baseValueSchema;
 };

@@ -1,5 +1,4 @@
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -13,19 +12,18 @@ const props = {
   helperText,
   onClose,
   open: true,
+  disabled: true,
 };
 
 const queryMocks = vi.hoisted(() => ({
+  useAllFirewallsQuery: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
-  userPermissions: vi.fn(() => ({
-    data: {
-      create_firewall_device: false,
-    },
-  })),
+  useGetAllUserEntitiesByPermission: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
+vi.mock('src/features/IAM/hooks/useGetAllUserEntitiesByPermission', () => ({
+  useGetAllUserEntitiesByPermission:
+    queryMocks.useGetAllUserEntitiesByPermission,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -36,9 +34,27 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllFirewallsQuery: queryMocks.useAllFirewallsQuery,
+  };
+});
+
 describe('AddLinodeDrawer', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({ id: '1' });
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllFirewallsQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
   });
 
   it('should contain helper text', () => {
@@ -62,20 +78,11 @@ describe('AddLinodeDrawer', () => {
   });
 
   it('should disable "Add" button if the user does not have create_firewall_device permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        create_firewall_device: false,
-      },
-    });
-
     const { getByRole } = renderWithTheme(<AddLinodeDrawer {...props} />);
 
-    const autocomplete = screen.getByRole('combobox');
-    await userEvent.click(autocomplete);
-    await userEvent.type(autocomplete, 'linode-5');
-
-    const option = await screen.findByText('linode-5');
-    await userEvent.click(option);
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+    expect(select).toBeDisabled();
 
     const addButton = getByRole('button', {
       name: 'Add',
@@ -85,25 +92,15 @@ describe('AddLinodeDrawer', () => {
   });
 
   it('should enable "Add" button if the user has create_firewall_device permission', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        create_firewall_device: true,
-      },
+    const { getByRole } = renderWithTheme(
+      <AddLinodeDrawer {...props} disabled={false} />
+    );
+
+    const select = getByRole('combobox');
+    expect(select).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(select).toBeEnabled();
     });
-
-    const { getByRole } = renderWithTheme(<AddLinodeDrawer {...props} />);
-
-    const autocomplete = screen.getByRole('combobox');
-    await userEvent.click(autocomplete);
-    await userEvent.type(autocomplete, 'linode-5');
-
-    const option = await screen.findByText('linode-5');
-    await userEvent.click(option);
-
-    const addButton = getByRole('button', {
-      name: 'Add',
-    });
-    expect(addButton).toBeInTheDocument();
-    expect(addButton).toBeEnabled();
   });
 });

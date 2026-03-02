@@ -1,17 +1,32 @@
-import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
-import React from 'react';
+import {
+  useChildAccountsInfiniteQuery,
+  useMyDelegatedChildAccountsQuery,
+} from '@linode/queries';
+import {
+  Button,
+  Drawer,
+  LinkButton,
+  Notice,
+  Stack,
+  Typography,
+  useTheme,
+} from '@linode/ui';
+import React, { useMemo, useState } from 'react';
 
+import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
+import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, setStorage, storage } from 'src/utilities/storage';
+import { getStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
+import { ChildAccountsTable } from './SwitchAccounts/ChildAccountsTable';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
-import type { APIError, UserType } from '@linode/api-v4';
+import type { APIError, Filter, UserType } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -29,26 +44,82 @@ interface HandleSwitchToChildAccountProps {
 
 export const SwitchAccountDrawer = (props: Props) => {
   const { onClose, open, userType } = props;
-  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
+  const theme = useTheme();
   const [isParentTokenError, setIsParentTokenError] = React.useState<
     APIError[]
   >([]);
-  const [query, setQuery] = React.useState<string>('');
-
-  const isProxyUser = userType === 'proxy';
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const isParentUserType = userType === 'parent';
+  const isProxyUserType = userType === 'proxy';
+  const isDelegateUserType = userType === 'delegate';
+  const isProxyOrDelegateUserType = isProxyUserType || isDelegateUserType;
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
   const currentTokenWithBearer = storage.authentication.token.get() ?? '';
 
   const {
     createToken,
-    createTokenError,
+    error: createTokenError,
     revokeToken,
     updateCurrentToken,
-    validateParentToken,
   } = useParentChildAuthentication();
 
+  const { handleSwitchToParentAccount, isSubmitting } =
+    useSwitchToParentAccount({
+      isDelegateUserType,
+      isProxyUserType,
+      onClose,
+      onTokenExpired: (error) => {
+        setIsParentTokenError([error]);
+      },
+    });
+
   const createTokenErrorReason = createTokenError?.[0]?.reason;
+
+  const filter: Filter = {
+    ['+order']: 'asc',
+    ['+order_by']: 'company',
+    ...(searchQuery && { company: { '+contains': searchQuery } }),
+  };
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isError: childAccountInfiniteError,
+    isFetchingNextPage,
+    isInitialLoading,
+    isRefetching,
+    refetch: refetchChildAccounts,
+  } = useChildAccountsInfiniteQuery(
+    {
+      filter,
+      headers: isProxyOrDelegateUserType
+        ? {
+            Authorization: currentParentTokenWithBearer,
+          }
+        : undefined,
+    },
+    isIAMDelegationEnabled === false && isParentUserType
+  );
+
+  const {
+    data: delegatedChildAccounts,
+    error: delegatedChildAccountsError,
+    isLoading: delegatedChildAccountsLoading,
+    isRefetching: delegatedChildAccountsIsRefetching,
+    refetch: refetchDelegatedChildAccounts,
+  } = useMyDelegatedChildAccountsQuery({
+    params: {
+      page,
+      page_size: pageSize,
+    },
+    filter,
+    enabled: isIAMDelegationEnabled && isParentUserType,
+  });
 
   const handleSwitchToChildAccount = React.useCallback(
     async ({
@@ -58,10 +129,11 @@ export const SwitchAccountDrawer = (props: Props) => {
       onClose,
       userType,
     }: HandleSwitchToChildAccountProps) => {
-      const isProxyUser = userType === 'proxy';
+      const isProxyOrDelegateUserType =
+        userType === 'proxy' || userType === 'delegate';
 
       try {
-        if (isProxyUser) {
+        if (isProxyOrDelegateUserType) {
           // Revoke proxy token before switching accounts.
           await revokeToken().catch(() => {
             /* Allow user account switching; tokens will expire naturally. */
@@ -74,54 +146,79 @@ export const SwitchAccountDrawer = (props: Props) => {
         const proxyToken = await createToken(euuid);
 
         setTokenInLocalStorage({
-          prefix: 'authentication/proxy_token',
+          prefix: isIAMDelegationEnabled
+            ? 'authentication/delegate_token'
+            : 'authentication/proxy_token',
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
           },
         });
 
-        updateCurrentToken({ userType: 'proxy' });
+        updateCurrentToken({
+          userType: isIAMDelegationEnabled ? 'delegate' : 'proxy',
+        });
         onClose(event);
-        location.reload();
-      } catch (error) {
+
+        // Only redirect to /linodes for IAM delegate users
+        if (isIAMDelegationEnabled) {
+          location.replace('/linodes');
+        } else {
+          location.reload();
+        }
+      } catch {
         // Error is handled by createTokenError.
       }
     },
-    [createToken, updateCurrentToken, revokeToken]
+    [createToken, isIAMDelegationEnabled, updateCurrentToken, revokeToken]
   );
 
-  const handleSwitchToParentAccount = React.useCallback(async () => {
-    if (!validateParentToken()) {
-      const expiredTokenError: APIError = {
-        field: 'token',
-        reason: PARENT_USER_SESSION_EXPIRED,
-      };
+  const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
+    useState<boolean>(false);
 
-      setIsParentTokenError([expiredTokenError]);
+  const isLoading =
+    isInitialLoading ||
+    isSubmitting ||
+    isSwitchingChildAccounts ||
+    isRefetching ||
+    delegatedChildAccountsLoading ||
+    delegatedChildAccountsIsRefetching;
 
-      return;
-    }
-
-    // Flag to prevent multiple clicks on the switch account link.
-    setSubmitting(true);
-
-    // Revoke proxy token before switching to parent account.
-    await revokeToken().catch(() => {
-      /* Allow user account switching; tokens will expire naturally. */
-    });
-
-    updateCurrentToken({ userType: 'parent' });
-
-    // Reset flag for proxy user to display success toast once.
-    setStorage('is_proxy_user', 'false');
-
+  const refetchFn = isIAMDelegationEnabled
+    ? refetchDelegatedChildAccounts
+    : refetchChildAccounts;
+  const handleClose = () => {
+    setIsSwitchingChildAccounts(false);
+    setSearchQuery('');
     onClose();
-    location.reload();
-  }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
+  };
 
+  const childAccounts = useMemo(() => {
+    if (isIAMDelegationEnabled) {
+      return delegatedChildAccounts?.data || [];
+    }
+    return data?.pages.flatMap((page) => page.data);
+  }, [isIAMDelegationEnabled, delegatedChildAccounts, data]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1); // Reset to first page when page size changes
+  };
+
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+    setPage(1); // Reset to first page when search query changes
+  };
+
+  const hasError = isIAMDelegationEnabled
+    ? delegatedChildAccountsError
+    : childAccountInfiniteError;
   return (
-    <Drawer onClose={onClose} open={open} title="Switch Account">
+    <Drawer onClose={handleClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
         <Notice text={createTokenErrorReason} variant="error" />
       )}
@@ -130,11 +227,11 @@ export const SwitchAccountDrawer = (props: Props) => {
       )}
       <Typography
         sx={(theme) => ({
-          margin: `${theme.spacing(3)} 0`,
+          margin: `${theme.spacingFunction(24)} 0`,
         })}
       >
         Select an account to view and manage its settings and configurations
-        {isProxyUser && (
+        {isProxyOrDelegateUserType && (
           <>
             {' or '}
             <LinkButton
@@ -151,26 +248,96 @@ export const SwitchAccountDrawer = (props: Props) => {
         )}
         .
       </Typography>
-      <DebouncedSearchTextField
-        clearable
-        debounceTime={250}
-        hideLabel
-        label="Search"
-        onSearch={setQuery}
-        placeholder="Search"
-        sx={{ marginBottom: 3 }}
-        value={query}
-      />
-      <ChildAccountList
-        currentTokenWithBearer={
-          isProxyUser ? currentParentTokenWithBearer : currentTokenWithBearer
-        }
-        isLoading={isSubmitting}
-        onClose={onClose}
-        onSwitchAccount={handleSwitchToChildAccount}
-        searchQuery={query}
-        userType={userType}
-      />
+
+      {hasError ? (
+        <Stack alignItems="center" gap={1} justifyContent="center">
+          <ErrorStateCloud />
+          <Typography>Unable to load data.</Typography>
+          <Typography>
+            Try again or contact support if the issue persists.
+          </Typography>
+          <Button
+            buttonType="primary"
+            onClick={() => refetchFn()}
+            sx={(theme) => ({
+              marginTop: theme.spacingFunction(16),
+            })}
+          >
+            Try again
+          </Button>
+        </Stack>
+      ) : (
+        <>
+          <DebouncedSearchTextField
+            clearable
+            debounceTime={250}
+            hideLabel
+            key={`switch-search-${searchQuery}`}
+            label="Search"
+            onSearch={handleSearchQueryChange}
+            placeholder="Search"
+            sx={{ marginBottom: theme.spacingFunction(12) }}
+            value={searchQuery}
+          />
+          {searchQuery &&
+            childAccounts &&
+            childAccounts.length === 0 &&
+            !isLoading && (
+              <Typography
+                sx={{
+                  fontStyle: 'italic',
+                  marginTop: theme.spacingFunction(6),
+                }}
+              >
+                No search results
+              </Typography>
+            )}
+
+          {isIAMDelegationEnabled && (
+            <ChildAccountsTable
+              childAccounts={childAccounts}
+              currentTokenWithBearer={
+                isProxyOrDelegateUserType
+                  ? currentParentTokenWithBearer
+                  : currentTokenWithBearer
+              }
+              filter={filter}
+              isLoading={isLoading}
+              isSwitchingChildAccounts={isSwitchingChildAccounts}
+              onClose={onClose}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+              onSwitchAccount={handleSwitchToChildAccount}
+              page={page}
+              pageSize={pageSize}
+              setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+              totalResults={delegatedChildAccounts?.results || 0}
+              userType={userType}
+            />
+          )}
+          {!isIAMDelegationEnabled && (
+            <ChildAccountList
+              childAccounts={childAccounts}
+              currentTokenWithBearer={
+                isProxyOrDelegateUserType
+                  ? currentParentTokenWithBearer
+                  : currentTokenWithBearer
+              }
+              fetchNextPage={fetchNextPage}
+              filter={filter}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              isLoading={isLoading}
+              isSwitchingChildAccounts={isSwitchingChildAccounts}
+              onClose={onClose}
+              onSwitchAccount={handleSwitchToChildAccount}
+              refetchFn={refetchFn}
+              setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+              userType={userType}
+            />
+          )}
+        </>
+      )}
     </Drawer>
   );
 };

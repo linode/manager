@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
-import { useTheme } from '@mui/material';
+import { Stack, useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { enqueueSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
@@ -23,7 +23,9 @@ import { Link } from 'src/components/Link';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
+import { DelegateUserChip } from '../../Shared/DelegateUserChip';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
@@ -75,23 +77,29 @@ export const AssignSelectedRolesDrawer = ({
       }
     : undefined;
 
+  const { data: permissions } = usePermissions('account', ['view_user']);
+
   const {
     data: accountUsers,
     fetchNextPage,
     hasNextPage,
     isFetching: isFetchingAccountUsers,
     isLoading: isLoadingAccountUsers,
-  } = useAccountUsersInfiniteQuery({
-    ...userSearchFilter,
-    '+order': 'asc',
-    '+order_by': 'username',
-  });
+  } = useAccountUsersInfiniteQuery(
+    {
+      ...userSearchFilter,
+      '+order': 'asc',
+      '+order_by': 'username',
+    },
+    permissions?.view_user
+  );
 
   const getUserOptions = useCallback(() => {
     const users = accountUsers?.pages.flatMap((page) => page.data);
     return users?.map((user: User) => ({
       label: user.username,
       value: user.username,
+      userType: user.user_type,
     }));
   }, [accountUsers]);
 
@@ -143,11 +151,14 @@ export const AssignSelectedRolesDrawer = ({
 
   const handleScroll = (event: React.SyntheticEvent) => {
     const listboxNode = event.currentTarget;
-    if (
-      listboxNode.scrollTop + listboxNode.clientHeight >=
-        listboxNode.scrollHeight &&
-      hasNextPage
-    ) {
+    const isAtBottom =
+      Math.abs(
+        listboxNode.scrollHeight -
+          listboxNode.clientHeight -
+          listboxNode.scrollTop
+      ) < 1;
+
+    if (isAtBottom && hasNextPage) {
       fetchNextPage();
     }
   };
@@ -156,7 +167,7 @@ export const AssignSelectedRolesDrawer = ({
     <Drawer
       onClose={handleClose}
       open={open}
-      title={`Assign Role${selectedRoles.length > 1 ? `s` : ``}`}
+      title={`Assign Selected Role${selectedRoles.length > 1 ? `s` : ``} to Users`}
     >
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -176,7 +187,7 @@ export const AssignSelectedRolesDrawer = ({
             })}
           >
             <Typography mb={theme.spacingFunction(8)} variant="h3">
-              Users
+              User
             </Typography>
 
             <Controller
@@ -201,12 +212,29 @@ export const AssignSelectedRolesDrawer = ({
                   }}
                   options={getUserOptions() || []}
                   placeholder="Select a User"
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.value}>
+                      <Stack alignItems="center" direction="row" spacing={1}>
+                        <Typography>{option.label}</Typography>
+                        {option.userType === 'delegate' && <DelegateUserChip />}
+                      </Stack>
+                    </li>
+                  )}
                   slotProps={{
                     listbox: {
                       onScroll: handleScroll,
                     },
                   }}
-                  textFieldProps={{ hideLabel: true }}
+                  textFieldProps={{
+                    hideLabel: true,
+                    sx: {
+                      '& .MuiInputBase-input': {
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      },
+                    },
+                  }}
                 />
               )}
               rules={{ required: 'Select a user.' }}

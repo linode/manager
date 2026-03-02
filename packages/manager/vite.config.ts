@@ -13,7 +13,11 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  plugins: [react(), svgr({ exportAsDefault: true }), urlCanParsePolyfill()],
+  plugins: [
+    react(),
+    svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
+    urlCanParsePolyfill(),
+  ],
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
@@ -24,6 +28,7 @@ export default defineConfig({
     port: 3000,
   },
   test: {
+    include: ['**/*.test.{js,jsx,ts,tsx}'],
     coverage: {
       exclude: [
         'src/**/*.constants.{js,jsx,ts,tsx}',
@@ -40,7 +45,6 @@ export default defineConfig({
     },
     environment: 'jsdom',
     globals: true,
-    pool: 'forks',
     setupFiles: './src/testSetup.ts',
   },
 });

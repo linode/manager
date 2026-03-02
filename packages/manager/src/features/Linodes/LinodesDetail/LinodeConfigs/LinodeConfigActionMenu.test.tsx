@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
 import { linodeConfigFactory } from 'src/factories';
+import { LINODE_LOCKED_DELETE_CONFIG_TOOLTIP } from 'src/features/Linodes/constants';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
@@ -28,11 +29,22 @@ const queryMocks = vi.hoisted(() => ({
     },
   })),
   useNavigate: vi.fn(() => navigate),
+  useLinodeQuery: vi.fn().mockReturnValue({
+    data: { locks: [] as string[] },
+  }),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
 
 const defaultProps = {
   config: linodeConfigFactory.build(),
@@ -113,5 +125,108 @@ describe('ConfigActionMenu', () => {
 
     const deleteBtn = screen.getByTestId('Delete');
     expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
+  describe('Lock functionality', () => {
+    it('should disable Delete action when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          reboot_linode: true,
+          update_linode: true,
+          clone_linode: true,
+          delete_linode: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: ['cannot_delete_with_subresources'] },
+      });
+
+      renderWithTheme(<ConfigActionMenu {...defaultProps} />);
+
+      const actionBtn = screen.getByRole('button');
+      await userEvent.click(actionBtn);
+
+      const deleteBtn = screen.getByTestId('Delete');
+      expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should show lock tooltip for Delete when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          reboot_linode: true,
+          update_linode: true,
+          clone_linode: true,
+          delete_linode: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: ['cannot_delete_with_subresources'] },
+      });
+
+      renderWithTheme(<ConfigActionMenu {...defaultProps} />);
+
+      const actionBtn = screen.getByRole('button');
+      await userEvent.click(actionBtn);
+
+      const tooltip = screen.getByLabelText(
+        LINODE_LOCKED_DELETE_CONFIG_TOOLTIP
+      );
+      expect(tooltip).toBeInTheDocument();
+    });
+
+    it('should enable Delete action when Linode is not locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          reboot_linode: true,
+          update_linode: true,
+          clone_linode: true,
+          delete_linode: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: [] },
+      });
+
+      renderWithTheme(<ConfigActionMenu {...defaultProps} />);
+
+      const actionBtn = screen.getByRole('button');
+      await userEvent.click(actionBtn);
+
+      const deleteBtn = screen.getByTestId('Delete');
+      expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should not affect other actions when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          reboot_linode: true,
+          update_linode: true,
+          clone_linode: true,
+          delete_linode: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: ['cannot_delete'] },
+      });
+
+      renderWithTheme(<ConfigActionMenu {...defaultProps} />);
+
+      const actionBtn = screen.getByRole('button');
+      await userEvent.click(actionBtn);
+
+      // Boot, Edit, Clone should still be enabled
+      expect(screen.getByTestId('Boot')).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+      expect(screen.getByTestId('Edit')).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+      expect(screen.getByTestId('Clone')).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+    });
   });
 });

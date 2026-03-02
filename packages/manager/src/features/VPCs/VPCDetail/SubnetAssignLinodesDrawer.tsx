@@ -24,19 +24,18 @@ import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { Code } from 'src/components/Code/Code';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+  VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
+  VPC_IPV4_INPUT_HELPER_TEXT,
+  VPC_IPV6_INPUT_HELPER_TEXT,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
@@ -50,7 +49,6 @@ import {
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
 import {
-  generateVPCIPv6InputHelperText,
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
   getVPCInterfacePayload,
@@ -148,53 +146,43 @@ export const SubnetAssignLinodesDrawer = (
   const [allowPublicIPv6Access, setAllowPublicIPv6Access] =
     React.useState<boolean>(false);
 
-  const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
-  // TODO: change update_linode to create_linode_config_profile_interface once it's available
-  // TODO: change delete_linode to delete_linode_config_profile_interface once it's available
-  // TODO: refactor useQueryWithPermissions once API filter is available
-  const { data: filteredLinodes } = useQueryWithPermissions<Linode>(
-    useAllLinodesQuery(),
-    'linode',
-    ['update_linode', 'delete_linode'],
-    open
-  );
-
-  const userCanAssignLinodes =
-    permissions?.update_vpc && filteredLinodes?.length > 0;
-
-  const downloadCSV = async () => {
-    await getCSVData();
-    csvRef.current.link.click();
-  };
-
   // We only want the linodes from the same region as the VPC
-  const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(
+  const query = useAllLinodesQuery(
     {},
     {
       region: vpcRegion,
-    }
+    },
+    open
   );
 
-  // We need to filter to the linodes from this region that are not already
-  // assigned to this subnet
-  const findUnassignedLinodes = React.useCallback(() => {
-    return linodes?.filter((linode) => {
+  const downloadCSV = async () => {
+    // getCSVData
+    await query.refetch();
+    csvRef.current.link.click();
+  };
+
+  // TODO: change update_linode to create_linode_config_profile_interface once it's available
+  const {
+    data: availableLinodes,
+    filter: availableLinodesFilter,
+    isLoading: availableLinodesLoading,
+  } = useGetAllUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: open,
+  });
+
+  const userCanAssignLinodes = availableLinodes && availableLinodes.length > 0;
+
+  const linodeOptionsToAssign = React.useMemo(() => {
+    // We need to filter to the linodes from this region that are not already
+    // assigned to this subnet
+    if (!availableLinodes) return [];
+
+    return availableLinodes?.filter((linode) => {
       return !subnet?.linodes.some((linodeInfo) => linodeInfo.id === linode.id);
     });
-  }, [subnet, linodes]);
-
-  const [linodeOptionsToAssign, setLinodeOptionsToAssign] = React.useState<
-    Linode[]
-  >([]);
-
-  // Moved the list of linodes that are currently assignable to a subnet into a state variable (linodeOptionsToAssign)
-  // and update that list whenever this subnet or the list of all linodes in this subnet's region changes. This takes
-  // care of the MUI invalid value warning that was occurring before in the Linodes autocomplete [M3-6752]
-  React.useEffect(() => {
-    if (linodes) {
-      setLinodeOptionsToAssign(findUnassignedLinodes() ?? []);
-    }
-  }, [linodes, setLinodeOptionsToAssign, findUnassignedLinodes]);
+  }, [subnet, availableLinodes]);
 
   // Determine the configId based on the number of configurations
   function getConfigId(inputs: {
@@ -550,7 +538,7 @@ export const SubnetAssignLinodesDrawer = (
         try {
           const data = await getAllLinodeConfigs(linode.id);
           setLinodeConfigs(data);
-        } catch (errors) {
+        } catch {
           // force error to appear at top of drawer
           setAssignLinodesErrors({
             none: 'Could not load configurations for selected linode',
@@ -584,19 +572,11 @@ export const SubnetAssignLinodesDrawer = (
   return (
     <Drawer
       error={subnetError}
-      isFetching={isFetching}
+      isFetching={isFetching || availableLinodesLoading}
       onClose={handleOnClose}
       open={open}
-      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'} (${
-        subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
-      })`}
+      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'}`}
     >
-      {!userCanAssignLinodes && (
-        <Notice
-          text={`You don't have permissions to assign Linodes to ${subnet?.label}. Please contact an account administrator for details.`}
-          variant="error"
-        />
-      )}
       {assignLinodesErrors.none && (
         <Notice text={assignLinodesErrors.none} variant="error" />
       )}
@@ -606,6 +586,7 @@ export const SubnetAssignLinodesDrawer = (
         <LinodeSelect
           checkIsOptionEqualToValue
           disabled={!userCanAssignLinodes}
+          filter={availableLinodesFilter}
           label="Linode"
           onSelectionChange={(selected) => {
             setFieldValue('selectedLinode', selected);
@@ -639,36 +620,21 @@ export const SubnetAssignLinodesDrawer = (
                 }
                 data-testid="vpc-ipv4-checkbox"
                 disabled={!userCanAssignLinodes}
-                label={<Typography>Auto-assign VPC IPv4 address</Typography>}
+                label={<Typography>Auto-assign VPC IPv4</Typography>}
                 sx={{ marginRight: 0 }}
               />
-              <TooltipIcon
-                status="info"
-                text={
-                  showIPv6Content ? (
-                    <Typography component="span">
-                      Automatically assign an IPv4 address as{' '}
-                      {showIPv6Content ? 'a' : 'the'} private IP address for
-                      this Linode in the VPC.
-                    </Typography>
-                  ) : (
-                    VPC_AUTO_ASSIGN_IPV4_TOOLTIP
-                  )
-                }
-              />
+              <TooltipIcon status="info" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
             {!autoAssignVPCIPv4Address && (
               <TextField
                 disabled={!userCanAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
+                helperText={VPC_IPV4_INPUT_HELPER_TEXT}
                 label="VPC IPv4"
                 noMarginTop={showIPv6Content}
                 onChange={(e) => {
                   setFieldValue('chosenIPv4', e.target.value);
                   setAssignLinodesErrors({});
-                }}
-                style={{
-                  marginBottom: showIPv6Content ? theme.spacingFunction(24) : 0,
                 }}
                 value={values.chosenIPv4}
               />
@@ -698,29 +664,19 @@ export const SubnetAssignLinodesDrawer = (
                     }
                     data-testid="vpc-ipv6-checkbox"
                     disabled={!userCanAssignLinodes}
-                    label={
-                      <Typography>Auto-assign VPC IPv6 address</Typography>
-                    }
+                    label={<Typography>Auto-assign VPC IPv6</Typography>}
                     sx={{ marginRight: 0 }}
                   />
                   <TooltipIcon
                     status="info"
-                    text={
-                      <Typography component="span">
-                        Automatically assign an IPv6 address as a private IP
-                        address for this Linode in the VPC. A <Code>/52</Code>{' '}
-                        IPv6 network prefix is allocated for the VPC.
-                      </Typography>
-                    }
+                    text={VPC_AUTO_ASSIGN_IPV6_TOOLTIP}
                   />
                 </Box>
                 {!autoAssignVPCIPv6Address && (
                   <TextField
                     disabled={!userCanAssignLinodes}
                     errorText={assignLinodesErrors['vpc.ipv6.slaac[0].range']}
-                    helperText={generateVPCIPv6InputHelperText(
-                      subnet?.ipv6?.[0].range ?? ''
-                    )}
+                    helperText={VPC_IPV6_INPUT_HELPER_TEXT}
                     label="VPC IPv6"
                     noMarginTop
                     onChange={(e) => {

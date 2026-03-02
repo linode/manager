@@ -1,6 +1,6 @@
 import { useProfile } from '@linode/queries';
-import { Box, Chip, Stack, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { Box, Chip, Stack, Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -12,6 +12,8 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { UsersActionMenu } from './UsersActionMenu';
 
@@ -29,11 +31,18 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'delete_user',
     'is_account_admin',
+    'view_user',
   ]);
 
-  const canViewUser = permissions.is_account_admin;
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
-  const isProxyUser = Boolean(user.user_type === 'proxy');
+  const canViewUser = permissions.view_user;
+
+  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
+  // If so, we need to show the 'User type' column in the table
+  const isChildOrDelegateWithDelegationEnabled =
+    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
@@ -48,39 +57,76 @@ export const UserRow = ({ onDelete, user }: Props) => {
             username={user.username}
           />
           <MaskableText isToggleable text={user.username}>
-            <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {canViewUser ? (
-                <Link to={`/iam/users/${user.username}/details`}>
-                  {user.username}
-                </Link>
-              ) : (
-                user.username
-              )}
-            </Typography>
+            <Tooltip
+              placement="bottom"
+              title={user.username.length > 32 ? user.username : null}
+            >
+              <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {canViewUser ? (
+                  <Link
+                    to={
+                      isChildOrDelegateWithDelegationEnabled &&
+                      user.user_type === 'delegate'
+                        ? `/iam/users/${user.username}/roles`
+                        : `/iam/users/${user.username}/details`
+                    }
+                  >
+                    {truncateEnd(user.username, 32)}
+                  </Link>
+                ) : (
+                  truncateEnd(user.username, 32)
+                )}
+              </Typography>
+            </Tooltip>
           </MaskableText>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
+      {isChildOrDelegateWithDelegationEnabled && (
+        <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
+          <Typography>
+            {user.user_type === 'child' ? 'User' : 'Delegate User'}
+          </Typography>
+        </TableCell>
+      )}
       <TableCell
         sx={{
           '& > p': { overflow: 'hidden', textOverflow: 'ellipsis' },
           display: { sm: 'table-cell', xs: 'none' },
         }}
       >
-        <MaskableText isToggleable text={user.email} />
+        {isChildOrDelegateWithDelegationEnabled ? (
+          user.user_type === 'child' ? (
+            <MaskableText isToggleable text={user.email} />
+          ) : (
+            <Typography>
+              Not applicable{' '}
+              <TooltipIcon
+                status="info"
+                sxTooltipIcon={{
+                  marginLeft: '-9px',
+                  marginTop: '-5px',
+                }}
+                text="E-mail addresses of delegate users are not displayed."
+                tooltipPosition="right"
+              />
+            </Typography>
+          )
+        ) : (
+          <MaskableText isToggleable text={user.email} />
+        )}
       </TableCell>
-      {!isProxyUser && (
-        <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
-          <LastLogin last_login={user.last_login} />
-        </TableCell>
-      )}
+      <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
+        <LastLogin last_login={user.last_login} user_type={user.user_type} />
+      </TableCell>
+
       <TableCell actionCell>
         <UsersActionMenu
-          isProxyUser={isProxyUser}
           onDelete={onDelete}
           permissions={permissions}
           username={user.username}
+          userType={user.user_type}
         />
       </TableCell>
     </TableRow>
@@ -91,11 +137,29 @@ export const UserRow = ({ onDelete, user }: Props) => {
  * Display information about a Users last login
  *
  * - The component renders "Never" if last_login is `null`
+ * - The component renders "Not applicable" if the user is a delegate user
  * - The component renders a date if last_login is a success
  * - The component renders a date and a status if last_login is a failure
  */
-const LastLogin = (props: Pick<User, 'last_login'>) => {
-  const { last_login } = props;
+const LastLogin = (props: Pick<User, 'last_login' | 'user_type'>) => {
+  const { last_login, user_type } = props;
+
+  if (user_type === 'delegate') {
+    return (
+      <Typography>
+        Not applicable
+        <TooltipIcon
+          status="info"
+          sxTooltipIcon={{
+            marginLeft: '-9px',
+            marginTop: '-5px',
+          }}
+          text="Last login of delegate users is not displayed."
+          tooltipPosition="right"
+        />
+      </Typography>
+    );
+  }
 
   if (last_login === null) {
     return <Typography>Never</Typography>;

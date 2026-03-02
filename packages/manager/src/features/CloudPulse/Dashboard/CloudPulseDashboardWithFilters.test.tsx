@@ -2,98 +2,69 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { dashboardFactory, serviceTypesFactory } from 'src/factories';
+import { dashboardFactory } from 'src/factories';
 import * as utils from 'src/features/CloudPulse/Utils/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardWithFilters } from './CloudPulseDashboardWithFilters';
 
+import type { GroupByOption } from '../GroupBy/CloudPulseGroupByDrawer';
+
 const queryMocks = vi.hoisted(() => ({
-  useCloudPulseDashboardByIdQuery: vi.fn().mockReturnValue({}),
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
-  useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
+  useGlobalDimensions: vi.fn().mockReturnValue({}),
 }));
 
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Select filters to visualize metrics.';
+const mockGroupByOptions: GroupByOption[] = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' },
+];
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
   return {
     ...actual,
-    useCloudPulseDashboardByIdQuery: queryMocks.useCloudPulseDashboardByIdQuery,
     useCloudPulseDashboardsQuery: queryMocks.useCloudPulseDashboardsQuery,
   };
 });
-
-vi.mock('src/queries/cloudpulse/services.ts', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/services');
+vi.mock('../GroupBy/utils', async () => {
+  const actual = await vi.importActual('../GroupBy/utils');
 
   return {
     ...actual,
-    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+    useGlobalDimensions: queryMocks.useGlobalDimensions,
   };
 });
 const mockDashboard = dashboardFactory.build();
-const mockServiceTypesList = serviceTypesFactory.build();
-queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-  data: {
-    data: mockDashboard,
-  },
-  error: false,
-  isLoading: false,
-});
-
-queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
-  data: {
-    data: [mockDashboard],
-  },
-  error: false,
-  isLoading: false,
-});
-
-queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-  data: {
-    data: [mockServiceTypesList],
-  },
-  error: false,
-  isLoading: false,
-});
-
-vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
-  data: [mockDashboard],
-  error: '',
-  isLoading: false,
-});
+const PRESET_BUTTON_ID = 'preset-button';
 
 describe('CloudPulseDashboardWithFilters component tests', () => {
   it('renders a CloudPulseDashboardWithFilters component with error placeholder', () => {
-    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: {
-        data: mockDashboard,
-      },
-      error: false,
-      isError: true,
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [],
+      error: 'test error',
       isLoading: false,
     });
 
     renderWithTheme(
-      <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
+      <CloudPulseDashboardWithFilters resource={1} serviceType="dbaas" />
     );
 
-    const error = screen.getByText('Error while loading Dashboard with Id - 1');
+    const error = screen.getByText('Error loading dashboards');
     expect(error).toBeDefined();
   });
 
   it('renders a CloudPulseDashboardWithFilters component successfully without error placeholders', () => {
-    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      error: false,
-      isError: false,
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [],
+      error: '',
       isLoading: false,
     });
-
     renderWithTheme(
-      <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
+      <CloudPulseDashboardWithFilters resource={1} serviceType="dbaas" />
     );
 
     const circle = screen.getByTestId(circleProgress);
@@ -101,33 +72,40 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
   });
 
   it('renders a CloudPulseDashboardWithFilters component successfully for dbaas', () => {
-    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: { ...mockDashboard, service_type: 'dbaas' },
-      error: false,
-      isError: false,
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, service_type: 'dbaas' }],
+      error: '',
       isLoading: false,
     });
 
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
+
     renderWithTheme(
-      <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
+      <CloudPulseDashboardWithFilters resource={1} serviceType="dbaas" />
     );
 
-    const startDate = screen.getByText('Start Date');
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
+
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     const nodeTypeSelect = screen.getByTestId('node-type-select');
-    expect(startDate).toBeInTheDocument();
+    expect(presetButton).toBeInTheDocument();
     expect(nodeTypeSelect).toBeInTheDocument();
   });
 
   it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for dbaas', async () => {
-    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: { ...mockDashboard, service_type: 'dbaas' },
-      error: false,
-      isError: false,
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, service_type: 'dbaas' }],
+      error: '',
       isLoading: false,
     });
 
     renderWithTheme(
-      <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
+      <CloudPulseDashboardWithFilters resource={1} serviceType="dbaas" />
     );
     const closeIcon = screen.getByTestId('CloseIcon');
     expect(closeIcon).toBeDefined();
@@ -139,20 +117,136 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
   });
 
   it('renders a CloudPulseDashboardWithFilters component with no filters configured error', () => {
-    queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
-      data: { ...mockDashboard, id: -1, service_type: 'xyz' },
-      error: false,
-      isError: false,
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, id: 0 }],
+      error: '',
       isLoading: false,
     });
 
     renderWithTheme(
-      <CloudPulseDashboardWithFilters dashboardId={-1} resource={1} />
+      <CloudPulseDashboardWithFilters resource={1} serviceType={'dbaas'} />
     );
 
     const noFilterText = screen.getByText(
-      'No Filters Configured for Service Type - xyz'
+      'No Filters Configured for Dashboard with Id - 0'
     );
     expect(noFilterText).toBeDefined();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for nodebalancer', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, service_type: 'nodebalancer', id: 3 }],
+      error: '',
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters resource={1} serviceType="nodebalancer" />
+    );
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    const portsSelect = screen.getByPlaceholderText('e.g., 80,443,3000');
+    expect(presetButton).toBeInTheDocument();
+    expect(portsSelect).toBeInTheDocument();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for firewall', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [
+        { ...mockDashboard, service_type: 'firewall', id: 4 },
+        { ...mockDashboard, service_type: 'firewall', id: 8 },
+      ],
+      error: '',
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters resource={1} serviceType="firewall" />
+    );
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Select a Linode Region')).toBeVisible();
+    expect(screen.getByPlaceholderText('Select Interface Types')).toBeVisible();
+    expect(screen.getByPlaceholderText('e.g., 1234,5678')).toBeVisible();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for objectstorage', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, service_type: 'objectstorage', id: 6 }],
+      error: '',
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters
+        region="test"
+        resource="test"
+        serviceType="objectstorage"
+      />
+    );
+
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for objectstorage if region is not provided', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, service_type: 'objectstorage', id: 6 }],
+      error: '',
+      isLoading: false,
+    });
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters
+        resource={1}
+        serviceType="objectstorage"
+      />
+    );
+    const error = screen.getByText(mandatoryFiltersError);
+    expect(error).toBeDefined();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for blockstorage', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [{ ...mockDashboard, service_type: 'blockstorage', id: 7 }],
+      error: '',
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters resource={1} serviceType="blockstorage" />
+    );
+
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
+  });
+
+  it('renders a CloudPulseDashboardWithFilters component successfully for firewall nodebalancer', async () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [
+        {
+          ...mockDashboard,
+          service_type: 'firewall',
+          id: 4,
+          label: 'linode_firewall_dashbaord',
+        },
+        {
+          ...mockDashboard,
+          service_type: 'firewall',
+          id: 8,
+          label: 'nodebalancer_firewall_dashbaord',
+        },
+      ],
+      error: '',
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardWithFilters resource={1} serviceType="firewall" />
+    );
+
+    const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
+    expect(presetButton).toBeInTheDocument();
+    await userEvent.click(screen.getByPlaceholderText('Select a Dashboard'));
+    await userEvent.click(screen.getByText('nodebalancer_firewall_dashbaord'));
+    expect(
+      screen.getByPlaceholderText('Select a NodeBalancer Region')
+    ).toBeVisible();
   });
 });

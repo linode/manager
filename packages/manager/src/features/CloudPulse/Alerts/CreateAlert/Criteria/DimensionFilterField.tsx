@@ -34,7 +34,8 @@ interface DimensionFilterFieldProps {
 export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
 
-  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, resetField, setValue } =
+    useFormContext<CreateAlertDefinitionForm>();
 
   const dataFieldOptions =
     dimensionOptions.map((dimension) => ({
@@ -52,13 +53,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       value: null,
     };
     if (operation === 'selectOption') {
-      setValue(`${name}.dimension_label`, selected.value, {
-        shouldValidate: true,
+      resetField(name, {
+        defaultValue: { ...fieldValue, dimension_label: selected.value },
       });
-      setValue(`${name}.operator`, fieldValue.operator);
-      setValue(`${name}.value`, fieldValue.value);
     } else {
-      setValue(name, fieldValue);
+      resetField(name, { defaultValue: fieldValue });
     }
   };
 
@@ -76,6 +75,10 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     control,
     name: 'entity_ids',
   });
+  const entityType = useWatch({
+    control,
+    name: 'entity_type',
+  });
   const serviceType = useWatch({
     control,
     name: 'serviceType',
@@ -88,9 +91,16 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
-          (dim) => dim.dimension_label === dimensionFieldWatcher
-        ) ?? null)
+        (dim) => dim.dimension_label === dimensionFieldWatcher
+      ) ?? null)
       : null;
+
+  const handleError = React.useCallback(
+    (hasError: boolean) => {
+      setValue('hasAPIError', hasError);
+    },
+    [setValue]
+  );
 
   return (
     <GridLegacy
@@ -149,7 +159,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 field.onChange(
                   operation === 'selectOption' ? newValue.value : null
                 );
-                setValue(`${name}.value`, null);
+                resetField(`${name}.value`, { defaultValue: null });
               }}
               options={dimensionOperatorOptions}
               placeholder="Select an Operator"
@@ -171,7 +181,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               dimensionLabel={dimensionFieldWatcher}
               disabled={!dimensionFieldWatcher}
               entities={entities}
+              entityType={entityType ?? undefined}
               errorText={fieldState.error?.message}
+              handleError={handleError}
               name={name}
               onBlur={field.onBlur}
               onChange={field.onChange}

@@ -22,7 +22,7 @@ export const CloudPulseModifyAlertResources = React.memo(
     const { name } = props;
     const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-
+    const entityTypeWatcher = useWatch({ control, name: 'entity_type' });
     const flags = useFlags();
 
     const maxSelectionCount = React.useMemo(() => {
@@ -42,6 +42,13 @@ export const CloudPulseModifyAlertResources = React.memo(
         shouldValidate: true,
       });
     };
+
+    const setError = React.useCallback(
+      (hasError: boolean) => {
+        setValue('hasAPIError', hasError);
+      },
+      [setValue]
+    );
 
     const titleRef = React.useRef<HTMLDivElement>(null);
 
@@ -63,6 +70,7 @@ export const CloudPulseModifyAlertResources = React.memo(
               <AlertResources
                 alertResourceIds={field.value ?? []}
                 alertType="user"
+                entityType={entityTypeWatcher}
                 errorText={fieldState.error?.message}
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel
@@ -70,6 +78,7 @@ export const CloudPulseModifyAlertResources = React.memo(
                 maxSelectionCount={maxSelectionCount}
                 scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher || undefined}
+                setError={setError}
               />
             </Box>
           </Box>

@@ -100,7 +100,13 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
         <Stack spacing={2}>
           <Typography>
             {MAINTENANCE_POLICY_DESCRIPTION}{' '}
-            <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
+            <Link
+              data-pendo-id="linode-detail-maintenance-policy-learn-more"
+              to={MAINTENANCE_POLICY_LEARN_MORE_URL}
+            >
+              Learn more
+            </Link>
+            .
           </Typography>
           {showUpcomingMaintenanceNotice && (
             <Notice variant="warning">
@@ -133,6 +139,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
           <Box>
             <Button
               buttonType="outlined"
+              data-pendo-id="linode-maintenance-policy-save-button"
               disabled={!isDirty || isDisabled}
               loading={isSubmitting}
               type="submit"

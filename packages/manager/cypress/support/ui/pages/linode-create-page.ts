@@ -130,7 +130,7 @@ export const linodeCreatePage = {
    * Select the Linode Interfaces Type.
    */
   selectLinodeInterfacesType: () => {
-    cy.findByText('Linode Interfaces').click();
+    cy.get('[data-qa-interfaces-option="linode"]').click();
   },
 
   /**
@@ -141,13 +141,20 @@ export const linodeCreatePage = {
   },
 
   /**
-   * Select the interfaces' card.
+   * Selects an interface generation.
    *
-   * @param title - Interfaces' card title to select.
+   * @param generation - The interface generation to select.
    */
-  selectInterfaceCard: (title: string) => {
-    cy.get(`[data-qa-select-card-heading="${title}"]`)
-      .should('be.visible')
-      .click();
+  selectInterfaceGeneration: (generation: 'legacy_config' | 'linode') => {
+    cy.get(`[data-qa-interfaces-option="${generation}"]`).click();
+  },
+
+  /**
+   * Select the interfaces' type.
+   *
+   * @param type - Interfaces' type title to select.
+   */
+  selectInterface: (type: 'public' | 'vlan' | 'vpc') => {
+    cy.get(`[data-qa-interface-type-option="${type}"]`).click();
   },
 };

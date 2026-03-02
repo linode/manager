@@ -27,7 +27,7 @@ export const DatabaseEmptyState = () => {
     headers.logo = (
       <DatabaseLogo sx={{ marginBottom: '20px', marginTop: '-10px' }} />
     );
-  }
+  } // TODO (UIE-8634): Determine if condition is still necessary
 
   return (
     <ResourcesSection

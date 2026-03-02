@@ -17,6 +17,7 @@ import { Link } from 'src/components/Link';
 import type { BetaChipProps } from '@linode/ui';
 
 export interface APLProps {
+  isEnterpriseTier?: boolean;
   isSectionDisabled: boolean;
   setAPL: (apl: boolean) => void;
   setHighAvailability: (ha: boolean | undefined) => void;
@@ -33,7 +34,12 @@ export const APLCopy = () => (
 );
 
 export const ApplicationPlatform = (props: APLProps) => {
-  const { setAPL, setHighAvailability, isSectionDisabled } = props;
+  const {
+    setAPL,
+    setHighAvailability,
+    isSectionDisabled,
+    isEnterpriseTier = false,
+  } = props;
   const [selectedValue, setSelectedValue] = React.useState<
     'no' | 'yes' | undefined
   >(isSectionDisabled ? 'no' : undefined);
@@ -43,7 +49,10 @@ export const ApplicationPlatform = (props: APLProps) => {
     if (value === 'yes' || value === 'no') {
       setSelectedValue(value);
       setAPL(value === 'yes');
-      setHighAvailability(value === 'yes');
+      // For Enterprise clusters, HA is already enabled by default, so don't enforce it when APL is enabled
+      if (!isEnterpriseTier) {
+        setHighAvailability(value === 'yes');
+      }
     }
   };
 

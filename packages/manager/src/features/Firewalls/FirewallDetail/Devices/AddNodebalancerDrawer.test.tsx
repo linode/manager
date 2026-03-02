@@ -17,6 +17,17 @@ const props = {
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
+  userPermissions: vi.fn(() => ({
+    data: {
+      create_firewall_device: true,
+    },
+  })),
+  useGetAllUserEntitiesByPermission: vi.fn().mockReturnValue({}),
+  useAllFirewallsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -27,9 +38,32 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/useGetAllUserEntitiesByPermission', () => ({
+  useGetAllUserEntitiesByPermission:
+    queryMocks.useGetAllUserEntitiesByPermission,
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllFirewallsQuery: queryMocks.useAllFirewallsQuery,
+  };
+});
+
 describe('AddNodeBalancerDrawer', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({ id: '1' });
+    queryMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+    queryMocks.useAllFirewallsQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
   });
 
   it('should contain helper text', () => {

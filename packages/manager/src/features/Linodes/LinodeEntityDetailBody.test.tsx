@@ -6,11 +6,25 @@ import {
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 
 import type { BodyProps } from './LinodeEntityDetailBody';
+
+beforeAll(() => mockMatchMedia());
+
+const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+  };
+});
 
 describe('LinodeEntityDetailBody', () => {
   const baseProps: BodyProps = {
@@ -82,6 +96,12 @@ describe('LinodeEntityDetailBody', () => {
   });
 
   it('renders VPC IPv4 and VPC IPv6 for a linode assigned to a Dual Stack VPC', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['VPC Dual Stack'],
+      },
+    });
+
     const subnet = subnetFactory.build({
       id: 1,
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],

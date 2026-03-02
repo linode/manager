@@ -24,6 +24,8 @@ interface Props {
   handleAllowPublicIPv6AccessChange: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
+  publicIPv4Error?: string;
+  publicIPv6Error?: string;
   showIPv6Content: boolean;
   sx?: SxProps<Theme>;
   userCannotAssignLinodes: boolean;
@@ -35,6 +37,8 @@ export const PublicAccess = (props: Props) => {
     allowPublicIPv6Access,
     handleAllowPublicIPv4AccessChange,
     handleAllowPublicIPv6AccessChange,
+    publicIPv4Error,
+    publicIPv6Error,
     showIPv6Content,
     sx,
     userCannotAssignLinodes,
@@ -47,13 +51,8 @@ export const PublicAccess = (props: Props) => {
         Public access
       </Typography>
       <FormControlLabel
-        control={
-          <Checkbox
-            checked={allowPublicIPv4Access}
-            onChange={handleAllowPublicIPv4AccessChange}
-            sx={{ ml: 0.4 }}
-          />
-        }
+        checked={allowPublicIPv4Access}
+        control={<Checkbox sx={{ ml: 0.4 }} />}
         disabled={userCannotAssignLinodes}
         label={
           <Stack alignItems="center" direction="row">
@@ -64,27 +63,44 @@ export const PublicAccess = (props: Props) => {
             />
           </Stack>
         }
+        onChange={handleAllowPublicIPv4AccessChange}
       />
+      {allowPublicIPv4Access && publicIPv4Error && (
+        <Typography
+          sx={(theme) => ({
+            color: theme.color.red,
+          })}
+        >
+          {publicIPv4Error}
+        </Typography>
+      )}
       {showIPv6Content && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={allowPublicIPv6Access}
-              onChange={handleAllowPublicIPv6AccessChange}
-              sx={{ ml: 0.4 }}
-            />
-          }
-          disabled={userCannotAssignLinodes}
-          label={
-            <Stack alignItems="center" direction="row">
-              <Typography>Allow public IPv6 access</Typography>
-              <TooltipIcon
-                status="info"
-                text={PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP}
-              />
-            </Stack>
-          }
-        />
+        <>
+          <FormControlLabel
+            checked={allowPublicIPv6Access}
+            control={<Checkbox sx={{ ml: 0.4 }} />}
+            disabled={userCannotAssignLinodes}
+            label={
+              <Stack alignItems="center" direction="row">
+                <Typography>Allow public IPv6 access</Typography>
+                <TooltipIcon
+                  status="info"
+                  text={PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP}
+                />
+              </Stack>
+            }
+            onChange={handleAllowPublicIPv6AccessChange}
+          />
+          {allowPublicIPv6Access && publicIPv6Error && (
+            <Typography
+              sx={(theme) => ({
+                color: theme.color.red,
+              })}
+            >
+              {publicIPv6Error}
+            </Typography>
+          )}
+        </>
       )}
     </>
   );

@@ -1,4 +1,8 @@
-import { destinationType } from '@linode/api-v4';
+import {
+  authenticationType,
+  dataCompressionType,
+  destinationType,
+} from '@linode/api-v4';
 import { useAllDestinationsQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -6,56 +10,102 @@ import {
   CircleProgress,
   ErrorState,
   Paper,
+  Stack,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationLinodeObjectStorageDetailsForm';
+import {
+  getDestinationTypeOption,
+  useIsACLPLogsEnabled,
+} from 'src/features/Delivery/deliveryUtils';
+import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
+import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
-import { DestinationLinodeObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationLinodeObjectStorageDetailsSummary';
+import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
+import { DestinationCustomHTTPSDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationCustomHTTPSDetailsSummary';
 
 import type {
+  AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsExtended,
+  CustomHTTPSDetails,
+  CustomHTTPSDetailsExtended,
   DestinationType,
-  LinodeObjectStorageDetails,
 } from '@linode/api-v4';
+import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 interface DestinationName {
   create?: boolean;
   id?: number;
   label: string;
+  pendoId?: string;
   type?: DestinationType;
 }
 
-const controlPaths = {
+const akamaiObjectStorageDetailsControlPaths = {
   accessKeyId: 'destination.details.access_key_id',
   accessKeySecret: 'destination.details.access_key_secret',
   bucketName: 'destination.details.bucket_name',
   host: 'destination.details.host',
   path: 'destination.details.path',
-  region: 'destination.details.region',
 } as const;
 
-export const StreamFormDelivery = () => {
+const customHttpsDetailsControlPaths = {
+  authenticationType: 'destination.details.authentication.type',
+  authenticationDetails: 'destination.details.authentication.details',
+  basicAuthenticationPassword:
+    'destination.details.authentication.details.basic_authentication_password',
+  basicAuthenticationUser:
+    'destination.details.authentication.details.basic_authentication_user',
+  clientCertificateDetails: 'destination.details.client_certificate_details',
+  clientCaCertificate:
+    'destination.details.client_certificate_details.client_ca_certificate',
+  clientCertificate:
+    'destination.details.client_certificate_details.client_certificate',
+  clientPrivateKey:
+    'destination.details.client_certificate_details.client_private_key',
+  tlsHostname: 'destination.details.client_certificate_details.tls_hostname',
+  contentType: 'destination.details.content_type',
+  customHeaders: 'destination.details.custom_headers',
+  dataCompression: 'destination.details.data_compression',
+  endpointUrl: 'destination.details.endpoint_url',
+} as const;
+
+interface StreamFormDeliveryProps {
+  mode: FormMode;
+  setDisableTestConnection: (disable: boolean) => void;
+}
+
+export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
+  const { mode, setDisableTestConnection } = props;
+
+  const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const theme = useTheme();
-  const { control, setValue, clearErrors } =
+  const { control, setValue, getValues, reset } =
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
+
+  const capitalizedMode = capitalize(mode);
 
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
 
-  const destinationNameOptions: DestinationName[] = (
-    destinations?.data || []
-  ).map(({ id, label, type }) => ({
-    id,
-    label,
-    type,
-  }));
+  useEffect(() => {
+    setDisableTestConnection(isLoading || !!error || !creatingNewDestination);
+  }, [isLoading, error, setDisableTestConnection, creatingNewDestination]);
+
+  const destinationNameOptions: DestinationName[] = (destinations || []).map(
+    ({ id, label, type }) => ({
+      id,
+      label,
+      type,
+    })
+  );
 
   const selectedDestinationType = useWatch({
     control,
@@ -67,10 +117,48 @@ export const StreamFormDelivery = () => {
     name: 'stream.destinations',
   });
 
-  const destinationNameFilterOptions = createFilterOptions<DestinationName>();
+  const destinationNameFilterOptions = createFilterOptions<DestinationName>({
+    stringify: (destination) => destination.label,
+  });
 
   const findDestination = (id: number) =>
-    destinations?.data?.find((destination) => destination.id === id);
+    destinations?.find((destination) => destination.id === id);
+
+  const resetDestinationForm = (
+    destType: DestinationType,
+    destinationLabel?: null | string
+  ) => {
+    const currentValues = getValues();
+    const newDestinationDetails =
+      destType === destinationType.AkamaiObjectStorage
+        ? {
+            path: '',
+          }
+        : {
+            authentication: {
+              type: authenticationType.None,
+            },
+            client_certificate_details: {
+              client_ca_certificate: '',
+              client_certificate: '',
+              client_private_key: '',
+              tls_hostname: '',
+            },
+            data_compression: dataCompressionType.Gzip,
+          };
+
+    reset({
+      stream: {
+        ...currentValues.stream,
+        destinations: [],
+      },
+      destination: {
+        ...currentValues.destination,
+        label: destinationLabel || '',
+        details: newDestinationDetails,
+      },
+    });
+  };
 
   const getDestinationForm = () => (
     <>
@@ -80,14 +168,21 @@ export const StreamFormDelivery = () => {
         render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
-            disabled
+            disabled={!isACLPLogsCustomHttpsEnabled}
             errorText={fieldState.error?.message}
             label="Destination Type"
             onBlur={field.onBlur}
             onChange={(_, { value }) => {
               field.onChange(value);
+              resetDestinationForm(value as DestinationType);
+              setCreatingNewDestination(false);
             }}
             options={destinationTypeOptions}
+            textFieldProps={{
+              inputProps: {
+                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Type`,
+              },
+            }}
             value={getDestinationTypeOption(field.value)}
           />
         )}
@@ -110,6 +205,7 @@ export const StreamFormDelivery = () => {
                   create: true,
                   label: inputValue,
                   type: selectedDestinationType,
+                  pendoId: `Logs Delivery Streams ${capitalizedMode}-Destination Name-New`,
                 });
               }
 
@@ -121,12 +217,25 @@ export const StreamFormDelivery = () => {
             onChange={(_, newValue) => {
               const id = newValue?.id;
 
-              setValue('stream.destinations', id ? [id] : []);
-              const selectedDestination = id ? findDestination(id) : undefined;
-              if (selectedDestination) {
-                setValue('destination.details', selectedDestination.details);
-              } else {
-                clearErrors('destination.details');
+              if (id === undefined && selectedDestinations.length > 0) {
+                resetDestinationForm(
+                  selectedDestinationType,
+                  (newValue?.label || newValue) as null | string
+                );
+              }
+
+              if (id) {
+                setValue('stream.destinations', [id]);
+                const selectedDestination = findDestination(id);
+                if (selectedDestination) {
+                  setValue(
+                    'destination.details',
+                    selectedDestinationType ===
+                      destinationType.AkamaiObjectStorage
+                      ? (selectedDestination.details as AkamaiObjectStorageDetailsExtended)
+                      : (selectedDestination.details as CustomHTTPSDetailsExtended)
+                  );
+                }
               }
 
               field.onChange(newValue?.label || newValue);
@@ -135,40 +244,91 @@ export const StreamFormDelivery = () => {
             options={destinationNameOptions.filter(
               ({ type }) => type === selectedDestinationType
             )}
-            placeholder="Create or Select Destination Name"
+            placeholder="Select existing or enter new destination"
             renderOption={(props, option) => {
-              const { key, ...optionProps } = props;
+              const { id, ...optionProps } = props;
               return (
-                <li key={key} {...optionProps}>
-                  {option.create ? (
-                    <>
-                      <strong>Create&nbsp;</strong> &quot;{option.label}&quot;
-                    </>
-                  ) : (
-                    option.label
-                  )}
+                <li data-pendo-id={option.pendoId} {...optionProps} key={id}>
+                  <Stack
+                    alignItems="center"
+                    direction="row"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Stack direction="column">
+                      <Box
+                        sx={{
+                          fontWeight: theme.tokens.font.FontWeight.Semibold,
+                        }}
+                      >
+                        {option.create ? (
+                          <span>
+                            <strong>Create&nbsp;</strong> &quot;{option.label}
+                            &quot;
+                          </span>
+                        ) : (
+                          option.label
+                        )}
+                      </Box>
+                      {option.id && (
+                        <Box
+                          sx={{
+                            color:
+                              theme.tokens.component.Dropdown.Text.Description,
+                          }}
+                        >
+                          ID: {option.id}
+                        </Box>
+                      )}
+                    </Stack>
+                  </Stack>
                 </li>
               );
+            }}
+            textFieldProps={{
+              inputProps: {
+                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Name`,
+              },
             }}
             value={field.value ? { label: field.value } : null}
           />
         )}
       />
-      {selectedDestinationType === destinationType.LinodeObjectStorage && (
+      {selectedDestinationType === destinationType.AkamaiObjectStorage && (
         <>
           {creatingNewDestination && !selectedDestinations?.length && (
-            <DestinationLinodeObjectStorageDetailsForm
-              controlPaths={controlPaths}
+            <DestinationAkamaiObjectStorageDetailsForm
+              controlPaths={akamaiObjectStorageDetailsControlPaths}
+              entity="stream"
+              mode={mode}
             />
           )}
           {selectedDestinations?.[0] && (
-            <DestinationLinodeObjectStorageDetailsSummary
+            <DestinationAkamaiObjectStorageDetailsSummary
               {...(findDestination(selectedDestinations[0])
-                ?.details as LinodeObjectStorageDetails)}
+                ?.details as AkamaiObjectStorageDetails)}
             />
           )}
         </>
       )}
+      {isACLPLogsCustomHttpsEnabled &&
+        selectedDestinationType === destinationType.CustomHttps && (
+          <>
+            {creatingNewDestination && !selectedDestinations?.length && (
+              <DestinationCustomHttpsDetailsForm
+                controlPaths={customHttpsDetailsControlPaths}
+                entity="stream"
+                mode={mode}
+              />
+            )}
+            {selectedDestinations?.[0] && (
+              <DestinationCustomHTTPSDetailsSummary
+                {...(findDestination(selectedDestinations[0])
+                  ?.details as CustomHTTPSDetails)}
+              />
+            )}
+          </>
+        )}
     </>
   );
 
@@ -176,7 +336,7 @@ export const StreamFormDelivery = () => {
     <Paper>
       <Typography variant="h2">Delivery</Typography>
       <Typography sx={{ mt: theme.spacingFunction(12) }}>
-        Define a destination where you want this stream to send logs.
+        Set the destination for log delivery.
       </Typography>
       {isLoading && (
         <Box display="flex" justifyContent="center">

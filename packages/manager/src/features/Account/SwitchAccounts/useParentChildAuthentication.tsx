@@ -2,20 +2,26 @@ import {
   deletePersonalAccessToken,
   getPersonalAccessTokens,
 } from '@linode/api-v4';
-import { useCreateChildAccountPersonalAccessTokenMutation } from '@linode/queries';
+import {
+  useCreateChildAccountPersonalAccessTokenMutation,
+  useGenerateChildAccountTokenQuery,
+} from '@linode/queries';
 import { useCallback } from 'react';
+import React from 'react';
 
 import {
   getPersonalAccessTokenForRevocation,
   isParentTokenValid,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { getStorage, storage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
 
 export const useParentChildAuthentication = () => {
   const currentTokenWithBearer = storage.authentication.token.get() ?? '';
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const {
     error: createTokenError,
@@ -23,20 +29,42 @@ export const useParentChildAuthentication = () => {
     mutateAsync: createProxyToken,
   } = useCreateChildAccountPersonalAccessTokenMutation();
 
+  const {
+    error: generateTokenError,
+    isPending: generateTokenLoading,
+    mutateAsync: generateProxyToken,
+  } = useGenerateChildAccountTokenQuery();
+
+  const error = React.useMemo(
+    () => (isIAMDelegationEnabled ? generateTokenError : createTokenError),
+    [isIAMDelegationEnabled, createTokenError, generateTokenError]
+  );
+
+  const loading = React.useMemo(
+    () => (isIAMDelegationEnabled ? generateTokenLoading : createTokenLoading),
+    [isIAMDelegationEnabled, createTokenLoading, generateTokenLoading]
+  );
+
   const createToken = useCallback(
     async (euuid: string): Promise<Token> => {
-      return createProxyToken({
+      const tokenParent = getStorage('authentication/parent_token/token');
+
+      const mutationFn = isIAMDelegationEnabled
+        ? generateProxyToken
+        : createProxyToken;
+
+      return mutationFn({
         euuid,
         headers: {
           /**
-           * Headers are required for proxy users when obtaining a proxy token.
-           * For 'proxy' userType, use the stored parent token in the request.
+           * Headers are required for proxy or delegate users when obtaining a proxy or delegate token.
+           * For 'proxy' or 'delegate' userType, use the stored parent token in the request.
            */
-          Authorization: getStorage('authentication/parent_token/token'),
+          Authorization: tokenParent,
         },
       });
     },
-    [createProxyToken]
+    [createProxyToken, generateProxyToken, isIAMDelegationEnabled]
   );
 
   const revokeToken = useCallback(async (): Promise<void> => {
@@ -58,7 +86,11 @@ export const useParentChildAuthentication = () => {
   }, [currentTokenWithBearer]);
 
   const updateCurrentToken = useCallback(
-    ({ userType }: { userType: Extract<UserType, 'parent' | 'proxy'> }) => {
+    ({
+      userType,
+    }: {
+      userType: Extract<UserType, 'delegate' | 'parent' | 'proxy'>;
+    }) => {
       updateCurrentTokenBasedOnUserType({ userType });
     },
     []
@@ -70,8 +102,8 @@ export const useParentChildAuthentication = () => {
 
   return {
     createToken,
-    createTokenError,
-    createTokenLoading,
+    error,
+    loading,
     revokeToken,
     updateCurrentToken,
     validateParentToken,

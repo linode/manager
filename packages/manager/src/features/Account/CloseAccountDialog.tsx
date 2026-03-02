@@ -59,10 +59,10 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
     })
       .then((response) => {
         setIsClosingAccount(false);
-        /** shoot the user off to survey monkey to answer some questions */
+        /** Store survey link as state param for security so that it is not exposed in URL */
         navigate({
           to: '/cancel',
-          search: { survey_link: response.survey_link },
+          state: (prev) => ({ ...prev, surveyLink: response.survey_link }),
         });
       })
       .catch((e: APIError[]) => {

@@ -18,7 +18,7 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
   useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
 }));
-const mockDashboard = dashboardFactory.build();
+const mockDashboard = dashboardFactory.buildList(2);
 const mockServiceTypesList = serviceTypesFactory.build();
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
@@ -52,7 +52,7 @@ queryMocks.useCloudPulseServiceTypes.mockReturnValue({
 });
 
 vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
-  data: [mockDashboard],
+  data: mockDashboard,
   error: '',
   isLoading: false,
 });

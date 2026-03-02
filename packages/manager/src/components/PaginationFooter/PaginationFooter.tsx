@@ -17,9 +17,16 @@ export interface PaginationProps {
   sx?: SxProps;
 }
 
+interface PaginationOption {
+  label: string;
+  value: number;
+}
+
 interface Props extends PaginationProps {
+  customOptions?: PaginationOption[];
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
+  minPageSize?: number;
 }
 
 const baseOptions = [
@@ -33,20 +40,22 @@ export const PaginationFooter = (props: Props) => {
   const theme = useTheme();
   const {
     count,
+    customOptions,
     fixedSize,
     handlePageChange,
     handleSizeChange,
+    minPageSize = MIN_PAGE_SIZE,
     page,
     pageSize,
     showAll,
     sx,
   } = props;
 
-  if (count <= MIN_PAGE_SIZE && !fixedSize) {
+  if (count <= minPageSize && !fixedSize) {
     return null;
   }
 
-  const finalOptions = [...baseOptions];
+  const finalOptions = [...(customOptions ?? baseOptions)];
 
   // Add "Show All" to the list of options if the consumer has so specified.
   if (showAll) {
@@ -96,8 +105,8 @@ export const PaginationFooter = (props: Props) => {
             onChange={(_e, value) => handleSizeChange(Number(value.value))}
             options={finalOptions}
             value={{
-              label: defaultPagination?.label ?? '',
-              value: defaultPagination?.value ?? '',
+              label: defaultPagination?.label ?? finalOptions[0]?.label ?? '',
+              value: defaultPagination?.value ?? finalOptions[0]?.value ?? '',
             }}
           />
         </Box>

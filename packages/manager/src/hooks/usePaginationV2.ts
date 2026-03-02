@@ -1,16 +1,18 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
+import React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 
 import type { RegisteredRouter, ToSubOptions } from '@tanstack/react-router';
 import type { TableSearchParams } from 'src/routes/types';
 
-export interface PaginationPropsV2 {
+export interface PaginationPropsV2<D = unknown> {
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
   page: number;
   pageSize: number;
+  paginatedData: D[];
 }
 
 export interface UsePaginationV2Props<T extends TableSearchParams> {
@@ -18,6 +20,13 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
    * The route to which the pagination params are applied.
    */
   currentRoute: ToSubOptions['to'];
+  /**
+   * The default page size to use when no preference exists.
+   * @default MIN_PAGE_SIZE
+   *
+   * @warning For API-driven data, this should be set to the minimum page size supported by the API (25 to 500).
+   */
+  defaultPageSize?: number;
   /**
    * The initial page pagination is set to - defaults to 1, it's unusual to set this.
    * @default 1
@@ -38,13 +47,17 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
   searchParams?: (prev: T) => T;
 }
 
-export const usePaginationV2 = <T extends TableSearchParams>({
+export const usePaginationV2 = <T extends TableSearchParams, D = unknown>({
+  clientSidePaginationData,
   currentRoute,
+  defaultPageSize = MIN_PAGE_SIZE,
   initialPage = 1,
   preferenceKey,
   queryParamsPrefix,
   searchParams,
-}: UsePaginationV2Props<T>): PaginationPropsV2 => {
+}: UsePaginationV2Props<T> & {
+  clientSidePaginationData?: D[] | undefined;
+}): PaginationPropsV2<D> => {
   const { data: pageSizePreferences } = usePreferences(
     (preferences) => preferences?.pageSizes
   );
@@ -64,25 +77,28 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     search[pageSizeKey as keyof TableSearchParams] || search.pageSize;
 
   const preferredPageSize = preferenceKey
-    ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
-    : MIN_PAGE_SIZE;
+    ? (pageSizePreferences?.[preferenceKey] ?? defaultPageSize)
+    : defaultPageSize;
 
   const page = searchParamPage ? Number(searchParamPage) : initialPage;
   const pageSize = searchParamPageSize
     ? Number(searchParamPageSize)
     : preferredPageSize;
 
-  const setPage = (page: number) => {
-    navigate<RegisteredRouter, string, string>({
-      search: (prev: TableSearchParams & T) => ({
-        ...prev,
-        ...(searchParams?.(prev) ?? {}),
-        [pageKey]: page,
-        ...(queryParamsPrefix ? {} : { page }),
-      }),
-      to: currentRoute,
-    });
-  };
+  const setPage = React.useCallback(
+    (page: number) => {
+      navigate<RegisteredRouter, string, string>({
+        search: (prev: TableSearchParams & T) => ({
+          ...prev,
+          ...(searchParams?.(prev) ?? {}),
+          [pageKey]: page,
+          ...(queryParamsPrefix ? {} : { page }),
+        }),
+        to: currentRoute,
+      });
+    },
+    [currentRoute, pageKey, queryParamsPrefix, searchParams, navigate]
+  );
 
   const setPageSize = (pageSize: number) => {
     navigate<RegisteredRouter, string, string>({
@@ -110,10 +126,33 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     }
   };
 
+  const totalCount = clientSidePaginationData?.length;
+  const maxPage =
+    totalCount !== undefined
+      ? Math.max(1, Math.ceil(totalCount / pageSize))
+      : page;
+  const clampedPage = Math.min(page, maxPage);
+
+  const paginatedData = React.useMemo(() => {
+    if (!clientSidePaginationData) return undefined;
+
+    return clientSidePaginationData.slice(
+      (clampedPage - 1) * pageSize,
+      clampedPage * pageSize
+    );
+  }, [clientSidePaginationData, clampedPage, pageSize]);
+
+  React.useEffect(() => {
+    if (paginatedData !== undefined && clampedPage !== page) {
+      setPage(clampedPage);
+    }
+  }, [clampedPage, page, paginatedData, setPage]);
+
   return {
     handlePageChange: setPage,
     handlePageSizeChange,
-    page,
+    page: clampedPage,
     pageSize,
+    paginatedData: paginatedData ?? [],
   };
 };

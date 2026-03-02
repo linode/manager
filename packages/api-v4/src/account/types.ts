@@ -1,7 +1,7 @@
 import type { Capabilities, Region } from '../regions';
 import type { APIWarning, RequestOptions } from '../types';
 
-export type UserType = 'child' | 'default' | 'parent' | 'proxy';
+export type UserType = 'child' | 'default' | 'delegate' | 'parent' | 'proxy';
 
 export interface User {
   email: string;
@@ -62,9 +62,12 @@ export type BillingSource = 'akamai' | 'linode';
 export const accountCapabilities = [
   'Akamai Cloud Load Balancer',
   'Akamai Cloud Pulse',
+  'Akamai Cloud Pulse Logs',
+  'Akamai Cloud Pulse Logs LKE-E Audit',
   'Block Storage',
   'Block Storage Encryption',
   'Cloud Firewall',
+  'Cloud Firewall Rule Set',
   'CloudPulse',
   'Disk Encryption',
   'Kubernetes',
@@ -79,6 +82,7 @@ export const accountCapabilities = [
   'Managed Databases',
   'Managed Databases Beta',
   'NETINT Quadra T1U',
+  'Network LoadBalancer',
   'NodeBalancers',
   'Object Storage Access Key Regions',
   'Object Storage Endpoint Types',
@@ -89,7 +93,6 @@ export const accountCapabilities = [
   'Vlans',
   'VPCs',
   'VPC Dual Stack',
-  'VPC IPv6 Large Prefixes',
 ] as const;
 
 export type AccountCapability = (typeof accountCapabilities)[number];
@@ -431,6 +434,8 @@ export const EventActionKeys = [
   'lke_pool_delete',
   'lke_pool_recycle',
   'lke_token_rotate',
+  'lock_create',
+  'lock_delete',
   'longviewclient_create',
   'longviewclient_delete',
   'longviewclient_update',

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeDiskFactory } from 'src/factories';
+import { LINODE_LOCKED_DELETE_DISK_TOOLTIP } from 'src/features/Linodes/constants';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
@@ -26,8 +27,12 @@ const queryMocks = vi.hoisted(() => ({
       resize_linode: false,
       delete_linode: false,
       clone_linode: false,
+      create_image: true,
     },
   })),
+  useLinodeQuery: vi.fn().mockReturnValue({
+    data: { locks: [] as string[] },
+  }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -42,6 +47,14 @@ vi.mock('@tanstack/react-router', async () => {
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
 
 describe('LinodeDiskActionMenu', () => {
   beforeEach(() => mockMatchMedia());
@@ -209,6 +222,7 @@ describe('LinodeDiskActionMenu', () => {
         resize_linode: false,
         delete_linode: false,
         clone_linode: false,
+        create_image: false,
       },
     });
 
@@ -242,6 +256,7 @@ describe('LinodeDiskActionMenu', () => {
         resize_linode: true,
         delete_linode: true,
         clone_linode: true,
+        create_image: true,
       },
     });
 
@@ -266,5 +281,130 @@ describe('LinodeDiskActionMenu', () => {
 
     const deleteBtn = screen.getByTestId('Delete');
     expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+  });
+
+  describe('Lock functionality', () => {
+    it('should disable Delete action when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          update_linode: true,
+          resize_linode: true,
+          delete_linode: true,
+          clone_linode: true,
+          create_image: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: ['cannot_delete_with_subresources'] },
+      });
+
+      const { getByLabelText } = renderWithTheme(
+        <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Disk ${defaultProps.disk.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const deleteBtn = screen.getByTestId('Delete');
+      expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should show lock tooltip for Delete when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          update_linode: true,
+          resize_linode: true,
+          delete_linode: true,
+          clone_linode: true,
+          create_image: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: ['cannot_delete_with_subresources'] },
+      });
+
+      const { getByLabelText } = renderWithTheme(
+        <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Disk ${defaultProps.disk.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const tooltip = screen.getByLabelText(LINODE_LOCKED_DELETE_DISK_TOOLTIP);
+      expect(tooltip).toBeInTheDocument();
+    });
+
+    it('should enable Delete action when Linode is not locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          update_linode: true,
+          resize_linode: true,
+          delete_linode: true,
+          clone_linode: true,
+          create_image: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: [] },
+      });
+
+      const { getByLabelText } = renderWithTheme(
+        <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Disk ${defaultProps.disk.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      const deleteBtn = screen.getByTestId('Delete');
+      expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('should not affect other actions when Linode is locked', async () => {
+      queryMocks.userPermissions.mockReturnValue({
+        data: {
+          update_linode: true,
+          resize_linode: true,
+          delete_linode: true,
+          clone_linode: true,
+          create_image: true,
+        },
+      });
+      queryMocks.useLinodeQuery.mockReturnValue({
+        data: { locks: ['cannot_delete'] },
+      });
+
+      const { getByLabelText } = renderWithTheme(
+        <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
+      );
+
+      const actionMenuButton = getByLabelText(
+        `Action menu for Disk ${defaultProps.disk.label}`
+      );
+
+      await userEvent.click(actionMenuButton);
+
+      // Rename, Resize, Clone should still be enabled when user has permissions and Linode is offline
+      expect(screen.getByTestId('Rename')).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+      expect(screen.getByTestId('Resize')).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+      expect(screen.getByTestId('Clone')).not.toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+    });
   });
 });

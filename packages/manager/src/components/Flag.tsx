@@ -8,6 +8,7 @@ import type { BoxProps } from '@linode/ui';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
+  xi: 'gb',
 };
 
 // Countries that need a css border in the Flag component (countries that have DCs)

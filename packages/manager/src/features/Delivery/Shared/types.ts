@@ -1,54 +1,95 @@
-import { destinationType, streamStatus, streamType } from '@linode/api-v4';
+import {
+  authenticationType,
+  contentType,
+  destinationType,
+  streamStatus,
+  streamType,
+} from '@linode/api-v4';
 
 import type {
+  AkamaiObjectStorageDetailsExtended,
   CreateDestinationPayload,
-  DestinationDetails,
+  CustomHTTPSDetailsExtended,
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
 export type FormType = 'destination' | 'stream';
 
-export interface LabelValueOption {
+export interface AutocompleteOption {
   label: string;
+  pendoId?: string;
   value: string;
 }
 
-export const destinationTypeOptions: LabelValueOption[] = [
+export const destinationTypeOptions: AutocompleteOption[] = [
   {
     value: destinationType.CustomHttps,
     label: 'Custom HTTPS',
   },
   {
-    value: destinationType.LinodeObjectStorage,
-    label: 'Linode Object Storage',
+    value: destinationType.AkamaiObjectStorage,
+    label: 'Akamai Object Storage',
   },
 ];
 
-export const streamTypeOptions: LabelValueOption[] = [
+export const streamTypeOptions: AutocompleteOption[] = [
   {
     value: streamType.AuditLogs,
     label: 'Audit Logs',
   },
   {
     value: streamType.LKEAuditLogs,
-    label: 'Kubernetes Audit Logs',
+    label: 'Kubernetes API Audit Logs',
   },
 ];
 
-export const streamStatusOptions: LabelValueOption[] = [
+export const streamStatusOptions: AutocompleteOption[] = [
   {
     value: streamStatus.Active,
-    label: 'Enabled',
+    label: 'Active',
+    pendoId: 'Logs Delivery Streams-Status Active',
   },
   {
     value: streamStatus.Inactive,
-    label: 'Disabled',
+    label: 'Inactive',
+    pendoId: 'Logs Delivery Streams-Status Inactive',
+  },
+  {
+    value: streamStatus.Provisioning,
+    label: 'Provisioning',
+    pendoId: 'Logs Delivery Streams-Status Provisioning',
   },
 ];
 
+export const authenticationTypeOptions: AutocompleteOption[] = [
+  {
+    value: authenticationType.Basic,
+    label: 'Basic',
+  },
+  {
+    value: authenticationType.None,
+    label: 'None',
+  },
+];
+
+export const contentTypeOptions: AutocompleteOption[] = [
+  {
+    value: contentType.Json,
+    label: contentType.Json,
+  },
+  {
+    value: contentType.JsonUtf8,
+    label: contentType.JsonUtf8,
+  },
+];
+
+export type DestinationDetailsForm =
+  | AkamaiObjectStorageDetailsExtended
+  | CustomHTTPSDetailsExtended;
+
 export interface DestinationForm
   extends Omit<CreateDestinationPayload, 'details'> {
-  details: DestinationDetails;
+  details: DestinationDetailsForm;
 }
 
 export type DestinationFormType = DestinationForm;

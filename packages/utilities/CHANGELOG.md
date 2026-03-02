@@ -1,3 +1,52 @@
+## [2026-02-25] - v0.15.0
+
+
+### Tech Stories:
+
+- Clean up unused marketplace v2 factories ([#13396](https://github.com/linode/manager/pull/13396))
+
+## [2026-01-12] - v0.14.0
+
+
+### Upcoming Features:
+
+- Add factory for Marketplace Partner Referral ([#13215](https://github.com/linode/manager/pull/13215))
+
+## [2025-12-09] - v0.13.0
+
+
+### Tech Stories:
+
+- Update `scrollErrorIntoViewV2.test.tsx‎` to not mock  MutationObserver` ([#13119](https://github.com/linode/manager/pull/13119))
+
+## [2025-11-18] - v0.12.0
+
+
+### Tech Stories:
+
+- Add MSW crud support for types API ([#13067](https://github.com/linode/manager/pull/13067))
+
+## [2025-10-21] - v0.11.0
+
+
+### Added:
+
+- `Block Storage` to ap-west's `monitors.metrics` field in `regions` ([#12931](https://github.com/linode/manager/pull/12931))
+
+
+## [2025-10-07] - v0.10.0
+
+
+### Added:
+
+- Added `regionVPCAvailabilityFactory` in regions.ts ([#12919](https://github.com/linode/manager/pull/12919))
+
+## [2025-09-23] - v0.9.0
+
+### Changed:
+
+- Separate VPC IPv6 from `linodeInterfaceFactoryVPC` into `linodeInterfaceFactoryDualStackVPC`
+
 ## [2025-09-09] - v0.8.0
 
 ### Changed:

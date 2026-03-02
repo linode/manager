@@ -187,10 +187,13 @@ export async function redirectToLogin() {
  * @returns Some information about the new session because authentication was successfull
  */
 export async function handleOAuthCallback(options: AuthCallbackOptions) {
+  const paramsObject =
+    typeof options.params === 'string'
+      ? getQueryParamsFromQueryString(options.params)
+      : options.params;
+
   const { data: params, error: parseParamsError } = await tryCatch(
-    OAuthCallbackParamsSchema.validate(
-      getQueryParamsFromQueryString(options.params)
-    )
+    OAuthCallbackParamsSchema.validate(paramsObject)
   );
 
   if (parseParamsError) {
@@ -296,7 +299,9 @@ export async function handleLoginAsCustomerCallback(
 ) {
   const { data: params, error } = await tryCatch(
     LoginAsCustomerCallbackParamsSchema.validate(
-      getQueryParamsFromQueryString(options.params)
+      typeof options.params === 'string'
+        ? getQueryParamsFromQueryString(options.params)
+        : options.params
     )
   );
 

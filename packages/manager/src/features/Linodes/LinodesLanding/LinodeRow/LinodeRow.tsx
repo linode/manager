@@ -2,6 +2,7 @@ import { useTypeQuery } from '@linode/queries';
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -45,6 +46,7 @@ export const LinodeRow = (props: Props) => {
     id,
     ipv4,
     label,
+    locks,
     maintenance,
     region,
     status,
@@ -185,6 +187,7 @@ export const LinodeRow = (props: Props) => {
           linodeBackups={backups}
           linodeId={id}
           linodeLabel={label}
+          linodeLocks={locks}
           linodeRegion={region}
           linodeStatus={status}
           linodeType={linodeType}
@@ -204,11 +207,12 @@ export const RenderFlag: React.FC<{
    * precedent over notifications
    */
   const { mutationAvailable } = props;
+  const theme = useTheme();
 
   if (mutationAvailable) {
     return (
       <Tooltip title="There is a free upgrade available for this Linode">
-        <Flag />
+        <Flag style={{ color: theme.tokens.alias.Content.Icon.Informative }} />
       </Tooltip>
     );
   }

@@ -4,18 +4,29 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import {
+  akamaiObjectStorageDestinationFactory,
+  customHttpsDestinationFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamFormDelivery } from './StreamFormDelivery';
 
+import type { DestinationType } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
 const loadingTestId = 'circle-progress';
 
-const mockDestinations = destinationFactory.buildList(5);
+const mockDestinations = [
+  ...akamaiObjectStorageDestinationFactory.buildList(2),
+  ...customHttpsDestinationFactory.buildList(2),
+];
 
 describe('StreamFormDelivery', () => {
+  const setDisableTestConnection = () => {};
+
   beforeEach(async () => {
     server.use(
       http.get('*/monitor/streams/destinations', () => {
@@ -24,75 +35,48 @@ describe('StreamFormDelivery', () => {
     );
   });
 
-  it('should render disabled Destination Type input with proper selection', async () => {
+  const renderComponentAndAddNewDestinationName = async (
+    destinationTypeToSet: DestinationType,
+    flags: Partial<Flags>
+  ) => {
     renderWithThemeAndHookFormContext({
-      component: <StreamFormDelivery />,
-      useFormOptions: {
-        defaultValues: {
-          destination: {
-            type: destinationType.LinodeObjectStorage,
-          },
-        },
-      },
-    });
-
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
-
-    const destinationTypeAutocomplete =
-      screen.getByLabelText('Destination Type');
-
-    expect(destinationTypeAutocomplete).toBeDisabled();
-    expect(destinationTypeAutocomplete).toHaveValue('Linode Object Storage');
-  });
-
-  it('should render Destination Name input and allow to select an existing option', async () => {
-    renderWithThemeAndHookFormContext({
-      component: <StreamFormDelivery />,
+      component: (
+        <StreamFormDelivery
+          mode="create"
+          setDisableTestConnection={setDisableTestConnection}
+        />
+      ),
       useFormOptions: {
         defaultValues: {
           destination: {
             label: '',
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
+          },
+          stream: {
+            destinations: [],
           },
         },
       },
+      options: { flags },
     });
 
     const loadingElement = screen.queryByTestId(loadingTestId);
     expect(loadingElement).toBeInTheDocument();
     await waitForElementToBeRemoved(loadingElement);
 
-    const destinationNameAutocomplete =
-      screen.getByLabelText('Destination Name');
+    if (
+      flags.aclpLogs?.customHttpsEnabled &&
+      destinationTypeToSet === destinationType.CustomHttps
+    ) {
+      const destinationTypeAutocomplete =
+        screen.getByLabelText('Destination Type');
 
-    // Open the dropdown
-    await userEvent.click(destinationNameAutocomplete);
-
-    // Select the "Destination 1" option
-    const firstDestination = await screen.findByText('Destination 1');
-    await userEvent.click(firstDestination);
-
-    expect(destinationNameAutocomplete).toHaveValue('Destination 1');
-  });
-
-  const renderComponentAndAddNewDestinationName = async () => {
-    renderWithThemeAndHookFormContext({
-      component: <StreamFormDelivery />,
-      useFormOptions: {
-        defaultValues: {
-          destination: {
-            label: '',
-            type: destinationType.LinodeObjectStorage,
-          },
-        },
-      },
-    });
-
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
+      expect(destinationTypeAutocomplete).toBeEnabled();
+      await userEvent.click(destinationTypeAutocomplete);
+      const customHttpsOption = await screen.findByText('Custom HTTPS');
+      await userEvent.click(customHttpsOption);
+      expect(destinationTypeAutocomplete).toHaveValue('Custom HTTPS');
+    }
 
     const destinationNameAutocomplete =
       screen.getByLabelText('Destination Name');
@@ -111,83 +95,532 @@ describe('StreamFormDelivery', () => {
     await userEvent.click(createNewTestDestination);
   };
 
-  it('should render Destination Name input and allow to add a new option', async () => {
-    await renderComponentAndAddNewDestinationName();
+  describe('when customHttpsEnabled feature flag is set to false', () => {
+    const flags = {
+      aclpLogs: {
+        enabled: true,
+        beta: false,
+        customHttpsEnabled: false,
+      },
+    };
 
-    const destinationNameAutocomplete =
-      screen.getByLabelText('Destination Name');
+    it('should render disabled Destination Type input with Akamai Object Storage selected', async () => {
+      renderWithThemeAndHookFormContext({
+        component: (
+          <StreamFormDelivery
+            mode="create"
+            setDisableTestConnection={setDisableTestConnection}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            destination: {
+              type: destinationType.AkamaiObjectStorage,
+            },
+          },
+        },
+      });
 
-    // Move focus away from the dropdown
-    await userEvent.tab();
+      const loadingElement = screen.queryByTestId(loadingTestId);
+      expect(loadingElement).toBeInTheDocument();
+      await waitForElementToBeRemoved(loadingElement);
 
-    expect(destinationNameAutocomplete).toHaveValue('New test destination');
+      const destinationTypeAutocomplete =
+        screen.getByLabelText('Destination Type');
+
+      expect(destinationTypeAutocomplete).toBeDisabled();
+      expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
+    });
+
+    describe('and Destination Type is set to Akamai Object Storage', () => {
+      it('should render Destination Name input and allow to select an existing option', async () => {
+        renderWithThemeAndHookFormContext({
+          component: (
+            <StreamFormDelivery
+              mode="create"
+              setDisableTestConnection={setDisableTestConnection}
+            />
+          ),
+          useFormOptions: {
+            defaultValues: {
+              destination: {
+                label: '',
+                type: destinationType.AkamaiObjectStorage,
+              },
+            },
+          },
+        });
+
+        const loadingElement = screen.queryByTestId(loadingTestId);
+        expect(loadingElement).toBeInTheDocument();
+        await waitForElementToBeRemoved(loadingElement);
+
+        const destinationNameAutocomplete =
+          screen.getByLabelText('Destination Name');
+
+        // Open the dropdown
+        await userEvent.click(destinationNameAutocomplete);
+
+        // Select the "Destination 1" option
+        const firstDestination = await screen.findByText(
+          'Akamai Object Storage Destination 1'
+        );
+        await userEvent.click(firstDestination);
+
+        expect(destinationNameAutocomplete).toHaveValue(
+          'Akamai Object Storage Destination 1'
+        );
+      });
+
+      it('should render Destination Name input and allow to add a new option', async () => {
+        await renderComponentAndAddNewDestinationName(
+          destinationType.AkamaiObjectStorage,
+          flags
+        );
+
+        const destinationNameAutocomplete =
+          screen.getByLabelText('Destination Name');
+
+        // Move focus away from the dropdown
+        await userEvent.tab();
+
+        expect(destinationNameAutocomplete).toHaveValue('New test destination');
+      });
+
+      describe('and new Destination Name is added', () => {
+        it('should render Host input and allow to type text', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Type the test value inside the input
+          const hostInput = screen.getByLabelText('Host');
+          await userEvent.type(hostInput, 'Test');
+
+          expect(hostInput.getAttribute('value')).toEqual('Test');
+        });
+
+        it('should render Bucket input and allow to type text', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Type the test value inside the input
+          const bucketInput = screen.getByLabelText('Bucket');
+          await userEvent.type(bucketInput, 'test');
+
+          expect(bucketInput.getAttribute('value')).toEqual('test');
+        });
+
+        it('should render Access Key ID input and allow to type text', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Type the test value inside the input
+          const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+          await userEvent.type(accessKeyIDInput, 'Test');
+
+          expect(accessKeyIDInput.getAttribute('value')).toEqual('Test');
+        });
+
+        it('should render Secret Access Key input and allow to type text', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Type the test value inside the input
+          const secretAccessKeyInput =
+            screen.getByLabelText('Secret Access Key');
+          await userEvent.type(secretAccessKeyInput, 'Test');
+
+          expect(secretAccessKeyInput.getAttribute('value')).toEqual('Test');
+        });
+
+        it('should render Log Path Prefix input and allow to type text', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Type the test value inside the input
+          const logPathPrefixInput = screen.getByLabelText(
+            'Log Path Prefix (optional)'
+          );
+          await userEvent.type(logPathPrefixInput, 'Test');
+
+          expect(logPathPrefixInput.getAttribute('value')).toEqual('Test');
+        });
+      });
+    });
   });
 
-  it('should render Host input after adding a new destination name and allow to type text', async () => {
-    await renderComponentAndAddNewDestinationName();
+  describe('when customHttpsEnabled feature flag is set to true', () => {
+    const flags = {
+      aclpLogs: {
+        enabled: true,
+        beta: false,
+        customHttpsEnabled: true,
+      },
+    };
 
-    // Type the test value inside the input
-    const hostInput = screen.getByLabelText('Host');
-    await userEvent.type(hostInput, 'Test');
+    it('should render enabled Destination Type input with Akamai Object Storage selected and allow to select Custom HTTPS', async () => {
+      renderWithThemeAndHookFormContext({
+        component: (
+          <StreamFormDelivery
+            mode="create"
+            setDisableTestConnection={setDisableTestConnection}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            destination: {
+              type: destinationType.AkamaiObjectStorage,
+            },
+          },
+        },
+        options: {
+          flags,
+        },
+      });
 
-    expect(hostInput.getAttribute('value')).toEqual('Test');
-  });
+      const loadingElement = screen.queryByTestId(loadingTestId);
+      expect(loadingElement).toBeInTheDocument();
+      await waitForElementToBeRemoved(loadingElement);
 
-  it('should render Bucket input after adding a new destination name and allow to type text', async () => {
-    await renderComponentAndAddNewDestinationName();
+      const destinationTypeAutocomplete =
+        screen.getByLabelText('Destination Type');
 
-    // Type the test value inside the input
-    const bucketInput = screen.getByLabelText('Bucket');
-    await userEvent.type(bucketInput, 'Test');
+      expect(destinationTypeAutocomplete).toBeEnabled();
+      expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
+      await userEvent.click(destinationTypeAutocomplete);
+      const customHttpsOption = await screen.findByText('Custom HTTPS');
+      await userEvent.click(customHttpsOption);
+      expect(destinationTypeAutocomplete).toHaveValue('Custom HTTPS');
+    });
 
-    expect(bucketInput.getAttribute('value')).toEqual('Test');
-  });
+    describe('and Destination Type is set to Custom HTTPS', () => {
+      it('should render Destination Name input and allow to select an existing option', async () => {
+        renderWithThemeAndHookFormContext({
+          component: (
+            <StreamFormDelivery
+              mode="create"
+              setDisableTestConnection={setDisableTestConnection}
+            />
+          ),
+          useFormOptions: {
+            defaultValues: {
+              destination: {
+                label: '',
+                type: destinationType.CustomHttps,
+              },
+            },
+          },
+          options: {
+            flags,
+          },
+        });
 
-  it('should render Region input after adding a new destination name and allow to select an option', async () => {
-    await renderComponentAndAddNewDestinationName();
+        const loadingElement = screen.queryByTestId(loadingTestId);
+        expect(loadingElement).toBeInTheDocument();
+        await waitForElementToBeRemoved(loadingElement);
 
-    const regionAutocomplete = screen.getByLabelText('Region');
+        const destinationNameAutocomplete =
+          screen.getByLabelText('Destination Name');
 
-    // Open the dropdown
-    await userEvent.click(regionAutocomplete);
-    await userEvent.type(regionAutocomplete, 'US, Chi');
+        // Open the dropdown
+        await userEvent.click(destinationNameAutocomplete);
 
-    // Select the "US, Chicago, IL (us-ord)" option
-    const chicagoRegion = await screen.findByText('US, Chicago, IL (us-ord)');
-    await userEvent.click(chicagoRegion);
+        // Select the "Custom HTTPS Destination 2" option
+        const customHttpsDestination = await screen.findByText(
+          'Custom HTTPS Destination 2'
+        );
+        await userEvent.click(customHttpsDestination);
 
-    expect(regionAutocomplete.getAttribute('value')).toEqual(
-      'US, Chicago, IL (us-ord)'
-    );
-  });
+        expect(destinationNameAutocomplete).toHaveValue(
+          'Custom HTTPS Destination 2'
+        );
+      });
 
-  it('should render Access Key ID input after adding a new destination name and allow to type text', async () => {
-    await renderComponentAndAddNewDestinationName();
+      it('should render Destination Name input and allow to add a new option', async () => {
+        await renderComponentAndAddNewDestinationName(
+          destinationType.CustomHttps,
+          flags
+        );
 
-    // Type the test value inside the input
-    const accessKeyIDInput = screen.getByLabelText('Access Key ID');
-    await userEvent.type(accessKeyIDInput, 'Test');
+        const destinationNameAutocomplete =
+          screen.getByLabelText('Destination Name');
 
-    expect(accessKeyIDInput.getAttribute('value')).toEqual('Test');
-  });
+        // Move focus away from the dropdown
+        await userEvent.tab();
 
-  it('should render Secret Access Key input after adding a new destination name and allow to type text', async () => {
-    await renderComponentAndAddNewDestinationName();
+        expect(destinationNameAutocomplete).toHaveValue('New test destination');
+      });
 
-    // Type the test value inside the input
-    const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
-    await userEvent.type(secretAccessKeyInput, 'Test');
+      describe('and new Destination Name is added', () => {
+        it('should render Authentication autocomplete with None selected and allow to select Basic', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.CustomHttps,
+            flags
+          );
 
-    expect(secretAccessKeyInput.getAttribute('value')).toEqual('Test');
-  });
+          const authenticationAutocomplete =
+            screen.getByLabelText('Authentication');
 
-  it('should render Log Path Prefix input after adding a new destination name and allow to type text', async () => {
-    await renderComponentAndAddNewDestinationName();
+          expect(authenticationAutocomplete).toHaveValue('None');
 
-    // Type the test value inside the input
-    const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
-    await userEvent.type(logPathPrefixInput, 'Test');
+          // Open the dropdown
+          await userEvent.click(authenticationAutocomplete);
 
-    expect(logPathPrefixInput.getAttribute('value')).toEqual('Test');
+          // Select the "Basic" option
+          const basicAuthentication = await screen.findByText('Basic');
+          await userEvent.click(basicAuthentication);
+
+          expect(authenticationAutocomplete).toHaveValue('Basic');
+        });
+
+        describe('and Authentication is set to Basic', () => {
+          it('should render Username input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            // Select the "Basic" Authentication option
+            const authenticationAutocomplete =
+              screen.getByLabelText('Authentication');
+            await userEvent.click(authenticationAutocomplete);
+            const basicAuthentication = await screen.findByText('Basic');
+            await userEvent.click(basicAuthentication);
+
+            expect(authenticationAutocomplete).toHaveValue('Basic');
+
+            // Type the test value inside the input
+            const usernameInput = screen.getByLabelText('Username');
+            await userEvent.type(usernameInput, 'Test');
+
+            expect(usernameInput.getAttribute('value')).toEqual('Test');
+          });
+
+          it('should render Password input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            // Select the "Basic" Authentication option
+            const authenticationAutocomplete =
+              screen.getByLabelText('Authentication');
+            await userEvent.click(authenticationAutocomplete);
+            const basicAuthentication = await screen.findByText('Basic');
+            await userEvent.click(basicAuthentication);
+
+            expect(authenticationAutocomplete).toHaveValue('Basic');
+
+            // Type the test value inside the input
+            const passwordInput = screen.getByLabelText('Password');
+            await userEvent.type(passwordInput, 'Test');
+
+            expect(passwordInput.getAttribute('value')).toEqual('Test');
+          });
+        });
+
+        it('should render Endpoint URL input and allow to type text', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.CustomHttps,
+            flags
+          );
+
+          // Type the test value inside the input
+          const endpointUrlInput = screen.getByLabelText('Endpoint URL');
+          await userEvent.type(endpointUrlInput, 'Test');
+
+          expect(endpointUrlInput.getAttribute('value')).toEqual('Test');
+        });
+
+        describe('Client Certificate fields', () => {
+          it('should render TLS Hostname input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const tlsHostnameInput = screen.getByLabelText('TLS Hostname');
+            await userEvent.type(tlsHostnameInput, 'test');
+
+            expect(tlsHostnameInput).toHaveValue('test');
+          });
+
+          it('should render CA Certificate input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const caCertificateInput = screen.getByLabelText('CA Certificate');
+            await userEvent.type(caCertificateInput, 'test');
+
+            expect(caCertificateInput).toHaveValue('test');
+          });
+
+          it('should render Client Certificate input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const clientCertificateInput =
+              screen.getByLabelText('Client Certificate');
+            await userEvent.type(clientCertificateInput, 'test');
+
+            expect(clientCertificateInput).toHaveValue('test');
+          });
+
+          it('should render Client Key input and allow to type text', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const clientKeyInput = screen.getByLabelText('Client Key');
+            await userEvent.type(clientKeyInput, 'test');
+
+            expect(clientKeyInput).toHaveValue('test');
+          });
+        });
+
+        describe('HTTPS Headers fields', () => {
+          it('should render Content Type autocomplete and allow to select application/json', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const contentTypeAutocomplete =
+              screen.getByLabelText('Content Type');
+            expect(contentTypeAutocomplete).toHaveValue('');
+
+            await userEvent.click(contentTypeAutocomplete);
+            const jsonOption = await screen.findByText('application/json');
+            await userEvent.click(jsonOption);
+
+            expect(contentTypeAutocomplete).toHaveValue('application/json');
+          });
+
+          it('should render Content Type autocomplete and allow to select application/json; charset=utf-8', async () => {
+            await renderComponentAndAddNewDestinationName(
+              destinationType.CustomHttps,
+              flags
+            );
+
+            const contentTypeAutocomplete =
+              screen.getByLabelText('Content Type');
+
+            await userEvent.click(contentTypeAutocomplete);
+            const jsonUtf8Option = await screen.findByText(
+              'application/json; charset=utf-8'
+            );
+            await userEvent.click(jsonUtf8Option);
+
+            expect(contentTypeAutocomplete).toHaveValue(
+              'application/json; charset=utf-8'
+            );
+          });
+
+          describe('Custom Headers', () => {
+            const addCustomHeaderButtonText = 'Add Custom Header';
+
+            it('should add a custom header when clicking Add Custom Header button and allow typing in Custom Header fields', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+              await userEvent.click(addCustomHeaderButton);
+
+              const headerNameInput = screen.getByLabelText('Name');
+              expect(headerNameInput).toBeInTheDocument();
+
+              const headerValueInput = screen.getByLabelText('Value');
+              expect(headerValueInput).toBeInTheDocument();
+
+              await userEvent.type(headerNameInput, 'X-Custom-Header');
+              expect(headerNameInput).toHaveValue('X-Custom-Header');
+
+              await userEvent.type(headerValueInput, 'custom-value');
+              expect(headerValueInput).toHaveValue('custom-value');
+            });
+
+            it('should update custom header title when Name is typed', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+              await userEvent.click(addCustomHeaderButton);
+
+              // Verify default title is shown initially
+              screen.getByText('Custom Header 1');
+
+              const headerNameInput = screen.getByLabelText('Name');
+              await userEvent.type(headerNameInput, 'Authorization');
+
+              // Verify default title is replaced with the typed name
+              expect(
+                screen.queryByText('Custom Header 1')
+              ).not.toBeInTheDocument();
+              screen.getByText('Authorization');
+            });
+
+            it('should remove custom header when clicking close button', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+              await userEvent.click(addCustomHeaderButton);
+
+              const headerNameInput = screen.getByLabelText('Name');
+              expect(headerNameInput).toBeInTheDocument();
+
+              const closeButton = screen.getByRole('button', { name: '' });
+              await userEvent.click(closeButton);
+
+              expect(screen.queryByLabelText('Name')).not.toBeInTheDocument();
+            });
+
+            it('should allow adding multiple custom headers', async () => {
+              await renderComponentAndAddNewDestinationName(
+                destinationType.CustomHttps,
+                flags
+              );
+
+              const addCustomHeaderButton = screen.getByRole('button', {
+                name: addCustomHeaderButtonText,
+              });
+
+              await userEvent.click(addCustomHeaderButton);
+              screen.getByText('Custom Header 1');
+
+              await userEvent.click(addCustomHeaderButton);
+              expect(screen.getByText('Custom Header 2')).toBeInTheDocument();
+            });
+          });
+        });
+      });
+    });
   });
 });

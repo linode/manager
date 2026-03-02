@@ -56,7 +56,7 @@ export const TaxCollectionBanner = () => {
       buttonType="primary"
       onClick={() =>
         navigate({
-          to: flags?.iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+          to: '/billing',
           search: { action: 'edit' },
         })
       }

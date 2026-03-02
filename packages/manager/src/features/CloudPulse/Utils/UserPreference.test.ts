@@ -7,10 +7,14 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn(),
 }));
 
-vi.mock('@linode/queries', () => ({
-  useMutatePreferences: queryMocks.useMutatePreferences,
-  usePreferences: queryMocks.usePreferences,
-}));
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useMutatePreferences: queryMocks.useMutatePreferences,
+    usePreferences: queryMocks.usePreferences,
+  };
+});
 
 describe('usePreferencesToggle', () => {
   it('should initialize with undefined preference', () => {

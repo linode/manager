@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import ChevronLeftIcon from '../../assets/icons/chevron-left.svg';
 import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
@@ -24,6 +25,11 @@ export interface DrawerProps extends _DrawerProps {
    */
   error?: APIError[] | null | string;
   /**
+   * An optional prop that handles back navigation for second-level drawers.
+   * It can act as a visual indicator, similar to a back button or `onClose` handler.
+   */
+  handleBackNavigation?: () => void;
+  /**
    * Whether the drawer is fetching the entity's data.
    *
    * If true, the drawer will feature a loading spinner for its content.
@@ -33,6 +39,12 @@ export interface DrawerProps extends _DrawerProps {
    * Title that appears at the top of the drawer
    */
   title: string;
+  /**
+   * Adds a suffix element to the drawer.
+   *
+   * Can be used to indicate special states, such as `BetaChip`, `NewFeatureChip`, or other UI elements next to the title.
+   */
+  titleSuffix?: React.JSX.Element;
   /**
    * Increases the Drawers width from 480px to 700px on desktop-sized viewports
    * @default false
@@ -56,11 +68,13 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     const {
       children,
       error,
+      handleBackNavigation,
       isFetching,
       onClose,
       open,
       sx,
       title,
+      titleSuffix,
       wide,
       ...rest
     } = props;
@@ -147,18 +161,43 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         >
           <Grid>
             {isFetching ? null : (
-              <Typography
-                data-qa-drawer-title={lastTitleRef.current}
-                data-testid="drawer-title"
-                id={titleID}
-                sx={(theme) => ({
-                  marginRight: theme.spacing(2),
-                  wordBreak: 'break-word',
-                })}
-                variant="h2"
+              <Box
+                alignItems="center"
+                data-testid="drawer-title-container"
+                display="flex"
               >
-                {lastTitleRef.current}
-              </Typography>
+                {handleBackNavigation && (
+                  <IconButton
+                    aria-label="back navigation"
+                    data-qa-back-navigation
+                    disableRipple
+                    onClick={handleBackNavigation}
+                    sx={(theme) => ({
+                      color: theme.palette.text.primary,
+                      padding: 0,
+                      marginRight: theme.spacingFunction(8),
+                      '& svg': {
+                        width: 24,
+                        height: 24,
+                      },
+                    })}
+                  >
+                    <ChevronLeftIcon />
+                  </IconButton>
+                )}
+                <Typography
+                  data-qa-drawer-title={lastTitleRef.current}
+                  data-testid="drawer-title"
+                  id={titleID}
+                  sx={{
+                    wordBreak: 'break-word',
+                  }}
+                  variant="h2"
+                >
+                  {lastTitleRef.current}
+                </Typography>
+                {titleSuffix && <span>{titleSuffix}</span>}
+              </Box>
             )}
           </Grid>
           <Grid>

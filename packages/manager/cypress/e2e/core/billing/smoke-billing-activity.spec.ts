@@ -118,8 +118,9 @@ authenticate();
 describe('Billing Activity Feed', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      // TODO M3-10491 - Remove `iamRbacPrimaryNavChanges` feature flag mock once flag is deleted.
-      iamRbacPrimaryNavChanges: true,
+      iam: {
+        enabled: false,
+      },
     });
   });
   /*

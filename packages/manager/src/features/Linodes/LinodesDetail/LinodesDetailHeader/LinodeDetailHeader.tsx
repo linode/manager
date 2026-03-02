@@ -22,6 +22,8 @@ import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
+import { AddLockDialog } from '../LinodeLock/AddLockDialog';
+import { RemoveLockDialog } from '../LinodeLock/RemoveLockDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
@@ -56,17 +58,20 @@ export const LinodeDetailHeader = () => {
   const { mutateAsync: updateLinode } =
     useLinodeUpdateMutation(matchedLinodeId);
 
-  const { data: permissions } = usePermissions(
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
     'linode',
     ['update_linode'],
     linodeId
   );
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
+  const [addLockDialogOpen, setAddLockDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(search.delete);
   const [rebuildDialogOpen, setRebuildDialogOpen] = React.useState(
     search.rebuild
   );
+
+  const [removeLockDialogOpen, setRemoveLockDialogOpen] = React.useState(false);
   const [rescueDialogOpen, setRescueDialogOpen] = React.useState(search.rescue);
   const [resizeDialogOpen, setResizeDialogOpen] = React.useState(search.resize);
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
@@ -89,12 +94,14 @@ export const LinodeDetailHeader = () => {
       navigate({ search: undefined });
     }
 
+    setAddLockDialogOpen(false);
     setPowerDialogOpen(false);
     setDeleteDialogOpen(false);
     setResizeDialogOpen(false);
     setMigrateDialogOpen(false);
     setRescueDialogOpen(false);
     setRebuildDialogOpen(false);
+    setRemoveLockDialogOpen(false);
     setEnableBackupsDialogOpen(false);
   };
 
@@ -134,6 +141,10 @@ export const LinodeDetailHeader = () => {
     setPowerAction(action);
   };
 
+  const onOpenAddLockDialog = () => {
+    setAddLockDialogOpen(true);
+  };
+
   const onOpenDeleteDialog = () => {
     setDeleteDialogOpen(true);
   };
@@ -146,6 +157,10 @@ export const LinodeDetailHeader = () => {
     setRebuildDialogOpen(true);
   };
 
+  const onOpenRemoveLockDialog = () => {
+    setRemoveLockDialogOpen(true);
+  };
+
   const onOpenRescueDialog = () => {
     setRescueDialogOpen(true);
   };
@@ -155,15 +170,17 @@ export const LinodeDetailHeader = () => {
   };
 
   const handlers = {
+    onOpenAddLockDialog,
     onOpenDeleteDialog,
     onOpenMigrateDialog,
     onOpenPowerDialog,
     onOpenRebuildDialog,
+    onOpenRemoveLockDialog,
     onOpenRescueDialog,
     onOpenResizeDialog,
   };
 
-  if (isLoading) {
+  if (isLoading || isPermissionsLoading) {
     return <CircleProgress />;
   }
 
@@ -219,6 +236,12 @@ export const LinodeDetailHeader = () => {
         linodeLabel={linode.label}
         onClose={closeDialogs}
       />
+      <AddLockDialog
+        linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
+        onClose={closeDialogs}
+        open={Boolean(addLockDialogOpen)}
+      />
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}
         linodeLabel={linode.label}
@@ -237,6 +260,13 @@ export const LinodeDetailHeader = () => {
         linodeLabel={linode.label}
         onClose={closeDialogs}
         open={Boolean(rebuildDialogOpen)}
+      />
+      <RemoveLockDialog
+        linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
+        linodeLocks={linode.locks}
+        onClose={closeDialogs}
+        open={Boolean(removeLockDialogOpen)}
       />
       <RescueDialog
         linodeId={matchedLinodeId}

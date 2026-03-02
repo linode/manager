@@ -3,6 +3,8 @@ import * as React from 'react';
 import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { createDedicatedPlanFiltersRenderProp } from 'src/features/components/PlansPanel/DedicatedPlanFilters';
+import { createGPUPlanFilterRenderProp } from 'src/features/components/PlansPanel/GpuFilters';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
@@ -11,6 +13,7 @@ import {
   isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
+  useShouldDisablePremiumPlansTab,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -82,21 +85,22 @@ export const KubernetesPlansPanel = (props: Props) => {
     Boolean(flags.soldOutChips) && Boolean(selectedRegionId)
   );
 
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
   const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
     plan === 'shared' && Boolean(isAPLEnabled);
 
   const _types = types.filter((type) => {
     // Do not display MTC plans if the feature flag is not enabled.
-    if (!flags.mtc2025 && isMTCPlan(type)) {
+    if (!flags.mtc?.enabled && isMTCPlan(type)) {
       return false;
     }
 
     return (
       !type.id.includes('dedicated-edge') &&
       !type.id.includes('nanode-edge') &&
-      // Filter out GPU types for enterprise; otherwise, return the rest of the types.
-      // TODO: remove this once GPU plans are supported in LKE-E (Q3 2025)
-      (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true) &&
       // Filter out Blackwell plans for kubernetes (for now)
       !(type.id.includes('blackwell') && !flags.kubernetesBlackwellPlans)
     );
@@ -109,7 +113,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     { isLKE: true }
   );
 
-  const tabs = Object.keys(plans).map(
+  const tabs = Object.keys(plans)?.map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
       const plansMap: PlanSelectionType[] = plans[plan]!;
       const {
@@ -125,6 +129,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       });
 
       return {
+        disabled: false,
         render: () => {
           return (
             <>
@@ -136,6 +141,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
+                plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 regionsData={regionsData}
               />
@@ -146,6 +152,16 @@ export const KubernetesPlansPanel = (props: Props) => {
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
+                planFilters={(() => {
+                  switch (plan) {
+                    case 'dedicated':
+                      return createDedicatedPlanFiltersRenderProp();
+                    case 'gpu':
+                      return createGPUPlanFilterRenderProp();
+                    default:
+                      return undefined;
+                  }
+                })()}
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}
                 selectedId={selectedId}
@@ -170,6 +186,26 @@ export const KubernetesPlansPanel = (props: Props) => {
     currentPlanHeading
   );
 
+  // If there are no premium plans available, plans table will hide the premium tab.
+  // To override this behavior, we add the tab again and then disable it.
+  // If there are plans but they should be disabled, we disable the existing tab.
+  if (
+    shouldDisablePremiumPlansTab &&
+    !tabs.some((tab) => tab.title === planTabInfoContent.premium?.title)
+  ) {
+    tabs.push({
+      disabled: true,
+      render: () => <div />,
+      title: planTabInfoContent.premium?.title,
+    });
+  } else if (shouldDisablePremiumPlansTab) {
+    tabs.forEach((tab) => {
+      if (tab.title === planTabInfoContent.premium?.title) {
+        tab.disabled = true;
+      }
+    });
+  }
+
   return (
     <TabbedPanel
       copy={copy}
@@ -179,6 +215,11 @@ export const KubernetesPlansPanel = (props: Props) => {
       initTab={initialTab >= 0 ? initialTab : 0}
       notice={notice}
       sx={{ padding: 0 }}
+      tabDisabledMessage={
+        shouldDisablePremiumPlansTab
+          ? 'Premium CPUs are now called G7 Dedicated plans.'
+          : undefined
+      }
       tabs={tabs}
     />
   );

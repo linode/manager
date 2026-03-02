@@ -1,7 +1,9 @@
-import { Button, Select, Typography } from '@linode/ui';
+import { Button, Hidden, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
+import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   sortRows,
@@ -35,35 +37,45 @@ import {
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
+
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
   value: 'all',
 };
 
+const COLUMN_WIDTHS = {
+  name: '26%',
+  access: '14%',
+  description: '38%',
+  actions: '10%',
+};
+
+const TABLE_CELL_BASE_STYLE = {
+  boxSizing: 'border-box' as const,
+};
 interface Props {
   roles?: RoleView[];
 }
 const DEFAULT_PAGE_SIZE = 10;
 
 export const RolesTable = ({ roles = [] }: Props) => {
-  // Filter string for the search bar
-  const [filterString, setFilterString] = React.useState('');
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { query } = useSearch({
+    strict: false,
+  });
+
   const [filterableEntityType, setFilterableEntityType] =
     useState<null | SelectOption>(ALL_ROLES_OPTION);
   const [sort, setSort] = useState<
     undefined | { column: string; order: Order }
-  >(undefined);
+  >({ column: 'name', order: 'asc' });
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
   const isAccountAdmin = permissions?.is_account_admin;
-
-  const pagination = usePaginationV2({
-    currentRoute: '/iam/roles',
-    initialPage: 1,
-    preferenceKey: ROLES_TABLE_PREFERENCE_KEY,
-  });
 
   // Filtering
   const getFilteredRows = (
@@ -80,10 +92,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
     );
   };
 
-  const filteredRows = React.useMemo(
-    () => getFilteredRows(filterString, filterableEntityType?.value),
-    [roles, filterString, filterableEntityType]
-  );
+  const filteredRows = React.useMemo(() => {
+    return getFilteredRows(query ?? '', filterableEntityType?.value);
+  }, [roles, query, filterableEntityType]);
 
   // Get just the list of entity types from this list of roles, to be used in the selection filter
   const filterableOptions = React.useMemo(() => {
@@ -95,18 +106,21 @@ export const RolesTable = ({ roles = [] }: Props) => {
     return sortRows(filteredRows, sort.order, sort.column);
   }, [filteredRows, sort]);
 
-  const paginatedRows = React.useMemo(() => {
-    const start = (pagination.page - 1) * pagination.pageSize;
-    return sortedRows.slice(start, start + pagination.pageSize);
-  }, [sortedRows, pagination.page, pagination.pageSize]);
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/roles',
+    defaultPageSize: DEFAULT_PAGE_SIZE,
+    initialPage: 1,
+    preferenceKey: ROLES_TABLE_PREFERENCE_KEY,
+    clientSidePaginationData: sortedRows,
+  });
 
   const areAllSelected = React.useMemo(() => {
     return (
-      !!paginatedRows?.length &&
+      !!pagination.paginatedData?.length &&
       !!selectedRows?.length &&
-      paginatedRows?.length === selectedRows?.length
+      pagination.paginatedData?.length === selectedRows?.length
     );
-  }, [paginatedRows, selectedRows]);
+  }, [pagination.paginatedData, selectedRows]);
 
   const handleSort = (event: CustomEvent, column: string) => {
     setSort({ column, order: event.detail as Order });
@@ -114,7 +128,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
 
   const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
     if (row === 'all') {
-      setSelectedRows(areAllSelected ? [] : paginatedRows);
+      setSelectedRows(areAllSelected ? [] : pagination.paginatedData);
     } else if (selectedRows.includes(row)) {
       setSelectedRows(selectedRows.filter((r) => r !== row));
     } else {
@@ -123,13 +137,14 @@ export const RolesTable = ({ roles = [] }: Props) => {
   };
 
   const handleTextFilter = (fs: string) => {
-    setFilterString(fs);
-    pagination.handlePageChange(1);
+    navigate({
+      to: location.pathname,
+      search: { query: fs !== '' ? fs : undefined },
+    });
   };
 
   const handleChangeEntityTypeFilter = (_: never, entityType: SelectOption) => {
     setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
-    pagination.handlePageChange(1);
   };
 
   const assignRoleRow = (row: RoleView) => {
@@ -149,7 +164,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const handlePageSizeChange = (event: CustomEvent<{ pageSize: number }>) => {
     const newSize = event.detail.pageSize;
     pagination.handlePageSizeChange(newSize);
-    pagination.handlePageChange(1);
   };
 
   return (
@@ -185,7 +199,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
               label="Search"
               onSearch={handleTextFilter}
               placeholder="Search"
-              value={filterString}
+              value={query ?? ''}
             />
             <Select
               hideLabel
@@ -201,57 +215,79 @@ export const RolesTable = ({ roles = [] }: Props) => {
             buttonType="primary"
             disabled={selectedRows.length === 0 || !isAccountAdmin}
             onClick={() => handleAssignSelectedRoles()}
+            sx={{ height: 34 }}
             tooltipText={
-              selectedRows.length === 0
-                ? 'You must select some roles to assign them.'
-                : !isAccountAdmin
-                  ? 'You do not have permission to assign roles.'
+              !isAccountAdmin
+                ? 'You do not have permission to assign roles.'
+                : selectedRows.length === 0
+                  ? 'You must select some roles to assign them.'
                   : undefined
             }
           >
             Assign Selected Roles
           </Button>
         </Grid>
-
         <Table data-testid="roles-table">
           <TableHead>
             <TableRow
+              headerbackground={
+                theme.tokens.component.Table.HeaderNested.Background
+              }
               headerborder
               select={(event) => handleSelect(event, 'all')}
-              selectable
               selected={areAllSelected}
             >
               <TableHeaderCell
                 sort={(event) => handleSort(event, 'name')}
                 sortable
                 sorted={sort?.column === 'name' ? sort.order : undefined}
-                style={{ minWidth: '26%' }}
+                style={{
+                  minWidth: COLUMN_WIDTHS.name,
+                  ...TABLE_CELL_BASE_STYLE,
+                }}
               >
                 Role
               </TableHeaderCell>
+              <Hidden smDown>
+                <TableHeaderCell
+                  sort={(event) => handleSort(event, 'access')}
+                  sortable
+                  sorted={sort?.column === 'access' ? sort.order : undefined}
+                  style={{
+                    minWidth: COLUMN_WIDTHS.access,
+                    ...TABLE_CELL_BASE_STYLE,
+                  }}
+                >
+                  Role Type
+                </TableHeaderCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableHeaderCell
+                  style={{
+                    minWidth: COLUMN_WIDTHS.description,
+                    ...TABLE_CELL_BASE_STYLE,
+                  }}
+                >
+                  Description
+                </TableHeaderCell>
+              </Hidden>
               <TableHeaderCell
-                sort={(event) => handleSort(event, 'access')}
-                sortable
-                sorted={sort?.column === 'access' ? sort.order : undefined}
-                style={{ minWidth: '14%' }}
-              >
-                Role Type
-              </TableHeaderCell>
-              <TableHeaderCell style={{ minWidth: '38%' }}>
-                Description
-              </TableHeaderCell>
-              <TableHeaderCell style={{ minWidth: '10%' }} />
+                style={{
+                  minWidth: COLUMN_WIDTHS.actions,
+                  ...TABLE_CELL_BASE_STYLE,
+                }}
+              />
             </TableRow>
           </TableHead>
           <TableBody>
-            {!paginatedRows?.length ? (
+            {!pagination.paginatedData?.length ? (
               <TableRow>
                 <TableCell style={{ justifyContent: 'center' }}>
                   No items to display.
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedRows.map((roleRow) => (
+              pagination.paginatedData.map((roleRow) => (
                 <TableRow
                   expandable
                   hoverable
@@ -262,27 +298,47 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
-                    style={{ minWidth: '26%', wordBreak: 'break-word' }}
+                    disabled={!isAccountAdmin}
+                    style={{
+                      wordBreak: 'break-word',
+                      minWidth: COLUMN_WIDTHS.name,
+                      ...TABLE_CELL_BASE_STYLE,
+                    }}
                   >
                     {roleRow.name}
                   </TableCell>
-                  <TableCell style={{ minWidth: '14%' }}>
-                    {capitalizeAllWords(roleRow.access, '_')}
-                  </TableCell>
-                  <TableCell style={{ minWidth: '38%' }}>
-                    {roleRow.permissions.length ? (
-                      roleRow.description
-                    ) : (
-                      <Typography>
-                        {getFacadeRoleDescription(roleRow)}{' '}
-                        <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-                      </Typography>
-                    )}
-                  </TableCell>
+                  <Hidden smDown>
+                    <TableCell
+                      style={{
+                        minWidth: COLUMN_WIDTHS.access,
+                        ...TABLE_CELL_BASE_STYLE,
+                      }}
+                    >
+                      {capitalizeAllWords(roleRow.access, '_')}
+                    </TableCell>
+                  </Hidden>
+                  <Hidden smDown>
+                    <TableCell
+                      style={{
+                        minWidth: COLUMN_WIDTHS.description,
+                        ...TABLE_CELL_BASE_STYLE,
+                      }}
+                    >
+                      {roleRow.permissions.length ? (
+                        roleRow.description
+                      ) : (
+                        <Typography>
+                          {getFacadeRoleDescription(roleRow)}{' '}
+                          <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
+                        </Typography>
+                      )}
+                    </TableCell>
+                  </Hidden>
                   <TableCell
                     style={{
-                      minWidth: '10%',
                       justifyContent: 'flex-end',
+                      minWidth: COLUMN_WIDTHS.actions,
+                      ...TABLE_CELL_BASE_STYLE,
                     }}
                   >
                     <RolesTableActionMenu
@@ -294,7 +350,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   </TableCell>
                   <TableRowExpanded
                     slot="expanded"
-                    style={{ marginBottom: 12, padding: 0, width: '100%' }}
+                    style={{
+                      marginBottom: theme.spacingFunction(12),
+                      marginLeft: theme.spacingFunction(44),
+                      padding: `0 ${theme.spacingFunction(4)}`,
+                      width: '100%',
+                    }}
                   >
                     <RolesTableExpandedRow permissions={roleRow.permissions} />
                   </TableRowExpanded>
@@ -305,12 +366,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
         </Table>
         {sortedRows.length !== 0 && sortedRows.length > DEFAULT_PAGE_SIZE && (
           <Pagination
-            count={filteredRows.length}
+            count={sortedRows.length}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
             page={pagination.page}
             pageSize={pagination.pageSize}
-            style={{ borderTop: 0 }}
+            style={{ border: 0 }}
           />
         )}
       </Paper>

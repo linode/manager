@@ -1,4 +1,5 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
+
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
@@ -41,12 +42,12 @@ import type { Interception } from 'support/cypress-exports';
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 const timeRanges = [
-  { label: 'last 30 minutes', unit: 'min', value: 30 },
-  { label: 'last 12 hours', unit: 'hr', value: 12 },
-  { label: 'last 30 days', unit: 'days', value: 30 },
-  { label: 'last 7 days', unit: 'days', value: 7 },
-  { label: 'last hour', unit: 'hr', value: 1 },
-  { label: 'last day', unit: 'days', value: 1 },
+  { label: 'Last 30 minutes', unit: 'min', value: 30 },
+  { label: 'Last 12 hours', unit: 'hr', value: 12 },
+  { label: 'Last 30 days', unit: 'days', value: 30 },
+  { label: 'Last 7 days', unit: 'days', value: 7 },
+  { label: 'Last hour', unit: 'hr', value: 1 },
+  { label: 'Last day', unit: 'days', value: 1 },
 ];
 
 const mockRegion = regionFactory.build({
@@ -94,46 +95,10 @@ const databaseMock: Database = databaseFactory.build({
   region: mockRegion.id,
   type: engine,
 });
+// Profile timezone is set to 'UTC'
 const mockProfile = profileFactory.build({
   timezone: 'UTC',
 });
-/**
- * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
- * hour, and minute. The function also provides individual date components such as day, hour,
- * minute, month, and AM/PM.
- *
- * @param {number} daysOffset - The number of days to adjust from the current date. Positive
- *                               values give a future date, negative values give a past date.
- * @param {number} hour - The hour to set for the resulting date (0-23).
- * @param {number} [minute=0] - The minute to set for the resulting date (0-59). Defaults to 0.
- *
- * @returns {Object} - Returns an object containing:
- *   - `actualDate`: The formatted date and time in IST (YYYY-MM-DD HH:mm).
- *   - `day`: The day of the month as a number.
- *   - `hour`: The hour in the 24-hour format as a number.
- *   - `minute`: The minute of the hour as a number.
- *   - `month`: The month of the year as a number.
- */
-const getDateRangeInGMT = (
-  hour: number,
-  minute: number = 0,
-  isStart: boolean = false
-) => {
-  const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = isStart
-    ? now.startOf('month').set({ hour, minute }).setZone('GMT')
-    : now.set({ hour, minute }).setZone('GMT');
-  const actualDate = targetDate.setZone('GMT').toFormat('yyyy-LL-dd HH:mm');
-
-  return {
-    actualDate,
-    day: targetDate.day,
-    hour: targetDate.hour,
-    minute: targetDate.minute,
-    month: targetDate.month,
-  };
-};
-
 /**
  * This function calculates the start of the current month and the current date and time,
  * adjusted by subtracting 5 hours and 30 minutes, and returns them in the ISO 8601 format (UTC).
@@ -168,18 +133,6 @@ const getLastMonthRange = (): DateTimeWithPreset => {
   };
 };
 
-const convertToGmt = (dateStr: string): string => {
-  return DateTime.fromISO(dateStr.replace(' ', 'T')).toFormat(
-    'yyyy-MM-dd HH:mm'
-  );
-};
-const formatToUtcDateTime = (dateStr: string): string => {
-  return DateTime.fromISO(dateStr)
-    .toUTC() // 🌍 keep it in UTC
-    .toFormat('yyyy-MM-dd HH:mm');
-};
-
-// It is going to be modified
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
@@ -224,6 +177,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     mockGetDatabases([databaseMock]).as('fetchDatabases');
 
     cy.visitWithLogin('/metrics');
+
+    cy.get('[aria-label="Content is loading"]', { timeout: 1000 }).should(
+      'not.exist'
+    );
     cy.wait([
       '@fetchServices',
       '@fetchDashboard',
@@ -231,93 +188,125 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       '@fetchDatabases',
     ]);
   });
-
   it('should implement and validate custom date/time picker for a specific date and time range', () => {
-    // --- Generate start and end date/time in GMT ---
-    const {
-      actualDate: startActualDate,
-      day: startDay,
-      hour: startHour,
-      minute: startMinute,
-    } = getDateRangeInGMT(12, 15, true);
+    // --- Mock the start date to ensure consistent test results ---
 
-    const {
-      actualDate: endActualDate,
-      day: endDay,
-      hour: endHour,
-      minute: endMinute,
-    } = getDateRangeInGMT(12, 30);
+    const MOCK_START_DATE = new Date('2025-08-01');
 
-    cy.wait(1000);
-    // --- Select start date ---
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
-    cy.get('@startDateInput').click();
+    cy.clock(MOCK_START_DATE.getTime(), ['Date']);
+
+    // --- Define date/time values for the test ---
+
+    const startDayOfMonth = 1;
+    const endDayOfMonth = 3;
+    const startHour = 1;
+    const startMinute = 15;
+    const endHour = 2;
+    const endMinute = 45;
+
+    const ACTUAL_START_DATE_TIME = '2025-08-01 01:15';
+    const ACTUAL_END_DATE_TIME = '2025-08-03 02:45';
+
+    // --- Reset the date/time picker to a known state ---
+    ui.button.findByTitle('Last hour').click();
+
+    ui.button.findByTitle('Reset').should('be.visible').click();
+
+    cy.get('[data-qa-preset="Reset"]').should(
+      'have.attr',
+      'aria-selected',
+      'true'
+    );
+
+    // --- Open the date picker dialog and select start/end days ---
+
     cy.get('[role="dialog"]').within(() => {
-      cy.findAllByText(startDay).first().click();
-      cy.findAllByText(endDay).first().click();
+      // --- Select start and end day ---
+      cy.findAllByText(startDayOfMonth).first().click();
+      cy.findAllByText(endDayOfMonth).first().click();
     });
+    // --- Select start time (hours and minutes) in the time picker ---
 
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .first()
-      .should('be.visible', { timeout: 10000 }) // waits up to 10 seconds
+      .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
     cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
-    cy.get('@timePickerButton', { timeout: 15000 })
-      .wait(300) // ⛔ doesn't work like this! (cy.wait isn't chainable on element)
-      .click();
+    cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.wait(1000);
-    cy.findByLabelText('Select hours')
-      .as('selectHours')
-      .scrollIntoView({ easing: 'linear' });
+    cy.get(`[aria-label="${startHour} hours"]`).click();
 
-    cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${startHour} hours"]`).click();
-    });
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .first()
+      .should('be.visible', { timeout: 10000 })
+      .as('timePickerButton');
 
-    cy.findByLabelText('Select minutes')
-      .as('selectMinutes')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
 
-    cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${startMinute} minutes"]`).click();
-    });
+    cy.get('@timePickerButton', { timeout: 15000 }).wait(300).first().click();
+
+    cy.get(`[aria-label="${startMinute} minutes"]`).first().click();
+
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .first()
+      .should('be.visible', { timeout: 10000 })
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
+
+    cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
     cy.findByLabelText('Select meridiem')
       .as('startMeridiemSelect')
       .scrollIntoView();
-    cy.get('@startMeridiemSelect').find('[aria-label="PM"]').click();
+    cy.get('@startMeridiemSelect').find('[aria-label="AM"]').click();
 
-    // --- Select end time ---
+    // --- Select end time (hours and minutes) in the time picker ---
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
       .last()
       .should('be.visible', { timeout: 10000 })
       .as('timePickerButton');
 
-    cy.get('@timePickerButton', { timeout: 15000 }).click();
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
+
+    cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.findByLabelText('Select hours').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
-    });
-    cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${endHour} hours"]`).click();
-    });
+    cy.get(`[aria-label="${endHour} hours"]`).last().click();
 
-    cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${endMinute} minutes"]`).click();
-    });
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .last()
+      .should('be.visible', { timeout: 10000 })
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
+
+    cy.get('@timePickerButton', { timeout: 15000 }).wait(300).last().click();
+
+    cy.get(`[aria-label="${endMinute} minutes"]`).last().click();
+
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .last()
+      .should('be.visible', { timeout: 10000 })
+      .as('timePickerButton');
+
+    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
+
+    cy.get('@timePickerButton', { timeout: 15000 }).wait(300).click();
 
     cy.findByLabelText('Select meridiem')
       .as('endMeridiemSelect')
       .scrollIntoView();
-    cy.get('@endMeridiemSelect').find('[aria-label="PM"]').click();
+    cy.get('@endMeridiemSelect').find('[aria-label="AM"]').click();
 
     // --- Set timezone ---
     cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').clear();
@@ -329,70 +318,51 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .and('be.enabled')
       .click();
 
-    // --- Re-validate after apply ---
+    // --- Validate that the UI shows the expected start/end date/time ---
     cy.get('[aria-labelledby="start-date"]').should(
       'have.value',
-      `${startActualDate} PM`
+      `${ACTUAL_START_DATE_TIME} AM`
     );
+
     cy.get('[aria-labelledby="end-date"]').should(
       'have.value',
-      `${endActualDate} PM`
+      `${ACTUAL_END_DATE_TIME} AM`
     );
 
-    // --- Select Node Type ---
     ui.autocomplete.findByLabel('Node Type').type('Primary{enter}');
 
-    // --- Validate API requests ---
-    cy.wait(Array(4).fill('@getMetrics'));
+    // --- Validate API requests triggered for the selected range ---
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
     cy.get('@getMetrics.all')
       .should('have.length', 4)
       .each((xhr: unknown) => {
         const {
           request: { body },
         } = xhr as Interception;
-        expect(formatToUtcDateTime(body.absolute_time_duration.start)).to.equal(
-          convertToGmt(startActualDate)
+        expect(body.absolute_time_duration.start).to.equal(
+          '2025-08-01T01:15:00Z'
         );
-        expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
-          convertToGmt(endActualDate)
-        );
-      });
-
-    // --- Test Time Range Presets ---
-    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
-      'getPresets'
-    );
-
-    cy.get('@startDateInput').click();
-    ui.button.findByTitle('last 30 days').click();
-
-    cy.get('[data-qa-buttons="apply"]')
-      .should('be.visible')
-      .and('be.enabled')
-      .click();
-
-    cy.get('@getPresets.all')
-      .should('have.length', 4)
-      .each((xhr: unknown) => {
-        const {
-          request: { body },
-        } = xhr as Interception;
-        expect(body).to.have.nested.property(
-          'relative_time_duration.unit',
-          'days'
-        );
-        expect(body).to.have.nested.property(
-          'relative_time_duration.value',
-          30
+        expect(body.absolute_time_duration.end).to.equal(
+          '2025-08-03T02:45:00Z'
         );
       });
   });
 
   timeRanges.forEach((range) => {
     it(`Select and validate the functionality of the "${range.label}" preset from the "Time Range" dropdown`, () => {
-      cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+      ui.button.findByTitle('Last hour').as('startDateInput');
+      cy.get('@startDateInput').scrollIntoView();
+
       cy.get('@startDateInput').click();
+
       ui.button.findByTitle(range.label).click();
+
+      cy.get(`[data-qa-preset="${range.label}"]`).should(
+        'have.attr',
+        'aria-selected',
+        'true'
+      );
+
       cy.get('[data-qa-buttons="apply"]')
         .should('be.visible')
         .should('be.enabled')
@@ -423,9 +393,17 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     const { end, start } = getLastMonthRange();
 
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    ui.button.findByTitle('Last hour').as('startDateInput');
+    cy.get('@startDateInput').scrollIntoView();
+
     cy.get('@startDateInput').click();
-    ui.button.findByTitle('last month').click();
+
+    ui.button.findByTitle('Last month').click();
+
+    cy.get('[data-qa-preset="Last month"]')
+      .should('exist')
+      .and('have.attr', 'aria-selected', 'true');
+
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
@@ -451,9 +429,16 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     const { end, start } = getThisMonthRange();
 
-    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    ui.button.findByTitle('Last hour').as('startDateInput');
+    cy.get('@startDateInput').scrollIntoView();
+
     cy.get('@startDateInput').click();
-    ui.button.findByTitle('this month').click();
+
+    ui.button.findByTitle('This month').click();
+
+    cy.get('[data-qa-preset="This month"]')
+      .should('exist')
+      .and('have.attr', 'aria-selected', 'true');
     cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
@@ -478,5 +463,32 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           })
         ).to.equal(formatDate(end, { format: 'yyyy-MM-dd hh:mm' }));
       });
+  });
+
+  it('should not change the selected preset when a new preset selection is cancelled', () => {
+    // open the time range picker
+    ui.button.findByTitle('Last hour').as('timeRangeTrigger');
+    cy.get('@timeRangeTrigger').click();
+
+    // verify initial preset
+    cy.get('[data-qa-preset="Last hour"]').should(
+      'have.attr',
+      'aria-selected',
+      'true'
+    );
+
+    // select a different preset but cancel
+    ui.button.findByTitle('Last month').click();
+    ui.button.findByTitle('Cancel').should('be.visible').click();
+
+    // reopen picker
+    cy.get('@timeRangeTrigger').click();
+
+    // original preset should remain selected
+    cy.get('[data-qa-preset="Last hour"]').should(
+      'have.attr',
+      'aria-selected',
+      'true'
+    );
   });
 });

@@ -23,7 +23,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import {
   DELETE_ALERT_SUCCESS_MESSAGE,
-  UPDATE_ALERT_SUCCESS_MESSAGE,
+  DISABLE_ALERT_FAILED_MESSAGE,
+  DISABLE_ALERT_SUCCESS_MESSAGE,
+  ENABLE_ALERT_FAILED_MESSAGE,
+  ENABLE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import { AlertsTable } from './AlertsTable';
 import { AlertListingTableLabelMap } from './constants';
@@ -126,7 +129,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleConfirm = React.useCallback(
     (alert: Alert, currentStatus: boolean) => {
       const toggleStatus = currentStatus ? 'disabled' : 'enabled';
-      const errorStatus = currentStatus ? 'Disabling' : 'Enabling';
       setIsUpdating(true);
       editAlertDefinition({
         alertId: alert.id,
@@ -135,15 +137,22 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       })
         .then(() => {
           // Handle success
-          enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
-            variant: 'success',
-          });
+          enqueueSnackbar(
+            currentStatus
+              ? DISABLE_ALERT_SUCCESS_MESSAGE
+              : ENABLE_ALERT_SUCCESS_MESSAGE,
+            {
+              variant: 'success',
+            }
+          );
         })
         .catch((updateError: APIError[]) => {
           // Handle error
           const errorResponse = getAPIErrorOrDefault(
             updateError,
-            `${errorStatus} alert failed`
+            currentStatus
+              ? DISABLE_ALERT_FAILED_MESSAGE
+              : ENABLE_ALERT_FAILED_MESSAGE
           );
           enqueueSnackbar(errorResponse[0].reason, {
             variant: 'error',
@@ -221,12 +230,28 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     }
   };
 
+  // Create a map for service value-to-label mapping to optimize sorting
+  const serviceValueToLabelMap = React.useMemo(() => {
+    return services.reduce<Record<string, string>>((map, { label, value }) => {
+      map[value] = label;
+      return map;
+    }, {});
+  }, [services]);
+
+  const alertsWithServiceLabels = React.useMemo(() => {
+    return alerts.map((alert) => ({
+      ...alert,
+      service_type_label:
+        serviceValueToLabelMap[alert.service_type] || alert.service_type,
+    }));
+  }, [alerts, serviceValueToLabelMap]);
+
   const { order, orderBy, handleOrderChange, sortedData } = useOrderV2({
-    data: alerts,
+    data: alertsWithServiceLabels,
     initialRoute: {
       defaultOrder: {
         order: 'asc',
-        orderBy: 'service_type',
+        orderBy: 'service_type_label',
       },
       from: '/alerts/definitions',
     },

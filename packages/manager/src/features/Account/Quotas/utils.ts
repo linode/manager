@@ -17,6 +17,18 @@ import type {
 import type { SelectOption } from '@linode/ui';
 import type { UseQueryResult } from '@tanstack/react-query';
 
+const INCLUDED_OBJ_QUOTA_TYPES = [
+  'obj-bytes',
+  'obj-objects',
+  'obj-buckets',
+  'obj-total-ingress-throughput',
+  'obj-total-egress-throughput',
+  'obj-total-concurrent-requests',
+];
+const INCLUDED_OBJ_GLOBAL_QUOTA_TYPES = ['keys'];
+
+export const QUOTA_ROW_MIN_HEIGHT = 58;
+
 type UseGetLocationsForQuotaService =
   | {
       isFetchingRegions: boolean;
@@ -79,6 +91,44 @@ interface GetQuotasFiltersProps {
   location: null | SelectOption<Quota['region_applied']>;
   service: SelectOption<QuotaType>;
 }
+
+export interface QuotaWithUsage extends Quota {
+  usage: null | QuotaUsage;
+}
+
+export const getQuotaVisibilityFilter = (service: QuotaType) => {
+  return {
+    isVisible(quota: Quota) {
+      if (service === 'object-storage') {
+        return (
+          INCLUDED_OBJ_QUOTA_TYPES.includes(quota.quota_type) ||
+          INCLUDED_OBJ_GLOBAL_QUOTA_TYPES.includes(quota.quota_type)
+        );
+      }
+
+      return true;
+    },
+  };
+};
+
+export const getQuotaMapper = (service: QuotaType) => {
+  return {
+    mapQuota(quota: Quota, usage: null | QuotaUsage): QuotaWithUsage {
+      if (service === 'object-storage') {
+        return {
+          ...quota,
+          quota_name: quota.quota_name.replace(' (per endpoint)', ''),
+          usage,
+        };
+      }
+
+      return {
+        ...quota,
+        usage,
+      };
+    },
+  };
+};
 
 /**
  * Function to get the filters for the quotas query
@@ -145,17 +195,19 @@ export const getQuotaIncreaseMessage = ({
   }
 
   return {
-    description: `**User**: ${profile.username}<br>\n**Email**: ${
-      profile.email
-    }<br>\n**Quota Name**: ${
-      quota.quota_name
-    }<br>\n**Current Quota**: ${convertedMetrics.limit?.toLocaleString()} ${
-      convertedMetrics.metric
-    }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
-      convertedMetrics.metric
-    }<br>\n**Needed in**: ${
-      neededIn
-    }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    description:
+      `**User**: ${profile.username}<br>\n**Email**: ${
+        profile.email
+      }<br>\n**Quota Name**: ${
+        quota.quota_name
+      }<br>\n**Current Quota**: ${convertedMetrics.limit?.toLocaleString()} ${
+        convertedMetrics.metric
+      }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
+        convertedMetrics.metric
+      }<br>\n**Needed in**: ${neededIn}<br>\n` +
+      (regionAppliedValue
+        ? `**${regionAppliedLabel}**: ${regionAppliedValue}`
+        : ''),
     neededIn: 'Fewer than 7 days',
     notes: '',
     quantity: String(quantity),
@@ -193,6 +245,17 @@ export const convertResourceMetric = ({
     };
   }
 
+  if (initialResourceMetric === 'byte_per_second') {
+    return {
+      convertedUsage: 0,
+      convertedResourceMetric: 'Gbps',
+      convertedLimit: readableBytes(initialLimit, {
+        unit: 'GB',
+        base10: true,
+      }).value,
+    };
+  }
+
   return {
     convertedUsage: initialUsage,
     convertedLimit: initialLimit,
@@ -208,6 +271,10 @@ export const convertResourceMetric = ({
  * Note: the value should be the raw values in bytes, not an existing conversion
  */
 export const pluralizeMetric = (value: number, unit: string) => {
+  if (unit === 'byte_per_second') {
+    return unit;
+  }
+
   if (unit !== 'byte') {
     return value > 1 ? `${unit}s` : unit;
   }

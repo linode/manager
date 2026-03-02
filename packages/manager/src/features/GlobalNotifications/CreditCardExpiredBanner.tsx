@@ -4,12 +4,10 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useFlags } from 'src/hooks/useFlags';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 export const CreditCardExpiredBanner = () => {
   const navigate = useNavigate();
-  const flags = useFlags();
 
   const { data: account } = useAccount();
 
@@ -33,9 +31,7 @@ export const CreditCardExpiredBanner = () => {
           buttonType="primary"
           onClick={() =>
             navigate({
-              to: flags?.iamRbacPrimaryNavChanges
-                ? '/billing'
-                : '/account/billing',
+              to: '/billing',
             })
           }
         >

@@ -1,7 +1,9 @@
-import { useRegionsQuery } from '@linode/queries';
 import { TextField } from '@linode/ui';
-import React, { useMemo } from 'react';
+import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
+import { BlockStorageDimensionFilterAutocomplete } from './BlockStorageDimensionFilterAutocomplete';
 import {
   MULTISELECT_PLACEHOLDER_TEXT,
   SINGLESELECT_PLACEHOLDER_TEXT,
@@ -9,8 +11,9 @@ import {
   valueFieldConfig,
 } from './constants';
 import { DimensionFilterAutocomplete } from './DimensionFilterAutocomplete';
-import { useFetchOptions } from './useFetchOptions';
-import { getOperatorGroup, getStaticOptions } from './utils';
+import { FirewallDimensionFilterAutocomplete } from './FirewallDimensionFilterAutocomplete';
+import { ObjectStorageDimensionFilterAutocomplete } from './ObjectStorageDimensionFilterAutocomplete';
+import { getOperatorGroup } from './utils';
 
 import type { OperatorGroup, ValueFieldConfig } from './constants';
 import type {
@@ -18,6 +21,7 @@ import type {
   CloudPulseServiceType,
   DimensionFilterOperatorType,
 } from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 interface ValueFieldRendererProps {
   /**
@@ -35,10 +39,17 @@ interface ValueFieldRendererProps {
    */
   entities?: string[];
   /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: AssociatedEntityType;
+  /**
    * Error message to be displayed under the input field, if any.
    */
   errorText: string | undefined;
-
+  /**
+   * Callback triggered when a dependent API has an error.
+   */
+  handleError?: (hasError: boolean) => void;
   /**
    * The name of the field set in the form.
    */
@@ -53,7 +64,6 @@ interface ValueFieldRendererProps {
    * Callback fired when the value changes.
    */
   onChange: (value: string | string[]) => void;
-
   /**
    * The operator used in the current filter. Used to determine the type of input to show.
    */
@@ -70,7 +80,10 @@ interface ValueFieldRendererProps {
    * Service type of the alert
    */
   serviceType?: CloudPulseServiceType | null;
-
+  /**
+   * The type of monitoring to filter on.
+   */
+  type?: 'alerts' | 'metrics';
   /**
    * The currently selected value for the input field.
    */
@@ -84,19 +97,29 @@ interface ValueFieldRendererProps {
 
 export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
   const {
-    serviceType,
-    scope,
     dimensionLabel,
     disabled,
     entities,
+    entityType,
     errorText,
+    handleError,
     name,
     onBlur,
     onChange,
     operator,
+    scope,
     value,
     values,
+    type = 'alerts',
+    selectedRegions,
+    serviceType,
   } = props;
+
+  const flags = useFlags();
+
+  const maxDimensionFiltersValues =
+    flags.aclpAlerting?.maxDimensionFiltersValues ?? undefined;
+
   // Use operator group for config lookup
   const operatorGroup = getOperatorGroup(operator);
   let dimensionConfig: Record<OperatorGroup, ValueFieldConfig>;
@@ -111,25 +134,7 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     // 3. No dimension-specific config & values present → use *
     dimensionConfig = valueFieldConfig['*'];
   }
-  const { data: regions } = useRegionsQuery();
   const config = dimensionConfig[operatorGroup];
-  const customFetchItems = useFetchOptions({
-    dimensionLabel,
-    regions,
-    entities,
-    serviceType,
-    type: 'alerts',
-    scope,
-  });
-  const staticOptions = useMemo(
-    () =>
-      getStaticOptions(
-        serviceType ?? undefined,
-        dimensionLabel ?? '',
-        values ?? []
-      ),
-    [dimensionLabel, serviceType, values]
-  );
   if (!config) return null;
 
   if (config.type === 'textfield') {
@@ -158,25 +163,71 @@ export const ValueFieldRenderer = (props: ValueFieldRendererProps) => {
     const autocompletePlaceholder = config.multiple
       ? MULTISELECT_PLACEHOLDER_TEXT
       : SINGLESELECT_PLACEHOLDER_TEXT;
-    const { values, isLoading, isError } = config.useCustomFetch
-      ? customFetchItems
-      : { values: staticOptions, isLoading: false, isError: false };
-    return (
-      <DimensionFilterAutocomplete
-        disabled={disabled}
-        errorText={errorText}
-        fieldOnBlur={onBlur}
-        fieldOnChange={onChange}
-        fieldValue={value}
-        isError={isError}
-        isLoading={isLoading}
-        multiple={config.multiple}
-        name={name}
-        placeholderText={config.placeholder ?? autocompletePlaceholder}
-        values={values}
-      />
-    );
-  }
 
+    // Common props shared across all autocomplete components
+    const commonAutocompleteProps = {
+      dimensionLabel,
+      disabled,
+      errorText,
+      handleError,
+      fieldOnBlur: onBlur,
+      fieldOnChange: onChange,
+      fieldValue: value,
+      multiple: config.multiple,
+      name,
+      placeholderText: config.placeholder ?? autocompletePlaceholder,
+      serviceType: serviceType ?? null,
+      type,
+      maxSelections: maxDimensionFiltersValues,
+    };
+
+    // Determine custom fetch behaviour if there are same dimension_labels across service types
+    const customFetch = Array.isArray(config.useCustomFetch)
+      ? config.useCustomFetch.includes(serviceType ?? '')
+        ? serviceType
+        : undefined
+      : config.useCustomFetch === serviceType
+        ? serviceType
+        : undefined;
+
+    switch (customFetch) {
+      case 'blockstorage':
+        return (
+          <BlockStorageDimensionFilterAutocomplete
+            {...commonAutocompleteProps}
+            entities={entities}
+            scope={scope}
+            selectedRegions={selectedRegions}
+          />
+        );
+      case 'firewall':
+        return (
+          <FirewallDimensionFilterAutocomplete
+            {...commonAutocompleteProps}
+            entities={entities}
+            entityType={entityType}
+            placeholderText={config.placeholder ?? autocompletePlaceholder}
+            scope={scope}
+            selectedRegions={selectedRegions}
+          />
+        );
+      case 'objectstorage':
+        return (
+          <ObjectStorageDimensionFilterAutocomplete
+            {...commonAutocompleteProps}
+            entities={entities ?? []}
+            scope={scope}
+            selectedRegions={selectedRegions}
+          />
+        );
+      default:
+        return (
+          <DimensionFilterAutocomplete
+            {...commonAutocompleteProps}
+            values={values}
+          />
+        );
+    }
+  }
   return null;
 };

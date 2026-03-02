@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { engineTypeMap } from '../constants';
+import { AlertsEndpointFilter } from './AlertsEndpointFilter';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
 import { AlertsTagFilter } from './AlertsTagsFilter';
@@ -86,6 +87,35 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'tags',
     },
   ],
+  objectstorage: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+    {
+      accessor: ({ endpoint }) => endpoint,
+      label: 'Endpoint',
+      sortingKey: 'endpoint',
+    },
+  ],
+  blockstorage: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+  ],
 };
 
 export const serviceToFiltersMap: Partial<
@@ -103,16 +133,23 @@ export const serviceToFiltersMap: Partial<
     { component: AlertsRegionFilter, filterKey: 'region' },
     { component: AlertsTagFilter, filterKey: 'tags' },
   ],
+  objectstorage: [
+    { component: AlertsRegionFilter, filterKey: 'region' },
+    { component: AlertsEndpointFilter, filterKey: 'endpoint' },
+  ],
+  blockstorage: [{ component: AlertsRegionFilter, filterKey: 'region' }],
 };
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.
   'tags',
+  'endpoint',
 ];
 
 export const alertAdditionalFilterKeyMap: Record<
   AlertAdditionalFilterKey,
   keyof AlertInstance
 > = {
+  endpoint: 'endpoint',
   engineType: 'engineType', // engineType filter selected here, will map to engineType property on AlertInstance
   tags: 'tags',
 };

@@ -1,3 +1,4 @@
+import type { AssociatedEntityType } from '../../shared/types';
 import type {
   AlertDefinitionScope,
   AlertSeverityType,
@@ -18,6 +19,8 @@ export interface CreateAlertDefinitionForm
     'rule_criteria' | 'severity' | 'trigger_conditions'
   > {
   entity_ids?: string[];
+  entity_type?: AssociatedEntityType;
+  hasAPIError?: boolean;
   regions?: string[];
   rule_criteria: {
     rules: MetricCriteriaForm[];

@@ -13,18 +13,20 @@ import {
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
-import {
-  DIMENSION_TRANSFORM_CONFIG,
-  TRANSFORMS,
-} from '../../shared/DimensionTransform';
-import { compareArrays } from '../../Utils/FilterBuilder';
+import { filterFirewallResources } from '../../Utils/utils';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AssociatedEntityType } from '../../shared/types';
 import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type { MonitoringCapabilities } from '@linode/api-v4';
+import type {
+  Firewall,
+  Linode,
+  MonitoringCapabilities,
+  NotificationChannelAlerts,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 import type {
   AclpAlertServiceTypeConfig,
@@ -237,6 +239,23 @@ export const getAlertChipBorderRadius = (
 };
 
 /**
+ * Determines whether to use details.email.usernames (newer API) or content.email.email_addresses (older API)
+ * for displaying email recipients in notification channels.
+ *
+ * @param channel The notification channel to check
+ * @returns true if we should use content.email.email_addresses, false if we should use details.email.usernames
+ */
+export const shouldUseContentsForEmail = (
+  channel: NotificationChannel
+): boolean => {
+  // Use content if: details is missing, details is empty, details.email is empty or details.email.usernames is empty
+  return !(
+    channel.channel_type === 'email' && // ensuring it's an email channel to avoid the type error with email property
+    channel.details?.email?.usernames?.length
+  );
+};
+
+/**
  * @param value The notification channel object for which we need to display the chips
  * @returns The label and the values that needs to be displayed based on channel type
  */
@@ -244,24 +263,31 @@ export const getChipLabels = (
   value: NotificationChannel
 ): AlertDimensionsProp => {
   if (value.channel_type === 'email') {
+    const contentEmail = value.content?.email;
+    const useContent = shouldUseContentsForEmail(value);
+
+    const recipients = useContent
+      ? (contentEmail?.email_addresses ?? [])
+      : (value.details?.email?.usernames ?? []);
+
     return {
       label: 'To',
-      values: value.content.email.email_addresses,
+      values: recipients,
     };
   } else if (value.channel_type === 'slack') {
     return {
       label: 'Slack Webhook URL',
-      values: [value.content.slack.slack_webhook_url],
+      values: [value.content?.slack.slack_webhook_url ?? ''],
     };
   } else if (value.channel_type === 'pagerduty') {
     return {
       label: 'Service API Key',
-      values: [value.content.pagerduty.service_api_key],
+      values: [value.content?.pagerduty.service_api_key ?? ''],
     };
   } else {
     return {
       label: 'Webhook URL',
-      values: [value.content.webhook.webhook_url],
+      values: [value.content?.webhook.webhook_url ?? ''],
     };
   }
 };
@@ -279,7 +305,9 @@ export const filterAlerts = (props: FilterAlertsProps): Alert[] => {
   return (
     alerts?.filter(({ label, status, type, scope, regions }) => {
       return (
-        (status === 'enabled' || status === 'in progress') &&
+        (status === 'enabled' ||
+          status === 'provisioning' ||
+          status === 'enabling') &&
         (!selectedType || type === selectedType) &&
         (!searchText ||
           label.toLowerCase().includes(searchText.toLowerCase())) &&
@@ -591,10 +619,12 @@ export const convertSecondsToOptions = (seconds: number): string => {
  * @param aclpServices list of services with their statuses
  * @returns list of alerts from enabled services
  */
-export const alertsFromEnabledServices = (
-  allAlerts: Alert[] | undefined,
+export const alertsFromEnabledServices = <
+  T extends Alert | NotificationChannelAlerts,
+>(
+  allAlerts: T[] | undefined,
   aclpServices: Partial<AclpServices> | undefined
-) => {
+): T[] | undefined => {
   // Return the alerts whose service type is enabled in the aclpServices flag
   return allAlerts?.filter(
     (alert) => aclpServices?.[alert.service_type]?.alerts?.enabled ?? false
@@ -602,40 +632,35 @@ export const alertsFromEnabledServices = (
 };
 
 /**
- * Transform a dimension value using the appropriate transform function
- * @param serviceType - The cloud pulse service type
- * @param dimensionLabel - The dimension label
- * @param value - The value to transform
- * @returns Transformed value
+ * @param serviceType The service type
+ * @param entityType The entity type
+ * @returns The filter function for the service type and entity type if applicable
  */
-export const transformDimensionValue = (
-  serviceType: CloudPulseServiceType | null,
-  dimensionLabel: string,
-  value: string
-): string => {
-  return (
-    (
-      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
-    )?.(value) ?? TRANSFORMS.capitalize(value)
-  );
+export const getFilterFn = (
+  serviceType?: CloudPulseServiceType | null,
+  entityType?: AssociatedEntityType
+) => {
+  if (!serviceType) {
+    return undefined;
+  }
+  if (serviceType === 'firewall' && entityType) {
+    return (resources: Firewall[]) =>
+      filterFirewallResources(resources, entityType);
+  }
+  if (serviceType === 'linode') {
+    return (resources: Linode[]) => filterLinodeResources(resources);
+  }
+  return undefined;
 };
 
 /**
- * Checks if two arrays are equal, ignores the order of the elements
- * @param a The first array
- * @param b The second array
- * @returns True if the arrays are equal, false otherwise
+ * @param linodes The list of linodes
+ * @returns The filtered list of linodes that have ACLP alerts
  */
-export const arraysEqual = (
-  a: number[] | undefined,
-  b: number[] | undefined
-) => {
-  if (a === undefined && b === undefined) return true;
-  if (a === undefined || b === undefined) return false;
-  if (a.length !== b.length) return false;
-
-  return compareArrays(
-    [...a].sort((x, y) => x - y),
-    [...b].sort((x, y) => x - y)
+export const filterLinodeResources = (linodes: Linode[]): Linode[] => {
+  return linodes.filter(
+    (linode) =>
+      (linode.alerts.system_alerts?.length ?? 0) > 0 ||
+      (linode.alerts.user_alerts?.length ?? 0) > 0
   );
 };

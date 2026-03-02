@@ -1,11 +1,16 @@
-import { useUserRoles, useUserRolesMutation } from '@linode/queries';
+import {
+  useGetDefaultDelegationAccessQuery,
+  useUpdateDefaultDelegationAccessQuery,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { deleteUserEntity, getErrorMessage } from '../utilities';
 
 import type { EntitiesRole } from '../types';
@@ -15,30 +20,56 @@ interface Props {
   onSuccess?: () => void;
   open: boolean;
   role: EntitiesRole | undefined;
+  username?: string;
 }
 
 export const RemoveAssignmentConfirmationDialog = (props: Props) => {
-  const { onClose: _onClose, onSuccess, open, role } = props;
-  const { username } = useParams({ from: '/iam/users/$username' });
+  const { onClose: _onClose, onSuccess, open, role, username } = props;
+
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    error,
-    isPending,
+    error: userRolesError,
+    isPending: isUserRolesPending,
     mutateAsync: updateUserRoles,
     reset,
-  } = useUserRolesMutation(username);
+  } = useUserRolesMutation(username ?? '');
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const {
+    mutateAsync: updateDefaultDelegationRoles,
+    isPending: isDefaultDelegationRolesPending,
+    error: defaultDelegationRolesError,
+  } = useUpdateDefaultDelegationAccessQuery();
+
+  const isPending = isUserRolesPending || isDefaultDelegationRolesPending;
+
+  const { data: assignedUserRoles } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const { data: delegateDefaultRoles } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
     _onClose();
   };
 
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultDelegationRoles
+    : updateUserRoles;
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? delegateDefaultRoles
+    : assignedUserRoles;
+
   const onDelete = async () => {
-    if (!role || !assignedRoles) return;
+    if (!role || !assignedRoles || isPending) return;
 
     const { role_name, entity_id, entity_type } = role;
 
@@ -48,19 +79,25 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       entity_id,
       entity_type
     );
+    try {
+      await mutationFn({
+        ...assignedRoles,
+        entity_access: updatedUserEntityRoles,
+      });
 
-    await updateUserRoles({
-      ...assignedRoles,
-      entity_access: updatedUserEntityRoles,
-    });
+      enqueueSnackbar(`Entity access removed`, {
+        variant: 'success',
+      });
 
-    enqueueSnackbar(`Entity access removed`, {
-      variant: 'success',
-    });
-
-    onSuccess?.();
-    onClose();
+      onSuccess?.();
+      onClose();
+    } catch {
+      // error is handled by react-query and shown via <ConfirmationDialog error=… />
+    }
   };
+  const error = isDefaultDelegationRolesForChildAccount
+    ? defaultDelegationRolesError
+    : userRolesError;
 
   return (
     <ConfirmationDialog
@@ -70,6 +107,7 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
             label: 'Remove',
             loading: isPending,
             onClick: onDelete,
+            disabled: isPending,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
@@ -81,15 +119,27 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       error={getErrorMessage(error)}
       onClose={onClose}
       open={open}
-      title={`Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`}
+      title={
+        isDefaultDelegationRolesForChildAccount
+          ? `Remove the ${role?.entity_name} entity from the list?`
+          : `Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`
+      }
     >
-      <Notice variant="warning">
+      {isDefaultDelegationRolesForChildAccount ? (
         <Typography>
-          You’re about to remove the <strong>{role?.entity_name}</strong> entity
-          from the <strong>{role?.role_name}</strong> role for{' '}
-          <strong>{username}</strong>. This change will be applied immediately.
+          Delegate users won’t get the {role?.role_name} access on the{' '}
+          {role?.entity_name} entity by default.
         </Typography>
-      </Notice>
+      ) : (
+        <Notice variant="warning">
+          <Typography>
+            You’re about to remove the <strong>{role?.entity_name}</strong>{' '}
+            entity from the <strong>{role?.role_name}</strong> role for{' '}
+            <strong>{username}</strong>. This change will be applied
+            immediately.
+          </Typography>
+        </Notice>
+      )}
     </ConfirmationDialog>
   );
 };

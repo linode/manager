@@ -1,6 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useUpdateImageMutation } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import {
+  ActionsPanel,
+  Box,
+  Drawer,
+  Notice,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import { Stack, Typography } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
@@ -29,6 +36,10 @@ export const EditImageDrawer = (props: Props) => {
     open
   );
   const canUpdateImage = permissions?.update_image;
+
+  const { data: accountPermissions } = usePermissions('account', [
+    'is_account_admin',
+  ]);
 
   const defaultValues = {
     description: image?.description ?? undefined,
@@ -153,15 +164,36 @@ export const EditImageDrawer = (props: Props) => {
         control={control}
         name="tags"
         render={({ field, fieldState }) => (
-          <TagsInput
-            disabled={!canUpdateImage}
-            label="Tags"
-            onChange={(tags) => field.onChange(tags.map((tag) => tag.value))}
-            tagError={fieldState.error?.message}
-            value={
-              field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
-            }
-          />
+          <Stack
+            alignItems="center"
+            direction="row"
+            spacing={1}
+            sx={{ display: 'flex' }}
+          >
+            <Box sx={{ flex: 1 }}>
+              <TagsInput
+                disabled={!accountPermissions?.is_account_admin}
+                label="Tags"
+                onChange={(tags) =>
+                  field.onChange(tags.map((tag) => tag.value))
+                }
+                tagError={fieldState.error?.message}
+                value={
+                  field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
+                }
+              />
+            </Box>
+            {!accountPermissions?.is_account_admin && (
+              <TooltipIcon
+                status="info"
+                sxTooltipIcon={{
+                  padding: 0,
+                  top: 20,
+                }}
+                text="You don't have permissions to edit tags. Please contact an account administrator for details."
+              />
+            )}
+          </Stack>
         )}
       />
 

@@ -1,6 +1,8 @@
 import { PRIVATE_IPV4_REGEX } from '@linode/validation';
 import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 
+import type { PrefixListRuleReference } from 'src/features/Firewalls/shared';
+
 /**
  * Removes the prefix length from the end of an IPv6 address.
  *
@@ -21,6 +23,8 @@ export interface ExtendedIP {
   error?: string;
 }
 
+export interface ExtendedPL extends ExtendedIP, PrefixListRuleReference {}
+
 export const stringToExtendedIP = (ip: string): ExtendedIP => ({ address: ip });
 export const extendedIPToString = (ip: ExtendedIP): string => ip.address;
 export const ipFieldPlaceholder = '192.0.2.1/32';
@@ -38,7 +42,7 @@ export const validateIPs = (
 ): ExtendedIP[] => {
   return ips.map(({ address }) => {
     if (!options?.allowEmptyAddress && !address) {
-      return { address, error: 'Please enter an IP address.' };
+      return { address, error: 'Enter an IP address.' };
     }
     // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
     // methods for each, so we check for a netmask to decide the method to use.

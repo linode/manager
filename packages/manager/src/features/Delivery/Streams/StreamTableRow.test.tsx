@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { streamFactory } from 'src/factories/delivery';
+import { streamFactory } from 'src/factories';
 import { StreamTableRow } from 'src/features/Delivery/Streams/StreamTableRow';
 import {
   mockMatchMedia,
@@ -38,9 +38,9 @@ describe('StreamTableRow', () => {
     // Stream Type:
     screen.getByText('Audit Logs');
     // Status:
-    screen.getByText('Enabled');
+    screen.getByText('Active');
     // Destination Type:
-    screen.getByText('Linode Object Storage');
+    screen.getByText('Akamai Object Storage');
     // ID:
     screen.getByText('1');
     // Creation Time:
@@ -52,7 +52,7 @@ describe('StreamTableRow', () => {
     await userEvent.click(actionMenu);
 
     expect(screen.getByText('Edit')).toBeVisible();
-    expect(screen.getByText('Disable')).toBeVisible();
+    expect(screen.getByText('Deactivate')).toBeVisible();
     expect(screen.getByText('Delete')).toBeVisible();
   });
 });

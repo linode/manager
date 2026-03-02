@@ -38,7 +38,7 @@ describe('VPC Create Drawer', () => {
     expect(getByText('Description')).toBeVisible();
     expect(getByText('Subnets')).toBeVisible();
     expect(getByText('Subnet Label')).toBeVisible();
-    expect(getByText('Subnet IP Address Range')).toBeVisible();
+    expect(getByText('Subnet IPv4 Range (CIDR)')).toBeVisible();
     expect(getByText('Add another Subnet')).toBeVisible();
     expect(getByRole('button', { name: 'Create VPC' })).toBeVisible();
     expect(getByText('Cancel')).toBeVisible();

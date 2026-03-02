@@ -74,20 +74,20 @@ describe('getRemitAddress', () => {
     expect(result.entity).toBe('Linode');
   });
 
-  it('should return Linode address with Akamai entity when country is US and using Akamai billing', () => {
-    const result = getRemitAddress('US', true);
-    expect(result).toEqual(ADDRESSES.linode);
-    expect(result.entity).toBe('Akamai Technologies, Inc.');
+  it('should return Akamai US address when country is CA or US and using Akamai billing', () => {
+    const result1 = getRemitAddress('CA', true);
+    expect(result1).toEqual(ADDRESSES.akamai.us);
+
+    const result2 = getRemitAddress('US', true);
+    expect(result2).toEqual(ADDRESSES.akamai.us);
   });
 
-  it('should return Akamai US address when country is CA and using Akamai billing', () => {
-    const result = getRemitAddress('CA', true);
-    expect(result).toEqual(ADDRESSES.akamai.us);
-  });
+  it('should return Linode address when country is CA or US and not using Akamai billing', () => {
+    const result1 = getRemitAddress('CA', false);
+    expect(result1).toEqual(ADDRESSES.linode);
 
-  it('should return Linode address when country is CA and not using Akamai billing', () => {
-    const result = getRemitAddress('CA', false);
-    expect(result).toEqual(ADDRESSES.linode);
+    const result2 = getRemitAddress('US', false);
+    expect(result2).toEqual(ADDRESSES.linode);
   });
 
   it('should return Akamai international address for other countries when using Akamai billing', () => {

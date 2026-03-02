@@ -11,7 +11,6 @@ import {
   useAllVolumesQuery,
 } from '@linode/queries';
 
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
@@ -29,6 +28,7 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
+import { useIsPrivateImageSharingEnabled } from '../Images/utils';
 import { search } from './utils';
 
 import type { SearchableEntityType } from './search.interfaces';
@@ -43,17 +43,18 @@ interface Props {
  * based on a user's seach query.
  */
 export const useClientSideSearch = ({ enabled, query }: Props) => {
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
+
   const {
     data: domains,
     error: domainsError,
     isLoading: domainsLoading,
   } = useAllDomainsQuery(enabled);
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: lkeClustersError,
     isLoading: lkeClustersLoading,
-  } = useAllKubernetesClustersQuery({ enabled, isUsingBetaEndpoint });
+  } = useAllKubernetesClustersQuery({ enabled });
   const {
     data: volumes,
     error: volumesError,
@@ -104,7 +105,10 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
 
   const searchableDomains = domains?.map(domainToSearchableItem) ?? [];
   const searchableVolumes = volumes?.map(volumeToSearchableItem) ?? [];
-  const searchableImages = privateImages?.map(imageToSearchableItem) ?? [];
+  const searchableImages =
+    privateImages?.map((img) =>
+      imageToSearchableItem(img, isPrivateImageSharingEnabled)
+    ) ?? [];
   const searchableNodebalancers = nodebals?.map(nodeBalToSearchableItem) ?? [];
   const searchableFirewalls = firewalls?.map(firewallToSearchableItem) ?? [];
   const searchableDatabases = databases?.map(databaseToSearchableItem) ?? [];
@@ -115,9 +119,9 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     objectStorageBuckets?.buckets.map(bucketToSearchableItem) ?? [];
   const searchableClusters =
     clusters?.map(kubernetesClusterToSearchableItem) ?? [];
-  const searchableStreams = streams?.data?.map(streamToSearchableItem) ?? [];
+  const searchableStreams = streams?.map(streamToSearchableItem) ?? [];
   const searchableDestinations =
-    destinations?.data?.map(destinationToSearchableItem) ?? [];
+    destinations?.map(destinationToSearchableItem) ?? [];
 
   const searchableItems = [
     ...searchableLinodes,

@@ -86,6 +86,14 @@ const mockGPUType = [
   }),
 ];
 
+const mockPremiumType = [
+  linodeTypeFactory.build({
+    class: 'premium',
+    id: 'premium-8',
+    label: 'Premium 8GB',
+  }),
+];
+
 const mockAcceleratedType = [
   linodeTypeFactory.build({
     class: 'accelerated',
@@ -99,6 +107,7 @@ const mockLinodeTypes = [
   ...mockHighMemoryLinodeTypes,
   ...mockSharedLinodeTypes,
   ...mockGPUType,
+  ...mockPremiumType,
   ...mockAcceleratedType,
 ];
 
@@ -133,6 +142,11 @@ const notices = {
   limitedAvailability: '[data-testid="limited-availability-banner"]',
   unavailable: '[data-qa-error="true"]',
 };
+
+const GPU_GENERAL_AVAILABILITY_NOTICE =
+  'New GPU instances are now generally available. Deploy an RTX 4000 Ada GPU instance in select core compute regions in North America, Europe, and Asia.';
+const GPU_NO_AVAILABILITY_ERROR =
+  'GPU Plans are not currently available in this region.';
 
 authenticate();
 describe('displays linode plans panel based on availability', () => {
@@ -225,7 +239,7 @@ describe('displays linode plans panel based on availability', () => {
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
         cy.get('[id="g7-premium-64"]').should('be.disabled');
         cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
@@ -355,7 +369,7 @@ describe('displays kubernetes plans panel based on availability', () => {
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
         cy.get('[data-qa-plan-row="Premium 512 GB"]').should(
           'have.attr',
           'disabled'
@@ -381,7 +395,7 @@ describe('displays specific linode plans for GPU', () => {
     }).as('getFeatureFlags');
   });
 
-  it('Should render divided tables when GPU divider enabled', () => {
+  it('Should render GPU plans in Linodes Create', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
@@ -390,26 +404,22 @@ describe('displays specific linode plans for GPU', () => {
       .click();
 
     // GPU tab
-    // Should display two separate tables
+    // Confirm that the expected notice/error banners are present:
+    //
+    // - General availability notice explaining that Nvidia Ada plans are available.
+    // - Region availability error explaining that GPU plans are unavailable in the mocked region.
     cy.findByText('GPU').click();
     cy.get(linodePlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 3);
+      cy.contains(GPU_GENERAL_AVAILABILITY_NOTICE).should('be.visible');
+      cy.contains(GPU_NO_AVAILABILITY_ERROR).should('be.visible');
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
-        name: 'List of NVIDIA RTX 4000 Ada Plans',
+        name: 'List of Linode Plans',
       }).within(() => {
-        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[id="gpu-2"]').should('be.disabled');
-      });
-
-      cy.findByRole('table', {
-        name: 'List of NVIDIA Quadro RTX 6000 Plans',
-      }).within(() => {
-        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
         cy.get('[id="gpu-1"]').should('be.disabled');
+        cy.get('[id="gpu-2"]').should('be.disabled');
       });
     });
   });
@@ -430,7 +440,7 @@ describe('displays specific kubernetes plans for GPU', () => {
     }).as('getFeatureFlags');
   });
 
-  it('Should render divided tables when GPU divider enabled', () => {
+  it('Should render GPU plans in Kubernetes Create', () => {
     cy.visitWithLogin('/kubernetes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
@@ -439,29 +449,24 @@ describe('displays specific kubernetes plans for GPU', () => {
       .click();
 
     // GPU tab
-    // Should display two separate tables
+    // Confirm that the expected notice/error banners are present:
+    //
+    // - General availability notice explaining that Nvidia Ada plans are available.
+    // - Region availability error explaining that GPU plans are unavailable in the mocked region.
     cy.findByText('GPU').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 3);
-      cy.get(notices.unavailable).should('be.visible');
+      cy.contains(GPU_GENERAL_AVAILABILITY_NOTICE).should('be.visible');
+      cy.contains(GPU_NO_AVAILABILITY_ERROR).should('be.visible');
 
       cy.findByRole('table', {
-        name: 'List of NVIDIA RTX 4000 Ada Plans',
+        name: 'List of Linode Plans',
       }).within(() => {
-        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
+        cy.findAllByRole('row').should('have.length', 3);
+        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
         cy.get('[data-qa-plan-row="gpu-2 Ada"]').should(
           'have.attr',
           'disabled'
         );
-      });
-
-      cy.findByRole('table', {
-        name: 'List of NVIDIA Quadro RTX 6000 Plans',
-      }).within(() => {
-        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
-        cy.findAllByRole('row').should('have.length', 2);
-        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
       });
     });
   });

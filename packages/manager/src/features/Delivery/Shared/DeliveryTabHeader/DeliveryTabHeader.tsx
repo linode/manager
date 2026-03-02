@@ -1,4 +1,4 @@
-import { Autocomplete, Button } from '@linode/ui';
+import { Autocomplete, Box, Button, SelectedIcon } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -7,20 +7,19 @@ import * as React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 
 import type { Theme } from '@mui/material/styles';
-import type { LabelValueOption } from 'src/features/Delivery/Shared/types';
+import type { AutocompleteOption } from 'src/features/Delivery/Shared/types';
 
 export interface DeliveryTabHeaderProps {
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
-  entity?: string;
+  entity: string;
   isSearching?: boolean;
-  loading?: boolean;
   onButtonClick?: () => void;
   onSearch?: (label: string) => void;
   onSelect?: (status: string) => void;
   searchValue?: string;
-  selectList?: LabelValueOption[];
+  selectList?: AutocompleteOption[];
   selectValue?: string;
   spacingBottom?: 0 | 4 | 16 | 24;
 }
@@ -30,10 +29,9 @@ export const DeliveryTabHeader = ({
   createButtonText,
   disabledCreateButton,
   entity,
-  loading,
   onButtonClick,
   spacingBottom = 24,
-  isSearching,
+  isSearching = false,
   selectList,
   onSelect,
   selectValue,
@@ -43,13 +41,6 @@ export const DeliveryTabHeader = ({
   const theme = useTheme();
 
   const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-  const customBreakpoint = 636;
-  const customXsDownBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down(customBreakpoint)
-  );
-  const customSmMdBetweenBreakpoint = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.between(customBreakpoint, 'md')
-  );
   const searchLabel = `Search for a ${entity}`;
 
   return (
@@ -68,29 +59,24 @@ export const DeliveryTabHeader = ({
           alignItems: 'center',
           display: 'flex',
           flexWrap: xsDown ? 'wrap' : 'nowrap',
-          gap: 3,
+          gap: `${theme.spacingFunction(24)} 0`,
           justifyContent:
             onSearch && searchValue !== undefined
               ? 'space-between'
               : 'flex-end',
           flex: '1 1 auto',
 
-          marginLeft: customSmMdBetweenBreakpoint
-            ? theme.spacingFunction(16)
-            : customXsDownBreakpoint
-              ? theme.spacingFunction(8)
-              : undefined,
-          marginRight: customSmMdBetweenBreakpoint
-            ? theme.spacingFunction(16)
-            : customXsDownBreakpoint
-              ? theme.spacingFunction(8)
-              : undefined,
+          marginLeft: 0,
+          marginRight: 0,
         }}
       >
         {onSearch && searchValue !== undefined && (
           <DebouncedSearchTextField
             clearable
             hideLabel
+            inputProps={{
+              'data-pendo-id': `Logs Delivery ${entity}s-Search`,
+            }}
             isSearching={isSearching}
             label={searchLabel}
             onSearch={onSearch}
@@ -108,15 +94,42 @@ export const DeliveryTabHeader = ({
               }}
               options={selectList}
               placeholder="Select"
+              renderOption={(props, option, { selected }) => {
+                return (
+                  <li
+                    {...props}
+                    data-pendo-id={option.pendoId}
+                    data-qa-option
+                    key={props.key}
+                  >
+                    <Box
+                      sx={{
+                        flexGrow: 1,
+                      }}
+                    >
+                      {option.label}
+                    </Box>
+                    <SelectedIcon visible={selected} />
+                  </li>
+                );
+              }}
+              textFieldProps={{
+                inputProps: {
+                  'data-pendo-id': `Logs Delivery ${entity}s-Status`,
+                },
+              }}
               value={selectList.find(({ value }) => value === selectValue)}
             />
           )}
           {onButtonClick && (
             <Button
               buttonType="primary"
+              data-pendo-id={`Logs Delivery ${entity}s-Create ${entity}`}
               disabled={disabledCreateButton}
-              loading={loading}
               onClick={onButtonClick}
+              sx={{
+                whiteSpace: 'nowrap',
+              }}
               {...buttonDataAttrs}
             >
               {createButtonText ?? `Create ${entity}`}
@@ -132,7 +145,10 @@ const StyledActions = styled('div')(({ theme }) => ({
   display: 'flex',
   gap: theme.spacingFunction(24),
   justifyContent: 'flex-end',
-  marginLeft: 'auto',
+
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: 'auto',
+  },
 
   '& .MuiAutocomplete-root > .MuiBox-root': {
     display: 'flex',

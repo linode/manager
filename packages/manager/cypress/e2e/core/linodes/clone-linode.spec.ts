@@ -16,10 +16,7 @@ import {
   dcPricingMockLinodeTypes,
   dcPricingRegionDifferenceNotice,
 } from 'support/constants/dc-specific-pricing';
-import {
-  LINODE_CLONE_TIMEOUT,
-  LINODE_CREATE_TIMEOUT,
-} from 'support/constants/linodes';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { interceptEvents } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -47,7 +44,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion, extendRegion } from 'support/util/regions';
 
-import type { Event, Linode } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -70,6 +67,7 @@ describe('clone linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: false },
+      generationalPlansv2: { enabled: false, allowedPlans: [] },
     });
   });
 
@@ -137,34 +135,17 @@ describe('clone linode', () => {
         const newLinodeId = xhr.response?.body?.id;
         assert.equal(xhr.response?.statusCode, 200);
         cy.url().should('endWith', `linodes/${newLinodeId}/metrics`);
-      });
 
-      ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
-
-      // Change the way to check the clone progress due to M3-9860
-      cy.wait('@cloneEvents').then((xhr) => {
-        const eventData: Event[] = xhr.response?.body?.data;
-        const cloneEvent = eventData.filter(
-          (event: Event) => event['action'] === 'linode_clone'
+        ui.toast.assertMessage(
+          `Your Linode ${newLinodeLabel} is being created.`
         );
-        cy.get('[id="menu-button--notification-events-menu"]')
-          .should('be.visible')
-          .click();
-        cy.get(`[data-qa-event="${cloneEvent[0]['id']}"]`).should('be.visible');
-        cy.get('[data-testid="linear-progress"]').should('be.visible');
-        // The progress bar should disappear when the clone is done.
-        cy.get('[data-testid="linear-progress"]', {
-          timeout: LINODE_CLONE_TIMEOUT,
-        }).should('not.exist');
+        // breadcrumb link
+        cy.get('[data-testid="editable-text').within(() => {
+          cy.findByText(newLinodeLabel).should('be.visible');
+        });
+        // status of new clone is offline
+        cy.findByText('OFFLINE').should('be.visible');
       });
-
-      cy.visit('/linodes');
-      cy.findByText(newLinodeLabel, { timeout: LINODE_CLONE_TIMEOUT }).should(
-        'be.visible'
-      );
-      cy.findByText(linode.label, { timeout: LINODE_CLONE_TIMEOUT }).should(
-        'be.visible'
-      );
     });
   });
 

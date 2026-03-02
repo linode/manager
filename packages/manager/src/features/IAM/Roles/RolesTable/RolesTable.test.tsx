@@ -1,20 +1,19 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { RolesTable } from './RolesTable';
 
 import type { RoleView } from '../../Shared/types';
 
-const queryMocks = {
+const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn(),
-};
+  useSearch: vi.fn(),
+}));
 
 vi.mock('src/features/IAM/Shared/utilities', async () => {
-  const actual = await vi.importActual<any>(
-    'src/features/IAM/Shared/utilities'
-  );
+  const actual = await vi.importActual('src/features/IAM/Shared/utilities');
   return {
     ...actual,
     mapAccountPermissionsToRoles: vi.fn(),
@@ -22,12 +21,18 @@ vi.mock('src/features/IAM/Shared/utilities', async () => {
 });
 
 vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual<any>(
-    'src/features/IAM/hooks/usePermissions'
-  );
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
   return {
     ...actual,
     usePermissions: vi.fn().mockReturnValue({}),
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -59,55 +64,58 @@ beforeEach(() => {
       is_account_admin: true,
     },
   });
+  resizeScreenSize(1200);
 });
 
 describe('RolesTable', () => {
-  it('renders no roles when roles array is empty', async () => {
-    const { getByText, getByTestId } = renderWithTheme(
-      <RolesTable roles={[]} />
-    );
+  beforeEach(() => {
+    queryMocks.useSearch.mockReturnValue({
+      query: '',
+    });
+  });
 
-    expect(getByTestId('roles-table')).toBeInTheDocument();
-    expect(getByText('No items to display.')).toBeInTheDocument();
+  it('renders no roles when roles array is empty', async () => {
+    renderWithTheme(<RolesTable roles={[]} />);
+
+    screen.getByTestId('roles-table');
+    screen.getByText('No items to display.');
   });
 
   it('renders roles correctly when roles array is provided', async () => {
-    const { getByText, getByTestId, getAllByRole } = renderWithTheme(
-      <RolesTable roles={mockRoles} />
-    );
+    const { getAllByRole } = renderWithTheme(<RolesTable roles={mockRoles} />);
 
-    expect(getByTestId('roles-table')).toBeInTheDocument();
+    screen.getByTestId('roles-table');
     expect(getAllByRole('combobox').length).toEqual(1);
-    expect(getByText('Account linode admin')).toBeInTheDocument();
+    screen.getByText('Account linode admin');
   });
 
   it('filters roles to warranted results based on search input', async () => {
-    renderWithTheme(<RolesTable roles={mockRoles} />);
-    const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
-    fireEvent.change(searchInput, { target: { value: 'Account' } });
-
-    await waitFor(() => {
-      expect(screen.getByTestId('roles-table')).toBeInTheDocument();
-      expect(searchInput.value).toBe('Account');
-      // TODO - if there is a way to pierce the shadow DOM, we can check these results, but these tests fail currently
-      // expect(screen.getByText('Account')).toBeInTheDocument();
-      // expect(screen.queryByText('Database')).not.toBeInTheDocument();
-      // expect(screen.getByText('No items to display.')).not.toBeInTheDocument();
+    queryMocks.useSearch.mockReturnValue({
+      query: 'Account',
     });
+
+    renderWithTheme(<RolesTable roles={mockRoles} />);
+
+    const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
+
+    screen.getByTestId('roles-table');
+
+    expect(searchInput.value).toBe('Account');
+    expect(screen.queryByText('Database')).not.toBeInTheDocument();
+    expect(screen.queryByText('No items to display.')).not.toBeInTheDocument();
   });
 
   it('filters roles to no results based on search input if warranted', async () => {
+    queryMocks.useSearch.mockReturnValue({
+      query: 'NonsenseThatWontMatchAnything',
+    });
+
     renderWithTheme(<RolesTable roles={mockRoles} />);
 
     const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
-    fireEvent.change(searchInput, {
-      target: { value: 'NonsenseThatWontMatchAnything' },
-    });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('roles-table')).toBeInTheDocument();
-      expect(searchInput.value).toBe('NonsenseThatWontMatchAnything');
-      expect(screen.getByText('No items to display.')).toBeInTheDocument();
-    });
+    screen.getByTestId('roles-table');
+    expect(searchInput.value).toBe('NonsenseThatWontMatchAnything');
+    screen.getByText('No items to display.');
   });
 });

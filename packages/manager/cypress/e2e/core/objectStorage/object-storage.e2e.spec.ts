@@ -92,7 +92,7 @@ describe('object storage end-to-end tests', () => {
       objectStorageGen2: { enabled: false },
     }).as('getFeatureFlags');
 
-    cy.visitWithLogin('/object-storage');
+    cy.visitWithLogin('/object-storage/buckets');
     cy.wait(['@getFeatureFlags', '@getBuckets', '@getNetworkUtilization']);
 
     // Wait for loader to disappear, indicating that all buckets have been loaded.

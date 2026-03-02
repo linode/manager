@@ -20,7 +20,9 @@ import type {
   Firewall,
   FirewallDevice,
   FirewallDevicePayload,
+  FirewallPrefixList,
   FirewallRules,
+  FirewallRuleSet,
   FirewallSettings,
   FirewallTemplate,
   FirewallTemplateSlug,
@@ -303,5 +305,57 @@ export const getTemplate = (templateSlug: FirewallTemplateSlug) =>
       `${BETA_API_ROOT}/networking/firewalls/templates/${encodeURIComponent(
         templateSlug,
       )}`,
+    ),
+  );
+
+/**
+ * getFirewallRuleSets
+ *
+ * Returns a paginated list of all Cloud Firewall Rule Sets.
+ */
+export const getFirewallRuleSets = (params?: Params, filter?: Filter) =>
+  Request<Page<FirewallRuleSet>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/rulesets`),
+  );
+
+/**
+ * getFirewallRuleSet
+ *
+ * Get a specific Firewall Rule Set by its ID.
+ */
+export const getFirewallRuleSet = (ruleSetID: number) =>
+  Request<FirewallRuleSet>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/networking/firewalls/rulesets/${encodeURIComponent(ruleSetID)}`,
+    ),
+  );
+
+/**
+ * getFirewallPrefixLists
+ *
+ * Returns a paginated list of all Cloud Firewall Prefix Lists.
+ */
+export const getFirewallPrefixLists = (params?: Params, filter?: Filter) =>
+  Request<Page<FirewallPrefixList>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+    setURL(`${BETA_API_ROOT}/networking/prefixlists`),
+  );
+
+/**
+ * getFirewallPrefixList
+ *
+ * Get a specific Firewall Prefix List by its ID.
+ */
+export const getFirewallPrefixList = (prefixListID: number) =>
+  Request<FirewallPrefixList>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/networking/prefixlists/${encodeURIComponent(prefixListID)}`,
     ),
   );

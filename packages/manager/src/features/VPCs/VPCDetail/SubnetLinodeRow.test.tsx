@@ -2,6 +2,7 @@ import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
+  linodeInterfaceFactoryDualStackVPC,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
@@ -31,6 +32,7 @@ const queryMocks = vi.hoisted(() => ({
   useLinodeConfigQuery: vi.fn().mockReturnValue({}),
   useLinodeInterfaceQuery: vi.fn().mockReturnValue({}),
   useLinodeInterfaceFirewallsQuery: vi.fn().mockReturnValue({}),
+  useAccount: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -43,6 +45,7 @@ vi.mock('@linode/queries', async () => {
     useLinodeInterfaceQuery: queryMocks.useLinodeInterfaceQuery,
     useLinodeInterfaceFirewallsQuery:
       queryMocks.useLinodeInterfaceFirewallsQuery,
+    useAccount: queryMocks.useAccount,
   };
 });
 
@@ -100,7 +103,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnetFactory.build()}
           subnetId={0}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-          vpcId={1}
         />
       )
     );
@@ -133,7 +135,6 @@ describe('SubnetLinodeRow', () => {
             subnet={subnetFactory1}
             subnetId={1}
             subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-            vpcId={1}
           />,
           { flags: { vpcIpv6: false } }
         )
@@ -191,7 +192,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnetFactory.build()}
           subnetId={1}
           subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
-          vpcId={1}
         />
       )
     );
@@ -208,7 +208,13 @@ describe('SubnetLinodeRow', () => {
     expect(firewall).toBeVisible();
   });
 
-  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled (config/legacy interface)', async () => {
+  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled and user has VPC Dual Stack account capability (config/legacy interface)', async () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['VPC Dual Stack'],
+      },
+    });
+
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const config = linodeConfigFactory.build({
@@ -232,7 +238,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnetFactory1}
           subnetId={1}
           subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-          vpcId={1}
         />,
         {
           flags: { vpcIpv6: true },
@@ -245,9 +250,15 @@ describe('SubnetLinodeRow', () => {
     await findByText('2001:db8::/64');
   });
 
-  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled (Linode Interface)', async () => {
+  it('should display the VPC IPv6 and VPC IPv6 Ranges when vpcIpv6 feature flag is enabled and user has VPC Dual Stack account capability (Linode Interface)', async () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['VPC Dual Stack'],
+      },
+    });
+
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
-    const vpcLinodeInterface = linodeInterfaceFactoryVPC.build({
+    const vpcLinodeInterface = linodeInterfaceFactoryDualStackVPC.build({
       id: 1,
     });
     queryMocks.useLinodeInterfaceQuery.mockReturnValue({
@@ -270,7 +281,6 @@ describe('SubnetLinodeRow', () => {
           subnetInterfaces={[
             { active: true, config_id: null, id: vpcLinodeInterface.id },
           ]}
-          vpcId={1}
         />,
         {
           flags: { vpcIpv6: true },
@@ -280,10 +290,10 @@ describe('SubnetLinodeRow', () => {
 
     // VPC IPv6 and VPC IPv6 Ranges columns present, so contents of those cells should be populated
     expect(getByTestId('vpc-ipv6-cell')).toHaveTextContent(
-      '2600:3c03::f03c:91ff:fe0a:109a'
+      '2600:3c19:e418:1:2000:4fff:fed1:38c4'
     );
     expect(getByTestId('linode-ipv6-ranges-cell')).toHaveTextContent(
-      '2600:3c03::f03c:91ff:fe0a:109a'
+      '2600:3c19:e418:2::/64'
     );
   });
 
@@ -314,7 +324,6 @@ describe('SubnetLinodeRow', () => {
           subnetInterfaces={[
             { active: true, config_id: config.id, id: vpcInterface.id },
           ]}
-          vpcId={1}
         />
       )
     );
@@ -372,7 +381,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnet}
           subnetId={subnet.id}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-          vpcId={1}
         />
       )
     );
@@ -401,7 +409,6 @@ describe('SubnetLinodeRow', () => {
           subnet={subnet}
           subnetId={subnet.id}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
-          vpcId={1}
         />
       )
     );

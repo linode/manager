@@ -4,14 +4,17 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 import { StreamCreate } from 'src/features/Delivery/Streams/StreamForm/StreamCreate';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 const mockDestinations = [
-  destinationFactory.build({ id: 1, label: 'Destination 1' }),
+  akamaiObjectStorageDestinationFactory.build({
+    id: 1,
+    label: 'Destination 1',
+  }),
 ];
 
 describe('StreamCreate', () => {
@@ -25,9 +28,8 @@ describe('StreamCreate', () => {
             details: {},
           },
           destination: {
-            type: destinationType.LinodeObjectStorage,
+            type: destinationType.AkamaiObjectStorage,
             details: {
-              region: '',
               path: '',
             },
           },
@@ -44,7 +46,7 @@ describe('StreamCreate', () => {
       const createStreamButtonText = 'Create Stream';
 
       const fillOutFormWithNewDestination = async () => {
-        const streamNameInput = screen.getByLabelText('Name');
+        const streamNameInput = screen.getByLabelText('Stream Name');
         await userEvent.type(streamNameInput, 'Test');
         const destinationNameInput = screen.getByLabelText('Destination Name');
         await userEvent.type(destinationNameInput, 'Test destination name');
@@ -57,21 +59,16 @@ describe('StreamCreate', () => {
         await waitFor(() => {
           expect(hostInput).toBeDefined();
         });
-        await userEvent.type(hostInput, 'Test');
+        await userEvent.type(hostInput, 'test');
         const bucketInput = screen.getByLabelText('Bucket');
-        await userEvent.type(bucketInput, 'Test');
-        const regionAutocomplete = screen.getByLabelText('Region');
-        await userEvent.click(regionAutocomplete);
-        await userEvent.type(regionAutocomplete, 'US, Chi');
-        const chicagoRegion = await screen.findByText(
-          'US, Chicago, IL (us-ord)'
-        );
-        await userEvent.click(chicagoRegion);
+        await userEvent.type(bucketInput, 'test');
         const accessKeyIDInput = screen.getByLabelText('Access Key ID');
         await userEvent.type(accessKeyIDInput, 'Test');
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText('Log Path Prefix');
+        const logPathPrefixInput = screen.getByLabelText(
+          'Log Path Prefix (optional)'
+        );
         await userEvent.type(logPathPrefixInput, 'Test');
       };
 
@@ -132,16 +129,11 @@ describe('StreamCreate', () => {
         describe('and selected existing destination', () => {
           const createStreamSpy = vi.fn();
           const createDestinationSpy = vi.fn();
-          const verifyDestinationSpy = vi.fn();
 
           it("should enable Create Stream button and perform proper calls when it's clicked", async () => {
             server.use(
               http.get('*/monitor/streams/destinations', () => {
                 return HttpResponse.json(makeResourcePage(mockDestinations));
-              }),
-              http.post('*/monitor/streams/destinations/verify', () => {
-                verifyDestinationSpy();
-                return HttpResponse.json({});
               }),
               http.post('*/monitor/streams/destinations', () => {
                 createDestinationSpy();
@@ -156,7 +148,7 @@ describe('StreamCreate', () => {
             renderStreamCreate();
 
             // Fill out form and select existing destination
-            const streamNameInput = screen.getByLabelText('Name');
+            const streamNameInput = screen.getByLabelText('Stream Name');
             await userEvent.type(streamNameInput, 'Test');
             const destinationNameInput =
               screen.getByLabelText('Destination Name');
@@ -174,13 +166,8 @@ describe('StreamCreate', () => {
             // Create stream button should not be disabled with existing destination selected
             expect(createStreamButton).toBeEnabled();
 
-            // Test connection
-            await userEvent.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
-
-            await waitFor(() => {
-              expect(createStreamButton).toBeEnabled();
-            });
+            // Test connection should be disabled when using existing destination
+            expect(testConnectionButton).toBeDisabled();
 
             // Create stream
             await userEvent.click(createStreamButton);

@@ -5,6 +5,7 @@ import React from 'react';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
 import type { EntitiesRole } from '../types';
@@ -23,12 +24,21 @@ const props = {
   onSuccess: vi.fn(),
   open: true,
   role: mockRole,
+  username: 'test_user',
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useUpdateDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
+}));
+
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -37,14 +47,8 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
+    useUpdateDefaultDelegationAccessQuery:
+      queryMocks.useUpdateDefaultDelegationAccessQuery,
   };
 });
 
@@ -61,13 +65,13 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('RemoveAssignmentConfirmationDialog', () => {
   beforeEach(() => {
-    queryMocks.useParams.mockReturnValue({
-      username: 'test_user',
-    });
+    vi.clearAllMocks();
   });
 
   it('should render', async () => {
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    renderWithTheme(
+      <RemoveAssignmentConfirmationDialog {...props} username="test_user" />
+    );
 
     const headerText = screen.getByText(
       'Remove the Test entity from the firewall_admin role assignment?'
@@ -130,5 +134,46 @@ describe('RemoveAssignmentConfirmationDialog', () => {
         entity_access: [],
       });
     });
+  });
+
+  it('should render when isDefaultDelegationRolesForChildAccount is true', async () => {
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+
+    const headerText = screen.getByText(
+      'Remove the Test entity from the list?'
+    );
+    expect(headerText).toBeVisible();
+
+    const paragraph = screen.getByText(/Delegate users won’t get the/i);
+
+    expect(paragraph).toBeVisible();
+    expect(paragraph).toHaveTextContent(mockRole.entity_name);
+    expect(paragraph).toHaveTextContent(mockRole.role_name);
+  });
+
+  it('displays error message when there is an API error', async () => {
+    const apiError = [{ reason: 'Failed to load user roles' }];
+
+    queryMocks.useUpdateDefaultDelegationAccessQuery.mockReturnValue({
+      mutateAsync: vi.fn().mockRejectedValue(apiError),
+      isPending: false,
+      error: apiError,
+    });
+
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: true,
+    });
+
+    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    const removeButton = screen.getByText('Remove');
+    expect(removeButton).toBeVisible();
+
+    await userEvent.click(removeButton);
+    await expect(
+      screen.getByText(INTERNAL_ERROR_NO_CHANGES_SAVED)
+    ).toBeVisible();
   });
 });

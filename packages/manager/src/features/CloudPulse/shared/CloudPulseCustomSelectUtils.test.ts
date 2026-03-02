@@ -16,6 +16,7 @@ it('test handleCustomSelectionChange method for single selection', () => {
     filterKey: 'test',
     handleSelectionChange,
     value: selectedValue,
+    dashboardId: 1,
   });
 
   expect(result).toBeDefined();
@@ -36,6 +37,7 @@ it('test handleCustomSelectionChange method for multiple selection', () => {
     filterKey: 'test',
     handleSelectionChange,
     value: selectedValue,
+    dashboardId: 1,
   });
 
   expect(result).toBeDefined();

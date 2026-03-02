@@ -14,8 +14,6 @@ export const createDatabaseSchema = object({
   cluster_size: number()
     .oneOf([1, 2, 3], 'Nodes are required')
     .required('Nodes are required'),
-  replication_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
-  replication_commit_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
 });
 
 export const getDynamicDatabaseSchema = (isVPCSelected: boolean) => {
@@ -29,6 +27,13 @@ export const getDynamicDatabaseSchema = (isVPCSelected: boolean) => {
     }),
   });
 };
+
+export const updateMaintenanceSchema = object({
+  frequency: string().oneOf(['weekly', 'monthly']).optional(),
+  hour_of_day: number(),
+  day_of_week: number(),
+  week_of_month: number().nullable(),
+});
 
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
@@ -212,3 +217,27 @@ export const createDynamicAdvancedConfigSchema = (allConfigurations: any[]) => {
     ),
   });
 };
+
+const DatabaseConnectionPoolSize = number()
+  .typeError('Pool size is required and must be a number')
+  .integer('Pool size must be a whole number')
+  .min(1, 'The minimum pool size for this database is 1.');
+
+export const createDatabaseConnectionPoolSchema = object({
+  database: string().required('Database is required'),
+  mode: string()
+    .oneOf(['transaction', 'session', 'statement'], 'Pool mode is required')
+    .required('Pool mode is required'),
+  label: string()
+    .required('Pool name is required')
+    .max(63, 'Pool name must not exceed 63 characters'),
+  size: DatabaseConnectionPoolSize.required(),
+  username: string().required('Username is required').nullable(),
+});
+
+export const updateDatabaseConnectionPoolSchema = object({
+  database: string().optional(),
+  mode: string().oneOf(['transaction', 'session', 'statement']).optional(),
+  size: DatabaseConnectionPoolSize,
+  username: string().nullable().optional(),
+});

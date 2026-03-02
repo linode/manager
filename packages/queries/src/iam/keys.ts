@@ -1,12 +1,19 @@
 import {
   getAccountRoles,
   getUserAccountPermissions,
+  getUserEntitiesByPermission,
   getUserEntityPermissions,
   getUserRoles,
 } from '@linode/api-v4';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import type { AccessType } from '@linode/api-v4';
+import type {
+  AccessType,
+  EntityByPermission,
+  GetEntitiesByPermissionParams,
+  PermissionType,
+} from '@linode/api-v4';
 
 export const iamQueries = createQueryKeys('iam', {
   user: (username: string) => ({
@@ -26,6 +33,30 @@ export const iamQueries = createQueryKeys('iam', {
         queryFn: () => getUserEntityPermissions(username, entityType, entityId),
         queryKey: [entityType, entityId],
       }),
+      getPaginatedEntitiesByPermission: (
+        entityType: AccessType,
+        permission: PermissionType,
+      ) => ({
+        queryFn: () =>
+          getUserEntitiesByPermission({
+            username,
+            entityType,
+            permission,
+          }).then((res) => res.data ?? []),
+        queryKey: [entityType, permission],
+      }),
+      getAllEntitiesByPermission: (
+        entityType: AccessType,
+        permission: PermissionType,
+      ) => ({
+        queryFn: () =>
+          getAllUserEntitiesByPermission({
+            username,
+            entityType,
+            permission,
+          }).then((res) => res.data ?? []),
+        queryKey: [entityType, permission],
+      }),
     },
     queryKey: [username],
   }),
@@ -34,3 +65,18 @@ export const iamQueries = createQueryKeys('iam', {
     queryKey: null,
   },
 });
+
+export const getAllUserEntitiesByPermission = ({
+  username,
+  entityType,
+  permission,
+}: GetEntitiesByPermissionParams) =>
+  getAll<EntityByPermission>((params, filter) =>
+    getUserEntitiesByPermission({
+      username,
+      entityType,
+      permission,
+      params,
+      filter,
+    }),
+  )();

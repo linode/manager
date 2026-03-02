@@ -7,14 +7,14 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
-import { destinationFactory } from 'src/factories/delivery';
+import { akamaiObjectStorageDestinationFactory } from 'src/factories';
 import { DestinationEdit } from 'src/features/Delivery/Destinations/DestinationForm/DestinationEdit';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 const destinationId = 123;
-const mockDestination = destinationFactory.build({
+const mockDestination = akamaiObjectStorageDestinationFactory.build({
   id: destinationId,
   label: `Destination ${destinationId}`,
 });
@@ -47,23 +47,20 @@ describe('DestinationEdit', () => {
     expect(loadingElement).toBeInTheDocument();
     await waitForElementToBeRemoved(loadingElement);
 
-    assertInputHasValue('Destination Type', 'Linode Object Storage');
+    assertInputHasValue('Destination Type', 'Akamai Object Storage');
     await waitFor(() => {
       assertInputHasValue('Destination Name', 'Destination 123');
     });
-    assertInputHasValue('Host', '3000');
-    assertInputHasValue('Bucket', 'Bucket Name');
-    await waitFor(() => {
-      assertInputHasValue('Region', 'US, Chicago, IL (us-ord)');
-    });
+    assertInputHasValue('Host', 'destinations-bucket-name.host.com');
+    assertInputHasValue('Bucket', 'destinations-bucket-name');
     assertInputHasValue('Access Key ID', 'Access Id');
-    assertInputHasValue('Secret Access Key', 'Access Secret');
-    assertInputHasValue('Log Path Prefix', 'file');
+    assertInputHasValue('Secret Access Key', '');
+    assertInputHasValue('Log Path Prefix (optional)', 'file');
   });
 
   describe('given Test Connection and Edit Destination buttons', () => {
     const testConnectionButtonText = 'Test Connection';
-    const editDestinationButtonText = 'Edit Destination';
+    const saveDestinationButtonText = 'Save Changes';
     const editDestinationSpy = vi.fn();
     const verifyDestinationSpy = vi.fn();
 
@@ -92,19 +89,23 @@ describe('DestinationEdit', () => {
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
         });
-        const editDestinationButton = screen.getByRole('button', {
-          name: editDestinationButtonText,
+        const saveDestinationButton = screen.getByRole('button', {
+          name: saveDestinationButtonText,
         });
 
-        expect(editDestinationButton).toBeDisabled();
+        // Enter Secret Access Key
+        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        await userEvent.type(secretAccessKeyInput, 'Test');
+
+        expect(saveDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
 
         await waitFor(() => {
-          expect(editDestinationButton).toBeEnabled();
+          expect(saveDestinationButton).toBeEnabled();
         });
 
-        await userEvent.click(editDestinationButton);
+        await userEvent.click(saveDestinationButton);
         expect(editDestinationSpy).toHaveBeenCalled();
       });
     });
@@ -130,16 +131,20 @@ describe('DestinationEdit', () => {
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
         });
-        const editDestinationButton = screen.getByRole('button', {
-          name: editDestinationButtonText,
+        const saveDestinationButton = screen.getByRole('button', {
+          name: saveDestinationButtonText,
         });
 
-        expect(editDestinationButton).toBeDisabled();
+        // Enter Secret Access Key
+        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        await userEvent.type(secretAccessKeyInput, 'Test');
+
+        expect(saveDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
 
         await waitFor(() => {
-          expect(editDestinationButton).toBeDisabled();
+          expect(saveDestinationButton).toBeDisabled();
         });
       });
     });

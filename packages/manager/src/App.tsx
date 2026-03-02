@@ -20,6 +20,9 @@ export const App = withDocumentTitleProvider(
       window.location.pathname === '/oauth/callback' ||
       window.location.pathname === '/admin/callback';
 
+    const { isLoading } = useInitialRequests();
+    const { areFeatureFlagsLoading } = useSetupFeatureFlags();
+
     if (isAuthCallback) {
       return (
         <ErrorBoundaryFallback>
@@ -28,9 +31,6 @@ export const App = withDocumentTitleProvider(
         </ErrorBoundaryFallback>
       );
     }
-
-    const { isLoading } = useInitialRequests();
-    const { areFeatureFlagsLoading } = useSetupFeatureFlags();
 
     if (isLoading || areFeatureFlagsLoading) {
       return <SplashScreen />;

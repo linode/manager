@@ -81,7 +81,7 @@ export const Default: Story = {
         }}
         onApply={() => {}}
         presetsProps={{
-          defaultValue: 'Last 7 days',
+          defaultValue: DateTimeRangePicker.PRESET_LABELS.LAST_7_DAYS,
           enablePresets: true,
         }}
         startDateProps={{
@@ -96,7 +96,7 @@ export const Default: Story = {
 export const WithPresets: Story = {
   args: {
     presetsProps: {
-      defaultValue: 'last 30 days',
+      defaultValue: DateTimeRangePicker.PRESET_LABELS.LAST_30_DAYS,
       enablePresets: true,
     },
   },

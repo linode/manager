@@ -20,11 +20,14 @@ it('test getDashboardProperties method', () => {
     filterValue: { region: 'us-east' },
     resource: 1,
     groupBy: [],
+    region: 'us-east',
   });
 
   expect(result).toBeDefined();
   expect(result.dashboardId).toEqual(mockDashboard.id);
+  expect(result.serviceType).toEqual(mockDashboard.service_type);
   expect(result.resources).toEqual(['1']);
+  expect(result.region).toEqual('us-east');
 });
 
 it('test checkMandatoryFiltersSelected method for time duration and resource', () => {
@@ -93,6 +96,29 @@ it('test checkMandatoryFiltersSelected method for role', () => {
   expect(result).toBe(true);
 });
 
+it('checkMandatoryFiltersSelected method should return false if no region is selected for objectstorage service type', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+  });
+  expect(result).toBe(false);
+});
+
+it('checkMandatoryFiltersSelected method should return true if region is selected for objectstorage service type', () => {
+  const result = checkMandatoryFiltersSelected({
+    dashboardObj: { ...mockDashboard, service_type: 'objectstorage', id: 6 },
+    filterValue: {},
+    resource: 1,
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
+    groupBy: [],
+    region: 'ap-west',
+  });
+  expect(result).toBe(true);
+});
+
 it('test constructDimensionFilters method', () => {
   mockDashboard.service_type = 'dbaas';
   const result = constructDimensionFilters({
@@ -105,6 +131,18 @@ it('test constructDimensionFilters method', () => {
   expect(result.length).toEqual(1);
   expect(result[0].filterKey).toEqual('node_type');
   expect(result[0].filterValue).toEqual('primary');
+});
+
+it('test constructDimensionFilters method for endpoints only dashboard', () => {
+  const result = constructDimensionFilters({
+    dashboardObj: { ...mockDashboard, id: 10, service_type: 'objectstorage' },
+    filterValue: {},
+    resource: 'us-east-1.linodeobjects.com',
+    groupBy: [],
+  });
+  expect(result.length).toEqual(1);
+  expect(result[0].filterKey).toEqual('endpoint');
+  expect(result[0].filterValue).toEqual(['us-east-1.linodeobjects.com']);
 });
 
 it('test checkIfFilterNeededInMetricsCall method', () => {

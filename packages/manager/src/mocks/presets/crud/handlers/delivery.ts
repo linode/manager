@@ -1,8 +1,13 @@
 import { destinationType } from '@linode/api-v4';
+import { omitProps } from '@linode/ui';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { destinationFactory, streamFactory } from 'src/factories/delivery';
+import {
+  akamaiObjectStorageDestinationFactory,
+  customHttpsDestinationFactory,
+  streamFactory,
+} from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
@@ -13,9 +18,11 @@ import {
 } from 'src/mocks/utilities/response';
 
 import type {
+  AkamaiObjectStorageDetails,
+  AkamaiObjectStorageDetailsPayload,
   CreateDestinationPayload,
+  CustomHTTPSDetailsExtended,
   Destination,
-  LinodeObjectStorageDetails,
   Stream,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -73,7 +80,7 @@ export const createStreams = (mockState: MockState) => [
         destinations: payload['destinations'].map((destinationId: number) =>
           destinations?.find(({ id }) => id === destinationId)
         ),
-        details: payload['details'],
+        details: payload['details'] ?? null,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });
@@ -221,19 +228,46 @@ export const createDestinations = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
       const payload: CreateDestinationPayload = await request.clone().json();
-      const details = payload.details;
-      const destination = destinationFactory.build({
-        label: payload.label,
-        type: payload.type,
-        details: {
-          ...details,
-          ...(payload.type === destinationType.LinodeObjectStorage
-            ? { path: (details as LinodeObjectStorageDetails).path ?? null }
-            : {}),
-        },
-        created: DateTime.now().toISO(),
-        updated: DateTime.now().toISO(),
-      });
+      const { label, type, details } = payload;
+
+      const authenticationDetails = (details as CustomHTTPSDetailsExtended)
+        .authentication?.details;
+      const created = DateTime.now().toISO();
+      const updated = DateTime.now().toISO();
+
+      const destination =
+        type === destinationType.AkamaiObjectStorage
+          ? akamaiObjectStorageDestinationFactory.build({
+              label,
+              type,
+              details: {
+                ...omitProps(details as AkamaiObjectStorageDetailsPayload, [
+                  'access_key_secret',
+                ]),
+                ...{
+                  path: (details as AkamaiObjectStorageDetails).path ?? null,
+                },
+              },
+              created,
+              updated,
+            })
+          : customHttpsDestinationFactory.build({
+              label,
+              type,
+              details: {
+                ...details,
+                authentication: {
+                  ...(details as CustomHTTPSDetailsExtended).authentication,
+                  details: authenticationDetails
+                    ? omitProps(authenticationDetails, [
+                        'basic_authentication_password',
+                      ])
+                    : undefined,
+                },
+              },
+              created,
+              updated,
+            });
 
       await mswDB.add('destinations', destination, mockState);
 

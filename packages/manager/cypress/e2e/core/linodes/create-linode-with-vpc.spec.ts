@@ -311,7 +311,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
       .click();
 
     // Check box to assign public IPv4.
-    cy.findByText('Assign a public IPv4 address for this Linode')
+    cy.findByText('Allow public IPv4 access (1:1 NAT)')
       .should('be.visible')
       .click();
 
@@ -476,8 +476,11 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
-    // Select VPC card
-    linodeCreatePage.selectInterfaceCard('VPC');
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
+    // Select VPC
+    linodeCreatePage.selectInterface('vpc');
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
@@ -548,7 +551,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
    * - Confirms that outgoing API request contains expected VPC interface data.
    * - Confirms newly assigned Linode does not have an unrecommended config notice inside VPC
    */
-  it('can assign existing VPCs during Linode Create flow (Linode Inteface)', () => {
+  it('can assign existing VPCs during Linode Create flow (Linode Interface)', () => {
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
       ipv4: `${randomIp()}/0`,
@@ -612,11 +615,8 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
-
-    // Select VPC card
-    linodeCreatePage.selectInterfaceCard('VPC');
+    // Select VPC option
+    linodeCreatePage.selectInterface('vpc');
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
@@ -750,8 +750,11 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
     // Select VPC card
-    linodeCreatePage.selectInterfaceCard('VPC');
+    linodeCreatePage.selectInterface('vpc');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -820,7 +823,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       .click();
 
     // Check box to assign public IPv4.
-    cy.findByText('Assign a public IPv4 address for this Linode')
+    cy.findByText('Allow public IPv4 access (1:1 NAT)')
       .should('be.visible')
       .click();
 
@@ -933,11 +936,8 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm the Linode Interfaces section is shown.
     assertNewLinodeInterfacesIsAvailable();
 
-    // Switch to Linode Interfaces
-    linodeCreatePage.selectLinodeInterfacesType();
-
     // Select VPC card
-    linodeCreatePage.selectInterfaceCard('VPC');
+    linodeCreatePage.selectInterface('vpc');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -1005,7 +1005,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       .click();
 
     // Check box to assign public IPv4.
-    cy.findByText('Assign a public IPv4 address for this Linode')
+    cy.findByText('Allow public IPv4 access (1:1 NAT)')
       .should('be.visible')
       .click();
 
@@ -1068,7 +1068,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card.
-    linodeCreatePage.selectInterfaceCard('VPC');
+    linodeCreatePage.selectInterface('vpc');
 
     // Confirm that VPC selection is disabled.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {

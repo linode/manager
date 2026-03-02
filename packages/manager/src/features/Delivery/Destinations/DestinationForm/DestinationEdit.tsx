@@ -4,7 +4,7 @@ import {
   useDestinationQuery,
   useUpdateDestinationMutation,
 } from '@linode/queries';
-import { Box, CircleProgress, ErrorState } from '@linode/ui';
+import { Box, CircleProgress, ErrorState, omitProps } from '@linode/ui';
 import { destinationFormSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
@@ -14,6 +14,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { getDestinationPayloadDetails } from 'src/features/Delivery/deliveryUtils';
 import { DestinationForm } from 'src/features/Delivery/Destinations/DestinationForm/DestinationForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -45,15 +46,15 @@ export const DestinationEdit = () => {
         },
       ],
     },
+    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: [1, 2],
     title: `Edit Destination ${destinationId}`,
   };
 
   const form = useForm<DestinationFormType>({
     defaultValues: {
-      type: destinationType.LinodeObjectStorage,
+      type: destinationType.AkamaiObjectStorage,
       details: {
-        region: '',
         path: '',
       },
     },
@@ -78,9 +79,14 @@ export const DestinationEdit = () => {
   }, [destination, form]);
 
   const onSubmit = () => {
+    const formValues = form.getValues();
     const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
-      ...form.getValues(),
+      ...omitProps(formValues, ['type']),
+      details: getDestinationPayloadDetails(
+        formValues.details,
+        formValues.type
+      ),
     };
 
     updateDestination(destination)

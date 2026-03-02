@@ -1,3 +1,195 @@
+## [2026-02-25] - v0.157.0
+
+
+### Added:
+
+- New quota properties ([#13177](https://github.com/linode/manager/pull/13177))
+- `Maintenance Policy` to Linode Capabilities ([#13269](https://github.com/linode/manager/pull/13269))
+
+### Changed:
+
+- Adjust Custom HTTPS Destination types ([#13274](https://github.com/linode/manager/pull/13274))
+- Adjust Custom HTTPS Destination types: content type, data compression, custom headers ([#13331](https://github.com/linode/manager/pull/13331))
+- Delivery Logs - adjust DestinationDetailsPayload type for Custom HTTPS destinations ([#13380](https://github.com/linode/manager/pull/13380))
+- New fields in the NodeBalancer details object and NodeBalancerVPC object to align with recent API updates ([#13394](https://github.com/linode/manager/pull/13394))
+
+### Removed:
+
+- The value 'in-progress' from cloudpulse/types.ts ([#13406](https://github.com/linode/manager/pull/13406))
+
+### Tech Stories:
+
+- Clean up unused marketplace v2 apiv4 endpoints ([#13396](https://github.com/linode/manager/pull/13396))
+
+### Upcoming Features:
+
+- RESPROT2- Added lock permissions to IAM types (AccountAdmin and AccountViewer ) ([#13305](https://github.com/linode/manager/pull/13305))
+- Rename the marketplace contact sales POST API route ([#13368](https://github.com/linode/manager/pull/13368))
+- Deprecate connection_pool_port, add endpoints property to DatabaseHosts ([#13386](https://github.com/linode/manager/pull/13386))
+- Update types for network load balancer integration with `CloudPulse Metrics` ([#13387](https://github.com/linode/manager/pull/13387))
+
+## [2026-01-26] - v0.156.0
+
+
+### Fixed:
+
+- IAM Delegation: fix payload for updateChildAccountDelegates ([#13260](https://github.com/linode/manager/pull/13260))
+
+### Tech Stories:
+
+- Clean up unused VPC IPv6 Large Prefixes tag ([#13245](https://github.com/linode/manager/pull/13245))
+
+### Upcoming Features:
+
+- CloudPulse-Alerts: Add `DeleteChannelPayload` type and request for deletion of a notification channel ([#13256](https://github.com/linode/manager/pull/13256))
+- Added locks property to Linode interface,added lock create and delete event keys, refactored Lock types ([#13286](https://github.com/linode/manager/pull/13286))
+- New type `NotificationChannelAlerts`, request `getAlertsByNotificationChannelId` to fetch alerts associated to a notification channel ([#13294](https://github.com/linode/manager/pull/13294))
+
+## [2026-01-12] - v0.155.0
+
+
+### Added:
+
+- `Akamai Cloud Pulse Logs LKE-E Audit ` to the `AccountCapability` type ([#13171](https://github.com/linode/manager/pull/13171))
+
+### Changed:
+
+- Use v4beta endpoints for /events and /events/<eventId> ([#13084](https://github.com/linode/manager/pull/13084))
+- Renamed updated_at, created_at to updated,created in NotificationChannelBase interface ([#13193](https://github.com/linode/manager/pull/13193))
+- Updated getDatabaseConnectionPools signature to accept params for pagination ([#13195](https://github.com/linode/manager/pull/13195))
+- AlertNotificationType from `custom | default` to `user | system`  ([#13203](https://github.com/linode/manager/pull/13203))
+- ACLP-Alerting: Notification Channel types to support API changes and backward compatibility  ([#13227](https://github.com/linode/manager/pull/13227))
+- Move to `v4 endpoint` instead of v4beta for `CloudPulse metrics` api calls ([#13239](https://github.com/linode/manager/pull/13239))
+
+### Upcoming Features:
+
+- Add new API endpoints and types for Resource Locking feature(RESPROT2) ([#13187](https://github.com/linode/manager/pull/13187))
+- Change range property of IPv6SLAAC to be optional ([#13209](https://github.com/linode/manager/pull/13209))
+- Add API endpoints for `Marketplace` ([#13215](https://github.com/linode/manager/pull/13215))
+- CloudPulse-Alerts: Add `CreateNotificationChannelPayload` in types.ts and add request function `createNotificationChannel` in alerts.ts ([#13225](https://github.com/linode/manager/pull/13225))
+- CloudPulse-Alerts: Add type for edition of notification channel payload ([#13235](https://github.com/linode/manager/pull/13235))
+
+## [2025-12-16] - v0.154.1
+
+
+### Added:
+
+- `Akamai Cloud Pulse Logs LKE-E Audit` to the `AccountCapability` type ([#13171](https://github.com/linode/manager/pull/13171))
+
+## [2025-12-09] - v0.154.0
+
+
+### Changed:
+
+- Update database restoreWithBackup data to include region ([#13097](https://github.com/linode/manager/pull/13097))
+- Add private_network to `DatabaseBackupsPayload` ([#13174](https://github.com/linode/manager/pull/13174))
+
+### Tech Stories:
+
+- Add `@types/node` as a devDependency ([#13119](https://github.com/linode/manager/pull/13119))
+
+### Upcoming Features:
+
+- Add new API endpoints and types for Network Load Balancers ([#13078](https://github.com/linode/manager/pull/13078))
+- Update FirewallRuleType to support ruleset ([#13079](https://github.com/linode/manager/pull/13079))
+- Add additional status types `enabling`, `disabling`, `provisioning` in CloudPulse alerts ([#13127](https://github.com/linode/manager/pull/13127))
+- CloudPulse-Metrics: Update `entity_ids` type in `CloudPulseMetricsRequest` for metrics api in endpoints dahsboard ([#13133](https://github.com/linode/manager/pull/13133))
+- Add `deleted` property to `FirewallPrefixList` type after API update ([#13146](https://github.com/linode/manager/pull/13146))
+- Added Database Connection Pool types and endpoints ([#13148](https://github.com/linode/manager/pull/13148))
+- Add 'Cloud Firewall Rule Set' to AccountCapability type ([#13156](https://github.com/linode/manager/pull/13156))
+
+## [2025-11-18] - v0.153.0
+
+
+### Added:
+
+- IAM Parent/Child: delegate permissions ([#13033](https://github.com/linode/manager/pull/13033))
+- Added `Akamai Cloud Pulse Logs ` to the `AccountCapability` type ([#13062](https://github.com/linode/manager/pull/13062))
+
+### Changed:
+
+- IAM: cleanup for nodebalancer permissions ([#13017](https://github.com/linode/manager/pull/13017))
+
+### Upcoming Features:
+
+- Clean up Delivery Stream and Destination interfaces ([#13038](https://github.com/linode/manager/pull/13038))
+- Add new API endpoints, and types for Firewall RS & PL ([#13061](https://github.com/linode/manager/pull/13061))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` and `CapabilityServiceTypeMapping` at types.ts for new service - lke ([#13064](https://github.com/linode/manager/pull/13064))
+- New IAM getUserEntitiesByPermission endpoint ([#13070](https://github.com/linode/manager/pull/13070))
+
+## [2025-11-04] - v0.152.0
+
+
+### Changed:
+
+- Change `/linode/instances/<id>/clone` endpoint to use `v4beta` ([#13045](https://github.com/linode/manager/pull/13045))
+
+### Upcoming Features:
+
+- Add endpoints for `/v4/images/sharegroups/members` and `/v4/images/sharegroups/tokens` ([#12984](https://github.com/linode/manager/pull/12984))
+- Add endpoints for `/v4/images/sharegroups` and `/v4/images/sharegroups/images` ([#12985](https://github.com/linode/manager/pull/12985))
+- Add new `filters` prop in AclpWidget type and update `Filters` type to use `DimensionFilterOperatorType` for operator ([#13006](https://github.com/linode/manager/pull/13006))
+
+## [2025-10-21] - v0.151.0
+
+
+### Added:
+
+- Volume io_ready property ([#12903](https://github.com/linode/manager/pull/12903))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` type and `capabilityServiceTypeMapping` constant in `types.ts` ([#12931](https://github.com/linode/manager/pull/12931))
+
+### Changed:
+
+- DatabaseInstance interface host prop to include null type ([#12976](https://github.com/linode/manager/pull/12976))
+
+### Upcoming Features:
+
+- ACLP: add `groupBy` in `AclpWidget` interface of cloudpulse types ([#12969](https://github.com/linode/manager/pull/12969))
+
+## [2025-10-07] - v0.150.0
+
+
+### Added:
+
+- IAM Parent/Child - Implement new delegation types and endpoints definitions ([#12895](https://github.com/linode/manager/pull/12895))
+- CloudPulse-Metrics: Update `CloudPulseServiceType` and constant `capabilityServiceTypeMapping` at `types.ts` ([#12905](https://github.com/linode/manager/pull/12905))
+- Region VPC availability types and endpoints ([#12919](https://github.com/linode/manager/pull/12919))
+
+### Changed:
+
+- All kubernetes endpoints from `/v4` to `/v4beta`; clean up duplicate endpoints ([#12867](https://github.com/linode/manager/pull/12867))
+- CloudPulse-Alerts: Update `CloudPulseAlertsPayload` in types.ts ([#12870](https://github.com/linode/manager/pull/12870))
+- ACLP: update `group_by` property to optional for `Widgets` and `CloudPulseMetricRequest` interface ([#12887](https://github.com/linode/manager/pull/12887))
+- CloudPulse-Metrics: Update `CloudPulseMetricsRequest` and `JWETokenPayLoad` type at `types.ts` ([#12912](https://github.com/linode/manager/pull/12912))
+
+### Upcoming Features:
+
+- Update Destination's details interface ([#12851](https://github.com/linode/manager/pull/12851))
+- Logs Delivery Stream details type update and UpdateDestinationPayload update according to API docs ([#12898](https://github.com/linode/manager/pull/12898))
+
+## [2025-09-23] - v0.149.0
+
+### Added:
+
+- Images IAM RBAC types ([#12782](https://github.com/linode/manager/pull/12782))
+- LKE-E Phase 2 account capabilities (Kubernetes Enterprise BYO VPC, Kubernetes Enterprise Dual Stack) ([#12826](https://github.com/linode/manager/pull/12826))
+- VPC Dual Stack capability for regions ([#12826](https://github.com/linode/manager/pull/12826))
+- ACLP: `group_by` property in Dashboard interface ([#12843](https://github.com/linode/manager/pull/12843))
+
+### Changed:
+
+- Update `UpdateVolumeRequest` to reflect optional `label` ([#12800](https://github.com/linode/manager/pull/12800))
+- Update `DiskDevice` and `VolumeDevice` to more closely align with the API's behavior ([#12809](https://github.com/linode/manager/pull/12809))
+- GET and PUT /account to /v4beta endpoint ([#12826](https://github.com/linode/manager/pull/12826))
+
+### Upcoming Features:
+
+- Update LinodeInterfaceHistory type as per API type changes ([#12321](https://github.com/linode/manager/pull/12321))
+- Add audit_logs_enabled property to KubernetesCluster's ControlPlaneOptions interface ([#12696](https://github.com/linode/manager/pull/12696))
+- Make `address` an optional property on the IPv6SLAAC object ([#12778](https://github.com/linode/manager/pull/12778))
+- POST v4beta/monitor/streams/destinations/verify API endpoint for Destinations ([#12823](https://github.com/linode/manager/pull/12823))
+- Rename DataStream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
 ## [2025-09-09] - v0.148.0
 
 ### Added:
