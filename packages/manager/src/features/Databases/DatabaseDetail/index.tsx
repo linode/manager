@@ -7,7 +7,6 @@ import {
   BetaChip,
   CircleProgress,
   ErrorState,
-  NewFeatureChip,
   Notice,
   Typography,
 } from '@linode/ui';
@@ -84,7 +83,6 @@ export const DatabaseDetail = () => {
       to: `/databases/$engine/$databaseId/networking`,
       title: 'Networking',
       hide: !isVPCEnabled,
-      chip: <NewFeatureChip />,
     },
     {
       to: `/databases/$engine/$databaseId/backups`,
