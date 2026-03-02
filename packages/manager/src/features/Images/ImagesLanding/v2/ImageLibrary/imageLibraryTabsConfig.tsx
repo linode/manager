@@ -4,6 +4,9 @@ import { Link } from 'src/components/Link';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import {
+  AUTOMATIC_IMAGES_DEFAULT_ORDER,
+  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+  AUTOMATIC_IMAGES_PREFERENCE_KEY,
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
@@ -17,14 +20,16 @@ export interface ImageViewTableColConfig {
   /** Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
   hiddenOn?: Exclude<keyof HiddenProps, 'children'>;
 
-  /** Field name for sorting (required if sortable is `true`) */
-  label?: string;
-
   /** Column name */
-  name: React.ReactNode | string;
+  name: string;
 
-  /** Enable sorting for this column */
-  sortable?: boolean;
+  /**
+   * Provide sortableProps to enable sorting for this column.
+   */
+  sortableProps?: {
+    /** API field used for sorting this column */
+    label: string;
+  };
 }
 
 export interface ImageConfig {
@@ -35,9 +40,9 @@ export interface ImageConfig {
   };
   columns: ImageViewTableColConfig[];
   description: React.ReactNode;
-  docsLink?: string;
+  docsLink?: { href: string; label?: string };
   emptyMessage: {
-    instruction: string;
+    instruction?: string;
     main: string;
   };
   eventCategory: string;
@@ -60,7 +65,7 @@ export const imageLibrarySubTabs: ImageLibrarySubTab[] = [
 ];
 
 const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
-  { name: 'Image', label: 'label', sortable: true },
+  { name: 'Image', sortableProps: { label: 'label' } },
   {
     name: 'Status',
     hiddenOn: 'smDown',
@@ -69,15 +74,14 @@ const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
     name: 'Replicated in',
     hiddenOn: 'smDown',
   },
-  { name: 'Original Image', label: 'size', sortable: true },
+  { name: 'Original Image', sortableProps: { label: 'size' } },
   {
     name: 'All Replicas',
     hiddenOn: 'mdDown',
   },
   {
     name: 'Created',
-    label: 'created',
-    sortable: true,
+    sortableProps: { label: 'created' },
     hiddenOn: 'mdDown',
   },
   {
@@ -86,9 +90,27 @@ const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
   },
 ];
 
+const RECOVERY_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
+  { name: 'Image', sortableProps: { label: 'label' } },
+  {
+    name: 'Status',
+    hiddenOn: 'smDown',
+  },
+  { name: 'Size', sortableProps: { label: 'size' } },
+  {
+    name: 'Created',
+    sortableProps: { label: 'created' },
+    hiddenOn: 'smDown',
+  },
+  {
+    name: 'Expires',
+    hiddenOn: 'smDown',
+  },
+];
+
 export const IMAGES_CONFIG: Omit<
   Record<ImageLibraryType, ImageConfig>,
-  'recovery-images' | 'shared-with-me'
+  'shared-with-me'
 > = {
   'owned-by-me': {
     title: 'Owned by me',
@@ -126,5 +148,28 @@ export const IMAGES_CONFIG: Omit<
         'Click \u2018Create Image\u2019 to create your first custom image',
     },
   },
-  // "shared-with-me", and 'recovery-images' images config will go here...
+  'recovery-images': {
+    title: 'Recovery images',
+    description: (
+      <>
+        These are images we automatically capture when Linode disks are deleted.
+        They will be deleted after the indicated expiration date.
+      </>
+    ),
+    type: 'automatic',
+    orderByDefault: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+    orderDefault: AUTOMATIC_IMAGES_DEFAULT_ORDER,
+    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
+    isEnabled: (subType) => subType === 'recovery-images',
+    columns: RECOVERY_IMAGES_TABLE_COLUMNS,
+    eventCategory: 'Recovery Images Table',
+    emptyMessage: {
+      main: 'No recovery images to display',
+    },
+    docsLink: {
+      label: 'Recover a deleted Linode',
+      href: 'https://techdocs.akamai.com/cloud-computing/docs/images#recover-a-deleted',
+    },
+  },
+  // "shared-with-me" images config will go here
 };

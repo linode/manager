@@ -118,7 +118,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
         )}
       </TableCell>
       <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
-        <LastLogin last_login={user.last_login} />
+        <LastLogin last_login={user.last_login} user_type={user.user_type} />
       </TableCell>
 
       <TableCell actionCell>
@@ -137,11 +137,29 @@ export const UserRow = ({ onDelete, user }: Props) => {
  * Display information about a Users last login
  *
  * - The component renders "Never" if last_login is `null`
+ * - The component renders "Not applicable" if the user is a delegate user
  * - The component renders a date if last_login is a success
  * - The component renders a date and a status if last_login is a failure
  */
-const LastLogin = (props: Pick<User, 'last_login'>) => {
-  const { last_login } = props;
+const LastLogin = (props: Pick<User, 'last_login' | 'user_type'>) => {
+  const { last_login, user_type } = props;
+
+  if (user_type === 'delegate') {
+    return (
+      <Typography>
+        Not applicable
+        <TooltipIcon
+          status="info"
+          sxTooltipIcon={{
+            marginLeft: '-9px',
+            marginTop: '-5px',
+          }}
+          text="Last login of delegate users is not displayed."
+          tooltipPosition="right"
+        />
+      </Typography>
+    );
+  }
 
   if (last_login === null) {
     return <Typography>Never</Typography>;
