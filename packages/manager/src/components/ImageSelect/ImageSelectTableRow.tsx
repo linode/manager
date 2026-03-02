@@ -1,8 +1,16 @@
-import { FormControlLabel, ListItem, Radio } from '@linode/ui';
+import {
+  FormControlLabel,
+  Hidden,
+  ListItem,
+  Radio,
+  TooltipIcon,
+} from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import {
   PlanTextTooltip,
   StyledFormattedRegionList,
@@ -12,6 +20,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { TABLE_CELL_BASE_STYLE } from './constants';
 
 import type { Image, ImageRegion } from '@linode/api-v4';
+import type { Theme } from '@linode/ui';
 
 interface Props {
   image: Image;
@@ -23,7 +32,21 @@ interface Props {
 export const ImageSelectTableRow = (props: Props) => {
   const { image, onSelect, selected, timezone } = props;
 
-  const { created, id, image_sharing, label, regions, size, status } = image;
+  const {
+    capabilities,
+    created,
+    id,
+    image_sharing,
+    label,
+    regions,
+    size,
+    status,
+    type,
+  } = image;
+
+  const matchesLgDown = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('lg')
+  );
 
   const getSizeDisplay = () => {
     if (status === 'available') {
@@ -76,29 +99,50 @@ export const ImageSelectTableRow = (props: Props) => {
           onChange={onSelect}
           sx={{ gap: 2 }}
         />
+        {type === 'manual' && capabilities.includes('cloud-init') && (
+          <TooltipIcon
+            icon={<CloudInitIcon />}
+            sxTooltipIcon={{
+              padding: 0,
+            }}
+            text="This image supports our Metadata service via cloud-init."
+          />
+        )}
       </TableCell>
-      <TableCell
-        style={{
-          whiteSpace: 'nowrap',
-          paddingLeft: '58px',
-          ...TABLE_CELL_BASE_STYLE,
-        }}
-      >
-        <PlanTextTooltip
-          displayText={
-            regions.length > 0
-              ? pluralize('Region', 'Regions', regions.length)
-              : '—'
-          }
-          tooltipText={<FormattedRegionList />}
-        />
-      </TableCell>
-      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
-        {getShareGroupDisplay()}
-      </TableCell>
-      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
-        {getSizeDisplay()}
-      </TableCell>
+      <Hidden lgDown>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            paddingLeft: '58px',
+            ...TABLE_CELL_BASE_STYLE,
+          }}
+        >
+          <PlanTextTooltip
+            displayText={
+              regions.length > 0
+                ? pluralize('Region', 'Regions', regions.length)
+                : '—'
+            }
+            tooltipText={<FormattedRegionList />}
+          />
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            paddingLeft: matchesLgDown ? '58px' : undefined,
+            ...TABLE_CELL_BASE_STYLE,
+          }}
+        >
+          {getShareGroupDisplay()}
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
+          {getSizeDisplay()}
+        </TableCell>
+      </Hidden>
       <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
         {formatDate(created, { timezone })}
       </TableCell>

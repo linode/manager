@@ -8,7 +8,7 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Autocomplete,
   Box,
-  IconButton,
+  Hidden,
   Notice,
   Stack,
   TooltipIcon,
@@ -216,31 +216,33 @@ export const ImageSelectTable = (props: Props) => {
               >
                 Image
               </TableHeaderCell>
-              <TableHeaderCell>Replicated in</TableHeaderCell>
-              <TableHeaderCell
-                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-              >
-                <Stack alignItems="center" direction="row">
-                  Share Group
-                  {
-                    <IconButton aria-label="Share group" size="small">
-                      <TooltipIcon
-                        status="info"
-                        sxTooltipIcon={{
-                          padding: '4px',
-                        }}
-                        text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
-                        tooltipPosition="right"
-                      />
-                    </IconButton>
-                  }
-                </Stack>
-              </TableHeaderCell>
-              <TableHeaderCell
-                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-              >
-                Size
-              </TableHeaderCell>
+              <Hidden lgDown>
+                <TableHeaderCell>Replicated in</TableHeaderCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableHeaderCell
+                  style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+                >
+                  <Stack alignItems="center" direction="row">
+                    Share Group
+                    <TooltipIcon
+                      status="info"
+                      sxTooltipIcon={{
+                        padding: '4px',
+                      }}
+                      text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
+                      tooltipPosition="right"
+                    />
+                  </Stack>
+                </TableHeaderCell>
+              </Hidden>
+              <Hidden lgDown>
+                <TableHeaderCell
+                  style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+                >
+                  Size
+                </TableHeaderCell>
+              </Hidden>
               <TableHeaderCell
                 style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
               >
