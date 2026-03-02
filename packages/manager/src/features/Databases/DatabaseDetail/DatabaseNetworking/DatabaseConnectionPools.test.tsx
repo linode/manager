@@ -47,7 +47,6 @@ const mockConnectionPool = databaseConnectionPoolFactory.build({
 const queryMocks = vi.hoisted(() => {
   return {
     useDatabaseConnectionPoolsQuery: vi.fn(),
-    useFlags: vi.fn().mockReturnValue({}),
   };
 });
 
@@ -56,14 +55,6 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useDatabaseConnectionPoolsQuery: queryMocks.useDatabaseConnectionPoolsQuery,
-  };
-});
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
   };
 });
 
@@ -140,11 +131,10 @@ describe('DatabaseConnectionPools Component', () => {
       data: makeResourcePage([mockConnectionPool]),
       isLoading: false,
     });
-    queryMocks.useFlags.mockReturnValue({
-      hostnameEndpoints: true,
-    });
 
-    renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />);
+    renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />, {
+      flags: { hostnameEndpoints: true },
+    });
     const serviceURIText = screen.getByText('Service URI');
     expect(serviceURIText).toBeInTheDocument();
   });
