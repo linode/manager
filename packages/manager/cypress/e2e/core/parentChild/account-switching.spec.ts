@@ -22,6 +22,7 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import {
   mockGetRolePermissionsError,
@@ -151,6 +152,10 @@ const mockAlternateChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
+  beforeEach(() => {
+    // Disable IAM delegation to use legacy child accounts flow for all tests
+    mockAppendFeatureFlags({ iamDelegation: false });
+  });
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */

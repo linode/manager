@@ -251,7 +251,6 @@ export const convertResourceMetric = ({
       convertedResourceMetric: 'Gbps',
       convertedLimit: readableBytes(initialLimit, {
         unit: 'GB',
-        round: 0,
         base10: true,
       }).value,
     };
@@ -272,6 +271,10 @@ export const convertResourceMetric = ({
  * Note: the value should be the raw values in bytes, not an existing conversion
  */
 export const pluralizeMetric = (value: number, unit: string) => {
+  if (unit === 'byte_per_second') {
+    return unit;
+  }
+
   if (unit !== 'byte') {
     return value > 1 ? `${unit}s` : unit;
   }
