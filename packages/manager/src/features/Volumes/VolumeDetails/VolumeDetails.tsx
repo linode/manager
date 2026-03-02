@@ -39,6 +39,13 @@ export const VolumeDetails = () => {
     BLOCK_STORAGE_METRICS_KEY
   );
 
+  const isVolumeMetricsTabHidden =
+    aclpServiceError ||
+    !blockStorageContextualMetrics ||
+    !aclpServices?.blockstorage?.metrics?.enabled ||
+    !regionSupportsMetrics ||
+    !!regionError;
+
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       to: '/volumes/$volumeId/summary',
@@ -47,12 +54,7 @@ export const VolumeDetails = () => {
     {
       to: '/volumes/$volumeId/metrics',
       title: 'Metrics',
-      hide:
-        aclpServiceError ||
-        !blockStorageContextualMetrics ||
-        !aclpServices?.blockstorage?.metrics?.enabled ||
-        !regionSupportsMetrics ||
-        !!regionError,
+      hide: isVolumeMetricsTabHidden,
       chip: aclpServices?.blockstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);
