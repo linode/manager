@@ -432,7 +432,7 @@ const databases = [
   }),
 
   http.get('*/databases/postgresql/instances/:id/connection-pools', () => {
-    const connectionPools = databaseConnectionPoolFactory.buildList(50);
+    const connectionPools = databaseConnectionPoolFactory.buildList(5);
     // For mocking error response
     // return HttpResponse.json({ errors: [{ reason: 'Unable to retrieve connection pools' }] }, { status: 400 });
     return HttpResponse.json(makeResourcePage(connectionPools));
