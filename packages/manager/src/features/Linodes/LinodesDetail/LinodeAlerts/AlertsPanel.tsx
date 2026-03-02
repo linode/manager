@@ -13,6 +13,7 @@ import * as React from 'react';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
+import { getLinodeAlertsInitialValues } from './utilities';
 
 import type { AlertSectionProps } from './AlertSection';
 import type { APIError, Linode } from '@linode/api-v4';
@@ -25,8 +26,8 @@ interface Props {
    */
   error?: APIError[] | null;
   /**
-   * Formik bag passed down from LinodeAlerts in unified mode (ACLP flag ON).
-   * Not needed in standalone or create-flow — those modes manage Formik internally.
+   * Formik passed down from LinodeAlerts in unified mode (ACLP flag ON).
+   * Not needed in standalone or create-flow - those modes manage Formik internally.
    */
   formik?: FormikProps<Linode['alerts']>;
   /**
@@ -34,6 +35,9 @@ interface Props {
    * Combines ACLP flag check and region support
    */
   isAclpAlertingInRegionEnabled?: boolean;
+  /**
+   * Whether the panel is read-only
+   */
   isReadOnly?: boolean;
   /**
    * Loading state for save operation
@@ -83,7 +87,7 @@ export const AlertsPanel = (props: Props) => {
     );
   }
 
-  // Unified mode: formik comes from the parent.
+  // Unified Legacy mode: formik comes from the parent.
   if (isAclpAlertingInRegionEnabled) {
     return (
       <AlertsPanelContent
@@ -122,17 +126,11 @@ const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
         );
       })
       .catch(() => {
-        // Error surfaced via the error prop passed to AlertsPanelContent below.
+        // Error is displayed via the error prop passed to AlertsPanelContent below.
       });
   };
 
-  const initialValues = {
-    cpu: linode?.alerts.cpu ?? 0,
-    io: linode?.alerts.io ?? 0,
-    network_in: linode?.alerts.network_in ?? 0,
-    network_out: linode?.alerts.network_out ?? 0,
-    transfer_quota: linode?.alerts.transfer_quota ?? 0,
-  };
+  const initialValues = getLinodeAlertsInitialValues(linode);
 
   return (
     <Formik

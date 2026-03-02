@@ -25,6 +25,7 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AlertsPanel } from './AlertsPanel';
+import { getLinodeAlertsInitialValues } from './utilities';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 import type { APIError, Linode } from '@linode/api-v4';
@@ -55,13 +56,9 @@ const LinodeAlerts = () => {
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(id);
 
-  const initalValues = {
-    cpu: linode?.alerts.cpu ?? 0,
-    io: linode?.alerts.io ?? 0,
-    network_in: linode?.alerts.network_in ?? 0,
-    network_out: linode?.alerts.network_out ?? 0,
-    transfer_quota: linode?.alerts.transfer_quota ?? 0,
-  };
+  // Note: ACLP alert fields (system_alerts & user_alerts) are intentionally excluded
+  // from initialValues as they are managed separately within AlertReusableComponent.
+  const initialValues = getLinodeAlertsInitialValues(linode);
 
   const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
     React.useState<boolean>(false);
@@ -182,8 +179,8 @@ const LinodeAlerts = () => {
           >
             <Typography>
               Try the <strong>Alerts (Beta)</strong>, featuring new options like
-              customizable alerts. You can switch back to legacy Alerts at any
-              time.
+              customizable alerts. You can keep your legacy alerts and add them
+              to the new Beta Alerts.
             </Typography>
           </DismissibleBanner>
         )}
@@ -201,7 +198,7 @@ const LinodeAlerts = () => {
             )}
             <Formik
               enableReinitialize
-              initialValues={initalValues}
+              initialValues={initialValues}
               onSubmit={handleUnifiedSave}
               validateOnChange
               validationSchema={UpdateLinodeAlertsSchema}

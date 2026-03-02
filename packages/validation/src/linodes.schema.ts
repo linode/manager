@@ -388,9 +388,6 @@ const DiskEncryptionSchema = string()
 
 export const UpdateLinodeAlertsSchema = object({
   cpu: number()
-    // .transform((value, originalValue) =>
-    //   originalValue === '' ? undefined : value,
-    // )
     .required('CPU Usage is required.')
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800'),

@@ -75,8 +75,8 @@ export const Alerts = ({
           serviceType="linode"
         />
       ) : (
-        // Legacy Alerts View (read-only)
-        <AlertsPanel isReadOnly={true} paperSx={{ p: 0 }} />
+        // Legacy Alerts View (read-only with default values)
+        <AlertsPanel paperSx={{ p: 0 }} />
       )}
     </Accordion>
   );

@@ -181,7 +181,7 @@ describe('LinodeAlerts — unified mode (aclpServices.linode.alerts.enabled + re
     const { getByTestId } = renderWithTheme(<LinodeAlerts />, { flags });
 
     expect(getByTestId('notice-info')).toHaveTextContent(
-      'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.'
+      'Try the Alerts (Beta), featuring new options like customizable alerts. You can keep your legacy alerts and add them to the new Beta Alerts.'
     );
   });
 });
