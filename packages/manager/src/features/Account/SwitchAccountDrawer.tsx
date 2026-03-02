@@ -103,7 +103,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           }
         : undefined,
     },
-    isIAMDelegationEnabled === false
+    isIAMDelegationEnabled === false && isParentUserType
   );
 
   const {
@@ -170,7 +170,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         // Error is handled by createTokenError.
       }
     },
-    [createToken, updateCurrentToken, revokeToken, isIAMDelegationEnabled]
+    [createToken, isIAMDelegationEnabled, updateCurrentToken, revokeToken]
   );
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
