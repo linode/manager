@@ -3,13 +3,7 @@ import {
   useDatabaseQuery,
   useDatabaseTypesQuery,
 } from '@linode/queries';
-import {
-  BetaChip,
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { useEditableLabelState } from '@linode/utilities';
 import {
   Outlet,
@@ -19,7 +13,6 @@ import {
 } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -68,7 +61,7 @@ export const DatabaseDetail = () => {
 
   const settingsTabPath = `/databases/$engine/$databaseId/settings`;
 
-  const { tabs, tabIndex, handleTabChange, getTabIndex } = useTabs([
+  const { tabs, tabIndex, handleTabChange } = useTabs([
     {
       to: `/databases/$engine/$databaseId/summary`,
       title: 'Summary',
@@ -151,8 +144,6 @@ export const DatabaseDetail = () => {
       });
   };
 
-  const onSettingsTab = tabIndex === getTabIndex(settingsTabPath);
-
   return (
     <DatabaseDetailContext.Provider
       value={{
@@ -202,18 +193,6 @@ export const DatabaseDetail = () => {
             variant="warning"
           />
         )}
-        {isVPCEnabled && onSettingsTab && (
-          <DismissibleBanner
-            preferenceKey="database-manage-access-moved-notice"
-            variant="info"
-          >
-            <Typography>
-              The Manage Access settings were moved and are now available in the
-              Networking tab.
-            </Typography>
-          </DismissibleBanner>
-        )}
-
         <TabPanels>
           <Outlet />
         </TabPanels>
