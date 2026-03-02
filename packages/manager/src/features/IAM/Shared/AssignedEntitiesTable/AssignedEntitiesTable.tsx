@@ -76,7 +76,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     order: orderParam,
     selectedRole: selectedRoleSearchParam,
     orderBy: orderByParam,
-    page: pageParam,
   } = useSearch({
     from: isDefaultDelegationRolesForChildAccount
       ? DEFAULTS_ENTITIES_URL
@@ -232,7 +231,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     currentRoute: isDefaultDelegationRolesForChildAccount
       ? DEFAULTS_ENTITIES_URL
       : USER_ENTITIES_URL,
-    initialPage: pageParam ?? 1,
+    initialPage: 1,
     preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
     clientSidePaginationData: filteredAndSortedRoles,
   });
