@@ -23,7 +23,7 @@ interface Props {
 
 export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
-  const { data: grants } = useAccountUserGrants(user.username);
+  const { data: grants } = useAccountUserGrants(user.username, user.restricted);
   const { data: profile } = useProfile();
 
   const isProxyOrDelegateUser = Boolean(

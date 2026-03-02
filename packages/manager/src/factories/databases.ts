@@ -179,7 +179,7 @@ export const databaseInstanceFactory =
               {
                 address: 'public-db-mysql-primary-0.b.linodeb.net',
                 role: 'primary',
-                private_access: false,
+                public_access: true,
                 port: 3306,
               },
             ],
@@ -191,7 +191,7 @@ export const databaseInstanceFactory =
               {
                 address: 'public-db-mysql-primary-0.b.linodeb.net',
                 role: 'primary',
-                private_access: false,
+                public_access: true,
                 port: 3306,
               },
             ],
@@ -253,7 +253,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
             {
               address: 'public-db-mysql-primary-0.b.linodeb.net',
               role: 'primary',
-              private_access: false,
+              public_access: true,
               port: 3306,
             },
           ],
@@ -265,7 +265,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
             {
               address: 'public-db-mysql-primary-0.b.linodeb.net',
               role: 'primary',
-              private_access: false,
+              public_access: true,
               port: 3306,
             },
           ],
