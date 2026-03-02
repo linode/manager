@@ -1,5 +1,4 @@
 import { Accordion, BetaChip } from '@linode/ui';
-import { Formik } from 'formik';
 import * as React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -77,20 +76,7 @@ export const Alerts = ({
         />
       ) : (
         // Legacy Alerts View (read-only)
-        <Formik
-          enableReinitialize
-          initialValues={{
-            cpu: 90,
-            io: 10000,
-            network_in: 10,
-            network_out: 10,
-            transfer_quota: 80,
-          }}
-          onSubmit={() => {}}
-          validateOnChange
-        >
-          <AlertsPanel isReadOnly={true} paperSx={{ p: 0 }} />
-        </Formik>
+        <AlertsPanel isReadOnly={true} paperSx={{ p: 0 }} />
       )}
     </Accordion>
   );

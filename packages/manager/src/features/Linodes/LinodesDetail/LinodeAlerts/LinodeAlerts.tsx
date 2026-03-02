@@ -63,6 +63,18 @@ const LinodeAlerts = () => {
     transfer_quota: linode?.alerts.transfer_quota ?? 0,
   };
 
+  const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
+    React.useState<boolean>(false);
+  const [hasAclpAlertsUnsavedChanges, setHasAclpAlertsUnsavedChanges] =
+    React.useState<boolean>(false);
+
+  // Store current ACLP alerts payload
+  const [aclpAlertsPayload, setAclpAlertsPayload] = React.useState<
+    CloudPulseAlertsPayload | undefined
+  >();
+
+  const unifiedAlertsContainerRef = React.useRef<HTMLDivElement>(null);
+
   // Helper to extract general/root errors from API errors array
   // Includes errors without a field property, or with field="alerts" (not field-specific like "alerts.cpu")
   const getGeneralOrRootError = (errors?: APIError[]) => {
@@ -72,21 +84,6 @@ const LinodeAlerts = () => {
   };
 
   const generalOrRootError = getGeneralOrRootError(mutationError ?? undefined);
-
-  const [hasLegacyAlertsUnsavedChanges, setHasLegacyAlertsUnsavedChanges] =
-    React.useState<boolean>(false);
-  const [hasAclpAlertsUnsavedChanges, setHasAclpAlertsUnsavedChanges] =
-    React.useState<boolean>(false);
-
-  // // Ref to access AlertsPanel methods
-  // const legacyAlertsPanelRef = React.useRef<AlertsPanelHandle>(null);
-
-  // Store current ACLP alerts payload
-  const [aclpAlertsPayload, setAclpAlertsPayload] = React.useState<
-    CloudPulseAlertsPayload | undefined
-  >();
-
-  const aclpEnabledViewRef = React.useRef<HTMLDivElement>(null);
 
   const { proceed, reset, status } = useBlocker({
     enableBeforeUnload:
@@ -123,23 +120,6 @@ const LinodeAlerts = () => {
     }
   }, [status, reset]);
 
-  // Handler for legacy alerts save in standalone mode
-  const handleLegacySave = React.useCallback(
-    async (alerts: Linode['alerts']) => {
-      await updateLinode({ alerts })
-        .then(() => {
-          enqueueSnackbar(
-            `Successfully updated alert settings for ${linode?.label}`,
-            { variant: 'success' }
-          );
-        })
-        .catch(() => {
-          // Error is handled by React Query and displayed via mutationError prop
-        });
-    },
-    [updateLinode, enqueueSnackbar, linode?.label]
-  );
-
   // Unified save handler for both legacy and ACLP alerts
   const handleUnifiedSave = React.useCallback(
     async (legacyAlertsValues: Linode['alerts']) => {
@@ -156,8 +136,8 @@ const LinodeAlerts = () => {
           setHasAclpAlertsUnsavedChanges(false);
         })
         .catch((errors) => {
-          if (errors && aclpEnabledViewRef.current) {
-            scrollErrorIntoViewV2(aclpEnabledViewRef);
+          if (errors && unifiedAlertsContainerRef.current) {
+            scrollErrorIntoViewV2(unifiedAlertsContainerRef);
           }
         });
     },
@@ -208,7 +188,8 @@ const LinodeAlerts = () => {
           </DismissibleBanner>
         )}
         {isAclpAlertingInRegionEnabled ? (
-          <Paper ref={aclpEnabledViewRef}>
+          // Unified mode - both Legacy Alerts and ACLP Alerts are displayed with a shared save button.
+          <Paper ref={unifiedAlertsContainerRef}>
             {/* Display general mutation error globally for unified save */}
             {generalOrRootError && (
               <Notice
@@ -225,7 +206,7 @@ const LinodeAlerts = () => {
               validateOnChange
               validationSchema={UpdateLinodeAlertsSchema}
             >
-              {({ handleSubmit, dirty }) => (
+              {(formik) => (
                 <Stack divider={<Divider />}>
                   {/* Legacy Alerts View when ACLP alerting is enabled */}
                   <Accordion
@@ -236,6 +217,7 @@ const LinodeAlerts = () => {
                   >
                     <AlertsPanel
                       error={mutationError}
+                      formik={formik}
                       isAclpAlertingInRegionEnabled={
                         isAclpAlertingInRegionEnabled
                       }
@@ -283,11 +265,11 @@ const LinodeAlerts = () => {
                     primaryButtonProps={{
                       'data-testid': 'unified-alerts-save',
                       disabled:
-                        (!dirty && !hasAclpAlertsUnsavedChanges) ||
+                        (!formik.dirty && !hasAclpAlertsUnsavedChanges) ||
                         isUpdatingLinode,
                       label: 'Save Alerts',
                       loading: isUpdatingLinode,
-                      onClick: () => handleSubmit(),
+                      onClick: () => formik.handleSubmit(),
                     }}
                     sx={{ justifyContent: 'flex-start' }}
                   />
@@ -296,25 +278,15 @@ const LinodeAlerts = () => {
             </Formik>
           </Paper>
         ) : (
-          // Legacy Alerts View (Standalone) when ACLP alerting is not enabled
-          <Formik
-            enableReinitialize
-            initialValues={initalValues}
-            onSubmit={handleLegacySave}
-            validateOnChange
-            validationSchema={UpdateLinodeAlertsSchema}
-          >
-            <AlertsPanel
-              error={mutationError}
-              isReadOnly={!permissions.update_linode}
-              isSaving={isUpdatingLinode}
-              linodeId={id}
-              onUnsavedChangesUpdate={(hasUnsavedChanges) => {
-                setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
-              }}
-              paperSx={(theme) => ({ pb: theme.spacingFunction(16) })}
-            />
-          </Formik>
+          // Standalone mode - only Legacy Alerts are displayed and AlertsPanel manages its own save.
+          <AlertsPanel
+            isReadOnly={!permissions.update_linode}
+            linodeId={id}
+            onUnsavedChangesUpdate={(hasUnsavedChanges) => {
+              setHasLegacyAlertsUnsavedChanges(hasUnsavedChanges);
+            }}
+            paperSx={(theme) => ({ pb: theme.spacingFunction(16) })}
+          />
         )}
       </Box>
     </>

@@ -1,7 +1,13 @@
-import { useLinodeQuery, useTypeQuery } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+  useTypeQuery,
+} from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
+import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
-import { useFormikContext } from 'formik';
+import { Formik } from 'formik';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -11,12 +17,18 @@ import { AlertSection } from './AlertSection';
 import type { AlertSectionProps } from './AlertSection';
 import type { APIError, Linode } from '@linode/api-v4';
 import type { SxProps, Theme } from '@linode/ui';
+import type { FormikProps } from 'formik';
 
 interface Props {
   /**
    * API error to display
    */
   error?: APIError[] | null;
+  /**
+   * Formik bag passed down from LinodeAlerts in unified mode (ACLP flag ON).
+   * Not needed in standalone or create-flow — those modes manage Formik internally.
+   */
+  formik?: FormikProps<Linode['alerts']>;
   /**
    * Whether ACLP alerting is enabled in the current region
    * Combines ACLP flag check and region support
@@ -44,17 +56,120 @@ interface Props {
   paperSx?: SxProps<Theme>;
 }
 
+/**
+ * Handles three rendering modes depending on context:
+ * - Create flow (no linodeId): read-only, Formik is a no-op
+ * - Standalone (linodeId, ACLP flag OFF): self-contained with its own Formik and save
+ * - Unified (linodeId, ACLP flag ON): parent LinodeAlerts owns Formik, passes it down
+ */
 export const AlertsPanel = (props: Props) => {
+  const { isAclpAlertingInRegionEnabled, linodeId } = props;
+
+  // Create flow: read-only with default values, no submission needed.
+  if (!linodeId) {
+    return (
+      <Formik
+        initialValues={{
+          cpu: 90,
+          io: 10000,
+          network_in: 10,
+          network_out: 10,
+          transfer_quota: 80,
+        }}
+        onSubmit={() => {}}
+      >
+        {(formik) => <AlertsPanelContent {...props} formik={formik} />}
+      </Formik>
+    );
+  }
+
+  // Unified mode: formik comes from the parent.
+  if (isAclpAlertingInRegionEnabled) {
+    return (
+      <AlertsPanelContent
+        {...props}
+        formik={props.formik!}
+        linodeId={linodeId}
+      />
+    );
+  }
+
+  // Standalone mode: self-contained, owns its own save logic.
+  return <AlertsPanelStandalone {...props} linodeId={linodeId} />;
+};
+
+/**
+ * Used when the ACLP flag is OFF. Manages its own data fetching, mutation, and form state
+ * so the parent doesn't need to know anything about how the save works.
+ */
+const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
+  const { linodeId, ...rest } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
+  const { enqueueSnackbar } = useSnackbar();
   const {
     error,
+    isPending: isSaving,
+    mutateAsync: updateLinode,
+  } = useLinodeUpdateMutation(linodeId);
+
+  const handleSave = async (alerts: Linode['alerts']) => {
+    await updateLinode({ alerts })
+      .then(() => {
+        enqueueSnackbar(
+          `Successfully updated alert settings for ${linode?.label}`,
+          { variant: 'success' }
+        );
+      })
+      .catch(() => {
+        // Error surfaced via the error prop passed to AlertsPanelContent below.
+      });
+  };
+
+  const initialValues = {
+    cpu: linode?.alerts.cpu ?? 0,
+    io: linode?.alerts.io ?? 0,
+    network_in: linode?.alerts.network_in ?? 0,
+    network_out: linode?.alerts.network_out ?? 0,
+    transfer_quota: linode?.alerts.transfer_quota ?? 0,
+  };
+
+  return (
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      onSubmit={handleSave}
+      validateOnChange
+      validationSchema={UpdateLinodeAlertsSchema}
+    >
+      {(formik) => (
+        <AlertsPanelContent
+          {...rest}
+          error={error}
+          formik={formik}
+          isSaving={isSaving}
+          linodeId={linodeId}
+        />
+      )}
+    </Formik>
+  );
+};
+
+interface AlertsPanelContentProps extends Omit<Props, 'formik'> {
+  formik: FormikProps<Linode['alerts']>;
+}
+
+/** Renders the form fields and save button. Formik is always passed in explicitly. */
+const AlertsPanelContent = (props: AlertsPanelContentProps) => {
+  const {
+    error,
+    formik,
     isAclpAlertingInRegionEnabled,
     isSaving,
     isReadOnly,
     linodeId,
     paperSx,
   } = props;
-
-  const formik = useFormikContext<Linode['alerts']>();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
