@@ -22,12 +22,7 @@ import type {
 } from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
-const statusList: AlertStatusType[] = [
-  'enabled',
-  'disabled',
-  'in progress',
-  'failed',
-];
+const statusList: AlertStatusType[] = ['enabled', 'disabled', 'failed'];
 const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
 const tagSequence = ['LinodeTags', 'DBaaSTags', 'bothTags', 'No Tags'];
 
@@ -99,7 +94,7 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
     ui.button.findByAttribute('aria-label', 'Toggle group by tag').click();
 
     // Validate table headers are visible
-    ['label', 'status', 'service_type', 'created_by', 'updated'].forEach(
+    ['label', 'status', 'service_type_label', 'created_by', 'updated'].forEach(
       (header) => {
         ui.heading.findByText(header).should('be.visible');
       }

@@ -10,12 +10,22 @@ import {
   CONFIGS_HELPER_TEXT,
   CONFIGS_ID_PLACEHOLDER_TEXT,
   INTERFACE_ID_HELPER_TEXT,
+  NODE_ID_HELPER_TEXT,
+  NODE_ID_PLACEHOLDER_TEXT,
   PORT_HELPER_TEXT,
   PORT_PLACEHOLDER_TEXT,
   PORTS_PLACEHOLDER_TEXT,
+  VIP_HELPER_TEXT,
+  VIP_PLACEHOLDER_TEXT,
 } from '../../../constants';
 
 import type { Item } from '../../../constants';
+import type {
+  AlertDefinitionScope,
+  CloudPulseServiceType,
+  Region,
+} from '@linode/api-v4';
+import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 
 export const MULTISELECT_PLACEHOLDER_TEXT = 'Select Values';
 export const TEXTFIELD_PLACEHOLDER_TEXT = 'Enter a Value';
@@ -96,7 +106,7 @@ export interface AutocompleteConfig extends BaseConfig {
   /**
    * Flag to use a custom fetch function instead of the static options.
    */
-  useCustomFetch?: boolean;
+  useCustomFetch?: string | string[];
 }
 
 /**
@@ -151,11 +161,57 @@ export const valueFieldConfig: ValueFieldConfigMap = {
       inputType: 'number',
     },
   },
+  ip: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+      helperText: VIP_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: VIP_PLACEHOLDER_TEXT,
+    },
+  },
+  node_id: {
+    eq_neq: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+    },
+    in: {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+      helperText: NODE_ID_HELPER_TEXT,
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+      placeholder: NODE_ID_PLACEHOLDER_TEXT,
+    },
+  },
   linode_id: {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
-      useCustomFetch: true,
+      useCustomFetch: ['firewall', 'blockstorage'],
     },
     startswith_endswith: {
       type: 'textfield',
@@ -164,7 +220,27 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
-      useCustomFetch: true,
+      useCustomFetch: ['firewall', 'blockstorage'],
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+    },
+  },
+  nodebalancer_id: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: 'firewall',
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: 'firewall',
     },
     '*': {
       type: 'textfield',
@@ -175,7 +251,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
-      useCustomFetch: true,
+      useCustomFetch: 'firewall',
     },
     startswith_endswith: {
       type: 'textfield',
@@ -185,7 +261,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
-      useCustomFetch: true,
+      useCustomFetch: 'firewall',
     },
     '*': {
       type: 'textfield',
@@ -252,7 +328,7 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     eq_neq: {
       type: 'autocomplete',
       multiple: false,
-      useCustomFetch: true,
+      useCustomFetch: 'firewall',
     },
     startswith_endswith: {
       type: 'textfield',
@@ -262,7 +338,28 @@ export const valueFieldConfig: ValueFieldConfigMap = {
     in: {
       type: 'autocomplete',
       multiple: true,
-      useCustomFetch: true,
+      useCustomFetch: 'firewall',
+    },
+    '*': {
+      type: 'textfield',
+      inputType: 'text',
+    },
+  },
+  endpoint: {
+    eq_neq: {
+      type: 'autocomplete',
+      multiple: false,
+      useCustomFetch: 'objectstorage',
+    },
+    startswith_endswith: {
+      type: 'textfield',
+      placeholder: 'e.g., us-east-1.linodeobjects.com',
+      inputType: 'text',
+    },
+    in: {
+      type: 'autocomplete',
+      multiple: true,
+      useCustomFetch: 'objectstorage',
     },
     '*': {
       type: 'textfield',
@@ -311,4 +408,114 @@ export interface FetchOptions {
   isError: boolean;
   isLoading: boolean;
   values: Item<string, string>[];
+}
+
+export interface FetchOptionsProps {
+  /**
+   * The type of associated entity to filter on.
+   */
+  associatedEntityType?: AssociatedEntityType;
+  /**
+   * The dimension label determines the filtering logic and return type.
+   */
+  dimensionLabel: null | string;
+  /**
+   * List of firewall entity IDs to filter on.
+   */
+  entities?: string[];
+  /**
+   * List of regions to filter on.
+   */
+  regions?: Region[];
+  /**
+   * Scope of fetching: account (all resources) or entity (filtered subset).
+   */
+  scope?: AlertDefinitionScope | null;
+  /**
+   * List of user selected regions for region scope.
+   */
+  selectedRegions?: null | string[];
+  /**
+   * Service to apply specific transformations to dimension values.
+   */
+  serviceType?: CloudPulseServiceType | null;
+  /**
+   * The type of monitoring to filter on.
+   */
+  type: 'alerts' | 'metrics';
+}
+
+export interface DimensionFilterAutocompleteProps {
+  /**
+   * The current selected dimension label.
+   */
+  dimensionLabel: null | string;
+  /**
+   * Whether the autocomplete input should be disabled.
+   */
+  disabled: boolean;
+  /**
+   * List of entity IDs selected in the entity scope.
+   */
+  entities?: string[];
+  /**
+   * The entity type for firewall filtering (linode or nodebalancer).
+   */
+  entityType?: AssociatedEntityType;
+  /**
+   * Optional error message to display beneath the input.
+   */
+  errorText?: string;
+  /**
+   * Handler function called on input blur.
+   */
+  fieldOnBlur: () => void;
+  /**
+   * Callback triggered when the user selects a new value(s).
+   */
+  fieldOnChange: (newValue: string | string[]) => void;
+  /**
+   * Current raw string value (or null) from the form state.
+   */
+  fieldValue: null | string;
+  /**
+   * Callback triggered when a dependent API has an error.
+   */
+  handleError?: (hasError: boolean) => void;
+  /**
+   * The maximum number of selections allowed (for multi-select).
+   */
+  maxSelections?: number;
+  /**
+   * To control single-select/multi-select in the Autocomplete.
+   */
+  multiple?: boolean;
+  /**
+   * Name of the field set in the form.
+   */
+  name: string;
+  /**
+   * Placeholder text to display when no selection is made.
+   */
+  placeholderText: string;
+  /**
+   * Scope of the alert to handle all use-cases.
+   */
+  scope?: AlertDefinitionScope | null;
+  /**
+   * List of selected regions under the region scope.
+   */
+  selectedRegions?: null | string[];
+  /**
+   * Service type of the alert.
+   */
+  serviceType: CloudPulseServiceType | null;
+  /**
+   * The type of monitoring to filter on.
+   */
+  type: 'alerts' | 'metrics';
+  /**
+   * The list of pre-defined values for static options.
+   */
+  values?: null | string[];
 }

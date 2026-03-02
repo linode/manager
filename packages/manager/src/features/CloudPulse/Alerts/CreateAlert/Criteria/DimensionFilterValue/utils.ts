@@ -1,14 +1,58 @@
-import { transformDimensionValue } from '../../../Utils/utils';
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from 'src/features/CloudPulse/shared/DimensionTransform';
 
 import type { Item } from '../../../constants';
 import type { OperatorGroup } from './constants';
 import type {
+  AlertDefinitionScope,
   CloudPulseServiceType,
   DimensionFilterOperatorType,
   Linode,
+  NodeBalancer,
   VPC,
 } from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+import type { FirewallEntity } from 'src/features/CloudPulse/shared/types';
+
+interface MaxSelectionControlProps {
+  /**
+   * Indicates if the maximum selections have been reached
+   */
+  maxReached: boolean;
+  /**
+   * Indicates whether multiple select is enabled
+   */
+  multiple: boolean;
+  /**
+   * The option item to check if it should be disabled
+   */
+  option: Item<string, string>;
+  /**
+   * The current value of the field as a comma-separated string
+   */
+  value?: string;
+}
+
+/**
+ * Transform a dimension value using the appropriate transform function
+ * @param serviceType - The cloud pulse service type
+ * @param dimensionLabel - The dimension label
+ * @param value - The value to transform
+ * @returns Transformed value
+ */
+export const transformDimensionValue = (
+  serviceType: CloudPulseServiceType | null,
+  dimensionLabel: string,
+  value: string
+): string => {
+  return (
+    (
+      serviceType && DIMENSION_TRANSFORM_CONFIG[serviceType]?.[dimensionLabel]
+    )?.(value) ?? TRANSFORMS.capitalize(value)
+  );
+};
 
 /**
  * Resolves the selected value(s) for the Autocomplete component from raw string.
@@ -77,9 +121,9 @@ export const getOperatorGroup = (
  * @returns - List of label/value option objects.
  */
 export const getStaticOptions = (
-  serviceType: CloudPulseServiceType | undefined,
+  serviceType: CloudPulseServiceType | null,
   dimensionLabel: string,
-  values: null | string[]
+  values: string[]
 ): Item<string, string>[] => {
   return (
     values?.map((val: string) => ({
@@ -90,7 +134,7 @@ export const getStaticOptions = (
 };
 
 /**
- * Filters firewall resources and returns matching entity IDs.
+ * Filters firewall resources and returns matching parent entity IDs.
  * @param firewallResources - List of firewall resource objects.
  * @param entities - List of target firewall entity IDs.
  * @returns - Flattened array of matching entity IDs.
@@ -98,13 +142,19 @@ export const getStaticOptions = (
 export const getFilteredFirewallParentEntities = (
   firewallResources: CloudPulseResources[] | undefined,
   entities: string[] | undefined
-): string[] => {
+): FirewallEntity[] => {
   if (!(firewallResources?.length && entities?.length)) return [];
 
   return firewallResources
     .filter((firewall) => entities.includes(firewall.id))
     .flatMap((firewall) =>
-      firewall.entities ? Object.keys(firewall.entities) : []
+      // combine key as id and value as label for each entity
+      firewall.entities
+        ? Object.entries(firewall.entities).map(([id, label]) => ({
+            id,
+            label,
+          }))
+        : []
     );
 };
 
@@ -124,6 +174,25 @@ export const getFirewallLinodes = (
 };
 
 /**
+ * Extracts nodebalancer items from firewall resources.
+ * @param nodebalancers - List of nodebalancers.
+ * @returns - Flattened list of nodebalancer ID/label pairs as options.
+ */
+export const getFirewallNodebalancers = (
+  nodebalancers: NodeBalancer[]
+): Item<string, string>[] => {
+  if (!nodebalancers) return [];
+  return nodebalancers.map((nodebalancer) => ({
+    label: transformDimensionValue(
+      'firewall',
+      'nodebalancer_id',
+      nodebalancer.label
+    ),
+    value: String(nodebalancer.id),
+  }));
+};
+
+/**
  * Extracts unique region values from a list of linodes.
  * @param linodes - Linode objects with region information.
  * @returns - Deduplicated list of regions as options.
@@ -132,6 +201,23 @@ export const getLinodeRegions = (linodes: Linode[]): Item<string, string>[] => {
   if (!linodes) return [];
   const regions = new Set<string>();
   linodes.forEach(({ region }) => region && regions.add(region));
+  return Array.from(regions).map((region) => ({
+    label: transformDimensionValue('firewall', 'region_id', region),
+    value: region,
+  }));
+};
+
+/**
+ * Extracts unique region values from a list of nodebalancers.
+ * @param nodebalancers - Nodebalancer objects with region information.
+ * @returns - Deduplicated list of regions as options.
+ */
+export const getNodebalancerRegions = (
+  nodebalancers: NodeBalancer[]
+): Item<string, string>[] => {
+  if (!nodebalancers) return [];
+  const regions = new Set<string>();
+  nodebalancers.forEach(({ region }) => region && regions.add(region));
   return Array.from(regions).map((region) => ({
     label: transformDimensionValue('firewall', 'region_id', region),
     value: region,
@@ -152,4 +238,117 @@ export const getVPCSubnets = (vpcs: VPC[]): Item<string, string>[] => {
       value: String(subnetId),
     }))
   );
+};
+
+interface ScopeBasedFilteredResourcesProps {
+  /**
+   * A list of entity IDs to filter by when scope is `entity`.
+   */
+  entities?: string[];
+  /**
+   * The full list of available CloudPulse resources.
+   */
+  resources: CloudPulseResources[];
+  /**
+   * The scope of the alert definition (`account`, `entity`, `region`, or `null`).
+   */
+  scope: AlertDefinitionScope | null;
+  /**
+   * A list of region IDs to filter by when scope is `region`.
+   */
+  selectedRegions?: null | string[];
+}
+
+/* Filters a list of Resource objects based on the given alert definition scope.
+ *
+ * @param props - Object containing filter parameters.
+ * @returns A filtered list of resources based on the provided scope.
+ */
+export const scopeBasedFilteredResources = (
+  props: ScopeBasedFilteredResourcesProps
+): CloudPulseResources[] => {
+  const { scope, resources, selectedRegions, entities } = props;
+
+  switch (scope) {
+    case 'account':
+      return resources;
+    case 'entity':
+      return entities
+        ? resources.filter((resource) => entities.includes(resource.id))
+        : [];
+    case 'region':
+      return selectedRegions
+        ? resources.filter((resource) =>
+            selectedRegions.includes(resource.region ?? '')
+          )
+        : [];
+    default:
+      return resources;
+  }
+};
+
+/**
+ * Extracts linode items from firewall resources by merging entities.
+ * @param resources - List of firewall resources with entity mappings.
+ * @returns - Flattened list of linode ID/label pairs as options.
+ */
+export const getBlockStorageLinodes = (
+  linodes: Linode[]
+): Item<string, string>[] => {
+  if (!linodes) return [];
+  return linodes.map((linode) => ({
+    label: transformDimensionValue('blockstorage', 'linode_id', linode.label),
+    value: String(linode.id),
+  }));
+};
+
+/**
+ * @param multiple - Indicates whether multiple select is enabled
+ * @param value - The value of the field as a comma-separated string
+ * @param maxSelections - The maximum number of selections allowed
+ * @returns - Boolean indicating if the maximum selections have been reached
+ */
+export const isMaxSelectionsReached = (
+  multiple: boolean,
+  value: string,
+  maxSelections?: number
+): boolean => {
+  if (!multiple || value === '' || maxSelections === undefined) {
+    return false;
+  }
+
+  const values = value?.split(',') || [];
+
+  return values.length >= maxSelections;
+};
+
+/**
+ * @param maxReached - The boolean indicating if max selections have been reached
+ * @param value -  The current value of the field as a comma-separated string
+ * @param multiple - Indicates whether multiple select is enabled
+ * @param option - The option item to check if it should be disabled
+ * @returns - Boolean indicating if the option should be disabled
+ */
+export const isOptionDisabled = ({
+  maxReached,
+  value,
+  multiple,
+  option,
+}: MaxSelectionControlProps): boolean => {
+  if (
+    !maxReached ||
+    option.label.trim() === 'Select All' ||
+    option.label.trim() === 'Deselect All'
+  ) {
+    return false;
+  }
+
+  const values = value?.split(',') || [];
+
+  // Allow already selected options (so user can unselect)
+  if (multiple) {
+    return !values.some((selected) => selected === option.value);
+  }
+
+  return false;
 };

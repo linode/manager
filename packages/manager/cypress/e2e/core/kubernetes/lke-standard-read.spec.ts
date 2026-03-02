@@ -9,7 +9,7 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetCluster,
   mockGetClusterPools,
-  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
 import { mockGetProfile } from 'support/intercepts/profile';
 
@@ -65,12 +65,17 @@ describe('LKE Cluster Summary', () => {
     ).as('getAccount');
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetClusterPools(mockCluster.id, []).as('getNodePools');
     mockGetProfile(mockProfile).as('getProfile');
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getProfile']);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getTieredVersions',
+      '@getProfile',
+    ]);
 
     // Confirm that no VPC label or link is shown in the summary section
     cy.get('[data-qa-kube-entity-footer]').within(() => {
@@ -104,12 +109,17 @@ describe('LKE Node Pools', () => {
 
     mockGetCluster(mockCluster).as('getCluster');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetProfile(profileFactory.build()).as('getProfile');
     mockGetLinodes(mockLinodes).as('getLinodes');
 
     cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}/summary`);
-    cy.wait(['@getCluster', '@getNodePools', '@getVersions', '@getProfile']);
+    cy.wait([
+      '@getCluster',
+      '@getNodePools',
+      '@getTieredVersions',
+      '@getProfile',
+    ]);
 
     // Confirm VPC IP columns are not present in the node table
     cy.get('[aria-label="List of Your Cluster Nodes"] thead').within(() => {

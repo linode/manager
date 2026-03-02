@@ -3,9 +3,13 @@ import * as React from 'react';
 
 import SwapIcon from 'src/assets/icons/swapSmall.svg';
 
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
+
 import type { ButtonProps } from '@linode/ui';
 
 export const SwitchAccountButton = (props: ButtonProps) => {
+  const { isDelegateUserType } = useDelegationRole();
+
   return (
     <Button
       startIcon={<SwapIcon data-testid="swap-icon" />}
@@ -15,10 +19,15 @@ export const SwitchAccountButton = (props: ButtonProps) => {
         },
         font: theme.tokens.alias.Typography.Label.Semibold.S,
         marginTop: theme.tokens.spacing.S4,
+        ...(isDelegateUserType && {
+          '&.MuiButton-root': {
+            textTransform: 'none',
+          },
+        }),
       })}
       {...props}
     >
-      Switch Account
+      {isDelegateUserType ? 'Switch Back to Your Account' : 'Switch Account'}
     </Button>
   );
 };

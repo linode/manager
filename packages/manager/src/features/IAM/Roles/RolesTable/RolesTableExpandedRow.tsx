@@ -16,11 +16,7 @@ export const RolesTableExpandedRow = ({ permissions }: Props) => {
   return (
     <Paper
       sx={{
-        backgroundColor:
-          theme.name === 'light'
-            ? theme.tokens.color.Neutrals[5]
-            : theme.tokens.color.Neutrals[100],
-        marginTop: theme.spacing(1.25),
+        backgroundColor: 'transparent',
         padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
         width: '100%',
       }}

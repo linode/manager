@@ -33,10 +33,12 @@ describe('LinodeRow', () => {
     const renderedLinode = (
       <LinodeRow
         handlers={{
+          onOpenAddLockDialog: () => {},
           onOpenDeleteDialog: () => {},
           onOpenMigrateDialog: () => {},
           onOpenPowerDialog: () => {},
           onOpenRebuildDialog: () => {},
+          onOpenRemoveLockDialog: () => {},
           onOpenRescueDialog: () => {},
           onOpenResizeDialog: () => {},
         }}

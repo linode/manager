@@ -1,9 +1,4 @@
-import {
-  useAllFirewallsQuery,
-  useAllLinodesQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
+import { useAllFirewallsQuery } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
@@ -13,13 +8,12 @@ import {
   RadioGroup,
   Typography,
 } from '@linode/ui';
-import { getEntityIdsByPermission } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { useQueryWithPermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -61,24 +55,20 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
 
   const { control } = useFormContext<CreateFirewallFormValues>();
 
-  const { data: grants } = useGrants();
-  const { data: firewalls } = useAllFirewallsQuery(open);
-  const { data: profile } = useProfile();
+  const { data: firewalls, isLoading: isLoadingAllFirewalls } =
+    useAllFirewallsQuery(open);
 
-  const { data: permissableLinodes, hasFiltered: hasFilteredLinodes } =
-    useQueryWithPermissions<Linode>(useAllLinodesQuery(), 'linode', [
-      'apply_linode_firewalls',
-    ]);
-
-  const isRestrictedUser = profile?.restricted;
-
-  // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
-  const readOnlyNodebalancerIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
-    : [];
-
+  const {
+    data: availableLinodes,
+    filter: availableLinodesFilter,
+    isLoading: availableLinodesLoading,
+  } = useGetAllUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'apply_linode_firewalls',
+    enabled: open,
+  });
   const deviceSelectGuidance =
-    hasFilteredLinodes || readOnlyNodebalancerIds.length > 0
+    availableLinodes?.length !== 0
       ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
       : undefined;
 
@@ -101,9 +91,8 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   };
 
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
-    return (
-      !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
+    return !assignedNodeBalancers?.some(
+      (service) => service.id === nodebalancer.id
     );
   };
 
@@ -217,17 +206,19 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
         name="devices.linodes"
         render={({ field, fieldState }) => (
           <LinodeSelect
-            disabled={userCannotAddFirewall}
+            disabled={userCannotAddFirewall || isLoadingAllFirewalls}
             errorText={fieldState.error?.message}
+            filter={availableLinodesFilter}
             helperText={deviceSelectGuidance}
             label={
               createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
             }
+            loading={isLoadingAllFirewalls || availableLinodesLoading}
             multiple
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
-            options={permissableLinodes ?? []}
+            options={availableLinodes ?? []}
             optionsFilter={linodeOptionsFilter}
             value={field.value ?? null}
           />

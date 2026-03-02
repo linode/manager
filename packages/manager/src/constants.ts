@@ -251,7 +251,7 @@ export const ADDRESSES = {
 // Linode Community URL accessible from the TopMenu Community icon
 export const LINODE_COMMUNITY_URL = 'https://linode.com/community';
 
-export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
+export const FEEDBACK_LINK = 'https://www.akamai.com/cloud/feedback';
 
 export const DEVELOPERS_LINK = 'https://developers.linode.com';
 
@@ -285,6 +285,7 @@ export const DISALLOWED_IMAGE_REGIONS = [
   'au-mel',
   'sg-sin-2',
   'jp-tyo-3',
+  'fr-par-2',
 ];
 
 // Default tooltip text for actions without permission

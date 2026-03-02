@@ -8,6 +8,8 @@ import { iamQueries } from './keys';
 import type {
   AccessType,
   APIError,
+  EntityByPermission,
+  GetEntitiesByPermissionParams,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
@@ -30,15 +32,23 @@ export const useAccountRoles = (enabled = true) => {
   });
 };
 
-export const useUserRolesMutation = (username: string) => {
+export const useUserRolesMutation = (username: string | undefined) => {
   const queryClient = useQueryClient();
+
   return useMutation<IamUserRoles, APIError[], IamUserRoles>({
-    mutationFn: (data) => updateUserRoles(username, data),
+    mutationFn: (data) => {
+      if (!username) {
+        throw new Error('Username is required');
+      }
+      return updateUserRoles(username, data);
+    },
     onSuccess: (role) => {
-      queryClient.setQueryData<IamUserRoles>(
-        iamQueries.user(username)._ctx.roles.queryKey,
-        role,
-      );
+      if (username) {
+        queryClient.setQueryData<IamUserRoles>(
+          iamQueries.user(username)._ctx.roles.queryKey,
+          role,
+        );
+      }
     },
   });
 };
@@ -47,7 +57,7 @@ export const useUserAccountPermissions = (enabled = true) => {
   const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries.user(profile?.username || '')._ctx.accountPermissions,
-    enabled: Boolean(profile?.username) && profile?.restricted && enabled,
+    enabled: Boolean(profile?.username) && enabled,
   });
 };
 
@@ -65,6 +75,42 @@ export const useUserEntityPermissions = (
       Boolean(profile?.username) &&
       profile?.restricted &&
       Boolean(entityType && entityId) &&
+      enabled,
+  });
+};
+
+export const useGetUserEntitiesByPermissionQuery = ({
+  username,
+  entityType,
+  permission,
+  enabled = true,
+}: GetEntitiesByPermissionParams) => {
+  const { data: profile } = useProfile();
+  return useQuery<EntityByPermission[], APIError[]>({
+    ...iamQueries
+      .user(username ?? '')
+      ._ctx.getPaginatedEntitiesByPermission(entityType, permission),
+    enabled:
+      Boolean(username && entityType && permission) &&
+      profile?.restricted &&
+      enabled,
+  });
+};
+
+export const useGetAllUserEntitiesByPermissionQuery = ({
+  username,
+  entityType,
+  permission,
+  enabled = true,
+}: GetEntitiesByPermissionParams) => {
+  const { data: profile } = useProfile();
+  return useQuery<EntityByPermission[], APIError[]>({
+    ...iamQueries
+      .user(username ?? '')
+      ._ctx.getAllEntitiesByPermission(entityType, permission),
+    enabled:
+      Boolean(username && entityType && permission) &&
+      profile?.restricted &&
       enabled,
   });
 };

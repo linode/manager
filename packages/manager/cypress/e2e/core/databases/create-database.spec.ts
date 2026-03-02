@@ -48,6 +48,7 @@ describe('create a database cluster, mocked data', () => {
           status: 'provisioning',
           type: configuration.linodeType,
           version: configuration.version,
+          platform: 'rdbms-default',
         });
 
         // Database mock once instance has been provisioned.
@@ -203,9 +204,8 @@ describe('create a database cluster, mocked data', () => {
           });
         cy.wait('@createDatabase');
 
-        // TODO Update assertions upon completion of M3-7030.
         cy.url().should(
-          'endWith',
+          'contains',
           `/databases/${databaseMock.engine}/${databaseMock.id}`
         );
 
@@ -239,7 +239,7 @@ describe('create a database cluster, mocked data', () => {
 
         cy.findByText(databaseMock.label)
           .should('be.visible')
-          .closest('tr')
+          .closest('cds-table-row')
           .within(() => {
             cy.findByText(`${configuration.engine} v${configuration.version}`, {
               exact: false,
@@ -260,7 +260,7 @@ describe('create a database cluster, mocked data', () => {
 
         cy.findByText(databaseMock.label)
           .should('be.visible')
-          .closest('tr')
+          .closest('cds-table-row')
           .within(() => {
             cy.findByText('Active').should('be.visible');
           });

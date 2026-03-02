@@ -1,6 +1,8 @@
 import { GridLegacy, Paper } from '@mui/material';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
@@ -37,6 +39,10 @@ interface WidgetProps {
   manualRefreshTimeStamp?: number;
   metricDefinitions: ResourcePage<MetricDefinition> | undefined;
   preferences?: AclpConfig;
+  /**
+   * Selected region for the widget
+   */
+  region?: string;
   resourceList: CloudPulseResources[] | undefined;
   resources: string[];
   savePref?: boolean;
@@ -68,7 +74,10 @@ export const RenderWidgets = React.memo(
       savePref,
       groupBy,
       linodeRegion,
+      region,
     } = props;
+
+    const flags = useFlags();
 
     const getCloudPulseGraphProperties = (
       widget: Widgets
@@ -87,10 +96,11 @@ export const RenderWidgets = React.memo(
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
         dashboardId: dashboard.id,
+        globalFilterGroupBy: groupBy,
         widget: {
           ...widget,
           time_granularity: autoIntervalOption,
-          group_by: groupBy.length === 0 ? undefined : groupBy,
+          group_by: undefined,
         },
       };
       if (savePref) {
@@ -117,11 +127,16 @@ export const RenderWidgets = React.memo(
           time_granularity: {
             ...(pref.timeGranularity ?? autoIntervalOption),
           },
+          group_by: pref.groupBy,
+          filters: flags.aclp?.showWidgetDimensionFilters
+            ? (pref.filters ?? widgetObj.filters)
+            : widgetObj.filters,
         };
       } else {
         return {
           ...widgetObj,
           time_granularity: autoIntervalOption,
+          group_by: undefined,
         };
       }
     };
@@ -134,8 +149,6 @@ export const RenderWidgets = React.memo(
 
     if (
       !dashboard.service_type ||
-      // eslint-disable-next-line sonarjs/no-inverted-boolean-check
-      !(resources.length > 0) ||
       (!isJweTokenFetching && !jweToken?.token) ||
       !resourceList?.length
     ) {
@@ -176,6 +189,7 @@ export const RenderWidgets = React.memo(
                 availableMetrics={availMetrics}
                 isJweTokenFetching={isJweTokenFetching}
                 linodeRegion={linodeRegion}
+                region={region}
                 resources={resourceList!}
                 savePref={savePref}
               />

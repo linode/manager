@@ -1,5 +1,7 @@
 import type { OCA } from './features/OneClickApps/types';
+import type { Region } from '@linode/api-v4';
 import type {
+  AlertStatusType,
   CloudPulseServiceType,
   TPAProvider,
 } from '@linode/api-v4/lib/profile';
@@ -70,6 +72,7 @@ interface LinodeInterfacesFlag extends BaseFeatureFlag {
 
 interface VMHostMaintenanceFlag extends BaseFeatureFlag {
   beta: boolean;
+  hasQueue?: boolean;
   new: boolean;
 }
 
@@ -95,6 +98,41 @@ interface AclpFlag {
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
+
+  /**
+   * This property indicates whether to enable zoom in charts or not
+   */
+  enableZoomInCharts?: boolean;
+
+  /**
+   * This property indicates for which unit, we need to humanize the values e.g., count, iops etc.,
+   */
+  humanizableUnits?: string[];
+
+  /**
+   * This property indicates whether the feature is new or not
+   */
+  new?: boolean;
+
+  /**
+   * This property indicates whether to show widget dimension filters or not
+   */
+  showWidgetDimensionFilters?: boolean;
+}
+
+interface AclpLogsFlag extends BetaFeatureFlag {
+  /**
+   * This property indicates whether to bypass account capabilities check or not
+   */
+  bypassAccountCapabilities?: boolean;
+  /**
+   * This property indicates whether to show Custom HTTPS destination type
+   */
+  customHttpsEnabled?: boolean;
+  /**
+   * This property indicates whether the feature is new or not
+   */
+  new?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -134,8 +172,13 @@ interface AclpAlerting {
   accountAlertLimit: number;
   accountMetricLimit: number;
   alertDefinitions: boolean;
+  beta: boolean;
+  editDisabledStatuses?: AlertStatusType[];
+  maxDimensionFiltersValues?: number;
+  maxEmailChannelRecipients?: number;
   notificationChannels: boolean;
   recentActivity: boolean;
+  systemChannelSupportedServices?: CloudPulseServiceType[]; // linode, dbaas, etc.
 }
 
 interface LimitsEvolution {
@@ -144,12 +187,32 @@ interface LimitsEvolution {
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
 }
 
+interface MTC {
+  /**
+   * Whether the MTC feature is enabled.
+   */
+  enabled: boolean;
+  /**
+   * Region IDs where MTC is supported (Only used for Linode Migration region dropdown).
+   */
+  supportedRegions: Region['id'][];
+}
+
+interface FirewallRulesetsAndPrefixLists extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
+interface ResourceLockFlag {
+  linodes: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpLogs: BetaFeatureFlag;
+  aclpLogs: AclpLogsFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   aclpServices: Partial<AclpServices>;
@@ -157,44 +220,61 @@ export interface Flags {
   apiMaintenance: APIMaintenance;
   apl: boolean;
   aplGeneralAvailability: boolean;
+  aplLkeE: boolean;
+  blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
+  databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseVpc: boolean;
+  databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
   gecko2: GeckoFeatureFlag;
+  generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
-  iam: BetaFeatureFlag;
-  iamRbacPrimaryNavChanges: boolean;
+  hostnameEndpoints: boolean;
+  iam: BaseFeatureFlag;
+  iamDelegation: BaseFeatureFlag;
+  iamLimitedAvailabilityBadges: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
+  linodeCreateBanner: LinodeCreateBanner;
   linodeDiskEncryption: boolean;
   linodeInterfaces: LinodeInterfacesFlag;
-  lkeEnterprise: LkeEnterpriseFlag;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
+  marketplaceV2: boolean;
+  marketplaceV2GlobalBanner: boolean;
   metadata: boolean;
-  mtc2025: boolean;
+  mtc: MTC;
+  networkLoadBalancer: boolean;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
+  objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
+  objSummaryPage: boolean;
+  placementGroupPolicyUpdate: boolean;
+  privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   referralBannerText: BannerContent;
+  resourceLock: ResourceLockFlag;
   secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
@@ -302,11 +382,13 @@ export type ProductInformationBannerLocation =
   | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
-  | 'LinodeCreate' // Use for Marketplace banners
   | 'Linodes'
   | 'LoadBalancers'
+  | 'Logs'
   | 'Longview'
   | 'Managed'
+  | 'Marketplace'
+  | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
@@ -352,3 +434,12 @@ export type AclpServices = {
     metrics?: AclpFlag;
   };
 };
+
+interface GenerationalPlansFlag extends BaseFeatureFlag {
+  allowedPlans: string[];
+}
+
+interface LinodeCreateBanner extends BaseFeatureFlag {
+  message?: string;
+  pendo_id?: string;
+}

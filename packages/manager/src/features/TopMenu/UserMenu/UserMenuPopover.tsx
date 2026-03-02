@@ -1,5 +1,12 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { BetaChip, Box, Divider, Stack, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Divider,
+  NewFeatureChip,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
@@ -10,10 +17,18 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
+import {
+  useIsIAMDelegationEnabled,
+  useIsIAMEnabled,
+} from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
+import {
+  sendSwitchAccountEvent,
+  sendSwitchToParentAccountEvent,
+} from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
@@ -29,28 +44,48 @@ interface MenuLink {
   display: string;
   hide?: boolean;
   isBeta?: boolean;
+  isNew?: boolean;
   to: string;
 }
 
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const { iamRbacPrimaryNavChanges, limitsEvolution } = useFlags();
+  const { limitsEvolution, iamLimitedAvailabilityBadges } = useFlags();
+  const {
+    isProxyOrDelegateUserType,
+    isParentUserType,
+    isDelegateUserType,
+    isProxyUserType,
+    profile,
+  } = useDelegationRole();
   const theme = useTheme();
 
+  const { handleSwitchToParentAccount, isSubmitting } =
+    useSwitchToParentAccount({
+      isDelegateUserType,
+      isProxyUserType,
+      onClose,
+      onTokenExpired: () => {
+        sessionContext.updateState({
+          isOpen: true,
+        });
+      },
+    });
+
   const { data: account } = useAccount();
-  const { data: profile } = useProfile();
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'child_account_access',
   });
 
-  const isProxyUser = profile?.user_type === 'proxy';
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
-  const canSwitchBetweenParentOrProxyAccount =
-    (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
-    profile?.user_type === 'proxy';
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? isParentUserType || isProxyOrDelegateUserType
+    : (isParentUserType && !isChildAccountAccessRestricted) ||
+      isProxyOrDelegateUserType;
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
@@ -69,20 +104,18 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     },
     { display: 'OAuth Apps', to: '/profile/clients' },
     {
-      display: iamRbacPrimaryNavChanges ? 'Preferences' : 'Referrals',
-      to: iamRbacPrimaryNavChanges
-        ? '/profile/preferences'
-        : '/profile/referrals',
+      display: 'Preferences',
+      to: '/profile/preferences',
     },
     {
-      display: iamRbacPrimaryNavChanges ? 'Referrals' : 'My Settings',
-      to: iamRbacPrimaryNavChanges ? '/profile/referrals' : '/profile/settings',
+      display: 'Referrals',
+      to: '/profile/referrals',
     },
     { display: 'Log Out', to: '/logout' },
   ];
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
-  const proxyHeaders = isProxyUser
+  const proxyHeaders = isProxyOrDelegateUserType
     ? {
         Authorization: getStorage(`authentication/parent_token/token`),
       }
@@ -93,58 +126,47 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     profile,
   });
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
-  const userName = (isProxyUser ? parentProfile : profile)?.username ?? '';
+  const userName =
+    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
 
-  const { isParentTokenExpired } = useIsParentTokenExpired({ isProxyUser });
+  const { isParentTokenExpired } = useIsParentTokenExpired({
+    isProxyOrDelegateUserType,
+  });
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
       {
         display: 'Billing',
-        to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+        to: '/billing',
       },
       {
-        display:
-          iamRbacPrimaryNavChanges && isIAMEnabled
-            ? 'Identity & Access'
-            : 'Users & Grants',
-        to:
-          iamRbacPrimaryNavChanges && isIAMEnabled
-            ? '/iam'
-            : iamRbacPrimaryNavChanges && !isIAMEnabled
-              ? '/users'
-              : '/account/users',
-        isBeta: iamRbacPrimaryNavChanges && isIAMEnabled,
+        display: isIAMEnabled ? 'Identity & Access' : 'Users & Grants',
+        to: isIAMEnabled ? '/iam' : '/users',
+        isNew: isIAMEnabled && iamLimitedAvailabilityBadges,
       },
       {
         display: 'Quotas',
         hide: !limitsEvolution?.enabled,
-        to: iamRbacPrimaryNavChanges ? '/quotas' : '/account/quotas',
+        to: '/quotas',
       },
       {
         display: 'Login History',
-        to: iamRbacPrimaryNavChanges
-          ? '/login-history'
-          : '/account/login-history',
+        to: '/login-history',
       },
       {
         display: 'Service Transfers',
-        to: iamRbacPrimaryNavChanges
-          ? '/service-transfers'
-          : '/account/service-transfers',
+        to: '/service-transfers',
       },
       {
         display: 'Maintenance',
-        to: iamRbacPrimaryNavChanges ? '/maintenance' : '/account/maintenance',
+        to: '/maintenance',
       },
       {
-        display: iamRbacPrimaryNavChanges ? 'Account Settings' : 'Settings',
-        to: iamRbacPrimaryNavChanges
-          ? '/account-settings'
-          : '/account/settings',
+        display: 'Account Settings',
+        to: '/account-settings',
       },
     ],
-    [isIAMEnabled, iamRbacPrimaryNavChanges, limitsEvolution]
+    [isIAMEnabled, limitsEvolution, iamLimitedAvailabilityBadges]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -176,6 +198,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       });
     }
 
+    if (isDelegateUserType) {
+      sendSwitchToParentAccountEvent();
+      return handleSwitchToParentAccount();
+    }
+
     onDrawerOpen(true);
   };
 
@@ -197,6 +224,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             backgroundColor: theme.tokens.alias.Background.Normal,
             paddingX: theme.tokens.spacing.S24,
             paddingY: theme.tokens.spacing.S16,
+            maxWidth: 304,
           }),
         },
       }}
@@ -208,8 +236,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
-          {canSwitchBetweenParentOrProxyAccount && (
+        <Stack
+          display="flex"
+          gap={(theme) => (companyNameOrEmail ? theme.tokens.spacing.S8 : 0)}
+        >
+          {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail && (
             <Typography
               sx={(theme) => ({
                 color: theme.tokens.alias.Content.Text.Primary.Default,
@@ -223,18 +254,22 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             sx={(theme) => ({
               color: theme.tokens.alias.Content.Text.Primary.Default,
               font: theme.tokens.alias.Typography.Label.Bold.L,
+              overflowWrap: 'break-word',
             })}
           >
-            {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
-              ? companyNameOrEmail
+            {canSwitchBetweenParentOrProxyAccount
+              ? companyNameOrEmail || null
               : userName}
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               buttonType="outlined"
               data-testid="switch-account-button"
+              disabled={isSubmitting}
               onClick={() => {
-                sendSwitchAccountEvent('User Menu');
+                if (!isDelegateUserType) {
+                  sendSwitchAccountEvent('User Menu');
+                }
                 handleAccountSwitch();
               }}
             />
@@ -253,9 +288,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           </Grid>
         </Box>
         <Box>
-          <Heading>
-            {iamRbacPrimaryNavChanges ? 'Administration' : 'Account'}
-          </Heading>
+          <Heading>Administration</Heading>
           <Divider />
           <Stack
             gap={(theme) => theme.tokens.spacing.S8}
@@ -275,6 +308,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                 >
                   {menuLink.display}
                   {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                  {menuLink?.isNew ? <NewFeatureChip component="span" /> : null}
                 </Link>
               )
             )}

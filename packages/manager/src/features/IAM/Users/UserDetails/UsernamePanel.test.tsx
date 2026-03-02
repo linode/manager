@@ -9,7 +9,7 @@ import { UsernamePanel } from './UsernamePanel';
 const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: {
-      update_user: false,
+      is_account_admin: false,
     },
   })),
 }));
@@ -23,7 +23,7 @@ describe('UsernamePanel', () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
-      <UsernamePanel canUpdateUser={true} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={true} />
     );
 
     const usernameTextField = getByLabelText('Username');
@@ -31,11 +31,11 @@ describe('UsernamePanel', () => {
     expect(usernameTextField).toHaveDisplayValue(user.username);
   });
 
-  it('disables the input if the user doesn not have update_user permission', async () => {
+  it('disables the input if the user doesn not have is_account_admin permission', async () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
-      <UsernamePanel canUpdateUser={false} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={false} />
     );
 
     expect(getByLabelText('Username')).toBeDisabled();
@@ -50,7 +50,7 @@ describe('UsernamePanel', () => {
   it("does not allow the user to update a proxy user's username", async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_user: true,
+        is_account_admin: true,
       },
     });
 
@@ -60,7 +60,7 @@ describe('UsernamePanel', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <UsernamePanel canUpdateUser={true} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={true} />
     );
 
     const warning = getByLabelText('This field can’t be modified.');
@@ -76,19 +76,19 @@ describe('UsernamePanel', () => {
     expect(getByText('Save').closest('button')).toBeDisabled();
   });
 
-  it('enables the save button when the user makes a change to the username and has update_user permission', async () => {
+  it('enables the save button when the user makes a change to the username and has is_account_admin permission', async () => {
     const user = accountUserFactory.build({
       username: 'my-linode-username',
     });
 
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_user: true,
+        is_account_admin: true,
       },
     });
 
     const { getByLabelText, getByRole, findByDisplayValue } = renderWithTheme(
-      <UsernamePanel canUpdateUser={true} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={true} />
     );
 
     await findByDisplayValue(user.username);
@@ -102,19 +102,19 @@ describe('UsernamePanel', () => {
     expect(saveButton).toBeEnabled();
   });
 
-  it('disables the save button when the user does not have update_user permission', async () => {
+  it('disables the save button when the user does not have is_account_admin permission', async () => {
     const user = accountUserFactory.build({
       username: 'my-linode-username',
     });
 
     queryMocks.userPermissions.mockReturnValue({
       data: {
-        update_user: false,
+        is_account_admin: false,
       },
     });
 
     const { getByRole, findByDisplayValue } = renderWithTheme(
-      <UsernamePanel canUpdateUser={false} user={user} />
+      <UsernamePanel activeUser={user} canUpdateUser={false} />
     );
 
     await findByDisplayValue(user.username);

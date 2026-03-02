@@ -34,6 +34,8 @@ export const DestinationsLandingEmptyState = (
               });
               navigateToCreate();
             },
+            'data-pendo-id':
+              'Logs Delivery Destinations Empty-Create Destination',
           },
         ]}
         gettingStartedGuidesData={gettingStartedGuides}

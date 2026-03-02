@@ -8,6 +8,7 @@ import {
   Area,
   CartesianGrid,
   Legend,
+  ReferenceArea,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -26,6 +27,7 @@ import {
 } from './utils';
 
 import type { TooltipProps } from 'recharts';
+import type { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 export interface DataSet {
@@ -45,6 +47,32 @@ export interface AreaProps {
    * datakey for the area
    */
   dataKey: string;
+}
+
+interface ZoomCallbacks {
+  /**
+   * Callback fired on mouse down event on the chart
+   */
+  onMouseDown?: CategoricalChartFunc;
+  /**
+   * Callback fired on mouse move event on the chart
+   */
+  onMouseMove?: CategoricalChartFunc;
+  /**
+   * Callback fired on mouse up event on the chart
+   */
+  onMouseUp?: CategoricalChartFunc;
+}
+
+interface ReferenceAreaProps {
+  /**
+   * Ending x-axis value of the reference area
+   */
+  referenceEnd: number;
+  /**
+   * Starting x-axis value of the reference area
+   */
+  referenceStart: number;
 }
 
 interface XAxisProps {
@@ -119,6 +147,11 @@ export interface AreaChartProps {
   margin?: { bottom: number; left: number; right: number; top: number };
 
   /**
+   * reference area to be highlighted on the chart
+   */
+  referenceArea?: null | ReferenceAreaProps;
+
+  /**
    * control the visibility of dots for each data points
    */
   showDot?: boolean;
@@ -133,6 +166,11 @@ export interface AreaChartProps {
    * timezone for the timestamp of graph data
    */
   timezone: string;
+
+  /**
+   * formatter for the tooltip value
+   */
+  tooltipCustomValueFormatter?: (value: number, unit: string) => string;
 
   /**
    * unit to be displayed with data
@@ -166,6 +204,11 @@ export interface AreaChartProps {
    * y-axis properties
    */
   yAxisProps?: YAxisProps;
+
+  /**
+   * zoom callbacks (onMouseDown, onMouseMove, onMouseUp)
+   */
+  zoomCallbacks?: ZoomCallbacks;
 }
 
 export const AreaChart = (props: AreaChartProps) => {
@@ -189,9 +232,14 @@ export const AreaChart = (props: AreaChartProps) => {
     xAxis,
     xAxisTickCount,
     yAxisProps,
+    tooltipCustomValueFormatter,
+    zoomCallbacks,
+    referenceArea,
   } = props;
 
   const theme = useTheme();
+  const { onMouseDown, onMouseMove, onMouseUp } = zoomCallbacks ?? {};
+  const { referenceStart, referenceEnd } = referenceArea ?? {};
 
   const [activeSeries, setActiveSeries] = React.useState<Array<string>>([]);
   const handleLegendClick = (dataKey: string) => {
@@ -227,7 +275,9 @@ export const AreaChart = (props: AreaChartProps) => {
                 {item.dataKey}
               </Typography>
               <Typography marginLeft={2} sx={{ font: theme.font.bold }}>
-                {tooltipValueFormatter(item.value, unit)}
+                {tooltipCustomValueFormatter
+                  ? tooltipCustomValueFormatter(item.value, unit)
+                  : tooltipValueFormatter(item.value, unit)}
               </Typography>
             </Box>
           ))}
@@ -272,7 +322,14 @@ export const AreaChart = (props: AreaChartProps) => {
         height={height}
         width={width}
       >
-        <_AreaChart aria-label={ariaLabel} data={data} margin={margin}>
+        <_AreaChart
+          aria-label={ariaLabel}
+          data={data}
+          margin={margin}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+        >
           <CartesianGrid
             stroke={theme.color.grey7}
             strokeDasharray="3 3"
@@ -308,6 +365,8 @@ export const AreaChart = (props: AreaChartProps) => {
               color: theme.tokens.color.Neutrals[70],
               font: theme.font.bold,
             }}
+            offset={20}
+            wrapperStyle={{ zIndex: 2 }}
           />
           {showLegend && !legendRows && (
             <Legend
@@ -329,6 +388,13 @@ export const AreaChart = (props: AreaChartProps) => {
             <Legend
               content={<CustomLegend legendHeight={legendHeight} />}
               wrapperStyle={legendStyles}
+            />
+          )}
+          {referenceStart !== undefined && referenceEnd !== undefined && (
+            <ReferenceArea
+              strokeOpacity={0.3}
+              x1={referenceStart}
+              x2={referenceEnd}
             />
           )}
           {areas.map(({ color, dataKey }) => (

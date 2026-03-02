@@ -21,6 +21,10 @@ export interface SelectionCardProps {
    */
   className?: string;
   /**
+   * An optional data-pendo-id for analytics tracking
+   */
+  'data-pendo-id'?: string;
+  /**
    * An optional custom data-testid
    * @default selection-card
    */
@@ -39,7 +43,7 @@ export interface SelectionCardProps {
    * The heading of the card.
    * @example Linode 1GB
    */
-  heading: string;
+  heading: JSX.Element | string;
   /**
    * An optional decoration to display next to the heading.
    * @example (Current)
@@ -63,6 +67,10 @@ export interface SelectionCardProps {
    * An optional variant to render on the right side.
    */
   renderVariant?: () => JSX.Element | null;
+  /**
+   * An optional prop to set the ARIA role of the selection card.
+   */
+  role?: string;
   /**
    * An array of subheadings to display below the heading.
    * @example ['Linode 1GB', 'Linode 2GB', 'Linode 4GB']
@@ -125,6 +133,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
     onClick,
     renderIcon,
     renderVariant,
+    role,
     subheadings,
     sxCardBase,
     sxCardBaseHeading,
@@ -167,6 +176,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
   const cardGrid = (
     <StyledGrid
       className={className}
+      data-pendo-id={props['data-pendo-id']}
       data-qa-selection-card
       data-qa-selection-card-checked={checked}
       data-testid={props['data-testid'] ?? 'selection-card'}
@@ -174,6 +184,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
       id={id}
       onClick={handleClick}
       onKeyPress={handleKeyPress}
+      role={role}
       size={gridSize ?? { lg: 4, sm: 6, xl: 3, xs: 12 }}
       sx={sxGrid}
       tabIndex={0}

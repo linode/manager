@@ -1,57 +1,15 @@
 import { Autocomplete } from '@linode/ui';
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { handleValueChange, resolveSelectedValues } from './utils';
+import {
+  getStaticOptions,
+  handleValueChange,
+  isMaxSelectionsReached,
+  isOptionDisabled,
+  resolveSelectedValues,
+} from './utils';
 
-import type { Item } from '../../../constants';
-
-interface DimensionFilterAutocompleteProps {
-  /**
-   * Whether the autocomplete input should be disabled.
-   */
-  disabled: boolean;
-  /**
-   * Optional error message to display beneath the input.
-   */
-  errorText?: string;
-  /**
-   * Handler function called on input blur.
-   */
-  fieldOnBlur: () => void;
-  /**
-   * Callback triggered when the user selects a new value(s).
-   */
-  fieldOnChange: (newValue: string | string[]) => void;
-
-  /**
-   * Current raw string value (or null) from the form state.
-   */
-  fieldValue: null | string;
-  /**
-   * boolean to control display of API error messages
-   */
-  isError: boolean;
-  /**
-   * boolean to control showing loading state
-   */
-  isLoading: boolean;
-  /**
-   * To control single-select/multi-select in the Autocomplete.
-   */
-  multiple?: boolean;
-  /**
-   * Name of the field set in the form.
-   */
-  name: string;
-  /**
-   * Placeholder text to display when no selection is made.
-   */
-  placeholderText: string;
-  /**
-   * The full list of selectable options for the autocomplete input.
-   */
-  values: Item<string, string>[];
-}
+import type { DimensionFilterAutocompleteProps } from './constants';
 
 /**
  * Renders an Autocomplete input field for the DimensionFilter value field.
@@ -64,28 +22,55 @@ export const DimensionFilterAutocomplete = (
     multiple,
     name,
     fieldOnChange,
-    values,
     disabled,
     fieldOnBlur,
-    isError,
-    isLoading,
     placeholderText,
     errorText,
     fieldValue,
+    serviceType,
+    dimensionLabel,
+    values,
+    maxSelections,
   } = props;
 
+  const options = useMemo(
+    () => getStaticOptions(serviceType, dimensionLabel ?? '', values ?? []),
+    [dimensionLabel, serviceType, values]
+  );
+  const maxReached = React.useMemo(() => {
+    return isMaxSelectionsReached(
+      multiple ?? false,
+      fieldValue ?? '',
+      maxSelections
+    );
+  }, [fieldValue, maxSelections, multiple]);
+
+  const showHelperText = !errorText && maxSelections !== undefined && multiple;
+  const disableSelectAll =
+    maxSelections !== undefined && multiple
+      ? options.length > maxSelections
+      : false;
   return (
     <Autocomplete
       data-qa-dimension-filter={`${name}-value`}
       data-testid="value"
       disabled={disabled}
-      errorText={
-        errorText ?? (isError ? 'Failed to fetch the values.' : undefined)
+      disableSelectAll={disableSelectAll}
+      errorText={errorText}
+      getOptionDisabled={(option) => {
+        return isOptionDisabled({
+          maxReached,
+          value: fieldValue ?? undefined,
+          multiple: multiple ?? false,
+          option,
+        });
+      }}
+      helperText={
+        showHelperText ? `Select up to ${maxSelections} values` : undefined
       }
       isOptionEqualToValue={(option, value) => value.value === option.value}
       label="Value"
       limitTags={1}
-      loading={!disabled && isLoading && !isError}
       multiple={multiple}
       onBlur={fieldOnBlur}
       onChange={(_, selected, operation) => {
@@ -96,10 +81,10 @@ export const DimensionFilterAutocomplete = (
         );
         fieldOnChange(newValue);
       }}
-      options={values}
+      options={options}
       placeholder={placeholderText}
       sx={{ flex: 1 }}
-      value={resolveSelectedValues(values, fieldValue, multiple ?? false)}
+      value={resolveSelectedValues(options, fieldValue, multiple ?? false)}
     />
   );
 };

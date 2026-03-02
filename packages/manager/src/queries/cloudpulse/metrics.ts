@@ -19,8 +19,10 @@ export const useCloudPulseMetricsQuery = (
   request: CloudPulseMetricsRequest,
   obj: {
     authToken?: string;
+    isFiltersLoading?: boolean;
     isFlags: boolean;
     label: string;
+    shouldRefresh?: boolean;
     timeStamp: number | undefined;
     url: string;
   }
@@ -37,8 +39,8 @@ export const useCloudPulseMetricsQuery = (
       obj.label
     ),
 
-    enabled: !!obj.isFlags,
-    refetchInterval: 120000,
+    enabled: !!obj.isFlags && !obj.isFiltersLoading,
+    refetchInterval: obj.shouldRefresh ? 120000 : false,
     refetchOnWindowFocus: false,
     retry: 0,
   });

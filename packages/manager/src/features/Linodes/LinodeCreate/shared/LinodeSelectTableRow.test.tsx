@@ -3,8 +3,6 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { imageFactory, typeFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   renderWithThemeAndHookFormContext,
   wrapWithTableBody,
@@ -13,17 +11,20 @@ import {
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
 const queryMocks = vi.hoisted(() => ({
-  userPermissions: vi.fn(() => ({
-    data: {
-      shutdown_linode: false,
-      clone_linode: false,
-    },
-  })),
+  useImageQuery: vi.fn().mockReturnValue({}),
+  useRegionsQuery: vi.fn().mockReturnValue({}),
+  useTypeQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/features/IAM/hooks/usePermissions', () => ({
-  usePermissions: queryMocks.userPermissions,
-}));
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useImageQuery: queryMocks.useImageQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
+    useTypeQuery: queryMocks.useTypeQuery,
+  };
+});
 
 describe('LinodeSelectTableRow', () => {
   it('should render a Radio that is labeled by the Linode label', () => {
@@ -31,7 +32,14 @@ describe('LinodeSelectTableRow', () => {
 
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
-        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+        <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
+          linode={linode}
+          onSelect={vi.fn()}
+          selected
+        />
       ),
     });
 
@@ -43,7 +51,14 @@ describe('LinodeSelectTableRow', () => {
 
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
-        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+        <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
+          linode={linode}
+          onSelect={vi.fn()}
+          selected
+        />
       ),
     });
 
@@ -56,6 +71,9 @@ describe('LinodeSelectTableRow', () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
         <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
           linode={linode}
           onSelect={vi.fn()}
           selected={false}
@@ -67,12 +85,6 @@ describe('LinodeSelectTableRow', () => {
   });
 
   it('should should call onSelect when a radio is selected', async () => {
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        shutdown_linode: false,
-        clone_linode: true,
-      },
-    });
     const linode = linodeFactory.build();
 
     const onSelect = vi.fn();
@@ -80,6 +92,9 @@ describe('LinodeSelectTableRow', () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
         <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={true}
+          isShutdownable={false}
           linode={linode}
           onSelect={onSelect}
           selected={false}
@@ -100,15 +115,20 @@ describe('LinodeSelectTableRow', () => {
       label: 'My Image Nice Label',
     });
 
-    server.use(
-      http.get('*/v4/images/my-image', () => {
-        return HttpResponse.json(image);
-      })
-    );
+    queryMocks.useImageQuery.mockReturnValue({
+      data: image,
+    });
 
     const { findByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
-        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+        <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
+          linode={linode}
+          onSelect={vi.fn()}
+          selected
+        />
       ),
     });
 
@@ -122,19 +142,24 @@ describe('LinodeSelectTableRow', () => {
       label: 'US Test',
     });
 
-    server.use(
-      http.get('*/v4*/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
-      })
-    );
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [region],
+    });
 
     const { findByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
-        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+        <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
+          linode={linode}
+          onSelect={vi.fn()}
+          selected
+        />
       ),
     });
 
-    await findByText(`US, ${region.label}`);
+    await findByText(region.label);
   });
 
   it('should render a Linode plan label', async () => {
@@ -144,15 +169,20 @@ describe('LinodeSelectTableRow', () => {
       label: 'Linode Type 1',
     });
 
-    server.use(
-      http.get('*/v4/linode/types/linode-type-1', () => {
-        return HttpResponse.json(type);
-      })
-    );
+    queryMocks.useTypeQuery.mockReturnValue({
+      data: type,
+    });
 
     const { findByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
-        <LinodeSelectTableRow linode={linode} onSelect={vi.fn()} selected />
+        <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
+          linode={linode}
+          onSelect={vi.fn()}
+          selected
+        />
       ),
     });
 
@@ -165,6 +195,9 @@ describe('LinodeSelectTableRow', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
         <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={false}
+          isShutdownable={false}
           linode={linode}
           onPowerOff={vi.fn()}
           onSelect={vi.fn()}
@@ -178,16 +211,13 @@ describe('LinodeSelectTableRow', () => {
 
   it('should render an enabled power off button if the Linode is powered on, a onPowerOff function is passed, and the row is selected, if user has shutdown_linode permission', async () => {
     const linode = linodeFactory.build({ status: 'running' });
-    queryMocks.userPermissions.mockReturnValue({
-      data: {
-        shutdown_linode: true,
-        clone_linode: true,
-      },
-    });
 
     const { getByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
         <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={true}
+          isShutdownable={true}
           linode={linode}
           onPowerOff={vi.fn()}
           onSelect={vi.fn()}
@@ -206,6 +236,9 @@ describe('LinodeSelectTableRow', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: wrapWithTableBody(
         <LinodeSelectTableRow
+          disabled={false}
+          isCloneable={true}
+          isShutdownable={true}
           linode={linode}
           onPowerOff={onPowerOff}
           onSelect={vi.fn()}

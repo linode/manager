@@ -1,8 +1,9 @@
 import { Stack } from '@linode/ui';
 import React from 'react';
 
+import { PublicAccess } from '../../EditInterfaceDrawer/VPCInterface/PublicAccess';
 import { VPCDetails } from './VPCDetails';
-import { VPCIPv4Addresses } from './VPCIPv4Addresses';
+import { VPCIPAddresses } from './VPCIPAddresses';
 import { VPCRanges } from './VPCRanges';
 
 interface Props {
@@ -13,7 +14,8 @@ export const VPCInterface = ({ regionId }: Props) => {
   return (
     <Stack spacing={2}>
       <VPCDetails regionId={regionId} />
-      <VPCIPv4Addresses />
+      <VPCIPAddresses />
+      <PublicAccess />
       <VPCRanges />
     </Stack>
   );

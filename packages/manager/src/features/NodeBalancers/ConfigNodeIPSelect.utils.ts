@@ -1,4 +1,6 @@
-import type { Linode, LinodeIPsResponse, Subnet } from '@linode/api-v4';
+import { listToItemsByID } from '@linode/queries';
+
+import type { Linode, Subnet, VPCIP } from '@linode/api-v4';
 
 export interface PrivateIPOption {
   /**
@@ -8,14 +10,14 @@ export interface PrivateIPOption {
   /**
    * The Linode associated with the private IPv4 address
    */
-  linode: Partial<Linode>;
+  linode: Linode;
 }
 
 export interface VPCIPOption extends PrivateIPOption {
   /**
    * The Subnet associated with the VPC IPv4 address
    */
-  subnet: Partial<Subnet>;
+  subnet: Subnet;
 }
 
 /**
@@ -40,55 +42,38 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 };
 
 export const getVPCIPOptions = (
-  vpcIps: LinodeIPsResponse[] | undefined,
+  vpcIps: undefined | VPCIP[],
   linodes: Linode[] | undefined,
-  subnets?: Subnet[] | undefined
+  subnets: Subnet[] | undefined
 ) => {
   if (!vpcIps || !subnets) {
     return [];
   }
 
+  const linodesMap = listToItemsByID(linodes ?? [], 'id');
+  const subnetsMap = listToItemsByID(subnets ?? [], 'id');
+
   const options: VPCIPOption[] = [];
 
-  const linodeLabelMap = (linodes ?? []).reduce(
-    (acc: Record<number, string>, linode) => {
-      acc[linode.id] = linode.label;
-      return acc;
-    },
-    {}
-  );
-  const subnetLabelMap = (subnets ?? []).reduce(
-    (acc: Record<number, string>, subnet) => {
-      acc[subnet.id] = subnet.label;
-      return acc;
-    },
-    {}
-  );
-
-  vpcIps.forEach(({ ipv4 }) => {
-    if (ipv4.vpc) {
-      const vpcData = ipv4.vpc
-        .filter((vpc) => vpc.address && vpc.subnet_id in subnetLabelMap)
-        .map((vpc) => {
-          const linode: Partial<Linode> = {
-            label: linodeLabelMap[vpc.linode_id],
-            id: vpc.linode_id,
-          };
-          return {
-            label: vpc.address,
-            linode,
-            subnet: {
-              id: vpc.subnet_id,
-              label: subnetLabelMap[vpc.subnet_id],
-            },
-          };
-        });
-
-      if (vpcData) {
-        options.push(...vpcData);
-      }
+  for (const ip of vpcIps) {
+    if (!ip.address || !ip.linode_id) {
+      continue;
     }
-  });
 
-  return options.sort((a, b) => a.label.localeCompare(b.label));
+    const subnet = subnetsMap[ip.subnet_id];
+    const linode = linodesMap[ip.linode_id];
+
+    if (!linode || !subnet) {
+      // Safeguard against linode or subnet being undefined
+      continue;
+    }
+
+    options.push({
+      label: ip.address,
+      subnet,
+      linode,
+    });
+  }
+
+  return options;
 };

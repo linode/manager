@@ -2,6 +2,7 @@ import { useDeleteVolumeMutation } from '@linode/queries';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
 import type { APIError, Volume } from '@linode/api-v4';
@@ -18,6 +19,15 @@ interface Props {
 export const DeleteVolumeDialog = (props: Props) => {
   const { isFetching, onClose, onDeleteSuccess, open, volume, volumeError } =
     props;
+
+  const { data: volumePermissions } = usePermissions(
+    'volume',
+    ['delete_volume'],
+    volume?.id,
+    open
+  );
+
+  const isAttached = volume?.linode_id !== null;
 
   const {
     error,
@@ -41,6 +51,9 @@ export const DeleteVolumeDialog = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={
+        !volumePermissions?.delete_volume || isAttached
+      }
       entity={{
         action: 'deletion',
         name: volume?.label,

@@ -1,6 +1,7 @@
 export const streamStatus = {
   Active: 'active',
   Inactive: 'inactive',
+  Provisioning: 'provisioning',
 } as const;
 
 export type StreamStatus = (typeof streamStatus)[keyof typeof streamStatus];
@@ -20,13 +21,11 @@ export interface AuditData {
 }
 
 export interface Stream extends AuditData {
-  destinations: Destination[];
-  details: StreamDetails;
+  destinations: DestinationCore[];
+  details: StreamDetailsType;
   id: number;
   label: string;
-  primary_destination_id: number;
   status: StreamStatus;
-  stream_audit_id: number;
   type: StreamType;
   version: string;
 }
@@ -36,55 +35,87 @@ export interface StreamDetails {
   is_auto_add_all_clusters_enabled?: boolean;
 }
 
+export type StreamDetailsType = null | StreamDetails;
+
 export const destinationType = {
   CustomHttps: 'custom_https',
-  LinodeObjectStorage: 'linode_object_storage',
+  AkamaiObjectStorage: 'akamai_object_storage',
 } as const;
 
 export type DestinationType =
   (typeof destinationType)[keyof typeof destinationType];
 
-export interface Destination extends AuditData {
+export interface DestinationCore {
   details: DestinationDetails;
   id: number;
   label: string;
   type: DestinationType;
+}
+
+export interface Destination extends DestinationCore, AuditData {
   version: string;
 }
 
 export type DestinationDetails =
-  | CustomHTTPsDetails
-  | LinodeObjectStorageDetails;
+  | AkamaiObjectStorageDetails
+  | CustomHTTPSDetails;
 
-export interface LinodeObjectStorageDetails {
+export interface AkamaiObjectStorageDetails {
   access_key_id: string;
-  access_key_secret: string;
   bucket_name: string;
   host: string;
   path: string;
-  region: string;
 }
 
-type ContentType = 'application/json' | 'application/json; charset=utf-8';
-type DataCompressionType = 'gzip' | 'None';
+export interface AkamaiObjectStorageDetailsExtended
+  extends AkamaiObjectStorageDetails {
+  access_key_secret: string;
+}
 
-export interface CustomHTTPsDetails {
+export const contentType = {
+  Json: 'application/json',
+  JsonUtf8: 'application/json; charset=utf-8',
+} as const;
+
+export type ContentType = (typeof contentType)[keyof typeof contentType] | null;
+
+export const dataCompressionType = {
+  Gzip: 'gzip',
+  None: 'None',
+} as const;
+
+export type DataCompressionType =
+  (typeof dataCompressionType)[keyof typeof dataCompressionType];
+
+export interface CustomHTTPSDetails {
   authentication: Authentication;
   client_certificate_details?: ClientCertificateDetails;
-  content_type: ContentType;
+  content_type?: ContentType;
   custom_headers?: CustomHeader[];
   data_compression: DataCompressionType;
   endpoint_url: string;
 }
 
-interface ClientCertificateDetails {
-  client_ca_certificate: string;
-  client_certificate: string;
-  client_private_key: string;
-  tls_hostname: string;
+export interface CustomHTTPSDetailsExtended extends CustomHTTPSDetails {
+  authentication: Authentication & {
+    details?: AuthenticationDetailsExtended;
+  };
 }
 
-type AuthenticationType = 'basic' | 'none';
+interface ClientCertificateDetails {
+  client_ca_certificate?: string;
+  client_certificate?: string;
+  client_private_key?: string;
+  tls_hostname?: string;
+}
+
+export const authenticationType = {
+  Basic: 'basic',
+  None: 'none',
+} as const;
+
+export type AuthenticationType =
+  (typeof authenticationType)[keyof typeof authenticationType];
 
 interface Authentication {
   details?: AuthenticationDetails;
@@ -92,18 +123,21 @@ interface Authentication {
 }
 
 interface AuthenticationDetails {
-  basic_authentication_password: string;
   basic_authentication_user: string;
 }
 
-interface CustomHeader {
+interface AuthenticationDetailsExtended extends AuthenticationDetails {
+  basic_authentication_password: string;
+}
+
+export interface CustomHeader {
   name: string;
   value: string;
 }
 
 export interface CreateStreamPayload {
   destinations: number[];
-  details: StreamDetails;
+  details?: StreamDetailsType;
   label: string;
   status?: StreamStatus;
   type: StreamType;
@@ -111,24 +145,23 @@ export interface CreateStreamPayload {
 
 export interface UpdateStreamPayload {
   destinations: number[];
-  details: StreamDetails;
+  details?: StreamDetailsType;
   label: string;
   status: StreamStatus;
-  type: StreamType;
 }
 
 export interface UpdateStreamPayloadWithId extends UpdateStreamPayload {
   id: number;
 }
 
-export interface LinodeObjectStorageDetailsPayload
-  extends Omit<LinodeObjectStorageDetails, 'path'> {
+export interface AkamaiObjectStorageDetailsPayload
+  extends Omit<AkamaiObjectStorageDetailsExtended, 'path'> {
   path?: string;
 }
 
 export type DestinationDetailsPayload =
-  | CustomHTTPsDetails
-  | LinodeObjectStorageDetailsPayload;
+  | AkamaiObjectStorageDetailsPayload
+  | CustomHTTPSDetailsExtended;
 
 export interface CreateDestinationPayload {
   details: DestinationDetailsPayload;
@@ -136,7 +169,7 @@ export interface CreateDestinationPayload {
   type: DestinationType;
 }
 
-export type UpdateDestinationPayload = CreateDestinationPayload;
+export type UpdateDestinationPayload = Omit<CreateDestinationPayload, 'type'>;
 
 export interface UpdateDestinationPayloadWithId
   extends UpdateDestinationPayload {

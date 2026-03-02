@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutateProfile, useProfile } from '@linode/queries';
+import { useMutateProfile } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
 import { UpdateUserEmailSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
@@ -8,18 +8,20 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
+
 import type { User } from '@linode/api-v4';
 
 interface Props {
-  canUpdateUser: boolean;
-  user: User;
+  activeUser: User;
 }
 
-export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
+export const UserEmailPanel = ({ activeUser }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { data: profile } = useProfile();
+  const { profileUserName } = useDelegationRole();
 
-  const isProxyUserProfile = user?.user_type === 'proxy';
+  const isProxyOrDelegateUserType =
+    activeUser?.user_type === 'proxy' || activeUser?.user_type === 'delegate';
 
   const { mutateAsync: updateProfile } = useMutateProfile();
 
@@ -30,8 +32,8 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
     setError,
   } = useForm({
     resolver: yupResolver(UpdateUserEmailSchema),
-    defaultValues: { email: user.email },
-    values: { email: user.email },
+    defaultValues: { email: activeUser.email },
+    values: { email: activeUser.email },
   });
 
   const onSubmit = async (values: { email: string }) => {
@@ -44,15 +46,18 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
     }
   };
 
-  const disabledReason = isProxyUserProfile
+  const disabledReason = isProxyOrDelegateUserType
     ? RESTRICTED_FIELD_TOOLTIP
-    : profile?.username !== user.username
-      ? 'You can\u{2019}t change another user\u{2019}s email address.'
-      : undefined;
+    : activeUser.user_type === 'delegate' &&
+        profileUserName !== activeUser.username
+      ? 'E-mail addresses of delegate users are not displayed.'
+      : profileUserName !== activeUser.username
+        ? 'You can\u{2019}t change another user\u{2019}s email address.'
+        : undefined;
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
   const disableEmailField =
-    profile?.username !== user.username || isProxyUserProfile;
+    profileUserName !== activeUser.username || isProxyOrDelegateUserType;
 
   return (
     <Paper>
@@ -77,11 +82,11 @@ export const UserEmailPanel = ({ canUpdateUser, user }: Props) => {
         />
         <Button
           buttonType="primary"
-          disabled={!isDirty || !canUpdateUser}
+          disabled={!isDirty || disableEmailField}
           loading={isSubmitting}
           sx={{ mt: 2 }}
           tooltipText={
-            !canUpdateUser
+            disableEmailField
               ? 'You do not have permission to update this user.'
               : undefined
           }

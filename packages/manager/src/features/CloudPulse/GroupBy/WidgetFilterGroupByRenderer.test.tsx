@@ -53,7 +53,7 @@ describe('Widget Group By Renderer', () => {
     });
     renderWithTheme(component);
 
-    const groupByIcon = screen.getByTestId('group-by');
+    const groupByIcon = screen.getByTestId('widget-group-by');
     expect(groupByIcon).toBeInTheDocument();
     expect(groupByIcon).toBeDisabled();
 
@@ -72,7 +72,7 @@ describe('Widget Group By Renderer', () => {
 
     renderWithTheme(component);
 
-    const groupByIcon = screen.getByTestId('group-by');
+    const groupByIcon = screen.getByTestId('widget-group-by');
 
     await groupByIcon.click();
 
@@ -85,7 +85,7 @@ describe('Widget Group By Renderer', () => {
     const title = screen.getByText('Group By');
     expect(title).toBeInTheDocument();
 
-    expect(handleChange).toHaveBeenCalledWith([]);
+    expect(handleChange).toHaveBeenCalledWith([], false);
   });
 
   it('Should not open drawer but group by icon should be enabled', async () => {
@@ -96,7 +96,7 @@ describe('Widget Group By Renderer', () => {
     });
     renderWithTheme(component);
 
-    const groupByIcon = screen.getByTestId('group-by');
+    const groupByIcon = screen.getByTestId('widget-group-by');
     expect(groupByIcon).toBeEnabled();
 
     const drawer = screen.queryByTestId('drawer');
@@ -113,14 +113,14 @@ describe('Widget Group By Renderer', () => {
     });
     renderWithTheme(component);
 
-    const groupByIcon = screen.getByTestId('group-by');
+    const groupByIcon = screen.getByTestId('widget-group-by');
 
     await groupByIcon.click();
 
     const drawer = screen.getByTestId('drawer');
     expect(drawer).toBeInTheDocument();
 
-    expect(handleChange).toHaveBeenCalledWith([defaultValue[0].value]);
+    expect(handleChange).toHaveBeenCalledWith([defaultValue[0].value], false);
 
     defaultValue.forEach((value) => {
       const option = screen.getByRole('button', { name: value.label });

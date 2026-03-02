@@ -14,6 +14,7 @@ import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 import {
   DASHBOARD_ID,
+  GROUP_BY,
   REFRESH,
   RESOURCE_FILTER_MAP,
   TIME_DURATION,
@@ -29,7 +30,10 @@ export interface GlobalFilterProperties {
     filterValue: FilterValueType,
     labels: string[]
   ): void;
-  handleDashboardChange(dashboard: Dashboard | undefined): void;
+  handleDashboardChange(
+    dashboard: Dashboard | undefined,
+    skipReset?: boolean
+  ): void;
   handleGroupByChange: (selectedValues: string[]) => void;
   handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
@@ -72,9 +76,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         });
       }
       setSelectedDashboard(dashboard);
-      handleDashboardChange(dashboard);
+      handleDashboardChange(
+        dashboard,
+        preferences?.[DASHBOARD_ID] === dashboard?.id
+      );
     },
-    []
+    [preferences, handleDashboardChange]
   );
 
   const emitFilterChange = React.useCallback(
@@ -103,6 +110,17 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     {},
 
     RESOURCE_FILTER_MAP[selectedDashboard?.service_type ?? ''] ?? {}
+  );
+
+  const onGroupByChange = React.useCallback(
+    (selectedValues: string[], savePref: boolean = false) => {
+      if (savePref) {
+        updatePreferences({ [GROUP_BY]: selectedValues });
+      }
+
+      handleGroupByChange(selectedValues);
+    },
+    []
   );
 
   return (
@@ -150,8 +168,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               </IconButton>
             </CloudPulseTooltip>
             <GlobalFilterGroupByRenderer
-              handleChange={handleGroupByChange}
-              selectedDashboard={selectedDashboard}
+              handleChange={onGroupByChange}
+              preferenceGroupBy={preferences?.[GROUP_BY]}
+              savePreferences
+              selectedDashboard={
+                preferences?.[DASHBOARD_ID] === selectedDashboard?.id // wait for dashboard id in preference to match selected dashboard id
+                  ? selectedDashboard
+                  : undefined
+              }
             />
           </Box>
         </Box>

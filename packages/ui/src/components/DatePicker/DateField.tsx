@@ -12,8 +12,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateFieldProps as MUIDateFieldProps } from '@mui/x-date-pickers/DateField';
 import type { DateTime } from 'luxon';
 
-interface DateFieldProps
-  extends Omit<MUIDateFieldProps<DateTime>, 'onChange' | 'value'> {
+interface DateFieldProps extends Omit<MUIDateFieldProps, 'onChange' | 'value'> {
   errorText?: string;
   format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
   inputRef?: React.RefObject<HTMLInputElement | null>;
@@ -64,7 +63,6 @@ export const DateField = ({
             'aria-invalid': Boolean(errorText),
             'aria-labelledby': validInputId,
             id: validInputId,
-            onClick,
           }}
           inputRef={inputRef}
           onChange={handleChange}
@@ -73,6 +71,7 @@ export const DateField = ({
               InputLabelProps: { shrink: true },
               error: Boolean(errorText),
               helperText: '',
+              onClick, // Move onClick to textField slotProps
             },
           }}
           sx={{ marginTop: 1 }}

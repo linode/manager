@@ -17,12 +17,10 @@ const props = {
 
 const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({}),
-  useQueryWithPermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.usePermissions,
-  useQueryWithPermissions: queryMocks.useQueryWithPermissions,
 }));
 
 const mockUpdateImage = vi.fn();
@@ -38,10 +36,7 @@ vi.mock('@linode/api-v4', async () => {
 
 beforeEach(() => {
   queryMocks.usePermissions.mockReturnValue({
-    data: { update_image: true },
-  });
-  queryMocks.useQueryWithPermissions.mockReturnValue({
-    data: [props.image],
+    data: { update_image: true, is_account_admin: true },
   });
 });
 

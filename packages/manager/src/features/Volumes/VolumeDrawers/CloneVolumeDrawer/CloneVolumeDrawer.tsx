@@ -39,16 +39,11 @@ const initialValues = { label: '' };
 export const CloneVolumeDrawer = (props: Props) => {
   const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
-  const { data: accountPermissions } = usePermissions('account', [
-    'create_volume',
-  ]);
   const { data: volumePermissions } = usePermissions(
     'volume',
     ['clone_volume'],
     volume?.id
   );
-  const canCloneVolume =
-    volumePermissions?.clone_volume && accountPermissions?.create_volume;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
@@ -104,7 +99,7 @@ export const CloneVolumeDrawer = (props: Props) => {
       title="Clone Volume"
     >
       <form onSubmit={handleSubmit}>
-        {!canCloneVolume && (
+        {!volumePermissions?.clone_volume && (
           <Notice
             spacingBottom={12}
             text="You don't have permission to clone this volume."
@@ -118,7 +113,7 @@ export const CloneVolumeDrawer = (props: Props) => {
           be available in {volume?.region}.
         </Typography>
         <TextField
-          disabled={!canCloneVolume}
+          disabled={!volumePermissions?.clone_volume}
           errorText={touched.label ? errors.label : undefined}
           label="Label"
           name="label"
@@ -149,7 +144,7 @@ export const CloneVolumeDrawer = (props: Props) => {
         />
         <ActionsPanel
           primaryButtonProps={{
-            disabled: !canCloneVolume || isInvalidPrice,
+            disabled: !volumePermissions?.clone_volume || isInvalidPrice,
             label: 'Clone Volume',
             loading: isSubmitting,
             tooltipText:

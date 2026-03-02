@@ -170,9 +170,10 @@ const assertBillingAccessSelected = (
 
 describe('User permission management', () => {
   beforeEach(() => {
-    // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
     mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: true,
+      iam: {
+        enabled: false,
+      },
     }).as('getFeatureFlags');
   });
 
@@ -221,6 +222,7 @@ describe('User permission management', () => {
 
     // Restrict account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUserUpdated);
+    mockGetUser(mockUserUpdated);
     mockGetUserGrants(mockUser.username, mockUserGrantsUpdated);
     cy.get('[data-qa="toggle-full-account-access"]')
       .should('be.visible')

@@ -1,4 +1,5 @@
 import {
+  useAccountSettings,
   useAllTypes,
   useMutateAccountAgreements,
   useRegionsQuery,
@@ -12,6 +13,7 @@ import {
   Select,
   Stack,
   TextField,
+  Typography,
 } from '@linode/ui';
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
@@ -31,6 +33,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -38,14 +41,12 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-  useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
-  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -125,8 +126,8 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
+  const { data: accountSettings } = useAccountSettings();
   const { showAPL } = useAPLAvailability();
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
@@ -174,10 +175,13 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
-  // LKE-E does not support APL at this time.
-  const isAPLSupported = showAPL && selectedTier === 'standard';
+  // APL is supported for standard clusters, and for enterprise clusters when the APL_LKE_E flag is enabled
+  const isAPLSupported =
+    showAPL &&
+    (selectedTier === 'standard' ||
+      (selectedTier === 'enterprise' && flags.aplLkeE));
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -198,9 +202,17 @@ export const CreateCluster = () => {
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
+
+      // If switching to standard tier and APL is enabled, enable HA
+      if (aplEnabled) {
+        setHighAvailability(true);
+      }
     }
 
-    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    // If a user configures node pools in the LKE-E flow, but then switches to LKE, reset configurations that are incompatible with LKE-E:
+    // - If a user added > 100 nodes, set the max node count to 100 for correct price display.
+    // - Clear the firewall selection.
+    // - Clear the update strategy selection.
     if (isLkeEnterpriseLAFeatureEnabled) {
       nodePools.forEach((nodePool, idx) =>
         update(idx, {
@@ -211,6 +223,8 @@ export const CreateCluster = () => {
               ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
               : MAX_NODES_PER_POOL_STANDARD_TIER
           ),
+          firewall_id: undefined,
+          update_strategy: undefined,
         })
       );
     }
@@ -228,6 +242,9 @@ export const CreateCluster = () => {
     globalGrantType: 'add_lkes',
   });
 
+  const isInterfaceIncompatible =
+    accountSettings?.interfaces_for_new_linodes === 'linode_only';
+
   const {
     data: allTypes,
     error: typesError,
@@ -240,14 +257,11 @@ export const CreateCluster = () => {
   const { mutateAsync: createKubernetesCluster } =
     useCreateKubernetesClusterMutation();
 
-  const { mutateAsync: createKubernetesClusterBeta } =
-    useCreateKubernetesClusterBetaMutation();
-
   const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+    data: versionData,
+    isLoading: isLoadingVersions,
+    error: versionsError,
+  } = useKubernetesTieredVersionsQuery(selectedTier);
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -349,10 +363,6 @@ export const CreateCluster = () => {
       };
     }
 
-    const createClusterFn = isUsingBetaEndpoint
-      ? createKubernetesClusterBeta
-      : createKubernetesCluster;
-
     // TODO: Improve error handling in M3-10429, at which point we shouldn't need this.
     if (
       (isLkeEnterprisePostLAFeatureEnabled ||
@@ -384,7 +394,7 @@ export const CreateCluster = () => {
       }
     }
 
-    createClusterFn(payload)
+    createKubernetesCluster(payload)
       .then((cluster) => {
         navigate({
           to: '/kubernetes/clusters/$clusterId/summary',
@@ -485,6 +495,21 @@ export const CreateCluster = () => {
               variant="error"
             />
           )}
+          {isInterfaceIncompatible && (
+            <Notice sx={{ marginBottom: 2 }} variant="warning">
+              <Typography>
+                Your account’s{' '}
+                <strong>
+                  Network Interface Type setting is incompatible with LKE
+                </strong>
+                . To create a cluster, update this setting to allow the option
+                for Configuration Profile Interfaces.{' '}
+                <Link to={'/account-settings#interface-type'}>
+                  Account settings
+                </Link>
+              </Typography>
+            </Notice>
+          )}
           <Paper data-qa-label-header>
             <TextField
               data-qa-label-input
@@ -577,6 +602,7 @@ export const CreateCluster = () => {
                 <StyledStackWithTabletBreakpoint>
                   <Stack>
                     <ApplicationPlatform
+                      isEnterpriseTier={selectedTier === 'enterprise'}
                       isSectionDisabled={!isAPLSupported}
                       setAPL={setAplEnabled}
                       setHighAvailability={setHighAvailability}
@@ -696,6 +722,7 @@ export const CreateCluster = () => {
                 ? UNKNOWN_PRICE
                 : highAvailabilityPrice
             }
+            isInterfaceIncompatible={isInterfaceIncompatible}
             pools={nodePools}
             region={selectedRegion?.id}
             regionsData={regionsData}

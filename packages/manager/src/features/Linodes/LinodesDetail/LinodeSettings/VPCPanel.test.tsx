@@ -13,18 +13,27 @@ beforeAll(() => mockMatchMedia());
 
 const props = {
   additionalIPv4RangesForVPC: [],
+  additionalIPv6RangesForVPC: [],
   assignPublicIPv4Address: false,
+  assignPublicIPv6Address: false,
   autoassignIPv4WithinVPC: true,
+  autoassignIPv6WithinVPC: false,
   handleIPv4RangeChange: vi.fn(),
+  handleIPv6RangeChange: vi.fn(),
   handleSelectVPC: vi.fn(),
   handleSubnetChange: vi.fn(),
   handleVPCIPv4Change: vi.fn(),
+  handleVPCIPv6Change: vi.fn(),
   region: 'us-east',
   selectedSubnetId: undefined,
   selectedVPCId: undefined,
+  showIPv6Content: false,
   toggleAssignPublicIPv4Address: vi.fn(),
+  toggleAssignPublicIPv6Address: vi.fn(),
   toggleAutoassignIPv4WithinVPCEnabled: vi.fn(),
+  toggleAutoassignIPv6WithinVPCEnabled: vi.fn(),
   vpcIPv4AddressOfLinode: undefined,
+  vpcIPv6AddressOfLinode: undefined,
 };
 
 const vpcPanelTestId = 'vpc-panel';
@@ -149,9 +158,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByLabelText(
-          'Auto-assign a VPC IPv4 address for this Linode in the VPC'
-        )
+        wrapper.getByLabelText('Auto-assign VPC IPv4 address')
       ).not.toBeChecked();
       // Using regex here to account for the "(required)" indicator.
       expect(wrapper.getByLabelText(/^VPC IPv4.*/)).toHaveValue('10.0.4.3');
@@ -181,7 +188,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByLabelText('Assign a public IPv4 address for this Linode')
+        wrapper.getByLabelText('Allow public IPv4 access (1:1 NAT)')
       ).toBeChecked();
     });
   });

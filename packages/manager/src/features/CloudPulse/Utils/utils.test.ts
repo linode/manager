@@ -1,7 +1,15 @@
 import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
-import { serviceTypesFactory } from 'src/factories';
+import {
+  kubernetesClusterFactory,
+  objectStorageBucketFactoryGen2,
+  serviceTypesFactory,
+} from 'src/factories';
+import {
+  firewallEntityfactory,
+  firewallFactory,
+} from 'src/factories/firewalls';
 
 import {
   INTERFACE_ID,
@@ -20,12 +28,21 @@ import {
 import {
   arePortsValid,
   areValidInterfaceIds,
+  arraysEqual,
+  filterFirewallResources,
+  filterKubernetesClusters,
   getEnabledServiceTypes,
+  getFilteredDimensions,
+  getValidSortedEndpoints,
+  isValidFilter,
   isValidPort,
   useIsAclpSupportedRegion,
   validationFunction,
 } from './utils';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
+import type { Dimension } from '@linode/api-v4';
 import type { AclpServices } from 'src/featureFlags';
 
 describe('isValidPort', () => {
@@ -337,5 +354,398 @@ describe('getEnabledServiceTypes', () => {
     };
     const result = getEnabledServiceTypes(serviceTypesList, aclpServicesFlag);
     expect(result).not.toContain('linode');
+  });
+
+  describe('filterFirewallResources', () => {
+    it('should return the filtered firewall resources for linode', () => {
+      const resources = [
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 1,
+              label: 'linode-1',
+              type: 'linode',
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 33,
+              label: null,
+              type: 'linode_interface',
+              parent_entity: {
+                id: 2,
+                label: 'linode-2',
+                type: 'linode',
+              },
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 3,
+              label: null,
+              type: 'linode',
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 4,
+              label: null,
+              type: 'linode_interface',
+              parent_entity: {
+                id: 3,
+                label: null,
+                type: 'linode',
+              },
+            }),
+          ],
+        }),
+        firewallFactory.build({
+          entities: [
+            firewallEntityfactory.build({
+              id: 2,
+              label: 'nodebalancer-1',
+              type: 'nodebalancer',
+            }),
+          ],
+        }),
+      ];
+      expect(filterFirewallResources(resources, 'linode')).toEqual([
+        resources[0],
+        resources[1],
+      ]);
+    });
+  });
+});
+
+describe('filterKubernetesClusters', () => {
+  it('should return the filtered kubernetes clusters for enterprise', () => {
+    const clusters = [
+      ...kubernetesClusterFactory.buildList(5, { tier: 'standard' }),
+      ...kubernetesClusterFactory.buildList(5, { tier: 'enterprise' }),
+    ];
+    expect(filterKubernetesClusters(clusters)).toHaveLength(5);
+  });
+  it('should return the filtered kubernetes clusters for enterprise sorted by label', () => {
+    const clusters = [
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-redis-cluster',
+      }),
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-mr-api-4',
+      }),
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-alertmanager2',
+      }),
+      kubernetesClusterFactory.build({
+        tier: 'enterprise',
+        label: 'pl-labkrk-2-alertmanager',
+      }),
+    ];
+
+    expect(filterKubernetesClusters(clusters)[0].label).toBe(
+      'pl-labkrk-2-alertmanager'
+    );
+    expect(filterKubernetesClusters(clusters)[1].label).toBe(
+      'pl-labkrk-2-alertmanager2'
+    );
+    expect(filterKubernetesClusters(clusters)[2].label).toBe(
+      'pl-labkrk-2-mr-api-4'
+    );
+    expect(filterKubernetesClusters(clusters)[3].label).toBe(
+      'pl-labkrk-2-redis-cluster'
+    );
+  });
+});
+
+describe('isValidFilter', () => {
+  const valuedDim: Dimension = {
+    dimension_label: 'browser',
+    label: 'Browser',
+    values: ['chrome', 'firefox', 'safari'],
+  };
+
+  const staticDim: Dimension = {
+    dimension_label: 'browser',
+    label: 'Browser',
+    values: [],
+  };
+
+  it('returns false when operator is missing', () => {
+    const filter = {
+      dimension_label: 'browser',
+      operator: null,
+      value: 'chrome',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(false);
+  });
+
+  it('returns false when the dimension_label is not present in options', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'os',
+      operator: 'eq',
+      value: 'linux',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(false);
+  });
+
+  it('returns true for static dimensions (no values array) regardless of value', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'eq',
+      value: 'chrome',
+    };
+    expect(isValidFilter(filter, [staticDim])).toBe(true);
+  });
+
+  it('allows pattern operators ("endswith" / "startswith") even without validating values', () => {
+    const f1: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'endswith',
+      value: 'fox',
+    };
+    const f2: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'startswith',
+      value: 'chr',
+    };
+    expect(isValidFilter(f1, [valuedDim])).toBe(true);
+    expect(isValidFilter(f2, [valuedDim])).toBe(true);
+  });
+
+  it('returns true when multiple comma-separated values are all valid', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'in',
+      value: 'chrome,firefox',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(true);
+  });
+
+  it('returns false when value is empty string for a dimension that expects values', () => {
+    const filter: MetricsDimensionFilter = {
+      dimension_label: 'browser',
+      operator: 'eq',
+      value: '',
+    };
+    expect(isValidFilter(filter, [valuedDim])).toBe(false);
+  });
+});
+
+describe('getFilteredDimensions', () => {
+  it('returns [] when no dimensionFilters provided', () => {
+    const dimensions: Dimension[] = [
+      { dimension_label: 'linode_id', values: [], label: 'Linode' },
+      { dimension_label: 'vpc_subnet_id', values: [], label: 'Linode' },
+    ];
+
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: [],
+    });
+    expect(result).toEqual([]);
+  });
+
+  it('merges linode and vpc values into metric dimensions and keeps valid filters', () => {
+    const dimensions: Dimension[] = [
+      { dimension_label: 'linode_id', values: [], label: 'Linode' },
+      { dimension_label: 'vpc_subnet_id', values: [], label: 'VPC subnet ID' },
+      {
+        dimension_label: 'browser',
+        values: ['chrome', 'firefox'],
+        label: 'browser',
+      },
+    ];
+
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const filters: MetricsDimensionFilter[] = [
+      { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: 'vpc-1' },
+      { dimension_label: 'browser', operator: 'in', value: 'chrome' },
+    ];
+
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
+
+    // all three filters are valid against mergedDimensions
+    expect(result).toHaveLength(3);
+    expect(result).toEqual(expect.arrayContaining(filters));
+  });
+
+  it('filters out invalid filters (values not present in merged dimension values)', () => {
+    const dimensions: Dimension[] = [
+      { dimension_label: 'linode_id', values: [], label: 'Linode' },
+      {
+        dimension_label: 'vpc_subnet_id',
+        values: [],
+        label: 'VPC subnet Id',
+      },
+      {
+        dimension_label: 'browser',
+        values: ['chrome', 'firefox'],
+        label: 'Browser',
+      },
+    ];
+
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const filters: MetricsDimensionFilter[] = [
+      { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+      { dimension_label: 'vpc_subnet_id', operator: 'eq', value: 'vpc-1' },
+      // invalid browser value -- should be removed
+      { dimension_label: 'browser', operator: 'in', value: 'edge' },
+    ];
+
+    const result = getFilteredDimensions({
+      dimensions,
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
+
+    // only the two valid filters should remain
+    expect(result).toHaveLength(2);
+    expect(result).toEqual(
+      expect.arrayContaining([
+        { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+        { dimension_label: 'vpc_subnet_id', operator: 'eq', value: 'vpc-1' },
+      ])
+    );
+    // invalid 'browser' filter must be absent
+    expect(result).toEqual(
+      expect.not.arrayContaining([
+        { dimension_label: 'browser', operator: 'in', value: 'edge' },
+      ])
+    );
+  });
+
+  it('returns [] when dimensions is empty', () => {
+    const linodes: FetchOptions = {
+      values: [{ label: 'L1', value: 'lin-1' }],
+      isError: false,
+      isLoading: false,
+    };
+    const vpcs: FetchOptions = {
+      values: [{ label: 'V1', value: 'vpc-1' }],
+      isError: false,
+      isLoading: false,
+    };
+
+    const filters: MetricsDimensionFilter[] = [
+      { dimension_label: 'linode_id', operator: 'eq', value: 'lin-1' },
+    ];
+
+    const result = getFilteredDimensions({
+      dimensions: [],
+      linodes,
+      vpcs,
+      dimensionFilters: filters,
+    });
+
+    // with no metric definitions, mergedDimensions is undefined and filters should not pass validation
+    expect(result).toEqual([]);
+  });
+});
+
+describe('arraysEqual', () => {
+  it('should return true when both arrays are empty', () => {
+    expect(arraysEqual([], [])).toBe(true);
+  });
+  it('should return false when one array is empty and the other is not', () => {
+    expect(arraysEqual([], [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are undefined', () => {
+    expect(arraysEqual(undefined, undefined)).toBe(true);
+  });
+  it('should return false when one of the arrays is undefined', () => {
+    expect(arraysEqual(undefined, [1, 2, 3])).toBe(false);
+  });
+  it('should return true when arrays are equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+  });
+  it('should return false when arrays are not equal', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4])).toBe(false);
+  });
+  it('should return true when arrays have same elements but in different order', () => {
+    expect(arraysEqual([1, 2, 3], [3, 2, 1])).toBe(true);
+  });
+});
+
+describe('getValidSortedEndpoints', () => {
+  it('should return an empty array when buckets are undefined', () => {
+    expect(getValidSortedEndpoints(undefined)).toEqual([]);
+  });
+  it('should return the valid and unique sorted endpoints', () => {
+    const buckets = [
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'a',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'b',
+        region: undefined,
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: 'c',
+        region: 'us-east',
+      }),
+      objectStorageBucketFactoryGen2.build({
+        s3_endpoint: undefined,
+        region: 'us-east',
+      }),
+    ];
+    // Only a and c are valid, so they are sorted and returned
+    expect(getValidSortedEndpoints(buckets)).toEqual([
+      { id: 'a', label: 'a', region: 'us-east' },
+      { id: 'c', label: 'c', region: 'us-east' },
+    ]);
   });
 });

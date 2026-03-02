@@ -17,6 +17,15 @@ const queryMocks = vi.hoisted(() => ({
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
 }));
 
+const iamMocks = vi.hoisted(() => ({
+  usePermissions: vi.fn().mockReturnValue({ data: { update_vpc: true } }),
+  useGetAllUserEntitiesByPermission: vi.fn().mockReturnValue({
+    data: [],
+    isLoading: false,
+    error: null,
+  }),
+}));
+
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
@@ -24,6 +33,14 @@ vi.mock('@linode/queries', async () => {
     useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
   };
 });
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: iamMocks.usePermissions,
+}));
+
+vi.mock('src/features/IAM/hooks/useGetAllUserEntitiesByPermission', () => ({
+  useGetAllUserEntitiesByPermission: iamMocks.useGetAllUserEntitiesByPermission,
+}));
 
 const props = {
   isFetching: false,
@@ -48,6 +65,15 @@ describe('Subnet Assign Linodes Drawer', () => {
     region: props.vpcRegion,
   });
 
+  beforeEach(() => {
+    // Set up the default mock to return the linode
+    iamMocks.useGetAllUserEntitiesByPermission.mockReturnValue({
+      data: [linode],
+      isLoading: false,
+      error: null,
+    });
+  });
+
   server.use(
     http.get('*/linode/instances', () => {
       return HttpResponse.json(makeResourcePage([linode]));
@@ -59,9 +85,7 @@ describe('Subnet Assign Linodes Drawer', () => {
       <SubnetAssignLinodesDrawer {...props} />
     );
 
-    const header = getByText(
-      'Assign Linodes to subnet: subnet-1 (10.0.0.0/24)'
-    );
+    const header = getByText('Assign Linodes to subnet: subnet-1');
     expect(header).toBeVisible();
     const notice = getByTestId('subnet-linode-action-notice');
     expect(notice).toBeVisible();

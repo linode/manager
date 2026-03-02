@@ -103,7 +103,7 @@ export const DebouncedSearchTextField = React.memo(
 
     // Synchronize the internal state with the prop value when the value prop changes.
     React.useEffect(() => {
-      if (value && value !== textFieldValue) {
+      if (value !== textFieldValue) {
         setTextFieldValue(value);
       }
     }, [value]);

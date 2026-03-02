@@ -89,7 +89,7 @@ describe('NodeBalancersLanding', () => {
     expect(getByText('Backend Status')).toBeVisible();
     expect(getByText('Transferred')).toBeVisible();
     expect(getByText('Ports')).toBeVisible();
-    expect(getByText('IP Address')).toBeVisible();
+    expect(getByText('Frontend IP')).toBeVisible();
     expect(getByText('Region')).toBeVisible();
   });
 

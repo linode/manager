@@ -1,3 +1,4 @@
+import type { AssociatedEntityType } from '../shared/types';
 import type { Filter } from '@linode/api-v4';
 
 export const DASHBOARD_ID = 'dashboardId';
@@ -8,15 +9,23 @@ export const SECONDARY_NODE = 'secondary';
 
 export const REGION = 'region';
 
-export const LINODE_REGION = 'associated_entity_region';
+export const ENTITY_REGION = 'entity_region';
+
+export const ENDPOINT = 'endpoint';
+
+export const PARENT_ENTITY_REGION = 'associated_entity_region';
 
 export const RESOURCES = 'resources';
+
+export const NODEBALANCER_ID = 'nodebalancer_id';
 
 export const INTERVAL = 'interval';
 
 export const TIME_DURATION = 'dateTimeDuration';
 
 export const AGGREGATE_FUNCTION = 'aggregateFunction';
+
+export const GROUP_BY = 'groupBy';
 
 export const SIZE = 'size';
 
@@ -39,6 +48,8 @@ export const WIDGETS = 'widgets';
 export const PORT = 'port';
 
 export const INTERFACE_ID = 'interface_id';
+
+export const FIREWALL = 'Firewall';
 
 export const PORTS_HELPER_TEXT =
   'Enter one or more port numbers (1-65535) separated by commas.';
@@ -80,11 +91,19 @@ export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
 
-export const NO_REGION_MESSAGE: Record<string, string> = {
-  dbaas: 'No database clusters configured in any regions.',
-  linode: 'No Linodes configured in any regions.',
-  nodebalancer: 'No NodeBalancers configured in any regions.',
-  firewall: 'No firewalls configured in any Linode regions.',
+export const CLUSTERS_TOOLTIP_TEXT =
+  'This list includes only LKE Enterprise clusters.';
+
+export const NO_REGION_MESSAGE: Record<number, string> = {
+  1: 'No database clusters configured in any regions.',
+  2: 'No Linodes configured in any regions.',
+  3: 'No NodeBalancers configured in any regions.',
+  4: 'No firewalls configured in any Linode regions.',
+  6: 'No Object Storage buckets configured in any region.',
+  7: 'No volumes configured in any regions.',
+  8: 'No firewalls configured in any Nodebalancer regions.',
+  9: 'No LKE clusters configured in any regions.',
+  5: 'No Network Load Balancers configured in any regions.',
 };
 
 export const HELPER_TEXT: Record<string, string> = {
@@ -119,4 +138,15 @@ export const RESOURCE_FILTER_MAP: Record<string, Filter> = {
   netloadbalancer: {
     ...ORDER_BY_LABLE_ASC,
   },
+  blockstorage: {
+    ...ORDER_BY_LABLE_ASC,
+  },
+};
+
+export const ASSOCIATED_ENTITY_METRIC_MAP: Record<
+  AssociatedEntityType,
+  string
+> = {
+  linode: 'Linode',
+  nodebalancer: 'Node Balancer',
 };

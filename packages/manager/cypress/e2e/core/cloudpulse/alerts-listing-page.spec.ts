@@ -29,7 +29,8 @@ import {
 import {
   alertStatuses,
   DELETE_ALERT_SUCCESS_MESSAGE,
-  UPDATE_ALERT_SUCCESS_MESSAGE,
+  DISABLE_ALERT_SUCCESS_MESSAGE,
+  ENABLE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -109,7 +110,7 @@ interface AlertToggleOptions extends AlertActionOptions {
 const statusList: AlertStatusType[] = [
   'enabled',
   'disabled',
-  'in progress',
+  'provisioning',
   'failed',
 ];
 const serviceTypes: CloudPulseServiceType[] = ['linode', 'dbaas'];
@@ -234,7 +235,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       { ascending: [2, 4, 1, 3], column: 'status', descending: [1, 3, 2, 4] },
       {
         ascending: [1, 2, 3, 4],
-        column: 'service_type',
+        column: 'service_type_label',
         descending: [3, 4, 1, 2],
       },
       {
@@ -426,7 +427,10 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         alertName,
         alias,
         confirmationText: `Are you sure you want to ${action.toLowerCase()} this alert definition?`,
-        successMessage: UPDATE_ALERT_SUCCESS_MESSAGE,
+        successMessage:
+          action === 'Disable'
+            ? DISABLE_ALERT_SUCCESS_MESSAGE
+            : ENABLE_ALERT_SUCCESS_MESSAGE,
       });
     });
   });

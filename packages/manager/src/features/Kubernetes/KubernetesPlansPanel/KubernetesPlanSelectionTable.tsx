@@ -6,15 +6,22 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
+import type { LinodeTypeClass } from '@linode/api-v4';
 import type { PlanSelectionFilterOptionsTable } from 'src/features/components/PlansPanel/PlanContainer';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 interface KubernetesPlanSelectionTableProps {
+  /**
+   * Optional message to display when filters result in no plans
+   */
+  filterEmptyStateMessage?: string;
   filterOptions?: PlanSelectionFilterOptionsTable;
-  renderPlanSelection: (
-    filterOptions?: PlanSelectionFilterOptionsTable | undefined
-  ) => React.JSX.Element[];
+  plans?: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
+  renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
 }
 
@@ -32,13 +39,28 @@ export const KubernetesPlanSelectionTable = (
   props: KubernetesPlanSelectionTableProps
 ) => {
   const {
+    filterEmptyStateMessage,
     filterOptions,
+    plans,
+    planType,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
   } = props;
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    plans,
+    planType
+  );
+
+  // Determine spacing based on feature flag:
+  // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
+  // - If disabled (legacy mode) -> spacingBottom={16}
+  const spacingBottom = isGenerationalPlansEnabled ? 0 : 16;
 
   return (
-    <Table aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}>
+    <Table
+      aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
+      spacingBottom={spacingBottom}
+    >
       <TableHead>
         <TableRow>
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
@@ -68,8 +90,10 @@ export const KubernetesPlanSelectionTable = (
             colSpan={9}
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
+        ) : filterEmptyStateMessage ? (
+          <TableRowEmpty colSpan={9} message={filterEmptyStateMessage} />
         ) : (
-          renderPlanSelection()
+          ((plans && renderPlanSelection?.(plans)) ?? null)
         )}
       </TableBody>
     </Table>

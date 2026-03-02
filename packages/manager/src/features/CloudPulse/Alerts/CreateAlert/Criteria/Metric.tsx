@@ -6,6 +6,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
 import {
+  entityLabelMap,
   metricAggregationOptions,
   metricOperatorOptions,
 } from '../../constants';
@@ -57,7 +58,7 @@ export const Metric = (props: MetricCriteriaProps) => {
     onMetricDelete,
     showDeleteIcon,
   } = props;
-  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, resetField } = useFormContext<CreateAlertDefinitionForm>();
 
   const handleDataFieldChange = (
     selected: { label: string; value: string },
@@ -71,24 +72,32 @@ export const Metric = (props: MetricCriteriaProps) => {
       threshold: 0,
     };
     if (operation === 'selectOption') {
-      setValue(`${name}.metric`, selected.value, { shouldValidate: true });
-      setValue(`${name}.aggregate_function`, fieldValue.aggregate_function);
-      setValue(`${name}.dimension_filters`, fieldValue.dimension_filters);
-      setValue(`${name}.operator`, fieldValue.operator);
-      setValue(`${name}.threshold`, fieldValue.threshold);
+      resetField(name, {
+        defaultValue: { ...fieldValue, metric: selected.value },
+      });
     } else {
-      setValue(name, fieldValue);
+      resetField(name, { defaultValue: fieldValue });
     }
   };
+  const serviceType = useWatch({ control, name: 'serviceType' });
+  const entityType = useWatch({ control, name: 'entity_type' });
 
   const metricOptions = React.useMemo(() => {
-    return data
-      ? data.map((metric) => ({
+    let filteredData = data;
+
+    // Filter firewall metrics based on entity type
+    if (serviceType === 'firewall' && entityType) {
+      const entityLabel = entityLabelMap[entityType];
+      filteredData = data.filter(({ label }) => label.includes(entityLabel));
+    }
+
+    return filteredData
+      ? filteredData.map((metric) => ({
           label: metric.label,
           value: metric.metric,
         }))
       : [];
-  }, [data]);
+  }, [data, entityType, serviceType]);
 
   const metricWatcher = useWatch({ control, name: `${name}.metric` });
 

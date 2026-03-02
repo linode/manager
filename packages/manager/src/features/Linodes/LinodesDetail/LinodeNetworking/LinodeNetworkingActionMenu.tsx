@@ -6,6 +6,7 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import {
+  LINODE_LOCKED_DELETE_IP_TOOLTIP,
   PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT,
   PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT,
   PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT,
@@ -22,6 +23,7 @@ interface Props {
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isLinodeInterface: boolean;
+  isLinodeSubResourcesLocked?: boolean;
   isOnlyPublicIP: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
@@ -35,6 +37,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     hasPublicInterface,
     ipAddress,
     ipType,
+    isLinodeSubResourcesLocked,
     isOnlyPublicIP,
     isLinodeInterface,
     disabledFromInterfaces,
@@ -49,7 +52,9 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     'Reserved IPv4 (private)',
     'Reserved IPv4 (public)',
     'VPC – IPv4',
-    'VPC NAT – IPv4',
+    'VPC – IPv6',
+    'VPC – Range – IPv4',
+    'VPC – Range – IPv6',
   ].includes(ipType);
 
   const deletableIPTypes = ['Private – IPv4', 'Public – IPv4', 'Range – IPv6'];
@@ -89,19 +94,25 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     deletableIPTypes.includes(ipType) &&
     !isLinodeInterface
       ? {
-          disabled: readOnly || isOnlyPublicIP || disabledFromInterfaces,
+          disabled:
+            readOnly ||
+            isOnlyPublicIP ||
+            disabledFromInterfaces ||
+            isLinodeSubResourcesLocked,
           id: 'delete',
           onClick: () => {
             onRemove(ipAddress);
           },
           title: 'Delete',
-          tooltip: readOnly
-            ? readOnlyTooltip
-            : disabledFromInterfaces
-              ? isPublicIPNotAssignedCopy
-              : isOnlyPublicIP
-                ? isOnlyPublicIPTooltip
-                : undefined,
+          tooltip: isLinodeSubResourcesLocked
+            ? LINODE_LOCKED_DELETE_IP_TOOLTIP
+            : readOnly
+              ? readOnlyTooltip
+              : disabledFromInterfaces
+                ? isPublicIPNotAssignedCopy
+                : isOnlyPublicIP
+                  ? isOnlyPublicIPTooltip
+                  : undefined,
         }
       : null,
     onEdit && ipAddress && showEdit

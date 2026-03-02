@@ -1,13 +1,21 @@
 import { BETA_API_ROOT } from '../constants';
-import Request, { setData, setMethod, setURL } from '../request';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
 
+import type { Filter, Params, ResourcePage } from '../types';
 import type {
   AccessType,
+  EntityByPermission,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
 } from './types';
-
+import type { EntityType } from 'src/entities/types';
 /**
  * getUserRoles
  *
@@ -91,6 +99,8 @@ export const getUserEntityPermissions = (
   username: string,
   entityType: AccessType,
   entityId: number | string,
+  params?: Params,
+  filter?: Filter,
 ) =>
   Request<PermissionType[]>(
     setURL(
@@ -99,4 +109,36 @@ export const getUserEntityPermissions = (
       )}/permissions/${entityType}/${entityId}`,
     ),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  );
+
+/**
+ * getUserEntitiesByPermission
+ *
+ * Returns the available entities for a given permission.
+ */
+export interface GetEntitiesByPermissionParams {
+  enabled?: boolean;
+  entityType: EntityType;
+  filter?: Filter;
+  params?: Params;
+  permission: PermissionType;
+  username: string | undefined;
+}
+
+export const getUserEntitiesByPermission = ({
+  username,
+  entityType,
+  permission,
+  params,
+  filter,
+}: GetEntitiesByPermissionParams) =>
+  Request<ResourcePage<EntityByPermission>>(
+    setURL(
+      `${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}?permission=${permission}`,
+    ),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
   );

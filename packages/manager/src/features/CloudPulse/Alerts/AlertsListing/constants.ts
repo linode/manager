@@ -12,7 +12,7 @@ export const AlertListingTableLabelMap = [
   },
   {
     colName: 'Service',
-    label: 'service_type',
+    label: 'service_type_label',
   },
   {
     colName: 'Created By',
@@ -34,7 +34,9 @@ export const statusToActionMap: Record<AlertStatusType, AlertStatusUpdateType> =
     disabled: 'Enable',
     enabled: 'Disable',
     failed: 'Disable',
-    'in progress': 'Disable',
+    provisioning: 'Disable',
+    disabling: 'Enable',
+    enabling: 'Disable',
   };
 
 export const AlertContextualViewTableHeaderMap: TableColumnHeader[] = [

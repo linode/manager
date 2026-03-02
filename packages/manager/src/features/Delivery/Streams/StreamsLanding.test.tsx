@@ -1,22 +1,17 @@
-import {
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { streamFactory } from 'src/factories/delivery';
+import { streamFactory } from 'src/factories';
 import { StreamsLanding } from 'src/features/Delivery/Streams/StreamsLanding';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
-
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
+  useSearch: vi.fn(),
+  useStreamsQuery: vi.fn().mockReturnValue({}),
   useUpdateStreamMutation: vi.fn().mockReturnValue({
     mutateAsync: vi.fn(),
   }),
@@ -30,6 +25,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -37,6 +33,7 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useStreamsQuery: queryMocks.useStreamsQuery,
     useUpdateStreamMutation: queryMocks.useUpdateStreamMutation,
     useDeleteStreamMutation: queryMocks.useDeleteStreamMutation,
   };
@@ -46,28 +43,27 @@ const stream = streamFactory.build({ id: 1 });
 const streams = [stream, ...streamFactory.buildList(30)];
 
 describe('Streams Landing Table', () => {
-  const renderComponentAndWaitForLoadingComplete = async () => {
+  const renderComponent = () => {
     renderWithTheme(<StreamsLanding />, {
       initialRoute: '/logs/delivery/streams',
     });
-
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
   };
 
   beforeEach(() => {
     mockMatchMedia();
+    queryMocks.useSearch.mockReturnValue({});
   });
 
-  it('should render streams landing tab header and table with items PaginationFooter', async () => {
-    server.use(
-      http.get('*/monitor/streams', () => {
-        return HttpResponse.json(makeResourcePage(streams));
-      })
-    );
+  it('should render streams landing tab header and table with items PaginationFooter', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: streams,
+        results: 31,
+      },
+      isLoading: false,
+    });
 
-    await renderComponentAndWaitForLoadingComplete();
+    renderComponent();
 
     // search text input
     screen.getByPlaceholderText('Search for a Stream');
@@ -84,7 +80,8 @@ describe('Streams Landing Table', () => {
     within(screen.getByRole('table')).getByText('Status');
     screen.getByText('ID');
     screen.getByText('Destination Type');
-    screen.getByText('Creation Time');
+    screen.getByText('Last Modified');
+    screen.getByText('Last Modified By');
 
     // PaginationFooter
     const paginationFooterSelectPageSizeInput = screen.getAllByTestId(
@@ -93,18 +90,48 @@ describe('Streams Landing Table', () => {
     expect(paginationFooterSelectPageSizeInput.value).toBe('Show 25');
   });
 
-  it('should render streams landing empty state', async () => {
-    server.use(
-      http.get('*/monitor/streams', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
+  it('should render streams landing table with empty row when there are no search results', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
 
-    await renderComponentAndWaitForLoadingComplete();
+    queryMocks.useSearch.mockReturnValue({
+      label: 'Same unknown label',
+    });
+
+    renderComponent();
+
+    const emptyRow = screen.getByText('No items to display.');
+    expect(emptyRow).toBeInTheDocument();
+  });
+
+  it('should render streams landing empty state', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: {
+        data: [],
+        results: 0,
+      },
+    });
+
+    renderComponent();
 
     screen.getByText((text) =>
       text.includes('Create a stream and configure delivery of cloud logs')
     );
+  });
+
+  it('should render loading state when fetching streams', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      isLoading: true,
+    });
+
+    renderComponent();
+
+    const loadingElement = screen.queryByTestId(loadingTestId);
+    expect(loadingElement).toBeInTheDocument();
   });
 
   const clickOnActionMenu = async () => {
@@ -118,13 +145,20 @@ describe('Streams Landing Table', () => {
     await userEvent.click(screen.getByText(itemText));
   };
 
+  const checkClosedModal = async (modal: HTMLElement) => {
+    await waitFor(() => {
+      expect(modal).not.toBeInTheDocument();
+    });
+  };
+
   describe('given action menu', () => {
     beforeEach(() => {
-      server.use(
-        http.get('*/monitor/streams', () => {
-          return HttpResponse.json(makeResourcePage(streams));
-        })
-      );
+      queryMocks.useStreamsQuery.mockReturnValue({
+        data: {
+          data: streams,
+          results: 31,
+        },
+      });
     });
 
     describe('when Edit clicked', () => {
@@ -132,7 +166,7 @@ describe('Streams Landing Table', () => {
         const mockNavigate = vi.fn();
         queryMocks.useNavigate.mockReturnValue(mockNavigate);
 
-        await renderComponentAndWaitForLoadingComplete();
+        renderComponent();
 
         await clickOnActionMenu();
         await clickOnActionMenuItem('Edit');
@@ -143,29 +177,28 @@ describe('Streams Landing Table', () => {
       });
     });
 
-    describe('when Disable clicked', () => {
+    describe('when Deactivate clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({
           mutateAsync: mockUpdateStreamMutation,
         });
 
-        await renderComponentAndWaitForLoadingComplete();
+        renderComponent();
         await clickOnActionMenu();
-        await clickOnActionMenuItem('Disable');
+        await clickOnActionMenuItem('Deactivate');
 
         expect(mockUpdateStreamMutation).toHaveBeenCalledWith({
           id: 1,
           status: 'inactive',
           label: 'Stream 1',
           destinations: [123],
-          details: {},
-          type: 'audit_logs',
+          details: null,
         });
       });
     });
 
-    describe('when Enable clicked', () => {
+    describe('when Activate clicked', () => {
       it('should update stream with proper parameters', async () => {
         const mockUpdateStreamMutation = vi.fn().mockResolvedValue({});
         queryMocks.useUpdateStreamMutation.mockReturnValue({
@@ -173,17 +206,16 @@ describe('Streams Landing Table', () => {
         });
 
         stream.status = 'inactive';
-        await renderComponentAndWaitForLoadingComplete();
+        renderComponent();
         await clickOnActionMenu();
-        await clickOnActionMenuItem('Enable');
+        await clickOnActionMenuItem('Activate');
 
         expect(mockUpdateStreamMutation).toHaveBeenCalledWith({
           id: 1,
           status: 'active',
           label: 'Stream 1',
           destinations: [123],
-          details: {},
-          type: 'audit_logs',
+          details: null,
         });
       });
     });
@@ -195,13 +227,80 @@ describe('Streams Landing Table', () => {
           mutateAsync: mockDeleteStreamMutation,
         });
 
-        await renderComponentAndWaitForLoadingComplete();
+        renderComponent();
         await clickOnActionMenu();
         await clickOnActionMenuItem('Delete');
+
+        const deleteStreamModal = screen.getByText('Delete Stream');
+        expect(deleteStreamModal).toBeInTheDocument();
+
+        // get modal Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteStreamModal);
+
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // get delete Stream button
+        const deleteStreamButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteStreamButton);
 
         expect(mockDeleteStreamMutation).toHaveBeenCalledWith({
           id: 1,
         });
+
+        await checkClosedModal(deleteStreamModal);
+      });
+
+      it('should show error when cannot delete stream', async () => {
+        const mockDeleteStreamMutation = vi
+          .fn()
+          .mockRejectedValue([{ reason: 'Unexpected error' }]);
+        queryMocks.useDeleteStreamMutation.mockReturnValue({
+          mutateAsync: mockDeleteStreamMutation,
+        });
+
+        renderComponent();
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        const deleteStreamModal = screen.getByText('Delete Stream');
+        expect(deleteStreamModal).toBeInTheDocument();
+
+        const errorIcon = screen.queryByTestId('ErrorOutlineIcon');
+        expect(errorIcon).not.toBeInTheDocument();
+
+        // get delete Stream button
+        const deleteStreamButton = screen.getByRole('button', {
+          name: 'Delete',
+        });
+        await userEvent.click(deleteStreamButton);
+
+        expect(mockDeleteStreamMutation).toHaveBeenCalledWith({
+          id: 1,
+        });
+
+        // check for error state in modal
+        screen.getByTestId('ErrorOutlineIcon');
+
+        // get modal Cancel button
+        const cancelModalDialogButton = screen.getByRole('button', {
+          name: 'Cancel',
+        });
+        await userEvent.click(cancelModalDialogButton);
+        await checkClosedModal(deleteStreamModal);
+
+        // open delete confirmation modal again
+        await clickOnActionMenu();
+        await clickOnActionMenuItem('Delete');
+
+        // check for error state to be reset
+        expect(errorIcon).not.toBeInTheDocument();
       });
     });
   });

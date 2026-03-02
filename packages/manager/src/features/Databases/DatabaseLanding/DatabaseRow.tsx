@@ -3,20 +3,20 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { Chip } from '@linode/ui';
-import { Hidden } from '@linode/ui';
+import { Chip, Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
+import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+
+import { StyledActionMenuWrapper } from '../shared.styles';
 
 import type { Event } from '@linode/api-v4';
 import type {
@@ -80,21 +80,30 @@ export const DatabaseRow = ({
         <Chip
           label="HA"
           size="small"
-          sx={(theme) => ({ borderColor: theme.color.green, mx: 2 })}
+          sx={(theme) => ({ borderColor: theme.color.green, mx: 0, my: 0 })}
           variant="outlined"
         />
       </>
     );
   return (
-    <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
-      <TableCell>
+    <TableRow
+      data-qa-database-cluster-id={id}
+      hoverable
+      key={`database-row-${id}`}
+      zebra
+    >
+      <TableCell
+        style={{
+          flex: '0 1 20.5%',
+        }}
+      >
         {isDatabasesV2GA && isLinkInactive ? (
           label
         ) : (
           <Link to={`/databases/${engine}/${id}`}>{label}</Link>
         )}
       </TableCell>
-      <TableCell statusCell>
+      <TableCell>
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
       {isNewDatabase && <TableCell>{formattedPlan}</TableCell>}
@@ -123,7 +132,7 @@ export const DatabaseRow = ({
         </TableCell>
       </Hidden>
       {isDatabasesV2GA && isNewDatabase && (
-        <TableCell actionCell>
+        <StyledActionMenuWrapper>
           <DatabaseActionMenu
             databaseEngine={engine}
             databaseId={id}
@@ -131,7 +140,7 @@ export const DatabaseRow = ({
             databaseStatus={status}
             handlers={handlers!}
           />
-        </TableCell>
+        </StyledActionMenuWrapper>
       )}
     </TableRow>
   );

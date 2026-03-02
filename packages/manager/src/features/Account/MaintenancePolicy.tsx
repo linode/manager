@@ -105,6 +105,7 @@ export const MaintenancePolicy = () => {
           <Box marginTop={2}>
             <Button
               buttonType="outlined"
+              data-pendo-id="maintenance-policy-save-button"
               disabled={!isDirty || !permissions.update_account_settings}
               loading={isSubmitting}
               type="submit"

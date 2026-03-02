@@ -1,11 +1,12 @@
 import { useAccount, useRegionsQuery } from '@linode/queries';
-import { isFeatureEnabledV2 } from '@linode/utilities';
+import { isFeatureEnabledV2, roundTo } from '@linode/utilities';
 import React from 'react';
 
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { arraysEqual } from '../Alerts/Utils/utils';
+import { valueFieldConfig } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import { getOperatorGroup } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/utils';
 import {
   INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
@@ -21,6 +22,10 @@ import {
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
 
+import type { FetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/constants';
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { AssociatedEntityType } from '../shared/types';
+import type { MetricsDimensionFilter } from '../Widget/components/DimensionFilters/types';
 import type {
   Alert,
   APIError,
@@ -28,7 +33,12 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
   Dashboard,
+  Dimension,
+  Firewall,
+  FirewallDeviceEntity,
+  KubernetesCluster,
   MonitoringCapabilities,
+  ObjectStorageBucket,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -54,6 +64,25 @@ interface AclpSupportedRegionProps {
    * The type of monitoring capability to check
    */
   type: keyof MonitoringCapabilities;
+}
+
+interface FilterProps {
+  /**
+   * The dimension filters to be validated
+   */
+  dimensionFilters: MetricsDimensionFilter[] | undefined;
+  /**
+   * The dimension options associated with the metric
+   */
+  dimensions: Dimension[];
+  /**
+   * The fetch options for linodes
+   */
+  linodes: FetchOptions;
+  /**
+   * The fetch options for vpcs
+   */
+  vpcs: FetchOptions;
 }
 
 /**
@@ -98,13 +127,10 @@ export const useContextualAlertsState = (
       };
 
       alerts.forEach((alert) => {
-        const isAccountOrRegion =
-          alert.scope === 'region' || alert.scope === 'account';
-
-        // include alerts which has either account or region level scope or entityId is present in the alert's entity_ids
+        // include alerts for which entityId is present in the alert's entity_ids
         const shouldInclude = entityId
-          ? isAccountOrRegion || alert.entity_ids.includes(entityId)
-          : isAccountOrRegion;
+          ? alert.entity_ids.includes(entityId)
+          : false;
 
         if (shouldInclude) {
           const payloadAlertType =
@@ -392,4 +418,281 @@ export const useIsAclpSupportedRegion = (
   const region = regions?.find(({ id }) => id === regionId);
 
   return region?.monitors?.[type]?.includes(capability) ?? false;
+};
+
+/**
+ * Checks if the given value is a valid number according to the specified config.
+ * @param raw The value to validate
+ * @param config Optional configuration object with min and max properties
+ */
+const isValueAValidNumber = (
+  value: string,
+  config: undefined | { max?: number; min?: number }
+): boolean => {
+  const trimmed = value.trim();
+  if (trimmed === '') return false;
+  // try to parse as finite number
+  const num = Number(trimmed);
+  if (!Number.isFinite(num)) return false;
+
+  // If min/max are integers (or present) enforce range.
+  if (config?.min !== undefined && num < config.min) return false;
+  if (config?.max !== undefined && num > config.max) return false;
+
+  // If min/max are integers and config min/max are integers, it likely expects integer inputs
+  // (e.g. ports, ids). We'll enforce integer if both min and max are integer values.
+  if (
+    config &&
+    Number.isInteger(config.min ?? 0) &&
+    Number.isInteger(config.max ?? 0)
+  ) {
+    // If both min and max exist and are integers, require the input be integer.
+    // If only one exists and it's an integer, still reasonable to require integer.
+    if (!Number.isInteger(num)) return false;
+  }
+
+  return true;
+};
+
+/**
+ * @param filter The filter associated with the metric
+ * @param options The dimension options associated with the metric
+ * @returns boolean
+ */
+export const isValidFilter = (
+  filter: MetricsDimensionFilter,
+  options: Dimension[]
+): boolean => {
+  if (!filter.operator || !filter.dimension_label || !filter.value)
+    return false;
+
+  const operator = filter.operator;
+  const operatorGroup = getOperatorGroup(operator);
+
+  if (!operatorGroup.includes(operator)) return false;
+
+  const dimension = options.find(
+    ({ dimension_label: dimensionLabel }) =>
+      dimensionLabel === filter.dimension_label
+  );
+  if (!dimension) return false;
+
+  const dimensionConfig =
+    valueFieldConfig[filter.dimension_label] ??
+    valueFieldConfig[
+      !dimension.values || dimension.values.length === 0 ? 'emptyValue' : '*'
+    ];
+
+  const dimensionFieldConfig = dimensionConfig[operatorGroup];
+
+  if (
+    dimensionFieldConfig.type === 'textfield' &&
+    dimensionFieldConfig.inputType === 'number'
+  ) {
+    return isValueAValidNumber(
+      String(filter.value ?? ''),
+      dimensionFieldConfig
+    );
+  } else if (dimensionFieldConfig.type === 'textfield') {
+    return true;
+  }
+
+  const validValues = new Set(dimension.values);
+  return (filter.value ?? '')
+    .split(',')
+    .every((value) => validValues.has(value));
+};
+
+/**
+ * @param linodes The list of linode according to the supported regions
+ * @param vpcs The list of vpcs according to the supported regions
+ * @param dimensionFilters The array of dimension filters selected
+ * @returns The filtered dimension filter based on the selections
+ */
+export const getFilteredDimensions = (
+  filterProps: FilterProps
+): MetricsDimensionFilter[] => {
+  const { dimensions, linodes, vpcs, dimensionFilters } = filterProps;
+
+  const mergedDimensions = dimensions.map((dim) =>
+    dim.dimension_label === 'linode_id'
+      ? { ...dim, values: linodes.values.map((lin) => lin.value) }
+      : dim.dimension_label === 'vpc_subnet_id'
+        ? { ...dim, values: vpcs.values.map((vpc) => vpc.value) }
+        : dim
+  );
+  return dimensionFilters?.length
+    ? dimensionFilters.filter((filter) =>
+        isValidFilter(filter, mergedDimensions ?? [])
+      )
+    : [];
+};
+
+/**
+ *
+ * @param resources Firewall resources
+ * @param entityType Associated entity type
+ * @returns Filtered firewall resources based on the associated entity type
+ */
+export const filterFirewallResources = (
+  resources: Firewall[],
+  entityType: AssociatedEntityType
+) => {
+  return resources.filter((resource) =>
+    resource.entities.some((entity: FirewallDeviceEntity) => {
+      // If the entity type is linode_interface, it should be associated with a linode and have a parent entity label
+      if (
+        entity.type === 'linode_interface' &&
+        entityType === 'linode' &&
+        entity.parent_entity?.label
+      ) {
+        return true;
+      }
+      return entity.label && entity.type === entityType;
+    })
+  );
+};
+
+/**
+ * @param clusters The list of kubernetes clusters
+ * @returns The filtered kubernetes clusters based on the tier
+ */
+export const filterKubernetesClusters = (
+  clusters: KubernetesCluster[]
+): KubernetesCluster[] => {
+  return clusters
+    .filter(({ tier }) => tier === 'enterprise')
+    .sort((a, b) => a.label.localeCompare(b.label));
+};
+
+/**
+ * @param buckets The list of buckets
+ * @returns The valid sorted endpoints
+ */
+export const getValidSortedEndpoints = (
+  buckets: ObjectStorageBucket[] | undefined
+): CloudPulseResources[] => {
+  if (!buckets) return [];
+
+  const visitedEndpoints = new Set<string>();
+  const uniqueEndpoints: CloudPulseResources[] = [];
+
+  buckets.forEach(({ s3_endpoint: s3Endpoint, region }) => {
+    if (s3Endpoint && region && !visitedEndpoints.has(s3Endpoint)) {
+      visitedEndpoints.add(s3Endpoint);
+      uniqueEndpoints.push({ id: s3Endpoint, label: s3Endpoint, region });
+    }
+  });
+
+  uniqueEndpoints.sort((a, b) => a.label.localeCompare(b.label));
+  return uniqueEndpoints;
+};
+
+/**
+ * @param obj1 The first object to be compared
+ * @param obj2 The second object to be compared
+ * @returns True if, both are equal else false
+ */
+export const deepEqual = <T>(obj1: T, obj2: T): boolean => {
+  if (obj1 === obj2) {
+    return true; // Identical references or values
+  }
+
+  // If either is null or undefined, or they are not of object type, return false
+  if (
+    obj1 === null ||
+    obj2 === null ||
+    typeof obj1 !== 'object' ||
+    typeof obj2 !== 'object'
+  ) {
+    return false;
+  }
+
+  // Handle array comparison separately
+  if (Array.isArray(obj1) && Array.isArray(obj2)) {
+    return compareArrays(obj1, obj2);
+  }
+
+  // Ensure both objects have the same number of keys
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  // Recursively check each key
+  for (const key of keys1) {
+    if (!(key in obj2)) {
+      return false;
+    }
+    // Recursive deep equal check
+    if (!deepEqual((obj1 as any)[key], (obj2 as any)[key])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
+ * @param arr1 Array for comparison
+ * @param arr2 Array for comparison
+ * @returns True if, both the arrays are equal, else false
+ */
+export const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (!deepEqual(arr1[i], arr2[i])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Checks if two arrays are equal, ignores the order of the elements
+ * @param a The first array
+ * @param b The second array
+ * @returns True if the arrays are equal, false otherwise
+ */
+export const arraysEqual = (
+  a: number[] | undefined,
+  b: number[] | undefined
+) => {
+  if (a === undefined && b === undefined) return true;
+  if (a === undefined || b === undefined) return false;
+  if (a.length !== b.length) return false;
+
+  return compareArrays(
+    [...a].sort((x, y) => x - y),
+    [...b].sort((x, y) => x - y)
+  );
+};
+
+/**
+ * @param value The numeric value to humanize
+ * @returns The humanized string representation of the value
+ */
+export const humanizeLargeData = (value: number) => {
+  if (value >= 1000000000000) {
+    return +(value / 1000000000000).toFixed(1) + 'T';
+  }
+  if (value >= 1000000000) {
+    return +(value / 1000000000).toFixed(1) + 'B';
+  }
+  if (value >= 1000000) {
+    return +(value / 1000000).toFixed(1) + 'M';
+  }
+  if (value >= 100000) {
+    return +(value / 1000).toFixed(0) + 'K';
+  }
+  if (value >= 1000) {
+    return +(value / 1000).toFixed(1) + 'K';
+  }
+  return `${roundTo(value, 2)}`;
 };

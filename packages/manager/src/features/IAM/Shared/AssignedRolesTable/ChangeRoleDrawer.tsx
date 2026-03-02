@@ -1,5 +1,7 @@
 import {
   useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
+  useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
@@ -12,11 +14,13 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import {
@@ -40,15 +44,32 @@ interface Props {
 
 export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
-  const { username } = useParams({ from: '/iam/users/$username' });
-
+  const { username } = useParams({ strict: false });
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
 
-  const { data: assignedRoles } = useUserRoles(username ?? '');
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
+  const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
+    enabled: isDefaultDelegationRolesForChildAccount,
+  });
 
+  const { data: userRolesData } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
   const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
+  const { mutateAsync: updateDefaultRoles } =
+    useUpdateDefaultDelegationAccessQuery();
+
+  const mutationFn = isDefaultDelegationRolesForChildAccount
+    ? updateDefaultRoles
+    : updateUserRoles;
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
       return [];
@@ -72,22 +93,15 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         el.value !== role?.name;
       // Exclude account roles already assigned to the user
       if (isAccountRole(el)) {
-        return (
-          !assignedRoles?.account_access.includes(el.value) &&
-          matchesRoleContext
-        );
+        return matchesRoleContext;
       }
       // Exclude entity roles already assigned to the user
       if (isEntityRole(el)) {
-        return (
-          !assignedRoles?.entity_access.some((entity) =>
-            entity.roles.includes(el.value)
-          ) && matchesRoleContext
-        );
+        return matchesRoleContext;
       }
       return true;
     });
-  }, [accountRoles, assignedRoles, role]);
+  }, [accountRoles, role]);
 
   const {
     control,
@@ -132,7 +146,9 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         newRole,
       });
 
-      await updateUserRoles(updatedUserRoles);
+      await mutationFn(updatedUserRoles);
+
+      enqueueSnackbar(`Role changed.`, { variant: 'success' });
 
       handleClose();
     } catch (errors) {
@@ -156,7 +172,9 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         <Typography sx={{ marginBottom: 2.5 }}>
           Select a role you want{' '}
           {role?.access === 'account_access'
-            ? 'to assign.'
+            ? isDefaultDelegationRolesForChildAccount
+              ? 'to assign by default to new delegate users.'
+              : 'to assign.'
             : 'the entities to be attached to.'}{' '}
           <Link to={ROLES_LEARN_MORE_LINK}>
             Learn more about roles and permissions
@@ -165,7 +183,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         </Typography>
 
         <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
-          Change from role <strong>{role?.name}</strong> to:
+          Change the role from <strong>{role?.name}</strong> to:
         </Typography>
 
         <Controller

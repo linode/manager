@@ -17,7 +17,7 @@ import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 
 import { getMarketplaceAppLabel } from '../../Marketplace/utilities';
 import { UserDefinedFieldInput } from './UserDefinedFieldInput';
-import { separateUDFsByRequiredStatus } from './utilities';
+import { getTotalClusterSize, separateUDFsByRequiredStatus } from './utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -58,6 +58,8 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
   const clusterSize = stackscriptData?.['cluster_size'];
 
   const isCluster = clusterSize !== null && clusterSize !== undefined;
+
+  const totalClusterSize = getTotalClusterSize(stackscriptData);
 
   const marketplaceAppInfo =
     stackscriptId !== null && stackscriptId !== undefined
@@ -102,7 +104,7 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
         )}
         {isCluster && (
           <Notice
-            text={`You are creating a cluster with ${clusterSize} nodes.`}
+            text={`You are creating a cluster with ${totalClusterSize} nodes.`}
             variant="success"
           />
         )}

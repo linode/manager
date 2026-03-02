@@ -5,6 +5,7 @@ import type {
   DNSResolvers,
   Region,
   RegionAvailability,
+  RegionVPCAvailability,
 } from '@linode/api-v4/lib/regions/types';
 
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
@@ -57,5 +58,12 @@ export const regionAvailabilityFactory =
   Factory.Sync.makeFactory<RegionAvailability>({
     available: false,
     plan: 'g6-standard-7',
+    region: 'us-east',
+  });
+
+export const regionVPCAvailabilityFactory =
+  Factory.Sync.makeFactory<RegionVPCAvailability>({
+    available: true,
+    available_ipv6_prefix_lengths: [52],
     region: 'us-east',
   });

@@ -29,7 +29,9 @@ import { loginHistoryRouteTree } from './loginHistory/';
 import { longviewRouteTree } from './longview';
 import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
+import { marketplaceRouteTree } from './marketplace';
 import { cloudPulseMetricsRouteTree } from './metrics';
+import { networkLoadBalancersRouteTree } from './networkLoadBalancer';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
@@ -79,6 +81,8 @@ export const routeTree = rootRoute.addChildren([
   longviewRouteTree,
   maintenanceRouteTree,
   managedRouteTree,
+  marketplaceRouteTree,
+  networkLoadBalancersRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
@@ -102,6 +106,8 @@ export const router = createRouter({
     isACLPEnabled: false,
     isDatabasesEnabled: false,
     isPlacementGroupsEnabled: false,
+    isPrivateImageSharingEnabled: false,
+    profile: undefined,
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
@@ -116,5 +122,8 @@ declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
     router: typeof router;
+  }
+  interface HistoryState {
+    surveyLink?: string;
   }
 }

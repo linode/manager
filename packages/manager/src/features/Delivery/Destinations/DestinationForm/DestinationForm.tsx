@@ -1,5 +1,11 @@
-import { destinationType } from '@linode/api-v4';
+import {
+  authenticationType,
+  dataCompressionType,
+  type DestinationType,
+  destinationType,
+} from '@linode/api-v4';
 import { Autocomplete, Paper, TextField } from '@linode/ui';
+import { capitalize, scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -7,8 +13,12 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
-import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
-import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationLinodeObjectStorageDetailsForm';
+import {
+  getDestinationTypeOption,
+  useIsACLPLogsEnabled,
+} from 'src/features/Delivery/deliveryUtils';
+import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
+import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
@@ -24,9 +34,28 @@ interface DestinationFormProps {
   onSubmit: SubmitHandler<DestinationFormType>;
 }
 
+const customHttpsDetailsControlPaths = {
+  authenticationType: 'details.authentication.type',
+  authenticationDetails: 'details.authentication.details',
+  basicAuthenticationPassword:
+    'details.authentication.details.basic_authentication_password',
+  basicAuthenticationUser:
+    'details.authentication.details.basic_authentication_user',
+  clientCaCertificate:
+    'details.client_certificate_details.client_ca_certificate',
+  clientCertificate: 'details.client_certificate_details.client_certificate',
+  clientPrivateKey: 'details.client_certificate_details.client_private_key',
+  tlsHostname: 'details.client_certificate_details.tls_hostname',
+  contentType: 'details.content_type',
+  customHeaders: 'details.custom_headers',
+  dataCompression: 'details.data_compression',
+  endpointUrl: 'details.endpoint_url',
+} as const;
+
 export const DestinationForm = (props: DestinationFormProps) => {
   const { mode, isSubmitting, onSubmit } = props;
 
+  const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const {
     verifyDestination,
     isPending: isVerifyingDestination,
@@ -34,7 +63,9 @@ export const DestinationForm = (props: DestinationFormProps) => {
     setDestinationVerified,
   } = useVerifyDestination();
 
-  const { control, handleSubmit } = useFormContext<DestinationFormType>();
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const { control, handleSubmit, getValues, reset } =
+    useFormContext<DestinationFormType>();
   const destination = useWatch({
     control,
   }) as DestinationFormType;
@@ -43,8 +74,29 @@ export const DestinationForm = (props: DestinationFormProps) => {
     setDestinationVerified(false);
   }, [destination, setDestinationVerified]);
 
+  const resetForm = (destType: DestinationType) => {
+    const currentValues = getValues();
+    const newDestinationDetails =
+      destType === destinationType.AkamaiObjectStorage
+        ? {
+            path: '',
+          }
+        : {
+            authentication: {
+              type: authenticationType.None,
+            },
+            data_compression: dataCompressionType.Gzip,
+          };
+
+    reset({
+      ...currentValues,
+      type: destType,
+      details: newDestinationDetails,
+    });
+  };
+
   return (
-    <form id="destinationForm">
+    <form id="destinationForm" ref={formRef}>
       <Grid container spacing={2}>
         <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
           <Paper>
@@ -54,13 +106,19 @@ export const DestinationForm = (props: DestinationFormProps) => {
               render={({ field }) => (
                 <Autocomplete
                   disableClearable
-                  disabled
+                  disabled={!isACLPLogsCustomHttpsEnabled}
                   label="Destination Type"
                   onBlur={field.onBlur}
                   onChange={(_, { value }) => {
+                    resetForm(value as DestinationType);
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
+                  textFieldProps={{
+                    inputProps: {
+                      'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Type`,
+                    },
+                  }}
                   value={getDestinationTypeOption(field.value)}
                 />
               )}
@@ -72,19 +130,32 @@ export const DestinationForm = (props: DestinationFormProps) => {
                 <TextField
                   aria-required
                   errorText={fieldState.error?.message}
+                  inputProps={{
+                    'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Name`,
+                  }}
                   label="Destination Name"
                   onBlur={field.onBlur}
                   onChange={(value) => {
                     field.onChange(value);
                   }}
-                  placeholder="Destination Name"
                   value={field.value}
                 />
               )}
             />
-            {destination.type === destinationType.LinodeObjectStorage && (
-              <DestinationLinodeObjectStorageDetailsForm />
+            {destination.type === destinationType.AkamaiObjectStorage && (
+              <DestinationAkamaiObjectStorageDetailsForm
+                entity="destination"
+                mode={mode}
+              />
             )}
+            {isACLPLogsCustomHttpsEnabled &&
+              destination.type === destinationType.CustomHttps && (
+                <DestinationCustomHttpsDetailsForm
+                  controlPaths={customHttpsDetailsControlPaths}
+                  entity="destination"
+                  mode={mode}
+                />
+              )}
           </Paper>
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
@@ -95,9 +166,12 @@ export const DestinationForm = (props: DestinationFormProps) => {
             isSubmitting={isSubmitting}
             isTesting={isVerifyingDestination}
             mode={mode}
-            onSubmit={handleSubmit(onSubmit)}
-            onTestConnection={handleSubmit(() =>
-              verifyDestination(destination)
+            onSubmit={handleSubmit(onSubmit, () =>
+              scrollErrorIntoViewV2(formRef)
+            )}
+            onTestConnection={handleSubmit(
+              () => verifyDestination(destination),
+              () => scrollErrorIntoViewV2(formRef)
             )}
           />
         </Grid>

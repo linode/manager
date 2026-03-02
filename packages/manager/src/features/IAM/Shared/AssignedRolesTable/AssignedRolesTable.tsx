@@ -1,8 +1,12 @@
-import { useAccountRoles, useUserRoles } from '@linode/queries';
+import {
+  useAccountRoles,
+  useGetDefaultDelegationAccessQuery,
+  useUserRoles,
+} from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -17,6 +21,7 @@ import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -66,30 +71,73 @@ const ALL_ROLES_OPTION: SelectOption = {
   value: 'all',
 };
 
+const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
+const USER_ROLES_URL = '/iam/users/$username/roles';
+
 export const AssignedRolesTable = () => {
-  const { username } = useParams({ from: '/iam/users/$username' });
+  const { username } = useParams({ strict: false });
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
-  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
-  const { data: permissions } = usePermissions('account', ['is_account_admin']);
+  const { isDefaultDelegationRolesForChildAccount } =
+    useIsDefaultDelegationRolesForChildAccount();
 
-  const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username/roles',
-    initialPage: 1,
-    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+  const {
+    query: queryParam,
+    roleType: roleTypeParam,
+    order: orderParam,
+  } = useSearch({
+    from: isDefaultDelegationRolesForChildAccount
+      ? DEFAULTS_ROLES_URL
+      : USER_ROLES_URL,
   });
+  const order: 'asc' | 'desc' = orderParam ?? 'asc';
+  const orderBy: OrderByKeys = 'name';
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_default_delegate_access',
+  ]);
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
+
+  const { data: defaultRolesData, isLoading: defaultRolesLoading } =
+    useGetDefaultDelegationAccessQuery({
+      enabled: isDefaultDelegationRolesForChildAccount,
+    });
+
+  const { data: userRolesData, isLoading: userRolesLoading } = useUserRoles(
+    username ?? '',
+    !isDefaultDelegationRolesForChildAccount
+  );
+
+  const assignedRoles = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesData
+    : userRolesData;
+  const assignedRolesLoading = isDefaultDelegationRolesForChildAccount
+    ? defaultRolesLoading
+    : userRolesLoading;
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
-    if (orderBy === newOrderBy) {
-      setOrder(order === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrderBy(newOrderBy);
-      setOrder('asc');
-    }
+    const nextOrder: 'asc' | 'desc' =
+      orderBy === newOrderBy ? (order === 'asc' ? 'desc' : 'asc') : 'asc';
     setIsInitialLoad(false);
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
+      params:
+        isDefaultDelegationRolesForChildAccount && !username
+          ? undefined
+          : username,
+      search: (prev) => ({
+        ...prev,
+        order: nextOrder,
+        orderBy: newOrderBy,
+      }),
+    });
   };
 
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
@@ -133,15 +181,25 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
+  /**
+   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
+   *
+   * @param drawerMode Optional mode indicating which dialog should be closed.
+   */
+  const handleDialogClose = (drawerMode?: DrawerModes) => {
+    if (drawerMode && drawerMode === 'change-role') {
+      setIsChangeRoleDrawerOpen(false);
+    } else {
+      setIsUnassignRoleDialogOpen(false);
+    }
+  };
+
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
   const { data: entities, isLoading: entitiesLoading } = useAllAccountEntities(
     {}
   );
 
-  const { data: assignedRoles, isLoading: assignedRolesLoading } = useUserRoles(
-    username ?? ''
-  );
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountRoles) {
       return { filterableOptions: [], roles: [] };
@@ -164,26 +222,29 @@ export const AssignedRolesTable = () => {
     return { filterableOptions, roles };
   }, [assignedRoles, accountRoles, entities]);
 
-  const [query, setQuery] = React.useState('');
-
-  const [entityType, setEntityType] = React.useState<null | SelectOption>(
-    ALL_ROLES_OPTION
-  );
+  const selectedEntityTypeOption = React.useMemo<null | SelectOption>(() => {
+    const value = roleTypeParam ?? ALL_ROLES_OPTION.value;
+    return (
+      filterableOptions.find((opt) => opt.value === value) || ALL_ROLES_OPTION
+    );
+  }, [filterableOptions, roleTypeParam]);
 
   const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     const selectedRole = roleName;
     navigate({
-      to: '/iam/users/$username/entities',
-      params: { username },
+      to: isDefaultDelegationRolesForChildAccount
+        ? '/iam/roles/defaults/entity-access'
+        : '/iam/users/$username/entities',
+      params: { username: username || '' },
       search: { selectedRole },
     });
   };
 
   const filteredAndSortedRoles = React.useMemo(() => {
     const rolesToFilter = getFilteredRoles({
-      entityType: entityType?.value as 'all' | AccessType,
+      entityType: roleTypeParam ?? 'all',
       getSearchableFields,
-      query,
+      query: queryParam ?? '',
       roles,
     }) as RoleView[];
 
@@ -208,91 +269,96 @@ export const AssignedRolesTable = () => {
       }
       return 0;
     });
-  }, [roles, query, entityType, order, orderBy, isInitialLoad]);
+  }, [roles, queryParam, roleTypeParam, order, orderBy, isInitialLoad]);
 
-  const memoizedTableItems: TableItem[] = React.useMemo(() => {
-    return filteredAndSortedRoles
-      .slice(
-        (pagination.page - 1) * pagination.pageSize,
-        pagination.page * pagination.pageSize
-      )
-      .map((role: ExtendedRoleView) => {
-        const OuterTableCells = (
-          <>
-            {role.access === 'account_access' ? (
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <Typography>
-                  {role.entity_type === 'account'
-                    ? 'All Entities'
-                    : `All ${getFormattedEntityType(role.entity_type)}s`}
-                </Typography>
-              </TableCell>
-            ) : (
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <AssignedEntities
-                  onButtonClick={handleViewEntities}
-                  onRemoveAssignment={handleRemoveAssignment}
-                  role={role}
-                />
-              </TableCell>
-            )}
-            <TableCell actionCell>
-              <AssignedRolesActionMenu
-                handleChangeRole={handleChangeRole}
-                handleUnassignRole={handleUnassignRole}
-                handleUpdateEntities={handleUpdateEntities}
-                handleViewEntities={handleViewEntities}
-                permissions={permissions}
-                role={role}
-              />
-            </TableCell>
-          </>
-        );
-
-        const InnerTable = (
-          <Grid
-            sx={{
-              padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
-            }}
-          >
-            <Typography
-              sx={{
-                font: theme.tokens.alias.Typography.Label.Bold.S,
-                marginBottom: theme.tokens.spacing.S4,
-              }}
-            >
-              Description
-            </Typography>
-            <Typography
-              sx={{
-                marginBottom: theme.tokens.spacing.S8,
-              }}
-            >
-              {role.permissions.length ? (
-                role.description
-              ) : (
-                <>
-                  {getFacadeRoleDescription(role)}{' '}
-                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-                </>
-              )}
-            </Typography>
-            <Permissions permissions={role.permissions} />
-          </Grid>
-        );
-
-        return {
-          InnerTable,
-          OuterTableCells,
-          id: role.id,
-          label: role.name,
-        };
-      });
-  }, [filteredAndSortedRoles, pagination]);
+  const pagination = usePaginationV2({
+    currentRoute: isDefaultDelegationRolesForChildAccount
+      ? DEFAULTS_ROLES_URL
+      : USER_ROLES_URL,
+    initialPage: 1,
+    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+    clientSidePaginationData: filteredAndSortedRoles,
+  });
 
   const filteredAndSortedRolesCount = React.useMemo(() => {
     return filteredAndSortedRoles.length;
   }, [filteredAndSortedRoles]);
+
+  const memoizedTableItems: TableItem[] = React.useMemo(() => {
+    return pagination.paginatedData?.map((role: ExtendedRoleView) => {
+      const OuterTableCells = (
+        <>
+          {role.access === 'account_access' ? (
+            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <Typography>
+                {role.entity_type === 'account'
+                  ? 'All Entities'
+                  : `All ${getFormattedEntityType(role.entity_type)}s`}
+              </Typography>
+            </TableCell>
+          ) : (
+            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+              <AssignedEntities
+                disabled={!permissions.is_account_admin}
+                onButtonClick={handleViewEntities}
+                onRemoveAssignment={handleRemoveAssignment}
+                role={role}
+              />
+            </TableCell>
+          )}
+          <TableCell actionCell>
+            <AssignedRolesActionMenu
+              handleChangeRole={handleChangeRole}
+              handleUnassignRole={handleUnassignRole}
+              handleUpdateEntities={handleUpdateEntities}
+              handleViewEntities={handleViewEntities}
+              permissions={permissions}
+              role={role}
+            />
+          </TableCell>
+        </>
+      );
+
+      const InnerTable = (
+        <Grid
+          sx={{
+            padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
+          }}
+        >
+          <Typography
+            sx={{
+              font: theme.tokens.alias.Typography.Label.Bold.S,
+              marginBottom: theme.tokens.spacing.S4,
+            }}
+          >
+            Description
+          </Typography>
+          <Typography
+            sx={{
+              marginBottom: theme.tokens.spacing.S8,
+            }}
+          >
+            {role.permissions.length ? (
+              role.description
+            ) : (
+              <>
+                {getFacadeRoleDescription(role)}{' '}
+                <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
+              </>
+            )}
+          </Typography>
+          <Permissions permissions={role.permissions} />
+        </Grid>
+      );
+
+      return {
+        InnerTable,
+        OuterTableCells,
+        id: role.id,
+        label: role.name,
+      };
+    });
+  }, [filteredAndSortedRoles, pagination]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -343,6 +409,7 @@ export const AssignedRolesTable = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: theme.tokens.spacing.S12,
+          minHeight: theme.spacingFunction(40),
         }}
       >
         <Grid container direction="row" rowSpacing={1}>
@@ -358,37 +425,64 @@ export const AssignedRolesTable = () => {
             hideLabel
             label="Filter"
             onSearch={(value) => {
-              pagination.handlePageChange(1);
-              setQuery(value);
+              navigate({
+                to: isDefaultDelegationRolesForChildAccount
+                  ? DEFAULTS_ROLES_URL
+                  : USER_ROLES_URL,
+                params:
+                  isDefaultDelegationRolesForChildAccount && !username
+                    ? undefined
+                    : username,
+                search: (prev) => ({
+                  ...prev,
+                  page: 1,
+                  query: value !== '' ? value : undefined,
+                }),
+              });
             }}
             placeholder="Search"
-            value={query}
+            value={queryParam ?? ''}
           />
           <Select
             hideLabel
             label="Select type"
             onChange={(_, selected) => {
-              pagination.handlePageChange(1);
-              setEntityType(selected ?? null);
+              const nextRoleType = (selected?.value ??
+                ALL_ROLES_OPTION.value) as 'all' | AccessType;
+              navigate({
+                to: isDefaultDelegationRolesForChildAccount
+                  ? DEFAULTS_ROLES_URL
+                  : USER_ROLES_URL,
+                params: isDefaultDelegationRolesForChildAccount
+                  ? undefined
+                  : { username: username || '' },
+                search: (prev) => ({
+                  ...prev,
+                  page: 1,
+                  roleType: nextRoleType,
+                }),
+              });
             }}
             options={filterableOptions}
             placeholder="All Assigned Roles"
             sx={{ minWidth: 250 }}
-            value={entityType}
+            value={selectedEntityTypeOption}
           />
         </Grid>
         <Grid sx={{ alignSelf: 'flex-start' }}>
           <Button
             buttonType="primary"
-            disabled={!permissions?.is_account_admin}
+            disabled={!permissionToCheck}
             onClick={() => setIsAssignNewRoleDrawerOpen(true)}
             tooltipText={
-              !permissions?.is_account_admin
+              !permissionToCheck
                 ? 'You do not have permission to assign roles.'
                 : undefined
             }
           >
-            Assign New Roles
+            {isDefaultDelegationRolesForChildAccount
+              ? 'Add New Default Roles'
+              : 'Assign New Roles'}
           </Button>
         </Grid>
       </Grid>
@@ -406,12 +500,12 @@ export const AssignedRolesTable = () => {
       />
       <ChangeRoleDrawer
         mode={drawerMode}
-        onClose={() => setIsChangeRoleDrawerOpen(false)}
+        onClose={() => handleDialogClose(drawerMode)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
-        onClose={() => setIsUnassignRoleDialogOpen(false)}
+        onClose={() => handleDialogClose()}
         open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />
@@ -424,6 +518,7 @@ export const AssignedRolesTable = () => {
         onClose={() => setIsRemoveAssignmentDialogOpen(false)}
         open={isRemoveAssignmentDialogOpen}
         role={selectedRoleDetails}
+        username={username}
       />
       {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
         <PaginationFooter

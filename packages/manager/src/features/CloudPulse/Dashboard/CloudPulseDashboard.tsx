@@ -10,6 +10,10 @@ import {
 } from 'src/queries/cloudpulse/services';
 
 import { RESOURCE_FILTER_MAP } from '../Utils/constants';
+import {
+  getAssociatedEntityType,
+  getResourcesFilterConfig,
+} from '../Utils/FilterConfig';
 import { useAclpPreference } from '../Utils/UserPreference';
 import {
   renderPlaceHolder,
@@ -17,7 +21,11 @@ import {
 } from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { DateTimeWithPreset, JWETokenPayLoad } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DateTimeWithPreset,
+  JWETokenPayLoad,
+} from '@linode/api-v4';
 
 export interface DashboardProperties {
   /**
@@ -66,6 +74,11 @@ export interface DashboardProperties {
   savePref?: boolean;
 
   /**
+   * Selected service type for the dashboard
+   */
+  serviceType: CloudPulseServiceType;
+
+  /**
    * Selected tags for the dashboard
    */
   tags?: string[];
@@ -79,12 +92,18 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    serviceType,
     groupBy,
     linodeRegion,
+    region,
   } = props;
 
   const { preferences } = useAclpPreference();
+
   const getJweTokenPayload = (): JWETokenPayLoad => {
+    if (serviceType === 'objectstorage') {
+      return {};
+    }
     return {
       entity_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
@@ -96,6 +115,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
+  // Get the resources filter configuration for the dashboard
+  const resourcesFilterConfig = getResourcesFilterConfig(dashboardId);
+  const filterFn = resourcesFilterConfig?.filterFn;
+  // Get the associated entity type for the dashboard
+  const associatedEntityType = getAssociatedEntityType(dashboardId);
+
   const {
     data: resourceList,
     isError: isResourcesApiError,
@@ -104,7 +129,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {}
+    RESOURCE_FILTER_MAP[dashboard?.service_type ?? ''] ?? {},
+    associatedEntityType,
+    filterFn
   );
 
   const {
@@ -123,7 +150,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
-    Boolean(resources) && !isDashboardLoading && !isDashboardApiError
+    !isDashboardLoading && !isDashboardApiError
   );
 
   if (isDashboardApiError) {
@@ -169,6 +196,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
+      region={region}
       resourceList={resourceList}
       resources={resources}
       savePref={savePref}

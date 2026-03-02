@@ -7,7 +7,10 @@ import svgr from 'vite-plugin-svgr';
 const DIRNAME = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
-  plugins: [react(), svgr({ exportAsDefault: true })],
+  plugins: [
+    react(),
+    svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
+  ],
   build: {
     rollupOptions: {
       // Suppress "SOURCEMAP_ERROR" warnings.

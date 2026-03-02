@@ -1,4 +1,4 @@
-import { linodeQueries, useAllLinodesQuery } from '@linode/queries';
+import { linodeQueries } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -15,10 +15,7 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import {
-  usePermissions,
-  useQueryWithPermissions,
-} from 'src/features/IAM/hooks/usePermissions';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -97,8 +94,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
-    const [linodeOptionsToUnassign, setLinodeOptionsToUnassign] =
-      React.useState<Linode[]>([]);
     const [interfacesToDelete, setInterfacesToDelete] = React.useState<
       DeleteInterfaceIds[]
     >([]);
@@ -106,36 +101,30 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { linodes: subnetLinodeIds } = subnet || {};
 
     // 1. We need to get all the linodes.
+    // TODO: change to 'delete_linode_config_profile_interface' once it's available
     const {
-      data: linodes,
-      error: linodesError,
+      data: availableLinodes,
+      isLoading: availableLinodesLoading,
+      error: availableLinodesError,
       refetch: getCSVData,
-    } = useAllLinodesQuery();
+    } = useGetAllUserEntitiesByPermission<Linode>({
+      entityType: 'linode',
+      permission: 'delete_linode',
+      enabled: open,
+    });
 
-    // 2. We need to filter only the linodes that are assigned to the subnet.
-    const findAssignedLinodes = React.useCallback(() => {
-      return linodes?.filter((linode) => {
+    const userCanUnassignLinodes =
+      availableLinodes && availableLinodes?.length > 0;
+
+    const linodeOptionsToUnassign = React.useMemo(() => {
+      // 2. We need to filter only the linodes that are assigned to the subnet.
+      if (!availableLinodes) return [];
+      return availableLinodes?.filter((linode) => {
         return subnetLinodeIds?.some(
           (linodeInfo) => linodeInfo.id === linode.id
         );
       });
-    }, [linodes, subnetLinodeIds]);
-
-    const { data: permissions } = usePermissions('vpc', ['update_vpc'], vpcId);
-    // TODO: change to 'delete_linode_config_profile_interface' once it's available
-    const { data: filteredLinodes } = useQueryWithPermissions(
-      useAllLinodesQuery(),
-      'linode',
-      ['delete_linode']
-    );
-    const userCanUnassignLinodes =
-      permissions.update_vpc && filteredLinodes?.length > 0;
-
-    React.useEffect(() => {
-      if (linodes) {
-        setLinodeOptionsToUnassign(findAssignedLinodes() ?? []);
-      }
-    }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
+    }, [subnetLinodeIds, availableLinodes]);
 
     // 3. When a linode is selected, we need to get the VPC interface to unassign.
     const getVPCInterface = React.useCallback(
@@ -338,12 +327,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
-        {!userCanUnassignLinodes && linodeOptionsToUnassign.length > 0 && (
-          <Notice
-            text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
-            variant="error"
-          />
-        )}
         {unassignLinodesErrors.length > 0 && (
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
@@ -359,8 +342,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
                 disabled={!userCanUnassignLinodes}
-                errorText={linodesError ? linodesError[0].reason : undefined}
+                errorText={
+                  availableLinodesError
+                    ? availableLinodesError[0].reason
+                    : undefined
+                }
                 label="Linodes"
+                loading={availableLinodesLoading}
                 multiple
                 onChange={(_, value) => {
                   setSelectedLinodes(value);

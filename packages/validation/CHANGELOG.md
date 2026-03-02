@@ -1,3 +1,83 @@
+## [2026-02-25] - v0.82.0
+
+
+### Changed:
+
+- Adjust Custom HTTPS Destination validation ([#13274](https://github.com/linode/manager/pull/13274))
+- Adjust Custom HTTPS Destination validation: certificate details, custom headers, content type ([#13331](https://github.com/linode/manager/pull/13331))
+- Delivery Logs - change destination type detection in updateDestinationSchema ([#13380](https://github.com/linode/manager/pull/13380))
+
+### Upcoming Features:
+
+- Updated validation rules for createDatabaseConnectionPoolSchema ([#13276](https://github.com/linode/manager/pull/13276))
+- Update database connection pool size ([#13304](https://github.com/linode/manager/pull/13304))
+- Update the validation schema to match the API ([#13368](https://github.com/linode/manager/pull/13368))
+
+## [2026-01-26] - v0.81.0
+
+
+### Fixed:
+
+- End character validation for name,description fields in ACLP-Alerting Create Alert form ([#13297](https://github.com/linode/manager/pull/13297))
+
+## [2026-01-12] - v0.80.0
+
+
+### Changed:
+
+- Logs Destination Form - add matching host and bucket name validation ([#13176](https://github.com/linode/manager/pull/13176))
+- Use UpdateConfigProfileInterfacesSchema in UpdateLinodeConfigSchema for interfaces property ([#13209](https://github.com/linode/manager/pull/13209))
+
+## [2025-12-09] - v0.79.0
+
+
+### Changed:
+
+- Validate Bucket name in Destination Form for forbidden characters ([#13166](https://github.com/linode/manager/pull/13166))
+
+### Upcoming Features:
+
+- Update FirewallRuleTypeSchema to support ruleset ([#13079](https://github.com/linode/manager/pull/13079))
+- Added Database Connection Pool schemas ([#13148](https://github.com/linode/manager/pull/13148))
+
+## [2025-11-04] - v0.78.0
+
+### Upcoming Features:
+
+- Add validation schemas for creating and updating Sharegroup Members and Tokens ([#12984](https://github.com/linode/manager/pull/12984))
+- Add validation schemas for creating and updating Sharegroups and Sharegroup Images ([#12985](https://github.com/linode/manager/pull/12985))
+
+## [2025-10-21] - v0.77.0
+
+### Changed:
+
+- Rename "Linode Object Storage" to "Akamai Object Storage" in various schema names ([#12977](https://github.com/linode/manager/pull/12977))
+
+
+## [2025-10-07] - v0.76.0
+
+
+### Upcoming Features:
+
+- Update validation schema for Destination - Details - Path ([#12851](https://github.com/linode/manager/pull/12851))
+- Logs Delivery Stream and Destination details validation change for Update schemas ([#12898](https://github.com/linode/manager/pull/12898))
+
+## [2025-09-23] - v0.75.0
+
+### Changed:
+
+- ACLP-alerting: Allowing 0 for the metric threshold value ([#12803](https://github.com/linode/manager/pull/12803))
+
+### Fixed:
+
+- Username & email ASCII & chars limit validation + improved messages ([#12788](https://github.com/linode/manager/pull/12788))
+- Fix VPC IPv6 range validation in `ModifyLinodeInterfaceSchema` ([#12856](https://github.com/linode/manager/pull/12856))
+
+### Upcoming Features:
+
+- Remove `address` from slaacSchema as it is a read-only field ([#12778](https://github.com/linode/manager/pull/12778))
+- Rename Datastream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
 ## [2025-09-09] - v0.74.0
 
 ### Added:

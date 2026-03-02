@@ -19,7 +19,11 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { getMaintenanceDateField } from './utilities';
+import {
+  deriveMaintenanceStartISO,
+  getMaintenanceDateField,
+  getUpcomingRelativeLabel,
+} from './utilities';
 
 import type { MaintenanceTableType } from './MaintenanceTable';
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
@@ -42,6 +46,8 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   in_progress: 'other',
   scheduled: 'active',
 };
+
+const MAX_REASON_DISPLAY_LENGTH = 93;
 
 interface MaintenanceTableRowProps {
   maintenance: AccountMaintenance;
@@ -70,12 +76,27 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const eventProgress = recentEvent && formatProgressEvent(recentEvent);
 
-  const truncatedReason = truncate(reason, 93);
+  const truncatedReason = reason
+    ? truncate(reason, MAX_REASON_DISPLAY_LENGTH)
+    : '';
 
-  const isTruncated = reason !== truncatedReason;
+  const isTruncated = reason ? reason !== truncatedReason : false;
 
   const dateField = getMaintenanceDateField(tableType);
   const dateValue = props.maintenance[dateField];
+
+  // Precompute for potential use; currently used via getUpcomingRelativeLabel
+  React.useMemo(
+    () => deriveMaintenanceStartISO(props.maintenance),
+    [props.maintenance]
+  );
+
+  const upcomingRelativeLabel = React.useMemo(() => {
+    if (tableType !== 'upcoming') {
+      return undefined;
+    }
+    return getUpcomingRelativeLabel(props.maintenance);
+  }, [props.maintenance, tableType]);
 
   return (
     <TableRow key={entity.id}>
@@ -114,7 +135,11 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
           {(tableType === 'upcoming' || tableType === 'completed') && (
             <Hidden mdDown>
               <TableCell data-testid="relative-date">
-                {when ? parseAPIDate(when).toRelative() : '—'}
+                {tableType === 'upcoming'
+                  ? upcomingRelativeLabel
+                  : when
+                    ? parseAPIDate(when).toRelative()
+                    : '—'}
               </TableCell>
             </Hidden>
           )}
@@ -137,7 +162,11 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
           </TableCell>
           <Hidden mdDown>
             <TableCell data-testid="relative-date">
-              {when ? parseAPIDate(when).toRelative() : '—'}
+              {tableType === 'upcoming'
+                ? upcomingRelativeLabel
+                : when
+                  ? parseAPIDate(when).toRelative()
+                  : '—'}
             </TableCell>
           </Hidden>
         </>

@@ -16,7 +16,7 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
+import { chooseRegion, extendRegion } from 'support/util/regions';
 
 import {
   MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT,
@@ -123,12 +123,6 @@ describe('maintenance policy region support - Linode Details > Settings', () => 
     cleanUp(['linodes', 'lke-clusters']);
   });
 
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      iamRbacPrimaryNavChanges: false,
-    }).as('getFeatureFlags');
-  });
-
   it('disables maintenance policy selector when region does not support it', () => {
     // Mock a linode in a region that doesn't support maintenance policies
     const mockRegion = regionFactory.build({
@@ -182,7 +176,7 @@ describe('maintenance policy region support - Linode Details > Settings', () => 
     // eu-central is known to support maintenance policies
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
-      region: 'eu-central', // Frankfurt, DE - known to support maintenance policies
+      region: chooseRegion({ capabilities: ['Maintenance Policy'] }).id,
     });
 
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {

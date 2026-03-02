@@ -37,12 +37,13 @@ export const triggerConditionValidation = object({
     .typeError('The value should be a number.'),
 });
 
-const specialStartEndRegex = /^[^a-zA-Z0-9]/;
+const specialStartRegex = /^[^a-zA-Z0-9]/;
+const specialEndRegex = /[^a-zA-Z0-9]$/;
 export const createAlertDefinitionSchema = object({
   label: string()
     .required(fieldErrorMessage)
     .matches(
-      /^[^*#&+:<>"?@%{}\\\/]+$/,
+      /^[^*#&+:<>"?@%{}\\/]+$/,
       'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
     )
     .max(100, 'Name must be 100 characters or less.')
@@ -50,7 +51,10 @@ export const createAlertDefinitionSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !specialStartEndRegex.test(value ?? '');
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
       },
     ),
   description: string()
@@ -59,7 +63,10 @@ export const createAlertDefinitionSchema = object({
       'no-special-start-end',
       'Description cannot start or end with a special character.',
       (value) => {
-        return !specialStartEndRegex.test(value ?? '');
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
       },
     )
     .optional(),
@@ -93,7 +100,10 @@ export const editAlertDefinitionSchema = object({
       'no-special-start-end',
       'Name cannot start or end with a special character.',
       (value) => {
-        return !specialStartEndRegex.test(value ?? '');
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
       },
     )
     .optional(),
@@ -103,7 +113,10 @@ export const editAlertDefinitionSchema = object({
       'no-special-start-end',
       'Description cannot start or end with a special character.',
       (value) => {
-        return !specialStartEndRegex.test(value ?? '');
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
       },
     )
     .optional(),
@@ -120,8 +133,74 @@ export const editAlertDefinitionSchema = object({
   trigger_conditions: triggerConditionValidation.optional().default(undefined),
   severity: number().oneOf([0, 1, 2, 3]).optional(),
   status: string()
-    .oneOf(['enabled', 'disabled', 'in progress', 'failed'])
+    .oneOf([
+      'enabled',
+      'disabled',
+      'failed',
+      'provisioning',
+      'disabling',
+      'enabling',
+    ])
     .optional(),
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
   regions: array().of(string().defined()).optional(),
+});
+
+export const createNotificationChannelPayloadSchema = object({
+  label: string()
+    .required(fieldErrorMessage)
+    .matches(
+      /^[^*#&+:<>"?@%{}\\/]+$/,
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
+    )
+    .max(100, 'Name must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Name cannot start or end with a special character.',
+      (value) => {
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
+      },
+    ),
+  channel_type: string()
+    .oneOf(['email', 'webhook', 'pagerduty', 'slack'])
+    .required(fieldErrorMessage),
+  details: object({
+    email: object({
+      usernames: array()
+        .of(string())
+        .min(1, fieldErrorMessage)
+        .required(fieldErrorMessage),
+    }).required(),
+  }).required(),
+});
+
+export const editNotificationChannelPayloadSchema = object({
+  label: string()
+    .required(fieldErrorMessage)
+    .matches(
+      /^[^*#&+:<>"?@%{}\\/]+$/,
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
+    )
+    .max(100, 'Name must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Name cannot start or end with a special character.',
+      (value) => {
+        return !(
+          specialStartRegex.test(value ?? '') ||
+          specialEndRegex.test(value ?? '')
+        );
+      },
+    ),
+  details: object({
+    email: object({
+      usernames: array()
+        .of(string())
+        .min(1, fieldErrorMessage)
+        .required(fieldErrorMessage),
+    }).required(),
+  }).required(),
 });

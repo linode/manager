@@ -55,7 +55,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const { data: firewallPermissions } = usePermissions(
     'firewall',
     ['delete_firewall_device'],
-    firewallId
+    firewallId,
+    firewallId !== -1
   );
 
   const { data: linodePermissions } = usePermissions(

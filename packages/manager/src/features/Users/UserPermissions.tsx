@@ -162,14 +162,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    this.getUserGrants();
-    this.getUserType();
+    this.getUserAndGrants();
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.currentUsername !== this.props.currentUsername) {
-      this.getUserGrants();
-      this.getUserType();
+      this.getUserAndGrants();
     }
   }
 
@@ -214,64 +212,50 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       { showTabs: false, tabs: [] }
     );
 
-  getUserGrants = () => {
+  getUserAndGrants = async () => {
     const { currentUsername } = this.props;
-    if (currentUsername) {
-      getGrants(currentUsername)
-        .then((grants) => {
-          if (grants.global) {
-            const { showTabs, tabs } = this.getTabInformation(grants);
-
-            this.setState({
-              grants,
-              loading: false,
-              loadingGrants: false,
-              originalGrants: grants,
-              restricted: true,
-              showTabs,
-              tabs,
-            });
-          } else {
-            this.setState({
-              grants,
-              loading: false,
-              loadingGrants: false,
-              restricted: false,
-            });
-          }
-        })
-        .catch((errResponse) => {
-          this.setState({
-            errors: getAPIErrorOrDefault(
-              errResponse,
-              'Unknown error occurred while fetching user permissions. Try again later.'
-            ),
-          });
-          scrollErrorIntoViewV2(this.formContainerRef);
-        });
+    if (!currentUsername) {
+      return;
     }
-  };
 
-  getUserType = async () => {
-    const { currentUsername } = this.props;
+    try {
+      const user = await getUser(currentUsername);
 
-    // Current user is the user whose permissions are currently being viewed.
-    if (currentUsername) {
-      try {
-        const user = await getUser(currentUsername);
+      this.setState({
+        userType: user.user_type,
+      });
 
+      if (!user.restricted) {
         this.setState({
-          userType: user.user_type,
+          loading: false,
+          loadingGrants: false,
+          restricted: false,
         });
-      } catch (error) {
-        this.setState({
-          errors: getAPIErrorOrDefault(
-            error,
-            'Unknown error occurred while fetching user permissions. Try again later.'
-          ),
-        });
-        scrollErrorIntoViewV2(this.formContainerRef);
+        return;
       }
+
+      const grants = await getGrants(currentUsername);
+      const { showTabs, tabs } = this.getTabInformation(grants);
+
+      this.setState({
+        grants,
+        loading: false,
+        loadingGrants: false,
+        originalGrants: grants,
+        restricted: true,
+        showTabs,
+        tabs,
+      });
+    } catch (errResponse) {
+      this.setState({
+        errors: getAPIErrorOrDefault(
+          errResponse,
+          'Unknown error occurred while fetching user permissions. Try again later.'
+        ),
+        loading: false,
+        loadingGrants: false,
+      });
+      scrollErrorIntoViewV2(this.formContainerRef);
     }
   };
 
@@ -303,7 +287,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             user
           );
           // unconditionally sets this.state.loadingGrants to false
-          this.getUserGrants();
+          this.getUserAndGrants();
           enqueueSnackbar('User permissions successfully saved.', {
             variant: 'success',
           });
@@ -364,7 +348,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderBillingPerm = () => {
     const { grants, userType } = this.state;
     const isChildUser = userType === 'child';
-    const isProxyUser = userType === 'proxy';
+    const isProxyOrDelegateUser =
+      userType === 'proxy' || userType === 'delegate';
 
     if (!(grants && grants.global)) {
       return null;
@@ -397,7 +382,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={grants.global.account_access === null}
             data-qa-billing-access="None"
-            disabled={isProxyUser}
+            disabled={isProxyOrDelegateUser}
             heading="None"
             onClick={this.billingPermOnClick(null)}
             subheadings={['The user cannot view any billing information.']}
@@ -408,7 +393,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               (isChildUser && Boolean(this.state.grants?.global.account_access))
             }
             data-qa-billing-access="Read Only"
-            disabled={isProxyUser}
+            disabled={isProxyOrDelegateUser}
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
@@ -435,7 +420,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
-    const isProxyUser = this.state.userType === 'proxy';
+    const isProxyOrDelegateUser =
+      this.state.userType === 'proxy' || this.state.userType === 'delegate';
 
     return (
       <Box>
@@ -460,7 +446,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 }}
                 variant="h2"
               >
-                {isProxyUser ? PARENT_USER : 'General'} Permissions
+                {isProxyOrDelegateUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledFullAccountAccessToggleGrid>

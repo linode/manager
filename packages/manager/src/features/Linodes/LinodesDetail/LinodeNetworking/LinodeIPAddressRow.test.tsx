@@ -2,7 +2,7 @@ import { linodeIPFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { vpcIPFactory } from 'src/factories';
+import { vpcIPv4Factory } from 'src/factories';
 import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/constants';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
@@ -16,7 +16,9 @@ const ipDisplay = ipResponseToDisplayRows({
   ipResponse: ips,
   isLinodeInterface: false,
 })[0];
-const ipDisplayVPC = createVPCIPv4Display([vpcIPFactory.build()])[0];
+const [ipDisplayVPC, ipDisplayVPCNAT] = createVPCIPv4Display([
+  vpcIPv4Factory.build(),
+]);
 
 const handlers: IPAddressRowHandlers = {
   handleOpenEditRDNS: vi.fn(),
@@ -50,6 +52,7 @@ describe('LinodeIPAddressRow', () => {
     getAllByText('Delete');
     getAllByText('Edit RDNS');
   });
+
   it('should render a VPC IP Address row', () => {
     const { getAllByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
@@ -69,6 +72,26 @@ describe('LinodeIPAddressRow', () => {
     // No actions should be rendered
     expect(queryByText('Delete')).not.toBeInTheDocument();
     expect(queryByText('Edit RDNS')).not.toBeInTheDocument();
+  });
+
+  it('should render a VPC NAT IPv4 Address row', () => {
+    const { getAllByText } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplayVPCNAT}
+        />
+      )
+    );
+
+    getAllByText(ipDisplayVPCNAT.address);
+    getAllByText(ipDisplayVPCNAT.type);
+    // Check if actions were rendered
+    getAllByText('Edit RDNS');
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {
@@ -132,7 +155,7 @@ describe('ipResponseToDisplayRows', () => {
     const ipDisplays = ipResponseToDisplayRows({
       ipResponse: {
         ...ips,
-        ipv4: { ...ips.ipv4, vpc: [vpcIPFactory.build()] },
+        ipv4: { ...ips.ipv4, vpc: [vpcIPv4Factory.build()] },
       },
       isLinodeInterface: false,
     });

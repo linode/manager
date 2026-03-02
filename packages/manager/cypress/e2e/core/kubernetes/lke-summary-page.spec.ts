@@ -7,7 +7,7 @@ import {
   mockGetControlPlaneACL,
   mockGetDashboardUrl,
   mockGetKubeconfig,
-  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
@@ -99,7 +99,7 @@ describe('LKE summary page', () => {
     };
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetApiEndpoints(mockCluster.id).as('getApiEndpoints');
     mockGetDashboardUrl(mockCluster.id).as('getDashboardUrl');
@@ -110,7 +110,7 @@ describe('LKE summary page', () => {
     cy.wait([
       '@getCluster',
       '@getNodePools',
-      '@getVersions',
+      '@getTieredVersions',
       '@getApiEndpoints',
       '@getDashboardUrl',
     ]);
@@ -162,7 +162,7 @@ describe('LKE summary page', () => {
     };
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetApiEndpoints(mockCluster.id).as('getApiEndpoints');
     mockGetDashboardUrl(mockCluster.id).as('getDashboardUrl');
@@ -173,7 +173,7 @@ describe('LKE summary page', () => {
     cy.wait([
       '@getCluster',
       '@getNodePools',
-      '@getVersions',
+      '@getTieredVersions',
       '@getApiEndpoints',
       '@getDashboardUrl',
     ]);
@@ -232,7 +232,7 @@ describe('LKE summary page', () => {
     };
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetApiEndpoints(mockCluster.id).as('getApiEndpoints');
     mockGetDashboardUrl(mockCluster.id).as('getDashboardUrl');
@@ -243,7 +243,7 @@ describe('LKE summary page', () => {
     cy.wait([
       '@getCluster',
       '@getNodePools',
-      '@getVersions',
+      '@getTieredVersions',
       '@getApiEndpoints',
       '@getDashboardUrl',
     ]);
@@ -287,7 +287,7 @@ describe('LKE summary page', () => {
     };
 
     mockGetCluster(mockCluster).as('getCluster');
-    mockGetKubernetesVersions().as('getVersions');
+    mockGetTieredKubernetesVersions('standard').as('getTieredVersions');
     mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
     mockGetApiEndpoints(mockCluster.id).as('getApiEndpoints');
     mockGetDashboardUrl(mockCluster.id).as('getDashboardUrl');
@@ -298,7 +298,7 @@ describe('LKE summary page', () => {
     cy.wait([
       '@getCluster',
       '@getNodePools',
-      '@getVersions',
+      '@getTieredVersions',
       '@getApiEndpoints',
       '@getDashboardUrl',
     ]);

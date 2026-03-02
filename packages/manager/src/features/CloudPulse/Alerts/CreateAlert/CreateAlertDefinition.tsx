@@ -28,6 +28,7 @@ import { TriggerConditions } from './Criteria/TriggerConditions';
 import { EntityScopeRenderer } from './EntityScopeRenderer';
 import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
+import { EntityTypeSelect } from './GeneralInformation/EntityTypeSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { alertDefinitionFormSchema } from './schemas';
@@ -56,16 +57,17 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
+  entity_ids: [],
+  entity_type: 'linode',
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
   },
+  scope: null,
   serviceType: null,
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
-  entity_ids: [],
-  scope: null,
 };
 
 const overrides: CrumbOverridesProps[] = [
@@ -100,12 +102,12 @@ export const CreateAlertDefinition = () => {
     getValues,
     handleSubmit,
     setError,
-    setValue,
+    resetField,
   } = formMethods;
 
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
-    getValues('serviceType')!
+    getValues('serviceType') ?? ''
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
@@ -154,10 +156,24 @@ export const CreateAlertDefinition = () => {
 
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
-    setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
-    setValue('entity_ids', []);
-    setValue('trigger_conditions', triggerConditionInitialValues);
-  }, [setValue]);
+    resetField('rule_criteria.rules', {
+      defaultValue: [{ ...criteriaInitialValues }],
+    });
+    resetField('entity_ids', { defaultValue: [] });
+    resetField('trigger_conditions', {
+      defaultValue: triggerConditionInitialValues,
+    });
+    resetField('scope', { defaultValue: null });
+    resetField('entity_type', { defaultValue: 'linode' });
+    resetField('channel_ids', { defaultValue: [] });
+  }, [resetField]);
+
+  const handleEntityTypeChange = React.useCallback(() => {
+    // Reset the criteria when entity type changes
+    resetField('rule_criteria.rules', {
+      defaultValue: [{ ...criteriaInitialValues }],
+    });
+  }, [resetField]);
 
   React.useEffect(() => {
     setValidationSchema(
@@ -215,6 +231,12 @@ export const CreateAlertDefinition = () => {
               handleServiceTypeChange={handleServiceTypeChange}
               name="serviceType"
             />
+            {serviceTypeWatcher === 'firewall' && (
+              <EntityTypeSelect
+                name="entity_type"
+                onEntityTypeChange={handleEntityTypeChange}
+              />
+            )}
             <CloudPulseAlertSeveritySelect name="severity" />
             <AlertEntityScopeSelect
               name="scope"
@@ -223,7 +245,7 @@ export const CreateAlertDefinition = () => {
             <EntityScopeRenderer scope={scopeWatcher} />
             <MetricCriteriaField
               name="rule_criteria.rules"
-              serviceType={serviceTypeWatcher!}
+              serviceType={serviceTypeWatcher ?? null}
               setMaxInterval={(interval: number) =>
                 setMaxScrapeInterval(interval)
               }
@@ -235,7 +257,10 @@ export const CreateAlertDefinition = () => {
               serviceMetadataError={serviceMetadataError}
               serviceMetadataLoading={serviceMetadataLoading}
             />
-            <AddChannelListing name="channel_ids" />
+            <AddChannelListing
+              name="channel_ids"
+              serviceType={serviceTypeWatcher}
+            />
             <ActionsPanel
               primaryButtonProps={{
                 label: 'Submit',

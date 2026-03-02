@@ -1,6 +1,6 @@
 import { linodeTypeFactory } from '@linode/utilities';
 
-import { getLinodePrice } from './utilities';
+import { getLinodePrice, getParsedMarketplaceClusterData } from './utilities';
 
 describe('getLinodePrice', () => {
   it('gets a price for a normal Linode', () => {
@@ -9,9 +9,10 @@ describe('getLinodePrice', () => {
     });
 
     const result = getLinodePrice({
-      clusterSize: undefined,
+      stackscriptData: undefined,
       regionId: 'fake-region-id',
       type,
+      types: [],
     });
 
     expect(result).toBe('$5/month');
@@ -23,11 +24,46 @@ describe('getLinodePrice', () => {
     });
 
     const result = getLinodePrice({
-      clusterSize: '3',
+      stackscriptData: {
+        cluster_size: '3',
+      },
       regionId: 'fake-region-id',
+      types: [],
       type,
     });
 
     expect(result).toBe('3 Nodes - $15/month $0.60/hr');
+  });
+});
+
+describe('getParsedMarketplaceClusterData', () => {
+  it('parses stackscript user defined fields', () => {
+    const types = [
+      linodeTypeFactory.build({ label: 'Linode 2GB' }),
+      linodeTypeFactory.build({ label: 'Linode 4GB' }),
+    ];
+
+    const stackscriptData = {
+      cluster_size: '1',
+      mysql_cluster_size: '5',
+      mysql_cluster_type: 'Linode 2GB',
+      redis_cluster_size: '5',
+      redis_cluster_type: 'Linode 4GB',
+    };
+
+    expect(
+      getParsedMarketplaceClusterData(stackscriptData, types)
+    ).toStrictEqual([
+      {
+        prefix: 'mysql',
+        size: '5',
+        type: types[0],
+      },
+      {
+        prefix: 'redis',
+        size: '5',
+        type: types[1],
+      },
+    ]);
   });
 });

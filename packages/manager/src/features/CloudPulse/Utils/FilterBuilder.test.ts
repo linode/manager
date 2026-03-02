@@ -1,14 +1,22 @@
 import { databaseQueries } from '@linode/queries';
+import { nodeBalancerFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
-import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
+import {
+  dashboardFactory,
+  databaseInstanceFactory,
+  objectStorageEndpointsFactory,
+} from 'src/factories';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {
-  deepEqual,
   filterBasedOnConfig,
+  filterEndpointsUsingRegion,
+  filterFirewallNodebalancers,
   filterUsingDependentFilters,
+  getEndpointsProperties,
   getFilters,
+  getFirewallNodebalancersProperties,
   getTextFilterProperties,
 } from './FilterBuilder';
 import {
@@ -24,6 +32,7 @@ import {
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import { deepEqual } from './utils';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseServiceTypeFilters } from './models';
@@ -36,9 +45,18 @@ const dbaasConfig = FILTER_CONFIG.get(1);
 
 const nodeBalancerConfig = FILTER_CONFIG.get(3);
 
-const firewallConfig = FILTER_CONFIG.get(4);
+const linodeFirewallConfig = FILTER_CONFIG.get(4);
+
+const nodebalancerFirewallConfig = FILTER_CONFIG.get(8);
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas', id: 1 });
+
+const objectStorageBucketDashboard = dashboardFactory.build({
+  service_type: 'objectstorage',
+  id: 6,
+});
+
+const objectStorageBucketConfig = FILTER_CONFIG.get(6);
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
@@ -116,6 +134,31 @@ it('test getResourceSelectionProperties method', () => {
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
     expect(JSON.stringify(xFilter)).toEqual('{"region":"us-east"}');
+    expect(label).toEqual(name);
+  }
+});
+
+it('test getResourceSelectionProperties method for linode-firewall', () => {
+  const resourceSelectionConfig = linodeFirewallConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Firewalls'
+  );
+
+  expect(resourceSelectionConfig).toBeDefined();
+
+  if (resourceSelectionConfig) {
+    const { disabled, handleResourcesSelection, label, savePreferences } =
+      getResourcesProperties(
+        {
+          config: resourceSelectionConfig,
+          dashboard: { ...mockDashboard, id: 4 },
+          isServiceAnalyticsIntegration: true,
+        },
+        vi.fn()
+      );
+    const { name } = resourceSelectionConfig.configuration;
+    expect(handleResourcesSelection).toBeDefined();
+    expect(savePreferences).toEqual(false);
+    expect(disabled).toEqual(false);
     expect(label).toEqual(name);
   }
 });
@@ -335,6 +378,7 @@ it('test getCustomSelectProperties method', () => {
       isMultiSelect: isMultiSelectApi,
       savePreferences: savePreferencesApi,
       type,
+      filterFn,
     } = getCustomSelectProperties(
       {
         config: customSelectEngineConfig,
@@ -351,6 +395,7 @@ it('test getCustomSelectProperties method', () => {
     expect(savePreferencesApi).toEqual(false);
     expect(isMultiSelectApi).toEqual(true);
     expect(label).toEqual(name);
+    expect(filterFn).not.toBeDefined();
   }
 });
 
@@ -379,7 +424,7 @@ it('test getTextFilterProperties method for port', () => {
 });
 
 it('test getTextFilterProperties method for interface_id', () => {
-  const interfaceIdFilterConfig = firewallConfig?.filters.find(
+  const interfaceIdFilterConfig = linodeFirewallConfig?.filters.find(
     (filterObj) => filterObj.name === 'Interface IDs'
   );
 
@@ -399,6 +444,89 @@ it('test getTextFilterProperties method for interface_id', () => {
     expect(handleTextFilterChange).toBeDefined();
     expect(label).toEqual(interfaceIdFilterConfig.configuration.name);
     expect(savePreferences).toEqual(true);
+  }
+});
+
+it('test getEndpointsProperties method', () => {
+  const endpointsConfig = objectStorageBucketConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Endpoints'
+  );
+
+  expect(endpointsConfig).toBeDefined();
+
+  if (endpointsConfig) {
+    const endpointsProperties = getEndpointsProperties(
+      {
+        config: endpointsConfig,
+        dashboard: objectStorageBucketDashboard,
+        dependentFilters: { region: 'us-east' },
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+    const {
+      label,
+      serviceType,
+      disabled,
+      savePreferences,
+      handleEndpointsSelection,
+      defaultValue,
+      region,
+      xFilter,
+    } = endpointsProperties;
+
+    expect(endpointsProperties).toBeDefined();
+    expect(label).toEqual(endpointsConfig.configuration.name);
+    expect(serviceType).toEqual('objectstorage');
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(handleEndpointsSelection).toBeDefined();
+    expect(defaultValue).toEqual(undefined);
+    expect(region).toEqual('us-east');
+    expect(xFilter).toEqual({ region: 'us-east' });
+  }
+});
+it('test getFirewallNodebalancersProperties', () => {
+  const nodebalancersConfig = nodebalancerFirewallConfig?.filters.find(
+    (filterObj) => filterObj.name === 'NodeBalancers'
+  );
+
+  expect(nodebalancersConfig).toBeDefined();
+
+  if (nodebalancersConfig) {
+    const nodebalancersProperties = getFirewallNodebalancersProperties(
+      {
+        config: nodebalancersConfig,
+        dashboard: dashboardFactory.build({ service_type: 'firewall', id: 8 }),
+        dependentFilters: {
+          resource_id: '1',
+          associated_entity_region: 'us-east',
+        },
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+    const {
+      label,
+      disabled,
+      selectedDashboard,
+      savePreferences,
+      handleNodebalancersSelection,
+      defaultValue,
+      xFilter,
+    } = nodebalancersProperties;
+
+    expect(nodebalancersProperties).toBeDefined();
+    expect(label).toEqual(nodebalancersConfig.configuration.name);
+    expect(selectedDashboard.service_type).toEqual('firewall');
+    expect(savePreferences).toEqual(true);
+    expect(disabled).toEqual(false);
+    expect(handleNodebalancersSelection).toBeDefined();
+    expect(defaultValue).toEqual(undefined);
+    expect(xFilter).toEqual({
+      resource_id: '1',
+      associated_entity_region: 'us-east',
+    });
   }
 });
 
@@ -553,6 +681,104 @@ describe('filterUsingDependentFilters', () => {
 
     result = filterUsingDependentFilters(mockData, filters);
     expect(result).toEqual([mockData[1]]);
+  });
+});
+
+describe('filterEndpointsUsingRegion', () => {
+  const mockData: CloudPulseResources[] = [
+    {
+      ...objectStorageEndpointsFactory.build({ region: 'us-east' }),
+      id: 'us-east-1.linodeobjects.com',
+      label: 'us-east-1.linodeobjects.com',
+    },
+    {
+      ...objectStorageEndpointsFactory.build({ region: 'us-west' }),
+      id: 'us-west-1.linodeobjects.com',
+      label: 'us-west-1.linodeobjects.com',
+    },
+  ];
+  it('should return data as is if data is undefined', () => {
+    expect(
+      filterEndpointsUsingRegion(undefined, { region: 'us-east' })
+    ).toEqual(undefined);
+  });
+  it('should return undefined if region filter is undefined', () => {
+    expect(filterEndpointsUsingRegion(mockData, undefined)).toEqual(undefined);
+  });
+  it('should return endpoints based on region if region filter is provided', () => {
+    expect(filterEndpointsUsingRegion(mockData, { region: 'us-east' })).toEqual(
+      [mockData[0]]
+    );
+  });
+});
+
+describe('filterFirewallNodebalancers', () => {
+  const mockData = [
+    nodeBalancerFactory.build({
+      id: 1,
+      label: 'nodebalancer-1',
+      region: 'us-east',
+    }),
+    nodeBalancerFactory.build({
+      id: 2,
+      label: 'nodebalancer-2',
+      region: 'us-west',
+    }),
+  ];
+  const mockFirewalls: CloudPulseResources[] = [
+    {
+      id: '1',
+      label: 'firewall-1',
+      entities: { '1': 'nodebalancer-1' },
+    },
+  ];
+
+  it('should return undefined if data is undefined', () => {
+    expect(
+      filterFirewallNodebalancers(
+        undefined,
+        { associated_entity_region: 'us-east', resource_id: '1' },
+        mockFirewalls
+      )
+    ).toEqual(undefined);
+  });
+
+  it('should return undefined if xFilter/firewalls is empty or undefined', () => {
+    const result = filterFirewallNodebalancers(
+      mockData,
+      undefined,
+      mockFirewalls
+    );
+    const result2 = filterFirewallNodebalancers(mockData, {}, mockFirewalls);
+    const result3 = filterFirewallNodebalancers(
+      mockData,
+      { associated_entity_region: 'us-east', resource_id: '1' },
+      []
+    );
+    const result4 = filterFirewallNodebalancers(
+      mockData,
+      { associated_entity_region: 'us-east', resource_id: '1' },
+      undefined
+    );
+    expect(result).toEqual(undefined);
+    expect(result2).toEqual(undefined);
+    expect(result3).toEqual(undefined);
+    expect(result4).toEqual(undefined);
+  });
+
+  it('should filter nodebalancers based on xFilter', () => {
+    const result = filterFirewallNodebalancers(
+      mockData,
+      { associated_entity_region: 'us-east', resource_id: '1' },
+      mockFirewalls
+    );
+    expect(result).toEqual([
+      {
+        id: '1',
+        label: 'nodebalancer-1',
+        associated_entity_region: 'us-east',
+      },
+    ]);
   });
 });
 

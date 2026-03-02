@@ -30,6 +30,7 @@ import type {
   AliasTypes as AliasTypesDark,
   ComponentTypes as ComponentTypesDark,
 } from '@linode/design-language-system/themes/dark';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
 
 export type ThemeName = 'dark' | 'light';
 

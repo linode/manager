@@ -7,16 +7,27 @@ import { CancelLanding } from './CancelLanding';
 
 const realLocation = window.location;
 
-beforeAll(() => {
-  window.location = realLocation;
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+  };
 });
 
 afterEach(() => {
-  window.location = realLocation;
+  (window as Partial<Window>).location = realLocation;
 });
 
 describe('CancelLanding', () => {
   it('does not render the body when there is no survey_link in the state', () => {
+    queryMocks.useLocation.mockReturnValue({
+      state: {},
+    });
     const { queryByTestId } = renderWithTheme(<CancelLanding />, {
       initialEntries: ['/cancel'],
       initialRoute: '/cancel',
@@ -25,8 +36,11 @@ describe('CancelLanding', () => {
   });
 
   it('renders the body when there is a survey_link in the state', () => {
+    queryMocks.useLocation.mockReturnValue({
+      state: { surveyLink: 'https://linode.com' },
+    });
     const { queryByTestId } = renderWithTheme(<CancelLanding />, {
-      initialEntries: ['/cancel?survey_link=https://linode.com'],
+      initialEntries: ['/cancel'],
       initialRoute: '/cancel',
     });
     expect(queryByTestId('body')).toBeInTheDocument();
@@ -38,11 +52,17 @@ describe('CancelLanding', () => {
     const mockAssign = vi.fn();
     delete (window as Partial<Window>).location;
 
-    window.location = { ...realLocation, assign: mockAssign };
+    (window as Partial<Window>).location = {
+      ...realLocation,
+      assign: mockAssign,
+    };
 
     const surveyLink = 'https://linode.com';
+    queryMocks.useLocation.mockReturnValue({
+      state: { surveyLink },
+    });
     const { getByTestId } = renderWithTheme(<CancelLanding />, {
-      initialEntries: ['/cancel?survey_link=' + encodeURIComponent(surveyLink)],
+      initialEntries: ['/cancel'],
       initialRoute: '/cancel',
     });
     const button = getByTestId('survey-button');

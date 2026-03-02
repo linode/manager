@@ -5,25 +5,40 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { RESOURCE_FILTER_MAP } from '../Utils/constants';
-import { deepEqual, filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import { CLUSTERS_TOOLTIP_TEXT, RESOURCE_FILTER_MAP } from '../Utils/constants';
+import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import { deepEqual } from '../Utils/utils';
+import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
+import type { QueryFunctionType } from '../Utils/models';
+import type { AssociatedEntityType } from './types';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
   clusterSize?: number;
+  endpoint?: string;
   engineType?: string;
   entities?: Record<string, string>;
   id: string;
   label: string;
   region?: string;
   tags?: string[];
+  volumeLinodeId?: string;
+  volumeLinodeLabel?: null | string;
 }
 
 export interface CloudPulseResourcesSelectProps {
+  /**
+   * The associated entity type for the dashboard
+   */
+  associatedEntityType?: AssociatedEntityType;
   defaultValue?: Partial<FilterValue>;
   disabled?: boolean;
+  /**
+   * The filter function to apply to the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
   handleResourcesSelection: (
     resources: CloudPulseResources[],
     savePref?: boolean
@@ -49,9 +64,13 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       savePreferences,
       xFilter,
+      associatedEntityType,
+      filterFn,
     } = props;
 
     const flags = useFlags();
+    const tooltipText =
+      resourceType === 'lke' ? CLUSTERS_TOOLTIP_TEXT : undefined;
 
     const {
       data: resources,
@@ -62,7 +81,9 @@ export const CloudPulseResourcesSelect = React.memo(
       resourceType,
       {},
 
-      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {}
+      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {},
+      associatedEntityType, // This is based on the filter configuration, used to keep associated entity id to label mapping for the supported entity type
+      filterFn
     );
 
     const [selectedResources, setSelectedResources] =
@@ -122,6 +143,7 @@ export const CloudPulseResourcesSelect = React.memo(
       <Autocomplete
         autoHighlight
         clearOnBlur
+        data-pendo-id={label || 'Resources'} // Adding data-pendo-id for better tracking in Pendo analytics, using the label prop to create a unique identifier for the select element.
         data-testid="resource-select"
         disabled={disabled}
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
@@ -177,6 +199,7 @@ export const CloudPulseResourcesSelect = React.memo(
             <ListItem
               {...rest}
               aria-disabled={isMaxSelectionsReached}
+              data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
               data-qa-option
               key={key}
             >
@@ -188,17 +211,8 @@ export const CloudPulseResourcesSelect = React.memo(
           );
         }}
         textFieldProps={{
-          InputProps: {
-            sx: {
-              '::-webkit-scrollbar': {
-                display: 'none',
-              },
-              maxHeight: '55px',
-              msOverflowStyle: 'none',
-              overflow: 'auto',
-              scrollbarWidth: 'none',
-            },
-          },
+          ...CLOUD_PULSE_TEXT_FIELD_PROPS,
+          labelTooltipText: tooltipText,
         }}
         value={selectedResources ?? []}
       />

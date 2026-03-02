@@ -4,11 +4,14 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type CloudPulseServiceType =
+  | 'blockstorage'
   | 'dbaas'
   | 'firewall'
   | 'linode'
-  | 'nodebalancer';
-
+  | 'lke'
+  | 'netloadbalancer'
+  | 'nodebalancer'
+  | 'objectstorage';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -17,8 +20,14 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type AlertDefinitionScope = 'account' | 'entity' | 'region';
+export type AlertStatusType =
+  | 'disabled'
+  | 'disabling'
+  | 'enabled'
+  | 'enabling'
+  | 'failed'
+  | 'provisioning';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -32,11 +41,16 @@ export type MetricUnitType =
   | 'second';
 export type NotificationStatus = 'Disabled' | 'Enabled';
 export type ChannelType = 'email' | 'pagerduty' | 'slack' | 'webhook';
-export type AlertNotificationType = 'custom' | 'default';
+export type AlertNotificationType = 'system' | 'user';
 type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
+type EmailRecipientType =
+  | 'admin_users'
+  | 'read_users'
+  | 'read_write_users'
+  | 'user';
 export interface Dashboard {
   created: string;
   group_by?: string[];
@@ -88,7 +102,7 @@ export interface Widgets {
 
 export interface Filters {
   dimension_label: string;
-  operator: string;
+  operator: DimensionFilterOperatorType;
   value: string;
 }
 
@@ -110,6 +124,8 @@ export interface AclpConfig {
 
 export interface AclpWidget {
   aggregateFunction: string;
+  filters: Filters[];
+  groupBy?: string[];
   label: string;
   size: number;
   timeGranularity: TimeGranularity;
@@ -133,7 +149,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  entity_ids: number[];
+  entity_ids?: number[];
 }
 
 export interface JWEToken {
@@ -148,7 +164,8 @@ export interface Metric {
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   associated_entity_region?: string;
-  entity_ids: number[];
+  entity_ids: number[] | string[] | undefined;
+  entity_region?: string;
   filters?: Filters[];
   group_by?: string[];
   metrics: Metric[];
@@ -265,41 +282,52 @@ export interface Alert {
   updated_by: string;
 }
 
-interface NotificationChannelAlerts {
-  id: number;
-  label: string;
+interface NotificationChannelAlertInfo {
+  alert_count: number;
   type: 'alerts-definitions';
   url: string;
 }
 interface NotificationChannelBase {
-  alerts: NotificationChannelAlerts[];
+  alerts: NotificationChannelAlertInfo;
   channel_type: ChannelType;
-  created_at: string;
+  created: string;
   created_by: string;
   id: number;
   label: string;
   status: NotificationStatus;
   type: AlertNotificationType;
-  updated_at: string;
+  updated: string;
   updated_by: string;
 }
 
 interface NotificationChannelEmail extends NotificationChannelBase {
   channel_type: AlertNotificationEmail;
-  content: {
+  content?: {
     email: {
       email_addresses: string[];
       message: string;
       subject: string;
     };
   };
+  details?: {
+    email: {
+      recipient_type: EmailRecipientType;
+      usernames: string[];
+    };
+  };
 }
 
 interface NotificationChannelSlack extends NotificationChannelBase {
   channel_type: AlertNotificationSlack;
-  content: {
+  content?: {
     slack: {
       message: string;
+      slack_channel: string;
+      slack_webhook_url: string;
+    };
+  };
+  details?: {
+    slack: {
       slack_channel: string;
       slack_webhook_url: string;
     };
@@ -308,7 +336,14 @@ interface NotificationChannelSlack extends NotificationChannelBase {
 
 interface NotificationChannelPagerDuty extends NotificationChannelBase {
   channel_type: AlertNotificationPagerDuty;
-  content: {
+  content?: {
+    pagerduty: {
+      attributes: string[];
+      description: string;
+      service_api_key: string;
+    };
+  };
+  details?: {
     pagerduty: {
       attributes: string[];
       description: string;
@@ -318,12 +353,27 @@ interface NotificationChannelPagerDuty extends NotificationChannelBase {
 }
 interface NotificationChannelWebHook extends NotificationChannelBase {
   channel_type: AlertNotificationWebHook;
-  content: {
+  content?: {
     webhook: {
       http_headers: {
         header_key: string;
         header_value: string;
       }[];
+      webhook_url: string;
+    };
+  };
+  details?: {
+    webhook: {
+      alert_body: {
+        body: string;
+        subject: string;
+      };
+      http_headers: {
+        header_key: string;
+        header_value: string;
+      }[];
+      method: 'GET' | 'POST' | 'PUT';
+      request_body: string;
       webhook_url: string;
     };
   };
@@ -375,6 +425,10 @@ export const capabilityServiceTypeMapping: Record<
   dbaas: 'Managed Databases',
   nodebalancer: 'NodeBalancers',
   firewall: 'Cloud Firewall',
+  objectstorage: 'Object Storage',
+  blockstorage: 'Block Storage',
+  lke: 'Kubernetes',
+  netloadbalancer: 'Network LoadBalancer',
 };
 
 /**
@@ -395,4 +449,59 @@ export interface CloudPulseAlertsPayload {
    * Only included in Beta mode.
    */
   user_alerts?: number[];
+}
+
+interface EmailDetail {
+  email: {
+    usernames: string[];
+  };
+}
+
+export interface CreateNotificationChannelPayload {
+  /**
+   * The type of channel to create.
+   */
+  channel_type: ChannelType;
+  /**
+   * The details of the channel to create.
+   */
+  details: EmailDetail;
+  /**
+   * The label of the channel to create.
+   */
+  label: string;
+}
+
+export interface EditNotificationChannelPayload {
+  /**
+   * The details of the channel to edit.
+   */
+  details: EmailDetail;
+  /**
+   * The label of the channel to edit.
+   */
+  label: string;
+}
+
+export interface EditNotificationChannelPayloadWithId
+  extends EditNotificationChannelPayload {
+  /**
+   * The ID of the channel to edit.
+   */
+  channelId: number;
+}
+
+export interface DeleteChannelPayload {
+  /**
+   * The ID of the channel to delete.
+   */
+  channelId: number;
+}
+
+export interface NotificationChannelAlerts {
+  id: number;
+  label: string;
+  service_type: CloudPulseServiceType;
+  type: 'alerts-definitions';
+  url: string;
 }

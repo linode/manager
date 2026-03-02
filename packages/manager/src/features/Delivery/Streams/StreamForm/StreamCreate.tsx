@@ -25,6 +25,7 @@ export const StreamCreate = () => {
         },
       ],
     },
+    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: [1, 2],
     title: 'Create Stream',
   };
@@ -33,12 +34,12 @@ export const StreamCreate = () => {
     defaultValues: {
       stream: {
         type: streamType.AuditLogs,
-        details: {},
+        details: null,
+        destinations: [],
       },
       destination: {
-        type: destinationType.LinodeObjectStorage,
+        type: destinationType.AkamaiObjectStorage,
         details: {
-          region: '',
           path: '',
         },
       },

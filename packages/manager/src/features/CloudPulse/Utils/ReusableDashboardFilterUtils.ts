@@ -1,5 +1,6 @@
 import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
-import { FILTER_CONFIG } from './FilterConfig';
+import { ENDPOINT } from './constants';
+import { FILTER_CONFIG, isEndpointsOnlyDashboard } from './FilterConfig';
 import { CloudPulseAvailableViews } from './models';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
@@ -24,9 +25,13 @@ interface ReusableDashboardFilterUtilProps {
    */
   groupBy: string[];
   /**
+   * The selected region
+   */
+  region?: string;
+  /**
    * The selected resource id
    */
-  resource: number;
+  resource: number | string;
   /**
    * The selected time duration
    */
@@ -40,7 +45,8 @@ interface ReusableDashboardFilterUtilProps {
 export const getDashboardProperties = (
   props: ReusableDashboardFilterUtilProps
 ): DashboardProperties => {
-  const { dashboardObj, filterValue, resource, timeDuration, groupBy } = props;
+  const { dashboardObj, filterValue, resource, timeDuration, groupBy, region } =
+    props;
   return {
     additionalFilters: constructDimensionFilters({
       dashboardObj,
@@ -50,9 +56,13 @@ export const getDashboardProperties = (
     }),
     dashboardId: dashboardObj.id,
     duration: timeDuration ?? defaultTimeDuration(),
-    resources: [String(resource)],
+    resources: isEndpointsOnlyDashboard(dashboardObj.id)
+      ? []
+      : [String(resource)],
+    serviceType: dashboardObj.service_type,
     savePref: false,
     groupBy,
+    region,
   };
 };
 
@@ -63,7 +73,7 @@ export const getDashboardProperties = (
 export const checkMandatoryFiltersSelected = (
   props: ReusableDashboardFilterUtilProps
 ): boolean => {
-  const { dashboardObj, filterValue, resource, timeDuration } = props;
+  const { dashboardObj, filterValue, resource, timeDuration, region } = props;
   const serviceTypeConfig = FILTER_CONFIG.get(dashboardObj.id);
 
   if (!serviceTypeConfig) {
@@ -71,6 +81,10 @@ export const checkMandatoryFiltersSelected = (
   }
 
   if (!timeDuration || !resource) {
+    return false;
+  }
+
+  if (dashboardObj.service_type === 'objectstorage' && !region) {
     return false;
   }
 
@@ -137,13 +151,20 @@ export const checkIfFilterNeededInMetricsCall = (
 export const constructDimensionFilters = (
   props: ReusableDashboardFilterUtilProps
 ): CloudPulseMetricsAdditionalFilters[] => {
-  const { dashboardObj, filterValue } = props;
-  return Object.keys(filterValue)
+  const { dashboardObj, filterValue, resource } = props;
+  const filters = Object.keys(filterValue)
     .filter((key) => checkIfFilterNeededInMetricsCall(key, dashboardObj.id))
     .map((key) => ({
       filterKey: key,
       filterValue: filterValue[key],
     }));
+  if (isEndpointsOnlyDashboard(dashboardObj.id)) {
+    filters.push({
+      filterKey: ENDPOINT,
+      filterValue: [String(resource)],
+    });
+  }
+  return filters;
 };
 
 /**

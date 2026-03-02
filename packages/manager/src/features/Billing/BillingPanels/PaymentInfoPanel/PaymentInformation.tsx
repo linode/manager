@@ -11,7 +11,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -24,7 +23,7 @@ import { AddPaymentMethodDrawer } from './AddPaymentMethodDrawer/AddPaymentMetho
 import type { Profile } from '@linode/api-v4';
 import type { PaymentMethod } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
-
+import type { BillingSearch } from 'src/routes/billing';
 interface Props {
   error?: APIError[] | null;
   isAkamaiCustomer: boolean;
@@ -35,9 +34,8 @@ interface Props {
 
 const PaymentInformation = (props: Props) => {
   const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
-  const { iamRbacPrimaryNavChanges } = useFlags();
   const search = useSearch({
-    from: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+    from: '/billing',
   });
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
@@ -50,13 +48,13 @@ const PaymentInformation = (props: Props) => {
   const queryClient = useQueryClient();
   const addPaymentMethodRouteMatch = search.action === 'add-payment-method';
 
-  const isChildUser = profile?.user_type === 'child';
+  const isChildUserType = profile?.user_type === 'child';
 
   const { data: permissions } = usePermissions('account', [
     'create_payment_method',
   ]);
 
-  const isReadOnly = !permissions?.create_payment_method || isChildUser;
+  const isReadOnly = !permissions?.create_payment_method || isChildUserType;
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -81,7 +79,11 @@ const PaymentInformation = (props: Props) => {
   const closeAddDrawer = React.useCallback(() => {
     setAddDrawerOpen(false);
     navigate({
-      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+      to: '/billing',
+      search: (prev: BillingSearch) => ({
+        ...prev,
+        action: prev.action === 'add-payment-method' ? undefined : prev.action,
+      }),
     });
   }, [navigate]);
 
@@ -122,9 +124,7 @@ const PaymentInformation = (props: Props) => {
               disableTouchRipple
               onClick={() =>
                 navigate({
-                  to: iamRbacPrimaryNavChanges
-                    ? '/billing'
-                    : '/account/billing',
+                  to: '/billing',
                   search: (prev) => ({
                     ...prev,
                     action: 'add-payment-method',
@@ -133,7 +133,7 @@ const PaymentInformation = (props: Props) => {
               }
               tooltipText={getRestrictedResourceText({
                 includeContactInfo: false,
-                isChildUser,
+                isChildUserType,
                 resourceType: 'Account',
               })}
             >
@@ -144,7 +144,7 @@ const PaymentInformation = (props: Props) => {
         {!isAkamaiCustomer ? (
           <PaymentMethods
             error={error}
-            isChildUser={isChildUser}
+            isChildUser={isChildUserType}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}

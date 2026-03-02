@@ -1,5 +1,6 @@
 import type { MaintenancePolicySlug } from '../account/types';
 import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
+import type { LockType } from '../locks/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
@@ -44,7 +45,14 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  maintenance_policy?: MaintenancePolicySlug;
+  locks: LockType[];
+  /**
+   * The maintenance policy configured for this Linode.
+   *
+   * Will be `null` if the Maintenance Policy feature is not enabled or the Linode's
+   * region does not support maintenance policies.
+   */
+  maintenance_policy: MaintenancePolicySlug | null;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
@@ -73,6 +81,7 @@ export interface LinodeBackups {
 export type LinodeCapabilities =
   | 'Block Storage Encryption'
   | 'Block Storage Performance B1'
+  | 'Maintenance Policy'
   | 'SMTP Enabled';
 
 export type Window =
@@ -192,7 +201,7 @@ export interface ConfigInterfaceIPv4 {
 
 export interface IPv6SLAAC {
   address?: string;
-  range: string;
+  range?: string;
 }
 
 // The legacy interface type - for Configuration Profile Interfaces

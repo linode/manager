@@ -1,5 +1,7 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutateProfile, useProfile } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
+import { UpdateUserEmailSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,7 +18,8 @@ export const UserEmailPanel = ({ user }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
 
-  const isProxyUserProfile = user?.user_type === 'proxy';
+  const isProxyOrDelegateUserProfile =
+    user?.user_type === 'proxy' || user?.user_type === 'delegate';
 
   const { mutateAsync: updateProfile } = useMutateProfile();
 
@@ -26,6 +29,7 @@ export const UserEmailPanel = ({ user }: Props) => {
     handleSubmit,
     setError,
   } = useForm({
+    resolver: yupResolver(UpdateUserEmailSchema),
     defaultValues: { email: user.email },
     values: { email: user.email },
   });
@@ -40,7 +44,7 @@ export const UserEmailPanel = ({ user }: Props) => {
     }
   };
 
-  const disabledReason = isProxyUserProfile
+  const disabledReason = isProxyOrDelegateUserProfile
     ? RESTRICTED_FIELD_TOOLTIP
     : profile?.username !== user.username
       ? 'You can\u{2019}t change another user\u{2019}s email address.'
@@ -48,7 +52,7 @@ export const UserEmailPanel = ({ user }: Props) => {
 
   // This should be disabled if this is NOT the current user or if the proxy user is viewing their own profile.
   const disableEmailField =
-    profile?.username !== user.username || isProxyUserProfile;
+    profile?.username !== user.username || isProxyOrDelegateUserProfile;
 
   return (
     <Paper>

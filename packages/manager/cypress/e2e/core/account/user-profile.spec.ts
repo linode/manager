@@ -5,6 +5,7 @@ import {
   mockGetUsers,
   mockUpdateUsername,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockUpdateProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
@@ -22,6 +23,12 @@ describe('User Profile', () => {
   it('can change email and username of the active account', () => {
     const newUsername = randomString(12);
     const newEmail = `${newUsername}@example.com`;
+
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
 
     getProfile().then((profile) => {
       const activeUsername = profile.body.username;

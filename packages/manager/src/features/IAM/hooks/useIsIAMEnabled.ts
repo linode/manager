@@ -1,4 +1,4 @@
-import { iamQueries, profileQueries } from '@linode/queries';
+import { iamQueries } from '@linode/queries';
 import {
   useAccountRoles,
   useProfile,
@@ -8,6 +8,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { useFlags } from 'src/hooks/useFlags';
 
+import type { Profile } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FlagSet } from 'src/featureFlags';
 
@@ -19,17 +20,18 @@ import type { FlagSet } from 'src/featureFlags';
 export const useIsIAMEnabled = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: roles } = useAccountRoles(
+  const { data: roles, isLoading: isLoadingRoles } = useAccountRoles(
     flags?.iam?.enabled === true && !profile?.restricted
   );
 
-  const { data: permissions } = useUserAccountPermissions(
-    flags?.iam?.enabled === true
-  );
+  const { data: permissions, isLoading: isLoadingPermissions } =
+    useUserAccountPermissions(flags?.iam?.enabled === true);
 
   return {
-    isIAMBeta: flags.iam?.beta,
-    isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions?.length),
+    isIAMEnabled: flags?.iam?.enabled && Boolean(roles || permissions),
+    isLoading: isLoadingRoles || isLoadingPermissions,
+    accountRoles: roles,
+    profile,
   };
 };
 
@@ -44,23 +46,20 @@ export const useIsIAMEnabled = () => {
  */
 export const checkIAMEnabled = async (
   queryClient: QueryClient,
-  flags: FlagSet
+  flags: FlagSet,
+  profile: Profile | undefined
 ): Promise<boolean> => {
-  if (!flags?.iam?.enabled) {
+  if (!flags?.iam?.enabled || !profile) {
     return false;
   }
 
   try {
-    const profile = await queryClient.ensureQueryData(
-      queryOptions(profileQueries.profile())
-    );
-
-    if (profile.restricted) {
+    if (profile.username) {
       // For restricted users ONLY, get permissions
       const permissions = await queryClient.ensureQueryData(
         queryOptions(iamQueries.user(profile.username)._ctx.accountPermissions)
       );
-      return Boolean(permissions.length);
+      return Boolean(permissions);
     }
 
     // For non-restricted users ONLY, get roles
@@ -72,4 +71,18 @@ export const checkIAMEnabled = async (
   } catch {
     return false;
   }
+};
+
+/**
+ * Returns whether or not features related to the IAM Delegation project
+ * should be enabled.
+ */
+export const useIsIAMDelegationEnabled = () => {
+  const flags = useFlags();
+  const { isIAMEnabled } = useIsIAMEnabled();
+
+  return {
+    isIAMDelegationEnabled:
+      (flags.iamDelegation?.enabled && isIAMEnabled) ?? false,
+  };
 };

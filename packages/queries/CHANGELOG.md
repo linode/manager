@@ -1,3 +1,85 @@
+## [2026-02-25] - v0.21.0
+
+
+### Tech Stories:
+
+- Clean up unused marketplace v2 queries ([#13396](https://github.com/linode/manager/pull/13396))
+
+## [2026-01-26] - v0.20.0
+
+
+### Upcoming Features:
+
+- Add API queries for MarketplaceV2 ([#13255](https://github.com/linode/manager/pull/13255))
+
+## [2026-01-12] - v0.19.0
+
+
+### Changed:
+
+- IAM: Enable account_viewer to access users table ([#13189](https://github.com/linode/manager/pull/13189))
+
+### Upcoming Features:
+
+- Add new API queries for CRUD of locks for Resource Locking feature(RESPROT2)  ([#13187](https://github.com/linode/manager/pull/13187))
+
+## [2025-12-09] - v0.18.0
+
+
+### Changed:
+
+- Update database useRestoreFromBackupMutation data to include region ([#13097](https://github.com/linode/manager/pull/13097))
+
+### Upcoming Features:
+
+- Add new queries for Network Load Balancers ([#13078](https://github.com/linode/manager/pull/13078))
+- Added Database Connection Pool queries ([#13148](https://github.com/linode/manager/pull/13148))
+
+## [2025-11-18] - v0.17.0
+
+
+### Upcoming Features:
+
+- Add new queries for Firewall RS & PL ([#13061](https://github.com/linode/manager/pull/13061))
+- New IAM getUserEntitiesByPermission queries ([#13070](https://github.com/linode/manager/pull/13070))
+
+## [2025-10-21] - v0.16.0
+
+### Added:
+
+- `useAllGetDelegatedChildAccountsForUserQuery` for IAM User Delegation ([#12920](https://github.com/linode/manager/pull/12920))
+
+## [2025-10-07] - v0.15.0
+
+
+### Added:
+
+- IAM RBAC: useAllAccountEntities to fetch all pages client-side via getAll, preventing missing items on large accounts ([#12888](https://github.com/linode/manager/pull/12888))
+- IAM Parent/Child - Implement new delegation query hooks ([#12895](https://github.com/linode/manager/pull/12895))
+- IAM Delegation: useAllListMyDelegatedChildAccountsQuery to fetch all data ([#12913](https://github.com/linode/manager/pull/12913))
+- Region VPC availability queries ([#12919](https://github.com/linode/manager/pull/12919))
+
+### Changed:
+
+- ACLP: update metric definition queries cache time to inifinity ([#12887](https://github.com/linode/manager/pull/12887))
+
+### Removed:
+
+- `isUsingBetaEndpoint` logic for kubernetes queries since all kubernetes endpoints
+now use /v4beta ([#12867](https://github.com/linode/manager/pull/12867))
+
+### Upcoming Features:
+
+- Logs Delivery Streams/Destinations update useAll queries ([#12802](https://github.com/linode/manager/pull/12802))
+
+## [2025-09-23] - v0.14.0
+
+### Upcoming Features:
+
+- Add infiniteQueries for Streams and Destinations ([#12811](https://github.com/linode/manager/pull/12811))
+- Add query for Destinations' POST v4beta/monitor/streams/destinations/verify endpoint ([#12823](https://github.com/linode/manager/pull/12823))
+- Rename DataStream to Delivery ([#12852](https://github.com/linode/manager/pull/12852))
+
 ## [2025-09-11] - v0.13.1
 
 ### Fixed:

@@ -1,9 +1,16 @@
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
+import { ASSOCIATED_ENTITY_METRIC_MAP } from '../Utils/constants';
+import {
+  getAssociatedEntityType,
+  isEndpointsOnlyDashboard,
+} from '../Utils/FilterConfig';
+
 import type { GroupByOption } from './CloudPulseGroupByDrawer';
 import type {
   CloudPulseServiceType,
+  Dashboard,
   Dimension,
   MetricDefinition,
 } from '@linode/api-v4';
@@ -40,7 +47,8 @@ interface MetricDimension {
  */
 export const useGlobalDimensions = (
   dashboardId: number | undefined,
-  serviceType: CloudPulseServiceType | undefined
+  serviceType: CloudPulseServiceType | undefined,
+  preference?: string[]
 ): GroupByDimension => {
   const { data: dashboard, isLoading: dashboardLoading } =
     useCloudPulseDashboardByIdQuery(dashboardId);
@@ -53,14 +61,19 @@ export const useGlobalDimensions = (
   if (metricLoading || dashboardLoading) {
     return { options: [], defaultValue: [], isLoading: true };
   }
-  const metricDimensions = getMetricDimensions(metricDefinition?.data ?? []);
-  const commonDimensions = [
-    defaultOption,
-    ...getCommonDimensions(metricDimensions),
-  ];
+  const metricDimensions = getMetricDimensions(
+    metricDefinition?.data ?? [],
+    dashboard
+  );
+  const baseDimensions = getCommonDimensions(metricDimensions);
+  const shouldIncludeDefault = !isEndpointsOnlyDashboard(dashboardId ?? 0);
+
+  const commonDimensions = shouldIncludeDefault
+    ? [defaultOption, ...baseDimensions]
+    : baseDimensions;
 
   const commonGroups = getCommonGroups(
-    dashboard?.group_by ?? [],
+    preference ? preference : (dashboard?.group_by ?? []),
     commonDimensions
   );
   return {
@@ -81,10 +94,18 @@ export const getCommonGroups = (
   commonDimensions: GroupByOption[]
 ): GroupByOption[] => {
   if (groupBy.length === 0 || commonDimensions.length === 0) return [];
-
-  return commonDimensions.filter((group) => {
-    return groupBy.includes(group.value);
-  });
+  const commonGroups: GroupByOption[] = [];
+  // To maintain the order of groupBy from dashboard config or preferences
+  for (let index = 0; index < groupBy.length; index++) {
+    const group = groupBy[index];
+    const commonGroup = commonDimensions.find(
+      (dimension) => dimension.value === group
+    );
+    if (commonGroup) {
+      commonGroups.push(commonGroup);
+    }
+  }
+  return commonGroups;
 };
 
 /**
@@ -99,7 +120,8 @@ export const useWidgetDimension = (
   dashboardId: number | undefined,
   serviceType: CloudPulseServiceType | undefined,
   globalDimensions: GroupByOption[],
-  metric: string | undefined
+  metric: string | undefined,
+  preference?: string[]
 ): GroupByDimension => {
   const { data: dashboard, isLoading: dashboardLoading } =
     useCloudPulseDashboardByIdQuery(dashboardId);
@@ -120,9 +142,11 @@ export const useWidgetDimension = (
         label,
         value: dimension_label,
       })) ?? [];
-  const defaultGroupBy =
-    dashboard?.widgets.find((widget) => widget.metric === metric)?.group_by ??
-    [];
+  const defaultGroupBy = preference
+    ? preference
+    : (dashboard?.widgets.find((widget) => widget.metric === metric)
+        ?.group_by ?? []);
+
   const options = metricDimensions.filter(
     (metricDimension) =>
       !globalDimensions.some(
@@ -130,9 +154,17 @@ export const useWidgetDimension = (
       )
   );
 
-  const defaultValue = options.filter((options) =>
-    defaultGroupBy.includes(options.value)
-  );
+  // To maintain the order of groupBy from dashboard config or preferences
+  const defaultValue: GroupByOption[] = [];
+
+  for (let index = 0; index < defaultGroupBy.length; index++) {
+    const groupBy = defaultGroupBy[index];
+
+    const defaultOption = options.find((option) => option.value === groupBy);
+    if (defaultOption) {
+      defaultValue.push(defaultOption);
+    }
+  }
 
   return {
     options,
@@ -147,14 +179,25 @@ export const useWidgetDimension = (
  * @returns transform dimension object with metric as key and dimensions as value
  */
 export const getMetricDimensions = (
-  metricDefinition: MetricDefinition[]
+  metricDefinition: MetricDefinition[],
+  dashboard?: Dashboard
 ): MetricDimension => {
-  return metricDefinition.reduce((acc, { metric, dimensions }) => {
-    return {
-      ...acc,
-      [metric]: dimensions,
-    };
-  }, {});
+  if (!dashboard) {
+    return {};
+  }
+  const associatedEntityType = getAssociatedEntityType(dashboard.id);
+  return metricDefinition
+    .filter(({ label }) =>
+      associatedEntityType
+        ? label.includes(ASSOCIATED_ENTITY_METRIC_MAP[associatedEntityType]) // we need to filter metrics based on associated entity type for firewall dashboards, can be linode, nodebalancer, etc.
+        : true
+    )
+    .reduce((acc, { metric, dimensions }) => {
+      return {
+        ...acc,
+        [metric]: dimensions,
+      };
+    }, {});
 };
 
 /**

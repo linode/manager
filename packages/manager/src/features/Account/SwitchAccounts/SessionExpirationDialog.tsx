@@ -8,6 +8,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
+import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { parseAPIDate } from 'src/utilities/date';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
@@ -21,7 +23,8 @@ export const SessionExpirationDialog = React.memo(
     const sessionExpirationContext = React.useContext(
       _sessionExpirationContext
     );
-
+    const { isProxyUserType, isDelegateUserType } = useDelegationRole();
+    const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
     const [timeRemaining, setTimeRemaining] = React.useState<{
       minutes: number;
       seconds: number;
@@ -36,8 +39,8 @@ export const SessionExpirationDialog = React.memo(
 
     const {
       createToken,
-      createTokenError,
-      createTokenLoading,
+      error: createTokenError,
+      loading: createTokenLoading,
       revokeToken,
       updateCurrentToken,
       validateParentToken,
@@ -90,8 +93,12 @@ export const SessionExpirationDialog = React.memo(
 
       updateCurrentToken({ userType: 'parent' });
 
-      // Reset flag for proxy user to display success toast once.
-      setStorage('is_proxy_user', 'false');
+      // Reset flag for proxy or delegate user to display success toast once.
+      if (isProxyUserType) {
+        setStorage('is_proxy_user_type', 'false');
+      } else if (isDelegateUserType) {
+        setStorage('is_delegate_user_type', 'false');
+      }
       setLogoutLoading(false);
 
       onClose();
@@ -106,15 +113,22 @@ export const SessionExpirationDialog = React.memo(
 
         const proxyToken = await createToken(euuid);
 
+        const tokenPrefix = isIAMDelegationEnabled
+          ? 'authentication/delegate_token'
+          : 'authentication/proxy_token';
+        const tokenUserType = isIAMDelegationEnabled ? 'delegate' : 'proxy';
+
         setTokenInLocalStorage({
-          prefix: 'authentication/proxy_token',
+          prefix: tokenPrefix,
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
           },
         });
 
-        updateCurrentToken({ userType: 'proxy' });
+        updateCurrentToken({
+          userType: tokenUserType,
+        });
         onClose();
         location.reload();
       } catch (error) {
@@ -129,7 +143,9 @@ export const SessionExpirationDialog = React.memo(
      */
     useEffect(() => {
       const checkTokenExpiry = () => {
-        const expiryString = getStorage('authentication/proxy_token/expire');
+        const expiryString = isProxyUserType
+          ? getStorage('authentication/proxy_token/expire')
+          : getStorage('authentication/delegate_token/expire');
 
         if (!expiryString) {
           return;

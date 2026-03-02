@@ -26,7 +26,7 @@ describe('UserEmailPanel', () => {
     const user = accountUserFactory.build();
 
     const { getByLabelText } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={true} user={user} />
+      <UserEmailPanel activeUser={user} />
     );
 
     const emailTextField = getByLabelText('Email');
@@ -45,7 +45,7 @@ describe('UserEmailPanel', () => {
     );
 
     const { findByLabelText, getByLabelText, getByText } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={false} user={user} />
+      <UserEmailPanel activeUser={user} />
     );
 
     const warning = await findByLabelText(
@@ -70,7 +70,7 @@ describe('UserEmailPanel', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={false} user={user} />
+      <UserEmailPanel activeUser={user} />
     );
 
     const warning = getByLabelText('This field can’t be modified.');
@@ -94,7 +94,7 @@ describe('UserEmailPanel', () => {
       username: 'user-1',
     });
 
-    renderWithTheme(<UserEmailPanel canUpdateUser={true} user={user} />);
+    renderWithTheme(<UserEmailPanel activeUser={user} />);
 
     const emailInput = screen.getByLabelText('Email');
 
@@ -108,13 +108,13 @@ describe('UserEmailPanel', () => {
     expect(errorText).toBeInTheDocument();
   });
 
-  it('disables the save button when the user does not have update_user permission', async () => {
+  it('disables the save button when the user does not have is_account_admin permission', async () => {
     const user = accountUserFactory.build({
       email: 'my-linode-email',
     });
 
     const { getByRole, findByDisplayValue } = renderWithTheme(
-      <UserEmailPanel canUpdateUser={false} user={user} />
+      <UserEmailPanel activeUser={user} />
     );
 
     await findByDisplayValue(user.email);

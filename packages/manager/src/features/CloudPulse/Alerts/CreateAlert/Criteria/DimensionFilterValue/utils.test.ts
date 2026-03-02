@@ -1,14 +1,18 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 
-import { transformDimensionValue } from '../../../Utils/utils';
 import {
   getFilteredFirewallParentEntities,
   getFirewallLinodes,
   getLinodeRegions,
+  getNodebalancerRegions,
   getOperatorGroup,
   getStaticOptions,
   handleValueChange,
+  isMaxSelectionsReached,
+  isOptionDisabled,
   resolveSelectedValues,
+  scopeBasedFilteredResources,
+  transformDimensionValue,
 } from './utils';
 
 import type { Linode } from '@linode/api-v4';
@@ -103,7 +107,7 @@ describe('Utils', () => {
     });
 
     it('should return empty array if input is null', () => {
-      expect(getStaticOptions('linode', 'dim', null)).toEqual([]);
+      expect(getStaticOptions('linode', 'dim', [])).toEqual([]);
     });
   });
 
@@ -119,16 +123,30 @@ describe('Utils', () => {
         entities: { b: 'linode-2' },
         label: 'firewall-2',
       },
+      {
+        id: '3',
+        entities: { c: 'nodebalancer-1' },
+        label: 'firewall-3',
+      },
     ];
 
     it('should return matched resources by entity IDs', () => {
       expect(getFilteredFirewallParentEntities(resources, ['1'])).toEqual([
-        'a',
+        {
+          label: 'linode-1',
+          id: 'a',
+        },
+      ]);
+      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([
+        {
+          label: 'nodebalancer-1',
+          id: 'c',
+        },
       ]);
     });
 
     it('should return empty array if no match', () => {
-      expect(getFilteredFirewallParentEntities(resources, ['3'])).toEqual([]);
+      expect(getFilteredFirewallParentEntities(resources, ['4'])).toEqual([]);
     });
 
     it('should handle undefined inputs', () => {
@@ -188,5 +206,223 @@ describe('Utils', () => {
         },
       ]);
     });
+  });
+
+  describe('getNodebalancerRegions', () => {
+    it('should extract and deduplicate regions', () => {
+      const nodebalancers = nodeBalancerFactory.buildList(3, {
+        region: 'us-east',
+      });
+      nodebalancers[1].region = 'us-west'; // introduce a second unique region
+
+      const result = getNodebalancerRegions(nodebalancers);
+      expect(result).toEqual([
+        {
+          label: transformDimensionValue(
+            'firewall',
+            'region_id',
+            nodebalancers[0].region
+          ),
+          value: 'us-east',
+        },
+        {
+          label: transformDimensionValue(
+            'firewall',
+            'region_id',
+            nodebalancers[1].region
+          ),
+          value: 'us-west',
+        },
+      ]);
+    });
+  });
+
+  describe('scopeBasedFilteredBuckets', () => {
+    const buckets: CloudPulseResources[] = [
+      { label: 'bucket-1', id: 'bucket-1', region: 'us-east' },
+      { label: 'bucket-2', id: 'bucket-2', region: 'us-west' },
+      { label: 'bucket-3', id: 'bucket-3', region: 'eu-central' },
+    ];
+
+    it('returns all buckets for account scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'account',
+        resources: buckets,
+      });
+      expect(result).toEqual(buckets);
+    });
+
+    it('filters buckets by entity IDs for entity scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'entity',
+        resources: buckets,
+        entities: ['bucket-1', 'bucket-3'],
+      });
+      expect(result).toEqual([
+        { id: 'bucket-1', label: 'bucket-1', region: 'us-east' },
+        { id: 'bucket-3', label: 'bucket-3', region: 'eu-central' },
+      ]);
+    });
+
+    it('returns empty array if no entities match for entity scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'entity',
+        resources: buckets,
+        entities: ['bucket-99'],
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('returns empty array if entities is undefined for entity scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'entity',
+        resources: buckets,
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('filters buckets by region IDs for region scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'region',
+        resources: buckets,
+        selectedRegions: ['us-east', 'eu-central'],
+      });
+      expect(result).toEqual([
+        { id: 'bucket-1', label: 'bucket-1', region: 'us-east' },
+        { id: 'bucket-3', label: 'bucket-3', region: 'eu-central' },
+      ]);
+    });
+
+    it('returns empty array if no regions match for region scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'region',
+        resources: buckets,
+        selectedRegions: ['ap-south'],
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('returns empty array if selectedRegions is undefined for region scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: 'region',
+        resources: buckets,
+      });
+      expect(result).toEqual([]);
+    });
+
+    it('returns all buckets for null scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: null,
+        resources: buckets,
+      });
+      expect(result).toEqual(buckets);
+    });
+
+    it('returns all buckets for unrecognized scope', () => {
+      const result = scopeBasedFilteredResources({
+        scope: null,
+        resources: buckets,
+      });
+      expect(result).toEqual(buckets);
+    });
+  });
+});
+describe('isMaxSelectionsReached', () => {
+  it('returns false when multiple is false', () => {
+    expect(isMaxSelectionsReached(false, 'a,b,c', 2)).toBe(false);
+  });
+
+  it('returns false when value is empty string', () => {
+    expect(isMaxSelectionsReached(true, '', 2)).toBe(false);
+  });
+
+  it('returns false when maxSelections is undefined', () => {
+    expect(isMaxSelectionsReached(true, 'a,b,c', undefined)).toBe(false);
+  });
+
+  it('returns false when selections are less than maxSelections', () => {
+    expect(isMaxSelectionsReached(true, 'a,b', 3)).toBe(false);
+  });
+
+  it('returns true when selections equal maxSelections', () => {
+    expect(isMaxSelectionsReached(true, 'a,b,c', 3)).toBe(true);
+  });
+
+  it('returns true when selections exceed maxSelections', () => {
+    expect(isMaxSelectionsReached(true, 'a,b,c,d', 3)).toBe(true);
+  });
+
+  it('counts single value correctly', () => {
+    expect(isMaxSelectionsReached(true, 'a', 1)).toBe(true);
+  });
+});
+
+describe('isOptionDisabled', () => {
+  const optionA = { label: 'A', value: 'a' };
+  const optionB = { label: 'B', value: 'b' };
+
+  it('returns false when maxReached is false', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: false,
+        multiple: true,
+        value: 'a,b',
+        option: optionA,
+      })
+    ).toBe(false);
+  });
+
+  it('returns false when multiple is false even if maxReached is true', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: false,
+        value: 'a,b',
+        option: optionA,
+      })
+    ).toBe(false);
+  });
+
+  it('disables option when maxReached is true and option is NOT selected', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        value: 'a',
+        option: optionB, // already selected? NO
+      })
+    ).toBe(true);
+  });
+
+  it('does NOT disable option when maxReached is true and option IS selected', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        value: 'a,b',
+        option: optionA, // already selected
+      })
+    ).toBe(false);
+  });
+
+  it('handles undefined value safely', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        option: optionA,
+      })
+    ).toBe(true);
+  });
+
+  it('handles empty value string', () => {
+    expect(
+      isOptionDisabled({
+        maxReached: true,
+        multiple: true,
+        value: '',
+        option: optionA,
+      })
+    ).toBe(true);
   });
 });

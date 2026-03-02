@@ -11,7 +11,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
-import { useFlags } from 'src/hooks/useFlags';
 
 import {
   BillingActionButton,
@@ -60,7 +59,6 @@ export const ContactInformation = React.memo((props: Props) => {
     zip,
   } = props;
 
-  const { iamRbacPrimaryNavChanges } = useFlags();
   const navigate = useNavigate();
   const { contactDrawerOpen, focusEmail } = useSearch({
     strict: false,
@@ -72,7 +70,7 @@ export const ContactInformation = React.memo((props: Props) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
-  const isChildUser = Boolean(profile?.user_type === 'child');
+  const isChildUserType = Boolean(profile?.user_type === 'child');
 
   const taxIdIsVerifyingNotification = notifications?.find((notification) => {
     return notification.type === 'tax_id_verifying';
@@ -80,11 +78,11 @@ export const ContactInformation = React.memo((props: Props) => {
 
   const { data: permissions } = usePermissions('account', ['update_account']);
 
-  const isReadOnly = !permissions.update_account || isChildUser;
+  const isReadOnly = !permissions.update_account || isChildUserType;
 
   const handleEditDrawerOpen = () => {
     navigate({
-      to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+      to: '/billing',
       search: (prev) => ({
         ...prev,
         action: 'edit',
@@ -148,7 +146,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 onClick={handleEditDrawerOpen}
                 tooltipText={getRestrictedResourceText({
                   includeContactInfo: false,
-                  isChildUser,
+                  isChildUserType,
                   resourceType: 'Account',
                 })}
               >
@@ -191,7 +189,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {(firstName || lastName) && (
                   <StyledTypography
                     data-qa-contact-name
-                    sx={{ wordBreak: 'keep-all' }}
+                    sx={{ wordBreak: 'break-word' }}
                   >
                     {firstName} {lastName}
                   </StyledTypography>
@@ -199,7 +197,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 {company && (
                   <StyledTypography
                     data-qa-company
-                    sx={{ wordBreak: 'keep-all' }}
+                    sx={{ wordBreak: 'break-word' }}
                   >
                     {company}
                   </StyledTypography>
@@ -259,7 +257,7 @@ export const ContactInformation = React.memo((props: Props) => {
         focusEmail={Boolean(focusEmail)}
         onClose={() => {
           navigate({
-            to: iamRbacPrimaryNavChanges ? '/billing' : '/account/billing',
+            to: '/billing',
             search: undefined,
           });
         }}

@@ -133,7 +133,9 @@ export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
   failed: 'error',
-  'in progress': 'other',
+  provisioning: 'other',
+  disabling: 'other',
+  enabling: 'other',
 };
 
 export const channelTypeOptions: Item<string, ChannelType>[] = [
@@ -142,6 +144,13 @@ export const channelTypeOptions: Item<string, ChannelType>[] = [
     value: 'email',
   },
 ];
+
+export const channelTypeMap: Record<ChannelType, string> = {
+  email: 'Email',
+  pagerduty: 'PagerDuty',
+  slack: 'Slack',
+  webhook: 'Webhook',
+};
 
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
@@ -167,11 +176,14 @@ export const dimensionOperatorTypeMap: Record<
   startswith: 'starts with',
   in: 'in',
 };
+
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
   failed: 'Failed',
-  'in progress': 'In Progress',
+  disabling: 'Disabling',
+  enabling: 'Enabling',
+  provisioning: 'Provisioning',
 };
 
 export const alertStatusOptions: Item<string, AlertStatusType>[] =
@@ -198,10 +210,20 @@ export const MULTILINE_ERROR_SEPARATOR = '|';
 export const SINGLELINE_ERROR_SEPARATOR = '\t';
 
 export const CREATE_ALERT_SUCCESS_MESSAGE =
-  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+  'Alert created. It may take up to 5 minutes for your alert to be enabled.';
 
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
-  'Alert successfully updated. It may take a few minutes for your changes to take effect.';
+  'Alert updated. It may take up to 5 minutes for changes to be applied.';
+
+export const DISABLE_ALERT_SUCCESS_MESSAGE =
+  'Alert disabled. It may take up to 5 minutes for your changes to take effect.';
+
+export const ENABLE_ALERT_SUCCESS_MESSAGE =
+  'Alert enabled. It may take up to 5 minutes for your changes to take effect.';
+
+export const DISABLE_ALERT_FAILED_MESSAGE = 'Failed to disable an Alert.';
+
+export const ENABLE_ALERT_FAILED_MESSAGE = 'Failed to enable an Alert.';
 
 export const ACCOUNT_GROUP_INFO_MESSAGE =
   'This alert applies to all entities associated with your account, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
@@ -229,6 +251,13 @@ export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
 export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
+
+export const VIP_PLACEHOLDER_TEXT = 'Enter VIP address';
+export const NODE_ID_PLACEHOLDER_TEXT = 'Enter Node ID';
+export const NODE_ID_HELPER_TEXT =
+  'Enter one or more Node IDs separated by commas.';
+export const VIP_HELPER_TEXT =
+  'Enter one or more VIP addresses separated by commas.';
 
 export const CONFIGS_HELPER_TEXT =
   'Enter one or more configuration IDs separated by commas.';
@@ -269,3 +298,32 @@ export const HELPER_TEXT_MAP: Record<string, Record<string, string>> = {
     default: CONFIG_ERROR_MESSAGE,
   },
 };
+
+export const entityLabelMap = {
+  linode: 'Linode',
+  nodebalancer: 'Node Balancer',
+};
+
+export const entityTypeTooltipText =
+  'Select a firewall entity type to filter the list in the Entities section. The metrics and dimensions in the Criteria section will update automatically based on your selection.';
+
+export const CREATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel created successfully. You can now use it to deliver alert notifications.';
+
+export const CREATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to create the notification channel. Verify the configuration details and try again.';
+
+export const UPDATE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel updated successfully. All changes have been saved.';
+
+export const UPDATE_CHANNEL_FAILED_MESSAGE =
+  'Failed to update the notification channel. Verify the details and try again.';
+
+export const DELETE_CHANNEL_TOOLTIP_TEXT =
+  'This channel is linked to active alerts. Please reassign or remove those alerts before deleting this channel.';
+
+export const DELETE_CHANNEL_SUCCESS_MESSAGE =
+  'Notification channel deleted successfully.';
+
+export const DELETE_CHANNEL_FAILED_MESSAGE =
+  'Failed to delete the notification channel. Ensure it is not in use and try again.';

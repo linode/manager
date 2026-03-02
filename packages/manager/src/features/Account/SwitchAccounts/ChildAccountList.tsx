@@ -1,23 +1,18 @@
-import { useChildAccountsInfiniteQuery } from '@linode/queries';
-import {
-  Box,
-  Button,
-  CircleProgress,
-  LinkButton,
-  Notice,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import React, { useState } from 'react';
+import { Box, CircleProgress, LinkButton, Notice, Stack } from '@linode/ui';
+import React from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
+import type { ChildAccount, Filter, UserType } from '@linode/api-v4';
 
-import type { Filter, UserType } from '@linode/api-v4';
-
-interface ChildAccountListProps {
+export interface ChildAccountListProps {
+  childAccounts: ChildAccount[] | undefined;
   currentTokenWithBearer: string;
+  fetchNextPage: () => void;
+  filter: Filter;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
   isLoading?: boolean;
+  isSwitchingChildAccounts: boolean;
   onClose: () => void;
   onSwitchAccount: (props: {
     currentTokenWithBearer: string;
@@ -26,53 +21,27 @@ interface ChildAccountListProps {
     onClose: () => void;
     userType: undefined | UserType;
   }) => void;
-  searchQuery: string;
+  refetchFn: () => void;
+  setIsSwitchingChildAccounts: (isSwitchingChildAccounts: boolean) => void;
   userType: undefined | UserType;
 }
 
 export const ChildAccountList = React.memo(
   ({
+    childAccounts,
     currentTokenWithBearer,
+    filter,
     isLoading,
+    isSwitchingChildAccounts,
+    setIsSwitchingChildAccounts,
     onClose,
     onSwitchAccount,
-    searchQuery,
     userType,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
   }: ChildAccountListProps) => {
-    const filter: Filter = {
-      ['+order']: 'asc',
-      ['+order_by']: 'company',
-      ...(searchQuery && { company: { '+contains': searchQuery } }),
-    };
-
-    const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
-      useState<boolean>(false);
-    const {
-      data,
-      fetchNextPage,
-      hasNextPage,
-      isError,
-      isFetchingNextPage,
-      isInitialLoading,
-      isRefetching,
-      refetch: refetchChildAccounts,
-    } = useChildAccountsInfiniteQuery({
-      filter,
-      headers:
-        userType === 'proxy'
-          ? {
-              Authorization: currentTokenWithBearer,
-            }
-          : undefined,
-    });
-    const childAccounts = data?.pages.flatMap((page) => page.data);
-
-    if (
-      isInitialLoading ||
-      isLoading ||
-      isSwitchingChildAccounts ||
-      isRefetching
-    ) {
+    if (isLoading) {
       return (
         <Box display="flex" justifyContent="center">
           <CircleProgress size="md" />
@@ -80,7 +49,7 @@ export const ChildAccountList = React.memo(
       );
     }
 
-    if (childAccounts?.length === 0) {
+    if (childAccounts && childAccounts.length === 0) {
       return (
         <Notice variant="info">
           There are no child accounts
@@ -89,27 +58,6 @@ export const ChildAccountList = React.memo(
             : undefined}
           .
         </Notice>
-      );
-    }
-
-    if (isError) {
-      return (
-        <Stack alignItems="center" gap={1} justifyContent="center">
-          <ErrorStateCloud />
-          <Typography>Unable to load data.</Typography>
-          <Typography>
-            Try again or contact support if the issue persists.
-          </Typography>
-          <Button
-            buttonType="primary"
-            onClick={() => refetchChildAccounts()}
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
-            Try again
-          </Button>
-        </Stack>
       );
     }
 
@@ -130,7 +78,7 @@ export const ChildAccountList = React.memo(
             });
           }}
           sx={(theme) => ({
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacingFunction(16),
           })}
         >
           {childAccount.company}

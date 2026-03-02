@@ -12,6 +12,7 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
+  QueryFunctionType,
 } from '../Utils/models';
 import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
@@ -41,6 +42,11 @@ export interface CloudPulseCustomSelectProps {
   clearDependentSelections?: string[];
 
   /**
+   * The dashboard id where this filter is being used
+   */
+  dashboardId: number;
+
+  /**
    * Last selected values from user preferences
    */
   defaultValue?: FilterValue;
@@ -55,6 +61,10 @@ export interface CloudPulseCustomSelectProps {
    */
   errorText?: string;
 
+  /**
+   * The filter function to apply to the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
   /**
    * The filterKey that needs to be used
    */
@@ -88,6 +98,9 @@ export interface CloudPulseCustomSelectProps {
    */
   isOptional?: boolean;
 
+  /**
+   * The label that needs to be displayed for the select component
+   */
   label: string;
 
   /**
@@ -105,6 +118,9 @@ export interface CloudPulseCustomSelectProps {
    */
   placeholder?: string;
 
+  /**
+   * The user preferences object to get the last selected values
+   */
   preferences?: AclpConfig;
 
   /**
@@ -141,9 +157,11 @@ export const CloudPulseCustomSelect = React.memo(
       options,
       placeholder,
       preferences,
+      dashboardId,
       savePreferences,
       type,
       isOptional,
+      filterFn,
     } = props;
 
     const [selectedResource, setResource] = React.useState<
@@ -162,6 +180,7 @@ export const CloudPulseCustomSelect = React.memo(
       filter: {},
       idField: apiResponseIdField ?? 'id',
       labelField: apiResponseLabelField ?? 'label',
+      filterFn,
     });
 
     React.useEffect(() => {
@@ -196,6 +215,7 @@ export const CloudPulseCustomSelect = React.memo(
         maxSelections,
         savePreferences,
         value,
+        dashboardId,
       });
       setResource(
         Array.isArray(filteredValue)
@@ -230,10 +250,12 @@ export const CloudPulseCustomSelect = React.memo(
     return (
       <Autocomplete
         autoHighlight
+        data-testid={`${filterKey}-select`}
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label={label || 'Select a Value'}
+        loading={isLoading}
         multiple={isMultiSelect}
         noMarginTop
         onChange={handleChange}

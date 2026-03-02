@@ -5,10 +5,13 @@
 import 'cypress-file-upload';
 import {
   mockGetBucketObjects,
+  mockGetBuckets,
   mockUploadBucketObject,
 } from 'support/intercepts/object-storage';
 import { makeError } from 'support/util/errors';
 import { randomItem, randomLabel, randomString } from 'support/util/random';
+
+import { objectStorageBucketFactory } from 'src/factories';
 
 describe('object storage failure paths', () => {
   /*
@@ -19,6 +22,12 @@ describe('object storage failure paths', () => {
   it('shows error upon object upload failure', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
+    const bucketMock = objectStorageBucketFactory.build({
+      cluster: bucketCluster,
+      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      label: bucketLabel,
+      objects: 0,
+    });
     const bucketFile = randomItem([
       'object-storage-files/1.txt',
       'object-storage-files/2.jpg',
@@ -29,6 +38,7 @@ describe('object storage failure paths', () => {
     const bucketFilename = bucketFile.split('/')[1];
 
     // Mock empty object list and failed object-url upload request.
+    mockGetBuckets([bucketMock]).as('getBuckets');
     mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
     mockUploadBucketObject(
       bucketLabel,
@@ -73,7 +83,14 @@ describe('object storage failure paths', () => {
   it('shows error upon object list retrieval failure', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
+    const bucketMock = objectStorageBucketFactory.build({
+      cluster: bucketCluster,
+      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      label: bucketLabel,
+      objects: 0,
+    });
 
+    mockGetBuckets([bucketMock]).as('getBuckets');
     mockGetBucketObjects(
       bucketLabel,
       bucketCluster,

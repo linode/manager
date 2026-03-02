@@ -16,12 +16,18 @@ import {
   mockGetChildAccounts,
   mockGetChildAccountsError,
   mockGetInvoices,
+  mockGetMaintenance,
   mockGetPaymentMethods,
   mockGetPayments,
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
+import {
+  mockGetRolePermissionsError,
+  mockGetUserAccountPermissionsError,
+} from 'support/intercepts/iam';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetProfile,
@@ -146,6 +152,10 @@ const mockAlternateChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
+  beforeEach(() => {
+    // Disable IAM delegation to use legacy child accounts flow for all tests
+    mockAppendFeatureFlags({ iamDelegation: false });
+  });
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
@@ -160,6 +170,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
@@ -239,6 +251,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       cy.visitWithLogin('/');
       cy.trackPageVisit().as('pageVisit');
@@ -315,6 +329,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount, mockAlternateChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       cy.visitWithLogin('/');
       cy.trackPageVisit().as('pageVisit');
@@ -394,6 +410,8 @@ describe('Parent/Child account switching', () => {
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       // Visit billing page with `authentication/parent_token/*` local storage
       // data set to mock values.
@@ -426,6 +444,9 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
+      mockGetMaintenance([], []);
       mockGetLinodes([]);
       mockGetRegions([]);
       mockGetEvents([]);
@@ -433,6 +454,7 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetProfile(mockParentProfile);
       mockGetUser(mockParentUser);
+      mockGetChildAccounts([]);
       mockGetPaymentMethods(paymentMethodFactory.buildList(1)).as(
         'getPaymentMethods'
       );
@@ -481,6 +503,8 @@ describe('Parent/Child account switching', () => {
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       // Visit billing page with `authentication/parent_token/*` local storage
       // data set to mock values.
@@ -511,6 +535,8 @@ describe('Parent/Child account switching', () => {
       // We'll mitigate this by broadly mocking ALL API-v4 requests, then applying more specific mocks to the
       // individual requests as needed.
       mockAllApiRequests();
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetLinodes([]);
       mockGetRegions([]);
       mockGetEvents([]);
@@ -650,6 +676,8 @@ describe('Parent/Child account switching', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
       mockGetChildAccountsError('An unknown error has occurred', 500);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetUser(mockParentUser);
 
       cy.visitWithLogin('/account/billing');

@@ -8,7 +8,6 @@ import * as React from 'react';
 import { accountMaintenanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
@@ -18,6 +17,7 @@ import {
 
 import { MaintenanceTable } from './MaintenanceTable';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
+import { getUpcomingRelativeLabel } from './utilities';
 
 beforeAll(() => mockMatchMedia());
 
@@ -45,11 +45,10 @@ describe('Maintenance Table Row', () => {
     );
     const { getByText } = within(screen.getByTestId('relative-date'));
 
-    if (maintenance.when) {
-      expect(
-        getByText(parseAPIDate(maintenance.when).toRelative()!)
-      ).toBeInTheDocument();
-    }
+    // The upcoming relative label prefers the actual or policy-derived start time;
+    // falls back to the notice time when start cannot be determined.
+    const expected = getUpcomingRelativeLabel(maintenance);
+    expect(getByText(expected)).toBeInTheDocument();
   });
 });
 

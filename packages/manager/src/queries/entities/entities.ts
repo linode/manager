@@ -19,6 +19,7 @@ export const useAllAccountEntities = ({
   useQuery<AccountEntity[], APIError[]>({
     enabled,
     ...entitiesQueries.all(params, filter),
+    ...queryPresets.shortLived,
   });
 
 export const useAccountEntities = (params: Params, filter: Filter) =>

@@ -53,6 +53,15 @@ export const BACKUPS_INVALID_TIME_VALIDATON_TEXT =
 export const BACKUPS_UNABLE_TO_RESTORE_TEXT =
   'You can restore a backup after the first backup is completed.';
 
+export const SUMMARY_HOST_TOOLTIP_COPY =
+  'Use the IPv6 address (AAAA record) for this hostname to avoid network transfer charges when connecting to this database from Linodes within the same region.';
+
+export const SUMMARY_PRIVATE_HOST_COPY =
+  "Private hostnames resolve to internal IP addresses and can only be used to access the database cluster from other Linode instances within the same VPC. This connection is secured and doesn't incur transfer costs.";
+
+export const SUMMARY_PRIVATE_HOST_LEGACY_COPY =
+  'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
+
 // Links
 export const LEARN_MORE_LINK_LEGACY =
   'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';
@@ -62,3 +71,24 @@ export const ADVANCED_CONFIG_LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters';
 export const MANAGE_NETWORKING_LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#manage-networking';
+export const MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#manage-pgbouncer-connection-pools';
+
+// Styles
+export const CONNECTION_POOL_LABEL_CELL_STYLES = {
+  flex: '.5 1 20.5%',
+};
+
+export const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
+export const poolModeOptions = [
+  { label: 'Transaction', value: 'transaction' },
+  { label: 'Session', value: 'session' },
+  { label: 'Statement', value: 'statement' },
+];
+export const databaseNamesOptions = [
+  { label: 'defaultdb', value: 'defaultdb' },
+]; // Currently the only option for the database name field, but more may be introduced later.
+export const usernameOptions = [
+  { label: defaultUsername, value: defaultUsername },
+  { label: 'akmadmin', value: 'akmadmin' },
+]; // Currently the only options for the username field

@@ -19,6 +19,7 @@ export type Capabilities =
   | 'Managed Databases'
   | 'Metadata'
   | 'NETINT Quadra T1U'
+  | 'Network LoadBalancer'
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Group'
@@ -66,6 +67,12 @@ export interface Region {
 export interface RegionAvailability {
   available: boolean;
   plan: string;
+  region: string;
+}
+
+export interface RegionVPCAvailability {
+  available: boolean; // True if Region has VPC capabilities
+  available_ipv6_prefix_lengths: number[];
   region: string;
 }
 

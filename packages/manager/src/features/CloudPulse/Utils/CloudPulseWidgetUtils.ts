@@ -1,4 +1,5 @@
 import { Alias } from '@linode/design-language-system';
+import { DateTimeRangePicker } from '@linode/ui';
 import { getMetrics } from '@linode/utilities';
 
 import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
@@ -10,6 +11,7 @@ import {
 } from './unitConversion';
 import {
   convertTimeDurationToStartAndEndTimeRange,
+  humanizeLargeData,
   seriesDataFormatter,
 } from './utils';
 
@@ -75,6 +77,10 @@ interface GraphDataOptionsProps {
    */
   groupBy?: string[];
   /**
+   * The units for which to apply humanization
+   */
+  humanizableUnits?: string[];
+  /**
    * label for the graph title
    */
   label: string;
@@ -129,9 +135,19 @@ interface MetricRequestProps {
   linodeRegion?: string;
 
   /**
+   * selected region for the widget
+   */
+  region?: string;
+
+  /**
    * list of CloudPulse resources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the widget
+   */
+  serviceType: CloudPulseServiceType;
 
   /**
    * widget filters for metrics data
@@ -204,11 +220,15 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
     unit,
     groupBy,
     metricLabel,
+    humanizableUnits: humanizedUnits,
   } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
+  const isHumanizableUnit = humanizedUnits?.some(
+    (unitElement) => unitElement.toLowerCase() === unit.toLowerCase()
+  );
 
   // check whether to hide metric name or not based on the number of unique metric names
   const hideMetricName =
@@ -266,7 +286,9 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         // construct a legend row with the dimension
         const legendRow: MetricsDisplayRow = {
           data: getMetrics(data as number[][]),
-          format: (value: number) => formatToolTip(value, unit),
+          format: isHumanizableUnit
+            ? (value: number) => `${humanizeLargeData(value)} ${unit}` // we need to humanize count values in legend
+            : (value: number) => formatToolTip(value, unit),
           legendColor: color,
           legendTitle: labelName,
         };
@@ -326,21 +348,29 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
-  const { duration, entityIds, resources, widget, groupBy, linodeRegion } =
-    props;
+  const {
+    duration,
+    entityIds,
+    resources,
+    widget,
+    groupBy,
+    linodeRegion,
+    region,
+    serviceType,
+  } = props;
   const preset = duration.preset;
-
+  const presetDuration = getTimeDurationFromPreset(preset);
   return {
     absolute_time_duration:
-      preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
-        ? undefined
-        : { end: duration.end, start: duration.start },
-    entity_ids: resources
-      ? entityIds.map((id) => parseInt(id, 10))
-      : widget.entity_ids.map((id) => parseInt(id, 10)),
+      presetDuration === undefined
+        ? { end: duration.end, start: duration.start }
+        : undefined,
+    entity_ids: !entityIds.length
+      ? undefined
+      : getEntityIds(resources, entityIds, widget, serviceType),
     filters: undefined,
     group_by: !groupBy?.length ? undefined : groupBy,
-    relative_time_duration: getTimeDurationFromPreset(preset),
+    relative_time_duration: presetDuration,
     metrics: [
       {
         aggregate_function: widget.aggregate_function,
@@ -355,7 +385,29 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
     associated_entity_region: linodeRegion,
+    entity_region: serviceType === 'objectstorage' ? region : undefined,
   };
+};
+
+/**
+ *
+ * @param resources list of CloudPulse resources
+ * @param entityIds list of entity ids
+ * @param widget widget
+ * @returns transformed entity ids
+ */
+export const getEntityIds = (
+  resources: CloudPulseResources[],
+  entityIds: string[],
+  widget: Widgets,
+  serviceType: CloudPulseServiceType
+) => {
+  if (serviceType === 'objectstorage') {
+    return entityIds;
+  }
+  return resources
+    ? entityIds.map((id) => parseInt(id, 10))
+    : widget.entity_ids.map((id) => parseInt(id, 10));
 };
 
 /**
@@ -417,14 +469,35 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
     }
 
     if (key === 'linode_id') {
-      const linodeLabel =
-        resources.find((resource) => resource.entities?.[value] !== undefined)
-          ?.entities?.[value] ?? value;
+      let linodeLabel = value;
+      if (serviceType === 'firewall') {
+        linodeLabel =
+          resources.find((resource) => resource.entities?.[value] !== undefined)
+            ?.entities?.[value] ?? linodeLabel;
+      }
+      if (serviceType === 'blockstorage') {
+        linodeLabel =
+          resources.find((resource) => resource.volumeLinodeId === value)
+            ?.volumeLinodeLabel ?? linodeLabel;
+      }
       const index = groupBy.indexOf('linode_id');
       if (index !== -1) {
         labels[index] = linodeLabel;
       } else {
         labels.push(linodeLabel);
+      }
+      return;
+    }
+
+    if (key === 'nodebalancer_id') {
+      const nodebalancerLabel =
+        resources.find((resource) => resource.entities?.[value] !== undefined)
+          ?.entities?.[value] ?? value;
+      const index = groupBy.indexOf('nodebalancer_id');
+      if (index !== -1) {
+        labels[index] = nodebalancerLabel;
+      } else {
+        labels.push(nodebalancerLabel);
       }
       return;
     }
@@ -486,19 +559,23 @@ export const getTimeDurationFromPreset = (
   preset?: string
 ): TimeDuration | undefined => {
   switch (preset) {
-    case 'last 7 days':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_7_DAYS:
       return { unit: 'days', value: 7 };
-    case 'last 12 hours':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_12_HOURS:
       return { unit: 'hr', value: 12 };
-    case 'last 30 days':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_30_DAYS:
       return { unit: 'days', value: 30 };
-    case 'last 30 minutes':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_30_MINUTES:
       return { unit: 'min', value: 30 };
-    case 'last day':
+    case DateTimeRangePicker.PRESET_LABELS.LAST_DAY:
       return { unit: 'days', value: 1 };
-    case 'last hour': {
+    case DateTimeRangePicker.PRESET_LABELS.LAST_HOUR:
       return { unit: 'hr', value: 1 };
-    }
+    case DateTimeRangePicker.PRESET_LABELS.LAST_MONTH:
+    case DateTimeRangePicker.PRESET_LABELS.RESET:
+    case DateTimeRangePicker.PRESET_LABELS.THIS_MONTH:
+      // These presets use absolute_time_duration instead of relative_time_duration
+      return undefined;
     default:
       return undefined;
   }

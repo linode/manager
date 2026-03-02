@@ -105,7 +105,7 @@ export interface ObjectStorageBucket {
   hostname: string;
   label: string;
   objects: number;
-  region?: string;
+  region: string;
   s3_endpoint?: string;
   size: number; // Size of bucket in bytes
 }

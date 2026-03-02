@@ -13,6 +13,7 @@ import {
   mockCancelAccountError,
   mockGetAccount,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockWebpageUrl } from 'support/intercepts/general';
 import {
   mockGetProfile,
@@ -28,13 +29,21 @@ import {
 import { accountFactory } from 'src/factories/account';
 import {
   CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
   PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
 } from 'src/features/Account/constants';
 
 import type { CancelAccount } from '@linode/api-v4';
 
 describe('Account cancellation', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Confirms that a user can cancel their account from the Account Settings page.
    * - Confirms that user is warned that account cancellation is destructive.
@@ -227,6 +236,13 @@ describe('Account cancellation', () => {
 });
 
 describe('Parent/Child account cancellation', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
   /*
    * - Confirms that a child user cannot close the account.
    */
@@ -286,7 +302,7 @@ describe('Parent/Child account cancellation', () => {
           .trigger('mouseover');
         // Click the button first, then confirm the tooltip is shown.
         ui.tooltip
-          .findByText(PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
+          .findByText(DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT)
           .should('be.visible');
       });
   });

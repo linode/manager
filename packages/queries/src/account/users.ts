@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { delegationQueries } from '../iam/delegation';
 import { profileQueries, useProfile } from '../profile';
 import { accountQueries } from './queries';
 
@@ -29,11 +30,9 @@ export const useAccountUsers = ({
   filters?: Filter;
   params?: Params;
 }) => {
-  const { data: profile } = useProfile();
-
   return useQuery<ResourcePage<User>, APIError[]>({
     ...accountQueries.users._ctx.paginated(params, filters),
-    enabled: enabled && !profile?.restricted,
+    enabled,
     placeholderData: keepPreviousData,
   });
 };
@@ -42,8 +41,6 @@ export const useAccountUsersInfiniteQuery = (
   filter: Filter = {},
   enabled = true,
 ) => {
-  const { data: profile } = useProfile();
-
   return useInfiniteQuery<ResourcePage<User>, APIError[]>({
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
@@ -53,7 +50,7 @@ export const useAccountUsersInfiniteQuery = (
     },
     initialPageParam: 1,
     ...accountQueries.users._ctx.infinite(filter),
-    enabled: enabled && !profile?.restricted,
+    enabled,
     placeholderData: keepPreviousData,
   });
 };
@@ -66,10 +63,14 @@ export const useAccountUser = (username: string, enabled: boolean = true) => {
   });
 };
 
-export const useAccountUserGrants = (username: string) => {
-  return useQuery<Grants, APIError[]>(
-    accountQueries.users._ctx.user(username)._ctx.grants,
-  );
+export const useAccountUserGrants = (
+  username: string,
+  enabled: boolean = true,
+) => {
+  return useQuery<Grants, APIError[]>({
+    ...accountQueries.users._ctx.user(username)._ctx.grants,
+    enabled,
+  });
 };
 
 export const useUpdateUserMutation = (username: string) => {
@@ -81,6 +82,9 @@ export const useUpdateUserMutation = (username: string) => {
     onSuccess(user) {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts._def,
       });
       queryClient.setQueryData(
         accountQueries.users._ctx.user(user.username).queryKey,
@@ -112,6 +116,9 @@ export const useAccountUserDeleteMutation = (username: string) => {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts._def,
       });
       queryClient.removeQueries({
         queryKey: accountQueries.users._ctx.user(username).queryKey,
@@ -155,5 +162,16 @@ export const useCreateUserMutation = () => {
         user,
       );
     },
+  });
+};
+
+export const useAllAccountUsersQuery = (
+  enabled: boolean = true,
+  filters: Filter = {},
+  params: Params = {},
+) => {
+  return useQuery<User[], APIError[]>({
+    ...accountQueries.users._ctx.all(params, filters),
+    enabled,
   });
 };
