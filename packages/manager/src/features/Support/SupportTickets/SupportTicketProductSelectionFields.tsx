@@ -248,23 +248,24 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
           <Controller
             control={control}
             name="entityType"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <Autocomplete
                 data-qa-ticket-entity-type
-                disableClearable
+                errorText={fieldState.error?.message}
                 label="What is this regarding?"
                 onChange={(_e, type) => {
                   // Don't reset things if the type hasn't changed.
-                  if (type.value === entityType) {
+                  if (type?.value === entityType) {
                     return;
                   }
-                  field.onChange(type.value);
+                  field.onChange(type?.value ?? 'none');
                   setValue('entityId', '');
                   setValue('entityInputValue', '');
                   clearErrors('entityId');
                 }}
                 options={topicOptions}
-                value={selectedTopic}
+                placeholder="Select an option?"
+                value={selectedTopic ?? null}
               />
             )}
           />
