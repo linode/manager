@@ -26,6 +26,8 @@ interface ConnectionDetailsHostRowsProps {
 type HostContentMode = 'default' | 'private' | 'public';
 
 /**
+ * @deprecated Delete this file in favor of ConnectionDetailsHostRows2 after the API releases hostname endpoint changes.
+ *
  * This component is responsible for conditionally rendering the Private Host, Public Host, and Read-only Host rows that get displayed in
  * the Connection Details tables that appear in the Database Summary and Networking tabs */
 export const ConnectionDetailsHostRows = (

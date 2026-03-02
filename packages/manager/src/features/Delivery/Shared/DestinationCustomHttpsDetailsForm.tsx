@@ -1,3 +1,4 @@
+import { authenticationType } from '@linode/api-v4';
 import { Autocomplete, Divider, TextField, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -18,6 +19,7 @@ import type { FormMode, FormType } from 'src/features/Delivery/Shared/types';
 
 interface DestinationCustomHttpsDetailsFormProps {
   controlPaths: {
+    authenticationDetails: string;
     authenticationType: string;
     basicAuthenticationPassword: string;
     basicAuthenticationUser: string;
@@ -40,7 +42,7 @@ export const DestinationCustomHttpsDetailsForm = (
   const { controlPaths } = props;
   const theme = useTheme();
 
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   const selectedAuthenticationType = useWatch({
     control,
@@ -59,6 +61,9 @@ export const DestinationCustomHttpsDetailsForm = (
             label="Authentication"
             onBlur={field.onBlur}
             onChange={(_, { value }) => {
+              if (value === authenticationType.None) {
+                setValue(controlPaths.authenticationDetails, undefined);
+              }
               field.onChange(value);
             }}
             options={authenticationTypeOptions}

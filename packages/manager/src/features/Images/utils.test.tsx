@@ -8,6 +8,7 @@ import {
   getEventsForImages,
   getImageLabelForLinode,
   getImageLibrarySubTabIndex,
+  getImageTypeToImageLibraryType,
   useIsPrivateImageSharingEnabled,
 } from './utils';
 
@@ -117,5 +118,19 @@ describe('getImageLibrarySubTabIndex', () => {
 
   it('works with an empty subTabs array', () => {
     expect(getImageLibrarySubTabIndex([], 'owned-by-me')).toBe(0);
+  });
+});
+
+describe('getImageTypeToImageLibraryType', () => {
+  it('returns "owned-by-me" when image type is "manual"', () => {
+    expect(getImageTypeToImageLibraryType('manual')).toBe('owned-by-me');
+  });
+
+  it('returns "recovery-images" when image type is "automatic"', () => {
+    expect(getImageTypeToImageLibraryType('automatic')).toBe('recovery-images');
+  });
+
+  it('returns "shared-with-me" when image type is "shared"', () => {
+    expect(getImageTypeToImageLibraryType('shared')).toBe('shared-with-me');
   });
 });

@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { delegationQueries } from '../iam/delegation';
 import { profileQueries, useProfile } from '../profile';
 import { accountQueries } from './queries';
 
@@ -62,10 +63,14 @@ export const useAccountUser = (username: string, enabled: boolean = true) => {
   });
 };
 
-export const useAccountUserGrants = (username: string) => {
-  return useQuery<Grants, APIError[]>(
-    accountQueries.users._ctx.user(username)._ctx.grants,
-  );
+export const useAccountUserGrants = (
+  username: string,
+  enabled: boolean = true,
+) => {
+  return useQuery<Grants, APIError[]>({
+    ...accountQueries.users._ctx.user(username)._ctx.grants,
+    enabled,
+  });
 };
 
 export const useUpdateUserMutation = (username: string) => {
@@ -77,6 +82,9 @@ export const useUpdateUserMutation = (username: string) => {
     onSuccess(user) {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts._def,
       });
       queryClient.setQueryData(
         accountQueries.users._ctx.user(user.username).queryKey,
@@ -108,6 +116,9 @@ export const useAccountUserDeleteMutation = (username: string) => {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts._def,
       });
       queryClient.removeQueries({
         queryKey: accountQueries.users._ctx.user(username).queryKey,

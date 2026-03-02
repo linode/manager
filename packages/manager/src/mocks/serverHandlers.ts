@@ -220,25 +220,71 @@ const makeMockDatabase = (params: PathParams): Database => {
 
   const database = databaseFactory.build(db);
 
-  if (database.platform !== 'rdbms-default') {
-    delete database.private_network;
-  }
+  // Mock a database cluster with a public VPC Configuration
+  database.private_network = {
+    public_access: true,
+    subnet_id: 123,
+    vpc_id: 10,
+  };
 
-  if (database.platform === 'rdbms-default' && !!database.private_network) {
+  if (database.private_network) {
     // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
     database.hosts = {
       primary: 'private-db-mysql-primary-0.b.linodeb.net',
       standby: 'private-db-mysql-standby-0.b.linodeb.net',
+      /**
+       * The contents of the hosts.endpoints vary based off whether the VPC has public access or not.
+       * If private_network public_access is true, the endpoints should return both public and private addresses.
+       * If private_network public_access is false, the endpoints should only return private addresses.
+       */
       endpoints: [
         {
-          address: 'private-db-mysql-primary-0.b.linodeb.net',
           role: 'primary',
-          private_access: true,
-          port: 12345,
+          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          port: 15847,
+          public_access: true,
+        },
+        {
+          role: 'primary',
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          port: 15847,
+          public_access: false,
+        },
+        {
+          role: 'standby',
+          address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
+          port: 15847,
+          public_access: true,
+        },
+        {
+          role: 'standby',
+          address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
+          port: 15847,
+          public_access: false,
+        },
+        {
+          role: 'primary-connection-pool',
+          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          port: 15848,
+          public_access: false,
         },
       ],
     };
   }
+
+  // Uncomment the lines below to mock a database cluster without a VPC configuration
+  // database.private_network = null;
+  // database.hosts = {
+  //   primary: 'db-mysql-primary-0.b.linodeb.net',
+  //   endpoints: [
+  //     {
+  //       role: 'primary',
+  //       address: 'db-mysql-primary-0.b.linodeb.net',
+  //       port: 15847,
+  //       public_access: true,
+  //     },
+  //   ],
+  // };
 
   return database;
 };

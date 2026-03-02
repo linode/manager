@@ -22,6 +22,7 @@ import {
   mockGetUser,
 } from 'support/intercepts/account';
 import { mockGetEvents, mockGetNotifications } from 'support/intercepts/events';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockAllApiRequests } from 'support/intercepts/general';
 import {
   mockGetRolePermissionsError,
@@ -151,6 +152,10 @@ const mockAlternateChildAccountToken = appTokenFactory.build({
 const mockErrorMessage = 'An unknown error has occurred.';
 
 describe('Parent/Child account switching', () => {
+  beforeEach(() => {
+    // Disable IAM delegation to use legacy child accounts flow for all tests
+    mockAppendFeatureFlags({ iamDelegation: false });
+  });
   /*
    * Tests to confirm that Parent account users can switch to Child accounts as expected.
    */
@@ -165,6 +170,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
@@ -244,6 +251,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       cy.visitWithLogin('/');
       cy.trackPageVisit().as('pageVisit');
@@ -320,6 +329,8 @@ describe('Parent/Child account switching', () => {
       mockGetAccount(mockParentAccount);
       mockGetChildAccounts([mockChildAccount, mockAlternateChildAccount]);
       mockGetUser(mockParentUser);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       cy.visitWithLogin('/');
       cy.trackPageVisit().as('pageVisit');
@@ -399,6 +410,8 @@ describe('Parent/Child account switching', () => {
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       // Visit billing page with `authentication/parent_token/*` local storage
       // data set to mock values.
@@ -490,6 +503,8 @@ describe('Parent/Child account switching', () => {
       interceptGetPayments().as('getPayments');
       interceptGetPaymentMethods().as('getPaymentMethods');
       interceptGetInvoices().as('getInvoices');
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
 
       // Visit billing page with `authentication/parent_token/*` local storage
       // data set to mock values.
@@ -661,6 +676,8 @@ describe('Parent/Child account switching', () => {
       mockGetProfile(mockParentProfile);
       mockGetAccount(mockParentAccount);
       mockGetChildAccountsError('An unknown error has occurred', 500);
+      mockGetRolePermissionsError('Not found', 404);
+      mockGetUserAccountPermissionsError('Not found', 404);
       mockGetUser(mockParentUser);
 
       cy.visitWithLogin('/account/billing');
