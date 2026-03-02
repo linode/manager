@@ -10,11 +10,9 @@ import {
 } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import {
-  DEFAULT_PAGE_SIZES,
-  MIN_PAGE_SIZE,
-} from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { DEFAULT_PAGE_SIZES } from 'src/features/Databases/constants';
 import { DatabaseSettingsDeleteClusterDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
 import { ManageAccessControlDrawer } from 'src/features/Databases/DatabaseDetail/ManageAccessControlDrawer';

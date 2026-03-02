@@ -20,10 +20,8 @@ import {
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import {
-  DEFAULT_PAGE_SIZES,
-  MIN_PAGE_SIZE,
-} from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { DEFAULT_PAGE_SIZES } from 'src/features/Databases/constants';
 import {
   CONNECTION_POOL_LABEL_CELL_STYLES,
   MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
