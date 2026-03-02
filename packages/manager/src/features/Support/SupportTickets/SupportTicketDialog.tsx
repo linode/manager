@@ -187,7 +187,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       ),
       entityId: _prefilledEntity?.id ? String(_prefilledEntity.id) : '',
       entityInputValue: '',
-      entityType: _prefilledEntity?.type ?? 'general',
+      entityType:
+        _prefilledEntity?.type ??
+        (valuesFromStorage.entityType === 'general'
+          ? 'none'
+          : (valuesFromStorage.entityType ?? 'none')),
       summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
       ticketType: _prefilledTicketType ?? 'general',
     },
@@ -243,7 +247,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       description: clearValues ? '' : valuesFromStorage.description,
       entityId: clearValues ? '' : valuesFromStorage.entityId,
       entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
-      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
+      entityType: clearValues
+        ? 'none'
+        : valuesFromStorage.entityType === 'general'
+          ? 'none'
+          : valuesFromStorage.entityType,
       selectedSeverity: clearValues
         ? undefined
         : valuesFromStorage.selectedSeverity,
@@ -358,6 +366,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const { onSuccess } = props;
+
+    if (values.entityType === 'none') {
+      form.setError('entityType', {
+        message: 'Please select a topic.',
+      });
+      return;
+    }
 
     if (liveChat && entityType === 'general') {
       await handleStartLiveChat();
