@@ -98,3 +98,16 @@ export const getImageLibrarySubTabIndex = (
 
   return tabIndex;
 };
+
+export const getImageTypeToImageLibraryType = (
+  imageType: Image['type']
+): ImageLibraryType => {
+  switch (imageType) {
+    case 'automatic':
+      return 'recovery-images';
+    case 'manual':
+      return 'owned-by-me';
+    default:
+      return 'shared-with-me';
+  }
+};
