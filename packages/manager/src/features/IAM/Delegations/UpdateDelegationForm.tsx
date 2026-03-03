@@ -79,11 +79,11 @@ export const UpdateDelegationForm = ({
         }) ?? []);
 
   const isSearching =
-    inputValue.length > 0 &&
-    (isFetching || isFetchingAllUsers || debouncedInputValue !== inputValue);
+    inputValue.length > 0 && debouncedInputValue !== inputValue;
 
-  const showNoOptionsText =
-    !isSearching && inputValue.length > 0 && users.length === 0;
+  const isLoadingOptions = isFetching || isFetchingAllUsers;
+
+  const showNoOptionsText = !isLoadingOptions && !isSearching;
 
   const isSelectAllFetching = allUserSelected && isFetchingAllUsers;
 
@@ -181,9 +181,7 @@ export const UpdateDelegationForm = ({
                 loading={isFetching || isFetchingAllUsers}
                 multiple
                 noMarginTop
-                noOptionsText={
-                  isSearching ? ' ' : showNoOptionsText ? 'No users found' : ' '
-                }
+                noOptionsText={showNoOptionsText ? 'No users found' : ' '}
                 onChange={(_, newValue) => {
                   field.onChange(newValue || []);
                 }}
