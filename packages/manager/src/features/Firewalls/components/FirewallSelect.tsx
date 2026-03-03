@@ -67,6 +67,7 @@ export const FirewallSelect = <DisableClearable extends boolean>(
     hideDefaultChips,
     label,
     loading,
+    options,
     showNoFirewallOption = true,
     value,
     warningMessageForNoFirewallOption,
@@ -78,12 +79,12 @@ export const FirewallSelect = <DisableClearable extends boolean>(
   const { defaultNumEntities, isDefault, tooltipText } =
     useDefaultFirewallChipInformation(value, hideDefaultChips);
 
-  const options = useMemo(
+  const firewallOptions = useMemo(
     () => [
-      ...(firewalls ?? []),
+      ...(options ? options : (firewalls ?? [])),
       ...(showNoFirewallOption ? [noFirewallOption] : []),
     ],
-    [firewalls, showNoFirewallOption]
+    [firewalls, options, showNoFirewallOption]
   );
 
   const selectedFirewall = useMemo(
@@ -102,7 +103,7 @@ export const FirewallSelect = <DisableClearable extends boolean>(
         label={label ?? 'Firewall'}
         loading={isLoading || loading}
         noMarginTop
-        options={options}
+        options={firewallOptions}
         placeholder="Select a Firewall"
         renderOption={({ key, ...props }, option, state) => (
           <FirewallSelectOption

@@ -872,7 +872,7 @@ export const CreateLinodeSchema = object({
           }),
     }),
   metadata: MetadataSchema.notRequired().default(undefined),
-  firewall_id: number().nullable(),
+  firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
   maintenance_policy: string()

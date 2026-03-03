@@ -38,10 +38,6 @@ export const getLinodeCreateResolver = (
       values.linodeInterfaces = values.linodeInterfaces.map(
         getCleanedLinodeInterfaceValues
       );
-      if (tab === 'Clone Linode' && !values.firewall_id) {
-        // The Clone Linode flow does not have the firewall_id field under interfaces object, so we set firewall_id to -1 to bypass the firewall requirement in the validation schema.
-        values.firewall_id = -1;
-      }
       if (
         values.interface_generation === 'legacy_config' ||
         tab === 'Clone Linode'
