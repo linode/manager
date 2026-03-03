@@ -83,9 +83,10 @@ export const UserMenu = React.memo(() => {
         setStorage('is_delegate_user_type', 'true');
       }
 
-      enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
-        variant: 'success',
-      });
+      const message = companyNameOrEmail
+        ? `Account switched to ${companyNameOrEmail}.`
+        : 'Account switched.';
+      enqueueSnackbar(message, { variant: 'success' });
     }
   }, [
     isProxyOrDelegateUserType,
