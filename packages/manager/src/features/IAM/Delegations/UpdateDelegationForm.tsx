@@ -78,6 +78,15 @@ export const UpdateDelegationForm = ({
           }));
         }) ?? []);
 
+  const isSearching =
+    inputValue.length > 0 &&
+    (isFetching || isFetchingAllUsers || debouncedInputValue !== inputValue);
+
+  const showNoOptionsText =
+    !isSearching && inputValue.length > 0 && users.length === 0;
+
+  const isSelectAllFetching = allUserSelected && isFetchingAllUsers;
+
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
 
@@ -168,10 +177,13 @@ export const UpdateDelegationForm = ({
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
-                label={'Delegate Users'}
+                label="Delegate Users"
                 loading={isFetching || isFetchingAllUsers}
                 multiple
                 noMarginTop
+                noOptionsText={
+                  isSearching ? ' ' : showNoOptionsText ? 'No users found' : ' '
+                }
                 onChange={(_, newValue) => {
                   field.onChange(newValue || []);
                 }}
@@ -205,6 +217,12 @@ export const UpdateDelegationForm = ({
                 }}
                 textFieldProps={{
                   hideLabel: true,
+                  helperText: isSelectAllFetching
+                    ? 'Fetching all users...'
+                    : undefined,
+                  InputProps: isSelectAllFetching
+                    ? { startAdornment: null }
+                    : undefined,
                 }}
                 value={field.value}
               />
