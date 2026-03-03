@@ -8,6 +8,8 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Autocomplete,
   Box,
+  CircleProgress,
+  ErrorState,
   Hidden,
   Notice,
   Stack,
@@ -19,6 +21,7 @@ import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeaderCell,
   TableRow,
@@ -26,21 +29,17 @@ import {
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { SHARE_GROUP_COLUMN_HEADER_TOOLTIP } from 'src/features/Images/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import {
   DEFAULT_CLIENT_SIDE_PAGE_SIZE,
-  IMAGE_SELECT_TABLE_COLUMNS_COUNT,
-  IMAGE_SELECT_TABLE_PENDO_IDS,
   IMAGE_SELECT_TABLE_PREFERENCE_KEY,
   TABLE_CELL_BASE_STYLE,
 } from './constants';
 import { ImageSelectTableRow } from './ImageSelectTableRow';
 
+import type { IMAGE_SELECT_TABLE_PENDO_IDS } from './constants';
 import type { Filter, Image } from '@linode/api-v4';
 import type { LinkProps } from '@tanstack/react-router';
 
@@ -266,20 +265,21 @@ export const ImageSelectTable = (props: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading && (
-              <TableRowLoading
-                columns={IMAGE_SELECT_TABLE_COLUMNS_COUNT}
-                rows={pagination.pageSize}
-              />
-            )}
+            {isLoading && <CircleProgress />}
             {imagesError && (
-              <TableRowError
-                colSpan={IMAGE_SELECT_TABLE_COLUMNS_COUNT}
-                message={imagesError[0].reason}
-              />
+              <ErrorState errorText="There was a problem retrieving your images. Refresh the page or try again later." />
             )}
             {!isLoading && !imagesError && imagesData?.length === 0 && (
-              <TableRowEmpty colSpan={IMAGE_SELECT_TABLE_COLUMNS_COUNT} />
+              <TableRow>
+                <TableCell
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  No items to display.
+                </TableCell>
+              </TableRow>
             )}
             {!isLoading &&
               !imagesError &&
