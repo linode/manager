@@ -526,7 +526,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           {(!ticketType || ticketType === 'general') && (
             <>
               {props.hideProductSelection ? null : (
-                <SupportTicketProductSelectionFields />
+                <SupportTicketProductSelectionFields liveChat={liveChat} />
               )}
               {!(liveChat && entityType === 'general') && (
                 <>
