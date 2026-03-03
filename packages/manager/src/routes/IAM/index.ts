@@ -178,7 +178,9 @@ const iamDelegationsRoute = createRoute({
     }
 
     const isChildAccount = profile?.user_type === 'child';
-    if (!isDelegationEnabled || isChildAccount) {
+    const isDelegateAccount = profile?.user_type === 'delegate';
+    const isChildOrDelegate = isChildAccount || isDelegateAccount;
+    if (!isDelegationEnabled || isChildOrDelegate) {
       throw redirect({
         to: '/iam/users',
         replace: true,

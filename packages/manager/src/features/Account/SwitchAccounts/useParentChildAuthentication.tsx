@@ -47,18 +47,22 @@ export const useParentChildAuthentication = () => {
 
   const createToken = useCallback(
     async (euuid: string): Promise<Token> => {
-      return isIAMDelegationEnabled
-        ? generateProxyToken({ euuid })
-        : createProxyToken({
-            euuid,
-            headers: {
-              /**
-               * Headers are required for proxy or delegate users when obtaining a proxy or delegate token.
-               * For 'proxy' or 'delegate' userType, use the stored parent token in the request.
-               */
-              Authorization: getStorage('authentication/parent_token/token'),
-            },
-          });
+      const tokenParent = getStorage('authentication/parent_token/token');
+
+      const mutationFn = isIAMDelegationEnabled
+        ? generateProxyToken
+        : createProxyToken;
+
+      return mutationFn({
+        euuid,
+        headers: {
+          /**
+           * Headers are required for proxy or delegate users when obtaining a proxy or delegate token.
+           * For 'proxy' or 'delegate' userType, use the stored parent token in the request.
+           */
+          Authorization: tokenParent,
+        },
+      });
     },
     [createProxyToken, generateProxyToken, isIAMDelegationEnabled]
   );

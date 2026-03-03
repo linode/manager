@@ -21,6 +21,7 @@ import type {
   Account,
   APIError,
   ChildAccount,
+  ChildAccountTokenPayload,
   ChildAccountWithDelegates,
   GetChildAccountDelegatesParams,
   GetChildAccountsIamParams,
@@ -233,13 +234,10 @@ export const useGetChildAccountQuery = (
  * - Audience: Clients that need temporary auth to perform actions in the child account.
  * - Data: Token for `POST /iam/delegation/child-accounts/:euuid/token`.
  */
-export const useGenerateChildAccountTokenQuery = (): UseMutationResult<
-  Token,
-  APIError[],
-  { euuid: string }
-> => {
-  return useMutation<Token, APIError[], { euuid: string }>({
-    mutationFn: generateChildAccountToken,
+export const useGenerateChildAccountTokenQuery = () => {
+  return useMutation<Token, APIError[], ChildAccountTokenPayload>({
+    mutationFn: ({ euuid, headers }: ChildAccountTokenPayload) =>
+      generateChildAccountToken({ euuid, headers }),
   });
 };
 
