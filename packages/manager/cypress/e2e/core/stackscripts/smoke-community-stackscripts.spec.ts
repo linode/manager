@@ -401,7 +401,7 @@ describe('Community Stackscripts integration tests', () => {
 
     // Select a firewall
     linodeCreatePage.selectFirewall(
-      mockFirewall.label,
+      'No firewall - traffic is unprotected (not recommended)',
       'Public Interface Firewall'
     );
 
