@@ -36,7 +36,6 @@ import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
-  getAllBucketsFromClusters,
   getAllBucketsFromEndpoints,
   getAllBucketsFromRegions,
   getAllObjectStorageClusters,
@@ -147,53 +146,54 @@ export const useObjectStorageClusters = (enabled: boolean = true) =>
     enabled,
   });
 
-export const useObjectStorageBuckets = (enabled = true) => {
+export const useObjectStorageBuckets = (enabled: boolean = true) => {
   const flags = useFlags();
-  const { data: account } = useAccount();
-  const { data: allRegions } = useRegionsQuery();
+  const { data: account, isLoading: accountIsLoading } = useAccount(enabled);
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
+  // TODO: always use regions query once dynamic Object Storage capability resolution is enabled
+  const isObjectStorageGen2Enabled =
+    account === undefined
+      ? undefined
+      : isFeatureEnabledV2(
+          'Object Storage Endpoint Types',
+          Boolean(flags.objectStorageGen2?.enabled),
+          account.capabilities ?? []
+        );
+  const endpointsQueryEnabled = enabled && isObjectStorageGen2Enabled === true;
+  const regionsQueryEnabled = enabled && isObjectStorageGen2Enabled === false;
+
+  const { data: allRegions, isLoading: regionsAreLoading } =
+    useRegionsQuery(regionsQueryEnabled);
+  const objRegions = allRegions?.filter((r) =>
+    r.capabilities.includes('Object Storage')
   );
-
-  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
-    'Object Storage Endpoint Types',
-    Boolean(flags.objectStorageGen2?.enabled),
-    account?.capabilities ?? []
-  );
-
-  const endpointsQueryEnabled = enabled && isObjectStorageGen2Enabled;
-  const clustersQueryEnabled = enabled && !isObjMultiClusterEnabled;
 
   // Endpoints contain all the regions that support Object Storage.
-  const { data: endpoints } = useObjectStorageEndpoints(endpointsQueryEnabled);
-  const { data: clusters } = useObjectStorageClusters(clustersQueryEnabled);
+  const { data: endpoints, isLoading: endpointsAreLoading } =
+    useObjectStorageEndpoints(endpointsQueryEnabled);
 
-  const regions =
-    isObjMultiClusterEnabled && !isObjectStorageGen2Enabled
-      ? allRegions?.filter((r) => r.capabilities.includes('Object Storage'))
-      : undefined;
-
-  const queryEnabled =
-    enabled &&
-    ((isObjectStorageGen2Enabled && Boolean(endpoints)) ||
-      (isObjMultiClusterEnabled && Boolean(regions)) ||
-      Boolean(clusters));
-
-  const queryFn = isObjectStorageGen2Enabled
+  const bucketsQueryEnabled =
+    (endpointsQueryEnabled && Boolean(endpoints)) ||
+    (regionsQueryEnabled && Boolean(objRegions));
+  const queryFn = endpointsQueryEnabled
     ? () => getAllBucketsFromEndpoints(endpoints)
-    : isObjMultiClusterEnabled
-      ? () => getAllBucketsFromRegions(regions)
-      : () => getAllBucketsFromClusters(clusters);
+    : () => getAllBucketsFromRegions(objRegions);
 
-  return useQuery<BucketsResponseType<typeof isObjectStorageGen2Enabled>>({
-    enabled: queryEnabled,
+  const dependencyIsLoading =
+    accountIsLoading || regionsAreLoading || endpointsAreLoading;
+
+  const bucketsQuery = useQuery<
+    BucketsResponseType<typeof isObjectStorageGen2Enabled>
+  >({
+    enabled: bucketsQueryEnabled,
     queryFn,
     queryKey: objectStorageQueries.buckets.queryKey,
     retry: false,
   });
+  return {
+    ...bucketsQuery,
+    isLoading: bucketsQuery.isLoading || dependencyIsLoading,
+  };
 };
 
 export const useObjectStorageAccessKeys = (params: Params) =>
