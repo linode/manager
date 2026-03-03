@@ -25,11 +25,7 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
-import type {
-  AccountSettings,
-  PriceType,
-  Region,
-} from '@linode/api-v4';
+import type { AccountSettings, PriceType, Region } from '@linode/api-v4';
 
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.
@@ -187,11 +183,7 @@ describe('Object Storage enrollment', () => {
     mockGetAccessKeys([]);
 
     cy.visitWithLogin('/object-storage/buckets');
-    cy.wait([
-      '@getAccountSettings',
-      '@getBuckets',
-      '@getRegions',
-    ]);
+    cy.wait(['@getAccountSettings', '@getBuckets', '@getRegions']);
 
     // Confirm that empty-state message is shown before proceeding.
     cy.findByText('S3-compatible storage solution').should('be.visible');
