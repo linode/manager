@@ -278,6 +278,7 @@ export const ImageSelectTable = (props: Props) => {
                   image={image}
                   key={image.id}
                   onSelect={() => onSelect(image)}
+                  regions={regions ?? []}
                   selected={image.id === selectedImageId}
                   timezone={profile?.timezone}
                 />

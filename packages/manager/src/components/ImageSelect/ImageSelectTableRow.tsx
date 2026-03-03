@@ -19,18 +19,19 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import { TABLE_CELL_BASE_STYLE } from './constants';
 
-import type { Image, ImageRegion } from '@linode/api-v4';
+import type { Image, ImageRegion, Region } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
 interface Props {
   image: Image;
   onSelect: () => void;
+  regions: Region[];
   selected: boolean;
   timezone?: string;
 }
 
 export const ImageSelectTableRow = (props: Props) => {
-  const { image, onSelect, selected, timezone } = props;
+  const { image, onSelect, regions, selected, timezone } = props;
 
   const {
     capabilities,
@@ -38,7 +39,7 @@ export const ImageSelectTableRow = (props: Props) => {
     id,
     image_sharing,
     label,
-    regions,
+    regions: imageRegions,
     size,
     status,
     type,
@@ -77,12 +78,20 @@ export const ImageSelectTableRow = (props: Props) => {
     return '—';
   };
 
+  const getRegionListItem = (imageRegion: ImageRegion) => {
+    const matchingRegion = regions.find((r) => r.id === imageRegion.region);
+
+    return matchingRegion
+      ? `${matchingRegion.label} (${imageRegion.region})`
+      : imageRegion.region;
+  };
+
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
-      {regions.map((region: ImageRegion, idx) => {
+      {imageRegions.map((region: ImageRegion, idx) => {
         return (
           <ListItem disablePadding key={`${region.region}-${idx}`}>
-            {region.region}
+            {getRegionListItem(region)}
           </ListItem>
         );
       })}
@@ -119,8 +128,8 @@ export const ImageSelectTableRow = (props: Props) => {
         >
           <PlanTextTooltip
             displayText={
-              regions.length > 0
-                ? pluralize('Region', 'Regions', regions.length)
+              imageRegions.length > 0
+                ? pluralize('Region', 'Regions', imageRegions.length)
                 : '—'
             }
             tooltipText={<FormattedRegionList />}
