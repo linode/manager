@@ -7,7 +7,7 @@ import {
   useAllVolumesQuery,
   useAllVPCsQuery,
 } from '@linode/queries';
-import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
+import { Autocomplete, Box, Chip, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -30,11 +30,12 @@ import type {
 import type { APIError } from '@linode/api-v4';
 
 interface Props {
+  liveChat?: boolean;
   ticketType?: TicketType;
 }
 
 export const SupportTicketProductSelectionFields = (props: Props) => {
-  const { ticketType } = props;
+  const { liveChat, ticketType } = props;
   const {
     clearErrors,
     control,
@@ -265,7 +266,28 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
                 }}
                 options={topicOptions}
                 placeholder="Select an option?"
-                value={selectedTopic ?? null}
+                renderOption={
+                  liveChat
+                    ? (props, option) => (
+                        <li {...props}>
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              width: '100%',
+                            }}
+                          >
+                            <span>{option.label}</span>
+                            {option.value === 'general' && (
+                              <Chip label="Live Chat" size="small" />
+                            )}
+                          </Box>
+                        </li>
+                      )
+                    : undefined
+                }
+                value={selectedTopic}
               />
             )}
           />
