@@ -85,6 +85,8 @@ import {
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
+  logsAlertMetricCriteria,
+  logsMetricCriteria,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -124,6 +126,7 @@ import {
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
+  streamFactory,
   subnetFactory,
   supportReplyFactory,
   supportTicketFactory,
@@ -214,10 +217,6 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
 
-  if (db.engine === 'postgresql') {
-    db.connection_pool_port = 100; /** @Deprecated replaced by `endpoints` property */
-  }
-
   const database = databaseFactory.build(db);
 
   // Mock a database cluster with a public VPC Configuration
@@ -241,26 +240,32 @@ const makeMockDatabase = (params: PathParams): Database => {
         {
           role: 'primary',
           address: 'public-db-mysql-primary-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: true,
         },
         {
           role: 'primary',
           address: 'private-db-mysql-primary-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: false,
         },
         {
           role: 'standby',
           address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: true,
         },
         {
           role: 'standby',
           address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: false,
+        },
+        {
+          role: 'primary-connection-pool',
+          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          port: 15848,
+          public_access: true,
         },
         {
           role: 'primary-connection-pool',
@@ -280,7 +285,13 @@ const makeMockDatabase = (params: PathParams): Database => {
   //     {
   //       role: 'primary',
   //       address: 'db-mysql-primary-0.b.linodeb.net',
-  //       port: 15847,
+  //       port: 3306,
+  //       public_access: true,
+  //     },
+  //     {
+  //       role: 'primary-connection-pool',
+  //       address: 'public-db-mysql-primary-0.b.linodeb.net',
+  //       port: 15848,
   //       public_access: true,
   //     },
   //   ],
@@ -3513,6 +3524,12 @@ export const handlers = [
           rules: [firewallMetricRulesFactory.build()],
         },
       }),
+      alertFactory.build({
+        id: 494,
+        label: 'Logs-alert',
+        service_type: 'logs',
+        type: 'user',
+      }),
       ...alertFactory.buildList(3, { status: 'enabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'disabling', type: 'user' }),
       ...alertFactory.buildList(3, { status: 'provisioning', type: 'user' }),
@@ -3611,6 +3628,19 @@ export const handlers = [
             entity_ids: ['1', '4'],
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
+            },
+          })
+        );
+      }
+      if (params.id === '494' && params.serviceType === 'logs') {
+        return HttpResponse.json(
+          alertFactory.build({
+            id: 494,
+            label: 'Logs-alert',
+            service_type: 'logs',
+            type: 'user',
+            rule_criteria: {
+              rules: [logsAlertMetricCriteria.build()],
             },
           })
         );
@@ -3886,6 +3916,12 @@ export const handlers = [
           regions: 'us-iad,us-east,eu-west',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+        serviceTypesFactory.build({
+          label: 'Logs',
+          service_type: 'logs',
+          regions: undefined,
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -3902,6 +3938,7 @@ export const handlers = [
       blockstorage: 'Volumes',
       lke: 'LKE Enterprise',
       netloadbalancer: 'Network Load Balancers',
+      logs: 'Logs',
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
@@ -4306,6 +4343,9 @@ export const handlers = [
       if (params.serviceType === 'netloadbalancer') {
         return HttpResponse.json({ data: networkLoadBalancerMetricCriteria });
       }
+      if (params.serviceType === 'logs') {
+        return HttpResponse.json({ data: logsMetricCriteria });
+      }
       return HttpResponse.json(response);
     }
   ),
@@ -4708,6 +4748,9 @@ export const handlers = [
         'Content-Type': 'application/javascript',
       },
     });
+  }),
+  http.get('*/monitor/streams', () => {
+    return HttpResponse.json(makeResourcePage(streamFactory.buildList(10)));
   }),
   ...entityTransfers,
   ...statusPage,
