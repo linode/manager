@@ -1,6 +1,7 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
+  setHeaders,
   setMethod,
   setParams,
   setURL,
@@ -12,6 +13,7 @@ import type { Token } from '../profile';
 import type { ResourcePage as Page } from '../types';
 import type {
   ChildAccount,
+  ChildAccountTokenPayload,
   ChildAccountWithDelegates,
   GetChildAccountDelegatesParams,
   GetChildAccountsIamParams,
@@ -98,12 +100,16 @@ export const getDelegatedChildAccount = ({ euuid }: { euuid: string }) =>
     setMethod('GET'),
   );
 
-export const generateChildAccountToken = ({ euuid }: { euuid: string }) =>
+export const generateChildAccountToken = ({
+  euuid,
+  headers,
+}: ChildAccountTokenPayload) =>
   Request<Token>(
     setURL(
       `${BETA_API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}/token`,
     ),
     setMethod('POST'),
+    setHeaders(headers),
     setData(euuid),
   );
 

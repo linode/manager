@@ -98,9 +98,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
           selectedBucket={bucket}
         />
       ),
-      options: {
-        flags: { objMultiCluster: false },
-      },
     });
 
     expect(screen.getByText(bucket.label)).toBeInTheDocument();
@@ -122,9 +119,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
           selectedBucket={bucket}
         />
       ),
-      options: {
-        flags: { objMultiCluster: false },
-      },
     });
 
     expect(screen.queryByText(bucket.label)).not.toBeInTheDocument();
@@ -139,9 +133,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
           selectedBucket={bucket}
         />
       ),
-      options: {
-        flags: { objMultiCluster: false },
-      },
     });
 
     expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
@@ -156,9 +147,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
           selectedBucket={undefined}
         />
       ),
-      options: {
-        flags: { objMultiCluster: false },
-      },
     });
 
     expect(screen.getByText('Bucket Detail')).toBeInTheDocument();
@@ -176,7 +164,7 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
         />
       ),
       options: {
-        flags: { objMultiCluster: false },
+        flags: { objectStorageGen2: { enabled: true } },
       },
     });
 
@@ -198,7 +186,7 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
         />
       ),
       options: {
-        flags: { objMultiCluster: false },
+        flags: { objectStorageGen2: { enabled: true } },
       },
     });
 
@@ -227,7 +215,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
         />
       ),
       options: {
-        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+        flags: { objectStorageGen2: { enabled: true } },
       },
     });
 
@@ -254,7 +242,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
         />
       ),
       options: {
-        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+        flags: { objectStorageGen2: { enabled: true } },
       },
     });
 

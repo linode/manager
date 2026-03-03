@@ -68,7 +68,14 @@ const imagesIndexRoute = createRoute({
 );
 
 const imageActionRoute = createRoute({
-  beforeLoad: async ({ params }) => {
+  beforeLoad: async ({ context, params }) => {
+    // Prevent access if private image sharing is enabled
+    if (context.isPrivateImageSharingEnabled) {
+      throw redirect({
+        to: '/images/image-library/$imageType',
+        params: { imageType: 'owned-by-me' },
+      });
+    }
     if (!(params.action in imageActions)) {
       throw redirect({
         search: () => ({}),
@@ -154,9 +161,14 @@ const imageLibraryIndexRoute = createRoute({
         to: '/images',
       });
     }
+
+    const normalizedPath = location.pathname.endsWith('/')
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
+
     if (
       context.isPrivateImageSharingEnabled &&
-      location.pathname === '/images/image-library'
+      normalizedPath === '/images/image-library'
     ) {
       throw redirect({
         to: '/images/image-library/$imageType',
