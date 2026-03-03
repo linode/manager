@@ -147,8 +147,7 @@ export const ImageLibraryTabs = () => {
                   </Notice>
                 )}
                 {tab.type === 'recovery-images' && (
-                  // <ImagesView handlers={handlers} type="recovery-images" />
-                  <Notice variant="info">Recovery Images</Notice>
+                  <ImagesView handlers={handlers} type="recovery-images" />
                 )}
               </SafeTabPanel>
             ))}
