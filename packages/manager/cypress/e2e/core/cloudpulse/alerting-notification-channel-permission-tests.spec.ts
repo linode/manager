@@ -37,7 +37,10 @@ describe('Notification Channel Listing Page — Access Control', () => {
     mockAppendFeatureFlags(flags);
     cy.visitWithLogin('/linodes');
 
-    ui.nav.findItemByTitle('Alerts').should('be.visible').click();
+    ui.nav.findItemByTitle('Alerts').as('alertsNav');
+    cy.get('@alertsNav').scrollIntoView();
+    cy.get('@alertsNav').should('be.visible').click();
+
     ui.tabList
       .findTabByTitle('Notification Channels')
       .should('be.visible')
@@ -62,7 +65,9 @@ describe('Notification Channel Listing Page — Access Control', () => {
     mockAppendFeatureFlags(flags);
     cy.visitWithLogin('/linodes');
 
-    ui.nav.findItemByTitle('Alerts').should('be.visible').click();
+    ui.nav.findItemByTitle('Alerts').as('alertsNav');
+    cy.get('@alertsNav').scrollIntoView();
+    cy.get('@alertsNav').should('be.visible').click();
 
     // Tab should not render at all
     ui.tabList.findTabByTitle('Notification Channels').should('not.exist');
