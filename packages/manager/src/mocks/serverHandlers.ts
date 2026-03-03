@@ -214,10 +214,6 @@ const makeMockDatabase = (params: PathParams): Database => {
     db.ssl_connection = true;
   }
 
-  if (db.engine === 'postgresql') {
-    db.connection_pool_port = 100; /** @Deprecated replaced by `endpoints` property */
-  }
-
   const database = databaseFactory.build(db);
 
   // Mock a database cluster with a public VPC Configuration
@@ -241,26 +237,32 @@ const makeMockDatabase = (params: PathParams): Database => {
         {
           role: 'primary',
           address: 'public-db-mysql-primary-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: true,
         },
         {
           role: 'primary',
           address: 'private-db-mysql-primary-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: false,
         },
         {
           role: 'standby',
           address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: true,
         },
         {
           role: 'standby',
           address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
-          port: 15847,
+          port: 3306,
           public_access: false,
+        },
+        {
+          role: 'primary-connection-pool',
+          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          port: 15848,
+          public_access: true,
         },
         {
           role: 'primary-connection-pool',
@@ -280,7 +282,13 @@ const makeMockDatabase = (params: PathParams): Database => {
   //     {
   //       role: 'primary',
   //       address: 'db-mysql-primary-0.b.linodeb.net',
-  //       port: 15847,
+  //       port: 3306,
+  //       public_access: true,
+  //     },
+  //     {
+  //       role: 'primary-connection-pool',
+  //       address: 'public-db-mysql-primary-0.b.linodeb.net',
+  //       port: 15848,
   //       public_access: true,
   //     },
   //   ],
