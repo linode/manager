@@ -11,17 +11,17 @@ import { FormControlLabel, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import type { ChangeEvent } from 'react';
 import React from 'react';
-import { useController, useFormContext, useWatch } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 
-import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { InterfacePurpose } from '@linode/api-v4';
 
 interface Props {
+  disabled: boolean;
   index: number;
 }
 
@@ -46,7 +46,7 @@ const interfaceTypes = [
   },
 ] as const;
 
-export const InterfaceType = ({ index }: Props) => {
+export const InterfaceType = ({ disabled, index }: Props) => {
   const queryClient = useQueryClient();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -58,16 +58,6 @@ export const InterfaceType = ({ index }: Props) => {
     control,
     name: `linodeInterfaces.${index}.purpose`,
   });
-
-  const interfaceGeneration = useWatch({
-    control,
-    name: 'interface_generation',
-  });
-
-  const createType = useGetLinodeCreateType();
-  const isCreatingFromBackup = createType === 'Backups';
-
-  const disabled = isCreatingFromBackup && interfaceGeneration !== 'linode';
 
   const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
