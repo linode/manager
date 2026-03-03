@@ -1039,19 +1039,24 @@ export const handlers = [
     ];
     const aclpSupportedRegionLinodes = [
       linodeFactory.build({
-        label: 'aclp-supported-region-linode-1',
+        label: 'aclp-supported-region-only-aclp-alerts-linode',
         region: 'us-iad',
         id: 1004,
       }),
       linodeFactory.build({
-        label: 'aclp-supported-region-linode-2',
+        label: 'aclp-supported-region-only-legacy-alerts-linode',
         region: 'us-east',
         id: 1005,
       }),
       linodeFactory.build({
-        label: 'aclp-supported-region-linode-3',
+        label: 'aclp-supported-region-no-alerts-linode',
         region: 'us-iad',
         id: 1006,
+      }),
+      linodeFactory.build({
+        label: 'aclp-supported-region-both-alerts-linode',
+        region: 'us-east',
+        id: 1007,
       }),
     ];
     const linodeFirewall = linodeFactory.build({
@@ -1230,13 +1235,11 @@ export const handlers = [
         }),
       ];
       const linodeAclpSupportedRegionDetails = [
-        /** Whether a Linode is ACLP-subscribed can be determined using the useIsLinodeAclpSubscribed hook. */
-
-        // 1. Example: ACLP-subscribed Linode in an ACLP-supported region (mock Linode ID: 1004)
+        // 1. Example: Linode with ACLP alerts in an ACLP-supported region (mock Linode ID: 1004)
         linodeFactory.build({
           id,
           backups: { enabled: false },
-          label: 'aclp-supported-region-linode-1',
+          label: 'aclp-supported-region-only-aclp-alerts-linode',
           region: 'us-iad',
           alerts: {
             user_alerts: [21, 22, 23, 24, 25],
@@ -1248,11 +1251,11 @@ export const handlers = [
             transfer_quota: 0,
           },
         }),
-        // 2. Example: Linode not subscribed to ACLP in an ACLP-supported region (mock Linode ID: 1005)
+        // 2. Example: Linode with only Legacy Alerts in an ACLP-supported region (mock Linode ID: 1005)
         linodeFactory.build({
           id,
           backups: { enabled: false },
-          label: 'aclp-supported-region-linode-2',
+          label: 'aclp-supported-region-only-legacy-alerts-linode',
           region: 'us-east',
           alerts: {
             user_alerts: [],
@@ -1265,13 +1268,10 @@ export const handlers = [
           },
         }),
         // 3. Example: Linode in an ACLP-supported region with NO enabled alerts (mock Linode ID: 1006)
-        // - Whether this Linode is ACLP-subscribed depends on the ACLP release stage:
-        //   a. Beta stage: NOT subscribed to ACLP
-        //   b. GA stage: Subscribed to ACLP
         linodeFactory.build({
           id,
           backups: { enabled: false },
-          label: 'aclp-supported-region-linode-3',
+          label: 'aclp-supported-region-no-alerts-linode',
           region: 'us-iad',
           alerts: {
             user_alerts: [],
@@ -1281,6 +1281,22 @@ export const handlers = [
             network_in: 0,
             network_out: 0,
             transfer_quota: 0,
+          },
+        }),
+        // 4. Example: Linode with both ACLP and Legacy Alerts in an ACLP-supported region (mock Linode ID: 1007)
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-both-alerts-linode',
+          region: 'us-east',
+          alerts: {
+            user_alerts: [21, 22, 23, 24, 25],
+            system_alerts: [19, 20],
+            cpu: 90,
+            io: 90000,
+            network_in: 0,
+            network_out: 0,
+            transfer_quota: 90,
           },
         }),
       ];
@@ -1318,6 +1334,8 @@ export const handlers = [
           return linodeAclpSupportedRegionDetails[1];
         case 1006:
           return linodeAclpSupportedRegionDetails[2];
+        case 1007:
+          return linodeAclpSupportedRegionDetails[3];
         default:
           return linodeDetail;
       }
@@ -3369,13 +3387,14 @@ export const handlers = [
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
           }),
-          // Mocked 2 alert definitions associated with mock Linode ID '1004' (aclp-supported-region-linode-1)
+          // Mocked 2 alert definitions associated with mock Linode IDs '1004' and '1007'
+          // (aclp-supported-region-only-aclp-alerts-linode & aclp-supported-region-both-alerts-linode)
           ...alertFactory.buildList(2, {
             rule_criteria: {
               rules: alertRulesFactory.buildList(2),
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
-            entity_ids: ['1004'],
+            entity_ids: ['1004', '1007'],
           }),
           ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
