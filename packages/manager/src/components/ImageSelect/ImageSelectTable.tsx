@@ -35,6 +35,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import {
   DEFAULT_CLIENT_SIDE_PAGE_SIZE,
   IMAGE_SELECT_TABLE_COLUMNS_COUNT,
+  IMAGE_SELECT_TABLE_PENDO_IDS,
   IMAGE_SELECT_TABLE_PREFERENCE_KEY,
   TABLE_CELL_BASE_STYLE,
 } from './constants';
@@ -58,6 +59,10 @@ interface Props {
    */
   onSelect: (image: Image) => void;
   /**
+   * An object containing Pendo IDs for elements in this component.
+   */
+  pendoIDs: typeof IMAGE_SELECT_TABLE_PENDO_IDS;
+  /**
    * The ID of the currently selected image.
    */
   selectedImageId?: null | string;
@@ -66,7 +71,8 @@ interface Props {
 type OptionType = { label: string; value: string };
 
 export const ImageSelectTable = (props: Props) => {
-  const { currentRoute, errorText, onSelect, selectedImageId } = props;
+  const { currentRoute, errorText, onSelect, pendoIDs, selectedImageId } =
+    props;
 
   const theme = useTheme();
   const [query, setQuery] = useState('');
@@ -156,6 +162,7 @@ export const ImageSelectTable = (props: Props) => {
         <Box sx={{ flex: 1, minWidth: 200, maxWidth: 350 }}>
           <DebouncedSearchTextField
             clearable
+            data-pendo-id={pendoIDs.searchImagesBar}
             debounceTime={250}
             errorText={filterError?.message}
             hideLabel
@@ -171,6 +178,7 @@ export const ImageSelectTable = (props: Props) => {
         </Box>
         <Box sx={{ flex: 1, minWidth: 150, maxWidth: 250 }}>
           <Autocomplete
+            data-pendo-id={pendoIDs.tagFilterSelect}
             label=""
             noMarginTop
             onChange={(_, value) => {
@@ -185,6 +193,7 @@ export const ImageSelectTable = (props: Props) => {
         </Box>
         <Box sx={{ flex: 1, minWidth: 150, maxWidth: 250 }}>
           <Autocomplete
+            data-pendo-id={pendoIDs.regionFilterSelect}
             label=""
             noMarginTop
             onChange={(_, value) => {
@@ -226,6 +235,7 @@ export const ImageSelectTable = (props: Props) => {
                   <Stack alignItems="center" direction="row">
                     Share Group
                     <TooltipIcon
+                      data-pendo-id={pendoIDs.shareGroupInfoIcon}
                       status="info"
                       sxTooltipIcon={{
                         padding: '4px',
@@ -278,6 +288,7 @@ export const ImageSelectTable = (props: Props) => {
                   image={image}
                   key={image.id}
                   onSelect={() => onSelect(image)}
+                  pendoIDs={pendoIDs}
                   regions={regions ?? []}
                   selected={image.id === selectedImageId}
                   timezone={profile?.timezone}

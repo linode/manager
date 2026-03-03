@@ -5,6 +5,7 @@ import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
+import { IMAGE_SELECT_TABLE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
@@ -99,6 +100,7 @@ export const Images = () => {
             currentRoute={'/linodes/create/images'}
             errorText={fieldState.error?.message}
             onSelect={onChange}
+            pendoIDs={IMAGE_SELECT_TABLE_PENDO_IDS}
             selectedImageId={field.value}
           />
         ) : (

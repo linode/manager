@@ -17,7 +17,10 @@ import {
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { TABLE_CELL_BASE_STYLE } from './constants';
+import {
+  IMAGE_SELECT_TABLE_PENDO_IDS,
+  TABLE_CELL_BASE_STYLE,
+} from './constants';
 
 import type { Image, ImageRegion, Region } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
@@ -25,13 +28,14 @@ import type { Theme } from '@linode/ui';
 interface Props {
   image: Image;
   onSelect: () => void;
+  pendoIDs: typeof IMAGE_SELECT_TABLE_PENDO_IDS;
   regions: Region[];
   selected: boolean;
   timezone?: string;
 }
 
 export const ImageSelectTableRow = (props: Props) => {
-  const { image, onSelect, regions, selected, timezone } = props;
+  const { image, onSelect, pendoIDs, regions, selected, timezone } = props;
 
   const {
     capabilities,
@@ -65,16 +69,7 @@ export const ImageSelectTableRow = (props: Props) => {
     if (image_sharing?.shared_by?.sharegroup_label) {
       return image_sharing.shared_by.sharegroup_label;
     }
-    if (
-      image_sharing?.shared_with?.sharegroup_count !== null &&
-      image_sharing?.shared_with?.sharegroup_count !== undefined
-    ) {
-      return pluralize(
-        'Share Group',
-        'Share Groups',
-        image_sharing.shared_with.sharegroup_count
-      );
-    }
+
     return '—';
   };
 
@@ -110,6 +105,7 @@ export const ImageSelectTableRow = (props: Props) => {
         />
         {type === 'manual' && capabilities.includes('cloud-init') && (
           <TooltipIcon
+            data-pendo-id={pendoIDs.metadataSupportedIcon}
             icon={<CloudInitIcon />}
             sxTooltipIcon={{
               padding: 0,
@@ -127,6 +123,7 @@ export const ImageSelectTableRow = (props: Props) => {
           }}
         >
           <PlanTextTooltip
+            data-pendo-id={pendoIDs.replicatedRegionPopover}
             displayText={
               imageRegions.length > 0
                 ? pluralize('Region', 'Regions', imageRegions.length)
