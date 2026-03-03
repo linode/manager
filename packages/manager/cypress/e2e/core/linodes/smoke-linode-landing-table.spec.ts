@@ -93,21 +93,29 @@ describe('linode landing checks', () => {
 
   it('checks the landing page side menu items', () => {
     cy.findByTitle('Akamai - Cloud Manager').should('be.visible');
-    cy.findByTestId('menu-item-Linodes').should('be.visible');
-    cy.findByTestId('menu-item-Volumes').should('be.visible');
-    cy.findByTestId('menu-item-NodeBalancers').should('be.visible');
-    cy.findByTestId('menu-item-Firewalls').should('be.visible');
-    cy.findByTestId('menu-item-StackScripts').should('be.visible');
-    cy.findByTestId('menu-item-Images').should('be.visible');
-    cy.findByTestId('menu-item-Domains').should('be.visible');
-    cy.findByTestId('menu-item-Kubernetes').should('be.visible');
-    cy.findByTestId('menu-item-Object Storage').should('be.visible');
-    cy.findByTestId('menu-item-Longview').should('be.visible');
-    cy.findByTestId('menu-item-Marketplace').should('be.visible');
-    cy.findByTestId('menu-item-Billing').scrollIntoView();
-    cy.findByTestId('menu-item-Billing').should('be.visible');
-    cy.findByTestId('menu-item-Account Settings').should('be.visible');
-    cy.findByTestId('menu-item-Help & Support').should('be.visible');
+
+    const expectedNavItems = [
+      'Linodes',
+      'Volumes',
+      'NodeBalancers',
+      'Firewalls',
+      'StackScripts',
+      'Images',
+      'Domains',
+      'Kubernetes',
+      'Object Storage',
+      'Longview',
+      'Quick Deploy Apps',
+      'Partner Referrals',
+      'Billing',
+      'Account Settings',
+      'Help & Support',
+    ];
+
+    expectedNavItems.forEach((navItem) => {
+      ui.nav.findItemByTitle(navItem).scrollIntoView();
+      ui.nav.findItemByTitle(navItem).should('be.visible');
+    });
   });
 
   it('checks the landing top menu items', () => {
@@ -271,7 +279,7 @@ describe('linode landing checks', () => {
         cy.get(commonLocators.topMenuCreateItemsLocator.marketplaceOneClickLink)
           .should('be.visible')
           .within(() => {
-            cy.findByText('Marketplace').should('be.visible');
+            cy.findByText('Quick Deploy Apps').should('be.visible');
             cy.findByText('Deploy applications with ease').should('be.visible');
           });
       });
