@@ -804,7 +804,7 @@ describe('usePaginationV2', () => {
       expect(mockNavigate).not.toHaveBeenCalled();
     });
 
-    it('should handle page clamping to 1 for empty data', async () => {
+    it('should not reset page when data is empty (e.g. still loading) to preserve URL on reload', async () => {
       queryClient.setQueryData(['profile', 'preferences'], {
         pageSizes: { 'test-key': 25 },
       });
@@ -826,9 +826,9 @@ describe('usePaginationV2', () => {
         expect(result.current.page).toBe(1);
       });
 
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalled();
-      });
+      // Should not trigger navigation when totalCount is 0 so that page from URL
+      // is preserved on reload while data is still loading
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
     it('should auto-reset page when data changes and current page becomes invalid', async () => {
