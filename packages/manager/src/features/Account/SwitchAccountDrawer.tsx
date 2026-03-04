@@ -217,6 +217,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   const hasError = isIAMDelegationEnabled
     ? delegatedChildAccountsError
     : childAccountInfiniteError;
+
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
@@ -268,17 +269,20 @@ export const SwitchAccountDrawer = (props: Props) => {
         </Stack>
       ) : (
         <>
-          <DebouncedSearchTextField
-            clearable
-            debounceTime={250}
-            hideLabel
-            key={`switch-search-${searchQuery}`}
-            label="Search"
-            onSearch={handleSearchQueryChange}
-            placeholder="Search"
-            sx={{ marginBottom: theme.spacingFunction(12) }}
-            value={searchQuery}
-          />
+          {childAccounts && childAccounts.length !== 0 && (
+            <DebouncedSearchTextField
+              clearable
+              debounceTime={250}
+              hideLabel
+              key={`switch-search-${searchQuery}`}
+              label="Search"
+              loading={isLoading}
+              onSearch={handleSearchQueryChange}
+              placeholder="Search"
+              sx={{ marginBottom: theme.spacingFunction(12) }}
+              value={searchQuery}
+            />
+          )}
           {searchQuery &&
             childAccounts &&
             childAccounts.length === 0 &&
