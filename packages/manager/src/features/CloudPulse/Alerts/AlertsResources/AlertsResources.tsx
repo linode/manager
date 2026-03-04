@@ -179,8 +179,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     const filteredTypes =
       alertClass === 'shared'
         ? Object.keys(databaseTypeClassMap).filter(
-          (type) => type !== 'dedicated'
-        )
+            (type) => type !== 'dedicated'
+          )
         : [alertClass];
 
     // Apply type filter only for DBaaS user alerts with a valid alertClass based on above filtered types
@@ -205,7 +205,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(
-      serviceType && (serviceType === 'firewall' || supportedRegionIds?.length)
+      serviceType &&
+        (serviceType === 'firewall' ||
+          serviceType === 'logs' ||
+          supportedRegionIds?.length)
     ), // Enable query only if serviceType and supportedRegionIds are available, in case of firewall only serviceType is needed
     serviceType,
     {},
@@ -468,8 +471,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                     new Set(
                       regionFilteredResources
                         ? regionFilteredResources.flatMap(
-                          ({ tags }) => tags ?? []
-                        )
+                            ({ tags }) => tags ?? []
+                          )
                         : []
                     )
                   ),

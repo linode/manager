@@ -731,3 +731,68 @@ export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
     ],
   },
 ];
+
+const logsDimensions: Dimension[] = [
+  {
+    label: 'Status Code',
+    dimension_label: 'status_code',
+    values: [],
+  },
+];
+
+export const logsMetricCriteria: MetricDefinition[] = [
+  {
+    label: 'Successful Upload Count',
+    metric: 'success_upload_count',
+    unit: 'Count',
+    scrape_interval: '300s',
+    metric_type: 'gauge',
+    is_alertable: true,
+    available_aggregate_functions: ['sum'],
+    dimensions: logsDimensions,
+  },
+  {
+    label: 'Error Upload Count',
+    metric: 'error_upload_count',
+    unit: 'Count',
+    scrape_interval: '300s',
+    metric_type: 'gauge',
+    is_alertable: true,
+    available_aggregate_functions: ['sum'],
+    dimensions: logsDimensions,
+  },
+  {
+    label: 'Error Upload Rate',
+    metric: 'error_upload_rate',
+    unit: 'Percent',
+    scrape_interval: '300s',
+    metric_type: 'gauge',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: logsDimensions,
+  },
+];
+
+export const logsAlertMetricCriteria =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
+    label: 'Successful Upload Count',
+    metric: 'success_upload_count',
+    unit: 'Count',
+    aggregate_function: 'sum',
+    operator: 'eq',
+    threshold: 1500,
+    dimension_filters: [
+      {
+        label: 'Status Code',
+        dimension_label: 'status_code',
+        operator: 'in',
+        value: '203,402',
+      },
+      {
+        label: 'Status Code',
+        dimension_label: 'status_code',
+        operator: 'eq',
+        value: '503',
+      },
+    ],
+  });
