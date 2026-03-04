@@ -9,7 +9,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
@@ -48,7 +47,6 @@ export const BucketDetailLanding = React.memo(() => {
   });
 
   const { aclpServices, objectStorageContextualMetrics } = useFlags();
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
   const { isError: aclpServiceError, isLoading: aclServiceLoading } =
     useCloudPulseServiceByServiceType('objectstorage', true);
 
@@ -57,7 +55,7 @@ export const BucketDetailLanding = React.memo(() => {
     isLoading,
     error,
     isPending,
-  } = useObjectStorageBuckets(isObjectStorageGen2Enabled);
+  } = useObjectStorageBuckets();
 
   const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
 
@@ -148,7 +146,10 @@ export const BucketDetailLanding = React.memo(() => {
 
             {!!metricsTabIndex && (
               <SafeTabPanel index={metricsTabIndex}>
-                <BucketMetrics bucketName={bucketName} region={bucket.region} />
+                <BucketMetrics
+                  hostname={bucket.hostname}
+                  region={bucket.region}
+                />
               </SafeTabPanel>
             )}
           </TabPanels>

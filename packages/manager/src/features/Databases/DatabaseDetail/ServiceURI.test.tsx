@@ -8,18 +8,141 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ServiceURI } from './ServiceURI';
 
-const mockDatabase = databaseFactory.build({
-  connection_pool_port: 100,
-  engine: 'postgresql',
-  id: 1,
-  platform: 'rdbms-default',
-  private_network: null,
-});
-
 const mockCredentials = {
   password: 'password123',
   username: 'lnroot',
 };
+
+const DEFAULT_PRIMARY = 'db-postgres-default-primary.net';
+const DEFAULT_STANDBY = 'db-postgres-default-standby.net';
+
+const PRIVATE_PRIMARY = `private-${DEFAULT_PRIMARY}`;
+const PRIVATE_STANDBY = `private-${DEFAULT_STANDBY}`;
+
+const PRIMARY_PUBLIC_CONNECTION_POOL =
+  'public-db-postgres-primary-connection-pool-0.b.linodeb.net';
+const PRIMARY_PRIVATE_CONNECTION_POOL =
+  'private-db-postgres-primary-connection-pool-0.b.linodeb.net';
+
+const databaseWithNoVPC = databaseFactory.build({
+  engine: 'postgresql',
+  hosts: {
+    primary: DEFAULT_PRIMARY,
+    standby: DEFAULT_STANDBY,
+    endpoints: [
+      {
+        role: 'primary',
+        address: DEFAULT_PRIMARY,
+        port: 3306,
+        public_access: true,
+      },
+      {
+        role: 'primary-connection-pool',
+        address: PRIMARY_PUBLIC_CONNECTION_POOL,
+        port: 15848,
+        public_access: true,
+      },
+      {
+        role: 'standby-connection-pool',
+        address:
+          'public-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+        port: 15848,
+        public_access: true,
+      },
+    ],
+  },
+  platform: 'rdbms-default',
+  private_network: null, // No VPC configured
+});
+
+const databaseWithPrivateVPC = databaseFactory.build({
+  engine: 'postgresql',
+  hosts: {
+    primary: PRIVATE_PRIMARY,
+    standby: PRIVATE_STANDBY,
+    endpoints: [
+      {
+        role: 'primary',
+        address: PRIVATE_PRIMARY,
+        port: 3306,
+        public_access: false,
+      },
+      {
+        role: 'primary-connection-pool',
+        address: PRIMARY_PRIVATE_CONNECTION_POOL,
+        port: 15848,
+        public_access: false,
+      },
+      {
+        role: 'standby-connection-pool',
+        address:
+          'private-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+        port: 15848,
+        public_access: false,
+      },
+    ],
+  },
+  platform: 'rdbms-default',
+  private_network: {
+    public_access: false,
+    subnet_id: 1,
+    vpc_id: 123,
+  },
+});
+
+const databaseWithPublicVPC = databaseFactory.build({
+  engine: 'postgresql',
+  hosts: {
+    primary: PRIVATE_PRIMARY,
+    standby: PRIVATE_STANDBY,
+    endpoints: [
+      {
+        role: 'primary',
+        address: PRIVATE_PRIMARY,
+        port: 3306,
+        public_access: false,
+      },
+      {
+        role: 'primary-connection-pool',
+        address: PRIMARY_PRIVATE_CONNECTION_POOL,
+        port: 15848,
+        public_access: false,
+      },
+      {
+        role: 'standby-connection-pool',
+        address:
+          'private-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+        port: 15848,
+        public_access: false,
+      },
+      {
+        role: 'primary',
+        address: DEFAULT_PRIMARY,
+        port: 3306,
+        public_access: true,
+      },
+      {
+        role: 'primary-connection-pool',
+        address: PRIMARY_PUBLIC_CONNECTION_POOL,
+        port: 15848,
+        public_access: true,
+      },
+      {
+        role: 'standby-connection-pool',
+        address:
+          'public-replica-db-postgres-standby-connection-pool-0.b.linodeb.net',
+        port: 15848,
+        public_access: true,
+      },
+    ],
+  },
+  platform: 'rdbms-default',
+  private_network: {
+    public_access: true,
+    subnet_id: 1,
+    vpc_id: 123,
+  },
+});
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => {
@@ -41,8 +164,9 @@ describe('ServiceURI', () => {
     queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
       data: mockCredentials,
     });
+
     const { container } = renderWithTheme(
-      <ServiceURI database={mockDatabase} />
+      <ServiceURI database={databaseWithNoVPC} />
     );
 
     const revealPasswordBtn = screen.getByRole('button', {
@@ -52,7 +176,7 @@ describe('ServiceURI', () => {
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@db-mysql-primary-0.b.linodeb.net:100/{connection pool label}?sslmode=require`
+      `postgres://{click to reveal password}@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
 
     // eslint-disable-next-line testing-library/no-container
@@ -65,7 +189,8 @@ describe('ServiceURI', () => {
       data: mockCredentials,
       refetch: vi.fn(),
     });
-    renderWithTheme(<ServiceURI database={mockDatabase} />);
+
+    renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
 
     const revealPasswordBtn = screen.getByRole('button', {
       name: '{click to reveal password}',
@@ -75,7 +200,7 @@ describe('ServiceURI', () => {
     const serviceURIText = screen.getByTestId('service-uri').textContent;
     expect(revealPasswordBtn).not.toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://lnroot:password123@db-mysql-primary-0.b.linodeb.net:100/{connection pool label}?sslmode=require`
+      `postgres://lnroot:password123@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
   });
 
@@ -84,7 +209,7 @@ describe('ServiceURI', () => {
       error: new Error('Failed to fetch credentials'),
     });
 
-    renderWithTheme(<ServiceURI database={mockDatabase} />);
+    renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
 
     const errorRetryBtn = screen.getByRole('button', {
       name: '{error. click to retry}',
@@ -96,8 +221,9 @@ describe('ServiceURI', () => {
     queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
       data: mockCredentials,
     });
-    const { container } = renderWithTheme(
-      <ServiceURI database={mockDatabase} isGeneralServiceURI />
+
+    renderWithTheme(
+      <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
     );
 
     const revealPasswordBtn = screen.getByRole('button', {
@@ -107,12 +233,8 @@ describe('ServiceURI', () => {
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@db-mysql-primary-0.b.linodeb.net:3306/defaultdb?sslmode=require`
+      `postgres://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
     );
-
-    // eslint-disable-next-line testing-library/no-container
-    const copyButton = container.querySelector('[data-qa-copy-btn]');
-    expect(copyButton).toBeInTheDocument();
   });
 
   it('should reveal general service URI password after clicking reveal button', async () => {
@@ -120,7 +242,9 @@ describe('ServiceURI', () => {
       data: mockCredentials,
       refetch: vi.fn(),
     });
-    renderWithTheme(<ServiceURI database={mockDatabase} isGeneralServiceURI />);
+    renderWithTheme(
+      <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
+    );
 
     const revealPasswordBtn = screen.getByRole('button', {
       name: '{click to reveal password}',
@@ -130,7 +254,107 @@ describe('ServiceURI', () => {
     const serviceURIText = screen.getByTestId('service-uri').textContent;
     expect(revealPasswordBtn).not.toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://password123@db-mysql-primary-0.b.linodeb.net:3306/defaultdb?sslmode=require`
+      `postgres://password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
+    );
+  });
+
+  it('should render private service URI component if there is a private-only VPC', async () => {
+    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
+      data: mockCredentials,
+    });
+
+    renderWithTheme(<ServiceURI database={databaseWithPrivateVPC} />);
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `postgres://{click to reveal password}@${PRIMARY_PRIVATE_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+    );
+  });
+
+  it('should render private general service URI component if there is a private-only VPC', async () => {
+    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
+      data: mockCredentials,
+    });
+
+    renderWithTheme(
+      <ServiceURI database={databaseWithPrivateVPC} isGeneralServiceURI />
+    );
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `postgres://{click to reveal password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
+    );
+  });
+
+  it('should render public service URI component if there is a VPC with public access', async () => {
+    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
+      data: mockCredentials,
+    });
+
+    renderWithTheme(<ServiceURI database={databaseWithPublicVPC} />);
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `postgres://{click to reveal password}@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+    );
+  });
+
+  it('should render private service URI component if there is a VPC with public access and showPrivateVPC is true', async () => {
+    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
+      data: mockCredentials,
+    });
+
+    renderWithTheme(
+      <ServiceURI database={databaseWithPublicVPC} showPrivateVPC />
+    );
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `postgres://{click to reveal password}@${PRIMARY_PRIVATE_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+    );
+  });
+
+  it('should render general private service URI if there is a VPC with public access, isGeneralServiceURI is true, and showPrivateVPC is true', () => {
+    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
+      data: mockCredentials,
+    });
+
+    renderWithTheme(
+      <ServiceURI
+        database={databaseWithPublicVPC}
+        isGeneralServiceURI
+        showPrivateVPC
+      />
+    );
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `postgres://{click to reveal password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 });

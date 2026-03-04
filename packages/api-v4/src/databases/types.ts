@@ -96,10 +96,10 @@ export type HostEndpointRole =
   | 'standby'
   | 'standby-connection-pool';
 
-interface HostEndpoint {
+export interface HostEndpoint {
   address: string;
   port: number;
-  private_access: boolean;
+  public_access: boolean;
   role: HostEndpointRole;
 }
 
@@ -120,8 +120,6 @@ type MemberType = 'failover' | 'primary';
 export interface DatabaseInstance {
   allow_list: string[];
   cluster_size: ClusterSize;
-  /** @Deprecated replaced by `endpoints` property */
-  connection_pool_port: null | number;
   connection_strings: ConnectionStrings[];
   created: string;
   /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */

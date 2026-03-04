@@ -31,3 +31,4 @@ export { default as VisibilityHideIcon } from './visibilityHide.svg';
 export { default as VisibilityShowIcon } from './visibilityShow.svg';
 export { default as WarningOutlinedIcon } from './warning-outlined.svg';
 export { default as WarningIcon } from './warning.svg';
+export { default as ZeroStateSearchNarrowIcon } from './zero-state-search-narrow.svg';
