@@ -3789,6 +3789,9 @@ export const handlers = [
   http.put('*/monitor/alert-channels/:id', () => {
     return HttpResponse.json(notificationChannelFactory.build());
   }),
+  http.get('*/v4beta/monitor/streams', ({ params }) => {
+    return HttpResponse.json(makeResourcePage(streamFactory.buildList(5)));
+  }),
   http.get('*/monitor/alert-channels/:id', ({ params }) => {
     if (params.id === undefined) {
       return HttpResponse.json({}, { status: 404 });
@@ -4068,6 +4071,16 @@ export const handlers = [
           id: 5,
           service_type: 'netloadbalancer',
           label: 'Network Load Balancer',
+        })
+      );
+    }
+
+    if (params.serviceType === 'logs') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 11,
+          service_type: 'logs',
+          label: 'Log Delivery Status',
         })
       );
     }
@@ -4528,6 +4541,41 @@ export const handlers = [
       ];
       serviceType = 'netloadbalancer';
       dashboardLabel = 'Network Load Balancer';
+    } else if (id === '11') {
+      serviceType = 'logs';
+      dashboardLabel = 'Log Delivery Status';
+      widgets = [
+        {
+          metric: 'success_upload_count',
+          unit: 'Count',
+          label: 'Success Upload',
+          color: 'default',
+          size: 6,
+          chart_type: 'area',
+          y_label: 'success_upload_count',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'error_upload_count',
+          unit: 'Count',
+          label: 'Error Upload',
+          color: 'default',
+          size: 6,
+          chart_type: 'area',
+          y_label: 'error_upload_count',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'error_upload_rate',
+          unit: '%',
+          label: 'Error Rate',
+          color: 'default',
+          size: 12,
+          chart_type: 'area',
+          y_label: 'error_upload_rate',
+          aggregate_function: 'avg',
+        },
+      ];
     } else {
       serviceType = 'linode';
       dashboardLabel = 'Linode Service I/O Statistics';
