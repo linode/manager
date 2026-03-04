@@ -178,7 +178,7 @@ export const ImageSelectTable = (props: Props) => {
         <Box sx={{ flex: 1, minWidth: 150, maxWidth: 250 }}>
           <Autocomplete
             data-pendo-id={pendoIDs.tagFilterSelect}
-            label=""
+            label="Filter by tag"
             noMarginTop
             onChange={(_, value) => {
               setSelectedTag((value as null | OptionType)?.value ?? null);
@@ -186,14 +186,16 @@ export const ImageSelectTable = (props: Props) => {
             }}
             options={tagOptions}
             placeholder="Filter by tag"
-            sx={{ paddingBottom: '9px' }} // to align with search field
+            textFieldProps={{
+              hideLabel: true,
+            }}
             value={selectedTagOption}
           />
         </Box>
         <Box sx={{ flex: 1, minWidth: 150, maxWidth: 250 }}>
           <Autocomplete
             data-pendo-id={pendoIDs.regionFilterSelect}
-            label=""
+            label="Filter by region"
             noMarginTop
             onChange={(_, value) => {
               setSelectedRegion((value as null | OptionType)?.value ?? null);
@@ -201,7 +203,9 @@ export const ImageSelectTable = (props: Props) => {
             }}
             options={regionOptions}
             placeholder="Filter by region"
-            sx={{ paddingBottom: '9px' }} // to align with search field
+            textFieldProps={{
+              hideLabel: true,
+            }}
             value={selectedRegionOption}
           />
         </Box>
