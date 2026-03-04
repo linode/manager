@@ -9,7 +9,8 @@ import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
-  useGetListMyDelegatedChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useMyDelegatedChildAccountsQuery: vi.fn().mockReturnValue({}),
+  useChildAccountsInfiniteQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -17,8 +18,9 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
-    useGetListMyDelegatedChildAccountsQuery:
-      queryMocks.useGetListMyDelegatedChildAccountsQuery,
+    useMyDelegatedChildAccountsQuery:
+      queryMocks.useMyDelegatedChildAccountsQuery,
+    useChildAccountsInfiniteQuery: queryMocks.useChildAccountsInfiniteQuery,
   };
 });
 
@@ -29,15 +31,31 @@ const props = {
 };
 
 describe('SwitchAccountDrawer', () => {
+  const accounts = accountFactory.buildList(5, {
+    company: 'Test Account 1',
+    euuid: '123',
+  });
+
   beforeEach(() => {
     queryMocks.useProfile.mockReturnValue({});
-    queryMocks.useGetListMyDelegatedChildAccountsQuery.mockReturnValue({
-      data: accountFactory.buildList(5, {
-        company: 'Test Account 1',
-        euuid: '123',
-      }),
+    queryMocks.useMyDelegatedChildAccountsQuery.mockReturnValue({
+      data: { data: accounts, results: accounts.length, page: 1, pages: 1 },
       isLoading: false,
       isRefetching: false,
+    });
+    queryMocks.useChildAccountsInfiniteQuery.mockReturnValue({
+      data: {
+        pages: [
+          { data: accounts, results: accounts.length, page: 1, pages: 1 },
+        ],
+        pageParams: [],
+      },
+      isInitialLoading: false,
+      isRefetching: false,
+      isFetchingNextPage: false,
+      hasNextPage: false,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
     });
   });
 
