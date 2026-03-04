@@ -68,7 +68,7 @@ export const CloudPulseDashboardSelect = React.memo(
     // Get formatted enabled service types based on the LD flag
     const serviceTypes: CloudPulseServiceType[] = serviceType
       ? [serviceType]
-      : getEnabledServiceTypes(serviceTypesList, aclpServices);
+      : [...getEnabledServiceTypes(serviceTypesList, aclpServices), 'logs'];
 
     const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
       (serviceTypesList?.data || [])

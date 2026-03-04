@@ -3789,9 +3789,6 @@ export const handlers = [
   http.put('*/monitor/alert-channels/:id', () => {
     return HttpResponse.json(notificationChannelFactory.build());
   }),
-  http.get('*/v4beta/monitor/streams', ({ params }) => {
-    return HttpResponse.json(makeResourcePage(streamFactory.buildList(5)));
-  }),
   http.get('*/monitor/alert-channels/:id', ({ params }) => {
     if (params.id === undefined) {
       return HttpResponse.json({}, { status: 404 });
