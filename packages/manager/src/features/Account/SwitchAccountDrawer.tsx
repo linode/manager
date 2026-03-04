@@ -269,7 +269,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         </Stack>
       ) : (
         <>
-          {childAccounts && childAccounts.length !== 0 && (
+          {((childAccounts && childAccounts.length !== 0) || searchQuery) && (
             <DebouncedSearchTextField
               clearable
               debounceTime={250}
@@ -283,7 +283,8 @@ export const SwitchAccountDrawer = (props: Props) => {
               value={searchQuery}
             />
           )}
-          {searchQuery &&
+          {isIAMDelegationEnabled &&
+            searchQuery &&
             childAccounts &&
             childAccounts.length === 0 &&
             !isLoading && (
