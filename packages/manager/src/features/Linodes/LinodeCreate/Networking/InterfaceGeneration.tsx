@@ -85,9 +85,7 @@ export const InterfaceGeneration = () => {
           label={
             <Stack mt={1.25} spacing={0.5}>
               <Stack direction="row">
-                <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                  Linode Interfaces (Recommended)
-                </Typography>
+                <Typography>Linode Interfaces (Recommended)</Typography>
                 <LinodeInterfaceFeatureStatusChip />
                 <TooltipIcon
                   status="info"
@@ -126,9 +124,7 @@ export const InterfaceGeneration = () => {
           disabled={disabled}
           label={
             <Stack direction="row" mt={1.25} spacing={0.5}>
-              <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                Configuration Profile Interfaces (Legacy)
-              </Typography>
+              <Typography>Configuration Profile Interfaces (Legacy)</Typography>
               <TooltipIcon
                 status="info"
                 sxTooltipIcon={{
