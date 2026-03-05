@@ -15,26 +15,16 @@ export type ShareGroupsType =
   | 'membership-requests'
   | 'owned-groups';
 
-export interface ImageSubTab {
+/**
+ * Generic configuration for image sub-tabs within the Images feature for Image Library and Share Groups.
+ */
+export interface ImageSubTab<T> {
   /** Whether this tab represents a beta feature */
   isBeta?: boolean;
   /** Display title for the tab */
   title: string;
-
   /** The type this tab represents */
-  type: ImageLibraryType | ShareGroupsType | undefined;
-}
-/**
- * Configuration for image sub-tabs within the Image Library tab.
- */
-export interface ImageLibrarySubTab extends ImageSubTab {
-  /** The type this tab represents */
-  type: ImageLibraryType;
-}
-
-export interface ShareGroupsSubTab extends ImageSubTab {
-  /** The type this tab represents */
-  type: ShareGroupsType;
+  type: T;
 }
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
@@ -98,7 +88,7 @@ export const useIsPrivateImageSharingEnabled = () => {
  * @returns the index of the selected sub-tab
  */
 export const getSubTabIndex = (
-  subTabs: ImageSubTab[],
+  subTabs: ImageSubTab<ImageLibraryType | ShareGroupsType>[],
   selectedTab: ImageLibraryType | ShareGroupsType | undefined
 ) => {
   if (selectedTab === undefined) {

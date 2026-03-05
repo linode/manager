@@ -12,7 +12,7 @@ import {
   useIsPrivateImageSharingEnabled,
 } from './utils';
 
-import type { ImageLibrarySubTab } from './utils';
+import type { ImageLibraryType, ImageSubTab } from './utils';
 
 describe('getImageLabelForLinode', () => {
   it('handles finding an image and getting the label', () => {
@@ -95,7 +95,7 @@ describe('useIsPrivateImageSharingEnabled', () => {
 });
 
 describe('getImageLibrarySubTabIndex', () => {
-  const subTabs: ImageLibrarySubTab[] = [
+  const subTabs: ImageSubTab<ImageLibraryType>[] = [
     { type: 'owned-by-me', title: 'Owned by me' },
     { type: 'shared-with-me', title: 'Shared with me', isBeta: true },
     { type: 'recovery-images', title: 'Recovery images' },

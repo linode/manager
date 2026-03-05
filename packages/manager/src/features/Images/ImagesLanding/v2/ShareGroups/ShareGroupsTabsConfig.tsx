@@ -1,6 +1,6 @@
-import type { ShareGroupsSubTab } from 'src/features/Images/utils';
+import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
 
-export const shareGroupsSubTabs: ShareGroupsSubTab[] = [
+export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
   {
     type: 'owned-groups',
     title: 'Owned groups',
