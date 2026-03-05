@@ -11,6 +11,9 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
   useMyDelegatedChildAccountsQuery: vi.fn().mockReturnValue({}),
   useChildAccountsInfiniteQuery: vi.fn().mockReturnValue({}),
+  useIsIAMDelegationEnabled: vi
+    .fn()
+    .mockReturnValue({ isIAMDelegationEnabled: true }),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -24,6 +27,16 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/useIsIAMEnabled', async () => {
+  const actual = await vi.importActual(
+    'src/features/IAM/hooks/useIsIAMEnabled'
+  );
+  return {
+    ...actual,
+    useIsIAMDelegationEnabled: queryMocks.useIsIAMDelegationEnabled,
+  };
+});
+
 const props = {
   onClose: vi.fn(),
   open: true,
@@ -33,11 +46,13 @@ const props = {
 describe('SwitchAccountDrawer', () => {
   const accounts = accountFactory.buildList(5, {
     company: 'Test Account 1',
-    euuid: '123',
   });
 
   beforeEach(() => {
     queryMocks.useProfile.mockReturnValue({});
+    queryMocks.useIsIAMDelegationEnabled.mockReturnValue({
+      isIAMDelegationEnabled: true,
+    });
     queryMocks.useMyDelegatedChildAccountsQuery.mockReturnValue({
       data: { data: accounts, results: accounts.length, page: 1, pages: 1 },
       isLoading: false,
@@ -111,5 +126,21 @@ describe('SwitchAccountDrawer', () => {
     await waitFor(() => {
       expect(props.onClose).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should display an empty state when no child accounts are found', async () => {
+    queryMocks.useMyDelegatedChildAccountsQuery.mockReturnValue({
+      data: { data: [], results: 0, page: 1, pages: 1 },
+      isLoading: false,
+      isRefetching: false,
+    });
+    const { getByText } = renderWithTheme(<SwitchAccountDrawer {...props} />);
+
+    expect(getByText('You don’t have access to other accounts.')).toBeVisible();
+    expect(
+      getByText(
+        'You must be added to a delegation by an account administrator to have access to other accounts.'
+      )
+    ).toBeVisible();
   });
 });

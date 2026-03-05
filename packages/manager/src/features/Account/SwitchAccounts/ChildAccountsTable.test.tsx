@@ -28,7 +28,6 @@ const props: ChildAccountsTableProps = {
   setIsSwitchingChildAccounts: vi.fn(),
   totalResults: 0,
   userType: undefined,
-  filter: {},
   isLoading: false,
   isSwitchingChildAccounts: false,
   onClose: vi.fn(),
@@ -64,17 +63,5 @@ describe('ChildAccountsTable', () => {
     );
 
     expect(getByTestId('child-accounts-table-pagination')).toBeVisible();
-  });
-
-  it('should display an empty state when no child accounts are found', async () => {
-    const { getByText } = renderWithTheme(
-      <ChildAccountsTable {...props} childAccounts={[]} />
-    );
-
-    expect(
-      getByText(
-        /You don't have access to other accounts. You must be added to a delegation by an account administrator to have access to other accounts./
-      )
-    ).toBeInTheDocument();
   });
 });
