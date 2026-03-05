@@ -116,7 +116,7 @@ export const LinodeCreate = () => {
 
   const handleAlertsModeChange = React.useCallback(
     (isBeta: boolean) => {
-      // Initialize alerts to empty defaults when entering ACLP mode so that
+      // Reset alerts to empty defaults when entering ACLP mode so that
       // previously selected alerts don't persist across mode toggles. While in
       // legacy mode the alerts field is ignored by the payload builder, so
       // there is no need to clear it when switching back to legacy mode.
