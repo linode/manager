@@ -113,7 +113,7 @@ describe('getImageLibrarySubTabIndex', () => {
 
   it('returns 0 if selectedTab does not exist in subTabs', () => {
     // @ts-expect-error intentionally passing an unexpected value
-    expect(getImageLibrarySubTabIndex(subTabs, 'hey')).toBe(0);
+    expect(getSubTabIndex(subTabs, 'hey')).toBe(0);
   });
 
   it('works with an empty subTabs array', () => {
