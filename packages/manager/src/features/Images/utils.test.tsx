@@ -7,8 +7,8 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   getEventsForImages,
   getImageLabelForLinode,
-  getImageLibrarySubTabIndex,
   getImageTypeToImageLibraryType,
+  getSubTabIndex,
   useIsPrivateImageSharingEnabled,
 } from './utils';
 
@@ -102,13 +102,13 @@ describe('getImageLibrarySubTabIndex', () => {
   ];
 
   it('returns 0 if selectedTab is undefined', () => {
-    expect(getImageLibrarySubTabIndex(subTabs, undefined)).toBe(0);
+    expect(getSubTabIndex(subTabs, undefined)).toBe(0);
   });
 
   it('returns the correct index when selectedTab matches a tab key', () => {
-    expect(getImageLibrarySubTabIndex(subTabs, 'owned-by-me')).toBe(0);
-    expect(getImageLibrarySubTabIndex(subTabs, 'shared-with-me')).toBe(1);
-    expect(getImageLibrarySubTabIndex(subTabs, 'recovery-images')).toBe(2);
+    expect(getSubTabIndex(subTabs, 'owned-by-me')).toBe(0);
+    expect(getSubTabIndex(subTabs, 'shared-with-me')).toBe(1);
+    expect(getSubTabIndex(subTabs, 'recovery-images')).toBe(2);
   });
 
   it('returns 0 if selectedTab does not exist in subTabs', () => {
@@ -117,7 +117,7 @@ describe('getImageLibrarySubTabIndex', () => {
   });
 
   it('works with an empty subTabs array', () => {
-    expect(getImageLibrarySubTabIndex([], 'owned-by-me')).toBe(0);
+    expect(getSubTabIndex([], 'owned-by-me')).toBe(0);
   });
 });
 

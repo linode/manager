@@ -10,16 +10,31 @@ export type ImageLibraryType =
   | 'recovery-images'
   | 'shared-with-me';
 
-/**
- * Configuration for image sub-tabs within the Image Library tab.
- */
-export interface ImageLibrarySubTab {
+export type ShareGroupsType =
+  | 'joined-groups'
+  | 'membership-requests'
+  | 'owned-groups';
+
+export interface ImageSubTab {
   /** Whether this tab represents a beta feature */
   isBeta?: boolean;
   /** Display title for the tab */
   title: string;
+
+  /** The type this tab represents */
+  type: ImageLibraryType | ShareGroupsType | undefined;
+}
+/**
+ * Configuration for image sub-tabs within the Image Library tab.
+ */
+export interface ImageLibrarySubTab extends ImageSubTab {
   /** The type this tab represents */
   type: ImageLibraryType;
+}
+
+export interface ShareGroupsSubTab extends ImageSubTab {
+  /** The type this tab represents */
+  type: ShareGroupsType;
 }
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
@@ -82,9 +97,9 @@ export const useIsPrivateImageSharingEnabled = () => {
  *
  * @returns the index of the selected sub-tab
  */
-export const getImageLibrarySubTabIndex = (
-  subTabs: ImageLibrarySubTab[],
-  selectedTab: ImageLibraryType | undefined
+export const getSubTabIndex = (
+  subTabs: ImageSubTab[],
+  selectedTab: ImageLibraryType | ShareGroupsType | undefined
 ) => {
   if (selectedTab === undefined) {
     return 0;
