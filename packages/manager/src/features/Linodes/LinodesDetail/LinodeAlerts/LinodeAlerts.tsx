@@ -70,6 +70,10 @@ const LinodeAlerts = () => {
     CloudPulseAlertsPayload | undefined
   >();
 
+  // Track whether ACLP alerts have finished loading without error
+  const [isAclpAlertsReady, setIsAclpAlertsReady] =
+    React.useState<boolean>(false);
+
   const unifiedAlertsContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Helper to extract general/root errors from API errors array
@@ -243,6 +247,7 @@ const LinodeAlerts = () => {
                     <AlertReusableComponent
                       entityId={linodeId.toString()}
                       entityName={linode?.label ?? ''}
+                      onStatusChange={setIsAclpAlertsReady}
                       onToggleAlert={(payload, hasUnsavedChanges) => {
                         setAclpAlertsPayload(payload);
                         setHasAclpAlertsUnsavedChanges(
@@ -263,6 +268,7 @@ const LinodeAlerts = () => {
                       'data-testid': 'unified-alerts-save',
                       disabled:
                         (!formik.dirty && !hasAclpAlertsUnsavedChanges) ||
+                        !isAclpAlertsReady ||
                         isUpdatingLinode,
                       label: 'Save Alerts',
                       loading: isUpdatingLinode,

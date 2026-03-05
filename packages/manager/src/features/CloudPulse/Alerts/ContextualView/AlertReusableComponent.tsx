@@ -43,6 +43,15 @@ interface AlertReusableComponentProps {
   isLegacyAlertAvailable?: boolean;
 
   /**
+   * Called when this component's ready state changes.
+   * Receives `true` when alerts have loaded successfully, or `false`
+   * when alerts are still loading or failed to load due to an error.
+   * Service owners can use this to enable or disable save buttons that depend
+   * on the readiness of this component before allowing any action.
+   */
+  onStatusChange?: (isReady: boolean) => void;
+
+  /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
    * @param hasUnsavedChanges boolean to check if there are unsaved changes
@@ -73,6 +82,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     entityId,
     entityName,
     onToggleAlert,
+    onStatusChange,
     paperSx,
     serviceType,
     regionId,
@@ -83,6 +93,10 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     error,
     isLoading,
   } = useAlertDefinitionByServiceTypeQuery(serviceType);
+
+  React.useEffect(() => {
+    onStatusChange?.(!isLoading && !error);
+  }, [isLoading, error, onStatusChange]);
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [selectedType, setSelectedType] = React.useState<
