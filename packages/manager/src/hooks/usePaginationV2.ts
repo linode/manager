@@ -143,10 +143,15 @@ export const usePaginationV2 = <T extends TableSearchParams, D = unknown>({
   }, [clientSidePaginationData, clampedPage, pageSize]);
 
   React.useEffect(() => {
-    if (paginatedData !== undefined && clampedPage !== page) {
+    if (
+      paginatedData !== undefined &&
+      totalCount !== undefined &&
+      totalCount > 0 &&
+      clampedPage !== page
+    ) {
       setPage(clampedPage);
     }
-  }, [clampedPage, page, paginatedData, setPage]);
+  }, [clampedPage, page, paginatedData, setPage, totalCount]);
 
   return {
     handlePageChange: setPage,

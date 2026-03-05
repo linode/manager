@@ -2,6 +2,7 @@ import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { interceptGetAccountAvailability } from 'support/intercepts/account';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { interceptGetAllImages } from 'support/intercepts/images';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import {
@@ -9,6 +10,7 @@ import {
   interceptGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
 import { chooseImage } from 'support/util/images';
@@ -18,10 +20,16 @@ import {
   pollLinodeDiskSize,
   pollLinodeStatus,
 } from 'support/util/polling';
-import { randomLabel, randomPhrase, randomString } from 'support/util/random';
+import {
+  randomLabel,
+  randomNumber,
+  randomPhrase,
+  randomString,
+} from 'support/util/random';
 import { chooseRegion, getRegionByLabel } from 'support/util/regions';
 
 import { getFilteredImagesForImageSelect } from 'src/components/ImageSelect/utilities';
+import { firewallFactory } from 'src/factories';
 
 import type { Image } from '@linode/api-v4';
 
@@ -179,6 +187,11 @@ const createLinodeAndImage = async () => {
   return image;
 };
 
+const mockFirewall = firewallFactory.build({
+  id: randomNumber(),
+  label: randomLabel(),
+});
+
 authenticate();
 describe('Create stackscripts', () => {
   before(() => {
@@ -186,6 +199,7 @@ describe('Create stackscripts', () => {
   });
   beforeEach(() => {
     cy.tag('method:e2e', 'purpose:dcTesting');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
   });
 
   /*
@@ -288,6 +302,11 @@ describe('Create stackscripts', () => {
     cy.findByLabelText('Example Title').should('be.visible').click();
     cy.focused().type('{selectall}{backspace}');
     cy.focused().type(randomString(12));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      'No firewall - traffic is unprotected (not recommended)',
+      'Public Interface Firewall'
+    );
 
     ui.button
       .findByTitle('Create Linode')
@@ -389,6 +408,11 @@ describe('Create stackscripts', () => {
       cy.findByText(privateImage.label).as('qaPrivateImage').scrollIntoView();
       cy.get('@qaPrivateImage').should('be.visible').click();
 
+      // Select a firewall
+      linodeCreatePage.selectFirewall(
+        'No firewall - traffic is unprotected (not recommended)',
+        'Public Interface Firewall'
+      );
       interceptCreateLinode().as('createLinode');
       fillOutLinodeForm(
         linodeLabel,

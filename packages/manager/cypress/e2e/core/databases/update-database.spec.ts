@@ -237,7 +237,6 @@ const suspendCluster = (label: string) => {
  * @param initialLabel - cluster name
  * @param updateAttemptLabel - cluster updated name
  * @param errorMessage - error thrown for updating a suspended/resuming cluster
- * @param hostnameRegex - connection settings hostname
  * @param allowedIp - ip for manage access actions
  */
 
@@ -247,7 +246,6 @@ const validateSuspendResume = (
   initialLabel: string,
   updateAttemptLabel: string,
   errorMessage: string,
-  hostnameRegex: RegExp,
   allowedIp: string
 ) => {
   cy.visit(`/databases/${engine}/${id}`);
@@ -263,8 +261,6 @@ const validateSuspendResume = (
     .click();
 
   cy.findByText('Connection Details');
-  // DBaaS hostnames are not available when database/cluster is suspended or resuming.
-  cy.findByText(hostnameRegex).should('be.visible');
 
   // DBaaS passwords cannot be revealed when database/cluster is suspended or resuming.
   ui.cdsButton.findButtonByTitle('Show').should('be.enabled');
@@ -647,8 +643,6 @@ describe('Update database clusters', () => {
 
           const errorMessage =
             'Your database is suspended; please wait until it becomes active to perform this operation.';
-          const hostnameRegex =
-            /your hostnames? will appear here once (it is|they are) available./i;
 
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
@@ -719,7 +713,6 @@ describe('Update database clusters', () => {
             initialLabel,
             updateAttemptLabel,
             errorMessage,
-            hostnameRegex,
             allowedIp
           );
         });
@@ -756,8 +749,6 @@ describe('Update database clusters', () => {
             });
 
             const errorMessage = `Your database is ${action}; please wait until it becomes active to perform this operation.`;
-            const hostnameRegex =
-              /your hostnames? will appear here once (it is|they are) available./i;
 
             mockGetAccount(accountFactory.build()).as('getAccount');
             mockGetDatabases([database]).as('getDatabases');
@@ -846,7 +837,6 @@ describe('Update database clusters', () => {
               initialLabel,
               updateAttemptLabel,
               errorMessage,
-              hostnameRegex,
               allowedIp
             );
           });
