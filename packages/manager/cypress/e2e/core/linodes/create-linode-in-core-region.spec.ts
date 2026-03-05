@@ -1,5 +1,6 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
   mockGetRegionAvailability,
@@ -8,6 +9,9 @@ import {
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
+import { randomNumber } from 'support/util/random';
+
+import { firewallFactory } from 'src/factories';
 
 describe('Create Linode in a Core Region', () => {
   /*
@@ -30,6 +34,10 @@ describe('Create Linode in a Core Region', () => {
       region: mockRegion1.id,
     });
     const rootPass = randomString(32);
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
 
     mockAppendFeatureFlags({
       gecko2: {
@@ -39,6 +47,7 @@ describe('Create Linode in a Core Region', () => {
     }).as('getFeatureFlags');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetRegionAvailability(mockRegion1.id, []).as('getRegionAvailability');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
@@ -55,6 +64,11 @@ describe('Create Linode in a Core Region', () => {
     linodeCreatePage.selectImage('Debian 11');
     linodeCreatePage.setRootPassword(rootPass);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     ui.button
       .findByTitle('Create Linode')

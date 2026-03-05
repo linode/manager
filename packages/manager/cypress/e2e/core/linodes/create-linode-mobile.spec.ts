@@ -4,11 +4,14 @@
 
 import { linodeFactory } from '@linode/utilities';
 import { MOBILE_VIEWPORTS } from 'support/constants/environment';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { firewallFactory } from 'src/factories';
 
 describe('Linode create mobile smoke', () => {
   MOBILE_VIEWPORTS.forEach((viewport) => {
@@ -23,7 +26,11 @@ describe('Linode create mobile smoke', () => {
         label: randomLabel(),
         region: mockLinodeRegion.id,
       });
-
+      const mockFirewall = firewallFactory.build({
+        id: randomNumber(),
+        label: randomLabel(),
+      });
+      mockGetFirewalls([mockFirewall]).as('getFirewalls');
       mockCreateLinode(mockLinode).as('createLinode');
 
       cy.viewport(viewport.width, viewport.height);
@@ -34,6 +41,11 @@ describe('Linode create mobile smoke', () => {
       linodeCreatePage.selectPlanCard('Shared CPU', 'Nanode 1 GB');
       linodeCreatePage.setLabel(mockLinode.label);
       linodeCreatePage.setRootPassword(randomString(32));
+      // Select a firewall
+      linodeCreatePage.selectFirewall(
+        mockFirewall.label,
+        'Public Interface Firewall'
+      );
 
       cy.get('[data-qa-linode-create-summary]').scrollIntoView();
       cy.get('[data-qa-linode-create-summary]').within(() => {

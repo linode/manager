@@ -1,5 +1,6 @@
 import { linodeFactory, sshKeyFactory } from '@linode/utilities';
 import { mockGetUser, mockGetUsers } from 'support/intercepts/account';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockCreateSSHKey } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
@@ -7,9 +8,13 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { accountUserFactory } from 'src/factories';
+import { accountUserFactory, firewallFactory } from 'src/factories';
 
 describe('Create Linode with SSH Key', () => {
+  const mockFirewall = firewallFactory.build({
+    id: randomNumber(),
+    label: randomLabel(),
+  });
   /*
    * - Confirms UI flow when creating a Linode with an authorized SSH key.
    * - Confirms that existing SSH keys are listed on page and can be selected.
@@ -34,6 +39,7 @@ describe('Create Linode with SSH Key', () => {
 
     mockGetUsers([mockUser]);
     mockGetUser(mockUser);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
 
     cy.visitWithLogin('/linodes/create');
@@ -43,6 +49,11 @@ describe('Create Linode with SSH Key', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // Confirm that SSH key is listed, then select it.
     cy.findByText(mockSshKey.label).scrollIntoView();
@@ -101,6 +112,7 @@ describe('Create Linode with SSH Key', () => {
     mockGetUsers([mockUser]);
     mockCreateLinode(mockLinode).as('createLinode');
     mockCreateSSHKey(mockSshKey).as('createSSHKey');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin('/linodes/create');
 
@@ -109,6 +121,11 @@ describe('Create Linode with SSH Key', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // Confirm that no SSH keys are listed for the mocked user.
     cy.findByText(mockUser.username).scrollIntoView();
