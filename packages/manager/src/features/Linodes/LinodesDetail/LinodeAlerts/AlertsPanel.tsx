@@ -98,7 +98,7 @@ export const AlertsPanel = (props: Props) => {
     );
   }
 
-  // Standalone mode: self-contained, owns its own save logic.
+  // Standalone Legacy mode: self-contained, owns its own save logic.
   return <AlertsPanelStandalone {...props} linodeId={linodeId} />;
 };
 
