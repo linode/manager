@@ -1,4 +1,5 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
 import {
   mockCreateLinode,
@@ -10,7 +11,7 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { imageFactory } from 'src/factories';
+import { firewallFactory, imageFactory } from 'src/factories';
 
 describe('Create Linode with user data', () => {
   /*
@@ -26,10 +27,15 @@ describe('Create Linode with user data', () => {
       label: randomLabel(),
       region: linodeRegion.id,
     });
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
     const userDataFixturePath = 'user-data/user-data-config-basic.yml';
 
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin('/linodes/create');
 
@@ -40,6 +46,11 @@ describe('Create Linode with user data', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // Expand "Add User Data" accordion and enter user data config.
     ui.accordionHeading
