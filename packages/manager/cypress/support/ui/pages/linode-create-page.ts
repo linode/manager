@@ -157,4 +157,30 @@ export const linodeCreatePage = {
   selectInterface: (type: 'public' | 'vlan' | 'vpc') => {
     cy.get(`[data-qa-interface-type-option="${type}"]`).click();
   },
+
+  /**
+   * Selects a firewall from the firewall dropdown.
+   *
+   * @param firewallLabel - Label of the firewall to select.
+   * @param interfaceType - Optional interface type for the firewall dropdown label (e.g., 'Public Interface Firewall', 'VPC Interface Firewall').
+   */
+  selectFirewall: (
+    firewallLabel: string,
+    dropdownLabel:
+      | 'Assign Firewall'
+      | 'Firewall'
+      | 'Public Interface Firewall'
+      | 'VPC Interface Firewall'
+  ) => {
+    cy.findByLabelText(dropdownLabel).should('be.visible');
+    cy.get(`[data-qa-autocomplete="${dropdownLabel}"]`).within(() => {
+      cy.get('[data-testid="textfield-input"]').click();
+      cy.focused().type(firewallLabel);
+    });
+
+    ui.autocompletePopper
+      .findByTitle(firewallLabel)
+      .should('be.visible')
+      .click();
+  },
 };

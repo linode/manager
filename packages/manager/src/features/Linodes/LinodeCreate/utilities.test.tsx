@@ -489,6 +489,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               vpc: null,
               default_route: null,
               vlan: null,
+              firewall_id: null,
             },
           ],
           'linode'
@@ -545,6 +546,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               public: null,
               default_route: null,
               vlan: { vlan_label: 'my-vlan-1' },
+              firewall_id: null,
             },
           ],
           'linode'
@@ -565,6 +567,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               vpc: null,
               vlan: null,
               default_route: null,
+              firewall_id: null,
             },
             {
               vpc: null,
@@ -572,6 +575,7 @@ describe('getDoesEmployeeNeedToAssignFirewall', () => {
               public: null,
               default_route: null,
               vlan: { vlan_label: 'my-vlan-1' },
+              firewall_id: null,
             },
           ],
           'linode'
