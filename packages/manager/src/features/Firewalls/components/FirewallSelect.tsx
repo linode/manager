@@ -10,6 +10,8 @@ import { FirewallSelectOption } from './FirewallSelectOption';
 import type { Firewall } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from '@linode/ui';
 
+// -1 is used as the value for the "firewall_id" if user doesn't want to use a firewall.
+// If null or undefined were used instead, the API would default to using the default firewall, which is not the intended behavior when a user explicitly selects "No firewall".
 const NO_FIREWALL_ID = -1;
 
 const noFirewallOption = {

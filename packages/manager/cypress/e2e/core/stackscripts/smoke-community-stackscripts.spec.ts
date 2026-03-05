@@ -1,6 +1,5 @@
 import { getProfile } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
-import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import {
@@ -11,10 +10,10 @@ import {
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
-import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { firewallFactory, stackScriptFactory } from 'src/factories';
+import { stackScriptFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Profile, StackScript } from '@linode/api-v4';
@@ -286,16 +285,11 @@ describe('Community Stackscripts integration tests', () => {
     const image = 'AlmaLinux 9';
     const region = chooseRegion({ capabilities: ['Linodes', 'Vlans'] });
     const linodeLabel = randomLabel();
-    const mockFirewall = firewallFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-    });
 
     // Ensure that the Primary Nav is open
     mockGetUserPreferences({ desktop_sidebar_open: false }).as(
       'getPreferences'
     );
-    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin('/stackscripts/community');
     cy.wait(['@getStackScripts', '@getPreferences']);

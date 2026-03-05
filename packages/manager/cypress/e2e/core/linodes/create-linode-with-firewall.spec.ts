@@ -904,6 +904,150 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
   });
 
   /*
+   * Legacy Configuration Profile Interfaces
+   * - Confirms UI flow to create a Linode with "No firewall" option.
+   * - Confirms that no firewall is reflected in create summary section.
+   * - Confirms that outgoing Linode Create API request specifies no Firewall to be attached.
+   */
+  it('can assign "No firewall" option during Linode Create flow (legacy)', () => {
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: linodeRegion.id,
+    });
+
+    mockCreateLinode(mockLinode).as('createLinode');
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+
+    cy.visitWithLogin('/linodes/create');
+
+    linodeCreatePage.setLabel(mockLinode.label);
+    linodeCreatePage.selectImage('Debian 12');
+    linodeCreatePage.selectRegionById(linodeRegion.id);
+    linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Confirm the Linode Interfaces section is shown.
+    assertNewLinodeInterfacesIsAvailable();
+
+    // Switch to legacy Config Interfaces
+    linodeCreatePage.selectLegacyConfigInterfacesType();
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      'No firewall - traffic is unprotected (not recommended)',
+      'Firewall'
+    );
+
+    // Create Linode and confirm contents of outgoing API request payload.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createLinode').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      const firewallId = requestPayload['firewall_id'];
+      expect(firewallId).to.equal(-1);
+    });
+
+    // Confirm redirect to new Linode.
+    cy.url().should('endWith', `/linodes/${mockLinode.id}`);
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
+  });
+
+  /*
+   * Linode Interfaces
+   * - Confirms UI flow to create a Linode with "No firewall" option.
+   * - Confirms that no firewall is reflected in create summary section.
+   * - Confirms that outgoing Linode Create API request specifies no Firewall to be attached.
+   */
+  it('can assign "No firewall" option during Linode Create flow (Linode Interfaces)', () => {
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: linodeRegion.id,
+    });
+
+    mockCreateLinode(mockLinode).as('createLinode');
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+
+    cy.visitWithLogin('/linodes/create');
+
+    linodeCreatePage.setLabel(mockLinode.label);
+    linodeCreatePage.selectImage('Debian 12');
+    linodeCreatePage.selectRegionById(linodeRegion.id);
+    linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Confirm the Linode Interfaces section is shown.
+    assertNewLinodeInterfacesIsAvailable();
+
+    linodeCreatePage.selectFirewall(
+      'No firewall - traffic is unprotected (not recommended)',
+      'Public Interface Firewall'
+    );
+
+    // Create Linode and confirm contents of outgoing API request payload.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@createLinode').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      const firewallId = requestPayload['interfaces'][0]['firewall_id'];
+      expect(firewallId).to.equal(-1);
+    });
+
+    // Confirm redirect to new Linode.
+    cy.url().should('endWith', `/linodes/${mockLinode.id}`);
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
+  });
+
+  /*
+   * Mocks no selection made in firewall dropdown.
+   * Confirms that correct validation error message is shown on the page when attempting to create a Linode.
+   */
+  it('displays validation error related to firewall if no selection made in firewall dropdown', () => {
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: linodeRegion.id,
+    });
+
+    mockCreateLinode(mockLinode).as('createLinode');
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+
+    cy.visitWithLogin('/linodes/create');
+
+    linodeCreatePage.setLabel(mockLinode.label);
+    linodeCreatePage.selectImage('Debian 12');
+    linodeCreatePage.selectRegionById(linodeRegion.id);
+    linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Confirm the Linode Interfaces section is shown.
+    assertNewLinodeInterfacesIsAvailable();
+
+    // Create Linode and confirm contents of outgoing API request payload.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm the correct validation error related to firewall show up on the page.
+    cy.findByText('Select an option or create a new Firewall.').should(
+      'be.visible'
+    );
+  });
+
+  /*
    * - Mocks the internal header to enable the Generate Compliant Firewall banner.
    * - Mocks an error response to the Create Firewall call.
    */
