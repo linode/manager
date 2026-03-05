@@ -136,9 +136,7 @@ export const InterfaceType = ({ index }: Props) => {
             key={interfaceType.purpose}
             label={
               <Stack direction="row" mt={1.25} spacing={0.5}>
-                <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                  {interfaceType.label}
-                </Typography>
+                <Typography>{interfaceType.label}</Typography>
                 <TooltipIcon
                   status="info"
                   sxTooltipIcon={{ p: 0, ml: 0.5 }}

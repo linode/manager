@@ -58,18 +58,11 @@ export const AddInterfaceForm = (props: Props) => {
     async resolver(rawValues, context, options) {
       const valuesWithOnlySelectedInterface = getCleanedLinodeInterfaceValues(
         structuredClone(rawValues)
-      );
+      ) as CreateInterfaceFormValues;
 
       const { errors, values } = await yupResolver(
         CreateLinodeInterfaceFormSchema
-      )(
-        {
-          ...valuesWithOnlySelectedInterface,
-          firewall_id: valuesWithOnlySelectedInterface.firewall_id!,
-        },
-        context,
-        options
-      );
+      )(valuesWithOnlySelectedInterface, context, options);
 
       if (errors) {
         return { errors, values };
