@@ -39,9 +39,9 @@ export const InterfaceType = (props: Props) => {
     field.onChange(value);
 
     // VLAN interfaces do not support Firewalls, so set
-    // the Firewall ID to `null` to be safe and early return.
+    // the Firewall ID to `-1` to be safe and early return.
     if (value === 'vlan') {
-      setValue('firewall_id', null);
+      setValue('firewall_id', -1);
       return;
     }
 

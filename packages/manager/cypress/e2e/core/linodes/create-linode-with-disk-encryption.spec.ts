@@ -3,9 +3,10 @@ import {
   linodeTypeFactory,
   regionFactory,
 } from '@linode/utilities';
-import { accountFactory } from '@src/factories';
+import { accountFactory, firewallFactory } from '@src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeTypes,
@@ -17,7 +18,7 @@ import {
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel, randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
 import {
@@ -156,6 +157,10 @@ describe('Create Linode with Disk Encryption', () => {
           label: randomLabel(),
           region: distributedRegion.id,
         });
+        const mockFirewall = firewallFactory.build({
+          id: randomNumber(),
+          label: randomLabel(),
+        });
 
         mockAppendFeatureFlags({
           gecko2: {
@@ -167,6 +172,7 @@ describe('Create Linode with Disk Encryption', () => {
         mockGetLinodeTypes([mockLinodeType]);
         mockGetRegionAvailability(distributedRegion.id, []);
         mockCreateLinode(mockLinode).as('createLinode');
+        mockGetFirewalls([mockFirewall]).as('getFirewalls');
         cy.visitWithLogin('/linodes/create');
 
         cy.get('[data-qa-linode-region]').within(() => {
@@ -185,7 +191,11 @@ describe('Create Linode with Disk Encryption', () => {
 
         linodeCreatePage.setLabel(mockLinode.label);
         linodeCreatePage.setRootPassword(randomString(32));
-
+        // Select a firewall
+        linodeCreatePage.selectFirewall(
+          mockFirewall.label,
+          'Public Interface Firewall'
+        );
         // Select mock Nanode plan type.
         cy.get('[data-qa-plan-row="Nanode 1 GB"]').click();
 
