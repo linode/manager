@@ -41,13 +41,18 @@ import type { DatabaseClusterConfiguration } from 'support/constants/databases';
  */
 const getFlattenDefaultConfigs = (
   engineConfig: Record<string, any>,
-  prefix = ''
+  prefix = '',
+  includePrefix = true
 ): string[] =>
   Object.entries(engineConfig).flatMap(([key, value]) => {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     return typeof value === 'object' && value !== null && !Array.isArray(value)
-      ? getFlattenDefaultConfigs(value, fullKey)
-      : [fullKey];
+      ? getFlattenDefaultConfigs(
+          value,
+          includePrefix ? fullKey : '',
+          includePrefix
+        )
+      : [includePrefix ? fullKey : key];
   });
 
 const flattenConfigsEngineLevel = (
@@ -126,15 +131,14 @@ const addConfigsToUI = (
         ? false
         : value.example;
 
+  // Get all existing config keys from engine_config (handles nested structures)
+  const existingConfigKeys = new Set(
+    getFlattenDefaultConfigs(database.engine_config, '', false)
+  );
+
   // Process new configs to be added
   const newEntries = Object.entries(configsList)
-    .filter(([key]) => {
-      // Check both the engine subfield and the top-level for the config key
-      return (
-        !(key in database.engine_config[engineType]) &&
-        !(key in database.engine_config)
-      );
-    })
+    .filter(([key]) => !existingConfigKeys.has(key))
     .slice(0, addSingle ? 1 : undefined); // Limit to 1 if addSingle, otherwise all
 
   if (newEntries.length > 0) {
