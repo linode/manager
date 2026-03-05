@@ -21,6 +21,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../hooks/usePermissions';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../Shared/constants';
+import { getPlaceholder } from '../Shared/Entities/utils';
 
 import type {
   ChildAccount,
@@ -220,7 +221,6 @@ export const UpdateDelegationForm = ({
                   }
                 }}
                 options={users}
-                placeholder="Select users"
                 renderTags={() => null}
                 slotProps={{
                   listbox: {
@@ -244,6 +244,11 @@ export const UpdateDelegationForm = ({
                   InputProps: isSelectAllFetching
                     ? { startAdornment: null }
                     : undefined,
+                  placeholder: getPlaceholder(
+                    'delegates',
+                    selectedUsers.length,
+                    totalUserCount
+                  ),
                 }}
                 value={field.value}
               />

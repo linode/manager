@@ -19,7 +19,7 @@ export const placeholderMap: Record<string, string> = {
   stackscript: 'Select Stackscripts',
   volume: 'Select Volumes',
   vpc: 'Select VPCs',
-  delegates: 'Select Users',
+  delegates: 'Select delegates',
 };
 
 export const getCreateLinkForEntityType = (entityType: AccessType): string => {
@@ -41,17 +41,17 @@ export const getPlaceholder = (
   currentValueLength: number,
   possibleEntitiesLength: number
 ): string => {
-  let placeholder: string;
-
-  if (currentValueLength > 0) {
-    placeholder = ' ';
-  } else if (possibleEntitiesLength === 0) {
-    placeholder = 'None';
-  } else {
-    placeholder = placeholderMap[type] || 'Select';
+  if (possibleEntitiesLength === 0) {
+    return 'None';
   }
 
-  return placeholder;
+  if (currentValueLength > 0 && currentValueLength >= possibleEntitiesLength) {
+    const label = placeholderMap[type] || type;
+    const subject = label.startsWith('Select ') ? label.slice(7) : label;
+    return `All ${subject} selected`;
+  }
+
+  return placeholderMap[type] || 'Select';
 };
 
 export const mapEntitiesToOptions = (
