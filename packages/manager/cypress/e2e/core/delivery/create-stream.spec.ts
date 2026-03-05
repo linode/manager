@@ -1,4 +1,5 @@
 import { streamType } from '@linode/api-v4';
+import { regionFactory } from '@linode/utilities';
 import { mockDestination } from 'support/constants/delivery';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -9,6 +10,7 @@ import {
 } from 'support/intercepts/delivery';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetClusters } from 'support/intercepts/lke';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { logsStreamForm } from 'support/ui/pages/logs-stream-form';
 import { randomLabel } from 'support/util/random';
@@ -179,25 +181,55 @@ describe('Create Stream', () => {
 
   describe('given Kubernetes API Audit Logs Stream Type', () => {
     it('selects clusters and creates new stream', () => {
+      const regionWithCapabilityAndCluster = regionFactory.build({
+        id: 'us-southeast',
+        label: 'Atlanta, GA',
+        capabilities: ['ACLP Logs Datacenter LKE-E', 'Object Storage'],
+      });
+      const regionWithCapabilityNoCluster = regionFactory.build({
+        id: 'us-chicago',
+        label: 'Chicago, IL',
+        capabilities: ['ACLP Logs Datacenter LKE-E', 'Object Storage'],
+      });
+      const regionNoCapabilityWithCluster = regionFactory.build({
+        id: 'us-west',
+        label: 'Fremont, CA',
+        capabilities: ['Object Storage'],
+      });
+
+      const cluster1 = kubernetesClusterFactory.build({
+        id: 1,
+        label: 'cluster-1',
+        region: regionWithCapabilityAndCluster.id,
+        control_plane: { audit_logs_enabled: true },
+      });
+      const cluster2 = kubernetesClusterFactory.build({
+        id: 2,
+        label: 'cluster-2',
+        region: regionWithCapabilityAndCluster.id,
+        control_plane: { audit_logs_enabled: false },
+      });
+      const cluster3 = kubernetesClusterFactory.build({
+        id: 3,
+        label: 'cluster-3',
+        region: regionWithCapabilityAndCluster.id,
+        control_plane: { audit_logs_enabled: true },
+      });
+      const clusterNoCap = kubernetesClusterFactory.build({
+        id: 4,
+        label: 'cluster-4',
+        region: regionNoCapabilityWithCluster.id,
+        control_plane: { audit_logs_enabled: true },
+      });
+
       // Mock API responses
       mockGetDestinations([mockDestination]);
-      mockGetClusters([
-        kubernetesClusterFactory.build({
-          id: 1,
-          label: 'cluster-1',
-          control_plane: { audit_logs_enabled: true },
-        }),
-        kubernetesClusterFactory.build({
-          id: 2,
-          label: 'cluster-2',
-          control_plane: { audit_logs_enabled: false },
-        }),
-        kubernetesClusterFactory.build({
-          id: 3,
-          label: 'cluster-3',
-          control_plane: { audit_logs_enabled: true },
-        }),
+      mockGetRegions([
+        regionWithCapabilityAndCluster,
+        regionWithCapabilityNoCluster,
+        regionNoCapabilityWithCluster,
       ]);
+      mockGetClusters([cluster1, cluster2, cluster3, clusterNoCap]);
 
       // Visit the Create Stream page
       cy.visitWithLogin('/logs/delivery/streams/create');
@@ -213,8 +245,32 @@ describe('Create Stream', () => {
       // Select existing destination
       logsStreamForm.selectExistingDestination(mockDestination.label);
 
+      // Expect only 'Atlanta, GA' to be in Region Select (has capability and is in clusters)
+      ui.regionSelect.find().should('be.visible').click();
+
+      ui.autocompletePopper
+        .findByTitle(regionWithCapabilityAndCluster.id, { exact: false })
+        .should('be.visible');
+
+      ui.autocompletePopper
+        .find()
+        .should('not.contain', regionWithCapabilityNoCluster.id);
+
+      ui.autocompletePopper
+        .find()
+        .should('not.contain', regionNoCapabilityWithCluster.id);
+
+      // Close the dropdown
+      ui.regionSelect.find().type('{esc}');
+
       cy.findByText('Clusters').should('be.visible');
       cy.get('[data-testid="clusters-table"]').should('exist');
+
+      // Expect only cluster-1, cluster-2, cluster-3 to be in table.
+      cy.findByText('cluster-1').should('be.visible');
+      cy.findByText('cluster-2').should('be.visible');
+      cy.findByText('cluster-3').should('be.visible');
+      cy.findByText('cluster-4').should('not.exist');
 
       // Select cluster-1 and cluster-3 individually
       logsStreamForm.findClusterCheckbox('cluster-1').check();
