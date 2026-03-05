@@ -42,7 +42,7 @@ describe('object storage smoke tests', () => {
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       gecko2: false,
-      objMultiCluster: false,
+      objMultiCluster: true,
       objectStorageGen2: { enabled: false },
     }).as('getFeatureFlags');
 
@@ -179,22 +179,22 @@ describe('object storage smoke tests', () => {
    */
   it('can delete object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const region = 'us-southeast';
     const bucketMock = objectStorageBucketFactory.build({
-      cluster: bucketCluster,
-      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      region: region,
+      hostname: `${bucketLabel}.${region}.linodeobjects.com`,
       label: bucketLabel,
       objects: 0,
     });
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
-      objMultiCluster: false,
+      objMultiCluster: true,
       objectStorageGen2: { enabled: false },
     });
 
     mockGetBuckets([bucketMock]).as('getBuckets');
-    mockDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
+    mockDeleteBucket(bucketLabel, region).as('deleteBucket');
 
     cy.visitWithLogin('/object-storage/buckets');
     cy.wait('@getBuckets');

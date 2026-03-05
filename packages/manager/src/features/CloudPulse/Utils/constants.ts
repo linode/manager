@@ -51,6 +51,8 @@ export const INTERFACE_ID = 'interface_id';
 
 export const FIREWALL = 'Firewall';
 
+export const STATUS_CODE = 'status_code';
+
 export const PORTS_HELPER_TEXT =
   'Enter one or more port numbers (1-65535) separated by commas.';
 
@@ -71,6 +73,22 @@ export const PORTS_LEADING_COMMA_ERROR_MESSAGE =
 
 export const PORTS_LIMIT_ERROR_MESSAGE =
   'Port list must be 100 characters or less.';
+
+export const STATUS_CODE_HELPER_TEXT =
+  'Enter one or more Status Codes separated by commas.';
+
+export const STATUS_CODE_ERROR_MESSAGE =
+  'Enter valid status codes as integers separated by commas without spaces.';
+
+export const STATUS_CODE_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
+  'Use a single comma to separate status codes.';
+export const STATUS_CODE_LEADING_COMMA_ERROR_MESSAGE =
+  'First character must be an integer.';
+
+export const STATUS_CODE_LIMIT_ERROR_MESSAGE =
+  'Status code list must be 100 characters or less.';
+
+export const STATUS_CODE_PLACEHOLDER_TEXT = 'e.g., 200,400';
 
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
