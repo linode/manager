@@ -94,7 +94,7 @@ describe('useIsPrivateImageSharingEnabled', () => {
   });
 });
 
-describe('getImageLibrarySubTabIndex', () => {
+describe('getSubTabIndex', () => {
   const subTabs: ImageSubTab<ImageLibraryType>[] = [
     { type: 'owned-by-me', title: 'Owned by me' },
     { type: 'shared-with-me', title: 'Shared with me', isBeta: true },
