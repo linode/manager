@@ -366,7 +366,7 @@ describe('Parent/Child account switching', () => {
           // Confirm no results message.
           mockGetChildAccounts([]).as('getEmptySearchResults');
           cy.findByPlaceholderText('Search').click();
-          cy.focused().type('Fake Name');
+          cy.focused().type('Fake Name', { delay: 50 });
           cy.wait('@getEmptySearchResults');
 
           cy.contains(mockChildAccount.company).should('not.exist');
@@ -378,7 +378,7 @@ describe('Parent/Child account switching', () => {
           mockGetChildAccounts([mockChildAccount]).as('getSearchResults');
           cy.findByPlaceholderText('Search').click();
           cy.focused().clear();
-          cy.focused().type(mockChildAccount.company);
+          cy.focused().type(mockChildAccount.company, { delay: 50 });
           cy.wait('@getSearchResults');
 
           cy.findByText(mockChildAccount.company).should('be.visible');
