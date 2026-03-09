@@ -10,7 +10,7 @@ type UDPStickiness = 'none' | 'session' | 'source_ip';
 
 export type Stickiness = TCPStickiness | UDPStickiness;
 
-type NodeBalancerType = 'common' | 'premium' | 'premium_40GB';
+type NodeBalancerType = 'common' | 'premium' | 'premium_40gb';
 
 export interface LKEClusterInfo {
   id: number;
