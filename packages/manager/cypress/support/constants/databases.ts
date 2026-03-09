@@ -565,6 +565,16 @@ export const databaseConfigurationsAdvConfig: DatabaseClusterConfiguration[] = [
     ip: randomIp(),
   },
   {
+    clusterSize: 2,
+    dbType: 'postgresql',
+    engine: 'PostgreSQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '13',
+    ip: randomIp(),
+  },
+  {
     clusterSize: 3,
     dbType: 'postgresql',
     engine: 'PostgreSQL',
