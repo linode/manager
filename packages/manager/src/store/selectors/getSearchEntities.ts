@@ -215,6 +215,7 @@ export const streamToSearchableItem = (stream: Stream): SearchableItem => ({
     description: getStreamDescription(stream),
     path: `/logs/delivery/streams/${stream.id}/edit`,
     status: stream.status,
+    created: stream.created,
   },
   entityType: 'stream',
   label: stream.label,
@@ -227,6 +228,7 @@ export const destinationToSearchableItem = (
   data: {
     description: getDestinationDescription(destination),
     path: `/logs/delivery/destinations/${destination.id}/edit`,
+    created: destination.created,
   },
   entityType: 'destination',
   label: destination.label,

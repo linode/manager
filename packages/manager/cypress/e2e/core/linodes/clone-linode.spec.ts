@@ -20,6 +20,7 @@ import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { interceptEvents } from 'support/intercepts/events';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   interceptCloneLinode,
   mockCloneLinode,
@@ -43,6 +44,8 @@ import {
   randomString,
 } from 'support/util/random';
 import { chooseRegion, extendRegion } from 'support/util/regions';
+
+import { firewallFactory } from 'src/factories';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -195,8 +198,13 @@ describe('clone linode', () => {
       id: mockLinode.id + 1,
       label: newLinodeLabel,
     };
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
 
     mockGetVLANs([mockVlan]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockGetLinodeVolumes(clonedLinode.id, [mockVolume]).as('getLinodeVolumes');
@@ -229,6 +237,8 @@ describe('clone linode', () => {
           .type(mockVlan.cidr_block);
       });
 
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
