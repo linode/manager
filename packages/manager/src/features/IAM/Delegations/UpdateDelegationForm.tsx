@@ -193,7 +193,7 @@ export const UpdateDelegationForm = ({
                 clearOnBlur
                 data-testid="delegates-autocomplete"
                 disableClearable={true}
-                disabled={isFetchingAllUsers}
+                disabled={isFetchingAllUsers || isSubmitting}
                 errorText={fieldState.error?.message ?? error?.[0].reason}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
@@ -278,6 +278,7 @@ export const UpdateDelegationForm = ({
               )}
               {selectedUsers.map((user) => (
                 <DelegationUserRow
+                  isSubmitting={isSubmitting}
                   key={user.value}
                   onRemove={() =>
                     setValue(
@@ -315,16 +316,22 @@ export const UpdateDelegationForm = ({
 };
 
 interface DelegationUserRowProps {
+  isSubmitting: boolean;
   onRemove: () => void;
   username: string;
 }
 
-const DelegationUserRow = ({ onRemove, username }: DelegationUserRowProps) => {
+const DelegationUserRow = ({
+  onRemove,
+  username,
+  isSubmitting,
+}: DelegationUserRowProps) => {
   return (
     <Stack alignItems="center" direction="row" justifyContent="space-between">
       <Typography>{username}</Typography>
       <IconButton
         aria-label={`Remove ${username}`}
+        disabled={isSubmitting}
         onClick={onRemove}
         sx={{ p: 0.75 }}
       >

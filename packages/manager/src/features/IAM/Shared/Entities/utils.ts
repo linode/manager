@@ -19,7 +19,7 @@ export const placeholderMap: Record<string, string> = {
   stackscript: 'Select Stackscripts',
   volume: 'Select Volumes',
   vpc: 'Select VPCs',
-  delegates: 'Select delegates',
+  delegates: 'Select users',
 };
 
 export const getCreateLinkForEntityType = (entityType: AccessType): string => {

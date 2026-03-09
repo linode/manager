@@ -156,39 +156,43 @@ export const EntitiesSelect = ({
         }}
         value={value || []}
       />
-      <Typography sx={{ mb: 1, mt: 2 }}>
-        Selected entities ({value.length}):
-      </Typography>
-      <Paper
-        sx={(theme) => ({
-          backgroundColor: isLoading
-            ? theme.tokens.alias.Interaction.Background.Disabled
-            : theme.palette.background.paper,
-          maxHeight: 370,
-          overflowY: 'auto',
-          p: 2,
-          py: 1,
-        })}
-        variant="outlined"
-      >
-        <Stack spacing={1}>
-          {value.length === 0 && (
-            <Typography py={1} textAlign="center">
-              No entities selected
-            </Typography>
-          )}
-          {value.map((entity) => (
-            <EntityRow
-              disabled={mode === 'change-role'}
-              key={entity.value}
-              label={entity.label}
-              onRemove={() =>
-                onChange(value.filter((v) => v.value !== entity.value))
-              }
-            />
-          ))}
-        </Stack>
-      </Paper>
+      {memoizedEntities.length > 0 && (
+        <>
+          <Typography sx={{ mb: 1, mt: 2 }}>
+            Selected entities ({value.length}):
+          </Typography>
+          <Paper
+            sx={(theme) => ({
+              backgroundColor: isLoading
+                ? theme.tokens.alias.Interaction.Background.Disabled
+                : theme.palette.background.paper,
+              maxHeight: 370,
+              overflowY: 'auto',
+              p: 2,
+              py: 1,
+            })}
+            variant="outlined"
+          >
+            <Stack spacing={1}>
+              {value.length === 0 && (
+                <Typography py={1} textAlign="center">
+                  No entities selected
+                </Typography>
+              )}
+              {value.map((entity) => (
+                <EntityRow
+                  disabled={mode === 'change-role'}
+                  key={entity.value}
+                  label={entity.label}
+                  onRemove={() =>
+                    onChange(value.filter((v) => v.value !== entity.value))
+                  }
+                />
+              ))}
+            </Stack>
+          </Paper>
+        </>
+      )}
       {!memoizedEntities.length && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontSize="inherit">

@@ -34,7 +34,7 @@ describe('getPlaceholder', () => {
 
   it('should return "All X selected" when all items are selected', () => {
     expect(getPlaceholder('linode', 10, 10)).toBe('All Linodes selected');
-    expect(getPlaceholder('delegates', 5, 5)).toBe('All delegates selected');
+    expect(getPlaceholder('delegates', 5, 5)).toBe('All users selected');
   });
 });
 
