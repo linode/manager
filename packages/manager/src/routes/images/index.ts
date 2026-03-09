@@ -1,7 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { imageLibrarySubTabs } from 'src/features/Images/ImagesLanding/v2/ImageLibrary/imageLibraryTabsConfig';
-import { shareGroupsSubTabs } from 'src/features/Images/ImagesLanding/v2/ShareGroups/ShareGroupsTabsConfig';
+import { shareGroupsSubTabs } from 'src/features/Images/ImagesLanding/v2/ShareGroups/shareGroupsTabsConfig';
 
 import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';

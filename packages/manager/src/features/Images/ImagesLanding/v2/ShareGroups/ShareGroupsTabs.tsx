@@ -1,5 +1,4 @@
-import { BetaChip, Notice } from '@linode/ui';
-import { Stack } from '@linode/ui';
+import { BetaChip, Notice, Stack } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -11,7 +10,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getSubTabIndex } from 'src/features/Images/utils';
 
-import { shareGroupsSubTabs as subTabs } from './ShareGroupsTabsConfig';
+import { shareGroupsSubTabs as subTabs } from './shareGroupsTabsConfig';
 
 export const ShareGroupsTabs = () => {
   const navigate = useNavigate();
