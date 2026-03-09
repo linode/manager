@@ -156,7 +156,7 @@ export const EntitiesSelect = ({
         }}
         value={value || []}
       />
-      {memoizedEntities.length > 0 && (
+      {memoizedEntities.length > 0 && !isLoading && (
         <>
           <Typography sx={{ mb: 1, mt: 2 }}>
             Selected entities ({value.length}):
@@ -193,7 +193,7 @@ export const EntitiesSelect = ({
           </Paper>
         </>
       )}
-      {!memoizedEntities.length && (
+      {!memoizedEntities.length && !isLoading && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
