@@ -198,6 +198,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
             ) : (
               connectionPools?.data.map((pool) => (
                 <DatabaseConnectionPoolRow
+                  databaseStatus={database.status}
                   key={pool.label}
                   onDelete={() => setDeletePoolLabelSelection(pool.label)}
                   onEdit={() => setEditPoolSelection(pool)}
