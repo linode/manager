@@ -3,7 +3,16 @@ import {
   useAllAccountUsersQuery,
   useUpdateChildAccountDelegatesQuery,
 } from '@linode/queries';
-import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  CloseIcon,
+  IconButton,
+  Notice,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
@@ -57,6 +66,8 @@ export const UpdateDelegationForm = ({
   const { data, error, fetchNextPage, hasNextPage, isFetching } =
     useAccountUsersInfiniteQuery(apiFilter);
 
+  const totalUserCount = data?.pages[0]?.results ?? 0;
+
   const {
     data: allUsers,
     isFetching: isFetchingAllUsers,
@@ -64,26 +75,6 @@ export const UpdateDelegationForm = ({
   } = useAllAccountUsersQuery(allUserSelected, {
     user_type: 'parent',
   });
-
-  const users =
-    allUserSelected && allUsers
-      ? allUsers.map((user) => ({
-          label: user.username,
-          value: user.username,
-        }))
-      : (data?.pages.flatMap((page) => {
-          return page.data.map((user) => ({
-            label: user.username,
-            value: user.username,
-          }));
-        }) ?? []);
-
-  const isSearching =
-    inputValue.length > 0 && debouncedInputValue !== inputValue;
-
-  const isLoadingOptions = isFetching || isFetchingAllUsers;
-
-  const showNoOptionsText = !isLoadingOptions && !isSearching;
 
   const isSelectAllFetching = allUserSelected && isFetchingAllUsers;
 
@@ -103,7 +94,34 @@ export const UpdateDelegationForm = ({
     reset,
     setError,
     setValue,
+    watch,
   } = form;
+
+  const selectedUsers = watch('users');
+
+  const users =
+    allUserSelected && allUsers
+      ? allUsers.map((user) => ({
+          label: user.username,
+          value: user.username,
+        }))
+      : !inputValue &&
+          totalUserCount > 0 &&
+          selectedUsers.length >= totalUserCount
+        ? selectedUsers
+        : (data?.pages.flatMap((page) => {
+            return page.data.map((user) => ({
+              label: user.username,
+              value: user.username,
+            }));
+          }) ?? []);
+
+  const isSearching =
+    inputValue.length > 0 && debouncedInputValue !== inputValue;
+
+  const isLoadingOptions = isFetching || isFetchingAllUsers;
+
+  const showNoOptionsText = !isLoadingOptions && !isSearching;
 
   const onSubmit = async (values: UpdateDelegationsFormValues) => {
     const usersList = values.users.map((user) => user.value);
@@ -171,8 +189,11 @@ export const UpdateDelegationForm = ({
             name="users"
             render={({ field, fieldState }) => (
               <Autocomplete
+                autoHighlight
+                clearOnBlur
                 data-testid="delegates-autocomplete"
-                disabled={isFetchingAllUsers}
+                disableClearable={true}
+                disabled={isFetchingAllUsers || isSubmitting}
                 errorText={fieldState.error?.message ?? error?.[0].reason}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
@@ -188,17 +209,19 @@ export const UpdateDelegationForm = ({
                 onInputChange={(_, value) => {
                   setInputValue(value);
                 }}
-                onSelectAllClick={(isSelectAllActive) => {
-                  if (isSelectAllActive && !allUserSelected) {
+                onSelectAllClick={(_event) => {
+                  const allCurrentOptionsSelected =
+                    totalUserCount > 0 &&
+                    selectedUsers.length >= totalUserCount;
+                  if (allCurrentOptionsSelected) {
+                    setValue('users', []);
+                    setAllUserSelected(false);
+                  } else {
                     onSelectAllClick();
                   }
                 }}
                 options={users}
-                placeholder={getPlaceholder(
-                  'delegates',
-                  field.value.length,
-                  users?.length ?? 0
-                )}
+                renderTags={() => null}
                 slotProps={{
                   listbox: {
                     onScroll: (event: React.SyntheticEvent) => {
@@ -221,11 +244,53 @@ export const UpdateDelegationForm = ({
                   InputProps: isSelectAllFetching
                     ? { startAdornment: null }
                     : undefined,
+                  placeholder: getPlaceholder(
+                    'delegates',
+                    selectedUsers.length,
+                    totalUserCount
+                  ),
                 }}
                 value={field.value}
               />
             )}
           />
+          <Typography sx={{ mb: 1, mt: 2 }}>
+            Users in the account delegation
+            {isFetchingAllUsers ? '' : ` (${selectedUsers.length})`}:
+          </Typography>
+          <Paper
+            sx={(theme) => ({
+              backgroundColor: isFetchingAllUsers
+                ? theme.tokens.alias.Interaction.Background.Disabled
+                : theme.palette.background.paper,
+              maxHeight: 370,
+              overflowY: 'auto',
+              p: 2,
+              py: 1,
+            })}
+            variant="outlined"
+          >
+            <Stack spacing={1}>
+              {selectedUsers.length === 0 && (
+                <Typography py={1} textAlign="center">
+                  No users selected
+                </Typography>
+              )}
+              {selectedUsers.map((user) => (
+                <DelegationUserRow
+                  isSubmitting={isSubmitting}
+                  key={user.value}
+                  onRemove={() =>
+                    setValue(
+                      'users',
+                      selectedUsers.filter((u) => u.value !== user.value)
+                    )
+                  }
+                  username={user.label}
+                />
+              ))}
+            </Stack>
+          </Paper>
 
           <ActionsPanel
             primaryButtonProps={{
@@ -247,5 +312,31 @@ export const UpdateDelegationForm = ({
         </form>
       </FormProvider>
     </>
+  );
+};
+
+interface DelegationUserRowProps {
+  isSubmitting: boolean;
+  onRemove: () => void;
+  username: string;
+}
+
+const DelegationUserRow = ({
+  onRemove,
+  username,
+  isSubmitting,
+}: DelegationUserRowProps) => {
+  return (
+    <Stack alignItems="center" direction="row" justifyContent="space-between">
+      <Typography>{username}</Typography>
+      <IconButton
+        aria-label={`Remove ${username}`}
+        disabled={isSubmitting}
+        onClick={onRemove}
+        sx={{ p: 0.75 }}
+      >
+        <CloseIcon />
+      </IconButton>
+    </Stack>
   );
 };
