@@ -145,12 +145,12 @@ const entities = [
  * and do the filtering client-side.
  */
 export const useAPISearch = ({ enabled, query }: Props) => {
-  const deboundedQuery = useDebouncedValue(query);
+  const debouncedQuery = useDebouncedValue(query);
   const { isACLPLogsEnabled } = useIsACLPLogsEnabled();
 
   const result = entities.map((entity) => {
     const { error, filter } = getAPIFilterFromQuery(
-      deboundedQuery,
+      debouncedQuery,
       entity.searchOptions
     );
 
@@ -161,7 +161,7 @@ export const useAPISearch = ({ enabled, query }: Props) => {
         entity.baseFilter ? { ...entity.baseFilter, ...filter } : filter,
         enabled &&
           error === null &&
-          Boolean(deboundedQuery) &&
+          Boolean(debouncedQuery) &&
           (!entity.requireACLPLogsEnabled || isACLPLogsEnabled)
       ),
     };
