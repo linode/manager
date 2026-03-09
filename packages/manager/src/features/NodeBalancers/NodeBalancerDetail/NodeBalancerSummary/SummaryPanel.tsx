@@ -112,7 +112,7 @@ export const SummaryPanel = () => {
               <strong>Type: </strong>
               {nodebalancer.type === 'common' && 'Basic'}
               {nodebalancer.type === 'premium' && 'Premium'}
-              {nodebalancer.type === 'premium_40GB' && 'Enterprise'}
+              {nodebalancer.type === 'premium_40gb' && 'Enterprise'}
             </Typography>
           </StyledSection>
           <StyledSection>
