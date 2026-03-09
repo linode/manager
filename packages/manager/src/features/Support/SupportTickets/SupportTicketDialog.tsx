@@ -18,6 +18,7 @@ import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
@@ -147,7 +148,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTicketType,
     prefilledTitle,
   } = props;
-  const liveChat = true;
+  const flags = useFlags();
+  const liveChat = Boolean(flags.liveChat);
 
   const location = useLocation();
   const navigate = useNavigate();
