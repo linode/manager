@@ -264,10 +264,6 @@ export const useDeleteDatabaseConnectionPoolMutation = (
       queryClient.invalidateQueries(
         databaseQueries.database('postgresql', databaseId)._ctx.connectionPools,
       );
-      queryClient.removeQueries({
-        queryKey: databaseQueries.database('postgresql', databaseId)._ctx
-          .connectionPools.queryKey,
-      });
     },
   });
 };
