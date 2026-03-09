@@ -1,6 +1,6 @@
 import { createStreamSchema, updateStreamSchema } from '@linode/validation';
 
-import { BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -20,7 +20,7 @@ import type { CreateStreamPayload, Stream, UpdateStreamPayload } from './types';
  */
 export const getStream = (streamId: number) =>
   Request<Stream>(
-    setURL(`${BETA_API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
+    setURL(`${API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
     setMethod('GET'),
   );
 
@@ -30,7 +30,7 @@ export const getStream = (streamId: number) =>
  */
 export const getStreams = (params?: Params, filter?: Filter) =>
   Request<Page<Stream>>(
-    setURL(`${BETA_API_ROOT}/monitor/streams`),
+    setURL(`${API_ROOT}/monitor/streams`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
@@ -44,7 +44,7 @@ export const getStreams = (params?: Params, filter?: Filter) =>
 export const createStream = (data: CreateStreamPayload) =>
   Request<Stream>(
     setData(data, createStreamSchema),
-    setURL(`${BETA_API_ROOT}/monitor/streams`),
+    setURL(`${API_ROOT}/monitor/streams`),
     setMethod('POST'),
   );
 
@@ -57,7 +57,7 @@ export const createStream = (data: CreateStreamPayload) =>
 export const updateStream = (streamId: number, data: UpdateStreamPayload) =>
   Request<Stream>(
     setData(data, updateStreamSchema),
-    setURL(`${BETA_API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
+    setURL(`${API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
     setMethod('PUT'),
   );
 
@@ -68,6 +68,6 @@ export const updateStream = (streamId: number, data: UpdateStreamPayload) =>
  */
 export const deleteStream = (streamId: number) =>
   Request<{}>(
-    setURL(`${BETA_API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
+    setURL(`${API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
     setMethod('DELETE'),
   );

@@ -5,6 +5,7 @@ import {
   regionFactory,
 } from '@linode/utilities';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeTypes,
@@ -14,7 +15,11 @@ import {
   mockGetRegions,
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
+import { randomNumber } from 'support/util/random';
+
+import { firewallFactory } from 'src/factories';
 
 const mockEnabledRegion = regionFactory.build({
   id: 'us-east',
@@ -37,10 +42,15 @@ const mockBlackwellLinodeTypes = new Array(4).fill(null).map((_, index) =>
 const selectedBlackwell = mockBlackwellLinodeTypes[0];
 
 describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
+  const mockFirewall = firewallFactory.build({
+    id: randomNumber(),
+    label: randomLabel(),
+  });
   beforeEach(() => {
     mockGetRegions([mockEnabledRegion, mockDisabledRegion]).as('getRegions');
 
     mockGetLinodeTypes(mockBlackwellLinodeTypes).as('getLinodeTypes');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
   });
 
   /*
@@ -120,6 +130,11 @@ describe('smoketest for Nvidia blackwell GPUs in linodes/create page', () => {
     cy.findByLabelText('Linode Label').type(newLinodeLabel);
     cy.get('[type="password"]').should('be.visible').scrollIntoView();
     cy.get('[id="root-password"]').type(randomString(12));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
     cy.scrollTo('bottom');
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
