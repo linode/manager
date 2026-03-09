@@ -28,23 +28,34 @@ vi.mock('src/features/CloudPulse/Utils/utils', () => ({
 
 // Keep AlertReusableComponent lightweight in tests - it has its own test coverage.
 // Renders a button so tests can simulate ACLP alert changes via onToggleAlert.
+// Calls onStatusChange(true) on mount to simulate a successful alerts load.
 vi.mock(
   'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent',
   () => ({
     AlertReusableComponent: ({
+      onStatusChange,
       onToggleAlert,
     }: {
+      onStatusChange?: (isReady: boolean) => void;
       onToggleAlert: (payload: unknown, hasUnsavedChanges: boolean) => void;
-    }) => (
-      <div data-testid="aclp-alerts">
-        <button
-          data-testid="aclp-toggle"
-          onClick={() => onToggleAlert({}, true)}
-        >
-          Toggle ACLP Alert
-        </button>
-      </div>
-    ),
+    }) => {
+      React.useEffect(() => {
+        if (onStatusChange) {
+          onStatusChange(true);
+        }
+      }, [onStatusChange]);
+
+      return (
+        <div data-testid="aclp-alerts">
+          <button
+            data-testid="aclp-toggle"
+            onClick={() => onToggleAlert({}, true)}
+          >
+            Toggle ACLP Alert
+          </button>
+        </div>
+      );
+    },
   })
 );
 
