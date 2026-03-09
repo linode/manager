@@ -265,6 +265,7 @@ export interface Flags {
   linodeCreateBanner: LinodeCreateBanner;
   linodeDiskEncryption: boolean;
   linodeInterfaces: LinodeInterfacesFlag;
+  liveChat: boolean;
   lkeEnterprise2: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
