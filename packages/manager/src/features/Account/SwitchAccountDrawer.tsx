@@ -105,7 +105,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           }
         : undefined,
     },
-    isIAMDelegationEnabled === false && isParentUserType
+    isIAMDelegationEnabled === false && (isParentUserType || isProxyUserType)
   );
 
   const {
