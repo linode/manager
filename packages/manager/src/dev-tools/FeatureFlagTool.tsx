@@ -41,6 +41,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
+  { flag: 'liveChat', label: 'Live Chat' },
   { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
   { flag: 'marketplaceV2', label: 'MarketplaceV2' },
   { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
