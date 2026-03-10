@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Outer Ring -->
+  <circle cx="256" cy="256" r="150"
+          stroke="#00E5FF"
+          stroke-width="12"
+          fill="none"/>
+
+  <!-- Inner Dashed Ring -->
+  <circle cx="256" cy="256" r="105"
+          stroke="#6366F1"
+          stroke-width="6"
+          fill="none"
+          stroke-dasharray="10 8"/>
+
+  <!-- Vector Nodes -->
+  <circle cx="256" cy="106" r="18" fill="#00E5FF"/>
+  <circle cx="406" cy="256" r="18" fill="#22D3EE"/>
+  <circle cx="256" cy="406" r="18" fill="#818CF8"/>
+  <circle cx="106" cy="256" r="18" fill="#38BDF8"/>
+
+  <!-- Connecting Lines -->
+  <line x1="256" y1="106" x2="406" y2="256" stroke="#94A3B8" stroke-width="4"/>
+  <line x1="406" y1="256" x2="256" y2="406" stroke="#94A3B8" stroke-width="4"/>
+  <line x1="256" y1="406" x2="106" y2="256" stroke="#94A3B8" stroke-width="4"/>
+  <line x1="106" y1="256" x2="256" y2="106" stroke="#94A3B8" stroke-width="4"/>
+
+  <!-- Center Core -->
+  <circle cx="256" cy="256" r="36" fill="#6366F1"/>
+
+</svg>

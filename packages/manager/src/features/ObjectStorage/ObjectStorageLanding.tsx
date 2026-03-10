@@ -30,11 +30,6 @@ const SummaryLanding = React.lazy(() =>
     default: module.SummaryLanding,
   }))
 );
-const BucketLanding = React.lazy(() =>
-  import('./BucketLanding/BucketLanding').then((module) => ({
-    default: module.BucketLanding,
-  }))
-);
 const AccessKeyLanding = React.lazy(() =>
   import('./AccessKeyLanding/AccessKeyLanding').then((module) => ({
     default: module.AccessKeyLanding,
@@ -179,13 +174,9 @@ export const ObjectStorageLanding = () => {
               </SafeTabPanel>
             )}
             <SafeTabPanel index={bucketsTabIndex}>
-              {isObjMultiClusterEnabled ? (
-                <OMC_BucketLanding
-                  isCreateBucketDrawerOpen={isCreateBucketOpen}
-                />
-              ) : (
-                <BucketLanding isCreateBucketDrawerOpen={isCreateBucketOpen} />
-              )}
+              <OMC_BucketLanding
+                isCreateBucketDrawerOpen={isCreateBucketOpen}
+              />
             </SafeTabPanel>
             <SafeTabPanel index={accessKeysTabIndex}>
               <AccessKeyLanding

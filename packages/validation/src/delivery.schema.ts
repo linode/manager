@@ -56,20 +56,15 @@ const clientCertificateDetailsSchema = object({
 }).test(
   'all-or-nothing-cert-details',
   'If any certificate detail is provided, all are required.',
-  function (value, context) {
+  function (value) {
     if (!value) {
       return true;
     }
 
-    const {
-      client_ca_certificate,
-      client_certificate,
-      client_private_key,
-      tls_hostname,
-    } = value;
+    const { client_ca_certificate, client_certificate, client_private_key } =
+      value;
 
     const fields = [
-      tls_hostname,
       client_ca_certificate,
       client_certificate,
       client_private_key,
@@ -82,39 +77,30 @@ const clientCertificateDetailsSchema = object({
     }
 
     const errors: ValidationError[] = [];
-    if (!hasValue(tls_hostname)) {
-      errors.push(
-        context.createError({
-          path: `${this.path}.tls_hostname`,
-          message:
-            'TLS Hostname is required when other Client Certificate details are provided.',
-        }),
-      );
-    }
     if (!hasValue(client_ca_certificate)) {
       errors.push(
-        context.createError({
+        this.createError({
           path: `${this.path}.client_ca_certificate`,
           message:
-            'CA Certificate is required when other Client Certificate details are provided.',
+            'CA Certificate is required when other client certificate details are provided.',
         }),
       );
     }
     if (!hasValue(client_certificate)) {
       errors.push(
-        context.createError({
+        this.createError({
           path: `${this.path}.client_certificate`,
           message:
-            'Client Certificate is required when other Client Certificate details are provided.',
+            'Client Certificate is required when other client certificate details are provided.',
         }),
       );
     }
     if (!hasValue(client_private_key)) {
       errors.push(
-        context.createError({
+        this.createError({
           path: `${this.path}.client_private_key`,
           message:
-            'Client Key is required when other Client Certificate details are provided.',
+            'Client Key is required when other client certificate details are provided.',
         }),
       );
     }
@@ -123,14 +109,40 @@ const clientCertificateDetailsSchema = object({
   },
 );
 
+const forbiddenCustomHeaderNames = [
+  'content-type',
+  'encoding',
+  'authorization',
+  'host',
+  'akamai',
+];
+
 const customHeaderSchema = object({
   name: string()
     .max(maxLength, maxLengthMessage)
-    .required('Custom Header Name is required.'),
+    .required('Custom Header Name is required.')
+    .test(
+      'non-empty-name',
+      'Custom Header Name cannot be empty or whitespace only.',
+      (value) => hasValue(value),
+    )
+    .test(
+      'forbidden-custom-header-name',
+      'This header name is not allowed.',
+      (value) =>
+        !forbiddenCustomHeaderNames.includes(value.trim().toLowerCase()),
+    ),
   value: string()
     .max(maxLength, maxLengthMessage)
-    .required('Custom Header Value is required'),
+    .required('Custom Header Value is required.')
+    .test(
+      'non-empty-value',
+      'Custom Header Value cannot be empty or whitespace only.',
+      (value) => hasValue(value),
+    ),
 });
+
+const urlRgx = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]+)+(\/\S*)?$/;
 
 const customHTTPSDetailsSchema = object({
   authentication: authenticationSchema.required(),
@@ -139,11 +151,49 @@ const customHTTPSDetailsSchema = object({
     .oneOf(['application/json', 'application/json; charset=utf-8'])
     .nullable()
     .optional(),
-  custom_headers: array().of(customHeaderSchema).min(1).optional(),
+  custom_headers: array()
+    .of(customHeaderSchema)
+    .min(1)
+    .optional()
+    .test(
+      'unique-header-names',
+      'Custom Header Names must be unique.',
+      function (headers) {
+        if (!headers || headers.length === 0) {
+          return true;
+        }
+
+        const seenNames = new Set<string>();
+        const errors: ValidationError[] = [];
+
+        headers.forEach((header, index) => {
+          const trimmedName = header?.name?.trim().toLowerCase();
+          if (!trimmedName) {
+            return;
+          }
+
+          if (seenNames.has(trimmedName)) {
+            errors.push(
+              this.createError({
+                path: `${this.path}[${index}].name`,
+                message: 'Custom Header Name must be unique.',
+              }),
+            );
+          } else {
+            seenNames.add(trimmedName);
+          }
+        });
+
+        return errors.length === 0 || new ValidationError(errors);
+      },
+    ),
   data_compression: string().oneOf(['gzip', 'None']).required(),
   endpoint_url: string()
     .max(maxLength, maxLengthMessage)
-    .required('Endpoint URL is required.'),
+    .required('Endpoint URL is required.')
+    .test('is-valid-url', 'Endpoint URL must be a valid URL.', (value) =>
+      urlRgx.test(value),
+    ),
 });
 
 const hostRgx =
@@ -298,7 +348,7 @@ const detailsShouldNotExistOrBeNull = (schema: MixedSchema) =>
 
 const streamSchemaBase = object({
   label: string()
-    .min(3, 'Stream name must have at least 3 characters')
+    .min(3, 'Stream name must have at least 3 characters.')
     .max(maxLength, maxLengthMessage)
     .required('Stream name is required.'),
   status: mixed<'active' | 'inactive' | 'provisioning'>().oneOf([
@@ -338,7 +388,7 @@ export const updateStreamSchema = streamSchemaBase
       return detailsShouldNotExistOrBeNull(mixed());
     }),
   })
-  .noUnknown('Object contains unknown fields');
+  .noUnknown('Object contains unknown fields.');
 
 export const streamAndDestinationFormSchema = object({
   stream: streamSchemaBase.shape({
@@ -349,7 +399,7 @@ export const streamAndDestinationFormSchema = object({
       otherwise: (schema) =>
         schema
           .nullable()
-          .equals([null], 'Details must be null for audit_logs type'),
+          .equals([null], 'Details must be null for audit_logs type.'),
     }) as Schema<InferType<typeof streamDetailsSchema> | null>,
   }),
   destination: destinationFormSchema.defined().when('stream.destinations', {

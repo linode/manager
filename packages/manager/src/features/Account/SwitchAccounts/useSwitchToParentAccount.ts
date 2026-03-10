@@ -55,7 +55,13 @@ export const useSwitchToParentAccount = ({
       }
 
       onClose?.();
-      location.reload();
+
+      // For switch back to parent, always redirect to /linodes for delegate users
+      if (isDelegateUserType) {
+        location.replace('/linodes');
+      } else {
+        location.reload();
+      }
     } catch (error) {
       setSubmitting(false);
       throw error;

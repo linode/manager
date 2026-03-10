@@ -241,6 +241,33 @@ export const mockUpdateSuspendResumeDatabase = (
 };
 
 /**
+ * Intercepts PUT request to update database and mocks error with custom field and reason.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ * @param field - Error field name.
+ * @param reason - Error reason message.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateDatabaseError = (
+  id: number,
+  engine: string,
+  field: string,
+  reason: string
+): Cypress.Chainable<null> => {
+  const error = makeErrorResponse({
+    field,
+    reason,
+  });
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    error
+  );
+};
+
+/**
  * Intercepts POST request to reset an active database's password and mocks response.
  *
  * @param id - Database ID.

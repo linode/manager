@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -40,9 +39,8 @@ export const ObjectDetailsDrawer = React.memo(
     let formattedLastModified;
 
     const { data: profile } = useProfile();
-    const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
     const { data: bucketsData, isLoading: isLoadingEndpointData } =
-      useObjectStorageBuckets(isObjectStorageGen2Enabled);
+      useObjectStorageBuckets();
 
     const isLoadingEndpoint = isLoadingEndpointData || !bucketsData;
 

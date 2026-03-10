@@ -1,4 +1,5 @@
 import { linodeFactory } from '@linode/utilities';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
@@ -7,11 +8,12 @@ import {
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { getRandomOCAId } from 'support/util/one-click-apps';
-import { randomLabel, randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { imageFactory } from 'src/factories';
+import { firewallFactory, imageFactory } from 'src/factories';
 import { stackScriptFactory } from 'src/factories/stackscripts';
 import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreate/Tabs/Marketplace/utilities';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
@@ -166,10 +168,15 @@ describe('OneClick Apps (OCA)', () => {
     const linode = linodeFactory.build({
       label: linodeLabel,
     });
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
 
     mockGetAllImages(images);
     mockGetStackScripts([stackscript]).as('getStackScripts');
     mockGetStackScript(stackscript.id, stackscript);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin(`/linodes/create/marketplace`);
 
@@ -241,6 +248,12 @@ describe('OneClick Apps (OCA)', () => {
 
     // Create the Linode
     mockCreateLinode(linode).as('createLinode');
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     ui.button
       .findByTitle('Create Linode')

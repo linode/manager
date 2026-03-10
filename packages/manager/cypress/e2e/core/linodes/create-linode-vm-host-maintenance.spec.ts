@@ -1,13 +1,14 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { randomLabel, randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 
-import { accountSettingsFactory } from 'src/factories';
+import { accountSettingsFactory, firewallFactory } from 'src/factories';
 const mockEnabledRegion = regionFactory.build({
   capabilities: ['Linodes', 'Maintenance Policy'],
 });
@@ -35,7 +36,12 @@ describe('vmHostMaintenance feature flag', () => {
       label: randomLabel(),
       region: mockEnabledRegion.id,
     });
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
     mockCreateLinode(mockLinode).as('createLinode');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getAccountSettings', '@getFeatureFlags', '@getRegions']);
@@ -82,6 +88,8 @@ describe('vmHostMaintenance feature flag', () => {
       planLabel: 'Nanode 1 GB',
     };
     linodeCreatePage.selectPlan(mockPlan.planType, mockPlan.planLabel);
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
     cy.scrollTo('bottom');
     ui.button
       .findByTitle('View Code Snippets')

@@ -20,6 +20,7 @@ import {
   REGION,
   RESOURCE_ID,
   RESOURCES,
+  STATUS_CODE,
   TAGS,
 } from '../Utils/constants';
 import {
@@ -379,7 +380,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           );
         } else if (
           config.configuration.filterKey === PORT ||
-          config.configuration.filterKey === INTERFACE_ID
+          config.configuration.filterKey === INTERFACE_ID ||
+          config.configuration.filterKey === STATUS_CODE
         ) {
           return getTextFilterProperties(
             {

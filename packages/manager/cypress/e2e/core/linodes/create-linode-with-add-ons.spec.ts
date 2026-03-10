@@ -1,4 +1,5 @@
 import { linodeFactory } from '@linode/utilities';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -8,7 +9,13 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { firewallFactory } from 'src/factories';
+
 describe('Create Linode with Add-ons', () => {
+  const mockFirewall = firewallFactory.build({
+    id: randomNumber(),
+    label: randomLabel(),
+  });
   /*
    * - Confirms UI flow to create a Linode with backups using mock API data.
    * - Confirms that backups is reflected in create summary section.
@@ -25,6 +32,7 @@ describe('Create Linode with Add-ons', () => {
 
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin('/linodes/create');
 
@@ -33,6 +41,11 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
     linodeCreatePage.checkBackups();
     linodeCreatePage.checkEUAgreements();
 
@@ -78,6 +91,7 @@ describe('Create Linode with Add-ons', () => {
 
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin('/linodes/create');
 
@@ -86,8 +100,15 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.selectRegionById(linodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
     linodeCreatePage.checkEUAgreements();
     linodeCreatePage.selectInterfaceGeneration('legacy_config');
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
     linodeCreatePage.checkPrivateIPs();
 
     // Confirm Private IP assignment indicator is shown in Linode summary.

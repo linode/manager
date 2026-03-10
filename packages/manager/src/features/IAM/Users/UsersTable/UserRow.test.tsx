@@ -81,16 +81,17 @@ describe('UserRow', () => {
     });
   });
 
-  it('renders username and user type, and does not render email for a Delegate user when isIAMDelegationEnabled flag is enabled', async () => {
+  it('renders username and user type, and does not render email and last login for a Delegate user when isIAMDelegationEnabled flag is enabled', async () => {
     const delegateUser = accountUserFactory.build({
       user_type: 'delegate',
+      last_login: null,
     });
 
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ user_type: 'child' }),
     });
 
-    const { getByText, queryByText } = renderWithTheme(
+    const { getAllByText, getByText, queryByText } = renderWithTheme(
       wrapWithTableBody(<UserRow onDelete={vi.fn()} user={delegateUser} />, {
         flags: {
           iamDelegation: { enabled: true },
@@ -99,12 +100,10 @@ describe('UserRow', () => {
     );
 
     expect(getByText(delegateUser.username)).toBeVisible();
-
-    await waitFor(() => {
-      expect(queryByText(delegateUser.email)).not.toBeInTheDocument();
-      expect(getByText('Not applicable')).toBeVisible();
-      expect(getByText('Delegate User')).toBeVisible();
-    });
+    expect(queryByText(delegateUser.email)).not.toBeInTheDocument();
+    expect(queryByText('Never')).not.toBeInTheDocument();
+    expect(getAllByText('Not applicable').length).toBe(2);
+    expect(getByText('Delegate User')).toBeVisible();
   });
 
   it('renders "Never" if last_login is null', async () => {
