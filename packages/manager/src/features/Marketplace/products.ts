@@ -191,8 +191,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     categories: ['Media & Entertainment, Gaming'],
-    id: 'titan',
-    name: 'Titan',
+    id: 'titan-video-processing-and-compression',
+    name: 'TITAN Video Processing and Compression',
     partner: {
       email: 'inquiries@ateme.com',
       logoDarkMode: 'ateme-dark.svg',

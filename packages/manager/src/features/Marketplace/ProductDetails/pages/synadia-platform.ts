@@ -37,14 +37,14 @@ Ready to start your free trial of Synadia Platform on the Akamai Cloud? Contact 
 const documentationMarkdown = `
 | Specification | Details |
 | :---- | :---- |
-| Deployment model | Managed BYOC on Akamai Cloud or self-hosted. |
-| Cloud & edge support | Native operation across Akamai, AWS, Azure, GCP, private clouds, and constrained edge environments. |
-| Operational footprint | Lightweight, single-binary core with minimal dependencies and simplified operations at scale. |
-| Security | Zero-trust security with mTLS, fine-grained authorization, and no shared secrets or stored credentials. |
-| Latency profile | Millisecond-level data and service propagation with local-first access via mirrors and replicas. |
-| Architecture | Event-driven, real-time messaging and streaming built on a single global connective fabric. |
-| Replication & locality | Built-in geo-replication, mirroring, and digital twins for fast local reads and global consistency. |
-| Data capabilities | Unified support for messaging, durable streams, key-value storage, and object storage. |
+| **Deployment model** | Managed BYOC on Akamai Cloud or self-hosted. |
+| **Cloud & edge support** | Native operation across Akamai, AWS, Azure, GCP, private clouds, and constrained edge environments. |
+| **Operational footprint** | Lightweight, single-binary core with minimal dependencies and simplified operations at scale. |
+| **Security** | Zero-trust security with mTLS, fine-grained authorization, and no shared secrets or stored credentials. |
+| **Latency profile** | Millisecond-level data and service propagation with local-first access via mirrors and replicas. |
+| **Architecture** | Event-driven, real-time messaging and streaming built on a single global connective fabric. |
+| **Replication & locality** | Built-in geo-replication, mirroring, and digital twins for fast local reads and global consistency. |
+| **Data capabilities** | Unified support for messaging, durable streams, key-value storage, and object storage. |
 
 The Synadia Platform, running on Akamai, enables a globally connected NATS supercluster to act as a single logical event fabric spanning regions, clouds, and the edge. At the core, multiple regional NATS clusters form a supercluster, providing high availability, low latency, and seamless data routing across geographies.
 
