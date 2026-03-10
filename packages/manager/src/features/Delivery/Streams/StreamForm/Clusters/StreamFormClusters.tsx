@@ -44,6 +44,11 @@ interface StreamFormClustersProps {
   mode: FormMode;
 }
 
+const logGenerationOptions = [
+  { label: 'Enabled', value: true },
+  { label: 'Disabled', value: false },
+];
+
 export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const { mode } = props;
   const { control, setValue, formState, trigger } =
@@ -52,11 +57,12 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const xsDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const { gecko2 } = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
-  const { data: regions } = useRegionsQuery();
-  const logGenerationOptions = [
-    { label: 'Enabled', value: true },
-    { label: 'Disabled', value: false },
-  ];
+  const { data: regions = [] } = useRegionsQuery();
+  const {
+    data: clusters = [],
+    isLoading,
+    error,
+  } = useAllKubernetesClustersQuery({ enabled: true });
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
@@ -66,18 +72,40 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const [regionFilter, setRegionFilter] = useState<string>('');
   const [logGenerationFilter, setLogGenerationFilter] = useState<boolean>();
 
-  const {
-    data: clusters = [],
-    isLoading,
-    error,
-  } = useAllKubernetesClustersQuery({ enabled: true });
+  const eligibleRegions = useMemo(
+    () =>
+      regions?.filter(({ capabilities }) =>
+        capabilities.includes('ACLP Logs Datacenter LKE-E')
+      ),
+    [regions]
+  );
+
+  const eligibleClusters = useMemo(() => {
+    const regionMap = new Map(
+      eligibleRegions.map(({ id, label }) => [id, label])
+    );
+
+    return clusters
+      .filter(({ region }) => regionMap.has(region))
+      .map((cluster) => ({
+        ...cluster,
+        region: regionMap.get(cluster.region)
+          ? `${regionMap.get(cluster.region)} (${cluster.region})`
+          : cluster.region,
+      }));
+  }, [clusters, eligibleRegions]);
+
+  const visibleRegions = useMemo(() => {
+    const clusterRegions = new Set(clusters.map(({ region }) => region));
+    return eligibleRegions.filter(({ id }) => clusterRegions.has(id));
+  }, [clusters, eligibleRegions]);
 
   const clusterIdsWithLogsEnabled = useMemo(
     () =>
-      clusters
+      eligibleClusters
         ?.filter((cluster) => cluster.control_plane.audit_logs_enabled)
         .map(({ id }) => id),
-    [clusters]
+    [eligibleClusters]
   );
 
   const [isAutoAddAllClustersEnabled, clusterIds] = useWatch({
@@ -138,10 +166,10 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
     }
   };
 
-  const filteredClusters =
-    !searchText && !regionFilter && logGenerationFilter === undefined
-      ? clusters
-      : clusters.filter((cluster) => {
+  const filteredClusters = useMemo(() => {
+    return !searchText && !regionFilter && logGenerationFilter === undefined
+      ? eligibleClusters
+      : eligibleClusters.filter((cluster) => {
           const lowerSearch = searchText.toLowerCase();
 
           let result = true;
@@ -167,31 +195,30 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
 
           return result;
         });
+  }, [searchText, regionFilter, logGenerationFilter, eligibleClusters]);
 
-  const sortedAndFilteredClusters = sortData<KubernetesCluster>(
-    orderBy,
-    order
-  )(filteredClusters);
+  const sortedAndFilteredClusters = useMemo(
+    () => sortData<KubernetesCluster>(orderBy, order)(filteredClusters),
+    [orderBy, order, filteredClusters]
+  );
 
   // Paginate clusters
-  const indexOfFirstClusterInPage = (page - 1) * pageSize;
+  const maxPage = Math.max(
+    1,
+    Math.ceil(sortedAndFilteredClusters.length / pageSize)
+  );
+  const safePage = page > maxPage ? maxPage : page;
+
+  if (safePage !== page) {
+    setPage(safePage);
+  }
+
+  const indexOfFirstClusterInPage = (safePage - 1) * pageSize;
   const indexOfLastClusterInPage = indexOfFirstClusterInPage + pageSize;
   const paginatedClusters = sortedAndFilteredClusters.slice(
     indexOfFirstClusterInPage,
     indexOfLastClusterInPage
   );
-
-  // If the current page is out of range after filtering, change to the last available page
-  useEffect(() => {
-    if (indexOfFirstClusterInPage >= sortedAndFilteredClusters.length) {
-      const lastPage = Math.max(
-        1,
-        Math.ceil(sortedAndFilteredClusters.length / pageSize)
-      );
-
-      setPage(lastPage);
-    }
-  }, [sortedAndFilteredClusters, indexOfFirstClusterInPage, pageSize]);
 
   return (
     <Paper>
@@ -265,7 +292,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
             />
             <StyledSelectsWrapper>
               <RegionSelect
-                currentCapability="Object Storage"
+                currentCapability="ACLP Logs Datacenter LKE-E"
                 isGeckoLAEnabled={isGeckoLAEnabled}
                 label=""
                 onChange={(_, region) => {
@@ -273,7 +300,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                 }}
                 placeholder="Select Region"
                 regionFilter="core"
-                regions={regions ?? []}
+                regions={visibleRegions ?? []}
                 sx={{
                   width: '160px !important',
                 }}
@@ -320,7 +347,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               eventCategory="Clusters Table"
               handlePageChange={setPage}
               handleSizeChange={setPageSize}
-              page={page}
+              page={safePage}
               pageSize={pageSize}
             />
           </Box>
