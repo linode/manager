@@ -47,7 +47,7 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   }),
   type: Factory.each((i) => {
     if (i === 1) {
-      return 'premium_40GB';
+      return 'premium_40gb';
     }
     if (i % 2 === 0) {
       return 'premium';
