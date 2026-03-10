@@ -14,6 +14,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
+import { WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION } from '../constants';
 import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -108,8 +109,11 @@ export const Firewall = () => {
                 });
               }
             }}
-            placeholder="None"
+            placeholder="Select a Firewall"
             value={field.value}
+            warningMessageForNoFirewallOption={
+              WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION
+            }
           />
           <Box>
             <LinkButton

@@ -1,4 +1,4 @@
-import { Box, CircleProgress, LinkButton, Notice, useTheme } from '@linode/ui';
+import { Box, CircleProgress, LinkButton, useTheme } from '@linode/ui';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   Table,
@@ -10,12 +10,11 @@ import React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 
-import type { Account, Filter, UserType } from '@linode/api-v4';
+import type { Account, UserType } from '@linode/api-v4';
 
 export interface ChildAccountsTableProps {
   childAccounts?: Account[];
   currentTokenWithBearer?: string;
-  filter: Filter;
   isLoading: boolean;
   isSwitchingChildAccounts: boolean;
   onClose: () => void;
@@ -43,7 +42,6 @@ export interface ChildAccountsTableProps {
 
 export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
   const {
-    filter,
     childAccounts,
     currentTokenWithBearer,
     isLoading,
@@ -73,19 +71,6 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
       <Box display="flex" justifyContent="center">
         <CircleProgress size="md" />
       </Box>
-    );
-  }
-
-  if (
-    childAccounts &&
-    childAccounts.length === 0 &&
-    !Object.prototype.hasOwnProperty.call(filter, 'company')
-  ) {
-    return (
-      <Notice variant="info">
-        You don&apos;t have access to other accounts. You must be added to a
-        delegation by an account administrator to have access to other accounts.
-      </Notice>
     );
   }
 

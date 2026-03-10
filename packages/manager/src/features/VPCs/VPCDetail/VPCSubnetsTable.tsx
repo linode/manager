@@ -315,6 +315,13 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const getTableItems = (): TableItem[] => {
     return subnets.data.map((subnet) => {
+      // NodeBalancers can have same VPC subnet as its frontend and backend configuration.
+      // and this can create duplicate entries in the resources count and also in the list of nodebalancers assigned to a subnet.
+      // To avoid this, we are creating a unique list of nodebalancers based on their id.
+      const uniqueNodebalancers = Array.from(
+        new Map(subnet.nodebalancers.map((nb) => [nb.id, nb])).values()
+      );
+
       const OuterTableCells = (
         <>
           <Hidden smDown>
@@ -326,7 +333,7 @@ export const VPCSubnetsTable = (props: Props) => {
           )}
           <Hidden smDown>
             <TableCell>
-              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
+              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + uniqueNodebalancers.length : subnet.linodes.length}`}
             </TableCell>
           </Hidden>
           <TableCell actionCell>
@@ -336,7 +343,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
               numLinodes={subnet.linodes.length}
-              numNodebalancers={subnet.nodebalancers.length}
+              numNodebalancers={uniqueNodebalancers.length}
               subnet={subnet}
               vpcId={vpcId}
             />
@@ -376,7 +383,7 @@ export const VPCSubnetsTable = (props: Props) => {
               )}
             </TableBody>
           </Table>
-          {isNodebalancerVPCEnabled && subnet.nodebalancers?.length > 0 && (
+          {isNodebalancerVPCEnabled && uniqueNodebalancers.length > 0 && (
             <Table aria-label="NodeBalancers" size="small" striped={false}>
               <TableHead
                 style={{
@@ -386,7 +393,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 {SubnetNodebalancerTableRowHead}
               </TableHead>
               <TableBody>
-                {subnet.nodebalancers.map((nb) => (
+                {uniqueNodebalancers.map((nb) => (
                   <SubnetNodeBalancerRow
                     key={nb.id}
                     nodeBalancerId={nb.id}

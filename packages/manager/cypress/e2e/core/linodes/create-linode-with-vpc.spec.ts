@@ -9,6 +9,7 @@ import {
 } from 'support/intercepts/account';
 import { mockGetLinodeConfig } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -36,6 +37,7 @@ import { chooseRegion } from 'support/util/regions';
 import {
   accountFactory,
   accountSettingsFactory,
+  firewallFactory,
   linodeConfigFactory,
   subnetFactory,
   vpcFactory,
@@ -106,8 +108,14 @@ describe('Create Linode with VPCs (Legacy)', () => {
       ],
     };
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     mockGetVPCs([mockVPC]).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
 
@@ -136,6 +144,9 @@ describe('Create Linode with VPCs (Legacy)', () => {
       'have.value',
       `${mockSubnet.label} (${mockSubnet.ipv4})`
     );
+
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -240,7 +251,13 @@ describe('Create Linode with VPCs (Legacy)', () => {
       ],
     };
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     mockGetVPCs([]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
 
@@ -292,6 +309,9 @@ describe('Create Linode with VPCs (Legacy)', () => {
     cy.get('[data-qa-autocomplete="Subnet"]').within(() => {
       cy.findByLabelText('Clear').click();
     });
+
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Try to submit the form without a subnet selected
     ui.button
@@ -460,6 +480,11 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       ],
     };
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockGetVPCs([mockVPC]).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
     mockCreateLinode(mockLinode).as('createLinode');
@@ -499,6 +524,9 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       'have.value',
       `${mockSubnet.label} (${mockSubnet.ipv4})`
     );
+
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -572,6 +600,11 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       region: linodeRegion.id,
     });
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       primary: true,
@@ -601,6 +634,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
 
     mockGetVPCs([mockVPC]).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
 
@@ -634,6 +668,12 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     cy.findByLabelText('Subnet').should(
       'have.value',
       `${mockSubnet.label} (${mockSubnet.ipv4})`
+    );
+
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'VPC Interface Firewall'
     );
 
     // Confirm VPC assignment indicator is shown in Linode summary.
@@ -737,6 +777,13 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       ],
     };
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
+
     mockGetVPCs([]);
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
@@ -755,6 +802,8 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
 
     // Select VPC card
     linodeCreatePage.selectInterface('vpc');
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -896,6 +945,11 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
       region: linodeRegion.id,
     });
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       primary: true,
@@ -924,6 +978,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     };
 
     mockGetVPCs([]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
 
@@ -1008,6 +1063,12 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     cy.findByText('Allow public IPv4 access (1:1 NAT)')
       .should('be.visible')
       .click();
+
+    // Select a firewall for the VPC interface
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'VPC Interface Firewall'
+    );
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
