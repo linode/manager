@@ -1,5 +1,5 @@
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Button } from '@linode/ui';
+import { Button, TooltipIcon } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { enqueueSnackbar } from 'notistack';
@@ -7,21 +7,22 @@ import React, { useState } from 'react';
 
 import { Code } from 'src/components/Code/Code';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import {
-  StyledGridContainer,
-  StyledLabelTypography,
-  StyledValueGrid,
-} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
 import type { Database, DatabaseCredentials } from '@linode/api-v4';
 
 interface ServiceURIProps {
   database: Database;
   isGeneralServiceURI?: boolean;
+  showPrivateVPC?: boolean;
 }
 
 export const ServiceURI = (props: ServiceURIProps) => {
-  const { database, isGeneralServiceURI = false } = props;
+  const {
+    database,
+    isGeneralServiceURI = false,
+    showPrivateVPC = false,
+  } = props;
 
   const [hidePassword, setHidePassword] = useState(true);
   const [isCopying, setIsCopying] = useState(false);
@@ -36,6 +37,26 @@ export const ServiceURI = (props: ServiceURIProps) => {
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id, !hidePassword);
 
+  const hasVPC = Boolean(database?.private_network?.vpc_id);
+  const hasPublicVPC = hasVPC && database.private_network?.public_access;
+  // If there is a VPC, use VPC public access unless we want to explicitly show private access, otherwise default to public
+  const publicAccess =
+    hasPublicVPC && showPrivateVPC
+      ? false
+      : hasVPC
+        ? database.private_network?.public_access
+        : true;
+
+  const primaryHost = database.hosts?.endpoints.find(
+    (endpoint) =>
+      endpoint.role === 'primary' && endpoint.public_access === publicAccess
+  );
+  const primaryConnectionPoolHost = database.hosts?.endpoints.find(
+    (endpoint) =>
+      endpoint.role === 'primary-connection-pool' &&
+      endpoint.public_access === publicAccess
+  );
+
   const handleCopy = async () => {
     if (!credentials) {
       try {
@@ -43,7 +64,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         const { data } = await getDatabaseCredentials();
         if (data) {
           // copy with revealed credentials
-          copy(getServiceURIText(isGeneralServiceURI, data));
+          copy(getServiceURIText(data, isGeneralServiceURI));
         } else {
           enqueueSnackbar(
             'There was an error retrieving cluster credentials. Please try again.',
@@ -62,13 +83,13 @@ export const ServiceURI = (props: ServiceURIProps) => {
   };
 
   const getServiceURIText = (
-    isGeneralServiceURI: boolean,
-    credentials: DatabaseCredentials | undefined
+    credentials: DatabaseCredentials | undefined,
+    isGeneralServiceURI?: boolean
   ) => {
     if (isGeneralServiceURI) {
-      return `${engine}://${credentials?.password}@${database.hosts?.primary}:${database.port}/defaultdb?sslmode=require`;
+      return `${engine}://${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?sslmode=require`;
     }
-    return `postgres://${credentials?.username}:${credentials?.password}@${database.hosts?.primary}:${database.connection_pool_port}/{connection pool label}?sslmode=require`;
+    return `postgres://${credentials?.username}:${credentials?.password}@${primaryConnectionPoolHost?.address}:${primaryConnectionPoolHost?.port}/{connection pool label}?sslmode=require`;
   };
 
   const getCredentials = (isGeneralServiceURI: boolean) => {
@@ -110,7 +131,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     </Button>
   );
 
-  const ServiceURIJSX = (isGeneralServiceURI: boolean) => (
+  return (
     <Grid display="contents">
       <StyledValueGrid
         data-testid="service-uri"
@@ -118,7 +139,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         sx={{
           overflowX: 'auto',
           overflowY: 'hidden',
-          p: isGeneralServiceURI ? '0' : null,
+          p: '0',
         }}
         whiteSpace="pre"
       >
@@ -128,16 +149,17 @@ export const ServiceURI = (props: ServiceURIProps) => {
           : hidePassword || (!credentialsError && !credentials)
             ? RevealPasswordButton
             : getCredentials(isGeneralServiceURI)}
-        {!isGeneralServiceURI ? (
+        {isGeneralServiceURI ? (
           <>
-            @{database.hosts?.primary}:{database.connection_pool_port}/
-            <StyledCode>{'{connection pool label}'}</StyledCode>
-            ?sslmode=require
+            @{primaryHost?.address}:
+            {`${primaryHost?.port}/defaultdb?sslmode=require`}
           </>
         ) : (
           <>
-            @{database.hosts?.primary}:
-            {`${database.port}/defaultdb?sslmode=require`}
+            @{primaryConnectionPoolHost?.address}:
+            {primaryConnectionPoolHost?.port}/
+            <StyledCode>{'{connection pool label}'}</StyledCode>
+            ?sslmode=require
           </>
         )}
       </StyledValueGrid>
@@ -149,33 +171,29 @@ export const ServiceURI = (props: ServiceURIProps) => {
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
             onClickCallback={handleCopy}
-            text={getServiceURIText(isGeneralServiceURI, credentials)}
+            text={getServiceURIText(credentials, isGeneralServiceURI)}
+          />
+        </Grid>
+      )}
+      {hasPublicVPC && showPrivateVPC && (
+        <Grid>
+          <TooltipIcon
+            status="info"
+            sxTooltipIcon={{
+              marginLeft: '2px',
+              padding: '0px',
+            }}
+            text={
+              'Private endpoints are resolvable only for resources within the VPC Subnet. Public endpoints are resolvable outside the VPC.'
+            }
           />
         </Grid>
       )}
     </Grid>
   );
-
-  if (isGeneralServiceURI) {
-    return ServiceURIJSX(isGeneralServiceURI);
-  }
-
-  return (
-    <StyledGridContainer display="flex">
-      <Grid
-        size={{
-          md: 1.5,
-          xs: 3,
-        }}
-      >
-        <StyledLabelTypography>Service URI</StyledLabelTypography>
-      </Grid>
-      {ServiceURIJSX(isGeneralServiceURI)}
-    </StyledGridContainer>
-  );
 };
 
-const StyledCode = styled(Code, {
+export const StyledCode = styled(Code, {
   label: 'StyledCode',
 })(() => ({
   margin: 0,

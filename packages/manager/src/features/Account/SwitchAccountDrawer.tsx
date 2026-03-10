@@ -3,6 +3,7 @@ import {
   useMyDelegatedChildAccountsQuery,
 } from '@linode/queries';
 import {
+  Box,
   Button,
   Drawer,
   LinkButton,
@@ -14,6 +15,7 @@ import {
 import React, { useMemo, useState } from 'react';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
+import NoResultsState from 'src/assets/icons/no-results-state.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
@@ -103,7 +105,7 @@ export const SwitchAccountDrawer = (props: Props) => {
           }
         : undefined,
     },
-    isIAMDelegationEnabled === false
+    isIAMDelegationEnabled === false && (isParentUserType || isProxyUserType)
   );
 
   const {
@@ -159,12 +161,18 @@ export const SwitchAccountDrawer = (props: Props) => {
           userType: isIAMDelegationEnabled ? 'delegate' : 'proxy',
         });
         onClose(event);
-        location.replace('/linodes');
+
+        // Only redirect to /linodes for IAM delegate users
+        if (isIAMDelegationEnabled) {
+          location.replace('/linodes');
+        } else {
+          location.reload();
+        }
       } catch {
         // Error is handled by createTokenError.
       }
     },
-    [createToken, isProxyUserType, updateCurrentToken, revokeToken]
+    [createToken, isIAMDelegationEnabled, updateCurrentToken, revokeToken]
   );
 
   const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
@@ -211,6 +219,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   const hasError = isIAMDelegationEnabled
     ? delegatedChildAccountsError
     : childAccountInfiniteError;
+
   return (
     <Drawer onClose={handleClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
@@ -219,118 +228,147 @@ export const SwitchAccountDrawer = (props: Props) => {
       {isParentTokenError.length > 0 && (
         <Notice text={isParentTokenError[0].reason} variant="error" />
       )}
-      <Typography
-        sx={(theme) => ({
-          margin: `${theme.spacingFunction(24)} 0`,
-        })}
-      >
-        Select an account to view and manage its settings and configurations
-        {isProxyOrDelegateUserType && (
-          <>
-            {' or '}
-            <LinkButton
-              aria-label="parent-account-link"
-              disabled={isSubmitting}
-              onClick={() => {
-                sendSwitchToParentAccountEvent();
-                handleSwitchToParentAccount();
-              }}
-            >
-              switch back to your account
-            </LinkButton>
-          </>
-        )}
-        .
-      </Typography>
-
-      {hasError && (
-        <Stack alignItems="center" gap={1} justifyContent="center">
-          <ErrorStateCloud />
-          <Typography>Unable to load data.</Typography>
-          <Typography>
-            Try again or contact support if the issue persists.
+      {childAccounts &&
+      childAccounts.length === 0 &&
+      isIAMDelegationEnabled &&
+      !Object.prototype.hasOwnProperty.call(filter, 'company') ? (
+        <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
+          <NoResultsState />
+          <Typography sx={{ mt: 2, mb: 1 }} variant="h2">
+            You don’t have access to other accounts.
+          </Typography>
+          <Typography sx={{ textAlign: 'center', maxWidth: 300 }}>
+            You must be added to a delegation by an account administrator to
+            have access to other accounts.
           </Typography>
           <Button
-            buttonType="primary"
-            onClick={() => refetchFn()}
+            buttonType="outlined"
+            onClick={handleClose}
+            sx={{ mt: 4, alignSelf: 'flex-end' }}
+          >
+            Close
+          </Button>
+        </Box>
+      ) : (
+        <>
+          <Typography
             sx={(theme) => ({
-              marginTop: theme.spacingFunction(16),
+              margin: `${theme.spacingFunction(24)} 0`,
             })}
           >
-            Try again
-          </Button>
-        </Stack>
-      )}
-      {!hasError && (
-        <>
-          <DebouncedSearchTextField
-            clearable
-            debounceTime={250}
-            hideLabel
-            key={`switch-search-${searchQuery}`}
-            label="Search"
-            onSearch={handleSearchQueryChange}
-            placeholder="Search"
-            sx={{ marginBottom: theme.spacingFunction(12) }}
-            value={searchQuery}
-          />
-          {searchQuery &&
-            childAccounts &&
-            childAccounts.length === 0 &&
-            !isLoading && (
-              <Typography
-                sx={{
-                  fontStyle: 'italic',
-                  marginTop: theme.spacingFunction(6),
-                }}
-              >
-                No search results
-              </Typography>
+            Select an account to view and manage its settings and configurations
+            {isProxyOrDelegateUserType && (
+              <>
+                {' or '}
+                <LinkButton
+                  aria-label="parent-account-link"
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    sendSwitchToParentAccountEvent();
+                    handleSwitchToParentAccount();
+                  }}
+                >
+                  switch back to your account
+                </LinkButton>
+              </>
             )}
+            .
+          </Typography>
+
+          {hasError ? (
+            <Stack alignItems="center" gap={1} justifyContent="center">
+              <ErrorStateCloud />
+              <Typography>Unable to load data.</Typography>
+              <Typography>
+                Try again or contact support if the issue persists.
+              </Typography>
+              <Button
+                buttonType="primary"
+                onClick={() => refetchFn()}
+                sx={(theme) => ({
+                  marginTop: theme.spacingFunction(16),
+                })}
+              >
+                Try again
+              </Button>
+            </Stack>
+          ) : (
+            <>
+              {((childAccounts && childAccounts.length !== 0) ||
+                searchQuery) && (
+                <DebouncedSearchTextField
+                  clearable
+                  debounceTime={250}
+                  hideLabel
+                  key={`switch-search-${searchQuery}`}
+                  label="Search"
+                  loading={isLoading}
+                  onSearch={handleSearchQueryChange}
+                  placeholder="Search"
+                  sx={{ marginBottom: theme.spacingFunction(12) }}
+                  value={searchQuery}
+                />
+              )}
+              {isIAMDelegationEnabled &&
+                searchQuery &&
+                childAccounts &&
+                childAccounts.length === 0 &&
+                !isLoading && (
+                  <Typography
+                    sx={{
+                      fontStyle: 'italic',
+                      marginTop: theme.spacingFunction(6),
+                    }}
+                  >
+                    No search results
+                  </Typography>
+                )}
+
+              {isIAMDelegationEnabled && (
+                <ChildAccountsTable
+                  childAccounts={childAccounts}
+                  currentTokenWithBearer={
+                    isProxyOrDelegateUserType
+                      ? currentParentTokenWithBearer
+                      : currentTokenWithBearer
+                  }
+                  isLoading={isLoading}
+                  isSwitchingChildAccounts={isSwitchingChildAccounts}
+                  onClose={onClose}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
+                  onSwitchAccount={handleSwitchToChildAccount}
+                  page={page}
+                  pageSize={pageSize}
+                  setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+                  totalResults={delegatedChildAccounts?.results || 0}
+                  userType={userType}
+                />
+              )}
+              {!isIAMDelegationEnabled && (
+                <ChildAccountList
+                  childAccounts={childAccounts}
+                  currentTokenWithBearer={
+                    isProxyOrDelegateUserType
+                      ? currentParentTokenWithBearer
+                      : currentTokenWithBearer
+                  }
+                  fetchNextPage={fetchNextPage}
+                  filter={filter}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  isLoading={isLoading}
+                  isSwitchingChildAccounts={isSwitchingChildAccounts}
+                  onClose={onClose}
+                  onSwitchAccount={handleSwitchToChildAccount}
+                  refetchFn={refetchFn}
+                  setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
+                  userType={userType}
+                />
+              )}
+            </>
+          )}
         </>
-      )}
-      {isIAMDelegationEnabled && (
-        <ChildAccountsTable
-          childAccounts={childAccounts}
-          currentTokenWithBearer={
-            isProxyOrDelegateUserType
-              ? currentParentTokenWithBearer
-              : currentTokenWithBearer
-          }
-          filter={filter}
-          isLoading={isLoading}
-          isSwitchingChildAccounts={isSwitchingChildAccounts}
-          onClose={onClose}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          onSwitchAccount={handleSwitchToChildAccount}
-          page={page}
-          pageSize={pageSize}
-          setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
-          totalResults={delegatedChildAccounts?.results || 0}
-          userType={userType}
-        />
-      )}
-      {!isIAMDelegationEnabled && (
-        <ChildAccountList
-          childAccounts={childAccounts}
-          currentTokenWithBearer={
-            isProxyOrDelegateUserType
-              ? currentParentTokenWithBearer
-              : currentTokenWithBearer
-          }
-          fetchNextPage={fetchNextPage}
-          filter={filter}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          isLoading={isLoading}
-          isSwitchingChildAccounts={isSwitchingChildAccounts}
-          onClose={onClose}
-          onSwitchAccount={handleSwitchToChildAccount}
-          refetchFn={refetchFn}
-          setIsSwitchingChildAccounts={setIsSwitchingChildAccounts}
-          userType={userType}
-        />
       )}
     </Drawer>
   );

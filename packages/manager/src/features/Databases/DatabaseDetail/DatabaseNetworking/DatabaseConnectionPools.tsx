@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
@@ -20,14 +21,18 @@ import {
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import {
-  MIN_PAGE_SIZE,
-  PAGE_SIZES,
-} from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { DEFAULT_PAGE_SIZES } from 'src/features/Databases/constants';
 import {
   CONNECTION_POOL_LABEL_CELL_STYLES,
   MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
 } from 'src/features/Databases/constants';
+import {
+  StyledGridContainer,
+  StyledLabelTypography,
+  StyledValueGrid,
+} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
@@ -47,6 +52,7 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
+  const flags = useFlags();
   const isDatabaseInactive = database.status !== 'active';
 
   const [deletePoolLabelSelection, setDeletePoolLabelSelection] =
@@ -80,6 +86,9 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
     );
   }
 
+  const hasVPC = Boolean(database?.private_network?.vpc_id);
+  const hasPublicVPC = hasVPC && database.private_network?.public_access;
+
   return (
     <>
       <div className={classes.topSection}>
@@ -110,9 +119,42 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           Add Pool
         </Button>
       </div>
-      {connectionPools && connectionPools.data.length > 0 && (
-        <ServiceURI database={database} />
-      )}
+      {flags?.hostnameEndpoints &&
+        connectionPools &&
+        connectionPools.data.length > 0 && (
+          <StyledGridContainer container size={12} spacing={0}>
+            <Grid
+              size={{
+                md: 2,
+                xs: 3,
+              }}
+            >
+              <StyledLabelTypography>
+                {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
+              </StyledLabelTypography>
+            </Grid>
+            <StyledValueGrid size={{ md: 10, xs: 9 }}>
+              <ServiceURI database={database} />
+            </StyledValueGrid>
+            {hasPublicVPC && (
+              <>
+                <Grid
+                  size={{
+                    md: 2,
+                    xs: 3,
+                  }}
+                >
+                  <StyledLabelTypography>
+                    Private Service URI
+                  </StyledLabelTypography>
+                </Grid>
+                <StyledValueGrid size={{ md: 10, xs: 9 }}>
+                  <ServiceURI database={database} showPrivateVPC />
+                </StyledValueGrid>
+              </>
+            )}
+          </StyledGridContainer>
+        )}
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table
           aria-label={'List of Connection pools'}
@@ -183,7 +225,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
           ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
           page={pagination.page}
           pageSize={pagination.pageSize}
-          pageSizes={PAGE_SIZES}
+          pageSizes={DEFAULT_PAGE_SIZES}
           style={{
             borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
             borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,

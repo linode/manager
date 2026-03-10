@@ -13,6 +13,7 @@ import {
 import { getAPIFilterFromQuery } from '@linode/search';
 import { useDebouncedValue } from '@linode/utilities';
 
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 import {
   databaseToSearchableItem,
@@ -119,6 +120,7 @@ const entities = [
     searchOptions: {
       searchableFieldsWithoutOperator: ['label'],
     },
+    requireACLPLogsEnabled: true,
   },
   {
     getSearchableItem: destinationToSearchableItem,
@@ -127,6 +129,7 @@ const entities = [
     searchOptions: {
       searchableFieldsWithoutOperator: ['label'],
     },
+    requireACLPLogsEnabled: true,
   },
 ];
 
@@ -142,11 +145,12 @@ const entities = [
  * and do the filtering client-side.
  */
 export const useAPISearch = ({ enabled, query }: Props) => {
-  const deboundedQuery = useDebouncedValue(query);
+  const debouncedQuery = useDebouncedValue(query);
+  const { isACLPLogsEnabled } = useIsACLPLogsEnabled();
 
   const result = entities.map((entity) => {
     const { error, filter } = getAPIFilterFromQuery(
-      deboundedQuery,
+      debouncedQuery,
       entity.searchOptions
     );
 
@@ -155,7 +159,10 @@ export const useAPISearch = ({ enabled, query }: Props) => {
       parseError: error,
       ...entity.query(
         entity.baseFilter ? { ...entity.baseFilter, ...filter } : filter,
-        enabled && error === null && Boolean(deboundedQuery)
+        enabled &&
+          error === null &&
+          Boolean(debouncedQuery) &&
+          (!entity.requireACLPLogsEnabled || isACLPLogsEnabled)
       ),
     };
   });

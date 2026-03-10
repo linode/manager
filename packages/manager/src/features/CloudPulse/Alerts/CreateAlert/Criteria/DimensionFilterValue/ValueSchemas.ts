@@ -19,6 +19,9 @@ import {
   INTERFACE_ID_ERROR_MESSAGE,
   PORT_HELPER_TEXT,
   PORTS_TRAILING_COMMA_ERROR_MESSAGE,
+  STATUS_CODE_ERROR_MESSAGE,
+  STATUS_CODES_ERROR_MESSAGE,
+  STATUS_CODES_HELPER_TEXT,
 } from '../../../constants';
 
 const LENGTH_ERROR_MESSAGE = 'Value must be 100 characters or less.';
@@ -240,6 +243,73 @@ const multipleInterfacesSchema = string()
     }
   );
 
+const singleStatusCodeSchema = string()
+  .max(100, LENGTH_ERROR_MESSAGE)
+  .test(
+    'validate-single-status-code-schema',
+    STATUS_CODE_ERROR_MESSAGE,
+    function (value) {
+      if (!value || typeof value !== 'string') {
+        return this.createError({ message: fieldErrorMessage });
+      }
+
+      if (!CONFIG_NUMBER_REGEX.test(value)) {
+        return this.createError({ message: STATUS_CODE_ERROR_MESSAGE });
+      }
+
+      return true;
+    }
+  );
+
+const multipleStatusCodeSchema = string()
+  .max(100, LENGTH_ERROR_MESSAGE)
+  .test(
+    'validate-multi-status-code-schema',
+    STATUS_CODES_ERROR_MESSAGE,
+    function (value) {
+      if (!value || typeof value !== 'string') {
+        return this.createError({ message: fieldErrorMessage });
+      }
+      if (value.includes(' ')) {
+        return this.createError({ message: STATUS_CODES_ERROR_MESSAGE });
+      }
+
+      if (value.trim().endsWith(',')) {
+        return this.createError({
+          message: PORTS_TRAILING_COMMA_ERROR_MESSAGE,
+        });
+      }
+
+      if (value.trim().startsWith(',')) {
+        return this.createError({ message: PORTS_LEADING_COMMA_ERROR_MESSAGE });
+      }
+
+      if (value.trim().includes(',,')) {
+        return this.createError({
+          message: CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+        });
+      }
+      if (value.includes('.')) {
+        return this.createError({ message: STATUS_CODES_HELPER_TEXT });
+      }
+
+      const rawSegments = value.split(',');
+      // Check for empty segments
+      if (rawSegments.some((segment) => segment.trim() === '')) {
+        return this.createError({
+          message: CONFIG_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+        });
+      }
+      for (const configId of rawSegments) {
+        const trimmedConfigId = configId.trim();
+
+        if (!CONFIG_NUMBER_REGEX.test(trimmedConfigId)) {
+          return this.createError({ message: STATUS_CODE_ERROR_MESSAGE });
+        }
+      }
+      return true;
+    }
+  );
 const baseValueSchema = string()
   .nullable()
   .required(fieldErrorMessage)
@@ -268,6 +338,11 @@ export const getDimensionFilterValueSchema = ({
     const interfaceSchema =
       operator === 'in' ? multipleInterfacesSchema : singleInterfaceSchema;
     return interfaceSchema.concat(baseValueSchema);
+  }
+  if (dimensionLabel === 'status_code') {
+    const statusCodeSchema =
+      operator === 'in' ? multipleStatusCodeSchema : singleStatusCodeSchema;
+    return statusCodeSchema.concat(baseValueSchema);
   }
   if (['endswith', 'startswith'].includes(operator)) {
     return string().max(100, LENGTH_ERROR_MESSAGE).concat(baseValueSchema);

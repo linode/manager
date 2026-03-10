@@ -1,7 +1,9 @@
 import { linodeFactory } from '@linode/utilities';
-import { imageFactory } from '@src/factories';
+import { firewallFactory, imageFactory } from '@src/factories';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -20,8 +22,14 @@ const mockImage = imageFactory.build({
   label: randomLabel(),
 });
 
+const mockFirewall = firewallFactory.build({
+  id: randomNumber(),
+  label: randomLabel(),
+});
+
 const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   mockGetAllImages([mockImage]).as('mockImage');
+  mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
@@ -52,6 +60,11 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   cy.findByText('Shared CPU').click();
   cy.get('[id="g6-nanode-1"][type="radio"]').click();
   cy.get('[id="root-password"]').type(randomString(32));
+  // Select a firewall
+  linodeCreatePage.selectFirewall(
+    mockFirewall.label,
+    'Public Interface Firewall'
+  );
 
   ui.button
     .findByTitle('Create Linode')
