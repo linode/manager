@@ -6,3 +6,6 @@ export const MANUAL_IMAGES_DEFAULT_ORDER = 'asc';
 export const MANUAL_IMAGES_DEFAULT_ORDER_BY = 'label';
 export const AUTOMATIC_IMAGES_DEFAULT_ORDER = 'asc';
 export const AUTOMATIC_IMAGES_DEFAULT_ORDER_BY = 'label';
+
+export const SHARE_GROUP_COLUMN_HEADER_TOOLTIP =
+  "Displays the share group for images shared with you; your custom images don't display a group name.";
