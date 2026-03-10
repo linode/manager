@@ -24,7 +24,7 @@ const defaultFormValues: Partial<LinodeCreateFormValues> = {
 describe('InterfaceType', () => {
   it('renders all interface type options', () => {
     const { getByText, getByRole } = renderWithThemeAndHookFormContext({
-      component: <InterfaceType index={0} />,
+      component: <InterfaceType disabled={false} index={0} />,
       useFormOptions: {
         defaultValues: defaultFormValues,
       },
@@ -44,7 +44,7 @@ describe('InterfaceType', () => {
 
   it('renders tooltip icons for each interface type', () => {
     const { getAllByRole } = renderWithThemeAndHookFormContext({
-      component: <InterfaceType index={0} />,
+      component: <InterfaceType disabled={false} index={0} />,
       useFormOptions: {
         defaultValues: defaultFormValues,
       },
@@ -57,7 +57,7 @@ describe('InterfaceType', () => {
 
   it('selects the correct radio based on form value', () => {
     const { getByDisplayValue } = renderWithThemeAndHookFormContext({
-      component: <InterfaceType index={0} />,
+      component: <InterfaceType disabled={false} index={0} />,
       useFormOptions: {
         defaultValues: {
           ...defaultFormValues,
@@ -76,7 +76,7 @@ describe('InterfaceType', () => {
 
   it('allows user to change interface type selection', async () => {
     const { getByDisplayValue } = renderWithThemeAndHookFormContext({
-      component: <InterfaceType index={0} />,
+      component: <InterfaceType disabled={false} index={0} />,
       useFormOptions: {
         defaultValues: defaultFormValues,
       },
