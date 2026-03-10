@@ -137,6 +137,7 @@ export const NodePoolFirewallSelect = (props: NodePoolFirewallSelectProps) => {
             }
           }}
           placeholder="Select firewall"
+          showNoFirewallOption={false}
           value={field.value}
         />
       )}

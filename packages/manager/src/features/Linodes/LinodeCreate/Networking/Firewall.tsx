@@ -11,6 +11,8 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 
+import { WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION } from '../../constants';
+
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const Firewall = () => {
@@ -61,8 +63,11 @@ export const Firewall = () => {
           errorText={fieldState.error?.message}
           onBlur={field.onBlur}
           onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
-          placeholder="None"
+          placeholder="Select a Firewall"
           value={field.value}
+          warningMessageForNoFirewallOption={
+            WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION
+          }
         />
         <Box>
           <LinkButton

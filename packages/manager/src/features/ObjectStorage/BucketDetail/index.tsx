@@ -1,3 +1,4 @@
+import { useRegionQuery } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
@@ -41,6 +41,7 @@ const BucketMetrics = React.lazy(() =>
 
 const BUCKET_DETAILS_URL = '/object-storage/buckets/$clusterId/$bucketName';
 const ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT = ['E0', 'E1'];
+const OBJECT_STORAGE_METRICS_KEY = 'Object Storage';
 
 export const BucketDetailLanding = React.memo(() => {
   const { bucketName, clusterId } = useParams({
@@ -48,22 +49,40 @@ export const BucketDetailLanding = React.memo(() => {
   });
 
   const { aclpServices, objectStorageContextualMetrics } = useFlags();
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
   const { isError: aclpServiceError, isLoading: aclServiceLoading } =
     useCloudPulseServiceByServiceType('objectstorage', true);
 
   const {
     data: bucketsData,
-    isLoading,
+    isLoading: bucketsLoading,
     error,
     isPending,
-  } = useObjectStorageBuckets(isObjectStorageGen2Enabled);
+  } = useObjectStorageBuckets();
 
   const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
+
+  const {
+    data: region,
+    isLoading: regionLoading,
+    error: regionError,
+  } = useRegionQuery(bucket?.region || '');
 
   const { endpoint_type } = bucket ?? {};
 
   const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
+
+  const regionSupportsMetrics = region?.monitors?.metrics?.includes(
+    OBJECT_STORAGE_METRICS_KEY
+  );
+
+  const isBucketMetricsTabHidden =
+    !endpoint_type ||
+    ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT.includes(endpoint_type) ||
+    aclpServiceError ||
+    !aclpServices?.objectstorage?.metrics?.enabled ||
+    !objectStorageContextualMetrics ||
+    !regionSupportsMetrics ||
+    !!regionError;
 
   const { handleTabChange, tabIndex, tabs, getTabIndex } = useTabs([
     {
@@ -82,17 +101,12 @@ export const BucketDetailLanding = React.memo(() => {
     {
       title: 'Metrics',
       to: `${BUCKET_DETAILS_URL}/metrics`,
-      hide:
-        !endpoint_type ||
-        ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT.includes(endpoint_type) ||
-        aclpServiceError ||
-        !aclpServices?.objectstorage?.metrics?.enabled ||
-        !objectStorageContextualMetrics,
+      hide: isBucketMetricsTabHidden,
       chip: aclpServices?.objectstorage?.metrics?.beta ? <BetaChip /> : null,
     },
   ]);
 
-  if (isPending || isLoading || aclServiceLoading) {
+  if (isPending || bucketsLoading || regionLoading || aclServiceLoading) {
     return <CircleProgress />;
   }
 
