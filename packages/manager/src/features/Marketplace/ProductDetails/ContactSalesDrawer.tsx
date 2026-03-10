@@ -138,21 +138,16 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   const handleFormReset = () => {
     reset();
     setSelectedCountry(null);
-    setSelectedPhoneCountry(defaultCountry);
   };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      const cleanedAdditionalEmails = values.additional_emails?.filter((e) =>
-        e?.trim()
-      );
-
-      if (!cleanedAdditionalEmails?.length) {
+      if (
+        values?.additional_emails?.length === 1 &&
+        values?.additional_emails[0].trim() === ''
+      ) {
         delete values.additional_emails;
-      } else {
-        values.additional_emails = cleanedAdditionalEmails;
       }
-
       await createPartnerReferral(values);
       enqueueSnackbar(
         'Your request has been received by Akamai. After we forward it to the partner, you will receive a confirmation email.',

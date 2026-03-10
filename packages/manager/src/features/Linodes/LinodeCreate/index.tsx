@@ -129,7 +129,7 @@ export const LinodeCreate = () => {
       to: '/linodes/create/os',
     },
     {
-      title: 'Quick Deploy Apps',
+      title: 'Marketplace',
       to: '/linodes/create/marketplace',
     },
     {
