@@ -126,6 +126,7 @@ export const DefaultFirewalls = () => {
                   label="Configuration Profile Interfaces Firewall"
                   onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  showNoFirewallOption={false}
                   value={field.value}
                 />
               )}
@@ -142,6 +143,7 @@ export const DefaultFirewalls = () => {
                   label="Linode Interfaces - Public Interface Firewall"
                   onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  showNoFirewallOption={false}
                   value={field.value}
                 />
               )}
@@ -158,6 +160,7 @@ export const DefaultFirewalls = () => {
                   label="Linode Interfaces - VPC Interface Firewall"
                   onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  showNoFirewallOption={false}
                   value={field.value}
                 />
               )}
@@ -177,6 +180,7 @@ export const DefaultFirewalls = () => {
                   label="NodeBalancers Firewall"
                   onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  showNoFirewallOption={false}
                   value={field.value}
                 />
               )}

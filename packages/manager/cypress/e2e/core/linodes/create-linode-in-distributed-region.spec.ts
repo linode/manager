@@ -4,6 +4,7 @@ import {
   regionFactory,
 } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeTypes,
@@ -14,8 +15,10 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { randomLabel, randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
+
+import { firewallFactory } from 'src/factories';
 
 import type { Region } from '@linode/api-v4';
 
@@ -42,6 +45,10 @@ describe('Create Linode in Distributed Region', () => {
       label: randomLabel(),
       region: mockRegion.id,
     });
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
     const rootPass = randomString(32);
 
     mockAppendFeatureFlags({
@@ -51,6 +58,7 @@ describe('Create Linode in Distributed Region', () => {
       },
     }).as('getFeatureFlags');
     mockGetRegions([mockRegion]).as('getRegions');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
     mockCreateLinode(mockLinode).as('createLinode');
@@ -74,6 +82,12 @@ describe('Create Linode in Distributed Region', () => {
         .should('be.visible')
         .click();
     });
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     ui.button
       .findByTitle('Create Linode')

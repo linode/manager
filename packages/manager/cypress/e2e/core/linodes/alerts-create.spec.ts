@@ -2,21 +2,32 @@ import { regionAvailabilityFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockGetAlertDefinition } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import {
   mockGetRegionAvailability,
   mockGetRegions,
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { randomLabel, randomString } from 'support/util/random';
+import { linodeCreatePage } from 'support/ui/pages';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 
-import { accountSettingsFactory, alertFactory } from 'src/factories';
+import {
+  accountSettingsFactory,
+  alertFactory,
+  firewallFactory,
+} from 'src/factories';
 import {
   ALERTS_BETA_MODE_BANNER_TEXT,
   ALERTS_BETA_MODE_BUTTON_TEXT,
   ALERTS_LEGACY_MODE_BANNER_TEXT,
   ALERTS_LEGACY_MODE_BUTTON_TEXT,
 } from 'src/features/Linodes/constants';
+
+const mockFirewall = firewallFactory.build({
+  id: randomNumber(),
+  label: randomLabel(),
+});
 
 describe('Create flow when beta alerts enabled by region and feature flag', function () {
   beforeEach(() => {
@@ -54,6 +65,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       interfaces_for_new_linodes: 'legacy_config_default_but_linode_allowed',
     });
     mockGetAccountSettings(mockInitialAccountSettings).as('getSettings');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
   });
 
   it('Alerts panel becomes visible after switching to region w/ alerts enabled', function () {
@@ -88,6 +100,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     const enabledRegion = this.mockRegions[0];
     mockGetRegionAvailability(enabledRegion.id, []).as('getRegionAvailability');
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // legacy alerts panel appears
     cy.wait('@getRegionAvailability');
@@ -208,6 +225,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     const enabledRegion = this.mockRegions[0];
     mockGetRegionAvailability(enabledRegion.id, []).as('getRegionAvailability');
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     // legacy alerts panel appears
     cy.wait('@getRegionAvailability');
@@ -437,6 +459,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       'getRegionAvailability'
     );
     ui.regionSelect.find().type(`${disabledRegion.label}{enter}`);
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     cy.wait('@getRegionAvailability');
     // enter plan and password form fields to enable "View Code Snippets" button
