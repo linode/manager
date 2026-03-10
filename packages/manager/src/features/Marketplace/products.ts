@@ -36,6 +36,23 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
+    categories: ['Kubernetes', 'Enterprise', 'Other Software and APIs'],
+    id: 'cloudcasa',
+    name: 'CloudCasa',
+    partner: {
+      email: 'info@catalogicsoftware.com',
+      logoDarkMode: 'cloudcasa-dark.svg',
+      logoLightMode: 'cloudcasa-light.svg',
+      name: 'CloudCasa by Catalogic',
+      url: 'https://cloudcasa.io/',
+    },
+    shortDescription:
+      'CloudCasa is a Kubernetes-native data protection platform that delivers cost-effective backup, granular recovery, and mobility across cloud, on-prem, and edge environments.',
+    type: {
+      name: 'Kubernetes',
+    },
+  },
+  {
     categories: [
       'Compute',
       'Enterprise',
@@ -81,6 +98,23 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
+    categories: ['Media & Entertainment, Gaming', 'Other Software and APIs'],
+    id: 'live-encoder',
+    name: 'Live Encoder',
+    partner: {
+      email: 'akamai@bitmovin.com',
+      logoDarkMode: 'bitmovin-dark.svg',
+      logoLightMode: 'bitmovin-light.svg',
+      name: 'Bitmovin',
+      url: 'https://bitmovin.com/live-encoding-live-streaming',
+    },
+    shortDescription:
+      'Power live experiences through Akamai and Bitmovin with unbeatable reliability, quality and scalability, ensuring platforms can support and stream any event size.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
     categories: [
       'AI',
       'Data Analytics',
@@ -102,6 +136,49 @@ export const PRODUCTS: Product[] = [
     },
     shortDescription:
       'Myota provides S3-compatible cyberstorage that makes data 100% immune to ransomware and cloud outages. Automatically encrypts, shards, and spreads across locations, while lowering data storage cost by 50%.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Data Analytics',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'playback',
+    name: 'Playback',
+    partner: {
+      email: 'akamai@bitmovin.com',
+      logoDarkMode: 'bitmovin-dark.svg',
+      logoLightMode: 'bitmovin-light.svg',
+      name: 'Bitmovin',
+      url: 'https://bitmovin.com/video-player',
+    },
+    shortDescription:
+      'Stream in the highest quality across the widest range of devices, and enhance engagement and retention with real-time Analytics to identify issues and optimize video performance.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Development Tools',
+      'Enterprise',
+      'Kubernetes',
+      'Other Software and APIs',
+    ],
+    id: 'portainer',
+    name: 'Portainer',
+    partner: {
+      email: 'partners@portainer.io',
+      logoDarkMode: 'portainer-dark.svg',
+      logoLightMode: 'portainer-light.svg',
+      name: 'Portainer.io Limited',
+      url: 'https://www.portainer.io/',
+    },
+    shortDescription:
+      'Portainer is a universal container management platform that lets IT teams manage Docker and Kubernetes fleets across cloud and edge to enforce security and simplify operations at any scale.',
     type: {
       name: 'SaaS & APIs',
     },
@@ -223,6 +300,23 @@ export const PRODUCTS: Product[] = [
     },
     shortDescription:
       'Vindral Live is a live streaming service that supports configurable ultra-low latency and synchronized playout. Ideal for iGaming, sports, events - anywhere you want interactivity.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: ['Media & Entertainment, Gaming', 'Other Software and APIs'],
+    id: 'vod-encoder',
+    name: 'VOD Encoder',
+    partner: {
+      email: 'akamai@bitmovin.com',
+      logoDarkMode: 'bitmovin-dark.svg',
+      logoLightMode: 'bitmovin-light.svg',
+      name: 'Bitmovin',
+      url: 'https://bitmovin.com/encoding-service',
+    },
+    shortDescription:
+      'Process entire content libraries in up to 100x real-time and minimize file size while maintaining the highest quality and security with support for the latest codecs.',
     type: {
       name: 'SaaS & APIs',
     },
