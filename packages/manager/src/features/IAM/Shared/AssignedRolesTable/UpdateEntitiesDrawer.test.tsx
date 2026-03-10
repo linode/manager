@@ -105,6 +105,10 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should prefill the form with assigned entities', async () => {
+    queryMocks.useAllAccountEntities.mockReturnValue({
+      data: mockEntities,
+      isLoading: false,
+    });
     renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the prefilled entities
