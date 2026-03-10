@@ -1,9 +1,12 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
+import { firewallFactory } from '@src/factories';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { randomLabel, randomString } from 'support/util/random';
+import { linodeCreatePage } from 'support/ui/pages';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 
 import type { Region } from '@linode/api-v4';
 
@@ -100,6 +103,11 @@ describe('GDPR agreement', () => {
   });
 
   it('needs the agreement checked to submit the form', () => {
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
       billing_agreement: false,
@@ -126,6 +134,12 @@ describe('GDPR agreement', () => {
     cy.focused().type(linodeLabel);
 
     cy.findByLabelText('Root Password').type(rootpass);
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      mockFirewall.label,
+      'Public Interface Firewall'
+    );
 
     cy.get('[data-testid="eu-agreement-checkbox"]')
       .as('euAgreement')

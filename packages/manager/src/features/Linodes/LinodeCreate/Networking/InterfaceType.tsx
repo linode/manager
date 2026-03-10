@@ -74,9 +74,9 @@ export const InterfaceType = ({ index }: Props) => {
     field.onChange(value);
 
     // VLAN interfaces do not support Firewalls, so set
-    // the Firewall ID to `null` to be safe and early return.
+    // the Firewall ID to `-1` to be safe and early return.
     if (value === 'vlan') {
-      setValue(`linodeInterfaces.${index}.firewall_id`, null);
+      setValue(`linodeInterfaces.${index}.firewall_id`, -1);
       return;
     }
 
@@ -136,9 +136,7 @@ export const InterfaceType = ({ index }: Props) => {
             key={interfaceType.purpose}
             label={
               <Stack direction="row" mt={1.25} spacing={0.5}>
-                <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                  {interfaceType.label}
-                </Typography>
+                <Typography>{interfaceType.label}</Typography>
                 <TooltipIcon
                   status="info"
                   sxTooltipIcon={{ p: 0, ml: 0.5 }}

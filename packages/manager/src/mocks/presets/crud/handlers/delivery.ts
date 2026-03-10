@@ -34,7 +34,7 @@ import type {
 
 export const getStreams = () => [
   http.get(
-    '*/v4beta/monitor/streams',
+    '*/v4/monitor/streams',
     async ({
       request,
     }): Promise<
@@ -53,7 +53,7 @@ export const getStreams = () => [
     }
   ),
   http.get(
-    '*/v4beta/monitor/streams/:id',
+    '*/v4/monitor/streams/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Stream>> => {
       const id = Number(params.id);
       const stream = await mswDB.get('streams', id);
@@ -69,7 +69,7 @@ export const getStreams = () => [
 
 export const createStreams = (mockState: MockState) => [
   http.post(
-    '*/v4beta/monitor/streams',
+    '*/v4/monitor/streams',
     async ({ request }): Promise<StrictResponse<APIErrorResponse | Stream>> => {
       const payload = await request.clone().json();
       const destinations = await mswDB.getAll('destinations');
@@ -94,7 +94,7 @@ export const createStreams = (mockState: MockState) => [
             id: stream.id,
             label: stream.label,
             type: 'stream',
-            url: `/v4beta/delivery/streams`,
+            url: `/v4/delivery/streams`,
           },
         },
         mockState,
@@ -108,7 +108,7 @@ export const createStreams = (mockState: MockState) => [
 
 export const updateStream = (mockState: MockState) => [
   http.put(
-    '*/v4beta/monitor/streams/:id',
+    '*/v4/monitor/streams/:id',
     async ({
       params,
       request,
@@ -140,7 +140,7 @@ export const updateStream = (mockState: MockState) => [
             id: stream.id,
             label: stream.label,
             type: 'stream',
-            url: `/v4beta/monitor/streams/${stream.id}`,
+            url: `/v4/monitor/streams/${stream.id}`,
           },
         },
         mockState,
@@ -154,7 +154,7 @@ export const updateStream = (mockState: MockState) => [
 
 export const deleteStream = (mockState: MockState) => [
   http.delete(
-    '*/v4beta/monitor/streams/:id',
+    '*/v4/monitor/streams/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const stream = await mswDB.get('streams', id);
@@ -172,7 +172,7 @@ export const deleteStream = (mockState: MockState) => [
             id: stream.id,
             label: stream.label,
             type: 'domain',
-            url: `/v4beta/monitor/streams/${stream.id}`,
+            url: `/v4/monitor/streams/${stream.id}`,
           },
         },
         mockState,
@@ -186,7 +186,7 @@ export const deleteStream = (mockState: MockState) => [
 
 export const getDestinations = () => [
   http.get(
-    '*/v4beta/monitor/streams/destinations',
+    '*/v4/monitor/streams/destinations',
     async ({
       request,
     }): Promise<
@@ -205,7 +205,7 @@ export const getDestinations = () => [
     }
   ),
   http.get(
-    '*/v4beta/monitor/streams/destinations/:id',
+    '*/v4/monitor/streams/destinations/:id',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
@@ -223,7 +223,7 @@ export const getDestinations = () => [
 
 export const createDestinations = (mockState: MockState) => [
   http.post(
-    '*/v4beta/monitor/streams/destinations',
+    '*/v4/monitor/streams/destinations',
     async ({
       request,
     }): Promise<StrictResponse<APIErrorResponse | Destination>> => {
@@ -278,7 +278,7 @@ export const createDestinations = (mockState: MockState) => [
             id: destination.id,
             label: destination.label,
             type: 'destination',
-            url: `/v4beta/delivery/streams/destinations`,
+            url: `/v4/delivery/streams/destinations`,
           },
         },
         mockState,
@@ -292,7 +292,7 @@ export const createDestinations = (mockState: MockState) => [
 
 export const updateDestination = (mockState: MockState) => [
   http.put(
-    '*/v4beta/monitor/streams/destinations/:id',
+    '*/v4/monitor/streams/destinations/:id',
     async ({
       params,
       request,
@@ -322,7 +322,7 @@ export const updateDestination = (mockState: MockState) => [
             id: destination.id,
             label: destination.label,
             type: 'stream',
-            url: `/v4beta/monitor/streams/${destination.id}`,
+            url: `/v4/monitor/streams/${destination.id}`,
           },
         },
         mockState,
@@ -336,7 +336,7 @@ export const updateDestination = (mockState: MockState) => [
 
 export const deleteDestination = (mockState: MockState) => [
   http.delete(
-    '*/v4beta/monitor/streams/destinations/:id',
+    '*/v4/monitor/streams/destinations/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const destination = await mswDB.get('destinations', id);
@@ -367,7 +367,7 @@ export const deleteDestination = (mockState: MockState) => [
             id: destination.id,
             label: destination.label,
             type: 'domain',
-            url: `/v4beta/monitor/streams/${destination.id}`,
+            url: `/v4/monitor/streams/${destination.id}`,
           },
         },
         mockState,
@@ -381,7 +381,7 @@ export const deleteDestination = (mockState: MockState) => [
 
 export const verifyDestination = () => [
   http.post(
-    '*/v4beta/monitor/streams/destinations/verify',
+    '*/v4/monitor/streams/destinations/verify',
     async (): Promise<StrictResponse<APIErrorResponse | {}>> => {
       return makeResponse({}, 200);
     }
