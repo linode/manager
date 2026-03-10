@@ -8,6 +8,7 @@ import {
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -391,6 +392,12 @@ describe('Community Stackscripts integration tests', () => {
       .within(() => {
         cy.get('[data-qa-radio]').click({ force: true });
       });
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(
+      'No firewall - traffic is unprotected (not recommended)',
+      'Public Interface Firewall'
+    );
 
     // Input root password
     // Weak or fair root password cannot rebuild the linode

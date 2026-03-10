@@ -8,6 +8,7 @@ import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/Ge
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION } from 'src/features/Linodes/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 
@@ -72,8 +73,11 @@ export const InterfaceFirewall = ({ index }: Props) => {
           label={`${labelMap[interfaceType ?? 'public']} Interface Firewall`}
           onBlur={field.onBlur}
           onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
-          placeholder="None"
+          placeholder="Select a Firewall"
           value={field.value}
+          warningMessageForNoFirewallOption={
+            WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION
+          }
         />
         <Box>
           <LinkButton
