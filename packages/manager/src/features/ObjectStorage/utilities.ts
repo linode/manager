@@ -190,3 +190,16 @@ export const filterRegionsByEndpoints = <T extends { id: string }>(
 
   return regions.filter((region) => endpointRegions.has(region.id));
 };
+
+export const uniqueByKey = <T extends Record<string, unknown>>(
+  arr: Array<T>,
+  key: string
+): Array<T> => {
+  const seen = new Set();
+  return arr.filter((item) => {
+    const value = item[key];
+    if (seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
+};

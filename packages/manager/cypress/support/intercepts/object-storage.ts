@@ -197,7 +197,7 @@ export const interceptDeleteBucket = (
       apiMatcher(`object-storage/buckets/${cluster}/*`)
     );
   }
-  return cy.intercept('DELETE', apiMatcher('object-storage/buckets/*'));
+  return cy.intercept('DELETE', apiMatcher('object-storage/buckets/**/*'));
 };
 
 /**

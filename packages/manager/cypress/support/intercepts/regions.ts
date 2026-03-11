@@ -15,6 +15,15 @@ import type { Region, RegionAvailability } from '@linode/api-v4';
 import type { ExtendedRegion } from 'support/util/regions';
 
 /**
+ * Intercepts GET regions request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetRegions = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('regions*'));
+};
+
+/**
  * Intercepts GET request to fetch Linode regions and mocks response.
  *
  * The array of mock regions can contain actual API region objects, or Cypress-
