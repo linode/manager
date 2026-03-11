@@ -12,7 +12,7 @@ import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.
 
 import type { Account, UserType } from '@linode/api-v4';
 
-interface ChildAccountsTableProps {
+export interface ChildAccountsTableProps {
   childAccounts?: Account[];
   currentTokenWithBearer?: string;
   isLoading: boolean;
@@ -76,7 +76,10 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
 
   return (
     <>
-      <Table aria-label="List of Child Accounts">
+      <Table
+        aria-label="List of Child Accounts"
+        data-testid="child-accounts-table"
+      >
         <TableBody>
           {childAccounts?.map((childAccount, idx) => (
             <TableRow key={childAccount.euuid}>
@@ -111,6 +114,7 @@ export const ChildAccountsTable = (props: ChildAccountsTableProps) => {
       {totalResults > MIN_PAGE_SIZE && (
         <Pagination
           count={totalResults}
+          data-testid="child-accounts-table-pagination"
           itemsLabel="Accounts: "
           onPageChange={(e: CustomEvent<number>) =>
             handlePageChange(Number(e.detail))

@@ -149,7 +149,8 @@ export const LinodeSelectTable = (props: Props) => {
       private_ip: linode.interface_generation !== 'linode' && hasPrivateIP,
       region: linode.region,
       type: linode.type ?? '',
-      interface_generation: undefined,
+      interface_generation:
+        createPath === 'clone' ? undefined : prev.interface_generation,
     }));
 
     if (!isLabelFieldDirty) {

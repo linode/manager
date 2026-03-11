@@ -29,6 +29,7 @@ import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
+import { WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION } from 'src/features/Linodes/constants';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   REMOVABLE_SELECTIONS_LINODES_TABLE_HEADERS,
@@ -753,6 +754,9 @@ export const SubnetAssignLinodesDrawer = (
                     setFieldValue('selectedFirewall', firewall?.id)
                   }
                   value={values.selectedFirewall}
+                  warningMessageForNoFirewallOption={
+                    WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION
+                  }
                 />
               </>
             )}

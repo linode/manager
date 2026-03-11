@@ -1,6 +1,7 @@
 import type { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
 
 export type Capabilities =
+  | 'ACLP Logs Datacenter LKE-E'
   | 'Backups'
   | 'Bare Metal'
   | 'Block Storage'

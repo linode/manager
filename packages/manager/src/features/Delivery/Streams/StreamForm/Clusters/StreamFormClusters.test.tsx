@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import {
   screen,
   waitFor,
@@ -6,7 +7,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { kubernetesClusterFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -20,7 +21,7 @@ const testClustersDetails = [
   {
     label: 'gke-prod-europe-west1',
     id: 1,
-    region: 'US, Atalanta, GA',
+    region: 'us-southeast',
     control_plane: {
       audit_logs_enabled: false,
     },
@@ -28,7 +29,7 @@ const testClustersDetails = [
   {
     label: 'metrics-stream-cluster',
     id: 2,
-    region: 'US, Chicago, IL',
+    region: 'us-chicago',
     control_plane: {
       audit_logs_enabled: true,
     },
@@ -36,21 +37,59 @@ const testClustersDetails = [
   {
     label: 'prod-cluster-eu',
     id: 3,
-    region: 'NL, Amsterdam',
+    region: 'nl-ams',
+    control_plane: {
+      audit_logs_enabled: true,
+    },
+  },
+  {
+    label: 'cluster-no-capability',
+    id: 4,
+    region: 'us-east',
     control_plane: {
       audit_logs_enabled: true,
     },
   },
 ];
-const clusters = kubernetesClusterFactory.buildList(3).map((cluster, idx) => ({
+const clusters = kubernetesClusterFactory.buildList(4).map((cluster, idx) => ({
   ...cluster,
   ...testClustersDetails[idx],
 }));
+
+const regions = [
+  regionFactory.build({
+    id: 'us-southeast',
+    label: 'Atlanta, GA',
+    country: 'us',
+    capabilities: ['ACLP Logs Datacenter LKE-E', 'Object Storage'],
+  }),
+  regionFactory.build({
+    id: 'us-chicago',
+    label: 'Chicago, IL',
+    country: 'us',
+    capabilities: ['ACLP Logs Datacenter LKE-E', 'Object Storage'],
+  }),
+  regionFactory.build({
+    id: 'nl-ams',
+    label: 'Amsterdam',
+    country: 'nl',
+    capabilities: ['ACLP Logs Datacenter LKE-E', 'Object Storage'],
+  }),
+  regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+    country: 'us',
+    capabilities: ['Object Storage'],
+  }),
+];
 
 const renderComponentWithoutSelectedClusters = async () => {
   server.use(
     http.get('*/lke/clusters', () => {
       return HttpResponse.json(makeResourcePage(clusters));
+    }),
+    http.get('*/regions', () => {
+      return HttpResponse.json(makeResourcePage(regions));
     })
   );
 
@@ -134,12 +173,12 @@ describe('StreamFormClusters', () => {
 
     // Type test value inside the search
     await userEvent.click(input);
-    await userEvent.type(input, 'US,');
+    await userEvent.type(input, 'us-');
 
     await waitFor(() =>
       expect(getColumnsValuesFromTable(2)).toEqual([
-        'US, Atalanta, GA',
-        'US, Chicago, IL',
+        'US, Atlanta, GA (us-southeast)',
+        'US, Chicago, IL (us-chicago)',
       ])
     );
   });
@@ -231,6 +270,9 @@ describe('StreamFormClusters', () => {
       server.use(
         http.get('*/lke/clusters', () => {
           return HttpResponse.json(makeResourcePage(clusters));
+        }),
+        http.get('*/regions', () => {
+          return HttpResponse.json(makeResourcePage(regions));
         })
       );
 
@@ -276,6 +318,9 @@ describe('StreamFormClusters', () => {
         server.use(
           http.get('*/lke/clusters', () => {
             return HttpResponse.json(makeResourcePage(modifiedClusters));
+          }),
+          http.get('*/regions', () => {
+            return HttpResponse.json(makeResourcePage(regions));
           })
         );
 
@@ -393,5 +438,57 @@ describe('StreamFormClusters', () => {
     expect(gkeProdCheckbox).not.toBeChecked();
     expect(metricsStreamCheckbox).not.toBeChecked();
     expect(prodClusterCheckbox).toBeChecked();
+  });
+
+  describe('capability filtering', () => {
+    describe('given clusters table', () => {
+      it('should only display clusters in regions with "ACLP Logs Datacenter LKE-E" capability', async () => {
+        await renderComponentWithoutSelectedClusters();
+
+        const tableRows = getColumnsValuesFromTable();
+        expect(tableRows).toContain('gke-prod-europe-west1');
+        expect(tableRows).not.toContain('cluster-no-capability');
+      });
+    });
+
+    describe('given regions dropdown', () => {
+      beforeEach(() => {
+        const regionWithCapabilityButNoClusters = regionFactory.build({
+          id: 'ap-south',
+          label: 'Singapore',
+          country: 'sg',
+          capabilities: ['ACLP Logs Datacenter LKE-E', 'Object Storage'],
+        });
+
+        const allRegions = [...regions, regionWithCapabilityButNoClusters];
+
+        server.use(
+          http.get('*/lke/clusters', () => {
+            return HttpResponse.json(makeResourcePage(clusters));
+          }),
+          http.get('*/regions', () => {
+            return HttpResponse.json(makeResourcePage(allRegions));
+          })
+        );
+      });
+
+      it('should only display regions that have clusters and the required capability', async () => {
+        await renderComponentWithoutSelectedClusters();
+
+        const regionSelect = screen.getByPlaceholderText('Select Region');
+        await userEvent.click(regionSelect);
+
+        const regionOptions = await screen.findAllByRole('option');
+        const regionOptionLabels = regionOptions.map(
+          ({ textContent }) => textContent
+        );
+
+        expect(regionOptionLabels).toEqual([
+          'US, Atlanta, GA (us-southeast)',
+          'US, Chicago, IL (us-chicago)',
+          'NL, Amsterdam (nl-ams)',
+        ]);
+      });
+    });
   });
 });

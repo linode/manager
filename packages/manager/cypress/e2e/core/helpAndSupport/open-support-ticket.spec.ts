@@ -6,6 +6,7 @@ import 'cypress-file-upload';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetDomains } from 'support/intercepts/domains';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinodeAccountLimitError,
   mockGetLinodeDetails,
@@ -31,6 +32,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { firewallFactory } from 'src/factories';
 import {
   accountFactory,
   domainFactory,
@@ -378,6 +380,10 @@ describe('open support tickets', () => {
       planLabel: 'Nanode 1 GB',
       planId: 'g6-nanode-1',
     };
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
 
     const mockLinode = linodeFactory.build();
 
@@ -393,6 +399,7 @@ describe('open support tickets', () => {
     mockGetSupportTicket(mockAccountLimitTicket);
     mockGetSupportTicketReplies(mockAccountLimitTicket.id, []);
     mockGetLinodes([mockLinode]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
     cy.visitWithLogin('/linodes/create');
 
@@ -401,6 +408,8 @@ describe('open support tickets', () => {
     linodeCreatePage.selectRegionById(mockRegion.id);
     linodeCreatePage.selectPlan(mockPlan.planType, mockPlan.planLabel);
     linodeCreatePage.setRootPassword(randomString(32));
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Attempt to create Linode and confirm mocked account limit error with support link is present.
     ui.button

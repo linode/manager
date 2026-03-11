@@ -57,8 +57,7 @@ export const UserMenu = React.memo(() => {
 
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
-  const userName =
-    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
+  const userName = (isProxyUserType ? parentProfile : profile)?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -84,9 +83,10 @@ export const UserMenu = React.memo(() => {
         setStorage('is_delegate_user_type', 'true');
       }
 
-      enqueueSnackbar(`Account switched to ${companyNameOrEmail}.`, {
-        variant: 'success',
-      });
+      const message = companyNameOrEmail
+        ? `Account switched to ${companyNameOrEmail}.`
+        : 'Account switched.';
+      enqueueSnackbar(message, { variant: 'success' });
     }
   }, [
     isProxyOrDelegateUserType,
