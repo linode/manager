@@ -213,7 +213,7 @@ export const stackscriptToSearchableItem = (
 export const streamToSearchableItem = (stream: Stream): SearchableItem => ({
   data: {
     description: getStreamDescription(stream),
-    path: `/logs/delivery/streams/${stream.id}/edit`,
+    path: `/logs/delivery/streams/${stream.id}/summary`,
     status: stream.status,
     created: stream.created,
   },
@@ -227,7 +227,7 @@ export const destinationToSearchableItem = (
 ): SearchableItem => ({
   data: {
     description: getDestinationDescription(destination),
-    path: `/logs/delivery/destinations/${destination.id}/edit`,
+    path: `/logs/delivery/destinations/${destination.id}/summary`,
     created: destination.created,
   },
   entityType: 'destination',

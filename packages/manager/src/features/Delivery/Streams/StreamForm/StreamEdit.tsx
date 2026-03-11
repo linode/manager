@@ -8,18 +8,13 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import {
-  LandingHeader,
-  type LandingHeaderProps,
-} from 'src/components/LandingHeader';
 import { StreamForm } from 'src/features/Delivery/Streams/StreamForm/StreamForm';
 
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
 
 export const StreamEdit = () => {
   const { streamId } = useParams({
-    from: '/logs/delivery/streams/$streamId/edit',
+    from: '/logs/delivery/streams/$streamId/summary',
   });
   const {
     data: destinations,
@@ -31,22 +26,6 @@ export const StreamEdit = () => {
     isLoading: isLoadingStream,
     error: errorStream,
   } = useStreamQuery(Number(streamId));
-
-  const landingHeaderProps: LandingHeaderProps = {
-    breadcrumbProps: {
-      pathname: '/logs/delivery/streams/edit',
-      crumbOverrides: [
-        {
-          label: 'Delivery',
-          linkTo: '/logs/delivery/streams',
-          position: 1,
-        },
-      ],
-    },
-    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
-    removeCrumbX: [1, 2],
-    title: `Edit Stream ${streamId}`,
-  };
 
   const form = useForm<StreamAndDestinationFormType>({
     defaultValues: {
@@ -106,8 +85,6 @@ export const StreamEdit = () => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Edit Stream" />
-      <LandingHeader {...landingHeaderProps} />
       {(isLoadingStream || isLoadingDestinations) && (
         <Box display="flex" justifyContent="center">
           <CircleProgress size="md" />

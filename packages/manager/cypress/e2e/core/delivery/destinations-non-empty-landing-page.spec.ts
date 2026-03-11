@@ -92,7 +92,7 @@ function editDestinationViaActionMenu(
       mockGetDestination(destination);
       // Edit destination redirect
       ui.actionMenuItem.findByTitle('Edit').click();
-      cy.url().should('endWith', `/destinations/${destination.id}/edit`);
+      cy.url().should('endWith', `/destinations/${destination.id}/summary`);
     });
 }
 
@@ -255,7 +255,7 @@ describe('destinations landing checks for non-empty state', () => {
       mockGetDestination(destination).as('getDestination');
 
       cy.findByText(destination.label).click();
-      cy.url().should('endWith', `/destinations/${destination.id}/edit`);
+      cy.url().should('endWith', `/destinations/${destination.id}/summary`);
       cy.wait('@getDestination');
     });
 

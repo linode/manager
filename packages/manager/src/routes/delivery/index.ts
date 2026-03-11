@@ -32,6 +32,12 @@ const streamsRoute = createRoute({
   getParentRoute: () => deliveryRoute,
   path: 'streams',
   validateSearch: (search: StreamSearchParams) => search,
+});
+
+const streamsLandingRoute = createRoute({
+  getParentRoute: () => streamsRoute,
+  path: '/',
+  validateSearch: (search: StreamSearchParams) => search,
 }).lazy(() =>
   import('src/features/Delivery/deliveryLandingLazyRoute').then(
     (m) => m.deliveryLandingLazyRoute
@@ -39,16 +45,16 @@ const streamsRoute = createRoute({
 );
 
 const streamsCreateRoute = createRoute({
-  getParentRoute: () => deliveryRoute,
-  path: 'streams/create',
+  getParentRoute: () => streamsRoute,
+  path: 'create',
 }).lazy(() =>
   import('src/features/Delivery/Streams/StreamForm/streamCreateLazyRoute').then(
     (m) => m.streamCreateLazyRoute
   )
 );
 
-const streamsEditRoute = createRoute({
-  getParentRoute: () => deliveryRoute,
+const streamRoute = createRoute({
+  getParentRoute: () => streamsRoute,
   params: {
     parse: ({ streamId }: { streamId: string }) => ({
       streamId: Number(streamId),
@@ -57,10 +63,40 @@ const streamsEditRoute = createRoute({
       streamId: String(streamId),
     }),
   },
-  path: 'streams/$streamId/edit',
+  path: '$streamId',
+});
+
+const streamLandingRoute = createRoute({
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/logs/delivery/streams/$streamId/summary',
+      params: { streamId: params.streamId },
+      replace: true,
+    });
+  },
+  getParentRoute: () => streamRoute,
+  path: '/',
 }).lazy(() =>
-  import('src/features/Delivery/Streams/StreamForm/streamEditLazyRoute').then(
-    (m) => m.streamEditLazyRoute
+  import('src/features/Delivery/Streams/Stream/streamLandingLazyRoute').then(
+    (m) => m.streamLandingLazyRoute
+  )
+);
+
+const streamSummaryRoute = createRoute({
+  getParentRoute: () => streamRoute,
+  path: 'summary',
+}).lazy(() =>
+  import('src/features/Delivery/Streams/Stream/streamLandingLazyRoute').then(
+    (m) => m.streamLandingLazyRoute
+  )
+);
+
+const streamMetricsRoute = createRoute({
+  getParentRoute: () => streamRoute,
+  path: 'metrics',
+}).lazy(() =>
+  import('src/features/Delivery/Streams/Stream/streamLandingLazyRoute').then(
+    (m) => m.streamLandingLazyRoute
   )
 );
 
@@ -72,6 +108,12 @@ const destinationsRoute = createRoute({
   getParentRoute: () => deliveryRoute,
   path: 'destinations',
   validateSearch: (search: DestinationSearchParams) => search,
+});
+
+const destinationsLandingRoute = createRoute({
+  getParentRoute: () => destinationsRoute,
+  path: '/',
+  validateSearch: (search: DestinationSearchParams) => search,
 }).lazy(() =>
   import('src/features/Delivery/deliveryLandingLazyRoute').then(
     (m) => m.deliveryLandingLazyRoute
@@ -79,16 +121,16 @@ const destinationsRoute = createRoute({
 );
 
 const destinationsCreateRoute = createRoute({
-  getParentRoute: () => deliveryRoute,
-  path: 'destinations/create',
+  getParentRoute: () => destinationsRoute,
+  path: 'create',
 }).lazy(() =>
   import(
     'src/features/Delivery/Destinations/DestinationForm/destinationCreateLazyRoute'
   ).then((m) => m.destinationCreateLazyRoute)
 );
 
-const destinationsEditRoute = createRoute({
-  getParentRoute: () => deliveryRoute,
+const destinationRoute = createRoute({
+  getParentRoute: () => destinationsRoute,
   params: {
     parse: ({ destinationId }: { destinationId: string }) => ({
       destinationId: Number(destinationId),
@@ -97,7 +139,28 @@ const destinationsEditRoute = createRoute({
       destinationId: String(destinationId),
     }),
   },
-  path: 'destinations/$destinationId/edit',
+  path: '$destinationId',
+});
+
+const destinationLandingRoute = createRoute({
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/logs/delivery/destinations/$destinationId/summary',
+      params: { destinationId: params.destinationId },
+      replace: true,
+    });
+  },
+  getParentRoute: () => destinationRoute,
+  path: '/',
+}).lazy(() =>
+  import(
+    'src/features/Delivery/Destinations/DestinationForm/destinationEditLazyRoute'
+  ).then((m) => m.destinationEditLazyRoute)
+);
+
+const destinationSummaryRoute = createRoute({
+  getParentRoute: () => destinationRoute,
+  path: 'summary',
 }).lazy(() =>
   import(
     'src/features/Delivery/Destinations/DestinationForm/destinationEditLazyRoute'
@@ -106,9 +169,21 @@ const destinationsEditRoute = createRoute({
 
 export const deliveryRouteTree = deliveryRoute.addChildren([
   deliveryLandingRoute,
-  streamsRoute.addChildren([streamsCreateRoute, streamsEditRoute]),
+  streamsRoute.addChildren([
+    streamsLandingRoute,
+    streamsCreateRoute,
+    streamRoute.addChildren([
+      streamLandingRoute,
+      streamSummaryRoute,
+      streamMetricsRoute,
+    ]),
+  ]),
   destinationsRoute.addChildren([
+    destinationsLandingRoute,
     destinationsCreateRoute,
-    destinationsEditRoute,
+    destinationRoute.addChildren([
+      destinationLandingRoute,
+      destinationSummaryRoute,
+    ]),
   ]),
 ]);
