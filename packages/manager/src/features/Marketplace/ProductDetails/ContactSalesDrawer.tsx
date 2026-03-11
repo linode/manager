@@ -261,6 +261,9 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     } else {
                       field.onChange(value.map((email) => email.address));
                     }
+                    if (value.some((email) => !email.address.trim())) {
+                      trigger('additional_emails');
+                    }
                   }}
                   title="Additional email addresses"
                   tooltip="You can add two additional emails"
