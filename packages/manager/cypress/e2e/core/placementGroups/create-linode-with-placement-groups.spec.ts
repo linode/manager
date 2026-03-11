@@ -1,5 +1,6 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -11,10 +12,14 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui/';
 import { linodeCreatePage } from 'support/ui/pages';
-import { randomNumber, randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
-import { accountFactory, placementGroupFactory } from 'src/factories';
+import {
+  accountFactory,
+  firewallFactory,
+  placementGroupFactory,
+} from 'src/factories';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 const mockAccount = accountFactory.build();
@@ -37,12 +42,18 @@ const mockDallasRegion = extendRegion(
   })
 );
 
+const mockFirewall = firewallFactory.build({
+  id: randomNumber(),
+  label: randomLabel(),
+});
+
 const mockRegions = [mockNewarkRegion, mockDallasRegion];
 
 describe('Linode create flow with Placement Group', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount);
     mockGetRegions(mockRegions).as('getRegions');
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
   });
 
   /*
@@ -90,6 +101,8 @@ describe('Linode create flow with Placement Group', () => {
     // Choose plan
     cy.findByText('Shared CPU').click();
     cy.get('[id="g6-nanode-1"]').click();
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Choose Placement Group
     // No Placement Group available
@@ -241,6 +254,8 @@ describe('Linode create flow with Placement Group', () => {
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
     linodeCreatePage.setLabel(mockLinode.label);
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Confirm that mocked Placement Group is shown in the Autocomplete, and then select it.
     cy.findByText(

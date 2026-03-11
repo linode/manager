@@ -12,6 +12,7 @@ const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(() => vi.fn()),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
@@ -37,6 +38,7 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -102,14 +104,11 @@ describe('AssignedEntitiesTable', () => {
       data: mockEntities,
     });
 
+    queryMocks.useSearch.mockReturnValue({ query: 'NonExistentRole' });
+
     renderWithTheme(<AssignedEntitiesTable />);
 
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'NonExistentRole');
-
-    await waitFor(() => {
-      expect(screen.getByText('No items to display.')).toBeVisible();
-    });
+    expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should filter roles based on search query', async () => {

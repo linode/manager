@@ -30,7 +30,7 @@ export const EndpointSummaryTable = ({ endpoints }: Props) => {
 
   return (
     <Box>
-      <Table>
+      <Table data-testid="table-endpoint-summary">
         <TableHead>
           <TableRow>
             <TableCell>Content Stored</TableCell>

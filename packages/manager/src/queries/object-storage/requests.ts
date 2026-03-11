@@ -1,6 +1,5 @@
 import {
   getBuckets,
-  getBucketsInCluster,
   getBucketsInRegion,
   getClusters,
   getObjectStorageEndpoints,
@@ -40,9 +39,8 @@ export const getAllObjectStorageEndpoints = () =>
  * @deprecated This type will be deprecated and removed when OBJ Gen2 is in GA.
  */
 export interface BucketError {
-  cluster: ObjectStorageCluster;
   error: APIError[];
-  region?: Region;
+  region: Region;
 }
 
 /**
@@ -74,46 +72,8 @@ export type BucketsResponseType<T> = T extends true
 export function isBucketError(
   error: BucketError | BucketErrorGen2
 ): error is BucketError {
-  return (error as BucketError).cluster !== undefined;
+  return (error as BucketError).region !== undefined;
 }
-
-/**
- * @deprecated This function is deprecated and will be removed in the future.
- */
-export const getAllBucketsFromClusters = async (
-  clusters: ObjectStorageCluster[] | undefined
-) => {
-  if (clusters === undefined) {
-    return { buckets: [], errors: [] } as BucketsResponse;
-  }
-
-  const promises = clusters.map((cluster) =>
-    getAll<ObjectStorageBucket>((params) =>
-      getBucketsInCluster(cluster.id, params)
-    )()
-      .then((data) => data.data)
-      .catch((error) => ({
-        cluster,
-        error,
-      }))
-  );
-
-  const data = await Promise.all(promises);
-
-  const bucketsPerCluster = data.filter((item) =>
-    Array.isArray(item)
-  ) as ObjectStorageBucket[][];
-
-  const buckets = bucketsPerCluster.reduce((acc, val) => acc.concat(val), []);
-
-  const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
-
-  if (errors.length === clusters.length) {
-    throw new Error('Unable to get Object Storage buckets.');
-  }
-
-  return { buckets, errors } as BucketsResponse;
-};
 
 /**
  * @deprecated This function is deprecated and will be removed in the future.

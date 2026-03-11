@@ -4,6 +4,7 @@ import {
   mockGetAccountSettings,
 } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegion, mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
@@ -21,6 +22,7 @@ import { chooseRegion } from 'support/util/regions';
 import {
   accountFactory,
   accountSettingsFactory,
+  firewallFactory,
   VLANFactory,
 } from 'src/factories';
 
@@ -56,7 +58,13 @@ describe('Create Linode with VLANs (Legacy)', () => {
       region: mockLinodeRegion.id,
     });
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     mockGetVLANs([mockVlan]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
 
@@ -88,6 +96,9 @@ describe('Create Linode with VLANs (Legacy)', () => {
           .should('be.enabled')
           .type(mockVlan.cidr_block);
       });
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -146,7 +157,13 @@ describe('Create Linode with VLANs (Legacy)', () => {
       region: mockLinodeRegion.id,
     });
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     mockGetVLANs([]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
 
@@ -174,6 +191,9 @@ describe('Create Linode with VLANs (Legacy)', () => {
           .should('be.visible')
           .click();
       });
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -305,7 +325,13 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
       region: mockLinodeRegion.id,
     });
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     mockGetVLANs([mockVlan]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
 
@@ -337,6 +363,9 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     cy.findByLabelText(/IPAM Address/)
       .should('be.enabled')
       .type(mockVlan.cidr_block);
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
@@ -471,7 +500,13 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
       region: mockLinodeRegion.id,
     });
 
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
     mockGetVLANs([]);
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     mockCreateLinode(mockLinode).as('createLinode');
     cy.visitWithLogin('/linodes/create');
 
@@ -504,6 +539,9 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     cy.findByLabelText(/IPAM Address/)
       .should('be.enabled')
       .type(mockVlan.cidr_block);
+
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Firewall');
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();

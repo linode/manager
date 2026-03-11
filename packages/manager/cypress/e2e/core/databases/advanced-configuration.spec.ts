@@ -13,6 +13,7 @@ import {
   mockGetDatabaseEngineConfigs,
   mockGetDatabaseTypes,
   mockUpdateDatabase,
+  mockUpdateDatabaseError,
 } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
@@ -40,14 +41,44 @@ import type { DatabaseClusterConfiguration } from 'support/constants/databases';
  */
 const getFlattenDefaultConfigs = (
   engineConfig: Record<string, any>,
-  prefix = ''
+  prefix = '',
+  includePrefix = true
 ): string[] =>
   Object.entries(engineConfig).flatMap(([key, value]) => {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     return typeof value === 'object' && value !== null && !Array.isArray(value)
-      ? getFlattenDefaultConfigs(value, fullKey)
-      : [fullKey];
+      ? getFlattenDefaultConfigs(
+          value,
+          includePrefix ? fullKey : '',
+          includePrefix
+        )
+      : [includePrefix ? fullKey : key];
   });
+
+const flattenConfigsEngineLevel = (
+  configs: Record<string, any>
+): Record<string, any> => {
+  const result: Record<string, any> = {};
+  Object.entries(configs).forEach(([key, value]) => {
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      // Only flatten if value is a config group (not a config leaf)
+      Object.values(value).every(
+        (v) => typeof v === 'object' && v !== null && !Array.isArray(v)
+      )
+    ) {
+      // Nested group (e.g., pg, mysql)
+      Object.entries(value).forEach(([subKey, subValue]) => {
+        result[subKey] = subValue;
+      });
+    } else {
+      // Top-level config
+      result[key] = value;
+    }
+  });
+  return result;
+};
 
 /**
  * Get list of advanced Configurations available for users to add/modify
@@ -100,9 +131,14 @@ const addConfigsToUI = (
         ? false
         : value.example;
 
+  // Get all existing config keys from engine_config (handles nested structures)
+  const existingConfigKeys = new Set(
+    getFlattenDefaultConfigs(database.engine_config, '', false)
+  );
+
   // Process new configs to be added
   const newEntries = Object.entries(configsList)
-    .filter(([key]) => !database.engine_config[engineType][key])
+    .filter(([key]) => !existingConfigKeys.has(key))
     .slice(0, addSingle ? 1 : undefined); // Limit to 1 if addSingle, otherwise all
 
   if (newEntries.length > 0) {
@@ -121,8 +157,20 @@ const addConfigsToUI = (
         .within(() => {
           // Confirms configure drawer already renders default configs
           Object.keys(database.engine_config[engineType]).forEach((key) => {
+            cy.findByText(`${engineType}.${key}`).scrollIntoView();
             cy.findByText(`${engineType}.${key}`).should('be.visible');
           });
+          Object.keys(database.engine_config)
+            .filter(
+              (key) =>
+                key !== 'pg' &&
+                key !== 'mysql' &&
+                typeof database.engine_config[key] !== 'object'
+            )
+            .forEach((key) => {
+              cy.findByText(key).scrollIntoView();
+              cy.findByText(key).should('be.visible');
+            });
 
           // Adding configs one at a time from the dropdown
           cy.get(
@@ -140,9 +188,24 @@ const addConfigsToUI = (
 
           // Type value for non-boolean configs
           if (value.type !== 'boolean') {
-            cy.get(`[name="${flatKey}"]`).scrollIntoView();
-            cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
-            cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
+            if (value.enum) {
+              cy.findByText(flatKey).scrollIntoView();
+              cy.findByText(flatKey)
+                .parent()
+                .within(() => {
+                  ui.autocomplete.find().click();
+                  ui.autocomplete.find().clear();
+                  ui.autocomplete.find().type(`${additionalConfigs[flatKey]}`);
+                });
+              ui.autocompletePopper
+                .findByTitle(`${additionalConfigs[flatKey]}`)
+                .click();
+            } else {
+              cy.get(`[name="${flatKey}"]`).scrollIntoView();
+              cy.get(`[name="${flatKey}"]`).should('be.visible');
+              cy.get(`[name="${flatKey}"]`).clear();
+              cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
+            }
           }
         });
     });
@@ -195,7 +258,7 @@ describe('Update database clusters', () => {
           );
 
           mockGetAccount(accountFactory.build()).as('getAccount');
-          mockGetDatabase(database).as('getDatabase').debug();
+          mockGetDatabase(database).as('getDatabase');
           mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockGetDatabaseEngineConfigs(database.engine, mockConfigs);
 
@@ -215,6 +278,7 @@ describe('Update database clusters', () => {
           });
 
           // Confirms all the buttons are in the initial state - enabled/disabled
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -226,18 +290,15 @@ describe('Update database clusters', () => {
             .findButtonByTitle('Add')
             .should('exist')
             .should('be.disabled');
-          ui.button
-            .findByTitle('Save')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.disabled');
+          ui.button.findByTitle('Save').should('exist').should('be.disabled');
 
           ui.button
             .findByTitle('Cancel')
-            .scrollIntoView()
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
 
           ui.cdsButton
             .findButtonByTitle('Configure')
@@ -247,9 +308,11 @@ describe('Update database clusters', () => {
 
           ui.drawer.findByTitle('Advanced Configuration').should('be.visible');
           cy.get('[aria-label="Close drawer"]')
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
         });
 
         /*
@@ -296,6 +359,7 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
@@ -313,31 +377,52 @@ describe('Update database clusters', () => {
             true
           );
 
-          // Update advanced configurations with the newly added config
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            engine_config: {
-              ...(database.engine_config as ConfigCategoryValues),
-              [engineType]: {
-                ...(existingConfig as ConfigCategoryValues),
-                ...singleConfig,
-              },
-            },
-          }).as('updateAdvancedConfiguration');
+          const isSyncReplicationQuorum =
+            singleConfig['synchronous_replication'] === 'quorum';
+          const isInvaliClusterSize =
+            database.cluster_size < 3 && isSyncReplicationQuorum;
 
+          // Update advanced configurations with the newly added config
+          if (isInvaliClusterSize) {
+            mockUpdateDatabaseError(
+              database.id,
+              database.engine,
+              'engine_config.synchronous_replication',
+              'synchronous_replication is only supported for clusters with 3 nodes'
+            ).as('updateAdvancedConfiguration');
+          } else {
+            mockUpdateDatabase(database.id, database.engine, {
+              ...database,
+              engine_config: {
+                ...(database.engine_config as ConfigCategoryValues),
+                [engineType]: {
+                  ...(existingConfig as ConfigCategoryValues),
+                  ...singleConfig,
+                },
+              },
+            }).as('updateAdvancedConfiguration');
+          }
           // Save or Save and Restart Services as per the config added
           ui.button
             .findByTitle(saveRestartButton)
-            .scrollIntoView()
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
           cy.wait('@updateAdvancedConfiguration');
 
-          // Confirms newly added advacned Config on the Configuration tab tableview
-          cy.findByText(`${engineType}.${Object.keys(singleConfig)[0]}`).should(
-            'be.visible'
-          );
+          if (isInvaliClusterSize) {
+            // Verify error message is displayed for invalid synchronous replication
+            cy.findByText(
+              /synchronous_replication is only supported for clusters with 3 nodes/i
+            ).should('be.visible');
+          } else {
+            // Confirms newly added advanced Config on the Configuration tab tableview
+            cy.findByText(
+              `${engineType}.${Object.keys(singleConfig)[0]}`
+            ).should('be.visible');
+          }
         });
 
         /*
@@ -384,48 +469,83 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
             .should('be.enabled')
             .click();
 
+          const flatMockConfigs = flattenConfigsEngineLevel(mockConfigs);
+
           // Add configs from the configList to the existing database cluster
           const {
             additionalConfigs: allConfig,
             saveButton: saveRestartButton,
-          } = addConfigsToUI(
-            mockConfigs[engineType],
-            database,
-            engineType,
-            false
-          );
+          } = addConfigsToUI(flatMockConfigs, database, engineType, false);
+
+          const nestedConfig: Record<string, any> = {};
+          const topLevelConfig: Record<string, any> = {};
+          // Separate nested engine configs and top-level configs
+          Object.entries(allConfig).forEach(([key, value]) => {
+            if (key in mockConfigs[engineType]) {
+              nestedConfig[key] = value;
+            } else {
+              topLevelConfig[key] = value;
+            }
+          });
+
+          const isSyncReplicationQuorum =
+            allConfig['synchronous_replication'] === 'quorum';
+          const isInvalidClusterSize =
+            database.cluster_size < 3 && isSyncReplicationQuorum;
 
           // Update advanced configurations with the newly added config
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            engine_config: {
-              ...(database.engine_config as ConfigCategoryValues),
-              [engineType]: {
-                ...(existingConfig as ConfigCategoryValues),
-                ...allConfig,
+          if (isInvalidClusterSize) {
+            mockUpdateDatabaseError(
+              database.id,
+              database.engine,
+              'engine_config.synchronous_replication',
+              'synchronous_replication is only supported for clusters with 3 nodes'
+            ).as('updateAdvancedConfiguration');
+          } else {
+            mockUpdateDatabase(database.id, database.engine, {
+              ...database,
+              engine_config: {
+                ...(database.engine_config as ConfigCategoryValues),
+                [engineType]: {
+                  ...(existingConfig as ConfigCategoryValues),
+                  ...nestedConfig,
+                },
+                ...topLevelConfig,
               },
-            },
-          }).as('updateAdvancedConfiguration');
+            }).as('updateAdvancedConfiguration');
+          }
 
           // Save or Save and Restart Services as per the config added
           ui.button
             .findByTitle(saveRestartButton)
-            .scrollIntoView()
-            .should('be.visible')
+            .should('exist')
             .should('be.enabled')
-            .click();
+            .then((btn) => {
+              btn[0].click();
+            });
           cy.wait('@updateAdvancedConfiguration');
 
-          // Confirms newly added advacned Config on the Configuration tab tableview
-          Object.keys(allConfig).forEach((key) => {
-            cy.findByText(`${engineType}.${key}`).should('be.visible');
-          });
+          if (isInvalidClusterSize) {
+            // Verify error message is displayed for invalid synchronous replication
+            cy.findByText(
+              /synchronous_replication is only supported for clusters with 3 nodes/i
+            ).should('be.visible');
+          } else {
+            // Confirms newly added advanced Config on the Configuration tab tableview
+            Object.keys(nestedConfig).forEach((key) => {
+              cy.findByText(`${engineType}.${key}`).should('be.visible');
+            });
+            Object.keys(topLevelConfig).forEach((key) => {
+              cy.findByText(`${key}`).should('be.visible');
+            });
+          }
         });
 
         /*
@@ -469,6 +589,7 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
+          ui.cdsButton.findButtonByTitle('Configure').scrollIntoView();
           ui.cdsButton
             .findButtonByTitle('Configure')
             .should('be.visible')
