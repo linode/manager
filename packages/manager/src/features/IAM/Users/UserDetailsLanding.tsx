@@ -1,4 +1,4 @@
-import { NewFeatureChip } from '@linode/ui';
+import { NewFeatureChip, useTheme } from '@linode/ui';
 import { Outlet, useLoaderData, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -24,6 +24,7 @@ import { DelegateUserChip } from '../Shared/DelegateUserChip';
 
 export const UserDetailsLanding = () => {
   const flags = useFlags();
+  const theme = useTheme();
   const { isIAMEnabled } = useIsIAMEnabled();
   const showLimitedAvailabilityBadges =
     flags.iamLimitedAvailabilityBadges && isIAMEnabled;
@@ -87,6 +88,9 @@ export const UserDetailsLanding = () => {
           pathname: location.pathname,
           sx: {
             flexWrap: 'nowrap',
+            [theme.breakpoints.down(380)]: {
+              flexWrap: 'wrap',
+            },
             '& > div:nth-of-type(3) h1': {
               display: '-webkit-box',
               '-webkit-line-clamp': '1',

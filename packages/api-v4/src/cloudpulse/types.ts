@@ -9,6 +9,7 @@ export type CloudPulseServiceType =
   | 'firewall'
   | 'linode'
   | 'lke'
+  | 'logs'
   | 'netloadbalancer'
   | 'nodebalancer'
   | 'objectstorage';
@@ -429,6 +430,7 @@ export const capabilityServiceTypeMapping: Record<
   blockstorage: 'Block Storage',
   lke: 'Kubernetes',
   netloadbalancer: 'Network LoadBalancer',
+  logs: 'Akamai Cloud Pulse Logs',
 };
 
 /**

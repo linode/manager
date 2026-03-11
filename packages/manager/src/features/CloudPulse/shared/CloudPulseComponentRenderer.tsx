@@ -64,6 +64,7 @@ const Components: {
   associated_entity_region: CloudPulseRegionSelect,
   endpoint: CloudPulseEndpointsSelect,
   nodebalancer_id: CloudPulseFirewallNodebalancersSelect,
+  status_code: CloudPulseTextFilter,
 };
 
 const buildComponent = (props: CloudPulseComponentRendererProps) => {

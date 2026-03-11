@@ -7,6 +7,7 @@ import { array, boolean, number, object, string } from 'yup';
 import { CreateLinodeInterfaceFormSchema } from '../LinodesDetail/LinodeNetworking/LinodeInterfaces/AddInterfaceDrawer/utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
+import type { InterfaceGenerationType } from '@linode/api-v4/lib/linodes/types';
 import type { ObjectSchema } from 'yup';
 
 /**
@@ -17,6 +18,12 @@ import type { ObjectSchema } from 'yup';
 export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> =
   BaseCreateLinodeSchema.concat(
     object({
+      firewall_id: number().when('interface_generation', {
+        is: (value: InterfaceGenerationType) => value === 'legacy_config',
+        then: (schema) =>
+          schema.required('Select an option or create a new Firewall.'),
+        otherwise: (schema) => schema.nullable().notRequired(),
+      }),
       firewallOverride: boolean(),
       hasSignedEUAgreement: boolean(),
       interfaces: array(ConfigProfileInterfaceSchema).required(),

@@ -224,6 +224,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             backgroundColor: theme.tokens.alias.Background.Normal,
             paddingX: theme.tokens.spacing.S24,
             paddingY: theme.tokens.spacing.S16,
+            maxWidth: 304,
           }),
         },
       }}
@@ -235,8 +236,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
-          {canSwitchBetweenParentOrProxyAccount && (
+        <Stack
+          display="flex"
+          gap={(theme) => (companyNameOrEmail ? theme.tokens.spacing.S8 : 0)}
+        >
+          {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail && (
             <Typography
               sx={(theme) => ({
                 color: theme.tokens.alias.Content.Text.Primary.Default,
@@ -250,10 +254,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             sx={(theme) => ({
               color: theme.tokens.alias.Content.Text.Primary.Default,
               font: theme.tokens.alias.Typography.Label.Bold.L,
+              overflowWrap: 'break-word',
             })}
           >
-            {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
-              ? companyNameOrEmail
+            {canSwitchBetweenParentOrProxyAccount
+              ? companyNameOrEmail || null
               : userName}
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (

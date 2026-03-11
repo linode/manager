@@ -19,10 +19,15 @@ export const SwitchAccountButton = (props: ButtonProps) => {
         },
         font: theme.tokens.alias.Typography.Label.Semibold.S,
         marginTop: theme.tokens.spacing.S4,
+        ...(isDelegateUserType && {
+          '&.MuiButton-root': {
+            textTransform: 'none',
+          },
+        }),
       })}
       {...props}
     >
-      {isDelegateUserType ? 'Switch back to your account' : 'Switch Account'}
+      {isDelegateUserType ? 'Switch Back to Your Account' : 'Switch Account'}
     </Button>
   );
 };

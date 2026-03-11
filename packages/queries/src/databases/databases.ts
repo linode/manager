@@ -243,13 +243,11 @@ export const useUpdateDatabaseConnectionPoolMutation = (
     {
       mutationFn: (data) =>
         updateDatabaseConnectionPool(databaseId, poolName, data),
-      onSuccess(connectionPool) {
-        queryClient.setQueryData<ConnectionPool>(
-          databaseQueries
-            .database('postgresql', databaseId)
-            ._ctx.connectionPools._ctx.pool(connectionPool.label).queryKey,
-          connectionPool,
-        );
+      onSuccess() {
+        queryClient.invalidateQueries({
+          queryKey: databaseQueries.database('postgresql', databaseId)._ctx
+            .connectionPools.queryKey,
+        });
       },
     },
   );
@@ -266,10 +264,6 @@ export const useDeleteDatabaseConnectionPoolMutation = (
       queryClient.invalidateQueries(
         databaseQueries.database('postgresql', databaseId)._ctx.connectionPools,
       );
-      queryClient.removeQueries({
-        queryKey: databaseQueries.database('postgresql', databaseId)._ctx
-          .connectionPools.queryKey,
-      });
     },
   });
 };

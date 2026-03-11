@@ -101,11 +101,16 @@ describe('StreamEdit', () => {
           { exact: false }
         );
         await userEvent.click(createNewTestDestination);
-        const hostInput = screen.getByLabelText('Host');
+
+        // Switch to manual bucket entry mode
+        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        await userEvent.click(manualRadio);
+
+        const endpointInput = screen.getByLabelText('Endpoint');
         await waitFor(() => {
-          expect(hostInput).toBeDefined();
+          expect(endpointInput).toBeDefined();
         });
-        await userEvent.type(hostInput, 'test');
+        await userEvent.type(endpointInput, 'test');
         const bucketInput = screen.getByLabelText('Bucket');
         await userEvent.type(bucketInput, 'test');
         const accessKeyIDInput = screen.getByLabelText('Access Key ID');

@@ -25,7 +25,6 @@ export const SessionExpirationDialog = React.memo(
     );
     const { isProxyUserType, isDelegateUserType } = useDelegationRole();
     const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-
     const [timeRemaining, setTimeRemaining] = React.useState<{
       minutes: number;
       seconds: number;
@@ -121,7 +120,6 @@ export const SessionExpirationDialog = React.memo(
 
         setTokenInLocalStorage({
           prefix: tokenPrefix,
-
           token: {
             ...proxyToken,
             token: `Bearer ${proxyToken.token}`,
@@ -145,7 +143,7 @@ export const SessionExpirationDialog = React.memo(
      */
     useEffect(() => {
       const checkTokenExpiry = () => {
-        const expiryString = isIAMDelegationEnabled
+        const expiryString = isProxyUserType
           ? getStorage('authentication/proxy_token/expire')
           : getStorage('authentication/delegate_token/expire');
 

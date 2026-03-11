@@ -47,13 +47,13 @@ const mockHostname = 'my-bucket.linodeobjects.com';
 describe('Object Storage utilities', () => {
   describe('generateObjectUrl', () => {
     it('returns the correct URL', () => {
-      expect(generateObjectUrl(mockHostname, 'my-object')).toBe(
-        'https://my-bucket.linodeobjects.com/my-object'
+      expect(generateObjectUrl(mockHostname, 'my-folder/my-object')).toBe(
+        'https://my-bucket.linodeobjects.com/my-folder/my-object'
       );
     });
     it('encodes the URL for special characters', () => {
-      expect(generateObjectUrl(mockHostname, 'my-object?')).toBe(
-        'https://my-bucket.linodeobjects.com/my-object%3F'
+      expect(generateObjectUrl(mockHostname, 'my-object!@#$%^&*()_+<>.,')).toBe(
+        'https://my-bucket.linodeobjects.com/my-object!@#$%25%5E&*()_+%3C%3E.,'
       );
     });
   });
