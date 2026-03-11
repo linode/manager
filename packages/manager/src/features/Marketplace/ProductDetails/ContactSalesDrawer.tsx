@@ -116,7 +116,6 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       product_name: productName,
       phone: '',
       phone_country_code: '+1',
-      comments: '',
       tc_consent_given: false,
     },
     mode: 'onBlur',
@@ -138,17 +137,45 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   const handleFormReset = () => {
     reset();
     setSelectedCountry(null);
+    setSelectedPhoneCountry(defaultCountry);
+  };
+
+  const cleanUpPayload = (values: MarketplacePartnerReferralPayload) => {
+    const cleaned: MarketplacePartnerReferralPayload = {
+      ...values,
+    };
+
+    const cleanedAdditionalEmails = cleaned.additional_emails?.filter((e) =>
+      e?.trim()
+    );
+
+    if (!cleanedAdditionalEmails?.length) {
+      delete cleaned.additional_emails;
+    } else {
+      cleaned.additional_emails = cleanedAdditionalEmails;
+    }
+
+    const optionalStringFields: Array<
+      'account_executive_email' | 'comments' | 'company_name'
+    > = ['account_executive_email', 'comments', 'company_name'];
+
+    for (const key of optionalStringFields) {
+      const value = cleaned[key];
+      if (typeof value !== 'string' || value.trim() === '') {
+        delete cleaned[key];
+      } else {
+        cleaned[key] = value.trim();
+      }
+    }
+
+    return cleaned;
   };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      if (
-        values?.additional_emails?.length === 1 &&
-        values?.additional_emails[0].trim() === ''
-      ) {
-        delete values.additional_emails;
-      }
-      await createPartnerReferral(values);
+      const cleanedValues = cleanUpPayload(values);
+
+      await createPartnerReferral(cleanedValues);
       enqueueSnackbar(
         'Your request has been received by Akamai. After we forward it to the partner, you will receive a confirmation email.',
         { variant: 'success' }
