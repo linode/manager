@@ -13,9 +13,9 @@ export const createPartnerReferralSchema = object({
     .email('Please enter a valid email')
     .required('Email is required.'),
   additional_emails: array()
-    .of(string().defined().email('Please enter a valid email'))
-    .max(2, 'You can only provide up to 2 emails')
-    .optional(),
+    .optional()
+    .of(string().defined().trim().email('Please enter a valid email address.'))
+    .max(2, 'You can only provide up to 2 emails'),
   country_code: string().required('Please select your region'),
   phone_country_code: string().required('Please select your dialing code.'),
   phone: string()
@@ -37,8 +37,12 @@ export const createPartnerReferralSchema = object({
     ),
   company_name: string().optional(),
   account_executive_email: string()
-    .matches(AKAMAI_EMAIL_VALIDATION_REGEX, `Must be an akamai email address.`)
-    .optional(),
+    .optional()
+    .trim()
+    .matches(AKAMAI_EMAIL_VALIDATION_REGEX, {
+      excludeEmptyString: true,
+      message: 'Must be an Akamai email address.',
+    }),
   comments: string()
     .optional()
     .trim()

@@ -116,6 +116,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       product_name: productName,
       phone: '',
       phone_country_code: '+1',
+      account_executive_email: '',
       comments: '',
       tc_consent_given: false,
     },
@@ -236,7 +237,13 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                     if (value.length === 0) {
                       field.onChange(['']);
                     } else {
-                      field.onChange(value.map((email) => email.address));
+                      field.onChange(
+                        value.map((email) => email.address.trim())
+                      );
+                    }
+                    // trigger validation if any of the email addresses are empty after trimming
+                    if (value.some((email) => !email.address.trim())) {
+                      trigger('additional_emails');
                     }
                   }}
                   title="Additional email addresses"
