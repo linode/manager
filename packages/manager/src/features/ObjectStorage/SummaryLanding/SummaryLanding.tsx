@@ -3,10 +3,10 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
-import { EndpointMultiselect } from './Partials/EndpointMultiselect';
-import { EndpointSummaryTable } from './Partials/EndpointSummaryTable';
+import { EndpointMultiselect } from '../Partials/EndpointMultiselect';
+import { EndpointSummaryTable } from './EndpointSummaryTable/EndpointSummaryTable';
 
-import type { EndpointMultiselectValue } from './Partials/EndpointMultiselect';
+import type { EndpointMultiselectValue } from '../Partials/EndpointMultiselect';
 
 export const SummaryLanding = () => {
   const [selectedEndpoints, setSelectedEndpoints] = React.useState<

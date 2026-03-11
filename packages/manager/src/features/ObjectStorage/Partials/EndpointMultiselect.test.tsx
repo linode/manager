@@ -39,7 +39,7 @@ const endpointsMock = [
 const onChangeMock = vi.fn();
 
 describe('EndpointMultiselect', () => {
-  it('should show loading text while fetching endpoints', async () => {
+  it('should show loading text while fetching endpoints', () => {
     queryMocks.useObjectStorageEndpoints.mockReturnValue({
       data: [],
       isFetching: true,
@@ -54,7 +54,7 @@ describe('EndpointMultiselect', () => {
     expect(getByPlaceholderText('Loading S3 endpoints...')).toBeVisible();
   });
 
-  it('should show proper placeholder after fetching endpoints', async () => {
+  it('should show proper placeholder after fetching endpoints', () => {
     queryMocks.useObjectStorageEndpoints.mockReturnValue({
       data: endpointsMock,
       isFetching: false,
@@ -69,5 +69,24 @@ describe('EndpointMultiselect', () => {
     expect(
       getByPlaceholderText('Select an Object Storage S3 endpoint')
     ).toBeVisible();
+  });
+
+  it('should show label if showLabel property set to true', () => {
+    queryMocks.useObjectStorageEndpoints.mockReturnValue({
+      data: endpointsMock,
+      isFetching: false,
+    });
+
+    const selectedEndpoints: EndpointMultiselectValue[] = [];
+
+    const { getByText } = renderWithTheme(
+      <EndpointMultiselect
+        onChange={onChangeMock}
+        showLabel={true}
+        values={selectedEndpoints}
+      />
+    );
+
+    expect(getByText('Endpoint')).toBeVisible();
   });
 });
