@@ -1,6 +1,5 @@
 import { useAccount } from '@linode/queries';
 import { Hidden } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import React, { useState } from 'react';
 
 import { Table } from 'src/components/Table';
@@ -46,12 +45,6 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
   return (
     <>
       <Table
@@ -71,11 +64,9 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
               Label
             </TableCell>
             <TableCell>Access Key</TableCell>
-            {isObjMultiClusterEnabled && (
-              <Hidden smDown>
-                <TableCell>Regions/S3 Hostnames</TableCell>
-              </Hidden>
-            )}
+            <Hidden smDown>
+              <TableCell>Regions/S3 Hostnames</TableCell>
+            </Hidden>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -84,7 +75,6 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             data={data}
             error={error}
             isLoading={isLoading}
-            isObjMultiClusterEnabled={isObjMultiClusterEnabled}
             isRestrictedUser={isRestrictedUser}
             openDrawer={openDrawer}
             openRevokeDialog={openRevokeDialog}
@@ -93,13 +83,11 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
           />
         </TableBody>
       </Table>
-      {isObjMultiClusterEnabled && (
-        <HostNamesDrawer
-          onClose={() => setShowHostNamesDrawers(false)}
-          open={showHostNamesDrawer}
-          regions={hostNames}
-        />
-      )}
+      <HostNamesDrawer
+        onClose={() => setShowHostNamesDrawers(false)}
+        open={showHostNamesDrawer}
+        regions={hostNames}
+      />
     </>
   );
 };

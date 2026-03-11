@@ -20,10 +20,8 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
-import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
-import { AccessKeyDrawer } from './AccessKeyDrawer';
-import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
+import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
 import { ViewPermissionsDrawer } from './ViewPermissionsDrawer';
 
@@ -87,8 +85,6 @@ export const AccessKeyLanding = (props: Props) => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   // Redirect to base access keys route if current page has no data
   // TODO: Remove this implementation and replace `usePagination` with `usePaginate` hook. See [M3-10442]
@@ -193,10 +189,7 @@ export const AccessKeyLanding = (props: Props) => {
 
     setSubmitting(true);
 
-    updateObjectStorageKey(
-      keyToEdit.id,
-      isObjMultiClusterEnabled ? values : { label: values.label }
-    )
+    updateObjectStorageKey(keyToEdit.id, values)
       .then((_) => {
         setSubmitting(false);
 
@@ -301,25 +294,14 @@ export const AccessKeyLanding = (props: Props) => {
         pageSize={pagination.pageSize}
       />
 
-      {isObjMultiClusterEnabled ? (
-        <OMC_AccessKeyDrawer
-          isRestrictedUser={props.isRestrictedUser}
-          mode={mode}
-          objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          onClose={closeAccessDrawer}
-          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-          open={accessDrawerOpen}
-        />
-      ) : (
-        <AccessKeyDrawer
-          isRestrictedUser={props.isRestrictedUser}
-          mode={mode}
-          objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          onClose={closeAccessDrawer}
-          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-          open={accessDrawerOpen}
-        />
-      )}
+      <OMC_AccessKeyDrawer
+        isRestrictedUser={props.isRestrictedUser}
+        mode={mode}
+        objectStorageKey={keyToEdit ? keyToEdit : undefined}
+        onClose={closeAccessDrawer}
+        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+        open={accessDrawerOpen}
+      />
 
       <ViewPermissionsDrawer
         objectStorageKey={keyToEdit}

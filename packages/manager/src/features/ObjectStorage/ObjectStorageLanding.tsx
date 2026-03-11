@@ -18,10 +18,8 @@ import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { BillingNotice } from './BillingNotice';
-import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
-import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
-import { useIsObjMultiClusterEnabled } from './hooks/useIsObjectStorageGen2Enabled';
+import { BucketLanding } from './BucketLanding/BucketLanding';
 
 import type { MODE } from './AccessKeyLanding/types';
 
@@ -42,8 +40,6 @@ export const ObjectStorageLanding = () => {
   const match = useMatch({ strict: false });
 
   const [mode, setMode] = React.useState<MODE>('creating');
-
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
@@ -174,9 +170,7 @@ export const ObjectStorageLanding = () => {
               </SafeTabPanel>
             )}
             <SafeTabPanel index={bucketsTabIndex}>
-              <OMC_BucketLanding
-                isCreateBucketDrawerOpen={isCreateBucketOpen}
-              />
+              <BucketLanding isCreateBucketDrawerOpen={isCreateBucketOpen} />
             </SafeTabPanel>
             <SafeTabPanel index={accessKeysTabIndex}>
               <AccessKeyLanding
@@ -192,18 +186,10 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-
-        {isObjMultiClusterEnabled ? (
-          <OMC_CreateBucketDrawer
-            isOpen={isCreateBucketOpen}
-            onClose={() => navigate({ to: '/object-storage/buckets' })}
-          />
-        ) : (
-          <CreateBucketDrawer
-            isOpen={isCreateBucketOpen}
-            onClose={() => navigate({ to: '/object-storage/buckets' })}
-          />
-        )}
+        <OMC_CreateBucketDrawer
+          isOpen={isCreateBucketOpen}
+          onClose={() => navigate({ to: '/object-storage/buckets' })}
+        />
       </Tabs>
     </React.Fragment>
   );

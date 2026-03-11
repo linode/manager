@@ -15,8 +15,8 @@ import type {
  * HTTP method in your request body's method parameter.
  */
 export const getObjectURL = (
-  clusterId: string,
-  bucketName: string,
+  regionId: string,
+  bucket: string,
   name: string,
   method: 'DELETE' | 'GET' | 'POST' | 'PUT',
   options?: CreateObjectStorageObjectURLPayload,
@@ -25,8 +25,8 @@ export const getObjectURL = (
     setMethod('POST'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId,
-      )}/${encodeURIComponent(bucketName)}/object-url`,
+        regionId,
+      )}/${encodeURIComponent(bucket)}/object-url`,
     ),
     setData({ name, method, ...options }),
   );
@@ -38,7 +38,7 @@ export const getObjectURL = (
  * Gets the ACL for a given Object.
  */
 export const getObjectACL = ({
-  clusterId,
+  regionId,
   bucket,
   params,
 }: GetObjectStorageACLPayload) =>
@@ -46,7 +46,7 @@ export const getObjectACL = ({
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId,
+        regionId,
       )}/${encodeURIComponent(bucket)}/object-acl?name=${encodeURIComponent(
         params.name,
       )}`,
@@ -60,7 +60,7 @@ export const getObjectACL = ({
  * Updates the ACL for a given Object.
  */
 export const updateObjectACL = (
-  clusterId: string,
+  regionId: string,
   bucketName: string,
   name: string,
   acl: Omit<ACLType, 'custom'>,
@@ -69,7 +69,7 @@ export const updateObjectACL = (
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId,
+        regionId,
       )}/${encodeURIComponent(bucketName)}/object-acl`,
     ),
     setData({ acl, name }),

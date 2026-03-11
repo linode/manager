@@ -9,7 +9,6 @@ import { configureMultiReporters } from './cypress/support/plugins/configure-mul
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { fetchAccount } from './cypress/support/plugins/fetch-account';
-import { fetchLinodeClusters } from './cypress/support/plugins/fetch-linode-clusters';
 import { fetchLinodeImages } from './cypress/support/plugins/fetch-linode-images';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
@@ -102,7 +101,6 @@ export default defineConfig({
         discardPassedTestRecordings,
         fetchAccount,
         fetchLinodeRegions,
-        fetchLinodeClusters,
         fetchLinodeImages,
         resetUserPreferences,
         regionOverrideCheck,

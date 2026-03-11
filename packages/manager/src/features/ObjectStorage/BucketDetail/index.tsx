@@ -38,7 +38,7 @@ const BucketMetrics = React.lazy(() =>
   }))
 );
 
-const BUCKET_DETAILS_URL = '/object-storage/buckets/$clusterId/$bucketName';
+const BUCKET_DETAILS_URL = '/object-storage/buckets/$regionId/$bucketName';
 const ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT = ['E0', 'E1'];
 
 export const BucketDetailLanding = React.memo(() => {

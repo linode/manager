@@ -63,30 +63,21 @@ export const BucketDetail = () => {
    * the bucket's region id
    */
   const { enqueueSnackbar } = useSnackbar();
-  const { bucketName, clusterId } = useParams({
-    from: '/object-storage/buckets/$clusterId/$bucketName',
+  const { bucketName, regionId } = useParams({
+    from: '/object-storage/buckets/$regionId/$bucketName',
   });
   const { prefix = '' } = useSearch({
-    from: '/object-storage/buckets/$clusterId/$bucketName',
+    from: '/object-storage/buckets/$regionId/$bucketName',
   });
   const queryClient = useQueryClient();
 
   const flags = useFlags();
   const { data: account } = useAccount();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
   const { data: buckets } = useObjectStorageBuckets();
 
   const bucket = buckets?.buckets.find((bucket) => {
-    if (isObjMultiClusterEnabled) {
-      return bucket.label === bucketName && bucket.region === clusterId;
-    }
-    return bucket.label === bucketName && bucket.cluster === clusterId;
+    return bucket.label === bucketName && bucket.region === regionId;
   });
 
   const {
@@ -97,7 +88,7 @@ export const BucketDetail = () => {
     isFetching,
     isFetchingNextPage,
     isLoading,
-  } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
+  } = useObjectBucketObjectsInfiniteQuery(regionId, bucketName, prefix);
   const [isCreateFolderDrawerOpen, setIsCreateFolderDrawerOpen] =
     React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
@@ -114,7 +105,7 @@ export const BucketDetail = () => {
   const handleDownload = async (objectName: string) => {
     try {
       const { url } = await getObjectURL(
-        clusterId,
+        regionId,
         bucketName,
         objectName,
         'GET',
@@ -147,7 +138,7 @@ export const BucketDetail = () => {
   // we don't want to fetch for every delete action. Debounce
   // the updateBucket call by 3 seconds.
   const debouncedUpdateBucket = debounce(3000, false, () => {
-    fetchBucketAndUpdateCache(clusterId, bucketName, queryClient);
+    fetchBucketAndUpdateCache(regionId, bucketName, queryClient);
   });
 
   const deleteObject = async () => {
@@ -161,7 +152,7 @@ export const BucketDetail = () => {
     if (objectToDelete.endsWith('/')) {
       const itemsInFolderData = await getObjectList({
         bucket: bucketName,
-        clusterId,
+        regionId: regionId,
         params: {
           delimiter: OBJECT_STORAGE_DELIMITER,
           prefix: objectToDelete,
@@ -185,7 +176,7 @@ export const BucketDetail = () => {
 
     try {
       const { url } = await getObjectURL(
-        clusterId,
+        regionId,
         bucketName,
         objectToDelete,
         'DELETE'
@@ -213,7 +204,7 @@ export const BucketDetail = () => {
       pageParams: string[];
       pages: ObjectStorageObjectList[];
     }>(
-      getObjectBucketObjectsQueryKey(clusterId, bucketName, prefix),
+      getObjectBucketObjectsQueryKey(regionId, bucketName, prefix),
       (data) => ({
         pageParams: data?.pageParams || [],
         pages,
@@ -253,7 +244,7 @@ export const BucketDetail = () => {
   const addOneFile = (objectName: string, sizeInBytes: number) => {
     const currentData = queryClient.getQueryData<
       InfiniteData<ObjectStorageObjectList>
-    >(getObjectBucketObjectsQueryKey(clusterId, bucketName, prefix));
+    >(getObjectBucketObjectsQueryKey(regionId, bucketName, prefix));
 
     if (!currentData) {
       return;
@@ -300,7 +291,7 @@ export const BucketDetail = () => {
   const addOneFolder = (objectName: string) => {
     const currentData = queryClient.getQueryData<
       InfiniteData<ObjectStorageObjectList>
-    >(getObjectBucketObjectsQueryKey(clusterId, bucketName, prefix));
+    >(getObjectBucketObjectsQueryKey(regionId, bucketName, prefix));
 
     if (!currentData) {
       return;
@@ -320,7 +311,7 @@ export const BucketDetail = () => {
         // prefix. Due to how invalidateQueries works, all subdirectories also get invalidated.
         queryClient.invalidateQueries({
           queryKey: [
-            ...objectStorageQueries.bucket(clusterId, bucketName)._ctx.objects
+            ...objectStorageQueries.bucket(regionId, bucketName)._ctx.objects
               .queryKey,
             ...`${prefix}${objectName}`.split('/'),
           ],
@@ -349,7 +340,7 @@ export const BucketDetail = () => {
   const numOfDisplayedObjects =
     data?.pages.map((page) => page.data.length).reduce((a, b) => a + b, 0) || 0;
 
-  if (!bucketName || !clusterId) {
+  if (!bucketName || !regionId) {
     return null;
   }
 
@@ -360,7 +351,7 @@ export const BucketDetail = () => {
       <QuotasInfoNotice action="adding objects" />
       <ObjectUploader
         bucketName={bucketName}
-        clusterId={clusterId}
+        clusterId={regionId}
         maybeAddObjectToTable={maybeAddObjectToTable}
         prefix={prefix}
       />
@@ -448,7 +439,7 @@ export const BucketDetail = () => {
       </ConfirmationDialog>
       <ObjectDetailsDrawer
         bucketName={bucketName}
-        clusterId={clusterId}
+        clusterId={regionId}
         displayName={selectedObject?.name}
         lastModified={selectedObject?.last_modified}
         name={selectedObject?.name}
@@ -463,7 +454,7 @@ export const BucketDetail = () => {
       />
       <CreateFolderDrawer
         bucketName={bucketName}
-        clusterId={clusterId}
+        clusterId={regionId}
         maybeAddObjectToTable={maybeAddObjectToTable}
         onClose={() => setIsCreateFolderDrawerOpen(false)}
         open={isCreateFolderDrawerOpen}

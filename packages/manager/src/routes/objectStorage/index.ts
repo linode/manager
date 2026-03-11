@@ -72,7 +72,7 @@ const objectStorageAccessKeyCreateRoute = createRoute({
 
 const objectStorageBucketDetailRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
-  path: 'buckets/$clusterId/$bucketName',
+  path: 'buckets/$regionId/$bucketName',
   validateSearch: (search: ObjectStorageDetailSearchParams) => search,
 }).lazy(() =>
   import(

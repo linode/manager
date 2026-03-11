@@ -34,15 +34,6 @@ export const AccessKeyTableRow = (props: Props) => {
     storageKeyData,
   } = props;
 
-  const { data: account } = useAccount();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
   return (
     <TableRow data-qa-table-row={storageKeyData.label} key={storageKeyData.id}>
       <TableCell>{storageKeyData.label}</TableCell>
@@ -54,15 +45,13 @@ export const AccessKeyTableRow = (props: Props) => {
           <StyledCopyIcon text={storageKeyData.access_key} />
         </Stack>
       </TableCell>
-      {isObjMultiClusterEnabled && (
-        <Hidden smDown>
-          <HostNameTableCell
-            setHostNames={setHostNames}
-            setShowHostNamesDrawers={setShowHostNamesDrawers}
-            storageKeyData={storageKeyData}
-          />
-        </Hidden>
-      )}
+      <Hidden smDown>
+        <HostNameTableCell
+          setHostNames={setHostNames}
+          setShowHostNamesDrawers={setShowHostNamesDrawers}
+          storageKeyData={storageKeyData}
+        />
+      </Hidden>
       <TableCell actionCell>
         <AccessKeyActionMenu
           label={storageKeyData.label}

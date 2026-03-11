@@ -44,7 +44,7 @@ export const deleteAllTestBucketObjects = async (
   // @TODO Improve object retrieval to account for pagination for buckets with many objects.
   const storageObjects = await getObjectList({
     bucket: bucketLabel,
-    clusterId,
+    regionId: clusterId,
   });
   const storageObjectDeletePromises = storageObjects.data.map(
     async (storageObject: ObjectStorageObject) => {
@@ -104,7 +104,7 @@ export const deleteAllTestBuckets = async () => {
         bucket.label
       );
       return deleteBucket({
-        cluster: bucket.region || bucket.cluster,
+        regionId: bucket.region || bucket.cluster,
         label: bucket.label,
       });
     }

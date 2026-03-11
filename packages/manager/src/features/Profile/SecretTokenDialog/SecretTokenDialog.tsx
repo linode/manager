@@ -8,7 +8,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
-import { useIsObjMultiClusterEnabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
@@ -38,8 +37,6 @@ export const SecretTokenDialog = (props: Props) => {
 
   const { data: regionsData } = useRegionsQuery();
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
-
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const modalConfirmationButtonText = objectStorageKey
     ? 'I Have Saved My Secret Key'
@@ -71,38 +68,22 @@ export const SecretTokenDialog = (props: Props) => {
         } once, after which it can\u{2019}t be recovered. Be sure to keep it in a safe place.`}
         variant="warning"
       />
-      {/* @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix
-      to handle error cases when the feature flag is enabled without Mock
-      Service Worker (MSW). This can be removed during the feature flag cleanup. */}
-      {isObjMultiClusterEnabled &&
-        objectStorageKey &&
-        objectStorageKey?.regions?.length > 0 && (
-          <div>
-            <CopyAllHostnames
-              hideShowAll={Boolean(
-                objectStorageKey && objectStorageKey?.regions?.length <= 1
-              )}
-              text={
-                objectStorageKey?.regions
-                  .map(
-                    (region) =>
-                      `${regionsLookup?.[region.id]?.label}: ${
-                        region.s3_endpoint
-                      }`
-                  )
-                  .join('\n') ?? ''
-              }
-            />
-          </div>
-        )}
-      {/* @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix
-      to handle error cases when the feature flag is enabled without Mock
-      Service Worker (MSW). This can be removed during the feature flag cleanup. */}
-      {isObjMultiClusterEnabled &&
-        objectStorageKey &&
-        objectStorageKey?.regions?.length > 0 && (
-          <HostNamesList objectStorageKey={objectStorageKey} />
-        )}
+      <div>
+        <CopyAllHostnames
+          hideShowAll={Boolean(
+            objectStorageKey && objectStorageKey?.regions?.length <= 1
+          )}
+          text={
+            objectStorageKey?.regions
+              .map(
+                (region) =>
+                  `${regionsLookup?.[region.id]?.label}: ${region.s3_endpoint}`
+              )
+              .join('\n') ?? ''
+          }
+        />
+      </div>
+      <HostNamesList objectStorageKey={objectStorageKey} />
 
       {objectStorageKey ? (
         <>

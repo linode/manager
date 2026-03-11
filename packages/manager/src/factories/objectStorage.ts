@@ -11,6 +11,7 @@ import type {
 
 export const objectStorageBucketFactory =
   Factory.Sync.makeFactory<ObjectStorageBucket>({
+    region: 'us-east',
     cluster: 'us-east-1',
     created: '2019-12-12T00:00:00',
     hostname: Factory.each(
@@ -18,7 +19,6 @@ export const objectStorageBucketFactory =
     ),
     label: Factory.each((i) => `obj-bucket-${i}`),
     objects: 103,
-    region: 'us-east',
     size: 999999,
   });
 

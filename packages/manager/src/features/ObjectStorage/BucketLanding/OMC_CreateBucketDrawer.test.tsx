@@ -24,7 +24,6 @@ describe('OMC_CreateBucketDrawer', () => {
         component: <OMC_CreateBucketDrawer {...props} />,
         options: {
           flags: {
-            objMultiCluster: true,
             objectStorageGen2: { enabled: true },
           },
         },
@@ -59,7 +58,6 @@ describe('OMC_CreateBucketDrawer', () => {
         component: <OMC_CreateBucketDrawer {...props} />,
         options: {
           flags: {
-            objMultiCluster: true,
             objectStorageGen2: { enabled: true },
           },
         },

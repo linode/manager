@@ -15,7 +15,6 @@ import type {
   CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
   ObjectStorageBucketAccess,
-  ObjectStorageCluster,
   ObjectStorageEndpoint,
   ObjectStorageKey,
   PriceType,
@@ -97,6 +96,7 @@ export const mockGetBucketsForRegion = (
 /**
  * Intercepts POST request to create a bucket and mocks an error response.
  *
+ *  @param regionId - Region for which to mock buckets.
  * @param errorMessage - Optional error message with which to mock response.
  * @param statusCode - HTTP status code with which to mock response.
  *
@@ -167,34 +167,34 @@ export const mockCreateBucketError = (
 /**
  * Intercepts DELETE request to delete bucket.
  *
- * If a bucket label and cluster are provided, only requests to delete the
- * given bucket in the given cluster are intercepted.
+ * If a bucket label and regionId are provided, only requests to delete the
+ * given bucket in the given regionId are intercepted.
  *
- * If only a cluster is provided, only requests to delete buckets in the
- * given cluster are intercepted.
+ * If only a regionId is provided, only requests to delete buckets in the
+ * given regionId are intercepted.
  *
- * If no cluster or label are provided, all requests to delete buckets are
+ * If no regionId or label are provided, all requests to delete buckets are
  * intercepted.
  *
  * @param label - Optional label for bucket deletion to intercept.
- * @param cluster - Optional cluster for bucket deletion to intercept.
+ * @param regionId - Optional regionId for bucket deletion to intercept.
  *
  * @returns Cypress chainable.
  */
 export const interceptDeleteBucket = (
   label?: string,
-  cluster?: string
+  regionId?: string
 ): Cypress.Chainable<null> => {
-  if (label && cluster) {
+  if (label && regionId) {
     return cy.intercept(
       'DELETE',
-      apiMatcher(`object-storage/buckets/${cluster}/${label}`)
+      apiMatcher(`object-storage/buckets/${regionId}/${label}`)
     );
   }
-  if (cluster) {
+  if (regionId) {
     return cy.intercept(
       'DELETE',
-      apiMatcher(`object-storage/buckets/${cluster}/*`)
+      apiMatcher(`object-storage/buckets/${regionId}/*`)
     );
   }
   return cy.intercept('DELETE', apiMatcher('object-storage/buckets/*'));
@@ -204,18 +204,19 @@ export const interceptDeleteBucket = (
  * Intercepts DELETE request to delete bucket and mocks response.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
+ * @param statusCode - HTTP status code with which to mock response, 200 as default.
  *
  * @returns Cypress chainable.
  */
 export const mockDeleteBucket = (
   label: string,
-  cluster: string,
+  regionId: string,
   statusCode: number = 200
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'DELETE',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}`),
+    apiMatcher(`object-storage/buckets/${regionId}/${label}`),
     {
       body: {},
       statusCode,
@@ -227,7 +228,7 @@ export const mockDeleteBucket = (
  * Intercepts GET request to fetch bucket objects and mocks response.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  * @param data - Mocked response data.
  * @param statusCode - Mocked response status code.
  *
@@ -235,14 +236,14 @@ export const mockDeleteBucket = (
  */
 export const mockGetBucketObjects = (
   label: string,
-  cluster: string,
+  regionId: string,
   data: any,
   statusCode: number = 200
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher(
-      `object-storage/buckets/${cluster}/${label}/object-list?delimiter=%2F&prefix=`
+      `object-storage/buckets/${regionId}/${label}/object-list?delimiter=%2F&prefix=`
     ),
     {
       body: {
@@ -262,7 +263,7 @@ export const mockGetBucketObjects = (
  * is mocked.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  * @param filename - Mocked response object filename.
  * @param data - Optional mocked response data.
  * @param statusCode - Opiontal mocked response status code.
@@ -271,7 +272,7 @@ export const mockGetBucketObjects = (
  */
 export const mockUploadBucketObject = (
   label: string,
-  cluster: string,
+  regionId: string,
   filename: string,
   data?: any,
   statusCode: number = 200
@@ -279,14 +280,14 @@ export const mockUploadBucketObject = (
   const mockResponse = {
     body: data || {
       exists: false,
-      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
+      url: `https://${regionId}.linodeobjects.com:443/${label}/${filename}`,
     },
     statusCode,
   };
 
   return cy.intercept(
     'POST',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/object-url`),
+    apiMatcher(`object-storage/buckets/${regionId}/${label}/object-url`),
     mockResponse
   );
 };
@@ -295,7 +296,7 @@ export const mockUploadBucketObject = (
  * Intercepts S3 PUT request to upload bucket object.
  *
  * @param label - Object storage bucket label.
- * @param domain - Object storage bucket cluster.
+ * @param domain - Object storage domain.
  * @param filename - Object filename.
  *
  * @returns Cypress chainable.
@@ -312,7 +313,7 @@ export const interceptUploadBucketObjectS3 = (
  * Intercepts S3 PUT request to upload bucket object and mocks response.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param cluster - Region with Object Storage capability.
  * @param filename - Object filename.
  *
  * @returns Cypress chainable.
@@ -330,25 +331,25 @@ export const mockUploadBucketObjectS3 = (
 };
 
 /**
- * Intercepts POST request to delete bucket object and mocks response.
+ * Intercepts POST request to create an object URL and mocks response.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  * @param filename - Object filename.
  *
  * @returns Cypress chainable.
  */
-export const mockDeleteBucketObject = (
+export const mockCreateObjectUrl = (
   label: string,
-  cluster: string,
+  regionId: string,
   filename: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/object-url`),
+    apiMatcher(`object-storage/buckets/${regionId}/${label}/object-url`),
     {
       exists: true,
-      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
+      url: `https://${regionId}-1.linodeobjects.com:443/${label}/${filename}`,
     }
   );
 };
@@ -357,7 +358,7 @@ export const mockDeleteBucketObject = (
  * Intercepts S3 DELETE request to delete bucket object and mocks response.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param cluster - Region with Object Storage capability.
  * @param filename - Object filename.
  * @param status - Response status.
  *
@@ -390,7 +391,7 @@ export const interceptGetAccessKeys = (): Cypress.Chainable<null> => {
 /**
  * Intercepts GET request to fetch object storage access keys, and mocks response.
  *
- * @param response - Mocked response.
+ * @param accessKeys - Mocked response.
  *
  * @returns Cypress chainable.
  */
@@ -471,37 +472,20 @@ export const mockCancelObjectStorage = (): Cypress.Chainable => {
 };
 
 /**
- * Intercepts GET request to fetch Object Storage clusters and mocks response.
- *
- * @param clusters - Clusters with which to mock response.
- *
- * @returns Cypress chainable.
- */
-export const mockGetClusters = (
-  clusters: ObjectStorageCluster[]
-): Cypress.Chainable => {
-  return cy.intercept(
-    'GET',
-    apiMatcher('object-storage/clusters*'),
-    paginateResponse(clusters)
-  );
-};
-
-/**
  * Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  *
  * @returns Cypress chainable.
  */
 export const interceptGetBucketAccess = (
   label: string,
-  cluster: string
+  regionId: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`)
+    apiMatcher(`object-storage/buckets/${regionId}/${label}/access`)
   );
 };
 
@@ -509,17 +493,17 @@ export const interceptGetBucketAccess = (
  * Intercepts PUT request to update access information (ACL, CORS) for a given Bucket.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  *
  * @returns Cypress chainable.
  */
 export const interceptUpdateBucketAccess = (
   label: string,
-  cluster: string
+  regionId: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`)
+    apiMatcher(`object-storage/buckets/${regionId}/${label}/access`)
   );
 };
 
@@ -545,20 +529,20 @@ export const mockGetObjectStorageEndpoints = (
  *
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  * @param bucketFilename - uploaded bucketFilename
  *
  * @returns Cypress chainable.
  */
 export const mockGetBucketObjectFilename = (
   label: string,
-  cluster: string,
+  regionId: string,
   bucketFilename: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher(
-      `object-storage/buckets/${cluster}/${label}/object-acl?name=${bucketFilename}`
+      `object-storage/buckets/${regionId}/${label}/object-acl?name=${bucketFilename}`
     ),
     {
       body: {},
@@ -569,11 +553,11 @@ export const mockGetBucketObjectFilename = (
 
 export const mockGetBucket = (
   label: string,
-  cluster: string
+  regionId: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}`),
+    apiMatcher(`object-storage/buckets/${regionId}/${label}`),
     {
       body: {},
       statusCode: 200,
@@ -584,19 +568,19 @@ export const mockGetBucket = (
 /* Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket, and mocks response.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param regionId - Region with Object Storage capability.
  * @param bucketAccess - Access details for which to mock the response
  *
  * @returns Cypress chainable.
  */
 export const mockGetBucketAccess = (
   label: string,
-  cluster: string,
+  regionId: string,
   bucketAccess: ObjectStorageBucketAccess
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`),
+    apiMatcher(`object-storage/buckets/${regionId}/${label}/access`),
     makeResponse(bucketAccess)
   );
 };

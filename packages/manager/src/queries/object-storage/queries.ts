@@ -2,7 +2,6 @@ import {
   cancelObjectStorage,
   createBucket,
   deleteBucket,
-  deleteBucketWithRegion,
   deleteSSLCert,
   getBucketAccess,
   getObjectACL,
@@ -38,7 +37,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import {
   getAllBucketsFromEndpoints,
   getAllBucketsFromRegions,
-  getAllObjectStorageClusters,
   getAllObjectStorageEndpoints,
   getAllObjectStorageTypes,
 } from './requests';
@@ -54,7 +52,6 @@ import type {
   ObjectStorageBucket,
   ObjectStorageBucketAccess,
   ObjectStorageBucketSSL,
-  ObjectStorageCluster,
   ObjectStorageEndpoint,
   ObjectStorageKey,
   ObjectStorageObjectACL,
@@ -71,10 +68,10 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryFn: () => getObjectStorageKeys(params),
     queryKey: [params],
   }),
-  bucket: (clusterOrRegion: string, bucketName: string) => ({
+  bucket: (regionId: string, bucketName: string) => ({
     contextQueries: {
       access: {
-        queryFn: () => getBucketAccess(clusterOrRegion, bucketName),
+        queryFn: () => getBucketAccess(regionId, bucketName),
         queryKey: null,
       },
       objects: {
@@ -83,7 +80,7 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
             queryFn: () =>
               getObjectACL({
                 bucket: bucketName,
-                clusterId: clusterOrRegion,
+                regionId,
                 params: { name },
               }),
             queryKey: [name],
@@ -94,18 +91,14 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
         queryKey: null,
       },
       ssl: {
-        queryFn: () => getSSLCert(clusterOrRegion, bucketName),
+        queryFn: () => getSSLCert(regionId, bucketName),
         queryKey: null,
       },
     },
-    queryKey: [clusterOrRegion, bucketName],
+    queryKey: [regionId, bucketName],
   }),
   buckets: {
     queryFn: () => null, // This is a placeholder queryFn. Look at `useObjectStorageBuckets` for the actual logic.
-    queryKey: null,
-  },
-  clusters: {
-    queryFn: getAllObjectStorageClusters,
     queryKey: null,
   },
   endpoints: {
@@ -134,17 +127,6 @@ export const useObjectStorageEndpoints = (enabled = true) => {
     enabled: isObjectStorageGen2Enabled && enabled,
   });
 };
-
-/**
- *
- * @deprecated This will be replaced by useObjectStorageEndpoints
- */
-export const useObjectStorageClusters = (enabled: boolean = true) =>
-  useQuery<ObjectStorageCluster[], APIError[]>({
-    ...objectStorageQueries.clusters,
-    ...queryPresets.oneTimeFetch,
-    enabled,
-  });
 
 export const useObjectStorageBuckets = (enabled: boolean = true) => {
   const flags = useFlags();
@@ -203,39 +185,38 @@ export const useObjectStorageAccessKeys = (params: Params) =>
   });
 
 export const useBucketAccess = (
-  clusterOrRegion: string,
+  regionId: string,
   bucket: string,
   queryEnabled: boolean
 ) =>
   useQuery<ObjectStorageBucketAccess, APIError[]>({
-    ...objectStorageQueries.bucket(clusterOrRegion, bucket)._ctx.access,
+    ...objectStorageQueries.bucket(regionId, bucket)._ctx.access,
     enabled: queryEnabled,
   });
 
 export const useObjectAccess = (
   bucket: string,
-  clusterId: string,
+  regionId: string,
   params: { name: string },
   queryEnabled: boolean
 ) =>
   useQuery<ObjectStorageObjectACL, APIError[]>({
     enabled: queryEnabled,
     ...objectStorageQueries
-      .bucket(clusterId, bucket)
+      .bucket(regionId, bucket)
       ._ctx.objects._ctx.acl(params.name),
   });
 
 export const useUpdateBucketAccessMutation = (
-  clusterOrRegion: string,
+  regionId: string,
   bucket: string
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], UpdateObjectStorageBucketAccessPayload>({
-    mutationFn: (data) => updateBucketAccess(clusterOrRegion, bucket, data),
+    mutationFn: (data) => updateBucketAccess(regionId, bucket, data),
     onSuccess: (_, variables) => {
       queryClient.setQueryData<ObjectStorageBucketAccess>(
-        objectStorageQueries.bucket(clusterOrRegion, bucket)._ctx.access
-          .queryKey,
+        objectStorageQueries.bucket(regionId, bucket)._ctx.access.queryKey,
         (oldData) => ({
           acl: variables?.acl ?? 'private',
           acl_xml: oldData?.acl_xml ?? '',
@@ -248,7 +229,7 @@ export const useUpdateBucketAccessMutation = (
 };
 
 export const useUpdateObjectAccessMutation = (
-  clusterId: string,
+  regionId: string,
   bucketName: string,
   name: string
 ) => {
@@ -256,12 +237,12 @@ export const useUpdateObjectAccessMutation = (
 
   const options = queryOptions(
     objectStorageQueries
-      .bucket(clusterId, bucketName)
+      .bucket(regionId, bucketName)
       ._ctx.objects._ctx.acl(name)
   );
 
   return useMutation<{}, APIError[], ACLType>({
-    mutationFn: (data) => updateObjectACL(clusterId, bucketName, name, data),
+    mutationFn: (data) => updateObjectACL(regionId, bucketName, name, data),
     onSuccess(_, acl) {
       queryClient.setQueryData(options.queryKey, (oldData) => ({
         acl,
@@ -311,36 +292,8 @@ export const useCreateBucketMutation = () => {
 
 export const useDeleteBucketMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { cluster: string; label: string }>({
+  return useMutation<{}, APIError[], { label: string; regionId: string }>({
     mutationFn: deleteBucket,
-    onSuccess: (_, variables) => {
-      queryClient.setQueryData<BucketsResponse>(
-        objectStorageQueries.buckets.queryKey,
-        (oldData) => ({
-          buckets:
-            oldData?.buckets.filter(
-              (bucket) =>
-                !(
-                  bucket.cluster === variables.cluster &&
-                  bucket.label === variables.label
-                )
-            ) ?? [],
-          errors: oldData?.errors ?? [],
-        })
-      );
-    },
-  });
-};
-
-/*
- @TODO OBJ Multicluster: useDeleteBucketWithRegionMutation is a temporary hook,
- once feature is rolled out we replace it with existing useDeleteBucketMutation
- by updating it with region instead of cluster.
-*/
-export const useDeleteBucketWithRegionMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { label: string; region: string }>({
-    mutationFn: deleteBucketWithRegion,
     onSuccess: (_, variables) => {
       queryClient.setQueryData<BucketsResponse>(
         objectStorageQueries.buckets.queryKey,
@@ -349,7 +302,7 @@ export const useDeleteBucketWithRegionMutation = () => {
             oldData?.buckets.filter(
               (bucket: ObjectStorageBucket) =>
                 !(
-                  bucket.region === variables.region &&
+                  bucket.region === variables.regionId &&
                   bucket.label === variables.label
                 )
             ) ?? [],
@@ -361,16 +314,16 @@ export const useDeleteBucketWithRegionMutation = () => {
 };
 
 export const getObjectBucketObjectsQueryKey = (
-  clusterId: string,
+  regionId: string,
   bucket: string,
   prefix: string
 ) => [
-  ...objectStorageQueries.bucket(clusterId, bucket)._ctx.objects.queryKey,
+  ...objectStorageQueries.bucket(regionId, bucket)._ctx.objects.queryKey,
   ...prefixToQueryKey(prefix),
 ];
 
 export const useObjectBucketObjectsInfiniteQuery = (
-  clusterId: string,
+  regionId: string,
   bucket: string,
   prefix: string
 ) =>
@@ -380,16 +333,13 @@ export const useObjectBucketObjectsInfiniteQuery = (
     queryFn: ({ pageParam }) =>
       getObjectList({
         bucket,
-        clusterId,
+        regionId,
         params: { delimiter, marker: pageParam as string | undefined, prefix },
       }),
-    queryKey: getObjectBucketObjectsQueryKey(clusterId, bucket, prefix),
+    queryKey: getObjectBucketObjectsQueryKey(regionId, bucket, prefix),
   });
 
-export const useCreateObjectUrlMutation = (
-  clusterId: string,
-  bucketName: string
-) =>
+export const useCreateObjectUrlMutation = (regionId: string, bucket: string) =>
   useMutation<
     ObjectStorageObjectURL,
     APIError[],
@@ -400,15 +350,15 @@ export const useCreateObjectUrlMutation = (
     }
   >({
     mutationFn: ({ method, name, options }) =>
-      getObjectURL(clusterId, bucketName, name, method, options),
+      getObjectURL(regionId, bucket, name, method, options),
   });
 
-export const useBucketSSLQuery = (cluster: string, bucket: string) =>
+export const useBucketSSLQuery = (region: string, bucket: string) =>
   useQuery<ObjectStorageBucketSSL, APIError[]>(
-    objectStorageQueries.bucket(cluster, bucket)._ctx.ssl
+    objectStorageQueries.bucket(region, bucket)._ctx.ssl
   );
 
-export const useBucketSSLMutation = (cluster: string, bucket: string) => {
+export const useBucketSSLMutation = (region: string, bucket: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -416,24 +366,27 @@ export const useBucketSSLMutation = (cluster: string, bucket: string) => {
     APIError[],
     CreateObjectStorageBucketSSLPayload
   >({
-    mutationFn: (data) => uploadSSLCert(cluster, bucket, data),
+    mutationFn: (data) => uploadSSLCert(region, bucket, data),
     onSuccess(data) {
       queryClient.setQueryData<ObjectStorageBucketSSL>(
-        objectStorageQueries.bucket(cluster, bucket)._ctx.ssl.queryKey,
+        objectStorageQueries.bucket(region, bucket)._ctx.ssl.queryKey,
         data
       );
     },
   });
 };
 
-export const useBucketSSLDeleteMutation = (cluster: string, bucket: string) => {
+export const useBucketSSLDeleteMutation = (
+  regionId: string,
+  bucket: string
+) => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[]>({
-    mutationFn: () => deleteSSLCert(cluster, bucket),
+    mutationFn: () => deleteSSLCert(regionId, bucket),
     onSuccess() {
       queryClient.setQueryData<ObjectStorageBucketSSL>(
-        objectStorageQueries.bucket(cluster, bucket)._ctx.ssl.queryKey,
+        objectStorageQueries.bucket(regionId, bucket)._ctx.ssl.queryKey,
         { ssl: false }
       );
     },

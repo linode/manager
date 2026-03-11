@@ -8,7 +8,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateBucket,
   mockDeleteBucket,
-  mockDeleteBucketObject,
+  mockCreateObjectUrl,
   mockDeleteBucketObjectS3,
   mockGetBucketObjects,
   mockGetBuckets,
@@ -142,7 +142,7 @@ describe('object storage smoke tests', () => {
     bucketContents.forEach((bucketFile) => {
       const filename = bucketFile.split('/')[1];
 
-      mockDeleteBucketObject(bucketLabel, bucketCluster, filename).as(
+      mockCreateObjectUrl(bucketLabel, bucketCluster, filename).as(
         'deleteBucketObject'
       );
       mockDeleteBucketObjectS3(bucketLabel, bucketCluster, filename).as(

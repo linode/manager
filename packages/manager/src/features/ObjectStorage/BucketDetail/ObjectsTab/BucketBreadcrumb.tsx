@@ -20,8 +20,8 @@ interface Props {
 export const BucketBreadcrumb = (props: Props) => {
   const { bucketName, prefix } = props;
   const navigate = useNavigate();
-  const { clusterId } = useParams({
-    from: '/object-storage/buckets/$clusterId/$bucketName',
+  const { regionId } = useParams({
+    from: '/object-storage/buckets/$regionId/$bucketName',
   });
   const { width } = useWindowDimensions();
   const bucketPath = bucketName + '/' + prefix;
@@ -43,8 +43,8 @@ export const BucketBreadcrumb = (props: Props) => {
         <StyledLink
           onClick={() => {
             navigate({
-              to: '/object-storage/buckets/$clusterId/$bucketName',
-              params: { clusterId, bucketName },
+              to: '/object-storage/buckets/$regionId/$bucketName',
+              params: { regionId, bucketName },
               search: { prefix: '' },
             });
           }}
@@ -75,8 +75,8 @@ export const BucketBreadcrumb = (props: Props) => {
 
                   const prefixString = prefixArrayToString(prefixArray, idx);
                   navigate({
-                    to: '/object-storage/buckets/$clusterId/$bucketName',
-                    params: { clusterId, bucketName },
+                    to: '/object-storage/buckets/$regionId/$bucketName',
+                    params: { regionId, bucketName },
                     search: { prefix: prefixString },
                   });
                 }}
