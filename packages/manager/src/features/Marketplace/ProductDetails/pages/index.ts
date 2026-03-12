@@ -12,7 +12,7 @@ import { radSecurityPlatform } from './rad-security-platform';
 import { scaleflexSmartMediaCloudAndDam } from './scaleflex-smart-media-cloud-and-dam';
 import { sftpgo } from './sftpgo';
 import { synadiaPlatform } from './synadia-platform';
-import { titan } from './titan';
+import { titanVideoProcessingAndCompression } from './titan-video-processing-and-compression';
 import { vindralLive } from './vindral-live';
 import { vodEncoder } from './vod-encoder';
 
@@ -47,7 +47,7 @@ const detailsMap: Record<string, ProductTabDetails> = {
   'scaleflex-smart-media-cloud-and-dam': scaleflexSmartMediaCloudAndDam,
   sftpgo,
   'synadia-platform': synadiaPlatform,
-  titan,
+  'titan-video-processing-and-compression': titanVideoProcessingAndCompression,
   'vindral-live': vindralLive,
   'vod-encoder': vodEncoder,
   // Add more products here as you add their details files
