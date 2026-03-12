@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import * as React from 'react';
 
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
@@ -45,7 +46,7 @@ const quotasMock = [
     s3_endpoint: testEndpoint,
     description: 'Current number of buckets per account, per endpoint',
     quota_limit: 10,
-    resource_metric: 'bucket',
+    resource_metric: QuotaResourceMetrics.BUCKET,
   }),
   quotaFactory.build({
     quota_id: `obj-bytes-${testEndpoint}`,
@@ -55,7 +56,7 @@ const quotasMock = [
     s3_endpoint: testEndpoint,
     description: 'Current total capacity per account, per endpoint',
     quota_limit: 2048,
-    resource_metric: 'byte',
+    resource_metric: QuotaResourceMetrics.BYTE,
   }),
   quotaFactory.build({
     quota_id: `obj-objects-${testEndpoint}`,
@@ -65,7 +66,7 @@ const quotasMock = [
     s3_endpoint: testEndpoint,
     description: 'Current number of objects per account, per endpoint',
     quota_limit: 10,
-    resource_metric: 'object',
+    resource_metric: QuotaResourceMetrics.OBJECT,
   }),
 ];
 
