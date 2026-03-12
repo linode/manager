@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4/lib/quotas/types';
 import { Factory } from '@linode/utilities';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4/lib/quotas/types';
@@ -9,7 +10,7 @@ export const quotaFactory = Factory.Sync.makeFactory<Quota>({
   quota_name: 'Linode Dedicated vCPUs',
   quota_type: 'linode-dedicated-cpus',
   region_applied: 'us-east',
-  resource_metric: 'CPU',
+  resource_metric: QuotaResourceMetrics.CPU,
   has_usage: true,
 });
 
