@@ -1,5 +1,9 @@
 import { destinationType } from '@linode/api-v4';
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
@@ -7,6 +11,7 @@ import { beforeEach, describe, expect } from 'vitest';
 import {
   akamaiObjectStorageDestinationFactory,
   customHttpsDestinationFactory,
+  objectStorageBucketFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -24,10 +29,46 @@ const mockDestinations = [
   ...customHttpsDestinationFactory.buildList(2),
 ];
 
+const mockBuckets = [
+  objectStorageBucketFactory.build({
+    hostname: 'bucket-with-hostname.us-east-1.linodeobjects.com',
+    label: 'bucket-with-hostname',
+    region: 'us-east',
+  }),
+  objectStorageBucketFactory.build({
+    hostname: 'bucket-with-s3-endpoint.eu-central-1.linodeobjects.com',
+    label: 'bucket-with-s3-endpoint',
+    region: 'eu-central',
+    s3_endpoint: 'eu-central-1.linodeobjects.com',
+  }),
+];
+
+const queryMocks = vi.hoisted(() => ({
+  useObjectStorageBuckets: vi.fn().mockReturnValue({
+    data: undefined,
+    error: null,
+    isPending: true,
+  }),
+}));
+
+vi.mock('src/queries/object-storage/queries', async () => {
+  const actual = await vi.importActual('src/queries/object-storage/queries');
+  return {
+    ...actual,
+    useObjectStorageBuckets: queryMocks.useObjectStorageBuckets,
+  };
+});
+
 describe('StreamFormDelivery', () => {
   const setDisableTestConnection = () => {};
 
   beforeEach(async () => {
+    queryMocks.useObjectStorageBuckets.mockReturnValue({
+      data: { buckets: mockBuckets },
+      error: null,
+      isPending: false,
+    });
+
     server.use(
       http.get('*/monitor/streams/destinations', () => {
         return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -188,24 +229,35 @@ describe('StreamFormDelivery', () => {
       });
 
       describe('and new Destination Name is added', () => {
-        it('should render Host input and allow to type text', async () => {
+        it('should render Endpoint input as disabled in bucket_from_account mode and allow to type text after switching to manual mode', async () => {
           await renderComponentAndAddNewDestinationName(
             destinationType.AkamaiObjectStorage,
             flags
           );
 
-          // Type the test value inside the input
-          const hostInput = screen.getByLabelText('Host');
-          await userEvent.type(hostInput, 'Test');
+          // Endpoint is disabled when bucket_from_account is selected
+          const endpointInput = screen.getByLabelText('Endpoint');
+          expect(endpointInput).toBeDisabled();
 
-          expect(hostInput.getAttribute('value')).toEqual('Test');
+          // Switch to manual mode
+          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          await userEvent.click(manualRadio);
+
+          // Now Endpoint should be enabled
+          expect(endpointInput).toBeEnabled();
+          await userEvent.type(endpointInput, 'Test');
+          expect(endpointInput.getAttribute('value')).toEqual('Test');
         });
 
-        it('should render Bucket input and allow to type text', async () => {
+        it('should render Bucket input and allow to type text in manual mode', async () => {
           await renderComponentAndAddNewDestinationName(
             destinationType.AkamaiObjectStorage,
             flags
           );
+
+          // Switch to manual mode
+          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          await userEvent.click(manualRadio);
 
           // Type the test value inside the input
           const bucketInput = screen.getByLabelText('Bucket');
@@ -254,6 +306,123 @@ describe('StreamFormDelivery', () => {
           await userEvent.type(logPathPrefixInput, 'Test');
 
           expect(logPathPrefixInput.getAttribute('value')).toEqual('Test');
+        });
+      });
+
+      describe('Bucket selection behavior', () => {
+        it('should default to "Select Bucket associated with the account" radio', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          const bucketFromAccountRadio = screen.getByLabelText(
+            'Select Bucket associated with the account'
+          );
+          expect(bucketFromAccountRadio).toBeChecked();
+        });
+
+        it('should disable the Endpoint field when "Select Bucket associated with the account" is selected', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          const endpointInput = screen.getByLabelText('Endpoint');
+          expect(endpointInput).toBeDisabled();
+        });
+
+        it('should enable the Endpoint field when "Enter Bucket manually" is selected', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          await userEvent.click(manualRadio);
+
+          const endpointInput = screen.getByLabelText('Endpoint');
+          expect(endpointInput).toBeEnabled();
+        });
+
+        it('should clear Bucket and Endpoint when switching to "Select Bucket associated with the account"', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Switch to manual mode and fill in values
+          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          await userEvent.click(manualRadio);
+
+          const bucketInput = screen.getByLabelText('Bucket');
+          await userEvent.type(bucketInput, 'my-manual-bucket');
+          expect(bucketInput).toHaveValue('my-manual-bucket');
+
+          const endpointInput = screen.getByLabelText('Endpoint');
+          await userEvent.type(endpointInput, 'my-endpoint.com');
+          expect(endpointInput).toHaveValue('my-endpoint.com');
+
+          // Switch back to bucket_from_account
+          const bucketFromAccountRadio = screen.getByLabelText(
+            'Select Bucket associated with the account'
+          );
+          await userEvent.click(bucketFromAccountRadio);
+
+          // Both fields should be cleared
+          const bucketAutocomplete = screen.getByLabelText('Bucket');
+          expect(bucketAutocomplete).toHaveValue('');
+          expect(screen.getByLabelText('Endpoint')).toHaveValue('');
+        });
+
+        it('should set Bucket and Endpoint from hostname when selecting a bucket without s3_endpoint', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Open the Bucket Autocomplete and select a bucket with only hostname
+          const bucketAutocomplete = screen.getByLabelText('Bucket');
+          await userEvent.click(bucketAutocomplete);
+
+          const bucketOption = await screen.findByText('bucket-with-hostname');
+          await userEvent.click(bucketOption);
+
+          // Bucket should display the selected bucket label
+          await waitFor(() => {
+            expect(bucketAutocomplete).toHaveValue('bucket-with-hostname');
+          });
+
+          // Endpoint should be auto-filled with the bucket's hostname
+          expect(screen.getByLabelText('Endpoint')).toHaveValue(
+            'bucket-with-hostname.us-east-1.linodeobjects.com'
+          );
+        });
+
+        it('should set Bucket and Endpoint from s3_endpoint when selecting a bucket with s3_endpoint', async () => {
+          await renderComponentAndAddNewDestinationName(
+            destinationType.AkamaiObjectStorage,
+            flags
+          );
+
+          // Open the Bucket Autocomplete and select a bucket with s3_endpoint
+          const bucketAutocomplete = screen.getByLabelText('Bucket');
+          await userEvent.click(bucketAutocomplete);
+
+          const bucketOption = await screen.findByText(
+            'bucket-with-s3-endpoint'
+          );
+          await userEvent.click(bucketOption);
+
+          // Bucket should display the selected bucket label
+          await waitFor(() => {
+            expect(bucketAutocomplete).toHaveValue('bucket-with-s3-endpoint');
+          });
+
+          // Endpoint should be auto-filled with the bucket's s3_endpoint
+          expect(screen.getByLabelText('Endpoint')).toHaveValue(
+            'eu-central-1.linodeobjects.com'
+          );
         });
       });
     });

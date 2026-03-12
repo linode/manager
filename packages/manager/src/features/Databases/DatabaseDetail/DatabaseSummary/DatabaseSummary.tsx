@@ -21,17 +21,17 @@ export const DatabaseSummary = () => {
   const { database } = useDatabaseDetailContext();
   const flags = useFlags();
 
+  const pgBouncerEnabled =
+    flags.databasePgBouncer && database.engine === 'postgresql';
+
   const { data: connectionPools } = useDatabaseConnectionPoolsQuery(
     database.id,
-    flags.databasePgBouncer,
+    pgBouncerEnabled,
     {}
   );
 
   const showPgBouncerConnectionDetails =
-    flags.databasePgBouncer &&
-    database.engine === 'postgresql' &&
-    connectionPools &&
-    connectionPools.data.length > 0;
+    pgBouncerEnabled && connectionPools && connectionPools.data.length > 0;
 
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database.private_network?.public_access;
