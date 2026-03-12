@@ -11,17 +11,17 @@ import { FormControlLabel, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import type { ChangeEvent } from 'react';
 import React from 'react';
-import { useController, useFormContext, useWatch } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 
-import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { InterfacePurpose } from '@linode/api-v4';
 
 interface Props {
+  disabled: boolean;
   index: number;
 }
 
@@ -46,7 +46,7 @@ const interfaceTypes = [
   },
 ] as const;
 
-export const InterfaceType = ({ index }: Props) => {
+export const InterfaceType = ({ disabled, index }: Props) => {
   const queryClient = useQueryClient();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -59,24 +59,14 @@ export const InterfaceType = ({ index }: Props) => {
     name: `linodeInterfaces.${index}.purpose`,
   });
 
-  const interfaceGeneration = useWatch({
-    control,
-    name: 'interface_generation',
-  });
-
-  const createType = useGetLinodeCreateType();
-  const isCreatingFromBackup = createType === 'Backups';
-
-  const disabled = isCreatingFromBackup && interfaceGeneration !== 'linode';
-
   const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
     field.onChange(value);
 
     // VLAN interfaces do not support Firewalls, so set
-    // the Firewall ID to `null` to be safe and early return.
+    // the Firewall ID to `-1` to be safe and early return.
     if (value === 'vlan') {
-      setValue(`linodeInterfaces.${index}.firewall_id`, null);
+      setValue(`linodeInterfaces.${index}.firewall_id`, -1);
       return;
     }
 
@@ -136,9 +126,7 @@ export const InterfaceType = ({ index }: Props) => {
             key={interfaceType.purpose}
             label={
               <Stack direction="row" mt={1.25} spacing={0.5}>
-                <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                  {interfaceType.label}
-                </Typography>
+                <Typography>{interfaceType.label}</Typography>
                 <TooltipIcon
                   status="info"
                   sxTooltipIcon={{ p: 0, ml: 0.5 }}

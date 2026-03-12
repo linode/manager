@@ -9,6 +9,7 @@ import {
   PARENT_ENTITY_REGION,
   REGION,
   RESOURCE_ID,
+  STATUS_CODE_PLACEHOLDER_TEXT,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import { filterKubernetesClusters, getValidSortedEndpoints } from './utils';
@@ -657,6 +658,45 @@ export const NETLOADBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> =
     ],
     serviceType: 'netloadbalancer',
   };
+
+export const LOGS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['logs'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Stream Names',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Stream Names',
+        priority: 2,
+      },
+      name: 'Stream Names',
+    },
+    {
+      configuration: {
+        filterKey: 'status_code',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        name: 'Status Code',
+        dimensionKey: 'status_code',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        isOptional: true,
+        placeholder: STATUS_CODE_PLACEHOLDER_TEXT,
+        priority: 2,
+      },
+      name: 'Status Code',
+    },
+  ],
+  serviceType: 'logs',
+};
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -670,6 +710,7 @@ export const FILTER_CONFIG: Readonly<
   [8, FIREWALL_NODEBALANCER_CONFIG],
   [9, LKE_CONFIG],
   [10, ENDPOINT_DASHBOARD_CONFIG],
+  [11, LOGS_CONFIG],
 ]);
 
 /**

@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
@@ -35,6 +36,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
     volume?.id
   );
   const canResizeVolume = permissions?.resize_volume;
+  const isVolumeAttached = volume?.linode_id || volume?.linode_label;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
 
@@ -123,6 +125,20 @@ export const ResizeVolumeDrawer = (props: Props) => {
           regionId={volume?.region ?? ''}
           value={values.size ?? -1}
         />
+
+        {isVolumeAttached && (
+          <Notice spacingTop={16} text="" variant="warning">
+            Detach this volume from a Linode before resizing to prevent data
+            loss. For maximum safety, power off the Linode first.{' '}
+            <Link
+              external
+              to="https://techdocs.akamai.com/cloud-computing/docs/resize-a-volume"
+            >
+              Learn more about volume resizing.
+            </Link>
+          </Notice>
+        )}
+
         <ActionsPanel
           primaryButtonProps={{
             disabled: !canResizeVolume || !dirty || isInvalidPrice,

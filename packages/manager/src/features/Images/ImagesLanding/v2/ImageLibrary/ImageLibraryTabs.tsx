@@ -10,7 +10,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { getImageLibrarySubTabIndex } from '../../../utils';
+import { getSubTabIndex } from '../../../utils';
 import { DeleteImageDialog } from '../../DeleteImageDialog';
 import { EditImageDrawer } from '../../EditImageDrawer';
 import { ManageImageReplicasForm } from '../../ImageRegions/ManageImageRegionsForm';
@@ -108,10 +108,7 @@ export const ImageLibraryTabs = () => {
     onRebuild: handleRebuild,
   };
 
-  const subTabIndex = getImageLibrarySubTabIndex(
-    subTabs,
-    imageTypeParams?.imageType
-  );
+  const subTabIndex = getSubTabIndex(subTabs, imageTypeParams?.imageType);
 
   const onTabChange = (index: number) => {
     // - Update the "imageType" param.
@@ -147,8 +144,7 @@ export const ImageLibraryTabs = () => {
                   </Notice>
                 )}
                 {tab.type === 'recovery-images' && (
-                  // <ImagesView handlers={handlers} type="recovery-images" />
-                  <Notice variant="info">Recovery Images</Notice>
+                  <ImagesView handlers={handlers} type="recovery-images" />
                 )}
               </SafeTabPanel>
             ))}

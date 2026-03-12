@@ -1,12 +1,16 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { imageLibrarySubTabs } from 'src/features/Images/ImagesLanding/v2/ImageLibrary/imageLibraryTabsConfig';
+import { shareGroupsSubTabs } from 'src/features/Images/ImagesLanding/v2/ShareGroups/shareGroupsTabsConfig';
 
 import { rootRoute } from '../root';
 import { ImagesRoute } from './ImagesRoute';
 
 import type { TableSearchParams } from '../types';
-import type { ImageLibraryType } from 'src/features/Images/utils';
+import type {
+  ImageLibraryType,
+  ShareGroupsType,
+} from 'src/features/Images/utils';
 
 export interface ImagesSearchParams extends TableSearchParams {
   query?: string;
@@ -29,6 +33,10 @@ type ImageActionRouteParams = {
 
 type ImageLibraryTypeRouteParams = {
   imageType: ImageLibraryType;
+};
+
+type ShareGroupsTypeRouteParams = {
+  shareGroupsType: ShareGroupsType;
 };
 
 const imageActions = {
@@ -68,7 +76,14 @@ const imagesIndexRoute = createRoute({
 );
 
 const imageActionRoute = createRoute({
-  beforeLoad: async ({ params }) => {
+  beforeLoad: async ({ context, params }) => {
+    // Prevent access if private image sharing is enabled
+    if (context.isPrivateImageSharingEnabled) {
+      throw redirect({
+        to: '/images/image-library/$imageType',
+        params: { imageType: 'owned-by-me' },
+      });
+    }
     if (!(params.action in imageActions)) {
       throw redirect({
         search: () => ({}),
@@ -154,9 +169,14 @@ const imageLibraryIndexRoute = createRoute({
         to: '/images',
       });
     }
+
+    const normalizedPath = location.pathname.endsWith('/')
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
+
     if (
       context.isPrivateImageSharingEnabled &&
-      location.pathname === '/images/image-library'
+      normalizedPath === '/images/image-library'
     ) {
       throw redirect({
         to: '/images/image-library/$imageType',
@@ -244,6 +264,20 @@ const shareGroupsIndexRoute = createRoute({
         to: '/images',
       });
     }
+
+    const normalizedPath = location.pathname.endsWith('/')
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
+
+    if (
+      context.isPrivateImageSharingEnabled &&
+      normalizedPath === '/images/share-groups'
+    ) {
+      throw redirect({
+        to: '/images/share-groups/$shareGroupsType',
+        params: { shareGroupsType: 'owned-groups' },
+      });
+    }
   },
   getParentRoute: () => shareGroupsLandingRoute,
   path: '/',
@@ -254,6 +288,33 @@ const shareGroupsIndexRoute = createRoute({
   ).then((m) => m.shareGroupsTabsLazyRoute)
 );
 
+const shareGroupsTypeRoute = createRoute({
+  beforeLoad: async ({ context, params }) => {
+    if (
+      context.isPrivateImageSharingEnabled &&
+      !shareGroupsSubTabs
+        .map((tab) => tab.type)
+        .includes(params.shareGroupsType)
+    ) {
+      throw redirect({
+        to: '/images/share-groups/$shareGroupsType',
+        params: { shareGroupsType: 'owned-groups' },
+      });
+    }
+  },
+  getParentRoute: () => shareGroupsIndexRoute,
+  params: {
+    parse: ({ shareGroupsType }: ShareGroupsTypeRouteParams) => ({
+      shareGroupsType,
+    }),
+    stringify: ({ shareGroupsType }: ShareGroupsTypeRouteParams) => ({
+      shareGroupsType,
+    }),
+  },
+  path: '$shareGroupsType',
+  validateSearch: (search: ImagesSearchParams) => search,
+});
+
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
   imageLibraryLandingRoute.addChildren([
@@ -261,7 +322,9 @@ export const imagesRouteTree = imagesRoute.addChildren([
       imageLibraryTypeRoute.addChildren([imageActionRouteV2]),
     ]),
   ]),
-  shareGroupsLandingRoute.addChildren([shareGroupsIndexRoute]),
+  shareGroupsLandingRoute.addChildren([
+    shareGroupsIndexRoute.addChildren([shareGroupsTypeRoute]),
+  ]),
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,
     imagesCreateDiskRoute,
