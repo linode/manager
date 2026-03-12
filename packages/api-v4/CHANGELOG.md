@@ -1,3 +1,21 @@
+## [2026-03-16] - v0.158.0
+
+
+### Added:
+
+- Add `ACLP Logs Datacenter LKE-E` to the Region's `Capability` type ([#13467](https://github.com/linode/manager/pull/13467))
+
+### Changed:
+
+- Export `HostEndpoint` and rename `private_access` to `public_access` ([#13413](https://github.com/linode/manager/pull/13413))
+- Switch delivery endpoints from Beta APIv4 to APIv4 ([#13461](https://github.com/linode/manager/pull/13461))
+- Update  node balancer type for enterprise from premium_40GB to premium_40gb ([#13472](https://github.com/linode/manager/pull/13472))
+
+### Upcoming Features:
+
+- Add `shared` to ImageType ([#13418](https://github.com/linode/manager/pull/13418))
+- Add logs to `CloudPulseServiceType` and `capabilityServiceTypeMapping`  ([#13445](https://github.com/linode/manager/pull/13445))
+
 ## [2026-02-25] - v0.157.0
 
 
