@@ -82,6 +82,11 @@ export const StreamsLanding = () => {
     filter
   );
 
+  const hasLoadedInitialData = React.useRef(false);
+  if (!hasLoadedInitialData.current && streams !== undefined) {
+    hasLoadedInitialData.current = true;
+  }
+
   const onSearch = (label: string) => {
     navigate({
       search: (prev) => ({
@@ -112,6 +117,10 @@ export const StreamsLanding = () => {
     return (
       <ErrorState errorText="There was an error retrieving your streams. Please reload and try again." />
     );
+  }
+
+  if (!hasLoadedInitialData.current && isLoading) {
+    return <CircleProgress />;
   }
 
   if (streams?.results === 0 && !search?.status && !search?.label) {

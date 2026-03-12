@@ -72,6 +72,11 @@ export const DestinationsLanding = () => {
     filter
   );
 
+  const hasLoadedInitialData = React.useRef(false);
+  if (!hasLoadedInitialData.current && destinations !== undefined) {
+    hasLoadedInitialData.current = true;
+  }
+
   const onSearch = (label: string) => {
     navigate({
       search: (prev) => ({
@@ -91,6 +96,10 @@ export const DestinationsLanding = () => {
     return (
       <ErrorState errorText="There was an error retrieving your destinations. Please reload and try again." />
     );
+  }
+
+  if (!hasLoadedInitialData.current && isLoading) {
+    return <CircleProgress />;
   }
 
   if (destinations?.results === 0 && !search?.label) {
