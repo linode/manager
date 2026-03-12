@@ -17,10 +17,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useWatch } from 'react-hook-form';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Link } from 'src/components/Link';
 import { sortData } from 'src/components/OrderBy';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
@@ -262,6 +262,19 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               )}
             />
           </div>
+          <Typography sx={{ mt: 2 }}>
+            Select the LKE clusters that will send audit logs to the configured
+            destination. Logging must be enabled for a cluster before it can be
+            selected. To enable logging for a cluster, use the Linode API{' '}
+            <Link
+              external
+              hideIcon
+              to="https://techdocs.akamai.com/linode-api/reference/put-lke-cluster"
+            >
+              update the cluster
+            </Link>{' '}
+            to set audit_logs_enabled to true.
+          </Typography>
           <StyledGrid
             sx={{
               alignItems: 'center',
