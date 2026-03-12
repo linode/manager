@@ -1,11 +1,13 @@
 import { useDatabaseCredentialsQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { Button } from 'akamai-cds-react-components';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { DB_ROOT_USERNAME } from 'src/constants';
+import { CREDENTIALS_ERROR_TEXT } from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { isDefaultDatabase } from '../../utilities';
@@ -58,13 +60,15 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
 
   const handleShowPasswordClick = () => {
     setShowPassword((showCredentials) => !showCredentials);
+    getDatabaseCredentials();
   };
 
   React.useEffect(() => {
-    if (showCredentials && !credentials) {
-      getDatabaseCredentials();
+    if (showCredentials && credentialsError) {
+      setShowPassword(false);
+      enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
     }
-  }, [credentials, getDatabaseCredentials, showCredentials]);
+  }, [showCredentials, credentialsError]);
 
   const disableShowBtn = ['failed', 'provisioning'].includes(database.status);
 
@@ -89,11 +93,6 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         <div className={classes.progressCtn}>
           <CircleProgress noPadding size="xs" />
         </div>
-      ) : credentialsError ? (
-        <>
-          <span className={classes.error}>Error retrieving credentials.</span>
-          {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
-        </>
       ) : (
         credentialsBtn(
           handleShowPasswordClick,
