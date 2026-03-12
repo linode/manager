@@ -230,6 +230,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       )}
       {childAccounts &&
       childAccounts.length === 0 &&
+      isIAMDelegationEnabled &&
       !Object.prototype.hasOwnProperty.call(filter, 'company') ? (
         <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
           <NoResultsState />

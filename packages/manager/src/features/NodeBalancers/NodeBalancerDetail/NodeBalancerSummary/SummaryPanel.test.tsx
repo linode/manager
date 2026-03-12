@@ -162,9 +162,9 @@ describe('SummaryPanel', () => {
     expect(typeElement).toBeVisible();
   });
 
-  it('displays type: Enterprise if the nodebalancer is premium_40GB', () => {
+  it('displays type: Enterprise if the nodebalancer is premium_40gb', () => {
     queryMocks.useNodeBalancerQuery.mockReturnValue({
-      data: nodeBalancerFactory.build({ type: 'premium_40GB' }),
+      data: nodeBalancerFactory.build({ type: 'premium_40gb' }),
     });
 
     const { getByText } = renderWithTheme(<SummaryPanel />);
