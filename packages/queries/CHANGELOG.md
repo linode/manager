@@ -1,10 +1,3 @@
-## [2026-03-16] - v0.22.0
-
-
-### Fixed:
-
-- IAM: fix useGetChildAccountsQuery ([#13419](https://github.com/linode/manager/pull/13419))
-
 ## [2026-02-25] - v0.21.0
 
 
