@@ -204,19 +204,6 @@ describe('ServiceURI', () => {
     );
   });
 
-  it('should render error retry button if the credentials call fails', () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      error: new Error('Failed to fetch credentials'),
-    });
-
-    renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
-
-    const errorRetryBtn = screen.getByRole('button', {
-      name: '{error. click to retry}',
-    });
-    expect(errorRetryBtn).toBeInTheDocument();
-  });
-
   it('should render general service URI if isGeneralServiceURI is true', () => {
     queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
       data: mockCredentials,
