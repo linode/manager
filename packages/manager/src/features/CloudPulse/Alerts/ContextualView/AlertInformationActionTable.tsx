@@ -121,6 +121,13 @@ export interface AlertRowPropsOptions {
   ) => void;
 }
 
+/**
+ * Service types whose parent component handles saving alerts externally.
+ * The internal Save button is hidden for these service types.
+ * Add a service type here to opt out of the built-in Save button.
+ */
+const SERVICES_WITH_EXTERNAL_SAVE: CloudPulseServiceType[] = ['linode'];
+
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
@@ -356,28 +363,30 @@ export const AlertInformationActionTable = (
                     }}
                   />
                 </Box>
-                {/* Show save button only in edit mode and not for linode service type.
-                    For linode service type, save is handled by the service owner component. */}
-                {isEditMode && serviceType !== 'linode' && (
-                  <Box>
-                    <Button
-                      buttonType="primary"
-                      data-qa-buttons="true"
-                      data-testid="save-alerts"
-                      disabled={!hasUnsavedChanges || isLoading}
-                      loading={isLoading}
-                      onClick={() => {
-                        if (showConfirmationDialog) {
-                          setIsDialogOpen(true);
-                        } else {
-                          handleConfirm(enabledAlerts);
-                        }
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                )}
+                {/* Show save button only in edit mode. Service types listed in
+                    SERVICES_WITH_EXTERNAL_SAVE manage their own save externally
+                    (e.g. linode handles it in the parent component). */}
+                {isEditMode &&
+                  !SERVICES_WITH_EXTERNAL_SAVE.includes(serviceType) && (
+                    <Box>
+                      <Button
+                        buttonType="primary"
+                        data-qa-buttons="true"
+                        data-testid="save-alerts"
+                        disabled={!hasUnsavedChanges || isLoading}
+                        loading={isLoading}
+                        onClick={() => {
+                          if (showConfirmationDialog) {
+                            setIsDialogOpen(true);
+                          } else {
+                            handleConfirm(enabledAlerts);
+                          }
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Box>
+                  )}
               </>
             )}
           </Paginate>

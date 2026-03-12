@@ -26,6 +26,12 @@ import type {
 } from '@linode/api-v4';
 import type { SxProps, Theme } from '@linode/ui';
 
+/**
+ * Service types that display the Manage Alerts button inline with the
+ * search/filter row instead of in the section header.
+ */
+const SERVICES_WITH_INLINE_MANAGE_ALERTS: CloudPulseServiceType[] = ['linode'];
+
 interface AlertReusableComponentProps {
   /**
    * Id for the selected entity
@@ -95,7 +101,10 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   } = useAlertDefinitionByServiceTypeQuery(serviceType);
 
   React.useEffect(() => {
-    onStatusChange?.(!isLoading && !error);
+    // Only notify the parent when ready
+    if (!isLoading && !error) {
+      onStatusChange?.(true);
+    }
   }, [isLoading, error, onStatusChange]);
 
   const [searchText, setSearchText] = React.useState<string>('');
@@ -123,23 +132,24 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   return (
     <Paper sx={paperSx}>
       <Stack gap={3}>
-        {/* When entityId is available for non-linode services: Show header with title and Manage Alerts button */}
-        {entityId && serviceType !== 'linode' && (
-          <Box display="flex" justifyContent="space-between">
-            <Box alignItems="center" display="flex" gap={0.5}>
-              <Typography variant="h2">Alerts</Typography>
-              {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
+        {/* For services not in SERVICES_WITH_INLINE_MANAGE_ALERTS: Show header with title and Manage Alerts button */}
+        {entityId &&
+          !SERVICES_WITH_INLINE_MANAGE_ALERTS.includes(serviceType) && (
+            <Box display="flex" justifyContent="space-between">
+              <Box alignItems="center" display="flex" gap={0.5}>
+                <Typography variant="h2">Alerts</Typography>
+                {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
+              </Box>
+              <Button
+                buttonType="outlined"
+                data-qa-buttons="true"
+                data-testid="manage-alerts"
+                onClick={() => navigate({ to: '/alerts/definitions' })}
+              >
+                Manage Alerts
+              </Button>
             </Box>
-            <Button
-              buttonType="outlined"
-              data-qa-buttons="true"
-              data-testid="manage-alerts"
-              onClick={() => navigate({ to: '/alerts/definitions' })}
-            >
-              Manage Alerts
-            </Button>
-          </Box>
-        )}
+          )}
         <Stack gap={2}>
           <Box display="flex" gap={2}>
             <DebouncedSearchTextField
@@ -167,18 +177,19 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
                 hideLabel: true,
               }}
             />
-            {/* When entityId is available for linode service: Show Manage Alerts button in search/filter row (right-aligned) */}
-            {entityId && serviceType === 'linode' && (
-              <Button
-                buttonType="outlined"
-                data-qa-buttons="true"
-                data-testid="manage-alerts"
-                onClick={() => navigate({ to: '/alerts/definitions' })}
-                sx={{ marginLeft: 'auto' }}
-              >
-                Manage Alerts
-              </Button>
-            )}
+            {/* For services in SERVICES_WITH_INLINE_MANAGE_ALERTS: Show Manage Alerts button in search/filter row (right-aligned) */}
+            {entityId &&
+              SERVICES_WITH_INLINE_MANAGE_ALERTS.includes(serviceType) && (
+                <Button
+                  buttonType="outlined"
+                  data-qa-buttons="true"
+                  data-testid="manage-alerts"
+                  onClick={() => navigate({ to: '/alerts/definitions' })}
+                  sx={{ marginLeft: 'auto' }}
+                >
+                  Manage Alerts
+                </Button>
+              )}
           </Box>
 
           <AlertInformationActionTable

@@ -40,9 +40,7 @@ vi.mock(
       onToggleAlert: (payload: unknown, hasUnsavedChanges: boolean) => void;
     }) => {
       React.useEffect(() => {
-        if (onStatusChange) {
-          onStatusChange(true);
-        }
+        onStatusChange?.(true);
       }, [onStatusChange]);
 
       return (
