@@ -117,7 +117,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
   }, [credentialsError, hidePassword]);
 
   const renderPassword = () => {
-    if (hidePassword || (!credentialsError && !credentials)) {
+    if (hidePassword || credentialsError || !credentials) {
       return (
         <Button
           disabled={disablePasswordBtn}
