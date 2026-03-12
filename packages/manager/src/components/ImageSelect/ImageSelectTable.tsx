@@ -91,7 +91,7 @@ export const ImageSelectTable = (props: Props) => {
   const [selectedTag, setSelectedTag] = useState<null | string>(null);
   const [selectedRegion, setSelectedRegion] = useState<null | string>(null);
 
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { data: profile } = useProfile();
   const { data: tags } = useAllTagsQuery();
@@ -168,8 +168,8 @@ export const ImageSelectTable = (props: Props) => {
     <Stack pt={1} spacing={2}>
       {errorText && <Notice text={errorText} variant="error" />}
       <Stack
-        alignItems={matchesSmDown ? 'stretch' : 'center'}
-        direction={matchesSmDown ? 'column' : 'row'}
+        alignItems={matchesMdDown ? 'stretch' : 'center'}
+        direction={matchesMdDown ? 'column' : 'row'}
         flexWrap="wrap"
         gap={2}
       >
