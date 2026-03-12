@@ -26,12 +26,6 @@ import type {
 } from '@linode/api-v4';
 import type { SxProps, Theme } from '@linode/ui';
 
-/**
- * Service types that display the Manage Alerts button inline with the
- * search/filter row instead of in the section header.
- */
-const SERVICES_WITH_INLINE_MANAGE_ALERTS: CloudPulseServiceType[] = ['linode'];
-
 interface AlertReusableComponentProps {
   /**
    * Id for the selected entity
@@ -83,6 +77,14 @@ interface AlertReusableComponentProps {
   serviceType: CloudPulseServiceType;
 }
 
+/**
+ * Service types that display the Manage Alerts button inline with the search/filter row.
+ * For all other service types, the button appears inline with the Alerts section header.
+ */
+const SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW: CloudPulseServiceType[] = [
+  'linode',
+];
+
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   const {
     entityId,
@@ -132,9 +134,9 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   return (
     <Paper sx={paperSx}>
       <Stack gap={3}>
-        {/* For services not in SERVICES_WITH_INLINE_MANAGE_ALERTS: Show header with title and Manage Alerts button */}
+        {/* Not in SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW: Show Manage Alerts button inline with the Alerts section header */}
         {entityId &&
-          !SERVICES_WITH_INLINE_MANAGE_ALERTS.includes(serviceType) && (
+          !SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW.includes(serviceType) && (
             <Box display="flex" justifyContent="space-between">
               <Box alignItems="center" display="flex" gap={0.5}>
                 <Typography variant="h2">Alerts</Typography>
@@ -177,9 +179,11 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
                 hideLabel: true,
               }}
             />
-            {/* For services in SERVICES_WITH_INLINE_MANAGE_ALERTS: Show Manage Alerts button in search/filter row (right-aligned) */}
+            {/* In SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW: Show Manage Alerts button inline with the search/filter row (right-aligned) */}
             {entityId &&
-              SERVICES_WITH_INLINE_MANAGE_ALERTS.includes(serviceType) && (
+              SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW.includes(
+                serviceType
+              ) && (
                 <Button
                   buttonType="outlined"
                   data-qa-buttons="true"

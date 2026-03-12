@@ -114,9 +114,8 @@ describe('Alert Resuable Component for contextual view', () => {
   });
 
   it('Should show header for edit mode', async () => {
-    // The 'Alerts' heading and 'Manage Alerts' button are rendered in the component header
-    // only for non-linode service types. For linode, the heading is owned by the service owner
-    // (e.g. LinodeAlerts Accordion) and the save button is handled externally.
+    // For service types not in SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW (e.g. dbaas),
+    // the 'Alerts' heading and 'Manage Alerts' button appear together in the section header.
     renderWithTheme(
       <AlertReusableComponent
         entityId={entityId}
@@ -135,8 +134,8 @@ describe('Alert Resuable Component for contextual view', () => {
   });
 
   it('Should not show Alerts heading for linode service type but still show Manage Alerts button in filter row', () => {
-    // For linode: the "Alerts" heading belongs to the service owner (e.g. LinodeAlerts accordion),
-    // so it's intentionally absent here. The Manage Alerts button is moved to the filter row.
+    // For service types in SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW (e.g. linode), the 'Alerts' heading
+    // belongs to the service owner and is not rendered here. The Manage Alerts button moves to the filter row.
     renderWithTheme(component); // component uses serviceType='linode' with entityId
 
     expect(
