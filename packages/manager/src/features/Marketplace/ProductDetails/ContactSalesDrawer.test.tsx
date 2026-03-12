@@ -276,7 +276,7 @@ describe('ContactSalesDrawer', () => {
     fireEvent.blur(akamaiEmailInput);
 
     await waitFor(() => {
-      expect(queryByText('Must be an akamai email address.')).toBeVisible();
+      expect(queryByText('Must be an Akamai email address.')).toBeVisible();
     });
   });
 
