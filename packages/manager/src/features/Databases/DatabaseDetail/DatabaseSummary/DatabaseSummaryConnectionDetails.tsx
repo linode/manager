@@ -7,7 +7,11 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { DB_ROOT_USERNAME } from 'src/constants';
-import { CREDENTIALS_ERROR_TEXT } from 'src/features/Databases/constants';
+import {
+  CLUSTER_PROVISIONING_TEXT,
+  CREDENTIALS_ERROR_TEXT,
+  DISABLED_PASSWORD_BUTTON_TEXT,
+} from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { isDefaultDatabase } from '../../utilities';
@@ -70,7 +74,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     }
   }, [showCredentials, credentialsError]);
 
-  const disableShowBtn = ['failed', 'provisioning'].includes(database.status);
+  const disableShowBtn = ['failed', 'provisioning', 'suspended'].includes(
+    database.status
+  );
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
@@ -105,8 +111,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           sxTooltipIcon={sxTooltipIcon}
           text={
             database.status === 'provisioning'
-              ? 'Your Database Cluster is currently provisioning.'
-              : 'Your root password is unavailable when your Database Cluster has failed.'
+              ? CLUSTER_PROVISIONING_TEXT
+              : DISABLED_PASSWORD_BUTTON_TEXT
           }
         />
       )}

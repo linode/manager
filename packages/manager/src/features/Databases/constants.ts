@@ -65,6 +65,12 @@ export const SUMMARY_PRIVATE_HOST_LEGACY_COPY =
 export const CREDENTIALS_ERROR_TEXT =
   'There was an error retrieving cluster credentials. Please try again.';
 
+export const DISABLED_PASSWORD_BUTTON_TEXT =
+  'Your root password is unavailable when your Database Cluster is in a failed or suspended state.';
+
+export const CLUSTER_PROVISIONING_TEXT =
+  'Your Database Cluster is currently provisioning.';
+
 // Links
 export const LEARN_MORE_LINK_LEGACY =
   'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';

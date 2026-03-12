@@ -7,7 +7,11 @@ import React, { useState } from 'react';
 
 import { Code } from 'src/components/Code/Code';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { CREDENTIALS_ERROR_TEXT } from 'src/features/Databases/constants';
+import {
+  CLUSTER_PROVISIONING_TEXT,
+  CREDENTIALS_ERROR_TEXT,
+  DISABLED_PASSWORD_BUTTON_TEXT,
+} from 'src/features/Databases/constants';
 import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
 import type { Database, DatabaseCredentials } from '@linode/api-v4';
@@ -97,6 +101,14 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const showBtnLoading =
     !hidePassword && !isCopying && (credentialsLoading || credentialsFetching);
 
+  const disablePasswordBtn = ['failed', 'provisioning', 'suspended'].includes(
+    database.status
+  );
+  const disabledPasswordTooltipText =
+    database.status === 'provisioning'
+      ? CLUSTER_PROVISIONING_TEXT
+      : DISABLED_PASSWORD_BUTTON_TEXT;
+
   React.useEffect(() => {
     if (!hidePassword && credentialsError) {
       setHidePassword(true);
@@ -108,12 +120,19 @@ export const ServiceURI = (props: ServiceURIProps) => {
     if (hidePassword || (!credentialsError && !credentials)) {
       return (
         <Button
+          disabled={disablePasswordBtn}
           loading={showBtnLoading}
           onClick={() => {
             getDatabaseCredentials();
             setHidePassword(false);
           }}
-          sx={{ p: 0 }}
+          sx={{
+            p: 0,
+            '& .MuiButton-icon': {
+              margin: 0,
+            },
+          }}
+          tooltipText={disablePasswordBtn ? disabledPasswordTooltipText : ''}
         >
           {`{click to reveal password}`}
         </Button>
