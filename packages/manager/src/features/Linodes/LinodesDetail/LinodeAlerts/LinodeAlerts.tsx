@@ -27,8 +27,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { AlertsPanel } from './AlertsPanel';
 import { getLinodeAlertsInitialValues } from './utilities';
 
-import type { CloudPulseAlertsPayload } from '@linode/api-v4';
-import type { APIError, Linode } from '@linode/api-v4';
+import type { APIError, CloudPulseAlertsPayload, Linode } from '@linode/api-v4';
 
 const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
