@@ -1,4 +1,8 @@
-import type { CreateStreamPayload, StreamDetailsType } from '@linode/api-v4';
+import type {
+  CreateStreamPayload,
+  KubernetesCluster,
+  StreamDetailsType,
+} from '@linode/api-v4';
 import type { DestinationFormType } from 'src/features/Delivery/Shared/types';
 
 export interface StreamFromType extends Omit<CreateStreamPayload, 'details'> {
@@ -8,4 +12,8 @@ export interface StreamFromType extends Omit<CreateStreamPayload, 'details'> {
 export interface StreamAndDestinationFormType {
   destination: DestinationFormType;
   stream: StreamFromType;
+}
+
+export interface ExtendedKubernetesCluster extends KubernetesCluster {
+  regionLabel: string;
 }
