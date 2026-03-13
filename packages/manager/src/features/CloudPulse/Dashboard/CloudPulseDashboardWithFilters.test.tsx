@@ -139,9 +139,16 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       error: '',
       isLoading: false,
     });
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="nodebalancer" />
     );
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
     const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     const portsSelect = screen.getByPlaceholderText('e.g., 80,443,3000');
     expect(presetButton).toBeInTheDocument();
@@ -157,9 +164,18 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       error: '',
       isLoading: false,
     });
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="firewall" />
     );
+
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
+
     const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     expect(presetButton).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Select a Linode Region')).toBeVisible();
@@ -173,7 +189,11 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       error: '',
       isLoading: false,
     });
-
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
     renderWithTheme(
       <CloudPulseDashboardWithFilters
         region="test"
@@ -181,6 +201,8 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
         serviceType="objectstorage"
       />
     );
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
 
     const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     expect(presetButton).toBeInTheDocument();
@@ -191,6 +213,11 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       data: [{ ...mockDashboard, service_type: 'objectstorage', id: 6 }],
       error: '',
       isLoading: false,
+    });
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
     });
     renderWithTheme(
       <CloudPulseDashboardWithFilters
@@ -208,10 +235,17 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       error: '',
       isLoading: false,
     });
-
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="blockstorage" />
     );
+
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
 
     const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     expect(presetButton).toBeInTheDocument();
@@ -237,9 +271,17 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       isLoading: false,
     });
 
+    queryMocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: mockGroupByOptions,
+      defaultValue: [],
+    });
     renderWithTheme(
       <CloudPulseDashboardWithFilters resource={1} serviceType="firewall" />
     );
+
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeEnabled();
 
     const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     expect(presetButton).toBeInTheDocument();
