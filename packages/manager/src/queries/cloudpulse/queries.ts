@@ -10,6 +10,7 @@ import {
 } from '@linode/api-v4';
 import {
   databaseQueries,
+  deliveryQueries,
   firewallQueries,
   getAllLinodesRequest,
   networkLoadBalancerQueries,
@@ -142,6 +143,8 @@ export const queryFactory = createQueryKeys(key, {
         };
       case 'lke':
         return kubernetesQueries.lists._ctx.all;
+      case 'logs':
+        return deliveryQueries.streams._ctx.all(params, filters);
       case 'netloadbalancer':
         return networkLoadBalancerQueries.netloadbalancers._ctx.all(
           params,

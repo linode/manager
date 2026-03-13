@@ -7,6 +7,7 @@ import {
   getStreamDescription,
 } from 'src/features/Delivery/deliveryUtils';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
+import { getImageTypeToImageLibraryType } from 'src/features/Images/utils';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 
 import type {
@@ -74,25 +75,32 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   value: volume.id,
 });
 
-export const imageToSearchableItem = (image: Image): SearchableItem => ({
-  data: {
-    created: image.created,
-    description:
-      image.description && image.description.length > 1
-        ? image.description
-        : `${image.size} MB, Replicated in ${pluralize(
-            'region',
-            'regions',
-            image.regions.length
-          )}`,
-    icon: 'image',
-    path: `/images?query="${image.label}"`,
-    tags: image.tags,
-  },
-  entityType: 'image',
-  label: image.label,
-  value: image.id,
-});
+export const imageToSearchableItem = (
+  image: Image,
+  isPrivateImageSharingEnabled: boolean
+): SearchableItem => {
+  return {
+    data: {
+      created: image.created,
+      description:
+        image.description && image.description.length > 1
+          ? image.description
+          : `${image.size} MB, Replicated in ${pluralize(
+              'region',
+              'regions',
+              image.regions.length
+            )}`,
+      icon: 'image',
+      path: isPrivateImageSharingEnabled
+        ? `/images/image-library/${getImageTypeToImageLibraryType(image.type)}?query="${image.label}"`
+        : `/images?query="${image.label}"`,
+      tags: image.tags,
+    },
+    entityType: 'image',
+    label: image.label,
+    value: image.id,
+  };
+};
 
 export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   data: {
@@ -207,6 +215,7 @@ export const streamToSearchableItem = (stream: Stream): SearchableItem => ({
     description: getStreamDescription(stream),
     path: `/logs/delivery/streams/${stream.id}/edit`,
     status: stream.status,
+    created: stream.created,
   },
   entityType: 'stream',
   label: stream.label,
@@ -219,6 +228,7 @@ export const destinationToSearchableItem = (
   data: {
     description: getDestinationDescription(destination),
     path: `/logs/delivery/destinations/${destination.id}/edit`,
+    created: destination.created,
   },
   entityType: 'destination',
   label: destination.label,

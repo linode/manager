@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { delegationQueries } from '../iam/delegation';
 import { profileQueries, useProfile } from '../profile';
 import { accountQueries } from './queries';
 
@@ -82,6 +83,9 @@ export const useUpdateUserMutation = (username: string) => {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts._def,
+      });
       queryClient.setQueryData(
         accountQueries.users._ctx.user(user.username).queryKey,
         user,
@@ -112,6 +116,9 @@ export const useAccountUserDeleteMutation = (username: string) => {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: delegationQueries.childAccounts._def,
       });
       queryClient.removeQueries({
         queryKey: accountQueries.users._ctx.user(username).queryKey,

@@ -38,6 +38,18 @@ export const getLinodeCreateResolver = (
       values.linodeInterfaces = values.linodeInterfaces.map(
         getCleanedLinodeInterfaceValues
       );
+      if (
+        values.interface_generation === 'legacy_config' ||
+        tab === 'Clone Linode'
+      ) {
+        // firewall_id is required in the form under interfaces object when using linode interfaces, but not when using legacy interfaces.
+        // If the user selects legacy interfaces, we set firewall_id to -1 to bypass the firewall requirement in the validation schema.
+        values.linodeInterfaces.forEach((linodeInterface) => {
+          linodeInterface.firewall_id = -1;
+        });
+      } else {
+        values.firewall_id = -1;
+      }
     } else {
       values.linodeInterfaces = [];
       values.interfaces =
@@ -50,6 +62,12 @@ export const getLinodeCreateResolver = (
 
     if (!values.metadata?.user_data) {
       values.metadata = undefined;
+    }
+
+    // For the Clone Linode flow, we need not send firewall_id in the payload as API will take care of assigning the firewall_id based on the source Linode's configuration.
+    if (tab === 'Clone Linode' && !values.firewall_id) {
+      // The Clone Linode flow does not have the firewall_id field under interfaces object, so we set firewall_id to -1 to bypass the firewall requirement in the validation schema.
+      values.firewall_id = -1;
     }
 
     const { errors } = await yupResolver(

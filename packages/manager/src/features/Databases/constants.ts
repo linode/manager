@@ -92,3 +92,5 @@ export const usernameOptions = [
   { label: defaultUsername, value: defaultUsername },
   { label: 'akmadmin', value: 'akmadmin' },
 ]; // Currently the only options for the username field
+
+export const DEFAULT_PAGE_SIZES = [25, 50, 75, 100];

@@ -21,6 +21,7 @@ import type {
   Account,
   APIError,
   ChildAccount,
+  ChildAccountTokenPayload,
   ChildAccountWithDelegates,
   GetChildAccountDelegatesParams,
   GetChildAccountsIamParams,
@@ -99,7 +100,6 @@ export const useGetChildAccountsQuery = ({
 > => {
   return useQuery({
     ...delegationQueries.childAccounts({ params, users, filter }),
-    placeholderData: keepPreviousData,
     enabled,
   });
 };
@@ -174,8 +174,7 @@ export const useUpdateChildAccountDelegatesQuery = (): UseMutationResult<
     onSuccess(_data, { euuid }) {
       // Invalidate all child accounts
       queryClient.invalidateQueries({
-        queryKey: delegationQueries.childAccounts({ params: {}, users: true })
-          .queryKey,
+        queryKey: delegationQueries.childAccounts._def,
       });
       // Invalidate all child account delegates
       queryClient.invalidateQueries({
@@ -235,13 +234,10 @@ export const useGetChildAccountQuery = (
  * - Audience: Clients that need temporary auth to perform actions in the child account.
  * - Data: Token for `POST /iam/delegation/child-accounts/:euuid/token`.
  */
-export const useGenerateChildAccountTokenQuery = (): UseMutationResult<
-  Token,
-  APIError[],
-  { euuid: string }
-> => {
-  return useMutation<Token, APIError[], { euuid: string }>({
-    mutationFn: generateChildAccountToken,
+export const useGenerateChildAccountTokenQuery = () => {
+  return useMutation<Token, APIError[], ChildAccountTokenPayload>({
+    mutationFn: ({ euuid, headers }: ChildAccountTokenPayload) =>
+      generateChildAccountToken({ euuid, headers }),
   });
 };
 

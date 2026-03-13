@@ -11,6 +11,7 @@ import {
   useAllVolumesQuery,
 } from '@linode/queries';
 
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
@@ -28,6 +29,7 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
+import { useIsPrivateImageSharingEnabled } from '../Images/utils';
 import { search } from './utils';
 
 import type { SearchableEntityType } from './search.interfaces';
@@ -42,6 +44,9 @@ interface Props {
  * based on a user's seach query.
  */
 export const useClientSideSearch = ({ enabled, query }: Props) => {
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
+  const { isACLPLogsEnabled } = useIsACLPLogsEnabled();
+
   const {
     data: domains,
     error: domainsError,
@@ -93,16 +98,19 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     data: streams,
     error: streamsError,
     isLoading: streamsLoading,
-  } = useAllStreamsQuery({}, {}, enabled);
+  } = useAllStreamsQuery({}, {}, enabled && isACLPLogsEnabled);
   const {
     data: destinations,
     error: destinationsError,
     isLoading: destinationsLoading,
-  } = useAllDestinationsQuery({}, {}, enabled);
+  } = useAllDestinationsQuery({}, {}, enabled && isACLPLogsEnabled);
 
   const searchableDomains = domains?.map(domainToSearchableItem) ?? [];
   const searchableVolumes = volumes?.map(volumeToSearchableItem) ?? [];
-  const searchableImages = privateImages?.map(imageToSearchableItem) ?? [];
+  const searchableImages =
+    privateImages?.map((img) =>
+      imageToSearchableItem(img, isPrivateImageSharingEnabled)
+    ) ?? [];
   const searchableNodebalancers = nodebals?.map(nodeBalToSearchableItem) ?? [];
   const searchableFirewalls = firewalls?.map(firewallToSearchableItem) ?? [];
   const searchableDatabases = databases?.map(databaseToSearchableItem) ?? [];

@@ -2,12 +2,14 @@ import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
+  Notice,
   Paper,
   Stack,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
 
+import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
 import {
   ERROR_STATE_TEXT,
@@ -16,18 +18,33 @@ import {
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultEntityAccess = () => {
+  const { data: permissions, isLoading: isPermissionsLoading } = usePermissions(
+    'account',
+    ['view_default_delegate_access']
+  );
   const {
     data: defaultAccess,
     isLoading: defaultAccessLoading,
     error,
-  } = useGetDefaultDelegationAccessQuery({ enabled: true });
+  } = useGetDefaultDelegationAccessQuery({
+    enabled: permissions?.view_default_delegate_access,
+  });
 
   const hasAssignedEntities = defaultAccess
     ? defaultAccess.entity_access.length > 0
     : false;
 
-  if (defaultAccessLoading) {
+  if (defaultAccessLoading || isPermissionsLoading) {
     return <CircleProgress />;
+  }
+
+  if (!permissions?.view_default_delegate_access) {
+    return (
+      <Notice variant="error">
+        You do not have permission to view default entity access for delegate
+        users.
+      </Notice>
+    );
   }
 
   if (error) {
