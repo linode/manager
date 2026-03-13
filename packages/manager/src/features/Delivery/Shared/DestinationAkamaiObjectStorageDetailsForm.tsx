@@ -150,7 +150,8 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
                   field.onChange(bucket?.label || '');
                   setValue(
                     controlPaths?.host,
-                    bucket?.s3_endpoint || bucket?.hostname || ''
+                    bucket?.s3_endpoint || bucket?.hostname || '',
+                    { shouldValidate: true }
                   );
                 }}
                 options={buckets}

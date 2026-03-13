@@ -1,3 +1,10 @@
+## [2026-03-16] - v0.83.0
+
+
+### Changed:
+
+- Delivery Logs - additional validation in Endpoint URL and Custom Header Name fields ([#13392](https://github.com/linode/manager/pull/13392))
+
 ## [2026-02-25] - v0.82.0
 
 
