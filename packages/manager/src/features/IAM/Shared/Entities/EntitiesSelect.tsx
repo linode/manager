@@ -1,4 +1,12 @@
-import { Autocomplete, Notice, TextField, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  CloseIcon,
+  IconButton,
+  Notice,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
@@ -101,7 +109,9 @@ export const EntitiesSelect = ({
   return (
     <>
       <Autocomplete
+        disableClearable={true}
         disabled={!memoizedEntities.length}
+        errorText={errorText}
         getOptionLabel={(option) => option.label}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Entities"
@@ -123,26 +133,8 @@ export const EntitiesSelect = ({
           setInputValue(value);
         }}
         options={visibleOptions}
-        placeholder={getPlaceholder(
-          type,
-          value.length,
-          filteredEntities.length
-        )}
         readOnly={mode === 'change-role'}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            error={!!errorText}
-            errorText={errorText}
-            label="Entities"
-            noMarginTop
-            placeholder={getPlaceholder(
-              type,
-              value.length,
-              filteredEntities.length
-            )}
-          />
-        )}
+        renderTags={() => null}
         slotProps={{
           listbox: {
             onScroll: (e) => {
@@ -155,26 +147,53 @@ export const EntitiesSelect = ({
             },
           },
         }}
-        sx={{
-          marginTop: 0,
-          '& .MuiChip-root': {
-            padding: theme.tokens.spacing.S4,
-            height: 'auto',
-          },
-          '& .MuiInputLabel-root': {
-            color: theme.tokens.alias.Content.Text.Primary.Default,
-          },
-          '& .MuiChip-labelMedium': {
-            textWrap: 'auto',
-            height: 'auto',
-          },
-          '& .MuiAutocomplete-tag': {
-            wordBreak: 'break-all',
-          },
+        textFieldProps={{
+          placeholder: getPlaceholder(
+            type,
+            value.length,
+            filteredEntities.length
+          ),
         }}
         value={value || []}
       />
-      {!memoizedEntities.length && (
+      {memoizedEntities.length > 0 && !isLoading && (
+        <>
+          <Typography sx={{ mb: 1, mt: 2 }}>
+            Selected entities ({value.length}):
+          </Typography>
+          <Paper
+            sx={(theme) => ({
+              backgroundColor: isLoading
+                ? theme.tokens.alias.Interaction.Background.Disabled
+                : theme.palette.background.paper,
+              maxHeight: 370,
+              overflowY: 'auto',
+              p: 2,
+              py: 1,
+            })}
+            variant="outlined"
+          >
+            <Stack spacing={1}>
+              {value.length === 0 && (
+                <Typography py={1} textAlign="center">
+                  No entities selected
+                </Typography>
+              )}
+              {value.map((entity) => (
+                <EntityRow
+                  disabled={mode === 'change-role'}
+                  key={entity.value}
+                  label={entity.label}
+                  onRemove={() =>
+                    onChange(value.filter((v) => v.value !== entity.value))
+                  }
+                />
+              ))}
+            </Stack>
+          </Paper>
+        </>
+      )}
+      {!memoizedEntities.length && !isLoading && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
@@ -186,5 +205,28 @@ export const EntitiesSelect = ({
         </Notice>
       )}
     </>
+  );
+};
+
+interface EntityRowProps {
+  disabled?: boolean;
+  label: string;
+  onRemove: () => void;
+}
+
+const EntityRow = ({ disabled, label, onRemove }: EntityRowProps) => {
+  return (
+    <Stack alignItems="center" direction="row" justifyContent="space-between">
+      <Typography>{label}</Typography>
+      {!disabled && (
+        <IconButton
+          aria-label={`Remove ${label}`}
+          onClick={onRemove}
+          sx={{ p: 0.75 }}
+        >
+          <CloseIcon />
+        </IconButton>
+      )}
+    </Stack>
   );
 };

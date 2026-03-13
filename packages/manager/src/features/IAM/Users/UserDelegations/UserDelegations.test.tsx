@@ -14,6 +14,7 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn().mockReturnValue(vi.fn()),
   useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -23,6 +24,14 @@ vi.mock('@linode/queries', async () => {
     useGetDelegatedChildAccountsForUserQuery:
       queryMocks.useGetDelegatedChildAccountsForUserQuery,
     useAccountRoles: queryMocks.useAccountRoles,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
   };
 });
 
@@ -46,6 +55,10 @@ describe('UserDelegations', () => {
     // Ensure IAM is considered enabled
     queryMocks.useAccountRoles.mockReturnValue({
       data: accountRolesFactory.build(),
+      isLoading: false,
+    });
+    queryMocks.usePermissions.mockReturnValue({
+      data: { list_user_delegate_accounts: true },
       isLoading: false,
     });
   });
@@ -85,5 +98,27 @@ describe('UserDelegations', () => {
     });
 
     expect(screen.getByText('Account Delegations')).toBeVisible();
+  });
+
+  it('should not render if user does not have permissions', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        list_user_delegate_accounts: false,
+      },
+    });
+
+    renderWithTheme(<UserDelegations />, {
+      flags: {
+        iam: { enabled: true },
+        iamDelegation: {
+          enabled: true,
+        },
+      },
+    });
+    expect(
+      screen.queryByText(
+        `You do not have permission to view this user's account delegations.`
+      )
+    ).toBeVisible();
   });
 });

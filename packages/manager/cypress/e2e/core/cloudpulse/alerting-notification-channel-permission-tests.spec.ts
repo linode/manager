@@ -37,6 +37,7 @@ describe('Notification Channel Listing Page — Access Control', () => {
     mockAppendFeatureFlags(flags);
     cy.visitWithLogin('/linodes');
 
+    ui.nav.findItemByTitle('Alerts').scrollIntoView();
     ui.nav.findItemByTitle('Alerts').should('be.visible').click();
     ui.tabList
       .findTabByTitle('Notification Channels')
@@ -62,6 +63,7 @@ describe('Notification Channel Listing Page — Access Control', () => {
     mockAppendFeatureFlags(flags);
     cy.visitWithLogin('/linodes');
 
+    ui.nav.findItemByTitle('Alerts').scrollIntoView();
     ui.nav.findItemByTitle('Alerts').should('be.visible').click();
 
     // Tab should not render at all

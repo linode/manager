@@ -1,4 +1,4 @@
-import type { Filter, Params } from 'src/types';
+import type { Filter, Params, RequestOptions } from '../types';
 
 export interface ChildAccount {
   company: string;
@@ -36,4 +36,8 @@ export interface GetChildAccountDelegatesParams {
 export interface UpdateChildAccountDelegatesParams {
   euuid: string;
   users: string[];
+}
+
+export interface ChildAccountTokenPayload extends RequestOptions {
+  euuid: string;
 }

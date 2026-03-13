@@ -4,6 +4,8 @@
  * Create/Edit Stream Page
  */
 
+import { ui } from 'support/ui';
+
 import type { AkamaiObjectStorageDetailsExtended } from '@linode/api-v4';
 
 export const logsDestinationForm = {
@@ -21,17 +23,30 @@ export const logsDestinationForm = {
   },
 
   /**
-   * Sets destination's host
+   * Selects a bucket from the "Select Bucket associated with the account" Autocomplete dropdown
    *
-   * @param host - destination host to set
+   * @param bucketLabel - bucket label to select from the dropdown
    */
-  setHost: (host: string) => {
-    cy.findByLabelText('Host')
+  selectBucketFromDropdown: (bucketLabel: string) => {
+    cy.findByLabelText('Bucket')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Host for the destination')
+      .click();
+    ui.autocompletePopper.findByTitle(bucketLabel).should('be.visible').click();
+  },
+
+  /**
+   * Sets destination's endpoint
+   *
+   * @param endpoint - destination endpoint to set
+   */
+  setEndpoint: (endpoint: string) => {
+    cy.findByLabelText('Endpoint')
+      .should('be.visible')
+      .should('be.enabled')
+      .should('have.attr', 'placeholder', 'Endpoint for the destination')
       .clear();
-    cy.focused().type(host);
+    cy.focused().type(endpoint);
   },
 
   /**
@@ -79,11 +94,14 @@ export const logsDestinationForm = {
    * @param data - object with destination details of AkamaiObjectStorageDetails type
    */
   fillDestinationDetailsForm: (data: AkamaiObjectStorageDetailsExtended) => {
-    // Give Destination a host
-    logsDestinationForm.setHost(data.host);
+    // Switch to manual bucket entry
+    cy.findByLabelText('Enter Bucket manually').click();
 
     // Give Destination a bucket
     logsDestinationForm.setBucket(data.bucket_name);
+
+    // Give Destination an endpoint
+    logsDestinationForm.setEndpoint(data.host);
 
     // Give the Destination Access Key ID
     logsDestinationForm.setAccessKeyId(data.access_key_id);

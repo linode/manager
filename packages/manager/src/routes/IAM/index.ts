@@ -8,9 +8,11 @@ import { rootRoute } from '../root';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../types';
-import type { User } from '@linode/api-v4';
+import type { AccessType, EntityType, User } from '@linode/api-v4';
 
-interface IamEntitiesSearchParams {
+interface IamEntitiesSearchParams extends TableSearchParams {
+  entityType?: 'all' | EntityType;
+  query?: string;
   selectedRole?: string;
 }
 
@@ -18,6 +20,11 @@ interface IamUsersSearchParams extends TableSearchParams {
   company?: string;
   query?: string; // to be deprecated once UIE-9292 is resolved
   users?: string;
+}
+
+interface IamUserRolesSearchParams extends TableSearchParams {
+  query?: string;
+  roleType?: 'all' | AccessType;
 }
 
 const iamRoute = createRoute({
@@ -78,6 +85,7 @@ const iamUsersCatchAllRoute = createRoute({
 const iamRolesRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'roles',
+  validateSearch: (search: IamUserRolesSearchParams) => search,
   beforeLoad: async ({ context }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,
@@ -106,7 +114,9 @@ const iamDefaultsTabsRoute = createRoute({
     const profile = context?.profile;
     const userType = profile?.user_type;
 
-    if (userType !== 'child' || !isDelegationEnabled) {
+    const isChildOrDelegate = userType === 'child' || userType === 'delegate';
+
+    if (!isChildOrDelegate || !isDelegationEnabled) {
       throw redirect({
         to: '/iam/roles',
         replace: true,
@@ -122,6 +132,7 @@ const iamDefaultsTabsRoute = createRoute({
 const iamDefaultRolesRoute = createRoute({
   getParentRoute: () => iamDefaultsTabsRoute,
   path: 'roles',
+  validateSearch: (search: IamUserRolesSearchParams) => search,
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultRolesLazyRoute').then(
     (m) => m.defaultRolesLazyRoute
@@ -131,6 +142,7 @@ const iamDefaultRolesRoute = createRoute({
 const iamDefaultEntityAccessRoute = createRoute({
   getParentRoute: () => iamDefaultsTabsRoute,
   path: 'entity-access',
+  validateSearch: (search: IamEntitiesSearchParams) => search,
 }).lazy(() =>
   import('src/features/IAM/Roles/Defaults/defaultEntityAccessLazyRoute').then(
     (m) => m.defaultEntityAccessLazyRoute
@@ -166,7 +178,9 @@ const iamDelegationsRoute = createRoute({
     }
 
     const isChildAccount = profile?.user_type === 'child';
-    if (!isDelegationEnabled || isChildAccount) {
+    const isDelegateAccount = profile?.user_type === 'delegate';
+    const isChildOrDelegate = isChildAccount || isDelegateAccount;
+    if (!isDelegationEnabled || isChildOrDelegate) {
       throw redirect({
         to: '/iam/users',
         replace: true,
@@ -303,6 +317,7 @@ const iamUserNameDetailsRoute = createRoute({
 const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
+  validateSearch: (search: IamUserRolesSearchParams) => search,
   beforeLoad: async ({ context, params }) => {
     const isIAMEnabled = await checkIAMEnabled(
       context.queryClient,

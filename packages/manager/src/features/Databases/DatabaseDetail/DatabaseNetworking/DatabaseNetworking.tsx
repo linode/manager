@@ -20,6 +20,9 @@ export const DatabaseNetworking = () => {
     <Typography>{ACCESS_CONTROLS_IN_SETTINGS_TEXT}</Typography>
   );
 
+  const pgBouncerEnabled =
+    flags.databasePgBouncer && database.engine === 'postgresql';
+
   if (!isVPCEnabled) {
     navigate({
       to: `/databases/$engine/$databaseId/summary`,
@@ -40,9 +43,7 @@ export const DatabaseNetworking = () => {
           disabled={disabled}
         />
         <DatabaseManageNetworking database={database} />
-        {flags.databasePgBouncer && database.engine === 'postgresql' && (
-          <DatabaseConnectionPools database={database} />
-        )}
+        {pgBouncerEnabled && <DatabaseConnectionPools database={database} />}
       </Stack>
     </Paper>
   );

@@ -57,7 +57,7 @@ export const pages: Page[] = [
       {
         go: () => {
           loadAppNoLogin(routes.createLinode);
-          cy.get('[data-reach-tab]').contains('Marketplace').click();
+          cy.get('[data-reach-tab]').contains('Quick Deploy Apps').click();
         },
         name: 'Tab',
       },
