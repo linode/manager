@@ -545,7 +545,7 @@ describe('getReadOnlyHost', () => {
         {
           address: 'public-primary.example.com',
           role: 'primary' as HostEndpointRole,
-          private_access: false,
+          public_access: true,
           port: 12345,
         },
       ],
@@ -565,7 +565,7 @@ describe('getReadOnlyHost', () => {
         {
           address: 'public-primary.example.com',
           role: 'primary' as HostEndpointRole,
-          private_access: false,
+          public_access: true,
           port: 12345,
         },
       ],

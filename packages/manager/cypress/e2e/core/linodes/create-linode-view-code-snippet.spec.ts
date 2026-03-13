@@ -3,10 +3,13 @@
  */
 
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { randomLabel, randomString } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { firewallFactory } from 'src/factories';
 
 describe('Create Linode flow to validate code snippet modal', () => {
   beforeEach(() => {
@@ -24,6 +27,11 @@ describe('Create Linode flow to validate code snippet modal', () => {
     const mockLinodeRegion = chooseRegion({
       capabilities: ['Linodes'],
     });
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+    mockGetFirewalls([mockFirewall]).as('getFirewalls');
     cy.visitWithLogin('/linodes/create');
 
     // Set Linode label, distribution, plan type, password, etc.
@@ -32,6 +40,8 @@ describe('Create Linode flow to validate code snippet modal', () => {
     linodeCreatePage.selectRegionById(mockLinodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(rootPass);
+    // Select a firewall
+    linodeCreatePage.selectFirewall(mockFirewall.label, 'Assign Firewall');
 
     // View Code Snippets and confirm it's provisioned as expected.
     ui.button

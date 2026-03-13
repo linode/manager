@@ -40,14 +40,14 @@ Ready to simplify your live and file-based media workflows? Submit an enquiry to
 const documentationMarkdown = `
 | Specification | Details |
 | :---- | :---- |
-| Deployment model | Customer-managed software; deployable on-prem, cloud, or hybrid environments |
-| Packaging & orchestration | Containerised (Docker); Kubernetes-ready for scheduling  and horizontal scaling |
-| Product scope | Live encoding & packaging (Cambria Stream) |
-| Supported video codecs | Cambria Stream Ingest a wide range of live inputs, then encode and package them as HLS, MPEG-DASH, CMAR, SRT and Zixi. |
-| File orchestration | Centralised job distribution, load balancing, and node monitoring via Cambria Cluster |
-| Hybrid processing | On-prem and cloud resources managed within a single workflow, including workload bursting |
-| Automation & integration | REST APIs for workflow automation and integration with existing media systems |
-| Scalability model | Horizontal scaling based on available compute resources (CPU/GPU/VPU, environment-dependent) |
+| **Deployment model** | Customer-managed software; deployable on-prem, cloud, or hybrid environments |
+| **Packaging & orchestration** | Containerised (Docker); Kubernetes-ready for scheduling  and horizontal scaling |
+| **Product scope** | Live encoding & packaging (Cambria Stream) |
+| **Supported video codecs** | Cambria Stream Ingest a wide range of live inputs, then encode and package them as HLS, MPEG-DASH, CMAR, SRT and Zixi. |
+| **File orchestration** | Centralised job distribution, load balancing, and node monitoring via Cambria Cluster |
+| **Hybrid processing** | On-prem and cloud resources managed within a single workflow, including workload bursting |
+| **Automation & integration** | REST APIs for workflow automation and integration with existing media systems |
+| **Scalability model** | Horizontal scaling based on available compute resources (CPU/GPU/VPU, environment-dependent) |
 
 ### **Architectural diagrams**
 

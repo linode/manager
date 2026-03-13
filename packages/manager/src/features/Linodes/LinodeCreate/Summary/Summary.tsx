@@ -109,7 +109,7 @@ export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
 
   const hasFirewall =
     interfaceGeneration === 'linode'
-      ? linodeInterfaces.some((i) => i.firewall_id)
+      ? linodeInterfaces.some((i) => i.firewall_id && i.firewall_id !== -1)
       : firewallId;
 
   const hasBetaAclpAlertsAssigned =

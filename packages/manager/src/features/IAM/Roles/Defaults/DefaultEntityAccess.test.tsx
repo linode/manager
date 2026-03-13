@@ -17,6 +17,7 @@ const queryMocks = vi.hoisted(() => ({
   useIsDefaultDelegationRolesForChildAccount: vi
     .fn()
     .mockReturnValue({ isDefaultDelegationRolesForChildAccount: true }),
+  usePermissions: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
@@ -41,6 +42,14 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
@@ -51,6 +60,14 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('DefaultEntityAccess', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    queryMocks.usePermissions.mockReturnValue({
+      data: { view_default_delegate_access: true },
+      isLoading: false,
+    });
+  });
   it('should render', async () => {
     queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
       data: {
@@ -91,5 +108,22 @@ describe('DefaultEntityAccess', () => {
 
     renderWithTheme(<DefaultEntityAccess />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
+  });
+
+  it('should not render if user does not have permissions', () => {
+    queryMocks.usePermissions.mockReturnValue({
+      data: {
+        view_default_delegate_access: false,
+      },
+      isLoading: false,
+    });
+
+    renderWithTheme(<DefaultEntityAccess />);
+
+    expect(
+      screen.queryByText(
+        'You do not have permission to view default entity access for delegate users.'
+      )
+    ).toBeVisible();
   });
 });

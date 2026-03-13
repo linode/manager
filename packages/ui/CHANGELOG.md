@@ -1,3 +1,10 @@
+## [2026-03-16] - v0.25.0
+
+
+### Upcoming Features:
+
+- Add `ZeroStateSearchNarrowIcon` to UI package ([#13418](https://github.com/linode/manager/pull/13418))
+
 ## [2026-02-25] - v0.24.0
 
 

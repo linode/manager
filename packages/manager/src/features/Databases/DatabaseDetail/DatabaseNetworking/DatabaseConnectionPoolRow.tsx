@@ -6,10 +6,12 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { CONNECTION_POOL_LABEL_CELL_STYLES } from 'src/features/Databases/constants';
 import { StyledActionMenuWrapper } from 'src/features/Databases/shared.styles';
 
-import type { ConnectionPool } from '@linode/api-v4';
+import type { ConnectionPool, DatabaseStatus } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  /** Status of the Database */
+  databaseStatus: DatabaseStatus;
   /**
    * Function called when the delete button in the Action Menu is pressed.
    */
@@ -25,12 +27,17 @@ interface Props {
 }
 
 export const DatabaseConnectionPoolRow = (props: Props) => {
-  const { pool, onDelete, onEdit } = props;
+  const { pool, onDelete, onEdit, databaseStatus } = props;
+  const editDisabled = databaseStatus === 'provisioning';
 
   const connectionPoolActions: Action[] = [
     {
       onClick: () => onEdit(pool),
       title: 'Edit',
+      disabled: editDisabled,
+      tooltip: editDisabled
+        ? 'Your Database Cluster is currently provisioning.'
+        : '',
     },
     {
       onClick: () => onDelete(pool),

@@ -57,6 +57,7 @@ const akamaiObjectStorageDetailsControlPaths = {
 
 const customHttpsDetailsControlPaths = {
   authenticationType: 'destination.details.authentication.type',
+  authenticationDetails: 'destination.details.authentication.details',
   basicAuthenticationPassword:
     'destination.details.authentication.details.basic_authentication_password',
   basicAuthenticationUser:
