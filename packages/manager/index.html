@@ -11,8 +11,33 @@
     <script type="module" src="/src/index.tsx"></script>
     <script type="text/javascript">
       let hasLiveChatInitialized = false;
+      let embeddedMessagingScriptPromise;
 
-      function openLiveChatOnce() {
+      function loadEmbeddedMessagingScript() {
+        if (window.embeddedservice_bootstrap) {
+          return Promise.resolve();
+        }
+
+        if (embeddedMessagingScriptPromise) {
+          return embeddedMessagingScriptPromise;
+        }
+
+        embeddedMessagingScriptPromise = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%';
+          script.onload = () => resolve();
+          script.onerror = () => {
+            embeddedMessagingScriptPromise = undefined;
+            reject(new Error('Failed to load Embedded Messaging script.'));
+          };
+          document.body.appendChild(script);
+        });
+
+        return embeddedMessagingScriptPromise;
+      }
+
+      async function openLiveChatOnce() {
         const enableLiveChat = window.sessionStorage.getItem('EnableLiveChat') === 'true';
 
         if (!enableLiveChat || hasLiveChatInitialized) {
@@ -20,15 +45,26 @@
         }
 
         hasLiveChatInitialized = true;
+
+        try {
+          await loadEmbeddedMessagingScript();
+        } catch (err) {
+          hasLiveChatInitialized = false;
+          console.error('Error loading Embedded Messaging: ', err);
+          return;
+        }
+
         window.sessionStorage.removeItem('EnableLiveChat');
 
         window.addEventListener("message", (event) => {
           const { action, data } = event.data;
           if (action === "prechatLoaded") {
+            const liveChatToken = window.sessionStorage.getItem('LiveChatToken');
+            const liveChatSubject = window.sessionStorage.getItem('LiveChatSubject');
             console.debug("Received from iframe:", data);
             const dataMap = {
-              JWE_Token: "<Token>",
-              Subject: window.__supportChatSubject || "<Subject>"
+              JWE_Token: liveChatToken ?? "<Token>",
+              Subject: liveChatSubject || "<Subject>"
             };
             event.source.postMessage(
               { action: "hiddenParameters", data: dataMap },
@@ -51,21 +87,16 @@
               "%REACT_APP_CHAT_SCRT2_URL%"
           }
         );
+        window.sessionStorage.removeItem('LiveChatToken');
+        window.sessionStorage.removeItem('LiveChatSubject');
       }
 
       function initEmbeddedMessaging() {
-        try {
-          window.addEventListener("manager:enable-live-chat", openLiveChatOnce);
-          openLiveChatOnce();
-        } catch (err) {
-          console.error("Error loading Embedded Messaging: ", err);
-        }
+        window.addEventListener("manager:enable-live-chat", openLiveChatOnce);
+        openLiveChatOnce();
       }
-    </script>
-    <script
-      type="text/javascript"
-      src="%REACT_APP_CHAT_BOOTSTRAP_JS_URL%"
-      onload="initEmbeddedMessaging()">
+
+      initEmbeddedMessaging();
     </script>
   </body>
 </html>

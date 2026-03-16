@@ -3,7 +3,7 @@ import {
   createSupportTicketSchema,
 } from '@linode/validation/lib/support.schema';
 
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -151,4 +151,15 @@ export const uploadAttachment = (ticketId: number, formData: FormData) =>
     ),
     setMethod('POST'),
     setData(formData),
+  );
+
+/**
+ * Recive Support liveChat Token
+ * @param TokenID { String } the ID of the token to be retrieved
+ */
+
+export const getLiveChatToken = () =>
+  Request<{ token: string }>(
+    setURL(`${BETA_API_ROOT}/support/chat_token`),
+    setMethod('GET'),
   );
