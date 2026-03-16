@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { getLiveChatToken, uploadAttachment } from '@linode/api-v4/lib/support';
 import { useCreateSupportTicketMutation } from '@linode/queries';
 import {
   Accordion,
@@ -45,6 +45,7 @@ import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type {
+  APIError,
   CreateKubeClusterPayload,
   CreateLinodeRequest,
   TicketSeverity,
@@ -203,11 +204,15 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const {
     description,
     entityId,
+    entityInputValue,
     entityType,
     selectedSeverity,
     summary,
     ticketType,
   } = form.watch();
+
+  const isAccountBillingTopic =
+    liveChat && entityType === 'general' && entityInputValue !== 'general';
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
@@ -237,7 +242,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   React.useEffect(() => {
     // Store in-progress work to localStorage
     debouncedSave(form.getValues());
-  }, [summary, description, entityId, entityType, selectedSeverity]);
+  }, [
+    summary,
+    description,
+    entityId,
+    entityInputValue,
+    entityType,
+    selectedSeverity,
+  ]);
 
   /**
    * Clear the dialog completely if clearValues is passed (when canceling out of the dialog or successfully submitting)
@@ -290,11 +302,30 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const handleStartLiveChat = async () => {
+    setSubmitting(true);
+
+    try {
+      const { token } = await getLiveChatToken();
+      window.sessionStorage.setItem('LiveChatToken', token);
+    } catch (error) {
+      form.setError('root', {
+        message: getErrorStringOrDefault(
+          error as APIError[],
+          'Unable to start live chat. Please try again.'
+        ),
+      });
+      setSubmitting(false);
+      scrollErrorIntoViewV2(formContainerRef);
+      return;
+    }
+
+    window.sessionStorage.setItem('LiveChatSubject', summary);
     window.sessionStorage.setItem('EnableLiveChat', 'true');
     window.dispatchEvent(new Event('manager:enable-live-chat'));
     props.onClose();
     window.setTimeout(() => resetDialog(true), 500);
     await navigate({ to: '/support' });
+    setSubmitting(false);
   };
 
   /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
@@ -376,7 +407,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       return;
     }
 
-    if (liveChat && entityType === 'general') {
+    if (isAccountBillingTopic) {
       await handleStartLiveChat();
       return;
     }
@@ -491,32 +522,31 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   />
                 )}
               />
-              {hasSeverityCapability &&
-                !(liveChat && entityType === 'general') && (
-                  <Controller
-                    control={form.control}
-                    name="selectedSeverity"
-                    render={({ field }) => (
-                      <Autocomplete
-                        autoHighlight
-                        data-qa-ticket-severity
-                        label="Severity"
-                        onChange={(e, severity) =>
-                          field.onChange(
-                            severity !== null ? severity.value : undefined
-                          )
-                        }
-                        options={SEVERITY_OPTIONS}
-                        sx={{ maxWidth: 'initial' }}
-                        textFieldProps={{
-                          tooltipPosition: 'right',
-                          tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
-                        }}
-                        value={selectedSeverityOption ?? null}
-                      />
-                    )}
-                  />
-                )}
+              {hasSeverityCapability && !isAccountBillingTopic && (
+                <Controller
+                  control={form.control}
+                  name="selectedSeverity"
+                  render={({ field }) => (
+                    <Autocomplete
+                      autoHighlight
+                      data-qa-ticket-severity
+                      label="Severity"
+                      onChange={(e, severity) =>
+                        field.onChange(
+                          severity !== null ? severity.value : undefined
+                        )
+                      }
+                      options={SEVERITY_OPTIONS}
+                      sx={{ maxWidth: 'initial' }}
+                      textFieldProps={{
+                        tooltipPosition: 'right',
+                        tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
+                      }}
+                      value={selectedSeverityOption ?? null}
+                    />
+                  )}
+                />
+              )}
             </>
           )}
           {ticketType === 'smtp' && <SupportTicketSMTPFields />}
@@ -530,7 +560,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields liveChat={liveChat} />
               )}
-              {!(liveChat && entityType === 'general') && (
+              {!isAccountBillingTopic && (
                 <>
                   <Box mt={1}>
                     <Controller
@@ -573,15 +603,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              label:
-                liveChat && entityType === 'general'
-                  ? 'Start a Live Chat'
-                  : 'Open Ticket',
+              label: isAccountBillingTopic
+                ? 'Start a Live Chat'
+                : 'Open Ticket',
               loading: submitting,
-              onClick:
-                liveChat && entityType === 'general'
-                  ? handleStartLiveChat
-                  : handleSubmit,
+              onClick: isAccountBillingTopic
+                ? handleStartLiveChat
+                : handleSubmit,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
