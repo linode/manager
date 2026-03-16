@@ -83,7 +83,7 @@ describe('ContactSalesDrawer', () => {
     const noOfEmails = getAllByTestId('domain-transfer-input').length;
     if (noOfEmails < 2) {
       const addEmailButton = getByText(
-        'Add a second, additional email address'
+        'Click to add a second, additional email address'
       );
       expect(addEmailButton).toBeVisible();
     }
@@ -94,7 +94,9 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const addEmailButton = getByText('Add a second, additional email address');
+    const addEmailButton = getByText(
+      'Click to add a second, additional email address'
+    );
     fireEvent.click(addEmailButton);
 
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(2);
@@ -105,7 +107,9 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const addEmailButton = getByText('Add a second, additional email address');
+    const addEmailButton = getByText(
+      'Click to add a second, additional email address'
+    );
     fireEvent.click(addEmailButton);
 
     let additionalEmailInputs = queryAllByTestId('domain-transfer-input');
@@ -316,7 +320,8 @@ describe('ContactSalesDrawer', () => {
 
     fireEvent.click(consentCheckbox);
 
-    expect(getByText('Submit')).toBeEnabled();
+    // Submit should still be disabled because required fields (region, phone) are not filled
+    expect(getByText('Submit')).toBeDisabled();
   });
 
   it('expands the terms and conditions when the "Show details" button is clicked', async () => {
