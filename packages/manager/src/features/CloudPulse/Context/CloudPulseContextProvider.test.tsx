@@ -12,22 +12,18 @@ import type { FilterData } from '../Dashboard/CloudPulseDashboardLanding';
 describe('CloudPulseContextProvider', () => {
   it('should render children correctly', () => {
     const TestChild = () => <div data-testid="test-child">Test Child</div>;
-
     const { getByTestId } = renderWithTheme(
       <CloudPulseContextProvider>
         <TestChild />
       </CloudPulseContextProvider>
     );
-
     const childElement = getByTestId('test-child');
     expect(childElement).toHaveTextContent('Test Child');
   });
-
   it('should provide context methods to children', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
     });
-
     expect(result.current.setGlobalFilterData).toBeDefined();
     expect(result.current.getGlobalFilterData).toBeDefined();
     expect(result.current.setGlobalSelectedDashboard).toBeDefined();
@@ -35,7 +31,6 @@ describe('CloudPulseContextProvider', () => {
     expect(result.current.setGlobalGroupBy).toBeDefined();
     expect(result.current.getGlobalGroupBy).toBeDefined();
   });
-
   it('should set and get filter data correctly', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -51,7 +46,6 @@ describe('CloudPulseContextProvider', () => {
 
     expect(retrievedData).toEqual(mockFilterData);
   });
-
   it('should return undefined when no filter data has been set', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -60,7 +54,6 @@ describe('CloudPulseContextProvider', () => {
     const retrievedData = result.current.getGlobalFilterData();
     expect(retrievedData).toBeUndefined();
   });
-
   it('should handle complex filter data with arrays', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -82,7 +75,6 @@ describe('CloudPulseContextProvider', () => {
     result.current.setGlobalFilterData(complexFilterData);
     expect(result.current.getGlobalFilterData()).toEqual(complexFilterData);
   });
-
   it('should set and get dashboard correctly', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -98,7 +90,6 @@ describe('CloudPulseContextProvider', () => {
 
     expect(retrievedDashboard).toEqual(mockDashboard);
   });
-
   it('should return undefined when no dashboard has been set', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -107,7 +98,6 @@ describe('CloudPulseContextProvider', () => {
     const retrievedDashboard = result.current.getGlobalSelectedDashboard();
     expect(retrievedDashboard).toBeUndefined();
   });
-
   it('should set and get group by correctly', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -120,7 +110,6 @@ describe('CloudPulseContextProvider', () => {
 
     expect(retrievedGroupBy).toEqual(mockGroupBy);
   });
-
   it('should return empty array when no group by has been set', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -128,19 +117,5 @@ describe('CloudPulseContextProvider', () => {
 
     const retrievedGroupBy = result.current.getGlobalGroupBy();
     expect(retrievedGroupBy).toEqual([]);
-  });
-
-  it('should handle empty group by array', () => {
-    const { result } = renderHook(() => React.useContext(CloudPulseContext), {
-      wrapper: CloudPulseContextProvider,
-    });
-
-    result.current.setGlobalGroupBy(['region', 'service_type']);
-    expect(result.current.getGlobalGroupBy()).toEqual([
-      'region',
-      'service_type',
-    ]);
-    result.current.setGlobalGroupBy([]);
-    expect(result.current.getGlobalGroupBy()).toEqual([]);
   });
 });

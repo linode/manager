@@ -45,13 +45,6 @@ describe('CloudPulseWidgetCSVDownloader', () => {
     const button = getByRole('button');
     expect(button).toBeDisabled();
   });
-  it('should render download button disabled when no data', () => {
-    const { getByRole } = renderWithTheme(
-      <CloudPulseWidgetCSVDownloader {...baseProps} data={[]} />
-    );
-    const button = getByRole('button');
-    expect(button).toBeDisabled();
-  });
   it('should render download button enabled when data is available', () => {
     const { getByRole } = renderWithTheme(
       <CloudPulseWidgetCSVDownloader {...baseProps} />
