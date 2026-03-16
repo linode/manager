@@ -34,6 +34,12 @@ interface Props {
   ticketType?: TicketType;
 }
 
+interface TopicOption {
+  label: string;
+  topicVariant?: 'accountBilling' | 'general';
+  value: EntityType;
+}
+
 export const SupportTicketProductSelectionFields = (props: Props) => {
   const { liveChat, ticketType } = props;
   const {
@@ -204,20 +210,33 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
           (thisEntity) => String(thisEntity.value) === entityId
         ) || null;
 
-  const renderEntityTypes = () => {
+  const renderEntityTypes = (): TopicOption[] => {
     return Object.keys(ENTITY_MAP).map((key: string) => {
       return { label: key, value: ENTITY_MAP[key] };
     });
   };
 
-  const topicOptions: { label: string; value: EntityType }[] = [
-    { label: 'General/Account/Billing', value: 'general' },
+  const topicOptions: TopicOption[] = [
+    {
+      label: 'Account/Billing',
+      topicVariant: 'accountBilling',
+      value: 'general',
+    },
+    { label: 'General', topicVariant: 'general', value: 'general' },
     ...renderEntityTypes(),
   ];
 
-  const selectedTopic = topicOptions.find((eachTopic) => {
-    return eachTopic.value === entityType;
-  });
+  topicOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+  const selectedGeneralTopicVariant =
+    entityInputValue === 'general' ? 'general' : 'accountBilling';
+
+  const selectedTopic =
+    entityType === 'general'
+      ? topicOptions.find(
+          (eachTopic) => eachTopic.topicVariant === selectedGeneralTopicVariant
+        )
+      : topicOptions.find((eachTopic) => eachTopic.value === entityType);
 
   const _entityType = getEntityNameFromEntityType(entityType, true);
 
@@ -255,13 +274,30 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
                 errorText={fieldState.error?.message}
                 label="What is this regarding?"
                 onChange={(_e, type) => {
+                  const currentTopicVariant =
+                    entityType === 'general'
+                      ? selectedGeneralTopicVariant
+                      : undefined;
+
                   // Don't reset things if the type hasn't changed.
-                  if (type?.value === entityType) {
+                  if (
+                    type?.value === entityType &&
+                    (type?.value !== 'general' ||
+                      type.topicVariant === currentTopicVariant)
+                  ) {
                     return;
                   }
                   field.onChange(type?.value ?? 'none');
                   setValue('entityId', '');
-                  setValue('entityInputValue', '');
+                  setValue(
+                    'entityInputValue',
+                    type?.value === 'general' && type.topicVariant === 'general'
+                      ? 'general'
+                      : type?.value === 'general' &&
+                          type.topicVariant === 'accountBilling'
+                        ? 'accountBilling'
+                        : ''
+                  );
                   clearErrors('entityId');
                 }}
                 options={topicOptions}
@@ -279,8 +315,8 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
                             }}
                           >
                             <span>{option.label}</span>
-                            {option.value === 'general' && (
-                              <Chip label="Live Chat" size="small" />
+                            {option.topicVariant === 'accountBilling' && (
+                              <Chip label="Live Chat" size="medium" />
                             )}
                           </Box>
                         </li>
