@@ -29,24 +29,24 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
   const [pageSize, setPageSize] = React.useState(25);
   const [page, setPage] = React.useState(1);
 
-  const assignedDatabasesMap = () => {
+  const assignedDatabasesMap = React.useMemo(() => {
     const databaseMap: Record<number, SubnetAssignedDatabaseData> = {};
     databasesData.forEach((assignedDatabase) => {
       databaseMap[assignedDatabase.id] = assignedDatabase;
     });
     return databaseMap;
-  };
+  }, [databasesData]);
 
   // Create filter using unique database IDs from the assigned databases
-  const makeDatabaseIDsFilter = () => {
-    const uniqueIds = Object.values(assignedDatabasesMap()).map((db) => {
+  const makeDatabaseIDsFilter = React.useMemo(() => {
+    const uniqueIds = Object.values(assignedDatabasesMap).map((db) => {
       return { id: db.id };
     });
 
     return {
       '+or': uniqueIds,
     };
-  };
+  }, [assignedDatabasesMap]);
 
   const {
     data: databases,
@@ -57,12 +57,16 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
       page_size: pageSize,
       page,
     },
-    makeDatabaseIDsFilter(),
+    makeDatabaseIDsFilter,
     true,
     false
   );
 
-  const DatabasesTable = ({ children }: { children: React.ReactNode }) => (
+  const DatabasesTableWrapper = ({
+    children,
+  }: {
+    children: React.ReactNode;
+  }) => (
     <>
       <Table aria-label="Databases" size="small" striped={false}>
         <TableHead
@@ -91,7 +95,7 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
 
   const LoadingState = () => (
     <TableRow>
-      <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+      <TableCell colSpan={4} style={{ textAlign: 'center' }}>
         <CircleProgress size="sm" />
       </TableCell>
     </TableRow>
@@ -99,7 +103,7 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
 
   const TableErrorState = () => (
     <TableRowError
-      colSpan={6}
+      colSpan={4}
       message={
         getAPIErrorOrDefault(
           databasesError ?? [],
@@ -110,42 +114,41 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
   );
 
   const EmptyState = () => (
-    <TableRowEmpty colSpan={8} message="No Database Clusters" />
+    <TableRowEmpty colSpan={4} message="No Database Clusters" />
   );
 
   if (isLoading) {
     return (
-      <DatabasesTable>
+      <DatabasesTableWrapper>
         <LoadingState />
-      </DatabasesTable>
+      </DatabasesTableWrapper>
     );
   }
 
   if (databasesError) {
-    // TODO: Fix the error state styling
     return (
-      <DatabasesTable>
+      <DatabasesTableWrapper>
         <TableErrorState />
-      </DatabasesTable>
+      </DatabasesTableWrapper>
     );
   }
 
   if (databases && databases.data.length === 0) {
     return (
-      <DatabasesTable>
+      <DatabasesTableWrapper>
         <EmptyState />
-      </DatabasesTable>
+      </DatabasesTableWrapper>
     );
   }
 
   const databaseRows = () =>
     databases?.data.map((database) => (
       <SubnetDatabaseRow
-        assignedDatabase={assignedDatabasesMap()[database.id]}
+        assignedDatabase={assignedDatabasesMap[database.id]}
         database={database}
         key={database.id}
       />
     ));
 
-  return <DatabasesTable>{databaseRows()}</DatabasesTable>;
+  return <DatabasesTableWrapper>{databaseRows()}</DatabasesTableWrapper>;
 };
