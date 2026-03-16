@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -58,7 +59,7 @@ const mockQuotas = [
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 10,
     quota_name: 'Total Capacity',
-    resource_metric: 'byte',
+    resource_metric: QuotaResourceMetrics.BYTE,
     s3_endpoint: selectedDomain,
   }),
   quotaFactory.build({
@@ -68,7 +69,7 @@ const mockQuotas = [
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 78,
     quota_name: 'Number of Objects',
-    resource_metric: 'bucket',
+    resource_metric: QuotaResourceMetrics.BUCKET,
     s3_endpoint: selectedDomain,
   }),
   quotaFactory.build({
@@ -78,7 +79,7 @@ const mockQuotas = [
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 400,
     quota_name: 'Number of Buckets',
-    resource_metric: 'object',
+    resource_metric: QuotaResourceMetrics.OBJECT,
     s3_endpoint: selectedDomain,
   }),
 ];

@@ -149,6 +149,8 @@ import type { PathParams } from 'msw';
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
+import { QuotaResourceMetrics } from '@linode/api-v4';
+
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { trustedDeviceFactory } from 'src/factories/devices';
@@ -1813,7 +1815,7 @@ export const handlers = [
         endpoint_type: 'E0',
         quota_limit: 1_000_000_000_000_000,
         quota_name: 'Total Capacity',
-        resource_metric: 'byte',
+        resource_metric: QuotaResourceMetrics.BYTE,
         s3_endpoint: 'endpoint1',
       }),
     ];

@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { regionFactory } from '@linode/utilities';
 import { profileFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -74,7 +75,7 @@ const mockQuotas = [
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 10,
     quota_name: randomLabel(15),
-    resource_metric: 'byte',
+    resource_metric: QuotaResourceMetrics.BYTE,
     s3_endpoint: selectedDomain,
   }),
   quotaFactory.build({
@@ -84,7 +85,7 @@ const mockQuotas = [
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 78,
     quota_name: randomLabel(15),
-    resource_metric: 'bucket',
+    resource_metric: QuotaResourceMetrics.BUCKET,
     s3_endpoint: selectedDomain,
   }),
   quotaFactory.build({
@@ -94,7 +95,7 @@ const mockQuotas = [
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 400,
     quota_name: randomLabel(15),
-    resource_metric: 'object',
+    resource_metric: QuotaResourceMetrics.OBJECT,
     s3_endpoint: selectedDomain,
   }),
 ];
@@ -229,7 +230,7 @@ describe('Quota workflow tests', () => {
           endpoint_type: updatedEndpoint.endpoint_type,
           quota_limit: 20,
           quota_name: randomLabel(15),
-          resource_metric: 'byte',
+          resource_metric: QuotaResourceMetrics.BYTE,
           s3_endpoint: updatedDomain,
         }),
         quotaFactory.build({
@@ -239,7 +240,7 @@ describe('Quota workflow tests', () => {
           endpoint_type: updatedEndpoint.endpoint_type,
           quota_limit: 122,
           quota_name: randomLabel(15),
-          resource_metric: 'bucket',
+          resource_metric: QuotaResourceMetrics.BUCKET,
           s3_endpoint: updatedDomain,
         }),
         quotaFactory.build({
@@ -249,7 +250,7 @@ describe('Quota workflow tests', () => {
           endpoint_type: updatedEndpoint.endpoint_type,
           quota_limit: 450,
           quota_name: randomLabel(15),
-          resource_metric: 'object',
+          resource_metric: QuotaResourceMetrics.OBJECT,
           s3_endpoint: updatedDomain,
         }),
       ];
