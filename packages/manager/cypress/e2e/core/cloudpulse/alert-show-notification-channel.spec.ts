@@ -65,25 +65,39 @@ const {
 } = notificationChannelDetails[0];
 
 const mockAlerts = [
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 1,
+    label: 'Alert-C',
     service_type: 'linode',
   }),
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 2,
+    label: 'Alert-A',
     service_type: 'dbaas',
   }),
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 3,
+    label: 'Alert-G',
     service_type: 'nodebalancer',
   }),
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 4,
+    label: 'Alert-E',
     service_type: 'lke',
   }),
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 5,
+    label: 'Alert-B',
     service_type: 'firewall',
   }),
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 6,
+    label: 'Alert-F',
     service_type: 'objectstorage',
   }),
-  ...notificationChannelAlertsFactory.buildList(2, {
+  notificationChannelAlertsFactory.build({
+    id: 7,
+    label: 'Alert-D',
     service_type: 'blockstorage',
   }),
 ];
@@ -105,6 +119,8 @@ const verifyAlertOrder = (expectedAlerts: { id: number }[]): void => {
 };
 
 describe('CloudPulse Alerting - Notification Channel Show details Validation', () => {
+  const associatedAlertsTable = '[data-qa="associated-alerts-table"]';
+
   beforeEach(() => {
     // Setup all mock APIs - tests will navigate directly to detail page
     const mockflags = flagsFactory.build({
@@ -264,7 +280,7 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
       const expectedHeaders = ['Alert Name', 'Service'];
 
       // Validate table headers
-      cy.get('[data-qa="associated-alerts-table"]').within(() => {
+      cy.get(associatedAlertsTable).within(() => {
         expectedHeaders.forEach((header) => {
           cy.findByText(header).should('have.text', header);
         });
@@ -294,7 +310,7 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
       const filteredAlertsLen = mockAlerts.filter((alert) =>
         alert.label.toLowerCase().includes(mockAlerts[0].label.toLowerCase())
       ).length;
-      cy.get('[data-qa="associated-alerts-table"]')
+      cy.get(associatedAlertsTable)
         .find('tbody')
         .last()
         .find('tr')
@@ -310,7 +326,7 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
       const dbaasAlerts = mockAlerts.filter(
         (alert) => alert.service_type === 'dbaas'
       );
-      cy.get('[data-qa="associated-alerts-table"]')
+      cy.get(associatedAlertsTable)
         .find('tbody')
         .last()
         .find('tr')
@@ -324,102 +340,86 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
         .findByAttribute('aria-label', 'Clear')
         .should('be.visible')
         .click();
-
-      // Validate the sorting functionality for Alert Name
-      cy.get('[data-qa="associated-alerts-table"]').within(() => {
-        // Click on the 'Alert Name' header to sort
-        ui.heading.findByText('label').click();
-
-        // Get the sort order and verify data matches
-        const AlertNameHeading = ui.heading.findByText('label');
-        AlertNameHeading.should('have.attr', 'aria-sort').then((sortOrder) => {
-          let expectedAlerts;
-          if (sortOrder === 'ascending') {
-            expectedAlerts = [...mockAlerts].sort((a, b) =>
-              a.label.localeCompare(b.label)
-            );
-          } else {
-            expectedAlerts = [...mockAlerts].sort((a, b) =>
-              b.label.localeCompare(a.label)
-            );
-          }
-          verifyAlertOrder(expectedAlerts);
-        });
-
-        // Click again to toggle sort order
-        ui.heading.findByText('label').click();
-
-        // Get the new sort order and verify data matches
-        const AlertNameHeadingAfterToggle = ui.heading.findByText('label');
-        AlertNameHeadingAfterToggle.should('have.attr', 'aria-sort').then(
-          (sortOrder) => {
-            let expectedAlerts;
-            if (sortOrder === 'ascending') {
-              expectedAlerts = [...mockAlerts].sort((a, b) =>
-                a.label.localeCompare(b.label)
-              );
-            } else {
-              expectedAlerts = [...mockAlerts].sort((a, b) =>
-                b.label.localeCompare(a.label)
-              );
-            }
-            verifyAlertOrder(expectedAlerts);
-          }
-        );
-      });
-
-      // Validate the sorting functionality for service Type
-      cy.get('[data-qa="associated-alerts-table"]').within(() => {
-        // Click on the 'Service' header to sort
-        ui.heading.findByText('service_type_label').click();
-
-        // Get the sort order and verify data matches
-        const serviceHeading = ui.heading.findByText('service_type_label');
-        serviceHeading.should('have.attr', 'aria-sort').then((sortOrder) => {
-          let expectedAlerts;
-          if (sortOrder === 'ascending') {
-            expectedAlerts = [...mockAlerts].sort((a, b) =>
-              cloudPulseServiceMap[a.service_type].localeCompare(
-                cloudPulseServiceMap[b.service_type]
-              )
-            );
-          } else {
-            expectedAlerts = [...mockAlerts].sort((a, b) =>
-              cloudPulseServiceMap[b.service_type].localeCompare(
-                cloudPulseServiceMap[a.service_type]
-              )
-            );
-          }
-          verifyAlertOrder(expectedAlerts);
-        });
-
-        // Click again to toggle sort order
-        ui.heading.findByText('service_type_label').click();
-
-        // Get the new sort order and verify data matches
-        const serviceHeadingAfterToggle =
-          ui.heading.findByText('service_type_label');
-        serviceHeadingAfterToggle
-          .should('have.attr', 'aria-sort')
-          .then((sortOrder) => {
-            let expectedAlerts;
-            if (sortOrder === 'ascending') {
-              expectedAlerts = [...mockAlerts].sort((a, b) =>
-                cloudPulseServiceMap[a.service_type].localeCompare(
-                  cloudPulseServiceMap[b.service_type]
-                )
-              );
-            } else {
-              expectedAlerts = [...mockAlerts].sort((a, b) =>
-                cloudPulseServiceMap[b.service_type].localeCompare(
-                  cloudPulseServiceMap[a.service_type]
-                )
-              );
-            }
-            verifyAlertOrder(expectedAlerts);
-          });
-      });
     });
+
+    // Validate the sorting functionality for Alert Name
+    // Default order is ascending by label; first click toggles to descending
+    cy.get(associatedAlertsTable).within(() => {
+      ui.heading.findByText('label').click();
+    });
+    ui.heading.findByText('label').as('alertNameHeading');
+    cy.get('@alertNameHeading').should('have.attr', 'aria-sort', 'descending');
+    // Descending by label: G(3), F(6), E(4), D(7), C(1), B(5), A(2)
+    verifyAlertOrder([
+      { id: 3 },
+      { id: 6 },
+      { id: 4 },
+      { id: 7 },
+      { id: 1 },
+      { id: 5 },
+      { id: 2 },
+    ]);
+
+    // Second click toggles back to ascending
+    cy.get(associatedAlertsTable).within(() => {
+      ui.heading.findByText('label').click();
+    });
+    ui.heading.findByText('label').as('alertNameHeadingAfterToggle');
+    cy.get('@alertNameHeadingAfterToggle').should(
+      'have.attr',
+      'aria-sort',
+      'ascending'
+    );
+    // Ascending by label: A(2), B(5), C(1), D(7), E(4), F(6), G(3)
+    verifyAlertOrder([
+      { id: 2 },
+      { id: 5 },
+      { id: 1 },
+      { id: 7 },
+      { id: 4 },
+      { id: 6 },
+      { id: 3 },
+    ]);
+
+    // Validate the sorting functionality for Service Type
+    // After label sort ends on ascending, all headers share that direction,
+    // so the first click on service_type_label toggles to descending
+    cy.get(associatedAlertsTable).within(() => {
+      ui.heading.findByText('service_type_label').click();
+    });
+    ui.heading.findByText('service_type_label').as('serviceHeading');
+    cy.get('@serviceHeading').should('have.attr', 'aria-sort', 'descending');
+    // Descending by service label: Volumes(7), Object Storage(6), NodeBalancers(3), Linodes(1), Kubernetes(4), Firewalls(5), Databases(2)
+    verifyAlertOrder([
+      { id: 7 },
+      { id: 6 },
+      { id: 3 },
+      { id: 1 },
+      { id: 4 },
+      { id: 5 },
+      { id: 2 },
+    ]);
+
+    // Second click toggles to ascending
+    cy.get(associatedAlertsTable).within(() => {
+      ui.heading.findByText('service_type_label').click();
+    });
+    ui.heading.findByText('service_type_label').as('serviceHeadingAfterToggle');
+    cy.get('@serviceHeadingAfterToggle').should(
+      'have.attr',
+      'aria-sort',
+      'ascending'
+    );
+    // Ascending by service label: Databases(2), Firewalls(5), Kubernetes(4), Linodes(1), NodeBalancers(3), Object Storage(6), Volumes(7)
+    verifyAlertOrder([
+      { id: 2 },
+      { id: 5 },
+      { id: 4 },
+      { id: 1 },
+      { id: 3 },
+      { id: 6 },
+      { id: 7 },
+    ]);
   });
 
   it('should verify the pagination functionality in Associated Alerts table', () => {
@@ -469,7 +469,7 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
           .click();
 
         // Verify the correct number of rows (alerts + header)
-        cy.get('[data-qa="associated-alerts-table"]')
+        cy.get(associatedAlertsTable)
           .find('tr')
           .should('have.length', expectedRowCount);
       });
