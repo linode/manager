@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -118,6 +119,61 @@ describe('QuotasTable', () => {
       ).toBeInTheDocument();
       expect(
         getByLabelText(`Action menu for quota ${quota.quota_name}`)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('should display object storage thoughput quotas correctly', async () => {
+    queryMocks.useAllQuotasQuery.mockReturnValue({
+      data: [
+        quotaFactory.build({
+          quota_name: 'Ingress Throughput (per endpoint)',
+          description:
+            'Current total ingress bandwidth per account, per endpoint',
+          quota_limit: 1250000000,
+          quota_type: 'obj-total-ingress-throughput',
+          resource_metric: QuotaResourceMetrics.BYTE_PER_SECOND,
+          has_usage: false,
+        }),
+      ],
+      isFetching: false,
+    });
+
+    queryMocks.useQueries.mockReturnValue([
+      {
+        data: quotaUsageFactory.build({
+          quota_limit: 1250000000,
+          usage: 10,
+        }),
+        isLoading: false,
+      },
+    ]);
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <QuotasTable
+        isGlobalScope={false}
+        selectedLocation={{
+          label: 'NJ',
+          value: 'us-east',
+        }}
+        selectedService={{
+          label: 'Object Storage',
+          value: 'object-storage',
+        }}
+      />
+    );
+
+    await waitFor(() => {
+      expect(getByText('Ingress Throughput')).toBeInTheDocument();
+      expect(getByText(`10 Gbps`)).toBeInTheDocument();
+      expect(
+        getByLabelText(
+          'Current total ingress bandwidth per account, per endpoint'
+        )
+      ).toBeInTheDocument();
+      expect(getByText('Not applicable')).toBeInTheDocument();
+      expect(
+        getByLabelText('Action menu for quota Ingress Throughput')
       ).toBeInTheDocument();
     });
   });

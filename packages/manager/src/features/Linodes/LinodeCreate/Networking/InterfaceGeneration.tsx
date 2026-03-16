@@ -1,4 +1,4 @@
-import { useAccountSettings } from '@linode/queries';
+import { useAccountSettings, useFirewallSettingsQuery } from '@linode/queries';
 import {
   Box,
   FormControl,
@@ -14,12 +14,11 @@ import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { getDefaultInterfacePayload } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import type {
-  CreateLinodeRequest,
-  LinodeInterfaceAccountSetting,
-} from '@linode/api-v4';
+import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
 
 const disabledReasonMap: Partial<
   Record<LinodeInterfaceAccountSetting, string>
@@ -31,7 +30,7 @@ const disabledReasonMap: Partial<
 };
 
 export const InterfaceGeneration = () => {
-  const { setValue } = useFormContext<CreateLinodeRequest>();
+  const { setValue } = useFormContext<LinodeCreateFormValues>();
 
   const { field } = useController<
     LinodeCreateFormValues,
@@ -42,11 +41,16 @@ export const InterfaceGeneration = () => {
 
   const { data: accountSettings } = useAccountSettings();
 
+  const { data: firewallSettings } = useFirewallSettingsQuery();
+
   const disabledReason =
     accountSettings &&
     disabledReasonMap[accountSettings.interfaces_for_new_linodes];
 
   const disabled = disabledReason !== undefined;
+
+  const createType = useGetLinodeCreateType();
+  const isCreatingFromBackup = createType === 'Backups';
 
   return (
     <FormControl>
@@ -75,6 +79,14 @@ export const InterfaceGeneration = () => {
           if (value === 'linode') {
             setValue('private_ip', undefined);
           }
+
+          // if Configuration Profile Interfaces is selected and user is on Backups tab, reset VLAN and VPC
+          // fields to prevent validation errors - config profile interfaces are not compatible with backups
+          if (value === 'legacy_config' && isCreatingFromBackup) {
+            setValue('linodeInterfaces', [
+              getDefaultInterfacePayload('public', firewallSettings),
+            ]);
+          }
         }}
         value={field.value ?? 'linode'}
       >
@@ -85,9 +97,7 @@ export const InterfaceGeneration = () => {
           label={
             <Stack mt={1.25} spacing={0.5}>
               <Stack direction="row">
-                <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                  Linode Interfaces (Recommended)
-                </Typography>
+                <Typography>Linode Interfaces (Recommended)</Typography>
                 <LinodeInterfaceFeatureStatusChip />
                 <TooltipIcon
                   status="info"
@@ -126,9 +136,7 @@ export const InterfaceGeneration = () => {
           disabled={disabled}
           label={
             <Stack direction="row" mt={1.25} spacing={0.5}>
-              <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                Configuration Profile Interfaces (Legacy)
-              </Typography>
+              <Typography>Configuration Profile Interfaces (Legacy)</Typography>
               <TooltipIcon
                 status="info"
                 sxTooltipIcon={{

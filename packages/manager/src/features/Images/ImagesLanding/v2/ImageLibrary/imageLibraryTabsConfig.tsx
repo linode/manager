@@ -12,7 +12,7 @@ import {
   MANUAL_IMAGES_PREFERENCE_KEY,
 } from '../../../constants';
 
-import type { ImageLibrarySubTab, ImageLibraryType } from '../../../utils';
+import type { ImageLibraryType, ImageSubTab } from '../../../utils';
 import type { Image } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
 
@@ -54,7 +54,7 @@ export interface ImageConfig {
   type: Image['type'];
 }
 
-export const imageLibrarySubTabs: ImageLibrarySubTab[] = [
+export const imageLibrarySubTabs: ImageSubTab<ImageLibraryType>[] = [
   { type: 'owned-by-me', title: 'Owned by me' },
   {
     type: 'shared-with-me',

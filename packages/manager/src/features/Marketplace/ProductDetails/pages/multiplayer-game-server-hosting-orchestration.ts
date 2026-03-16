@@ -62,7 +62,6 @@ const documentationMarkdown = `
 | **Compliance – Security** | SOC 1, SOC2, and SOC 3 (upon request) |
 | **Compliance – Regional**  | GDPR, EU-US Privacy Shield, Swiss-US Privacy Shield, HIPAA (upon request), FedRAMP (upon request) |
 
-### "Fully details" variation (with some modifications)
 
 ![Edgegap Architecture](/assets/marketplace/eg-architecture.jpeg)
 `.trim();

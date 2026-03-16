@@ -3,7 +3,7 @@ import {
   updateDestinationSchema,
 } from '@linode/validation';
 
-import { BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -28,7 +28,7 @@ import type {
 export const getDestination = (destinationId: number) =>
   Request<Destination>(
     setURL(
-      `${BETA_API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
+      `${API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
     ),
     setMethod('GET'),
   );
@@ -39,7 +39,7 @@ export const getDestination = (destinationId: number) =>
  */
 export const getDestinations = (params?: Params, filter?: Filter) =>
   Request<Page<Destination>>(
-    setURL(`${BETA_API_ROOT}/monitor/streams/destinations`),
+    setURL(`${API_ROOT}/monitor/streams/destinations`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
@@ -53,7 +53,7 @@ export const getDestinations = (params?: Params, filter?: Filter) =>
 export const createDestination = (data: CreateDestinationPayload) =>
   Request<Destination>(
     setData(data, createDestinationSchema),
-    setURL(`${BETA_API_ROOT}/monitor/streams/destinations`),
+    setURL(`${API_ROOT}/monitor/streams/destinations`),
     setMethod('POST'),
   );
 
@@ -70,7 +70,7 @@ export const updateDestination = (
   Request<Destination>(
     setData(data, updateDestinationSchema),
     setURL(
-      `${BETA_API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
+      `${API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
     ),
     setMethod('PUT'),
   );
@@ -83,7 +83,7 @@ export const updateDestination = (
 export const deleteDestination = (destinationId: number) =>
   Request<{}>(
     setURL(
-      `${BETA_API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
+      `${API_ROOT}/monitor/streams/destinations/${encodeURIComponent(destinationId)}`,
     ),
     setMethod('DELETE'),
   );
@@ -96,6 +96,6 @@ export const deleteDestination = (destinationId: number) =>
 export const verifyDestination = (data: CreateDestinationPayload) =>
   Request<Destination>(
     setData(data, createDestinationSchema),
-    setURL(`${BETA_API_ROOT}/monitor/streams/destinations/verify`),
+    setURL(`${API_ROOT}/monitor/streams/destinations/verify`),
     setMethod('POST'),
   );

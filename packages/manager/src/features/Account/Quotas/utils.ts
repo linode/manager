@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { useRegionsQuery } from '@linode/queries';
 import { capitalize, readableBytes } from '@linode/utilities';
 import { object, string } from 'yup';
@@ -217,7 +218,7 @@ export const getQuotaIncreaseMessage = ({
 
 interface ConvertResourceMetricProps {
   initialLimit: number;
-  initialResourceMetric: string;
+  initialResourceMetric: QuotaResourceMetrics;
   initialUsage: number;
 }
 
@@ -233,34 +234,38 @@ export const convertResourceMetric = ({
   convertedResourceMetric: string;
   convertedUsage: number;
 } => {
-  if (initialResourceMetric === 'byte') {
-    const limitReadable = readableBytes(initialLimit);
+  switch (initialResourceMetric) {
+    case QuotaResourceMetrics.BYTE: {
+      const limitReadable = readableBytes(initialLimit);
 
-    return {
-      convertedUsage: readableBytes(initialUsage, {
-        unit: limitReadable.unit,
-      }).value,
-      convertedResourceMetric: capitalize(limitReadable.unit),
-      convertedLimit: limitReadable.value,
-    };
+      return {
+        convertedUsage: readableBytes(initialUsage, {
+          unit: limitReadable.unit,
+        }).value,
+        convertedLimit: limitReadable.value,
+        convertedResourceMetric: capitalize(limitReadable.unit),
+      };
+    }
+    case QuotaResourceMetrics.BYTE_PER_SECOND: {
+      return {
+        convertedUsage: 0,
+        convertedResourceMetric: 'Gbps',
+        convertedLimit: readableBytes(initialLimit * 8, {
+          unit: 'GB',
+          base10: true,
+        }).value,
+      };
+    }
+    default: {
+      return {
+        convertedUsage: initialUsage,
+        convertedLimit: initialLimit,
+        convertedResourceMetric: capitalize(
+          pluralizeMetric(initialLimit, initialResourceMetric)
+        ),
+      };
+    }
   }
-
-  if (initialResourceMetric === 'byte_per_second') {
-    return {
-      convertedUsage: 0,
-      convertedResourceMetric: 'Gbps',
-      convertedLimit: readableBytes(initialLimit, {
-        unit: 'GB',
-        base10: true,
-      }).value,
-    };
-  }
-
-  return {
-    convertedUsage: initialUsage,
-    convertedLimit: initialLimit,
-    convertedResourceMetric: capitalize(initialResourceMetric),
-  };
 };
 
 /**
@@ -270,16 +275,11 @@ export const convertResourceMetric = ({
  *
  * Note: the value should be the raw values in bytes, not an existing conversion
  */
-export const pluralizeMetric = (value: number, unit: string) => {
-  if (unit === 'byte_per_second') {
-    return unit;
-  }
-
-  if (unit !== 'byte') {
-    return value > 1 ? `${unit}s` : unit;
-  }
-
-  return unit;
+export const pluralizeMetric = (
+  value: number,
+  unit: QuotaResourceMetrics
+): string => {
+  return value > 1 ? `${unit}s` : unit;
 };
 
 export const getQuotaIncreaseFormSchema = (currentLimit: number) =>

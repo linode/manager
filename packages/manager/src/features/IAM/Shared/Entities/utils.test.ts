@@ -20,16 +20,21 @@ describe('getCreateLinkForEntityType', () => {
 });
 
 describe('getPlaceholder', () => {
-  it('should return a space if currentValueLength is greater than 0', () => {
-    expect(getPlaceholder('linode', 1, 10)).toBe(' ');
+  it('should return the placeholder from placeholderMap if some but not all items are selected', () => {
+    expect(getPlaceholder('linode', 1, 10)).toBe(placeholderMap['linode']);
   });
 
   it('should return "None" if possibleEntitiesLength is 0', () => {
     expect(getPlaceholder('linode', 0, 0)).toBe('None');
   });
 
-  it('should return the placeholder from placeholderMap if type exists', () => {
+  it('should return the placeholder from placeholderMap if type exists and nothing is selected', () => {
     expect(getPlaceholder('linode', 0, 10)).toBe(placeholderMap['linode']);
+  });
+
+  it('should return "All X selected" when all items are selected', () => {
+    expect(getPlaceholder('linode', 10, 10)).toBe('All Linodes selected');
+    expect(getPlaceholder('delegates', 5, 5)).toBe('All users selected');
   });
 });
 
