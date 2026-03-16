@@ -25,7 +25,7 @@ import type { Filter } from '@linode/api-v4';
 
 interface Props {
   handlers: ImageHandlers;
-  type: Exclude<ImageLibraryType, 'shared-with-me'>;
+  type: ImageLibraryType;
 }
 
 export const ImagesView = (props: Props) => {

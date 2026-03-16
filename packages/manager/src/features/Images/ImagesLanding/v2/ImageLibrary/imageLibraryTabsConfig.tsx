@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-
 import {
   AUTOMATIC_IMAGES_DEFAULT_ORDER,
   AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
@@ -10,11 +9,14 @@ import {
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
-} from '../../../constants';
+  SHARED_IMAGES_DEFAULT_ORDER,
+  SHARED_IMAGES_DEFAULT_ORDER_BY,
+  SHARED_IMAGES_PREFERENCE_KEY,
+} from 'src/features/Images/constants';
 
-import type { ImageLibraryType, ImageSubTab } from '../../../utils';
 import type { Image } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
+import type { ImageLibraryType, ImageSubTab } from 'src/features/Images/utils';
 
 export interface ImageViewTableColConfig {
   /** Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
@@ -108,10 +110,19 @@ const RECOVERY_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
   },
 ];
 
-export const IMAGES_CONFIG: Omit<
-  Record<ImageLibraryType, ImageConfig>,
-  'shared-with-me'
-> = {
+const SHARED_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
+  { name: 'Image', sortableProps: { label: 'label' } },
+  {
+    name: 'Share Group',
+    sortableProps: { label: 'image_sharing.sharegroup_label' },
+  },
+  { name: 'Replicated in', hiddenOn: 'smDown' },
+  { name: 'Original Image', sortableProps: { label: 'size' } },
+  { name: 'Created', sortableProps: { label: 'created' }, hiddenOn: 'mdDown' },
+  { name: 'Image ID', hiddenOn: 'mdDown' },
+];
+
+export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
   'owned-by-me': {
     title: 'Owned by me',
     description: (
@@ -171,5 +182,38 @@ export const IMAGES_CONFIG: Omit<
       href: 'https://techdocs.akamai.com/cloud-computing/docs/images#recover-a-deleted',
     },
   },
-  // "shared-with-me" images config will go here
+  'shared-with-me': {
+    title: 'Shared with me',
+    description: (
+      <>
+        You can deploy{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+          encrypted
+        </Link>{' '}
+        images shared with you in a share group to any region. If you deploy the
+        instance in a different region from where the image is stored, you may
+        experience slower linode deployment times. Sharing images is free of
+        charge, but instances deployed from shared images are billed on a
+        regular basis. For details, see{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/access-billing-information">
+          Access billing information
+        </Link>
+        .
+      </>
+    ),
+    type: 'shared',
+    orderByDefault: SHARED_IMAGES_DEFAULT_ORDER_BY,
+    orderDefault: SHARED_IMAGES_DEFAULT_ORDER,
+    preferenceKey: SHARED_IMAGES_PREFERENCE_KEY,
+    isEnabled: (subType) => subType === 'shared-with-me',
+    columns: SHARED_IMAGES_TABLE_COLUMNS,
+    eventCategory: 'Shared Images Table',
+    emptyMessage: {
+      main: 'No shared images to display',
+    },
+    docsLink: {
+      label: 'Image sharing',
+      href: 'https://techdocs.akamai.com/cloud-computing/docs/image-sharing',
+    },
+  },
 };
