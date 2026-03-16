@@ -13,10 +13,11 @@ interface DownloadCSVProps {
   className?: string;
   csvRef?: React.RefObject<any>;
   data: unknown[];
+  dataPendoId?: string;
   disabled?: boolean;
   filename: string;
   headers: { key: string; label: string }[];
-  iconStyles?: React.CSSProperties;
+  iconStyles?: SxProps<Theme>;
   onClick: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
   sx?: SxProps<Theme>;
   text?: string;
@@ -36,6 +37,7 @@ export const DownloadCSV = ({
   className,
   csvRef,
   data,
+  dataPendoId,
   filename,
   headers,
   onClick,
@@ -46,13 +48,19 @@ export const DownloadCSV = ({
 }: DownloadCSVProps) => {
   const renderButton =
     buttonType === 'styledLink' ? (
-      <LinkButton disabled={disabled} onClick={onClick} sx={sx}>
+      <LinkButton
+        data-pendo-id={dataPendoId}
+        disabled={disabled}
+        onClick={onClick}
+        sx={sx}
+      >
         <DownloadIcon style={iconStyles} />
         {text}
       </LinkButton>
     ) : (
       <Button
         buttonType={buttonType}
+        data-pendo-id={dataPendoId}
         disabled={disabled}
         onClick={onClick}
         sx={sx}

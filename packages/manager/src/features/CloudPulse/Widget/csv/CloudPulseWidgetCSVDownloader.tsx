@@ -40,6 +40,7 @@ export const CloudPulseWidgetCSVDownloader = React.memo(
         buttonType="styledLink"
         csvRef={csvRef}
         data={csvData}
+        dataPendoId={`Widget CSV Download - ${widget.label ?? 'widget'}`}
         disabled={!enableDownloadIcon}
         filename={`${widget.label ?? 'widget'}.csv`}
         headers={[]}
