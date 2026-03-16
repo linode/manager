@@ -26,7 +26,13 @@ const baseProps: CSVDataProps = {
   dimensionFilters: [],
   dimensionOptions: [],
   duration: { start: '2026-01-01', end: '2026-01-02' },
-  filterConfig: FILTER_CONFIG.get(1)!,
+  filterConfig:
+    FILTER_CONFIG.get(1) ??
+    vi.mockObject({
+      capability: 'Managed Databases',
+      filters: [],
+      serviceType: 'dbaas',
+    }),
   filters: { id: {}, label: {} },
   groupBy: [],
   isDataLoading: false,
