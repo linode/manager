@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -6,25 +5,27 @@ import { ResourcesSection } from 'src/components/EmptyLandingPageResources/Resou
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
+import { StyledBucketIcon } from './BucketLanding/StylesBucketIcon';
 import {
   gettingStartedGuides,
   headers,
   linkAnalyticsEvent,
   youtubeLinkData,
-} from './BucketLandingEmptyResourcesData';
-import { StyledBucketIcon } from './StylesBucketIcon';
+} from './BucketsLandingPageResourcesData';
 
-export const BucketLandingEmptyState = () => {
+interface Props {
+  isRestrictedUser: boolean;
+}
+
+export const BucketsLandingPage = ({ isRestrictedUser }: Props) => {
   const navigate = useNavigate();
-  const { data: profile } = useProfile();
-  const isBucketCreationRestricted = profile?.restricted;
 
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Bucket',
-          disabled: isBucketCreationRestricted,
+          disabled: isRestrictedUser,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -37,6 +38,23 @@ export const BucketLandingEmptyState = () => {
             action: 'create',
             isSingular: false,
             resourceType: 'Buckets',
+          }),
+        },
+        {
+          children: 'Create Access Key',
+          disabled: isRestrictedUser,
+          onClick: () => {
+            sendEvent({
+              action: 'Click:button',
+              category: linkAnalyticsEvent.category,
+              label: 'Create Access Key',
+            });
+            navigate({ to: '/object-storage/access-keys/create' });
+          },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Access Keys',
           }),
         },
       ]}

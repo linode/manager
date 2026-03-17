@@ -18,7 +18,6 @@ interface Props {
   error: APIError[] | null | undefined;
   isLoading: boolean;
   isObjMultiClusterEnabled: boolean;
-  isRestrictedUser: boolean;
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
   setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
@@ -31,7 +30,6 @@ export const AccessKeyTableBody = (props: Props) => {
     error,
     isLoading,
     isObjMultiClusterEnabled,
-    isRestrictedUser,
     openDrawer,
     openRevokeDialog,
     setHostNames,
@@ -39,10 +37,6 @@ export const AccessKeyTableBody = (props: Props) => {
   } = props;
 
   const cols = isObjMultiClusterEnabled ? 4 : 3;
-
-  if (isRestrictedUser) {
-    return <TableRowEmpty colSpan={cols} />;
-  }
 
   if (isLoading) {
     return (

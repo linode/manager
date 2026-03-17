@@ -1,6 +1,7 @@
 import {
   cancelObjectStorage,
   createBucket,
+  createObjectStorageKeys,
   deleteBucket,
   deleteBucketWithRegion,
   deleteSSLCert,
@@ -12,6 +13,7 @@ import {
   getSSLCert,
   updateBucketAccess,
   updateObjectACL,
+  updateObjectStorageKey,
   uploadSSLCert,
 } from '@linode/api-v4';
 import {
@@ -50,6 +52,7 @@ import type {
   APIError,
   CreateObjectStorageBucketPayload,
   CreateObjectStorageBucketSSLPayload,
+  CreateObjectStorageKeyPayload,
   CreateObjectStorageObjectURLPayload,
   ObjectStorageBucket,
   ObjectStorageBucketAccess,
@@ -64,6 +67,7 @@ import type {
   PriceType,
   ResourcePage,
   UpdateObjectStorageBucketAccessPayload,
+  UpdateObjectStorageKeyPayload,
 } from '@linode/api-v4';
 
 export const objectStorageQueries = createQueryKeys('object-storage', {
@@ -117,6 +121,81 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryKey: null,
   },
 });
+
+/**
+ * Object Storage Access Keys
+ */
+
+export const useObjectStorageAccessKeys = (params: Params) =>
+  useQuery<ResourcePage<ObjectStorageKey>, APIError[]>({
+    ...objectStorageQueries.accessKeys(params),
+    placeholderData: keepPreviousData,
+  });
+
+// TODO: Optimize to use tanstack cache
+export const useObjectStorageAccessKey = (id: number) => {
+  const queryClient = useQueryClient();
+
+  if (id === -1) {
+    return {};
+  }
+
+  const queries = queryClient.getQueriesData({
+    queryKey: objectStorageQueries.accessKeys._def,
+  });
+
+  for (const [, data] of queries) {
+    const accessKey = (data as ResourcePage<ObjectStorageKey>)?.data?.find(
+      (key) => key.id === id
+    );
+    if (accessKey) {
+      return { data: accessKey };
+    }
+  }
+
+  return { data: undefined };
+};
+
+export const useCreateAccessKeyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    ObjectStorageKey,
+    APIError[],
+    CreateObjectStorageKeyPayload
+  >({
+    mutationFn: createObjectStorageKeys,
+    onSuccess() {
+      // Invalidate account settings because object storage will become enabled
+      // if a user created their first bucket.
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.settings.queryKey,
+      });
+
+      // Invalidate access keys query
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+    },
+  });
+};
+
+export const useUpdateAccessKeyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    ObjectStorageKey,
+    APIError[],
+    { data: UpdateObjectStorageKeyPayload; id: number }
+  >({
+    mutationFn: ({ id, data }) => updateObjectStorageKey(id, data),
+
+    onSuccess() {
+      // Invalidate access keys query
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+    },
+  });
+};
 
 export const useObjectStorageEndpoints = (enabled = true) => {
   const flags = useFlags();
@@ -195,12 +274,6 @@ export const useObjectStorageBuckets = (enabled: boolean = true) => {
     isLoading: bucketsQuery.isLoading || dependencyIsLoading,
   };
 };
-
-export const useObjectStorageAccessKeys = (params: Params) =>
-  useQuery<ResourcePage<ObjectStorageKey>, APIError[]>({
-    ...objectStorageQueries.accessKeys(params),
-    placeholderData: keepPreviousData,
-  });
 
 export const useBucketAccess = (
   clusterOrRegion: string,
@@ -286,6 +359,11 @@ export const useCreateBucketMutation = () => {
         queryKey: accountQueries.settings.queryKey,
       });
 
+      // Invalidate endpoints in order to update summary page multiselect.
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.endpoints.queryKey,
+      });
+
       // Add the new bucket to the cache
       queryClient.setQueryData<BucketsResponse>(
         objectStorageQueries.buckets.queryKey,
@@ -328,6 +406,11 @@ export const useDeleteBucketMutation = () => {
           errors: oldData?.errors ?? [],
         })
       );
+
+      // Invalidate endpoints in order to update summary page multiselect.
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.endpoints.queryKey,
+      });
     },
   });
 };
@@ -356,6 +439,11 @@ export const useDeleteBucketWithRegionMutation = () => {
           errors: oldData?.errors ?? [],
         })
       );
+
+      // Invalidate endpoints in order to update summary page multiselect.
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.endpoints.queryKey,
+      });
     },
   });
 };

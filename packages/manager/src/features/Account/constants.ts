@@ -5,6 +5,7 @@ export const CUSTOMER_SUPPORT = 'customer support';
 export const grantTypeMap = {
   account: 'Account',
   bucket: 'Buckets',
+  key: 'Access Keys',
   database: 'Databases',
   domain: 'Domains',
   firewall: 'Firewalls',

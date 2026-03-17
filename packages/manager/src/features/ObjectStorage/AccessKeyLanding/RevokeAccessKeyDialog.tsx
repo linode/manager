@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import { CancelNotice } from '../CancelNotice';
+import { CancelNotice } from '../ObjectStorageBanners/CancelNotice';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 

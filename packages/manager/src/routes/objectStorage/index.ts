@@ -1,4 +1,4 @@
-import { createRoute, redirect } from '@tanstack/react-router';
+import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { ObjectStorageRoute } from './ObjectStorageRoute';
@@ -14,9 +14,6 @@ export const objectStorageRoute = createRoute({
 });
 
 const objectStorageIndexRoute = createRoute({
-  beforeLoad: async () => {
-    throw redirect({ to: '/object-storage/summary' });
-  },
   getParentRoute: () => objectStorageRoute,
   path: '/',
 }).lazy(() =>
@@ -64,6 +61,30 @@ const objectStorageBucketCreateRoute = createRoute({
 const objectStorageAccessKeyCreateRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'access-keys/create',
+}).lazy(() =>
+  import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
+const objectStorageAccessKeyUpdateRoute = createRoute({
+  getParentRoute: () => objectStorageRoute,
+  path: 'access-keys/$accessKeyId/update',
+  parseParams: (params) => ({
+    accessKeyId: Number(params.accessKeyId),
+  }),
+}).lazy(() =>
+  import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
+const objectStorageAccessKeyDetailsRoute = createRoute({
+  getParentRoute: () => objectStorageRoute,
+  path: 'access-keys/$accessKeyId/details',
+  parseParams: (params) => ({
+    accessKeyId: Number(params.accessKeyId),
+  }),
 }).lazy(() =>
   import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -123,7 +144,10 @@ export const objectStorageRouteTree = objectStorageRoute.addChildren([
     objectStorageAccessKeysLandingRoute,
     objectStorageBucketCreateRoute,
     objectStorageAccessKeyCreateRoute,
+    objectStorageAccessKeyUpdateRoute,
+    objectStorageAccessKeyDetailsRoute,
   ]),
+
   objectStorageBucketDetailRoute.addChildren([
     objectStorageBucketDetailObjectsRoute,
     objectStorageBucketDetailAccessRoute,

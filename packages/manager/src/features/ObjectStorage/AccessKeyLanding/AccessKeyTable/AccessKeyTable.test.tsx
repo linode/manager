@@ -11,7 +11,6 @@ describe('ObjectStorageKeyTable', () => {
     data: [],
     error: undefined,
     isLoading: false,
-    isRestrictedUser: false,
     openDrawer: vi.fn(),
     openRevokeDialog: vi.fn(),
   };

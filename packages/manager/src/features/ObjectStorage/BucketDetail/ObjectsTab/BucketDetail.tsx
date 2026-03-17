@@ -30,7 +30,7 @@ import {
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import { QuotasInfoNotice } from '../../QuotasInfoNotice';
+import { QuotasInfoNotice } from '../../ObjectStorageBanners/QuotasInfoNotice';
 import { deleteObject as _deleteObject } from '../../requests';
 import {
   displayName,

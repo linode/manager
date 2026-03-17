@@ -24,20 +24,12 @@ export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;
   error: APIError[] | null | undefined;
   isLoading: boolean;
-  isRestrictedUser: boolean;
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
 }
 
 export const AccessKeyTable = (props: AccessKeyTableProps) => {
-  const {
-    data,
-    error,
-    isLoading,
-    isRestrictedUser,
-    openDrawer,
-    openRevokeDialog,
-  } = props;
+  const { data, error, isLoading, openDrawer, openRevokeDialog } = props;
 
   const [showHostNamesDrawer, setShowHostNamesDrawers] =
     useState<boolean>(false);
@@ -85,7 +77,6 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             error={error}
             isLoading={isLoading}
             isObjMultiClusterEnabled={isObjMultiClusterEnabled}
-            isRestrictedUser={isRestrictedUser}
             openDrawer={openDrawer}
             openRevokeDialog={openRevokeDialog}
             setHostNames={setHostNames}

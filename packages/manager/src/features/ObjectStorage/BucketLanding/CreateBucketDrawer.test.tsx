@@ -11,14 +11,14 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CreateBucketDrawer } from './CreateBucketDrawer';
+import { CreateBucketDrawerV1 } from './CreateBucketDrawer';
 
 const props = {
   isOpen: true,
   onClose: vi.fn(),
 };
 
-describe('CreateBucketDrawer', () => {
+describe('CreateBucketDrawerV1', () => {
   it.skip('Should show a general error notice if the API returns one', async () => {
     server.use(
       http.post('*/object-storage/buckets', () => {
@@ -54,7 +54,7 @@ describe('CreateBucketDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByPlaceholderText, getByTestId } =
-      renderWithTheme(<CreateBucketDrawer {...props} />);
+      renderWithTheme(<CreateBucketDrawerV1 {...props} />);
 
     await userEvent.type(
       getByLabelText('Label', { exact: false }),

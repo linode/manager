@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
 import { readableBytes, useOpenClose } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -20,17 +19,12 @@ import {
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 
-import { CancelNotice } from '../CancelNotice';
+import { CancelNotice } from '../ObjectStorageBanners/CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
-import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
 
 import type { APIError, ObjectStorageBucket } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-
-interface Props {
-  isCreateBucketDrawerOpen?: boolean;
-}
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -38,12 +32,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const OMC_BucketLanding = (props: Props) => {
-  const { isCreateBucketDrawerOpen } = props;
-  const { data: profile } = useProfile();
+export const OMC_BucketLanding = () => {
   const { availableStorageRegions } = useObjectStorageRegions();
-
-  const isRestrictedUser = profile?.restricted;
 
   const {
     data: objectStorageBucketsResponse,
@@ -161,10 +151,6 @@ export const OMC_BucketLanding = (props: Props) => {
     preferenceKey: 'object-storage-buckets',
   });
 
-  if (isRestrictedUser) {
-    return <RenderEmpty />;
-  }
-
   if (bucketsErrors) {
     return (
       <ErrorState
@@ -180,23 +166,21 @@ export const OMC_BucketLanding = (props: Props) => {
 
   if (objectStorageBucketsResponse?.buckets.length === 0) {
     return (
-      <>
-        {unavailableRegionLabels && unavailableRegionLabels.length > 0 && (
-          <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
-        )}
-        <RenderEmpty />
-      </>
+      unavailableRegionLabels &&
+      unavailableRegionLabels.length > 0 && (
+        <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
+      )
     );
   }
 
   return (
-    <React.Fragment>
-      <DocumentTitleSegment
-        segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
-      />
+    <>
+      <DocumentTitleSegment segment="Buckets" />
+
       {unavailableRegionLabels && unavailableRegionLabels.length > 0 && (
         <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
       )}
+
       <Grid size={12}>
         <BucketTable
           data={orderedData ?? []}
@@ -206,6 +190,7 @@ export const OMC_BucketLanding = (props: Props) => {
           order={order}
           orderBy={orderBy}
         />
+
         {/* If there's more than one Bucket, display the total usage. */}
         {buckets.length > 1 ? (
           <Typography
@@ -217,6 +202,7 @@ export const OMC_BucketLanding = (props: Props) => {
         ) : null}
         <TransferDisplay spacingTop={buckets.length > 1 ? 8 : 18} />
       </Grid>
+
       <TypeToConfirmDialog
         entity={{
           action: 'deletion',
@@ -256,17 +242,14 @@ export const OMC_BucketLanding = (props: Props) => {
           Account Settings. */}
         {buckets.length === 1 && <CancelNotice className={classes.copy} />}
       </TypeToConfirmDialog>
+
       <BucketDetailsDrawer
         onClose={closeBucketDetailDrawer}
         open={bucketDetailDrawerOpen}
         selectedBucket={selectedBucket}
       />
-    </React.Fragment>
+    </>
   );
-};
-
-const RenderEmpty = () => {
-  return <BucketLandingEmptyState />;
 };
 
 interface UnavailableRegionLabelsProps {
