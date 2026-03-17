@@ -67,30 +67,16 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
   }: {
     children: React.ReactNode;
   }) => (
-    <>
-      <Table aria-label="Databases" size="small" striped={false}>
-        <TableHead
-          style={{
-            color: theme.tokens.color.Neutrals.White,
-          }}
-        >
-          {SubnetDatabasesTableRowHead}
-        </TableHead>
-        <TableBody>{children}</TableBody>
-      </Table>
-      <PaginationFooter
-        count={databases?.results ?? 0}
-        handlePageChange={(page: number) => setPage(page)}
-        handleSizeChange={(pageSize: number) => setPageSize(pageSize)}
-        page={page}
-        pageSize={pageSize}
-        sx={{
-          border: 'none',
-          borderBottom: `1px solid ${theme.tokens.component.Table.Row.Border}`,
-          borderTop: `1px solid ${theme.tokens.component.Table.Row.Border}`,
+    <Table aria-label="Databases" size="small" striped={false}>
+      <TableHead
+        style={{
+          color: theme.tokens.color.Neutrals.White,
         }}
-      />
-    </>
+      >
+        {SubnetDatabasesTableRowHead}
+      </TableHead>
+      <TableBody>{children}</TableBody>
+    </Table>
   );
 
   const LoadingState = () => (
@@ -150,5 +136,21 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
       />
     ));
 
-  return <DatabasesTableWrapper>{databaseRows()}</DatabasesTableWrapper>;
+  return (
+    <>
+      <DatabasesTableWrapper>{databaseRows()}</DatabasesTableWrapper>
+      <PaginationFooter
+        count={databases?.results ?? 0}
+        handlePageChange={(page: number) => setPage(page)}
+        handleSizeChange={(pageSize: number) => setPageSize(pageSize)}
+        page={page}
+        pageSize={pageSize}
+        sx={{
+          border: 'none',
+          borderBottom: `1px solid ${theme.tokens.component.Table.Row.Border}`,
+          borderTop: `1px solid ${theme.tokens.component.Table.Row.Border}`,
+        }}
+      />
+    </>
+  );
 };
