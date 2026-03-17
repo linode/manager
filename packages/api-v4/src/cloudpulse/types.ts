@@ -47,7 +47,7 @@ type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
-type EmailRecipientType =
+export type EmailRecipientType =
   | 'admin_users'
   | 'read_users'
   | 'read_write_users'
@@ -303,14 +303,7 @@ interface NotificationChannelBase {
 
 interface NotificationChannelEmail extends NotificationChannelBase {
   channel_type: AlertNotificationEmail;
-  content?: {
-    email: {
-      email_addresses: string[];
-      message: string;
-      subject: string;
-    };
-  };
-  details?: {
+  details: {
     email: {
       recipient_type: EmailRecipientType;
       usernames: string[];
@@ -320,14 +313,7 @@ interface NotificationChannelEmail extends NotificationChannelBase {
 
 interface NotificationChannelSlack extends NotificationChannelBase {
   channel_type: AlertNotificationSlack;
-  content?: {
-    slack: {
-      message: string;
-      slack_channel: string;
-      slack_webhook_url: string;
-    };
-  };
-  details?: {
+  details: {
     slack: {
       slack_channel: string;
       slack_webhook_url: string;
@@ -337,14 +323,7 @@ interface NotificationChannelSlack extends NotificationChannelBase {
 
 interface NotificationChannelPagerDuty extends NotificationChannelBase {
   channel_type: AlertNotificationPagerDuty;
-  content?: {
-    pagerduty: {
-      attributes: string[];
-      description: string;
-      service_api_key: string;
-    };
-  };
-  details?: {
+  details: {
     pagerduty: {
       attributes: string[];
       description: string;
@@ -354,16 +333,7 @@ interface NotificationChannelPagerDuty extends NotificationChannelBase {
 }
 interface NotificationChannelWebHook extends NotificationChannelBase {
   channel_type: AlertNotificationWebHook;
-  content?: {
-    webhook: {
-      http_headers: {
-        header_key: string;
-        header_value: string;
-      }[];
-      webhook_url: string;
-    };
-  };
-  details?: {
+  details: {
     webhook: {
       alert_body: {
         body: string;
