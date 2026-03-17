@@ -29,10 +29,12 @@ import { Table } from 'src/components/Table';
 import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
-import type { KubernetesCluster } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { OrderByKeys } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
-import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
+import type {
+  ExtendedKubernetesCluster,
+  StreamAndDestinationFormType,
+} from 'src/features/Delivery/Streams/StreamForm/types';
 
 const controlPaths = {
   isAutoAddAllClustersEnabled:
@@ -80,7 +82,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
     [regions]
   );
 
-  const eligibleClusters = useMemo(() => {
+  const eligibleClusters: ExtendedKubernetesCluster[] = useMemo(() => {
     const regionMap = new Map(
       eligibleRegions.map(({ id, label }) => [id, label])
     );
@@ -89,7 +91,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
       .filter(({ region }) => regionMap.has(region))
       .map((cluster) => ({
         ...cluster,
-        region: regionMap.get(cluster.region)
+        regionLabel: regionMap.get(cluster.region)
           ? `${regionMap.get(cluster.region)} (${cluster.region})`
           : cluster.region,
       }));
@@ -198,7 +200,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   }, [searchText, regionFilter, logGenerationFilter, eligibleClusters]);
 
   const sortedAndFilteredClusters = useMemo(
-    () => sortData<KubernetesCluster>(orderBy, order)(filteredClusters),
+    () => sortData<ExtendedKubernetesCluster>(orderBy, order)(filteredClusters),
     [orderBy, order, filteredClusters]
   );
 
