@@ -7,6 +7,11 @@ import React, { useState } from 'react';
 
 import { Code } from 'src/components/Code/Code';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import {
+  CLUSTER_PROVISIONING_TEXT,
+  CREDENTIALS_ERROR_TEXT,
+  DISABLED_PASSWORD_BUTTON_TEXT,
+} from 'src/features/Databases/constants';
 import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
 import type { Database, DatabaseCredentials } from '@linode/api-v4';
@@ -66,18 +71,12 @@ export const ServiceURI = (props: ServiceURIProps) => {
           // copy with revealed credentials
           copy(getServiceURIText(data, isGeneralServiceURI));
         } else {
-          enqueueSnackbar(
-            'There was an error retrieving cluster credentials. Please try again.',
-            { variant: 'error' }
-          );
+          enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
         }
         setIsCopying(false);
       } catch {
         setIsCopying(false);
-        enqueueSnackbar(
-          'There was an error retrieving cluster credentials. Please try again.',
-          { variant: 'error' }
-        );
+        enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
       }
     }
   };
@@ -100,36 +99,48 @@ export const ServiceURI = (props: ServiceURIProps) => {
 
   // hide loading state if the user clicks on the copy icon
   const showBtnLoading =
-    !isCopying && (credentialsLoading || credentialsFetching);
+    !hidePassword && !isCopying && (credentialsLoading || credentialsFetching);
 
-  const ErrorButton = (
-    <Button
-      loading={showBtnLoading}
-      onClick={() => getDatabaseCredentials()}
-      sx={(theme) => ({
-        p: 0,
-        color: theme.tokens.alias.Content.Text.Negative,
-        '&:hover, &:focus': {
-          color: theme.tokens.alias.Content.Text.Negative,
-        },
-      })}
-    >
-      {`{error. click to retry}`}
-    </Button>
+  const disablePasswordBtn = ['failed', 'provisioning', 'suspended'].includes(
+    database.status
   );
+  const disabledPasswordTooltipText =
+    database.status === 'provisioning'
+      ? CLUSTER_PROVISIONING_TEXT
+      : DISABLED_PASSWORD_BUTTON_TEXT;
 
-  const RevealPasswordButton = (
-    <Button
-      loading={showBtnLoading}
-      onClick={() => {
-        setHidePassword(false);
-        getDatabaseCredentials();
-      }}
-      sx={{ p: 0 }}
-    >
-      {`{click to reveal password}`}
-    </Button>
-  );
+  React.useEffect(() => {
+    if (!hidePassword && credentialsError) {
+      setHidePassword(true);
+      enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
+    }
+  }, [credentialsError, hidePassword]);
+
+  const renderPassword = () => {
+    if (hidePassword || credentialsError || !credentials) {
+      return (
+        <Button
+          disabled={disablePasswordBtn}
+          loading={showBtnLoading}
+          onClick={() => {
+            getDatabaseCredentials();
+            setHidePassword(false);
+          }}
+          sx={{
+            p: 0,
+            '& .MuiButton-icon': {
+              margin: 0,
+            },
+          }}
+          tooltipText={disablePasswordBtn ? disabledPasswordTooltipText : ''}
+        >
+          {`{click to reveal password}`}
+        </Button>
+      );
+    }
+
+    return getCredentials(isGeneralServiceURI);
+  };
 
   return (
     <Grid display="contents">
@@ -144,11 +155,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         whiteSpace="pre"
       >
         {engine}://
-        {credentialsError
-          ? ErrorButton
-          : hidePassword || (!credentialsError && !credentials)
-            ? RevealPasswordButton
-            : getCredentials(isGeneralServiceURI)}
+        {renderPassword()}
         {isGeneralServiceURI ? (
           <>
             @{primaryHost?.address}:
