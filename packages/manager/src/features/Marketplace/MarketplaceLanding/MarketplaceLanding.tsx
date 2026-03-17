@@ -199,7 +199,7 @@ export const MarketplaceLanding = () => {
         }}
       />
       <Grid container mb={3} spacing={2}>
-        <Grid size={{ xs: 12, sm: 12, md: 7 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }}>
           <DebouncedSearchTextField
             clearable
             debounceTime={250}
@@ -218,16 +218,24 @@ export const MarketplaceLanding = () => {
             value={searchQuery ?? ''}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Autocomplete
             data-pendo-id="Cloud Marketplace Catalog-Category"
             label="Category"
+            noOptionsText="No categories match your search"
             onChange={(_, selected) =>
               updateSearchParam('category', selected?.label)
             }
             options={categoryOptions}
             placeholder="Category"
             renderOption={renderAutocompleteOption('category')}
+            slotProps={{
+              listbox: {
+                sx: {
+                  maxHeight: '50vh',
+                },
+              },
+            }}
             textFieldProps={{
               hideLabel: true,
             }}
@@ -236,10 +244,11 @@ export const MarketplaceLanding = () => {
             }
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2.5 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Autocomplete
             data-pendo-id="Cloud Marketplace Catalog-Type"
             label="Type"
+            noOptionsText="No types match your search"
             onChange={(_, selected) =>
               updateSearchParam('type', selected?.label)
             }
