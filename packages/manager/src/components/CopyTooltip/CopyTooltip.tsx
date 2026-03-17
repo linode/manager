@@ -25,6 +25,10 @@ export interface CopyTooltipProps {
    */
   disabled?: boolean;
   /**
+   * Optionally display disabled reason as tooltip
+   */
+  disabledReason?: string;
+  /**
    * If true, the component is in controlled mode for text masking, meaning the parent component handles the visibility toggle.
    * @default false
    */
@@ -63,6 +67,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     className,
     copyableText,
     disabled,
+    disabledReason,
     isMaskingControlled,
     masked,
     maskedTextLength,
@@ -104,6 +109,20 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       {copyableText ? displayText : <FileCopy />}
     </StyledIconButton>
   );
+
+  if (disabled && disabledReason) {
+    return (
+      <Tooltip
+        className="copy-tooltip"
+        data-qa-copied
+        disableInteractive
+        placement={placement ?? 'top'}
+        title={disabledReason}
+      >
+        {CopyButton}
+      </Tooltip>
+    );
+  }
 
   if (disabled) {
     return CopyButton;
