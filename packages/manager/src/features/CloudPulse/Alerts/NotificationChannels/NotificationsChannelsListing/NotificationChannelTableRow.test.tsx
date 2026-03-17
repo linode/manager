@@ -75,9 +75,8 @@ describe('NotificationChannelTableRow', () => {
   it('should render channel type as Slack for slack type', () => {
     const channel = notificationChannelFactory.build({
       channel_type: 'slack',
-      content: {
+      details: {
         slack: {
-          message: 'message',
           slack_channel: 'channel',
           slack_webhook_url: 'url',
         },
@@ -99,7 +98,7 @@ describe('NotificationChannelTableRow', () => {
   it('should render channel type as PagerDuty for pagerduty type', () => {
     const channel = notificationChannelFactory.build({
       channel_type: 'pagerduty',
-      content: {
+      details: {
         pagerduty: {
           attributes: [],
           description: 'desc',
@@ -123,7 +122,7 @@ describe('NotificationChannelTableRow', () => {
   it('should render channel type as Webhook for webhook type', () => {
     const channel = notificationChannelFactory.build({
       channel_type: 'webhook',
-      content: {
+      details: {
         webhook: {
           http_headers: [],
           webhook_url: 'url',
