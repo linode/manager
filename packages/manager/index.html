@@ -46,30 +46,56 @@
 
         hasLiveChatInitialized = true;
 
+        // Check for token FIRST before initializing
+        const liveChatToken = window.sessionStorage.getItem('LiveChatToken');
+        if (!liveChatToken) {
+          hasLiveChatInitialized = false;
+          return;
+        }
+
         try {
           await loadEmbeddedMessagingScript();
-        } catch (err) {
+        } catch {
           hasLiveChatInitialized = false;
-          console.error('Error loading Embedded Messaging: ', err);
           return;
         }
 
         window.sessionStorage.removeItem('EnableLiveChat');
 
         window.addEventListener("message", (event) => {
-          const { action, data } = event.data;
-          if (action === "prechatLoaded") {
-            const liveChatToken = window.sessionStorage.getItem('LiveChatToken');
-            const liveChatSubject = window.sessionStorage.getItem('LiveChatSubject');
-            console.debug("Received from iframe:", data);
+          const payload =
+            typeof event.data === 'string'
+              ? (() => {
+                  try {
+                    return JSON.parse(event.data);
+                  } catch {
+                    return { action: event.data };
+                  }
+                })()
+              : event.data ?? {};
+
+          const action = payload?.action ?? payload?.type ?? payload?.event;
+
+          if (
+            action === "prechatLoaded" ||
+            action === "prechat:loaded" ||
+            action === "embeddedMessaging:prechatLoaded"
+          ) {
+            const token = window.sessionStorage.getItem('LiveChatToken');
+            const subject = window.sessionStorage.getItem('LiveChatSubject');
+
             const dataMap = {
-              JWE_Token: liveChatToken ?? "<Token>",
-              Subject: liveChatSubject || "<Subject>"
+              JWE_Token: token ?? '',
+              Title: subject ?? '',
             };
+
             event.source.postMessage(
               { action: "hiddenParameters", data: dataMap },
               event.origin
             );
+
+            window.sessionStorage.removeItem('LiveChatToken');
+            window.sessionStorage.removeItem('LiveChatSubject');
           }
         });
 
@@ -87,8 +113,6 @@
               "%REACT_APP_CHAT_SCRT2_URL%"
           }
         );
-        window.sessionStorage.removeItem('LiveChatToken');
-        window.sessionStorage.removeItem('LiveChatSubject');
       }
 
       function initEmbeddedMessaging() {
