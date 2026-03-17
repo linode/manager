@@ -82,7 +82,6 @@ export const CardBaseHeading = styled('div', {
   display: 'flex',
   font: theme.font.bold,
   fontSize: '1rem',
-  wordBreak: 'break-word',
 }));
 
 export const CardBaseSubheading = styled('div', {
