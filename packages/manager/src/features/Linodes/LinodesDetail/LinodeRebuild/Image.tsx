@@ -1,5 +1,5 @@
 import { useStackScriptQuery } from '@linode/queries';
-import { useLocation } from '@tanstack/react-router';
+import { useLocation, useMatch } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -32,7 +32,8 @@ export const Image = (props: Props) => {
   const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
   const location = useLocation();
 
-  const isFromLinodeDetails = location.pathname.match('/linodes/[0-9]+');
+  const isFromLinodeDetails =
+    useMatch({ from: '/linodes/$linodeId', shouldThrow: false }) !== null;
 
   return (
     <Controller
