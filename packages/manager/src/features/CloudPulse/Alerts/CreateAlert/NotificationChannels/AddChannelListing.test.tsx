@@ -25,7 +25,12 @@ vi.mock('src/queries/cloudpulse/alerts', async () => {
 });
 
 const mockNotificationData: NotificationChannel[] = [
-  notificationChannelFactory.build({ id: 0 }),
+  notificationChannelFactory.build({
+    id: 0,
+    details: {
+      email: { usernames: ['user1', 'user2'], recipient_type: 'user' },
+    },
+  }),
 ];
 
 queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
@@ -40,8 +45,8 @@ describe('Channel Listing component', () => {
   it('should render the notification channels ', () => {
     const emailAddresses =
       mockNotificationData[0].channel_type === 'email' &&
-      mockNotificationData[0].content?.email
-        ? mockNotificationData[0].content.email.email_addresses
+      mockNotificationData[0].details?.email
+        ? mockNotificationData[0].details.email.usernames
         : [];
 
     const { getByText } =
@@ -57,8 +62,8 @@ describe('Channel Listing component', () => {
       });
     expect(getByText('4. Notification Channels')).toBeVisible();
     expect(getByText(capitalize(mockNotificationData[0].label))).toBeVisible();
-    expect(getByText(emailAddresses[0])).toBeInTheDocument();
-    expect(getByText(emailAddresses[1])).toBeInTheDocument();
+    expect(getByText(emailAddresses[0])).toBeVisible();
+    expect(getByText(emailAddresses[1])).toBeVisible();
   });
 
   it('should disable the add notification button when service type is null', () => {
