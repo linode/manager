@@ -45,7 +45,6 @@ import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type {
-  APIError,
   CreateKubeClusterPayload,
   CreateLinodeRequest,
   TicketSeverity,
@@ -211,8 +210,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     ticketType,
   } = form.watch();
 
+  const [liveChatFailed, setLiveChatFailed] = React.useState(false);
+
   const isAccountBillingTopic =
-    liveChat && entityType === 'general' && entityInputValue !== 'general';
+    liveChat &&
+    !liveChatFailed &&
+    entityType === 'general' &&
+    entityInputValue !== 'general';
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
@@ -305,27 +309,44 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setSubmitting(true);
 
     try {
-      const { token } = await getLiveChatToken();
-      window.sessionStorage.setItem('LiveChatToken', token);
-    } catch (error) {
-      form.setError('root', {
-        message: getErrorStringOrDefault(
-          error as APIError[],
-          'Unable to start live chat. Please try again.'
-        ),
-      });
-      setSubmitting(false);
-      scrollErrorIntoViewV2(formContainerRef);
-      return;
-    }
+      const response = (await getLiveChatToken()) as {
+        chat_token?: string;
+        data?: { chat_token?: string };
+      };
 
-    window.sessionStorage.setItem('LiveChatSubject', summary);
-    window.sessionStorage.setItem('EnableLiveChat', 'true');
-    window.dispatchEvent(new Event('manager:enable-live-chat'));
-    props.onClose();
-    window.setTimeout(() => resetDialog(true), 500);
-    await navigate({ to: '/support' });
-    setSubmitting(false);
+      const token = response?.chat_token ?? response?.data?.chat_token;
+
+      if (!token) {
+        form.setError('root', {
+          message:
+            'Unable to start live chat because no chat token was returned.',
+        });
+        return;
+      }
+
+      window.sessionStorage.setItem('LiveChatToken', token);
+      window.sessionStorage.setItem('LiveChatSubject', summary);
+      window.sessionStorage.setItem('EnableLiveChat', 'true');
+
+      // Navigate first so listeners on /support can receive the event reliably.
+      await navigate({ to: '/support' });
+      window.dispatchEvent(new Event('manager:enable-live-chat'));
+
+      props.onClose();
+      window.setTimeout(() => resetDialog(true), 500);
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response
+        ?.status;
+      if (status === 500) {
+        setLiveChatFailed(true);
+      } else {
+        form.setError('root', {
+          message: 'Unable to start live chat. Please try again.',
+        });
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
