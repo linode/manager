@@ -43,9 +43,8 @@ interface AlertReusableComponentProps {
   isLegacyAlertAvailable?: boolean;
 
   /**
-   * Called when this component's ready state changes.
-   * Receives `true` when alerts have loaded successfully, or `false`
-   * when alerts are still loading or failed to load due to an error.
+   * Called once when this component is ready - i.e. alerts have loaded
+   * successfully without error. Always receives `true`.
    * Service owners can use this to enable or disable save buttons that depend
    * on the readiness of this component before allowing any action.
    */

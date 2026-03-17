@@ -167,6 +167,8 @@ export const AlertInformationActionTable = (
 
   React.useEffect(() => {
     // To send initial state of alerts through toggle handler function in edit mode.
+    // This ensures the service owner receives the initial enabled-alert state immediately
+    // when the component is ready, regardless of whether any toggle action is performed.
     if (isEditMode && onToggleAlert) {
       onToggleAlert(enabledAlerts);
     }

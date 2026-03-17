@@ -110,6 +110,12 @@ const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
   const { linodeId, ...rest } = props;
 
   const { data: linode } = useLinodeQuery(linodeId);
+  const { data: type } = useTypeQuery(
+    linode?.type ?? '',
+    Boolean(linode?.type)
+  );
+  const isBareMetalInstance = type?.class === 'metal';
+
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
@@ -118,7 +124,14 @@ const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
   } = useLinodeUpdateMutation(linodeId);
 
   const handleSave = async (alerts: Linode['alerts']) => {
-    await updateLinode({ alerts })
+    await updateLinode({
+      alerts: {
+        ...alerts,
+        // Bare metal instances do not support cpu or network_in alerts.
+        cpu: isBareMetalInstance ? undefined : alerts.cpu,
+        network_in: isBareMetalInstance ? undefined : alerts.network_in,
+      },
+    })
       .then(() => {
         enqueueSnackbar(
           `Successfully updated alert settings for ${linode?.label}`,
