@@ -66,7 +66,7 @@ export const CREDENTIALS_ERROR_TEXT =
   'There was an error retrieving cluster credentials. Please try again.';
 
 export const DISABLED_PASSWORD_BUTTON_TEXT =
-  'Your root password is unavailable when your Database Cluster is in a failed or suspended state.';
+  'Your root password is unavailable when your Database Cluster is in a failed, suspended, or resuming state.';
 
 export const CLUSTER_PROVISIONING_TEXT =
   'Your Database Cluster is currently provisioning.';

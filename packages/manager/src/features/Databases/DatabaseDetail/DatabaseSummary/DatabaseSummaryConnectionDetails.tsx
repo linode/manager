@@ -74,9 +74,12 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     }
   }, [showCredentials, credentialsError]);
 
-  const disableShowBtn = ['failed', 'provisioning', 'suspended'].includes(
-    database.status
-  );
+  const disableShowBtn = [
+    'failed',
+    'provisioning',
+    'resuming',
+    'suspended',
+  ].includes(database.status);
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (

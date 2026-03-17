@@ -101,9 +101,13 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const showBtnLoading =
     !hidePassword && !isCopying && (credentialsLoading || credentialsFetching);
 
-  const disablePasswordBtn = ['failed', 'provisioning', 'suspended'].includes(
-    database.status
-  );
+  const disablePasswordBtn = [
+    'failed',
+    'provisioning',
+    'resuming',
+    'suspended',
+  ].includes(database.status);
+
   const disabledPasswordTooltipText =
     database.status === 'provisioning'
       ? CLUSTER_PROVISIONING_TEXT
@@ -177,6 +181,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
       ) : (
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
+            disabled={disablePasswordBtn}
+            disabledReason={disabledPasswordTooltipText}
             onClickCallback={handleCopy}
             text={getServiceURIText(credentials, isGeneralServiceURI)}
           />
