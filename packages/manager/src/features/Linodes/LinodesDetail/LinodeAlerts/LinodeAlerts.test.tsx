@@ -9,6 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import LinodeAlerts from './LinodeAlerts';
 
 const queryMocks = vi.hoisted(() => ({
+  useIsAclpSupportedRegion: vi.fn().mockReturnValue(false),
   userPermissions: vi.fn(() => ({
     data: {
       update_linode: false,
@@ -20,6 +21,41 @@ const queryMocks = vi.hoisted(() => ({
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
+
+vi.mock('src/features/CloudPulse/Utils/utils', () => ({
+  useIsAclpSupportedRegion: queryMocks.useIsAclpSupportedRegion,
+}));
+
+// Keep AlertReusableComponent lightweight in tests - it has its own test coverage.
+// Renders a button so tests can simulate ACLP alert changes via onToggleAlert.
+// Calls onStatusChange(true) on mount to simulate a successful alerts load.
+vi.mock(
+  'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent',
+  () => ({
+    AlertReusableComponent: ({
+      onStatusChange,
+      onToggleAlert,
+    }: {
+      onStatusChange?: (isReady: boolean) => void;
+      onToggleAlert: (payload: unknown, hasUnsavedChanges: boolean) => void;
+    }) => {
+      React.useEffect(() => {
+        onStatusChange?.(true);
+      }, [onStatusChange]);
+
+      return (
+        <div data-testid="aclp-alerts">
+          <button
+            data-testid="aclp-toggle"
+            onClick={() => onToggleAlert({}, true)}
+          >
+            Toggle ACLP Alert
+          </button>
+        </div>
+      );
+    },
+  })
+);
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
@@ -36,8 +72,8 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-describe('LinodeAlerts', () => {
-  it('should render component', async () => {
+describe('LinodeAlerts — standalone mode (ACLP flag OFF)', () => {
+  it('renders the alerts fields', async () => {
     const { getByText } = renderWithTheme(<LinodeAlerts />);
 
     expect(getByText('Alerts')).toBeVisible();
@@ -56,9 +92,7 @@ describe('LinodeAlerts', () => {
 
   it('should enable "Save" button if the user has update_linode permission', async () => {
     queryMocks.userPermissions.mockReturnValue({
-      data: {
-        update_linode: true,
-      },
+      data: { update_linode: true },
     });
     const { getByTestId, getAllByTestId } = renderWithTheme(<LinodeAlerts />);
 
@@ -72,5 +106,91 @@ describe('LinodeAlerts', () => {
       await userEvent.type(inputCPU, '20');
       expect(saveBtn).not.toHaveAttribute('aria-disabled', 'true');
     });
+  });
+});
+
+describe('LinodeAlerts — unified mode (aclpServices.linode.alerts.enabled + region supported)', () => {
+  const flags = {
+    aclpServices: { linode: { alerts: { enabled: true, beta: false } } },
+  };
+
+  beforeEach(() => {
+    queryMocks.useIsAclpSupportedRegion.mockReturnValue(true);
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_linode: false },
+    });
+  });
+
+  afterEach(() => {
+    queryMocks.useIsAclpSupportedRegion.mockReturnValue(false);
+  });
+
+  it('renders both the Legacy Alerts and Alerts accordions', async () => {
+    const { getByText } = renderWithTheme(<LinodeAlerts />, { flags });
+
+    expect(getByText('Legacy Alerts')).toBeVisible();
+    expect(getByText('Alerts')).toBeVisible();
+  });
+
+  it('renders the ACLP alerts component inside the Alerts accordion', async () => {
+    const { getByTestId } = renderWithTheme(<LinodeAlerts />, { flags });
+
+    expect(getByTestId('aclp-alerts')).toBeVisible();
+  });
+
+  it('renders the unified Save Alerts button instead of the standalone Save button', async () => {
+    const { getByTestId, queryByTestId } = renderWithTheme(<LinodeAlerts />, {
+      flags,
+    });
+
+    expect(getByTestId('unified-alerts-save')).toBeVisible();
+    expect(queryByTestId('alerts-save')).not.toBeInTheDocument();
+  });
+
+  it('disables the unified Save button when there are no unsaved changes', async () => {
+    const { getByTestId } = renderWithTheme(<LinodeAlerts />, { flags });
+
+    expect(getByTestId('unified-alerts-save')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
+
+  it('enables the unified Save button after editing a legacy alert field', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      data: { update_linode: true },
+    });
+    const { getByTestId, getAllByTestId } = renderWithTheme(<LinodeAlerts />, {
+      flags,
+    });
+
+    const inputCPU = getAllByTestId('textfield-input')[0];
+    const saveBtn = getByTestId('unified-alerts-save');
+
+    await waitFor(async () => {
+      await userEvent.type(inputCPU, '20');
+      expect(saveBtn).not.toHaveAttribute('aria-disabled', 'true');
+    });
+  });
+
+  it('enables the unified Save button when there are unsaved ACLP alert changes', async () => {
+    const { getByTestId } = renderWithTheme(<LinodeAlerts />, { flags });
+
+    const saveBtn = getByTestId('unified-alerts-save');
+    expect(saveBtn).toHaveAttribute('aria-disabled', 'true');
+
+    await userEvent.click(getByTestId('aclp-toggle'));
+
+    await waitFor(() => {
+      expect(saveBtn).not.toHaveAttribute('aria-disabled', 'true');
+    });
+  });
+
+  it('shows the info banner about the new Alerts (Beta) feature', async () => {
+    const { getByTestId } = renderWithTheme(<LinodeAlerts />, { flags });
+
+    expect(getByTestId('notice-info')).toHaveTextContent(
+      'Try the Alerts (Beta), featuring new options like customizable alerts. You can keep your legacy alerts and add them to the new Beta Alerts.'
+    );
   });
 });

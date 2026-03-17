@@ -24,6 +24,7 @@ import type {
   CloudPulseAlertsPayload,
   CloudPulseServiceType,
 } from '@linode/api-v4';
+import type { SxProps, Theme } from '@linode/ui';
 
 interface AlertReusableComponentProps {
   /**
@@ -42,6 +43,14 @@ interface AlertReusableComponentProps {
   isLegacyAlertAvailable?: boolean;
 
   /**
+   * Called once when this component is ready - i.e. alerts have loaded
+   * successfully without error. Always receives `true`.
+   * Service owners can use this to enable or disable save buttons that depend
+   * on the readiness of this component before allowing any action.
+   */
+  onStatusChange?: (isReady: boolean) => void;
+
+  /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
    * @param hasUnsavedChanges boolean to check if there are unsaved changes
@@ -50,6 +59,11 @@ interface AlertReusableComponentProps {
     payload: CloudPulseAlertsPayload,
     hasUnsavedChanges?: boolean
   ) => void;
+
+  /**
+   * Custom sx styles for the Paper wrapper component
+   */
+  paperSx?: SxProps<Theme>;
 
   /**
    * Region ID for the selected entity
@@ -62,11 +76,21 @@ interface AlertReusableComponentProps {
   serviceType: CloudPulseServiceType;
 }
 
+/**
+ * Service types that display the Manage Alerts button inline with the search/filter row.
+ * For all other service types, the button appears inline with the Alerts section header.
+ */
+const SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW: CloudPulseServiceType[] = [
+  'linode',
+];
+
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   const {
     entityId,
     entityName,
     onToggleAlert,
+    onStatusChange,
+    paperSx,
     serviceType,
     regionId,
     isLegacyAlertAvailable,
@@ -76,6 +100,13 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     error,
     isLoading,
   } = useAlertDefinitionByServiceTypeQuery(serviceType);
+
+  React.useEffect(() => {
+    // Only notify the parent when ready
+    if (!isLoading && !error) {
+      onStatusChange?.(true);
+    }
+  }, [isLoading, error, onStatusChange]);
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [selectedType, setSelectedType] = React.useState<
@@ -100,24 +131,26 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   }
 
   return (
-    <Paper sx={{ p: entityId ? undefined : 0 }}>
+    <Paper sx={paperSx}>
       <Stack gap={3}>
-        {entityId && (
-          <Box display="flex" justifyContent="space-between">
-            <Box alignItems="center" display="flex" gap={0.5}>
-              <Typography variant="h2">Alerts</Typography>
-              {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
+        {/* Not in SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW: Show Manage Alerts button inline with the Alerts section header */}
+        {entityId &&
+          !SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW.includes(serviceType) && (
+            <Box display="flex" justifyContent="space-between">
+              <Box alignItems="center" display="flex" gap={0.5}>
+                <Typography variant="h2">Alerts</Typography>
+                {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
+              </Box>
+              <Button
+                buttonType="outlined"
+                data-qa-buttons="true"
+                data-testid="manage-alerts"
+                onClick={() => navigate({ to: '/alerts/definitions' })}
+              >
+                Manage Alerts
+              </Button>
             </Box>
-            <Button
-              buttonType="outlined"
-              data-qa-buttons="true"
-              data-testid="manage-alerts"
-              onClick={() => navigate({ to: '/alerts/definitions' })}
-            >
-              Manage Alerts
-            </Button>
-          </Box>
-        )}
+          )}
         <Stack gap={2}>
           <Box display="flex" gap={2}>
             <DebouncedSearchTextField
@@ -145,6 +178,21 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
                 hideLabel: true,
               }}
             />
+            {/* In SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW: Show Manage Alerts button inline with the search/filter row (right-aligned) */}
+            {entityId &&
+              SERVICES_WITH_MANAGE_ALERTS_IN_FILTER_ROW.includes(
+                serviceType
+              ) && (
+                <Button
+                  buttonType="outlined"
+                  data-qa-buttons="true"
+                  data-testid="manage-alerts"
+                  onClick={() => navigate({ to: '/alerts/definitions' })}
+                  sx={{ marginLeft: 'auto' }}
+                >
+                  Manage Alerts
+                </Button>
+              )}
           </Box>
 
           <AlertInformationActionTable
