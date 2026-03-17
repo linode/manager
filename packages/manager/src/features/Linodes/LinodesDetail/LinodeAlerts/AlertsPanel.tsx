@@ -1,8 +1,4 @@
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-  useTypeQuery,
-} from '@linode/queries';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
@@ -110,12 +106,6 @@ const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
   const { linodeId, ...rest } = props;
 
   const { data: linode } = useLinodeQuery(linodeId);
-  const { data: type } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
-  );
-  const isBareMetalInstance = type?.class === 'metal';
-
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
@@ -124,14 +114,7 @@ const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
   } = useLinodeUpdateMutation(linodeId);
 
   const handleSave = async (alerts: Linode['alerts']) => {
-    await updateLinode({
-      alerts: {
-        ...alerts,
-        // Bare metal instances do not support cpu or network_in alerts.
-        cpu: isBareMetalInstance ? undefined : alerts.cpu,
-        network_in: isBareMetalInstance ? undefined : alerts.network_in,
-      },
-    })
+    await updateLinode({ alerts })
       .then(() => {
         enqueueSnackbar(
           `Successfully updated alert settings for ${linode?.label}`,
@@ -187,13 +170,6 @@ const AlertsPanelContent = (props: AlertsPanelContentProps) => {
     linodeId !== undefined
   );
 
-  const { data: type } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
-  );
-
-  const isBareMetalInstance = type?.class === 'metal';
-
   const isCreateFlow = !linodeId;
 
   const hasAPIErrorFor = getAPIErrorFor(
@@ -216,7 +192,6 @@ const AlertsPanelContent = (props: AlertsPanelContentProps) => {
       error:
         (formik.touched.cpu ? formik.errors.cpu : undefined) ||
         hasAPIErrorFor('alerts.cpu'),
-      hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -252,7 +227,6 @@ const AlertsPanelContent = (props: AlertsPanelContentProps) => {
       error:
         (formik.touched.io ? formik.errors.io : undefined) ||
         hasAPIErrorFor('alerts.io'),
-      hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -385,7 +359,7 @@ const AlertsPanelContent = (props: AlertsPanelContentProps) => {
       title: 'Transfer Quota',
       value: formik.values.transfer_quota ?? 0,
     },
-  ].filter((thisAlert) => !thisAlert.hidden);
+  ];
 
   const handleSaveClick = () => {
     formik.handleSubmit();

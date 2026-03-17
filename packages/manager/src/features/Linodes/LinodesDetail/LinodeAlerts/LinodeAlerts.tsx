@@ -1,8 +1,4 @@
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-  useTypeQuery,
-} from '@linode/queries';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import {
   Accordion,
   ActionsPanel,
@@ -39,11 +35,6 @@ const LinodeAlerts = () => {
 
   const { aclpServices } = useFlags();
   const { data: linode } = useLinodeQuery(id);
-  const { data: type } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
-  );
-  const isBareMetalInstance = type?.class === 'metal';
 
   const { data: permissions } = usePermissions('linode', ['update_linode'], id);
 
@@ -135,11 +126,6 @@ const LinodeAlerts = () => {
       const combinedAlertsPayload: Linode['alerts'] = {
         ...legacyAlertsValues,
         ...aclpAlertsPayload,
-        // Bare metal instances do not support cpu or network_in alerts.
-        cpu: isBareMetalInstance ? undefined : legacyAlertsValues.cpu,
-        network_in: isBareMetalInstance
-          ? undefined
-          : legacyAlertsValues.network_in,
       };
       await updateLinode({ alerts: combinedAlertsPayload })
         .then(() => {
@@ -155,7 +141,7 @@ const LinodeAlerts = () => {
           }
         });
     },
-    [aclpAlertsPayload, isBareMetalInstance, updateLinode, enqueueSnackbar]
+    [aclpAlertsPayload, updateLinode, enqueueSnackbar]
   );
 
   return (
