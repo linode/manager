@@ -7,6 +7,7 @@ import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsMarketplaceV2Enabled } from './features/Marketplace/shared';
 import { useIsNetworkLoadBalancerEnabled } from './features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
+import { useIsReserveIpEnabled } from './features/ReservedIps/utils';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 import type { SelectOption } from '@linode/ui';
@@ -22,6 +23,7 @@ export const GoTo = React.memo(() => {
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
 
@@ -62,6 +64,11 @@ export const GoTo = React.memo(() => {
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
+      },
+      {
+        display: 'Reserved IPs',
+        hide: !isReserveIpEnabled,
+        href: '/reserved-ips',
       },
       {
         display: 'Firewalls',
@@ -130,6 +137,7 @@ export const GoTo = React.memo(() => {
       isMarketplaceV2FeatureEnabled,
       isNetworkLoadBalancerEnabled,
       isPlacementGroupsEnabled,
+      isReserveIpEnabled,
     ]
   );
 
