@@ -18,13 +18,14 @@ export const DestinationCustomHTTPSDetailsSummary = (
 
   return (
     <>
-      <LabelValue label="Authentication" value={authentication.type} />
+      <LabelValue label="Authentication Type" value={authentication.type} />
       <LabelValue label="Endpoint URL" value={endpoint_url} />
       {authentication.type === 'basic' && (
         <>
           <LabelValue
+            data-testid="username"
             label="Username"
-            value={authentication.details!.basic_authentication_user!}
+            value="*****************"
           />
           <LabelValue
             data-testid="password"
@@ -37,7 +38,7 @@ export const DestinationCustomHTTPSDetailsSummary = (
       {(!!client_certificate_details || !!content_type || !!custom_headers) && (
         <>
           <Typography sx={{ mt: 0 }} variant="h2">
-            Additional Options
+            Connection Settings
           </Typography>
           {!!client_certificate_details && (
             <>
@@ -46,23 +47,28 @@ export const DestinationCustomHTTPSDetailsSummary = (
                 sx={{ mt: 2 }}
                 variant="h3"
               >
-                Client Certificate
+                Client Certificate Authentication
               </Typography>
               <LabelValue
                 label="TLS Hostname"
                 value={client_certificate_details.tls_hostname!}
               />
               <LabelValue
+                copyable
+                disableValueTooltip
                 label="CA Certificate"
                 value={client_certificate_details.client_ca_certificate!}
               />
               <LabelValue
+                copyable
+                disableValueTooltip
                 label="Client Certificate"
                 value={client_certificate_details.client_certificate!}
               />
               <LabelValue
-                label="Client Key"
-                value={client_certificate_details.client_private_key!}
+                data-testid="client-key"
+                label="Client Private Key"
+                value="*****************"
               />
             </>
           )}
