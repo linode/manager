@@ -39,7 +39,10 @@ import {
 } from './constants';
 import { ImageSelectTableRow } from './ImageSelectTableRow';
 
-import type { IMAGE_SELECT_TABLE_PENDO_IDS } from './constants';
+import type {
+  IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS,
+  IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS,
+} from './constants';
 import type { Filter, Image } from '@linode/api-v4';
 import type { LinkProps } from '@tanstack/react-router';
 
@@ -60,7 +63,10 @@ interface Props {
   /**
    * An object containing Pendo IDs for elements in this component.
    */
-  pendoIDs: typeof IMAGE_SELECT_TABLE_PENDO_IDS;
+  pendoIDs:
+    | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
+    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS;
+  queryParamsPrefix?: string;
   /**
    * The ID of the currently selected image.
    */
@@ -70,14 +76,22 @@ interface Props {
 type OptionType = { label: string; value: string };
 
 export const ImageSelectTable = (props: Props) => {
-  const { currentRoute, errorText, onSelect, pendoIDs, selectedImageId } =
-    props;
+  const {
+    currentRoute,
+    errorText,
+    onSelect,
+    pendoIDs,
+    queryParamsPrefix,
+    selectedImageId,
+  } = props;
 
   const theme = useTheme();
+
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<null | string>(null);
   const [selectedRegion, setSelectedRegion] = useState<null | string>(null);
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { data: profile } = useProfile();
   const { data: tags } = useAllTagsQuery();
@@ -126,6 +140,7 @@ export const ImageSelectTable = (props: Props) => {
     defaultPageSize: DEFAULT_CLIENT_SIDE_PAGE_SIZE,
     initialPage: 1,
     preferenceKey: IMAGE_SELECT_TABLE_PREFERENCE_KEY,
+    queryParamsPrefix,
   });
 
   const tagOptions =
@@ -153,8 +168,8 @@ export const ImageSelectTable = (props: Props) => {
     <Stack pt={1} spacing={2}>
       {errorText && <Notice text={errorText} variant="error" />}
       <Stack
-        alignItems={matchesSmDown ? 'stretch' : 'center'}
-        direction={matchesSmDown ? 'column' : 'row'}
+        alignItems={matchesMdDown ? 'stretch' : 'center'}
+        direction={matchesMdDown ? 'column' : 'row'}
         flexWrap="wrap"
         gap={2}
       >
@@ -186,6 +201,11 @@ export const ImageSelectTable = (props: Props) => {
             }}
             options={tagOptions}
             placeholder="Filter by tag"
+            renderOption={(props, option) => (
+              <li {...props} data-pendo-id={option.value} key={option.value}>
+                {option.label}
+              </li>
+            )}
             textFieldProps={{
               hideLabel: true,
             }}
@@ -203,6 +223,11 @@ export const ImageSelectTable = (props: Props) => {
             }}
             options={regionOptions}
             placeholder="Filter by region"
+            renderOption={(props, option) => (
+              <li {...props} data-pendo-id={option.value} key={option.value}>
+                {option.label}
+              </li>
+            )}
             textFieldProps={{
               hideLabel: true,
             }}
