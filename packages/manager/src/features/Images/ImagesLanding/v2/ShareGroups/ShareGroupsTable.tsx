@@ -102,7 +102,7 @@ export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
               {headerProps.docsLink && (
                 <DocsLink
                   analyticsLabel={headerProps.title}
-                  data-pendo-id={`${eventCategory}-docs-link`}
+                  data-pendo-id={`Images Groups Owned-Docs Link`}
                   href={headerProps.docsLink.href}
                   label={headerProps.docsLink.label}
                 />
@@ -110,7 +110,7 @@ export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
               {headerProps.buttonProps && (
                 <Button
                   buttonType="primary"
-                  data-pendo-id={`${eventCategory}-create-button`}
+                  data-pendo-id={`Images Groups Owned-Create Button`}
                   disabled={headerProps.buttonProps.disabled}
                   onClick={headerProps.buttonProps.onButtonClick}
                   tooltipText={headerProps.buttonProps.tooltipText}

@@ -26,7 +26,7 @@ export const ShareGroupsView = (props: Props) => {
   const search = useSearch({ from: '/images/share-groups' });
 
   const { data: profile } = useProfile();
-  const canCreateShareGroup = profile?.restricted === false;
+  const isRestrictedUser = profile?.restricted;
 
   const pagination = usePaginationV2({
     currentRoute: '/images/share-groups/$shareGroupsType',
@@ -113,8 +113,8 @@ export const ShareGroupsView = (props: Props) => {
               search: () => ({}),
               to: config.buttonProps?.navigateTo ?? '/',
             }),
-          disabled: !canCreateShareGroup,
-          tooltipText: !canCreateShareGroup
+          disabled: isRestrictedUser,
+          tooltipText: isRestrictedUser
             ? config.buttonProps.disabledToolTipText
             : undefined,
         }

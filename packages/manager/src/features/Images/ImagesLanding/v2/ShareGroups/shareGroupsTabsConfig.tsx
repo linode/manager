@@ -59,10 +59,9 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Group', sortableProps: { label: 'label' } },
   { name: 'Description', sortableProps: { label: 'description' } },
-  { name: '# of members', sortableProps: { label: 'members_count' } },
+  { name: '# of members' },
   {
     name: '# of images',
-    sortableProps: { label: 'images_count' },
     hidden: 'smDown',
   },
   { name: 'Created', sortableProps: { label: 'created' }, hidden: 'mdDown' },
@@ -72,11 +71,11 @@ const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
 const JOINED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Group', sortableProps: { label: 'label' } },
   { name: 'Description', sortableProps: { label: 'description' } },
-  { name: 'Membership Status', sortableProps: { label: 'status' } },
+  { name: 'Membership Status', sortableProps: { label: 'membership_status' } },
   {
     name: 'Status Changed',
     sortableProps: { label: 'status_changed' },
-    hidden: 'smDown',
+    hidden: 'mdDown',
   },
 ];
 
@@ -84,8 +83,8 @@ const MEMBERSHIP_REQUESTS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Share Group UUID', sortableProps: { label: 'label' } },
   { name: 'Token UUID', sortableProps: { label: 'token_uuid' } },
   { name: 'Status', sortableProps: { label: 'status' } },
-  { name: 'Created', sortableProps: { label: 'created' } },
-  { name: 'Expiry', sortableProps: { label: 'expiry' }, hidden: 'smDown' },
+  { name: 'Created', sortableProps: { label: 'created' }, hidden: 'mdDown' },
+  { name: 'Expiry', sortableProps: { label: 'expiry' }, hidden: 'mdDown' },
 ];
 
 export const SHAREGROUPS_CONFIG: Record<
@@ -113,7 +112,7 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
     },
-    eventCategory: 'shareGroups',
+    eventCategory: 'owned-groups',
     orderByDefault: 'label',
     orderDefault: 'asc',
     preferenceKey: 'owned-groups',
@@ -137,7 +136,7 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         "Go to 'My membership requests' to make a request and join a group",
     },
-    eventCategory: 'shareGroups',
+    eventCategory: 'joined-groups',
     orderByDefault: 'label',
     orderDefault: 'asc',
     preferenceKey: 'joined-groups',
@@ -156,7 +155,7 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         "Click 'Request Membership' to create your first membership request",
     },
-    eventCategory: 'shareGroups',
+    eventCategory: 'membership-requests',
     orderByDefault: 'label',
     orderDefault: 'asc',
     preferenceKey: 'membership-requests',
