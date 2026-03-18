@@ -8,26 +8,31 @@ import { RenderChannelDetails } from './RenderChannelDetails';
 
 import type { NotificationChannel } from '@linode/api-v4';
 
-const mockData: NotificationChannel = notificationChannelFactory.build();
+const mockData = notificationChannelFactory.build({
+  details: {
+    email: {
+      recipient_type: 'read_write_users',
+      usernames: [],
+    },
+  },
+});
 
 describe('RenderChannelDetails component', () => {
-  it('should render the email channel type notification details', () => {
-    const emailAddresses =
-      mockData.channel_type === 'email' && mockData.content?.email
-        ? mockData.content.email.email_addresses
-        : [];
-    const container = renderWithTheme(
+  it('should render the email channel type notification details with recipient_type if no usernames are there', () => {
+    const { getByText } = renderWithTheme(
       <RenderChannelDetails template={mockData} />
     );
-    expect(container.getByText(emailAddresses[0])).toBeVisible();
-    expect(container.getByText(emailAddresses[1])).toBeVisible();
+    const recipientType =
+      mockData.channel_type === 'email'
+        ? mockData.details.email.recipient_type
+        : '';
+    expect(getByText(recipientType)).toBeVisible();
   });
   it('should render the email channel with usernames if details is present', () => {
     const usernames = ['user1', 'user2'];
     const mockDataWithDetails: NotificationChannel =
       notificationChannelFactory.build({
         channel_type: 'email',
-        content: {},
         details: {
           email: {
             usernames,
