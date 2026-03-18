@@ -70,6 +70,39 @@ interface CountryItem {
   name: string;
 }
 
+export const cleanUpPayload = (values: MarketplacePartnerReferralPayload) => {
+  const cleaned: MarketplacePartnerReferralPayload = {
+    ...values,
+  };
+
+  // trim email input and drop blank rows entirely.
+  const cleanedAdditionalEmails = cleaned.additional_emails
+    ?.filter((email) => email?.trim())
+    .map((email) => email.trim());
+
+  if (!cleanedAdditionalEmails?.length) {
+    delete cleaned.additional_emails;
+  } else {
+    cleaned.additional_emails = cleanedAdditionalEmails;
+  }
+
+  const OPTIONAL_PAYLOAD_STRING_FIELDS: Array<
+    'account_executive_email' | 'comments' | 'company_name'
+  > = ['account_executive_email', 'comments', 'company_name'];
+
+  // Blank optional text inputs should be omitted, while real values are trimmed before submit.
+  for (const key of OPTIONAL_PAYLOAD_STRING_FIELDS) {
+    const value = cleaned[key];
+    if (typeof value !== 'string' || value.trim() === '') {
+      delete cleaned[key];
+    } else {
+      cleaned[key] = value.trim();
+    }
+  }
+
+  return cleaned;
+};
+
 export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   const MAX_ADDITIONAL_EMAILS = 2;
   const { classes } = useStyles();
@@ -152,39 +185,9 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
     setSelectedPhoneCountry(defaultCountry);
   };
 
-  const cleanUpPayload = (values: MarketplacePartnerReferralPayload) => {
-    const cleaned: MarketplacePartnerReferralPayload = {
-      ...values,
-    };
-
-    const cleanedAdditionalEmails = cleaned.additional_emails?.filter((e) =>
-      e?.trim()
-    );
-
-    if (!cleanedAdditionalEmails?.length) {
-      delete cleaned.additional_emails;
-    } else {
-      cleaned.additional_emails = cleanedAdditionalEmails;
-    }
-
-    const optionalStringFields: Array<
-      'account_executive_email' | 'comments' | 'company_name'
-    > = ['account_executive_email', 'comments', 'company_name'];
-
-    for (const key of optionalStringFields) {
-      const value = cleaned[key];
-      if (typeof value !== 'string' || value.trim() === '') {
-        delete cleaned[key];
-      } else {
-        cleaned[key] = value.trim();
-      }
-    }
-
-    return cleaned;
-  };
-
   const onSubmit = handleSubmit(async (values) => {
     try {
+      // Normalize optional form values so the API only receives meaningful user input.
       const cleanedValues = cleanUpPayload(values);
 
       await createPartnerReferral(cleanedValues);
