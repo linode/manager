@@ -43,12 +43,11 @@ const queryMocks = vi.hoisted(() => {
     eventCategory: 'shareGroups',
     orderByDefault: 'label',
     orderDefault: 'asc' as const,
-    preferenceKey: 'shareGroupsOwned',
+    preferenceKey: 'owned-sharegroups',
     buttonProps: {
       buttonText: 'Create Share Group',
+      disabledToolTipText: 'You do not have permissions to create share groups',
       navigateTo: '/images/share-groups/create',
-      disabledToolTipText:
-        "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions.",
     },
   };
 

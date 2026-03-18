@@ -5,6 +5,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ShareGroupsTabs } from './ShareGroupsLanding';
 
+vi.mock('./ShareGroupsView', () => ({
+  ShareGroupsView: () => <div>Mock Share Groups View</div>,
+}));
+
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),

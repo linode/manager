@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-
 import type { APIError } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
 import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
@@ -118,15 +116,11 @@ export const SHAREGROUPS_CONFIG: Record<
     eventCategory: 'shareGroups',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'owned-sharegroups',
+    preferenceKey: 'owned-groups',
     buttonProps: {
       buttonText: 'Create Share Group',
       navigateTo: '/images/share-groups/create',
-      disabledToolTipText: getRestrictedResourceText({
-        action: 'create',
-        isSingular: false,
-        resourceType: 'Images',
-      }),
+      disabledToolTipText: 'You do not have permissions to create share groups',
     },
   },
   'joined-groups': {
@@ -146,7 +140,7 @@ export const SHAREGROUPS_CONFIG: Record<
     eventCategory: 'shareGroups',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'joined-sharegroups',
+    preferenceKey: 'joined-groups',
   },
   'membership-requests': {
     title: 'Membership requests',
