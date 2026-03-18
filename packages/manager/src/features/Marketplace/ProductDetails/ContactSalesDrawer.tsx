@@ -11,6 +11,7 @@ import {
   InputAdornment,
   LinkButton,
   Notice,
+  PlusSignIcon,
   Stack,
   TextField,
   Typography,
@@ -123,6 +124,17 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   });
 
   const tcConsent = watch('tc_consent_given');
+  const countryCode = watch('country_code');
+  const phone = watch('phone');
+
+  const isSubmitDisabled =
+    isSubmitting ||
+    !tcConsent ||
+    !countryCode ||
+    !phone ||
+    !!errors.country_code ||
+    !!errors.phone ||
+    !!errors.phone_country_code;
 
   const dialingCodeFilterOptions = createFilterOptions({
     ignoreCase: true,
@@ -235,7 +247,16 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               return (
                 // Using MultipleIPInput component for additional emails since it allows for easy addition and removal of multiple entries, and it can display individual error messages for each email address.
                 <MultipleIPInput
-                  buttonText="Add a second, additional email address"
+                  buttonText={
+                    <>
+                      <PlusSignIcon
+                        height={12}
+                        style={{ marginRight: 4 }}
+                        width={12}
+                      />
+                      Click to add a second, additional email address
+                    </>
+                  }
                   className={
                     field.value?.length === MAX_ADDITIONAL_EMAILS
                       ? classes.hideAddEmailButton
@@ -291,6 +312,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   }
                   keepSearchEnabledOnMobile
                   label="Region"
+                  noOptionsText="No regions match your search"
                   onBlur={field.onBlur}
                   onChange={(_event, country) => {
                     setSelectedCountry(country);
@@ -363,6 +385,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       option.label === value.label
                     }
                     label="Phone Number"
+                    noOptionsText="No country codes match your search"
                     onBlur={field.onBlur}
                     onChange={(_, country) => {
                       setSelectedPhoneCountry(country);
@@ -651,11 +674,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           primaryButtonProps={{
             'data-pendo-id': 'Cloud Marketplace Contact Sales-Submit',
             label: 'Submit',
-            disabled: isSubmitting || !tcConsent,
+            disabled: isSubmitDisabled,
             type: 'submit',
             tooltipText:
-              'Please agree to share your information with the partner to proceed.',
-            alwaysShowTooltip: !tcConsent,
+              'Please complete all required fields and agree to share your information with the partner to proceed',
+            alwaysShowTooltip: isSubmitDisabled,
           }}
           secondaryButtonProps={{
             'data-pendo-id': 'Cloud Marketplace Contact Sales-Cancel',

@@ -386,39 +386,15 @@ const DiskEncryptionSchema = string()
   .oneOf(['enabled', 'disabled'])
   .notRequired();
 
-/**
- * A number field schema with conditional validation for legacy alert fields.
- * @param label - The label used in the required error message.
- * @returns A number schema with conditional validation.
- */
-const legacyAlertsFieldSchema = (
-  label:
-    | 'CPU Usage'
-    | 'Disk I/O Rate'
-    | 'Incoming Traffic'
-    | 'Outbound Traffic'
-    | 'Transfer Quota',
-) =>
-  // If system_alerts and user_alerts are undefined, then it is legacy alerts context.
-  // If it is legacy alerts context, then the field is required.
-  number().when(['system_alerts', 'user_alerts'], {
-    is: (systemAlerts?: number[], userAlerts?: number[]) => {
-      return systemAlerts === undefined && userAlerts === undefined;
-    },
-    then: (schema) => schema.required(`${label} is required.`),
-    otherwise: (schema) => schema.notRequired(),
-  });
-
 export const UpdateLinodeAlertsSchema = object({
-  // Legacy numeric-threshold alerts. All fields are required to update legacy alerts, but not for ACLP alerts.
-  cpu: legacyAlertsFieldSchema('CPU Usage')
+  cpu: number()
+    .required('CPU Usage is required.')
     .min(0, 'Must be between 0 and 4800')
     .max(4800, 'Must be between 0 and 4800'),
-  network_in: legacyAlertsFieldSchema('Incoming Traffic'),
-  network_out: legacyAlertsFieldSchema('Outbound Traffic'),
-  transfer_quota: legacyAlertsFieldSchema('Transfer Quota'),
-  io: legacyAlertsFieldSchema('Disk I/O Rate'),
-  // ACLP alerts. All fields are required to update ACLP alerts, but not for legacy alerts.
+  network_in: number().required('Incoming Traffic is required.'),
+  network_out: number().required('Outbound Traffic is required.'),
+  transfer_quota: number().required('Transfer Quota is required.'),
+  io: number().required('Disk I/O Rate is required.'),
   system_alerts: array().of(number().defined()).notRequired(),
   user_alerts: array().of(number().defined()).notRequired(),
 });

@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { pickRandom, regions } from '@linode/utilities';
 import { http } from 'msw';
 
@@ -30,7 +31,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         quota_limit: 50,
         quota_name: 'Dedicated CPU',
         region_applied: region.id,
-        resource_metric: 'CPU',
+        resource_metric: QuotaResourceMetrics.CPU,
       })
     ),
     ...regions.map((region) =>
@@ -40,7 +41,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         quota_limit: 100,
         quota_name: 'Shared CPU',
         region_applied: region.id,
-        resource_metric: 'CPU',
+        resource_metric: QuotaResourceMetrics.CPU,
       })
     ),
     ...regions.map((region) =>
@@ -49,7 +50,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         quota_limit: 25,
         quota_name: 'GPU',
         region_applied: region.id,
-        resource_metric: 'GPU',
+        resource_metric: QuotaResourceMetrics.GPU,
       })
     ),
     ...regions.map((region) =>
@@ -58,7 +59,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         quota_limit: 10,
         quota_name: 'VPU',
         region_applied: region.id,
-        resource_metric: 'VPU',
+        resource_metric: QuotaResourceMetrics.VPU,
       })
     ),
     ...regions.map((region) =>
@@ -68,7 +69,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         quota_limit: 15,
         quota_name: 'High Memory',
         region_applied: region.id,
-        resource_metric: 'CPU',
+        resource_metric: QuotaResourceMetrics.CPU,
       })
     ),
   ],
@@ -78,7 +79,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
         quota_limit: 50,
         quota_name: 'Total number of Clusters',
         region_applied: region.id,
-        resource_metric: 'cluster',
+        resource_metric: QuotaResourceMetrics.CLUSTER,
       })
     ),
   ],
@@ -88,7 +89,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       endpoint_type: 'E0',
       quota_limit: 1_000_000_000_000_000, // a petabyte
       quota_name: 'Total Capacity',
-      resource_metric: 'byte',
+      resource_metric: QuotaResourceMetrics.BYTE,
       s3_endpoint: 'us-east-1.linodeobjects.com',
     }),
     quotaFactory.build({
@@ -97,7 +98,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       endpoint_type: 'E0',
       quota_limit: 100,
       quota_name: 'Number of Buckets',
-      resource_metric: 'bucket',
+      resource_metric: QuotaResourceMetrics.BUCKET,
       s3_endpoint: 'us-west-1.linodeobjects.com',
     }),
     quotaFactory.build({
@@ -105,7 +106,7 @@ const mockQuotas: Record<QuotaType, Quota[]> = {
       endpoint_type: 'E3',
       quota_limit: 10_000_000,
       quota_name: 'Number of Objects',
-      resource_metric: 'object',
+      resource_metric: QuotaResourceMetrics.OBJECT,
       s3_endpoint: 'br-gru-1.linodeobjects.com',
     }),
   ],

@@ -28,7 +28,7 @@ interface Props {
 
 export const DatabaseConnectionPoolRow = (props: Props) => {
   const { pool, onDelete, onEdit, databaseStatus } = props;
-  const editDisabled = databaseStatus === 'provisioning';
+  const editDisabled = databaseStatus !== 'active';
 
   const connectionPoolActions: Action[] = [
     {
@@ -36,7 +36,7 @@ export const DatabaseConnectionPoolRow = (props: Props) => {
       title: 'Edit',
       disabled: editDisabled,
       tooltip: editDisabled
-        ? 'Your Database Cluster is currently provisioning.'
+        ? 'You can only edit connection pools on active database clusters'
         : '',
     },
     {

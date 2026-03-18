@@ -121,6 +121,13 @@ export interface AlertRowPropsOptions {
   ) => void;
 }
 
+/**
+ * Service types whose parent component handles saving alerts externally.
+ * The internal Save button is hidden for these service types.
+ * Add a service type here to opt out of the built-in Save button.
+ */
+const SERVICES_WITH_EXTERNAL_SAVE: CloudPulseServiceType[] = ['linode'];
+
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
@@ -159,6 +166,12 @@ export const AlertInformationActionTable = (
   const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
   React.useEffect(() => {
+    // To send initial state of alerts through toggle handler function in edit mode.
+    // This ensures the service owner receives the initial enabled-alert state immediately
+    // when the component is ready, regardless of whether any toggle action is performed.
+    if (isEditMode && onToggleAlert) {
+      onToggleAlert(enabledAlerts);
+    }
     return () => {
       // Cleanup on unmount (For Edit flow)
       if (isEditMode && onToggleAlert) {
@@ -345,28 +358,37 @@ export const AlertInformationActionTable = (
                     handleSizeChange={handlePageSizeChange}
                     page={page}
                     pageSize={pageSize}
+                    sx={{
+                      // Prevents layout breaks and enables smooth collapse when table with this footer is used inside an Accordion.
+                      // Without this, the PaginationFooter causes layout shifts during the collapse transition.
+                      contain: 'layout',
+                    }}
                   />
                 </Box>
-                {isEditMode && (
-                  <Box>
-                    <Button
-                      buttonType="primary"
-                      data-qa-buttons="true"
-                      data-testid="save-alerts"
-                      disabled={!hasUnsavedChanges || isLoading}
-                      loading={isLoading}
-                      onClick={() => {
-                        if (showConfirmationDialog) {
-                          setIsDialogOpen(true);
-                        } else {
-                          handleConfirm(enabledAlerts);
-                        }
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                )}
+                {/* Show save button only in edit mode. Service types listed in
+                    SERVICES_WITH_EXTERNAL_SAVE manage their own save externally
+                    (e.g. linode handles it in the parent component). */}
+                {isEditMode &&
+                  !SERVICES_WITH_EXTERNAL_SAVE.includes(serviceType) && (
+                    <Box>
+                      <Button
+                        buttonType="primary"
+                        data-qa-buttons="true"
+                        data-testid="save-alerts"
+                        disabled={!hasUnsavedChanges || isLoading}
+                        loading={isLoading}
+                        onClick={() => {
+                          if (showConfirmationDialog) {
+                            setIsDialogOpen(true);
+                          } else {
+                            handleConfirm(enabledAlerts);
+                          }
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Box>
+                  )}
               </>
             )}
           </Paginate>
