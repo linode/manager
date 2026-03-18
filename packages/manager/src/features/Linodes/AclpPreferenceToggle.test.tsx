@@ -173,10 +173,10 @@ describe('AclpPreferenceToggle', () => {
   /**
    * ACLP Preference Toggle tests for Alerts
    */
-  it('should display the correct legacy mode banner and button text for Alerts when isAlertsBetaMode is false', () => {
+  it('should display the correct legacy mode banner and button text for Alerts when isAclpAlertsMode is false', () => {
     renderWithTheme(
       <AclpPreferenceToggle
-        isAlertsBetaMode={false}
+        isAclpAlertsMode={false}
         onAlertsModeChange={vi.fn()}
         type="alerts"
       />
@@ -194,10 +194,10 @@ describe('AclpPreferenceToggle', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should display the correct beta mode banner and button text for Alerts when isAlertsBetaMode is true', () => {
+  it('should display the correct beta mode banner and button text for Alerts when isAclpAlertsMode is true', () => {
     renderWithTheme(
       <AclpPreferenceToggle
-        isAlertsBetaMode={true}
+        isAclpAlertsMode={true}
         onAlertsModeChange={vi.fn()}
         type="alerts"
       />
@@ -220,7 +220,7 @@ describe('AclpPreferenceToggle', () => {
 
     renderWithTheme(
       <AclpPreferenceToggle
-        isAlertsBetaMode={false}
+        isAclpAlertsMode={false}
         onAlertsModeChange={mockSetIsAclpBetaLocal}
         type="alerts"
       />
@@ -240,7 +240,7 @@ describe('AclpPreferenceToggle', () => {
 
     renderWithTheme(
       <AclpPreferenceToggle
-        isAlertsBetaMode={true}
+        isAclpAlertsMode={true}
         onAlertsModeChange={mockSetIsAclpBetaLocal}
         type="alerts"
       />

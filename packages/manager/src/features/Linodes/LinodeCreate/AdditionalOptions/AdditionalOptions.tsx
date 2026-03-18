@@ -12,13 +12,13 @@ import { MaintenancePolicy } from './MaintenancePolicy';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 interface AdditionalOptionProps {
-  isAlertsBetaMode: boolean;
-  onAlertsModeChange: (isBeta: boolean) => void;
+  isAclpAlertsMode: boolean;
+  onAlertsModeChange: (isAclpMode: boolean) => void;
 }
 
 export const AdditionalOptions = ({
   onAlertsModeChange,
-  isAlertsBetaMode,
+  isAclpAlertsMode,
 }: AdditionalOptionProps) => {
   const { aclpServices } = useFlags();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
@@ -53,7 +53,7 @@ export const AdditionalOptions = ({
       <Stack divider={<Divider />}>
         {showAlerts && (
           <Alerts
-            isAlertsBetaMode={isAlertsBetaMode}
+            isAclpAlertsMode={isAclpAlertsMode}
             onAlertsModeChange={onAlertsModeChange}
           />
         )}
