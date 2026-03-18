@@ -7,23 +7,33 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AclpPreferenceToggle } from './AclpPreferenceToggle';
 import {
+  ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT,
   ALERTS_BETA_MODE_BANNER_TEXT,
-  ALERTS_BETA_MODE_BUTTON_TEXT,
-  ALERTS_LEGACY_MODE_BANNER_TEXT,
-  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_NEW_PHASE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_NEW_PHASE_BUTTON_TEXT,
+  ALERTS_NEW_MODE_BANNER_TEXT,
+  METRICS_BETA_AND_NEW_MODE_BUTTON_TEXT,
   METRICS_BETA_MODE_BANNER_TEXT,
-  METRICS_BETA_MODE_BUTTON_TEXT,
-  METRICS_LEGACY_MODE_BANNER_TEXT,
-  METRICS_LEGACY_MODE_BUTTON_TEXT,
+  METRICS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+  METRICS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
+  METRICS_LEGACY_MODE_NEW_PHASE_BANNER_TEXT,
+  METRICS_LEGACY_MODE_NEW_PHASE_BUTTON_TEXT,
+  METRICS_NEW_MODE_BANNER_TEXT,
 } from './constants';
 
 import type { AclpPreferenceToggleType } from './AclpPreferenceToggle';
 
 interface ExpectedAclpPreferenceItem {
-  betaModeBannertext: string;
+  betaModeBannerText: string;
   betaModeButtonText: string;
-  legacyModeBannerText: string;
-  legacyModeButtonText: string;
+  legacyModeBetaPhaseBannerText: string;
+  legacyModeBetaPhaseButtonText: string;
+  legacyModeNewPhaseBannerText: string;
+  legacyModeNewPhaseButtonText: string;
+  newModeBannerText: string;
+  newModeButtonText: string;
   preference: boolean;
 }
 
@@ -33,17 +43,25 @@ const expectedAclpPreferences: Record<
 > = {
   metrics: {
     preference: true,
-    legacyModeBannerText: METRICS_LEGACY_MODE_BANNER_TEXT,
-    betaModeBannertext: METRICS_BETA_MODE_BANNER_TEXT,
-    legacyModeButtonText: METRICS_LEGACY_MODE_BUTTON_TEXT,
-    betaModeButtonText: METRICS_BETA_MODE_BUTTON_TEXT,
+    legacyModeBetaPhaseBannerText: METRICS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+    legacyModeNewPhaseBannerText: METRICS_LEGACY_MODE_NEW_PHASE_BANNER_TEXT,
+    betaModeBannerText: METRICS_BETA_MODE_BANNER_TEXT,
+    newModeBannerText: METRICS_NEW_MODE_BANNER_TEXT,
+    legacyModeBetaPhaseButtonText: METRICS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
+    legacyModeNewPhaseButtonText: METRICS_LEGACY_MODE_NEW_PHASE_BUTTON_TEXT,
+    betaModeButtonText: METRICS_BETA_AND_NEW_MODE_BUTTON_TEXT,
+    newModeButtonText: METRICS_BETA_AND_NEW_MODE_BUTTON_TEXT,
   },
   alerts: {
     preference: true,
-    legacyModeBannerText: ALERTS_LEGACY_MODE_BANNER_TEXT,
-    betaModeBannertext: ALERTS_BETA_MODE_BANNER_TEXT,
-    legacyModeButtonText: ALERTS_LEGACY_MODE_BUTTON_TEXT,
-    betaModeButtonText: ALERTS_BETA_MODE_BUTTON_TEXT,
+    legacyModeBetaPhaseBannerText: ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+    legacyModeNewPhaseBannerText: ALERTS_LEGACY_MODE_NEW_PHASE_BANNER_TEXT,
+    betaModeBannerText: ALERTS_BETA_MODE_BANNER_TEXT,
+    legacyModeBetaPhaseButtonText: ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
+    legacyModeNewPhaseButtonText: ALERTS_LEGACY_MODE_NEW_PHASE_BUTTON_TEXT,
+    betaModeButtonText: ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT,
+    newModeBannerText: ALERTS_NEW_MODE_BANNER_TEXT,
+    newModeButtonText: ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT,
   },
 };
 
@@ -62,6 +80,25 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('AclpPreferenceToggle', () => {
+  const metricsFlags = {
+    aclp: {
+      beta: true,
+      enabled: true,
+      new: false,
+    },
+  };
+
+  const alertingFlags = {
+    aclpAlerting: {
+      accountAlertLimit: 10,
+      accountMetricLimit: 10,
+      alertDefinitions: true,
+      beta: true,
+      notificationChannels: false,
+      recentActivity: false,
+    },
+  };
+
   /**
    * ACLP Preference Toggle tests for Metrics
    */
@@ -80,133 +117,217 @@ describe('AclpPreferenceToggle', () => {
     expect(skeleton).toBeInTheDocument();
   });
 
-  it('should display the correct legacy mode banner and button text for Metrics when isAclpMetricsBeta preference is disabled', () => {
+  it('should display the correct legacy mode banner and button text IN BETA phase for Metrics when isAclpMetricsMode preference is disabled', () => {
     queryMocks.usePreferences.mockReturnValue({
       data: false,
       isLoading: false,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
+      flags: metricsFlags,
+    });
 
     // Check if the banner content and button text is correct in legacy mode
     const typography = screen.getByTestId('metrics-preference-banner-text');
     expect(typography).toHaveTextContent(
-      expectedAclpPreferences.metrics.legacyModeBannerText
+      expectedAclpPreferences.metrics.legacyModeBetaPhaseBannerText
     );
 
     const expectedLegacyModeButtonText = screen.getByText(
-      expectedAclpPreferences.metrics.legacyModeButtonText
+      expectedAclpPreferences.metrics.legacyModeBetaPhaseButtonText
     );
     expect(expectedLegacyModeButtonText).toBeInTheDocument();
   });
 
-  it('should display the correct beta mode banner and button text for Metrics when isAclpMetricsBeta preference is enabled', () => {
+  it('should display the correct legacy mode banner and button text IN NEW phase for Metrics when isAclpMetricsMode preference is disabled', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: false,
+      isLoading: false,
+    });
+
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
+      flags: { aclp: { ...metricsFlags.aclp, beta: false, new: true } },
+    });
+
+    // Check if the banner content and button text is correct in legacy mode
+    const typography = screen.getByTestId('metrics-preference-banner-text');
+    expect(typography).toHaveTextContent(
+      expectedAclpPreferences.metrics.legacyModeNewPhaseBannerText
+    );
+
+    const expectedLegacyModeButtonText = screen.getByText(
+      expectedAclpPreferences.metrics.legacyModeNewPhaseButtonText
+    );
+    expect(expectedLegacyModeButtonText).toBeInTheDocument();
+  });
+
+  it('should display the correct ACLP beta phase mode banner and button text for Metrics when isAclpMetricsMode preference is enabled', () => {
     queryMocks.usePreferences.mockReturnValue({
       data: expectedAclpPreferences.metrics.preference,
       isLoading: false,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
+      flags: metricsFlags,
+    });
 
-    // Check if the banner content and button text is correct in beta mode
+    // Check if the banner content and button text is correct in ACLP beta mode
     const typography = screen.getByTestId('metrics-preference-banner-text');
     expect(typography).toHaveTextContent(
-      expectedAclpPreferences.metrics.betaModeBannertext
+      expectedAclpPreferences.metrics.betaModeBannerText
     );
 
-    const expectedLegacyModeButtonText = screen.getByText(
+    const expectedBetaModeButtonText = screen.getByText(
       expectedAclpPreferences.metrics.betaModeButtonText
     );
-    expect(expectedLegacyModeButtonText).toBeInTheDocument();
+    expect(expectedBetaModeButtonText).toBeInTheDocument();
   });
 
-  it('should update ACLP Metrics preference to beta mode when toggling from legacy mode', async () => {
+  it('should display the correct ACLP NEW phase mode banner and button text for Metrics when isAclpMetricsMode preference is enabled', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: expectedAclpPreferences.metrics.preference,
+      isLoading: false,
+    });
+
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
+      flags: { aclp: { ...metricsFlags.aclp, beta: false, new: true } },
+    });
+
+    // Check if the banner content and button text is correct in ACLP new phase mode
+    const typography = screen.getByTestId('metrics-preference-banner-text');
+    expect(typography).toHaveTextContent(
+      expectedAclpPreferences.metrics.newModeBannerText
+    );
+
+    const expectedNewModeButtonText = screen.getByText(
+      expectedAclpPreferences.metrics.newModeButtonText
+    );
+    expect(expectedNewModeButtonText).toBeInTheDocument();
+  });
+
+  it('should update ACLP Metrics preference to aclp mode when toggling from legacy mode', async () => {
     queryMocks.usePreferences.mockReturnValue({
       data: false,
       isLoading: false,
     });
     const mockUpdatePreferences = vi.fn().mockResolvedValue({
-      isAclpMetricsBeta: false,
+      isAclpMetricsMode: false,
     });
     queryMocks.useMutatePreferences.mockReturnValue({
       mutateAsync: mockUpdatePreferences,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
+      flags: metricsFlags,
+    });
 
-    // Click the button to switch from legacy to beta
+    // Click the button to switch from legacy to aclp
     const button = screen.getByText(
-      expectedAclpPreferences.metrics.legacyModeButtonText
+      expectedAclpPreferences.metrics.legacyModeBetaPhaseButtonText
     );
     await userEvent.click(button);
 
     expect(mockUpdatePreferences).toHaveBeenCalledWith({
-      isAclpMetricsBeta: true,
+      isAclpMetricsMode: true,
     });
   });
 
-  it('should update ACLP Metrics preference to legacy mode when toggling from beta mode', async () => {
+  it('should update ACLP Metrics preference to legacy mode when toggling from aclp mode', async () => {
     queryMocks.usePreferences.mockReturnValue({
       data: expectedAclpPreferences.metrics.preference,
       isLoading: false,
     });
     const mockUpdatePreferences = vi.fn().mockResolvedValue({
-      isAclpMetricsBeta: true,
+      isAclpMetricsMode: true,
     });
     queryMocks.useMutatePreferences.mockReturnValue({
       mutateAsync: mockUpdatePreferences,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
+      flags: metricsFlags,
+    });
 
-    // Click the button to switch from beta to legacy
+    // Click the button to switch from aclp to legacy
     const button = screen.getByText(
       expectedAclpPreferences.metrics.betaModeButtonText
     );
     await userEvent.click(button);
 
     expect(mockUpdatePreferences).toHaveBeenCalledWith({
-      isAclpMetricsBeta: false,
+      isAclpMetricsMode: false,
     });
   });
 
   /**
    * ACLP Preference Toggle tests for Alerts
    */
-  it('should display the correct legacy mode banner and button text for Alerts when isAclpAlertsMode is false', () => {
+  it('should display the correct legacy mode banner and button text IN BETA phase for Alerts when isAclpAlertsMode is false', () => {
     renderWithTheme(
       <AclpPreferenceToggle
         isAclpAlertsMode={false}
         onAlertsModeChange={vi.fn()}
         type="alerts"
-      />
+      />,
+      { flags: alertingFlags }
     );
 
     // Check if the banner content and button text is correct in legacy mode
     const typography = screen.getByTestId('alerts-preference-banner-text');
     expect(typography).toHaveTextContent(
-      expectedAclpPreferences.alerts.legacyModeBannerText
+      expectedAclpPreferences.alerts.legacyModeBetaPhaseBannerText
     );
 
     const button = screen.getByText(
-      expectedAclpPreferences.alerts.legacyModeButtonText
+      expectedAclpPreferences.alerts.legacyModeBetaPhaseButtonText
     );
     expect(button).toBeInTheDocument();
   });
 
-  it('should display the correct beta mode banner and button text for Alerts when isAclpAlertsMode is true', () => {
+  it('should display the correct legacy mode banner and button text IN NEW phase for Alerts when isAclpAlertsMode is false', () => {
+    renderWithTheme(
+      <AclpPreferenceToggle
+        isAclpAlertsMode={false}
+        onAlertsModeChange={vi.fn()}
+        type="alerts"
+      />,
+      {
+        flags: {
+          aclpAlerting: {
+            ...alertingFlags.aclpAlerting,
+            beta: false,
+            new: true,
+          },
+        },
+      }
+    );
+
+    // Check if the banner content and button text is correct in legacy mode
+    const typography = screen.getByTestId('alerts-preference-banner-text');
+    expect(typography).toHaveTextContent(
+      expectedAclpPreferences.alerts.legacyModeNewPhaseBannerText
+    );
+
+    const button = screen.getByText(
+      expectedAclpPreferences.alerts.legacyModeNewPhaseButtonText
+    );
+    expect(button).toBeInTheDocument();
+  });
+
+  it('should display the correct ACLP beta phase mode banner and button text for Alerts when isAclpAlertsMode is true', () => {
     renderWithTheme(
       <AclpPreferenceToggle
         isAclpAlertsMode={true}
         onAlertsModeChange={vi.fn()}
         type="alerts"
-      />
+      />,
+      { flags: alertingFlags }
     );
 
-    // Check if the banner content and button text is correct in beta mode
+    // Check if the banner content and button text is correct in aclp beta mode
     const typography = screen.getByTestId('alerts-preference-banner-text');
     expect(typography).toHaveTextContent(
-      expectedAclpPreferences.alerts.betaModeBannertext
+      expectedAclpPreferences.alerts.betaModeBannerText
     );
 
     const button = screen.getByText(
@@ -215,43 +336,75 @@ describe('AclpPreferenceToggle', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should call onAlertsModeChange with true when switching from legacy to beta mode', async () => {
-    const mockSetIsAclpBetaLocal = vi.fn();
+  it('should display the correct ACLP NEW phase mode banner and button text for Alerts when isAclpAlertsMode is true', () => {
+    renderWithTheme(
+      <AclpPreferenceToggle
+        isAclpAlertsMode={true}
+        onAlertsModeChange={vi.fn()}
+        type="alerts"
+      />,
+      {
+        flags: {
+          aclpAlerting: {
+            ...alertingFlags.aclpAlerting,
+            beta: false,
+            new: true,
+          },
+        },
+      }
+    );
+
+    // Check if the banner content and button text is correct in aclp new mode
+    const typography = screen.getByTestId('alerts-preference-banner-text');
+    expect(typography).toHaveTextContent(
+      expectedAclpPreferences.alerts.newModeBannerText
+    );
+
+    const button = screen.getByText(
+      expectedAclpPreferences.alerts.newModeButtonText
+    );
+    expect(button).toBeInTheDocument();
+  });
+
+  it('should call onAlertsModeChange with true when switching from legacy to aclp mode', async () => {
+    const mockSetIsAclpModeLocal = vi.fn();
 
     renderWithTheme(
       <AclpPreferenceToggle
         isAclpAlertsMode={false}
-        onAlertsModeChange={mockSetIsAclpBetaLocal}
+        onAlertsModeChange={mockSetIsAclpModeLocal}
         type="alerts"
-      />
+      />,
+      { flags: alertingFlags }
     );
 
-    // Click the button to switch from legacy to beta
+    // Click the button to switch from legacy to aclp
     const button = screen.getByText(
-      expectedAclpPreferences.alerts.legacyModeButtonText
+      expectedAclpPreferences.alerts.legacyModeBetaPhaseButtonText
     );
     await userEvent.click(button);
 
-    expect(mockSetIsAclpBetaLocal).toHaveBeenCalledWith(true);
+    expect(mockSetIsAclpModeLocal).toHaveBeenCalledWith(true);
   });
 
-  it('should call onAlertsModeChange with false when switching from beta to legacy mode', async () => {
-    const mockSetIsAclpBetaLocal = vi.fn();
+  it('should call onAlertsModeChange with false when switching from aclp to legacy mode', async () => {
+    const mockSetIsAclpModeLocal = vi.fn();
 
     renderWithTheme(
       <AclpPreferenceToggle
         isAclpAlertsMode={true}
-        onAlertsModeChange={mockSetIsAclpBetaLocal}
+        onAlertsModeChange={mockSetIsAclpModeLocal}
         type="alerts"
-      />
+      />,
+      { flags: alertingFlags }
     );
 
-    // Click the button to switch from beta to legacy
+    // Click the button to switch from aclp to legacy
     const button = screen.getByText(
       expectedAclpPreferences.alerts.betaModeButtonText
     );
     await userEvent.click(button);
 
-    expect(mockSetIsAclpBetaLocal).toHaveBeenCalledWith(false);
+    expect(mockSetIsAclpModeLocal).toHaveBeenCalledWith(false);
   });
 });
