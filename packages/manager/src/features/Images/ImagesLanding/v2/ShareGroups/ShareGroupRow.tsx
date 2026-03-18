@@ -32,7 +32,7 @@ export const ShareGroupRow = (props: Props) => {
   const deleteButtonDisabled = !!members_count;
   return (
     <TableRow data-qa-sharegroup-row={id} key={id}>
-      <TableCell>
+      <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
         <LinkButton onClick={() => {}}>{label}</LinkButton>
       </TableCell>
       <TableCell>{description}</TableCell>

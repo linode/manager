@@ -132,7 +132,7 @@ export const ShareGroupsView = (props: Props) => {
             mb: 2,
           },
         }}
-        data-pendo-id="share-groups-search"
+        data-pendo-id="Images Groups Owned-Search"
         errorText={searchParseError?.message}
         hideLabel
         isSearching={shareGroupsIsFetching}

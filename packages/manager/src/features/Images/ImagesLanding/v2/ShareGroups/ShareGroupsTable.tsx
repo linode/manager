@@ -102,6 +102,7 @@ export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
               {headerProps.docsLink && (
                 <DocsLink
                   analyticsLabel={headerProps.title}
+                  data-pendo-id={`${eventCategory}-docs-link`}
                   href={headerProps.docsLink.href}
                   label={headerProps.docsLink.label}
                 />

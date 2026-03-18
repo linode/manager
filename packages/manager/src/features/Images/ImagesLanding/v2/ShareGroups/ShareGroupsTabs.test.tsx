@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ShareGroupsTabs } from './ShareGroupsTabs';
+import { ShareGroupsTabs } from './ShareGroupsLanding';
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),

@@ -19,7 +19,7 @@ export interface ShareGroupsViewTableColConfig {
     label: string;
   };
 }
-export interface ShareGroupsTabConfig {
+export interface ShareGroupsTabsConfig {
   buttonProps?: {
     buttonText: string;
     disabledToolTipText?: string;
@@ -44,24 +44,27 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
   {
     type: 'owned-groups',
     title: 'Owned groups',
+    pendoId: 'Images Owned-Groups tab',
   },
   {
     type: 'joined-groups',
     title: 'Joined groups',
+    pendoId: 'Images Joined-Groups tab',
   },
   {
     type: 'membership-requests',
     title: 'My membership requests',
+    pendoId: 'Images Membership-Requests tab',
   },
 ];
 
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Group', sortableProps: { label: 'label' } },
   { name: 'Description', sortableProps: { label: 'description' } },
-  { name: '# of members', sortableProps: { label: 'member_count' } },
+  { name: '# of members', sortableProps: { label: 'members_count' } },
   {
     name: '# of images',
-    sortableProps: { label: 'image_count' },
+    sortableProps: { label: 'images_count' },
     hidden: 'smDown',
   },
   { name: 'Created', sortableProps: { label: 'created' }, hidden: 'mdDown' },
@@ -74,7 +77,7 @@ const JOINED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Membership Status', sortableProps: { label: 'status' } },
   {
     name: 'Status Changed',
-    sortableProps: { label: 'created' },
+    sortableProps: { label: 'status_changed' },
     hidden: 'smDown',
   },
 ];
@@ -87,79 +90,81 @@ const MEMBERSHIP_REQUESTS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Expiry', sortableProps: { label: 'expiry' }, hidden: 'smDown' },
 ];
 
-export const SHAREGROUPS_CONFIG: Record<ShareGroupsType, ShareGroupsTabConfig> =
-  {
-    'owned-groups': {
-      title: 'Owned groups',
-      description: (
-        <>
-          These are share groups you own. Other group members can deploy compute
-          instances from images shared within these groups.
-          <br />
-          Shared images are not additionally billed on top of existing original
-          and replicated images.
-        </>
-      ),
-      docsLink: {
-        href: `https://techdocs.akamai.com/cloud-computing/docs/image-sharing`,
-        label: 'Image sharing',
-      },
-      columns: OWNED_GROUPS_TABLE_COLUMNS,
-      emptyMessage: {
-        main: 'No Share groups to display',
-        instruction:
-          'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
-      },
-      eventCategory: 'shareGroups',
-      orderByDefault: 'label',
-      orderDefault: 'asc',
-      preferenceKey: 'shareGroupsOwned',
-      buttonProps: {
-        buttonText: 'Create Share Group',
-        navigateTo: '/images/share-groups/create',
-        disabledToolTipText: getRestrictedResourceText({
-          action: 'create',
-          isSingular: false,
-          resourceType: 'Images',
-        }),
-      },
+export const SHAREGROUPS_CONFIG: Record<
+  ShareGroupsType,
+  ShareGroupsTabsConfig
+> = {
+  'owned-groups': {
+    title: 'Owned groups',
+    description: (
+      <>
+        These are share groups you own. Other group members can deploy compute
+        instances from images shared within these groups.
+        <br />
+        Shared images are not additionally billed on top of existing original
+        and replicated images.
+      </>
+    ),
+    docsLink: {
+      href: `https://techdocs.akamai.com/cloud-computing/docs/image-sharing`,
+      label: 'Image sharing',
     },
-    'joined-groups': {
-      title: 'Joined groups',
-      description: (
-        <>
-          Manage your share group memberships. Groups you leave or are revoked
-          from will be removed from this list after one month.
-        </>
-      ),
-      columns: JOINED_GROUPS_TABLE_COLUMNS,
-      emptyMessage: {
-        main: 'No share groups to display',
-        instruction:
-          "Go to 'My membership requests' to make a request and join a group",
-      },
-      eventCategory: 'shareGroups',
-      orderByDefault: 'label',
-      orderDefault: 'asc',
-      preferenceKey: 'shareGroupsJoined',
+    columns: OWNED_GROUPS_TABLE_COLUMNS,
+    emptyMessage: {
+      main: 'No Share groups to display',
+      instruction:
+        'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
     },
-    'membership-requests': {
-      title: 'Membership requests',
-      description: (
-        <>
-          Manage your membership and track your share group membership requests.
-          We remove expired or cancelled requests after two weeks.
-        </>
-      ),
-      columns: MEMBERSHIP_REQUESTS_TABLE_COLUMNS,
-      emptyMessage: {
-        main: 'No membership requests to display',
-        instruction:
-          "Click 'Request Membership' to create your first membership request",
-      },
-      eventCategory: 'shareGroups',
-      orderByDefault: 'label',
-      orderDefault: 'asc',
-      preferenceKey: 'shareGroupsMembershipRequests',
+    eventCategory: 'shareGroups',
+    orderByDefault: 'label',
+    orderDefault: 'asc',
+    preferenceKey: 'owned-sharegroups',
+    buttonProps: {
+      buttonText: 'Create Share Group',
+      navigateTo: '/images/share-groups/create',
+      disabledToolTipText: getRestrictedResourceText({
+        action: 'create',
+        isSingular: false,
+        resourceType: 'Images',
+      }),
     },
-  };
+  },
+  'joined-groups': {
+    title: 'Joined groups',
+    description: (
+      <>
+        Manage your share group memberships. Groups you leave or are revoked
+        from will be removed from this list after one month.
+      </>
+    ),
+    columns: JOINED_GROUPS_TABLE_COLUMNS,
+    emptyMessage: {
+      main: 'No share groups to display',
+      instruction:
+        "Go to 'My membership requests' to make a request and join a group",
+    },
+    eventCategory: 'shareGroups',
+    orderByDefault: 'label',
+    orderDefault: 'asc',
+    preferenceKey: 'joined-sharegroups',
+  },
+  'membership-requests': {
+    title: 'Membership requests',
+    description: (
+      <>
+        Manage your membership and track your share group membership requests.
+        We remove expired or cancelled requests after two weeks.
+      </>
+    ),
+    columns: MEMBERSHIP_REQUESTS_TABLE_COLUMNS,
+    emptyMessage: {
+      main: 'No membership requests to display',
+      instruction:
+        "Click 'Request Membership' to create your first membership request",
+    },
+    eventCategory: 'shareGroups',
+    orderByDefault: 'label',
+    orderDefault: 'asc',
+    preferenceKey: 'membership-requests',
+  },
+};

@@ -40,7 +40,7 @@ export const ShareGroupsTabs = () => {
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
           {subTabs.map((tab) => (
-            <Tab key={`images-${tab.type}`}>
+            <Tab data-pendo-id={tab.pendoId} key={`images-${tab.type}`}>
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
           ))}

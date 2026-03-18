@@ -16,18 +16,21 @@ export const ShareGroupActionMenu = (props: Props) => {
       onClick: () => {},
       disabled: false,
       hidden: false,
+      pendoId: 'edit-group-details',
     },
     {
       title: 'Add Images',
       onClick: () => {},
       disabled: false,
       hidden: false,
+      pendoId: 'add-images',
     },
     {
       title: 'Add Members',
       onClick: () => {},
       disabled: false,
       hidden: false,
+      pendoId: 'add-members',
     },
     {
       title: 'Delete',
@@ -37,6 +40,7 @@ export const ShareGroupActionMenu = (props: Props) => {
       tooltip: deleteButtonDisabled
         ? 'Before deleting this share group, revoke access for all members first.'
         : undefined,
+      pendoId: 'delete-group',
     },
   ];
 
@@ -44,7 +48,7 @@ export const ShareGroupActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel="Action menu for share group"
-      data-pendo-id="share-groups-action-menu"
+      data-pendo-id="Images Groups Owned-Group Action menu"
     />
   );
 };
