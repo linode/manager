@@ -41,22 +41,25 @@ const preferenceConfig: Record<
   metrics: {
     preferenceKey: 'metrics-preference',
     getButtonText: (isAclpMode, isAclpBeta) => {
-      const aclpText = isAclpBeta ? 'Try Metrics (Beta)' : 'Try Metrics (New)';
+      const aclpText = isAclpBeta
+        ? 'Try the Metrics (Beta)'
+        : 'Try the Metrics (New)';
       return isAclpMode ? 'Switch to legacy Metrics' : aclpText;
     },
     getBannerText: (isAclpMode, isAclpBeta) => {
-      const aclpText = isAclpBeta ? 'Metrics (Beta)' : 'Metrics (New)';
+      const labelInAclp = isAclpBeta ? 'Metrics (Beta)' : 'Metrics (New)';
+      const labelOutsideAclp = isAclpBeta ? 'Metrics (Beta)' : 'Metrics';
 
       return isAclpMode ? (
         <span>
-          Welcome to <strong>{aclpText}</strong> with more options and greater
-          flexibility for better data analysis.
+          Welcome to <strong>{labelInAclp}</strong> with more options and
+          greater flexibility for better data analysis.
         </span>
       ) : (
         <span>
-          Try the new <strong>{aclpText}</strong> with more options and greater
-          flexibility for better data analysis. You can switch back to the
-          current view at any time.
+          Try the new <strong>{labelOutsideAclp}</strong> with more options and
+          greater flexibility for better data analysis. You can switch back to
+          the current view at any time.
         </span>
       );
     },
