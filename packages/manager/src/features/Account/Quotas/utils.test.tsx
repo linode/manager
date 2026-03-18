@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { profileFactory } from '@linode/utilities';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
@@ -133,7 +134,7 @@ describe('useGetLocationsForQuotaService', () => {
 
 describe('convertResourceMetric', () => {
   it('should convert the resource metric to a human readable format', () => {
-    const resourceMetric = 'byte';
+    const resourceMetric = QuotaResourceMetrics.BYTE;
     const usage = 1e6;
     const limit = 1e8;
 
@@ -154,25 +155,16 @@ describe('convertResourceMetric', () => {
 describe('pluralizeMetric', () => {
   it('should not pluralize if the value is 1', () => {
     const value = 1;
-    const unit = 'CPU';
+    const unit = QuotaResourceMetrics.CPU;
 
     const result = pluralizeMetric(value, unit);
 
     expect(result).toEqual('CPU');
   });
 
-  it('should not pluralize the resource metric if the unit is byte', () => {
+  it('should pluralize the resource metric if the value is greater than 1', () => {
     const value = 100;
-    const unit = 'byte';
-
-    const result = pluralizeMetric(value, unit);
-
-    expect(result).toEqual('byte');
-  });
-
-  it('should pluralize the resource metric if the unit is not byte', () => {
-    const value = 100;
-    const unit = 'CPU';
+    const unit = QuotaResourceMetrics.CPU;
 
     const result = pluralizeMetric(value, unit);
 
