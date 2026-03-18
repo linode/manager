@@ -5,7 +5,7 @@ import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
-import { IMAGE_SELECT_TABLE_PENDO_IDS } from 'src/components/ImageSelect/constants';
+import { IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
@@ -97,10 +97,10 @@ export const Images = () => {
         <Typography variant="h2">Choose an Image</Typography>
         {isPrivateImageSharingEnabled ? (
           <ImageSelectTable
-            currentRoute={'/linodes/create/images'}
+            currentRoute="/linodes/create/images"
             errorText={fieldState.error?.message}
             onSelect={onChange}
-            pendoIDs={IMAGE_SELECT_TABLE_PENDO_IDS}
+            pendoIDs={IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS}
             selectedImageId={field.value}
           />
         ) : (
