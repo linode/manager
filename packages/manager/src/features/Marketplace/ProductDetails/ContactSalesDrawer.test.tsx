@@ -7,7 +7,7 @@ import {
   renderWithThemeAndHookFormContext,
 } from 'src/utilities/testHelpers';
 
-import { ContactSalesDrawer } from './ContactSalesDrawer';
+import { cleanUpPayload, ContactSalesDrawer } from './ContactSalesDrawer';
 
 import type { ContactSalesDrawerProps } from './ContactSalesDrawer';
 
@@ -31,6 +31,49 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('ContactSalesDrawer', () => {
+  describe('cleanUpPayload', () => {
+    const basePayload = {
+      country_code: 'US',
+      email: 'user@akamai.com',
+      name: 'My User',
+      partner_name: 'Linode',
+      phone: '5555555555',
+      phone_country_code: '+1',
+      product_name: 'Linode Kubernetes Engine',
+      tc_consent_given: true,
+    };
+
+    it('omits blank optional fields and placeholder additional email rows', () => {
+      const payload = {
+        ...basePayload,
+        account_executive_email: '   ',
+        additional_emails: ['   ', ''],
+        comments: '',
+        company_name: '  ',
+      };
+
+      expect(cleanUpPayload(payload)).toEqual(basePayload);
+    });
+
+    it('trims optional string fields and keeps non-empty additional emails', () => {
+      const payload = {
+        ...basePayload,
+        account_executive_email: ' seller@akamai.com ',
+        additional_emails: [' first@akamai.com ', ''],
+        comments: ' interested in pricing ',
+        company_name: ' Example Corp ',
+      };
+
+      expect(cleanUpPayload(payload)).toEqual({
+        ...basePayload,
+        account_executive_email: 'seller@akamai.com',
+        additional_emails: ['first@akamai.com'],
+        comments: 'interested in pricing',
+        company_name: 'Example Corp',
+      });
+    });
+  });
+
   it('should render the Contact Sales Drawer with the correct title and description', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <ContactSalesDrawer {...mockProps} />,
@@ -279,7 +322,7 @@ describe('ContactSalesDrawer', () => {
     fireEvent.blur(akamaiEmailInput);
 
     await waitFor(() => {
-      expect(queryByText('Must be an akamai email address.')).toBeVisible();
+      expect(queryByText('Must be an Akamai email address.')).toBeVisible();
     });
   });
 
