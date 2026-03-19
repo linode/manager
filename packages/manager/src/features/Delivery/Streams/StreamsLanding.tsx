@@ -74,6 +74,7 @@ export const StreamsLanding = () => {
     data: streams,
     isLoading,
     error,
+    isFetching,
   } = useStreamsQuery(
     {
       page: pagination.page,
@@ -112,6 +113,10 @@ export const StreamsLanding = () => {
     return (
       <ErrorState errorText="There was an error retrieving your streams. Please reload and try again." />
     );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
   }
 
   if (streams?.results === 0 && !search?.status && !search?.label) {
@@ -186,7 +191,7 @@ export const StreamsLanding = () => {
         selectList={streamStatusOptions}
         selectValue={search?.status}
       />
-      {isLoading ? (
+      {isFetching ? (
         <CircleProgress />
       ) : (
         <>
