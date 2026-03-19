@@ -67,6 +67,7 @@ import { UserData } from './UserData/UserData';
 import {
   captureLinodeCreateAnalyticsEvent,
   defaultValues,
+  EMPTY_ACLP_ALERTS,
   getLinodeCreatePayload,
   useHandleLinodeCreateAnalyticsFormError,
 } from './utilities';
@@ -113,6 +114,20 @@ export const LinodeCreate = () => {
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
+  const handleAlertsModeChange = React.useCallback(
+    (isBeta: boolean) => {
+      // Reset alerts to empty defaults when entering ACLP mode so that
+      // previously selected alerts don't persist across mode toggles. While in
+      // legacy mode the alerts field is ignored by the payload builder, so
+      // there is no need to clear it when switching back to legacy mode.
+      if (isBeta) {
+        form.setValue('alerts', EMPTY_ACLP_ALERTS);
+      }
+      setIsAclpAlertsBetaCreateFlow(isBeta);
+    },
+    [form]
+  );
+
   const navigate = useNavigate();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
@@ -129,7 +144,7 @@ export const LinodeCreate = () => {
       to: '/linodes/create/os',
     },
     {
-      title: 'Marketplace',
+      title: 'Quick Deploy Apps',
       to: '/linodes/create/marketplace',
     },
     {
@@ -320,7 +335,7 @@ export const LinodeCreate = () => {
           )}
           <AdditionalOptions
             isAlertsBetaMode={isAclpAlertsBetaCreateFlow}
-            onAlertsModeChange={setIsAclpAlertsBetaCreateFlow}
+            onAlertsModeChange={handleAlertsModeChange}
           />
           <Addons />
           <EUAgreement />

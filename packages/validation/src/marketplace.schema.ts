@@ -37,7 +37,11 @@ export const createPartnerReferralSchema = object({
     ),
   company_name: string().optional(),
   account_executive_email: string()
-    .matches(AKAMAI_EMAIL_VALIDATION_REGEX, `Must be an akamai email address.`)
+    .trim()
+    .matches(AKAMAI_EMAIL_VALIDATION_REGEX, {
+      excludeEmptyString: true,
+      message: 'Must be an Akamai email address.',
+    })
     .optional(),
   comments: string()
     .optional()

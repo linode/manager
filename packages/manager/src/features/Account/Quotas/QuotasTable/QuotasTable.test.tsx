@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -131,7 +132,7 @@ describe('QuotasTable', () => {
             'Current total ingress bandwidth per account, per endpoint',
           quota_limit: 1250000000,
           quota_type: 'obj-total-ingress-throughput',
-          resource_metric: 'byte_per_second',
+          resource_metric: QuotaResourceMetrics.BYTE_PER_SECOND,
           has_usage: false,
         }),
       ],

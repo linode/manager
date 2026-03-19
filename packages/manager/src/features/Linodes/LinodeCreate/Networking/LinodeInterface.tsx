@@ -2,6 +2,7 @@ import { Notice, Stack } from '@linode/ui';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceGeneration } from './InterfaceGeneration';
 import { InterfaceType } from './InterfaceType';
@@ -30,6 +31,12 @@ export const LinodeInterface = ({ index }: Props) => {
     name: `linodeInterfaces.${index}.purpose`,
   });
 
+  const createType = useGetLinodeCreateType();
+  const isCreatingFromBackup = createType === 'Backups';
+
+  const disableInterfaceType =
+    isCreatingFromBackup && interfaceGeneration !== 'linode';
+
   return (
     <Stack spacing={2}>
       {errors.linodeInterfaces?.[index]?.message && (
@@ -44,9 +51,13 @@ export const LinodeInterface = ({ index }: Props) => {
           variant="error"
         />
       )}
-      <InterfaceType index={index} />
-      {interfaceType === 'vlan' && <VLAN index={index} />}
-      {interfaceType === 'vpc' && <VPC index={index} />}
+      <InterfaceType disabled={disableInterfaceType} index={index} />
+      {interfaceType === 'vlan' && !disableInterfaceType && (
+        <VLAN index={index} />
+      )}
+      {interfaceType === 'vpc' && !disableInterfaceType && (
+        <VPC index={index} />
+      )}
       <InterfaceGeneration />
       {interfaceGeneration === 'linode' && interfaceType !== 'vlan' && (
         <InterfaceFirewall index={index} />
