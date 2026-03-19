@@ -10,6 +10,7 @@ import { DB_ROOT_USERNAME } from 'src/constants';
 import {
   CLUSTER_PROVISIONING_TEXT,
   CREDENTIALS_ERROR_TEXT,
+  DISABLE_CREDENTIAL_STATES,
   DISABLED_PASSWORD_BUTTON_TEXT,
 } from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -74,12 +75,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     }
   }, [showCredentials, credentialsError]);
 
-  const disableShowBtn = [
-    'failed',
-    'provisioning',
-    'resuming',
-    'suspended',
-  ].includes(database.status);
+  const disableShowBtn = DISABLE_CREDENTIAL_STATES.includes(database.status);
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (

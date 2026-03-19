@@ -66,7 +66,7 @@ export const CREDENTIALS_ERROR_TEXT =
   'There was an error retrieving cluster credentials. Please try again.';
 
 export const DISABLED_PASSWORD_BUTTON_TEXT =
-  'Your root password is unavailable when your Database Cluster is in a failed, suspended, or resuming state.';
+  'Your root password is unavailable when your Database Cluster is in a suspended or resuming state.';
 
 export const CLUSTER_PROVISIONING_TEXT =
   'Your Database Cluster is currently provisioning.';
@@ -103,3 +103,9 @@ export const usernameOptions = [
 ]; // Currently the only options for the username field
 
 export const DEFAULT_PAGE_SIZES = [25, 50, 75, 100];
+export const DISABLE_CREDENTIAL_STATES = [
+  'provisioning',
+  'resuming',
+  'suspending',
+  'suspended',
+];
