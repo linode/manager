@@ -1,26 +1,44 @@
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-  useTypeQuery,
-} from '@linode/queries';
-import { useIsLinodeAclpSubscribed } from '@linode/shared';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { UpdateLinodeAlertsSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
+import { getLinodeAlertsInitialValues } from './utilities';
 
 import type { AlertSectionProps } from './AlertSection';
-import type { Linode } from '@linode/api-v4';
+import type { APIError, Linode } from '@linode/api-v4';
+import type { SxProps, Theme } from '@linode/ui';
+import type { FormikProps } from 'formik';
 
 interface Props {
+  /**
+   * API error to display
+   */
+  error?: APIError[] | null;
+  /**
+   * Formik passed down from LinodeAlerts in unified mode (ACLP flag ON).
+   * Not needed in standalone or create-flow - those modes manage Formik internally.
+   */
+  formik?: FormikProps<Linode['alerts']>;
+  /**
+   * Whether ACLP alerting is enabled in the current region
+   * Combines ACLP flag check and region support
+   */
+  isAclpAlertingInRegionEnabled?: boolean;
+  /**
+   * Whether the panel is read-only
+   */
   isReadOnly?: boolean;
+  /**
+   * Loading state for save operation
+   */
+  isSaving?: boolean;
   /**
    * Optional Linode ID.
    * - If provided, the Alerts Panel will be in the edit flow mode.
@@ -32,78 +50,127 @@ interface Props {
    * Receives `true` when there are unsaved changes, and `false` when the form is clean.
    */
   onUnsavedChangesUpdate?: (hasUnsavedChanges: boolean) => void;
+  /**
+   * Custom sx styles for the Paper wrapper component
+   */
+  paperSx?: SxProps<Theme>;
 }
 
+/**
+ * Handles three rendering modes depending on context:
+ * - Create flow (no linodeId): read-only, Formik is a no-op
+ * - Standalone (linodeId, ACLP flag OFF): self-contained with its own Formik and save
+ * - Unified (linodeId, ACLP flag ON): parent LinodeAlerts owns Formik, passes it down
+ */
 export const AlertsPanel = (props: Props) => {
-  const { isReadOnly, linodeId } = props;
+  const { isAclpAlertingInRegionEnabled, linodeId } = props;
+
+  // Create flow: read-only with default values, no submission needed.
+  if (!linodeId) {
+    return (
+      <Formik
+        initialValues={{
+          cpu: 90,
+          io: 10000,
+          network_in: 10,
+          network_out: 10,
+          transfer_quota: 80,
+        }}
+        onSubmit={() => {}}
+      >
+        {(formik) => <AlertsPanelContent {...props} formik={formik} />}
+      </Formik>
+    );
+  }
+
+  // Unified Legacy mode: formik comes from the parent.
+  if (isAclpAlertingInRegionEnabled) {
+    return (
+      <AlertsPanelContent
+        {...props}
+        formik={props.formik!}
+        linodeId={linodeId}
+      />
+    );
+  }
+
+  // Standalone Legacy mode: self-contained, owns its own save logic.
+  return <AlertsPanelStandalone {...props} linodeId={linodeId} />;
+};
+
+/**
+ * Used when the ACLP flag is OFF. Manages its own data fetching, mutation, and form state
+ * so the parent doesn't need to know anything about how the save works.
+ */
+const AlertsPanelStandalone = (props: Props & { linodeId: number }) => {
+  const { linodeId, ...rest } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
   const { enqueueSnackbar } = useSnackbar();
+  const {
+    error,
+    isPending: isSaving,
+    mutateAsync: updateLinode,
+  } = useLinodeUpdateMutation(linodeId);
+
+  const handleSave = async (alerts: Linode['alerts']) => {
+    await updateLinode({ alerts })
+      .then(() => {
+        enqueueSnackbar(
+          `Successfully updated alert settings for ${linode?.label}`,
+          { variant: 'success' }
+        );
+      })
+      .catch(() => {
+        // Error is displayed via the error prop passed to AlertsPanelContent below.
+      });
+  };
+
+  const initialValues = getLinodeAlertsInitialValues(linode);
+
+  return (
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      onSubmit={handleSave}
+      validateOnChange
+      validationSchema={UpdateLinodeAlertsSchema}
+    >
+      {(formik) => (
+        <AlertsPanelContent
+          {...rest}
+          error={error}
+          formik={formik}
+          isSaving={isSaving}
+          linodeId={linodeId}
+        />
+      )}
+    </Formik>
+  );
+};
+
+interface AlertsPanelContentProps extends Omit<Props, 'formik'> {
+  formik: FormikProps<Linode['alerts']>;
+}
+
+/** Renders the form fields and save button. Formik is always passed in explicitly. */
+const AlertsPanelContent = (props: AlertsPanelContentProps) => {
+  const {
+    error,
+    formik,
+    isAclpAlertingInRegionEnabled,
+    isSaving,
+    isReadOnly,
+    linodeId,
+    paperSx,
+  } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined
   );
 
-  const {
-    error,
-    isPending,
-    mutateAsync: updateLinode,
-  } = useLinodeUpdateMutation(linodeId ?? -1);
-
-  const { data: type } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
-  );
-
-  const isBareMetalInstance = type?.class === 'metal';
-
-  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linodeId, 'beta');
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
-
   const isCreateFlow = !linodeId;
-
-  const initialValues = isCreateFlow
-    ? {
-        cpu: 90,
-        io: 10000,
-        network_in: 10,
-        network_out: 10,
-        transfer_quota: 80,
-      }
-    : {
-        cpu: linode?.alerts.cpu ?? 0,
-        io: linode?.alerts.io ?? 0,
-        network_in: linode?.alerts.network_in ?? 0,
-        network_out: linode?.alerts.network_out ?? 0,
-        transfer_quota: linode?.alerts.transfer_quota ?? 0,
-      };
-
-  const formik = useFormik<Linode['alerts']>({
-    enableReinitialize: true,
-    initialValues,
-    validateOnChange: true,
-    validationSchema: UpdateLinodeAlertsSchema,
-    async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
-      await updateLinode({
-        alerts: {
-          cpu: isBareMetalInstance ? undefined : cpu,
-          io,
-          network_in: isBareMetalInstance ? undefined : network_in,
-          network_out,
-          transfer_quota,
-        },
-      })
-        .then(() => {
-          enqueueSnackbar(
-            `Successfully updated alert settings for ${linode?.label}`,
-            { variant: 'success' }
-          );
-        })
-        .catch(() => {})
-        .finally(() => {
-          setIsDialogOpen(false);
-        });
-    },
-  });
 
   const hasAPIErrorFor = getAPIErrorFor(
     {
@@ -125,7 +192,6 @@ export const AlertsPanel = (props: Props) => {
       error:
         (formik.touched.cpu ? formik.errors.cpu : undefined) ||
         hasAPIErrorFor('alerts.cpu'),
-      hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -161,7 +227,6 @@ export const AlertsPanel = (props: Props) => {
       error:
         (formik.touched.io ? formik.errors.io : undefined) ||
         hasAPIErrorFor('alerts.io'),
-      hidden: isBareMetalInstance,
       onStateChange: (
         e: React.ChangeEvent<HTMLInputElement>,
         checked: boolean
@@ -294,14 +359,10 @@ export const AlertsPanel = (props: Props) => {
       title: 'Transfer Quota',
       value: formik.values.transfer_quota ?? 0,
     },
-  ].filter((thisAlert) => !thisAlert.hidden);
+  ];
 
   const handleSaveClick = () => {
-    if (!isLinodeAclpSubscribed) {
-      formik.handleSubmit();
-    } else {
-      setIsDialogOpen(true);
-    }
+    formik.handleSubmit();
   };
 
   React.useEffect(() => {
@@ -319,57 +380,45 @@ export const AlertsPanel = (props: Props) => {
   }, [formik.dirty]);
 
   return (
-    <>
-      {/* Save legacy Alerts Confirmation Modal. This modal appears on "Save" only
-      when user already subscribed to Beta/ACLP Mode and makes changes in the
-      Legacy mode Interface. */}
-      <AlertConfirmationDialog
-        handleCancel={() => setIsDialogOpen(false)}
-        handleConfirm={() => formik.handleSubmit()}
-        isLoading={isPending}
-        isOpen={isDialogOpen && isLinodeAclpSubscribed}
-        message={
-          <>
-            Are you sure you want to save legacy Alerts? <b>Alerts(Beta)</b>{' '}
-            settings will be disabled and replaced by legacy Alerts settings.
-          </>
-        }
-        primaryButtonLabel="Confirm"
-        title="Are you sure you want to save legacy Alerts?"
-      />
-      <Paper
-        sx={(theme) =>
-          isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
-        }
-      >
-        {!isCreateFlow && (
-          <Typography
-            sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-            variant="h2"
-          >
-            Alerts
-          </Typography>
-        )}
-        {generalError && <Notice variant="error">{generalError}</Notice>}
-        {alertSections.map((alert, idx) => (
-          <React.Fragment key={`alert-${idx}`}>
-            <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
-            {idx !== alertSections.length - 1 ? <Divider /> : null}
-          </React.Fragment>
-        ))}
-        {!isCreateFlow && (
-          <StyledActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'alerts-save',
-              disabled: isReadOnly || !formik.dirty,
-              label: 'Save',
-              loading: isPending,
-              onClick: handleSaveClick,
-            }}
-          />
-        )}
-      </Paper>
-    </>
+    <Paper sx={paperSx}>
+      {/* Only show "Alerts" heading in legacy standalone mode (not CreateFlow and ACLP not enabled).
+      When ACLP is enabled AND region is supported, this component is rendered inside an Accordion which already provides the heading.
+      In CreateFlow, the heading is not needed. */}
+      {!isCreateFlow && !isAclpAlertingInRegionEnabled && (
+        <Typography
+          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+          variant="h2"
+        >
+          Alerts
+        </Typography>
+      )}
+
+      {/* Only show this general error in standalone Legacy mode. When ACLP alerting is enabled in the region,
+      it's displayed in the parent LinodeAlerts component instead */}
+      {!isAclpAlertingInRegionEnabled && generalError && (
+        <Notice variant="error">{generalError}</Notice>
+      )}
+      {alertSections.map((alert, idx) => (
+        <React.Fragment key={`alert-${idx}`}>
+          <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
+          {idx !== alertSections.length - 1 ? <Divider /> : null}
+        </React.Fragment>
+      ))}
+
+      {/* Show save button only in legacy standalone mode (not CreateFlow and ACLP not enabled).
+      When ACLP is enabled, save functionality is handled by the unified save button in parent LinodeAlerts component. */}
+      {!isCreateFlow && !isAclpAlertingInRegionEnabled && (
+        <StyledActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'alerts-save',
+            disabled: isReadOnly || !formik.dirty || isSaving,
+            label: 'Save',
+            loading: isSaving,
+            onClick: handleSaveClick,
+          }}
+        />
+      )}
+    </Paper>
   );
 };
 

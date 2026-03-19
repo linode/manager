@@ -8,6 +8,7 @@ import { AlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeAlerts/Ale
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
+import { EMPTY_ACLP_ALERTS } from '../utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
@@ -27,7 +28,7 @@ export const Alerts = ({
   const { field } = useController({
     control,
     name: 'alerts',
-    defaultValue: { system_alerts: [], user_alerts: [] },
+    defaultValue: EMPTY_ACLP_ALERTS,
   });
 
   const handleToggleAlert = (updatedAlerts: CloudPulseAlertsPayload) => {
@@ -71,11 +72,12 @@ export const Alerts = ({
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}
+          paperSx={{ p: 0 }}
           serviceType="linode"
         />
       ) : (
-        // Legacy Alerts View (read-only)
-        <AlertsPanel />
+        // Legacy Alerts View (read-only with default values)
+        <AlertsPanel paperSx={{ p: 0 }} />
       )}
     </Accordion>
   );

@@ -95,6 +95,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
+  { flag: 'reserveIp', label: 'Reserve IP' },
   { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },
 ];
 
