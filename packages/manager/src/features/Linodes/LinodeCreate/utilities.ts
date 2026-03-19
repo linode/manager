@@ -25,6 +25,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type {
   AccountSettings,
+  CloudPulseAlertsPayload,
   CreateLinodeRequest,
   FirewallSettings,
   InterfaceGenerationType,
@@ -42,6 +43,15 @@ import type { LinodeCreateSearchParams } from 'src/routes/linodes';
  * This is the ID of the Image of the default OS.
  */
 const DEFAULT_OS = 'linode/ubuntu24.04';
+
+/**
+ * Empty default value for the ACLP alerts form field.
+ * Used when entering ACLP mode to ensure a clean slate.
+ */
+export const EMPTY_ACLP_ALERTS: CloudPulseAlertsPayload = {
+  system_alerts: [],
+  user_alerts: [],
+};
 
 interface LinodeCreatePayloadOptions {
   isAclpAlertsPreferenceBeta?: boolean;

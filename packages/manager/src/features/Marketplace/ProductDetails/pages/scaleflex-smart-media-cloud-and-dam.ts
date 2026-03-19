@@ -47,13 +47,13 @@ Interested? Book a demo with our team. In this demo, you will:
 const documentationMarkdown = `
 | Specification | Details |
 | :---- | :---- |
-| Deployment Model | Cloud-native SaaS, composable MACH architecture with online hub and headless API access |
-| Supported Data Sources | Visual assets (images, videos, documents), ingress via drag-and-drop, CSV, and API |
-| API Type | RESTful headless APIs for media upload, management, optimization and enrichment platform functions; CLI and widgets available |
-| Programming Languages | Language-agnostic REST APIs; typical SDK use in JavaScript or any language capable of REST calls |
-| Availability SLA | 99.9% uptime |
-| Security | Standard token/API auth, permissions/roles, SSO / MFA |
-| Compliance | GDPR compliance, MACH Alliance certified, 10 Core accredited DAM vendor |
+| **Deployment Model** | Cloud-native SaaS, composable MACH architecture with online hub and headless API access |
+| **Supported Data Sources** | Visual assets (images, videos, documents), ingress via drag-and-drop, CSV, and API |
+| **API Type** | RESTful headless APIs for media upload, management, optimization and enrichment platform functions; CLI and widgets available |
+| **Programming Languages** | Language-agnostic REST APIs; typical SDK use in JavaScript or any language capable of REST calls |
+| **Availability SLA** | 99.9% uptime |
+| **Security** | Standard token/API auth, permissions/roles, SSO / MFA |
+| **Compliance** | GDPR compliance, MACH Alliance certified, 10 Core accredited DAM vendor |
 
 Full documentation under: [https://docs.scaleflex.com/](https://docs.scaleflex.com/)
 

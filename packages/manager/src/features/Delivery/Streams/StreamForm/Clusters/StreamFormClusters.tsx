@@ -17,10 +17,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useWatch } from 'react-hook-form';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Link } from 'src/components/Link';
 import { sortData } from 'src/components/OrderBy';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
@@ -29,10 +29,12 @@ import { Table } from 'src/components/Table';
 import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
-import type { KubernetesCluster } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { OrderByKeys } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
-import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
+import type {
+  ExtendedKubernetesCluster,
+  StreamAndDestinationFormType,
+} from 'src/features/Delivery/Streams/StreamForm/types';
 
 const controlPaths = {
   isAutoAddAllClustersEnabled:
@@ -80,7 +82,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
     [regions]
   );
 
-  const eligibleClusters = useMemo(() => {
+  const eligibleClusters: ExtendedKubernetesCluster[] = useMemo(() => {
     const regionMap = new Map(
       eligibleRegions.map(({ id, label }) => [id, label])
     );
@@ -89,7 +91,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
       .filter(({ region }) => regionMap.has(region))
       .map((cluster) => ({
         ...cluster,
-        region: regionMap.get(cluster.region)
+        regionLabel: regionMap.get(cluster.region)
           ? `${regionMap.get(cluster.region)} (${cluster.region})`
           : cluster.region,
       }));
@@ -198,7 +200,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   }, [searchText, regionFilter, logGenerationFilter, eligibleClusters]);
 
   const sortedAndFilteredClusters = useMemo(
-    () => sortData<KubernetesCluster>(orderBy, order)(filteredClusters),
+    () => sortData<ExtendedKubernetesCluster>(orderBy, order)(filteredClusters),
     [orderBy, order, filteredClusters]
   );
 
@@ -262,6 +264,19 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               )}
             />
           </div>
+          <Typography sx={{ mt: 2 }}>
+            Select the LKE clusters that will send audit logs to the configured
+            destination. Logging must be enabled for a cluster before it can be
+            selected. To enable logging for a cluster, use the Linode API{' '}
+            <Link
+              external
+              hideIcon
+              to="https://techdocs.akamai.com/linode-api/reference/put-lke-cluster"
+            >
+              update the cluster
+            </Link>{' '}
+            to set audit_logs_enabled to true.
+          </Typography>
           <StyledGrid
             sx={{
               alignItems: 'center',
