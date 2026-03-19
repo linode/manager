@@ -21,7 +21,7 @@ interface Props {
 
 export const ShareGroupsView = (props: Props) => {
   const { type } = props;
-  const config = SHAREGROUPS_CONFIG['owned-groups'];
+  const config = SHAREGROUPS_CONFIG[type];
   const navigate = useNavigate();
   const search = useSearch({ from: '/images/share-groups' });
 
