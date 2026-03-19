@@ -1,5 +1,18 @@
 import type { ObjectStorageEndpointTypes } from 'src/object-storage';
 import type { Region } from 'src/regions';
+
+export enum QuotaResourceMetrics {
+  BUCKET = 'bucket',
+  BYTE = 'byte',
+  BYTE_PER_SECOND = 'byte_per_second',
+  CLUSTER = 'cluster',
+  CPU = 'CPU',
+  GPU = 'GPU',
+  OBJECT = 'object',
+  REQUEST = 'request',
+  VPU = 'VPU',
+}
+
 /**
  * A Quota is a service used limit that is rated based on service metrics such
  * as vCPUs used, instances or storage size.
@@ -54,7 +67,7 @@ export interface Quota {
   /**
    * The unit of measurement for this service limit.
    */
-  resource_metric: string;
+  resource_metric: QuotaResourceMetrics;
 
   /**
    * The S3 endpoint URL to which this limit applies.

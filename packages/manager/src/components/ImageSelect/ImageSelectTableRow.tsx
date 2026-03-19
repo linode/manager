@@ -17,18 +17,21 @@ import {
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { formatDate } from 'src/utilities/formatDate';
 
-import {
-  IMAGE_SELECT_TABLE_PENDO_IDS,
-  TABLE_CELL_BASE_STYLE,
-} from './constants';
+import { TABLE_CELL_BASE_STYLE } from './constants';
 
+import type {
+  IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS,
+  IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS,
+} from './constants';
 import type { Image, ImageRegion, Region } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
 interface Props {
   image: Image;
   onSelect: () => void;
-  pendoIDs: typeof IMAGE_SELECT_TABLE_PENDO_IDS;
+  pendoIDs:
+    | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
+    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS;
   regions: Region[];
   selected: boolean;
   timezone?: string;

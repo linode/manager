@@ -1,5 +1,5 @@
 import { useGetChildAccountsQuery } from '@linode/queries';
-import { CircleProgress, Notice, Paper, Stack } from '@linode/ui';
+import { Notice, Paper, Stack } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
@@ -83,10 +83,6 @@ export const AccountDelegations = () => {
     });
   };
 
-  if (isLoading || isPermissionsLoading) {
-    return <CircleProgress />;
-  }
-
   if (!permissions?.list_all_child_accounts) {
     return (
       <Notice variant="error">
@@ -127,7 +123,7 @@ export const AccountDelegations = () => {
         delegations={childAccountsWithDelegates?.data ?? []}
         error={error}
         handleOrderChange={handleOrderChange}
-        isLoading={isLoading}
+        isLoading={isLoading || isPermissionsLoading}
         numCols={numCols}
         order={order}
         orderBy={orderBy}

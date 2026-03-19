@@ -76,16 +76,6 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
     page_size: pagination.pageSize,
   });
 
-  if (connectionPoolsLoading) {
-    return <CircleProgress />;
-  }
-
-  if (connectionPoolsError) {
-    return (
-      <ErrorState errorText="There was a problem retrieving your connection pools. Refresh the page or try again later." />
-    );
-  }
-
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database.private_network?.public_access;
 
@@ -190,6 +180,10 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
+            {connectionPoolsLoading && <CircleProgress />}
+            {connectionPoolsError && (
+              <ErrorState errorText="There was a problem retrieving your connection pools. Refresh the page or try again later." />
+            )}
             {connectionPools?.data.length === 0 ? (
               <TableRow data-testid={'table-row-empty'}>
                 <TableCell
@@ -204,6 +198,7 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
             ) : (
               connectionPools?.data.map((pool) => (
                 <DatabaseConnectionPoolRow
+                  databaseStatus={database.status}
                   key={pool.label}
                   onDelete={() => setDeletePoolLabelSelection(pool.label)}
                   onEdit={() => setEditPoolSelection(pool)}

@@ -1,5 +1,4 @@
 import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
-import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import {
@@ -45,19 +44,9 @@ const LinodesDetailNavigation = () => {
     type: 'metrics',
   });
 
-  const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
-    capability: 'Linodes',
-    regionId: linode?.region,
-    type: 'alerts',
-  });
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
-
-  // In Edit flow, default alert mode is based on Linode's ACLP subscription status
-  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linode?.id, 'beta');
-  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
-    React.useState<boolean>(isLinodeAclpSubscribed);
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
@@ -95,13 +84,6 @@ const LinodesDetailNavigation = () => {
       title: 'Activity Feed',
     },
     {
-      chip:
-        aclpServices?.linode?.alerts?.enabled &&
-        aclpServices?.linode?.alerts?.beta &&
-        isAclpAlertsSupportedRegionLinode &&
-        isAclpAlertsBetaEditFlow ? (
-          <BetaChip />
-        ) : null,
       to: '/linodes/$linodeId/alerts',
       title: 'Alerts',
     },
@@ -131,10 +113,6 @@ const LinodesDetailNavigation = () => {
     <LinodesDetailContext.Provider
       value={{
         isBareMetalInstance,
-        isAlertsBetaMode: {
-          get: isAclpAlertsBetaEditFlow,
-          set: setIsAclpAlertsBetaEditFlow,
-        },
       }}
     >
       <DocumentTitleSegment
