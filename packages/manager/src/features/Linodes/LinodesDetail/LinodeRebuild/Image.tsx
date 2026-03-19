@@ -1,11 +1,16 @@
 import { useStackScriptQuery } from '@linode/queries';
+import { useLocation, useMatch } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS } from 'src/components/ImageSelect/constants';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
+import { useIsPrivateImageSharingEnabled } from 'src/features/Images/utils';
 
 import type { RebuildLinodeFormValues } from './utils';
 import type { Image as ImageType, StackScript } from '@linode/api-v4';
+import type { LinkProps } from '@tanstack/react-router';
 
 interface Props {
   disabled: boolean;
@@ -24,23 +29,44 @@ export const Image = (props: Props) => {
     Boolean(stackscriptId)
   );
 
+  const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
+  const location = useLocation();
+
+  const isFromLinodeDetails =
+    useMatch({ from: '/linodes/$linodeId', shouldThrow: false }) !== null;
+
   return (
     <Controller
       control={control}
       name="image"
-      render={({ field, fieldState }) => (
-        <ImageSelect
-          disabled={props.disabled}
-          errorText={fieldState.error?.message}
-          filter={getImageSelectFilter(stackscript)}
-          label="Image"
-          loading={isLoading}
-          noMarginTop
-          onChange={(value) => field.onChange(value?.id ?? null)}
-          value={field.value ?? null}
-          variant="all"
-        />
-      )}
+      render={({ field, fieldState }) =>
+        isPrivateImageSharingEnabled ? (
+          <ImageSelectTable
+            currentRoute={
+              (isFromLinodeDetails
+                ? location.pathname
+                : '/linodes') as LinkProps['to']
+            }
+            errorText={fieldState.error?.message}
+            onSelect={(image) => field.onChange(image?.id ?? null)}
+            pendoIDs={IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS}
+            queryParamsPrefix="images"
+            selectedImageId={field.value}
+          />
+        ) : (
+          <ImageSelect
+            disabled={props.disabled}
+            errorText={fieldState.error?.message}
+            filter={getImageSelectFilter(stackscript)}
+            label="Image"
+            loading={isLoading}
+            noMarginTop
+            onChange={(value) => field.onChange(value?.id ?? null)}
+            value={field.value ?? null}
+            variant="all"
+          />
+        )
+      }
     />
   );
 };
