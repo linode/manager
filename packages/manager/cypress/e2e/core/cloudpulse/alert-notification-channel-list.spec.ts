@@ -29,7 +29,7 @@ import {
 } from 'src/features/CloudPulse/Alerts/NotificationChannels/NotificationsChannelsListing/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { NotificationChannel } from '@linode/api-v4';
+import type { EmailRecipientType, NotificationChannel } from '@linode/api-v4';
 
 const sortOrderMap = {
   ascending: 'asc',
@@ -163,15 +163,14 @@ const { label: userChannelLabel, id: userChannelId } = findChannel(
   0 // alertsLength (0 = no alerts)
 );
 
-const isEmailContent = (
-  content: NotificationChannel['content']
-): content is {
+const isEmailChannel = (
+  details: NotificationChannel['details']
+): details is {
   email: {
-    email_addresses: string[];
-    message: string;
-    subject: string;
+    recipient_type: EmailRecipientType;
+    usernames: string[];
   };
-} => content !== undefined && 'email' in content;
+} => details !== undefined && 'email' in details;
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
@@ -272,15 +271,12 @@ describe('Notification Channel Listing Page', () => {
         expect(item.updated_by).to.eq(expected.updated_by);
 
         // Email content (safe narrow)
-        if (isEmailContent(item.content) && isEmailContent(expected.content)) {
-          expect(item.content.email.email_addresses).to.deep.eq(
-            expected.content.email.email_addresses
+        if (isEmailChannel(item.details) && isEmailChannel(expected.details)) {
+          expect(item.details.email.usernames).to.deep.eq(
+            expected.details.email.usernames
           );
-          expect(item.content.email.subject).to.eq(
-            expected.content.email.subject
-          );
-          expect(item.content.email.message).to.eq(
-            expected.content.email.message
+          expect(item.details.email.recipient_type).to.eq(
+            expected.details.email.recipient_type
           );
         }
 
