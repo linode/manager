@@ -30,11 +30,9 @@ const notificationChannels = notificationChannelFactory.buildList(5);
 const createNotificationChannel = notificationChannelFactory.build({
   label: 'Test Channel Name',
   channel_type: 'email',
-  content: {
+  details: {
     email: {
-      email_addresses: ['user1', 'user2'],
-      message: 'You have a new Alert',
-      subject: 'Sample Alert',
+      usernames: ['user1', 'user2'],
     },
   },
 });

@@ -10,6 +10,7 @@ import type { SanitizeOptions } from 'src/utilities/sanitizeHTML';
 
 export interface HighlightedMarkdownProps {
   className?: string;
+  openLinksInNewTab?: boolean;
   sanitizeOptions?: SanitizeOptions;
   textOrMarkdown: string;
 }
@@ -20,7 +21,8 @@ export interface HighlightedMarkdownProps {
  * - Will perform syntax highlighting on any fenced code blocks
  */
 export const Markdown = (props: HighlightedMarkdownProps) => {
-  const { className, sanitizeOptions, textOrMarkdown } = props;
+  const { className, openLinksInNewTab, sanitizeOptions, textOrMarkdown } =
+    props;
 
   const theme = useTheme();
 
@@ -36,7 +38,7 @@ export const Markdown = (props: HighlightedMarkdownProps) => {
           lang,
           theme: getHighlighterTheme(theme.palette.mode),
         });
-      } catch (error) {
+      } catch {
         return shiki.codeToHtml(str, {
           lang: 'js',
           theme: getHighlighterTheme(theme.palette.mode),
@@ -47,6 +49,28 @@ export const Markdown = (props: HighlightedMarkdownProps) => {
     html: true,
     linkify: true,
   });
+
+  if (openLinksInNewTab) {
+    const defaultRender =
+      unsafeMarkdownIt.renderer.rules.link_open ||
+      function (tokens, idx, options, env, self) {
+        return self.renderToken(tokens, idx, options);
+      };
+
+    unsafeMarkdownIt.renderer.rules.link_open = function (
+      tokens,
+      idx,
+      options,
+      env,
+      self
+    ) {
+      tokens[idx].attrSet('target', '_blank');
+      // Adding rel="noopener noreferrer" directly here just as backup,
+      // although sanitizeHTML will already add it when it sees target="_blank"
+      tokens[idx].attrSet('rel', 'noopener noreferrer');
+      return defaultRender(tokens, idx, options, env, self);
+    };
+  }
 
   const unsafeParsedMarkdown = unsafeMarkdownIt.render(textOrMarkdown);
 

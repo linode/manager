@@ -7,7 +7,7 @@ import {
   renderWithThemeAndHookFormContext,
 } from 'src/utilities/testHelpers';
 
-import { ContactSalesDrawer } from './ContactSalesDrawer';
+import { cleanUpPayload, ContactSalesDrawer } from './ContactSalesDrawer';
 
 import type { ContactSalesDrawerProps } from './ContactSalesDrawer';
 
@@ -31,6 +31,49 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('ContactSalesDrawer', () => {
+  describe('cleanUpPayload', () => {
+    const basePayload = {
+      country_code: 'US',
+      email: 'user@akamai.com',
+      name: 'My User',
+      partner_name: 'Linode',
+      phone: '5555555555',
+      phone_country_code: '+1',
+      product_name: 'Linode Kubernetes Engine',
+      tc_consent_given: true,
+    };
+
+    it('omits blank optional fields and placeholder additional email rows', () => {
+      const payload = {
+        ...basePayload,
+        account_executive_email: '   ',
+        additional_emails: ['   ', ''],
+        comments: '',
+        company_name: '  ',
+      };
+
+      expect(cleanUpPayload(payload)).toEqual(basePayload);
+    });
+
+    it('trims optional string fields and keeps non-empty additional emails', () => {
+      const payload = {
+        ...basePayload,
+        account_executive_email: ' seller@akamai.com ',
+        additional_emails: [' first@akamai.com ', ''],
+        comments: ' interested in pricing ',
+        company_name: ' Example Corp ',
+      };
+
+      expect(cleanUpPayload(payload)).toEqual({
+        ...basePayload,
+        account_executive_email: 'seller@akamai.com',
+        additional_emails: ['first@akamai.com'],
+        comments: 'interested in pricing',
+        company_name: 'Example Corp',
+      });
+    });
+  });
+
   it('should render the Contact Sales Drawer with the correct title and description', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <ContactSalesDrawer {...mockProps} />,
@@ -83,7 +126,7 @@ describe('ContactSalesDrawer', () => {
     const noOfEmails = getAllByTestId('domain-transfer-input').length;
     if (noOfEmails < 2) {
       const addEmailButton = getByText(
-        'Add a second, additional email address'
+        'Click to add a second, additional email address'
       );
       expect(addEmailButton).toBeVisible();
     }
@@ -94,7 +137,9 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const addEmailButton = getByText('Add a second, additional email address');
+    const addEmailButton = getByText(
+      'Click to add a second, additional email address'
+    );
     fireEvent.click(addEmailButton);
 
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(2);
@@ -105,7 +150,9 @@ describe('ContactSalesDrawer', () => {
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const addEmailButton = getByText('Add a second, additional email address');
+    const addEmailButton = getByText(
+      'Click to add a second, additional email address'
+    );
     fireEvent.click(addEmailButton);
 
     let additionalEmailInputs = queryAllByTestId('domain-transfer-input');
@@ -176,18 +223,17 @@ describe('ContactSalesDrawer', () => {
     expect(selectedRegion).toHaveValue('United States Of America');
   });
 
-  it('shows an error message if a region is not selected on form submission', async () => {
-    const { getByText, queryByText } = renderWithTheme(
+  it('shows an error message if a region is not selected on blur', async () => {
+    const { getByTestId, queryByText } = renderWithTheme(
       <ContactSalesDrawer {...mockProps} />
     );
 
-    const tc_consentCheckbox = screen
-      .getByTestId('tc-consent-checkbox')
-      .querySelector('input') as HTMLInputElement;
-    fireEvent.click(tc_consentCheckbox);
+    const regionInput = getByTestId('region-autocomplete').querySelector(
+      'input'
+    ) as HTMLInputElement;
 
-    const submitButton = getByText('Submit');
-    fireEvent.click(submitButton);
+    fireEvent.focus(regionInput);
+    fireEvent.blur(regionInput);
 
     await waitFor(() => {
       expect(queryByText('Please select your region')).toBeVisible();
@@ -276,7 +322,7 @@ describe('ContactSalesDrawer', () => {
     fireEvent.blur(akamaiEmailInput);
 
     await waitFor(() => {
-      expect(queryByText('Must be an akamai email address.')).toBeVisible();
+      expect(queryByText('Must be an Akamai email address.')).toBeVisible();
     });
   });
 
@@ -316,7 +362,8 @@ describe('ContactSalesDrawer', () => {
 
     fireEvent.click(consentCheckbox);
 
-    expect(getByText('Submit')).toBeEnabled();
+    // Submit should still be disabled because required fields (region, phone) are not filled
+    expect(getByText('Submit')).toBeDisabled();
   });
 
   it('expands the terms and conditions when the "Show details" button is clicked', async () => {

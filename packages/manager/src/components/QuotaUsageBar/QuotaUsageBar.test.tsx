@@ -1,3 +1,4 @@
+import { QuotaResourceMetrics } from '@linode/api-v4';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -43,7 +44,11 @@ describe('QuotaUsageBanner', () => {
     'should display correct byte quota usage text for $usage bytes used out of $limit bytes',
     ({ usage, limit, expectedText }) => {
       const { getByText } = renderWithTheme(
-        <QuotaUsageBar limit={limit} resourceMetric="byte" usage={usage} />
+        <QuotaUsageBar
+          limit={limit}
+          resourceMetric={QuotaResourceMetrics.BYTE}
+          usage={usage}
+        />
       );
       const quotaUsageText = getByText(expectedText);
       expect(quotaUsageText).toBeVisible();
