@@ -604,4 +604,18 @@ describe('PrimaryNav', () => {
 
     expect(partnerReferralNavItem).toBeVisible();
   });
+
+  it('should show Reserved IPs menu item if the corresponding flag is enabled', async () => {
+    const flags: Partial<Flags> = {
+      reserveIp: true,
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const reservedIpsNavItem = await findByTestId('menu-item-Reserved IPs');
+
+    expect(reservedIpsNavItem).toBeVisible();
+  });
 });
