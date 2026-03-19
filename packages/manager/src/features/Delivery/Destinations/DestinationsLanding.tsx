@@ -63,6 +63,7 @@ export const DestinationsLanding = () => {
   const {
     data: destinations,
     isLoading,
+    isFetching,
     error,
   } = useDestinationsQuery(
     {
@@ -71,11 +72,6 @@ export const DestinationsLanding = () => {
     },
     filter
   );
-
-  const hasLoadedInitialData = React.useRef(false);
-  if (!hasLoadedInitialData.current && destinations !== undefined) {
-    hasLoadedInitialData.current = true;
-  }
 
   const onSearch = (label: string) => {
     navigate({
@@ -98,7 +94,7 @@ export const DestinationsLanding = () => {
     );
   }
 
-  if (!hasLoadedInitialData.current && isLoading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
@@ -134,7 +130,7 @@ export const DestinationsLanding = () => {
         onSearch={onSearch}
         searchValue={search?.label ?? ''}
       />
-      {isLoading ? (
+      {isFetching ? (
         <CircleProgress />
       ) : (
         <>

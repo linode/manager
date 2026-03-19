@@ -74,6 +74,7 @@ export const StreamsLanding = () => {
     data: streams,
     isLoading,
     error,
+    isFetching,
   } = useStreamsQuery(
     {
       page: pagination.page,
@@ -81,11 +82,6 @@ export const StreamsLanding = () => {
     },
     filter
   );
-
-  const hasLoadedInitialData = React.useRef(false);
-  if (!hasLoadedInitialData.current && streams !== undefined) {
-    hasLoadedInitialData.current = true;
-  }
 
   const onSearch = (label: string) => {
     navigate({
@@ -119,7 +115,7 @@ export const StreamsLanding = () => {
     );
   }
 
-  if (!hasLoadedInitialData.current && isLoading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
@@ -195,7 +191,7 @@ export const StreamsLanding = () => {
         selectList={streamStatusOptions}
         selectValue={search?.status}
       />
-      {isLoading ? (
+      {isFetching ? (
         <CircleProgress />
       ) : (
         <>
