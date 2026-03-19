@@ -119,7 +119,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
         placement={placement ?? 'top'}
         title={disabledReason}
       >
-        {CopyButton}
+        <span>{CopyButton}</span>
       </Tooltip>
     );
   }
@@ -153,6 +153,7 @@ export const StyledIconButton = styled('button', {
   label: 'StyledIconButton',
   shouldForwardProp: omittedProps([
     'copyableText',
+    'disabledReason',
     'text',
     'onClickCallback',
     'masked',
