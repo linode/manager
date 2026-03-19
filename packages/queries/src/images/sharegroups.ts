@@ -28,23 +28,28 @@ export const getAllShareGroups = (
   )().then((data) => data.data);
 
 export const shareGroupsQueries = createQueryKeys('sharegroups', {
-  all: (params: Params = {}, filters: Filter = {}) => ({
-    queryFn: () => getAllShareGroups(params, filters),
-    queryKey: [params, filters],
-  }),
-  sharegroup: (sharegroupId: string) => ({
-    queryFn: () => getSharegroup(sharegroupId),
-    queryKey: [sharegroupId],
-  }),
-  infinite: (filters: Filter) => ({
-    queryFn: ({ pageParam }) =>
-      getSharegroups({ page: pageParam as number }, filters),
-    queryKey: [filters],
-  }),
-  paginated: (params: Params, filters: Filter) => ({
-    queryFn: () => getSharegroups(params, filters),
-    queryKey: [params, filters],
-  }),
+  sharegroups: {
+    contextQueries: {
+      all: (params: Params = {}, filters: Filter = {}) => ({
+        queryFn: () => getAllShareGroups(params, filters),
+        queryKey: [params, filters],
+      }),
+      sharegroup: (sharegroupId: string) => ({
+        queryFn: () => getSharegroup(sharegroupId),
+        queryKey: [sharegroupId],
+      }),
+      infinite: (filters: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getSharegroups({ page: pageParam as number }, filters),
+        queryKey: [filters],
+      }),
+      paginated: (params: Params, filters: Filter) => ({
+        queryFn: () => getSharegroups(params, filters),
+        queryKey: [params, filters],
+      }),
+    },
+    queryKey: null,
+  },
 });
 
 export const useShareGroupsQuery = (
@@ -53,14 +58,14 @@ export const useShareGroupsQuery = (
   options?: Partial<UseQueryOptions<ResourcePage<Sharegroup>, APIError[]>>,
 ) =>
   useQuery<ResourcePage<Sharegroup>, APIError[]>({
-    ...shareGroupsQueries.paginated(params, filters),
+    ...shareGroupsQueries.sharegroups._ctx.paginated(params, filters),
     placeholderData: keepPreviousData,
     ...options,
   });
 
 export const useShareGroupQuery = (sharegroupId: string, enabled = true) =>
   useQuery<Sharegroup, APIError[]>({
-    ...shareGroupsQueries.sharegroup(sharegroupId),
+    ...shareGroupsQueries.sharegroups._ctx.sharegroup(sharegroupId),
     enabled,
   });
 
@@ -70,7 +75,7 @@ export const useAllShareGroupsQuery = (
   enabled: true,
 ) =>
   useQuery<Sharegroup[], APIError[]>({
-    ...shareGroupsQueries.all(params, filters),
+    ...shareGroupsQueries.sharegroups._ctx.all(params, filters),
     enabled,
   });
 
@@ -79,7 +84,7 @@ export const useShareGroupsInfiniteQuery = (
   enabled: boolean,
 ) =>
   useInfiniteQuery<ResourcePage<Sharegroup>, APIError[]>({
-    ...shareGroupsQueries.infinite(filters),
+    ...shareGroupsQueries.sharegroups._ctx.infinite(filters),
     enabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {

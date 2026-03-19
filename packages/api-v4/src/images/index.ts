@@ -1,5 +1,5 @@
 export * from './images';
 
-export * from './sharegroup';
+export * from './sharegroups';
 
 export * from './types';
