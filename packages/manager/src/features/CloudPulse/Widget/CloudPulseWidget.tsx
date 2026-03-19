@@ -19,6 +19,8 @@ import {
 import {
   AGGREGATE_FUNCTION,
   GROUP_BY,
+  REGION,
+  RESOURCE_ID,
   SIZE,
   TIME_GRANULARITY,
 } from '../Utils/constants';
@@ -512,6 +514,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     vpcFetch.isLoading,
     linodeFromVolumes.isLoading,
   ]);
+  const filterData = getGlobalFilterData();
   return (
     <GridLegacy container item lg={widget.size} xs={12}>
       <Stack
@@ -598,7 +601,27 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                       dimensionOptions={filteredDimensions ?? []}
                       duration={duration}
                       filterConfig={filterConfig}
-                      filters={getGlobalFilterData()}
+                      filters={
+                        !savePref // contextual view
+                          ? {
+                              ...(filterData || { id: {} }),
+                              label: {
+                                ...(filterData?.label || {}),
+                                [RESOURCE_ID]: resources
+                                  .filter((resource) =>
+                                    entityIds.includes(resource.id.toString())
+                                  )
+                                  .map((resource) => resource.label),
+                                ...(region && {
+                                  [REGION]: [
+                                    regions?.find(({ id }) => id === region)
+                                      ?.label ?? region,
+                                  ],
+                                }),
+                              },
+                            }
+                          : filterData
+                      }
                       groupBy={[...getGlobalGroupBy(), ...(groupBy ?? [])]}
                       isDataLoading={isLoading || isJweTokenFetching}
                       serviceType={serviceType}
