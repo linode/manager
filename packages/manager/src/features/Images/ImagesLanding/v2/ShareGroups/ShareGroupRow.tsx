@@ -1,13 +1,13 @@
 import { useProfile } from '@linode/queries';
 import { LinkButton } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { ShareGroupActionMenu } from './ShareGroupActionMenu';
+import { StyledActionMenuWrapper } from './ShareGroupTable.styles';
 
 import type { Sharegroup } from '@linode/api-v4';
 
@@ -29,35 +29,58 @@ export const ShareGroupRow = (props: Props) => {
     id,
   } = shareGroup;
 
-  const deleteButtonDisabled = !!members_count;
   return (
-    <TableRow data-qa-sharegroup-row={id} key={id}>
-      <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
+    <TableRow data-qa-sharegroup-row={id} key={id} rowborder>
+      <TableCell
+        data-pendo-id={`Images Groups Owned-Group name`}
+        style={{
+          whiteSpace: 'nowrap',
+          display: 'block',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+        }}
+      >
         <LinkButton onClick={() => {}}>{label}</LinkButton>
       </TableCell>
-      <TableCell>{description}</TableCell>
+      <TableCell
+        style={{
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          display: 'block',
+          flex: '0 1 20%',
+        }}
+      >
+        {description}
+      </TableCell>
       <TableCell>{members_count}</TableCell>
       <Hidden smDown>
         <TableCell>{images_count}</TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell>
+        <TableCell style={{ whiteSpace: 'nowrap' }}>
           {created &&
             formatDate(created, {
               timezone: profile?.timezone,
             })}
         </TableCell>
       </Hidden>
-      <Hidden mdDown>
-        <TableCell sx={{ textAlign: updated === null ? 'center' : 'start' }}>
+      <Hidden lgDown>
+        <TableCell
+          style={
+            updated
+              ? { whiteSpace: 'nowrap' }
+              : { display: 'flex', justifyContent: 'center' }
+          }
+        >
           {updated !== null
             ? formatDate(updated, { timezone: profile?.timezone })
             : '–'}
         </TableCell>
       </Hidden>
-      <TableCell actionCell>
-        <ShareGroupActionMenu deleteButtonDisabled={deleteButtonDisabled} />
-      </TableCell>
+      <StyledActionMenuWrapper>
+        <ShareGroupActionMenu deleteButtonDisabled={!!members_count} />
+      </StyledActionMenuWrapper>
     </TableRow>
   );
 };

@@ -16,6 +16,8 @@ export interface ShareGroupsViewTableColConfig {
     /* API field used for sorting this column */
     label: string;
   };
+  /* Style overrides for this column */
+  style?: React.CSSProperties;
 }
 export interface ShareGroupsTabsConfig {
   buttonProps?: {
@@ -58,14 +60,42 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
 
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   { name: 'Group', sortableProps: { label: 'label' } },
-  { name: 'Description', sortableProps: { label: 'description' } },
-  { name: '# of members' },
+  {
+    name: 'Description',
+    sortableProps: { label: 'description' },
+    style: {
+      whiteSpace: 'nowrap',
+      display: 'block',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      flex: '0 1 20%',
+    },
+  },
+  {
+    name: '# of members',
+    style: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      display: 'block',
+    },
+  },
   {
     name: '# of images',
     hidden: 'smDown',
   },
-  { name: 'Created', sortableProps: { label: 'created' }, hidden: 'mdDown' },
-  { name: 'Updated', sortableProps: { label: 'updated' }, hidden: 'mdDown' },
+  {
+    name: 'Created',
+    sortableProps: { label: 'created' },
+    hidden: 'mdDown',
+    style: { whiteSpace: 'nowrap' },
+  },
+  {
+    name: 'Updated',
+    sortableProps: { label: 'updated' },
+    hidden: 'mdDown',
+    style: { whiteSpace: 'nowrap' },
+  },
 ];
 
 const JOINED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [

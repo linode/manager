@@ -1,3 +1,4 @@
+import { useTheme } from '@linode/ui';
 import {
   Box,
   Button,
@@ -5,18 +6,19 @@ import {
   Typography,
   ZeroStateSearchNarrowIcon,
 } from '@linode/ui';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from 'akamai-cds-react-components/Table';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 
 import {
   StyledImageContainer,
@@ -29,7 +31,6 @@ import { ShareGroupRow } from './ShareGroupRow';
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
 import type { APIError, Sharegroup } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrderV2';
-
 interface HeaderProps {
   buttonProps?: {
     buttonText?: string;
@@ -79,6 +80,7 @@ export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
     orderBy,
     pagination,
   } = props;
+  const theme = useTheme();
   return (
     <StyledImageContainer>
       {headerProps && headerProps.title && (
@@ -130,21 +132,36 @@ export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
       <StyledImageTableContainer>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow
+              headerbackground={
+                theme.tokens.component.Table.HeaderNested.Background
+              }
+              headerborder
+            >
               {columns.map((col, idx) => {
                 const cell = col.sortableProps ? (
-                  <TableSortCell
-                    active={orderBy === col.sortableProps?.label}
-                    direction={order}
-                    handleClick={handleOrderChange}
+                  <TableHeaderCell
                     key={idx}
-                    label={col.sortableProps?.label}
+                    sort={() =>
+                      handleOrderChange(
+                        col.sortableProps?.label ?? col.name,
+                        order === 'asc' ? 'desc' : 'asc'
+                      )
+                    }
+                    sortable
+                    sorted={
+                      orderBy === col.sortableProps?.label ? order : undefined
+                    }
+                    style={{ ...col.style }}
                   >
                     {col.name}
-                  </TableSortCell>
+                  </TableHeaderCell>
                 ) : (
-                  <TableCell key={idx}>{col.name}</TableCell>
+                  <TableHeaderCell key={idx} style={{ ...col.style }}>
+                    {col.name}
+                  </TableHeaderCell>
                 );
+
                 return col.hidden ? (
                   <Hidden key={idx} {...{ [col.hidden]: true }}>
                     {cell}
@@ -153,7 +170,7 @@ export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
                   cell
                 );
               })}
-              <TableCell />
+              <TableHeaderCell style={{ maxWidth: '40px' }} />
             </TableRow>
           </TableHead>
           <TableBody>
