@@ -37,6 +37,7 @@ import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
 import { quotasRouteTree } from './quotas';
+import { reservedIpsRouteTree } from './reservedIps';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
 import { serviceTransfersRouteTree } from './serviceTransfers';
@@ -88,6 +89,7 @@ export const routeTree = rootRoute.addChildren([
   placementGroupsRouteTree,
   profileRouteTree,
   quotasRouteTree,
+  reservedIpsRouteTree,
   searchRouteTree,
   serviceTransfersRouteTree,
   settingsRouteTree,
