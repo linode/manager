@@ -1,6 +1,7 @@
 import { Divider, Typography } from '@linode/ui';
 import React from 'react';
 
+import { MASKED_VALUE } from 'src/features/Delivery/Destinations/constants';
 import { LabelValue } from 'src/features/Delivery/Shared/LabelValue';
 
 import type { CustomHTTPSDetails } from '@linode/api-v4';
@@ -25,12 +26,12 @@ export const DestinationCustomHTTPSDetailsSummary = (
           <LabelValue
             data-testid="username"
             label="Username"
-            value="*****************"
+            value={MASKED_VALUE}
           />
           <LabelValue
             data-testid="password"
             label="Password"
-            value="*****************"
+            value={MASKED_VALUE}
           />
         </>
       )}
@@ -68,7 +69,7 @@ export const DestinationCustomHTTPSDetailsSummary = (
               <LabelValue
                 data-testid="client-key"
                 label="Client Private Key"
-                value="*****************"
+                value={MASKED_VALUE}
               />
             </>
           )}
