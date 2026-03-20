@@ -581,7 +581,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields liveChat={liveChat} />
               )}
-              {!isAccountBillingTopic && (
+              {!isAccountBillingTopic && entityType !== 'none' && (
                 <>
                   <Box mt={1}>
                     <Controller
