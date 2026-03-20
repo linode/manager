@@ -17,3 +17,18 @@ export const SHARED_IMAGES_DEFAULT_ORDER_BY = 'label';
 
 export const SHARE_GROUP_COLUMN_HEADER_TOOLTIP =
   "Displays the share group for images shared with you; your custom images don't display a group name.";
+
+export const SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS = {
+  searchImagesBar: 'Images Library Shared-Search',
+  imageSharingDocsLink: 'Images Library Shared-Docs',
+  encryptedLink: 'Images Library Shared-Encrypted',
+  accessBillingInfoLink: 'Images Library Shared-Access Billing',
+  metadataSupportedIcon: 'Images Library Shared-Cloud-init',
+  replicatedRegionPopover: 'Images Library Shared-Replicated in',
+  sharedImageLabel: 'Images Library Shared-Image',
+  actionMenu: {
+    viewImageDetails: 'Images Library Shared-View Details',
+    deployNewLinode: 'Images Library Shared-Deploy to New Linode',
+    rebuildLinode: 'Images Library Shared-Rebuild an Existing Linode',
+  },
+};

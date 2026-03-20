@@ -217,6 +217,7 @@ export const ImagesView = (props: Props) => {
           handlePageSizeChange: pagination.handlePageSizeChange,
         }}
         query={search.query}
+        type={type}
       />
     </>
   );

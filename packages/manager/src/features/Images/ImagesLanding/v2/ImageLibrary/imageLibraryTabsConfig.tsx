@@ -12,6 +12,7 @@ import {
   SHARED_IMAGES_DEFAULT_ORDER,
   SHARED_IMAGES_DEFAULT_ORDER_BY,
   SHARED_IMAGES_PREFERENCE_KEY,
+  SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS,
 } from 'src/features/Images/constants';
 
 import type { Image } from '@linode/api-v4';
@@ -42,7 +43,7 @@ export interface ImageConfig {
   };
   columns: ImageViewTableColConfig[];
   description: React.ReactNode;
-  docsLink?: { href: string; label?: string };
+  docsLink?: { dataPendoId?: string; href: string; label?: string };
   emptyMessage: {
     instruction?: string;
     main: string;
@@ -187,7 +188,10 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
     description: (
       <>
         You can deploy{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+        <Link
+          pendoId={SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.encryptedLink}
+          to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image"
+        >
           encrypted
         </Link>{' '}
         images shared with you in a share group to any region. If you deploy the
@@ -195,7 +199,10 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
         experience slower linode deployment times. Sharing images is free of
         charge, but instances deployed from shared images are billed on a
         regular basis. For details, see{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/access-billing-information">
+        <Link
+          pendoId={SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.accessBillingInfoLink}
+          to="https://techdocs.akamai.com/cloud-computing/docs/access-billing-information"
+        >
           Access billing information
         </Link>
         .
@@ -214,6 +221,7 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
     docsLink: {
       label: 'Image sharing',
       href: 'https://techdocs.akamai.com/cloud-computing/docs/image-sharing',
+      dataPendoId: SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.imageSharingDocsLink,
     },
   },
 };
