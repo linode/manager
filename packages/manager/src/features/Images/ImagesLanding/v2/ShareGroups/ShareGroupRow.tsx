@@ -49,11 +49,10 @@ export const ShareGroupRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell>
-          {updated &&
-            formatDate(updated, {
-              timezone: profile?.timezone,
-            })}
+        <TableCell sx={{ textAlign: updated === null ? 'center' : 'start' }}>
+          {updated !== null
+            ? formatDate(updated, { timezone: profile?.timezone })
+            : '–'}
         </TableCell>
       </Hidden>
       <TableCell actionCell>
