@@ -336,6 +336,22 @@ describe('ServiceURI', () => {
     );
   });
 
+  it('should render private service URI placeholder text if there is a VPC with public access, isGeneralServiceURI and showPrivateVPC is true, but hosts are not yet available', () => {
+    const mockDb = {
+      ...databaseWithPublicVPC,
+      hosts: null,
+    };
+
+    renderWithTheme(
+      <ServiceURI database={mockDb} isGeneralServiceURI showPrivateVPC />
+    );
+
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+    expect(serviceURIText).toBe(
+      'Your Service URI will appear here once it is available.'
+    );
+  });
+
   it('should disable the reveal password and copy icon if the Database is suspended', async () => {
     const mockDatabase = {
       ...databaseWithNoVPC,

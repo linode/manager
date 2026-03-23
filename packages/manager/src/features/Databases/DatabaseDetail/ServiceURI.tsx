@@ -1,5 +1,5 @@
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Button, TooltipIcon } from '@linode/ui';
+import { Button, TooltipIcon, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { enqueueSnackbar } from 'notistack';
@@ -139,6 +139,27 @@ export const ServiceURI = (props: ServiceURIProps) => {
 
     return `${credentials?.username}:${credentials?.password}`;
   };
+
+  if (!primaryHost || (engine === 'postgres' && !primaryConnectionPoolHost)) {
+    return (
+      <Grid display="contents">
+        <StyledValueGrid
+          data-testid="service-uri"
+          size="grow"
+          sx={{
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            p: '0',
+          }}
+          whiteSpace="pre"
+        >
+          <Typography fontStyle="italic">
+            Your Service URI will appear here once it is available.
+          </Typography>
+        </StyledValueGrid>
+      </Grid>
+    );
+  }
 
   return (
     <Grid display="contents">
