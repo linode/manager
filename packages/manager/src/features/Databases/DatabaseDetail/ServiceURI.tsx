@@ -87,15 +87,9 @@ export const ServiceURI = (props: ServiceURIProps) => {
     isGeneralServiceURI?: boolean
   ) => {
     if (isGeneralServiceURI) {
-      return `${engine}://${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?sslmode=require`;
+      return `${engine}://${credentials?.username}:${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?sslmode=require`;
     }
     return `postgres://${credentials?.username}:${credentials?.password}@${primaryConnectionPoolHost?.address}:${primaryConnectionPoolHost?.port}/{connection pool label}?sslmode=require`;
-  };
-
-  const getCredentials = (isGeneralServiceURI: boolean) => {
-    return !isGeneralServiceURI
-      ? `${credentials?.username}:${credentials?.password}`
-      : credentials?.password;
   };
 
   // hide loading state if the user clicks on the copy icon
@@ -148,7 +142,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
           ? ErrorButton
           : hidePassword || (!credentialsError && !credentials)
             ? RevealPasswordButton
-            : getCredentials(isGeneralServiceURI)}
+            : `${credentials?.username}:${credentials?.password}`}
         {isGeneralServiceURI ? (
           <>
             @{primaryHost?.address}:

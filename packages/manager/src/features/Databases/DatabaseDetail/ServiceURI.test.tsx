@@ -254,7 +254,7 @@ describe('ServiceURI', () => {
     const serviceURIText = screen.getByTestId('service-uri').textContent;
     expect(revealPasswordBtn).not.toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
+      `postgres://lnroot:password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 
