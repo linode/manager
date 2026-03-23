@@ -154,6 +154,8 @@ const ipAddressForVPC = (
     region: ip.region,
     subnet_mask: ip.subnet_mask,
     type: ipType,
+    reserved: false,
+    tags: [],
   };
 };
 

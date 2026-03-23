@@ -13,4 +13,6 @@ export const ipAddressFactory = Factory.Sync.makeFactory<IPAddress>({
   region: 'us-east',
   subnet_mask: Factory.each((id) => `192.168.1.${id + 3}`),
   type: 'ipv4',
+  reserved: false,
+  tags: [],
 });
