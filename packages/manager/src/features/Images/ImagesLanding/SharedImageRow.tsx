@@ -133,14 +133,14 @@ export const SharedImageRow = (props: Props) => {
             whiteSpace: 'nowrap',
           }}
         >
-          <PlanTextTooltip
-            displayText={
-              imageRegions.length > 0
-                ? pluralize('Region', 'Regions', imageRegions.length)
-                : '—'
-            }
-            tooltipText={<FormattedRegionList />}
-          />
+          {imageRegions.length > 0 ? (
+            <PlanTextTooltip
+              displayText={pluralize('Region', 'Regions', imageRegions.length)}
+              tooltipText={<FormattedRegionList />}
+            />
+          ) : (
+            '—'
+          )}
         </TableCell>
       </Hidden>
       <TableCell data-qa-image-size>
