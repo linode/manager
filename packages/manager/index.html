@@ -12,6 +12,11 @@
     <script type="text/javascript">
       let hasLiveChatInitialized = false;
       let embeddedMessagingScriptPromise;
+      const embeddedMessagingConfig = {
+        bootstrapJsUrl: '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%',
+        deploymentUrl: '%REACT_APP_CHAT_DEPLOYMENT_URL%',
+        scrt2Url: '%REACT_APP_CHAT_SCRT2_URL%',
+      };
 
       function loadEmbeddedMessagingScript() {
         if (window.embeddedservice_bootstrap) {
@@ -25,7 +30,7 @@
         embeddedMessagingScriptPromise = new Promise((resolve, reject) => {
           const script = document.createElement('script');
           script.type = 'text/javascript';
-          script.src = '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%';
+          script.src = embeddedMessagingConfig.bootstrapJsUrl;
           script.onload = () => resolve();
           script.onerror = () => {
             embeddedMessagingScriptPromise = undefined;
@@ -96,6 +101,10 @@
 
             window.sessionStorage.removeItem('LiveChatToken');
             window.sessionStorage.removeItem('LiveChatSubject');
+          } else if (action === "chatInitiationResult") {
+            if (payload?.data?.statusCode !== 200) {
+              console.error('Live chat initiation failed:', payload?.data);
+            }
           }
         });
 
@@ -105,12 +114,11 @@
 
         embeddedservice_bootstrap.settings.language = "en_US";
         embeddedservice_bootstrap.init(
-          "00DWH000002hLKz",
-          "Compute_Chat_Support",
-          "%REACT_APP_CHAT_DEPLOYMENT_URL%",
+          "00DV90000051sBZ",
+          "AkaChat_Compute",
+          embeddedMessagingConfig.deploymentUrl,
           {
-            scrt2URL:
-              "%REACT_APP_CHAT_SCRT2_URL%"
+            scrt2URL: embeddedMessagingConfig.scrt2Url,
           }
         );
       }
