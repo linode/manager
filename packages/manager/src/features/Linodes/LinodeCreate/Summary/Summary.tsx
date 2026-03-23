@@ -112,25 +112,25 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
       ? linodeInterfaces.some((i) => i.firewall_id && i.firewall_id !== -1)
       : firewallId;
 
-  const hasBetaAclpAlertsAssigned =
+  const hasAclpAlertsAssigned =
     aclpServices?.linode?.alerts?.enabled &&
     isAclpAlertsSupportedRegionLinode &&
     isAclpAlertsMode;
 
-  const totalBetaAclpAlertsAssignedCount =
+  const totalAclpAlertsAssignedCount =
     (alerts?.system_alerts?.length ?? 0) + (alerts?.user_alerts?.length ?? 0);
 
-  const betaAclpAlertsAssignedList = [
+  const aclpAlertsAssignedList = [
     ...(alerts?.system_alerts ?? []),
     ...(alerts?.user_alerts ?? []),
   ].join(', ');
 
-  const betaAclpAlertsAssignedDetails =
-    totalBetaAclpAlertsAssignedCount > 0 ? (
+  const aclpAlertsAssignedDetails =
+    totalAclpAlertsAssignedCount > 0 ? (
       <TextTooltip
-        displayText={`+${totalBetaAclpAlertsAssignedCount}`}
+        displayText={`+${totalAclpAlertsAssignedCount}`}
         minWidth={1}
-        tooltipText={betaAclpAlertsAssignedList}
+        tooltipText={aclpAlertsAssignedList}
       />
     ) : (
       '0'
@@ -210,9 +210,9 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
     {
       item: {
         title: 'Alerts Assigned',
-        details: betaAclpAlertsAssignedDetails,
+        details: aclpAlertsAssignedDetails,
       },
-      show: hasBetaAclpAlertsAssigned,
+      show: hasAclpAlertsAssigned,
     },
   ];
 
