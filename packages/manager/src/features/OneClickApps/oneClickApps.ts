@@ -2301,15 +2301,15 @@ export const oneClickApps: Record<number, OCA> = {
   },
   1997012: {
     alt_description:
-      'Lightweight open large language model optimized for efficient AI inference.',
-    alt_name: 'Open large language model',
+      'Lightweight open-source large language model optimized for efficient AI inference.',
+    alt_name: 'Open-source large language model',
     categories: ['Chat', 'LLM', 'AI'],
     colors: {
       end: '1a73e8',
       start: '34a853',
     },
     description:
-      'Gemma 3 is an open large language model designed for efficient, high-performance AI inference across a variety of workloads. Optimized for text generation, chat, and reasoning tasks, it enables developers to deploy scalable AI applications such as assistants, code generation tools, and content automation directly on their own infrastructure.',
+      'Gemma 3 is an open-source large language model designed for efficient, high-performance AI inference across a variety of workloads. Optimized for text generation, chat, and reasoning tasks, it enables developers to deploy scalable AI applications such as assistants, code generation tools, and content automation directly on their own infrastructure.',
     isNew: true,
     logo_url: 'gemma3.svg',
     related_guides: [
@@ -2319,20 +2319,20 @@ export const oneClickApps: Record<number, OCA> = {
       },
     ],
     summary:
-      'Efficient open large language model for self-hosted AI applications.',
+      'Efficient open-source large language model for self-hosted AI applications.',
     website: 'https://ai.google.dev/gemma',
   },
   2015845: {
     alt_description:
-      'Open large language model series for advanced reasoning, coding, and chat.',
-    alt_name: 'Open large language model',
+      'Open-source large language model series for advanced reasoning, coding, and chat.',
+    alt_name: 'Open-source large language model',
     categories: ['Chat', 'LLM', 'AI'],
     colors: {
       end: '1f2937',
       start: '7c3aed',
     },
     description:
-      'Qwen is an open large language model series designed for high-performance text generation, reasoning, and coding tasks. It supports chat-based interactions, instruction following, and advanced AI application development, making it well-suited for assistants, code generation tools, automation workflows, and enterprise AI deployments.',
+      'Qwen is an open-source large language model series designed for high-performance text generation, reasoning, and coding tasks. It supports chat-based interactions, instruction following, and advanced AI application development, making it well-suited for assistants, code generation tools, automation workflows, and enterprise AI deployments.',
     isNew: true,
     logo_url: 'qwen.svg',
     related_guides: [
@@ -2342,7 +2342,52 @@ export const oneClickApps: Record<number, OCA> = {
       },
     ],
     summary:
-      'Open large language model for reasoning, coding, and chat applications.',
+      'Open-source large language model for reasoning, coding, and chat applications.',
     website: 'https://qwenlm.github.io/',
+  },
+  2025976: {
+    alt_description: 'Open-source Large Language Model.',
+    alt_name:
+      'Open-source and light weight reasoning LLM optimized for complex problem solving, code generation, and logical reasoning tasks.',
+    categories: ['LLM', 'Chat', 'AI'],
+    colors: {
+      end: '4D6BFE',
+      start: '4D6BFE',
+    },
+    description:
+      'DeepSeek-R1 is deployed on a cloud compute instance to provide scalable inference for reasoning and code generation tasks. The VM environment hosts the model runtime through vLLM which allows efficient access to the model via Open WebUI chat service.',
+    isNew: true,
+    logo_url: 'deepseek.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/deepseek-with-openwebui/',
+        title: 'Deploy DeepSeek-R1 with Open WebUI',
+      },
+    ],
+    summary:
+      'Open-source Large Language Model for reasoning, coding, and chat applications.',
+    website: 'https://huggingface.co/deepseek-ai',
+  },
+  2049320: {
+    alt_description: 'Autonomous AI agent',
+    alt_name:
+      'Open-source autonomous AI agent that runs locally and executes tasks through a persistent Gateway service',
+    categories: ['AI', 'AI Agent', 'LLM'],
+    colors: {
+      end: 'AF2626',
+      start: 'D53838',
+    },
+    description:
+      'OpenClaw is an open-source AI agent platform that runs locally and executes tasks through a persistent Gateway service. The Gateway connects communication channels, tools, and AI models, allowing the agent to receive messages, perform actions, and automate workflows.',
+    isNew: true,
+    logo_url: 'openclaw.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/openclaw/',
+        title: 'Deploy OpenClaw',
+      },
+    ],
+    summary: 'Autonomous AI agent.',
+    website: 'https://openclaw.ai/',
   },
 };

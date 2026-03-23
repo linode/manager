@@ -63,6 +63,7 @@ export const DestinationsLanding = () => {
   const {
     data: destinations,
     isLoading,
+    isFetching,
     error,
   } = useDestinationsQuery(
     {
@@ -91,6 +92,10 @@ export const DestinationsLanding = () => {
     return (
       <ErrorState errorText="There was an error retrieving your destinations. Please reload and try again." />
     );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
   }
 
   if (destinations?.results === 0 && !search?.label) {
@@ -125,7 +130,7 @@ export const DestinationsLanding = () => {
         onSearch={onSearch}
         searchValue={search?.label ?? ''}
       />
-      {isLoading ? (
+      {isFetching ? (
         <CircleProgress />
       ) : (
         <>
