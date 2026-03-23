@@ -140,7 +140,10 @@ export const ServiceURI = (props: ServiceURIProps) => {
     return `${credentials?.username}:${credentials?.password}`;
   };
 
-  if (!primaryHost || (engine === 'postgres' && !primaryConnectionPoolHost)) {
+  if (
+    (isGeneralServiceURI && !primaryHost) ||
+    (engine === 'postgres' && !primaryConnectionPoolHost)
+  ) {
     return (
       <Grid display="contents">
         <StyledValueGrid
