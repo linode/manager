@@ -35,7 +35,7 @@ const LinodeMetrics = () => {
       {aclpServices?.linode?.metrics?.enabled &&
       isAclpMetricsSupportedRegionLinode &&
       isAclpMetricsPreference ? (
-        // Beta ACLP Metrics View
+        // ACLP Metrics View
         <CloudPulseDashboardWithFilters
           dashboardId={linodeDashboardId}
           resource={linodeId}
