@@ -29,6 +29,7 @@ export interface Colors {
 
 export type AppCategory =
   | 'AI'
+  | 'AI Agent'
   | 'App Creators'
   | 'Chat'
   | 'Control Panels'
