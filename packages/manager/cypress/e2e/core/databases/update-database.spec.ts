@@ -263,7 +263,7 @@ const validateSuspendResume = (
   cy.findByText('Connection Details');
 
   // DBaaS passwords cannot be revealed when database/cluster is suspended or resuming.
-  ui.cdsButton.findButtonByTitle('Show').should('be.enabled');
+  ui.cdsButton.findButtonByTitle('Show').should('be.disabled');
 
   // Navigate to "Settings" tab.
   ui.tabList.findTabByTitle('Settings').click();
