@@ -49,6 +49,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
+  { flag: 'passwordlessLinodes', label: 'PasswordLess Linodes' },
   {
     flag: 'placementGroupPolicyUpdate',
     label: 'Placement Group Policy Update',

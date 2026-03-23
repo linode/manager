@@ -45,6 +45,7 @@ import {
 import {
   useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
+  useIsPasswordLessLinodesEnabled,
 } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
@@ -60,7 +61,7 @@ import { Networking } from './Networking/Networking';
 import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
-import { Security } from './Security';
+import { Security } from './Security/Security';
 import { SMTP } from './SMTP';
 import { Summary } from './Summary/Summary';
 import { UserData } from './UserData/UserData';
@@ -86,6 +87,7 @@ export const LinodeCreate = () => {
   });
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
   const { data: profile } = useProfile();
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
@@ -103,7 +105,12 @@ export const LinodeCreate = () => {
   const { isDualStackEnabled } = useVPCDualStack();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
-    context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
+    context: {
+      isPasswordLessLinodesEnabled,
+      isLinodeInterfacesEnabled,
+      profile,
+      secureVMNoticesEnabled,
+    },
     defaultValues: () =>
       defaultValues(linodeCreateType, search, queryClient, {
         isLinodeInterfacesEnabled,
