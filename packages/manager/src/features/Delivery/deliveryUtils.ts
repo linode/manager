@@ -121,7 +121,6 @@ export const getDestinationPayloadDetails = (
         certDetails.client_ca_certificate,
         certDetails.client_certificate,
         certDetails.client_private_key,
-        certDetails.tls_hostname,
       ].some((val) => !val);
 
       if (shouldRemoveCertDetails) {
