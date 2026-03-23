@@ -7,13 +7,23 @@ export interface IPAddress {
   public: boolean;
   rdns: null | string;
   region: string;
+  reserved: boolean;
   subnet_mask: string;
+  tags: string[];
   type: string;
   vpc_nat_1_1?: null | {
     address: string;
     subnet_id: number;
     vpc_id: number;
   };
+}
+
+export interface AllocateIPPayload {
+  linode_id: number;
+  public: boolean;
+  region?: string;
+  reserved?: boolean;
+  type: string;
 }
 
 export interface IPRangeBaseData {
@@ -50,4 +60,9 @@ export interface CreateIPv6RangePayload {
   linode_id?: number;
   prefix_length: IPv6Prefix;
   route_target?: string;
+}
+
+export interface ReserveIPPayload {
+  region: string;
+  tags?: string[];
 }
