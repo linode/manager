@@ -1,6 +1,15 @@
-import { createIPv6Range, getIPv6RangeInfo } from '@linode/api-v4';
+import {
+  createIPv6Range,
+  getIPv6RangeInfo,
+  getReservedIP,
+  getReservedIPs,
+  reserveIP,
+  unReserveIP,
+  updateReservedIP,
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useMutation,
   useQueries,
   useQuery,
@@ -19,6 +28,8 @@ import type {
   IPRange,
   IPRangeInformation,
   Params,
+  ReserveIPPayload,
+  ResourcePage,
 } from '@linode/api-v4';
 
 export const networkingQueries = createQueryKeys('networking', {
@@ -39,6 +50,14 @@ export const networkingQueries = createQueryKeys('networking', {
     },
     queryKey: null,
   },
+  reservedIPs: (params: Params = {}, filter: Filter = {}) => ({
+    queryFn: () => getReservedIPs(params, filter),
+    queryKey: [params, filter],
+  }),
+  reservedIP: (address: string) => ({
+    queryFn: () => getReservedIP(address),
+    queryKey: [address],
+  }),
 });
 
 export const useAllIPsQuery = (
@@ -116,6 +135,75 @@ export const useCreateIPv6RangeMutation = () => {
           queryKey: linodeQueries.linodes.queryKey,
         });
       }
+    },
+  });
+};
+
+export const useReservedIPsQuery = (
+  params?: Params,
+  filter?: Filter,
+  enabled: boolean = true,
+) => {
+  return useQuery<ResourcePage<IPAddress>, APIError[]>({
+    ...networkingQueries.reservedIPs(params, filter),
+    enabled,
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useReservedIPQuery = (address: string, enabled: boolean = true) =>
+  useQuery<IPAddress, APIError[]>({
+    ...networkingQueries.reservedIP(address),
+    enabled,
+  });
+
+export const useReserveIPMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IPAddress, APIError[], ReserveIPPayload>({
+    mutationFn: reserveIP,
+    onSuccess(reservedIP) {
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs._def,
+      });
+      queryClient.setQueryData<IPAddress>(
+        networkingQueries.reservedIP(reservedIP.address).queryKey,
+        reservedIP,
+      );
+    },
+  });
+};
+
+export const useUpdateReservedIPMutation = (address: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IPAddress,
+    APIError[],
+    { address: string; tags: null | string[] }
+  >({
+    mutationFn: (data) => updateReservedIP(address, data.tags),
+    onSuccess(reservedIP) {
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs._def,
+      });
+      queryClient.setQueryData<IPAddress>(
+        networkingQueries.reservedIP(reservedIP.address).queryKey,
+        reservedIP,
+      );
+    },
+  });
+};
+
+export const useUnReserveIPMutation = (address: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<object, APIError[]>({
+    mutationFn: () => unReserveIP(address),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs._def,
+      });
+      queryClient.removeQueries({
+        queryKey: networkingQueries.reservedIP(address).queryKey,
+      });
     },
   });
 };
