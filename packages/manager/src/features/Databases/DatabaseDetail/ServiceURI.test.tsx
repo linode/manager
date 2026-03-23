@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ServiceURI } from './ServiceURI';
 
-import type { DatabaseStatus } from '@linode/api-v4';
+import type { DatabaseStatus, Engine } from '@linode/api-v4';
 
 const mockCredentials = {
   password: 'password123',
@@ -170,7 +170,7 @@ describe('ServiceURI', () => {
     refetch: vi.fn(),
   });
 
-  it('should render the service URI component and copy icon', async () => {
+  it('should render the PgBouncer service URI component and copy icon', async () => {
     const { container } = renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} />
     );
@@ -218,6 +218,24 @@ describe('ServiceURI', () => {
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
       `postgres://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
+    );
+  });
+
+  it('should render general service URI with ssl-mode=REQUIRED if isGeneralServiceURI is true and the engine is mysql', () => {
+    const mockDb = {
+      ...databaseWithNoVPC,
+      engine: 'mysql' as Engine,
+    };
+    renderWithTheme(<ServiceURI database={mockDb} isGeneralServiceURI />);
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `mysql://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?ssl-mode=REQUIRED`
     );
   });
 

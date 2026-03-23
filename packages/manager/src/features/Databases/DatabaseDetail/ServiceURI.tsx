@@ -34,6 +34,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const [isCopying, setIsCopying] = useState(false);
   const engine =
     database.engine === 'postgresql' ? 'postgres' : database.engine;
+  const generalSslmode =
+    engine === 'mysql' ? 'ssl-mode=REQUIRED' : 'sslmode=require';
 
   const {
     data: credentials,
@@ -87,7 +89,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     isGeneralServiceURI?: boolean
   ) => {
     if (isGeneralServiceURI) {
-      return `${engine}://${credentials?.username}:${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?sslmode=require`;
+      return `${engine}://${credentials?.username}:${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?${generalSslmode}`;
     }
     return `postgres://${credentials?.username}:${credentials?.password}@${primaryConnectionPoolHost?.address}:${primaryConnectionPoolHost?.port}/{connection pool label}?sslmode=require`;
   };
@@ -155,7 +157,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         {isGeneralServiceURI ? (
           <>
             @{primaryHost?.address}:
-            {`${primaryHost?.port}/defaultdb?sslmode=require`}
+            {`${primaryHost?.port}/defaultdb?${generalSslmode}`}
           </>
         ) : (
           <>
