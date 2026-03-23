@@ -63,22 +63,9 @@ const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   {
     name: 'Description',
     sortableProps: { label: 'description' },
-    style: {
-      whiteSpace: 'nowrap',
-      display: 'block',
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-      flex: '0 1 20%',
-    },
   },
   {
     name: '# of members',
-    style: {
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      display: 'block',
-    },
   },
   {
     name: '# of images',
@@ -87,13 +74,13 @@ const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   {
     name: 'Created',
     sortableProps: { label: 'created' },
-    hidden: 'mdDown',
+    hidden: 'lgDown',
     style: { whiteSpace: 'nowrap' },
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
-    hidden: 'mdDown',
+    hidden: 'lgDown',
     style: { whiteSpace: 'nowrap' },
   },
 ];
@@ -105,7 +92,7 @@ const JOINED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   {
     name: 'Status Changed',
     sortableProps: { label: 'status_changed' },
-    hidden: 'mdDown',
+    hidden: 'lgDown',
   },
 ];
 

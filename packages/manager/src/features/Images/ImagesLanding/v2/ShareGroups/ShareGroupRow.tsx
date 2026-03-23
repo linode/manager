@@ -1,6 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { LinkButton } from '@linode/ui';
-import { Hidden } from '@linode/ui';
+import { Hidden, LinkButton } from '@linode/ui';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
@@ -31,33 +30,15 @@ export const ShareGroupRow = (props: Props) => {
 
   return (
     <TableRow data-qa-sharegroup-row={id} key={id} rowborder>
-      <TableCell
-        data-pendo-id={`Images Groups Owned-Group name`}
-        style={{
-          whiteSpace: 'nowrap',
-          display: 'block',
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        }}
-      >
+      <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
         <LinkButton onClick={() => {}}>{label}</LinkButton>
       </TableCell>
-      <TableCell
-        style={{
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          display: 'block',
-          flex: '0 1 20%',
-        }}
-      >
-        {description}
-      </TableCell>
+      <TableCell>{description}</TableCell>
       <TableCell>{members_count}</TableCell>
       <Hidden smDown>
         <TableCell>{images_count}</TableCell>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell style={{ whiteSpace: 'nowrap' }}>
           {created &&
             formatDate(created, {
@@ -66,13 +47,7 @@ export const ShareGroupRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell
-          style={
-            updated
-              ? { whiteSpace: 'nowrap' }
-              : { display: 'flex', justifyContent: 'center' }
-          }
-        >
+        <TableCell style={{ whiteSpace: 'nowrap' }}>
           {updated !== null
             ? formatDate(updated, { timezone: profile?.timezone })
             : '–'}

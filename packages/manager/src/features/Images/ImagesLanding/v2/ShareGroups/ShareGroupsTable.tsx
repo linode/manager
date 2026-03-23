@@ -1,14 +1,8 @@
-import { useTheme } from '@linode/ui';
-import {
-  Box,
-  Button,
-  Hidden,
-  Typography,
-  ZeroStateSearchNarrowIcon,
-} from '@linode/ui';
+import { Box, Button, Hidden, Typography, useTheme } from '@linode/ui';
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeaderCell,
   TableRow,
@@ -17,7 +11,6 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 
 import {
@@ -175,28 +168,16 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
           </TableHead>
           <TableBody>
             {!error && shareGroups.length === 0 && (
-              <TableRowEmpty
-                colSpan={columns.length + 1}
-                message={
-                  <Box
-                    sx={(theme) => ({
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: theme.spacingFunction(4),
-                      p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
-                    })}
-                  >
-                    <ZeroStateSearchNarrowIcon />
-                    <Typography variant="h3">{emptyMessage.main}</Typography>
-                    {!query && emptyMessage.instruction && (
-                      <Typography variant="body1">
-                        {emptyMessage.instruction}
-                      </Typography>
-                    )}
-                  </Box>
-                }
-              />
+              <TableRow>
+                <TableCell
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {emptyMessage.main}
+                </TableCell>
+              </TableRow>
             )}
             {error && query && (
               <TableRowError
