@@ -369,7 +369,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="phone-number">
+            <FormLabel htmlFor="phone_number">
               Phone number <Typography component="span">(required)</Typography>
             </FormLabel>
             <Stack direction="row" sx={{ marginTop: 0, width: '100%' }}>
