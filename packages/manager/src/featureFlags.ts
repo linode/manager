@@ -275,6 +275,7 @@ export interface Flags {
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
   referralBannerText: BannerContent;
+  reserveIp: boolean;
   resourceLock: ResourceLockFlag;
   secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
@@ -393,6 +394,7 @@ export type ProductInformationBannerLocation =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
+  | 'Reserved IPs'
   | 'StackScripts'
   | 'Volumes'
   | 'VPC';
