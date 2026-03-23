@@ -43,7 +43,7 @@ interface HeaderProps {
   title: string;
 }
 
-interface OwnedGroupsTableProps {
+interface ShareGroupsTableProps {
   columns: ShareGroupsViewTableColConfig[];
   emptyMessage: {
     instruction?: string;
@@ -66,7 +66,7 @@ interface OwnedGroupsTableProps {
   shareGroups: Sharegroup[];
 }
 
-export const ShareGroupsTable = (props: OwnedGroupsTableProps) => {
+export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
   const {
     columns,
     headerProps,
