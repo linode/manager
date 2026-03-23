@@ -14,6 +14,7 @@ import {
 } from '@linode/ui';
 import {
   CreateLinodeDiskFromImageSchema,
+  CreateLinodeDiskFromImageWithoutPasswordSchema,
   CreateLinodeDiskSchema,
 } from '@linode/validation';
 import { useFormik } from 'formik';
@@ -23,6 +24,7 @@ import * as React from 'react';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
@@ -58,6 +60,7 @@ export const CreateDiskDrawer = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { checkForNewEvents } = useEventsPollingActions();
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
 
   const [selectedMode, setSelectedMode] = React.useState<CreateMode>('empty');
 
@@ -80,9 +83,11 @@ export const CreateDiskDrawer = (props: Props) => {
   };
 
   const validationSchema =
-    selectedMode === 'from_image'
-      ? CreateLinodeDiskFromImageSchema
-      : CreateLinodeDiskSchema;
+    selectedMode === 'empty'
+      ? CreateLinodeDiskSchema
+      : isPasswordLessLinodesEnabled
+        ? CreateLinodeDiskFromImageWithoutPasswordSchema
+        : CreateLinodeDiskFromImageSchema;
 
   const formik = useFormik({
     enableReinitialize: true,

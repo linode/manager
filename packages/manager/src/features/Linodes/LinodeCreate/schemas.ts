@@ -68,3 +68,48 @@ export const CreateLinodeFromMarketplaceAppSchema = CreateLinodeSchema.concat(
     stackscript_id: number().required('You must select a Marketplace App.'),
   })
 );
+
+/**
+ * root_pass is set to be optional when authorized_users are provided.
+ * Applied to each schema variant when the passwordLessLinodes feature is enabled
+ */
+export const withRootPassOptional = <T extends LinodeCreateFormValues>(
+  schema: ObjectSchema<T>
+): ObjectSchema<T> =>
+  schema.shape({
+    root_pass: string().when('image', {
+      is: (value: any) => Boolean(value),
+      then: (schema) =>
+        schema.test({
+          name: 'root-pass-or-authorized-users',
+          message:
+            'An SSH Key or a Root Password is required to create an instance. We recommend using an SSH Key for better security.',
+          test(value, context) {
+            const { authorized_users } = context.parent;
+            const hasAuthorizedUsers =
+              Array.isArray(authorized_users) && authorized_users.length > 0;
+            return Boolean(value) || hasAuthorizedUsers;
+          },
+        }),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }) as ObjectSchema<T>;
+
+/**
+ * root_pass is set to be required when deploying from an image.
+ * Applied to each schema variant when the passwordLessLinodes feature is
+ * disabled enforcing the root password requirement.
+ */
+export const withRootPassRequired = <T extends LinodeCreateFormValues>(
+  schema: ObjectSchema<T>
+): ObjectSchema<T> =>
+  schema.shape({
+    root_pass: string().when('image', {
+      is: (value: any) => Boolean(value),
+      then: (schema) =>
+        schema.required(
+          'You must provide a root password when deploying from an image.'
+        ),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  }) as ObjectSchema<T>;

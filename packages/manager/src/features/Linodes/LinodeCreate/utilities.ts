@@ -245,12 +245,18 @@ export interface LinodeCreateFormContext {
    */
   isLinodeInterfacesEnabled: boolean;
   /**
+   * Is passwordLess Linode creation enabled?
+   * When true, root_pass is optional if authorized_users are provided.
+   * When false, root_pass is required.
+   */
+  isPasswordLessLinodesEnabled: boolean;
+  /**
    * Profile data is used in the Linode Create resolver because
    * restricted users are subject to different validation.
    */
   profile: Profile | undefined;
   /**
-   * Used for dispaying warnings to internal Akamai employees.
+   * Used for displaying warnings to internal Akamai employees.
    */
   secureVMNoticesEnabled: boolean;
 }

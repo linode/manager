@@ -10,6 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -55,12 +56,14 @@ export const LinodeRebuildForm = (props: Props) => {
     (preferences) => preferences?.type_to_confirm ?? true
   );
 
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
   const queryClient = useQueryClient();
   const { mutateAsync: rebuildLinode } = useRebuildLinodeMutation(linode.id);
   const { checkForNewEvents } = useEventsPollingActions();
 
   const form = useForm<RebuildLinodeFormValues, Context>({
     context: {
+      isPasswordLessLinodesEnabled,
       isTypeToConfirmEnabled,
       linodeLabel: linode.label,
       queryClient,
@@ -170,8 +173,29 @@ export const LinodeRebuildForm = (props: Props) => {
             )}
             {type.includes('StackScript') && <UserDefinedFields />}
             <Image disabled={!permissions.rebuild_linode} />
-            <Password disabled={!permissions.rebuild_linode} />
-            <SSHKeys disabled={!permissions.rebuild_linode} />
+            {isPasswordLessLinodesEnabled ? (
+              <>
+                <SSHKeys disabled={!permissions.rebuild_linode} />
+                <Divider spacingBottom={20} spacingTop={24} />
+                <Typography variant="h2">Authentication Method</Typography>
+                {form.formState.errors.root_pass?.message && (
+                  <Notice
+                    text={form.formState.errors.root_pass.message}
+                    variant="error"
+                  />
+                )}
+                <Password disabled={!permissions.rebuild_linode} />
+              </>
+            ) : (
+              <>
+                <Password
+                  disabled={!permissions.rebuild_linode}
+                  showErrorText
+                />
+                <Divider spacingBottom={20} spacingTop={24} />
+                <SSHKeys disabled={!permissions.rebuild_linode} />
+              </>
+            )}
             <DiskEncryption
               disabled={!permissions.rebuild_linode}
               isLKELinode={linode.lke_cluster_id !== null}
