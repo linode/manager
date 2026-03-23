@@ -79,6 +79,8 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
         region: 'us-southeast',
         subnet_mask: '255.255.255.0',
         type: 'ipv4',
+        reserved: false,
+        tags: [],
       },
     ],
     reserved: [],
@@ -123,6 +125,8 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       region: 'us-southeast',
       subnet_mask: 'ffff:ffff:ffff:ffff::',
       type: 'ipv6',
+      reserved: false,
+      tags: [],
     },
     slaac: {
       address: '2001:DB8::0000',
@@ -135,6 +139,8 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       region: 'us-southeast',
       subnet_mask: 'ffff:ffff:ffff:ffff::',
       type: 'ipv6',
+      reserved: false,
+      tags: [],
     },
     vpc: [
       {
