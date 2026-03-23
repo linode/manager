@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-03-26] - v1.160.1
+
+### Fixed:
+
+- Include username in Database General Service URI ([#13518](https://github.com/linode/manager/pull/13518))
+
 ## [2026-03-16] - v1.160.0
 
 
