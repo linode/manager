@@ -1,4 +1,12 @@
-import { Box, Button, Hidden, Typography, useTheme } from '@linode/ui';
+import {
+  Box,
+  Button,
+  ErrorState,
+  Hidden,
+  Typography,
+  useTheme,
+  ZeroStateSearchNarrowIcon,
+} from '@linode/ui';
 import {
   Table,
   TableBody,
@@ -11,7 +19,6 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
 
 import {
   StyledImageContainer,
@@ -24,15 +31,17 @@ import { ShareGroupRow } from './ShareGroupRow';
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
 import type { APIError, Sharegroup } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrderV2';
+
 interface HeaderProps {
   buttonProps?: {
     buttonText?: string;
     disabled?: boolean;
     onButtonClick: () => void;
+    pendoId?: string;
     tooltipText?: string;
   };
   description?: React.ReactNode;
-  docsLink?: { href: string; label?: string };
+  docsLink?: { href: string; label?: string; pendoId?: string };
   title: string;
 }
 
@@ -73,7 +82,9 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
     orderBy,
     pagination,
   } = props;
+
   const theme = useTheme();
+
   return (
     <StyledImageContainer>
       {headerProps && headerProps.title && (
@@ -97,7 +108,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
               {headerProps.docsLink && (
                 <DocsLink
                   analyticsLabel={headerProps.title}
-                  data-pendo-id={`Images Groups Owned-Docs Link`}
+                  data-pendo-id={headerProps.docsLink?.pendoId}
                   href={headerProps.docsLink.href}
                   label={headerProps.docsLink.label}
                 />
@@ -105,7 +116,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
               {headerProps.buttonProps && (
                 <Button
                   buttonType="primary"
-                  data-pendo-id={`Images Groups Owned-Create Button`}
+                  data-pendo-id={headerProps.buttonProps?.pendoId}
                   disabled={headerProps.buttonProps.disabled}
                   onClick={headerProps.buttonProps.onButtonClick}
                   tooltipText={headerProps.buttonProps.tooltipText}
@@ -168,22 +179,40 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
           </TableHead>
           <TableBody>
             {!error && shareGroups.length === 0 && (
-              <TableRow>
+              <TableRow rowborder>
                 <TableCell
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
                   }}
                 >
-                  {emptyMessage.main}
+                  <Box
+                    sx={(theme) => ({
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: theme.spacingFunction(4),
+                      p: `{theme.spacingFunction(24)} $theme.spacingFunction(32)}`,
+                      width: '100%',
+                    })}
+                  >
+                    <ZeroStateSearchNarrowIcon />
+                    <Typography variant="h3">{emptyMessage.main}</Typography>
+                    {!query && emptyMessage.instruction && (
+                      <Typography variant="body1">
+                        {emptyMessage.instruction}
+                      </Typography>
+                    )}
+                  </Box>
                 </TableCell>
               </TableRow>
             )}
             {error && query && (
-              <TableRowError
-                colSpan={columns.length + 1}
-                message={error[0].reason}
-              />
+              <TableRow rowborder>
+                <TableCell>
+                  <ErrorState compact errorText={error[0].reason} />
+                </TableCell>
+              </TableRow>
             )}
 
             {shareGroups.map((sharegroup) => (

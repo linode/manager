@@ -1,8 +1,9 @@
-import { useProfile } from '@linode/queries';
+import { usePreferences, useProfile } from '@linode/queries';
 import { Hidden, LinkButton } from '@linode/ui';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
+import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { ShareGroupActionMenu } from './ShareGroupActionMenu';
@@ -28,8 +29,20 @@ export const ShareGroupRow = (props: Props) => {
     id,
   } = shareGroup;
 
+  const { data: tableStripingPreference } = usePreferences(
+    (preferences) => preferences?.isTableStripingEnabled
+  );
+
+  const isTableStripingEnabled = getIsTableStripingEnabled(
+    tableStripingPreference
+  );
+
   return (
-    <TableRow data-qa-sharegroup-row={id} key={id} rowborder>
+    <TableRow
+      data-qa-sharegroup-row={id}
+      key={id}
+      zebra={isTableStripingEnabled}
+    >
       <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
         <LinkButton onClick={() => {}}>{label}</LinkButton>
       </TableCell>

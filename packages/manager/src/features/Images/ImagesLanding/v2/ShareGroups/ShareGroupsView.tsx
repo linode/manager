@@ -117,6 +117,7 @@ export const ShareGroupsView = (props: Props) => {
           tooltipText: isRestrictedUser
             ? config.buttonProps.disabledToolTipText
             : undefined,
+          pendoId: config.buttonProps.pendoId,
         }
       : undefined,
     docsLink: config.docsLink,
@@ -132,7 +133,7 @@ export const ShareGroupsView = (props: Props) => {
             mb: 2,
           },
         }}
-        data-pendo-id="Images Groups Owned-Search"
+        data-pendo-id={config.searchFieldPendoId}
         errorText={searchParseError?.message}
         hideLabel
         isSearching={shareGroupsIsFetching}

@@ -24,10 +24,11 @@ export interface ShareGroupsTabsConfig {
     buttonText: string;
     disabledToolTipText?: string;
     navigateTo?: string;
+    pendoId?: string;
   };
   columns: ShareGroupsViewTableColConfig[];
   description: React.ReactNode;
-  docsLink?: { href: string; label?: string };
+  docsLink?: { href: string; label?: string; pendoId?: string };
   emptyMessage: {
     instruction?: string;
     main: string;
@@ -37,6 +38,7 @@ export interface ShareGroupsTabsConfig {
   orderByDefault: string;
   orderDefault: 'asc' | 'desc';
   preferenceKey: string;
+  searchFieldPendoId?: string;
   title: string;
 }
 
@@ -122,6 +124,7 @@ export const SHAREGROUPS_CONFIG: Record<
     docsLink: {
       href: `https://techdocs.akamai.com/cloud-computing/docs/image-sharing`,
       label: 'Image sharing',
+      pendoId: 'Images Groups Owned-Docs Link',
     },
     columns: OWNED_GROUPS_TABLE_COLUMNS,
     emptyMessage: {
@@ -137,7 +140,9 @@ export const SHAREGROUPS_CONFIG: Record<
       buttonText: 'Create Share Group',
       navigateTo: '/images/share-groups/create',
       disabledToolTipText: 'You do not have permissions to create share groups',
+      pendoId: 'Images Groups Owned-Create Button',
     },
+    searchFieldPendoId: 'Images Groups Owned-Search',
   },
   'joined-groups': {
     title: 'Joined groups',

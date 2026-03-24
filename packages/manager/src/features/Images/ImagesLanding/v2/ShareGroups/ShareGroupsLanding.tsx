@@ -50,7 +50,7 @@ export const ShareGroupsTabs = () => {
             {subTabs.map((tab, index) => (
               <SafeTabPanel index={index} key={`images-${tab.type}-content`}>
                 {tab.type === 'owned-groups' && (
-                  <ShareGroupsView type={'owned-groups'} />
+                  <ShareGroupsView type="owned-groups" />
                 )}
                 {tab.type === 'joined-groups' && (
                   <Notice variant="info">
