@@ -798,7 +798,7 @@ export interface RebuildRequest {
     user_data: null | string;
   };
   root_pass?: string;
-  stackscript_data?: null | {};
+  stackscript_data?: null | Record<string, unknown>;
   stackscript_id?: number;
 }
 

@@ -38,8 +38,15 @@ const RebuildLinodeFromImageWithoutPasswordSchema = RebuildLinodeSchema.concat(
   object({
     confirmationText: string(),
     reuseUserData: boolean().required(),
-    root_pass: string().when('authorized_users', {
-      is: (value: any) => !Array.isArray(value) || value.length === 0,
+    root_pass: string().when(['authorized_users', 'authorized_keys'], {
+      is: (authorizedUsers: unknown, authorizedKeys: unknown) => {
+        const hasAuthorizedUsers =
+          Array.isArray(authorizedUsers) && authorizedUsers.length > 0;
+        const hasAuthorizedKeys =
+          Array.isArray(authorizedKeys) && authorizedKeys.length > 0;
+
+        return !hasAuthorizedUsers && !hasAuthorizedKeys;
+      },
       then: (schema) =>
         schema.required(
           'An SSH Key or a Root Password is required to rebuild a Linode. We recommend using an SSH Key for better security.'
