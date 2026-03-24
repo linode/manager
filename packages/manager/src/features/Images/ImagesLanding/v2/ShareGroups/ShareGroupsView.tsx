@@ -133,7 +133,6 @@ export const ShareGroupsView = (props: Props) => {
             mb: 2,
           },
         }}
-        data-pendo-id={config.searchFieldPendoId}
         errorText={searchParseError?.message}
         hideLabel
         isSearching={shareGroupsIsFetching}
