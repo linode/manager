@@ -81,14 +81,16 @@ export const withRootPassOptional = <T extends LinodeCreateFormValues>(
       is: (value: any) => Boolean(value),
       then: (schema) =>
         schema.test({
-          name: 'root-pass-or-authorized-users',
+          name: 'root-pass-or-ssh-key-required',
           message:
             'An SSH Key or a Root Password is required to create an instance. We recommend using an SSH Key for better security.',
           test(value, context) {
-            const { authorized_users } = context.parent;
+            const { authorized_users, authorized_keys } = context.parent;
             const hasAuthorizedUsers =
               Array.isArray(authorized_users) && authorized_users.length > 0;
-            return Boolean(value) || hasAuthorizedUsers;
+            const hasAuthorizedKeys =
+              Array.isArray(authorized_keys) && authorized_keys.length > 0;
+            return Boolean(value) || hasAuthorizedUsers || hasAuthorizedKeys;
           },
         }),
       otherwise: (schema) => schema.notRequired(),

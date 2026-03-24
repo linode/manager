@@ -101,7 +101,10 @@ export const CreateDiskDrawer = (props: Props) => {
                 label: values.label,
                 size: values.size,
               }
-            : values;
+            : {
+                ...values,
+                ...(values.root_pass === '' && { root_pass: undefined }),
+              };
 
         await createDisk(cleanedValues);
         checkForNewEvents();

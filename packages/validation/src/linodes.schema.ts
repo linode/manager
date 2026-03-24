@@ -627,7 +627,7 @@ export const CreateLinodeDiskFromImageSchema =
       .required('An image is required.')
       .typeError('An image is required.'),
     root_pass: string().when('image', {
-      is: (value: any) => Boolean(value),
+      is: (value: unknown) => Boolean(value),
       then: (schema) =>
         schema.required(
           'You must provide a root password when deploying from an image.',
@@ -643,17 +643,19 @@ export const CreateLinodeDiskFromImageWithoutPasswordSchema =
       .required('An image is required.')
       .typeError('An image is required.'),
     root_pass: string().when('image', {
-      is: (value: any) => Boolean(value),
+      is: (value: unknown) => Boolean(value),
       then: (schema) =>
         schema.test({
-          name: 'root-pass-or-authorized-users',
+          name: 'root-pass-or-ssh-key-required',
           message:
             'An SSH Key or a Root Password is required to create a disk. We recommend using an SSH Key for better security.',
           test(value, context) {
-            const { authorized_users } = context.parent;
+            const { authorized_users, authorized_keys } = context.parent;
             const hasAuthorizedUsers =
               Array.isArray(authorized_users) && authorized_users.length > 0;
-            return Boolean(value) || hasAuthorizedUsers;
+            const hasAuthorizedKeys =
+              Array.isArray(authorized_keys) && authorized_keys.length > 0;
+            return Boolean(value) || hasAuthorizedUsers || hasAuthorizedKeys;
           },
         }),
       otherwise: (schema) => schema.notRequired(),
