@@ -22,7 +22,11 @@ export interface CloudPulseLineGraph extends AreaChartProps {
   data: DataSet[];
   error?: string;
   loading?: boolean;
-  onZoomChange?: (isZoomed: boolean) => void;
+  onZoomChange?: (
+    isZoomed: boolean,
+    left: 'dataMin' | number,
+    right: 'dataMax' | number
+  ) => void;
   zoomResetKey: string;
 }
 
@@ -88,9 +92,9 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
 
   React.useEffect(() => {
     if (onZoomChange) {
-      onZoomChange(isZoomed);
+      onZoomChange(isZoomed, zoom.left, zoom.right);
     }
-  }, [isZoomed, onZoomChange]);
+  }, [isZoomed, onZoomChange, zoom.left, zoom.right]);
 
   if (loading) {
     return <CircleProgress sx={{ minHeight: '380px' }} />;
