@@ -3,6 +3,7 @@ import React from 'react';
 
 import GroupByIcon from 'src/assets/icons/group-by.svg';
 
+import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { CloudPulseGroupByDrawer } from './CloudPulseGroupByDrawer';
 import { GLOBAL_GROUP_BY_MESSAGE } from './constants';
@@ -40,6 +41,7 @@ export const GlobalFilterGroupByRenderer = (
     savePreferences,
   } = props;
   const [isSelected, setIsSelected] = React.useState(false);
+  const { setGlobalGroupBy } = useCloudPulseContext();
 
   const { options, defaultValue, isLoading } = useGlobalDimensions(
     selectedDashboard?.id,
@@ -60,9 +62,10 @@ export const GlobalFilterGroupByRenderer = (
         selectedValue.map(({ value }) => value),
         savePref ?? savePreferences
       );
+      setGlobalGroupBy(selectedValue.map(({ label }) => label));
       setOpen(false);
     },
-    [handleChange, savePreferences]
+    [handleChange, savePreferences, setGlobalGroupBy]
   );
 
   const onCancel = React.useCallback(() => {

@@ -206,7 +206,7 @@ describe('delivery utils functions', () => {
         expect(result.client_certificate_details).toBeUndefined();
       });
 
-      it('should omit client_certificate_details when any of its properties is empty', () => {
+      it('should omit client_certificate_details when any of [client_certificate, client_ca_certificate, client_private_key] properties is empty', () => {
         const details: CustomHTTPSDetailsExtended = {
           ...baseCustomHTTPSDetails,
           client_certificate_details: {
@@ -233,6 +233,27 @@ describe('delivery utils functions', () => {
             client_certificate: 'cert',
             client_private_key: 'key',
             tls_hostname: 'hostname',
+          },
+        };
+
+        const result = getDestinationPayloadDetails(
+          details,
+          destinationType.CustomHttps
+        ) as CustomHTTPSDetailsExtended;
+
+        expect(result.client_certificate_details).toBeDefined();
+        expect(result.client_certificate_details).toEqual(
+          details.client_certificate_details
+        );
+      });
+
+      it('should keep client_certificate_details when all of of [client_certificate, client_ca_certificate, client_private_key] properties have values but tls_hostname is empty', () => {
+        const details: CustomHTTPSDetailsExtended = {
+          ...baseCustomHTTPSDetails,
+          client_certificate_details: {
+            client_ca_certificate: 'ca-cert',
+            client_certificate: 'cert',
+            client_private_key: 'key',
           },
         };
 

@@ -190,7 +190,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
             result = cluster.region === regionFilter;
           }
 
-          if (result && logGenerationFilter) {
+          if (result && logGenerationFilter !== undefined) {
             result =
               cluster.control_plane.audit_logs_enabled === logGenerationFilter;
           }
