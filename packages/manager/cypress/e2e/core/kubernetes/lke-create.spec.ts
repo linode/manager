@@ -1455,6 +1455,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       });
       cy.findByTestId('apl-radio-button-no').within(() => {
         cy.findByRole('radio').should('be.enabled').should('not.be.checked');
+        cy.findByRole('radio').check();
       });
 
       // Confirm the VPC/Firewall section displays.
