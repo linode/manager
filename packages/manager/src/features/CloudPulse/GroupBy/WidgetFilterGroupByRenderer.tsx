@@ -96,7 +96,10 @@ export const WidgetFilterGroupByRenderer = (
 
   return (
     <>
-      <CloudPulseTooltip placement="bottom-end" title="Group By">
+      <CloudPulseTooltip
+        placement="bottom-end"
+        title={isDisabled ? 'No dimensions available for grouping' : 'Group By'}
+      >
         <IconButton
           aria-label="Group By Dashboard Metrics"
           color="inherit"
