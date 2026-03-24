@@ -1448,15 +1448,13 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .should('be.enabled')
         .click();
 
-      // Confirm the APL section is disabled and unsupported.
+      // Confirm that APL selection is enabled and no option is selected by default.
       cy.findByTestId('apl-label').should('be.visible');
-      cy.findByTestId('apl-coming-soon-chip').should(
-        'have.text',
-        'coming soon'
-      );
-      cy.findByTestId('apl-radio-button-yes').should('be.disabled');
+      cy.findByTestId('apl-radio-button-yes').within(() => {
+        cy.findByRole('radio').should('be.enabled').should('not.be.checked');
+      });
       cy.findByTestId('apl-radio-button-no').within(() => {
-        cy.findByRole('radio').should('be.disabled').should('be.checked');
+        cy.findByRole('radio').should('be.enabled').should('not.be.checked');
       });
 
       // Confirm the VPC/Firewall section displays.
@@ -1866,10 +1864,10 @@ describe('LKE cluster creation with LKE-E Post-LA', () => {
 
 /*
  * Each test provided w/ array of 12 mock linode types. Type excluded if:
-	- flag enabled and id includes 'blackwell'
-	- enterprise tier and id includes 'gpu'
+ * - flag enabled and id includes 'blackwell'
+ * - enterprise tier and id includes 'gpu'
  * If visible in table, rows are always enabled
-*/
+ */
 describe('smoketest for Nvidia Blackwell GPUs in kubernetes/create page', () => {
   const mockRegion = regionFactory.build({
     id: 'us-east',
