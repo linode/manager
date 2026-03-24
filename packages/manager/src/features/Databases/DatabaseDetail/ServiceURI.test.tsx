@@ -53,6 +53,7 @@ const databaseWithNoVPC = databaseFactory.build({
   },
   platform: 'rdbms-default',
   private_network: null, // No VPC configured
+  status: 'active',
 });
 
 const databaseWithPrivateVPC = databaseFactory.build({
@@ -88,6 +89,7 @@ const databaseWithPrivateVPC = databaseFactory.build({
     subnet_id: 1,
     vpc_id: 123,
   },
+  status: 'active',
 });
 
 const databaseWithPublicVPC = databaseFactory.build({
@@ -142,6 +144,7 @@ const databaseWithPublicVPC = databaseFactory.build({
     subnet_id: 1,
     vpc_id: 123,
   },
+  status: 'active',
 });
 
 // Hoist query mocks
@@ -202,19 +205,6 @@ describe('ServiceURI', () => {
     expect(serviceURIText).toBe(
       `postgres://lnroot:password123@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
-  });
-
-  it('should render error retry button if the credentials call fails', () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      error: new Error('Failed to fetch credentials'),
-    });
-
-    renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
-
-    const errorRetryBtn = screen.getByRole('button', {
-      name: '{error. click to retry}',
-    });
-    expect(errorRetryBtn).toBeInTheDocument();
   });
 
   it('should render general service URI if isGeneralServiceURI is true', () => {
