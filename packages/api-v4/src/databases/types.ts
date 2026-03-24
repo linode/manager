@@ -32,7 +32,6 @@ export interface DatabaseEngine {
 export type DatabaseStatus =
   | 'active'
   | 'degraded'
-  | 'failed'
   | 'migrated'
   | 'migrating'
   | 'provisioning'
