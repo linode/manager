@@ -117,8 +117,8 @@ describe('object storage end-to-end tests', () => {
           .click();
       });
 
-    cy.wait(['@createBucket', '@getBuckets']).then(([createBucket,]) => {
-      bucketHostname = createBucket?.response?.body?.hostname
+    cy.wait(['@createBucket', '@getBuckets']).then(([createBucket]) => {
+      bucketHostname = createBucket?.response?.body?.hostname;
     });
     ui.drawer.find().should('not.exist');
 
