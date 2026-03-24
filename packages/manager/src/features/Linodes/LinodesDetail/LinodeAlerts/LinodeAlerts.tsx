@@ -1,8 +1,8 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import { getFeatureChip } from '@linode/shared';
 import {
   Accordion,
   ActionsPanel,
-  BetaChip,
   Box,
   Divider,
   Notice,
@@ -33,7 +33,7 @@ const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
-  const { aclpServices } = useFlags();
+  const { aclpServices, aclpAlerting } = useFlags();
   const { data: linode } = useLinodeQuery(id);
 
   const { data: permissions } = usePermissions('linode', ['update_linode'], id);
@@ -174,19 +174,32 @@ const LinodeAlerts = () => {
         </Typography>
       </ConfirmationDialog>
       <Box>
-        {isAclpAlertingInRegionEnabled && (
-          <DismissibleBanner
-            dismissible={false}
-            preferenceKey="alerts-preference-linode-details"
-            variant="info"
-          >
-            <Typography>
-              Try the <strong>Alerts (Beta)</strong>, featuring new options like
-              customizable alerts. You can keep your legacy alerts and add them
-              to the new Beta Alerts.
-            </Typography>
-          </DismissibleBanner>
-        )}
+        {isAclpAlertingInRegionEnabled &&
+          (aclpAlerting?.beta || aclpAlerting?.new) && (
+            <DismissibleBanner
+              dismissible={false}
+              preferenceKey="alerts-preference-linode-details"
+              variant="info"
+            >
+              <Typography>
+                {aclpAlerting.beta && (
+                  <>
+                    Try the <strong>Alerts (Beta)</strong>, featuring new
+                    options like customizable alerts. You can keep your legacy
+                    alerts and add them to the new Beta Alerts.
+                  </>
+                )}
+
+                {!aclpAlerting.beta && aclpAlerting.new && (
+                  <>
+                    Try <strong>Alerts (New)</strong> with features like
+                    customizable alerts. Legacy and new alerts can be used
+                    together.
+                  </>
+                )}
+              </Typography>
+            </DismissibleBanner>
+          )}
         {isAclpAlertingInRegionEnabled ? (
           // Unified mode - both Legacy Alerts and ACLP Alerts are displayed with a shared save button.
           <Paper ref={unifiedAlertsContainerRef}>
@@ -238,9 +251,7 @@ const LinodeAlerts = () => {
                     detailProps={{ sx: { p: 0 } }}
                     disableGutters // Removes unnecessary default margins when stacking Accordions
                     heading="Alerts"
-                    headingChip={
-                      aclpServices?.linode?.alerts?.beta ? <BetaChip /> : null
-                    }
+                    headingChip={getFeatureChip(aclpAlerting ?? {})}
                     summaryProps={{ sx: { p: 0 } }}
                   >
                     <AlertReusableComponent
