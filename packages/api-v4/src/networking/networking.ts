@@ -15,7 +15,7 @@ import Request, {
   setXFilter,
 } from '../request';
 
-import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { Filter, ResourcePage as Page, Params, PriceType } from '../types';
 import type {
   AllocateIPPayload,
   CreateIPv6RangePayload,
@@ -285,4 +285,16 @@ export const unReserveIP = (ipAddress: string) =>
       `${BETA_API_ROOT}/networking/reserved/ips/${encodeURIComponent(ipAddress)}`,
     ),
     setMethod('DELETE'),
+  );
+
+/**
+ * getReservedIPsTypes
+ *
+ * Returns a paginated list of available Reserved IP types; used for pricing.
+ */
+export const getReservedIPsTypes = (params?: Params) =>
+  Request<Page<PriceType>>(
+    setURL(`${API_ROOT}/networking/reserved/ips/types`),
+    setMethod('GET'),
+    setParams(params),
   );
