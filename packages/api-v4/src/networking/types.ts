@@ -1,8 +1,16 @@
+export interface AssignedEntity {
+  id: number;
+  label: string;
+  type: string;
+  url: string;
+}
+
 export interface IPAddress {
   address: string;
+  assigned_entity: AssignedEntity | null;
   gateway: null | string;
   interface_id: null | number;
-  linode_id: number;
+  linode_id: null | number;
   prefix: number;
   public: boolean;
   rdns: null | string;
@@ -19,7 +27,7 @@ export interface IPAddress {
 }
 
 export interface AllocateIPPayload {
-  linode_id: number;
+  linode_id?: number;
   public: boolean;
   region?: string;
   reserved?: boolean;
