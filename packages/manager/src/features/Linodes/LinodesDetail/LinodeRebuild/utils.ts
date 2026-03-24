@@ -42,7 +42,7 @@ const RebuildLinodeFromImageWithoutPasswordSchema = RebuildLinodeSchema.concat(
       is: (value: any) => !Array.isArray(value) || value.length === 0,
       then: (schema) =>
         schema.required(
-          'An SSH Key or a Root Password is required to create an instance. We recommend using an SSH Key for better security.'
+          'An SSH Key or a Root Password is required to rebuild a Linode. We recommend using an SSH Key for better security.'
         ),
       otherwise: (schema) => schema.notRequired(),
     }),

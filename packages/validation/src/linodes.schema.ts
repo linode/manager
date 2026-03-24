@@ -648,7 +648,7 @@ export const CreateLinodeDiskFromImageWithoutPasswordSchema =
         schema.test({
           name: 'root-pass-or-authorized-users',
           message:
-            'An SSH Key or a Root Password is required to create an instance. We recommend using an SSH Key for better security.',
+            'An SSH Key or a Root Password is required to create a disk. We recommend using an SSH Key for better security.',
           test(value, context) {
             const { authorized_users } = context.parent;
             const hasAuthorizedUsers =
