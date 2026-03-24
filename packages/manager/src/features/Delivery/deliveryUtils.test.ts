@@ -288,6 +288,56 @@ describe('delivery utils functions', () => {
         expect(result.content_type).toBeUndefined();
         expect(result.client_certificate_details).toBeUndefined();
       });
+
+      it('should omit tls_hostname from client_certificate_details when it is an empty string', () => {
+        const details: CustomHTTPSDetailsExtended = {
+          ...baseCustomHTTPSDetails,
+          client_certificate_details: {
+            client_ca_certificate: 'ca-cert',
+            client_certificate: 'cert',
+            client_private_key: 'key',
+            tls_hostname: '',
+          },
+        };
+
+        const result = getDestinationPayloadDetails(
+          details,
+          destinationType.CustomHttps
+        ) as CustomHTTPSDetailsExtended;
+
+        expect(result.client_certificate_details).toBeDefined();
+        expect(result.client_certificate_details?.tls_hostname).toBeUndefined();
+        expect(result.client_certificate_details).toEqual({
+          client_ca_certificate: 'ca-cert',
+          client_certificate: 'cert',
+          client_private_key: 'key',
+        });
+      });
+
+      it('should omit tls_hostname from client_certificate_details when it is whitespace', () => {
+        const details: CustomHTTPSDetailsExtended = {
+          ...baseCustomHTTPSDetails,
+          client_certificate_details: {
+            client_ca_certificate: 'ca-cert',
+            client_certificate: 'cert',
+            client_private_key: 'key',
+            tls_hostname: '   ',
+          },
+        };
+
+        const result = getDestinationPayloadDetails(
+          details,
+          destinationType.CustomHttps
+        ) as CustomHTTPSDetailsExtended;
+
+        expect(result.client_certificate_details).toBeDefined();
+        expect(result.client_certificate_details?.tls_hostname).toBeUndefined();
+        expect(result.client_certificate_details).toEqual({
+          client_ca_certificate: 'ca-cert',
+          client_certificate: 'cert',
+          client_private_key: 'key',
+        });
+      });
     });
   });
 });
