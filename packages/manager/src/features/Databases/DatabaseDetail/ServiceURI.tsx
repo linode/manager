@@ -10,6 +10,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import {
   CLUSTER_PROVISIONING_TEXT,
   CREDENTIALS_ERROR_TEXT,
+  DISABLE_CREDENTIAL_STATES,
   DISABLED_PASSWORD_BUTTON_TEXT,
 } from 'src/features/Databases/constants';
 import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
@@ -101,9 +102,10 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const showBtnLoading =
     !hidePassword && !isCopying && (credentialsLoading || credentialsFetching);
 
-  const disablePasswordBtn = ['failed', 'provisioning', 'suspended'].includes(
+  const disablePasswordBtn = DISABLE_CREDENTIAL_STATES.includes(
     database.status
   );
+
   const disabledPasswordTooltipText =
     database.status === 'provisioning'
       ? CLUSTER_PROVISIONING_TEXT
@@ -177,6 +179,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
       ) : (
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
+            disabled={disablePasswordBtn}
+            disabledReason={disabledPasswordTooltipText}
             onClickCallback={handleCopy}
             text={getServiceURIText(credentials, isGeneralServiceURI)}
           />
