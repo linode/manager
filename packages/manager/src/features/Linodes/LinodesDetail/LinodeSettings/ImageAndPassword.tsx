@@ -1,4 +1,4 @@
-import { Divider, Notice, Typography } from '@linode/ui';
+import { Divider, Notice, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
@@ -45,7 +45,7 @@ export const ImageAndPassword = (props: Props) => {
         variant="all"
       />
       {isPasswordLessLinodesEnabled ? (
-        <>
+        <Stack>
           <Divider spacingBottom={20} spacingTop={24} />
           <UserSSHKeyPanel
             authorizedUsers={authorizedUsers}
@@ -54,16 +54,22 @@ export const ImageAndPassword = (props: Props) => {
           />
           <Divider spacingBottom={20} spacingTop={24} />
           <Typography variant="h2">Authentication Method</Typography>
-          {passwordError && <Notice text={passwordError} variant="error" />}
+          {passwordError && (
+            <Notice
+              sx={{ mb: 0, mt: 2 }}
+              text={passwordError}
+              variant="error"
+            />
+          )}
           <PasswordInput
             label="Root Password"
             onChange={(e) => onPasswordChange(e.target.value)}
             value={password || ''}
           />
           <Divider spacingBottom={20} spacingTop={24} />
-        </>
+        </Stack>
       ) : (
-        <>
+        <Stack>
           <PasswordInput
             errorText={passwordError}
             label="Root Password"
@@ -76,7 +82,7 @@ export const ImageAndPassword = (props: Props) => {
             disabled={disabled}
             setAuthorizedUsers={setAuthorizedUsers}
           />
-        </>
+        </Stack>
       )}
     </React.Fragment>
   );
