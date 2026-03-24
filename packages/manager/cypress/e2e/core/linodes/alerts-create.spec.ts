@@ -18,10 +18,10 @@ import {
   firewallFactory,
 } from 'src/factories';
 import {
+  ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT,
   ALERTS_BETA_MODE_BANNER_TEXT,
-  ALERTS_BETA_MODE_BUTTON_TEXT,
-  ALERTS_LEGACY_MODE_BANNER_TEXT,
-  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
 } from 'src/features/Linodes/constants';
 
 const mockFirewall = firewallFactory.build({
@@ -246,7 +246,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           // switch to beta
           // alerts are off/false but enabled, can switch to on/true
           ui.button
-            .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+            .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -402,7 +402,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       cy.get('[data-testid="notice-info"]')
         .should('be.visible')
         .within(() => {
-          cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+          cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
         });
     });
     // legacy alert form, inputs are ON but readonly
@@ -420,7 +420,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
 
     // upgrade from legacy alerts to beta alerts
     ui.button
-      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+      .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -435,7 +435,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           });
         // possible to downgrade from ACLP alerts to legacy alerts
         ui.button
-          .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
+          .findByTitle(ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled');
       });

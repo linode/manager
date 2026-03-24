@@ -12,11 +12,11 @@ import { randomLabel } from 'support/util/random';
 
 import { alertFactory } from 'src/factories';
 import {
+  ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT,
   ALERTS_BETA_MODE_BANNER_TEXT,
-  ALERTS_BETA_MODE_BUTTON_TEXT,
   ALERTS_BETA_PROMPT,
-  ALERTS_LEGACY_MODE_BANNER_TEXT,
-  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
   ALERTS_LEGACY_PROMPT,
 } from 'src/features/Linodes/constants';
 
@@ -142,7 +142,7 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+            cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
           });
         // alerts are disabled so all toggles are off
         ui.toggle.find().each(($toggle) => {
@@ -152,7 +152,7 @@ describe('region enables alerts', function () {
 
     // upgrade from legacy alerts to ACLP alerts
     ui.button
-      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+      .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -171,7 +171,7 @@ describe('region enables alerts', function () {
           });
         // possible to downgrade from ACLP alerts to legacy alerts
         ui.button
-          .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
+          .findByTitle(ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled');
 
@@ -203,7 +203,7 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+            cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
           });
 
         // alerts are enabled so all toggles are on if val > 0
@@ -214,7 +214,7 @@ describe('region enables alerts', function () {
 
     // upgrade from legacy alerts to ACLP alerts
     ui.button
-      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+      .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -274,7 +274,7 @@ describe('region enables alerts', function () {
 
     // downgrade from ACLP alerts to legacy alerts
     ui.button
-      .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
+      .findByTitle(ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -289,7 +289,7 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+            cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
           });
         // alerts are disabled so all toggles are off
         ui.toggle.find().each(($toggle) => {
@@ -301,7 +301,7 @@ describe('region enables alerts', function () {
         });
         // possible to upgrade to beta
         ui.button
-          .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+          .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled');
 
@@ -339,7 +339,7 @@ describe('region enables alerts', function () {
         assertLinodeAlertsEnabled(this.alertDefinitions);
         // downgrade from ACLP alerts to legacy alerts
         ui.button
-          .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
+          .findByTitle(ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -356,7 +356,7 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+            cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
           });
         // turn the toggles off
         ui.toggle
@@ -444,13 +444,13 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+            cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
           });
       });
 
     // upgrade from legacy alerts to ACLP alerts
     ui.button
-      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+      .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -558,8 +558,10 @@ describe('region disables alerts. beta alerts not available regardless of linode
         cy.contains('Alerts').should('be.visible');
         cy.get('[data-testid="notice-info"]').should('not.exist');
         // not possible to upgrade or downgrade
-        cy.findByText(ALERTS_LEGACY_MODE_BUTTON_TEXT).should('not.exist');
-        cy.findByText(ALERTS_BETA_MODE_BUTTON_TEXT).should('not.exist');
+        cy.findByText(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT).should(
+          'not.exist'
+        );
+        cy.findByText(ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT).should('not.exist');
         // alerts are disabled so all toggles are off but are not readonly
         ui.toggle.find().each(($toggle) => {
           cy.wrap($toggle)
@@ -591,8 +593,10 @@ describe('region disables alerts. beta alerts not available regardless of linode
         cy.contains('Alerts').should('be.visible');
         cy.get('[data-testid="notice-info"]').should('not.exist');
         // not possible to upgrade or downgrade
-        cy.findByText(ALERTS_LEGACY_MODE_BUTTON_TEXT).should('not.exist');
-        cy.findByText(ALERTS_BETA_MODE_BUTTON_TEXT).should('not.exist');
+        cy.findByText(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT).should(
+          'not.exist'
+        );
+        cy.findByText(ALERTS_BETA_AND_NEW_MODE_BUTTON_TEXT).should('not.exist');
         // legacy alerts are enabled
         ui.toggle.find().each(($toggle) => {
           cy.wrap($toggle)
