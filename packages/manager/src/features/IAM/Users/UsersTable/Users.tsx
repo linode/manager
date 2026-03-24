@@ -18,6 +18,7 @@ import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   IAM_CHILD_USERS_PENDO_IDS,
+  IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
@@ -232,7 +233,7 @@ export const UsersLanding = () => {
               buttonType="primary"
               data-pendo-id={
                 isDelegateUserType
-                  ? 'IAM Users Delegate-Add A User'
+                  ? IAM_DELEGATE_USERS_PENDO_IDS.addUserButton
                   : isChildUserType
                     ? IAM_CHILD_USERS_PENDO_IDS.addUserButton
                     : IAM_PARENT_USERS_PENDO_IDS.addUserButton

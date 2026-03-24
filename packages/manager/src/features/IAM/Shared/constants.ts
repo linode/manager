@@ -12,6 +12,7 @@ export const IAM_DELEGATE_USERS_PENDO_IDS = {
   addUserButton: 'IAM Users Delegate-Add A User',
   addUserDrawerSubmit: 'IAM Users Delegate Add A User-Add User',
   delegateUsernameActionMenu: 'IAM Users Delegate Username-Action menu',
+  delegateUsernameLink: 'IAM Users-Delegate Username',
 };
 // Pendo IDs for Child Users flow
 export const IAM_CHILD_USERS_PENDO_IDS = {
@@ -19,7 +20,6 @@ export const IAM_CHILD_USERS_PENDO_IDS = {
   childUsernameActionMenu: 'IAM Users Child Username-Action menu',
   addUserButton: 'IAM Users Child-Add A User',
   addUserDrawerSubmit: 'IAM Users Child Add A User-Add User',
-  delegateUsernameLink: 'IAM Users-Delegate Username',
 };
 
 // Pendo IDs for Roles pages (Parent & Child)

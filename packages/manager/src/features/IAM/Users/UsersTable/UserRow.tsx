@@ -17,6 +17,7 @@ import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   IAM_CHILD_USERS_PENDO_IDS,
+  IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
 import { UsersActionMenu } from './UsersActionMenu';
@@ -72,7 +73,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
                       user.user_type === 'child'
                         ? IAM_CHILD_USERS_PENDO_IDS.childUsernameLink
                         : user.user_type === 'delegate'
-                          ? IAM_CHILD_USERS_PENDO_IDS.delegateUsernameLink
+                          ? IAM_DELEGATE_USERS_PENDO_IDS.delegateUsernameLink
                           : IAM_PARENT_USERS_PENDO_IDS.parentUsernameLink
                     }
                     to={
