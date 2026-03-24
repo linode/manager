@@ -73,13 +73,18 @@ export const GlobalFilterGroupByRenderer = (
   }, []);
   return (
     <>
-      <CloudPulseTooltip placement="bottom-end" title="Group By">
+      <CloudPulseTooltip
+        placement="bottom-end"
+        title={
+          !options.length ? 'No dimensions available for grouping' : 'Group By'
+        }
+      >
         <IconButton
           aria-label="Group By Dashboard Metrics"
           color="inherit"
           data-qa-selected={isSelected}
           data-testid="group-by"
-          disabled={!selectedDashboard || isLoading}
+          disabled={!options.length || !selectedDashboard || isLoading}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
