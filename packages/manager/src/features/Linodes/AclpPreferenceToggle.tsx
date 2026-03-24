@@ -126,7 +126,7 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
 
   const isAclpModeBeta = type === 'alerts' ? aclpAlerting?.beta : aclp?.beta;
 
-  const handleBetaToggle = () => {
+  const handleToggle = () => {
     if (type === 'alerts' && onAlertsModeChange) {
       onAlertsModeChange(!isAclpMode);
     } else {
@@ -139,7 +139,7 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
       actionButton={
         <Button
           buttonType="primary"
-          onClick={handleBetaToggle}
+          onClick={handleToggle}
           sx={{ textTransform: 'none' }}
         >
           {config.getButtonText(isAclpMode, isAclpModeBeta)}

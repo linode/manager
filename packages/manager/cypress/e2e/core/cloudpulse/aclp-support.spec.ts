@@ -69,7 +69,7 @@ describe('ACLP Components UI varies according to ACLP support by region and user
     });
     // UI displays beta metrics, can switch to legacy view
     it('user preference enables aclp', function () {
-      mockGetUserPreferences({ isAclpMetricsBeta: true }).as(
+      mockGetUserPreferences({ isAclpMetricsMode: true }).as(
         'getUserPreferences'
       );
       cy.visitWithLogin(`/linodes/${this.mockLinodeId}/metrics`);
@@ -107,7 +107,7 @@ describe('ACLP Components UI varies according to ACLP support by region and user
 
     // UI displays legacy metrics, can switch to beta view
     it('user preference disables aclp', function () {
-      mockGetUserPreferences({ isAclpMetricsBeta: false }).as(
+      mockGetUserPreferences({ isAclpMetricsMode: false }).as(
         'getUserPreferences'
       );
       const mockLegacyStats: Stats = generateMockLegacyStats();
@@ -186,7 +186,7 @@ describe('ACLP Components UI varies according to ACLP support by region and user
     });
     // UI displays legacy metrics, no option to switch to beta view
     it('user preference enables aclp', function () {
-      mockGetUserPreferences({ isAclpMetricsBeta: true }).as(
+      mockGetUserPreferences({ isAclpMetricsMode: true }).as(
         'getUserPreferences'
       );
       cy.visitWithLogin(`/linodes/${this.mockLinodeId}/metrics`);
@@ -195,7 +195,7 @@ describe('ACLP Components UI varies according to ACLP support by region and user
 
     // UI displays legacy metrics, no option to switch to beta view
     it('user preference disables aclp', function () {
-      mockGetUserPreferences({ isAclpMetricsBeta: false }).as(
+      mockGetUserPreferences({ isAclpMetricsMode: false }).as(
         'getUserPreferences'
       );
       cy.visitWithLogin(`/linodes/${this.mockLinodeId}/metrics`);
