@@ -1296,7 +1296,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms that HA is enabled by default with LKE-E selection
      * - Confirms an LKE-E supported region can be selected
      * - Confirms an LKE-E supported k8 version can be selected
-     * - Confirms the APL section is disabled while it remains unsupported
+     * - Confirms that the APL section is present and enabled
      * - Confirms the VPC & Firewall placeholder section displays with correct copy
      * - Confirms ACL is enabled by default
      * - Confirms the checkout bar displays the correct LKE-E info
