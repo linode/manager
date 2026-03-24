@@ -15,6 +15,7 @@ import { Controller, useWatch } from 'react-hook-form';
 
 import {
   getDestinationTypeOption,
+  isFormInEditMode,
   useIsACLPLogsEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
@@ -106,7 +107,9 @@ export const DestinationForm = (props: DestinationFormProps) => {
               render={({ field }) => (
                 <Autocomplete
                   disableClearable
-                  disabled={!isACLPLogsCustomHttpsEnabled}
+                  disabled={
+                    isFormInEditMode(mode) || !isACLPLogsCustomHttpsEnabled
+                  }
                   label="Destination Type"
                   onBlur={field.onBlur}
                   onChange={(_, { value }) => {
