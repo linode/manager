@@ -1,6 +1,12 @@
 import { useProfile, useRegionsQuery } from '@linode/queries';
-import { List, ListItem, Stack, TooltipIcon, Typography } from '@linode/ui';
-import { Hidden } from '@linode/ui';
+import {
+  Hidden,
+  List,
+  ListItem,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
 import React from 'react';
 
