@@ -3,7 +3,15 @@ import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 
+import { ReservedIpsLandingEmptyState } from './ReservedIpsLandingEmptyState';
+
 export const ReservedIpsLanding = () => {
+  // TODO: Replace with actual data check once API queries are implemented
+  const showEmptyState = true;
+
+  if (showEmptyState) {
+    return <ReservedIpsLandingEmptyState />;
+  }
   return (
     <>
       <LandingHeader
