@@ -87,6 +87,14 @@ export const SupportTicketsLanding = () => {
           navigate({
             to: '/support/tickets',
             search: { dialogOpen: false },
+            state: (prev) => ({
+              ...prev,
+              description: undefined,
+              entityInputValue: undefined,
+              entityType: undefined,
+              liveChatDisabled: undefined,
+              title: undefined,
+            }),
           })
         }
         onSuccess={handleAddTicketSuccess}

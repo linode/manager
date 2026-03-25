@@ -16,6 +16,8 @@
         bootstrapJsUrl: '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%',
         deploymentUrl: '%REACT_APP_CHAT_DEPLOYMENT_URL%',
         scrt2Url: '%REACT_APP_CHAT_SCRT2_URL%',
+        orgId: '%REACT_APP_CHAT_ORG_ID%',
+        deploymentName: '%REACT_APP_CHAT_DEPLOYMENT_NAME%',
       };
 
       function loadEmbeddedMessagingScript() {
@@ -40,6 +42,35 @@
         });
 
         return embeddedMessagingScriptPromise;
+      }
+
+      function hideEmbeddedMessagingContainer() {
+        const selectors = [
+          '#embeddedmessaging-container',
+          '#embeddedMessaging-container',
+          '[id*="embeddedmessaging-container"]',
+          '[id*="embeddedMessaging-container"]',
+          '[id*="embeddedMessaging"]',
+          '[class*="embeddedMessaging"]',
+          'iframe[id*="embeddedMessaging"]',
+          'iframe[title*="chat" i]',
+          'button[id*="embeddedMessaging"]',
+        ];
+
+        selectors.forEach((selector) => {
+          document.querySelectorAll(selector).forEach((element) => {
+            element.style.setProperty('display', 'none', 'important');
+            element.style.setProperty('visibility', 'hidden', 'important');
+            element.setAttribute('aria-hidden', 'true');
+          });
+        });
+
+        const utilAPI = window.embeddedservice_bootstrap?.utilAPI;
+        try {
+          utilAPI?.minimizeChat?.();
+          utilAPI?.hideChatButton?.();
+        } catch {
+        }
       }
 
       async function openLiveChatOnce() {
@@ -100,10 +131,24 @@
             );
 
             window.sessionStorage.removeItem('LiveChatToken');
-            window.sessionStorage.removeItem('LiveChatSubject');
           } else if (action === "chatInitiationResult") {
+            const subject = window.sessionStorage.getItem('LiveChatSubject');
+            const description = window.sessionStorage.getItem('LiveChatDescription');
+
+            window.sessionStorage.removeItem('LiveChatSubject');
+            window.sessionStorage.removeItem('LiveChatDescription');
+
             if (payload?.data?.statusCode !== 200) {
-              console.error('Live chat initiation failed:', payload?.data);
+              hasLiveChatInitialized = false;
+              hideEmbeddedMessagingContainer();
+              window.dispatchEvent(new CustomEvent('manager:live-chat-failed', {
+                detail: {
+                  description: description ?? '',
+                  subject: subject ?? '',
+                  errorType: payload?.data?.type,
+                  errorDescription: payload?.data?.description,
+                },
+              }));
             }
           }
         });
@@ -114,8 +159,8 @@
 
         embeddedservice_bootstrap.settings.language = "en_US";
         embeddedservice_bootstrap.init(
-          "00DV90000051sBZ",
-          "AkaChat_Compute",
+          embeddedMessagingConfig.orgId,
+          embeddedMessagingConfig.deploymentName,
           embeddedMessagingConfig.deploymentUrl,
           {
             scrt2URL: embeddedMessagingConfig.scrt2Url,
