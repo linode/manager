@@ -8,7 +8,6 @@ import {
   gettingStartedGuides,
   headers,
   linkAnalyticsEvent,
-  youtubeLinkData,
 } from './ReservedIpsLandingEmptyStateData';
 
 export const ReservedIpsLandingEmptyState = () => {
@@ -30,7 +29,6 @@ export const ReservedIpsLandingEmptyState = () => {
         icon={NetworkingIcon}
         linkAnalyticsEvent={linkAnalyticsEvent}
         wide={true}
-        youtubeLinkData={youtubeLinkData}
       />
     </React.Fragment>
   );

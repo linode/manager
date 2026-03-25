@@ -1,8 +1,4 @@
-import {
-  docsLink,
-  youtubeChannelLink,
-  youtubeMoreLinkText,
-} from 'src/utilities/emptyStateLandingUtils';
+import { docsLink } from 'src/utilities/emptyStateLandingUtils';
 
 import type {
   ResourcesHeaders,
@@ -37,17 +33,6 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     to: docsLink,
   },
   title: 'Getting Started Guides',
-};
-
-export const youtubeLinkData: ResourcesLinkSection = {
-  links: [
-    // To be added once we have Reserved IPs specific YouTube content
-  ],
-  moreInfo: {
-    text: youtubeMoreLinkText,
-    to: youtubeChannelLink,
-  },
-  title: 'Video Playlist',
 };
 
 export const linkAnalyticsEvent: ResourcesLinks['linkAnalyticsEvent'] = {
