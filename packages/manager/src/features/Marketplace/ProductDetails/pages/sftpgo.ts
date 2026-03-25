@@ -7,47 +7,48 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-SFTPGo provides a fully managed, secure Managed File Transfer (MFT) solution designed for organizations that require professional file exchange without the burden of infrastructure management. Unlike standard shared hosting, SFTPGo delivers a dedicated and isolated installation for every customer, ensuring maximum security and performance. Each environment is automatically deployed in the user's selected region, providing a turnkey solution that is ready to use in minutes with simple, predictable pricing.
+SFTPGo is an enterprise-grade Managed File Transfer (MFT) solution designed for organizations that require high-performance file exchange without the overhead of infrastructure management.
 
-The service supports a comprehensive suite of protocols, including SFTP, FTP, FTPS, and WebDAV, complemented by an intuitive WebClient for non-technical users. Every plan includes a dedicated S3-compatible storage quota, yet the platform remains storage-agnostic, allowing you to "Bring Your Own Storage" from providers like Azure Blob, GCS, or S3. Administrators can manage the entire system through a powerful WebAdmin interface, which offers granular access controls, real-time monitoring, and no software limits on the number of users or admins.
+By delivering a **single-tenant, isolated architecture** for every customer, SFTPGo ensures dedicated resources, localized **data residency**, and maximum security - entirely free from the performance bottlenecks of multi-tenant environments. Deploy your environment in minutes and transform a passive storage service into an **active data pipeline**.
 
-A primary differentiator is the integrated Event Manager, a powerful automation engine that executes conditional "if-this-then-that" actions based on system activity. Administrators can easily define rules to trigger real-time webhooks, send notifications, or automate complex tasks such as PGP encryption, and automated data retention policies. This transforms a passive storage service into an active data pipeline, seamlessly integrating secure file transfers into your existing business workflows.
+### **Key Features**
 
-### **Key features**
+* **Multi-Protocol Access:** Secure transfers via SFTP, SCP, FTP, FTPS, and WebDAV, plus an intuitive WebClient for non-technical users.  
+* **Secure Public Sharing:** Collaborate effortlessly with external partners using unique, web-accessible links. Protect shares with passwords, expiration dates, or email-based authentication (OTP) without requiring account creation.  
+* **Storage Agnostic (BYOS):** Includes S3-compatible storage, but allows you to "Bring Your Own Storage" from Azure Blob, Google Cloud Storage, or AWS S3 (Compatible).  
+* **Smart Event Automation:** An integrated engine to trigger webhooks, notifications, and PGP tasks based on file activity, schedules, or Identity provider login events. It streamlines governance with automated lifecycle management - automatically handling inactivity, expirations, and usage limits for both users and public shares - and supports Just-in-Time provisioning from templates immediately after SSO login.  
+* **Identity & Security:** Native SSO (OpenID Connect), 2FA, and granular RBAC. Integrate with ICAP servers for real-time antivirus scanning and DLP checks.  
+* **Compliance Ready:** Simplify GDPR and HIPAA audits with comprehensive logs, reporting, and automated data retention policies.  
+* **No Software Limits:** Scale freely without restrictions on the number of users or administrators.
 
-* **Dedicated Infrastructure:** Ensure maximum security and performance with a fully isolated, dedicated installation and dedicated resources for every customer environment.  
-* **Regional Data Residency:** Meet strict compliance requirements by deploying your dedicated instance in your preferred geographic region for localized data sovereignty.  
-* **Hybrid Storage Management:** Simplify data centralization by using the included S3-compatible storage or connecting your own backends like Azure, GCS, and S3.  
-* **Unified File Access:** Enable secure file exchange via SFTP, FTPS, and WebDAV, or provide non-technical users with an intuitive WebClient.  
-* **Smart Event Automation:** Accelerate data pipelines with an integrated Event Manager that triggers webhooks, notifications, and PGP encryption or decryption based on real-time file activity.  
-* **Enterprise-Grade Protection:** Secure sensitive data with encryption at rest, two-factor authentication (2FA), and the flexibility to integrate advanced antivirus or DLP scanning workflows.  
-* **Advanced Identity Integration:** Streamline user management and secure access with native support for SSO (OpenID Connect).  
-* **Compliance Readiness:** Accelerate your audit processes with comprehensive logs, reporting, and automated data retention rules tailored for GDPR and HIPAA standards.
+### **Use Cases**
 
-### **Use cases**
+#### **Data Sovereignty & Compliance**
 
-**Secure Data Sovereignty and Compliance**  
-Deploy dedicated, isolated instances in specific geographic regions to meet strict GDPR, HIPAA, or local data residency requirements. Utilize built-in audit logs, PGP encryption, and automated data retention rules to ensure that sensitive files are managed and purged according to regulatory standards without manual intervention.
+Deploy dedicated instances in specific geographic regions to meet strict local data residency requirements. Use PGP encryption and automated retention rules to ensure sensitive files are managed according to regulatory standards.
 
-**Automated Cloud Data Ingestion**  
-Streamline business workflows by using the Event Manager to automatically trigger webhooks or move files to cloud storage backends like S3, Google Cloud Storage, or Azure Blob upon upload. This transforms a standard SFTP server into an active data pipeline, allowing your internal systems to react instantly to incoming data from partners or IoT devices.
+#### **Automated Cloud Data Ingestion**
 
-**Secure External Partner Collaboration**  
-Provide non-technical partners with a secure, branded WebClient for browser-based file exchange and link sharing, protected by Single Sign-On (SSO) or Multi-Factor Authentication. Implement Role-Based Access Control (RBAC) to enforce strict data isolation with per-user and per-directory permissions, ensuring collaborators only access authorized files. This granular control allows you to define specific actions (read, write, delete) at the folder level, preventing unauthorized data exposure within your dedicated environment.
+Use the Event Manager to trigger real-time webhooks or move files to cloud backends (S3, GCS, Azure) or external SFTP/FTP servers upon upload, download, or schedule. Perfect for reacting instantly to data from partners or IoT devices.
 
-**Hybrid Cloud Storage Gateway**  
-Use SFTPGo as a unified gateway to access and manage files across different cloud providers using legacy protocols like SFTP, FTP, or WebDAV. By abstracting the underlying storage (S3-compatible, Azure Blob, GCS, other SFTP servers), you can consolidate fragmented data sources into a single, manageable interface for your legacy applications and modern cloud services
+#### **Secure Partner Collaboration**
 
-Experience a secure, dedicated MFT environment today with a 10-day free trial included in all plans. Simply select the plan that best fits your needs and choose your preferred deployment region; your isolated instance will be provisioned automatically and ready for use in minutes. If you require a custom architecture, specialized compliance configurations, or would like to see a live demo, our team is available to help you design a proof-of-concept tailored to your specific business workflows.
+Provide external partners with a branded WebClient or Public Shares. Enforce strict isolation with per-directory permissions and protect access via SSO or Email OTP, ensuring collaborators see only authorized files.
+
+#### **Hybrid Cloud Storage Gateway**
+
+Consolidate fragmented data sources into a single entry point. SFTPGo acts as a unified bridge, allowing legacy applications to interact with modern object storage (S3, Azure, GCS) via standard protocols like SFTP and WebDAV, while providing users with a feature-rich, responsive WebClient.
+
+Experience a secure, dedicated MFT environment today with a 10-day free trial included in all plans. Simply select your plan and region; your isolated instance will be provisioned automatically. Need a custom architecture or a live demo? Our team is available to help you design a proof-of-concept tailored to your specific workflows.
 `.trim();
 
 const documentationMarkdown = `
 | Specification | Details |
 | :---- | :---- |
 | **Deployment Model** | SaaS. Fully managed dedicated instances |
-| **Supported Protocols** | SFTP, FTPS, WebDAV, and HTTPS (WebClient) |
+| **Supported Protocols** | SFTP, SCP, FTPS, WebDAV, and HTTPS (WebClient)  |
 | **Storage Backends** | Integrated S3-compatible storage plus Azure Blob, GCS, S3, and other SFTP/FTP servers |
-| **Authentication** | Multi-factor (2FA), SSO (OpenID Connect/SAML), and LDAP/Active Directory integration |
+| **Authentication** | Multi-factor (2FA), SSO (OpenID Connect), and LDAP/Active Directory integration |
 | **Automation Engine** | Native EventManager (HTTP Hooks, Email, Filesystem actions) |
 | **Advanced Security** | PGP Encryption and Decryption, ICAP support (Antivirus/DLP), Brute force protection |
 | **API & DevOps** | Comprehensive REST API and official Terraform Provider |
@@ -57,15 +58,24 @@ const documentationMarkdown = `
 
 ![SFTPGo architecture](/assets/marketplace/sftpgo-architecture.jpeg)
 
-### **Dedicated and Automated Managed File Transfer Workflow**
+### **Dedicated Managed File Transfer Architecture**
 
-Every customer receives an isolated and dedicated installation for secure and high-performance file management. The architecture offers flexible identity management, featuring built-in authentication with Two-Factor Authentication support or centralized access through Single Sign-On integration. It features a storage-agnostic design that connects to S3-compatible storage, Microsoft Azure Blob, and Google Cloud Storage. An integrated event-driven engine automates notifications and data workflows triggered by file activity, fully controllable through a comprehensive Application Programming Interface.
+Every deployment provides a single-tenant, isolated instance to ensure maximum security and performance. The architecture is built on four pillars:
 
-### **Automated Data Ingestion and Event-Driven Flow**
+* **Flexible Identity Management:** Local authentication with MFA, centralized access via SSO (OpenID Connect), or guest access via Email OTP for Public Shares.  
+* **Storage-Agnostic Design:** Native integration with S3-compatible backends, Microsoft Azure Blob, and Google Cloud Storage.  
+* **Event-Driven Automation:** An integrated engine to trigger notifications and data workflows, fully controllable via a comprehensive REST API.  
+* **Security Orchestration:** Support for high-performance protocols and integration with ICAP servers for antivirus and DLP inspection.
 
-The automated file transfer flow begins when a client initiates a connection using the Secure File Transfer Protocol or a secure web browser. Incoming traffic is routed to a dedicated and isolated installation to ensure security and data separation. After the user is authenticated, file operations are processed in real-time within the dedicated environment.
+### **Data Ingestion & Automation Flow**
 
-Following a successful file upload, the integrated event engine triggers predefined actions - such as email notifications or automated tasks - to streamline business workflows without manual intervention. Simultaneously, data is securely stored on the included S3-compatible backend or a preferred cloud storage provider such as Microsoft Azure Blob or Google Cloud Storage.
+The following steps outline the automated lifecycle of a file within SFTPGo:
+
+* **Secure Connection:** A client connects via SFTP/SCP/FTPS/WebDAV or a branded WebClient.  
+* **Isolated Processing:** Traffic is routed to your dedicated instance, ensuring complete data separation from other customers.  
+* **Real-Time Authentication:** The system validates credentials against the internal database or your external identity provider (SSO).  
+* **Active Event Triggering:** Upon upload, the Event Manager can stream the file to an ICAP server for scanning, execute PGP tasks, or fire webhooks.  
+* **Secure Persistence:** Files are stored on your chosen backend with encryption at rest. The Event Manager ensures continuous compliance by automatically enforcing per-folder data retention rules and managing the full lifecycle of users and public shares - including inactivity-based deletion, password expiration, and token-limited access.
 `.trim();
 
 const pricingMarkdown = `
