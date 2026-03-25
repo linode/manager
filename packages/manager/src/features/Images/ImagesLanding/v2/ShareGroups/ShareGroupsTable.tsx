@@ -183,6 +183,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
+                    padding: 0
                   }}
                 >
                   <Box
