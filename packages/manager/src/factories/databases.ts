@@ -17,7 +17,6 @@ import { Factory } from '@linode/utilities';
 export const possibleStatuses: DatabaseStatus[] = [
   'active',
   'degraded',
-  'failed',
   'migrating',
   'migrated',
   'provisioning',

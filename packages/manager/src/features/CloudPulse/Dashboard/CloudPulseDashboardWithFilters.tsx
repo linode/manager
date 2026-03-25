@@ -9,6 +9,8 @@ import {
   useCloudPulseDashboardsQuery,
 } from 'src/queries/cloudpulse/dashboards';
 
+import { CloudPulseContextProvider } from '../Context/CloudPulseContextProvider';
+import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
@@ -57,7 +59,20 @@ export interface CloudPulseDashboardWithFiltersProp {
 
 export const CloudPulseDashboardWithFilters = React.memo(
   (props: CloudPulseDashboardWithFiltersProp) => {
+    return (
+      <CloudPulseContextProvider>
+        <CloudPulseDashboardWithFiltersRenderer {...props} />
+      </CloudPulseContextProvider>
+    );
+  }
+);
+
+const CloudPulseDashboardWithFiltersRenderer = React.memo(
+  (props: CloudPulseDashboardWithFiltersProp) => {
     const { dashboardId, resource, region, serviceType } = props;
+
+    const { setGlobalSelectedDashboard, setGlobalFilterData } =
+      useCloudPulseContext();
 
     const { data: dashboardById, isError: isDashboardByIdError } =
       useCloudPulseDashboardByIdQuery(dashboardId, !serviceType);
@@ -143,6 +158,16 @@ export const CloudPulseDashboardWithFilters = React.memo(
       },
       []
     );
+
+    React.useEffect(() => {
+      setGlobalFilterData(filterData);
+    }, [filterData, setGlobalFilterData]);
+
+    React.useEffect(() => {
+      if (currentDashboard) {
+        setGlobalSelectedDashboard(currentDashboard);
+      }
+    }, [currentDashboard, setGlobalSelectedDashboard]);
 
     const renderPlaceHolder = (title: string) => {
       return (

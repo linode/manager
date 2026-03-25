@@ -15,6 +15,11 @@ import { TableRow } from 'src/components/TableRow';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
+import {
+  IAM_CHILD_USERS_PENDO_IDS,
+  IAM_DELEGATE_USERS_PENDO_IDS,
+  IAM_PARENT_USERS_PENDO_IDS,
+} from '../../Shared/constants';
 import { UsersActionMenu } from './UsersActionMenu';
 
 import type { User } from '@linode/api-v4';
@@ -64,6 +69,13 @@ export const UserRow = ({ onDelete, user }: Props) => {
               <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {canViewUser ? (
                   <Link
+                    data-pendo-id={
+                      user.user_type === 'child'
+                        ? IAM_CHILD_USERS_PENDO_IDS.childUsernameLink
+                        : user.user_type === 'delegate'
+                          ? IAM_DELEGATE_USERS_PENDO_IDS.delegateUsernameLink
+                          : IAM_PARENT_USERS_PENDO_IDS.parentUsernameLink
+                    }
                     to={
                       isChildOrDelegateWithDelegationEnabled &&
                       user.user_type === 'delegate'
