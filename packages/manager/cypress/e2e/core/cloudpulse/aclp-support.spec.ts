@@ -14,8 +14,8 @@ import {
 import { randomLabel, randomNumber } from 'support/util/random';
 
 import {
-  METRICS_BETA_AND_NEW_MODE_BUTTON_TEXT,
-  METRICS_BETA_MODE_BANNER_TEXT,
+  METRICS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT,
+  METRICS_ACLP_MODE_BETA_PHASE_BANNER_TEXT,
   METRICS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
   METRICS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
 } from 'src/features/Linodes/constants';
@@ -34,9 +34,25 @@ describe('ACLP Components UI varies according to ACLP support by region and user
     mockAppendFeatureFlags({
       aclpServices: {
         linode: {
-          alerts: { beta: false, enabled: false },
-          metrics: { beta: true, enabled: true },
+          alerts: {
+            beta: false, // irrelevant since we are no longer using this service-specific beta flag
+            enabled: false,
+          },
+          metrics: {
+            beta: true, // irrelevant since we are no longer using this service-specific beta flag
+            enabled: true,
+          },
         },
+      },
+      // For Metrics
+      aclp: {
+        beta: true, // relevant for this test suite
+        new: false, // relevant for this test suite
+      },
+      // For Alerts
+      aclpAlerting: {
+        beta: false, // relevant for this test suite
+        new: false, // relevant for this test suite
       },
     }).as('getFeatureFlags');
   });
@@ -94,10 +110,12 @@ describe('ACLP Components UI varies according to ACLP support by region and user
           cy.get('[data-testid="metrics-preference-banner-text"]').should(
             'be.visible'
           );
-          cy.contains(METRICS_BETA_MODE_BANNER_TEXT).should('be.visible');
+          cy.contains(METRICS_ACLP_MODE_BETA_PHASE_BANNER_TEXT).should(
+            'be.visible'
+          );
 
           ui.button
-            .findByTitle(METRICS_BETA_AND_NEW_MODE_BUTTON_TEXT)
+            .findByTitle(METRICS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled');
           // UI displays mock error msg
@@ -148,12 +166,14 @@ describe('ACLP Components UI varies according to ACLP support by region and user
             .click();
           // wait for dashboard query to complete
           cy.wait('@getDashboardError');
-          cy.contains(METRICS_BETA_MODE_BANNER_TEXT).should('be.visible');
+          cy.contains(METRICS_ACLP_MODE_BETA_PHASE_BANNER_TEXT).should(
+            'be.visible'
+          );
           cy.contains(METRICS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT).should(
             'not.exist'
           );
           ui.button
-            .findByTitle(METRICS_BETA_AND_NEW_MODE_BUTTON_TEXT)
+            .findByTitle(METRICS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled');
         });
