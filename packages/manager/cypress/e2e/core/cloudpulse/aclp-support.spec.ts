@@ -44,17 +44,14 @@ describe('ACLP Components UI varies according to ACLP support by region and user
           },
         },
       },
+      // For Metrics
       aclp: {
         beta: true, // relevant for this test suite
-        new: false,
+        new: false, // relevant for this test suite
       },
+      // For Alerts
       aclpAlerting: {
-        accountAlertLimit: 10,
-        accountMetricLimit: 10,
-        alertDefinitions: false,
         beta: false, // relevant for this test suite
-        notificationChannels: false,
-        recentActivity: false,
         new: false, // relevant for this test suite
       },
     }).as('getFeatureFlags');
