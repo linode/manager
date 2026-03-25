@@ -29,7 +29,9 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     // Endpoint URL:
     expect(screen.getByText('https://example.com/')).toBeVisible();
     // Username:
-    expect(screen.getByText('testuser')).toBeVisible();
+    expect(screen.getByTestId('username')).toHaveTextContent(
+      '*****************'
+    );
     // Password:
     expect(screen.getByTestId('password')).toHaveTextContent(
       '*****************'
@@ -57,7 +59,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     expect(screen.queryByTestId('password')).not.toBeInTheDocument();
   });
 
-  it('renders client certificate details when provided', () => {
+  it('renders Client Certificate Authentication details when provided', () => {
     const details: CustomHTTPSDetails = {
       authentication: { type: 'none' },
       endpoint_url: 'https://example.com/',
@@ -72,7 +74,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
 
     renderWithTheme(<DestinationCustomHTTPSDetailsSummary {...details} />);
 
-    expect(screen.getByText('Additional Options')).toBeVisible();
+    expect(screen.getByText('Connection Settings')).toBeVisible();
     expect(screen.queryByTestId('client-certificate-header')).toBeVisible();
     // TLS Hostname:
     expect(screen.getByText('tls.example.com')).toBeVisible();
@@ -81,7 +83,9 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     // Client Certificate:
     expect(screen.getByText('client-cert-content')).toBeVisible();
     // Client Key:
-    expect(screen.getByText('private-key-content')).toBeVisible();
+    expect(screen.getByTestId('client-key')).toHaveTextContent(
+      '*****************'
+    );
   });
 
   it('renders content type when provided', () => {
@@ -120,7 +124,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     expect(screen.getByText('Bearer token123')).toBeVisible();
   });
 
-  it('does not render Additional Options section when no optional fields provided', () => {
+  it('does not render Connection Settings section when no optional fields provided', () => {
     const details: CustomHTTPSDetails = {
       authentication: { type: 'none' },
       endpoint_url: 'https://example.com/',
@@ -129,7 +133,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
 
     renderWithTheme(<DestinationCustomHTTPSDetailsSummary {...details} />);
 
-    expect(screen.queryByText('Additional Options')).not.toBeInTheDocument();
+    expect(screen.queryByText('Connection Settings')).not.toBeInTheDocument();
     expect(screen.queryByText('HTTPS Headers')).not.toBeInTheDocument();
   });
 });

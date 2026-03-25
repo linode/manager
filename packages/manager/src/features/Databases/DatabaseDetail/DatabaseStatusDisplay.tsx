@@ -15,7 +15,6 @@ import type { Status } from 'src/components/StatusIcon/StatusIcon';
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   active: 'active',
   degraded: 'inactive',
-  failed: 'error',
   migrated: 'inactive',
   migrating: 'other',
   provisioning: 'other',

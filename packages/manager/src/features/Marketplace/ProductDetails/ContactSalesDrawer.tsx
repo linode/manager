@@ -198,9 +198,23 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       handleFormReset();
       onClose();
     } catch (errors) {
-      const errorMessage = errors
-        ? getAPIErrorOrDefault(errors)?.[0].reason
-        : "Oops! Something went wrong and we couldn't send your contacts. Please try again in a moment, or refresh the page.";
+      const apiErrors = getAPIErrorOrDefault(errors);
+      let errorMessage = apiErrors?.[0].reason;
+
+      // The API returns a very specific templated message when the rate limit is exceeded
+      // e.g: "You can only submit 2 requests in 24 hours and 1 requests per partner product in 30 days."
+      // Since numbers can change, we identify this message by checking its structure.
+      if (
+        errorMessage?.includes('You can only submit') &&
+        errorMessage?.includes('requests per partner product')
+      ) {
+        errorMessage =
+          'You have exceeded the limit of the number of times you can submit a referral for this product.';
+      } else if (!errorMessage) {
+        errorMessage =
+          "Oops! Something went wrong and we couldn't send your contacts. Please try again in a moment, or refresh the page.";
+      }
+
       setError('root', { message: errorMessage });
     }
   });
@@ -369,7 +383,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="phone-number">
+            <FormLabel htmlFor="phone_number">
               Phone number <Typography component="span">(required)</Typography>
             </FormLabel>
             <Stack direction="row" sx={{ marginTop: 0, width: '100%' }}>
