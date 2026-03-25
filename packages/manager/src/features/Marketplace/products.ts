@@ -36,6 +36,23 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
+    categories: ['Networking', 'Storage'],
+    id: 'clouddat',
+    name: 'CloudDat\u00AE for Akamai',
+    partner: {
+      email: 'akamai@dataexpedition.com',
+      logoDarkMode: 'data-expedition-dark.svg',
+      logoLightMode: 'data-expedition-light.svg',
+      name: 'Data Expedition, Inc.\u00AE',
+      url: 'https://www.dataexpedition.com/clouddat/akamai/',
+    },
+    shortDescription:
+      'CloudDat\u00AE for Akamai is a secure accelerated file transfer server that lets you upload and download files and objects at gigabits per second from anywhere in the world.',
+    type: {
+      name: 'Virtual Machines',
+    },
+  },
+  {
     categories: ['Kubernetes', 'Enterprise', 'Other Software and APIs'],
     id: 'cloudcasa',
     name: 'CloudCasa',
@@ -143,6 +160,31 @@ export const PRODUCTS: Product[] = [
   {
     categories: [
       'Data Analytics',
+      'Database Management',
+      'Data Sources',
+      'Enterprise',
+      'Kubernetes',
+      'Other Software and APIs',
+      'Storage',
+    ],
+    id: 'norsk-studio',
+    name: 'Norsk Studio',
+    partner: {
+      email: 'sales@norsk.video',
+      logoDarkMode: 'Norsk-dark.svg',
+      logoLightMode: 'Norsk-light.svg',
+      name: 'Norsk',
+      url: 'https://norsk.video/',
+    },
+    shortDescription:
+      'Norsk Studio is a live video and audio streaming workflow server with a graphical drag-and-drop UI that delivers the essentials for implementing high-quality streaming workflows.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Data Analytics',
       'Media & Entertainment, Gaming',
       'Other Software and APIs',
     ],
@@ -226,7 +268,12 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
-    categories: ['Storage', 'Other Software and APIs'],
+    categories: [
+      'Storage',
+      'Networking',
+      'Enterprise',
+      'Other Software and APIs',
+    ],
     id: 'sftpgo',
     name: 'SFTPGo',
     partner: {
@@ -239,7 +286,7 @@ export const PRODUCTS: Product[] = [
     shortDescription:
       'MFT supporting SFTP, FTP and WebDAV. Features SSO WebClient for user access and WebAdmin for management. Includes S3-compatible storage or connect your own cloud backends',
     type: {
-      name: 'SaaS & APIs',
+      name: 'Kubernetes',
     },
   },
   {
