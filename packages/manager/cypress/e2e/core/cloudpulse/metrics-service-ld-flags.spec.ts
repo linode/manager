@@ -88,7 +88,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockGetUserPreferences({});
   });
-  it('should display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is enabled and the service is enabled', () => {
+  it('should display "Linodes" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is enabled and the service is enabled', () => {
     mockAppendFeatureFlags(flagsFactory.build());
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
@@ -102,7 +102,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
     cy.get('@dashboardInput').click();
 
     cy.get('[data-qa-id="linode"]') // Selects the Linode label
-      .should('have.text', 'Linode')
+      .should('have.text', 'Linodes')
       .parent() // Moves up to the <li> containing both label and chip
       .as('linodeBetaServiceOption'); // Alias for reuse
 
@@ -122,7 +122,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       .click();
   });
 
-  it('should display "Linode" without a beta tag in the Service dropdown on the Metrics page when metrics.beta is false and the service is enabled', () => {
+  it('should display "Linodes" without a beta tag in the Service dropdown on the Metrics page when metrics.beta is false and the service is enabled', () => {
     const mockflags = flagsFactory.build({
       aclpServices: {
         linode: {
@@ -145,7 +145,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
 
     // Verify "Linode" is present without a beta chip
     ui.autocompletePopper
-      .findByTitle('Linode')
+      .findByTitle('Linodes')
       .should('be.visible')
       .within(() => {
         cy.get('[data-testid="betaChip"]').should('not.exist');
@@ -160,7 +160,7 @@ describe('Linode ACLP Metrics and Alerts Flag Behavior', () => {
       .click();
   });
 
-  it('should not display "Linode" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is true and enabled is false', () => {
+  it('should not display "Linodes" with a beta tag in the Service dropdown on the Metrics page when metrics.beta is true and enabled is false', () => {
     // Mock the feature flags to disable metrics for Linode
 
     const mockflags = flagsFactory.build({
