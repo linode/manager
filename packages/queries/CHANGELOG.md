@@ -1,3 +1,14 @@
+## [2026-03-31] - v0.23.0
+
+
+### Changed:
+
+- Keep previous data in streams and destinations paginated queries ([#13489](https://github.com/linode/manager/pull/13489))
+
+### Upcoming Features:
+
+- Implement share groups queries ([#13506](https://github.com/linode/manager/pull/13506))
+
 ## [2026-03-16] - v0.22.0
 
 
