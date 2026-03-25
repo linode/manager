@@ -158,8 +158,10 @@ export const uploadAttachment = (ticketId: number, formData: FormData) =>
  * @param TokenID { String } the ID of the token to be retrieved
  */
 
-export const getLiveChatToken = () =>
+export const getLiveChatToken = (params?: Params, filter?: Filter) =>
   Request<{ token: string }>(
     setURL(`${BETA_API_ROOT}/support/chat_token`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
   );
