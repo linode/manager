@@ -1,5 +1,6 @@
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
+import { useMemo } from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
@@ -11,25 +12,38 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { StreamMetrics } from 'src/features/Delivery/Streams/Stream/StreamMetrics';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { useTabs } from 'src/hooks/useTabs';
+
+import type { Tab } from 'src/hooks/useTabs';
 
 export const StreamLanding = () => {
   const { streamId } = useParams({
     strict: false,
   });
+  const { isACLPLogsMetricsEnabled } = useIsACLPLogsEnabled();
 
-  const { handleTabChange, tabIndex, tabs } = useTabs([
-    {
-      title: 'Summary',
-      to: `/logs/delivery/streams/$streamId/summary`,
-    },
-    {
-      title: 'Metrics',
-      to: `/logs/delivery/streams/$streamId/metrics`,
-    },
-  ]);
+  const activeTabs = useMemo(() => {
+    const result: Tab[] = [
+      {
+        title: 'Summary',
+        to: `/logs/delivery/streams/$streamId/summary`,
+      },
+    ];
+
+    if (isACLPLogsMetricsEnabled) {
+      result.push({
+        title: 'Metrics',
+        to: `/logs/delivery/streams/$streamId/metrics`,
+      });
+    }
+
+    return result;
+  }, [isACLPLogsMetricsEnabled]);
+
+  const { handleTabChange, tabIndex, tabs } = useTabs(activeTabs);
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
