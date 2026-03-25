@@ -5,6 +5,13 @@ import { CreateUserSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
+import {
+  IAM_CHILD_USERS_PENDO_IDS,
+  IAM_DELEGATE_USERS_PENDO_IDS,
+  IAM_PARENT_USERS_PENDO_IDS,
+} from '../../Shared/constants';
+
 interface Props {
   onClose: () => void;
   open: boolean;
@@ -13,7 +20,7 @@ interface Props {
 export const CreateUserDrawer = (props: Props) => {
   const { onClose, open } = props;
   const { mutateAsync: createUserMutation } = useCreateUserMutation();
-
+  const { isParentUserType, isDelegateUserType } = useDelegationRole();
   const {
     control,
     formState: { errors, isSubmitting },
@@ -102,6 +109,11 @@ export const CreateUserDrawer = (props: Props) => {
             'data-testid': 'submit',
             label: 'Add User',
             loading: isSubmitting,
+            'data-pendo-id': isDelegateUserType
+              ? IAM_DELEGATE_USERS_PENDO_IDS.addUserDrawerSubmit
+              : isParentUserType
+                ? IAM_PARENT_USERS_PENDO_IDS.addUserDrawerSubmit
+                : IAM_CHILD_USERS_PENDO_IDS.addUserDrawerSubmit,
             type: 'submit',
           }}
           secondaryButtonProps={{

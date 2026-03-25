@@ -16,6 +16,11 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
+import {
+  IAM_CHILD_USERS_PENDO_IDS,
+  IAM_DELEGATE_USERS_PENDO_IDS,
+  IAM_PARENT_USERS_PENDO_IDS,
+} from '../../Shared/constants';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
@@ -226,6 +231,13 @@ export const UsersLanding = () => {
           <Grid sx={{ alignSelf: 'flex-start' }}>
             <Button
               buttonType="primary"
+              data-pendo-id={
+                isDelegateUserType
+                  ? IAM_DELEGATE_USERS_PENDO_IDS.addUserButton
+                  : isChildUserType
+                    ? IAM_CHILD_USERS_PENDO_IDS.addUserButton
+                    : IAM_PARENT_USERS_PENDO_IDS.addUserButton
+              }
               disabled={!canCreateUser}
               onClick={() => setIsCreateDrawerOpen(true)}
               tooltipText={
