@@ -45,10 +45,10 @@ const expectedAclpPreferences: Record<
     preference: true,
     legacyModeBetaPhaseBannerText: METRICS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
     legacyModeNewPhaseBannerText: METRICS_LEGACY_MODE_NEW_PHASE_BANNER_TEXT,
-    aclpModeBetaPhaseBannerText: METRICS_ACLP_MODE_BETA_PHASE_BANNER_TEXT,
-    aclpModeNewPhaseBannerText: METRICS_ACLP_MODE_NEW_PHASE_BANNER_TEXT,
     legacyModeBetaPhaseButtonText: METRICS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
     legacyModeNewPhaseButtonText: METRICS_LEGACY_MODE_NEW_PHASE_BUTTON_TEXT,
+    aclpModeBetaPhaseBannerText: METRICS_ACLP_MODE_BETA_PHASE_BANNER_TEXT,
+    aclpModeNewPhaseBannerText: METRICS_ACLP_MODE_NEW_PHASE_BANNER_TEXT,
     aclpModeBetaPhaseButtonText:
       METRICS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT,
     aclpModeNewPhaseButtonText:
@@ -58,12 +58,12 @@ const expectedAclpPreferences: Record<
     preference: true,
     legacyModeBetaPhaseBannerText: ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
     legacyModeNewPhaseBannerText: ALERTS_LEGACY_MODE_NEW_PHASE_BANNER_TEXT,
-    aclpModeBetaPhaseBannerText: ALERTS_ACLP_MODE_BETA_PHASE_BANNER_TEXT,
     legacyModeBetaPhaseButtonText: ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
     legacyModeNewPhaseButtonText: ALERTS_LEGACY_MODE_NEW_PHASE_BUTTON_TEXT,
+    aclpModeBetaPhaseBannerText: ALERTS_ACLP_MODE_BETA_PHASE_BANNER_TEXT,
+    aclpModeNewPhaseBannerText: ALERTS_ACLP_MODE_NEW_PHASE_BANNER_TEXT,
     aclpModeBetaPhaseButtonText:
       ALERTS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT,
-    aclpModeNewPhaseBannerText: ALERTS_ACLP_MODE_NEW_PHASE_BANNER_TEXT,
     aclpModeNewPhaseButtonText: ALERTS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT,
   },
 };
