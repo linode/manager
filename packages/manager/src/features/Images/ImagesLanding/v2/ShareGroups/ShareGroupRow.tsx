@@ -41,6 +41,7 @@ export const ShareGroupRow = (props: Props) => {
     <TableRow
       data-qa-sharegroup-row={id}
       key={id}
+      rowborder={!isTableStripingEnabled}
       zebra={isTableStripingEnabled}
     >
       <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
