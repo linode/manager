@@ -209,7 +209,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
             )}
             {error && query && (
               <TableRow rowborder>
-                <TableCell>
+                <TableCell style={{ padding: 0 }}>
                   <ErrorState compact errorText={error[0].reason} />
                 </TableCell>
               </TableRow>
