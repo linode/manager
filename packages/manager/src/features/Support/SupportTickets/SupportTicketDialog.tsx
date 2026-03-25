@@ -119,7 +119,10 @@ export interface SupportTicketFormFields {
 export interface SupportTicketLocationState {
   description?: SupportTicketDialogProps['prefilledDescription'];
   entity?: SupportTicketDialogProps['prefilledEntity'];
+  entityInputValue?: SupportTicketFormFields['entityInputValue'];
+  entityType?: SupportTicketFormFields['entityType'];
   formPayloadValues?: SupportTicketFormFields['formPayloadValues'];
+  liveChatDisabled?: boolean;
   ticketType?: SupportTicketDialogProps['prefilledTicketType'];
   title?: SupportTicketDialogProps['prefilledTitle'];
 }
@@ -149,11 +152,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
   const flags = useFlags();
-  const liveChat = Boolean(flags.liveChat);
 
   const location = useLocation();
   const navigate = useNavigate();
   const locationState = location.state as SupportTicketLocationState;
+  const liveChat = Boolean(flags.liveChat) && !locationState?.liveChatDisabled;
+  const showLiveChatFallbackWarning = Boolean(locationState?.liveChatDisabled);
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string | undefined =
@@ -164,6 +168,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle ?? locationState?.title ?? undefined;
   const prefilledFormPayloadValues: FormPayloadValues | undefined =
     locationState?.formPayloadValues ?? undefined;
+  const prefilledEntityType: EntityType | undefined =
+    locationState?.entityType ?? undefined;
+  const prefilledEntityInputValue: string | undefined =
+    locationState?.entityInputValue ?? undefined;
   const _prefilledTicketType: TicketType | undefined =
     prefilledTicketType ?? locationState?.ticketType ?? undefined;
 
@@ -188,9 +196,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         valuesFromStorage.description
       ),
       entityId: _prefilledEntity?.id ? String(_prefilledEntity.id) : '',
-      entityInputValue: '',
+      entityInputValue: prefilledEntityInputValue ?? '',
       entityType:
         _prefilledEntity?.type ??
+        prefilledEntityType ??
         (valuesFromStorage.entityType === 'general'
           ? 'none'
           : (valuesFromStorage.entityType ?? 'none')),
@@ -326,6 +335,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
       window.sessionStorage.setItem('LiveChatToken', token);
       window.sessionStorage.setItem('LiveChatSubject', summary);
+      window.sessionStorage.setItem('LiveChatDescription', description);
       window.sessionStorage.setItem('EnableLiveChat', 'true');
 
       // Navigate first so listeners on /support can receive the event reliably.
@@ -578,6 +588,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           )}
           {(!ticketType || ticketType === 'general') && (
             <>
+              {showLiveChatFallbackWarning && (
+                <Notice
+                  spacingTop={16}
+                  text="Live Chat is not available at this time. Please open a support ticket below."
+                  variant="warning"
+                />
+              )}
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields liveChat={liveChat} />
               )}
