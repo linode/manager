@@ -192,7 +192,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                       flexDirection: 'column',
                       alignItems: 'center',
                       gap: theme.spacingFunction(4),
-                      p: `{theme.spacingFunction(24)} $theme.spacingFunction(32)}`,
+                      p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
                       width: '100%',
                     })}
                   >
