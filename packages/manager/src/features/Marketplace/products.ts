@@ -38,7 +38,7 @@ export const PRODUCTS: Product[] = [
   {
     categories: ['Networking', 'Storage'],
     id: 'clouddat',
-    name: 'CloudDat\u00AE for Akamai, by Data Expedition, Inc.\u00AE',
+    name: 'CloudDat\u00AE for Akamai',
     partner: {
       email: 'akamai@dataexpedition.com',
       logoDarkMode: 'data-expedition-dark.svg',
