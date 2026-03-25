@@ -115,7 +115,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
               {headerProps.buttonProps && (
                 <Button
                   buttonType="primary"
-                  data-pendo-id={headerProps.buttonProps?.pendoId}
+                  data-pendo-id={headerProps.buttonProps.pendoId}
                   disabled={headerProps.buttonProps.disabled}
                   onClick={headerProps.buttonProps.onButtonClick}
                   tooltipText={headerProps.buttonProps.tooltipText}
