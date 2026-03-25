@@ -41,6 +41,7 @@ export * from './objectStorage';
 export * from './placementGroups';
 export * from './preferences';
 export * from './promotionalOffer';
+export * from './sharegroups';
 export * from './stackscripts';
 export * from './statusPage';
 export * from './subnets';
