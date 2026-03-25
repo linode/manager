@@ -1,11 +1,13 @@
 import { apiMetrics } from './api-metrics';
 import { cambriaStream } from './cambria-stream';
 import { cloudcasa } from './cloudcasa';
+import { clouddat } from './clouddat';
 import { dynamicAdInsertion } from './dynamic-ad-insertion';
 import { heroEncoder } from './hero-encoder';
 import { liveEncoder } from './live-encoder';
 import { multiplayerGameServerHostingOrchestration } from './multiplayer-game-server-hosting-orchestration';
 import { myota } from './myota';
+import { norskStudio } from './norsk-studio';
 import { playback } from './playback';
 import { portainer } from './portainer';
 import { radSecurityPlatform } from './rad-security-platform';
@@ -34,6 +36,7 @@ export interface ProductTabDetails {
 const detailsMap: Record<string, ProductTabDetails> = {
   'api-metrics': apiMetrics,
   'cambria-stream': cambriaStream,
+  clouddat,
   cloudcasa,
   'dynamic-ad-insertion': dynamicAdInsertion,
   'hero-encoder': heroEncoder,
@@ -41,6 +44,7 @@ const detailsMap: Record<string, ProductTabDetails> = {
   'multiplayer-game-server-hosting-orchestration':
     multiplayerGameServerHostingOrchestration,
   myota,
+  'norsk-studio': norskStudio,
   playback,
   portainer,
   'rad-security-platform': radSecurityPlatform,
