@@ -4,6 +4,60 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-03-31] - v1.161.0
+
+
+### Added:
+
+- Quota resource metrics enum ([#13447](https://github.com/linode/manager/pull/13447))
+- Add DeepSeek-R1 and OpenClaw to Quick Deploy Apps ([#13499](https://github.com/linode/manager/pull/13499))
+- IAM: Add Pendo IDs for Parent/Child ([#13530](https://github.com/linode/manager/pull/13530))
+- sftpgo 
+([#13531](https://github.com/linode/manager/pull/13531))
+
+### Changed:
+
+- Streams and Destinations Landing page initial load spinner added before empty state ([#13489](https://github.com/linode/manager/pull/13489))
+
+### Fixed:
+
+- Database Advanced Config field tooltip error ([#13465](https://github.com/linode/manager/pull/13465))
+- Remove unintended validation on optional email fields in Contact Sales Drawer ([#13483](https://github.com/linode/manager/pull/13483))
+- Parent / Child - SwitchAccountDrawer search focus ([#13490](https://github.com/linode/manager/pull/13490))
+- In Stream Create and Edit forms in the Clusters table filtering by region resulted in an empty clusters list ([#13491](https://github.com/linode/manager/pull/13491))
+- Destination Form: the Endpoint field is not clearing validation error when a Bucket is selected ([#13494](https://github.com/linode/manager/pull/13494))
+- Marketplace Fixes: Improved texts and tooltips. Changed submit enable behavior in contact sales form ([#13498](https://github.com/linode/manager/pull/13498))
+- Product content received in markdown format can have links. Added capability in markdown to open these links in new tab ([#13501](https://github.com/linode/manager/pull/13501))
+- Improve loading pattern on Account Delegation landing page ([#13502](https://github.com/linode/manager/pull/13502))
+- Disable Database credential buttons for resuming state ([#13505](https://github.com/linode/manager/pull/13505))
+- Updated rate limiting error message in contact sales drawer ([#13512](https://github.com/linode/manager/pull/13512))
+- Destination Form: omit the tls_hostname field from the request if it is empty or contains only whitespace ([#13524](https://github.com/linode/manager/pull/13524))
+
+### Tech Stories:
+
+- Bump jspdf from 4.2.0 to 4.2.1 ([#13503](https://github.com/linode/manager/pull/13503))
+
+### Tests:
+
+- Added automation spec for edit notifiation channel ([#13431](https://github.com/linode/manager/pull/13431))
+- Adding  spec for show details notification channel ([#13449](https://github.com/linode/manager/pull/13449))
+- Fix test failures in lke-create.spec.ts following feature flag change ([#13526](https://github.com/linode/manager/pull/13526))
+
+### Upcoming Features:
+
+- Allow simultaneous v1 (Legacy) and v2 (ACLP) alerting in Linode edit flow ([#13455](https://github.com/linode/manager/pull/13455))
+- Use ImageSelectTable in Linode Rebuild dialog ([#13482](https://github.com/linode/manager/pull/13482))
+- Utility setup changes for CSV download for `CloudPulse metrics widget data` ([#13484](https://github.com/linode/manager/pull/13484))
+- Reserve IP: Add the new feature Reserved IPs to side nav ([#13486](https://github.com/linode/manager/pull/13486))
+- Fix PgBouncer and Service URI bugs ([#13487](https://github.com/linode/manager/pull/13487))
+- Migrated to `details` from `content` in ACLP-Alerts Notification Channels ([#13495](https://github.com/linode/manager/pull/13495))
+- ACLP-Metrics updated Tooltip messages for Group-by, DimensionFilter icons when in disabled state for the Widgets ([#13496](https://github.com/linode/manager/pull/13496))
+- Add alternate tool tip texts for group-by, dimension filter widget icons when disabled in ACLP-Metrics ([#13496](https://github.com/linode/manager/pull/13496))
+- Ability to download widget data as CSV in `CloudPulse metrics dashboards` ([#13497](https://github.com/linode/manager/pull/13497))
+- Implement owned groups landing page content ([#13506](https://github.com/linode/manager/pull/13506))
+- Custom HTTPS destination form: improve the UX and update copy ([#13507](https://github.com/linode/manager/pull/13507))
+- Configure new feature chip and banner messaging for ACLP Linode Alerts and Metrics ([#13509](https://github.com/linode/manager/pull/13509))
+
 ## [2026-03-16] - v1.160.0
 
 
