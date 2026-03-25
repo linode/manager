@@ -52,9 +52,9 @@ const documentationMarkdown = `
 | **Maximum path latency** | 20,000 milliseconds default (higher with configuration) |
 | **Maximum path packet loss** | 50% |
 
-#### Full documentation could be found [here](https://www.dataexpedition.com/clouddat/akamai/).
+Full documentation could be found [here](https://www.dataexpedition.com/clouddat/akamai/).
 
-#### CloudDat server software is hosted on an Akamai/Linode compute instance with access to a filesystem or object bucket in the same region. CloudDat clients accelerate the data transfer to and from the server, allowing for high performance over the WAN.
+CloudDat server software is hosted on an Akamai/Linode compute instance with access to a filesystem or object bucket in the same region. CloudDat clients accelerate the data transfer to and from the server, allowing for high performance over the WAN.
 
 ![CloudDat Architecture](/assets/marketplace/clouddat.svg)
 `.trim();
