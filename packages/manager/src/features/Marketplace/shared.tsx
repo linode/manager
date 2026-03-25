@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -64,6 +66,37 @@ export const useIsMarketplaceV2Enabled = () => {
   return {
     isMarketplaceV2FeatureEnabled: flags.marketplaceV2,
   };
+};
+
+/**
+ * Formats trademark symbols (e.g. ®) in a string as superscript.
+ * Returns the original string unchanged if no trademark symbols are found.
+ * When symbols are present, returns a <span> wrapping the text with
+ * styled <sup> elements. Using a single wrapper ensures the result
+ * behaves as one inline/flex child and avoids layout misalignment
+ * in flex containers like card headings.
+ */
+export const formatTrademarkSymbols = (
+  text: string
+): React.ReactElement | string => {
+  if (!text.includes('\u00AE')) {
+    return text;
+  }
+
+  const parts = text.split('\u00AE');
+
+  return (
+    <span>
+      {parts.map((part, index) => (
+        <React.Fragment key={index}>
+          {part}
+          {index < parts.length - 1 && (
+            <sup style={{ fontSize: '0.55em', lineHeight: 1 }}>{'\u00AE'}</sup>
+          )}
+        </React.Fragment>
+      ))}
+    </span>
+  );
 };
 
 export const getLogoUrl = (product: Product, theme: Theme) => {

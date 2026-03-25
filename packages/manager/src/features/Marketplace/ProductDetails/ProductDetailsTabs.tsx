@@ -48,7 +48,7 @@ const MarkdownContentRenderer = ({ content }: { content: string }) => {
             'alt',
             'style',
           ],
-          ALLOWED_TAGS: [...allowedHTMLTagsFlexible, 'img'],
+          ALLOWED_TAGS: [...allowedHTMLTagsFlexible, 'img', 'sup'],
         }}
         textOrMarkdown={content}
       />
