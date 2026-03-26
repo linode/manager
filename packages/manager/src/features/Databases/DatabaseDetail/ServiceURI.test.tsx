@@ -8,6 +8,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ServiceURI } from './ServiceURI';
 
+import type { DatabaseStatus, Engine } from '@linode/api-v4';
+
 const mockCredentials = {
   password: 'password123',
   username: 'lnroot',
@@ -53,6 +55,7 @@ const databaseWithNoVPC = databaseFactory.build({
   },
   platform: 'rdbms-default',
   private_network: null, // No VPC configured
+  status: 'active',
 });
 
 const databaseWithPrivateVPC = databaseFactory.build({
@@ -88,6 +91,7 @@ const databaseWithPrivateVPC = databaseFactory.build({
     subnet_id: 1,
     vpc_id: 123,
   },
+  status: 'active',
 });
 
 const databaseWithPublicVPC = databaseFactory.build({
@@ -142,6 +146,7 @@ const databaseWithPublicVPC = databaseFactory.build({
     subnet_id: 1,
     vpc_id: 123,
   },
+  status: 'active',
 });
 
 // Hoist query mocks
@@ -160,11 +165,12 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('ServiceURI', () => {
-  it('should render the service URI component and copy icon', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
+  queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
+    data: mockCredentials,
+    refetch: vi.fn(),
+  });
 
+  it('should render the PgBouncer service URI component and copy icon', async () => {
     const { container } = renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} />
     );
@@ -185,11 +191,6 @@ describe('ServiceURI', () => {
   });
 
   it('should reveal password after clicking reveal button', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-      refetch: vi.fn(),
-    });
-
     renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
 
     const revealPasswordBtn = screen.getByRole('button', {
@@ -204,24 +205,7 @@ describe('ServiceURI', () => {
     );
   });
 
-  it('should render error retry button if the credentials call fails', () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      error: new Error('Failed to fetch credentials'),
-    });
-
-    renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
-
-    const errorRetryBtn = screen.getByRole('button', {
-      name: '{error. click to retry}',
-    });
-    expect(errorRetryBtn).toBeInTheDocument();
-  });
-
   it('should render general service URI if isGeneralServiceURI is true', () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
-
     renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
     );
@@ -237,11 +221,25 @@ describe('ServiceURI', () => {
     );
   });
 
-  it('should reveal general service URI password after clicking reveal button', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-      refetch: vi.fn(),
+  it('should render general service URI with ssl-mode=REQUIRED if isGeneralServiceURI is true and the engine is mysql', () => {
+    const mockDb = {
+      ...databaseWithNoVPC,
+      engine: 'mysql' as Engine,
+    };
+    renderWithTheme(<ServiceURI database={mockDb} isGeneralServiceURI />);
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
     });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `mysql://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?ssl-mode=REQUIRED`
+    );
+  });
+
+  it('should reveal general service URI password after clicking reveal button', async () => {
     renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
     );
@@ -254,15 +252,11 @@ describe('ServiceURI', () => {
     const serviceURIText = screen.getByTestId('service-uri').textContent;
     expect(revealPasswordBtn).not.toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
+      `postgres://lnroot:password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 
   it('should render private service URI component if there is a private-only VPC', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
-
     renderWithTheme(<ServiceURI database={databaseWithPrivateVPC} />);
 
     const revealPasswordBtn = screen.getByRole('button', {
@@ -277,10 +271,6 @@ describe('ServiceURI', () => {
   });
 
   it('should render private general service URI component if there is a private-only VPC', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
-
     renderWithTheme(
       <ServiceURI database={databaseWithPrivateVPC} isGeneralServiceURI />
     );
@@ -297,10 +287,6 @@ describe('ServiceURI', () => {
   });
 
   it('should render public service URI component if there is a VPC with public access', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
-
     renderWithTheme(<ServiceURI database={databaseWithPublicVPC} />);
 
     const revealPasswordBtn = screen.getByRole('button', {
@@ -315,10 +301,6 @@ describe('ServiceURI', () => {
   });
 
   it('should render private service URI component if there is a VPC with public access and showPrivateVPC is true', async () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
-
     renderWithTheme(
       <ServiceURI database={databaseWithPublicVPC} showPrivateVPC />
     );
@@ -335,10 +317,6 @@ describe('ServiceURI', () => {
   });
 
   it('should render general private service URI if there is a VPC with public access, isGeneralServiceURI is true, and showPrivateVPC is true', () => {
-    queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
-      data: mockCredentials,
-    });
-
     renderWithTheme(
       <ServiceURI
         database={databaseWithPublicVPC}
@@ -356,5 +334,40 @@ describe('ServiceURI', () => {
     expect(serviceURIText).toBe(
       `postgres://{click to reveal password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
     );
+  });
+
+  it('should render private service URI placeholder text if there is a VPC with public access, isGeneralServiceURI and showPrivateVPC is true, but hosts are not yet available', () => {
+    const mockDb = {
+      ...databaseWithPublicVPC,
+      hosts: null,
+    };
+
+    renderWithTheme(
+      <ServiceURI database={mockDb} isGeneralServiceURI showPrivateVPC />
+    );
+
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+    expect(serviceURIText).toBe(
+      'Your Service URI will appear here once it is available.'
+    );
+  });
+
+  it('should disable the reveal password and copy icon if the Database is suspended', async () => {
+    const mockDatabase = {
+      ...databaseWithNoVPC,
+      status: 'suspended' as DatabaseStatus,
+    };
+
+    const { container } = renderWithTheme(
+      <ServiceURI database={mockDatabase} />
+    );
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    // eslint-disable-next-line testing-library/no-container
+    const copyButton = container.querySelector('[data-qa-copy-btn]');
+    expect(revealPasswordBtn).toBeDisabled();
+    expect(copyButton).toBeDisabled();
   });
 });

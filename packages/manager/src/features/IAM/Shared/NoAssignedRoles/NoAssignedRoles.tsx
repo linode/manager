@@ -6,6 +6,7 @@ import EmptyState from 'src/assets/icons/empty-state-cloud.svg';
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
+import { IAM_ROLES_PENDO_IDS } from '../constants';
 
 interface Props {
   hasAssignNewRoleDrawer: boolean;
@@ -54,6 +55,11 @@ export const NoAssignedRoles = (props: Props) => {
       {hasAssignNewRoleDrawer && (
         <Button
           buttonType="primary"
+          data-pendo-id={
+            isDefaultDelegationRolesForChildAccount
+              ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
+              : undefined
+          }
           disabled={!permissionToCheck}
           onClick={() => setIsAssignNewRoleDrawerOpen(true)}
           tooltipText={

@@ -21,21 +21,19 @@ const LinodeMetrics = () => {
   });
 
   const { aclpServices } = useFlags();
-  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpMetricsBeta
+  const { data: isAclpMetricsPreference } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsMode
   );
+  const isAclpMetricsInRegionEnabled =
+    aclpServices?.linode?.metrics?.enabled &&
+    isAclpMetricsSupportedRegionLinode;
   const linodeDashboardId = 2;
 
   return (
     <Box>
-      {aclpServices?.linode?.metrics?.enabled &&
-        isAclpMetricsSupportedRegionLinode && (
-          <AclpPreferenceToggle type="metrics" />
-        )}
-      {aclpServices?.linode?.metrics?.enabled &&
-      isAclpMetricsSupportedRegionLinode &&
-      isAclpMetricsPreferenceBeta ? (
-        // Beta ACLP Metrics View
+      {isAclpMetricsInRegionEnabled && <AclpPreferenceToggle type="metrics" />}
+      {isAclpMetricsInRegionEnabled && isAclpMetricsPreference ? (
+        // ACLP Metrics View
         <CloudPulseDashboardWithFilters
           dashboardId={linodeDashboardId}
           resource={linodeId}

@@ -95,6 +95,11 @@ export const DatabaseConfigurationItem = (props: Props) => {
           placeholder={
             configItem.isNew ? String(configItem?.example ?? '') : ''
           }
+          slotProps={{
+            htmlInput: {
+              step: 'any', // UIE-10285: Fix edge-case tooltip
+            },
+          }}
           type="number"
           value={configItem.value}
         />

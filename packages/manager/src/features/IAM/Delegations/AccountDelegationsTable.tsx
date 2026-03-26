@@ -65,7 +65,7 @@ export const AccountDelegationsTable = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {isLoading && <TableRowLoading columns={numCols} rows={3} />}
+        {isLoading && <TableRowLoading columns={numCols} rows={1} />}
         {error && (
           <TableRowError colSpan={numCols} message={error[0]?.reason} />
         )}

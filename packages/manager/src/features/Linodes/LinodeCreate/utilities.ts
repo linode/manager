@@ -25,6 +25,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type {
   AccountSettings,
+  CloudPulseAlertsPayload,
   CreateLinodeRequest,
   FirewallSettings,
   InterfaceGenerationType,
@@ -43,9 +44,18 @@ import type { LinodeCreateSearchParams } from 'src/routes/linodes';
  */
 const DEFAULT_OS = 'linode/ubuntu24.04';
 
+/**
+ * Empty default value for the ACLP alerts form field.
+ * Used when entering ACLP mode to ensure a clean slate.
+ */
+export const EMPTY_ACLP_ALERTS: CloudPulseAlertsPayload = {
+  system_alerts: [],
+  user_alerts: [],
+};
+
 interface LinodeCreatePayloadOptions {
-  isAclpAlertsPreferenceBeta?: boolean;
-  isAclpIntegration?: boolean;
+  isAclpAlertsEnabled?: boolean;
+  isAclpAlertsMode?: boolean;
   isDualStackEnabled?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
@@ -63,8 +73,8 @@ export const getLinodeCreatePayload = (
 ): CreateLinodeRequest => {
   const {
     isShowingNewNetworkingUI,
-    isAclpIntegration,
-    isAclpAlertsPreferenceBeta,
+    isAclpAlertsEnabled,
+    isAclpAlertsMode,
     isDualStackEnabled,
   } = options;
 
@@ -75,7 +85,9 @@ export const getLinodeCreatePayload = (
     'linodeInterfaces',
   ]);
 
-  if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
+  const isLegacyAlerts = !isAclpAlertsEnabled || !isAclpAlertsMode;
+
+  if (isLegacyAlerts) {
     values.alerts = undefined;
   }
 

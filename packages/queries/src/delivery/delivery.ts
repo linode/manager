@@ -15,6 +15,7 @@ import { profileQueries } from '@linode/queries';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -103,6 +104,7 @@ export const deliveryQueries = createQueryKeys('delivery', {
 export const useStreamsQuery = (params: Params = {}, filter: Filter = {}) =>
   useQuery<ResourcePage<Stream>, APIError[]>({
     ...deliveryQueries.streams._ctx.paginated(params, filter),
+    placeholderData: keepPreviousData,
   });
 
 export const useAllStreamsQuery = (
@@ -219,6 +221,7 @@ export const useDestinationsQuery = (
 ) =>
   useQuery<ResourcePage<Destination>, APIError[]>({
     ...deliveryQueries.destinations._ctx.paginated(params, filter),
+    placeholderData: keepPreviousData,
   });
 
 export const useDestinationsInfiniteQuery = (
