@@ -108,7 +108,11 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
   it('Should show confirm dialog on save button click when changes are made', async () => {
     renderWithTheme(
-      <AlertInformationActionTable {...props} showConfirmationDialog />
+      <AlertInformationActionTable
+        {...props}
+        serviceType="dbaas"
+        showConfirmationDialog
+      />
     );
 
     // First toggle an alert to make changes
@@ -127,7 +131,9 @@ describe('Alert Listing Reusable Table for contextual view', () => {
   });
 
   it('Should hide confirm dialog on save button click when changes are made', async () => {
-    renderWithTheme(<AlertInformationActionTable {...props} />);
+    renderWithTheme(
+      <AlertInformationActionTable {...props} serviceType="dbaas" />
+    );
 
     // First toggle an alert to make changes
     const alert = alerts[0];
@@ -145,14 +151,22 @@ describe('Alert Listing Reusable Table for contextual view', () => {
   });
 
   it('Should have save button in disabled form when no changes are made', () => {
-    renderWithTheme(<AlertInformationActionTable {...props} />);
+    renderWithTheme(
+      <AlertInformationActionTable {...props} serviceType="dbaas" />
+    );
 
     const saveButton = screen.getByTestId('save-alerts');
     expect(saveButton).toBeDisabled();
   });
 
   it('Should send correct payload to the API when save button is clicked in edit mode', async () => {
-    renderWithTheme(<AlertInformationActionTable {...props} alerts={alerts} />);
+    renderWithTheme(
+      <AlertInformationActionTable
+        {...props}
+        alerts={alerts}
+        serviceType="dbaas"
+      />
+    );
 
     // Toggle entity-level user alert with ID 2 to enable it
     const userAlertRow = await screen.findByTestId('9');
@@ -164,10 +178,38 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
     // Verify that account and region level alerts are not included in the payload
     expect(mockUpdateAlerts).toHaveBeenCalledWith({
-      alerts: {
+      system_alerts: [1, 2, 3, 4, 5, 6, 7],
+      user_alerts: [9],
+    });
+  });
+
+  it('Should not render save button for linode service type', () => {
+    // For linode, save is handled by the service owner component (e.g. LinodeAlerts unified save button).
+    renderWithTheme(<AlertInformationActionTable {...props} />); // props.serviceType is 'linode'
+
+    expect(screen.queryByTestId('save-alerts')).not.toBeInTheDocument();
+  });
+
+  it('Should call onToggleAlert with correct payload when a toggle is clicked for linode service type', async () => {
+    // Even though the save button is hidden for linode, the toggle still fires onToggleAlert
+    // so the service owner can collect the payload for its own save flow.
+    const onToggleAlert = vi.fn();
+    renderWithTheme(
+      <AlertInformationActionTable {...props} onToggleAlert={onToggleAlert} />
+    );
+
+    // Toggle entity-level user alert id 9 to enable it
+    const userAlertRow = await screen.findByTestId('9');
+    await userEvent.click(within(userAlertRow).getByRole('checkbox'));
+
+    // Raw payload passed to service owner: system_alerts unchanged, user_alerts with the newly toggled alert id 9,
+    // and hasUnsavedChanges is true
+    expect(onToggleAlert).toHaveBeenCalledWith(
+      {
         system_alerts: [1, 2, 3, 4, 5, 6, 7],
         user_alerts: [9],
       },
-    });
+      true // hasUnsavedChanges
+    );
   });
 });

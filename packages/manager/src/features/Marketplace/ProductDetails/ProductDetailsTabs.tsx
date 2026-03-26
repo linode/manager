@@ -38,9 +38,17 @@ const MarkdownContentRenderer = ({ content }: { content: string }) => {
   return (
     <StyledTabContent>
       <Markdown
+        openLinksInNewTab
         sanitizeOptions={{
-          ALLOWED_ATTR: [...allowedHTMLAttr, 'target', 'src', 'alt', 'style'],
-          ALLOWED_TAGS: [...allowedHTMLTagsFlexible, 'img'],
+          ALLOWED_ATTR: [
+            ...allowedHTMLAttr,
+            'target',
+            'rel',
+            'src',
+            'alt',
+            'style',
+          ],
+          ALLOWED_TAGS: [...allowedHTMLTagsFlexible, 'img', 'sup'],
         }}
         textOrMarkdown={content}
       />

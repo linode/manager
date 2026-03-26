@@ -78,12 +78,11 @@ describe('object storage end-to-end tests', () => {
     cy.tag('purpose:syntheticTesting');
     const bucketLabel = randomLabel();
     const bucketClusterObj = chooseCluster();
-    const bucketCluster = bucketClusterObj.id;
-    const bucketRegion = getRegionById(bucketClusterObj.region).label;
-    const bucketHostname = `${bucketLabel}.${bucketClusterObj.domain}`;
+    const bucketRegion = getRegionById(bucketClusterObj.region);
+    let bucketHostname: string;
     interceptGetBuckets().as('getBuckets');
     interceptCreateBucket().as('createBucket');
-    interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
+    interceptDeleteBucket(bucketLabel, bucketRegion.id).as('deleteBucket');
     interceptGetNetworkUtilization().as('getNetworkUtilization');
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
@@ -110,7 +109,7 @@ describe('object storage end-to-end tests', () => {
         cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.focused().type(`${bucketRegion}{enter}`);
+        cy.focused().type(`${bucketRegion.label}{enter}`);
 
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
@@ -118,7 +117,9 @@ describe('object storage end-to-end tests', () => {
           .click();
       });
 
-    cy.wait(['@createBucket', '@getBuckets']);
+    cy.wait(['@createBucket', '@getBuckets']).then(([createBucket]) => {
+      bucketHostname = createBucket?.response?.body?.hostname;
+    });
     ui.drawer.find().should('not.exist');
 
     // Confirm that bucket is created, initiate deletion.
@@ -126,7 +127,7 @@ describe('object storage end-to-end tests', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.findByText(bucketRegion).should('be.visible');
+        cy.findByText(bucketRegion.label).should('be.visible');
         cy.findByText(bucketHostname).should('be.visible');
         ui.button.findByTitle('Delete').should('be.visible').click();
       });

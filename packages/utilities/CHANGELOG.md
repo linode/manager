@@ -1,3 +1,10 @@
+## [2026-03-31] - v0.16.0
+
+
+### Changed:
+
+- `isAclpMetricsBeta` to `isAclpMetricsMode` in ManagerPreferences ([#13509](https://github.com/linode/manager/pull/13509))
+
 ## [2026-02-25] - v0.15.0
 
 

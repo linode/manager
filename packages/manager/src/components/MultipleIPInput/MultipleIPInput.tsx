@@ -68,7 +68,7 @@ export interface MultipeIPInputProps {
   /**
    * Text displayed on the button.
    */
-  buttonText?: string;
+  buttonText?: React.ReactNode;
 
   /**
    * Whether the first input field can be removed.

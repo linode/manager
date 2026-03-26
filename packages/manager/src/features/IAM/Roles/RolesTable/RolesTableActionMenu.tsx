@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
+import { IAM_ROLES_PENDO_IDS } from '../../Shared/constants';
+
 interface Props {
   canUpdateUserGrants: boolean;
   onClick?: () => void;
@@ -16,6 +18,7 @@ export const RolesTableActionMenu = ({
     <InlineMenuAction
       actionText={'Assign Role'}
       buttonHeight={40}
+      data-pendo-id={IAM_ROLES_PENDO_IDS.assignRole}
       disabled={!canUpdateUserGrants}
       onClick={onClick}
       sx={{

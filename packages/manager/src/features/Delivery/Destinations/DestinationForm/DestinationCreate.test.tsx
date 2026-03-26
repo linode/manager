@@ -454,8 +454,9 @@ describe('DestinationCreate', () => {
       it('should render Authentication autocomplete with None selected and allow to select Basic', async () => {
         await selectCustomHttpsDestinationType();
 
-        const authenticationAutocomplete =
-          screen.getByLabelText('Authentication');
+        const authenticationAutocomplete = screen.getByLabelText(
+          'Authentication Type'
+        );
 
         expect(authenticationAutocomplete).toHaveValue('None');
 
@@ -470,8 +471,9 @@ describe('DestinationCreate', () => {
         it('should render Username input and allow to type text', async () => {
           await selectCustomHttpsDestinationType();
 
-          const authenticationAutocomplete =
-            screen.getByLabelText('Authentication');
+          const authenticationAutocomplete = screen.getByLabelText(
+            'Authentication Type'
+          );
           await userEvent.click(authenticationAutocomplete);
           const basicAuthentication = await screen.findByText('Basic');
           await userEvent.click(basicAuthentication);
@@ -485,8 +487,9 @@ describe('DestinationCreate', () => {
         it('should render Password input and allow to type text', async () => {
           await selectCustomHttpsDestinationType();
 
-          const authenticationAutocomplete =
-            screen.getByLabelText('Authentication');
+          const authenticationAutocomplete = screen.getByLabelText(
+            'Authentication Type'
+          );
           await userEvent.click(authenticationAutocomplete);
           const basicAuthentication = await screen.findByText('Basic');
           await userEvent.click(basicAuthentication);
@@ -507,7 +510,7 @@ describe('DestinationCreate', () => {
         expect(endpointUrlInput).toHaveValue('https://test-endpoint.com');
       });
 
-      describe('Client Certificate fields', () => {
+      describe('Client Certificate Authentication fields', () => {
         it('should render TLS Hostname input and allow to type text', async () => {
           await selectCustomHttpsDestinationType();
 
@@ -539,10 +542,10 @@ describe('DestinationCreate', () => {
           expect(clientCertificateInput).toHaveValue('test-client-certificate');
         });
 
-        it('should render Client Key input and allow to type text', async () => {
+        it('should render Client Private Key input and allow to type text', async () => {
           await selectCustomHttpsDestinationType();
 
-          const clientKeyInput = screen.getByLabelText('Client Key');
+          const clientKeyInput = screen.getByLabelText('Client Private Key');
           await userEvent.type(clientKeyInput, 'test-client-key');
 
           expect(clientKeyInput).toHaveValue('test-client-key');

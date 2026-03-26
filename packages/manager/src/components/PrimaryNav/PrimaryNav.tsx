@@ -25,6 +25,7 @@ import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
 import PrimaryLink from './PrimaryLink';
@@ -65,6 +66,7 @@ export type NavEntity =
   | 'Placement Groups'
   | 'Quick Deploy Apps'
   | 'Quotas'
+  | 'Reserved IPs'
   | 'Service Transfers'
   | 'StackScripts'
   | 'Users & Grants'
@@ -126,6 +128,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
   const {
     data: preferences,
@@ -233,6 +237,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               {
                 display: 'NodeBalancers',
                 to: '/nodebalancers',
+              },
+              {
+                display: 'Reserved IPs',
+                hide: !isReserveIpEnabled,
+                to: '/reserved-ips',
               },
               {
                 display: 'Domains',
@@ -357,6 +366,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMEnabled,
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
+        isReserveIpEnabled,
         limitsEvolution,
       ]
     );

@@ -11,6 +11,7 @@ import {
   InputAdornment,
   LinkButton,
   Notice,
+  PlusSignIcon,
   Stack,
   TextField,
   Typography,
@@ -69,6 +70,39 @@ interface CountryItem {
   name: string;
 }
 
+export const cleanUpPayload = (values: MarketplacePartnerReferralPayload) => {
+  const cleaned: MarketplacePartnerReferralPayload = {
+    ...values,
+  };
+
+  // trim email input and drop blank rows entirely.
+  const cleanedAdditionalEmails = cleaned.additional_emails
+    ?.filter((email) => email?.trim())
+    .map((email) => email.trim());
+
+  if (!cleanedAdditionalEmails?.length) {
+    delete cleaned.additional_emails;
+  } else {
+    cleaned.additional_emails = cleanedAdditionalEmails;
+  }
+
+  const OPTIONAL_PAYLOAD_STRING_FIELDS: Array<
+    'account_executive_email' | 'comments' | 'company_name'
+  > = ['account_executive_email', 'comments', 'company_name'];
+
+  // Blank optional text inputs should be omitted, while real values are trimmed before submit.
+  for (const key of OPTIONAL_PAYLOAD_STRING_FIELDS) {
+    const value = cleaned[key];
+    if (typeof value !== 'string' || value.trim() === '') {
+      delete cleaned[key];
+    } else {
+      cleaned[key] = value.trim();
+    }
+  }
+
+  return cleaned;
+};
+
 export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   const MAX_ADDITIONAL_EMAILS = 2;
   const { classes } = useStyles();
@@ -116,7 +150,6 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       product_name: productName,
       phone: '',
       phone_country_code: '+1',
-      comments: '',
       tc_consent_given: false,
     },
     mode: 'onBlur',
@@ -124,6 +157,17 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   });
 
   const tcConsent = watch('tc_consent_given');
+  const countryCode = watch('country_code');
+  const phone = watch('phone');
+
+  const isSubmitDisabled =
+    isSubmitting ||
+    !tcConsent ||
+    !countryCode ||
+    !phone ||
+    !!errors.country_code ||
+    !!errors.phone ||
+    !!errors.phone_country_code;
 
   const dialingCodeFilterOptions = createFilterOptions({
     ignoreCase: true,
@@ -138,21 +182,15 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
   const handleFormReset = () => {
     reset();
     setSelectedCountry(null);
+    setSelectedPhoneCountry(defaultCountry);
   };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      const cleanedAdditionalEmails = values.additional_emails?.filter((e) =>
-        e?.trim()
-      );
+      // Normalize optional form values so the API only receives meaningful user input.
+      const cleanedValues = cleanUpPayload(values);
 
-      if (!cleanedAdditionalEmails?.length) {
-        delete values.additional_emails;
-      } else {
-        values.additional_emails = cleanedAdditionalEmails;
-      }
-
-      await createPartnerReferral(values);
+      await createPartnerReferral(cleanedValues);
       enqueueSnackbar(
         'Your request has been received by Akamai. After we forward it to the partner, you will receive a confirmation email.',
         { variant: 'success' }
@@ -160,9 +198,23 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
       handleFormReset();
       onClose();
     } catch (errors) {
-      const errorMessage = errors
-        ? getAPIErrorOrDefault(errors)?.[0].reason
-        : "Oops! Something went wrong and we couldn't send your contacts. Please try again in a moment, or refresh the page.";
+      const apiErrors = getAPIErrorOrDefault(errors);
+      let errorMessage = apiErrors?.[0].reason;
+
+      // The API returns a very specific templated message when the rate limit is exceeded
+      // e.g: "You can only submit 2 requests in 24 hours and 1 requests per partner product in 30 days."
+      // Since numbers can change, we identify this message by checking its structure.
+      if (
+        errorMessage?.includes('You can only submit') &&
+        errorMessage?.includes('requests per partner product')
+      ) {
+        errorMessage =
+          'You have exceeded the limit of the number of times you can submit a referral for this product.';
+      } else if (!errorMessage) {
+        errorMessage =
+          "Oops! Something went wrong and we couldn't send your contacts. Please try again in a moment, or refresh the page.";
+      }
+
       setError('root', { message: errorMessage });
     }
   });
@@ -212,7 +264,16 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
               return (
                 // Using MultipleIPInput component for additional emails since it allows for easy addition and removal of multiple entries, and it can display individual error messages for each email address.
                 <MultipleIPInput
-                  buttonText="Add a second, additional email address"
+                  buttonText={
+                    <>
+                      <PlusSignIcon
+                        height={12}
+                        style={{ marginRight: 4 }}
+                        width={12}
+                      />
+                      Click to add a second, additional email address
+                    </>
+                  }
                   className={
                     field.value?.length === MAX_ADDITIONAL_EMAILS
                       ? classes.hideAddEmailButton
@@ -237,6 +298,9 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       field.onChange(['']);
                     } else {
                       field.onChange(value.map((email) => email.address));
+                    }
+                    if (value.some((email) => !email.address.trim())) {
+                      trigger('additional_emails');
                     }
                   }}
                   title="Additional email addresses"
@@ -265,6 +329,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                   }
                   keepSearchEnabledOnMobile
                   label="Region"
+                  noOptionsText="No regions match your search"
                   onBlur={field.onBlur}
                   onChange={(_event, country) => {
                     setSelectedCountry(country);
@@ -318,7 +383,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="phone-number">
+            <FormLabel htmlFor="phone_number">
               Phone number <Typography component="span">(required)</Typography>
             </FormLabel>
             <Stack direction="row" sx={{ marginTop: 0, width: '100%' }}>
@@ -337,6 +402,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
                       option.label === value.label
                     }
                     label="Phone Number"
+                    noOptionsText="No country codes match your search"
                     onBlur={field.onBlur}
                     onChange={(_, country) => {
                       setSelectedPhoneCountry(country);
@@ -625,11 +691,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
           primaryButtonProps={{
             'data-pendo-id': 'Cloud Marketplace Contact Sales-Submit',
             label: 'Submit',
-            disabled: isSubmitting || !tcConsent,
+            disabled: isSubmitDisabled,
             type: 'submit',
             tooltipText:
-              'Please agree to share your information with the partner to proceed.',
-            alwaysShowTooltip: !tcConsent,
+              'Please complete all required fields and agree to share your information with the partner to proceed',
+            alwaysShowTooltip: isSubmitDisabled,
           }}
           secondaryButtonProps={{
             'data-pendo-id': 'Cloud Marketplace Contact Sales-Cancel',

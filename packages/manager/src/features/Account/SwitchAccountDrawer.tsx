@@ -231,6 +231,7 @@ export const SwitchAccountDrawer = (props: Props) => {
       {childAccounts &&
       childAccounts.length === 0 &&
       isIAMDelegationEnabled &&
+      !isLoading &&
       !Object.prototype.hasOwnProperty.call(filter, 'company') ? (
         <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
           <NoResultsState />
@@ -300,7 +301,6 @@ export const SwitchAccountDrawer = (props: Props) => {
                   clearable
                   debounceTime={250}
                   hideLabel
-                  key={`switch-search-${searchQuery}`}
                   label="Search"
                   loading={isLoading}
                   onSearch={handleSearchQueryChange}
