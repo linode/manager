@@ -5,15 +5,22 @@ import {
   useMutateAccountAgreements,
   useNetworkTransferPricesQuery,
   useProfile,
-  useRegionsQuery,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { Link } from 'src/components/Link';
+import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
@@ -26,14 +33,38 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { QuotasInfoNotice } from '../QuotasInfoNotice';
-import ClusterSelect from './ClusterSelect';
+import { BucketRegions } from './BucketRegions';
+import { StyledEUAgreementCheckbox } from './CreateBucketDrawer.styles';
 import { OveragePricing } from './OveragePricing';
 
-import type { CreateObjectStorageBucketPayload } from '@linode/api-v4';
+import type {
+  CreateObjectStorageBucketPayload,
+  ObjectStorageEndpoint,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface EndpointCount {
+  [key: string]: number;
+}
+
+interface EndpointOption {
+  /**
+   * The type of endpoint.
+   */
+  endpoint_type: ObjectStorageEndpointTypes;
+  /**
+   * The label to display in the dropdown.
+   */
+  label: string;
+  /**
+   * The hostname of the endpoint. This is only necessary when multiple endpoints of the same type are assigned to a region.
+   */
+  s3_endpoint?: string;
 }
 
 export const CreateBucketDrawer = (props: Props) => {
@@ -41,7 +72,11 @@ export const CreateBucketDrawer = (props: Props) => {
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
 
-  const { data: regions } = useRegionsQuery();
+  const {
+    availableStorageRegions,
+    isStorageEndpointsLoading,
+    storageEndpoints,
+  } = useObjectStorageRegions();
 
   const { data: bucketsData } = useObjectStorageBuckets();
 
@@ -65,40 +100,46 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
-  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] =
-    React.useState(false);
-  const [hasSignedAgreement, setHasSignedAgreement] =
-    React.useState<boolean>(false);
+
+  const [state, setState] = React.useState({
+    hasSignedAgreement: false,
+    isEnableObjDialogOpen: false,
+  });
 
   const {
     control,
     formState: { errors },
+    getValues,
     handleSubmit,
     reset,
+    resetField,
     setError,
+    setValue,
     watch,
   } = useForm<CreateObjectStorageBucketPayload>({
     context: { buckets: bucketsData?.buckets ?? [] },
     defaultValues: {
-      cluster: '',
       cors_enabled: true,
+      endpoint_type: undefined,
       label: '',
+      region: '',
+      s3_endpoint: undefined,
     },
     mode: 'onBlur',
     resolver: yupResolver(CreateBucketSchema),
   });
 
-  const watchCluster = watch('cluster');
+  const watchRegion = watch('region');
 
   const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
     try {
       await createBucket(data);
 
-      if (data.cluster) {
-        sendCreateBucketEvent(data.cluster);
+      if (data.region) {
+        sendCreateBucketEvent(data.region);
       }
 
-      if (hasSignedAgreement) {
+      if (state.hasSignedAgreement) {
         try {
           await updateAccountAgreements({ eu_model: true });
         } catch (error) {
@@ -114,30 +155,132 @@ export const CreateBucketDrawer = (props: Props) => {
     }
   };
 
-  const handleBucketFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (accountSettings?.object_storage !== 'active') {
-      setIsEnableObjDialogOpen(true);
-    } else {
-      handleSubmit(onSubmit)();
-    }
-  };
-
-  const clusterRegion = watchCluster
-    ? regions?.find((region) => watchCluster.includes(region.id))
-    : undefined;
-
-  const { showGDPRCheckbox } = getGDPRDetails({
-    agreements,
-    profile,
-    regions,
-    selectedRegionId: clusterRegion?.id ?? '',
-  });
-
   const handleClose = () => {
     reset();
     onClose();
   };
+
+  const handleBucketFormSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    const formValues = getValues();
+
+    // Custom validation in the handleBucketFormSubmit function
+    // to catch missing endpoint_type values before form submission
+    // since this is optional in the schema.
+    if (Boolean(storageEndpoints) && !formValues.endpoint_type) {
+      setError('endpoint_type', {
+        message: 'Endpoint Type is required.',
+        type: 'manual',
+      });
+      return;
+    }
+
+    if (accountSettings?.object_storage !== 'active') {
+      setState((prev) => ({ ...prev, isEnableObjDialogOpen: true }));
+    } else {
+      await handleSubmit(onSubmit)(e);
+    }
+  };
+
+  const selectedRegion = watchRegion
+    ? availableStorageRegions?.find((region) => watchRegion === region.id)
+    : undefined;
+
+  const filteredEndpoints = storageEndpoints?.filter(
+    (endpoint) => selectedRegion?.id === endpoint.region
+  );
+
+  // In rare cases, the dropdown must display a specific endpoint hostname (s3_endpoint) along with
+  // the endpoint type to distinguish between two assigned endpoints of the same type.
+  // This is necessary for multiple gen1 (E1) assignments in the same region.
+  const endpointCounts = filteredEndpoints?.reduce(
+    (acc: EndpointCount, { endpoint_type }) => {
+      acc[endpoint_type] = (acc[endpoint_type] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
+
+  const createEndpointOption = (
+    endpoint: ObjectStorageEndpoint
+  ): EndpointOption => {
+    const { endpoint_type, s3_endpoint } = endpoint;
+    const isLegacy = endpoint_type === 'E0';
+    const typeLabel = isLegacy ? 'Legacy' : 'Standard';
+    const shouldShowHostname =
+      endpointCounts && endpointCounts[endpoint_type] > 1;
+    const label =
+      shouldShowHostname && s3_endpoint !== null
+        ? `${typeLabel} (${endpoint_type}) ${s3_endpoint}`
+        : `${typeLabel} (${endpoint_type})`;
+
+    return {
+      endpoint_type,
+      label,
+      s3_endpoint: s3_endpoint ?? undefined,
+    };
+  };
+
+  const filteredEndpointOptions: EndpointOption[] | undefined =
+    filteredEndpoints?.map(createEndpointOption);
+
+  const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
+
+  const selectedEndpointOption = React.useMemo(() => {
+    const currentEndpointType = watch('endpoint_type');
+    const currentS3Endpoint = watch('s3_endpoint');
+    return (
+      filteredEndpointOptions?.find(
+        (endpoint) =>
+          endpoint.endpoint_type === currentEndpointType &&
+          endpoint.s3_endpoint === currentS3Endpoint
+      ) || null
+    );
+  }, [filteredEndpointOptions, watch]);
+
+  const { showGDPRCheckbox } = getGDPRDetails({
+    agreements,
+    profile,
+    regions: availableStorageRegions,
+    selectedRegionId: selectedRegion?.id ?? '',
+  });
+
+  const resetSpecificFormFields = () => {
+    resetField('endpoint_type');
+    setValue('s3_endpoint', undefined);
+    setValue('cors_enabled', true);
+  };
+
+  const updateEndpointType = (endpointOption: EndpointOption | null) => {
+    if (endpointOption) {
+      const { endpoint_type, s3_endpoint } = endpointOption;
+      const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
+
+      if (isGen2Endpoint) {
+        setValue('cors_enabled', false);
+      }
+
+      setValue('endpoint_type', endpoint_type, { shouldValidate: true });
+      setValue('s3_endpoint', s3_endpoint);
+    } else {
+      resetSpecificFormFields();
+    }
+  };
+
+  // Both of these are side effects that should only run when the region changes
+  React.useEffect(() => {
+    // Auto-select an endpoint option if there's only one
+    if (filteredEndpointOptions && filteredEndpointOptions.length === 1) {
+      updateEndpointType(filteredEndpointOptions[0]);
+    } else {
+      // When region changes, reset values
+      resetSpecificFormFields();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchRegion]);
 
   return (
     <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
@@ -156,51 +299,109 @@ export const CreateBucketDrawer = (props: Props) => {
         <Controller
           control={control}
           name="label"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <TextField
-              {...field}
               data-qa-cluster-label
               data-testid="label"
               disabled={isRestrictedUser}
-              errorText={fieldState.error?.message}
+              errorText={errors.label?.message}
               label="Bucket Name"
+              onBlur={field.onBlur}
+              onChange={field.onChange}
               required
+              value={field.value ?? ''}
             />
           )}
-          rules={{ required: 'Bucket name is required' }}
         />
         <Controller
           control={control}
-          name="cluster"
-          render={({ field, fieldState }) => (
-            <ClusterSelect
-              {...field}
-              data-qa-cluster-select
+          name="region"
+          render={({ field }) => (
+            <BucketRegions
               disabled={isRestrictedUser}
-              error={fieldState.error?.message}
-              onChange={(value) => field.onChange(value)}
+              error={errors.region?.message}
+              onBlur={field.onBlur}
+              onChange={(value) => {
+                field.onChange(value);
+              }}
               required
-              selectedCluster={field.value ?? undefined}
+              selectedRegion={field.value}
             />
           )}
-          rules={{ required: 'Cluster is required' }}
         />
-        {clusterRegion?.id && <OveragePricing regionId={clusterRegion.id} />}
-        {showGDPRCheckbox && (
-          <StyledEUAgreementCheckbox
-            checked={hasSignedAgreement}
-            onChange={(e) => setHasSignedAgreement(e.target.checked)}
-          />
+        {selectedRegion?.id && <OveragePricing regionId={selectedRegion.id} />}
+        {Boolean(storageEndpoints) && selectedRegion && (
+          <>
+            <Controller
+              control={control}
+              name="endpoint_type"
+              render={({ field }) => (
+                <Autocomplete
+                  disableClearable={hasSingleEndpointType}
+                  errorText={errors.endpoint_type?.message}
+                  label="Object Storage Endpoint Type"
+                  loading={isStorageEndpointsLoading}
+                  onBlur={field.onBlur}
+                  onChange={(_, endpointOption) =>
+                    updateEndpointType(endpointOption)
+                  }
+                  options={filteredEndpointOptions ?? []}
+                  placeholder="Object Storage Endpoint Type"
+                  textFieldProps={{
+                    containerProps: {
+                      sx: {
+                        '> .MuiFormHelperText-root': {
+                          marginBottom: 1,
+                        },
+                      },
+                    },
+                    helperText: (
+                      <Typography component="span">
+                        Endpoint types impact the performance, capacity, and
+                        rate limits for your bucket. Understand{' '}
+                        <Link to="https://techdocs.akamai.com/cloud-computing/docs/object-storage">
+                          endpoint types
+                        </Link>
+                        .
+                      </Typography>
+                    ),
+                    helperTextPosition: 'top',
+                  }}
+                  value={selectedEndpointOption}
+                />
+              )}
+            />
+            {Boolean(storageEndpoints) && selectedEndpointOption && (
+              <BucketRateLimitTable
+                endpointType={selectedEndpointOption?.endpoint_type}
+                typographyProps={{
+                  marginTop: 1,
+                  variant: 'inherit',
+                }}
+              />
+            )}
+          </>
         )}
+        {showGDPRCheckbox ? (
+          <StyledEUAgreementCheckbox
+            checked={state.hasSignedAgreement}
+            onChange={(e) =>
+              setState((prev) => ({
+                ...prev,
+                hasSignedAgreement: e.target.checked,
+              }))
+            }
+          />
+        ) : null}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
             disabled:
-              (showGDPRCheckbox && !hasSignedAgreement) ||
+              (showGDPRCheckbox && !state.hasSignedAgreement) ||
               isErrorTypes ||
               isRestrictedUser,
             label: 'Create Bucket',
-            loading: isPending || Boolean(clusterRegion?.id && isLoadingTypes),
+            loading: isPending || Boolean(selectedRegion?.id && isLoadingTypes),
             tooltipText:
               !isLoadingTypes && isInvalidPrice
                 ? PRICES_RELOAD_ERROR_NOTICE_TEXT
@@ -211,18 +412,16 @@ export const CreateBucketDrawer = (props: Props) => {
         />
         <EnableObjectStorageModal
           handleSubmit={handleSubmit(onSubmit)}
-          onClose={() => setIsEnableObjDialogOpen(false)}
-          open={isEnableObjDialogOpen}
-          regionId={clusterRegion?.id}
+          onClose={() =>
+            setState((prev) => ({
+              ...prev,
+              isEnableObjDialogOpen: false,
+            }))
+          }
+          open={state.isEnableObjDialogOpen}
+          regionId={selectedRegion?.id}
         />
       </form>
     </Drawer>
   );
 };
-
-const StyledEUAgreementCheckbox = styled(EUAgreementCheckbox, {
-  label: 'StyledEUAgreementCheckbox',
-})(({ theme }) => ({
-  marginButton: theme.spacing(3),
-  marginTop: theme.spacing(3),
-}));
