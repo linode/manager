@@ -23,7 +23,6 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
-import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
 import { ViewPermissionsDrawer } from './ViewPermissionsDrawer';
 
@@ -301,25 +300,14 @@ export const AccessKeyLanding = (props: Props) => {
         pageSize={pagination.pageSize}
       />
 
-      {isObjMultiClusterEnabled ? (
-        <OMC_AccessKeyDrawer
-          isRestrictedUser={props.isRestrictedUser}
-          mode={mode}
-          objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          onClose={closeAccessDrawer}
-          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-          open={accessDrawerOpen}
-        />
-      ) : (
-        <AccessKeyDrawer
-          isRestrictedUser={props.isRestrictedUser}
-          mode={mode}
-          objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          onClose={closeAccessDrawer}
-          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-          open={accessDrawerOpen}
-        />
-      )}
+      <AccessKeyDrawer
+        isRestrictedUser={props.isRestrictedUser}
+        mode={mode}
+        objectStorageKey={keyToEdit ? keyToEdit : undefined}
+        onClose={closeAccessDrawer}
+        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+        open={accessDrawerOpen}
+      />
 
       <ViewPermissionsDrawer
         objectStorageKey={keyToEdit}
