@@ -1,6 +1,7 @@
 import {
   cancelObjectStorage,
   createBucket,
+  createObjectStorageKeys,
   deleteBucket,
   deleteBucketWithRegion,
   deleteSSLCert,
@@ -10,8 +11,10 @@ import {
   getObjectStorageKeys,
   getObjectURL,
   getSSLCert,
+  revokeObjectStorageKey,
   updateBucketAccess,
   updateObjectACL,
+  updateObjectStorageKey,
   uploadSSLCert,
 } from '@linode/api-v4';
 import {
@@ -34,6 +37,11 @@ import {
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import {
+  sendCreateAccessKeyEvent,
+  sendEditAccessKeyEvent,
+  sendRevokeAccessKeyEvent,
+} from 'src/utilities/analytics/customEventAnalytics';
 
 import {
   getAllBucketsFromEndpoints,
@@ -50,6 +58,7 @@ import type {
   APIError,
   CreateObjectStorageBucketPayload,
   CreateObjectStorageBucketSSLPayload,
+  CreateObjectStorageKeyPayload,
   CreateObjectStorageObjectURLPayload,
   ObjectStorageBucket,
   ObjectStorageBucketAccess,
@@ -64,6 +73,7 @@ import type {
   PriceType,
   ResourcePage,
   UpdateObjectStorageBucketAccessPayload,
+  UpdateObjectStorageKeyPayload,
 } from '@linode/api-v4';
 
 export const objectStorageQueries = createQueryKeys('object-storage', {
@@ -117,6 +127,109 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryKey: null,
   },
 });
+
+/**
+ * Object Storage Access Keys
+ */
+
+export const useObjectStorageAccessKeys = (params: Params) =>
+  useQuery<ResourcePage<ObjectStorageKey>, APIError[]>({
+    ...objectStorageQueries.accessKeys(params),
+    placeholderData: keepPreviousData,
+  });
+
+// TODO: Optimize to use tanstack cache
+export const useObjectStorageAccessKey = (id: number) => {
+  const queryClient = useQueryClient();
+
+  if (id === -1) {
+    return {};
+  }
+
+  const queries = queryClient.getQueriesData({
+    queryKey: objectStorageQueries.accessKeys._def,
+  });
+
+  for (const [, data] of queries) {
+    const accessKey = (data as ResourcePage<ObjectStorageKey>)?.data?.find(
+      (key) => key.id === id
+    );
+    if (accessKey) {
+      return { data: accessKey };
+    }
+  }
+
+  return { data: undefined };
+};
+
+export const useCreateAccessKeyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    ObjectStorageKey,
+    APIError[],
+    CreateObjectStorageKeyPayload
+  >({
+    mutationFn: createObjectStorageKeys,
+    onSuccess() {
+      // Invalidate account settings because object storage will become enabled
+      // if a user created their first bucket.
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.settings.queryKey,
+      });
+
+      // Invalidate access keys query
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+
+      // @analytics
+      sendCreateAccessKeyEvent();
+    },
+    onError() {
+      // We also need to refresh account settings on failure, since, depending
+      // on the error, Object Storage service might have actually been enabled.
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.settings.queryKey,
+      });
+    },
+  });
+};
+
+export const useUpdateAccessKeyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    ObjectStorageKey,
+    APIError[],
+    { data: UpdateObjectStorageKeyPayload; id: number }
+  >({
+    mutationFn: ({ id, data }) => updateObjectStorageKey(id, data),
+    onSuccess() {
+      // Invalidate access keys query
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+
+      // @analytics
+      sendEditAccessKeyEvent();
+    },
+  });
+};
+
+export const useDeleteAccessKeyMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ObjectStorageKey, APIError[], number>({
+    mutationFn: (id) => revokeObjectStorageKey(id),
+    onSuccess() {
+      // Invalidate access keys query
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+
+      // @analytics
+      sendRevokeAccessKeyEvent();
+    },
+  });
+};
 
 export const useObjectStorageEndpoints = (enabled = true) => {
   const flags = useFlags();
@@ -195,12 +308,6 @@ export const useObjectStorageBuckets = (enabled: boolean = true) => {
     isLoading: bucketsQuery.isLoading || dependencyIsLoading,
   };
 };
-
-export const useObjectStorageAccessKeys = (params: Params) =>
-  useQuery<ResourcePage<ObjectStorageKey>, APIError[]>({
-    ...objectStorageQueries.accessKeys(params),
-    placeholderData: keepPreviousData,
-  });
 
 export const useBucketAccess = (
   clusterOrRegion: string,
