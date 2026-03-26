@@ -29,6 +29,7 @@ import {
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { usePermissions } from '../../hooks/usePermissions';
+import { IAM_ROLES_PENDO_IDS } from '../../Shared/constants';
 import {
   ROLES_LEARN_MORE_LINK,
   ROLES_TABLE_PREFERENCE_KEY,
@@ -213,6 +214,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
           </Grid>
           <Button
             buttonType="primary"
+            data-pendo-id={IAM_ROLES_PENDO_IDS.assignSelectedRoles}
             disabled={selectedRows.length === 0 || !isAccountAdmin}
             onClick={() => handleAssignSelectedRoles()}
             sx={{ height: 34 }}
@@ -298,6 +300,10 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
+                    // data-pendo-id={IAM_ROLES_PENDO_IDS.rolesChecked}
+                    {...(selectedRows.includes(roleRow) && {
+                      'data-pendo-id': IAM_ROLES_PENDO_IDS.rolesChecked,
+                    })}
                     disabled={!isAccountAdmin}
                     style={{
                       wordBreak: 'break-word',

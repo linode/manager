@@ -5,6 +5,7 @@ import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
+import { formatTrademarkSymbols } from '../shared';
 import { PRODUCT_CARD_GRID_SIZE, PRODUCT_CARD_STYLES } from './styles';
 
 export interface ProductCardData {
@@ -71,7 +72,7 @@ export const ProductSelectionCard = React.memo(
             fontSize: theme.tokens.font.FontSize.Xxxs, // Must come after font
           })}
         >
-          {companyName}
+          {formatTrademarkSymbols(companyName)}
         </Typography>,
         // Description
         <Typography
@@ -160,7 +161,7 @@ export const ProductSelectionCard = React.memo(
         data-pendo-id={`Cloud Marketplace-${productName}`}
         disabled={disabled}
         gridSize={PRODUCT_CARD_GRID_SIZE}
-        heading={productName}
+        heading={formatTrademarkSymbols(productName)}
         onClick={onClick}
         renderIcon={renderHeader}
         role="button"

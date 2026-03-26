@@ -111,11 +111,27 @@ describe('LinodeAlerts — standalone mode (ACLP flag OFF)', () => {
 
 describe('LinodeAlerts — unified mode (aclpServices.linode.alerts.enabled + region supported)', () => {
   const flags = {
-    aclpServices: { linode: { alerts: { enabled: true, beta: false } } },
+    aclpServices: {
+      linode: {
+        alerts: {
+          enabled: true,
+          beta: false, // "beta" here is irrelevant since we are no longer using this service-specific beta flag
+        },
+      },
+    },
+    aclpAlerting: {
+      accountAlertLimit: 10,
+      accountMetricLimit: 10,
+      alertDefinitions: false,
+      beta: true, // relevant for this test suite
+      notificationChannels: false,
+      recentActivity: false,
+      new: false, // relevant for this test suite
+    },
   };
 
   beforeEach(() => {
-    queryMocks.useIsAclpSupportedRegion.mockReturnValue(true);
+    queryMocks.useIsAclpSupportedRegion.mockReturnValue(true); // ACLP supported region
     queryMocks.userPermissions.mockReturnValue({
       data: { update_linode: false },
     });
@@ -186,11 +202,24 @@ describe('LinodeAlerts — unified mode (aclpServices.linode.alerts.enabled + re
     });
   });
 
-  it('shows the info banner about the new Alerts (Beta) feature', async () => {
+  it('displays the correct info banner about the ACLP Alerts feature in BETA Phase', async () => {
     const { getByTestId } = renderWithTheme(<LinodeAlerts />, { flags });
 
     expect(getByTestId('notice-info')).toHaveTextContent(
       'Try the Alerts (Beta), featuring new options like customizable alerts. You can keep your legacy alerts and add them to the new Beta Alerts.'
+    );
+  });
+
+  it('displays the correct info banner about the ACLP Alerts feature in NEW Phase', async () => {
+    const { getByTestId } = renderWithTheme(<LinodeAlerts />, {
+      flags: {
+        aclpServices: flags.aclpServices,
+        aclpAlerting: { ...flags.aclpAlerting, beta: false, new: true },
+      },
+    });
+
+    expect(getByTestId('notice-info')).toHaveTextContent(
+      'Try Alerts (New) with features like customizable alerts. Legacy and new alerts can be used together.'
     );
   });
 });

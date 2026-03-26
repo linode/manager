@@ -3,6 +3,7 @@ import React from 'react';
 
 import GroupByIcon from 'src/assets/icons/group-by.svg';
 
+import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { CloudPulseGroupByDrawer } from './CloudPulseGroupByDrawer';
 import { GLOBAL_GROUP_BY_MESSAGE } from './constants';
@@ -40,6 +41,7 @@ export const GlobalFilterGroupByRenderer = (
     savePreferences,
   } = props;
   const [isSelected, setIsSelected] = React.useState(false);
+  const { setGlobalGroupBy } = useCloudPulseContext();
 
   const { options, defaultValue, isLoading } = useGlobalDimensions(
     selectedDashboard?.id,
@@ -60,9 +62,10 @@ export const GlobalFilterGroupByRenderer = (
         selectedValue.map(({ value }) => value),
         savePref ?? savePreferences
       );
+      setGlobalGroupBy(selectedValue.map(({ label }) => label));
       setOpen(false);
     },
-    [handleChange, savePreferences]
+    [handleChange, savePreferences, setGlobalGroupBy]
   );
 
   const onCancel = React.useCallback(() => {
@@ -70,13 +73,18 @@ export const GlobalFilterGroupByRenderer = (
   }, []);
   return (
     <>
-      <CloudPulseTooltip placement="bottom-end" title="Group By">
+      <CloudPulseTooltip
+        placement="bottom-end"
+        title={
+          !options.length ? 'No dimensions available for grouping' : 'Group By'
+        }
+      >
         <IconButton
           aria-label="Group By Dashboard Metrics"
           color="inherit"
           data-qa-selected={isSelected}
           data-testid="group-by"
-          disabled={!selectedDashboard || isLoading}
+          disabled={!options.length || !selectedDashboard || isLoading}
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({

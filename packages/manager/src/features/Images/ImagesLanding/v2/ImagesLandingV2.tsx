@@ -14,11 +14,13 @@ export const ImagesLandingV2 = () => {
     {
       title: 'Image Library',
       to: '/images/image-library',
+      pendoId: 'Images-Library',
     },
     {
       title: 'Share Groups',
       to: '/images/share-groups',
       chip: <BetaChip />,
+      pendoId: 'Images-Groups',
     },
   ]);
 

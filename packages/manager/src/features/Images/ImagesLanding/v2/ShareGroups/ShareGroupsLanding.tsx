@@ -11,6 +11,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { getSubTabIndex } from 'src/features/Images/utils';
 
 import { shareGroupsSubTabs as subTabs } from './shareGroupsTabsConfig';
+import { ShareGroupsView } from './ShareGroupsView';
 
 export const ShareGroupsTabs = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export const ShareGroupsTabs = () => {
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
           {subTabs.map((tab) => (
-            <Tab key={`images-${tab.type}`}>
+            <Tab data-pendo-id={tab.pendoId} key={`images-${tab.type}`}>
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
           ))}
@@ -49,7 +50,7 @@ export const ShareGroupsTabs = () => {
             {subTabs.map((tab, index) => (
               <SafeTabPanel index={index} key={`images-${tab.type}-content`}>
                 {tab.type === 'owned-groups' && (
-                  <Notice variant="info">Owned Groups is coming soon...</Notice>
+                  <ShareGroupsView type="owned-groups" />
                 )}
                 {tab.type === 'joined-groups' && (
                   <Notice variant="info">
