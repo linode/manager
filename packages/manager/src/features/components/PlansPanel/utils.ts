@@ -24,6 +24,7 @@ import type {
 import type {
   BaseType,
   Capabilities,
+  DatabaseType,
   LinodeType,
   LinodeTypeClass,
   Region,
@@ -512,7 +513,7 @@ export const getDisabledPlanReasonCopy = ({
 export const useShouldDisablePremiumPlansTab = ({
   types,
 }: {
-  types: LinodeType[] | PlanSelectionType[] | undefined;
+  types: DatabaseType[] | LinodeType[] | PlanSelectionType[] | undefined;
 }): boolean => {
   const { isGenerationalPlansEnabled, allowedPlans } =
     useIsGenerationalPlansEnabled(types, 'premium');
