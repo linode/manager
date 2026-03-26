@@ -61,6 +61,15 @@ const objectStorageBucketCreateRoute = createRoute({
   )
 );
 
+const objectStorageBucketDetailsRoute = createRoute({
+  getParentRoute: () => objectStorageRoute,
+  path: 'buckets/$regionId/$bucketName/details',
+}).lazy(() =>
+  import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
 const objectStorageAccessKeyCreateRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'access-keys/create',
@@ -122,6 +131,7 @@ export const objectStorageRouteTree = objectStorageRoute.addChildren([
     objectStorageBucketsLandingRoute,
     objectStorageAccessKeysLandingRoute,
     objectStorageBucketCreateRoute,
+    objectStorageBucketDetailsRoute,
     objectStorageAccessKeyCreateRoute,
   ]),
   objectStorageBucketDetailRoute.addChildren([
