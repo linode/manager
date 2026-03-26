@@ -309,6 +309,34 @@ export const useObjectStorageBuckets = (enabled: boolean = true) => {
   };
 };
 
+// TODO: Optimize to use tanstack cache
+export const useObjectStorageBucket = (
+  region: string | undefined,
+  label: string | undefined
+) => {
+  const queryClient = useQueryClient();
+
+  if (!region || !label) {
+    return {};
+  }
+
+  const queries = queryClient.getQueriesData({
+    queryKey: objectStorageQueries.buckets.queryKey,
+  });
+
+  for (const [, data] of queries) {
+    const bucket = (data as { buckets: ObjectStorageBucket[] })?.buckets?.find(
+      (bucket) => bucket.region === region && bucket.label === label
+    );
+
+    if (bucket) {
+      return { data: bucket };
+    }
+  }
+
+  return { data: undefined };
+};
+
 export const useBucketAccess = (
   clusterOrRegion: string,
   bucket: string,

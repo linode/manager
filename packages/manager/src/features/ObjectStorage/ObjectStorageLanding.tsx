@@ -18,7 +18,7 @@ import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { BillingNotice } from './BillingNotice';
-import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { BucketDrawerOutlet } from './BucketLanding/BucketDrawerOutlet';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 
 import type { MODE } from './AccessKeyLanding/types';
@@ -123,7 +123,7 @@ export const ObjectStorageLanding = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment
         segment={`${
           isCreateBucketOpen && !objectStorageBucketsResponse?.buckets.length
@@ -189,13 +189,10 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-
-        <CreateBucketDrawer
-          isOpen={isCreateBucketOpen}
-          onClose={() => navigate({ to: '/object-storage/buckets' })}
-        />
       </Tabs>
-    </React.Fragment>
+
+      <BucketDrawerOutlet />
+    </>
   );
 };
 

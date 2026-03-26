@@ -2,28 +2,32 @@ import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
 import { Divider, Drawer, Typography } from '@linode/ui';
 import { pluralize, readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
+import {
+  useObjectStorageBucket,
+  useObjectStorageClusters,
+} from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AccessSelect } from '../BucketDetail/AccessTab/AccessSelect';
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 
-import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-
 export interface BucketDetailsDrawerProps {
+  isOpen: boolean;
   onClose: () => void;
-  open: boolean;
-  selectedBucket: ObjectStorageBucket | undefined;
 }
 
 export const BucketDetailsDrawer = React.memo(
   (props: BucketDetailsDrawerProps) => {
-    const { onClose, open, selectedBucket } = props;
+    const { onClose, isOpen } = props;
+    const { regionId, bucketName } = useParams({ strict: false });
+
+    const { data: bucket } = useObjectStorageBucket(regionId, bucketName);
 
     const {
       cluster,
@@ -34,7 +38,7 @@ export const BucketDetailsDrawer = React.memo(
       objects,
       region,
       size,
-    } = selectedBucket ?? {};
+    } = bucket ?? {};
 
     const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
@@ -65,7 +69,7 @@ export const BucketDetailsDrawer = React.memo(
     return (
       <Drawer
         onClose={onClose}
-        open={open}
+        open={isOpen}
         title={truncateMiddle(label ?? 'Bucket Detail')}
       >
         {formattedCreated && (
@@ -109,7 +113,7 @@ export const BucketDetailsDrawer = React.memo(
         {typeof objects === 'number' && (
           <Link
             to={`/object-storage/buckets/${
-              isObjMultiClusterEnabled && selectedBucket ? region : cluster
+              isObjMultiClusterEnabled && bucket ? region : cluster
             }/${label}`}
           >
             {pluralize('object', 'objects', objects)}
