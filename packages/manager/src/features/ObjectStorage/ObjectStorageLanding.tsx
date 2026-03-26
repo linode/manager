@@ -13,17 +13,16 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
-import { Tab, useTabs } from 'src/hooks/useTabs';
+import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { BillingNotice } from './BillingNotice';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
-import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
-import { useIsObjMultiClusterEnabled } from './hooks/useIsObjectStorageGen2Enabled';
 
 import type { MODE } from './AccessKeyLanding/types';
+import type { Tab } from 'src/hooks/useTabs';
 
 const SummaryLanding = React.lazy(() =>
   import('./SummaryLanding/SummaryLanding').then((module) => ({
@@ -42,8 +41,6 @@ export const ObjectStorageLanding = () => {
   const match = useMatch({ strict: false });
 
   const [mode, setMode] = React.useState<MODE>('creating');
-
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
@@ -193,17 +190,10 @@ export const ObjectStorageLanding = () => {
           </TabPanels>
         </React.Suspense>
 
-        {isObjMultiClusterEnabled ? (
-          <OMC_CreateBucketDrawer
-            isOpen={isCreateBucketOpen}
-            onClose={() => navigate({ to: '/object-storage/buckets' })}
-          />
-        ) : (
-          <CreateBucketDrawer
-            isOpen={isCreateBucketOpen}
-            onClose={() => navigate({ to: '/object-storage/buckets' })}
-          />
-        )}
+        <CreateBucketDrawer
+          isOpen={isCreateBucketOpen}
+          onClose={() => navigate({ to: '/object-storage/buckets' })}
+        />
       </Tabs>
     </React.Fragment>
   );
