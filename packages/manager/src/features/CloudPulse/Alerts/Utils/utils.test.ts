@@ -5,11 +5,7 @@ import {
 } from '@linode/utilities';
 import { act, renderHook } from '@testing-library/react';
 
-import {
-  alertFactory,
-  notificationChannelFactory,
-  serviceTypesFactory,
-} from 'src/factories';
+import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import { useContextualAlertsState } from '../../Utils/utils';
 import { transformDimensionValue } from '../CreateAlert/Criteria/DimensionFilterValue/utils';
@@ -26,7 +22,6 @@ import {
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
-  shouldUseContentsForEmail,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
@@ -497,63 +492,6 @@ describe('transformDimensionValue', () => {
     expect(
       transformDimensionValue('linode', 'unknown_dimension', 'test_value')
     ).toBe('Test_value');
-  });
-});
-
-describe('shouldUseContentsForEmail', () => {
-  it('should return false for email channel with valid usernames in details', () => {
-    const notificationChannel = notificationChannelFactory.build({
-      channel_type: 'email',
-      details: {
-        email: {
-          usernames: ['user1', 'user2'],
-        },
-      },
-    });
-    expect(shouldUseContentsForEmail(notificationChannel)).toBe(false);
-  });
-
-  it('should return true for email channel with undefined details', () => {
-    const notificationChannel = notificationChannelFactory.build({
-      channel_type: 'email',
-      details: undefined,
-    });
-    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
-  });
-
-  it('should return true for email channel with undefined details.email', () => {
-    const notificationChannel = notificationChannelFactory.build({
-      channel_type: 'email',
-      details: {
-        email: undefined,
-      },
-    });
-    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
-  });
-
-  it('should return true for email channel with undefined usernames', () => {
-    const notificationChannel = notificationChannelFactory.build({
-      channel_type: 'email',
-      details: {
-        email: {
-          usernames: undefined,
-        },
-      },
-    });
-    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
-  });
-
-  it('should return true for email channel with empty usernames array', () => {
-    const notificationChannel = notificationChannelFactory.build({
-      channel_type: 'email',
-      details: {
-        email: {
-          usernames: [],
-          recipient_type: 'admin_users',
-        },
-      },
-    });
-    expect(shouldUseContentsForEmail(notificationChannel)).toBe(true);
   });
 });
 

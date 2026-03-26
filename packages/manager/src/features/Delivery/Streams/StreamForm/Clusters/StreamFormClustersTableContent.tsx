@@ -10,13 +10,15 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { KubernetesCluster } from '@linode/api-v4';
-import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
+import type {
+  ExtendedKubernetesCluster,
+  StreamAndDestinationFormType,
+} from 'src/features/Delivery/Streams/StreamForm/types';
 
 export type OrderByKeys = 'label' | 'region';
 
 interface StreamFormClusterTableContentProps {
-  clusters: KubernetesCluster[] | undefined;
+  clusters: ExtendedKubernetesCluster[] | undefined;
   field: ControllerRenderProps<
     StreamAndDestinationFormType,
     'stream.details.cluster_ids'
@@ -101,7 +103,7 @@ export const StreamFormClusterTableContent = ({
           clusters.map(
             ({
               label,
-              region,
+              regionLabel,
               id,
               control_plane: { audit_logs_enabled: logsEnabled },
             }) => (
@@ -115,7 +117,7 @@ export const StreamFormClusterTableContent = ({
                   />
                 </TableCell>
                 <TableCell>{label}</TableCell>
-                <TableCell>{region}</TableCell>
+                <TableCell>{regionLabel}</TableCell>
                 <TableCell>
                   <Box alignItems="center" display="flex">
                     <StatusIcon status={logsEnabled ? 'active' : 'error'} />

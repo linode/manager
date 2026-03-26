@@ -4,6 +4,7 @@ import {
   LinkButton,
   Stack,
   TextField,
+  TooltipIcon,
   Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -21,10 +22,11 @@ interface CustomHeaderTitleProps {
   control: Control;
   controlPath: string;
   index: number;
+  tooltipText: string;
 }
 
 const CustomHeaderTitle = (props: CustomHeaderTitleProps) => {
-  const { control, controlPath, index } = props;
+  const { control, controlPath, index, tooltipText } = props;
 
   const headerName = useWatch({
     control,
@@ -32,9 +34,27 @@ const CustomHeaderTitle = (props: CustomHeaderTitleProps) => {
   });
 
   return (
-    <Typography noWrap={true} variant="subtitle1">
-      {headerName?.length ? headerName : `Custom Header ${index + 1}`}
-    </Typography>
+    <Stack
+      alignItems="center"
+      direction="row"
+      flexWrap="nowrap"
+      sx={{ minWidth: 0 }}
+    >
+      <Typography
+        noWrap={true}
+        overflow="hidden"
+        textOverflow="ellipsis"
+        variant="subtitle1"
+      >
+        {headerName?.length ? headerName : `Custom Header ${index + 1}`}
+      </Typography>
+      <TooltipIcon
+        labelTooltipIconSize="small"
+        status="info"
+        sxTooltipIcon={{ p: 1 }}
+        text={tooltipText}
+      />
+    </Stack>
   );
 };
 
@@ -91,6 +111,7 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
                 control={control}
                 controlPath={controlPath}
                 index={index}
+                tooltipText="A custom HTTPS header to include in the delivery request."
               />
               <IconButton onClick={() => removeField(index)} sx={{ p: 0 }}>
                 <CloseIcon />
@@ -105,6 +126,7 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
                     aria-required
                     errorText={fieldState.error?.message}
                     label="Name"
+                    labelTooltipText="The name of the custom header to include in the delivery request."
                     onBlur={controllerField.onBlur}
                     onChange={controllerField.onChange}
                     value={controllerField.value}
@@ -119,6 +141,7 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
                     aria-required
                     errorText={fieldState.error?.message}
                     label="Value"
+                    labelTooltipText="The value of the custom header to include in the delivery request."
                     multiline
                     onBlur={controllerField.onBlur}
                     onChange={controllerField.onChange}

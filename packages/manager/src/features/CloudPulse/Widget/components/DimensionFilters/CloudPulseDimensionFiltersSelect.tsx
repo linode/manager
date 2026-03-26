@@ -75,15 +75,23 @@ export const CloudPulseDimensionFiltersSelect = React.memo(
 
     const selectionCount = selectedDimensions?.length ?? 0;
 
+    const isDisabled = !dimensionOptions.length;
     return (
       <>
-        <CloudPulseTooltip placement="bottom-end" title="Dimension Filters">
+        <CloudPulseTooltip
+          placement="bottom-end"
+          title={
+            isDisabled
+              ? 'No dimensions available for filtering'
+              : 'Dimension Filters'
+          }
+        >
           <IconButton
             aria-label={`Widget Dimension Filter ${drawerLabel}`}
             color="inherit"
             data-qa-selected={selectionCount}
             data-testid="dimension-filter"
-            disabled={!dimensionOptions.length}
+            disabled={isDisabled}
             onClick={() => setOpen(true)}
             size="small"
             sx={(theme) => ({

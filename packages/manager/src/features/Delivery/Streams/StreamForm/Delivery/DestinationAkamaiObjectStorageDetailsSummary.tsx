@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { MASKED_VALUE } from 'src/features/Delivery/Destinations/constants';
 import { LabelValue } from 'src/features/Delivery/Shared/LabelValue';
 
 import type { AkamaiObjectStorageDetails } from '@linode/api-v4';
@@ -16,12 +17,12 @@ export const DestinationAkamaiObjectStorageDetailsSummary = (
       <LabelValue
         data-testid="access-key-id"
         label="Access Key ID"
-        value="*****************"
+        value={MASKED_VALUE}
       />
       <LabelValue
         data-testid="secret-access-key"
         label="Secret Access Key"
-        value="*****************"
+        value={MASKED_VALUE}
       />
       {!!path && <LabelValue label="Log Path" value={path} />}
     </>

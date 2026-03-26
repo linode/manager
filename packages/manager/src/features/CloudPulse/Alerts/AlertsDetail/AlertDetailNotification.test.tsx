@@ -7,9 +7,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AlertDetailNotification } from './AlertDetailNotification';
 
 const notificationChannels = notificationChannelFactory.buildList(3, {
-  content: {
+  details: {
     email: {
-      email_addresses: ['1@test.com', '2@test.com'],
+      usernames: ['1@test.com', '2@test.com'],
     },
   },
 });

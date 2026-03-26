@@ -44,13 +44,30 @@ describe('CopyTooltip', () => {
     expect(getByText(mockText)).toBeVisible();
   });
 
-  it('should disable the tooltip text with the disable property', async () => {
+  it('should disable the tooltip with the disable property', async () => {
     const { getByLabelText } = renderWithTheme(
       <CopyTooltip {...defaultProps} disabled />
     );
 
     const copyIconButton = getByLabelText(`Copy ${mockText} to clipboard`);
     expect(copyIconButton).toBeDisabled();
+  });
+
+  it('should display tooltip reason with the disabledReason property', async () => {
+    const { getByLabelText, findByRole } = renderWithTheme(
+      <CopyTooltip
+        {...defaultProps}
+        disabled
+        disabledReason="Tooltip disabled"
+      />
+    );
+
+    const copyIconButton = getByLabelText(`Copy ${mockText} to clipboard`);
+
+    await userEvent.hover(copyIconButton);
+    const copiedTooltip = await findByRole('tooltip');
+    expect(copiedTooltip).toBeInTheDocument();
+    expect(copiedTooltip).toHaveTextContent('Tooltip disabled');
   });
 
   it('should mask and toggle visibility of tooltip text with the masked property', async () => {

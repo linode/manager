@@ -1,19 +1,21 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
-import React, { type JSX } from 'react';
+import type { JSX } from 'react';
+import React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Skeleton } from 'src/components/Skeleton';
+import { useFlags } from 'src/hooks/useFlags';
 
 export interface AclpPreferenceToggleType {
   /**
    * Alerts toggle state. Use only when type is `alerts`
    */
-  isAlertsBetaMode?: boolean;
+  isAclpAlertsMode?: boolean;
   /**
    * Handler for alerts toggle. Use only when type is `alerts`
    */
-  onAlertsModeChange?: (isBeta: boolean) => void;
+  onAlertsModeChange?: (isAclpMode: boolean) => void;
   /**
    * Toggle type: `alerts` or `metrics`
    */
@@ -21,8 +23,14 @@ export interface AclpPreferenceToggleType {
 }
 
 interface PreferenceConfigItem {
-  getBannerText: (isBeta: boolean | undefined) => JSX.Element;
-  getButtonText: (isBeta: boolean | undefined) => string;
+  getBannerText: (
+    isAclpMode: boolean | undefined,
+    isAclpBeta: boolean | undefined
+  ) => JSX.Element;
+  getButtonText: (
+    isAclpMode: boolean | undefined,
+    isAclpBeta: boolean | undefined
+  ) => string;
   preferenceKey: string;
 }
 
@@ -32,62 +40,76 @@ const preferenceConfig: Record<
 > = {
   metrics: {
     preferenceKey: 'metrics-preference',
-    getButtonText: (isBeta) =>
-      isBeta ? 'Switch to legacy Metrics' : 'Try the Metrics (Beta)',
-    getBannerText: (isBeta) =>
-      isBeta ? (
+    getButtonText: (isAclpMode, isAclpBeta) => {
+      const aclpText = isAclpBeta
+        ? 'Try the Metrics (Beta)'
+        : 'Try the Metrics (New)';
+      return isAclpMode ? 'Switch to legacy Metrics' : aclpText;
+    },
+    getBannerText: (isAclpMode, isAclpBeta) => {
+      const labelInAclp = isAclpBeta ? 'Metrics (Beta)' : 'Metrics (New)';
+      const labelOutsideAclp = isAclpBeta ? 'Metrics (Beta)' : 'Metrics';
+
+      return isAclpMode ? (
         <span>
-          Welcome to <strong>Metrics (Beta)</strong> with more options and
+          Welcome to <strong>{labelInAclp}</strong> with more options and
           greater flexibility for better data analysis.
         </span>
       ) : (
         <span>
-          Try the new <strong>Metrics (Beta)</strong> with more options and
+          Try the new <strong>{labelOutsideAclp}</strong> with more options and
           greater flexibility for better data analysis. You can switch back to
           the current view at any time.
         </span>
-      ),
+      );
+    },
   },
   alerts: {
     preferenceKey: 'alerts-preference',
-    getButtonText: (isBeta) =>
-      isBeta ? 'Switch to legacy Alerts' : 'Try Alerts (Beta)',
-    getBannerText: (isBeta) =>
-      isBeta ? (
+    getButtonText: (isAclpMode, isAclpBeta) => {
+      const aclpText = isAclpBeta ? 'Try Alerts (Beta)' : 'Try Alerts (New)';
+      return isAclpMode ? 'Switch to legacy Alerts' : aclpText;
+    },
+    getBannerText: (isAclpMode, isAclpBeta) => {
+      const aclpText = isAclpBeta ? 'Alerts (Beta)' : 'Alerts (New)';
+
+      return isAclpMode ? (
         <span>
-          Welcome to <strong>Alerts (Beta)</strong>, designed for flexibility
-          with features like customizable alerts.
+          Welcome to <strong>{aclpText}</strong>, designed for flexibility with
+          features like customizable alerts.
         </span>
       ) : (
         <span>
-          Try the <strong>Alerts (Beta)</strong>, featuring new options like
+          Try the <strong>{aclpText}</strong>, featuring new options like
           customizable alerts. You can switch back to legacy Alerts at any time.
         </span>
-      ),
+      );
+    },
   },
 };
 
 /**
  * - For Alerts, the toggle uses local state, not preferences. We do this because each Linode should manage its own alert mode individually.
  *   - Create Linode: Toggle defaults to false (legacy mode). It's a simple UI toggle with no persistence.
- *   - Edit Linode: Toggle defaults based on useIsLinodeAclpSubscribed (true if the Linode is already subscribed to ACLP). Still local state - not saved to preferences.
  *
  * - For Metrics, we use account-level preferences, since it's a global setting shared across all Linodes.
  */
 export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
-  const { isAlertsBetaMode, onAlertsModeChange, type } = props;
+  const { isAclpAlertsMode, onAlertsModeChange, type } = props;
+
+  const { aclpAlerting, aclp } = useFlags();
 
   const config = preferenceConfig[type];
 
   // -------------------- Metrics related logic ------------------------
-  const { data: isAclpMetricsBeta, isLoading: isAclpMetricsBetaLoading } =
+  const { data: isAclpMetricsMode, isLoading: isAclpMetricsModeLoading } =
     usePreferences((preferences) => {
-      return preferences?.isAclpMetricsBeta;
+      return preferences?.isAclpMetricsMode;
     }, type === 'metrics');
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  if (isAclpMetricsBetaLoading) {
+  if (isAclpMetricsModeLoading) {
     return (
       <Skeleton
         data-testid="metrics-preference-skeleton"
@@ -100,12 +122,15 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
   }
   // -------------------------------------------------------------------
 
-  const isBeta = type === 'alerts' ? isAlertsBetaMode : isAclpMetricsBeta;
-  const handleBetaToggle = () => {
+  const isAclpMode = type === 'alerts' ? isAclpAlertsMode : isAclpMetricsMode;
+
+  const isAclpModeBeta = type === 'alerts' ? aclpAlerting?.beta : aclp?.beta;
+
+  const handleToggle = () => {
     if (type === 'alerts' && onAlertsModeChange) {
-      onAlertsModeChange(!isBeta);
+      onAlertsModeChange(!isAclpMode);
     } else {
-      updatePreferences({ isAclpMetricsBeta: !isBeta });
+      updatePreferences({ isAclpMetricsMode: !isAclpMode });
     }
   };
 
@@ -114,10 +139,10 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
       actionButton={
         <Button
           buttonType="primary"
-          onClick={handleBetaToggle}
+          onClick={handleToggle}
           sx={{ textTransform: 'none' }}
         >
-          {config.getButtonText(isBeta)}
+          {config.getButtonText(isAclpMode, isAclpModeBeta)}
         </Button>
       }
       dismissible={false}
@@ -126,7 +151,7 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
       variant="info"
     >
       <Typography data-testid={`${type}-preference-banner-text`}>
-        {config.getBannerText(isBeta)}
+        {config.getBannerText(isAclpMode, isAclpModeBeta)}
       </Typography>
     </DismissibleBanner>
   );
