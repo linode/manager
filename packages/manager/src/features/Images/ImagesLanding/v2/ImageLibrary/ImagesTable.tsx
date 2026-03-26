@@ -1,4 +1,5 @@
 import {
+  BetaChip,
   Box,
   Button,
   Hidden,
@@ -34,7 +35,6 @@ import type {
   ImageViewTableColConfig,
 } from './imageLibraryTabsConfig';
 import type { APIError, Event, Image } from '@linode/api-v4';
-import type { ImageLibraryType } from 'src/features/Images/utils';
 import type { Order } from 'src/hooks/useOrderV2';
 
 interface HeaderProps {
@@ -46,6 +46,7 @@ interface HeaderProps {
   };
   description?: React.ReactNode;
   docsLink?: ImageConfig['docsLink'];
+  isBeta?: ImageConfig['isBeta'];
   title: string;
 }
 
@@ -71,7 +72,6 @@ interface ImagesTableProps {
     pageSize: number;
   };
   query?: string;
-  type: ImageLibraryType;
 }
 
 export const ImagesTable = (props: ImagesTableProps) => {
@@ -89,7 +89,6 @@ export const ImagesTable = (props: ImagesTableProps) => {
     orderBy,
     pagination,
     query,
-    type,
   } = props;
 
   return (
@@ -103,7 +102,9 @@ export const ImagesTable = (props: ImagesTableProps) => {
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant="h3">{headerProps.title}</Typography>
+            <Typography variant="h3">
+              {headerProps.title} {headerProps.isBeta && <BetaChip />}
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
@@ -201,7 +202,7 @@ export const ImagesTable = (props: ImagesTableProps) => {
               />
             )}
             {images?.map((image) =>
-              type === 'shared-with-me' ? (
+              image.type === 'shared' ? (
                 <SharedImageRow
                   event={events[image.id]}
                   handlers={handlers}

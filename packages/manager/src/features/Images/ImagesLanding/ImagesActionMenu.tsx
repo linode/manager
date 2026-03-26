@@ -21,12 +21,12 @@ interface Props {
   event?: Event;
   handlers: Handlers;
   image: Image;
+  isSharedImageRow?: boolean;
   pendoIDs?: typeof SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS;
-  sharedImageRow?: boolean;
 }
 
 export const ImagesActionMenu = (props: Props) => {
-  const { handlers, image, sharedImageRow, pendoIDs } = props;
+  const { handlers, image, isSharedImageRow, pendoIDs } = props;
 
   const { id, status } = image;
 
@@ -49,38 +49,62 @@ export const ImagesActionMenu = (props: Props) => {
     const isDisabled = status && status !== 'available';
     const isAvailable = !isDisabled;
 
+    const deployAction = {
+      disabled: !linodeAccountPermissions.create_linode || isDisabled,
+      onClick: () => onDeploy?.(id),
+      pendoId: isSharedImageRow
+        ? pendoIDs?.actionMenu.deployNewLinode
+        : undefined,
+      title: 'Deploy to New Linode',
+      tooltip: !linodeAccountPermissions.create_linode
+        ? getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Linodes',
+          })
+        : isDisabled
+          ? 'Image is not yet available for use.'
+          : undefined,
+    };
+
+    const rebuildAction = {
+      disabled: isDisabled,
+      onClick: () => onRebuild?.(image),
+      pendoId: isSharedImageRow
+        ? pendoIDs?.actionMenu.rebuildLinode
+        : undefined,
+      title: 'Rebuild an Existing Linode',
+      tooltip: isDisabled ? 'Image is not yet available for use.' : undefined,
+    };
+
+    if (isSharedImageRow) {
+      return [
+        {
+          title: 'View Image Details',
+          onClick: () => null,
+          pendoId: pendoIDs?.actionMenu.viewImageDetails,
+        },
+        { ...deployAction },
+        { ...rebuildAction },
+      ];
+    }
+
     return [
-      ...(!sharedImageRow
-        ? [
-            {
-              disabled: !imagePermissions.update_image || isDisabled,
-              onClick: () => onEdit?.(image),
-              title: 'Edit',
-              tooltip: !imagePermissions.update_image
-                ? getRestrictedResourceText({
-                    action: 'edit',
-                    isSingular: true,
-                    resourceType: 'Images',
-                  })
-                : isDisabled
-                  ? 'Image is not yet available for use.'
-                  : undefined,
-            },
-          ]
-        : []),
-      ...(sharedImageRow
-        ? [
-            {
-              title: 'View Image Details',
-              onClick: () => null,
-              pendoId: pendoIDs?.actionMenu.viewImageDetails,
-            },
-          ]
-        : []),
-      ...(!sharedImageRow &&
-      onManageRegions &&
-      image.regions &&
-      image.regions.length > 0
+      {
+        disabled: !imagePermissions.update_image || isDisabled,
+        onClick: () => onEdit?.(image),
+        title: 'Edit',
+        tooltip: !imagePermissions.update_image
+          ? getRestrictedResourceText({
+              action: 'edit',
+              isSingular: true,
+              resourceType: 'Images',
+            })
+          : isDisabled
+            ? 'Image is not yet available for use.'
+            : undefined,
+      },
+      ...(onManageRegions && image.regions && image.regions.length > 0
         ? [
             {
               disabled: !imagePermissions.replicate_image || isDisabled,
@@ -96,48 +120,20 @@ export const ImagesActionMenu = (props: Props) => {
             },
           ]
         : []),
+      { ...deployAction },
+      { ...rebuildAction },
       {
-        disabled: !linodeAccountPermissions.create_linode || isDisabled,
-        onClick: () => onDeploy?.(id),
-        pendoId: sharedImageRow
-          ? pendoIDs?.actionMenu.deployNewLinode
-          : undefined,
-        title: 'Deploy to New Linode',
-        tooltip: !linodeAccountPermissions.create_linode
+        disabled: !imagePermissions.delete_image,
+        onClick: () => onDelete?.(image),
+        title: isAvailable ? 'Delete' : 'Cancel',
+        tooltip: !imagePermissions.delete_image
           ? getRestrictedResourceText({
-              action: 'create',
-              isSingular: false,
-              resourceType: 'Linodes',
+              action: 'delete',
+              isSingular: true,
+              resourceType: 'Images',
             })
-          : isDisabled
-            ? 'Image is not yet available for use.'
-            : undefined,
-      },
-      {
-        disabled: isDisabled,
-        onClick: () => onRebuild?.(image),
-        pendoId: sharedImageRow
-          ? pendoIDs?.actionMenu.rebuildLinode
           : undefined,
-        title: 'Rebuild an Existing Linode',
-        tooltip: isDisabled ? 'Image is not yet available for use.' : undefined,
       },
-      ...(!sharedImageRow
-        ? [
-            {
-              disabled: !imagePermissions.delete_image,
-              onClick: () => onDelete?.(image),
-              title: isAvailable ? 'Delete' : 'Cancel',
-              tooltip: !imagePermissions.delete_image
-                ? getRestrictedResourceText({
-                    action: 'delete',
-                    isSingular: true,
-                    resourceType: 'Images',
-                  })
-                : undefined,
-            },
-          ]
-        : []),
     ];
   }, [
     status,
@@ -151,7 +147,7 @@ export const ImagesActionMenu = (props: Props) => {
     imagePermissions,
     linodeAccountPermissions,
     pendoIDs,
-    sharedImageRow,
+    isSharedImageRow,
   ]);
 
   return (

@@ -163,7 +163,7 @@ export const SharedImageRow = (props: Props) => {
         <TableCell>{id}</TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ImagesActionMenu {...props} sharedImageRow />
+        <ImagesActionMenu {...props} isSharedImageRow />
       </TableCell>
     </TableRow>
   );

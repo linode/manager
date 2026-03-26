@@ -49,6 +49,7 @@ export interface ImageConfig {
     main: string;
   };
   eventCategory: string;
+  isBeta?: boolean;
   isEnabled: (subType: ImageLibraryType | undefined) => boolean;
   orderByDefault: string;
   orderDefault: 'asc' | 'desc';
@@ -212,6 +213,7 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
     orderByDefault: SHARED_IMAGES_DEFAULT_ORDER_BY,
     orderDefault: SHARED_IMAGES_DEFAULT_ORDER,
     preferenceKey: SHARED_IMAGES_PREFERENCE_KEY,
+    isBeta: true,
     isEnabled: (subType) => subType === 'shared-with-me',
     columns: SHARED_IMAGES_TABLE_COLUMNS,
     eventCategory: 'Shared Images Table',

@@ -205,6 +205,7 @@ export const ImagesView = (props: Props) => {
             : undefined,
           docsLink: config.docsLink,
           description: config.description,
+          isBeta: config.isBeta,
         }}
         images={images?.data ?? []}
         order={imagesOrder}
@@ -217,7 +218,6 @@ export const ImagesView = (props: Props) => {
           handlePageSizeChange: pagination.handlePageSizeChange,
         }}
         query={search.query}
-        type={type}
       />
     </>
   );
