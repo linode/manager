@@ -1,15 +1,10 @@
-import { regionFactory } from '@linode/utilities';
-import { waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import {
-  accountSettingsFactory,
-  objectStorageClusterFactory,
-} from 'src/factories';
+import { objectStorageEndpointsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
 
@@ -19,60 +14,71 @@ const props = {
 };
 
 describe('CreateBucketDrawer', () => {
-  it.skip('Should show a general error notice if the API returns one', async () => {
-    server.use(
-      http.post('*/object-storage/buckets', () => {
-        return HttpResponse.json(
-          { errors: [{ reason: 'Object Storage is offline!' }] },
-          {
-            status: 500,
-          }
-        );
-      }),
-      http.get('*/regions', async () => {
-        return HttpResponse.json(
-          makeResourcePage(
-            regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' })
-          )
-        );
-      }),
-      http.get('*object-storage/clusters', () => {
-        return HttpResponse.json(
-          makeResourcePage(
-            objectStorageClusterFactory.buildList(1, {
-              id: 'us-east-1',
-              region: 'us-east',
-            })
-          )
-        );
-      }),
-      http.get('*/account/settings', () => {
-        return HttpResponse.json(
-          accountSettingsFactory.build({ object_storage: 'active' })
-        );
-      })
-    );
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
-    const { findByText, getByLabelText, getByPlaceholderText, getByTestId } =
-      renderWithTheme(<CreateBucketDrawer {...props} />);
+  it('should render the drawer', () => {
+    const { getByTestId, getByText, queryByText } =
+      renderWithThemeAndHookFormContext({
+        component: <CreateBucketDrawer {...props} />,
+        options: {
+          flags: {
+            objMultiCluster: true,
+            objectStorageGen2: { enabled: true },
+          },
+        },
+      });
 
-    await userEvent.type(
-      getByLabelText('Label', { exact: false }),
-      'my-test-bucket'
-    );
+    expect(getByTestId('drawer-title')).toBeVisible();
+    expect(getByText('Bucket Name')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('Cancel')).toBeVisible();
+    expect(getByTestId('create-bucket-button')).toBeVisible();
+    expect(queryByText('Object Storage Endpoint Type')).not.toBeInTheDocument();
+  });
 
-    // We must waitFor because we need to load region and cluster data from the API
-    await waitFor(() =>
-      userEvent.selectOptions(
-        getByPlaceholderText('Select a Region'),
-        'Newark, NJ (us-east-1)'
-      )
-    );
+  it(
+    'should not display the endpoint selector if regions is not selected',
+    server.boundary(async () => {
+      server.use(
+        http.get('*/v4/object-storage/endpoints', () => {
+          return HttpResponse.json(
+            makeResourcePage([
+              objectStorageEndpointsFactory.build({
+                endpoint_type: 'E0',
+                region: 'us-sea',
+                s3_endpoint: null,
+              }),
+            ])
+          );
+        })
+      );
 
-    const saveButton = getByTestId('create-bucket-button');
+      const { queryByText } = renderWithThemeAndHookFormContext({
+        component: <CreateBucketDrawer {...props} />,
+        options: {
+          flags: {
+            objMultiCluster: true,
+            objectStorageGen2: { enabled: true },
+          },
+        },
+      });
 
-    await userEvent.click(saveButton);
+      expect(
+        queryByText('Object Storage Endpoint Type')
+      ).not.toBeInTheDocument();
+    })
+  );
 
-    await findByText('Object Storage is offline!');
+  it('should close the drawer', () => {
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <CreateBucketDrawer {...props} />,
+    });
+
+    const cancelButton = getByText('Cancel');
+    expect(cancelButton).toBeVisible();
+    fireEvent.click(cancelButton);
+    expect(props.onClose).toHaveBeenCalled();
   });
 });
