@@ -1,5 +1,6 @@
 import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
-import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import { getFeatureChip } from '@linode/shared';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import {
   Outlet,
@@ -28,7 +29,7 @@ const LinodesDetailNavigation = () => {
   const navigate = useNavigate();
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
-  const { aclpServices } = useFlags();
+  const { aclpServices, aclp } = useFlags();
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -44,19 +45,20 @@ const LinodesDetailNavigation = () => {
     type: 'metrics',
   });
 
-  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpMetricsBeta
+  const { data: isAclpMetricsPreference } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsMode
   );
+
+  const isAclpMetricsInRegionEnabled =
+    aclpServices?.linode?.metrics?.enabled &&
+    isAclpMetricsSupportedRegionLinode;
 
   const { tabs, handleTabChange, tabIndex } = useTabs([
     {
       chip:
-        aclpServices?.linode?.metrics?.enabled &&
-        aclpServices?.linode?.metrics?.beta &&
-        isAclpMetricsSupportedRegionLinode &&
-        isAclpMetricsPreferenceBeta ? (
-          <BetaChip />
-        ) : null,
+        isAclpMetricsInRegionEnabled && isAclpMetricsPreference
+          ? getFeatureChip(aclp ?? {})
+          : null,
       to: '/linodes/$linodeId/metrics',
       title: 'Metrics',
     },

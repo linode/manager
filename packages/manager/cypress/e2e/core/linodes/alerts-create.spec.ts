@@ -18,10 +18,10 @@ import {
   firewallFactory,
 } from 'src/factories';
 import {
-  ALERTS_BETA_MODE_BANNER_TEXT,
-  ALERTS_BETA_MODE_BUTTON_TEXT,
-  ALERTS_LEGACY_MODE_BANNER_TEXT,
-  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+  ALERTS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT,
+  ALERTS_ACLP_MODE_BETA_PHASE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT,
 } from 'src/features/Linodes/constants';
 
 const mockFirewall = firewallFactory.build({
@@ -50,14 +50,19 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       aclpServices: {
         linode: {
           alerts: {
-            beta: true,
+            beta: true, // "beta" here is irrelevant since we are no longer using this service-specific beta flag
             enabled: true,
           },
           metrics: {
-            beta: false,
+            beta: false, // "beta" here is irrelevant since we are no longer using this service-specific beta flag
             enabled: false,
           },
         },
+      },
+      aclp: { beta: false, new: false },
+      aclpAlerting: {
+        beta: true, // relevant for this test suite
+        new: false, // relevant for this test suite
       },
     }).as('getFeatureFlags');
     // mock network interface type in case test account has setting that disables <pre><code> snippet
@@ -185,7 +190,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     });
   });
 
-  it('create flow after switching to beta alerts', function () {
+  it('create flow after switching to aclp alerts', function () {
     const alertDefinitions = [
       alertFactory.build({
         description: randomLabel(),
@@ -243,10 +248,10 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           .should('be.enabled')
           .click();
         ui.accordion.findByTitle('Alerts').within(() => {
-          // switch to beta
+          // switch to ACLP
           // alerts are off/false but enabled, can switch to on/true
           ui.button
-            .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+            .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -385,7 +390,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     });
   });
 
-  it('can toggle from legacy to beta alerts and back to legacy', function () {
+  it('can toggle alerts from legacy to aclp and back to legacy', function () {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getFeatureFlags', '@getRegions']);
     ui.regionSelect.find().click();
@@ -402,7 +407,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       cy.get('[data-testid="notice-info"]')
         .should('be.visible')
         .within(() => {
-          cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
+          cy.contains(ALERTS_LEGACY_MODE_BETA_PHASE_BANNER_TEXT);
         });
     });
     // legacy alert form, inputs are ON but readonly
@@ -418,24 +423,23 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       });
     });
 
-    // upgrade from legacy alerts to beta alerts
+    // upgrade from legacy alerts to ACLP alerts
     ui.button
-      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
+      .findByTitle(ALERTS_LEGACY_MODE_BETA_PHASE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled')
       .click();
     cy.get('[data-qa-panel="Alerts"]')
       .should('be.visible')
       .within(() => {
-        cy.get('[data-testid="betaChip"]').should('be.visible');
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(ALERTS_BETA_MODE_BANNER_TEXT);
+            cy.contains(ALERTS_ACLP_MODE_BETA_PHASE_BANNER_TEXT);
           });
         // possible to downgrade from ACLP alerts to legacy alerts
         ui.button
-          .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
+          .findByTitle(ALERTS_ACLP_MODE_BETA_AND_NEW_PHASE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled');
       });
