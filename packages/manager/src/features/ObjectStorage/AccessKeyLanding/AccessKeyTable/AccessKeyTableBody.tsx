@@ -6,12 +6,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import { AccessKeyTableRow } from './AccessKeyTableRow';
 
-import type { OpenAccessDrawer } from '../types';
-import type {
-  APIError,
-  ObjectStorageKey,
-  ObjectStorageKeyRegions,
-} from '@linode/api-v4';
+import type { APIError, ObjectStorageKey } from '@linode/api-v4';
 
 interface Props {
   data: ObjectStorageKey[] | undefined;
@@ -19,10 +14,7 @@ interface Props {
   isLoading: boolean;
   isObjMultiClusterEnabled: boolean;
   isRestrictedUser: boolean;
-  openDrawer: OpenAccessDrawer;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
-  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
-  setShowHostNamesDrawers: (show: boolean) => void;
 }
 
 export const AccessKeyTableBody = (props: Props) => {
@@ -32,10 +24,7 @@ export const AccessKeyTableBody = (props: Props) => {
     isLoading,
     isObjMultiClusterEnabled,
     isRestrictedUser,
-    openDrawer,
     openRevokeDialog,
-    setHostNames,
-    setShowHostNamesDrawers,
   } = props;
 
   const cols = isObjMultiClusterEnabled ? 4 : 3;
@@ -69,10 +58,7 @@ export const AccessKeyTableBody = (props: Props) => {
   return data?.map((key) => (
     <AccessKeyTableRow
       key={key.id}
-      openDrawer={openDrawer}
       openRevokeDialog={openRevokeDialog}
-      setHostNames={setHostNames}
-      setShowHostNamesDrawers={setShowHostNamesDrawers}
       storageKeyData={key}
     />
   ));

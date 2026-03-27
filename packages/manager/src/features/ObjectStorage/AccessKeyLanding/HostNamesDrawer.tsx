@@ -1,29 +1,33 @@
 import { Box, Drawer } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useObjectStorageAccessKey } from 'src/queries/object-storage/queries';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
 
-import type { ObjectStorageKeyRegions } from '@linode/api-v4';
-
 interface Props {
+  isOpen: boolean;
   onClose: () => void;
-  open: boolean;
-  regions: ObjectStorageKeyRegions[];
 }
 
 export const HostNamesDrawer = (props: Props) => {
-  const { onClose, open, regions } = props;
+  const { onClose, isOpen } = props;
+  const { accessKeyId } = useParams({ strict: false });
+
+  const { data: objectStorageKey } = useObjectStorageAccessKey(accessKeyId);
   const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
+
+  const regions = objectStorageKey?.regions || [];
 
   if (!availableStorageRegions || !regionsByIdMap) {
     return null;
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title="Regions / S3 Hostnames">
+    <Drawer onClose={onClose} open={isOpen} title="Regions / S3 Hostnames">
       <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         <CopyAllHostnames
           text={

@@ -139,10 +139,10 @@ export const useObjectStorageAccessKeys = (params: Params) =>
   });
 
 // TODO: Optimize to use tanstack cache
-export const useObjectStorageAccessKey = (id: number) => {
+export const useObjectStorageAccessKey = (id: number | undefined) => {
   const queryClient = useQueryClient();
 
-  if (id === -1) {
+  if (!id) {
     return {};
   }
 
