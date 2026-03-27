@@ -34,7 +34,6 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
   useRegionQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useObjectStorageBucket: vi.fn().mockReturnValue({}),
 }));
 
 // Mock the queries
@@ -60,7 +59,6 @@ vi.mock('src/queries/object-storage/queries', async () => {
   return {
     ...actual,
     useObjectStorageClusters: queryMocks.useObjectStorageClusters,
-    useObjectStorageBucket: queryMocks.useObjectStorageBucket,
   };
 });
 
@@ -80,7 +78,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     queryMocks.useRegionQuery.mockReturnValue({ data: region });
     queryMocks.useRegionsQuery.mockReturnValue({ data: [region] });
     queryMocks.useObjectStorageClusters.mockReturnValue({ data: [] });
-    queryMocks.useObjectStorageBucket.mockReturnValue({ data: bucket });
 
     // These utils are used in the component
     vi.mocked(formatDate).mockReturnValue('2019-12-12');
@@ -94,7 +91,13 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
   it('renders correctly when open', () => {
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
     });
 
     expect(screen.getByText(bucket.label)).toBeInTheDocument();
@@ -109,7 +112,13 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
   it('does not render when closed', () => {
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={false} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={false}
+          onClose={mockOnClose}
+        />
+      ),
     });
 
     expect(screen.queryByText(bucket.label)).not.toBeInTheDocument();
@@ -117,17 +126,27 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
   it('renders correctly with objMultiCluster disabled', () => {
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
     });
 
     expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
   });
 
   it('handles undefined selectedBucket gracefully', () => {
-    queryMocks.useObjectStorageBucket.mockReturnValue({ data: undefined });
-
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={undefined}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
     });
 
     expect(screen.getByText('Bucket Detail')).toBeInTheDocument();
@@ -137,7 +156,13 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
   it('renders AccessSelect when cluster and bucketLabel are available', async () => {
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
       options: {
         flags: { objectStorageGen2: { enabled: true } },
       },
@@ -152,10 +177,15 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
   it('does not render AccessSelect when cluster or bucketLabel is missing', async () => {
     const bucketWithoutCluster = { ...bucket, cluster: '' };
-    queryMocks.useObjectStorageBucket.mockReturnValue(bucketWithoutCluster);
 
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={bucketWithoutCluster}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
       options: {
         flags: { objectStorageGen2: { enabled: true } },
       },
@@ -176,13 +206,15 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     id: e3Bucket.region,
   });
 
-  beforeEach(() => {
-    queryMocks.useObjectStorageBucket.mockReturnValue({ data: e3Bucket });
-  });
-
   it('renders correctly when open', () => {
     renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={e3Bucket}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
       options: {
         flags: { objectStorageGen2: { enabled: true } },
       },
@@ -203,7 +235,13 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
 
   it("doesn't show the CORS switch for E2 and E3 buckets", async () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <BucketDetailsDrawer isOpen={true} onClose={mockOnClose} />,
+      component: (
+        <BucketDetailsDrawer
+          bucket={e3Bucket}
+          isOpen={true}
+          onClose={mockOnClose}
+        />
+      ),
       options: {
         flags: { objectStorageGen2: { enabled: true } },
       },

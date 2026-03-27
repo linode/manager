@@ -11,6 +11,19 @@ import { HostNamesDrawer } from './HostNamesDrawer';
 // Mock the onClose function
 const mockOnClose = vi.fn();
 
+const mockAccessKey = objectStorageKeyFactory.build({
+  regions: [
+    {
+      id: 'region1',
+      s3_endpoint: 'endpoint1',
+    },
+    {
+      id: 'region2',
+      s3_endpoint: 'endpoint2',
+    },
+  ],
+});
+
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: vi.fn(() => ({
@@ -21,30 +34,15 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   })),
 }));
 
-vi.mock('src/queries/object-storage/queries', async () => {
-  const actual = await vi.importActual('src/queries/object-storage/queries');
-  return {
-    ...actual,
-    useObjectStorageAccessKey: vi.fn().mockReturnValue({
-      data: objectStorageKeyFactory.build({
-        regions: [
-          {
-            id: 'region1',
-            s3_endpoint: 'endpoint1',
-          },
-          {
-            id: 'region2',
-            s3_endpoint: 'endpoint2',
-          },
-        ],
-      }),
-    }),
-  };
-});
-
 describe('HostNamesDrawer', () => {
   it('renders the drawer with regions and copyable text', () => {
-    renderWithTheme(<HostNamesDrawer isOpen={true} onClose={mockOnClose} />);
+    renderWithTheme(
+      <HostNamesDrawer
+        isOpen={true}
+        objectStorageKey={mockAccessKey}
+        onClose={mockOnClose}
+      />
+    );
 
     expect(
       screen.getByRole('dialog', { name: 'Regions / S3 Hostnames' })
@@ -69,7 +67,13 @@ describe('HostNamesDrawer', () => {
   });
 
   it('calls onClose when the drawer is closed', async () => {
-    renderWithTheme(<HostNamesDrawer isOpen={true} onClose={mockOnClose} />);
+    renderWithTheme(
+      <HostNamesDrawer
+        isOpen={true}
+        objectStorageKey={mockAccessKey}
+        onClose={mockOnClose}
+      />
+    );
 
     const closeButton = screen.getByRole('button', { name: 'Close drawer' });
     await userEvent.click(closeButton);

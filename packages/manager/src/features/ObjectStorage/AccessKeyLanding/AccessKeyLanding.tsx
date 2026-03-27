@@ -44,7 +44,7 @@ export const AccessKeyLanding = (props: Props) => {
   const { mutateAsync: deleteAccessKey } = useDeleteAccessKeyMutation();
 
   const { drawer } = useAccessKeyDrawers();
-  const isCreateAccessDrawerOpen = drawer === 'create-access-key';
+  const isCreateAccessKeyDrawerOpen = drawer?.type === 'create-access-key';
 
   // Key to revoke (by clicking on a key's kebab menu )
   const [keyToRevoke, setKeyToRevoke] = React.useState<null | ObjectStorageKey>(
@@ -113,7 +113,7 @@ export const AccessKeyLanding = (props: Props) => {
   return (
     <div>
       <DocumentTitleSegment
-        segment={`${isCreateAccessDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
+        segment={`${isCreateAccessKeyDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
       />
       <AccessKeyTable
         data={data?.data}
