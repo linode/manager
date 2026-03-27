@@ -3,24 +3,13 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { objectStorageKeyFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesDrawer } from './HostNamesDrawer';
 
 // Mock the onClose function
 const mockOnClose = vi.fn();
-
-// Mock regions data
-const mockS3Regions = [
-  {
-    id: 'region1',
-    s3_endpoint: 'endpoint1',
-  },
-  {
-    id: 'region2',
-    s3_endpoint: 'endpoint2',
-  },
-];
 
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -32,15 +21,30 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   })),
 }));
 
+vi.mock('src/queries/object-storage/queries', async () => {
+  const actual = await vi.importActual('src/queries/object-storage/queries');
+  return {
+    ...actual,
+    useObjectStorageAccessKey: vi.fn().mockReturnValue({
+      data: objectStorageKeyFactory.build({
+        regions: [
+          {
+            id: 'region1',
+            s3_endpoint: 'endpoint1',
+          },
+          {
+            id: 'region2',
+            s3_endpoint: 'endpoint2',
+          },
+        ],
+      }),
+    }),
+  };
+});
+
 describe('HostNamesDrawer', () => {
   it('renders the drawer with regions and copyable text', () => {
-    renderWithTheme(
-      <HostNamesDrawer
-        onClose={mockOnClose}
-        open={true}
-        regions={mockS3Regions}
-      />
-    );
+    renderWithTheme(<HostNamesDrawer isOpen={true} onClose={mockOnClose} />);
 
     expect(
       screen.getByRole('dialog', { name: 'Regions / S3 Hostnames' })
@@ -65,13 +69,7 @@ describe('HostNamesDrawer', () => {
   });
 
   it('calls onClose when the drawer is closed', async () => {
-    renderWithTheme(
-      <HostNamesDrawer
-        onClose={mockOnClose}
-        open={true}
-        regions={mockS3Regions}
-      />
-    );
+    renderWithTheme(<HostNamesDrawer isOpen={true} onClose={mockOnClose} />);
 
     const closeButton = screen.getByRole('button', { name: 'Close drawer' });
     await userEvent.click(closeButton);

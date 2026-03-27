@@ -7,16 +7,17 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
+import { useAccessKeyDrawers } from '../hooks/useAccessKeyDrawers';
+
 import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
 
 interface Props {
-  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
-  setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 }
 
 export const HostNameTableCell = (props: Props) => {
-  const { setHostNames, setShowHostNamesDrawers, storageKeyData } = props;
+  const { storageKeyData } = props;
+  const { openDrawer } = useAccessKeyDrawers();
 
   const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
 
@@ -49,12 +50,7 @@ export const HostNameTableCell = (props: Props) => {
       {showMultipleRegions ? (
         <>
           | + {pluralize('region', 'regions', regions.length - 1)} |&nbsp;
-          <LinkButton
-            onClick={() => {
-              setHostNames(regions);
-              setShowHostNamesDrawers(true);
-            }}
-          >
+          <LinkButton onClick={() => openDrawer('access-key-hostnames')}>
             Show All
           </LinkButton>
           <StyledCopyIcon text={allEndpoints} />
