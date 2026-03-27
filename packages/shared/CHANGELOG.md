@@ -1,3 +1,14 @@
+## [2026-03-31] - v0.10.0
+
+
+### Added:
+
+- New `getFeatureChip` utility to shared package ([#13509](https://github.com/linode/manager/pull/13509))
+
+### Removed:
+
+- `useIsLinodeAclpSubscribed` hook from the shared package ([#13455](https://github.com/linode/manager/pull/13455))
+
 ## [2025-10-07] - v0.9.0
 
 ### Changed:

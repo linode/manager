@@ -437,6 +437,8 @@ export const NodeBalancerSchema = object({
         message: 'Subnet IDs must be unique',
       });
     }),
+
+  ipv4: string().optional(),
 });
 
 export const UpdateNodeBalancerSchema = object({
