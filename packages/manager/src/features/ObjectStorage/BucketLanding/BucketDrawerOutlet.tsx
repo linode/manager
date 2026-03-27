@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
-import { CreateBucketDrawer } from './CreateBucketDrawer';
 import { useBucketDrawers } from './hooks/useBucketDrawers';
+import { CreateBucketDrawer } from './OMC_CreateBucketDrawer';
 
 export const BucketDrawerOutlet = () => {
   const { drawer, closeDrawer } = useBucketDrawers();

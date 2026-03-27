@@ -6,7 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { CreateBucketDrawer } from './CreateBucketDrawer';
+import { CreateBucketDrawer } from './OMC_CreateBucketDrawer';
 
 const props = {
   isOpen: true,
