@@ -1,6 +1,7 @@
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useMemo } from 'react';
 
-type AccessKeyDrawers =
+type AccessKeyDrawerType =
   | 'access-key-hostnames'
   | 'access-key-permissions'
   | 'create-access-key'
@@ -8,26 +9,32 @@ type AccessKeyDrawers =
 
 const ACCESS_KEYS_BASE_URL = '/object-storage/access-keys';
 
+interface AccessKeyDrawerState {
+  accessKeyId?: number;
+  type: AccessKeyDrawerType;
+}
+
 export const useAccessKeyDrawers = () => {
   const navigate = useNavigate();
   const { routeId } = useMatch({ strict: false });
+  const { accessKeyId } = useParams({ strict: false });
 
-  function getDrawer(): AccessKeyDrawers | null {
+  function getDrawer(): AccessKeyDrawerState | null {
     switch (routeId) {
       case `${ACCESS_KEYS_BASE_URL}/$accessKeyId/edit`:
-        return 'edit-access-key';
+        return { accessKeyId, type: 'edit-access-key' };
       case `${ACCESS_KEYS_BASE_URL}/$accessKeyId/hostnames`:
-        return 'access-key-hostnames';
+        return { accessKeyId, type: 'access-key-hostnames' };
       case `${ACCESS_KEYS_BASE_URL}/$accessKeyId/permissions`:
-        return 'access-key-permissions';
+        return { accessKeyId, type: 'access-key-permissions' };
       case `${ACCESS_KEYS_BASE_URL}/create`:
-        return 'create-access-key';
+        return { type: 'create-access-key' };
       default:
         return null;
     }
   }
 
-  function openDrawer(drawer: AccessKeyDrawers, accessKeyId?: number) {
+  function openDrawer(drawer: AccessKeyDrawerType, accessKeyId?: number) {
     switch (drawer) {
       case 'access-key-hostnames':
         navigate({
@@ -55,7 +62,7 @@ export const useAccessKeyDrawers = () => {
   }
 
   return {
-    drawer: getDrawer(),
+    drawer: useMemo(() => getDrawer(), [routeId]),
     openDrawer,
     closeDrawer,
   };
