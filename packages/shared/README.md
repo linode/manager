@@ -13,3 +13,7 @@ Interfaces must be documented using the [TSDoc](https://tsdoc.org/) comment stan
 ## Hooks
 
 The hooks defined in this library are intended to provide functionality that is too complex or not "pure" enough to be placed in `@linode/utilities`. These hooks are used to implement feature-specific logic and are designed for use within React components.
+
+## Utilities
+
+The utilities defined in this library are reusable helpers that are not "pure" enough to be placed in `@linode/utilities`. These utilities may depend on `@linode/ui` and are designed for use within the context of specific features.

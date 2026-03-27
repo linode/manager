@@ -23,8 +23,12 @@ import { Link } from 'src/components/Link';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
-import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
+import {
+  IAM_ROLES_PENDO_IDS,
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+} from '../../Shared/constants';
 import { DelegateUserChip } from '../../Shared/DelegateUserChip';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
@@ -46,6 +50,8 @@ export const AssignSelectedRolesDrawer = ({
   selectedRoles,
 }: Props) => {
   const theme = useTheme();
+
+  const { isParentUserType } = useDelegationRole();
 
   const values = {
     roles: selectedRoles.map((r) => ({
@@ -213,7 +219,15 @@ export const AssignSelectedRolesDrawer = ({
                   options={getUserOptions() || []}
                   placeholder="Select a User"
                   renderOption={(props, option) => (
-                    <li {...props} key={option.value}>
+                    <li
+                      {...props}
+                      data-pendo-id={
+                        option.userType === 'delegate'
+                          ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate
+                          : IAM_ROLES_PENDO_IDS.assignSelectedRoleToChildUser
+                      }
+                      key={option.value}
+                    >
                       <Stack alignItems="center" direction="row" spacing={1}>
                         <Typography>{option.label}</Typography>
                         {option.userType === 'delegate' && <DelegateUserChip />}
@@ -223,6 +237,10 @@ export const AssignSelectedRolesDrawer = ({
                   slotProps={{
                     listbox: {
                       onScroll: handleScroll,
+                      // @ts-expect-error - MUI doesn't have a built in way to add data attributes to the options in Autocomplete, so we need to add it to the listboxProps and then check for it in the onChange handler
+                      'data-pendo-id': isParentUserType
+                        ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserParent
+                        : IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate,
                     },
                   }}
                   textFieldProps={{
@@ -278,6 +296,8 @@ export const AssignSelectedRolesDrawer = ({
             primaryButtonProps={{
               'data-testid': 'submit',
               label: 'Assign',
+              'data-pendo-id':
+                IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserAssign,
               type: 'submit',
               loading: isPending || formState.isSubmitting,
             }}

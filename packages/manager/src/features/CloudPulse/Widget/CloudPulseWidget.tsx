@@ -9,7 +9,9 @@ import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
 import { useBlockStorageFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useBlockStorageFetchOptions';
 import { useFirewallFetchOptions } from '../Alerts/CreateAlert/Criteria/DimensionFilterValue/useFirewallFetchOptions';
+import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { WidgetFilterGroupByRenderer } from '../GroupBy/WidgetFilterGroupByRenderer';
+import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
@@ -17,6 +19,8 @@ import {
 import {
   AGGREGATE_FUNCTION,
   GROUP_BY,
+  REGION,
+  RESOURCE_ID,
   SIZE,
   TIME_GRANULARITY,
 } from '../Utils/constants';
@@ -36,6 +40,7 @@ import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect'
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
 import { CloudPulseDimensionFiltersSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
+import { CloudPulseWidgetCSVDownloader } from './csv/CloudPulseWidgetCSVDownloader';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
@@ -173,6 +178,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     props.widget.group_by
   );
   const [isZoomed, setIsZoomed] = React.useState(false);
+  const [zoomRange, setZoomRange] = React.useState<{
+    left: 'dataMin' | number;
+    right: 'dataMax' | number;
+  }>();
   const theme = useTheme();
 
   const {
@@ -203,6 +212,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const flags = useFlags();
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
+  const filterConfig = FILTER_CONFIG.get(dashboardId);
 
   const jweTokenExpiryError = 'Token expired';
   const { data: regions } = useRegionsQuery();
@@ -238,6 +248,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     scope: 'entity',
     serviceType,
   });
+  const { getGlobalSelectedDashboard, getGlobalFilterData, getGlobalGroupBy } =
+    useCloudPulseContext();
   // Determine which fetch object is relevant for linodes
   const activeLinodeFetch =
     serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch;
@@ -403,9 +415,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     [savePref, updatePreferences, widget.label]
   );
 
-  const handleZoomStateChange = React.useCallback((zoomed: boolean) => {
-    setIsZoomed(zoomed);
-  }, []);
+  const handleZoomStateChange = React.useCallback(
+    (zoomed: boolean, left: 'dataMin' | number, right: 'dataMax' | number) => {
+      setIsZoomed(zoomed);
+      setZoomRange({ left, right });
+    },
+    []
+  );
   const {
     data: metricsList,
     error,
@@ -498,6 +514,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     vpcFetch.isLoading,
     linodeFromVolumes.isLoading,
   ]);
+  const filterData = getGlobalFilterData();
   return (
     <GridLegacy container item lg={widget.size} xs={12}>
       <Stack
@@ -534,7 +551,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 flex: { sm: 3, xs: 0 },
                 justifyContent: 'end',
                 alignItems: 'center',
-                gap: 2,
+                gap: 1,
                 maxHeight: `calc(${theme.spacing(10)} + 5px)`,
                 overflow: 'auto',
                 width: { sm: 'inherit', xs: '100%' },
@@ -558,7 +575,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   onAggregateFuncChange={handleAggregateFunctionChange}
                 />
               )}
-              <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
                 {flags.aclp?.showWidgetDimensionFilters && (
                   <CloudPulseDimensionFiltersSelect
                     dashboardId={dashboardId}
@@ -570,6 +587,48 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                     selectedRegions={linodeRegion ? [linodeRegion] : undefined}
                     serviceType={serviceType}
                   />
+                )}
+                {filterConfig && flags.aclp?.enableCSVDownload && (
+                  <CloudPulseTooltip
+                    key="csv-download-tooltip"
+                    placement="bottom-end"
+                    title="Download CSV"
+                  >
+                    <CloudPulseWidgetCSVDownloader
+                      dashboardName={getGlobalSelectedDashboard()?.label ?? ''}
+                      data={data}
+                      dimensionFilters={dimensionFilters ?? []}
+                      dimensionOptions={filteredDimensions ?? []}
+                      duration={duration}
+                      filterConfig={filterConfig}
+                      filters={
+                        !savePref // contextual view
+                          ? {
+                              ...(filterData || { id: {} }),
+                              label: {
+                                ...(filterData?.label || {}),
+                                [RESOURCE_ID]: resources
+                                  .filter((resource) =>
+                                    entityIds.includes(resource.id.toString())
+                                  )
+                                  .map((resource) => resource.label),
+                                ...(region && {
+                                  [REGION]: [
+                                    regions?.find(({ id }) => id === region)
+                                      ?.label ?? region,
+                                  ],
+                                }),
+                              },
+                            }
+                          : filterData
+                      }
+                      groupBy={[...getGlobalGroupBy(), ...(groupBy ?? [])]}
+                      isDataLoading={isLoading || isJweTokenFetching}
+                      serviceType={serviceType}
+                      widget={widget}
+                      zoomRange={zoomRange}
+                    />
+                  </CloudPulseTooltip>
                 )}
                 <WidgetFilterGroupByRenderer
                   dashboardId={dashboardId}

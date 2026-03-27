@@ -537,8 +537,9 @@ describe('StreamFormDelivery', () => {
             flags
           );
 
-          const authenticationAutocomplete =
-            screen.getByLabelText('Authentication');
+          const authenticationAutocomplete = screen.getByLabelText(
+            'Authentication Type'
+          );
 
           expect(authenticationAutocomplete).toHaveValue('None');
 
@@ -560,8 +561,9 @@ describe('StreamFormDelivery', () => {
             );
 
             // Select the "Basic" Authentication option
-            const authenticationAutocomplete =
-              screen.getByLabelText('Authentication');
+            const authenticationAutocomplete = screen.getByLabelText(
+              'Authentication Type'
+            );
             await userEvent.click(authenticationAutocomplete);
             const basicAuthentication = await screen.findByText('Basic');
             await userEvent.click(basicAuthentication);
@@ -582,8 +584,9 @@ describe('StreamFormDelivery', () => {
             );
 
             // Select the "Basic" Authentication option
-            const authenticationAutocomplete =
-              screen.getByLabelText('Authentication');
+            const authenticationAutocomplete = screen.getByLabelText(
+              'Authentication Type'
+            );
             await userEvent.click(authenticationAutocomplete);
             const basicAuthentication = await screen.findByText('Basic');
             await userEvent.click(basicAuthentication);
@@ -611,7 +614,7 @@ describe('StreamFormDelivery', () => {
           expect(endpointUrlInput.getAttribute('value')).toEqual('Test');
         });
 
-        describe('Client Certificate fields', () => {
+        describe('Client Certificate Authentication fields', () => {
           it('should render TLS Hostname input and allow to type text', async () => {
             await renderComponentAndAddNewDestinationName(
               destinationType.CustomHttps,
@@ -649,13 +652,13 @@ describe('StreamFormDelivery', () => {
             expect(clientCertificateInput).toHaveValue('test');
           });
 
-          it('should render Client Key input and allow to type text', async () => {
+          it('should render Client Private Key input and allow to type text', async () => {
             await renderComponentAndAddNewDestinationName(
               destinationType.CustomHttps,
               flags
             );
 
-            const clientKeyInput = screen.getByLabelText('Client Key');
+            const clientKeyInput = screen.getByLabelText('Client Private Key');
             await userEvent.type(clientKeyInput, 'test');
 
             expect(clientKeyInput).toHaveValue('test');

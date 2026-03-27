@@ -200,6 +200,7 @@ describe('StreamFormClusters', () => {
     await renderComponentWithoutSelectedClusters();
     const input = screen.getByPlaceholderText('Log Generation');
 
+    // Enabled filter option
     await userEvent.click(input);
     await userEvent.type(input, 'enabled');
 
@@ -208,6 +209,18 @@ describe('StreamFormClusters', () => {
 
     await waitFor(() =>
       expect(getColumnsValuesFromTable(3)).toEqual(['Enabled', 'Enabled'])
+    );
+
+    // Disabled filter option
+    await userEvent.clear(input);
+    await userEvent.click(input);
+    await userEvent.type(input, 'disabled');
+
+    const disabledOption = screen.getAllByText('Disabled')[0];
+    await userEvent.click(disabledOption);
+
+    await waitFor(() =>
+      expect(getColumnsValuesFromTable(3)).toEqual(['Disabled'])
     );
   });
 
