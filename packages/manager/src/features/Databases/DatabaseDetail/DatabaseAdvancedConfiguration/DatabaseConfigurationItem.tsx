@@ -6,7 +6,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { Button } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
 import React from 'react';
 
 import {

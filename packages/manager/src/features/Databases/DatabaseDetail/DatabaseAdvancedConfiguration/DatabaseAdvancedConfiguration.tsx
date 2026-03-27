@@ -1,7 +1,7 @@
 import { Box, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
-import { Button } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
 import React from 'react';
 
 import { Link } from 'src/components/Link';

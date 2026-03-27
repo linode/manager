@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { Button } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 

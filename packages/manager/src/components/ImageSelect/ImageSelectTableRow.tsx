@@ -7,7 +7,7 @@ import {
 } from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
+import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';

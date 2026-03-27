@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import { Button } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 

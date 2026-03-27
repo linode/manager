@@ -12,7 +12,7 @@ import {
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid';
-import { Button } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, get, useFieldArray, useForm } from 'react-hook-form';

@@ -9,7 +9,7 @@ import {
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
 import React from 'react';
 
 import { Link } from 'src/components/Link';

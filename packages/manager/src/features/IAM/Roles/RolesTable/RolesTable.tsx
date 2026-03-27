@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   sortRows,
   Table,
@@ -14,7 +14,7 @@ import {
   TableHeaderCell,
   TableRow,
   TableRowExpanded,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -38,7 +38,7 @@ import {
 
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
-import type { Order } from 'akamai-cds-react-components/Table';
+import type { Order } from '@akamai/cds-components/react/Table';
 
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',

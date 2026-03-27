@@ -15,7 +15,8 @@ import {
 } from '@linode/ui';
 import { updateMaintenanceSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
-import { Button, Select } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
+import { Select } from '@akamai/cds-components/react/Select';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

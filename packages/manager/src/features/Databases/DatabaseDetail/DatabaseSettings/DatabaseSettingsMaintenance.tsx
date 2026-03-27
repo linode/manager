@@ -1,7 +1,7 @@
 import { useDatabaseEnginesQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
 import { GridLegacy, styled } from '@mui/material';
-import { Button } from 'akamai-cds-react-components';
+import { Button } from '@akamai/cds-components/react/Button';
 import * as React from 'react';
 
 import {

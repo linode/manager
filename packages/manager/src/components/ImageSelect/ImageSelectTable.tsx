@@ -17,7 +17,7 @@ import {
   useTheme,
 } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
   TableBody,
@@ -25,7 +25,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';

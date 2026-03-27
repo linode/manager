@@ -1,13 +1,13 @@
 import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
   TableBody,
   TableHead,
   TableHeaderCell,
   TableRow,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
 import React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';

@@ -1,5 +1,5 @@
 import { Hidden } from '@linode/ui';
-import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
+import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
