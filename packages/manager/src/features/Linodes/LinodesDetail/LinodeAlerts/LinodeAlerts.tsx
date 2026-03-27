@@ -12,6 +12,7 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { UpdateLinodeAlertsSchema } from '@linode/validation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useBlocker, useParams } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -23,6 +24,7 @@ import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/Contextua
 import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
+import { invalidateAclpAlerts } from 'src/queries/cloudpulse/useAlertsMutation';
 
 import { AlertsPanel } from './AlertsPanel';
 import { getLinodeAlertsInitialValues } from './utilities';
@@ -48,6 +50,7 @@ const LinodeAlerts = () => {
     aclpServices?.linode?.alerts?.enabled && isAclpAlertsSupportedRegionLinode;
 
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
   const {
     error: mutationError,
@@ -68,6 +71,27 @@ const LinodeAlerts = () => {
   const [aclpAlertsPayload, setAclpAlertsPayload] = React.useState<
     CloudPulseAlertsPayload | undefined
   >();
+
+  // Holds what was last saved (or the initial server state on mount).
+  // We compare incoming payloads against this to decide if there are unsaved
+  // changes, rather than relying on the child component's hasUnsavedChanges
+  // which can briefly be stale right after a save while the cache refetches.
+  const lastSavedAclpPayloadRef = React.useRef<
+    CloudPulseAlertsPayload | undefined
+  >(undefined);
+
+  // Compares two ACLP payloads regardless of array order.
+  const aclpPayloadsEqual = (
+    a: CloudPulseAlertsPayload,
+    b: CloudPulseAlertsPayload
+  ) => {
+    const sort = (arr: number[] | undefined) =>
+      [...(arr ?? [])].sort((x, y) => x - y).join(',');
+    return (
+      sort(a.system_alerts) === sort(b.system_alerts) &&
+      sort(a.user_alerts) === sort(b.user_alerts)
+    );
+  };
 
   // Track whether ACLP alerts have finished loading without error
   const [isAclpAlertsReady, setIsAclpAlertsReady] =
@@ -129,11 +153,20 @@ const LinodeAlerts = () => {
       };
       await updateLinode({ alerts: combinedAlertsPayload })
         .then(() => {
-          enqueueSnackbar('Alert settings have been saved successfully', {
+          enqueueSnackbar('All your settings for Alerts have been saved.', {
             variant: 'success',
           });
           setHasLegacyAlertsUnsavedChanges(false);
           setHasAclpAlertsUnsavedChanges(false);
+          // Update the reference point so the next toggle compares against what was just saved.
+          lastSavedAclpPayloadRef.current = aclpAlertsPayload;
+          // Invalidate the cache so row checkboxes show the correct state if the user returns to this page.
+          invalidateAclpAlerts(
+            queryClient,
+            'linode',
+            linodeId.toString(),
+            aclpAlertsPayload ?? {}
+          );
         })
         .catch((errors) => {
           if (errors && unifiedAlertsContainerRef.current) {
@@ -141,7 +174,7 @@ const LinodeAlerts = () => {
           }
         });
     },
-    [aclpAlertsPayload, updateLinode, enqueueSnackbar]
+    [aclpAlertsPayload, updateLinode, enqueueSnackbar, queryClient, linodeId]
   );
 
   return (
@@ -258,11 +291,20 @@ const LinodeAlerts = () => {
                       entityId={linodeId.toString()}
                       entityName={linode?.label ?? ''}
                       onStatusChange={setIsAclpAlertsReady}
-                      onToggleAlert={(payload, hasUnsavedChanges) => {
+                      onToggleAlert={(payload) => {
                         setAclpAlertsPayload(payload);
-                        setHasAclpAlertsUnsavedChanges(
-                          hasUnsavedChanges ?? false
-                        );
+                        if (lastSavedAclpPayloadRef.current === undefined) {
+                          // First call on mount — treat this as the initial saved state.
+                          lastSavedAclpPayloadRef.current = payload;
+                          setHasAclpAlertsUnsavedChanges(false);
+                        } else {
+                          setHasAclpAlertsUnsavedChanges(
+                            !aclpPayloadsEqual(
+                              payload,
+                              lastSavedAclpPayloadRef.current
+                            )
+                          );
+                        }
                       }}
                       paperSx={(theme) => ({
                         px: 0,

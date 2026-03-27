@@ -53,7 +53,13 @@ interface AlertReusableComponentProps {
   /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
-   * @param hasUnsavedChanges boolean to check if there are unsaved changes
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes.
+   * Should not be used by service types in SERVICES_WITH_EXTERNAL_SAVE — this value
+   * is derived from the query cache and can be stale in the window between save success and
+   * the invalidated query resolving. Any toggle during that window would produce an incorrect
+   * result. Those service owners should compute this themselves from the incoming payload,
+   * and also invalidate the alerts query after save so toggle rows show the correct state
+   * if the user navigates away and comes back.
    */
   onToggleAlert?: (
     payload: CloudPulseAlertsPayload,
