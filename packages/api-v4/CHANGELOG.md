@@ -1,3 +1,14 @@
+## [2026-03-31] - v0.159.0
+
+
+### Removed:
+
+- Old `failed` property from `DatabaseStatus` ([#13505](https://github.com/linode/manager/pull/13505))
+
+### Upcoming Features:
+
+- Replaced `content` with `details` in cloudpulse/types.ts for ACLP-Alerts Notification Channels ([#13495](https://github.com/linode/manager/pull/13495))
+
 ## [2026-03-16] - v0.158.0
 
 
