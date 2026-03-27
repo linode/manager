@@ -219,14 +219,16 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
             ))}
           </TableBody>
         </Table>
-        <Pagination
-          count={pagination.count}
-          onPageChange={pagination.onPageChange}
-          onPageSizeChange={pagination.onPageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          pageSizes={DEFAULT_PAGE_SIZES}
-        />
+        {pagination.count > 25 && (
+          <Pagination
+            count={pagination.count}
+            onPageChange={pagination.onPageChange}
+            onPageSizeChange={pagination.onPageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            pageSizes={DEFAULT_PAGE_SIZES}
+          />
+        )}
       </StyledImageTableContainer>
     </StyledImageContainer>
   );
