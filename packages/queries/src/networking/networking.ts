@@ -18,7 +18,11 @@ import {
 import { useMemo } from 'react';
 
 import { linodeQueries } from '../linodes/linodes';
-import { getAllIps, getAllIPv6Ranges } from './requests';
+import {
+  getAllIps,
+  getAllIPv6Ranges,
+  getAllReservedIPsTypes,
+} from './requests';
 
 import type {
   APIError,
@@ -28,6 +32,7 @@ import type {
   IPRange,
   IPRangeInformation,
   Params,
+  PriceType,
   ReserveIPPayload,
   ResourcePage,
 } from '@linode/api-v4';
@@ -58,6 +63,10 @@ export const networkingQueries = createQueryKeys('networking', {
     queryFn: () => getReservedIP(address),
     queryKey: [address],
   }),
+  reservedIPTypes: {
+    queryFn: getAllReservedIPsTypes,
+    queryKey: null,
+  },
 });
 
 export const useAllIPsQuery = (
@@ -205,5 +214,11 @@ export const useUnReserveIPMutation = (address: string) => {
         queryKey: networkingQueries.reservedIP(address).queryKey,
       });
     },
+  });
+};
+
+export const useReservedIPTypesQuery = () => {
+  return useQuery<PriceType[], APIError[]>({
+    ...networkingQueries.reservedIPTypes,
   });
 };
