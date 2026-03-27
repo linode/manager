@@ -11,12 +11,10 @@ import {
 } from 'src/queries/object-storage/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
+import { useAccessKeyDrawers } from './hooks/useAccessKeyDrawers';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import { ViewPermissionsDrawer } from './ViewPermissionsDrawer';
 
-import type { MODE, OpenAccessDrawer } from './types';
 import type {
   CreateObjectStorageKeyPayload,
   ObjectStorageKey,
@@ -24,23 +22,13 @@ import type {
 import type { FormikBag } from 'formik';
 
 interface Props {
-  accessDrawerOpen: boolean;
-  closeAccessDrawer: () => void;
   isRestrictedUser: boolean;
-  mode: MODE;
-  openAccessDrawer: (mode: MODE) => void;
 }
 
 export type FormikProps = FormikBag<Props, CreateObjectStorageKeyPayload>;
 
 export const AccessKeyLanding = (props: Props) => {
-  const {
-    accessDrawerOpen,
-    closeAccessDrawer,
-    isRestrictedUser,
-    mode,
-    openAccessDrawer,
-  } = props;
+  const { isRestrictedUser } = props;
 
   const navigate = useNavigate();
   const pagination = usePaginationV2({
@@ -55,10 +43,8 @@ export const AccessKeyLanding = (props: Props) => {
   });
   const { mutateAsync: deleteAccessKey } = useDeleteAccessKeyMutation();
 
-  // Key to rename (by clicking on a key's kebab menu )
-  const [keyToEdit, setKeyToEdit] = React.useState<null | ObjectStorageKey>(
-    null
-  );
+  const { drawer } = useAccessKeyDrawers();
+  const isCreateAccessDrawerOpen = drawer === 'create-access-key';
 
   // Key to revoke (by clicking on a key's kebab menu )
   const [keyToRevoke, setKeyToRevoke] = React.useState<null | ObjectStorageKey>(
@@ -114,16 +100,6 @@ export const AccessKeyLanding = (props: Props) => {
       });
   };
 
-  const openDrawer: OpenAccessDrawer = (
-    mode: MODE,
-    objectStorageKey: null | ObjectStorageKey = null
-  ) => {
-    setKeyToEdit(objectStorageKey);
-    if (mode !== 'creating') {
-      openAccessDrawer(mode);
-    }
-  };
-
   const openRevokeDialog = (objectStorageKey: ObjectStorageKey) => {
     setKeyToRevoke(objectStorageKey);
     revokeKeysDialog.open();
@@ -137,7 +113,7 @@ export const AccessKeyLanding = (props: Props) => {
   return (
     <div>
       <DocumentTitleSegment
-        segment={`${accessDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
+        segment={`${isCreateAccessDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
       />
       <AccessKeyTable
         data={data?.data}
@@ -145,7 +121,6 @@ export const AccessKeyLanding = (props: Props) => {
         error={error}
         isLoading={isLoading}
         isRestrictedUser={isRestrictedUser}
-        openDrawer={openDrawer}
         openRevokeDialog={openRevokeDialog}
       />
       <PaginationFooter
@@ -155,20 +130,6 @@ export const AccessKeyLanding = (props: Props) => {
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-      />
-
-      <AccessKeyDrawer
-        isRestrictedUser={props.isRestrictedUser}
-        mode={mode}
-        objectStorageKey={keyToEdit ? keyToEdit : undefined}
-        onClose={closeAccessDrawer}
-        open={accessDrawerOpen}
-      />
-
-      <ViewPermissionsDrawer
-        objectStorageKey={keyToEdit}
-        onClose={closeAccessDrawer}
-        open={mode === 'viewing' && accessDrawerOpen}
       />
 
       <RevokeAccessKeyDialog

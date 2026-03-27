@@ -16,11 +16,7 @@ describe('HostNameTableCell', () => {
       regions: [],
     });
     const { getByText } = renderWithTheme(
-      <HostNameTableCell
-        setHostNames={vi.fn()}
-        setShowHostNamesDrawers={vi.fn()}
-        storageKeyData={storageKeyData}
-      />
+      <HostNameTableCell storageKeyData={storageKeyData} />
     );
 
     expect(getByText('None')).toBeInTheDocument();
@@ -47,11 +43,7 @@ describe('HostNameTableCell', () => {
       })
     );
     const { findByText } = renderWithTheme(
-      <HostNameTableCell
-        setHostNames={vi.fn()}
-        setShowHostNamesDrawers={vi.fn()}
-        storageKeyData={storageKeyData}
-      />
+      <HostNameTableCell storageKeyData={storageKeyData} />
     );
 
     const hostname = await findByText('US, Newark, NJ: alpha.test.com');
@@ -83,11 +75,7 @@ describe('HostNameTableCell', () => {
       })
     );
     const { getByText } = renderWithTheme(
-      <HostNameTableCell
-        setHostNames={vi.fn()}
-        setShowHostNamesDrawers={vi.fn()}
-        storageKeyData={storageKeyData}
-      />
+      <HostNameTableCell storageKeyData={storageKeyData} />
     );
 
     await waitFor(() => {

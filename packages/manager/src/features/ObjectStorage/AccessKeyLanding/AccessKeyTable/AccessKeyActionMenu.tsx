@@ -6,27 +6,21 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 import { useIsObjMultiClusterEnabled } from '../../hooks/useIsObjectStorageGen2Enabled';
+import { useAccessKeyDrawers } from '../hooks/useAccessKeyDrawers';
 
-import type { OpenAccessDrawer } from '../types';
 import type { ObjectStorageKey } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
 interface Props {
   label: string;
   objectStorageKey: ObjectStorageKey;
-  openDrawer: OpenAccessDrawer;
-  openHostnamesDrawer: () => void;
   openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
 export const AccessKeyActionMenu = (props: Props) => {
-  const {
-    label,
-    objectStorageKey,
-    openDrawer,
-    openHostnamesDrawer,
-    openRevokeDialog,
-  } = props;
+  const { label, objectStorageKey, openRevokeDialog } = props;
+
+  const { openDrawer } = useAccessKeyDrawers();
 
   const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
@@ -37,20 +31,22 @@ export const AccessKeyActionMenu = (props: Props) => {
   const actions = [
     {
       onClick: () => {
-        openDrawer('editing', objectStorageKey);
+        openDrawer('edit-access-key', objectStorageKey.id);
       },
       title: isObjMultiClusterEnabled ? 'Edit' : 'Edit Label',
     },
     {
       onClick: () => {
-        openDrawer('viewing', objectStorageKey);
+        openDrawer('access-key-permissions', objectStorageKey.id);
       },
       title: 'Permissions',
     },
     ...(isObjMultiClusterEnabled
       ? [
           {
-            onClick: openHostnamesDrawer,
+            onClick: () => {
+              openDrawer('access-key-hostnames', objectStorageKey.id);
+            },
             title: 'View Regions/S3 Hostnames',
           },
         ]

@@ -1,4 +1,4 @@
-import { useAccountSettings } from '@linode/queries';
+import { useAccountSettings, useProfile } from '@linode/queries';
 import {
   ActionsPanel,
   CircleProgress,
@@ -12,6 +12,7 @@ import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
 } from '@linode/validation';
+import { useParams } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
@@ -20,6 +21,7 @@ import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObj
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import {
   useCreateAccessKeyMutation,
+  useObjectStorageAccessKey,
   useObjectStorageBuckets,
   useUpdateAccessKeyMutation,
 } from 'src/queries/object-storage/queries';
@@ -48,12 +50,11 @@ import type {
 import type { FormikHelpers } from 'formik';
 
 export interface AccessKeyDrawerProps {
-  isRestrictedUser: boolean;
+  isOpen: boolean;
   mode: MODE;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
-  open: boolean;
 }
 
 // Access key scopes displayed in the drawer can have no permission or "No Access" selected, which are not valid API permissions.
@@ -103,7 +104,11 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const { isRestrictedUser, mode, objectStorageKey, onClose, open } = props;
+  const { mode, onClose, isOpen } = props;
+  const { accessKeyId } = useParams({ strict: false });
+
+  const { data: profile } = useProfile();
+  const isRestrictedUser = profile?.restricted ?? false;
 
   const displayKeysDialog = useOpenClose();
   // Key to display in Confirmation Modal upon creation
@@ -119,6 +124,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   } = useObjectStorageBuckets();
 
   const { data: accountSettings } = useAccountSettings();
+  const { data: objectStorageKey } = useObjectStorageAccessKey(accessKeyId);
   const { mutateAsync: createAccessKey } = useCreateAccessKeyMutation();
   const { mutateAsync: updateAccessKey } = useUpdateAccessKeyMutation();
 
@@ -307,13 +313,13 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   useEffect(() => {
     setLimitedAccessChecked(false);
     formik.resetForm({ values: initialValues });
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <>
       <Drawer
         onClose={onClose}
-        open={open}
+        open={isOpen}
         title={title}
         wide={createMode && hasBuckets}
       >
@@ -361,7 +367,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
             <TextField
               data-qa-add-label
-              disabled={isRestrictedUser || mode === 'viewing'}
+              disabled={isRestrictedUser}
               error={formik.touched.label ? !!formik.errors.label : false}
               errorText={formik.touched.label ? formik.errors.label : undefined}
               label="Label"

@@ -1,27 +1,29 @@
 import { Drawer, Typography } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
+
+import { useObjectStorageAccessKey } from 'src/queries/object-storage/queries';
 
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
 
-import type { ObjectStorageKey } from '@linode/api-v4';
-
 export interface Props {
-  objectStorageKey: null | ObjectStorageKey;
+  isOpen: boolean;
   onClose: () => void;
-  open: boolean;
 }
 
 export const ViewPermissionsDrawer = (props: Props) => {
-  const { objectStorageKey, onClose, open } = props;
+  const { onClose, isOpen } = props;
+  const { accessKeyId } = useParams({ strict: false });
 
+  const { data: objectStorageKey } = useObjectStorageAccessKey(accessKeyId);
   const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   return (
     <Drawer
       onClose={onClose}
-      open={open}
+      open={isOpen}
       title={`Permissions for ${objectStorageKey?.label}`}
       wide
     >
