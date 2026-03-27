@@ -253,6 +253,7 @@ export interface CreateNodeBalancerPayload {
   client_udp_sess_throttle?: number;
   configs: CreateNodeBalancerConfig[];
   firewall_id?: number;
+  ipv4?: string; // must be a reserved unassigned IP owned by the customer.
   label?: string;
   region?: string;
   tags?: string[];

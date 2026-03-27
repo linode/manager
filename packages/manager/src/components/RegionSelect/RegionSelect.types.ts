@@ -39,11 +39,6 @@ export interface RegionSelectProps<
    * A key/value object for disabling regions by their ID.
    */
   disabledRegions?: Record<string, DisableItemOption>;
-  /**
-   * Used to override filtering done by the `currentCapability` prop
-   * @todo Remove this after Object Storage Gen2.
-   */
-  forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
   /**
    * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
@@ -73,11 +68,6 @@ export interface RegionMultiSelectProps
   > {
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;
-  /**
-   * Used to override filtering done by the `currentCapability` prop
-   * @todo Remove this after Object Storage Gen2.
-   */
-  forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
   isClearable?: boolean;
   /**
