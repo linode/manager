@@ -298,9 +298,13 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
+        cy.findByLabelText('Label', { exact: false })
           .should('be.visible')
           .type(mockAccessKey.label);
+
+        cy.findByLabelText('Regions', { exact: false })
+          .should('be.visible')
+          .type('Jakarta, ID{enter}');
 
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
@@ -360,7 +364,13 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label').should('be.visible').type(randomLabel());
+        cy.findByLabelText('Label', { exact: false })
+          .should('be.visible')
+          .type(randomLabel());
+
+        cy.findByLabelText('Regions', { exact: false })
+          .should('be.visible')
+          .type('Jakarta, ID{enter}');
 
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
