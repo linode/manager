@@ -50,7 +50,11 @@ export const HostNameTableCell = (props: Props) => {
       {showMultipleRegions ? (
         <>
           | + {pluralize('region', 'regions', regions.length - 1)} |&nbsp;
-          <LinkButton onClick={() => openDrawer('access-key-hostnames')}>
+          <LinkButton
+            onClick={() =>
+              openDrawer('access-key-hostnames', storageKeyData.id)
+            }
+          >
             Show All
           </LinkButton>
           <StyledCopyIcon text={allEndpoints} />

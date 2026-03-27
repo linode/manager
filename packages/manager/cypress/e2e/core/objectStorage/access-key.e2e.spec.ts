@@ -42,8 +42,8 @@ describe('object storage access key end-to-end tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
-      objMultiCluster: false,
-      objectStorageGen2: { enabled: false },
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
     });
 
     cy.visitWithLogin('/object-storage/access-keys');
@@ -59,8 +59,14 @@ describe('object storage access key end-to-end tests', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
-        cy.focused().type(keyLabel);
+        cy.findByLabelText('Label', { exact: false })
+          .should('be.visible')
+          .type(keyLabel);
+
+        cy.findByLabelText('Regions', { exact: false })
+          .should('be.visible')
+          .type('Atlanta, {enter}');
+
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
           .should('be.visible')
@@ -124,6 +130,7 @@ describe('object storage access key end-to-end tests', () => {
     const bucketClusterObj = chooseCluster();
     const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
       cluster: bucketClusterObj.id,
+      cors_enabled: true,
       label: bucketLabel,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
       region: undefined,
@@ -140,8 +147,8 @@ describe('object storage access key end-to-end tests', () => {
         accountFactory.build({ capabilities: ['Object Storage'] })
       );
       mockAppendFeatureFlags({
-        objMultiCluster: false,
-        objectStorageGen2: { enabled: false },
+        objMultiCluster: true,
+        objectStorageGen2: { enabled: true },
       });
 
       interceptGetAccessKeys().as('getKeys');
@@ -160,10 +167,20 @@ describe('object storage access key end-to-end tests', () => {
         .findByTitle('Create Access Key')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Label').click();
-          cy.focused().type(keyLabel);
-          cy.findByLabelText('Limited Access').click();
-          cy.findByLabelText('Select read-only for all').click();
+          cy.findByLabelText('Label', { exact: false })
+            .should('be.visible')
+            .type(keyLabel);
+
+          cy.findByLabelText('Regions', { exact: false })
+            .should('be.visible')
+            .type('Atlanta, {enter}');
+
+          cy.focused().click();
+
+          cy.findByLabelText('Limited Access', { exact: false }).click();
+          cy.findByLabelText('Select read-only for all', {
+            exact: false,
+          }).click();
 
           ui.buttonGroup
             .findButtonByTitle('Create Access Key')
@@ -209,8 +226,8 @@ describe('object storage access key end-to-end tests', () => {
             });
         });
 
-        const permissionLabel = `This token has read-only access for ${bucketClusterObj.id}-${bucketLabel}`;
-        cy.findByLabelText(permissionLabel).should('be.visible');
+        const permissionLabel = `This access key has the following permissions:`;
+        cy.findByText(permissionLabel).should('be.visible');
       });
     });
   });
