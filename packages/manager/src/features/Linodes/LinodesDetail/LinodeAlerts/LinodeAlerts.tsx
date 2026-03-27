@@ -21,7 +21,10 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
-import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
+import {
+  arraysEqual,
+  useIsAclpSupportedRegion,
+} from 'src/features/CloudPulse/Utils/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { invalidateAclpAlerts } from 'src/queries/cloudpulse/useAlertsMutation';
@@ -30,6 +33,17 @@ import { AlertsPanel } from './AlertsPanel';
 import { getLinodeAlertsInitialValues } from './utilities';
 
 import type { APIError, CloudPulseAlertsPayload, Linode } from '@linode/api-v4';
+
+/**
+ * Returns true if two ACLP alert payloads contain the same alert IDs,
+ * regardless of array order.
+ */
+const aclpPayloadsEqual = (
+  a: CloudPulseAlertsPayload,
+  b: CloudPulseAlertsPayload
+): boolean =>
+  arraysEqual(a.system_alerts, b.system_alerts) &&
+  arraysEqual(a.user_alerts, b.user_alerts);
 
 const LinodeAlerts = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
@@ -74,24 +88,11 @@ const LinodeAlerts = () => {
 
   // Holds what was last saved (or the initial server state on mount).
   // We compare incoming payloads against this to decide if there are unsaved
-  // changes, rather than relying on the child component's hasUnsavedChanges
+  // changes, rather than relying on the ACLP reusable component's hasUnsavedChanges
   // which can briefly be stale right after a save while the cache refetches.
-  const lastSavedAclpPayloadRef = React.useRef<
-    CloudPulseAlertsPayload | undefined
-  >(undefined);
-
-  // Compares two ACLP payloads regardless of array order.
-  const aclpPayloadsEqual = (
-    a: CloudPulseAlertsPayload,
-    b: CloudPulseAlertsPayload
-  ) => {
-    const sort = (arr: number[] | undefined) =>
-      [...(arr ?? [])].sort((x, y) => x - y).join(',');
-    return (
-      sort(a.system_alerts) === sort(b.system_alerts) &&
-      sort(a.user_alerts) === sort(b.user_alerts)
-    );
-  };
+  const savedAclpPayloadRef = React.useRef<CloudPulseAlertsPayload | undefined>(
+    undefined
+  );
 
   // Track whether ACLP alerts have finished loading without error
   const [isAclpAlertsReady, setIsAclpAlertsReady] =
@@ -144,6 +145,25 @@ const LinodeAlerts = () => {
     }
   }, [status, reset]);
 
+  // Handles ACLP alert toggle changes from AlertReusableComponent.
+  // On the first call (mount), captures the initial server state as what was last saved.
+  // On subsequent calls, checks whether the incoming payload differs from what was last saved.
+  const handleAclpAlertsToggle = React.useCallback(
+    (payload: CloudPulseAlertsPayload) => {
+      setAclpAlertsPayload(payload);
+      if (savedAclpPayloadRef.current === undefined) {
+        // First call on mount - treat this as the initial saved state.
+        savedAclpPayloadRef.current = payload;
+        setHasAclpAlertsUnsavedChanges(false);
+      } else {
+        setHasAclpAlertsUnsavedChanges(
+          !aclpPayloadsEqual(payload, savedAclpPayloadRef.current)
+        );
+      }
+    },
+    []
+  );
+
   // Unified save handler for both legacy and ACLP alerts
   const handleUnifiedSave = React.useCallback(
     async (legacyAlertsValues: Linode['alerts']) => {
@@ -159,7 +179,7 @@ const LinodeAlerts = () => {
           setHasLegacyAlertsUnsavedChanges(false);
           setHasAclpAlertsUnsavedChanges(false);
           // Update the reference point so the next toggle compares against what was just saved.
-          lastSavedAclpPayloadRef.current = aclpAlertsPayload;
+          savedAclpPayloadRef.current = aclpAlertsPayload;
           // Invalidate the cache so row checkboxes show the correct state if the user returns to this page.
           invalidateAclpAlerts(
             queryClient,
@@ -235,103 +255,93 @@ const LinodeAlerts = () => {
           )}
         {isAclpAlertingInRegionEnabled ? (
           // Unified mode - both Legacy Alerts and ACLP Alerts are displayed with a shared save button.
-          <Paper ref={unifiedAlertsContainerRef}>
-            {/* Display general mutation error globally for unified save */}
-            {generalOrRootError && (
-              <Notice
-                sx={(theme) => ({ mb: theme.spacingFunction(8) })}
-                variant="error"
-              >
-                {generalOrRootError}
-              </Notice>
-            )}
-            <Formik
-              enableReinitialize
-              initialValues={initialValues}
-              onSubmit={handleUnifiedSave}
-              validateOnChange
-              validationSchema={UpdateLinodeAlertsSchema}
-            >
-              {(formik) => (
-                <Stack divider={<Divider />}>
-                  {/* Legacy Alerts View when ACLP alerting is enabled */}
-                  <Accordion
-                    defaultExpanded
-                    detailProps={{ sx: { p: 0 } }}
-                    heading="Legacy Alerts"
-                    summaryProps={{ sx: { p: 0 } }}
-                  >
-                    <AlertsPanel
-                      error={mutationError}
-                      formik={formik}
-                      isAclpAlertingInRegionEnabled={
-                        isAclpAlertingInRegionEnabled
-                      }
-                      isReadOnly={!permissions.update_linode}
-                      isSaving={isUpdatingLinode}
-                      linodeId={id}
-                      onUnsavedChangesUpdate={setHasLegacyAlertsUnsavedChanges}
-                      paperSx={(theme) => ({
-                        px: 0,
-                        py: theme.spacingFunction(8),
-                      })}
-                    />
-                  </Accordion>
-
-                  {/* ACLP Alerts View when ACLP alerting is enabled */}
-                  <Accordion
-                    defaultExpanded
-                    detailProps={{ sx: { p: 0 } }}
-                    disableGutters // Removes unnecessary default margins when stacking Accordions
-                    heading="Alerts"
-                    headingChip={getFeatureChip(aclpAlerting ?? {})}
-                    summaryProps={{ sx: { p: 0 } }}
-                  >
-                    <AlertReusableComponent
-                      entityId={linodeId.toString()}
-                      entityName={linode?.label ?? ''}
-                      onStatusChange={setIsAclpAlertsReady}
-                      onToggleAlert={(payload) => {
-                        setAclpAlertsPayload(payload);
-                        if (lastSavedAclpPayloadRef.current === undefined) {
-                          // First call on mount — treat this as the initial saved state.
-                          lastSavedAclpPayloadRef.current = payload;
-                          setHasAclpAlertsUnsavedChanges(false);
-                        } else {
-                          setHasAclpAlertsUnsavedChanges(
-                            !aclpPayloadsEqual(
-                              payload,
-                              lastSavedAclpPayloadRef.current
-                            )
-                          );
+          <Formik
+            enableReinitialize
+            initialValues={initialValues}
+            onSubmit={handleUnifiedSave}
+            validateOnChange
+            validationSchema={UpdateLinodeAlertsSchema}
+          >
+            {(formik) => (
+              <>
+                <Paper ref={unifiedAlertsContainerRef}>
+                  {/* Display general mutation error globally for unified save */}
+                  {generalOrRootError && (
+                    <Notice
+                      sx={(theme) => ({ mb: theme.spacingFunction(8) })}
+                      variant="error"
+                    >
+                      {generalOrRootError}
+                    </Notice>
+                  )}
+                  <Stack divider={<Divider />}>
+                    {/* Legacy Alerts View when ACLP alerting is enabled */}
+                    <Accordion
+                      defaultExpanded
+                      detailProps={{ sx: { p: 0 } }}
+                      heading="Legacy Alerts"
+                      summaryProps={{ sx: { p: 0 } }}
+                    >
+                      <AlertsPanel
+                        error={mutationError}
+                        formik={formik}
+                        isAclpAlertingInRegionEnabled={
+                          isAclpAlertingInRegionEnabled
                         }
-                      }}
-                      paperSx={(theme) => ({
-                        px: 0,
-                        py: theme.spacingFunction(16),
-                      })}
-                      serviceType="linode"
-                    />
-                  </Accordion>
+                        isReadOnly={!permissions.update_linode}
+                        isSaving={isUpdatingLinode}
+                        linodeId={id}
+                        onUnsavedChangesUpdate={
+                          setHasLegacyAlertsUnsavedChanges
+                        }
+                        paperSx={(theme) => ({
+                          px: 0,
+                          py: theme.spacingFunction(8),
+                        })}
+                      />
+                    </Accordion>
 
-                  {/* Unified Save Button */}
-                  <ActionsPanel
-                    primaryButtonProps={{
-                      'data-testid': 'unified-alerts-save',
-                      disabled:
-                        (!formik.dirty && !hasAclpAlertsUnsavedChanges) ||
-                        !isAclpAlertsReady ||
-                        isUpdatingLinode,
-                      label: 'Save Alerts',
-                      loading: isUpdatingLinode,
-                      onClick: () => formik.handleSubmit(),
-                    }}
-                    sx={{ justifyContent: 'flex-start' }}
-                  />
-                </Stack>
-              )}
-            </Formik>
-          </Paper>
+                    {/* ACLP Alerts View when ACLP alerting is enabled */}
+                    <Accordion
+                      defaultExpanded
+                      detailProps={{ sx: { p: 0 } }}
+                      disableGutters // Removes unnecessary default margins when stacking Accordions
+                      heading="Alerts"
+                      headingChip={getFeatureChip(aclpAlerting ?? {})}
+                      summaryProps={{ sx: { p: 0 } }}
+                    >
+                      <AlertReusableComponent
+                        entityId={linodeId.toString()}
+                        entityName={linode?.label ?? ''}
+                        onStatusChange={setIsAclpAlertsReady}
+                        onToggleAlert={handleAclpAlertsToggle}
+                        paperSx={(theme) => ({
+                          px: 0,
+                          py: theme.spacingFunction(16),
+                        })}
+                        serviceType="linode"
+                      />
+                    </Accordion>
+                  </Stack>
+                </Paper>
+
+                {/* Unified Save Button */}
+                <ActionsPanel
+                  primaryButtonProps={{
+                    'data-testid': 'unified-alerts-save',
+                    disabled:
+                      (!formik.dirty && !hasAclpAlertsUnsavedChanges) ||
+                      !isAclpAlertsReady ||
+                      isUpdatingLinode,
+                    label: 'Save Alerts',
+                    loading: isUpdatingLinode,
+                    onClick: () => formik.handleSubmit(),
+                  }}
+                  sx={{ justifyContent: 'flex-end' }}
+                />
+              </>
+            )}
+          </Formik>
         ) : (
           // Standalone mode - only Legacy Alerts are displayed and AlertsPanel manages its own save.
           <AlertsPanel
