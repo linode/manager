@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
-import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { useAccessKeyDrawers } from './hooks/useAccessKeyDrawers';
 import { HostNamesDrawer } from './HostNamesDrawer';
+import { AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { ViewPermissionsDrawer } from './ViewPermissionsDrawer';
 
 export const AccessKeysDrawerOutlet = () => {
