@@ -34,7 +34,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { QuotasInfoNotice } from '../QuotasInfoNotice';
 import { BucketRegions } from './BucketRegions';
-import { StyledEUAgreementCheckbox } from './CreateBucketDrawer.styles';
+import { StyledEUAgreementCheckbox } from './OMC_CreateBucketDrawer.styles';
 import { OveragePricing } from './OveragePricing';
 
 import type {
