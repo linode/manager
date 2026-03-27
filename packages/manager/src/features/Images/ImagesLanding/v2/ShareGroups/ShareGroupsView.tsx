@@ -138,6 +138,7 @@ export const ShareGroupsView = (props: Props) => {
         isSearching={shareGroupsIsFetching}
         label="Search"
         onSearch={onSearch}
+        pendoId={config.searchFieldPendoId}
         placeholder="Search share groups"
         value={search.query ?? ''}
       />

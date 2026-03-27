@@ -107,9 +107,9 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
             >
               {headerProps.docsLink && (
                 <DocsLink
-                  analyticsLabel={headerProps.title}
                   href={headerProps.docsLink.href}
                   label={headerProps.docsLink.label}
+                  pendoId={headerProps.docsLink.pendoId}
                 />
               )}
               {headerProps.buttonProps && (
@@ -183,7 +183,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    padding: 0
+                    padding: 0,
                   }}
                 >
                   <Box

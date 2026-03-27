@@ -124,7 +124,7 @@ export const SHAREGROUPS_CONFIG: Record<
     docsLink: {
       href: `https://techdocs.akamai.com/cloud-computing/docs/image-sharing`,
       label: 'Image sharing',
-      pendoId: 'Images Groups Owned-Docs Link',
+      pendoId: 'Images Groups Owned-Docs',
     },
     columns: OWNED_GROUPS_TABLE_COLUMNS,
     emptyMessage: {
