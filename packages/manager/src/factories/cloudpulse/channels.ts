@@ -12,14 +12,13 @@ export const notificationChannelFactory =
       alert_count: 1,
       url: 'monitor/alert-channels/{id}/alerts',
     },
-    channel_type: 'email',
-    content: {
+    details: {
       email: {
-        email_addresses: ['test@test.com', 'test2@test.com'],
-        message: 'You have a new Alert',
-        subject: 'Sample Alert',
+        recipient_type: 'user',
+        usernames: ['test@test.com', 'test2@test.com'],
       },
     },
+    channel_type: 'email',
     created: new Date().toISOString(),
     created_by: 'user1',
     id: Factory.each((i) => i),

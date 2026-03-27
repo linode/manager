@@ -43,6 +43,9 @@ export const NotificationChannelDetail = () => {
     return (
       <>
         <Breadcrumb
+          breadcrumbDataAttrs={{
+            'data-qa-breadcrumb': true,
+          }}
           crumbOverrides={overrides}
           pathname="/Notification Channels/Details"
         />
@@ -57,6 +60,9 @@ export const NotificationChannelDetail = () => {
     return (
       <>
         <Breadcrumb
+          breadcrumbDataAttrs={{
+            'data-qa-breadcrumb': true,
+          }}
           crumbOverrides={overrides}
           pathname="/Notification Channels/Details"
         />
@@ -71,6 +77,9 @@ export const NotificationChannelDetail = () => {
     return (
       <>
         <Breadcrumb
+          breadcrumbDataAttrs={{
+            'data-qa-breadcrumb': true,
+          }}
           crumbOverrides={overrides}
           pathname="/Notification Channels/Details"
         />
@@ -89,6 +98,9 @@ export const NotificationChannelDetail = () => {
       <DocumentTitleSegment segment={`${channelDetails?.label}`} />
       <Stack spacing={1}>
         <Breadcrumb
+          breadcrumbDataAttrs={{
+            'data-qa-breadcrumb': true,
+          }}
           crumbOverrides={overrides}
           pathname="/Notification Channels/Details"
         />
