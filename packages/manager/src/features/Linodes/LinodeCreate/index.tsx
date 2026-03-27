@@ -67,6 +67,7 @@ import { UserData } from './UserData/UserData';
 import {
   captureLinodeCreateAnalyticsEvent,
   defaultValues,
+  EMPTY_ACLP_ALERTS,
   getLinodeCreatePayload,
   useHandleLinodeCreateAnalyticsFormError,
 } from './utilities';
@@ -93,7 +94,7 @@ export const LinodeCreate = () => {
   const { aclpServices, linodeCreateBanner } = useFlags();
 
   // In Create flow, alerts always default to 'legacy' mode
-  const [isAclpAlertsBetaCreateFlow, setIsAclpAlertsBetaCreateFlow] =
+  const [isAclpAlertsModeCreateFlow, setIsAclpAlertsModeCreateFlow] =
     React.useState<boolean>(false);
 
   const queryClient = useQueryClient();
@@ -112,6 +113,20 @@ export const LinodeCreate = () => {
     resolver: getLinodeCreateResolver(linodeCreateType, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
+
+  const handleAlertsModeChange = React.useCallback(
+    (isAclpMode: boolean) => {
+      // Reset alerts to empty defaults when entering ACLP mode so that
+      // previously selected alerts don't persist across mode toggles. While in
+      // legacy mode the alerts field is ignored by the payload builder, so
+      // there is no need to clear it when switching back to legacy mode.
+      if (isAclpMode) {
+        form.setValue('alerts', EMPTY_ACLP_ALERTS);
+      }
+      setIsAclpAlertsModeCreateFlow(isAclpMode);
+    },
+    [form]
+  );
 
   const navigate = useNavigate();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
@@ -168,8 +183,8 @@ export const LinodeCreate = () => {
     const payload = getLinodeCreatePayload(values, {
       isDualStackEnabled,
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-      isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
-      isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
+      isAclpAlertsEnabled: aclpServices?.linode?.alerts?.enabled,
+      isAclpAlertsMode: isAclpAlertsModeCreateFlow,
     });
 
     try {
@@ -319,15 +334,15 @@ export const LinodeCreate = () => {
             <Networking />
           )}
           <AdditionalOptions
-            isAlertsBetaMode={isAclpAlertsBetaCreateFlow}
-            onAlertsModeChange={setIsAclpAlertsBetaCreateFlow}
+            isAclpAlertsMode={isAclpAlertsModeCreateFlow}
+            onAlertsModeChange={handleAlertsModeChange}
           />
           <Addons />
           <EUAgreement />
-          <Summary isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
+          <Summary isAclpAlertsMode={isAclpAlertsModeCreateFlow} />
           <SMTP />
           {secureVMNoticesEnabled && <FirewallAuthorization />}
-          <Actions isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
+          <Actions isAclpAlertsMode={isAclpAlertsModeCreateFlow} />
         </Stack>
       </form>
     </FormProvider>

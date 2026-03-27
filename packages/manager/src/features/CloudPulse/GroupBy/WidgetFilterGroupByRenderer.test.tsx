@@ -56,7 +56,9 @@ describe('Widget Group By Renderer', () => {
     const groupByIcon = screen.getByTestId('widget-group-by');
     expect(groupByIcon).toBeInTheDocument();
     expect(groupByIcon).toBeDisabled();
-
+    expect(
+      screen.getByTestId('No dimensions available for grouping')
+    ).toBeVisible();
     await groupByIcon.click();
 
     const drawer = screen.queryByTestId('drawer');

@@ -21,6 +21,8 @@ export type ShareGroupsType =
 export interface ImageSubTab<T> {
   /** Whether this tab represents a beta feature */
   isBeta?: boolean;
+  /** Pendo ID for the tab, used for analytics tracking */
+  pendoId?: string;
   /** Display title for the tab */
   title: string;
   /** The type this tab represents */

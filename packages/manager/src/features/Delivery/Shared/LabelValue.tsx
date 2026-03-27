@@ -3,17 +3,28 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+
 const maxWidth = 416;
 const labelWidth = 160;
 const valueWidth = maxWidth - labelWidth;
 
 interface LabelValueProps {
+  copyable?: boolean;
   'data-testid'?: string;
+  disableValueTooltip?: boolean;
   label: string;
   value: string;
 }
+
 export const LabelValue = (props: LabelValueProps) => {
-  const { label, value, 'data-testid': dataTestId } = props;
+  const {
+    copyable,
+    'data-testid': dataTestId,
+    disableValueTooltip,
+    label,
+    value,
+  } = props;
   const theme = useTheme();
   const labelRef = useRef<HTMLDivElement>(null);
   const [isLabelOverflowing, setIsLabelOverflowing] = useState(false);
@@ -41,68 +52,93 @@ export const LabelValue = (props: LabelValueProps) => {
 
   return (
     <Box
-      alignItems="center"
+      alignItems="flex-end"
       display="flex"
-      justifyContent="space-between"
-      marginTop={theme.spacingFunction(16)}
-      width={maxWidth}
+      justifyContent="flex-start"
+      minWidth={0}
     >
-      <StyledLabel title={isLabelOverflowing ? label : undefined}>
-        <Box alignItems="center" display="flex" maxWidth={labelWidth}>
-          <Typography
-            ref={labelRef}
+      <Box
+        alignItems="center"
+        display="flex"
+        marginTop={theme.spacingFunction(16)}
+        maxWidth={maxWidth}
+        minWidth={0}
+        width="100%"
+      >
+        <Tooltip title={isLabelOverflowing ? label : undefined}>
+          <Box
             sx={{
-              font: theme.font.bold,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
+              flex: `0 1 ${labelWidth}px`,
+              height: theme.spacingFunction(24),
+              lineHeight: theme.spacingFunction(24),
+              minWidth: 0,
             }}
           >
-            {label}
-          </Typography>
-          <Typography sx={{ font: theme.font.bold, flexShrink: 0 }}>
-            :
-          </Typography>
-        </Box>
-      </StyledLabel>
-      <Box width={valueWidth}>
-        <StyledValue
+            <Box alignItems="center" display="flex" maxWidth={labelWidth}>
+              <Typography
+                ref={labelRef}
+                sx={{
+                  font: theme.font.bold,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {label}
+              </Typography>
+              <Typography sx={{ font: theme.font.bold, flexShrink: 0 }}>
+                :&nbsp;
+              </Typography>
+            </Box>
+          </Box>
+        </Tooltip>
+        <Box
           data-testid={dataTestId}
-          title={isValueOverflowing ? value : undefined}
+          sx={{ flex: `0 1 ${valueWidth}px`, minWidth: 0 }}
         >
-          <Typography
-            ref={valueRef}
-            sx={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              width: 'fit-content',
-            }}
+          <Tooltip
+            title={
+              !disableValueTooltip && isValueOverflowing ? value : undefined
+            }
           >
-            {value}
-          </Typography>
-        </StyledValue>
+            <Typography
+              ref={valueRef}
+              sx={{
+                backgroundColor:
+                  theme.tokens.alias.Interaction.Background.Disabled,
+                border: `1px solid ${theme.tokens.alias.Border.Neutral}`,
+                borderRadius: 1,
+                boxSizing: 'border-box',
+                height: theme.spacingFunction(24),
+                lineHeight: theme.spacingFunction(24),
+                maxWidth: '100%',
+                overflow: 'hidden',
+                padding: theme.spacingFunction(1, 8),
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                width: 'fit-content',
+              }}
+            >
+              {value}
+            </Typography>
+          </Tooltip>
+        </Box>
       </Box>
+      {copyable && <StyledCopyTooltip text={value} />}
     </Box>
   );
 };
 
-const StyledValue = styled(Tooltip, {
-  label: 'StyledValue',
+const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
 })(({ theme }) => ({
-  backgroundColor: theme.tokens.alias.Interaction.Background.Disabled,
-  border: `1px solid ${theme.tokens.alias.Border.Neutral}`,
-  borderRadius: 4,
-  height: theme.spacingFunction(24),
-  lineHeight: theme.spacingFunction(24),
-  maxWidth: valueWidth,
-  padding: theme.spacingFunction(1, 8),
-}));
-
-const StyledLabel = styled(Tooltip, {
-  label: 'StyledLabel',
-})(({ theme }) => ({
-  height: theme.spacingFunction(24),
-  lineHeight: theme.spacingFunction(24),
-  maxWidth: labelWidth,
+  '& svg': {
+    height: theme.spacingFunction(16),
+    width: theme.spacingFunction(16),
+  },
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
+  display: 'inline-flex',
+  marginLeft: theme.spacingFunction(12),
 }));

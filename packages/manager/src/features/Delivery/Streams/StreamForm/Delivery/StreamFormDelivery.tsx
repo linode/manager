@@ -335,8 +335,15 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
   return (
     <Paper>
       <Typography variant="h2">Delivery</Typography>
-      <Typography sx={{ mt: theme.spacingFunction(12) }}>
-        Set the destination for log delivery.
+      <Typography
+        sx={{
+          mt: theme.spacingFunction(12),
+          maxWidth: 440,
+          whiteSpace: 'preserve-spaces',
+        }}
+      >
+        Choose the destination where logs will be delivered. Select a
+        preconfigured destination or create a new one.
       </Typography>
       {isLoading && (
         <Box display="flex" justifyContent="center">

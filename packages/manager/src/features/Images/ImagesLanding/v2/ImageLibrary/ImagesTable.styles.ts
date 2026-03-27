@@ -31,4 +31,10 @@ export const StyledImageTableContainer = styled(Box, {
   '& [data-qa-table-pagination]': {
     border: 'none',
   },
+  // When table striping is ON, rows use `zebra` (no rowborder). Apply a bottom
+  // border to the last row so the table is visually closed before the pagination
+  // footer - matching the behaviour of non-CDS tables elsewhere in the app.
+  '& cds-table-row:last-child:not([rowborder])': {
+    borderBottom: `1px solid ${theme.tokens.component.Table.Row.Border}`,
+  },
 }));

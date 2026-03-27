@@ -1,5 +1,12 @@
 import { authenticationType } from '@linode/api-v4';
-import { Autocomplete, Divider, TextField, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Divider,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -58,7 +65,7 @@ export const DestinationCustomHttpsDetailsForm = (
           <Autocomplete
             disableClearable
             errorText={fieldState.error?.message}
-            label="Authentication"
+            label="Authentication Type"
             onBlur={field.onBlur}
             onChange={(_, { value }) => {
               if (value === authenticationType.None) {
@@ -67,6 +74,10 @@ export const DestinationCustomHttpsDetailsForm = (
               field.onChange(value);
             }}
             options={authenticationTypeOptions}
+            textFieldProps={{
+              labelTooltipText:
+                'The authentication method used for requests sent to your HTTPS endpoint.',
+            }}
             value={getAuthenticationTypeOption(field.value)}
           />
         )}
@@ -113,6 +124,7 @@ export const DestinationCustomHttpsDetailsForm = (
             aria-required
             errorText={fieldState.error?.message}
             label="Endpoint URL"
+            labelTooltipText="The HTTPS endpoint for audit log delivery."
             onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
@@ -123,16 +135,24 @@ export const DestinationCustomHttpsDetailsForm = (
       />
       <Divider sx={{ my: 3 }} />
       <Typography sx={{ mt: 0 }} variant="h2">
-        Additional Options
+        Connection Settings
       </Typography>
-      <Typography sx={{ mt: 2 }} variant="h3">
-        Client Certificate&nbsp;
-        <span
-          style={{ fontWeight: theme.tokens.font.FontWeight.Regular.Normal }}
-        >
-          (optional)
-        </span>
-      </Typography>
+      <Stack alignItems="center" direction="row" flexWrap="nowrap" mt={2}>
+        <Typography variant="h3">
+          Client Certificate Authentication&nbsp;
+          <span
+            style={{ fontWeight: theme.tokens.font.FontWeight.Regular.Normal }}
+          >
+            (optional)
+          </span>
+        </Typography>
+        <TooltipIcon
+          labelTooltipIconSize="small"
+          status="info"
+          sxTooltipIcon={{ p: 1 }}
+          text="Certificate details are used to authenticate the audit log delivery service and verify the HTTPs destination during mutual TLS (mTLS( connections. This section is required only if the destination enforces client certificate authentication."
+        />
+      </Stack>
       <Controller
         control={control}
         name={controlPaths.tlsHostname}
@@ -140,6 +160,7 @@ export const DestinationCustomHttpsDetailsForm = (
           <TextField
             errorText={fieldState.error?.message}
             label="TLS Hostname"
+            labelTooltipText="The hostname used to verify the server’s certificate and matches the Subject Alternative Names (SANs) in the certificate. If not provided, the hostname is fetched from the endpoint URL."
             multiline
             onBlur={field.onBlur}
             onChange={(value) => {
@@ -156,6 +177,7 @@ export const DestinationCustomHttpsDetailsForm = (
           <TextField
             errorText={fieldState.error?.message}
             label="CA Certificate"
+            labelTooltipText="The certification authority (CA) certificate used to verify the origin server’s certificate. If the certificate is not signed by a well-known certification authority, enter the CA certificate in the PEM format for verification."
             multiline
             onBlur={field.onBlur}
             onChange={(value) => {
@@ -172,6 +194,7 @@ export const DestinationCustomHttpsDetailsForm = (
           <TextField
             errorText={fieldState.error?.message}
             label="Client Certificate"
+            labelTooltipText="The digital certificate you want to use to authenticate requests to your destination. Provide both the client certificate and the client private key in the PEM format to use mutual authentication."
             multiline
             onBlur={field.onBlur}
             onChange={(value) => {
@@ -187,7 +210,8 @@ export const DestinationCustomHttpsDetailsForm = (
         render={({ field, fieldState }) => (
           <TextField
             errorText={fieldState.error?.message}
-            label="Client Key"
+            label="Client Private Key"
+            labelTooltipText="The private key you want to use to authenticate to the backend server. Provide both the client certificate and the client private key in the non-encrypted PKCS8 format to use mutual authentication."
             multiline
             onBlur={field.onBlur}
             onChange={(value) => {
@@ -217,6 +241,10 @@ export const DestinationCustomHttpsDetailsForm = (
               field.onChange(value?.value || null);
             }}
             options={contentTypeOptions}
+            textFieldProps={{
+              labelTooltipText:
+                'The format and character encoding of the delivered audit log data.',
+            }}
             value={field.value ? getContentTypeOption(field.value) : null}
           />
         )}
