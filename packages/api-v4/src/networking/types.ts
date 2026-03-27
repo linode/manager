@@ -1,13 +1,8 @@
-export interface AssignedEntity {
-  id: number;
-  label: string;
-  type: string;
-  url: string;
-}
+import type { Entity } from '@linode/api-v4';
 
 export interface IPAddress {
   address: string;
-  assigned_entity: AssignedEntity | null;
+  assigned_entity: Entity | null;
   gateway: null | string;
   interface_id: null | number;
   linode_id: null | number;
