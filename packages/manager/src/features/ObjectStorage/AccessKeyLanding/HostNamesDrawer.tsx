@@ -1,23 +1,22 @@
 import { Box, Drawer } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useObjectStorageAccessKey } from 'src/queries/object-storage/queries';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
 
+import type { ObjectStorageKey } from '@linode/api-v4';
+
 interface Props {
   isOpen: boolean;
+  objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
 }
 
 export const HostNamesDrawer = (props: Props) => {
-  const { onClose, isOpen } = props;
-  const { accessKeyId } = useParams({ strict: false });
+  const { onClose, isOpen, objectStorageKey } = props;
 
-  const { data: objectStorageKey } = useObjectStorageAccessKey(accessKeyId);
   const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
 
   const regions = objectStorageKey?.regions || [];

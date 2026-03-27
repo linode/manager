@@ -2,32 +2,28 @@ import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
 import { Divider, Drawer, Typography } from '@linode/ui';
 import { pluralize, readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
-import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import {
-  useObjectStorageBucket,
-  useObjectStorageClusters,
-} from 'src/queries/object-storage/queries';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AccessSelect } from '../BucketDetail/AccessTab/AccessSelect';
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 
+import type { ObjectStorageBucket } from '@linode/api-v4';
+
 export interface BucketDetailsDrawerProps {
+  bucket?: ObjectStorageBucket;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const BucketDetailsDrawer = React.memo(
   (props: BucketDetailsDrawerProps) => {
-    const { onClose, isOpen } = props;
-    const { regionId, bucketName } = useParams({ strict: false });
-
-    const { data: bucket } = useObjectStorageBucket(regionId, bucketName);
+    const { onClose, isOpen, bucket } = props;
 
     const {
       cluster,

@@ -12,7 +12,6 @@ import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
 } from '@linode/validation';
-import { useParams } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
@@ -21,7 +20,6 @@ import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObj
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import {
   useCreateAccessKeyMutation,
-  useObjectStorageAccessKey,
   useObjectStorageBuckets,
   useUpdateAccessKeyMutation,
 } from 'src/queries/object-storage/queries';
@@ -104,8 +102,7 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const { mode, onClose, isOpen } = props;
-  const { accessKeyId } = useParams({ strict: false });
+  const { mode, onClose, isOpen, objectStorageKey } = props;
 
   const { data: profile } = useProfile();
   const isRestrictedUser = profile?.restricted ?? false;
@@ -124,7 +121,6 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   } = useObjectStorageBuckets();
 
   const { data: accountSettings } = useAccountSettings();
-  const { data: objectStorageKey } = useObjectStorageAccessKey(accessKeyId);
   const { mutateAsync: createAccessKey } = useCreateAccessKeyMutation();
   const { mutateAsync: updateAccessKey } = useUpdateAccessKeyMutation();
 

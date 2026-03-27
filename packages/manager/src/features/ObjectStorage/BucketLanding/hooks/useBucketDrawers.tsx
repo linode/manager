@@ -1,26 +1,34 @@
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useMemo } from 'react';
 
-type BucketDrawers = 'bucket-details' | 'create-bucket';
+type BucketDrawerType = 'bucket-details' | 'create-bucket';
 
 const BUCKETS_BASE_URL = '/object-storage/buckets';
+
+interface BucketDrawerState {
+  bucketName?: string;
+  regionId?: string;
+  type: BucketDrawerType;
+}
 
 export const useBucketDrawers = () => {
   const navigate = useNavigate();
   const { routeId } = useMatch({ strict: false });
+  const { regionId, bucketName } = useParams({ strict: false });
 
-  function getDrawer(): BucketDrawers | null {
+  function getDrawer(): BucketDrawerState | null {
     switch (routeId) {
       case `${BUCKETS_BASE_URL}/$regionId/$bucketName/details`:
-        return 'bucket-details';
+        return { type: 'bucket-details', regionId, bucketName };
       case `${BUCKETS_BASE_URL}/create`:
-        return 'create-bucket';
+        return { type: 'create-bucket' };
       default:
         return null;
     }
   }
 
   function openDrawer(
-    drawer: BucketDrawers,
+    drawer: BucketDrawerType,
     regionId?: string,
     bucketName?: string
   ) {
@@ -41,7 +49,7 @@ export const useBucketDrawers = () => {
   }
 
   return {
-    drawer: getDrawer(),
+    drawer: useMemo(() => getDrawer(), [routeId]),
     openDrawer,
     closeDrawer,
   };
