@@ -20,13 +20,13 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
+import { DEFAULT_PAGE_SIZES } from '../constants';
 import {
   StyledImageContainer,
   StyledImageTableContainer,
   StyledImageTableHeader,
   StyledImageTableSubheader,
 } from '../ImageLibrary/ImagesTable.styles';
-import { DEFAULT_PAGE_SIZES } from './constants';
 import { ShareGroupRow } from './ShareGroupRow';
 
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
@@ -219,7 +219,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
             ))}
           </TableBody>
         </Table>
-        {pagination.count > 25 && (
+        {pagination.count > DEFAULT_PAGE_SIZES[0] && (
           <Pagination
             count={pagination.count}
             onPageChange={pagination.onPageChange}
