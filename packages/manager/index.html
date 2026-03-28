@@ -1,179 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Akamai Cloud Manager</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
-    <script type="text/javascript">
-      let hasLiveChatInitialized = false;
-      let embeddedMessagingScriptPromise;
-      const embeddedMessagingConfig = {
-        bootstrapJsUrl: '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%',
-        deploymentUrl: '%REACT_APP_CHAT_DEPLOYMENT_URL%',
-        scrt2Url: '%REACT_APP_CHAT_SCRT2_URL%',
-        orgId: '%REACT_APP_CHAT_ORG_ID%',
-        deploymentName: '%REACT_APP_CHAT_DEPLOYMENT_NAME%',
-      };
 
-      function loadEmbeddedMessagingScript() {
-        if (window.embeddedservice_bootstrap) {
-          return Promise.resolve();
-        }
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akamai Cloud Manager</title>
+</head>
 
-        if (embeddedMessagingScriptPromise) {
-          return embeddedMessagingScriptPromise;
-        }
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+  <script type="text/javascript">
+    let hasLiveChatInitialized = false;
+    let embeddedMessagingScriptPromise;
+    let chatEventListenersAttached = false;
 
-        embeddedMessagingScriptPromise = new Promise((resolve, reject) => {
-          const script = document.createElement('script');
-          script.type = 'text/javascript';
-          script.src = embeddedMessagingConfig.bootstrapJsUrl;
-          script.onload = () => resolve();
-          script.onerror = () => {
-            embeddedMessagingScriptPromise = undefined;
-            reject(new Error('Failed to load Embedded Messaging script.'));
-          };
-          document.body.appendChild(script);
-        });
+    const embeddedMessagingConfig = {
+      bootstrapJsUrl: '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%',
+      deploymentUrl: '%REACT_APP_CHAT_DEPLOYMENT_URL%',
+      scrt2Url: '%REACT_APP_CHAT_SCRT2_URL%',
+      orgId: '%REACT_APP_CHAT_ORG_ID%',
+      deploymentName: '%REACT_APP_CHAT_DEPLOYMENT_NAME%',
+    };
 
+    function loadEmbeddedMessagingScript() {
+      if (window.embeddedservice_bootstrap) {
+        return Promise.resolve();
+      }
+
+      if (embeddedMessagingScriptPromise) {
         return embeddedMessagingScriptPromise;
       }
 
-      function hideEmbeddedMessagingContainer() {
-        const selectors = [
-          '#embeddedmessaging-container',
-          '#embeddedMessaging-container',
-          '[id*="embeddedmessaging-container"]',
-          '[id*="embeddedMessaging-container"]',
-          '[id*="embeddedMessaging"]',
-          '[class*="embeddedMessaging"]',
-          'iframe[id*="embeddedMessaging"]',
-          'iframe[title*="chat" i]',
-          'button[id*="embeddedMessaging"]',
-        ];
+      embeddedMessagingScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = embeddedMessagingConfig.bootstrapJsUrl;
+        script.onload = () => resolve();
+        script.onerror = () => {
+          embeddedMessagingScriptPromise = undefined;
+          reject(new Error('Failed to load Embedded Messaging script.'));
+        };
+        document.body.appendChild(script);
+      });
 
-        selectors.forEach((selector) => {
-          document.querySelectorAll(selector).forEach((element) => {
-            element.style.setProperty('display', 'none', 'important');
-            element.style.setProperty('visibility', 'hidden', 'important');
-            element.setAttribute('aria-hidden', 'true');
-          });
+      return embeddedMessagingScriptPromise;
+    }
+
+    function hideEmbeddedMessagingContainer() {
+      const selectors = [
+        '#embeddedmessaging-container',
+        '#embeddedMessaging-container',
+        '[id*="embeddedmessaging-container"]',
+        '[id*="embeddedMessaging-container"]',
+        '[id*="embeddedMessaging"]',
+        '[class*="embeddedMessaging"]',
+        'iframe[id*="embeddedMessaging"]',
+        'iframe[title*="chat" i]',
+        'button[id*="embeddedMessaging"]',
+        'button[title*="chat" i]',
+      ];
+
+      selectors.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((element) => {
+          element.style.setProperty('display', 'none', 'important');
+          element.style.setProperty('visibility', 'hidden', 'important');
+          element.style.setProperty('opacity', '0', 'important');
+          element.style.setProperty('pointer-events', 'none', 'important');
+          element.setAttribute('aria-hidden', 'true');
         });
+      });
 
+      try {
         const utilAPI = window.embeddedservice_bootstrap?.utilAPI;
-        try {
-          utilAPI?.minimizeChat?.();
-          utilAPI?.hideChatButton?.();
-        } catch {
-        }
-      }
+        utilAPI?.minimizeChat?.();
+        utilAPI?.hideChatButton?.();
+      } catch { }
+    }
 
-      async function openLiveChatOnce() {
-        const enableLiveChat = window.sessionStorage.getItem('EnableLiveChat') === 'true';
+    function handleChatClosed() {
+      hideEmbeddedMessagingContainer();
+      hasLiveChatInitialized = false;
+      window.sessionStorage.removeItem('EnableLiveChat');
+    }
 
-        if (!enableLiveChat || hasLiveChatInitialized) {
-          return;
-        }
+    function attachEmbeddedMessagingLifecycleListeners() {
+      if (chatEventListenersAttached) return;
+      chatEventListenersAttached = true;
 
-        hasLiveChatInitialized = true;
+      const closeEvents = [
+        'onEmbeddedMessagingConversationClosed',
+        'onEmbeddedMessagingWindowClosed',
+        'onEmbeddedMessagingChatClosed',
+        'onEmbeddedMessagingButtonClicked'
+      ];
 
-        // Check for token FIRST before initializing
-        const liveChatToken = window.sessionStorage.getItem('LiveChatToken');
-        if (!liveChatToken) {
-          hasLiveChatInitialized = false;
-          return;
-        }
+      closeEvents.forEach((eventName) => {
+        window.addEventListener(eventName, () => {
+          const iframe =
+            document.querySelector('iframe[id*="embeddedMessaging"]') ||
+            document.querySelector('iframe[title*="chat" i]');
 
-        try {
-          await loadEmbeddedMessagingScript();
-        } catch {
-          hasLiveChatInitialized = false;
-          return;
-        }
+          // If the iframe is gone or hidden after the click, treat it as closed.
+          setTimeout(() => {
+            const iframeStillVisible =
+              iframe &&
+              document.body.contains(iframe) &&
+              window.getComputedStyle(iframe).display !== 'none' &&
+              window.getComputedStyle(iframe).visibility !== 'hidden';
 
-        window.sessionStorage.removeItem('EnableLiveChat');
+            if (!iframeStillVisible || eventName !== 'onEmbeddedMessagingButtonClicked') {
+              handleChatClosed();
+            }
+          }, 300);
+        });
+      });
 
-        window.addEventListener("message", (event) => {
-          const payload =
-            typeof event.data === 'string'
-              ? (() => {
-                  try {
-                    return JSON.parse(event.data);
-                  } catch {
-                    return { action: event.data };
-                  }
-                })()
-              : event.data ?? {};
+      window.addEventListener('message', (event) => {
+        const payload =
+          typeof event.data === 'string'
+            ? (() => {
+              try {
+                return JSON.parse(event.data);
+              } catch {
+                return { action: event.data };
+              }
+            })()
+            : event.data ?? {};
 
-          const action = payload?.action ?? payload?.type ?? payload?.event;
+        const action = payload?.action ?? payload?.type ?? payload?.event;
 
-          if (
-            action === "prechatLoaded" ||
-            action === "prechat:loaded" ||
-            action === "embeddedMessaging:prechatLoaded"
-          ) {
-            const token = window.sessionStorage.getItem('LiveChatToken');
-            const subject = window.sessionStorage.getItem('LiveChatSubject');
+        if (
+          action === 'prechatLoaded' ||
+          action === 'prechat:loaded' ||
+          action === 'embeddedMessaging:prechatLoaded'
+        ) {
+          const token = window.sessionStorage.getItem('LiveChatToken');
+          const subject = window.sessionStorage.getItem('LiveChatSubject');
 
-            const dataMap = {
-              JWE_Token: token ?? '',
-              Title: subject ?? '',
-            };
+          const dataMap = {
+            JWE_Token: token ?? '',
+            Title: subject ?? '',
+          };
 
+          if (event.source && event.origin) {
             event.source.postMessage(
-              { action: "hiddenParameters", data: dataMap },
+              { action: 'hiddenParameters', data: dataMap },
               event.origin
             );
+          }
 
-            window.sessionStorage.removeItem('LiveChatToken');
-          } else if (action === "chatInitiationResult") {
-            const subject = window.sessionStorage.getItem('LiveChatSubject');
-            const description = window.sessionStorage.getItem('LiveChatDescription');
+          window.sessionStorage.removeItem('LiveChatToken');
+        } else if (action === 'chatInitiationResult') {
+          const subject = window.sessionStorage.getItem('LiveChatSubject');
+          const description = window.sessionStorage.getItem('LiveChatDescription');
 
-            window.sessionStorage.removeItem('LiveChatSubject');
-            window.sessionStorage.removeItem('LiveChatDescription');
+          window.sessionStorage.removeItem('LiveChatSubject');
+          window.sessionStorage.removeItem('LiveChatDescription');
 
-            if (payload?.data?.statusCode !== 200) {
-              hasLiveChatInitialized = false;
-              hideEmbeddedMessagingContainer();
-              window.dispatchEvent(new CustomEvent('manager:live-chat-failed', {
+          if (payload?.data?.statusCode !== 200) {
+            hasLiveChatInitialized = false;
+            hideEmbeddedMessagingContainer();
+            window.dispatchEvent(
+              new CustomEvent('manager:live-chat-failed', {
                 detail: {
                   description: description ?? '',
                   subject: subject ?? '',
                   errorType: payload?.data?.type,
                   errorDescription: payload?.data?.description,
                 },
-              }));
-            }
+              })
+            );
           }
-        });
+        } else if (
+          action === 'embeddedMessaging:conversationClosed' ||
+          action === 'embeddedMessaging:close' ||
+          action === 'embeddedMessagingWindowClosed' ||
+          action === 'chatWindowClosed'
+        ) {
+          handleChatClosed();
+        }
+      });
+    }
 
-        window.addEventListener("onEmbeddedMessagingButtonCreated", () => {
-          embeddedservice_bootstrap.utilAPI.launchChat();
-        }, { once: true });
+    async function openLiveChatOnce() {
+      const enableLiveChat =
+        window.sessionStorage.getItem('EnableLiveChat') === 'true';
 
-        embeddedservice_bootstrap.settings.language = "en_US";
-        embeddedservice_bootstrap.init(
-          embeddedMessagingConfig.orgId,
-          embeddedMessagingConfig.deploymentName,
-          embeddedMessagingConfig.deploymentUrl,
-          {
-            scrt2URL: embeddedMessagingConfig.scrt2Url,
-          }
-        );
+      if (!enableLiveChat || hasLiveChatInitialized) {
+        return;
       }
 
-      function initEmbeddedMessaging() {
-        window.addEventListener("manager:enable-live-chat", openLiveChatOnce);
-        openLiveChatOnce();
+      hasLiveChatInitialized = true;
+
+      const liveChatToken = window.sessionStorage.getItem('LiveChatToken');
+      if (!liveChatToken) {
+        hasLiveChatInitialized = false;
+        return;
       }
 
-      initEmbeddedMessaging();
-    </script>
-  </body>
+      try {
+        await loadEmbeddedMessagingScript();
+      } catch {
+        hasLiveChatInitialized = false;
+        return;
+      }
+
+      attachEmbeddedMessagingLifecycleListeners();
+      window.sessionStorage.removeItem('EnableLiveChat');
+
+      window.addEventListener(
+        'onEmbeddedMessagingButtonCreated',
+        () => {
+          try {
+            window.embeddedservice_bootstrap?.utilAPI?.launchChat?.();
+          } catch { }
+        },
+        { once: true }
+      );
+
+      embeddedservice_bootstrap.settings.language = 'en_US';
+      embeddedservice_bootstrap.init(
+        embeddedMessagingConfig.orgId,
+        embeddedMessagingConfig.deploymentName,
+        embeddedMessagingConfig.deploymentUrl,
+        {
+          scrt2URL: embeddedMessagingConfig.scrt2Url,
+        }
+      );
+    }
+
+    function initEmbeddedMessaging() {
+      window.addEventListener('manager:enable-live-chat', openLiveChatOnce);
+      openLiveChatOnce();
+    }
+
+    initEmbeddedMessaging();
+  </script>
+</body>
+
 </html>
