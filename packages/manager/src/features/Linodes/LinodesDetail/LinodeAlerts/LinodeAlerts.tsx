@@ -86,10 +86,15 @@ const LinodeAlerts = () => {
     CloudPulseAlertsPayload | undefined
   >();
 
-  // Holds what was last saved (or the initial server state on mount).
+  // Tracks what was last saved (or the initial server state on first load).
   // We compare incoming payloads against this to decide if there are unsaved
-  // changes, rather than relying on the ACLP reusable component's hasUnsavedChanges
-  // which can briefly be stale right after a save while the cache refetches.
+  // changes, rather than relying on the AlertReusableComponent's `hasUnsavedChanges`
+  // which can be stale right after a save while the cache refetches. Updated
+  // synchronously on save so the next toggle reflects the correct Save Alerts button state immediately.
+  //
+  // Note: invalidateAclpAlerts is also called after every save — it solves a
+  // separate concern: keeping the toggle row checkboxes correct by refreshing
+  // entity_ids in the alerts cache. Without it, the checkboxes would show stale state.
   const savedAclpPayloadRef = React.useRef<CloudPulseAlertsPayload | undefined>(
     undefined
   );
