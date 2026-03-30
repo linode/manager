@@ -1,5 +1,5 @@
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Button, TooltipIcon } from '@linode/ui';
+import { Button, TooltipIcon, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { enqueueSnackbar } from 'notistack';
@@ -10,6 +10,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import {
   CLUSTER_PROVISIONING_TEXT,
   CREDENTIALS_ERROR_TEXT,
+  DISABLE_CREDENTIAL_STATES,
   DISABLED_PASSWORD_BUTTON_TEXT,
 } from 'src/features/Databases/constants';
 import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
@@ -33,6 +34,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const [isCopying, setIsCopying] = useState(false);
   const engine =
     database.engine === 'postgresql' ? 'postgres' : database.engine;
+  const generalSslmode =
+    engine === 'mysql' ? 'ssl-mode=REQUIRED' : 'sslmode=require';
 
   const {
     data: credentials,
@@ -86,24 +89,19 @@ export const ServiceURI = (props: ServiceURIProps) => {
     isGeneralServiceURI?: boolean
   ) => {
     if (isGeneralServiceURI) {
-      return `${engine}://${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?sslmode=require`;
+      return `${engine}://${credentials?.username}:${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?${generalSslmode}`;
     }
     return `postgres://${credentials?.username}:${credentials?.password}@${primaryConnectionPoolHost?.address}:${primaryConnectionPoolHost?.port}/{connection pool label}?sslmode=require`;
-  };
-
-  const getCredentials = (isGeneralServiceURI: boolean) => {
-    return !isGeneralServiceURI
-      ? `${credentials?.username}:${credentials?.password}`
-      : credentials?.password;
   };
 
   // hide loading state if the user clicks on the copy icon
   const showBtnLoading =
     !hidePassword && !isCopying && (credentialsLoading || credentialsFetching);
 
-  const disablePasswordBtn = ['failed', 'provisioning', 'suspended'].includes(
+  const disablePasswordBtn = DISABLE_CREDENTIAL_STATES.includes(
     database.status
   );
+
   const disabledPasswordTooltipText =
     database.status === 'provisioning'
       ? CLUSTER_PROVISIONING_TEXT
@@ -139,8 +137,32 @@ export const ServiceURI = (props: ServiceURIProps) => {
       );
     }
 
-    return getCredentials(isGeneralServiceURI);
+    return `${credentials?.username}:${credentials?.password}`;
   };
+
+  if (
+    (isGeneralServiceURI && !primaryHost) ||
+    (engine === 'postgres' && !primaryConnectionPoolHost)
+  ) {
+    return (
+      <Grid display="contents">
+        <StyledValueGrid
+          data-testid="service-uri"
+          size="grow"
+          sx={{
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            p: '0',
+          }}
+          whiteSpace="pre"
+        >
+          <Typography fontStyle="italic">
+            Your Service URI will appear here once it is available.
+          </Typography>
+        </StyledValueGrid>
+      </Grid>
+    );
+  }
 
   return (
     <Grid display="contents">
@@ -159,7 +181,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
         {isGeneralServiceURI ? (
           <>
             @{primaryHost?.address}:
-            {`${primaryHost?.port}/defaultdb?sslmode=require`}
+            {`${primaryHost?.port}/defaultdb?${generalSslmode}`}
           </>
         ) : (
           <>
@@ -177,6 +199,8 @@ export const ServiceURI = (props: ServiceURIProps) => {
       ) : (
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
+            disabled={disablePasswordBtn}
+            disabledReason={disabledPasswordTooltipText}
             onClickCallback={handleCopy}
             text={getServiceURIText(credentials, isGeneralServiceURI)}
           />

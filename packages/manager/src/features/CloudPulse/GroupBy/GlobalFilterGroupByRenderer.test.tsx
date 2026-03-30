@@ -138,4 +138,26 @@ describe('Global Group By Renderer Component', () => {
       expect(option).toBeInTheDocument();
     });
   });
+  it('Should disable the group by icon and show alternate tooltip text when options are empty', async () => {
+    const defaultValue = [mockGroupByOptions[0]];
+
+    mocks.useGlobalDimensions.mockReturnValue({
+      isLoading: false,
+      options: [],
+      defaultValue,
+    });
+    renderWithTheme(
+      <GlobalFilterGroupByRenderer
+        handleChange={handleChange}
+        selectedDashboard={dashboard}
+      />
+    );
+
+    const groupByIcon = screen.getByTestId('group-by');
+    expect(groupByIcon).toBeDisabled();
+
+    expect(
+      screen.getByTestId('No dimensions available for grouping')
+    ).toBeVisible();
+  });
 });

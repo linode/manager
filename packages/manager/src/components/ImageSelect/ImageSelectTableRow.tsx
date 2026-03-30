@@ -18,6 +18,7 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 
 import { TABLE_CELL_BASE_STYLE } from './constants';
+import { getRegionListItem } from './utilities';
 
 import type {
   IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS,
@@ -76,20 +77,12 @@ export const ImageSelectTableRow = (props: Props) => {
     return '—';
   };
 
-  const getRegionListItem = (imageRegion: ImageRegion) => {
-    const matchingRegion = regions.find((r) => r.id === imageRegion.region);
-
-    return matchingRegion
-      ? `${matchingRegion.label} (${imageRegion.region})`
-      : imageRegion.region;
-  };
-
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
       {imageRegions.map((region: ImageRegion, idx) => {
         return (
           <ListItem disablePadding key={`${region.region}-${idx}`}>
-            {getRegionListItem(region)}
+            {getRegionListItem(regions, region)}
           </ListItem>
         );
       })}

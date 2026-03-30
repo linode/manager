@@ -26,6 +26,7 @@ import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleR
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import {
+  IAM_ROLES_PENDO_IDS,
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
 } from '../../Shared/constants';
@@ -225,6 +226,9 @@ export const AssignNewRoleDrawer = ({
                 isUserRolesPending ||
                 isDefaultRolesPending ||
                 formState.isSubmitting,
+              'data-pendo-id': isDefaultDelegationRolesForChildAccount
+                ? IAM_ROLES_PENDO_IDS.addNewDefaultRolesDrawer
+                : undefined,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',

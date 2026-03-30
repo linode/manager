@@ -110,6 +110,7 @@ export const getDestinationPayloadDetails = (
   if (type === destinationType.CustomHttps) {
     const propsToRemove: any[] = [];
     const customHTTPSDetails = details as CustomHTTPSDetailsExtended;
+    let finalCustomHTTPSDetails = customHTTPSDetails;
 
     if (!customHTTPSDetails.content_type) {
       propsToRemove.push('content_type');
@@ -121,20 +122,26 @@ export const getDestinationPayloadDetails = (
         certDetails.client_ca_certificate,
         certDetails.client_certificate,
         certDetails.client_private_key,
-        certDetails.tls_hostname,
       ].some((val) => !val);
 
       if (shouldRemoveCertDetails) {
         propsToRemove.push('client_certificate_details');
+      } else if (!certDetails.tls_hostname?.trim()) {
+        finalCustomHTTPSDetails = {
+          ...customHTTPSDetails,
+          client_certificate_details: omitProps(certDetails, ['tls_hostname']),
+        };
       }
     }
 
     if (propsToRemove.length > 0) {
       return omitProps(
-        customHTTPSDetails,
+        finalCustomHTTPSDetails,
         propsToRemove
       ) as CustomHTTPSDetailsExtended;
     }
+
+    return finalCustomHTTPSDetails;
   } else if ('path' in details && details.path === '') {
     return omitProps(details, ['path']);
   }

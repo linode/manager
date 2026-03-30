@@ -15,7 +15,11 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
 
 import { getProductById } from '../products';
-import { getLogoUrl, marketplaceContainerStyles } from '../shared';
+import {
+  formatTrademarkSymbols,
+  getLogoUrl,
+  marketplaceContainerStyles,
+} from '../shared';
 import { ContactSalesDrawer } from './ContactSalesDrawer';
 import { getProductTabDetails } from './pages';
 import {
@@ -168,7 +172,7 @@ export const ProductDetails = () => {
                   })}
                   variant="h1"
                 >
-                  {product.name}
+                  {formatTrademarkSymbols(product.name)}
                 </Typography>
                 {product.partner && (
                   <Typography
@@ -178,7 +182,7 @@ export const ProductDetails = () => {
                     })}
                     variant="body1"
                   >
-                    {product.partner.name}
+                    {formatTrademarkSymbols(product.partner.name)}
                   </Typography>
                 )}
               </ProductTitleSection>
@@ -193,7 +197,7 @@ export const ProductDetails = () => {
                 })}
                 variant="body1"
               >
-                {product.shortDescription}
+                {formatTrademarkSymbols(product.shortDescription)}
               </Typography>
 
               {/* Tags */}
