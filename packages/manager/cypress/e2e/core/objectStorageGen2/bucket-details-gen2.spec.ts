@@ -68,9 +68,11 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
       it(`does not hide the CORS toggle and SSL/TLS tab for buckets with an ${endpoint} endpoint`, () => {
         const { mockBucket, mockEndpoint } =
           createMocksBasedOnEndpointType(endpoint);
-        const { cluster, label } = mockBucket;
+        const { label } = mockBucket;
 
-        mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
+        mockGetBucketAccess(label, mockRegion.id, mockAccess).as(
+          'getBucketAccess'
+        );
         mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
           'getBucketsForRegion'
         );
@@ -78,7 +80,9 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
           'getObjectStorageEndpoints'
         );
 
-        cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/access`);
+        cy.visitWithLogin(
+          `/object-storage/buckets/${mockRegion.id}/${label}/access`
+        );
         cy.wait([
           '@getFeatureFlags',
           '@getAccount',
@@ -110,9 +114,11 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
       it(`hides the CORS toggle and SSL/TLS tab for for buckets with an ${endpoint} endpoint`, () => {
         const { mockBucket, mockEndpoint } =
           createMocksBasedOnEndpointType(endpoint);
-        const { cluster, label } = mockBucket;
+        const { label } = mockBucket;
 
-        mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
+        mockGetBucketAccess(label, mockRegion.id, mockAccess).as(
+          'getBucketAccess'
+        );
         mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
           'getBucketsForRegion'
         );
@@ -120,7 +126,9 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
           'getObjectStorageEndpoints'
         );
 
-        cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/access`);
+        cy.visitWithLogin(
+          `/object-storage/buckets/${mockRegion.id}/${label}/access`
+        );
         cy.wait([
           '@getFeatureFlags',
           '@getAccount',
