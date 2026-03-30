@@ -93,8 +93,8 @@ const LinodeAlerts = () => {
   // synchronously on save so the next toggle reflects the correct Save Alerts button state immediately.
   //
   // Note: invalidateAclpAlerts is also called after every save — it solves a
-  // separate concern: keeping the toggle row checkboxes correct by refreshing
-  // entity_ids in the alerts cache. Without it, the checkboxes would show stale state.
+  // separate concern: keeping the toggle row state correct by refreshing
+  // entity_ids in the alerts cache. Without it, the toggles would show stale state.
   const savedAclpPayloadRef = React.useRef<CloudPulseAlertsPayload | undefined>(
     undefined
   );
@@ -185,7 +185,8 @@ const LinodeAlerts = () => {
           setHasAclpAlertsUnsavedChanges(false);
           // Update the reference point so the next toggle compares against what was just saved.
           savedAclpPayloadRef.current = aclpAlertsPayload;
-          // Invalidate the cache so row checkboxes show the correct state if the user returns to this page.
+          // Invalidate the cache so alert toggles show the correct ON/OFF state
+          // after save and when the user navigates away and comes back.
           invalidateAclpAlerts(
             queryClient,
             'linode',
