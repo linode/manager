@@ -1,4 +1,4 @@
-import type { Entity } from '@linode/api-v4';
+import type { Entity } from '../account/types';
 
 export interface IPAddress {
   address: string;

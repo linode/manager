@@ -71,7 +71,7 @@ beforeEach(() => {
 
 const RESERVE_IP_TITLE = 'Reserve an IP Address';
 const REGION_SELECT_TEST_ID = 'region-select';
-const RESERVE_BUTTON_LABEL = 'Reserve';
+const RESERVE_BUTTON_LABEL = 'Reserve IP Address';
 const REGION_OPEN_BUTTON_LABEL = 'Open';
 
 describe('ReserveIPDrawer - loading state', () => {
@@ -404,7 +404,9 @@ describe('ReserveIPDrawer - pricing', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText((text) => text.startsWith('$') && text.endsWith('/mo'))
+        screen.getByText(
+          (text) => text.startsWith('$') && text.endsWith(' / mo.')
+        )
       ).toBeVisible();
     });
   });
