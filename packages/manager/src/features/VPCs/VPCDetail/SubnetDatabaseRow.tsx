@@ -23,10 +23,8 @@ export const SubnetDatabaseRow = ({ assignedDatabase, database }: Props) => {
       ?.map((rangeObj) => rangeObj.range)
       .filter((range) => range !== undefined) ?? [];
 
-  const noneSingleOrMultipleWithChipIPV6 =
-    determineNoneSingleOrMultipleWithChip(ipv6Ranges);
   const ipv6RangeContent = assignedDatabase?.ipv6_ranges
-    ? noneSingleOrMultipleWithChipIPV6
+    ? determineNoneSingleOrMultipleWithChip(ipv6Ranges)
     : '—';
 
   // For IPv4 addresses column, we display the primary and failover IPs for the database instance.
@@ -36,18 +34,18 @@ export const SubnetDatabaseRow = ({ assignedDatabase, database }: Props) => {
     if (memberKeys.length === 0) {
       return '—';
     }
+    // If there's only one key in members, it only contains the primary IPv4 which should be returned.
+    if (memberKeys.length === 1) {
+      return memberKeys[0];
+    }
 
+    // Retrieve primary and failover IPv4 addresses since there can be up to 2 failover IPv4 addresses for multi-node HA clusters.
     const primaryIPv4 = memberKeys.find(
       (key) => database.members[key] === 'primary'
     );
-    // Retrieve failover IPv4 addresses as there can be multiple
     const failoverIPv4s = memberKeys.filter(
       (key) => database.members[key] === 'failover'
     );
-
-    if (failoverIPv4s.length === 0) {
-      return primaryIPv4;
-    }
 
     return [primaryIPv4, ...failoverIPv4s].join(', ');
   };

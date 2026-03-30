@@ -259,7 +259,4 @@ export const convertPrivateToPublicHostname = (host: string) => {
 };
 
 export const getIsLinkInactive = (status: DatabaseStatus) =>
-  status === 'suspended' ||
-  status === 'suspending' ||
-  status === 'resuming' ||
-  status === 'migrated';
+  ['migrated', 'resuming', 'suspended', 'suspending'].includes(status);

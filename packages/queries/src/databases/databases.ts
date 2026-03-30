@@ -61,7 +61,7 @@ export const useDatabasesQuery = (
   params: Params,
   filter: Filter,
   isEnabled: boolean | undefined,
-  refetchInterval: false | number,
+  refetchInterval?: number,
 ) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
