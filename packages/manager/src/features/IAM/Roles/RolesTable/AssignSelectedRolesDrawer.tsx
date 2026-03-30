@@ -23,7 +23,6 @@ import { Link } from 'src/components/Link';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
-import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import {
   IAM_ROLES_PENDO_IDS,
@@ -50,8 +49,6 @@ export const AssignSelectedRolesDrawer = ({
   selectedRoles,
 }: Props) => {
   const theme = useTheme();
-
-  const { isParentUserType } = useDelegationRole();
 
   const values = {
     roles: selectedRoles.map((r) => ({
@@ -201,6 +198,9 @@ export const AssignSelectedRolesDrawer = ({
               name={`username`}
               render={({ field: { onChange }, fieldState }) => (
                 <Autocomplete
+                  data-pendo-id={
+                    IAM_ROLES_PENDO_IDS.assignSelectedRolesToUserOpen
+                  }
                   errorText={fieldState.error?.message}
                   getOptionLabel={(option) => option.label}
                   label="Select a User"
@@ -222,9 +222,11 @@ export const AssignSelectedRolesDrawer = ({
                     <li
                       {...props}
                       data-pendo-id={
-                        option.userType === 'delegate'
-                          ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate
-                          : IAM_ROLES_PENDO_IDS.assignSelectedRoleToChildUser
+                        option.userType === 'parent'
+                          ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserParent
+                          : option.userType === 'child'
+                            ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserChild
+                            : IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate
                       }
                       key={option.value}
                     >
@@ -237,10 +239,6 @@ export const AssignSelectedRolesDrawer = ({
                   slotProps={{
                     listbox: {
                       onScroll: handleScroll,
-                      // @ts-expect-error - MUI doesn't have a built in way to add data attributes to the options in Autocomplete, so we need to add it to the listboxProps and then check for it in the onChange handler
-                      'data-pendo-id': isParentUserType
-                        ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserParent
-                        : IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate,
                     },
                   }}
                   textFieldProps={{
