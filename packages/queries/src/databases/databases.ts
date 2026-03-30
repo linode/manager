@@ -42,14 +42,9 @@ import type {
   UpdateDatabasePayload,
 } from '@linode/api-v4';
 
-export const useDatabaseQuery = (
-  engine: Engine,
-  id: number,
-  isEnabled = true,
-) =>
+export const useDatabaseQuery = (engine: Engine, id: number) =>
   useQuery<Database, APIError[]>({
     ...databaseQueries.database(engine, id),
-    enabled: isEnabled,
     // @TODO Consider removing polling
     // The refetchInterval will poll the API for this Database. We will do this
     // to ensure we have up to date information. We do this polling because the events
