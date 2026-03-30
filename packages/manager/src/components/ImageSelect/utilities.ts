@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 
 import type { ImageSelectVariant } from './ImageSelect';
-import type { Image, RegionSite } from '@linode/api-v4';
+import type { Image, ImageRegion, Region, RegionSite } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
 
 /**
@@ -117,4 +117,18 @@ export const getDisabledImages = (options: DisabledImageOptions) => {
   }
 
   return {};
+};
+
+/**
+ * Accepts an array of regions of the Region type and an ImageRegion and returns a string for the matching region to be displayed in the UI
+ */
+export const getRegionListItem = (
+  regions: Region[],
+  imageRegion: ImageRegion
+) => {
+  const matchingRegion = regions.find((r) => r.id === imageRegion.region);
+
+  return matchingRegion
+    ? `${matchingRegion.label} (${imageRegion.region})`
+    : imageRegion.region;
 };

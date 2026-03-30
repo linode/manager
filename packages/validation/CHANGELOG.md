@@ -1,3 +1,11 @@
+## [2026-03-31] - v0.84.0
+
+
+### Upcoming Features:
+
+- Simplify `UpdateLinodeAlertsSchema` to support simultaneous legacy and ACLP alerting ([#13455](https://github.com/linode/manager/pull/13455))
+- Delivery Logs: Custom HTTPS validation messages improvements ([#13507](https://github.com/linode/manager/pull/13507))
+
 ## [2026-03-16] - v0.83.0
 
 
