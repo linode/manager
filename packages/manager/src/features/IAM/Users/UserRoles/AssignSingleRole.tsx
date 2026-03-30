@@ -1,11 +1,13 @@
 import { Autocomplete, Button, DeleteIcon } from '@linode/ui';
-import { Divider, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { getRoleByName } from 'src/features/IAM/Shared/utilities';
+
+import { Divider } from '../../Shared/Divider/Divider';
 
 import type { IamAccountRoles } from '@linode/api-v4';
 import type {
@@ -40,10 +42,8 @@ export const AssignSingleRole = ({
       <Box display="flex" flexDirection="column" sx={{ flex: '5 1 auto' }}>
         {index !== 0 && (
           <Divider
-            sx={{
-              marginBottom: theme.tokens.spacing.S24,
-              marginTop: theme.tokens.spacing.S20,
-            }}
+            spacingBottom={theme.tokens.spacing.S24}
+            spacingTop={theme.tokens.spacing.S20}
           />
         )}
 
