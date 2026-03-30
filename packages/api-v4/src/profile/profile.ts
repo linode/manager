@@ -130,7 +130,8 @@ export const getUserPreferences = () => {
 export const updateUserPreferences = (payload: UserPreferences) => {
   return Request<UserPreferences>(
     setURL(`${API_ROOT}/profile/preferences`),
-    setData(payload),
+    // Avoid `setData`: it uses `isEmpty`, which drops the body for `{}` / `[]`.
+    (config) => ({ ...config, data: payload }),
     setMethod('PUT'),
   );
 };
