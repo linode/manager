@@ -98,5 +98,5 @@ export const sharegroupTokenFactory = Factory.Sync.makeFactory<SharegroupToken>(
     token_uuid: Factory.each(() => crypto.randomUUID()),
     updated: new Date().toISOString(),
     valid_for_sharegroup_uuid: Factory.each(() => crypto.randomUUID()),
-  }
+  },
 );
