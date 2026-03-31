@@ -15,6 +15,7 @@
     let hasLiveChatInitialized = false;
     let embeddedMessagingScriptPromise;
     let chatEventListenersAttached = false;
+    let hasTriggeredChatCloseRefresh = false;
 
     const embeddedMessagingConfig = {
       bootstrapJsUrl: '%REACT_APP_CHAT_BOOTSTRAP_JS_URL%',
@@ -83,18 +84,19 @@
       hideEmbeddedMessagingContainer();
       hasLiveChatInitialized = false;
       window.sessionStorage.removeItem('EnableLiveChat');
+
+      // Reset stale chat state by reloading once after a close event.
+      if (!hasTriggeredChatCloseRefresh) {
+        hasTriggeredChatCloseRefresh = true;
+        window.location.reload();
+      }
     }
 
     function attachEmbeddedMessagingLifecycleListeners() {
       if (chatEventListenersAttached) return;
       chatEventListenersAttached = true;
 
-      const closeEvents = [
-        'onEmbeddedMessagingConversationClosed',
-        'onEmbeddedMessagingWindowClosed',
-        'onEmbeddedMessagingChatClosed',
-        'onEmbeddedMessagingButtonClicked'
-      ];
+      const closeEvents = ['onEmbeddedMessagingWindowClosed'];
 
       closeEvents.forEach((eventName) => {
         window.addEventListener(eventName, () => {
@@ -102,7 +104,7 @@
             document.querySelector('iframe[id*="embeddedMessaging"]') ||
             document.querySelector('iframe[title*="chat" i]');
 
-          // If the iframe is gone or hidden after the click, treat it as closed.
+          // If the iframe is gone or hidden, treat it as closed.
           setTimeout(() => {
             const iframeStillVisible =
               iframe &&
@@ -110,7 +112,7 @@
               window.getComputedStyle(iframe).display !== 'none' &&
               window.getComputedStyle(iframe).visibility !== 'hidden';
 
-            if (!iframeStillVisible || eventName !== 'onEmbeddedMessagingButtonClicked') {
+            if (!iframeStillVisible) {
               handleChatClosed();
             }
           }, 300);
@@ -173,12 +175,7 @@
               })
             );
           }
-        } else if (
-          action === 'embeddedMessaging:conversationClosed' ||
-          action === 'embeddedMessaging:close' ||
-          action === 'embeddedMessagingWindowClosed' ||
-          action === 'chatWindowClosed'
-        ) {
+        } else if (action === 'onEmbeddedMessagingWindowClosed') {
           handleChatClosed();
         }
       });
