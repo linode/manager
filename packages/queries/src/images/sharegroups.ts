@@ -1,14 +1,21 @@
-import { getSharegroup, getSharegroups } from '@linode/api-v4';
+import {
+  createSharegroup,
+  getSharegroup,
+  getSharegroups,
+} from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
   useInfiniteQuery,
+  useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query';
 
 import type {
   APIError,
+  CreateSharegroupPayload,
   Filter,
   Params,
   ResourcePage,
@@ -95,3 +102,21 @@ export const useShareGroupsInfiniteQuery = (
     initialPageParam: 1,
     retry: false,
   });
+
+export const useCreateShareGroupMutation = () => {
+  const queryclient = useQueryClient();
+
+  return useMutation<Sharegroup, APIError[], CreateSharegroupPayload>({
+    mutationFn: createSharegroup,
+    onSuccess(shareGroup) {
+      queryclient.invalidateQueries({
+        queryKey: shareGroupsQueries.sharegroups._ctx.paginated._def,
+      });
+      queryclient.setQueryData<Sharegroup>(
+        shareGroupsQueries.sharegroups._ctx.sharegroup(shareGroup.id.toString())
+          .queryKey,
+        shareGroup,
+      );
+    },
+  });
+};
