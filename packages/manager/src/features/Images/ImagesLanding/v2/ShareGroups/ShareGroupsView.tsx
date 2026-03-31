@@ -102,6 +102,15 @@ export const ShareGroupsView = (props: Props) => {
     );
   }
 
+  const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+    pagination.handlePageChange(Number(event.detail));
+  };
+
+  const handlePageSizeChange = (event: CustomEvent<{ pageSize: number }>) => {
+    const newSize = event.detail.pageSize;
+    pagination.handlePageSizeChange(newSize);
+  };
+
   const tableHeaderProps = {
     title: config.title,
     buttonProps: config.buttonProps
@@ -145,7 +154,6 @@ export const ShareGroupsView = (props: Props) => {
         columns={config.columns}
         emptyMessage={config.emptyMessage}
         error={shareGroupsError}
-        eventCategory={config.eventCategory}
         handleOrderChange={handleShareGroupsOrderChange}
         headerProps={tableHeaderProps}
         order={shareGroupsOrder}
@@ -154,8 +162,8 @@ export const ShareGroupsView = (props: Props) => {
           page: pagination.page,
           pageSize: pagination.pageSize,
           count: shareGroups?.results ?? 0,
-          handlePageChange: pagination.handlePageChange,
-          handlePageSizeChange: pagination.handlePageSizeChange,
+          onPageChange: handlePageChange,
+          onPageSizeChange: handlePageSizeChange,
         }}
         query={search.query}
         shareGroups={shareGroups?.data ?? []}

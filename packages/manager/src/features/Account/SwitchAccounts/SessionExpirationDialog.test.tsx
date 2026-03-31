@@ -33,10 +33,8 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-const realLocation = window.location;
-
 afterAll(() => {
-  window.location = realLocation;
+  vi.unstubAllGlobals();
 });
 
 describe('SessionExpirationDialog', () => {
@@ -64,11 +62,9 @@ describe('SessionExpirationDialog', () => {
   });
 
   it('calls history.push("/logout") if parent token is invalid when Log Out button is clicked', async () => {
-    // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+    // Use vi.stubGlobal to mock window.location without direct assignment (This avoids TS readonly error)
     const mockReload = vi.fn();
-    delete (window as Partial<Window>).location;
-
-    window.location = { ...realLocation, reload: mockReload };
+    vi.stubGlobal('location', { ...window.location, reload: mockReload });
 
     const { getByText } = renderWithTheme(
       <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />
