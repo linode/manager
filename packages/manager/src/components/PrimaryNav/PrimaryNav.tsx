@@ -377,7 +377,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     );
 
   const collapsedAccordions = React.useMemo(() => {
-    // Until the preferences query returns, keep the default (all collapsed) like the old effect did.
     if (preferences === undefined) {
       return DEFAULT_COLLAPSED_SIDE_NAV_INDICES;
     }

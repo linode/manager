@@ -130,8 +130,10 @@ export const getUserPreferences = () => {
 export const updateUserPreferences = (payload: UserPreferences) => {
   return Request<UserPreferences>(
     setURL(`${API_ROOT}/profile/preferences`),
+    setHeaders({ 'Content-Type': 'application/json' }),
     // Avoid `setData`: it uses `isEmpty`, which drops the body for `{}` / `[]`.
-    (config) => ({ ...config, data: payload }),
+    // Serialize here so the XHR/fetch layer always sends bytes (DevTools shows a clear payload).
+    (config) => ({ ...config, data: JSON.stringify(payload) }),
     setMethod('PUT'),
   );
 };

@@ -44,6 +44,7 @@ export const PreferenceEditor = (props: Props) => {
         })
         .catch(() => {
           setErrorMessage('Unable to set preferences');
+          setSubmitting(false);
         });
     } catch {
       setErrorMessage('Invalid JSON');
