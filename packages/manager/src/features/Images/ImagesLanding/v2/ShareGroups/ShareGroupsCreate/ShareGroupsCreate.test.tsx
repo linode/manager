@@ -28,6 +28,9 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('ShareGroupsCreate', () => {
+  const shareGroupLabel = 'My Share Group';
+  const shareGroupDescription = 'Test Description';
+
   let mockNavigate: ReturnType<typeof vi.fn>;
   let mockMutateAsync: ReturnType<typeof vi.fn>;
 
@@ -68,7 +71,7 @@ describe('ShareGroupsCreate', () => {
     expect(descriptionField).toBeVisible();
     expect(descriptionField).toHaveValue('');
 
-    const submitButton = getByText('Create Share Group').closest('button');
+    const submitButton = getByRole('button', { name: /Create Share Group/i });
     expect(submitButton).toBeVisible();
     expect(submitButton).toBeEnabled();
   });
@@ -78,19 +81,19 @@ describe('ShareGroupsCreate', () => {
 
     mockMutateAsync.mockResolvedValue(shareGroup);
 
-    const { getByRole, getByText } = renderWithTheme(<ShareGroupsCreate />);
+    const { getByRole } = renderWithTheme(<ShareGroupsCreate />);
 
     const labelField = getByRole('textbox', { name: /Label/i });
     const descriptionField = getByRole('textbox', { name: /Description/i });
-    const submitButton = getByText('Create Share Group').closest('button');
+    const submitButton = getByRole('button', { name: /Create Share Group/i });
 
-    await userEvent.type(labelField, 'My Share Group');
-    await userEvent.type(descriptionField, 'Test Description');
-    await userEvent.click(submitButton!);
+    await userEvent.type(labelField, shareGroupLabel);
+    await userEvent.type(descriptionField, shareGroupDescription);
+    await userEvent.click(submitButton);
 
     expect(mockMutateAsync).toHaveBeenCalledWith({
-      label: 'My Share Group',
-      description: 'Test Description',
+      label: shareGroupLabel,
+      description: shareGroupDescription,
     });
 
     expect(mockNavigate).toHaveBeenCalledWith({
@@ -104,16 +107,16 @@ describe('ShareGroupsCreate', () => {
 
     mockMutateAsync.mockResolvedValue(shareGroup);
 
-    const { getByRole, getByText } = renderWithTheme(<ShareGroupsCreate />);
+    const { getByRole } = renderWithTheme(<ShareGroupsCreate />);
 
     const labelField = getByRole('textbox', { name: /Label/i });
-    const submitButton = getByText('Create Share Group').closest('button');
+    const submitButton = getByRole('button', { name: /Create Share Group/i });
 
-    await userEvent.type(labelField, 'My Share Group');
-    await userEvent.click(submitButton!);
+    await userEvent.type(labelField, shareGroupLabel);
+    await userEvent.click(submitButton);
 
     expect(mockMutateAsync).toHaveBeenCalledWith({
-      label: 'My Share Group',
+      label: shareGroupLabel,
     });
   });
 
@@ -130,10 +133,10 @@ describe('ShareGroupsCreate', () => {
     const { getByRole, getByText } = renderWithTheme(<ShareGroupsCreate />);
 
     const labelField = getByRole('textbox', { name: /Label/i });
-    const submitButton = getByText('Create Share Group').closest('button');
+    const submitButton = getByRole('button', { name: /Create Share Group/i });
 
     await userEvent.type(labelField, 'Duplicate Label');
-    await userEvent.click(submitButton!);
+    await userEvent.click(submitButton);
 
     expect(getByText('Label must be unique')).toBeVisible();
   });
