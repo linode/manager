@@ -112,6 +112,12 @@ export const useCreateShareGroupMutation = () => {
       queryclient.invalidateQueries({
         queryKey: shareGroupsQueries.sharegroups._ctx.paginated._def,
       });
+      queryclient.invalidateQueries({
+        queryKey: shareGroupsQueries.sharegroups._ctx.all._def,
+      });
+      queryclient.invalidateQueries({
+        queryKey: shareGroupsQueries.sharegroups._ctx.infinite._def,
+      });
       queryclient.setQueryData<Sharegroup>(
         shareGroupsQueries.sharegroups._ctx.sharegroup(shareGroup.id.toString())
           .queryKey,

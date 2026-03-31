@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -21,8 +20,6 @@ export const ShareGroupsCreate = () => {
 
   const { mutateAsync: createShareGroup } = useCreateShareGroupMutation();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const { control, handleSubmit, setError } =
     useForm<CreateSharegroupPayload>();
 
@@ -31,10 +28,6 @@ export const ShareGroupsCreate = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createShareGroup(values);
-
-      enqueueSnackbar('Sharegroup scheduled for creation', {
-        variant: 'info',
-      });
 
       navigate({
         search: () => ({}),
