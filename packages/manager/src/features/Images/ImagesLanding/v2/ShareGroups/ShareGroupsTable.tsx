@@ -7,6 +7,7 @@ import {
   useTheme,
   ZeroStateSearchNarrowIcon,
 } from '@linode/ui';
+import { Pagination } from 'akamai-cds-react-components';
 import {
   Table,
   TableBody,
@@ -18,8 +19,8 @@ import {
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 
+import { DEFAULT_PAGE_SIZES } from '../constants';
 import {
   StyledImageContainer,
   StyledImageTableContainer,
@@ -52,15 +53,14 @@ interface ShareGroupsTableProps {
     main: string;
   };
   error?: APIError[] | null;
-  eventCategory: string;
   handleOrderChange: (newOrderBy: string, newOrder: Order) => void;
   headerProps?: HeaderProps;
   order: Order;
   orderBy: string;
   pagination: {
     count: number;
-    handlePageChange: (newPage: number) => void;
-    handlePageSizeChange: (newSize: number) => void;
+    onPageChange: (event: CustomEvent<{ page: number }>) => void;
+    onPageSizeChange: (event: CustomEvent<{ pageSize: number }>) => void;
     page: number;
     pageSize: number;
   };
@@ -72,7 +72,6 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
   const {
     columns,
     headerProps,
-    eventCategory,
     shareGroups,
     query,
     handleOrderChange,
@@ -183,7 +182,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    padding: 0
+                    padding: 0,
                   }}
                 >
                   <Box
@@ -220,14 +219,16 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
             ))}
           </TableBody>
         </Table>
-        <PaginationFooter
-          count={pagination.count}
-          eventCategory={eventCategory}
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-        />
+        {pagination.count > DEFAULT_PAGE_SIZES[0] && (
+          <Pagination
+            count={pagination.count}
+            onPageChange={pagination.onPageChange}
+            onPageSizeChange={pagination.onPageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            pageSizes={DEFAULT_PAGE_SIZES}
+          />
+        )}
       </StyledImageTableContainer>
     </StyledImageContainer>
   );
