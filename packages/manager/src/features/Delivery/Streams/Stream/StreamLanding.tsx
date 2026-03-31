@@ -1,3 +1,5 @@
+import { useStreamQuery } from '@linode/queries';
+import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -16,6 +18,7 @@ import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
 import { StreamMetrics } from 'src/features/Delivery/Streams/Stream/StreamMetrics';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { useTabs } from 'src/hooks/useTabs';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Tab } from 'src/hooks/useTabs';
 
@@ -45,6 +48,12 @@ export const StreamLanding = () => {
 
   const { handleTabChange, tabIndex, tabs } = useTabs(activeTabs);
 
+  const { isLoading: isLoadingStream, error: errorStream } = useStreamQuery(
+    Number(streamId)
+  );
+  const streamErrorDefaultMessage =
+    'There was an error retrieving stream. Please reload and try again.';
+
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/logs/delivery/streams/summary',
@@ -60,6 +69,24 @@ export const StreamLanding = () => {
     removeCrumbX: [1, 2],
     title: `Stream ${streamId}`,
   };
+
+  if (isLoadingStream) {
+    return (
+      <Box display="flex" justifyContent="center">
+        <CircleProgress />
+      </Box>
+    );
+  }
+
+  if (errorStream) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(errorStream, streamErrorDefaultMessage)[0].reason
+        }
+      />
+    );
+  }
 
   return (
     <>

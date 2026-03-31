@@ -21,11 +21,9 @@ export const StreamEdit = () => {
     isLoading: isLoadingDestinations,
     error: errorDestinations,
   } = useAllDestinationsQuery();
-  const {
-    data: stream,
-    isLoading: isLoadingStream,
-    error: errorStream,
-  } = useStreamQuery(Number(streamId));
+  const { data: stream, isLoading: isLoadingStream } = useStreamQuery(
+    Number(streamId)
+  );
 
   const form = useForm<StreamAndDestinationFormType>({
     defaultValues: {
@@ -90,26 +88,17 @@ export const StreamEdit = () => {
           <CircleProgress size="md" />
         </Box>
       )}
-      {errorStream && (
-        <ErrorState
-          compact
-          errorText="There was an error retrieving stream. Please reload and try again."
-        />
-      )}
       {errorDestinations && (
         <ErrorState
           compact
           errorText="There was an error retrieving destinations. Please reload and try again."
         />
       )}
-      {!isLoadingStream &&
-        !isLoadingDestinations &&
-        !errorStream &&
-        !errorDestinations && (
-          <FormProvider {...form}>
-            <StreamForm mode="edit" streamId={streamId} />
-          </FormProvider>
-        )}
+      {!isLoadingStream && !isLoadingDestinations && !errorDestinations && (
+        <FormProvider {...form}>
+          <StreamForm mode="edit" streamId={streamId} />
+        </FormProvider>
+      )}
     </>
   );
 };

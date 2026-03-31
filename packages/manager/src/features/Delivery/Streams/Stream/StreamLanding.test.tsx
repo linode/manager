@@ -7,10 +7,21 @@ import {
   streamFactory,
 } from 'src/factories';
 import { StreamLanding } from 'src/features/Delivery/Streams/Stream/StreamLanding';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import type { Flags } from 'src/featureFlags';
+
+const queryMocks = vi.hoisted(() => ({
+  useStreamQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useStreamQuery: queryMocks.useStreamQuery,
+  };
+});
 
 const streamId = 123;
 const mockDestinations = [
@@ -30,45 +41,83 @@ describe('StreamLanding', () => {
     });
   };
 
-  beforeEach(async () => {
-    server.use(
-      http.get(`*/monitor/streams/${streamId}`, () => {
-        return HttpResponse.json(mockStream);
-      })
-    );
-  });
+  describe('and stream has loaded successfully', () => {
+    beforeEach(async () => {
+      queryMocks.useStreamQuery.mockReturnValue({
+        data: mockStream,
+        isLoading: false,
+      });
+    });
 
-  describe('and metrics are not enabled', () => {
-    const flags = {
-      aclpLogs: {
-        enabled: true,
-        beta: false,
-        metricsEnabled: false,
-      },
-    };
+    describe('and metrics are not enabled', () => {
+      const flags = {
+        aclpLogs: {
+          enabled: true,
+          beta: false,
+          metricsEnabled: false,
+        },
+      };
 
-    it('should render the summary and not the metrics tab', async () => {
-      renderComponent(flags);
+      it('should render the summary and not the metrics tab', async () => {
+        renderComponent(flags);
 
-      screen.getByText('Summary');
-      expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
+        screen.getByText('Summary');
+        expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('and metrics are enabled', () => {
+      const flags = {
+        aclpLogs: {
+          enabled: true,
+          beta: false,
+          metricsEnabled: true,
+        },
+      };
+
+      it('should render the summary tab and metrics tab', async () => {
+        renderComponent(flags);
+
+        screen.getByText('Summary');
+        expect(screen.queryByText('Metrics')).toBeInTheDocument();
+      });
     });
   });
 
-  describe('and metrics are enabled', () => {
-    const flags = {
-      aclpLogs: {
-        enabled: true,
-        beta: false,
-        metricsEnabled: true,
-      },
-    };
+  describe('and stream is loading', () => {
+    beforeEach(async () => {
+      queryMocks.useStreamQuery.mockReturnValue({
+        isLoading: true,
+      });
+    });
 
-    it('should render the summary tab and metrics tab', async () => {
-      renderComponent(flags);
+    it('should render loading spinner', async () => {
+      renderComponent({});
 
-      screen.getByText('Summary');
-      expect(screen.queryByText('Metrics')).toBeInTheDocument();
+      expect(screen.queryByText('Summary')).not.toBeInTheDocument();
+      expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
+
+      const loadingElement = screen.queryByTestId('circle-progress');
+      expect(loadingElement).toBeInTheDocument();
+    });
+  });
+
+  describe('and stream request threw error', () => {
+    const streamErrorMessage = 'Stream not found';
+    beforeEach(async () => {
+      queryMocks.useStreamQuery.mockReturnValue({
+        isLoading: false,
+        error: [{ reason: streamErrorMessage }],
+      });
+    });
+
+    it('should render error state with message', async () => {
+      renderComponent({});
+
+      expect(screen.queryByText('Summary')).not.toBeInTheDocument();
+      expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
+
+      expect(screen.queryByText(streamErrorMessage)).toBeInTheDocument();
     });
   });
 });
