@@ -34,7 +34,6 @@ export interface ShareGroupsTabsConfig {
     main: string;
   };
   error?: APIError[] | null;
-  eventCategory: string;
   orderByDefault: string;
   orderDefault: 'asc' | 'desc';
   preferenceKey: string;
@@ -132,10 +131,9 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
     },
-    eventCategory: 'owned-groups',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'owned-groups',
+    preferenceKey: 'owned-groups-table',
     buttonProps: {
       buttonText: 'Create Share Group',
       navigateTo: '/images/share-groups/create',
@@ -158,10 +156,9 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         "Go to 'My membership requests' to make a request and join a group",
     },
-    eventCategory: 'joined-groups',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'joined-groups',
+    preferenceKey: 'joined-groups-table',
   },
   'membership-requests': {
     title: 'Membership requests',
@@ -177,9 +174,8 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         "Click 'Request Membership' to create your first membership request",
     },
-    eventCategory: 'membership-requests',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'membership-requests',
+    preferenceKey: 'membership-requests-table',
   },
 };
