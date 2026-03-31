@@ -118,3 +118,23 @@ export const getReservedIPsTypes = () => [
 ];
 
 // @TODO Linode Interfaces - add mocks for sharing/assigning IPs
+
+// Reserved IP handlers
+
+export const getReservedIPs = (mockState: MockState) => [
+  http.get(
+    '*/v4beta/networking/reserved/ips',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<IPAddress>>
+    > => {
+      const reservedIPs = await mswDB.getAll('reservedIPs');
+
+      return makePaginatedResponse({
+        data: reservedIPs || [],
+        request,
+      });
+    }
+  ),
+];
