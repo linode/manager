@@ -1,8 +1,13 @@
+import { regionFactory } from '@linode/utilities';
 import { Settings } from 'luxon';
 
 import { imageFactory } from 'src/factories';
 
-import { isImageDeprecated, isImageTooFarPastEOL } from './utilities';
+import {
+  getRegionListItem,
+  isImageDeprecated,
+  isImageTooFarPastEOL,
+} from './utilities';
 
 describe('isImageTooFarPastEOL', () => {
   it('should return false if the image does not have an `eol`', () => {
@@ -78,5 +83,29 @@ describe('isImageDeprecated', () => {
     });
 
     expect(isImageDeprecated(image)).toBe(false);
+  });
+});
+
+describe('getRegionListItem', () => {
+  it('should return a formatted string with label and region id when a matching region is found', () => {
+    const region = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
+    const imageRegion = { region: 'us-east', status: 'available' as const };
+
+    expect(getRegionListItem([region], imageRegion)).toBe(
+      'Newark, NJ (us-east)'
+    );
+  });
+
+  it('should return only the region id when no matching region is found', () => {
+    const region = regionFactory.build({ id: 'us-west', label: 'Fremont, CA' });
+    const imageRegion = { region: 'us-east', status: 'available' as const };
+
+    expect(getRegionListItem([region], imageRegion)).toBe('us-east');
+  });
+
+  it('should return only the region id when the regions array is empty', () => {
+    const imageRegion = { region: 'ap-south', status: 'available' as const };
+
+    expect(getRegionListItem([], imageRegion)).toBe('ap-south');
   });
 });

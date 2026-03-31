@@ -28,6 +28,7 @@ import {
 } from 'src/features/IAM/Shared/utilities';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { IAM_ROLES_PENDO_IDS } from '../../Shared/constants';
 import {
@@ -77,7 +78,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
 
   const { data: permissions } = usePermissions('account', ['is_account_admin']);
   const isAccountAdmin = permissions?.is_account_admin;
-
+  const { isDelegateUserType, isChildUserType } = useDelegationRole();
   // Filtering
   const getFilteredRows = (
     text: string,
@@ -214,7 +215,13 @@ export const RolesTable = ({ roles = [] }: Props) => {
           </Grid>
           <Button
             buttonType="primary"
-            data-pendo-id={IAM_ROLES_PENDO_IDS.assignSelectedRoles}
+            data-pendo-id={
+              isDelegateUserType
+                ? IAM_ROLES_PENDO_IDS.assignSelectedRolesAsDelegate
+                : isChildUserType
+                  ? IAM_ROLES_PENDO_IDS.assignSelectedRolesAsChild
+                  : IAM_ROLES_PENDO_IDS.assignSelectedRolesAsParent
+            }
             disabled={selectedRows.length === 0 || !isAccountAdmin}
             onClick={() => handleAssignSelectedRoles()}
             sx={{ height: 34 }}
@@ -300,10 +307,13 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
-                    // data-pendo-id={IAM_ROLES_PENDO_IDS.rolesChecked}
-                    {...(selectedRows.includes(roleRow) && {
-                      'data-pendo-id': IAM_ROLES_PENDO_IDS.rolesChecked,
-                    })}
+                    {...(selectedRows.includes(roleRow)
+                      ? {
+                          'data-pendo-id': IAM_ROLES_PENDO_IDS.rolesChecked,
+                        }
+                      : {
+                          'data-pendo-id': IAM_ROLES_PENDO_IDS.rolesUnchecked,
+                        })}
                     disabled={!isAccountAdmin}
                     style={{
                       wordBreak: 'break-word',
