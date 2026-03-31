@@ -17,6 +17,7 @@ interface StreamActionMenuProps extends StreamHandlers {
 
 export const StreamActionMenu = (props: StreamActionMenuProps) => {
   const { stream, onDelete, onDisableOrEnable, onEdit } = props;
+  const { status, label } = stream;
 
   const menuActions: Action[] = [
     {
@@ -25,14 +26,19 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
       },
       title: 'Edit',
       pendoId: 'Logs Delivery Streams-Edit',
+      disabled:
+        status === streamStatus.Deactivating || status === streamStatus.Failed,
     },
     {
       onClick: () => {
         onDisableOrEnable(stream);
       },
-      title: stream.status === streamStatus.Active ? 'Deactivate' : 'Activate',
-      pendoId: `Logs Delivery Streams-${stream.status === streamStatus.Active ? 'Deactivate' : 'Activate'}`,
-      disabled: stream.status === streamStatus.Provisioning,
+      title: status === streamStatus.Active ? 'Deactivate' : 'Activate',
+      pendoId: `Logs Delivery Streams-${status === streamStatus.Active ? 'Deactivate' : 'Activate'}`,
+      disabled:
+        status === streamStatus.Deactivating ||
+        status === streamStatus.Failed ||
+        status === streamStatus.Provisioning,
     },
     {
       onClick: () => {
@@ -46,7 +52,7 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
   return (
     <ActionMenu
       actionsList={menuActions}
-      ariaLabel={`Action menu for Stream ${stream.label}`}
+      ariaLabel={`Action menu for Stream ${label}`}
       pendoId="Logs Delivery Streams-Action Menu"
     />
   );
