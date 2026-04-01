@@ -131,7 +131,7 @@ export const DatabaseResize = () => {
   // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
   const restrictPlanTabs = () => {
     if (
-      flags.databaseGenerationalPlans &&
+      flags.databaseResizeGenerationalPlans &&
       currentPlanType?.class === 'premium'
     ) {
       return [];
@@ -346,7 +346,7 @@ export const DatabaseResize = () => {
     currentPlan?.id.includes('g7-dedicated');
 
   const disabledResizeToPremiumPlans =
-    !flags.databaseGenerationalPlans && !isCurrentPlanAPremiumPlan
+    !flags.databaseResizeGenerationalPlans && !isCurrentPlanAPremiumPlan
       ? displayTypes.filter(
           (type) =>
             type.class.includes('premium') || type.id.includes('g7-dedicated')
@@ -354,7 +354,7 @@ export const DatabaseResize = () => {
       : [];
 
   const disabledResizeFromPremiumPlans =
-    !flags.databaseGenerationalPlans && isCurrentPlanAPremiumPlan
+    !flags.databaseResizeGenerationalPlans && isCurrentPlanAPremiumPlan
       ? displayTypes.filter(
           (type) =>
             !type.class.includes('premium') && !type.id.includes('g7-dedicated')
@@ -365,6 +365,7 @@ export const DatabaseResize = () => {
     return !summaryText;
   }, [summaryText]);
 
+  console.log(summaryText, shouldSubmitBeDisabled)
   const handleNodeChange = (size: ClusterSize | undefined): void => {
     const selectedPlanTab = determineInitialPlanCategoryTab(
       displayTypes,
