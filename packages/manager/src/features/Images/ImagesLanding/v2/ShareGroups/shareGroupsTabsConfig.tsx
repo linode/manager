@@ -60,10 +60,14 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
 ];
 
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
-  { name: 'Group', sortableProps: { label: 'label' } },
+  {
+    name: 'Group',
+    sortableProps: { label: 'label' },
+  },
   {
     name: 'Description',
     sortableProps: { label: 'description' },
+    style: { flex: 2 },
   },
   {
     name: '# of members',
@@ -76,13 +80,11 @@ const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
     name: 'Created',
     sortableProps: { label: 'created' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap' },
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap' },
   },
 ];
 

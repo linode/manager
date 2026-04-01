@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Hidden, LinkButton } from '@linode/ui';
+import { Hidden, LinkButton, Tooltip } from '@linode/ui';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
@@ -37,6 +37,13 @@ export const ShareGroupRow = (props: Props) => {
     tableStripingPreference
   );
 
+  const TableCellOverflowStyle: React.CSSProperties = {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    display: 'block',
+  };
+
   return (
     <TableRow
       data-qa-sharegroup-row={id}
@@ -44,16 +51,34 @@ export const ShareGroupRow = (props: Props) => {
       rowborder={!isTableStripingEnabled}
       zebra={isTableStripingEnabled}
     >
-      <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
-        <LinkButton onClick={() => {}}>{label}</LinkButton>
-      </TableCell>
-      <TableCell>{description}</TableCell>
+      <Tooltip title={label}>
+        <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
+          <LinkButton
+            onClick={() => {}}
+            sx={{
+              ...TableCellOverflowStyle,
+            }}
+          >
+            {label}
+          </LinkButton>
+        </TableCell>
+      </Tooltip>
+      <Tooltip title={description}>
+        <TableCell
+          style={{
+            ...TableCellOverflowStyle,
+            flex: 2,
+          }}
+        >
+          {description}
+        </TableCell>
+      </Tooltip>
       <TableCell>{members_count}</TableCell>
       <Hidden smDown>
         <TableCell>{images_count}</TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>
+        <TableCell>
           {created &&
             formatDate(created, {
               timezone: profile?.timezone,
@@ -61,7 +86,7 @@ export const ShareGroupRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>
+        <TableCell>
           {updated !== null
             ? formatDate(updated, { timezone: profile?.timezone })
             : '–'}
