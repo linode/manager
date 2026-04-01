@@ -1,8 +1,8 @@
 import { regionFactory } from '@linode/utilities';
 import {
+  mockAkamaiObjectStorageDestination,
   mockAuditLogsStream,
   mockAuditLogsStreamPayload,
-  mockDestination,
   mockLKEAuditLogsStream,
 } from 'support/constants/delivery';
 import {
@@ -39,8 +39,8 @@ describe('Edit Stream', () => {
   describe('given Audit Logs Stream Type', () => {
     it('edits stream label and destination and saves', () => {
       // Mock API responses
-      mockGetDestinations([mockDestination]);
-      mockGetDestination(mockDestination);
+      mockGetDestinations([mockAkamaiObjectStorageDestination]);
+      mockGetDestination(mockAkamaiObjectStorageDestination);
       mockGetStreams([mockAuditLogsStream]);
       mockGetStream(mockAuditLogsStream);
 
@@ -117,7 +117,7 @@ describe('Edit Stream', () => {
       ui.toast.assertMessage(`There was an issue creating your destination`);
 
       // Submit the stream edit form - success
-      mockCreateDestination(mockDestination);
+      mockCreateDestination(mockAkamaiObjectStorageDestination);
       mockUpdateStream(
         {
           ...mockAuditLogsStreamPayload,
@@ -134,7 +134,7 @@ describe('Edit Stream', () => {
           expect(body).to.deep.equal({
             label: updatedLabel,
             status: 'active',
-            destinations: [mockDestination.id],
+            destinations: [mockAkamaiObjectStorageDestination.id],
             details: null,
           });
         });
@@ -191,8 +191,8 @@ describe('Edit Stream', () => {
       });
 
       // Mock API responses
-      mockGetDestinations([mockDestination]);
-      mockGetDestination(mockDestination);
+      mockGetDestinations([mockAkamaiObjectStorageDestination]);
+      mockGetDestination(mockAkamaiObjectStorageDestination);
       mockGetStreams([mockLKEAuditLogsStream]);
       mockGetStream({
         ...mockLKEAuditLogsStream,
@@ -298,7 +298,7 @@ describe('Edit Stream', () => {
           id: mockLKEAuditLogsStream.id,
           label: updatedLabel,
           status: 'active',
-          destinations: [mockDestination.id],
+          destinations: [mockAkamaiObjectStorageDestination.id],
           details: {
             is_auto_add_all_clusters_enabled: true,
           },
@@ -317,7 +317,7 @@ describe('Edit Stream', () => {
           id: mockLKEAuditLogsStream.id,
           label: updatedLabel,
           status: 'active',
-          destinations: [mockDestination.id],
+          destinations: [mockAkamaiObjectStorageDestination.id],
           details: {
             cluster_ids: [1, 3], // TODO: change to is_auto_add_all_clusters_enabled: true when "Automatically include all existing and recently configured clusters" feature is available
           },
@@ -332,7 +332,7 @@ describe('Edit Stream', () => {
           expect(body).to.deep.equal({
             label: updatedLabel,
             status: 'active',
-            destinations: [mockDestination.id],
+            destinations: [mockAkamaiObjectStorageDestination.id],
             details: {
               cluster_ids: [1, 3], // TODO: change to is_auto_add_all_clusters_enabled: true when "Automatically include all existing and recently configured clusters" feature is available
             },
