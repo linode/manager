@@ -115,10 +115,9 @@ export const ImagesTable = (props: ImagesTableProps) => {
             >
               {headerProps.docsLink && (
                 <DocsLink
-                  analyticsLabel={headerProps.title}
-                  data-pendo-id={headerProps.docsLink.dataPendoId}
                   href={headerProps.docsLink.href}
                   label={headerProps.docsLink.label}
+                  pendoId={headerProps.docsLink.dataPendoId}
                 />
               )}
               {headerProps.buttonProps && (
