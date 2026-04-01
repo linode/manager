@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type {
   AccountMaintenance,
+  DatabaseTypeClass,
   Linode,
   LinodeTypeClass,
   MaintenancePolicySlug,
@@ -106,7 +107,7 @@ export const useIsLinodeCloneFirewallEnabled = () => {
  */
 export const useIsGenerationalPlansEnabled = (
   plans: Array<{ id: string }> | undefined,
-  planType: LinodeTypeClass | undefined
+  planType: DatabaseTypeClass | LinodeTypeClass | undefined
 ) => {
   const flags = useFlags();
 

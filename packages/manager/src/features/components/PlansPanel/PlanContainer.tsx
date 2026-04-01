@@ -135,10 +135,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const isDatabaseResizeFlow =
     location.pathname.match(/\/databases\/.*\/(\d+\/resize)/)?.[0] ===
     location.pathname;
-  const shouldDisplayNoRegionSelectedMessage =
-    !selectedRegionId &&
-    isGenerationalPlansEnabled && // only display no region selected message for dbaas if generational plans is enabled
-    (isDatabaseCreateFlow || isDatabaseResizeFlow);
+  const shouldDisplayNoRegionSelectedMessage = !selectedRegionId;
 
   const isDatabaseGA =
     !flags.dbaasV2?.beta &&

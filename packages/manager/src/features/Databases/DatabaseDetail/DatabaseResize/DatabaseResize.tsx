@@ -1,6 +1,6 @@
 import {
   useDatabaseMutation,
-  // useDatabaseTypesQuery,
+  useDatabaseTypesQuery,
   useRegionAvailabilityQuery,
   useRegionsQuery,
 } from '@linode/queries';
@@ -26,7 +26,7 @@ import {
 } from 'src/features/components/PlansPanel/utils';
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
-import dbtypesData from 'src/features/Databases/DatabaseCreate/dbtypes.json';
+// import dbtypesData from 'src/features/Databases/DatabaseCreate/dbtypes.json';
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import {
   isDefaultDatabase,
@@ -34,6 +34,7 @@ import {
 } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
   RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
@@ -85,13 +86,13 @@ export const DatabaseResize = () => {
     reset: resetMutation,
   } = useDatabaseMutation(database.engine, database.id);
 
-  // const {
-  //   data: dbTypes,
-  //   error: typesError,
-  //   isLoading: typesLoading,
-  // } = useDatabaseTypesQuery({ platform: database.platform });
+  const {
+    data: dbTypes,
+    error: typesError,
+    isLoading: typesLoading,
+  } = useDatabaseTypesQuery({ platform: database.platform });
 
-  const dbTypes = dbtypesData.data as DatabaseType[];
+  // const dbTypes = dbtypesData.data as DatabaseType[];
 
   const shouldProvideRegions =
     flags.databasePremium && isDefaultDatabase(database);
@@ -114,6 +115,11 @@ export const DatabaseResize = () => {
     (type: DatabaseType) => type.id === database.type
   );
 
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    dbTypes,
+    currentPlanType?.class
+  );
+
   const isDisabledSharedTab = database.cluster_size === 2;
 
   // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
@@ -130,7 +136,10 @@ export const DatabaseResize = () => {
     ) {
       return [];
     }
-    if (currentPlanType?.class === 'premium') {
+    if (!isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
+      return ['shared', 'dedicated'];
+    }
+    if (isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
       return ['shared'];
     } else {
       return ['premium'];
@@ -410,11 +419,11 @@ export const DatabaseResize = () => {
     return null;
   }
 
-  if (regionsLoading) {
+  if (regionsLoading || typesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError) {
+  if (regionsError || typesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
-  // useDatabaseTypesQuery,
+  useDatabaseTypesQuery,
   useRegionAvailabilityQuery,
   useRegionsQuery,
 } from '@linode/queries';
@@ -38,13 +38,13 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 import { DatabaseCreateNetworkingConfiguration } from './DatabaseCreateNetworkingConfiguration';
-import dbtypesData from './dbtypes.json';
+// import dbtypesData from './dbtypes.json';
 
 import type { AccessProps } from './DatabaseCreateAccessControls';
 import type {
   ClusterSize,
   CreateDatabasePayload,
-  DatabaseType,
+  // DatabaseType,
   Engine,
   PrivateNetwork,
   VPC,
@@ -77,15 +77,15 @@ export const DatabaseCreate = () => {
   const { error: enginesError, isLoading: enginesLoading } =
     useDatabaseEnginesQuery(true);
 
-  // const {
-  //   data: dbtypes,
-  //   error: typesError,
-  //   isLoading: typesLoading,
-  // } = useDatabaseTypesQuery({
-  //   platform: 'rdbms-default',
-  // });
+  const {
+    data: dbtypes,
+    error: typesError,
+    isLoading: typesLoading,
+  } = useDatabaseTypesQuery({
+    platform: 'rdbms-default',
+  });
 
-  const dbtypes = dbtypesData.data as DatabaseType[];
+  // const dbtypes = dbtypesData.data as DatabaseType[];
 
   const flags = useFlags();
   const isVPCEnabled = flags.databaseVpc;
@@ -263,11 +263,11 @@ export const DatabaseCreate = () => {
     types: dbtypes,
   });
 
-  if (regionsLoading || !regionsData || enginesLoading) {
+  if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || enginesError) {
+  if (regionsError || typesError || enginesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
