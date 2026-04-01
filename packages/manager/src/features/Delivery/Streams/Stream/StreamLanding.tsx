@@ -56,7 +56,7 @@ export const StreamLanding = () => {
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
-      pathname: '/logs/delivery/streams/summary',
+      pathname: `/logs/delivery/streams/${streamId}`,
       crumbOverrides: [
         {
           label: 'Delivery',

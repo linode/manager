@@ -22,11 +22,7 @@ const deliveryLandingRoute = createRoute({
   },
   getParentRoute: () => deliveryRoute,
   path: '/',
-}).lazy(() =>
-  import('src/features/Delivery/deliveryLandingLazyRoute').then(
-    (m) => m.deliveryLandingLazyRoute
-  )
-);
+});
 
 const streamsRoute = createRoute({
   getParentRoute: () => deliveryRoute,
@@ -76,11 +72,7 @@ const streamLandingRoute = createRoute({
   },
   getParentRoute: () => streamRoute,
   path: '/',
-}).lazy(() =>
-  import('src/features/Delivery/Streams/Stream/streamLandingLazyRoute').then(
-    (m) => m.streamLandingLazyRoute
-  )
-);
+});
 
 const streamSummaryRoute = createRoute({
   getParentRoute: () => streamRoute,
@@ -161,11 +153,7 @@ const destinationLandingRoute = createRoute({
   },
   getParentRoute: () => destinationRoute,
   path: '/',
-}).lazy(() =>
-  import(
-    'src/features/Delivery/Destinations/DestinationForm/destinationEditLazyRoute'
-  ).then((m) => m.destinationEditLazyRoute)
-);
+});
 
 const destinationSummaryRoute = createRoute({
   getParentRoute: () => destinationRoute,
