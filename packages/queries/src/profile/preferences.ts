@@ -1,5 +1,10 @@
-import { getUserPreferences, updateUserPreferences } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { updateUserPreferences } from '@linode/api-v4';
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { profileQueries } from './profile';
@@ -54,7 +59,10 @@ export const useMutatePreferences = (replace = false) => {
       if (replace) {
         return updateUserPreferences(data);
       }
-      const existingPreferences = await getUserPreferences();
+      const preferencesQueryOptions = queryOptions(profileQueries.preferences);
+      const existingPreferences = await queryClient.ensureQueryData(
+        preferencesQueryOptions,
+      );
       if (!isPreferencesMergeBase(existingPreferences)) {
         throw PREFERENCES_MERGE_FAILED;
       }
@@ -65,9 +73,6 @@ export const useMutatePreferences = (replace = false) => {
         queryKey: profileQueries.preferences.queryKey,
       }),
     onMutate: (data) => updatePreferenceData(data, replace, queryClient),
-    onSuccess: (data) => {
-      queryClient.setQueryData(profileQueries.preferences.queryKey, data);
-    },
   });
 };
 
