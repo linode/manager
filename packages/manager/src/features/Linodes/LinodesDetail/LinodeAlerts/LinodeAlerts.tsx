@@ -270,7 +270,10 @@ const LinodeAlerts = () => {
           >
             {(formik) => (
               <>
-                <Paper ref={unifiedAlertsContainerRef}>
+                <Paper
+                  ref={unifiedAlertsContainerRef}
+                  sx={(theme) => ({ pb: theme.spacingFunction(16) })}
+                >
                   {/* Display general mutation error globally for unified save */}
                   {generalOrRootError && (
                     <Notice
