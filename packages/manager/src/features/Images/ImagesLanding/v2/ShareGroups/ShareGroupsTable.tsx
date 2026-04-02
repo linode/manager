@@ -28,6 +28,7 @@ import {
   StyledImageTableSubheader,
 } from '../ImageLibrary/ImagesTable.styles';
 import { ShareGroupRow } from './ShareGroupRow';
+import { StyledShareGroupsTableHeader } from './ShareGroupTable.styles';
 
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
 import type { APIError, Sharegroup } from '@linode/api-v4';
@@ -132,49 +133,52 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
         </StyledImageTableHeader>
       )}
       <StyledImageTableContainer>
-        <Table>
-          <TableHead>
-            <TableRow
-              headerbackground={
-                theme.tokens.component.Table.HeaderNested.Background
-              }
-              headerborder
-            >
-              {columns.map((col, idx) => {
-                const cell = col.sortableProps ? (
-                  <TableHeaderCell
-                    key={idx}
-                    sort={() =>
-                      handleOrderChange(
-                        col.sortableProps?.label ?? col.name,
-                        order === 'asc' ? 'desc' : 'asc'
-                      )
-                    }
-                    sortable
-                    sorted={
-                      orderBy === col.sortableProps?.label ? order : undefined
-                    }
-                    style={{ ...col.style }}
-                  >
-                    {col.name}
-                  </TableHeaderCell>
-                ) : (
-                  <TableHeaderCell key={idx} style={{ ...col.style }}>
-                    {col.name}
-                  </TableHeaderCell>
-                );
+        <Table style={{ boxSizing: 'border-box' }}>
+          <StyledShareGroupsTableHeader>
+            <TableHead>
+              <TableRow
+                headerbackground={
+                  theme.tokens.component.Table.HeaderNested.Background
+                }
+                headerborder
+              >
+                {columns.map((col, idx) => {
+                  const cell = col.sortableProps ? (
+                    <TableHeaderCell
+                      key={idx}
+                      sort={() =>
+                        handleOrderChange(
+                          col.sortableProps?.label ?? col.name,
+                          order === 'asc' ? 'desc' : 'asc'
+                        )
+                      }
+                      sortable
+                      sorted={
+                        orderBy === col.sortableProps?.label ? order : undefined
+                      }
+                      style={{ ...col.style }}
+                    >
+                      {col.name}
+                    </TableHeaderCell>
+                  ) : (
+                    <TableHeaderCell key={idx} style={{ ...col.style }}>
+                      {col.name}
+                    </TableHeaderCell>
+                  );
 
-                return col.hidden ? (
-                  <Hidden key={idx} {...{ [col.hidden]: true }}>
-                    {cell}
-                  </Hidden>
-                ) : (
-                  cell
-                );
-              })}
-              <TableHeaderCell style={{ maxWidth: '40px' }} />
-            </TableRow>
-          </TableHead>
+                  return col.hidden ? (
+                    <Hidden key={idx} {...{ [col.hidden]: true }}>
+                      {cell}
+                    </Hidden>
+                  ) : (
+                    cell
+                  );
+                })}
+                <TableHeaderCell style={{ flex: '0 0 5%' }} />
+              </TableRow>
+            </TableHead>
+          </StyledShareGroupsTableHeader>
+
           <TableBody>
             {!error && shareGroups.length === 0 && (
               <TableRow rowborder>

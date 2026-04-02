@@ -1,13 +1,22 @@
 import { usePreferences, useProfile } from '@linode/queries';
 import { Hidden, LinkButton, Tooltip } from '@linode/ui';
-import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
+import { truncateEnd } from '@linode/utilities';
+import { TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
 import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { ShareGroupActionMenu } from './ShareGroupActionMenu';
-import { StyledActionMenuWrapper } from './ShareGroupTable.styles';
+import {
+  StyledActionMenuWrapper,
+  StyledCreatedCell,
+  StyledDescriptionCell,
+  StyledGroupCell,
+  StyledImageCountCell,
+  StyledMemberCountCell,
+  StyledUpdatedCell,
+} from './ShareGroupTable.styles';
 
 import type { Sharegroup } from '@linode/api-v4';
 
@@ -49,48 +58,44 @@ export const ShareGroupRow = (props: Props) => {
       data-qa-sharegroup-row={id}
       key={id}
       rowborder={!isTableStripingEnabled}
+      style={{ padding: 0 }}
       zebra={isTableStripingEnabled}
     >
-      <Tooltip title={label}>
-        <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
+      <Tooltip title={label.length > 32 ? label : ''}>
+        <StyledGroupCell data-pendo-id={`Images Groups Owned-Group name`}>
           <LinkButton
             onClick={() => {}}
             sx={{
               ...TableCellOverflowStyle,
             }}
           >
-            {label}
+            {truncateEnd(label, 32)}
           </LinkButton>
-        </TableCell>
+        </StyledGroupCell>
       </Tooltip>
-      <Tooltip title={description}>
-        <TableCell
-          style={{
-            ...TableCellOverflowStyle,
-            flex: 2,
-          }}
-        >
-          {description}
-        </TableCell>
+      <Tooltip title={description.length > 50 ? description : ''}>
+        <StyledDescriptionCell>
+          {truncateEnd(description, 50)}
+        </StyledDescriptionCell>
       </Tooltip>
-      <TableCell>{members_count}</TableCell>
+      <StyledMemberCountCell>{members_count}</StyledMemberCountCell>
       <Hidden smDown>
-        <TableCell>{images_count}</TableCell>
+        <StyledImageCountCell>{images_count}</StyledImageCountCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell>
+        <StyledCreatedCell>
           {created &&
             formatDate(created, {
               timezone: profile?.timezone,
             })}
-        </TableCell>
+        </StyledCreatedCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell>
+        <StyledUpdatedCell>
           {updated !== null
             ? formatDate(updated, { timezone: profile?.timezone })
             : '–'}
-        </TableCell>
+        </StyledUpdatedCell>
       </Hidden>
       <StyledActionMenuWrapper>
         <ShareGroupActionMenu deleteButtonDisabled={!!members_count} />

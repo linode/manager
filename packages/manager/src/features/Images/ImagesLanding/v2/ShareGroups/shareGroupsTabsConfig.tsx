@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { APIError } from '@linode/api-v4';
-import type { HiddenProps } from '@linode/ui';
+import type { HiddenProps, SxProps } from '@linode/ui';
 import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
 
 export interface ShareGroupsViewTableColConfig {
@@ -59,32 +59,56 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
   },
 ];
 
+const COLUMN_WIDTHS = {
+  group: '20%',
+  description: '25%',
+  membersCount: '10%',
+  imagesCount: '10%',
+  created: '15%',
+  updated: '15%',
+  action: '5%',
+};
+
+const tableStyles: SxProps = {
+  flex: {
+    lg: '0 1 30%',
+    md: '0 1 20%',
+    sm: '100%',
+  },
+};
+
+
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   {
     name: 'Group',
     sortableProps: { label: 'label' },
+    style: { flex: '0 1 20%' },
   },
   {
     name: 'Description',
     sortableProps: { label: 'description' },
-    style: { flex: 2 },
+    style: { flex: '0 1 25%' },
   },
   {
     name: '# of members',
+    style: { flex: '0 1 10%' },
   },
   {
     name: '# of images',
     hidden: 'smDown',
+    style: { flex: '0 1 10%' },
   },
   {
     name: 'Created',
     sortableProps: { label: 'created' },
     hidden: 'lgDown',
+    style: { whiteSpace: 'nowrap', flex: '0 1 15%' },
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
     hidden: 'lgDown',
+    style: { whiteSpace: 'nowrap', flex: '0 1 15%' },
   },
 ];
 
