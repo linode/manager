@@ -365,7 +365,6 @@ export const DatabaseResize = () => {
     return !summaryText;
   }, [summaryText]);
 
-  console.log(summaryText, shouldSubmitBeDisabled)
   const handleNodeChange = (size: ClusterSize | undefined): void => {
     const selectedPlanTab = determineInitialPlanCategoryTab(
       displayTypes,

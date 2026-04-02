@@ -151,6 +151,7 @@ describe('database resize', () => {
         beta: false,
         enabled: true,
       },
+      databasePremium: true,
     };
 
     it('resize button should be disabled when no input is provided in the form', async () => {
