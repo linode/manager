@@ -1,10 +1,12 @@
 import {
   createIPv6Range,
+  getIP,
   getIPv6RangeInfo,
   getReservedIP,
   getReservedIPs,
   reserveIP,
   unReserveIP,
+  updateIP,
   updateReservedIP,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -55,6 +57,10 @@ export const networkingQueries = createQueryKeys('networking', {
     },
     queryKey: null,
   },
+  ip: (address: string) => ({
+    queryFn: () => getIP(address),
+    queryKey: [address],
+  }),
   reservedIPs: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getReservedIPs(params, filter),
     queryKey: [params, filter],
@@ -144,6 +150,26 @@ export const useCreateIPv6RangeMutation = () => {
           queryKey: linodeQueries.linodes.queryKey,
         });
       }
+    },
+  });
+};
+
+export const useUpdateIPMutation = (address: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IPAddress,
+    APIError[],
+    { address: string; rdns: null | string; reserved: boolean }
+  >({
+    mutationFn: (data) => updateIP(address, data.rdns, data.reserved),
+    onSuccess(ip) {
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
+      queryClient.setQueryData<IPAddress>(
+        networkingQueries.ip(address).queryKey,
+        ip,
+      );
     },
   });
 };

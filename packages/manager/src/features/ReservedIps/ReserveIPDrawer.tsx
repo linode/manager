@@ -15,6 +15,7 @@ import {
   useRegionsQuery,
   useReservedIPTypesQuery,
   useReserveIPMutation,
+  useUpdateIPMutation,
   useUpdateReservedIPMutation,
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
@@ -42,7 +43,7 @@ import {
 
 import { RESERVE_IP_DESCRIPTION, RESERVED_IPS_DOCS_LINK } from './constants';
 
-import type { IPAddress } from '@linode/api-v4';
+import type { APIError, IPAddress } from '@linode/api-v4';
 import type { TagOption } from 'src/components/TagsInput/TagsInput';
 
 export type ReserveIPDrawerMode = 'create' | 'edit' | 'reserve';
@@ -55,7 +56,11 @@ export interface ReserveIPDrawerProps {
   ipAddress?: IPAddress;
   mode: ReserveIPDrawerMode;
   onClose: () => void;
+  onSuccess?: (ip: IPAddress) => void;
   open: boolean;
+  // Optional region text to display when mode is 'create'. This is to show region
+  // selected and disabled while reserving an IP during create Linode flow.
+  region?: string;
 }
 
 interface ReserveIPFormValues {
@@ -98,9 +103,13 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
   const { mutateAsync: updateReservedIP } = useUpdateReservedIPMutation(
     ipAddress?.address ?? ''
   );
+  const { mutateAsync: updateIP } = useUpdateIPMutation(
+    ipAddress?.address ?? ''
+  );
   const { enqueueSnackbar } = useSnackbar();
 
-  const isRegionDisabled = mode === 'edit' || mode === 'reserve';
+  const isRegionDisabled =
+    mode === 'edit' || mode === 'reserve' || Boolean(props.region);
 
   const {
     control,
@@ -111,13 +120,14 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
   } = useForm<ReserveIPFormValues>({
     mode: 'onChange',
     values: {
-      region: ipAddress?.region ?? '',
+      region: props.region ?? ipAddress?.region ?? '',
       tags: (ipAddress?.tags ?? []).map((t) => ({ label: t, value: t })),
     },
   });
 
   const isSubmitDisabled =
-    mode === 'create' ? !isValid : mode === 'edit' ? !isDirty : false;
+    isSubmitting ||
+    (mode === 'create' ? !isValid : mode === 'edit' ? !isDirty : false);
 
   const selectedRegion = useWatch({ control, name: 'region' });
 
@@ -128,29 +138,47 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
 
   const handleClose = () => {
     onClose();
-    reset();
   };
 
   const onSubmit = async (values: ReserveIPFormValues) => {
     try {
       const tags = values.tags.map((tag) => tag.value);
 
-      if (mode === 'create') {
-        const created = await reserveIP({ region: values.region, tags });
-        enqueueSnackbar(`${created.address} has been reserved`, {
-          variant: 'success',
-        });
-      } else {
-        await updateReservedIP({ address: ipAddress?.address ?? '', tags });
-        const verb = mode === 'reserve' ? 'reserved' : 'updated';
-        enqueueSnackbar(`${ipAddress?.address} has been ${verb}`, {
-          variant: 'success',
-        });
+      switch (mode) {
+        case 'create':
+          const created = await reserveIP({ region: values.region, tags });
+          enqueueSnackbar(`${created.address} has been reserved`, {
+            variant: 'success',
+          });
+          props.onSuccess?.(created);
+          break;
+        case 'edit':
+          const edited = await updateReservedIP({
+            address: ipAddress?.address ?? '',
+            tags,
+          });
+          enqueueSnackbar(`${ipAddress?.address} has been updated`, {
+            variant: 'success',
+          });
+          props.onSuccess?.(edited);
+          break;
+        case 'reserve':
+          const reserved = await updateIP({
+            address: ipAddress?.address ?? '',
+            rdns: ipAddress?.rdns ?? null,
+            reserved: true,
+          });
+          enqueueSnackbar(`${ipAddress?.address} has been reserved`, {
+            variant: 'success',
+          });
+          props.onSuccess?.(reserved);
+          break;
+        default:
+          return;
       }
-
       handleClose();
     } catch (apiErrors) {
-      for (const error of apiErrors as { field?: string; reason: string }[]) {
+      for (const error of apiErrors as APIError[]) {
         if (error?.field === 'region' || error?.field === 'tags') {
           setError(error.field, { message: error.reason });
         } else {
@@ -170,13 +198,18 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
       {isLoading ? (
         <CircleProgress />
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          aria-label={reserveIPDrawerConfig[mode].title}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Stack spacing={2.5}>
-            <Typography variant="body1">
-              {RESERVE_IP_DESCRIPTION}
-              <br />
-              <Link to={RESERVED_IPS_DOCS_LINK}>Learn more</Link>.
-            </Typography>
+            {mode !== 'edit' && (
+              <Typography variant="body1">
+                {RESERVE_IP_DESCRIPTION}
+                <br />
+                <Link to={RESERVED_IPS_DOCS_LINK}>Learn more</Link>.
+              </Typography>
+            )}
 
             {errors.root?.message && (
               <Notice spacingTop={8} variant="error">
@@ -186,11 +219,15 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
 
             {(mode === 'reserve' || mode === 'edit') && ipAddress?.address && (
               <Box>
-                <Typography>IP Address</Typography>
+                <Typography sx={{ fontWeight: 'bold' }} variant="body2">
+                  IP Address
+                </Typography>
                 <Typography
+                  component="span"
                   sx={(theme) => ({
                     color: theme.palette.text.primary,
-                    marginTop: `${theme.spacingFunction(8)} !important`,
+                    display: 'block',
+                    marginTop: theme.spacingFunction(8),
                   })}
                 >
                   {ipAddress.address}
@@ -238,7 +275,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
                 variant="body1"
               >
                 {`$${renderMonthlyPriceToCorrectDecimalPlace(
-                  reservedIPPrice ? Number(reservedIPPrice) : undefined
+                  Number(reservedIPPrice)
                 )} / mo.`}
               </Typography>
             )}

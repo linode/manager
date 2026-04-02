@@ -15,6 +15,7 @@ const queryMocks = vi.hoisted(() => ({
   useReserveIPMutation: vi.fn(),
   useReservedIPTypesQuery: vi.fn(),
   useUpdateReservedIPMutation: vi.fn(),
+  useUpdateIPMutation: vi.fn(),
 }));
 
 vi.mock('@linode/queries', async (importOriginal) => ({
@@ -23,6 +24,7 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   useReserveIPMutation: queryMocks.useReserveIPMutation,
   useReservedIPTypesQuery: queryMocks.useReservedIPTypesQuery,
   useUpdateReservedIPMutation: queryMocks.useUpdateReservedIPMutation,
+  useUpdateIPMutation: queryMocks.useUpdateIPMutation,
 }));
 
 vi.mock('@linode/shared', async (importOriginal) => ({
@@ -43,6 +45,7 @@ const mockReserveIP = vi
     ipAddressFactory.build({ address: '192.0.2.1', reserved: true })
   );
 const mockUpdateReservedIP = vi.fn().mockResolvedValue({});
+const mockUpdateIP = vi.fn().mockResolvedValue({});
 const mockOnClose = vi.fn();
 
 const defaultMocks = () => {
@@ -60,6 +63,9 @@ const defaultMocks = () => {
   queryMocks.useUpdateReservedIPMutation.mockReturnValue({
     mutateAsync: mockUpdateReservedIP,
   });
+  queryMocks.useUpdateIPMutation.mockReturnValue({
+    mutateAsync: mockUpdateIP,
+  });
 };
 
 beforeEach(() => {
@@ -67,6 +73,7 @@ beforeEach(() => {
   mockOnClose.mockClear();
   mockReserveIP.mockClear();
   mockUpdateReservedIP.mockClear();
+  mockUpdateIP.mockClear();
 });
 
 const RESERVE_IP_TITLE = 'Reserve an IP Address';
@@ -351,7 +358,7 @@ describe('ReserveIPDrawer - reserve mode', () => {
     ).toBeEnabled();
   });
 
-  it('calls updateReservedIP mutation and closes on submit', async () => {
+  it('calls updatedIP mutation and closes on submit', async () => {
     renderWithTheme(
       <ReserveIPDrawer
         ipAddress={existingIP}
@@ -366,7 +373,7 @@ describe('ReserveIPDrawer - reserve mode', () => {
     );
 
     await waitFor(() => {
-      expect(mockUpdateReservedIP).toHaveBeenCalled();
+      expect(mockUpdateIP).toHaveBeenCalled();
     });
     expect(mockOnClose).toHaveBeenCalled();
   });
