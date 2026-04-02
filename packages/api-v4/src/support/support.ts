@@ -165,3 +165,11 @@ export const getLiveChatToken = (params?: Params, filter?: Filter) =>
     setParams(params),
     setXFilter(filter),
   );
+
+export const getLiveChatStatus = (params?: Params, filter?: Filter) =>
+  Request<{ live_chat_available: string }>(
+    setURL(`${BETA_API_ROOT}/support/live_chat_available/`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  );
