@@ -38,6 +38,8 @@ export const loadEnvironmentConfig: CypressPlugin = (
   return {
     ...config,
     expose: {
+      ...config.expose,
+      ...(conf.parsed ?? []),
       ...process.env,
     },
     env: {
