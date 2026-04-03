@@ -38,6 +38,7 @@ import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
   RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
   RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
 } from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
@@ -115,18 +116,17 @@ export const DatabaseResize = () => {
     (type: DatabaseType) => type.id === database.type
   );
 
-  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
-    dbTypes,
-    currentPlanType?.class
-  );
+  const { isGenerationalPlansEnabled, hasG7DedicatedPlans } =
+    useIsGenerationalPlansEnabled(dbTypes, currentPlanType?.class);
 
   const isDisabledSharedTab = database.cluster_size === 2;
 
   // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
-  const premiumRestrictedTabsCopy =
-    currentPlanType?.class === 'premium'
+  const premiumRestrictedTabsCopy = hasG7DedicatedPlans
+    ? 'Premium CPUs are now called G7 Dedicated plans.'
+    : currentPlanType?.class === 'premium'
       ? RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT
-      : 'Premium CPUs are now called G7 Dedicated plans.';
+      : RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT;
 
   // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
   const restrictPlanTabs = () => {
