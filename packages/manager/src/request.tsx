@@ -4,7 +4,10 @@ import { AxiosHeaders } from 'axios';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
+import {
+  clearAllAuthDataFromLocalStorage,
+  redirectToLogin,
+} from './OAuth/oauth';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
@@ -33,7 +36,7 @@ export type LinodeError = { errors: APIError[] };
  */
 let isRedirectingToLogin = false;
 
-export const handleError = (
+export const handleError = async (
   error: AxiosError<LinodeError>,
   store: ApplicationStore
 ) => {
@@ -45,8 +48,8 @@ export const handleError = (
     window.location.pathname !== '/oauth/callback'
   ) {
     isRedirectingToLogin = true;
-    clearAuthDataFromLocalStorage();
-    redirectToLogin();
+    clearAllAuthDataFromLocalStorage();
+    await redirectToLogin();
   }
 
   const status: number = error.response?.status ?? 0;

@@ -42,7 +42,7 @@ function clearNonceAndCodeVerifierFromLocalStorage() {
   storage.authentication.codeVerifier.clear();
 }
 
-function clearAllAuthDataFromLocalStorage() {
+export function clearAllAuthDataFromLocalStorage() {
   clearNonceAndCodeVerifierFromLocalStorage();
   clearAuthDataFromLocalStorage();
 }
