@@ -42,7 +42,7 @@ const makeDomainCreateReq = (domainPayload?: CreateDomainPayload) => {
     },
     body: domainData,
     method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
+    url: Cypress.expose('REACT_APP_API_ROOT') + '/domains',
   });
 };
 
