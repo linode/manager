@@ -15,6 +15,7 @@ import { DeleteImageDialog } from '../../DeleteImageDialog';
 import { EditImageDrawer } from '../../EditImageDrawer';
 import { ManageImageReplicasForm } from '../../ImageRegions/ManageImageRegionsForm';
 import { RebuildImageDrawer } from '../../RebuildImageDrawer';
+import { ViewSharedImageDrawer } from '../ShareGroups/ViewSharedImageDrawer';
 import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 import { ImagesView } from './ImagesView';
 
@@ -56,6 +57,10 @@ export const ImageLibraryTabs = () => {
       search: (prev) => prev,
       to: '/images/image-library/$imageType/$imageId/$action',
     });
+  };
+
+  const handleView = (image: Image) => {
+    actionHandler(image, 'view');
   };
 
   const handleEdit = (image: Image) => {
@@ -106,6 +111,7 @@ export const ImageLibraryTabs = () => {
     onEdit: handleEdit,
     onManageRegions: handleManageRegions,
     onRebuild: handleRebuild,
+    onView: handleView,
   };
 
   const subTabIndex = getSubTabIndex(subTabs, imageTypeParams?.imageType);
@@ -149,6 +155,13 @@ export const ImageLibraryTabs = () => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
+      <ViewSharedImageDrawer
+        image={selectedImage}
+        imageError={selectedImageError}
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={imageActionParams?.action === 'view'}
+      />
       <EditImageDrawer
         image={selectedImage}
         imageError={selectedImageError}
