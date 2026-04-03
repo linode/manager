@@ -56,12 +56,14 @@ export const ViewSharedImageDrawer = (props: Props) => {
         {image?.capabilities?.includes('distributed-sites') ? (
           <Stack alignItems="center" direction="row" spacing={0.5}>
             <Lock />
-            <Typography>Encrypted</Typography>
+            <Typography data-testid="encrypted-indicator">Encrypted</Typography>
           </Stack>
         ) : (
           <Stack alignItems="center" direction="row" spacing={0.5}>
             <Unlock />
-            <Typography>Not Encrypted</Typography>
+            <Typography data-testid="not-encrypted-indicator">
+              Not Encrypted
+            </Typography>
           </Stack>
         )}
         {image?.capabilities?.includes('cloud-init') && (
