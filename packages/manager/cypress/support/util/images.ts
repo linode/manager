@@ -13,7 +13,7 @@ const disallowedImageIds: string[] = [];
  *
  * Retrieved via Linode APIv4 during Cypress start-up.
  */
-export const images: Image[] = Cypress.env('cloudManagerImages') as Image[];
+export const images: Image[] = Cypress.expose('cloudManagerImages') as Image[];
 
 /**
  * Returns a known Cloud Manager image at random, or returns a user-chosen

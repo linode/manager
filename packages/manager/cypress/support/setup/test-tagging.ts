@@ -14,7 +14,7 @@ import type { Runnable, Test } from 'mocha';
 cy.tag = tag;
 cy.addTag = addTag;
 
-const query = Cypress.env('CY_TEST_TAGS') ?? '';
+const query = Cypress.expose('CY_TEST_TAGS') ?? '';
 
 /**
  *
