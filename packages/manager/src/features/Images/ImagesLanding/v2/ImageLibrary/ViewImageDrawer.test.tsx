@@ -56,6 +56,7 @@ const defaultProps = {
   image: baseImage,
   imageError: null,
   isFetching: false,
+  isSharedImage: true,
   onClose,
   open: true,
   pendoIDs: {} as typeof VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS,
@@ -91,7 +92,7 @@ describe('ViewImageDrawer', () => {
       <ViewImageDrawer {...defaultProps} />
     );
 
-    expect(getByText('my-share-group')).toBeVisible();
+    expect(getByText(/my-share-group/)).toBeVisible();
   });
 
   it('renders original image size and total replica size', () => {

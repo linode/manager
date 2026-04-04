@@ -16,9 +16,9 @@ import { EditImageDrawer } from '../../EditImageDrawer';
 import { ManageImageReplicasForm } from '../../ImageRegions/ManageImageRegionsForm';
 import { RebuildImageDrawer } from '../../RebuildImageDrawer';
 import { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
-import { ViewImageDrawer } from '../ShareGroups/ViewImageDrawer';
 import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 import { ImagesView } from './ImagesView';
+import { ViewImageDrawer } from './ViewImageDrawer';
 
 import type { Handlers as ImageHandlers } from '../../ImagesActionMenu';
 import type { Image } from '@linode/api-v4';

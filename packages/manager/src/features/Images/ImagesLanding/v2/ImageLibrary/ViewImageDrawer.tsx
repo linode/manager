@@ -49,8 +49,11 @@ export const ViewImageDrawer = (props: Props) => {
           <StyledLabel>Label:</StyledLabel> {image?.label}
         </Typography>
         <Typography variant="body1">
-          <StyledLabel>Image ID:</StyledLabel>{' '}
-          <CopyTooltip copyableText text={image?.id ?? ''} />
+          <StyledLabel>Image ID:</StyledLabel> {image?.id}
+          <StyledCopyIcon
+            data-pendo-id={pendoIDs.copyImageIdIcon}
+            text={image?.id ?? ''}
+          />
         </Typography>
         {isSharedImage && (
           <Typography variant="body1">
@@ -87,37 +90,33 @@ export const ViewImageDrawer = (props: Props) => {
           </Stack>
         )}
         {image?.description && (
-          <Typography variant="body1">
-            <Stack direction="column" spacing={1}>
-              <StyledLabel>Description</StyledLabel>
-              {image.description}
-            </Stack>
-          </Typography>
+          <Stack direction="column" spacing={1}>
+            <StyledLabel>Description</StyledLabel>
+            <Typography variant="body1">{image.description}</Typography>
+          </Stack>
         )}
-        <Typography variant="body1">
-          <StyledLabel>Replicated in the following regions:</StyledLabel>{' '}
-          {image?.regions.map((region) => {
-            const countryAndLabelObject = getCountryAndLabelFromImageRegion(
-              regions ?? [],
-              region
-            );
+        <StyledLabel>Replicated in the following regions:</StyledLabel>{' '}
+        {image?.regions.map((region) => {
+          const countryAndLabelObject = getCountryAndLabelFromImageRegion(
+            regions ?? [],
+            region
+          );
 
-            const imageCountry = countryAndLabelObject.country ?? 'us';
-            const regionLabel = countryAndLabelObject.label ?? 'Unknown';
+          const imageCountry = countryAndLabelObject.country ?? 'us';
+          const regionLabel = countryAndLabelObject.label ?? 'Unknown';
 
-            return (
-              <Stack
-                alignItems="center"
-                direction="row"
-                key={region.region}
-                marginTop={1}
-              >
-                <Flag country={imageCountry} />
-                <span style={{ paddingLeft: 8 }}>{regionLabel}</span>
-              </Stack>
-            );
-          })}
-        </Typography>
+          return (
+            <Stack
+              alignItems="center"
+              direction="row"
+              key={region.region}
+              marginTop={1}
+            >
+              <Flag country={imageCountry} />
+              <span style={{ paddingLeft: 8 }}>{regionLabel}</span>
+            </Stack>
+          );
+        })}
       </Stack>
       <ActionsPanel
         data-pendo-id={pendoIDs.closeButton}
@@ -142,4 +141,13 @@ const StyledCloudInitIcon = styled(CloudInitIcon, {
 })(() => ({
   height: 16,
   width: 16,
+}));
+
+const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
+  '& svg': {
+    height: 12,
+    top: 1,
+    width: 12,
+  },
+  marginLeft: theme.spacingFunction(4),
 }));
