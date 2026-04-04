@@ -9,18 +9,29 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Flag } from 'src/components/Flag';
 import { getCountryAndLabelFromImageRegion } from 'src/features/Images/utils';
 
+import type { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
 import type { APIError, Image } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
   imageError?: APIError[] | null;
   isFetching?: boolean;
+  isSharedImage?: boolean;
   onClose: () => void;
   open: boolean;
+  pendoIDs: typeof VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS;
 }
 
-export const ViewSharedImageDrawer = (props: Props) => {
-  const { imageError, isFetching, onClose, open, image } = props;
+export const ViewImageDrawer = (props: Props) => {
+  const {
+    imageError,
+    isFetching,
+    isSharedImage,
+    onClose,
+    open,
+    pendoIDs,
+    image,
+  } = props;
 
   const { data: regions } = useRegionsQuery();
 
@@ -30,7 +41,8 @@ export const ViewSharedImageDrawer = (props: Props) => {
       isFetching={isFetching}
       onClose={onClose}
       open={open}
-      title="View shared image details"
+      pendoId={pendoIDs.xButton}
+      title={`View ${isSharedImage ? 'shared ' : ''}image details`}
     >
       <Stack spacing={2}>
         <Typography variant="body1">
@@ -40,10 +52,12 @@ export const ViewSharedImageDrawer = (props: Props) => {
           <StyledLabel>Image ID:</StyledLabel>{' '}
           <CopyTooltip copyableText text={image?.id ?? ''} />
         </Typography>
-        <Typography variant="body1">
-          <StyledLabel>Share group:</StyledLabel>{' '}
-          {image?.image_sharing?.shared_by?.sharegroup_label}
-        </Typography>
+        {isSharedImage && (
+          <Typography variant="body1">
+            <StyledLabel>Share group:</StyledLabel>{' '}
+            {image?.image_sharing?.shared_by?.sharegroup_label}
+          </Typography>
+        )}
         <Typography variant="body1">
           <StyledLabel>Original image size:</StyledLabel> {image?.size} MB
         </Typography>
@@ -106,6 +120,7 @@ export const ViewSharedImageDrawer = (props: Props) => {
         </Typography>
       </Stack>
       <ActionsPanel
+        data-pendo-id={pendoIDs.closeButton}
         secondaryButtonProps={{
           'data-testid': 'cancel',
           label: 'Close',

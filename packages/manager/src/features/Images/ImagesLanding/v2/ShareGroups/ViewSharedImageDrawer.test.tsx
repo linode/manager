@@ -4,7 +4,9 @@ import React from 'react';
 import { imageFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ViewSharedImageDrawer } from './ViewSharedImageDrawer';
+import { ViewImageDrawer } from './ViewImageDrawer';
+
+import type { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
 
 const mockRegions = regionFactory.buildList(2, {
   id: 'us-east',
@@ -56,12 +58,13 @@ const defaultProps = {
   isFetching: false,
   onClose,
   open: true,
+  pendoIDs: {} as typeof VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS,
 };
 
-describe('ViewSharedImageDrawer', () => {
+describe('ViewImageDrawer', () => {
   it('renders the drawer title', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('View shared image details')).toBeVisible();
@@ -69,7 +72,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders image label', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('my-test-image')).toBeVisible();
@@ -77,7 +80,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders the image ID', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('private/123')).toBeVisible();
@@ -85,7 +88,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders the share group label', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('my-share-group')).toBeVisible();
@@ -93,7 +96,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders original image size and total replica size', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText(/1500 MB/)).toBeVisible();
@@ -102,7 +105,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders created date', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('2024-01-15T00:00:00')).toBeVisible();
@@ -110,7 +113,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders Encrypted when image has the distributed-sites capability', () => {
     const { getByTestId, queryByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByTestId('encrypted-indicator')).toBeVisible();
@@ -124,7 +127,7 @@ describe('ViewSharedImageDrawer', () => {
     });
 
     const { getByTestId, queryByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} image={image} />
+      <ViewImageDrawer {...defaultProps} image={image} />
     );
 
     expect(getByTestId('not-encrypted-indicator')).toBeVisible();
@@ -138,7 +141,7 @@ describe('ViewSharedImageDrawer', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} image={image} />
+      <ViewImageDrawer {...defaultProps} image={image} />
     );
 
     expect(getByText('Supports Metadata service via Cloud-Init')).toBeVisible();
@@ -146,7 +149,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('does not render the Cloud-Init metadata notice when image lacks the cloud-init capability', () => {
     const { queryByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(queryByText('Supports Metadata service via Cloud-Init')).toBeNull();
@@ -154,7 +157,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders the description when present', () => {
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('A test image description')).toBeVisible();
@@ -164,7 +167,7 @@ describe('ViewSharedImageDrawer', () => {
     const image = imageFactory.build({ ...baseImage, description: null });
 
     const { queryByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} image={image} />
+      <ViewImageDrawer {...defaultProps} image={image} />
     );
 
     expect(queryByText('Description')).toBeNull();
@@ -182,7 +185,7 @@ describe('ViewSharedImageDrawer', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('Newark, NJ')).toBeVisible();
@@ -192,7 +195,7 @@ describe('ViewSharedImageDrawer', () => {
     queryMocks.useRegionsQuery.mockReturnValue({ data: [] });
 
     const { getByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     expect(getByText('Unknown')).toBeVisible();
@@ -200,7 +203,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('calls onClose when the Close button is clicked', async () => {
     const { getByTestId } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} />
+      <ViewImageDrawer {...defaultProps} />
     );
 
     getByTestId('cancel').click();
@@ -210,7 +213,7 @@ describe('ViewSharedImageDrawer', () => {
 
   it('renders nothing in the drawer body when no image is provided', () => {
     const { queryByText } = renderWithTheme(
-      <ViewSharedImageDrawer {...defaultProps} image={undefined} />
+      <ViewImageDrawer {...defaultProps} image={undefined} />
     );
 
     expect(queryByText('my-test-image')).toBeNull();

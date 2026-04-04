@@ -15,7 +15,8 @@ import { DeleteImageDialog } from '../../DeleteImageDialog';
 import { EditImageDrawer } from '../../EditImageDrawer';
 import { ManageImageReplicasForm } from '../../ImageRegions/ManageImageRegionsForm';
 import { RebuildImageDrawer } from '../../RebuildImageDrawer';
-import { ViewSharedImageDrawer } from '../ShareGroups/ViewSharedImageDrawer';
+import { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
+import { ViewImageDrawer } from '../ShareGroups/ViewImageDrawer';
 import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 import { ImagesView } from './ImagesView';
 
@@ -155,12 +156,14 @@ export const ImageLibraryTabs = () => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
-      <ViewSharedImageDrawer
+      <ViewImageDrawer
         image={selectedImage}
         imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
+        isSharedImage={imageActionParams?.imageType === 'shared-with-me'}
         onClose={handleCloseDialog}
         open={imageActionParams?.action === 'view'}
+        pendoIDs={VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS}
       />
       <EditImageDrawer
         image={selectedImage}
