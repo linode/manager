@@ -3,6 +3,7 @@ import {
   importZoneSchema,
   updateDomainSchema,
 } from '@linode/validation/lib/domains.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -11,8 +12,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   CloneDomainPayload,
   CreateDomainPayload,
   Domain,
@@ -30,7 +32,7 @@ export const getDomains = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/domains`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -41,7 +43,7 @@ export const getDomains = (params?: Params, filter?: Filter) =>
 export const getDomain = (domainId: number) =>
   Request<Domain>(
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -53,7 +55,7 @@ export const createDomain = (data: CreateDomainPayload) =>
   Request<Domain>(
     setData(data, createDomainSchema),
     setURL(`${API_ROOT}/domains`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -66,7 +68,7 @@ export const updateDomain = (domainId: number, data: UpdateDomainPayload) =>
   Request<Domain>(
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}`),
     setMethod('PUT'),
-    setData(data, updateDomainSchema)
+    setData(data, updateDomainSchema),
   );
 
 /**
@@ -78,7 +80,7 @@ export const updateDomain = (domainId: number, data: UpdateDomainPayload) =>
 export const deleteDomain = (domainId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -91,7 +93,7 @@ export const cloneDomain = (domainId: number, data: CloneDomainPayload) =>
   Request<Domain>(
     setData(data),
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}/clone`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -104,7 +106,7 @@ export const importZone = (data: ImportZonePayload) =>
   Request<Domain>(
     setData(data, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -115,5 +117,5 @@ export const importZone = (data: ImportZonePayload) =>
 export const getDNSZoneFile = (domainId: number) =>
   Request<ZoneFile>(
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}/zone-file`),
-    setMethod('GET')
+    setMethod('GET'),
   );

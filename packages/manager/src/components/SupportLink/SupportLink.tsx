@@ -1,40 +1,56 @@
 import * as React from 'react';
-import { Link, LinkProps } from 'react-router-dom';
 
-import {
+import { Link } from 'src/components/Link';
+
+import type {
   EntityType,
+  FormPayloadValues,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-interface SupportLinkProps {
+export interface SupportLinkProps {
   description?: string;
   entity?: EntityForTicketDetails;
-  onClick?: LinkProps['onClick'];
+  formPayloadValues?: FormPayloadValues;
+  onClick?: () => void;
   text: string;
   ticketType?: TicketType;
   title?: string;
 }
 
 export interface EntityForTicketDetails {
-  id: number;
+  id?: number;
   type: EntityType;
 }
 
 const SupportLink = (props: SupportLinkProps) => {
-  const { description, entity, onClick, text, ticketType, title } = props;
+  const {
+    description,
+    entity,
+    formPayloadValues,
+    onClick,
+    text,
+    ticketType,
+    title,
+  } = props;
+
   return (
     <Link
-      to={{
-        pathname: '/support/tickets',
-        state: {
+      onClick={onClick}
+      search={{
+        dialogOpen: true,
+      }}
+      state={(prev) => {
+        return {
+          ...prev,
           description,
           entity,
-          open: true,
+          formPayloadValues,
           ticketType,
           title,
-        },
+        };
       }}
-      onClick={onClick}
+      to="/support/tickets/open"
     >
       {text}
     </Link>

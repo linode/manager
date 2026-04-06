@@ -1,12 +1,9 @@
+import { linodeFactory, profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import {
-  accountSettingsFactory,
-  linodeFactory,
-  profileFactory,
-} from 'src/factories';
+import { accountSettingsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BackupsCTA } from './BackupsCTA';
@@ -14,21 +11,21 @@ import { BackupsCTA } from './BackupsCTA';
 describe('BackupsCTA', () => {
   it('should render if all conditions are met', async () => {
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ restricted: false })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ restricted: false }));
       }),
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(ctx.json(accountSettingsFactory.build({ managed: false })));
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(
+          accountSettingsFactory.build({ managed: false })
+        );
       }),
-      rest.get('*/profile/preferences', (req, res, ctx) => {
-        return res(ctx.json(accountSettingsFactory.build({})));
+      http.get('*/profile/preferences', () => {
+        return HttpResponse.json(accountSettingsFactory.build({}));
       }),
-      rest.get('*/linode/instances', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              linodeFactory.buildList(5, { backups: { enabled: false } })
-            )
+      http.get('*/linode/instances', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            linodeFactory.buildList(5, { backups: { enabled: false } })
           )
         );
       })

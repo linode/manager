@@ -3,8 +3,10 @@ import React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Tab, TabLinkList } from './TabLinkList'; // Import your component and Tab type
+import { TabLinkList } from './TabLinkList'; // Import your component and Tab type
 import { Tabs } from './Tabs';
+
+import type { Tab } from './TabLinkList';
 
 describe('TabLinkList', () => {
   const tabs: Tab[] = [
@@ -20,9 +22,8 @@ describe('TabLinkList', () => {
           <TabLinkList tabs={tabs} />
         </Tabs>,
         {
-          MemoryRouter: {
-            initialEntries: [{ pathname: '/tab-1' }],
-          },
+          initialRoute: '/tab-1',
+          initialEntries: ['/tab-1'],
         }
       )
     );
@@ -38,9 +39,8 @@ describe('TabLinkList', () => {
           <TabLinkList noLink tabs={tabs} />
         </Tabs>,
         {
-          MemoryRouter: {
-            initialEntries: [{ pathname: '/tab-1' }],
-          },
+          initialRoute: '/tab-1',
+          initialEntries: ['/tab-1'],
         }
       )
     );
@@ -58,9 +58,8 @@ describe('TabLinkList', () => {
           <TabLinkList tabs={tabs} />
         </Tabs>,
         {
-          MemoryRouter: {
-            initialEntries: [{ pathname: '/tab-1' }],
-          },
+          initialRoute: '/tab-1',
+          initialEntries: ['/tab-1'],
         }
       )
     );

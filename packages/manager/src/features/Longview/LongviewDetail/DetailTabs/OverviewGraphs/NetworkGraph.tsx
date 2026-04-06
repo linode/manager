@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
@@ -10,8 +9,9 @@ import {
 } from 'src/features/Longview/shared/utilities';
 
 import { convertData } from '../../../shared/formatters';
-import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+
+import type { GraphProps } from './types';
 
 export const NetworkGraph = React.memo((props: GraphProps) => {
   const {
@@ -34,7 +34,7 @@ export const NetworkGraph = React.memo((props: GraphProps) => {
   );
 
   const networkData = React.useMemo(
-    () => sumNetwork(pathOr({}, ['Interface'], data.Network)),
+    () => sumNetwork(data.Network?.Interface ?? {}),
     [data.Network]
   );
 
@@ -53,21 +53,21 @@ export const NetworkGraph = React.memo((props: GraphProps) => {
 
   return (
     <LongviewLineGraph
+      ariaLabel="Network Usage Graph"
       data={[
         {
-          backgroundColor: theme.graphs.network.inbound,
+          backgroundColor: theme.graphs.darkGreen,
           borderColor: 'transparent',
           data: _convertData(rx_bytes, start, end),
           label: 'Inbound',
         },
         {
-          backgroundColor: theme.graphs.network.outbound,
+          backgroundColor: theme.graphs.lightGreen,
           borderColor: 'transparent',
           data: _convertData(tx_bytes, start, end),
           label: 'Outbound',
         },
       ]}
-      ariaLabel="Network Usage Graph"
       error={error}
       formatData={formatNetwork}
       formatTooltip={formatNetworkTooltip}

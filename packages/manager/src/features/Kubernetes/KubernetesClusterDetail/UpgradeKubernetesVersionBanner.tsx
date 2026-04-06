@@ -1,23 +1,24 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
+import { useKubernetesTieredVersionsQuery } from 'src/queries/kubernetes';
 
-import UpgradeVersionModal from '../UpgradeVersionModal';
 import { getNextVersion } from '../kubeUtils';
+import UpgradeVersionModal from '../UpgradeVersionModal';
+
+import type { KubernetesTier } from '@linode/api-v4';
 
 interface Props {
   clusterID: number;
-  clusterLabel: string;
+  clusterTier: KubernetesTier;
   currentVersion: string;
 }
 
 export const UpgradeKubernetesVersionBanner = (props: Props) => {
-  const { clusterID, clusterLabel, currentVersion } = props;
-  const { data: versions } = useKubernetesVersionQuery();
+  const { clusterID, clusterTier, currentVersion } = props;
+
+  const { data: versions } = useKubernetesTieredVersionsQuery(clusterTier);
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -32,27 +33,17 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       {nextVersion ? (
         <DismissibleBanner
           actionButton={actionButton}
-          variant="info"
+          forceImportantIconVerticalCenter
           preferenceKey={`${clusterID}-${currentVersion}`}
+          variant="info"
         >
-          <Grid
-            alignItems="center"
-            container
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Grid>
-              <Typography>
-                A new version of Kubernetes is available ({nextVersion}).
-              </Typography>
-            </Grid>
-          </Grid>
+          <Typography>
+            A new version of Kubernetes is available ({nextVersion}).
+          </Typography>
         </DismissibleBanner>
       ) : null}
       <UpgradeVersionModal
         clusterID={clusterID}
-        clusterLabel={clusterLabel}
-        currentVersion={currentVersion}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
       />

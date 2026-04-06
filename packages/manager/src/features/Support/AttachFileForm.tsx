@@ -1,12 +1,11 @@
+import { Button } from '@linode/ui';
 import AttachFile from '@mui/icons-material/AttachFile';
-import { remove } from 'ramda';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-
 import { AttachFileListItem } from './AttachFileListItem';
-import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';
+
+import type { FileAttachment } from './index';
 
 interface Props {
   files: FileAttachment[];
@@ -34,10 +33,16 @@ export const AttachFileForm = (props: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const removeFile = (fileIdx: number) => {
-    const newFiles = remove(fileIdx, 1, files);
+    // copy the files array
+    const newFiles = [...files];
+
+    // remove the file
+    newFiles.splice(fileIdx, 1);
+
     if (inputRef.current) {
       inputRef.current.value = '';
     }
+
     // Send the updated file list to the parent component's state
     updateFiles(newFiles);
   };
@@ -60,12 +65,14 @@ export const AttachFileForm = (props: Props) => {
         type="file"
       />
       <Button
-        sx={(theme) => ({
-          marginTop: theme.spacing(1),
-        })}
         buttonType="secondary"
         compactX
         onClick={clickAttachButton}
+        sx={(theme) => ({
+          display: 'flex',
+          justifyContent: 'flex-start',
+          marginTop: theme.spacing(1),
+        })}
       >
         <AttachFile />
         Attach a file

@@ -1,15 +1,13 @@
-/* 
+/*
 
 This component allows for dynamism in what is displayed as the tab/window title depending
-on where the user is in the application. Example: "Linodes | Akamai Cloud Manager" when on 
+on where the user is in the application. Example: "Linodes | Akamai Cloud Manager" when on
 the Linodes landing page. More context: https://github.com/linode/manager/pull/9406
 
 */
 
-import { reverse } from 'ramda';
+import { usePrevious } from '@linode/utilities';
 import * as React from 'react';
-
-import { usePrevious } from 'src/hooks/usePrevious';
 
 interface DocumentTitleSegmentsContext {
   appendSegment: (segment: string) => void;
@@ -27,13 +25,14 @@ const DocumentTitleSegmentsProvider = documentTitleSegments.Provider;
 
 const DocumentTitleSegmentsConsumer = documentTitleSegments.Consumer;
 
-interface Props {
+interface DocumentTitleSegmentProps {
   segment: string;
 }
+interface InnerDocumentTitleSegmentProps
+  extends DocumentTitleSegmentsContext,
+    DocumentTitleSegmentProps {}
 
-const InnerDocumentTitleSegment = (
-  props: Props & DocumentTitleSegmentsContext
-) => {
+const InnerDocumentTitleSegment = (props: InnerDocumentTitleSegmentProps) => {
   const { appendSegment, removeSegment, segment } = props;
 
   const prevSegment = usePrevious(segment) ?? '';
@@ -52,7 +51,7 @@ const InnerDocumentTitleSegment = (
   return null;
 };
 
-export const DocumentTitleSegment = (props: Props) => {
+export const DocumentTitleSegment = (props: DocumentTitleSegmentProps) => {
   const { segment } = props;
 
   return (
@@ -64,34 +63,34 @@ export const DocumentTitleSegment = (props: Props) => {
   );
 };
 
-export const withDocumentTitleProvider = <Props extends {}>(
-  Component: React.ComponentType<Props>
-) => (props: Props) => {
-  let titleSegments: string[] = [];
+export const withDocumentTitleProvider =
+  <Props extends {}>(Component: React.ComponentType<Props>) =>
+  (props: Props) => {
+    let titleSegments: string[] = [];
 
-  const updateDocumentTitle = () => {
-    const newTitle = reverse(titleSegments).join(' | ');
-    document.title = newTitle;
+    const updateDocumentTitle = () => {
+      const newTitle = [...titleSegments].reverse().join(' | ');
+      document.title = newTitle;
+    };
+
+    const appendSegment: DocumentTitleSegmentsContext['appendSegment'] = (
+      segment: string
+    ) => {
+      titleSegments = [...titleSegments, segment];
+      updateDocumentTitle();
+    };
+
+    const removeSegment: DocumentTitleSegmentsContext['removeSegment'] = (
+      segment: string
+    ) => {
+      const targetIdx = titleSegments.findIndex((el) => el === segment);
+      titleSegments.splice(targetIdx, 1);
+      updateDocumentTitle();
+    };
+
+    return (
+      <DocumentTitleSegmentsProvider value={{ appendSegment, removeSegment }}>
+        <Component {...props} />
+      </DocumentTitleSegmentsProvider>
+    );
   };
-
-  const appendSegment: DocumentTitleSegmentsContext['appendSegment'] = (
-    segment: string
-  ) => {
-    titleSegments = [...titleSegments, segment];
-    updateDocumentTitle();
-  };
-
-  const removeSegment: DocumentTitleSegmentsContext['removeSegment'] = (
-    segment: string
-  ) => {
-    const targetIdx = titleSegments.findIndex((el) => el === segment);
-    titleSegments.splice(targetIdx, 1);
-    updateDocumentTitle();
-  };
-
-  return (
-    <DocumentTitleSegmentsProvider value={{ appendSegment, removeSegment }}>
-      <Component {...props} />
-    </DocumentTitleSegmentsProvider>
-  );
-};

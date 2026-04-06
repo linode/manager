@@ -3,9 +3,9 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import LinodePubKey from './LinodePubKey';
-import SSHAccessTable from './SSHAccessTable';
+import { SSHAccessTable } from './SSHAccessTable';
 
-const SSHAcess = () => {
+export const SSHAccess = () => {
   return (
     <>
       <DocumentTitleSegment segment="SSH Access" />
@@ -14,5 +14,3 @@ const SSHAcess = () => {
     </>
   );
 };
-
-export default SSHAcess;

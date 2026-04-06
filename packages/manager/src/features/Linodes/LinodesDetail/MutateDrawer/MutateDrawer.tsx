@@ -1,11 +1,7 @@
+import { ActionsPanel, Drawer, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 
 interface MutateInfo {
   disk: null | number;
@@ -19,6 +15,7 @@ interface Spec {
   currentAmount: number;
   label: string;
   newAmount: null | number;
+  unit: string;
 }
 
 interface ExtendedUpgradeInfo {
@@ -93,13 +90,8 @@ export class MutateDrawer extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      error,
-      estimatedTimeToUpgradeInMins,
-      handleClose,
-      loading,
-      open,
-    } = this.props;
+    const { error, estimatedTimeToUpgradeInMins, handleClose, loading, open } =
+      this.props;
 
     const { extendedUpgradeInfo } = this.state;
 
@@ -114,28 +106,26 @@ export class MutateDrawer extends React.Component<Props, State> {
           <HighmemG6ToG7 />
         ) : (
           <ul className="nonMUI-list">
-            {Object.keys(extendedUpgradeInfo).map((newSpec) => {
-              const {
-                currentAmount,
-                label,
-                newAmount,
-                unit,
-              } = extendedUpgradeInfo[newSpec];
+            {Object.keys(extendedUpgradeInfo).map(
+              (newSpec: keyof typeof extendedUpgradeInfo) => {
+                const { currentAmount, label, newAmount, unit } =
+                  extendedUpgradeInfo[newSpec];
 
-              if (newAmount === null) {
-                return null;
+                if (newAmount === null) {
+                  return null;
+                }
+                return (
+                  <ListItem key={label}>
+                    <Typography>
+                      {label} goes from {currentAmount} {unit} to{' '}
+                      <strong>
+                        {newAmount} {unit}
+                      </strong>
+                    </Typography>
+                  </ListItem>
+                );
               }
-              return (
-                <ListItem key={label}>
-                  <Typography>
-                    {label} goes from {currentAmount} {unit} to{' '}
-                    <strong>
-                      {newAmount} {unit}
-                    </strong>
-                  </Typography>
-                </ListItem>
-              );
-            })}
+            )}
           </ul>
         )}
         <Typography style={{ marginBottom: 16, marginTop: 32 }} variant="h2">

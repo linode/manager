@@ -1,50 +1,29 @@
-import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
-import { lensPath, set } from 'ramda';
+import { uploadAttachment } from '@linode/api-v4';
+import { useSupportTicketReplyMutation } from '@linode/queries';
+import { Accordion, Notice } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
+import { makeStyles } from 'tss-react/mui';
 
-import { Accordion } from 'src/components/Accordion';
-import { Notice } from 'src/components/Notice/Notice';
-import { useSupportTicketReplyMutation } from 'src/queries/support';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../../AttachFileForm';
-import { FileAttachment } from '../../index';
+import { updateFileAtIndex } from '../../ticketUtils';
 import { MarkdownReference } from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
 import { TabbedReply } from './TabbedReply';
 
+import type { FileAttachment } from '../../index';
+import type { APIError, SupportReply } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
+
 const useStyles = makeStyles()((theme: Theme) => ({
-  expPanelSummary: {
-    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    borderTop: `1px solid ${theme.bg.main}`,
-    paddingTop: theme.spacing(),
-  },
-  reference: {
-    [theme.breakpoints.down('sm')]: {
-      padding: `${theme.spacing(2)} !important`,
-    },
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: 4,
-      marginRight: 4,
-      marginTop: theme.spacing(7),
-      padding: `0 !important`,
-    },
-  },
-  referenceRoot: {
-    '& > p': {
-      marginBottom: theme.spacing(),
-    },
-  },
   replyContainer: {
     paddingLeft: theme.spacing(6),
     [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(6),
+      paddingLeft: theme.spacing(5),
     },
   },
 }));
@@ -117,20 +96,22 @@ export const ReplyContainer = (props: Props) => {
             return;
           }
 
-          setFiles(set(lensPath([idx, 'uploading']), true));
+          setFiles((prevFiles) =>
+            updateFileAtIndex(prevFiles, idx, { uploading: true })
+          );
 
           const formData = new FormData();
           formData.append('file', file.file ?? '');
 
           uploadAttachment(props.ticketId, formData)
             .then(() => {
-              const nullFileState = {
-                file: null,
-                uploaded: true,
-                uploading: false,
-              };
-
-              setFiles(set(lensPath([idx]), nullFileState));
+              setFiles((prevFiles) =>
+                updateFileAtIndex(prevFiles, idx, {
+                  file: null,
+                  uploaded: true,
+                  uploading: false,
+                })
+              );
               reloadAttachments();
             })
             /*
@@ -138,14 +119,23 @@ export const ReplyContainer = (props: Props) => {
              * fail! Don't try to aggregate errors!
              */
             .catch((fileErrors) => {
-              setFiles(set(lensPath([idx, 'uploading']), false));
+              setFiles((prevFiles) =>
+                prevFiles.map((f, i) =>
+                  i === idx ? { ...f, uploading: false } : f
+                )
+              );
 
               const newErrors = getAPIErrorOrDefault(
                 fileErrors,
                 'There was an error attaching this file. Please try again.'
               );
 
-              setFiles(set(lensPath([idx, 'errors']), newErrors));
+              setFiles((prevFiles) =>
+                updateFileAtIndex(prevFiles, idx, {
+                  uploading: false,
+                  errors: newErrors,
+                })
+              );
             });
         });
       })
@@ -172,29 +162,21 @@ export const ReplyContainer = (props: Props) => {
           variant="error"
         />
       )}
-      <Grid>
-        <TabbedReply
-          error={errorMap.description}
-          handleChange={setValue}
-          isReply
-          value={value}
-        />
-      </Grid>
-      <Grid style={{ marginTop: 8 }}>
-        <Accordion
-          defaultExpanded={false}
-          detailProps={{ className: classes.expPanelSummary }}
-          heading="Formatting Tips"
-        >
-          <MarkdownReference isReply rootClass={classes.referenceRoot} />
-        </Accordion>
-      </Grid>
+      <TabbedReply
+        error={errorMap.description}
+        handleChange={setValue}
+        isReply
+        value={value}
+      />
+      <Accordion heading="Formatting Tips" sx={{ mt: 2 }}>
+        <MarkdownReference isReply />
+      </Accordion>
       <Grid>
         <AttachFileForm
+          files={files}
           updateFiles={(filesToAttach: FileAttachment[]) =>
             setFiles(filesToAttach)
           }
-          files={files}
         />
         <ReplyActions
           isSubmitting={isSubmitting}

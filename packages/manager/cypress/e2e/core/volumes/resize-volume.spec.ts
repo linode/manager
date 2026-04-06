@@ -1,7 +1,4 @@
-import type { VolumeRequestPayload } from '@linode/api-v4';
 import { createVolume } from '@linode/api-v4';
-import { Volume } from '@linode/api-v4/types';
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptResizeVolume } from 'support/intercepts/volumes';
 import { SimpleBackoffMethod } from 'support/util/backoff';
@@ -9,6 +6,11 @@ import { cleanUp } from 'support/util/cleanup';
 import { pollVolumeStatus } from 'support/util/polling';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
+
+import type { VolumeRequestPayload } from '@linode/api-v4';
+import type { Volume } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -35,6 +37,9 @@ describe('volume resize flow', () => {
   before(() => {
     cleanUp('volumes');
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Clicks "Resize" action menu item for volume, enters new size, and submits form.
@@ -51,7 +56,7 @@ describe('volume resize flow', () => {
       size: oldSize,
     });
 
-    cy.defer(createActiveVolume(volumeRequest), 'creating Volume').then(
+    cy.defer(() => createActiveVolume(volumeRequest), 'creating Volume').then(
       (volume: Volume) => {
         interceptResizeVolume(volume.id).as('resizeVolume');
         cy.visitWithLogin('/volumes', {
@@ -63,7 +68,7 @@ describe('volume resize flow', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('active').should('be.visible');
+            cy.findByText('Active').should('be.visible');
             cy.findByText(`${oldSize} GB`).should('be.visible');
             cy.findByLabelText(
               `Action menu for Volume ${volume.label}`
@@ -78,9 +83,8 @@ describe('volume resize flow', () => {
         cy.get('[data-qa-drawer="true"]')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Size')
-              .click()
-              .type(`{selectall}{backspace}${newSize}`);
+            cy.findByText('Size').click();
+            cy.focused().type(`{selectall}{backspace}${newSize}`);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Resize Volume').should('be.visible').click();
             });

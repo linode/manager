@@ -1,55 +1,61 @@
+import { getInvoiceItems } from '@linode/api-v4/lib/account';
 import {
-  Invoice,
-  InvoiceItem,
-  Payment,
-  getInvoiceItems,
-} from '@linode/api-v4/lib/account';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+  useAccount,
+  useAllAccountInvoices,
+  useAllAccountPayments,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import { Autocomplete, Notice, Typography, WarningIcon } from '@linode/ui';
+import { getAll, useSet } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
-import OrderBy from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
+import { createDisplayPage } from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useSet } from 'src/hooks/useSet';
-import { useAccount } from 'src/queries/account';
-import {
-  useAllAccountInvoices,
-  useAllAccountPayments,
-} from 'src/queries/accountBilling';
-import { useProfile } from 'src/queries/profile';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
-import { useRegionsQuery } from 'src/queries/regions';
+
+import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
-    marginRight: theme.spacing(1.25),
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(2),
+    },
   },
   dateColumn: {
     width: '25%',
@@ -57,16 +63,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   descriptionColumn: {
     width: '25%',
   },
-  flexContainer: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-  },
   headerContainer: {
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
     display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
@@ -75,9 +73,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   headerLeft: {
     display: 'flex',
-    flexGrow: 2,
-    marginLeft: 10,
-    paddingLeft: 20,
+    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 0,
     },
@@ -87,32 +83,21 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 5,
+    paddingRight: 20,
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
-      marginLeft: 15,
-      paddingLeft: 0,
     },
-  },
-  headline: {
-    fontSize: '1rem',
-    lineHeight: '1.5rem',
-    marginBottom: 8,
-    marginLeft: 15,
-    marginTop: 8,
   },
   pdfDownloadColumn: {
     '& > .loading': {
       width: 115,
     },
+    paddingRight: 0,
     textAlign: 'right',
   },
   pdfError: {
     color: theme.color.red,
-  },
-  root: {
-    padding: '8px 0',
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
@@ -121,6 +106,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   transactionDate: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(1),
+    },
     width: 130,
   },
   transactionType: {
@@ -137,21 +125,29 @@ interface ActivityFeedItem {
   type: 'invoice' | 'payment';
 }
 
-type TransactionTypes = 'all' | ActivityFeedItem['type'];
-const transactionTypeOptions: Item<TransactionTypes>[] = [
+interface TransactionTypeOptions {
+  label: string;
+  value: 'all' | 'invoice' | 'payment';
+}
+
+const transactionTypeOptions: TransactionTypeOptions[] = [
   { label: 'Invoices', value: 'invoice' },
   { label: 'Payments', value: 'payment' },
   { label: 'All Transaction Types', value: 'all' },
 ];
 
-type DateRange =
-  | '6 Months'
-  | '12 Months'
-  | '30 Days'
-  | '60 Days'
-  | '90 Days'
-  | 'All Time';
-const transactionDateOptions: Item<DateRange>[] = [
+interface TransactionDateOptions {
+  label: string;
+  value:
+    | '6 Months'
+    | '12 Months'
+    | '30 Days'
+    | '60 Days'
+    | '90 Days'
+    | 'All Time';
+}
+
+export const transactionDateOptions: TransactionDateOptions[] = [
   { label: '30 Days', value: '30 Days' },
   { label: '60 Days', value: '60 Days' },
   { label: '90 Days', value: '90 Days' },
@@ -159,8 +155,6 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: '12 Months', value: '12 Months' },
   { label: 'All Time', value: 'All Time' },
 ];
-
-const defaultDateRange: DateRange = '6 Months';
 
 const AkamaiBillingInvoiceText = (
   <Typography>
@@ -178,34 +172,55 @@ const AkamaiBillingInvoiceText = (
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
+
+const NUM_COLS = 4;
+
 export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel = (props: Props) => {
+export const BillingActivityPanel = React.memo((props: Props) => {
   const { accountActiveSince } = props;
-
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
-
-  const isAkamaiCustomer = account?.billing_source === 'akamai';
-
-  const { classes } = useStyles();
   const flags = useFlags();
 
+  const pagination = usePaginationV2({
+    currentRoute: '/billing',
+    preferenceKey: 'billing-activity-pagination',
+  });
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'amount',
+      },
+      from: '/billing',
+    },
+    preferenceKey: 'billing-activity-order',
+  });
+
+  const { data: permissions } = usePermissions('account', [
+    'list_billing_payments',
+    'list_billing_invoices',
+    'list_invoice_items',
+  ]);
+
+  const canViewInvoices = permissions.list_billing_invoices;
+  const canViewPayments = permissions.list_billing_payments;
+  const canViewInvoiceDetails = permissions.list_invoice_items;
+
+  const isAkamaiCustomer = account?.billing_source === 'akamai';
+  const { classes } = useStyles();
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
-  const [
-    selectedTransactionType,
-    setSelectedTransactionType,
-  ] = React.useState<TransactionTypes>('all');
+  const [selectedTransactionType, setSelectedTransactionType] =
+    React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
 
-  const [
-    selectedTransactionDate,
-    setSelectedTransactionDate,
-  ] = React.useState<DateRange>(defaultDateRange);
+  const [selectedTransactionDate, setSelectedTransactionDate] =
+    React.useState<TransactionDateOptions>(transactionDateOptions[3]);
 
   const endDate = getCutoffFromDateRange(selectedTransactionDate);
   const filter = makeFilter(endDate);
@@ -214,13 +229,13 @@ export const BillingActivityPanel = (props: Props) => {
     data: payments,
     error: accountPaymentsError,
     isLoading: accountPaymentsLoading,
-  } = useAllAccountPayments({}, filter);
+  } = useAllAccountPayments({}, filter, canViewPayments);
 
   const {
     data: invoices,
     error: accountInvoicesError,
     isLoading: accountInvoicesLoading,
-  } = useAllAccountInvoices({}, filter);
+  } = useAllAccountInvoices({}, filter, canViewInvoices);
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
@@ -267,7 +282,7 @@ export const BillingActivityPanel = (props: Props) => {
   );
 
   const downloadPaymentPDF = React.useCallback(
-    (paymentId: number) => {
+    async (paymentId: number) => {
       const payment = payments?.find(
         (thisPayment) => thisPayment.id === paymentId
       );
@@ -290,32 +305,13 @@ export const BillingActivityPanel = (props: Props) => {
         taxes?.date,
         taxes?.country_tax
       );
-      const result = printPayment(account, payment, countryTax);
+      const result = await printPayment(account, payment, countryTax);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
       }
     },
     [payments, flags, account, pdfErrors]
-  );
-
-  // Handlers for <Select /> components.
-  const handleTransactionTypeChange = React.useCallback(
-    (item: Item<TransactionTypes>) => {
-      setSelectedTransactionType(item.value);
-      pdfErrors.clear();
-      pdfLoading.clear();
-    },
-    [pdfErrors, pdfLoading]
-  );
-
-  const handleTransactionDateChange = React.useCallback(
-    (item: Item<DateRange>) => {
-      setSelectedTransactionDate(item.value);
-      pdfErrors.clear();
-      pdfLoading.clear();
-    },
-    [pdfErrors, pdfLoading]
   );
 
   // Combine Invoices and Payments
@@ -330,184 +326,247 @@ export const BillingActivityPanel = (props: Props) => {
   // Filter on transaction type
   const filteredData = React.useMemo(() => {
     return combinedData.filter(
-      (thisBillingItem) => thisBillingItem.type === selectedTransactionType
+      (thisBillingItem) =>
+        thisBillingItem.type === selectedTransactionType.value
     );
   }, [selectedTransactionType, combinedData]);
 
+  const data =
+    selectedTransactionType.value === 'all' ? combinedData : filteredData;
+
+  const orderedPaginatedData = React.useMemo(() => {
+    const orderedData = data.sort((a, b) => {
+      if (orderBy === 'total') {
+        return order === 'asc' ? a.total - b.total : b.total - a.total;
+      }
+      // Default: If no valid 'orderBy' is provided, sort the data by date in descending order.
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+
+    const displayPage = createDisplayPage<ActivityFeedItem>(
+      pagination.page,
+      pagination.pageSize
+    );
+
+    return displayPage(orderedData);
+  }, [data, orderBy, order, pagination.page, pagination.pageSize]);
+
+  const renderTableContent = () => {
+    if (accountPaymentsLoading || accountInvoicesLoading) {
+      return <TableRowLoading columns={NUM_COLS} rows={1} />;
+    }
+    if (accountPaymentsError || accountInvoicesError) {
+      return (
+        <TableRowError
+          colSpan={NUM_COLS}
+          message="There was an error retrieving your billing activity."
+        />
+      );
+    }
+    if (orderedPaginatedData.length === 0) {
+      return (
+        <TableRowEmpty
+          colSpan={NUM_COLS}
+          message={
+            canViewInvoices && canViewPayments ? (
+              'No Billing & Payment History found.'
+            ) : (
+              <>
+                <WarningIcon
+                  style={{ position: 'relative', top: 4, marginRight: 2 }}
+                  width={16}
+                />{' '}
+                You do not have permission to view billing or payment history.
+              </>
+            )
+          }
+        />
+      );
+    }
+    if (orderedPaginatedData.length > 0) {
+      return orderedPaginatedData.map((thisItem, idx) => {
+        const lastItem = idx === orderedPaginatedData.length - 1;
+        return (
+          <ActivityFeedItem
+            canViewInvoiceDetails={canViewInvoiceDetails}
+            downloadPDF={
+              thisItem.type === 'invoice'
+                ? downloadInvoicePDF
+                : downloadPaymentPDF
+            }
+            hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
+            isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
+            key={`${thisItem.type}-${thisItem.id}`}
+            sxRow={
+              lastItem
+                ? {
+                    '& .MuiTableCell-root': {
+                      borderBottom: 0,
+                    },
+                  }
+                : {}
+            }
+            {...thisItem}
+          />
+        );
+      });
+    }
+
+    return null;
+  };
+
   return (
-    <Grid xs={12} data-qa-billing-activity-panel>
-      <div className={classes.root}>
-        <div className={classes.headerContainer}>
-          <Typography className={classes.headline} variant="h2">
-            {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
-          </Typography>
-          {isAkamaiCustomer ? (
-            <div className={classes.headerLeft}>
+    <Grid data-qa-billing-activity-panel size={12}>
+      <Paper variant="outlined">
+        <StyledBillingAndPaymentHistoryHeader
+          className={classes.headerContainer}
+        >
+          <div>
+            <Typography
+              sx={{
+                fontSize: '1rem',
+                lineHeight: '1.5rem',
+              }}
+              variant="h2"
+            >
+              {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
+            </Typography>
+            {accountActiveSince ? (
+              <Typography className={classes.activeSince} variant="body1">
+                Account active since{' '}
+                {formatDate(accountActiveSince, {
+                  displayTime: false,
+                  timezone: profile?.timezone,
+                })}
+              </Typography>
+            ) : null}
+            {isAkamaiCustomer ? (
               <TextTooltip
                 displayText="Usage History may not reflect finalized invoice"
-                sxTypography={{ paddingLeft: '4px' }}
+                placement="right-end"
                 tooltipText={AkamaiBillingInvoiceText}
               />
-            </div>
-          ) : null}
-          <div className={classes.headerRight}>
-            {accountActiveSince && (
-              <div className={classes.flexContainer}>
-                <Typography className={classes.activeSince} variant="body1">
-                  Account active since{' '}
-                  {formatDate(accountActiveSince, {
-                    displayTime: false,
-                    timezone: profile?.timezone,
-                  })}
-                </Typography>
-              </div>
-            )}
-            <div className={classes.flexContainer}>
-              <Select
-                value={
-                  transactionTypeOptions.find(
-                    (thisOption) => thisOption.value === selectedTransactionType
-                  ) || null
-                }
-                className={classes.transactionType}
-                hideLabel
-                inline
-                isClearable={false}
-                isSearchable={false}
-                label="Transaction Types"
-                onChange={handleTransactionTypeChange}
-                options={transactionTypeOptions}
-                small
-              />
-              <Select
-                value={
-                  transactionDateOptions.find(
-                    (thisOption) => thisOption.value === selectedTransactionDate
-                  ) || null
-                }
-                className={classes.transactionDate}
-                hideLabel
-                inline
-                isClearable={false}
-                isSearchable={false}
-                label="Transaction Dates"
-                onChange={handleTransactionDateChange}
-                options={transactionDateOptions}
-                small
-              />
-            </div>
+            ) : null}
           </div>
-        </div>
-        <OrderBy
-          data={selectedTransactionType === 'all' ? combinedData : filteredData}
-          order={'desc'}
-          orderBy={'date'}
-        >
-          {({ data: orderedData }) => (
-            <Paginate data={orderedData} pageSize={25} shouldScroll={false}>
-              {({
-                count,
-                data: paginatedAndOrderedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <>
-                  <Table aria-label="List of Invoices and Payments">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={classes.descriptionColumn}>
-                          Description
-                        </TableCell>
-                        <TableCell className={classes.dateColumn}>
-                          Date
-                        </TableCell>
-                        <TableCell className={classes.totalColumn}>
-                          Amount
-                        </TableCell>
-                        <TableCell className={classes.pdfDownloadColumn} />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={
-                          accountPaymentsError || accountInvoicesError
-                            ? [
-                                {
-                                  reason:
-                                    'There was an error retrieving your billing activity.',
-                                },
-                              ]
-                            : undefined
-                        }
-                        loading={
-                          accountPaymentsLoading || accountInvoicesLoading
-                        }
-                        loadingProps={{
-                          columns: 4,
-                        }}
-                        length={paginatedAndOrderedData.length}
-                      >
-                        {paginatedAndOrderedData.map((thisItem) => {
-                          return (
-                            <ActivityFeedItem
-                              downloadPDF={
-                                thisItem.type === 'invoice'
-                                  ? downloadInvoicePDF
-                                  : downloadPaymentPDF
-                              }
-                              hasError={pdfErrors.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              isLoading={pdfLoading.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              key={`${thisItem.type}-${thisItem.id}`}
-                              {...thisItem}
-                            />
-                          );
-                        })}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                  <PaginationFooter
-                    count={count}
-                    eventCategory="Billing Activity Table"
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                  />
-                </>
+          <div className={classes.headerRight}>
+            <Autocomplete
+              className={classes.transactionType}
+              disableClearable
+              disabled={!canViewInvoices && !canViewPayments}
+              filterOptions={(options) => {
+                if (!canViewInvoices) {
+                  return options.filter((option) => option.value !== 'invoice');
+                }
+                if (!canViewPayments) {
+                  return options.filter((option) => option.value !== 'payment');
+                }
+                return options;
+              }}
+              label="Transaction Types"
+              noMarginTop
+              onChange={(_, item) => {
+                setSelectedTransactionType(item);
+                pdfErrors.clear();
+                pdfLoading.clear();
+              }}
+              options={transactionTypeOptions}
+              value={transactionTypeOptions.find(
+                (option) => option.value === selectedTransactionType.value
               )}
-            </Paginate>
-          )}
-        </OrderBy>
-      </div>
+            />
+            <Autocomplete
+              className={classes.transactionDate}
+              disableClearable
+              label="Transaction Dates"
+              noMarginTop
+              onChange={(_, item) => {
+                setSelectedTransactionDate(item);
+                pdfErrors.clear();
+                pdfLoading.clear();
+              }}
+              options={transactionDateOptions}
+              value={transactionDateOptions.find(
+                (option) => option.value === selectedTransactionDate.value
+              )}
+            />
+          </div>
+        </StyledBillingAndPaymentHistoryHeader>
+        {(canViewInvoices && !canViewPayments) ||
+        (!canViewInvoices && canViewPayments) ? (
+          <Notice
+            spacingBottom={20}
+            text={`You do not have permission to view ${
+              canViewInvoices ? 'payments' : 'invoices'
+            } history.`}
+            variant="error"
+          />
+        ) : null}
+        <Table aria-label="List of Invoices and Payments" sx={{ border: 0 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.descriptionColumn}>
+                Description
+              </TableCell>
+              <TableCell className={classes.dateColumn}>Date</TableCell>
+              <TableSortCell
+                active={orderBy === 'total'}
+                className={classes.totalColumn}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="total"
+              >
+                Amount
+              </TableSortCell>
+              {canViewInvoiceDetails && (
+                <TableCell className={classes.pdfDownloadColumn} />
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableContent()}</TableBody>
+        </Table>
+        <PaginationFooter
+          count={data.length}
+          eventCategory="Billing Activity Table"
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
+      </Paper>
     </Grid>
   );
-};
+});
+
+const StyledBillingAndPaymentHistoryHeader = styled('div', {
+  name: 'BillingAndPaymentHistoryHeader',
+})(() => ({
+  borderBottom: 0,
+  padding: `15px 0px 15px 20px`,
+}));
 
 // =============================================================================
 // <ActivityFeedItem />
 // =============================================================================
 interface ActivityFeedItemProps extends ActivityFeedItem {
+  canViewInvoiceDetails: boolean;
   downloadPDF: (id: number) => void;
   hasError: boolean;
   isLoading: boolean;
+  sxRow: SxProps<Theme>;
 }
 
 export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
   const {
+    canViewInvoiceDetails,
     date,
     downloadPDF,
     hasError,
     id,
     isLoading,
     label,
+    sxRow,
     total,
     type,
   } = props;
@@ -528,10 +587,10 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   };
 
   return (
-    <TableRow data-testid={`${type}-${id}`}>
+    <TableRow data-testid={`${type}-${id}`} sx={sxRow}>
       <TableCell>
-        {type === 'invoice' ? (
-          <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+        {type === 'invoice' && canViewInvoiceDetails ? (
+          <Link to={`/billing/invoices/${id}`}>{label}</Link>
         ) : (
           label
         )}
@@ -542,14 +601,16 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
       <TableCell className={classes.totalColumn}>
         <Currency quantity={total} wrapInParentheses={total < 0} />
       </TableCell>
-      <TableCell className={classes.pdfDownloadColumn}>
-        <InlineMenuAction
-          actionText={action.title}
-          className={action.className}
-          loading={isLoading}
-          onClick={action.onClick}
-        />
-      </TableCell>
+      {canViewInvoiceDetails && (
+        <TableCell className={classes.pdfDownloadColumn}>
+          <InlineMenuAction
+            actionText={action.title}
+            className={action.className}
+            loading={isLoading}
+            onClick={action.onClick}
+          />
+        </TableCell>
+      )}
     </TableRow>
   );
 });
@@ -593,30 +654,30 @@ export const paymentToActivityFeedItem = (
  * @returns ISO format beginning of the range date
  */
 export const getCutoffFromDateRange = (
-  range: DateRange,
+  range: TransactionDateOptions,
   currentDatetime?: string
-): string | undefined => {
-  if (range === 'All Time') {
-    return undefined;
+): null | string => {
+  if (range === transactionDateOptions[5]) {
+    return null;
   }
 
   const date = currentDatetime ? parseAPIDate(currentDatetime) : DateTime.utc();
 
   let outputDate: DateTime;
   switch (range) {
-    case '30 Days':
+    case transactionDateOptions[0]:
       outputDate = date.minus({ days: 30 });
       break;
-    case '60 Days':
+    case transactionDateOptions[1]:
       outputDate = date.minus({ days: 60 });
       break;
-    case '90 Days':
+    case transactionDateOptions[2]:
       outputDate = date.minus({ days: 90 });
       break;
-    case '6 Months':
+    case transactionDateOptions[3]:
       outputDate = date.minus({ months: 6 });
       break;
-    case '12 Months':
+    case transactionDateOptions[4]:
       outputDate = date.minus({ months: 12 });
       break;
     default:
@@ -629,7 +690,7 @@ export const getCutoffFromDateRange = (
 /**
  * @param endDate in ISO format
  */
-export const makeFilter = (endDate?: string): any => {
+export const makeFilter = (endDate: null | string) => {
   const filter: any = {
     '+order': 'desc',
     '+order_by': 'date',
@@ -643,5 +704,3 @@ export const makeFilter = (endDate?: string): any => {
 
   return filter;
 };
-
-export default React.memo(BillingActivityPanel);

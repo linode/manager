@@ -1,13 +1,9 @@
-import { Theme } from '@mui/material/styles';
+import { usePreferences } from '@linode/queries';
+import { dark, light } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { dark, light } from 'src/foundations/themes';
-
-import type { ThemeName } from 'src/foundations/themes';
-import { useAuthentication } from 'src/hooks/useAuthentication';
-import { usePreferences } from 'src/queries/preferences';
-
-export type ThemeChoice = 'dark' | 'light' | 'system';
+import type { ThemeName } from '@linode/ui';
+import type { Theme } from '@mui/material/styles';
 
 export const themes: Record<ThemeName, Theme> = { dark, light };
 
@@ -30,7 +26,7 @@ export const getNextThemeValue = (currentTheme: string | undefined) => {
  * Use this to validate if a value in a user's preferences is a valid value
  */
 export const isValidTheme = (value: unknown): boolean => {
-  return typeof value === 'string' && themes[value] !== undefined;
+  return typeof value === 'string' && value in themes;
 };
 
 /**
@@ -52,13 +48,18 @@ export const getThemeFromPreferenceValue = (
 };
 
 export const useColorMode = () => {
-  // Make sure we are authenticated before we fetch preferences.
-  const isAuthenticated = !!useAuthentication().token;
-  const { data: preferences } = usePreferences(isAuthenticated);
+  const { data: themePreference } = usePreferences(
+    (preferences) => preferences?.theme,
+    // Disable this query so that it only reads from the React Query cache.
+    // We don't want it to fetch because this hook us mounted before the user is
+    // authenticated, which would result in a 401.
+    false
+  );
+
   const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const colorMode = getThemeFromPreferenceValue(
-    preferences?.theme,
+    themePreference,
     isSystemInDarkMode
   );
 

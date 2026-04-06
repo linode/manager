@@ -1,57 +1,48 @@
+import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
-import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeRow, RenderFlag } from './LinodeRow';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    data: {},
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 describe('LinodeRow', () => {
   describe('when Linode has mutation', () => {
-    it('should render a Flag', () => {
-      const wrapper = shallow(<RenderFlag mutationAvailable={true} />);
-
-      const Tooltip = wrapper.find('Tooltip');
-
-      expect(Tooltip).toHaveLength(1);
-      expect(Tooltip.props()).toHaveProperty(
-        'title',
-        'There is a free upgrade available for this Linode'
+    it('should render a Flag', async () => {
+      const { getByLabelText } = renderWithTheme(
+        <RenderFlag mutationAvailable={true} />
       );
+
+      expect(
+        getByLabelText('There is a free upgrade available for this Linode')
+      ).toBeVisible();
     });
   });
 
-  it('should render a linode row', () => {
+  it('should render a linode row', async () => {
     const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
         handlers={{
+          onOpenAddLockDialog: () => {},
           onOpenDeleteDialog: () => {},
           onOpenMigrateDialog: () => {},
-          onOpenPowerDialog: (action) => {},
+          onOpenPowerDialog: () => {},
           onOpenRebuildDialog: () => {},
+          onOpenRemoveLockDialog: () => {},
           onOpenRescueDialog: () => {},
           onOpenResizeDialog: () => {},
         }}
-        alerts={linode.alerts}
-        backups={linode.backups}
-        created={linode.created}
-        group={linode.group}
-        hypervisor={linode.hypervisor}
-        id={linode.id}
-        image={linode.image}
-        ipv4={linode.ipv4}
-        ipv6={linode.ipv6 || ''}
-        key={`linode-row-${1}`}
-        label={linode.label}
-        region={linode.region}
-        specs={linode.specs}
-        status={linode.status}
-        tags={linode.tags}
-        type={linode.type}
-        updated={linode.updated}
-        watchdog_enabled={linode.watchdog_enabled}
+        {...linode}
       />
     );
 
@@ -63,7 +54,7 @@ describe('LinodeRow', () => {
 
     // Open action menu
     const actionMenu = getByLabelText(`Action menu for Linode ${linode.label}`);
-    userEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
 
     getByText('Power Off');
     getByText('Reboot');

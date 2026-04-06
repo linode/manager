@@ -2,8 +2,9 @@
  * @file Constants related to DC-specific pricing.
  */
 
-import { linodeTypeFactory } from '@src/factories';
-import { LkePlanDescription } from 'support/api/lke';
+import { linodeTypeFactory } from '@linode/utilities';
+
+import type { LkePlanDescription } from 'support/api/lke';
 
 /** Notice shown to users when selecting a region with a different price structure. */
 export const dcPricingRegionDifferenceNotice =
@@ -51,6 +52,11 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
           id: 'us-west',
           monthly: 4.17,
         },
+        {
+          hourly: 0.006,
+          id: 'us-southeast',
+          monthly: 4.67,
+        },
       ],
     },
   },
@@ -69,6 +75,12 @@ export const dcPricingMockLinodeTypes = linodeTypeFactory.buildList(3, {
       id: 'us-west',
       monthly: 12.2,
     },
+    {
+      // Mock a DC with $0 region prices, which is possible in some circumstances (e.g. Limited Availability).
+      hourly: 0.0,
+      id: 'us-southeast',
+      monthly: 0.0,
+    },
   ],
 });
 
@@ -83,6 +95,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
         },
         region_prices: [
           {
+            hourly: 0,
+            id: 'us-ord',
+            monthly: 0,
+          },
+          {
             hourly: 0.0048,
             id: 'us-east',
             monthly: 3.57,
@@ -91,6 +108,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
             hourly: 0.0056,
             id: 'us-west',
             monthly: 4.17,
+          },
+          {
+            hourly: 0.006,
+            id: 'us-southeast',
+            monthly: 4.67,
           },
         ],
       },
@@ -103,15 +125,16 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
  * Subset of LKE cluster plans as shown on Cloud Manager, mapped from DC-specific pricing mock linode
  * types to ensure size is consistent with ids in the types factory.
  */
-export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
-  (type) => {
+export const dcPricingLkeClusterPlans: LkePlanDescription[] =
+  dcPricingMockLinodeTypes.map((type) => {
     return {
-      size: type.id.split('-')[2],
+      nodeCount: 1,
+      planName: 'Linode 2 GB',
+      size: parseInt(type.id.split('-')[2], 10),
       tab: 'Shared CPU',
-      type: 'Linode',
+      type: 'nanode',
     };
-  }
-);
+  });
 
 export const MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED =
   '2023-10-05 00:00:00Z';

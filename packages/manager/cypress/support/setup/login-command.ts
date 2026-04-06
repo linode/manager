@@ -1,7 +1,8 @@
-import type { UserPreferences } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { oauthToken } from 'support/constants/api';
 import { apiMatcher } from 'support/util/intercepts';
+
+import type { UserPreferences } from '@linode/api-v4';
 
 const overrideLocalStorage = (
   window: Window,
@@ -14,16 +15,12 @@ const overrideLocalStorage = (
 };
 
 const _loginWithToken = (win: Window) => {
-  win.localStorage.setItem('authentication/oauth-token', oauthToken);
   win.localStorage.setItem('authentication/scopes', '*');
-  // cy.log(window.localStorage.getItem('authentication/oauth-token'));
-  const expireDate = DateTime.local().plus({ days: 30 });
-  const isoExpire = expireDate.toISO();
-  // cy.log(isoExpire);
-  win.localStorage.setItem('authentication/expires', isoExpire);
-  win.localStorage.setItem('authentication/expire-datetime', isoExpire);
   win.localStorage.setItem('authentication/token', 'Bearer ' + oauthToken);
-  win.localStorage.setItem('authentication/expire', isoExpire);
+  win.localStorage.setItem(
+    'authentication/expire',
+    DateTime.local().plus({ days: 30 }).toISO()
+  );
 };
 
 /**
@@ -79,6 +76,7 @@ Cypress.Commands.add(
           );
         }
       },
+      failOnStatusCode: false,
     };
 
     if (resolvedLinodeOptions.preferenceOverrides) {

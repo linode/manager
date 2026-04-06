@@ -1,11 +1,12 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Stack } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 import zxcvbn from 'zxcvbn';
-
-import { TextFieldProps } from 'src/components/TextField';
 
 import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
 import { HideShowText } from './HideShowText';
+
+import type { TextFieldProps } from '@linode/ui';
 
 interface Props extends TextFieldProps {
   disabledReason?: JSX.Element | string;
@@ -13,13 +14,12 @@ interface Props extends TextFieldProps {
   hideValidation?: boolean;
 }
 
-const PasswordInput = (props: Props) => {
+export const PasswordInput = React.memo((props: Props) => {
   const {
     disabledReason,
     hideStrengthLabel,
     hideValidation,
     required,
-    tooltipInteractive,
     value,
     ...rest
   } = props;
@@ -27,28 +27,23 @@ const PasswordInput = (props: Props) => {
   const strength = React.useMemo(() => maybeStrength(value), [value]);
 
   return (
-    <Grid container spacing={1}>
-      <Grid xs={12}>
-        <HideShowText
-          {...rest}
-          fullWidth
-          required={required}
-          tooltipInteractive={tooltipInteractive}
-          tooltipText={disabledReason}
-          value={value}
-        />
-      </Grid>
+    <Stack spacing={1}>
+      <HideShowText
+        {...rest}
+        fullWidth
+        required={required}
+        tooltipText={disabledReason}
+        value={value}
+      />
       {!hideValidation && (
-        <Grid xs={12}>
-          <StrengthIndicator
-            hideStrengthLabel={hideStrengthLabel}
-            strength={strength}
-          />
-        </Grid>
+        <StrengthIndicator
+          hideStrengthLabel={hideStrengthLabel}
+          strength={strength}
+        />
       )}
-    </Grid>
+    </Stack>
   );
-};
+});
 
 const maybeStrength = (value: Props['value']) => {
   if (!value) {
@@ -57,5 +52,3 @@ const maybeStrength = (value: Props['value']) => {
 
   return zxcvbn(String(value)).score;
 };
-
-export default React.memo(PasswordInput);

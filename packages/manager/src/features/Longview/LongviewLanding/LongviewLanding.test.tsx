@@ -1,8 +1,6 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -10,13 +8,15 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  LongviewClients,
-  LongviewClientsCombinedProps,
   filterLongviewClientsByQuery,
+  LongviewClients,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
 import { LongviewLanding } from './LongviewLanding';
+
+import type { LongviewClientsCombinedProps } from './LongviewClients';
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
 
 afterEach(() => {
   vi.clearAllMocks();
@@ -48,22 +48,21 @@ const props: LongviewClientsCombinedProps = {
   lvClientData: {},
   newClientLoading: false,
   updateLongviewClient: vi.fn(),
-  ...reactRouterProps,
 };
 
 describe('Utility Functions', () => {
   it('should properly filter longview clients by query', () => {
     expect(filterLongviewClientsByQuery('client-1', clients, {})).toEqual([
-      clients[1],
-    ]),
-      expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
-        clients
-      ),
-      expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]),
-      expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]),
-      expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
-        []
-      );
+      clients[0],
+    ]);
+    expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
+      clients
+    );
+    expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]);
+    expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]);
+    expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
+      []
+    );
   });
 
   describe('Sorting helpers', () => {
@@ -81,11 +80,7 @@ describe('Utility Functions', () => {
 
       it('should respect the optional order argument', () => {
         expect([4, 3, 5, 1, 2].sort((a, b) => sortFunc(a, b, 'asc'))).toEqual([
-          1,
-          2,
-          3,
-          4,
-          5,
+          1, 2, 3, 4, 5,
         ]);
 
         expect(
@@ -102,14 +97,15 @@ describe('Utility Functions', () => {
 });
 
 describe('Longview clients list view', () => {
-  it('should request clients on load', () => {
+  it('should request clients on load', async () => {
     renderWithTheme(<LongviewClients {...props} />);
     expect(props.getLongviewClients).toHaveBeenCalledTimes(1);
   });
 
-  it('should have an Add Client button', () => {
-    const { queryByText } = renderWithTheme(<LongviewLanding {...props} />);
-    expect(queryByText('Add Client')).toBeInTheDocument();
+  it('should have an Add Client button', async () => {
+    const { findByText } = renderWithTheme(<LongviewLanding {...props} />);
+    const addButton = await findByText('Add Client');
+    expect(addButton).toBeInTheDocument();
   });
 
   it('should attempt to add a new client when the Add Client button is clicked', async () => {
@@ -121,7 +117,7 @@ describe('Longview clients list view', () => {
     );
   });
 
-  it('should render a row for each client', () => {
+  it('should render a row for each client', async () => {
     const { queryAllByTestId } = renderWithTheme(
       <LongviewClients {...props} />
     );
@@ -131,7 +127,7 @@ describe('Longview clients list view', () => {
     );
   });
 
-  it('should render a CTA for non-Pro subscribers', () => {
+  it('should render a CTA for non-Pro subscribers', async () => {
     const { getByText } = renderWithTheme(
       <LongviewClients {...props} activeSubscription={{}} />
     );
@@ -139,7 +135,7 @@ describe('Longview clients list view', () => {
     getByText(/upgrade to longview pro/i);
   });
 
-  it('should not render a CTA for LV Pro subscribers', () => {
+  it('should not render a CTA for LV Pro subscribers', async () => {
     const { queryAllByText } = renderWithTheme(
       <LongviewClients
         {...props}

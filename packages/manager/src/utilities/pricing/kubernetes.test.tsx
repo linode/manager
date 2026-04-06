@@ -1,6 +1,7 @@
-import { linodeTypeFactory, nodePoolFactory } from 'src/factories';
+import { linodeTypeFactory } from '@linode/utilities';
+
+import { nodePoolFactory } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
 
 import { getKubernetesMonthlyPrice, getTotalClusterPrice } from './kubernetes';
 
@@ -23,6 +24,7 @@ describe('helper functions', () => {
     type: 'not-a-real-type',
   });
   const region = 'us_east';
+  const LKE_HA_PRICE = 60;
 
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {

@@ -4,7 +4,9 @@
 
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import { skip } from 'support/util/skip';
+
 import { accountSettingsFactory } from 'src/factories/accountSettings';
+
 import type { AccountSettings } from '@linode/api-v4';
 
 // / Account object with Managed enabled for mocking API requests.
@@ -28,10 +30,10 @@ export const nonManagedAccount = accountSettingsFactory.build({
  * where Managed is not expected to be enabled (e.g. when being run via CI).
  */
 export const expectManagedDisabled = () => {
-  const accountSettings = Cypress.env('cloudManagerAccountSettings') as
+  const accountSettings = Cypress.expose('cloudManagerAccountSettings') as
     | AccountSettings
     | undefined;
-  const failOnManaged = Cypress.env('CY_TEST_FAIL_ON_MANAGED');
+  const failOnManaged = Cypress.expose('CY_TEST_FAIL_ON_MANAGED');
 
   if (!accountSettings) {
     throw new Error('Unable to retrieve cached account settings');

@@ -1,29 +1,27 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import {
+  useAllLinodeConfigsQuery,
+  useBootLinodeMutation,
+  useRebootLinodeMutation,
+  useShutdownLinodeMutation,
+} from '@linode/queries';
+import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import {
-  useBootLinodeMutation,
-  useLinodeQuery,
-  useRebootLinodeMutation,
-  useShutdownLinodeMutation,
-} from 'src/queries/linodes/linodes';
+import { useEventsPollingActions } from 'src/queries/events/events';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
 
 export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
 interface Props {
   action: Action;
+  isFetching?: boolean;
   isOpen: boolean;
   linodeId: number | undefined;
-  manuallyUpdateConfigs?: boolean;
+  linodeLabel?: string | undefined;
   onClose: () => void;
 }
 
@@ -39,13 +37,8 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, manuallyUpdateConfigs, onClose } = props;
+  const { action, isFetching, isOpen, linodeId, linodeLabel, onClose } = props;
   const theme = useTheme();
-
-  const { data: linode } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && isOpen
-  );
 
   const {
     data: configs,
@@ -58,27 +51,23 @@ export const PowerActionsDialog = (props: Props) => {
 
   const {
     error: bootError,
-    isLoading: isBooting,
+    isPending: isBooting,
     mutateAsync: bootLinode,
-  } = useBootLinodeMutation(
-    linodeId ?? -1,
-    manuallyUpdateConfigs ? configs : undefined
-  );
+  } = useBootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: rebootError,
-    isLoading: isRebooting,
+    isPending: isRebooting,
     mutateAsync: rebootLinode,
-  } = useRebootLinodeMutation(
-    linodeId ?? -1,
-    manuallyUpdateConfigs ? configs : undefined
-  );
+  } = useRebootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: shutdownError,
-    isLoading: isShuttingDown,
+    isPending: isShuttingDown,
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const [selectedConfigID, setSelectConfigID] = React.useState<null | number>(
     null
@@ -117,7 +106,8 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
-    resetEventsPolling();
+    setSelectConfigID(null);
+    checkForNewEvents();
     onClose();
   };
 
@@ -132,6 +122,11 @@ export const PowerActionsDialog = (props: Props) => {
       value: config.id,
     })) ?? [];
 
+  const handleOnClose = () => {
+    setSelectConfigID(null);
+    onClose();
+  };
+
   return (
     <ConfirmationDialog
       actions={
@@ -144,18 +139,16 @@ export const PowerActionsDialog = (props: Props) => {
           secondaryButtonProps={{ label: 'Cancel', onClick: props.onClose }}
         />
       }
-      sx={{
-        '& .dialog-content': {
-          paddingBottom: 0,
-          paddingTop: 0,
-        },
-      }}
       error={error?.[0].reason}
-      onClose={onClose}
+      isFetching={isFetching}
+      onClose={handleOnClose}
       open={isOpen}
-      title={`${action} Linode ${linode?.label ?? ''}?`}
+      title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
-      {isPowerOnAction ? (
+      {isRebootAction && (
+        <Typography>Are you sure you want to reboot this Linode?</Typography>
+      )}
+      {isPowerOnAction && (
         <Typography
           sx={{
             alignItems: 'center',
@@ -165,43 +158,39 @@ export const PowerActionsDialog = (props: Props) => {
           }}
         >
           See the&nbsp;
-          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance">
             guide for setting up and securing a compute instance
           </Link>
           &nbsp;for more information.
         </Typography>
-      ) : null}
+      )}
       {showConfigSelect && (
-        <Select
+        <Autocomplete
+          autoHighlight
+          disablePortal={false}
           errorText={configsError?.[0].reason}
-          isLoading={configsLoading}
+          helperText="If no value is selected, the last booted config will be used."
           label="Config"
-          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
+          loading={configsLoading}
+          onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
           options={configOptions}
-          overflowPortal
-          value={configOptions.find((o) => o.value === selectedConfigID)}
+          value={
+            configOptions.find((option) => option.value === selectedConfigID) ??
+            null
+          }
         />
       )}
       {props.action === 'Power Off' && (
-        <span>
-          <Notice
-            sx={{
-              '& .noticeText': {
-                fontSize: '0.875rem !important',
-              },
-            }}
-            variant="warning"
-          >
-            <strong>Note: </strong>
-            Powered down Linodes will still accrue charges.
-            <br />
-            See the&nbsp;
-            <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services">
+        <Notice spacingBottom={0} variant="warning">
+          <Typography>
+            <strong>Note: </strong>Powered down Linodes will still accrue
+            charges. See the&nbsp;
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
               Billing and Payments documentation
             </Link>
             &nbsp;for more information.
-          </Notice>
-        </span>
+          </Typography>
+        </Notice>
       )}
     </ConfirmationDialog>
   );

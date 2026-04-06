@@ -1,23 +1,24 @@
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
+import type { JSX } from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
-import { Typography } from 'src/components/Typography';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import withClientStats from 'src/containers/longview.stats.container';
 
-import { LongviewNetwork } from '../../request.types';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,
 } from '../../shared/utilities';
-import { BaseProps as Props, baseGaugeProps } from './common';
+import { baseGaugeProps } from './common';
 
-type CombinedProps = Props & LVDataProps;
+import type { LongviewNetwork } from '../../request.types';
+import type { BaseProps as Props } from './common';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
-const Network = (props: CombinedProps) => {
+interface NetworkProps extends Props, LVDataProps {}
+
+const Network = (props: NetworkProps) => {
   const {
     lastUpdatedError,
     longviewClientData,
@@ -101,10 +102,9 @@ const Network = (props: CombinedProps) => {
   );
 };
 
-export const NetworkGauge = compose<CombinedProps, Props>(
-  React.memo,
-  withClientStats<Props>((ownProps) => ownProps.clientID)
-)(Network);
+export const NetworkGauge = React.memo(
+  withClientStats<Props>((ownProps) => ownProps.clientID)(Network)
+);
 
 /*
   What's returned from Network is a bit of an unknown, but assuming that

@@ -1,8 +1,9 @@
+import { linodeFactory } from '@linode/utilities';
 import React from 'react';
 
-import { linodeDiskFactory, linodeFactory } from 'src/factories';
+import { linodeDiskFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ResizeDiskDrawer } from './ResizeDiskDrawer';
@@ -12,13 +13,13 @@ describe('ResizeDiskDrawer', () => {
     const disk = linodeDiskFactory.build({ label: 'My Cool Disk' });
 
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
-        return res(
-          ctx.json(linodeFactory.build({ id: 1, specs: { disk: 1024 } }))
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ id: 1, specs: { disk: 1024 } })
         );
       }),
-      rest.get('*/linode/instances/1/disks', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([disk])));
+      http.get('*/linode/instances/1/disks', () => {
+        return HttpResponse.json(makeResourcePage([disk]));
       })
     );
 
@@ -47,19 +48,17 @@ describe('ResizeDiskDrawer', () => {
     });
 
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
-        return res(
-          ctx.json(linodeFactory.build({ id: 1, specs: { disk: 12 } }))
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ id: 1, specs: { disk: 12 } })
         );
       }),
-      rest.get('*/linode/instances/1/disks', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage([
-              diskToResize,
-              ...linodeDiskFactory.buildList(3, { size: 3 }),
-            ])
-          )
+      http.get('*/linode/instances/1/disks', () => {
+        return HttpResponse.json(
+          makeResourcePage([
+            diskToResize,
+            ...linodeDiskFactory.buildList(3, { size: 3 }),
+          ])
         );
       })
     );

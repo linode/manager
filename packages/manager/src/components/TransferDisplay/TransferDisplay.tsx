@@ -1,12 +1,7 @@
+import { useAccountNetworkTransfer, useRegionsQuery } from '@linode/queries';
+import { Box, CircleProgress, LinkButton, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Typography } from 'src/components/Typography';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
-import { useRegionsQuery } from 'src/queries/regions';
-
-import { StyledLinkButton } from '../Button/StyledLinkButton';
 import { StyledTransferDisplayContainer } from './TransferDisplay.styles';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
 import {
@@ -21,7 +16,11 @@ export interface Props {
 
 export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { data: generalPoolUsage, isError, isLoading } = useAccountTransfer();
+  const {
+    data: generalPoolUsage,
+    isError,
+    isLoading,
+  } = useAccountNetworkTransfer();
   const { data: regions } = useRegionsQuery();
 
   const generalPoolUsagePct = calculatePoolUsagePct(generalPoolUsage);
@@ -39,18 +38,18 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
         {isLoading ? (
           <>
             <Typography>Loading transfer data...</Typography>
-            <CircleProgress mini />
+            <CircleProgress size="sm" />
           </>
         ) : (
           <>
             <Typography>
-              <StyledLinkButton
+              <LinkButton
                 aria-label="Show the Monthly Network Transfer Pool"
                 data-testid="open-transfer-display-modal-button"
                 onClick={() => setModalOpen(true)}
               >
                 Monthly Network Transfer Pool
-              </StyledLinkButton>
+              </LinkButton>
               &nbsp;usage:
             </Typography>
             <Typography data-testid="transfer-pool-pct-display">

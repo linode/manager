@@ -1,35 +1,41 @@
+import {
+  useAccount,
+  useAllPaymentMethodsQuery,
+  useProfile,
+} from '@linode/queries';
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
-import { useAccount } from 'src/queries/account';
-import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
+import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
-import ContactInfo from './BillingPanels/ContactInfoPanel';
+import { ContactInformation } from './BillingPanels/ContactInfoPanel/ContactInformation';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
 export const BillingDetail = () => {
+  const { data: permissions } = usePermissions('account', [
+    'list_billing_payments',
+  ]);
   const {
     data: paymentMethods,
     error: paymentMethodsError,
     isLoading: paymentMethodsLoading,
-  } = useAllPaymentMethodsQuery();
+  } = useAllPaymentMethodsQuery(permissions?.list_billing_payments ?? false);
 
   const {
     data: account,
     error: accountError,
     isLoading: accountLoading,
   } = useAccount();
+
+  const { data: profile } = useProfile();
 
   if (accountLoading) {
     return <CircleProgress />;
@@ -48,16 +54,15 @@ export const BillingDetail = () => {
   }
 
   return (
-    <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
-      <DocumentTitleSegment segment={`Account & Billing`} />
+    <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
       <Grid
-        sx={{
-          paddingTop: 1,
-        }}
         columnSpacing={2}
         container
         data-testid="billing-detail"
         rowSpacing={2}
+        sx={{
+          paddingTop: 1,
+        }}
       >
         <BillingSummary
           balance={account?.balance ?? 0}
@@ -65,7 +70,7 @@ export const BillingDetail = () => {
           paymentMethods={paymentMethods}
           promotions={account?.active_promotions}
         />
-        <ContactInfo
+        <ContactInformation
           address1={account.address_1}
           address2={account.address_2}
           city={account.city}
@@ -75,6 +80,7 @@ export const BillingDetail = () => {
           firstName={account.first_name}
           lastName={account.last_name}
           phone={account.phone}
+          profile={profile}
           state={account.state}
           taxId={account.tax_id}
           zip={account.zip}
@@ -84,6 +90,7 @@ export const BillingDetail = () => {
           isAkamaiCustomer={account?.billing_source === 'akamai'}
           loading={paymentMethodsLoading}
           paymentMethods={paymentMethods}
+          profile={profile}
         />
         <BillingActivityPanel accountActiveSince={account?.active_since} />
       </Grid>
@@ -103,18 +110,15 @@ export const BillingBox = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-export const BillingActionButton = styled(Button)(({ theme }) => ({
-  '&:hover, &:focus': {
-    backgroundColor: 'transparent',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-  },
-  color: theme.textColors.linkActiveLight,
-  fontFamily: theme.font.bold,
+export const BillingActionButton = styled(Button)(({ theme, ...props }) => ({
+  ...(!props.disabled && {
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
+  }),
+  font: theme.font.bold,
   fontSize: '.875rem',
   minHeight: 'unset',
   minWidth: 'auto',
   padding: 0,
 }));
-
-export default BillingDetail;

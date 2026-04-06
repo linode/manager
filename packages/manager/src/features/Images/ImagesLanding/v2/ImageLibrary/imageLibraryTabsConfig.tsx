@@ -1,0 +1,236 @@
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  AUTOMATIC_IMAGES_DEFAULT_ORDER,
+  AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+  AUTOMATIC_IMAGES_PREFERENCE_KEY,
+  MANUAL_IMAGES_DEFAULT_ORDER,
+  MANUAL_IMAGES_DEFAULT_ORDER_BY,
+  MANUAL_IMAGES_PREFERENCE_KEY,
+  OWNED_BY_ME_IMAGES_TAB_PENDO_IDS,
+  RECOVERY_IMAGES_TAB_PENDO_IDS,
+  SHARED_IMAGES_DEFAULT_ORDER,
+  SHARED_IMAGES_DEFAULT_ORDER_BY,
+  SHARED_IMAGES_PREFERENCE_KEY,
+  SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS,
+} from 'src/features/Images/constants';
+
+import type { Image } from '@linode/api-v4';
+import type { HiddenProps } from '@linode/ui';
+import type { ImageLibraryType, ImageSubTab } from 'src/features/Images/utils';
+
+export interface ImageViewTableColConfig {
+  /** Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
+  hiddenOn?: Exclude<keyof HiddenProps, 'children'>;
+
+  /** Column name */
+  name: string;
+
+  /**
+   * Provide sortableProps to enable sorting for this column.
+   */
+  sortableProps?: {
+    /** API field used for sorting this column */
+    label: string;
+  };
+}
+
+export interface ImageConfig {
+  buttonProps?: {
+    buttonText: string;
+    disabledToolTipText?: string;
+    navigateTo?: string;
+  };
+  columns: ImageViewTableColConfig[];
+  description: React.ReactNode;
+  docsLink?: { dataPendoId?: string; href: string; label?: string };
+  emptyMessage: {
+    instruction?: string;
+    main: string;
+  };
+  eventCategory: string;
+  isBeta?: boolean;
+  isEnabled: (subType: ImageLibraryType | undefined) => boolean;
+  orderByDefault: string;
+  orderDefault: 'asc' | 'desc';
+  preferenceKey: string;
+  searchBarPendoId: string;
+  title: string;
+  type: Image['type'];
+}
+
+export const imageLibrarySubTabs: ImageSubTab<ImageLibraryType>[] = [
+  { type: 'owned-by-me', title: 'Owned by me' },
+  {
+    type: 'shared-with-me',
+    title: 'Shared with me',
+    isBeta: true,
+  },
+  { type: 'recovery-images', title: 'Recovery images' },
+];
+
+const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
+  { name: 'Image', sortableProps: { label: 'label' } },
+  {
+    name: 'Status',
+    hiddenOn: 'smDown',
+  },
+  {
+    name: 'Replicated in',
+    hiddenOn: 'smDown',
+  },
+  { name: 'Original Image', sortableProps: { label: 'size' } },
+  {
+    name: 'All Replicas',
+    hiddenOn: 'mdDown',
+  },
+  {
+    name: 'Created',
+    sortableProps: { label: 'created' },
+    hiddenOn: 'mdDown',
+  },
+  {
+    name: 'Image ID',
+    hiddenOn: 'mdDown',
+  },
+];
+
+const RECOVERY_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
+  { name: 'Image', sortableProps: { label: 'label' } },
+  {
+    name: 'Status',
+    hiddenOn: 'smDown',
+  },
+  { name: 'Size', sortableProps: { label: 'size' } },
+  {
+    name: 'Created',
+    sortableProps: { label: 'created' },
+    hiddenOn: 'smDown',
+  },
+  {
+    name: 'Expires',
+    hiddenOn: 'smDown',
+  },
+];
+
+const SHARED_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
+  { name: 'Image', sortableProps: { label: 'label' } },
+  {
+    name: 'Share Group',
+    sortableProps: { label: 'image_sharing.sharegroup_label' },
+  },
+  { name: 'Replicated in', hiddenOn: 'smDown' },
+  { name: 'Original Image', sortableProps: { label: 'size' } },
+  { name: 'Created', sortableProps: { label: 'created' }, hiddenOn: 'mdDown' },
+  { name: 'Image ID', hiddenOn: 'mdDown' },
+];
+
+export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
+  'owned-by-me': {
+    title: 'Owned by me',
+    description: (
+      <>
+        These are{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+          encrypted
+        </Link>{' '}
+        images you manually uploaded or captured from an existing compute
+        instance disk. You can deploy an image to a compute instance in any
+        region. If you deploy the instance in a different region from where the
+        image is stored, you may experience slower linode deployment times.
+      </>
+    ),
+    type: 'manual',
+    orderByDefault: MANUAL_IMAGES_DEFAULT_ORDER_BY,
+    orderDefault: MANUAL_IMAGES_DEFAULT_ORDER,
+    preferenceKey: MANUAL_IMAGES_PREFERENCE_KEY,
+    isEnabled: (subType) => subType === 'owned-by-me',
+    columns: CUSTOM_IMAGES_TABLE_COLUMNS,
+    buttonProps: {
+      buttonText: 'Create Image',
+      navigateTo: '/images/create',
+      disabledToolTipText: getRestrictedResourceText({
+        action: 'create',
+        isSingular: false,
+        resourceType: 'Images',
+      }),
+    },
+    eventCategory: 'Custom Images Table',
+    emptyMessage: {
+      main: 'No custom images to display',
+      instruction:
+        'Click \u2018Create Image\u2019 to create your first custom image',
+    },
+    searchBarPendoId: OWNED_BY_ME_IMAGES_TAB_PENDO_IDS.searchImagesBar,
+  },
+  'recovery-images': {
+    title: 'Recovery images',
+    description: (
+      <>
+        These are images we automatically capture when Linode disks are deleted.
+        They will be deleted after the indicated expiration date.
+      </>
+    ),
+    type: 'automatic',
+    orderByDefault: AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
+    orderDefault: AUTOMATIC_IMAGES_DEFAULT_ORDER,
+    preferenceKey: AUTOMATIC_IMAGES_PREFERENCE_KEY,
+    isEnabled: (subType) => subType === 'recovery-images',
+    columns: RECOVERY_IMAGES_TABLE_COLUMNS,
+    eventCategory: 'Recovery Images Table',
+    emptyMessage: {
+      main: 'No recovery images to display',
+    },
+    searchBarPendoId: RECOVERY_IMAGES_TAB_PENDO_IDS.searchImagesBar,
+    docsLink: {
+      dataPendoId: RECOVERY_IMAGES_TAB_PENDO_IDS.recoverDeletedLinodeDocsLink,
+      label: 'Recover a deleted Linode',
+      href: 'https://techdocs.akamai.com/cloud-computing/docs/images#recover-a-deleted',
+    },
+  },
+  'shared-with-me': {
+    title: 'Shared with me',
+    description: (
+      <>
+        You can deploy{' '}
+        <Link
+          pendoId={SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.encryptedLink}
+          to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image"
+        >
+          encrypted
+        </Link>{' '}
+        images shared with you in a share group to any region. If you deploy the
+        instance in a different region from where the image is stored, you may
+        experience slower linode deployment times. Sharing images is free of
+        charge, but instances deployed from shared images are billed on a
+        regular basis. For details, see{' '}
+        <Link
+          pendoId={SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.accessBillingInfoLink}
+          to="https://techdocs.akamai.com/cloud-computing/docs/access-billing-information"
+        >
+          Access billing information
+        </Link>
+        .
+      </>
+    ),
+    type: 'shared',
+    orderByDefault: SHARED_IMAGES_DEFAULT_ORDER_BY,
+    orderDefault: SHARED_IMAGES_DEFAULT_ORDER,
+    preferenceKey: SHARED_IMAGES_PREFERENCE_KEY,
+    isBeta: true,
+    isEnabled: (subType) => subType === 'shared-with-me',
+    columns: SHARED_IMAGES_TABLE_COLUMNS,
+    eventCategory: 'Shared Images Table',
+    emptyMessage: {
+      main: 'No shared images to display',
+    },
+    docsLink: {
+      label: 'Image sharing',
+      href: 'https://techdocs.akamai.com/cloud-computing/docs/image-sharing',
+      dataPendoId: SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.imageSharingDocsLink,
+    },
+    searchBarPendoId: SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.searchImagesBar,
+  },
+};

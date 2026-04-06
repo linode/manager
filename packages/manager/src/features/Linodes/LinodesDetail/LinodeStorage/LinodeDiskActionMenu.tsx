@@ -1,118 +1,121 @@
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
+import { useLinodeQuery } from '@linode/queries';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { sendEvent } from 'src/utilities/analytics';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { LINODE_LOCKED_DELETE_DISK_TOOLTIP } from 'src/features/Linodes/constants';
+
+import type { Disk, Linode } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  diskId?: number;
-  label: string;
-  linodeId?: number;
-  linodeStatus: string;
+  disk: Disk;
+  linodeId: number;
+  linodeStatus: Linode['status'];
   onDelete: () => void;
-  onImagize: () => void;
   onRename: () => void;
   onResize: () => void;
-  readOnly?: boolean;
 }
 
 export const LinodeDiskActionMenu = (props: Props) => {
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-  const history = useHistory();
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const {
-    diskId,
+  const { disk, linodeId, linodeStatus, onDelete, onRename, onResize } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
+  const isLinodeSubResourcesLocked =
+    linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
+
+  const { data: permissions, isLoading } = usePermissions(
+    'linode',
+    ['update_linode', 'resize_linode', 'delete_linode', 'clone_linode'],
     linodeId,
-    linodeStatus,
-    onDelete,
-    onImagize,
-    onRename,
-    onResize,
-    readOnly,
-  } = props;
+    isOpen
+  );
 
-  let _tooltip =
-    linodeStatus === 'offline'
-      ? undefined
-      : 'Your Linode must be fully powered down in order to perform this action';
+  const { data: imagePermissions } = usePermissions('account', [
+    'create_image',
+  ]);
 
-  _tooltip = readOnly
-    ? "You don't have permissions to perform this action"
-    : _tooltip;
+  const poweredOnTooltip =
+    linodeStatus !== 'offline'
+      ? 'Your Linode must be fully powered down in order to perform this action.'
+      : undefined;
 
-  const disabledProps = _tooltip
-    ? {
-        disabled: true,
-        tooltip: _tooltip,
-      }
-    : {};
+  const swapTooltip =
+    disk.filesystem == 'swap'
+      ? 'You cannot create images from Swap images.'
+      : undefined;
+
+  const noPermissionTooltip =
+    'You do not have permission to perform this action.';
 
   const actions: Action[] = [
     {
-      disabled: readOnly,
+      disabled: !permissions.update_linode,
       onClick: onRename,
       title: 'Rename',
-      tooltip: readOnly ? _tooltip : '',
+      tooltip: !permissions.update_linode ? noPermissionTooltip : undefined,
     },
     {
+      disabled: !permissions.resize_linode || linodeStatus !== 'offline',
       onClick: onResize,
       title: 'Resize',
-      ...disabledProps,
+      tooltip: !permissions.resize_linode
+        ? noPermissionTooltip
+        : poweredOnTooltip,
     },
     {
-      onClick: onImagize,
-      title: 'Imagize',
-      ...(readOnly ? disabledProps : {}),
+      disabled: !imagePermissions.create_image || !!swapTooltip,
+      onClick: () =>
+        navigate({
+          to: `/images/create/disk`,
+          search: {
+            selectedLinode: String(linodeId),
+            selectedDisk: String(disk.id),
+          },
+        }),
+      title: 'Create Disk Image',
+      tooltip: !imagePermissions.create_image
+        ? noPermissionTooltip
+        : swapTooltip,
     },
     {
+      disabled: !permissions.clone_linode,
       onClick: () => {
-        history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
+        navigate({
+          to: `/linodes/${linodeId}/clone/disks`,
+          search: {
+            selectedDisk: String(disk.id),
+          },
+        });
       },
+      tooltip: !permissions.clone_linode ? noPermissionTooltip : undefined,
       title: 'Clone',
-      ...(readOnly ? disabledProps : {}),
     },
     {
+      disabled:
+        !permissions.delete_linode ||
+        linodeStatus !== 'offline' ||
+        isLinodeSubResourcesLocked,
       onClick: onDelete,
       title: 'Delete',
-      ...disabledProps,
+      tooltip: isLinodeSubResourcesLocked
+        ? LINODE_LOCKED_DELETE_DISK_TOOLTIP
+        : !permissions.delete_linode
+          ? noPermissionTooltip
+          : poweredOnTooltip,
     },
   ];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <Box alignItems="center" display="flex" justifyContent="flex-end">
-      {!matchesSmDown &&
-        inlineActions.map((action) => (
-          <InlineMenuAction
-            tooltipAnalyticsEvent={
-              action.title === 'Resize'
-                ? () =>
-                    sendEvent({
-                      action: `Open:tooltip`,
-                      category: `Disk ${action.title} Flow`,
-                      label: `${action.title} help icon tooltip`,
-                    })
-                : undefined
-            }
-            actionText={action.title}
-            disabled={action.disabled}
-            key={action.title}
-            onClick={action.onClick}
-            tooltip={action.tooltip}
-          />
-        ))}
-      <ActionMenu
-        actionsList={menuActions}
-        ariaLabel={`Action menu for Disk ${props.label}`}
-      />
-    </Box>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Disk ${disk.label}`}
+      loading={isLoading}
+      onOpen={() => setIsOpen(true)}
+    />
   );
 };

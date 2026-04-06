@@ -1,32 +1,35 @@
-import { styled } from '@mui/material/styles';
-import { useFormik } from 'formik';
-import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  reportAgreementSigningError,
   useAccountAgreements,
+  useAccountSettings,
   useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
-import { useAccountSettings } from 'src/queries/accountSettings';
+  useNetworkTransferPricesQuery,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { CreateBucketSchema } from '@linode/validation';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
+import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { sendCreateBucketEvent } from 'src/utilities/analytics';
-import { getErrorMap } from 'src/utilities/errorUtils';
+  useObjectStorageTypesQuery,
+} from 'src/queries/object-storage/queries';
+import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
+import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
+import { QuotasInfoNotice } from '../QuotasInfoNotice';
 import ClusterSelect from './ClusterSelect';
 import { OveragePricing } from './OveragePricing';
+
+import type { CreateObjectStorageBucketPayload } from '@linode/api-v4';
 
 interface Props {
   isOpen: boolean;
@@ -37,148 +40,180 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
+
   const { data: regions } = useRegionsQuery();
-  const { data: clusters } = useObjectStorageClusters();
-  const { data: buckets } = useObjectStorageBuckets(clusters);
+
+  const { data: bucketsData } = useObjectStorageBuckets();
+
   const {
-    error,
-    isLoading,
-    mutateAsync: createBucket,
-    reset,
-  } = useCreateBucketMutation();
+    data: objTypes,
+    isError: isErrorObjTypes,
+    isInitialLoading: isLoadingObjTypes,
+  } = useObjectStorageTypesQuery(isOpen);
+  const {
+    data: transferTypes,
+    isError: isErrorTransferTypes,
+    isInitialLoading: isLoadingTransferTypes,
+  } = useNetworkTransferPricesQuery(isOpen);
+
+  const isErrorTypes = isErrorTransferTypes || isErrorObjTypes;
+  const isLoadingTypes = isLoadingTransferTypes || isLoadingObjTypes;
+  const isInvalidPrice =
+    !objTypes || !transferTypes || isErrorTypes || isErrorTransferTypes;
+
+  const { isPending, mutateAsync: createBucket } = useCreateBucketMutation();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
-  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
-    false
-  );
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] =
+    React.useState(false);
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
-  const formik = useFormik({
-    initialValues: {
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    setError,
+    watch,
+  } = useForm<CreateObjectStorageBucketPayload>({
+    context: { buckets: bucketsData?.buckets ?? [] },
+    defaultValues: {
       cluster: '',
+      cors_enabled: true,
       label: '',
     },
-    async onSubmit(values) {
-      await createBucket(values);
-      sendCreateBucketEvent(values.cluster);
-      if (hasSignedAgreement) {
-        updateAccountAgreements({
-          eu_model: true,
-        }).catch(reportAgreementSigningError);
-      }
-      onClose();
-    },
-    validate(values) {
-      reset();
-      const doesBucketExist = buckets?.buckets.find(
-        (b) => b.label === values.label && b.cluster === values.cluster
-      );
-      if (doesBucketExist) {
-        return {
-          label:
-            'A bucket with this label already exists in your selected region',
-        };
-      }
-      return {};
-    },
+    mode: 'onBlur',
+    resolver: yupResolver(CreateBucketSchema),
   });
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    if (accountSettings?.object_storage === 'active') {
-      formik.handleSubmit(e);
-    } else {
-      setIsEnableObjDialogOpen(true);
+  const watchCluster = watch('cluster');
+
+  const onSubmit = async (data: CreateObjectStorageBucketPayload) => {
+    try {
+      await createBucket(data);
+
+      if (data.cluster) {
+        sendCreateBucketEvent(data.cluster);
+      }
+
+      if (hasSignedAgreement) {
+        try {
+          await updateAccountAgreements({ eu_model: true });
+        } catch (error) {
+          reportAgreementSigningError(error);
+        }
+      }
+
+      handleClose();
+    } catch (errors) {
+      for (const error of errors) {
+        setError(error?.field ?? 'root', { message: error.reason });
+      }
     }
   };
 
-  React.useEffect(() => {
-    if (isOpen) {
-      formik.resetForm();
-      reset();
+  const handleBucketFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (accountSettings?.object_storage !== 'active') {
+      setIsEnableObjDialogOpen(true);
+    } else {
+      handleSubmit(onSubmit)();
     }
-  }, [isOpen]);
+  };
 
-  const clusterRegion =
-    regions &&
-    regions.filter((region) => {
-      return formik.values.cluster.includes(region.id);
-    });
+  const clusterRegion = watchCluster
+    ? regions?.find((region) => watchCluster.includes(region.id))
+    : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
     regions,
-    selectedRegionId: clusterRegion?.[0]?.id ?? '',
+    selectedRegionId: clusterRegion?.id ?? '',
   });
 
-  const errorMap = getErrorMap(['label', 'cluster'], error);
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
 
   return (
-    <Drawer onClose={onClose} open={isOpen} title="Create Bucket">
-      <form onSubmit={onSubmit}>
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
+      <form onSubmit={handleBucketFormSubmit}>
+        <QuotasInfoNotice action="creating a bucket" />
         {isRestrictedUser && (
           <Notice
             data-qa-permissions-notice
-            important
             text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
             variant="error"
           />
         )}
-        {Boolean(errorMap.none) && (
-          <Notice text={errorMap.none} variant="error" />
+        {errors.root?.message && (
+          <Notice text={errors.root?.message} variant="error" />
         )}
-        <TextField
-          data-qa-cluster-label
-          data-testid="label"
-          disabled={isRestrictedUser}
-          errorText={errorMap.label ?? formik.errors.label}
-          label="Label"
+        <Controller
+          control={control}
           name="label"
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          required
-          value={formik.values.label}
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              data-qa-cluster-label
+              data-testid="label"
+              disabled={isRestrictedUser}
+              errorText={fieldState.error?.message}
+              label="Bucket Name"
+              required
+            />
+          )}
+          rules={{ required: 'Bucket name is required' }}
         />
-        <ClusterSelect
-          data-qa-cluster-select
-          disabled={isRestrictedUser}
-          error={errorMap.cluster}
-          onBlur={formik.handleBlur}
-          onChange={(value) => formik.setFieldValue('cluster', value)}
-          required
-          selectedCluster={formik.values.cluster}
+        <Controller
+          control={control}
+          name="cluster"
+          render={({ field, fieldState }) => (
+            <ClusterSelect
+              {...field}
+              data-qa-cluster-select
+              disabled={isRestrictedUser}
+              error={fieldState.error?.message}
+              onChange={(value) => field.onChange(value)}
+              required
+              selectedCluster={field.value ?? undefined}
+            />
+          )}
+          rules={{ required: 'Cluster is required' }}
         />
-        {clusterRegion?.[0]?.id && (
-          <OveragePricing regionId={clusterRegion?.[0]?.id} />
-        )}
-        {showGDPRCheckbox ? (
+        {clusterRegion?.id && <OveragePricing regionId={clusterRegion.id} />}
+        {showGDPRCheckbox && (
           <StyledEUAgreementCheckbox
             checked={hasSignedAgreement}
             onChange={(e) => setHasSignedAgreement(e.target.checked)}
           />
-        ) : null}
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
             disabled:
-              !formik.values.cluster ||
-              (showGDPRCheckbox && !hasSignedAgreement),
+              (showGDPRCheckbox && !hasSignedAgreement) ||
+              isErrorTypes ||
+              isRestrictedUser,
             label: 'Create Bucket',
-            loading: isLoading,
+            loading: isPending || Boolean(clusterRegion?.id && isLoadingTypes),
+            tooltipText:
+              !isLoadingTypes && isInvalidPrice
+                ? PRICES_RELOAD_ERROR_NOTICE_TEXT
+                : '',
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
-
         <EnableObjectStorageModal
-          handleSubmit={formik.handleSubmit}
+          handleSubmit={handleSubmit(onSubmit)}
           onClose={() => setIsEnableObjDialogOpen(false)}
           open={isEnableObjDialogOpen}
-          regionId={clusterRegion?.[0]?.id}
+          regionId={clusterRegion?.id}
         />
       </form>
     </Drawer>

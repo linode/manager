@@ -1,26 +1,38 @@
-import { IPv6Prefix } from '@linode/api-v4/lib/networking';
-import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
 import {
   useAllocateIPMutation,
   useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Box,
+  Divider,
+  Drawer,
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
-type IPType = 'v4Private' | 'v4Public';
+import { Link } from 'src/components/Link';
 
-const ipOptions: Item<IPType>[] = [
+import { ExplainerCopy } from './ExplainerCopy';
+
+import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
+
+export type IPType = 'v4Private' | 'v4Public';
+
+type IPOption = {
+  label: string;
+  value: IPType;
+};
+
+const ipOptions: IPOption[] = [
   { label: 'Public', value: 'v4Public' },
   { label: 'Private', value: 'v4Private' },
 ];
@@ -29,27 +41,6 @@ const prefixOptions = [
   { label: '/64', value: '64' },
   { label: '/56', value: '56' },
 ];
-
-// @todo: Pre-fill support tickets.
-const explainerCopy: Record<IPType, JSX.Element> = {
-  v4Private: (
-    <>
-      Add a private IP address to your Linode. Data sent explicitly to and from
-      private IP addresses in the same data center does not incur transfer quota
-      usage. To ensure that the private IP is properly configured once added,
-      it&rsquo;s best to reboot your Linode.
-    </>
-  ),
-  v4Public: (
-    <>
-      Public IP addresses, over and above the one included with each Linode,
-      incur an additional monthly charge. If you need an additional Public IP
-      Address you must request one. Please open a{' '}
-      <Link to="support/tickets">Support Ticket</Link> if you have not done so
-      already.
-    </>
-  ),
-};
 
 const IPv6ExplanatoryCopy = {
   56: (
@@ -66,42 +57,41 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, JSX.Element | null> = {
-  v4Private: <>This Linode already has a private IP address.</>,
+const tooltipCopy: Record<IPType, null | string> = {
+  v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
 
 interface Props {
   linodeId: number;
+  linodeIsInDistributedRegion?: boolean;
   onClose: () => void;
   open: boolean;
   readOnly: boolean;
 }
 
 export const AddIPDrawer = (props: Props) => {
-  const { linodeId, onClose, open, readOnly } = props;
-  const theme = useTheme();
+  const { linodeId, linodeIsInDistributedRegion, onClose, open, readOnly } =
+    props;
 
   const {
     error: ipv4Error,
-    isLoading: ipv4Loading,
+    isPending: ipv4Loading,
     mutateAsync: allocateIPAddress,
     reset: resetIPv4,
   } = useAllocateIPMutation(linodeId);
 
   const {
     error: ipv6Error,
-    isLoading: ipv6Loading,
+    isPending: ipv6Loading,
     mutateAsync: createIPv6Range,
     reset: resetIPv6,
   } = useCreateIPv6RangeMutation();
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);
 
-  const [
-    selectedIPv6Prefix,
-    setSelectedIPv6Prefix,
-  ] = React.useState<IPv6Prefix | null>(null);
+  const [selectedIPv6Prefix, setSelectedIPv6Prefix] =
+    React.useState<IPv6Prefix | null>(null);
 
   const { data: ips } = useLinodeIPsQuery(linodeId, open);
 
@@ -163,113 +153,137 @@ export const AddIPDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Add an IP Address">
-      <React.Fragment>
-        <Typography variant="h2">IPv4</Typography>
+      <Stack spacing={2}>
+        <Typography variant="h3">IPv4</Typography>
         {Boolean(ipv4Error) && (
-          <Notice spacingTop={8} text={ipv4Error?.[0].reason} variant="error" />
+          <Notice spacingTop={4} text={ipv4Error?.[0].reason} variant="error" />
         )}
-        <Typography sx={{ marginTop: '1rem' }} variant="h3">
-          Select type
-        </Typography>
-        <RadioGroup
-          aria-label="ip-option"
+
+        <StyledRadioGroup
+          aria-labelledby="ipv4-select-type"
           data-qa-ip-options-radio-group
           name="Select IPv4 type"
           onChange={handleIPv4Change}
-          sx={{ marginTop: '0 !important' }}
           value={selectedIPv4}
         >
-          {ipOptions.map((option, idx) => (
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-radio={option.label}
-              key={idx}
-              label={option.label}
-              value={option.value}
+          {linodeIsInDistributedRegion && (
+            <Notice
+              sx={{ fontSize: 15 }}
+              text="Private IP is currently not available for distributed regions."
+              variant="warning"
             />
-          ))}
-        </RadioGroup>
+          )}
+          <Typography id="ipv4-select-type">Select type</Typography>
+          <Box>
+            {ipOptions.map((option, idx) => (
+              <FormControlLabel
+                control={<Radio />}
+                data-qa-radio={option.label}
+                disabled={
+                  option.value === 'v4Private' && linodeIsInDistributedRegion
+                }
+                key={idx}
+                label={option.label}
+                value={option.value}
+              />
+            ))}
+          </Box>
+        </StyledRadioGroup>
         {selectedIPv4 && (
-          <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
-            {explainerCopy[selectedIPv4]}
+          <Typography>
+            <ExplainerCopy ipType={selectedIPv4} linodeId={linodeId} />
           </Typography>
         )}
 
         {_tooltipCopy ? (
           <Tooltip placement="bottom-end" title={_tooltipCopy}>
             <div style={{ display: 'inline' }}>
-              <ActionsPanel
+              <StyledActionsPanel
                 primaryButtonProps={{
                   disabled: disabledIPv4,
                   label: 'Allocate',
                   loading: ipv4Loading,
                   onClick: handleAllocateIPv4,
-                  sx: { marginBottom: 8 },
                 }}
               />
             </div>
           </Tooltip>
         ) : (
-          <ActionsPanel
+          <StyledActionsPanel
             primaryButtonProps={{
               disabled: disabledIPv4,
               label: 'Allocate',
               loading: ipv4Loading,
               onClick: handleAllocateIPv4,
-              sx: { marginBottom: 8 },
             }}
           />
         )}
-        <Typography sx={{ marginTop: theme.spacing(4) }} variant="h2">
+        <Divider sx={{ pt: 1 }} />
+        <Typography sx={{ pt: 1 }} variant="h3">
           IPv6
         </Typography>
         {Boolean(ipv6Error) && (
-          <Notice spacingTop={8} text={ipv6Error?.[0].reason} variant="error" />
+          <Notice spacingTop={4} text={ipv6Error?.[0].reason} variant="error" />
         )}
-        <Typography sx={{ marginTop: '1rem' }} variant="h3">
-          Select prefix
-        </Typography>
-        <RadioGroup
-          aria-label="prefix-option"
+
+        <StyledRadioGroup
+          aria-labelledby="ipv6-select-type"
           data-qa-ip-options-radio-group
-          name="Select prefix"
+          name="Select IPv6 type"
           onChange={handleIPv6Change}
-          sx={{ marginTop: '0 !important' }}
           value={selectedIPv6Prefix}
         >
-          {prefixOptions.map((option, idx) => (
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-radio={option.label}
-              key={idx}
-              label={option.label}
-              value={option.value}
-            />
-          ))}
-        </RadioGroup>
+          <Typography id="ipv6-select-type">Select prefix</Typography>
+          <Box>
+            {prefixOptions.map((option, idx) => (
+              <FormControlLabel
+                control={<Radio />}
+                data-qa-radio={option.label}
+                key={idx}
+                label={option.label}
+                value={option.value}
+              />
+            ))}
+          </Box>
+        </StyledRadioGroup>
         {selectedIPv6Prefix && (
-          <Typography style={{ marginBottom: '1rem' }} variant="body1">
-            {IPv6ExplanatoryCopy[selectedIPv6Prefix]}
-          </Typography>
+          <Typography>{IPv6ExplanatoryCopy[selectedIPv6Prefix]}</Typography>
         )}
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself.{' '}
-          <Link to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/an-overview-of-ipv6-on-linode">
             Learn more
           </Link>
           .
         </Typography>
-        <ActionsPanel
+        <StyledActionsPanel
           primaryButtonProps={{
             disabled: disabledIPv6,
             label: 'Allocate',
             loading: ipv6Loading,
             onClick: handleCreateIPv6Range,
-            sx: { marginBottom: 8 },
           }}
         />
-      </React.Fragment>
+      </Stack>
     </Drawer>
   );
 };
+
+const StyledRadioGroup = styled(RadioGroup, {
+  label: 'StyledApiDrawerRadioGroup',
+})(({ theme }) => ({
+  '& label': {
+    minWidth: 100,
+  },
+  '& p': {
+    font: theme.font.bold,
+  },
+  marginBottom: '0 !important',
+}));
+
+const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+}));

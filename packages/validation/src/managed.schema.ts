@@ -68,13 +68,13 @@ export const createContactSchema = object().shape({
     .email('Invalid e-mail address'),
   phone: object()
     .shape({
-      primary: string().nullable(true).notRequired(),
-      secondary: string().nullable(true).notRequired(),
+      primary: string().nullable().notRequired(),
+      secondary: string().nullable().notRequired(),
     })
     .notRequired(),
   group: string()
     .notRequired()
-    .nullable(true)
+    .nullable()
     .min(2, 'Group must be between 2 and 50 characters.')
     .max(50, 'Group must be between 2 and 50 characters.'),
 });

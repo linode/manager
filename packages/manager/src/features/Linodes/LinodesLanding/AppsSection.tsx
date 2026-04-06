@@ -14,33 +14,27 @@ const linkGAEventTemplate = {
 const appsLinkData = [
   {
     text: 'Wordpress',
-    to:
-      '/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress',
+    to: '/linodes/create/marketplace?appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress',
   },
   {
     text: 'Harbor',
-    to:
-      '/linodes/create?type=One-Click&appID=912262&utm_source=marketplace&utm_medium=website&utm_campaign=Harbor',
+    to: '/linodes/create/marketplace?appID=912262&utm_source=marketplace&utm_medium=website&utm_campaign=Harbor',
   },
   {
     text: 'cPanel',
-    to:
-      '/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel',
+    to: '/linodes/create/marketplace?appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel',
   },
   {
     text: 'Postgres Cluster',
-    to:
-      '/linodes/create?type=One-Click&appID=1068726&utm_source=marketplace&utm_medium=website&utm_campaign=Postgres_Cluster',
+    to: '/linodes/create/marketplace?appID=1068726&utm_source=marketplace&utm_medium=website&utm_campaign=Postgres_Cluster',
   },
   {
     text: 'Prometheus & Grafana',
-    to:
-      '/linodes/create?type=One-Click&appID=985364&utm_source=marketplace&utm_medium=website&utm_campaign=Prometheus_Grafana',
+    to: '/linodes/create/marketplace?appID=985364&utm_source=marketplace&utm_medium=website&utm_campaign=Prometheus_Grafana',
   },
   {
     text: 'Kali',
-    to:
-      '/linodes/create?type=One-Click&appID=1017300&utm_source=marketplace&utm_medium=website&utm_campaign=Kali',
+    to: '/linodes/create/marketplace?appID=1017300&utm_source=marketplace&utm_medium=website&utm_campaign=Kali',
   },
 ];
 
@@ -101,7 +95,7 @@ const StyledLink = styled(Link, { label: 'StyledLink' })(({ theme }) => ({
   }`,
   color: theme.palette.text.primary,
   display: 'flex',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.875rem',
   gridColumn: 'span 1',
   height: theme.spacing(4.75),

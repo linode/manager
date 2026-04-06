@@ -1,22 +1,26 @@
 import * as React from 'react';
 
-import { extendedTypeFactory } from 'src/factories/types';
+import { planSelectionTypeFactory } from 'src/factories/types';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  KubernetesPlanContainer,
-  KubernetesPlanContainerProps,
-} from './KubernetesPlanContainer';
+import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
-const plans = extendedTypeFactory.buildList(2);
+import type { KubernetesPlanContainerProps } from './KubernetesPlanContainer';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
+
+const plans: PlanWithAvailability[] = planSelectionTypeFactory.buildList(2);
 
 const props: KubernetesPlanContainerProps = {
+  allDisabledPlans: [],
   getTypeCount: vi.fn(),
+  hasMajorityOfPlansDisabled: false,
   onSelect: vi.fn(),
   plans,
-  selectedRegionID: undefined,
+  selectedTier: 'standard',
+  selectedRegionId: undefined,
   updatePlanCount: vi.fn(),
+  wholePanelIsDisabled: false,
 };
 
 beforeAll(() => mockMatchMedia());

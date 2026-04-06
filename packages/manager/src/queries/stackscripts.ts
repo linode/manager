@@ -1,28 +1,23 @@
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { APIError, Params } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { stackscriptQueries } from '@linode/queries';
 
-import { data as placeholderData } from 'src/cachedData/marketplace.json';
-import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
-import { getAll } from 'src/utilities/getAll';
+import type { EventHandlerData } from '@linode/queries';
 
-import { queryPresets } from './base';
+export const stackScriptEventHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
+  // Keep the infinite store up to date
+  invalidateQueries({
+    queryKey: stackscriptQueries.infinite._def,
+  });
+  invalidateQueries({
+    queryKey: stackscriptQueries.all.queryKey,
+  });
 
-export const queryKey = 'stackscripts';
-
-export const useStackScriptsOCA = (enabled: boolean, params: Params = {}) => {
-  return useQuery<StackScript[], APIError[]>(
-    [`${queryKey}-oca-all`, params],
-    () => getAllOCAsRequest(params),
-    {
-      enabled,
-      placeholderData,
-      ...queryPresets.oneTimeFetch,
-    }
-  );
+  // If the event has a StackScript entity attached, invalidate it
+  if (event.entity?.id) {
+    invalidateQueries({
+      queryKey: stackscriptQueries.stackscript(event.entity.id).queryKey,
+    });
+  }
 };
-
-export const getAllOCAsRequest = (passedParams: Params = {}) =>
-  getAll<StackScript>((params) =>
-    getOneClickApps({ ...params, ...passedParams })
-  )().then((data) => data.data);

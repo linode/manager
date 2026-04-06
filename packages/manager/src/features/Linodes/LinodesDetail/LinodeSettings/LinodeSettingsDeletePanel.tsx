@@ -1,16 +1,11 @@
+import { useDeleteLinodeMutation, useLinodeQuery } from '@linode/queries';
+import { Accordion, Button, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Accordion } from 'src/components/Accordion';
-import { Button } from 'src/components/Button/Button';
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
-import {
-  useDeleteLinodeMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { LINODE_LOCKED_DELETE_TOOLTIP } from 'src/features/Linodes/constants';
+import { useEventsPollingActions } from 'src/queries/events/events';
 
 interface Props {
   isReadOnly?: boolean;
@@ -22,18 +17,25 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteLinode,
   } = useDeleteLinodeMutation(linodeId);
 
-  const history = useHistory();
+  const { checkForNewEvents } = useEventsPollingActions();
+
+  const navigate = useNavigate();
 
   const [open, setOpen] = React.useState<boolean>(false);
 
+  const isLocked = !!linode?.locks?.length;
+  const isDisabled = isReadOnly || isLocked;
+
   const onDelete = async () => {
     await deleteLinode();
-    resetEventsPolling();
-    history.push('/linodes');
+    checkForNewEvents();
+    navigate({
+      to: '/linodes',
+    });
   };
 
   return (
@@ -42,9 +44,10 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
         <Button
           buttonType="primary"
           data-qa-delete-linode
-          disabled={isReadOnly}
+          disabled={isDisabled}
           onClick={() => setOpen(true)}
           style={{ marginBottom: 8 }}
+          tooltipText={LINODE_LOCKED_DELETE_TOOLTIP}
         >
           Delete
         </Button>
@@ -60,8 +63,9 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
           type: 'Linode',
         }}
         errors={error}
+        expand
         label={'Linode Label'}
-        loading={isLoading}
+        loading={isPending}
         onClick={onDelete}
         onClose={() => setOpen(false)}
         open={open}

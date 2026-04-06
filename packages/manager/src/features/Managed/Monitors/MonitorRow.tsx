@@ -1,14 +1,13 @@
-import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Tooltip, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { TableCell } from 'src/components/TableCell';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-import { ExtendedIssue } from 'src/queries/managed/types';
 
-import ActionMenu from './MonitorActionMenu';
+import { MonitorActionMenu } from './MonitorActionMenu';
+import { getStatusColorMap, statusIconMap, statusTextMap } from './monitorMaps';
 import {
   StyledGrid,
   StyledLink,
@@ -16,26 +15,21 @@ import {
   StyledTableRow,
   StyledTypography,
 } from './MonitorRow.styles';
-import { statusIconMap, statusTextMap } from './monitorMaps';
+
+import type { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import type { ExtendedIssue } from 'src/queries/managed/types';
 
 interface MonitorRowProps {
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
-  openDialog: (id: number, label: string) => void;
-  openHistoryDrawer: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
 }
 
 export const MonitorRow = (props: MonitorRowProps) => {
-  const {
-    issues,
-    monitor,
-    openDialog,
-    openHistoryDrawer,
-    openMonitorDrawer,
-  } = props;
+  const { issues, monitor } = props;
+  const theme = useTheme();
 
   const Icon = statusIconMap[monitor.status];
+  const statusColors = getStatusColorMap(theme);
 
   // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
   const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
@@ -45,21 +39,38 @@ export const MonitorRow = (props: MonitorRowProps) => {
 
   return (
     <StyledTableRow
-      ariaLabel={`Monitor ${monitor.label}`}
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
       key={monitor.id}
     >
       <StyledTableCell data-qa-monitor-label>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+          wrap="nowrap"
+        >
           <StyledGrid>
-            <Icon height={30} width={30} />
+            <Icon
+              height={30}
+              style={{ color: statusColors[monitor.status] }}
+              width={30}
+            />
           </StyledGrid>
           <Grid>{monitor.label}</Grid>
         </Grid>
       </StyledTableCell>
       <TableCell data-qa-monitor-status>
-        <Grid alignItems="center" container direction="row" spacing={1}>
+        <Grid
+          container
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <Grid>
             <ConditionalTypography>
               {statusTextMap[monitor.status]}
@@ -86,12 +97,9 @@ export const MonitorRow = (props: MonitorRowProps) => {
         <Typography>{monitor.address}</Typography>
       </TableCell>
       <TableCell actionCell>
-        <ActionMenu
+        <MonitorActionMenu
           label={monitor.label}
-          monitorID={monitor.id}
-          openDialog={openDialog}
-          openHistoryDrawer={openHistoryDrawer}
-          openMonitorDrawer={openMonitorDrawer}
+          monitorId={monitor.id}
           status={monitor.status}
         />
       </TableCell>

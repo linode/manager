@@ -2,10 +2,11 @@ import { DateTime } from 'luxon';
 
 import { isPast } from 'src/utilities/isPast';
 
-export type Permission = [string, number];
+import type { ExcludedScope } from './CreateAPITokenDrawer';
 
 export const basePerms = [
   'account',
+  'child_account',
   'databases',
   'domains',
   'events',
@@ -15,14 +16,17 @@ export const basePerms = [
   'linodes',
   'lke',
   'longview',
+  'monitor',
   'nodebalancers',
   'object_storage',
   'stackscripts',
   'volumes',
+  'vpc',
 ] as const;
 
-export const basePermNameMap: Record<string, string> = {
+export const basePermNameMap = {
   account: 'Account',
+  child_account: 'Child Account Access',
   databases: 'Databases',
   domains: 'Domains',
   events: 'Events',
@@ -32,17 +36,24 @@ export const basePermNameMap: Record<string, string> = {
   linodes: 'Linodes',
   lke: 'Kubernetes',
   longview: 'Longview',
+  monitor: 'Monitor',
   nodebalancers: 'NodeBalancers',
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes',
-};
+  vpc: 'VPCs',
+} as const;
+
+type PermissionKey = keyof typeof basePermNameMap;
+
+export type Permission = [PermissionKey, number];
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
 export const levelMap = {
   create: 2,
   delete: 2,
+  hidden: -1,
   modify: 2,
   none: 0,
   read_only: 1,
@@ -50,8 +61,16 @@ export const levelMap = {
   view: 1,
 };
 
-const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
-  perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
+const NO_SCOPE_SELECTION = -1;
+
+const defaultScopeMap = (
+  perms: typeof basePerms,
+  isCreateFlow?: boolean
+): Record<string, -1 | 0> =>
+  perms.reduce(
+    (obj, key) => ({ ...obj, [key]: isCreateFlow ? NO_SCOPE_SELECTION : 0 }),
+    {}
+  );
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
@@ -79,18 +98,24 @@ const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
  * Each permission level gives a user access to all lower permission levels.
  */
 const permRegex = new RegExp(/[, ]/);
-export const scopeStringToPermTuples = (scopes: string): Permission[] => {
+export const scopeStringToPermTuples = (
+  scopes: string,
+  isCreateFlow?: boolean
+): Permission[] => {
   if (scopes === '*') {
     return basePerms.map((perm) => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
-    const [perm, level] = scopeStr.split(':');
-    return {
-      ...map,
-      [perm]: levelMap[level],
-    };
-  }, defaultScopeMap(basePerms));
+  const scopeMap = scopes.split(permRegex).reduce(
+    (map, scopeStr) => {
+      const [perm, level] = scopeStr.split(':');
+      return {
+        ...map,
+        [perm]: levelMap[level as keyof typeof levelMap],
+      };
+    },
+    defaultScopeMap(basePerms, isCreateFlow)
+  );
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -139,26 +164,29 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
 
 export const allMaxPerm = (
   scopeTups: Permission[],
-  perms: typeof basePerms
+  perms: typeof basePerms,
+  exclude: PermissionKey[] = []
 ): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
 
-  return scopeTups.reduce(
-    (acc: boolean, [key, value]: Permission) =>
-      value === levelMap.read_write && acc,
-    true
+  const excludeSet = new Set(exclude);
+  return scopeTups.every(
+    ([key, value]) => value === levelMap.read_write || excludeSet.has(key)
   );
 };
 
-export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
-  if (allMaxPerm(scopeTups, basePerms)) {
+export const permTuplesToScopeString = (
+  scopeTups: Permission[],
+  exclude: PermissionKey[]
+): string => {
+  if (allMaxPerm(scopeTups, basePerms, exclude)) {
     return '*';
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {
     const level = inverseLevelMap[value];
-    if (level !== 'none') {
+    if (level && level !== 'none') {
       return [...acc, [key, level].join(':')];
     }
     return [...acc];
@@ -173,13 +201,28 @@ export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
  * returned. Otherwise, `null` is returned.
  *
  * @param scopes - Permission scopes for which to check access levels.
+ * @param excludedScopes - Permission scopes for which to exclude from the access level check. (e.g. they have a different default)
+ * Example: { name: 'vpc', defaultAccessLevel: 0 } would ignore the VPC scope when it's set to None.
  *
  * @returns Access level for the given scopes if they are all the same; `null` otherwise.
  */
-export const allScopesAreTheSame = (scopes: Permission[]) => {
+export const allScopesAreTheSame = (
+  scopes: Permission[],
+  excludedScopes?: ExcludedScope[]
+) => {
   const sample = scopes[0];
+
+  // Filter out any scopes that are set to their own defaults.
+  const filteredScopes = scopes.filter(
+    (scope: Permission) =>
+      !excludedScopes?.find(
+        (excludedScope) =>
+          excludedScope.name === scope[0] &&
+          excludedScope.defaultAccessLevel === scope[1]
+      )
+  );
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
-  return scopes.slice(1).every(scopeMatches) ? sample[1] : null;
+  return filteredScopes.slice(1).every(scopeMatches) ? sample[1] : null;
 };
 
 /**
@@ -188,4 +231,56 @@ export const allScopesAreTheSame = (scopes: Permission[]) => {
 export const isWayInTheFuture = (time: string) => {
   const wayInTheFuture = DateTime.local().plus({ years: 100 }).toISO();
   return isPast(wayInTheFuture)(time);
+};
+
+/**
+ * Filters permissions from a base map, removing those specified in the perm parameter.
+ *
+ * @param basePermNameMap - Map of API permission keys to their corresponding Cloud names.
+ * @param perm - Array of objects specifying permissions for inclusion or exclusion:
+ *  - name: Key of the permission to filter.
+ *  - shouldBeIncluded: Boolean indicating whether to include or exclude the permission.
+ *
+ * @returns A new map containing only the allowed permissions from basePermNameMap.
+ */
+export const filterPermsNameMap = <
+  // We're constraining T to an array of objects with the following shape:
+  T extends { name: keyof typeof basePermNameMap; shouldBeIncluded: boolean }[],
+>(
+  permMap: typeof basePermNameMap,
+  perm: T
+): // Return type excludes the keys specified by T in the perm parameter dynamically.
+Omit<typeof basePermNameMap, T[number]['name']> => {
+  const filteredPermNameMap = { ...permMap };
+
+  for (const { name, shouldBeIncluded } of perm) {
+    if (!shouldBeIncluded && filteredPermNameMap[name]) {
+      delete filteredPermNameMap[name];
+    }
+  }
+
+  return filteredPermNameMap;
+};
+
+/**
+ * Determines whether a selection has been made for every scope, since by default, the scope permissions are set to null.
+ *
+ * @param scopeTuples - The array of scope tuples.
+ * @param excludedPerms - The permission keys to be excluded from this check.
+ * @returns {boolean} True if all scopes have permissions set to none/read_only/read_write, false otherwise.
+ */
+export const hasAccessBeenSelectedForAllScopes = (
+  scopeTuples: Permission[],
+  excludedPerms?: PermissionKey[]
+): boolean => {
+  const validAccessLevels = [
+    levelMap['none'],
+    levelMap['read_only'],
+    levelMap['read_write'],
+  ];
+  return scopeTuples.every(
+    (scopeTuple) =>
+      validAccessLevels.includes(scopeTuple[1]) ||
+      excludedPerms?.includes(scopeTuple[0])
+  );
 };

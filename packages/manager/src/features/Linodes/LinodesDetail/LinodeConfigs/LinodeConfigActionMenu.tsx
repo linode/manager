@@ -1,13 +1,14 @@
-import { Config } from '@linode/api-v4/lib/linodes';
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
+import { useLinodeQuery } from '@linode/queries';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { NO_PERMISSION_TOOLTIP_TEXT } from 'src/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { LINODE_LOCKED_DELETE_CONFIG_TOOLTIP } from 'src/features/Linodes/constants';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   config: Config;
@@ -16,66 +17,75 @@ interface Props {
   onBoot: () => void;
   onDelete: () => void;
   onEdit: () => void;
-  readOnly?: boolean;
 }
 
 export const ConfigActionMenu = (props: Props) => {
-  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
-  const history = useHistory();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { config, linodeId, onBoot, onDelete, onEdit } = props;
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const tooltip = readOnly
-    ? "You don't have permission to perform this action"
-    : undefined;
+  const { data: linode } = useLinodeQuery(linodeId);
+  const isLinodeSubResourcesLocked =
+    linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
+
+  const { data: permissions, isLoading } = usePermissions(
+    'linode',
+    ['reboot_linode', 'update_linode', 'clone_linode', 'delete_linode'],
+    linodeId,
+    isOpen
+  );
 
   const actions: Action[] = [
     {
+      disabled: !permissions.reboot_linode,
       onClick: onBoot,
       title: 'Boot',
+      tooltip: !permissions.reboot_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
+      disabled: !permissions.update_linode,
       onClick: onEdit,
       title: 'Edit',
+      tooltip: !permissions.update_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
-      disabled: readOnly,
+      disabled: !permissions.clone_linode,
       onClick: () => {
-        history.push(
-          `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-        );
+        navigate({
+          to: `/linodes/${linodeId}/clone/configs`,
+          search: (prev) => ({
+            ...prev,
+            selectedConfig: config.id,
+          }),
+        });
       },
       title: 'Clone',
+      tooltip: !permissions.clone_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
-      disabled: readOnly,
+      disabled: !permissions.delete_linode || isLinodeSubResourcesLocked,
       onClick: onDelete,
       title: 'Delete',
-      tooltip,
+      tooltip: isLinodeSubResourcesLocked
+        ? LINODE_LOCKED_DELETE_CONFIG_TOOLTIP
+        : !permissions.delete_linode
+          ? NO_PERMISSION_TOOLTIP_TEXT
+          : undefined,
     },
   ];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <Box alignItems="center" display="flex" justifyContent="flex-end">
-      {!matchesSmDown &&
-        inlineActions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              disabled={action.disabled}
-              key={action.title}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <ActionMenu
-        actionsList={menuActions}
-        ariaLabel={`Action menu for Linode Config ${props.label}`}
-      />
-    </Box>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Linode Config ${props.label}`}
+      loading={isLoading}
+      onOpen={() => setIsOpen(true)}
+    />
   );
 };

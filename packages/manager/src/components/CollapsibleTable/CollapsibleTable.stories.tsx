@@ -8,7 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import { CollapsibleTable } from './CollapsibleTable';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof CollapsibleTable> = {
   args: {
@@ -47,6 +47,7 @@ export const Default: StoryObj<typeof CollapsibleTable> = {
             <TableCell>159</TableCell>
             <TableCell>6</TableCell>
             <TableCell>24</TableCell>
+            <TableCell />
           </>
         ),
         id: 1,
@@ -59,7 +60,7 @@ export const Default: StoryObj<typeof CollapsibleTable> = {
         <TableCell sx={{ width: '14%' }}>Calories</TableCell>
         <TableCell sx={{ width: '18%' }}>Fat (g)</TableCell>
         <TableCell sx={{ width: '10%' }}>Carbs (g) </TableCell>
-        <TableCell></TableCell>
+        <TableCell />
       </TableRow>
     ),
   },

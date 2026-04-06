@@ -1,11 +1,11 @@
-import { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import { QueryClient } from 'react-query';
-import { MapStateToProps as _MapStateToProps } from 'react-redux';
-import { Action, Dispatch } from 'redux';
-import { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
+import type { MapStateToProps as _MapStateToProps } from 'react-redux';
 
-import { ApplicationState } from 'src/store';
+import type { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { QueryClient } from '@tanstack/react-query';
+import type { Action, Dispatch } from 'redux';
+import type { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
+import type { ApplicationState } from 'src/store';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
   entity: EventEntity;
@@ -34,73 +34,6 @@ export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>;
 
 export type MapState<S, O> = _MapStateToProps<S, O, ApplicationState>;
 
-export interface HasStringID {
-  id: string;
-}
-
-export interface HasNumericID {
-  id: number;
-}
-
-export type Entity = HasNumericID | HasStringID;
-
-export type TypeOfID<T> = T extends HasNumericID ? number : string;
-
-export type EntityMap<T> = Record<string, T>;
-
-export interface MappedEntityState<
-  T extends Entity,
-  E = APIError[] | undefined
-> {
-  error?: E;
-  items: string[];
-  itemsById: EntityMap<T>;
-  lastUpdated: number;
-  loading: boolean;
-}
-
-// NOTE: These 2 interfaces are as of 2/26/2020 what we intend to consolidate around
-export interface MappedEntityState2<T extends Entity, E = EntityError> {
-  error: E;
-  itemsById: Record<string, T>;
-  lastUpdated: number;
-  loading: boolean;
-  results: number;
-}
-
-export type RelationalMappedEntityState<T extends Entity, E> = Record<
-  number | string,
-  MappedEntityState2<T, E>
->;
-
-export interface EntityState<T extends Entity, E = APIError[] | undefined> {
-  entities: T[];
-  error?: E;
-  lastUpdated: number;
-  loading: boolean;
-  results: TypeOfID<T>[];
-}
-
-export interface RequestableData<D, E = APIError[]> {
-  data?: D;
-  error?: E;
-  lastUpdated: number;
-  loading: boolean;
-}
-
-// Rename to RequestableData and delete above when all components are using this pattern
-export interface RequestableDataWithEntityError<D> {
-  data?: D;
-  error: EntityError;
-  lastUpdated: number;
-  loading: boolean;
-  results?: number;
-}
-
-export interface RequestableRequiredData<D> extends RequestableData<D> {
-  data: D;
-}
-
 export type EventHandler = (
   event: EntityEvent,
   dispatch: Dispatch<any>,
@@ -127,7 +60,7 @@ export interface EntitiesAsObjectState<T> {
  * and the data is the actual stats for the Client
  */
 export type RelationalDataSet<T extends {}, E = EntityError> = Record<
-  string,
+  number | string,
   Partial<{
     data: T;
     error: E;

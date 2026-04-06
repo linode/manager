@@ -1,15 +1,18 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
-import { sendHelpButtonClickEvent } from 'src/utilities/analytics';
+import { sendHelpButtonClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export interface DocsLinkProps {
-  /** The label to use for analytics purposes */
+  /** DEPRECATED: The label to use for Adobe Analytics purposes */
   analyticsLabel?: string;
   /** The URL to link to */
   href: string;
+  /*  */
+  icon?: JSX.Element;
   /**
    * The clickable text of the link
    * @default Docs
@@ -17,8 +20,8 @@ export interface DocsLinkProps {
   label?: string;
   /** A callback function when the link is clicked */
   onClick?: () => void;
-  /*  */
-  icon?: JSX.Element;
+  /** The Pendo ID to use for tracking purposes */
+  pendoId?: string;
 }
 
 /**
@@ -27,10 +30,11 @@ export interface DocsLinkProps {
  * - Consider displaying the title of a key guide or product document as the link instead of the generic “Docs”.
  */
 export const DocsLink = (props: DocsLinkProps) => {
-  const { analyticsLabel, href, label, onClick, icon } = props;
+  const { analyticsLabel, href, label, onClick, icon, pendoId } = props;
 
   return (
     <StyledDocsLink
+      className="docsButton"
       onClick={() => {
         if (onClick === undefined) {
           sendHelpButtonClickEvent(href, analyticsLabel);
@@ -38,7 +42,7 @@ export const DocsLink = (props: DocsLinkProps) => {
           onClick();
         }
       }}
-      className="docsButton"
+      pendoId={pendoId}
       to={href}
     >
       {icon ?? <DocsIcon />}
@@ -50,18 +54,15 @@ export const DocsLink = (props: DocsLinkProps) => {
 const StyledDocsLink = styled(Link, {
   label: 'StyledDocsLink',
 })(({ theme }) => ({
+  ...theme.applyLinkStyles,
   '& svg': {
-    marginRight: theme.spacing(),
-  },
-  '&:hover': {
-    color: theme.textColors.linkActiveLight,
-    textDecoration: 'underline',
+    marginRight: theme.spacingFunction(4),
+    position: 'relative',
   },
   alignItems: 'center',
   display: 'flex',
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '.875rem',
-  lineHeight: 'normal',
   margin: 0,
   minWidth: 'auto',
 }));

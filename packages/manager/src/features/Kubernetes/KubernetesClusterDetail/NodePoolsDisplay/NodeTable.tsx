@@ -1,311 +1,245 @@
-import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useAllLinodesQuery, useProfile } from '@linode/queries';
+import { Box, ErrorState, Typography } from '@linode/ui';
+import { DateTime, Interval } from 'luxon';
+import React from 'react';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import OrderBy from 'src/components/OrderBy';
+import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { transitionText } from 'src/features/Linodes/transitions';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { parseAPIDate } from 'src/utilities/date';
 
-import NodeActionMenu from './NodeActionMenu';
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
+import { NodeRow as _NodeRow } from './NodeRow';
+import { nodeToRow } from './utils';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  copy: {
-    '& svg': {
-      height: `12px`,
-      opacity: 0,
-      width: `12px`,
-    },
-    marginLeft: 4,
-    top: 1,
-  },
-  error: {
-    color: theme.color.red,
-  },
-  ipCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '35%',
-  },
-  labelCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '35%',
-  },
-  row: {
-    '&:hover': {
-      backgroundColor: theme.bg.lightBlue1,
-    },
-    '&:hover $copy > svg, & $copy:focus > svg': {
-      opacity: 1,
-    },
-  },
-  statusCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '15%',
-  },
-  table: {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
-  },
-}));
+import type { StatusFilter } from './NodePoolsDisplay';
+import type { KubernetesTier, PoolNodeResponse } from '@linode/api-v4';
 
-// =============================================================================
-// NodeTable
-// =============================================================================
 export interface Props {
+  clusterCreated: string;
+  clusterTier: KubernetesTier;
+  isLkeClusterRestricted: boolean;
+  nodePoolType: string;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  poolId: number;
-  typeLabel: string;
+  statusFilter: StatusFilter;
 }
 
-export const NodeTable: React.FC<Props> = (props) => {
-  const { nodes, openRecycleNodeDialog, poolId, typeLabel } = props;
-
-  const classes = useStyles();
-
-  const { data: linodes, error, isLoading } = useAllLinodesQuery();
-
-  const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
-
-  return (
-    <OrderBy data={rowData} order={'asc'} orderBy={'label'}>
-      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-        <Paginate data={orderedData}>
-          {({
-            count,
-            data: paginatedAndOrderedData,
-            handlePageChange,
-            handlePageSizeChange,
-            page,
-            pageSize,
-          }) => (
-            <>
-              <Table
-                aria-label="List of Your Cluster Nodes"
-                className={classes.table}
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableSortCell
-                      active={orderBy === 'label'}
-                      className={classes.labelCell}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'label'}
-                    >
-                      Linode
-                    </TableSortCell>
-                    <TableSortCell
-                      active={orderBy === 'instanceStatus'}
-                      className={classes.statusCell}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'instanceStatus'}
-                    >
-                      Status
-                    </TableSortCell>
-                    <TableSortCell
-                      active={orderBy === 'ip'}
-                      className={classes.ipCell}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'ip'}
-                    >
-                      IP Address
-                    </TableSortCell>
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableContentWrapper
-                    length={paginatedAndOrderedData.length}
-                    loading={isLoading}
-                    loadingProps={{ columns: 4 }}
-                  >
-                    {paginatedAndOrderedData.map((eachRow) => {
-                      return (
-                        <NodeRow
-                          instanceId={eachRow.instanceId}
-                          instanceStatus={eachRow.instanceStatus}
-                          ip={eachRow.ip}
-                          key={`node-row-${eachRow.nodeId}`}
-                          label={eachRow.label}
-                          linodeError={error ?? undefined}
-                          nodeId={eachRow.nodeId}
-                          nodeStatus={eachRow.nodeStatus}
-                          openRecycleNodeDialog={openRecycleNodeDialog}
-                          typeLabel={typeLabel}
-                        />
-                      );
-                    })}
-                  </TableContentWrapper>
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={4}>
-                      <Typography>Pool ID {poolId}</Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-              <PaginationFooter
-                count={count}
-                eventCategory="Node Table"
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                page={page}
-                pageSize={pageSize}
-              />
-            </>
-          )}
-        </Paginate>
-      )}
-    </OrderBy>
-  );
-};
-
-export default React.memo(NodeTable);
-
-// =============================================================================
-// NodeRow
-// =============================================================================
-interface NodeRow {
-  instanceId?: number;
-  instanceStatus?: string;
-  ip?: string;
-  label?: string;
-  nodeId: string;
-  nodeStatus: string;
-}
-
-interface NodeRowProps extends NodeRow {
-  linodeError?: APIError[];
-  openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  typeLabel: string;
-}
-
-export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
+export const NodeTable = React.memo((props: Props) => {
   const {
-    instanceId,
-    instanceStatus,
-    ip,
-    label,
-    linodeError,
-    nodeId,
-    nodeStatus,
+    clusterCreated,
+    clusterTier,
+    nodePoolType,
+    nodes,
     openRecycleNodeDialog,
-    typeLabel,
+    isLkeClusterRestricted,
+    statusFilter,
   } = props;
 
-  const classes = useStyles();
+  const { data: profile } = useProfile();
 
-  const recentEvent = useRecentEventForLinode(instanceId ?? -1);
+  const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const { isLkeEnterprisePhase2DualStackFeatureEnabled } =
+    useIsLkeEnterpriseEnabled();
 
-  const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
+  const shouldShowVpcIPAddressColumns =
+    isLkeEnterprisePhase2DualStackFeatureEnabled &&
+    clusterTier === 'enterprise';
+  const numColumns = shouldShowVpcIPAddressColumns ? 6 : 4;
 
-  const nodeReadyAndInstanceRunning =
-    nodeStatus === 'ready' && instanceStatus === 'running';
-  const iconStatus = nodeReadyAndInstanceRunning ? 'active' : 'inactive';
+  const rowData = nodes.map((thisNode) =>
+    nodeToRow(thisNode, linodes ?? [], shouldShowVpcIPAddressColumns)
+  );
 
-  const displayLabel = label ?? typeLabel;
-  const displayStatus =
-    nodeStatus === 'not_ready'
-      ? 'Provisioning'
-      : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
+  const filteredRowData = ['offline', 'provisioning', 'running'].includes(
+    statusFilter
+  )
+    ? rowData.filter((row) => {
+        if (statusFilter === 'provisioning') {
+          return ['provisioning', undefined].includes(row.instanceStatus);
+        }
+        if (statusFilter === 'running') {
+          // The linode instance status needs to be running AND the node status needs to be ready before we consider it "running"
+          return row.instanceStatus === 'running' && row.nodeStatus === 'ready';
+        }
+        return row.instanceStatus === statusFilter;
+      })
+    : null;
 
-  const displayIP = ip ?? '';
+  // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
+  // since nodes are not returned right away unlike standard LKE
+  const isEnterpriseClusterWithin20MinsOfCreation = () => {
+    if (clusterTier !== 'enterprise') {
+      return false;
+    }
+
+    const createdTime = parseAPIDate(clusterCreated).setZone(profile?.timezone);
+
+    const interval = Interval.fromDateTimes(
+      createdTime,
+      createdTime.plus({ minutes: 20 })
+    );
+
+    const currentTime = DateTime.fromISO(DateTime.now().toISO(), {
+      zone: profile?.timezone,
+    });
+
+    return interval.contains(currentTime);
+  };
+
+  const { handleOrderChange, order, orderBy, sortedData } = useOrderV2({
+    data: filteredRowData || rowData,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/kubernetes/clusters/$clusterId/summary',
+    },
+    preferenceKey: 'node-pool-order',
+  });
 
   return (
-    <TableRow
-      ariaLabel={label}
-      className={classes.row}
-      data-qa-node-row={nodeId}
-    >
-      <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
-          <Grid>
-            <Typography>
-              {linodeLink ? (
-                <Link to={linodeLink}>{displayLabel}</Link>
-              ) : (
-                displayLabel
+    <Paginate data={sortedData ?? []}>
+      {({
+        count,
+        data: paginatedAndOrderedData,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize,
+      }) => (
+        <>
+          <Table aria-label="List of Your Cluster Nodes">
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'label'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={'label'}
+                  sx={(theme) => ({
+                    ...theme.applyTableHeaderStyles,
+                    width: '35%',
+                  })}
+                >
+                  Linode
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'instanceStatus'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={'instanceStatus'}
+                  sx={(theme) => ({
+                    ...theme.applyTableHeaderStyles,
+                    width: '25%',
+                  })}
+                >
+                  Status
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'ip'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={'ip'}
+                  sx={(theme) => ({
+                    ...theme.applyTableHeaderStyles,
+                    width: '35%',
+                  })}
+                >
+                  Public IPv4
+                </TableSortCell>
+                {shouldShowVpcIPAddressColumns && (
+                  <>
+                    <TableCell>VPC IPv4</TableCell>
+                    <TableCell>VPC IPv6</TableCell>
+                  </>
+                )}
+
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowData.length === 0 &&
+                isEnterpriseClusterWithin20MinsOfCreation() && (
+                  <TableRow>
+                    <TableCell colSpan={numColumns}>
+                      <ErrorState
+                        compact
+                        CustomIcon={EmptyStateCloud}
+                        errorText={
+                          <Box>
+                            <Typography
+                              data-qa-error-msg
+                              style={{ textAlign: 'center' }}
+                              variant="h3"
+                            >
+                              Worker nodes will appear once cluster provisioning
+                              is complete.
+                            </Typography>
+                            <Typography>
+                              Provisioning can take up to ~20 minutes.
+                            </Typography>
+                          </Box>
+                        }
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+              {(rowData.length > 0 ||
+                !isEnterpriseClusterWithin20MinsOfCreation()) && (
+                <TableContentWrapper
+                  length={paginatedAndOrderedData.length}
+                  loading={isLoading}
+                  loadingProps={{ columns: numColumns }}
+                >
+                  {paginatedAndOrderedData.map((eachRow) => {
+                    return (
+                      <_NodeRow
+                        instanceId={eachRow.instanceId}
+                        instanceStatus={eachRow.instanceStatus}
+                        ip={eachRow.ip}
+                        isLkeClusterRestricted={isLkeClusterRestricted}
+                        key={`node-row-${eachRow.nodeId}`}
+                        label={eachRow.label}
+                        linodeError={error ?? undefined}
+                        nodeId={eachRow.nodeId}
+                        nodeStatus={eachRow.nodeStatus}
+                        openRecycleNodeDialog={openRecycleNodeDialog}
+                        shouldShowVpcIPAddressColumns={
+                          shouldShowVpcIPAddressColumns
+                        }
+                        type={nodePoolType}
+                      />
+                    );
+                  })}
+                </TableContentWrapper>
               )}
-            </Typography>
-          </Grid>
-        </Grid>
-      </TableCell>
-      <TableCell statusCell={!linodeError}>
-        {linodeError ? (
-          <Typography className={classes.error}>
-            Error retrieving status
-          </Typography>
-        ) : (
-          <>
-            <StatusIcon status={iconStatus} />
-            {displayStatus}
-          </>
-        )}
-      </TableCell>
-      <TableCell>
-        {linodeError ? (
-          <Typography className={classes.error}>Error retrieving IP</Typography>
-        ) : displayIP.length > 0 ? (
-          <>
-            <CopyTooltip copyableText text={displayIP} />
-            <CopyTooltip className={classes.copy} text={displayIP} />
-          </>
-        ) : null}
-      </TableCell>
-      <TableCell>
-        <NodeActionMenu
-          instanceLabel={label}
-          nodeId={nodeId}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-        />
-      </TableCell>
-    </TableRow>
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={count}
+            eventCategory="Node Table"
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+            page={page}
+            pageSize={pageSize}
+            /**
+             * M3-9360: Since this table is in an accordion, the position needs to be relative
+             * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
+             **/
+            sx={{ position: 'relative' }}
+          />
+        </>
+      )}
+    </Paginate>
   );
 });
-
-// =============================================================================
-// Utilities
-// =============================================================================
-
-/**
- * Transforms an LKE Pool Node to a NodeRow.
- */
-export const nodeToRow = (
-  node: PoolNodeResponse,
-  linodes: LinodeWithMaintenance[]
-): NodeRow => {
-  const foundLinode = linodes.find(
-    (thisLinode) => thisLinode.id === node.instance_id
-  );
-
-  return {
-    instanceId: node.instance_id || undefined,
-    instanceStatus: foundLinode?.status,
-    ip: foundLinode?.ipv4[0],
-    label: foundLinode?.label,
-    nodeId: node.id,
-    nodeStatus: node.status,
-  };
-};

@@ -1,4 +1,12 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
+import {
+  STATS_NOT_READY_API_MESSAGE,
+  STATS_NOT_READY_MESSAGE,
+  useLinodeStatsByDate,
+  useLinodeTransferByDate,
+  useProfile,
+} from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -7,28 +15,18 @@ import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import { Typography } from 'src/components/Typography';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import {
   convertNetworkToUnit,
-  formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { useFlags } from 'src/hooks/useFlags';
-import {
-  STATS_NOT_READY_API_MESSAGE,
-  STATS_NOT_READY_MESSAGE,
-  useLinodeStatsByDate,
-  useLinodeTransferByDate,
-} from 'src/queries/linodes/stats';
-import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { readableBytes } from 'src/utilities/unitConversions';
 
-import { NetworkTransferHistoryChart } from './NetworkTransferHistoryChart';
+import type { Stats } from '@linode/api-v4/lib/linodes';
+import type {
+  LinodeNetworkTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
 
 interface Props {
   linodeCreated: string;
@@ -39,7 +37,6 @@ export const TransferHistory = React.memo((props: Props) => {
   const { linodeCreated, linodeID } = props;
 
   const theme = useTheme();
-  const flags = useFlags();
 
   // Needed to see the user's timezone.
   const { data: profile } = useProfile();
@@ -56,7 +53,7 @@ export const TransferHistory = React.memo((props: Props) => {
     data: stats,
     error: statsError,
     isLoading: statsLoading,
-  } = useLinodeStatsByDate(linodeID, year, month, true, linodeCreated);
+  } = useLinodeStatsByDate(linodeID, year, month, true);
 
   const { data: transfer } = useLinodeTransferByDate(
     linodeID,
@@ -84,16 +81,6 @@ export const TransferHistory = React.memo((props: Props) => {
     return convertNetworkToUnit(value, unit);
   };
 
-  /**
-   * formatNetworkTooltip is a helper method from Longview, where
-   * data is expected in bytes. The method does the rounding, unit conversions, etc.
-   * that we want, but it first multiplies by 8 to convert to bits.
-   * APIv4 returns this data in bits to begin with,
-   * so we have to preemptively divide by 8 to counter the conversion inside the helper.
-   */
-  const formatTooltip = (valueInBytes: number) =>
-    formatNetworkTooltip(valueInBytes / 8);
-
   const maxMonthOffset = getOffsetFromDate(
     now,
     DateTime.fromISO(linodeCreated, { zone: 'utc' })
@@ -104,14 +91,18 @@ export const TransferHistory = React.memo((props: Props) => {
   const decrementOffset = () =>
     setMonthOffset((prevOffset) => Math.max(prevOffset - 1, maxMonthOffset));
 
-  const decrementLabel = parseMonthOffset(monthOffset - 1, now)
-    .longHumanizedDate;
+  const decrementLabel = parseMonthOffset(
+    monthOffset - 1,
+    now
+  ).longHumanizedDate;
 
   const incrementOffset = () =>
     setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
 
-  const incrementLabel = parseMonthOffset(monthOffset + 1, now)
-    .longHumanizedDate;
+  const incrementLabel = parseMonthOffset(
+    monthOffset + 1,
+    now
+  ).longHumanizedDate;
 
   // In/Out totals from the /transfer endpoint are per-month (to align with billing cycle).
   // Graph data from the /stats endpoint works a bit differently: when you request data for the
@@ -133,7 +124,7 @@ export const TransferHistory = React.memo((props: Props) => {
     if (statsLoading) {
       return (
         <StyledDiv>
-          <CircleProgress mini />
+          <CircleProgress size="sm" />
         </StyledDiv>
       );
     }
@@ -146,57 +137,56 @@ export const TransferHistory = React.memo((props: Props) => {
 
       return (
         <ErrorState
+          compact
+          CustomIcon={
+            areStatsNotReady
+              ? () => (
+                  <PendingIcon
+                    style={{ color: theme.tokens.alias.Content.Icon.Positive }}
+                  />
+                )
+              : undefined
+          }
           errorText={
             areStatsNotReady ? STATS_NOT_READY_MESSAGE : statsErrorString
           }
-          CustomIcon={areStatsNotReady ? PendingIcon : undefined}
-          compact
         />
       );
     }
 
-    // @TODO recharts: remove conditional code and delete old chart when we decide recharts is stable
-    if (flags?.recharts) {
-      const timeData = combinedData.reduce((acc: any, point: any) => {
+    const timeData = combinedData.reduce(
+      (acc: LinodeNetworkTimeData[], point: Point) => {
         acc.push({
           'Public Outbound Traffic': convertNetworkData
             ? convertNetworkData(point[1])
             : point[1],
-          t: point[0],
+          timestamp: point[0],
         });
         return acc;
-      }, []);
-
-      return (
-        <NetworkTransferHistoryChart
-          aria-label={graphAriaLabel}
-          data={timeData}
-          timezone={profile?.timezone ?? 'UTC'}
-          unit={unit}
-        />
-      );
-    }
+      },
+      []
+    );
 
     return (
-      <LineGraph
-        data={[
-          {
-            backgroundColor: '#1CB35C',
-            borderColor: 'transparent',
-            data: combinedData,
-            label: 'Public Outbound Traffic',
-          },
-        ]}
-        accessibleDataTable={{ unit: 'Kb/s' }}
-        ariaLabel={graphAriaLabel}
-        chartHeight={190}
-        formatData={convertNetworkData}
-        formatTooltip={formatTooltip}
-        showToday={true}
-        tabIndex={-1}
-        timezone={profile?.timezone ?? 'UTC'}
-        unit={`/s`}
-      />
+      <Box>
+        <AreaChart
+          areas={[
+            {
+              color: theme.tokens.color.Green[70],
+              dataKey: 'Public Outbound Traffic',
+            },
+          ]}
+          ariaLabel={graphAriaLabel}
+          data={timeData}
+          height={190}
+          timezone={profile?.timezone ?? 'UTC'}
+          unit={` ${unit}/s`}
+          xAxis={{
+            tickFormat: 'LLL dd',
+            tickGap: 15,
+          }}
+        />
+      </Box>
     );
   };
 
@@ -230,8 +220,8 @@ export const TransferHistory = React.memo((props: Props) => {
           <IconButton
             aria-label={`Show Network Transfer History for ${decrementLabel}`}
             color="primary"
-            disableRipple
             disabled={monthOffset === maxMonthOffset}
+            disableRipple
             onClick={decrementOffset}
             sx={{ padding: 0 }}
           >
@@ -245,8 +235,8 @@ export const TransferHistory = React.memo((props: Props) => {
           <IconButton
             aria-label={`Show Network Transfer History for ${incrementLabel}`}
             color="primary"
-            disableRipple
             disabled={monthOffset === minMonthOffset}
+            disableRipple
             onClick={incrementOffset}
             sx={{ padding: 0 }}
           >

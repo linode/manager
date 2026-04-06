@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { regionFactory } from 'src/factories';
+// @todo: modularization - Replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';
@@ -15,13 +16,14 @@ describe('RegionSelect', () => {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    handleSelection: vi.fn(),
     helperText: '',
-    isClearable: false,
+    isGeckoLAEnabled: false,
     label: '',
+    onChange: vi.fn(),
     regions,
     required: false,
-    selectedId: '',
+    tooltipText: '',
+    value: '',
     width: 100,
   };
 
@@ -38,10 +40,10 @@ describe('RegionSelect', () => {
   });
 
   it('should render a Select component with the correct helper text', () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <RegionSelect {...props} helperText="helper text" />
     );
-    expect(getByLabelText('helper text')).toBeInTheDocument();
+    expect(getByText('helper text')).toBeInTheDocument();
   });
 
   it('should render a Select component with the correct error text', () => {

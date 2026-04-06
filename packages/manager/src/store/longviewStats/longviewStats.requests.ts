@@ -1,8 +1,9 @@
 import { get } from 'src/features/Longview/request';
-import { LongviewPackage } from 'src/features/Longview/request.types';
 
 import { createRequestThunk } from '../store.helpers';
 import { requestClientStats } from './longviewStats.actions';
+
+import type { LongviewPackage } from 'src/features/Longview/request.types';
 
 export const getClientStats = createRequestThunk(
   requestClientStats,

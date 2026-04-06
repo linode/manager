@@ -1,4 +1,4 @@
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 export const guidesMoreLinkText = 'Check out all our Docs';
 export const docsLink = 'https://www.linode.com/docs/';
@@ -14,12 +14,11 @@ interface AnalyticsEventTemplate {
   category: string;
 }
 
-export const getLinkOnClick = (
-  linkAnalyticsEventTemplate: AnalyticsEventTemplate,
-  linkText: string
-) => () => {
-  sendEvent({
-    ...linkAnalyticsEventTemplate,
-    label: linkText,
-  });
-};
+export const getLinkOnClick =
+  (linkAnalyticsEventTemplate: AnalyticsEventTemplate, linkText: string) =>
+  () => {
+    sendEvent({
+      ...linkAnalyticsEventTemplate,
+      label: linkText,
+    });
+  };

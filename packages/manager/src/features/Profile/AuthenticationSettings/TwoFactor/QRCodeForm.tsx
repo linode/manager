@@ -1,9 +1,9 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import QRCode from 'qrcode.react';
-import * as React from 'react';
+import { QRCodeCanvas } from 'qrcode.react';
+import React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   secret: string;
@@ -18,7 +18,7 @@ export const QRCodeForm = (props: Props) => {
         Scan this QR code to add your Cloud Manager account to your 2FA app:
       </StyledInstructions>
       <StyledQRCodeContainer>
-        <QRCode
+        <QRCodeCanvas
           data-qa-qr-code
           level="H" // QR code error checking level ("High"); gives a higher resolution code
           size={200}
@@ -42,7 +42,7 @@ const StyledInstructions = styled(Typography, {
 const StyledQRCodeContainer = styled('div', {
   label: 'StyledQRCodeContainer',
 })(({ theme }) => ({
-  border: `5px solid #fff`,
+  border: `5px solid ${theme.tokens.color.Neutrals.White}`,
   display: 'inline-block',
   margin: `${theme.spacing(2)} 0`,
 }));

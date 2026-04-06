@@ -1,11 +1,11 @@
-import { IPRange } from '@linode/api-v4';
+import { useLinodeRemoveRangeMutation } from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { useLinodeRemoveRangeMutation } from 'src/queries/linodes/networking';
+
+import type { IPRange } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -19,7 +19,7 @@ export const DeleteRangeDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: removeRange,
   } = useLinodeRemoveRangeMutation(range.range);
 
@@ -37,7 +37,7 @@ export const DeleteRangeDialog = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Delete Range',
-            loading: isLoading,
+            loading: isPending,
             onClick: handleDeleteIP,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

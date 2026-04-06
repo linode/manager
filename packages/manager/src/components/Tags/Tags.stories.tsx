@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Tags } from './Tags';
 
 import type { TagsProps } from './Tags';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TagsProps> = {
   render: (args) => <Tags {...args} />,

@@ -79,39 +79,53 @@ This works, but has a few disadvantages:
 
 A better way to fetch data is to use React Query. It address the issues listed above and has many additional features.
 
-To fetch data with React Query, check to see if the API method you want to use has a query written for it in `packages/manager/src/queries`. If not, feel free to write one. It should look something like this:
+To fetch data with React Query:
+
+- Create an `@linode/api-v4` function that calls the intended Linode API endpoint.
+- Create a query key factory that uses the newly created `@linode/api-v4` function.
+- Create a hook that wraps `useQuery` and uses the query key factory.
 
 ```ts
-import { getProfile, Profile } from "@linode/api-v4/lib/profile";
-import { APIError } from "@linode/api-v4/lib/types";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
+import { getProfile } from "@linode/api-v4";
+import type { APIError, Profile } from "@linode/api-v4";
 
-const queryKey = "profile";
+const profileQueries = createQueryKeys('profile', {
+  profile: {
+    queryFn: getProfile,
+    queryKey: null,
+  },
+});
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>(queryKey, getProfile);
+  useQuery<Profile, APIError[]>(profileQueries.profile);
 ```
 
 The first time `useProfile()` is called, the data is fetched from the API. On subsequent calls, the data is retrieved from the in-memory cache.
 
-`useQuery` accepts a third "options" parameter, which can be used to specify cache time (among others things). For example, to specify that the cache should never expire for this query:
+`useQuery` accepts options which can be used to specify cache time (among others things). For example, to specify that the cache should never expire for this query:
 
 ```ts
 import { queryPresets } from "src/queries/base";
-// ...other imports
+
+const profileQueries = createQueryKeys('profile', {
+  profile: {
+    queryFn: getProfile,
+    queryKey: null,
+  },
+});
 
 export const useProfile = () =>
-  useQuery<Profile, APIError[]>(
-    queryKey,
-    getProfile,
-    queryPresets.oneTimeFetch
-  );
+  useQuery<Profile, APIError[]>({
+    ...profileQueries.profile,
+    ...queryPresets.oneTimeFetch,
+  });
 ```
 
 Loading and error states are managed by React Query. The earlier username display example becomes greatly simplified:
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 import { useProfile } from "src/queries/profile";
 
 const UsernameDisplay = () => {
@@ -132,11 +146,11 @@ const UsernameDisplay = () => {
 ## When to use React Query or an api-v4 method directly
 
 Because **api-v4** methods don't commit data to a cache, it is acceptable to use **api-v4** methods directly
-when performing ***one-time actions*** that do not require any immediate state change in Cloud Manager's UI. 
+when performing **_one-time actions_** that do not require any immediate state change in Cloud Manager's UI.
 
 While use of **api-v4** methods directly are acceptable, use of **React Query** Queries or Mutations are **still prefered** for the benefits described above.
 
-A minimal example of accepable direct **api-v4** use: 
+A minimal example of acceptable direct **api-v4** use:
 
 ```ts
 resetKubeConfig({ id }).then(() => {
@@ -152,7 +166,7 @@ Before React Query, Redux was used to store API data, loading, and error states.
 ```tsx
 // ---- OLD PATTERN, DON'T USE ---- //
 
-import * as React from "react";
+import * as React from 'react';
 import profileContainer, {
   Props as ProfileProps,
 } from "src/containers/profile.container";
@@ -229,3 +243,111 @@ console.log(errorMap);
   none: 'a linode_id error or similar'
 }
 ```
+
+#### Scrolling to errors
+
+For deep forms, we provide a utility that will scroll to the first error encountered within a defined container. We do this to improve error visibility, because the user can be unaware of an error that isn't in the viewport.
+An error can be a notice (API error) or a Formik field error. In order to implement this often needed functionality, we must declare a form or form container via ref, then pass it to the `scrollErrorIntoViewV2` util (works both for class & functional components).
+
+Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorIntoViewV2`.
+
+Since Cloud Manager uses different ways of handling forms and validation, the `scrollErrorIntoViewV2` util should be implemented using the following patterns to ensure consistency.
+
+##### Formik (deprecated)
+
+```Typescript
+import * as React from 'react';
+
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
+
+export const MyComponent = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const {
+    values,
+    // other handlers
+  } = useFormik({
+    initialValues: {},
+    onSubmit: mySubmitFormHandler,
+    validate: () => {
+      scrollErrorIntoViewV2(formRef);
+    },
+    validationSchema: myValidationSchema,
+  });
+
+  return (
+    <form onSubmit={handleSubmit} ref={formContainerRef}>
+      <Error />
+      {/* form fields */}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
+
+##### React Hook Forms
+
+```Typescript
+import * as React from 'react';
+
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
+
+export const MyComponent = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const methods = useForm<LinodeCreateFormValues>({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: myResolvers,
+    // other methods
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit, () => scrollErrorIntoViewV2(formRef))}
+        ref={formContainerRef}
+      >
+        <Error />
+        {/* form fields */}
+        <button type="submit">Submit</button>
+      </form>
+    </>
+  );
+};
+```
+
+##### Uncontrolled forms
+
+```Typescript
+import * as React from 'react';
+
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
+
+export const MyComponent = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
+  const handleSubmit = () => {
+    try {
+      // form submission logic
+    } catch {
+      scrollErrorIntoViewV2(formContainerRef);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} ref={formContainerRef}>
+      <Error />
+      {/* form fields */}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
+
+### Toast / Event Message Punctuation
+
+**Best practice:**
+
+- If a message is a sentence or a sentence fragment with a subject and a verb, add punctuation. Otherwise, leave punctuation off.
+- If a developer notices inconsistencies within files they are already working in, they can progressively fix them. In this case, be prepared to fix any Cypress test failures.

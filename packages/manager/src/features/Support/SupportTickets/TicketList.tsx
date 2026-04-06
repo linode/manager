@@ -1,7 +1,7 @@
-import { SupportTicket } from '@linode/api-v4/lib/support';
+import { useSupportTicketsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -12,12 +12,13 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useSupportTicketsQuery } from 'src/queries/support';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TicketRow } from './TicketRow';
-import { getStatusFilter } from './ticketUtils';
+import { getStatusFilter, useTicketSeverityCapability } from './ticketUtils';
+
+import type { SupportTicket } from '@linode/api-v4/lib/support';
 
 export interface Props {
   filterStatus: 'closed' | 'open';
@@ -29,15 +30,29 @@ const preferenceKey = 'support-tickets';
 export const TicketList = (props: Props) => {
   const { filterStatus, newTicket } = props;
 
-  const pagination = usePagination(1, preferenceKey);
+  const hasSeverityCapability = useTicketSeverityCapability();
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'opened',
+  const pagination = usePaginationV2({
+    currentRoute:
+      filterStatus === 'open'
+        ? '/support/tickets/open'
+        : '/support/tickets/closed',
+    preferenceKey,
+  });
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'opened',
+      },
+      from:
+        filterStatus === 'open'
+          ? '/support/tickets/open'
+          : '/support/tickets/closed',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+  });
 
   const filter = {
     ['+order']: order,
@@ -60,12 +75,15 @@ export const TicketList = (props: Props) => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={hasSeverityCapability ? 7 : 6}
           responsive={{
-            1: { smDown: true },
-            3: { xsDown: true },
-            5: { smDown: true },
+            1: { mdDown: true },
+            2: { mdDown: true },
+            3: !hasSeverityCapability ? { smDown: true } : { smDown: false },
+            4: hasSeverityCapability ? { smDown: true } : { smDown: false },
+            5: !hasSeverityCapability ? { mdDown: true } : { mdDown: false },
+            6: hasSeverityCapability ? { mdDown: true } : { mdDown: false },
           }}
-          columns={6}
         />
       );
     }
@@ -117,7 +135,21 @@ export const TicketList = (props: Props) => {
                 Ticket ID
               </TableSortCell>
             </Hidden>
-            <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            <Hidden mdDown>
+              <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            </Hidden>
+            {hasSeverityCapability && (
+              <TableSortCell
+                active={isActive('severity')}
+                data-qa-support-severity-header
+                direction={order}
+                handleClick={handleOrderChange}
+                label="severity"
+                noWrap
+              >
+                Severity
+              </TableSortCell>
+            )}
             <Hidden smDown>
               <TableSortCell
                 active={isActive('opened')}
@@ -167,5 +199,3 @@ export const TicketList = (props: Props) => {
     </>
   );
 };
-
-export default TicketList;

@@ -1,29 +1,35 @@
-import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { linodeFactory } from '@linode/utilities';
+import { firewallFactory, imageFactory } from '@src/factories';
+import { mockGetFirewalls } from 'support/intercepts/firewalls';
+import { mockGetAllImages } from 'support/intercepts/images';
+import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
-import { cleanUp } from 'support/util/cleanup';
-import { ui } from 'support/ui';
-import { authenticate } from 'support/api/authentication';
 
 const region = chooseRegion();
 
 const mockLinode = linodeFactory.build({
-  region: region.id,
   id: 123456,
+  region: region.id,
 });
 
 const mockImage = imageFactory.build({
-  label: randomLabel(),
-  is_public: false,
   eol: null,
   id: `private/${randomNumber()}`,
+  is_public: false,
+  label: randomLabel(),
+});
+
+const mockFirewall = firewallFactory.build({
+  id: randomNumber(),
+  label: randomLabel(),
 });
 
 const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   mockGetAllImages([mockImage]).as('mockImage');
+  mockGetFirewalls([mockFirewall]).as('getFirewalls');
 
   cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
@@ -35,31 +41,43 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   cy.visitWithLogin(url);
 
   cy.wait('@mockImage');
+
   if (!preselectedImage) {
-    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-      containsClick('Choose an image');
-    });
-    cy.get(`[data-qa-image-select-item="${mockImage.id}"]`).within(() => {
-      cy.get('span').should('have.class', 'fl-tux');
-      fbtClick(mockImage.label);
-    });
+    cy.findByPlaceholderText('Choose an image')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText(mockImage.label)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
   }
 
   ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
 
-  fbtClick('Shared CPU');
-  getClick('[id="g6-nanode-1"][type="radio"]');
+  cy.findByText('Shared CPU').click();
+  cy.get('[id="g6-nanode-1"][type="radio"]').click();
   cy.get('[id="root-password"]').type(randomString(32));
-  getClick('[data-qa-deploy-linode="true"]');
+  // Select a firewall
+  linodeCreatePage.selectFirewall(
+    mockFirewall.label,
+    'Public Interface Firewall'
+  );
+
+  ui.button
+    .findByTitle('Create Linode')
+    .scrollIntoView()
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
 
   cy.wait('@mockLinodeRequest');
 
-  console.log('mockLinode', mockLinode);
-
-  fbtVisible(mockLinode.label);
-  fbtVisible(region.label);
-  fbtVisible(mockLinode.id);
+  cy.findByText(mockLinode.label).should('be.visible');
+  cy.findByText(region.label).should('be.visible');
+  cy.findByText(`${mockLinode.id}`).should('be.visible');
 };
 
 describe('create linode from image, mocked data', () => {
@@ -75,7 +93,7 @@ describe('create linode from image, mocked data', () => {
     ];
 
     mockGetAllImages([]).as('getImages');
-    cy.visitWithLogin('/linodes/create?type=Images');
+    cy.visitWithLogin('/linodes/create/images');
     cy.wait('@getImages');
     noImagesMessages.forEach((message: string) => {
       cy.findByText(message, { exact: false }).should('be.visible');
@@ -83,12 +101,12 @@ describe('create linode from image, mocked data', () => {
   });
 
   it('creates linode from image on images tab', () => {
-    createLinodeWithImageMock('/linodes/create?type=Images', false);
+    createLinodeWithImageMock('/linodes/create/images', false);
   });
 
   it('creates linode from preselected image on images tab', () => {
     createLinodeWithImageMock(
-      `/linodes/create/?type=Images&imageID=${mockImage.id}`,
+      `/linodes/create/images?imageID=${mockImage.id}`,
       true
     );
   });

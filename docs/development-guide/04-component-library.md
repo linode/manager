@@ -2,12 +2,12 @@
 
 ## Material-UI
 
-We use [Material-UI](https://mui.com/material-ui/getting-started/overview/) as the primary component library for Cloud Manager. The library contains many UI primitives like `<Typography />` and `<Button />` as well as a layout system with the `<Grid />` component.
+We use [Material-UI](https://mui.com/material-ui/getting-started/overview/) as the primary component library for Cloud Manager. The library contains many UI primitives like `<Typography />` and `<Button />`, as well as a layout system with the `<Grid />` component.
 
 All MUI components have abstractions in the Cloud Manager codebase, meaning you will use relative imports to use them instead of importing from MUI directly:
 
 ```ts
-import { Typography } from "src/components/Typography"; // NOT from '@mui/material/Typography'
+import { Typography } from "@linode/ui"; // NOT from '@mui/material/Typography'
 ```
 
 We do this because it gives us the ability to customize the component and still keep imports consistent. It also gives us flexibility if we ever wanted to change out the underlying component library.
@@ -22,9 +22,9 @@ We use [Storybook](https://storybook.js.org/) to document our UI component libra
 
 #### Running Storybook Locally
 
-`yarn build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
+`pnpm run --filter linode-manager build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
 
-`yarn storybook`: starts the local dev server at `localhost:6006`
+`pnpm storybook`: starts the local dev server at `localhost:6006`
 
 #### Adding Stories
 
@@ -37,7 +37,7 @@ A color, font, svg icon, or other simple styling convention.
 
 ##### Element
 
-A basic HTML element wrapped in a react component, or a small component that is not normally used on its own.
+A basic HTML element wrapped in a React component, or a small component that is not normally used on its own.
 
 ##### Component
 
@@ -45,10 +45,8 @@ A composition of Core Styles and Elements. Normally with some code that defines 
 
 ##### Feature
 
-A Composition of Core Styles, Elements, and Components that defines a verticle slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
+A Composition of Core Styles, Elements, and Components that defines a vertical slice of functionality. An example of a Feature is the Payment Method Row; it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
 
 #### Best Practices
-Our stories are in the process of being updated to the latest Storybook 7.0 format.
-We currently use MDX both for documentation and for defining stories in the same `.stories.mdx` file. However, Storybook has deprecated this functionality and they plan to remove it in a future version of Storybook.
 
-As we begin to move away from the MDX format, please refer to Storybook's  [documentation](https://storybook.js.org/docs/react/writing-docs/introduction) for how to write stories in the CSF format.
+Please refer to Storybook's [documentation](https://storybook.js.org/docs/react/writing-docs/introduction) for how to write stories in the CSF format.

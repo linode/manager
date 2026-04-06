@@ -1,9 +1,10 @@
-import { ManagedIssue, getTicket } from '@linode/api-v4';
+import { getTicket } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 
 import { parseAPIDate } from 'src/utilities/date';
 
-import { ExtendedIssue } from './types';
+import type { ExtendedIssue } from './types';
+import type { ManagedIssue } from '@linode/api-v4';
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**

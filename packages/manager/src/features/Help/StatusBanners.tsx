@@ -1,22 +1,19 @@
+import { useIncidentQuery } from '@linode/queries';
+import { Box, Typography } from '@linode/ui';
+import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-import {
-  IncidentImpact,
-  IncidentStatus,
-  useIncidentQuery,
-} from 'src/queries/statusPage';
-import { capitalize } from 'src/utilities/capitalize';
+import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
-import { truncateEnd } from 'src/utilities/truncate';
+
+import type { IncidentImpact, IncidentStatus } from '@linode/queries';
 
 export const StatusBanners = () => {
-  const { data: incidentsData } = useIncidentQuery();
+  const { data: incidentsData } = useIncidentQuery(LINODE_STATUS_PAGE_URL);
   const incidents = incidentsData?.incidents ?? [];
 
   if (incidents.length === 0) {
@@ -24,7 +21,6 @@ export const StatusBanners = () => {
   }
 
   return (
-    // eslint-disable-next-line
     <>
       {incidents.map((thisIncident) => {
         const mostRecentUpdate = thisIncident.incident_updates.filter(
@@ -74,20 +70,19 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
         expiry: DateTime.utc().plus({ days: 1 }).toISO(),
         label: preferenceKey,
       }}
+      preferenceKey={preferenceKey}
+      sx={{ marginBottom: theme.spacing() }}
       variant={
         variantMap.error ? 'error' : variantMap.warning ? 'warning' : undefined
       }
-      important
-      preferenceKey={preferenceKey}
-      sx={{ marginBottom: theme.spacing() }}
     >
       <Box display="flex" flexDirection="column">
         <Typography
+          data-testid="status-banner"
           sx={{
             fontSize: '1rem',
             marginBottom: theme.spacing(),
           }}
-          data-testid="status-banner"
         >
           <Link to={href}>
             <strong data-testid="incident-status">

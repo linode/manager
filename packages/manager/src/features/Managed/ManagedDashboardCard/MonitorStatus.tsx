@@ -1,22 +1,26 @@
-import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
-import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
+
 import {
-  StyledTypography,
   StyledIconGrid,
   StyledRootGrid,
+  StyledTypography,
 } from './MonitorStatus.styles';
+
+import type { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 
 export interface MonitorStatusProps {
   monitors: ManagedServiceMonitor[];
 }
 
 export const MonitorStatus = (props: MonitorStatusProps) => {
+  const theme = useTheme();
   const { monitors } = props;
 
   const failedMonitors = getFailedMonitors(monitors);
@@ -32,9 +36,17 @@ export const MonitorStatus = (props: MonitorStatusProps) => {
       <Grid>
         <StyledIconGrid>
           {failedMonitors.length === 0 ? (
-            <MonitorOK height={iconSize} width={iconSize} />
+            <MonitorOK
+              color={theme.tokens.alias.Content.Icon.Positive}
+              height={iconSize}
+              width={iconSize}
+            />
           ) : (
-            <MonitorFailed height={iconSize} width={iconSize} />
+            <MonitorFailed
+              color={theme.tokens.alias.Content.Icon.Negative}
+              height={iconSize}
+              width={iconSize}
+            />
           )}
         </StyledIconGrid>
       </Grid>

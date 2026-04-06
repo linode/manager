@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { ActionMenu } from './ActionMenu';
 
 import type { Action, ActionMenuProps } from './ActionMenu';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const standardActions = [
   {
@@ -34,10 +34,11 @@ export const Default: StoryObj<ActionMenuProps> = {
 const meta: Meta<ActionMenuProps> = {
   argTypes: {
     actionsList: {
-      options: {
-        'disabled actions': standardAndDisabledActions,
-        'standard actions': standardActions,
+      mapping: {
+        Disabled: standardAndDisabledActions,
+        Standard: standardActions,
       },
+      options: ['Standard', 'Disabled'],
     },
   },
   args: { actionsList: standardActions, ariaLabel: 'action menu' },

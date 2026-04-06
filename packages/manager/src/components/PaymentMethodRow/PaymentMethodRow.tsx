@@ -1,21 +1,24 @@
-import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import { useMakeDefaultPaymentMethodMutation } from '@linode/queries';
+import { Box, Chip, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
-import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/Chip';
-import { Paper } from 'src/components/Paper';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { queryKey } from 'src/queries/accountPayment';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 
+import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
+
 interface Props {
+  /**
+   * Whether the user is a child user.
+   */
+  isChildUser?: boolean | undefined;
   /**
    * Function called when the delete button in the Action Menu is pressed.
    */
@@ -32,43 +35,60 @@ interface Props {
  */
 export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
-  const { onDelete, paymentMethod } = props;
+  const { onDelete, paymentMethod, isChildUser } = props;
   const { is_default, type } = paymentMethod;
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const makeDefault = (id: number) => {
-    makeDefaultPaymentMethod(id)
-      .then(() => queryClient.invalidateQueries(`${queryKey}-all`))
-      .catch((errors) =>
-        enqueueSnackbar(
-          errors[0]?.reason || 'Unable to change your default payment method.',
-          { variant: 'error' }
-        )
-      );
+  const { mutateAsync: makePaymentMethodDefault } =
+    useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
+
+  const { data: permissions } = usePermissions('account', [
+    'make_billing_payment',
+    'set_default_payment_method',
+    'delete_payment_method',
+  ]);
+
+  const makeDefault = () => {
+    makePaymentMethodDefault().catch((errors) =>
+      enqueueSnackbar(
+        errors[0]?.reason || 'Unable to change your default payment method.',
+        { variant: 'error' }
+      )
+    );
   };
 
   const actions: Action[] = [
     {
+      disabled: isChildUser || !permissions.make_billing_payment,
       onClick: () => {
-        history.push({
-          pathname: '/account/billing/make-payment/',
-          state: { paymentMethod },
+        navigate({
+          to: '/billing',
+          search: (prev) => ({
+            ...prev,
+            action: 'make-payment',
+            paymentMethodId: paymentMethod.id,
+          }),
         });
       },
       title: 'Make a Payment',
     },
     {
-      disabled: paymentMethod.is_default,
-      onClick: () => makeDefault(paymentMethod.id),
+      disabled:
+        isChildUser ||
+        !permissions.set_default_payment_method ||
+        paymentMethod.is_default,
+      onClick: makeDefault,
       title: 'Make Default',
       tooltip: paymentMethod.is_default
         ? 'This is already your default payment method.'
         : undefined,
     },
     {
-      disabled: paymentMethod.is_default,
+      disabled:
+        isChildUser ||
+        !permissions.delete_payment_method ||
+        paymentMethod.is_default,
       onClick: onDelete,
       title: 'Delete',
       tooltip: paymentMethod.is_default
@@ -94,6 +114,8 @@ export const PaymentMethodRow = (props: Props) => {
 
   return (
     <Paper
+      data-qa-payment-row={type}
+      data-testid={`payment-method-row-${paymentMethod.id}`}
       sx={{
         '&&': {
           // TODO: Remove "&&" when Paper has been refactored
@@ -103,8 +125,6 @@ export const PaymentMethodRow = (props: Props) => {
           marginBottom: theme.spacing(),
         },
       }}
-      data-qa-payment-row={type}
-      data-testid={`payment-method-row-${paymentMethod.id}`}
       variant="outlined"
     >
       <Box sx={sxBoxFlex}>

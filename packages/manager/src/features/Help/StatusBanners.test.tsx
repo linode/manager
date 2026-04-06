@@ -4,10 +4,12 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { IncidentBanner, IncidentProps, StatusBanners } from './StatusBanners';
+import { IncidentBanner, StatusBanners } from './StatusBanners';
+
+import type { IncidentProps } from './StatusBanners';
 
 const props: IncidentProps = {
-  href: 'https://www.example.com',
+  href: 'https://www.example.com/',
   impact: 'major',
   message: 'We are monitoring this incident.',
   status: 'monitoring',
@@ -33,10 +35,10 @@ describe('Status banners from statuspage.io', () => {
       expect(screen.getByRole('link')).toHaveAttribute('href', props.href);
     });
 
-    it("clicking a banner's close icon should remove it from view", () => {
+    it("clicking a banner's close icon should remove it from view", async () => {
       const { container } = renderWithTheme(<IncidentBanner {...props} />);
       const dismissButton = screen.getByTestId('notice-dismiss');
-      userEvent.click(dismissButton);
+      await userEvent.click(dismissButton);
       expect(container).toBeEmptyDOMElement();
     });
   });

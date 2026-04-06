@@ -1,26 +1,36 @@
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Props, TicketList } from './TicketList';
+import { TicketList } from './TicketList';
 
-const queryClient = new QueryClient();
+import type { Props } from './TicketList';
 
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
 
 const props: Props = {
   filterStatus: 'open',
 };
 
 const loadingTestId = 'table-row-loading';
+
+const queryMocks = vi.hoisted(() => ({
+  useSearch: vi.fn().mockReturnValue({ dialogOpen: false }),
+  useNavigate: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 describe('TicketList', () => {
   it('renders loading state', () => {
@@ -30,20 +40,18 @@ describe('TicketList', () => {
 
   it('should render ticket table containing tickets', async () => {
     server.use(
-      rest.get('*/support/tickets', (req, res, ctx) => {
+      http.get('*/support/tickets', () => {
         const tickets = supportTicketFactory.buildList(1, {
           status: 'open',
           summary: 'my linode is broken :(',
         });
-        return res(ctx.json(makeResourcePage(tickets)));
+        return HttpResponse.json(makeResourcePage(tickets));
       })
     );
 
-    const {
-      getAllByText,
-      getByTestId,
-      queryAllByText,
-    } = renderWithTheme(<TicketList filterStatus="open" />, { queryClient });
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <TicketList filterStatus="open" />
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -64,16 +72,13 @@ describe('TicketList', () => {
 
   it('should render ticket list empty state', async () => {
     server.use(
-      rest.get('*/support/tickets', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage([])));
+      http.get('*/support/tickets', () => {
+        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <TicketList filterStatus="open" />,
-      {
-        queryClient,
-      }
+      <TicketList filterStatus="open" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

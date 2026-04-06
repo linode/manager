@@ -1,11 +1,13 @@
+import type { PriceObject, RegionPriceObject } from './linodes/types';
+
 export interface APIError {
   field?: string;
   reason: string;
 }
 
 export interface APIWarning {
-  title: string;
   detail: string;
+  title: string;
 }
 
 export interface ConfigOverride {
@@ -32,31 +34,32 @@ export interface Params {
 }
 
 export interface RequestOptions {
-  params?: Params;
   filter?: Filter;
   headers?: RequestHeaders;
+  params?: Params;
 }
 
-interface FilterConditionTypes {
+export interface FilterConditionTypes {
   '+and'?: Filter[];
-  '+or'?: Filter[] | string[];
-  '+order_by'?: string;
-  '+order'?: 'asc' | 'desc';
+  '+contains'?: string;
+  '+eq'?: number | string;
   '+gt'?: number;
   '+gte'?: number;
   '+lt'?: number;
   '+lte'?: number;
-  '+contains'?: string;
   '+neq'?: string;
+  '+or'?: Filter[] | string[];
+  '+order'?: 'asc' | 'desc';
+  '+order_by'?: string;
 }
 
 export type Filter = LinodeFilter | LinodeFilter[];
 
 type LinodeFilter =
+  | { [key: string]: boolean | Filter | null | number | string | undefined }
   | {
       [key in keyof FilterConditionTypes]: FilterConditionTypes[key];
-    }
-  | { [key: string]: string | number | boolean | Filter | null | undefined };
+    };
 
 // const filter: Filter = {
 //   '+or': [{ vcpus: 1 }, { class: 'standard' }],
@@ -95,16 +98,16 @@ type LinodeFilter =
 //   ],
 // };
 
-type RequestHeaderValue = string | string[] | number | boolean | null;
+type RequestHeaderValue = boolean | null | number | string | string[];
 
 type RequestContentType =
-  | RequestHeaderValue
   | 'application/json'
   | 'application/octet-stream'
   | 'application/x-www-form-urlencoded'
   | 'multipart/form-data'
   | 'text/html'
-  | 'text/plain';
+  | 'text/plain'
+  | RequestHeaderValue;
 
 export interface RequestHeaders {
   [key: string]: RequestHeaderValue | undefined;
@@ -112,6 +115,14 @@ export interface RequestHeaders {
   Authorization?: string;
   'Content-Encoding'?: string;
   'Content-Length'?: number;
-  'User-Agent'?: string;
   'Content-Type'?: RequestContentType;
+  'User-Agent'?: string;
+}
+
+export interface PriceType {
+  id: string;
+  label: string;
+  price: PriceObject;
+  region_prices: RegionPriceObject[];
+  transfer: number;
 }

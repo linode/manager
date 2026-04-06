@@ -1,0 +1,4 @@
+{
+  "extends": ["@linode/tsconfig/package"],
+  "include": ["src"]
+}

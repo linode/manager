@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { reportException } from 'src/exceptionReporting';
 
@@ -7,6 +8,7 @@ interface State {
 }
 
 interface Props {
+  children: React.ReactNode;
   renderError: (errorMsg: string) => JSX.Element;
 }
 

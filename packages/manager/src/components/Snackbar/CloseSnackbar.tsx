@@ -1,7 +1,5 @@
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton } from '@linode/ui';
 import * as React from 'react';
-
-import { IconButton } from 'src/components/IconButton';
 
 interface Props {
   onClick: () => void;
@@ -13,15 +11,15 @@ export const CloseSnackbar = (props: Props) => {
 
   return (
     <IconButton
+      onClick={onClick}
+      size="large"
       sx={(theme) => ({
         color: theme.palette.text.primary,
         padding: theme.spacing(1),
       })}
-      onClick={onClick}
-      size="large"
       title={text}
     >
-      <Close />
+      <CloseIcon height={16} width={16} />
     </IconButton>
   );
 };

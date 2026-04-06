@@ -1,15 +1,17 @@
+import { Paper } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { Grid } from 'src/components/Grid';
-import { Paper } from 'src/components/Paper';
-import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { InstallationInstructions } from '../shared/InstallationInstructions';
-import { LongviewActionMenu, ActionHandlers } from './LongviewActionMenu';
+import { LongviewActionMenu } from './LongviewActionMenu';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
+
+import type { ActionHandlers } from './LongviewActionMenu';
+import type { DispatchProps } from 'src/containers/longview.container';
 
 interface Props extends ActionHandlers {
   clientAPIKey: string;
@@ -58,42 +60,52 @@ export const LongviewClientInstructions = (props: Props) => {
       }}
     >
       <Grid
-        alignItems="flex-start"
         aria-label="Installation instructions for the Longview agent"
         container
         data-testid="installation"
-        direction="row"
-        justifyContent="space-between"
-        spacing={2}
       >
-        <Grid item xs={11}>
-          <Grid container spacing={2}>
-            <Grid item md={3} xs={12}>
-              {userCanModifyClient ? (
-                <EditableEntityLabel
-                  loading={updating}
-                  onEdit={handleUpdateLabel}
-                  subText="Waiting for data..."
-                  text={clientLabel}
-                />
-              ) : (
-                <RestrictedUserLabel
-                  label={clientLabel}
-                  subtext={'Waiting for data...'}
-                />
-              )}
-            </Grid>
-            <Grid item md={9} xs={12}>
-              <InstallationInstructions
-                APIKey={clientAPIKey}
-                installationKey={installCode}
+        <Grid container size={11}>
+          <Grid
+            size={{
+              md: 3,
+              xs: 12,
+            }}
+          >
+            {userCanModifyClient ? (
+              <EditableEntityLabel
+                loading={updating}
+                onEdit={handleUpdateLabel}
+                subText="Waiting for data..."
+                text={clientLabel}
               />
-            </Grid>
+            ) : (
+              <RestrictedUserLabel
+                label={clientLabel}
+                subtext={'Waiting for data...'}
+              />
+            )}
+          </Grid>
+          <Grid
+            size={{
+              md: 9,
+              xs: 12,
+            }}
+          >
+            <InstallationInstructions
+              APIKey={clientAPIKey}
+              installationKey={installCode}
+            />
           </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <Grid container justifyContent="flex-end" spacing={2}>
-            <Grid item>
+        <Grid size={1}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Grid>
               <LongviewActionMenu
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}

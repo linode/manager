@@ -1,8 +1,9 @@
+import { mockGetAccount } from 'support/intercepts/account';
+
 /**
  * @file Mocks Linode APIv4 account request to improve performance.
  */
 import type { Account } from '@linode/api-v4';
-import { mockGetAccount } from 'support/intercepts/account';
 
 /**
  * Mocks the Linode API account info GET request to improve performance.
@@ -14,7 +15,7 @@ import { mockGetAccount } from 'support/intercepts/account';
 export const mockAccountRequest = () => {
   // `cloudManagerAccount` is fetched during setup if the `fetchAccount` plugin is used.
   // See also: `cypress/support/plugins/fetch-account.ts`.
-  const cachedAccount = Cypress.env('cloudManagerAccount') as
+  const cachedAccount = Cypress.expose('cloudManagerAccount') as
     | Account
     | undefined;
 

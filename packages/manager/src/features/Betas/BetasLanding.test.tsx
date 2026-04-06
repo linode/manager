@@ -2,20 +2,20 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import BetasLanding from './BetasLanding';
+import { BetasLanding } from './BetasLanding';
 
 describe('BetasLanding', () => {
   it('should be defined', () => {
     expect(BetasLanding).toBeDefined();
   });
 
-  it('should have the page title of Betas', () => {
+  it('should have the page title of Betas', async () => {
     const { getByText } = renderWithTheme(<BetasLanding />);
     const pageTitle = getByText('Betas', { selector: 'h1' });
     expect(pageTitle).not.toBeNull();
   });
 
-  it('should have a paper for enrolled, active, and expired betas', () => {
+  it('should have a paper for enrolled, active, and expired betas', async () => {
     const { getByText } = renderWithTheme(<BetasLanding />);
     const enrolledPageHeader = getByText('Currently Enrolled Betas', {
       selector: 'h2',

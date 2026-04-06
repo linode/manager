@@ -1,79 +1,46 @@
-import Dialog from '@mui/material/Dialog';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useAccountSettings } from '@linode/queries';
+import { Dialog, Select } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { useIsMarketplaceV2Enabled } from './features/Marketplace/shared';
+import { useIsNetworkLoadBalancerEnabled } from './features/NetworkLoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
+import { useIsReserveIpEnabled } from './features/ReservedIps/utils';
+import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
-import { useAccountManagement } from './hooks/useAccountManagement';
-import { useFlags } from './hooks/useFlags';
+import type { SelectOption } from '@linode/ui';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  input: {
-    width: '100%',
-  },
-  paper: {
-    '& .MuiInput-root': {
-      border: 0,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-    },
-    '& .react-select__control': {
-      backgroundColor: 'transparent',
-    },
-    '& .react-select__indicators': {
-      display: 'none',
-    },
-    '& .react-select__menu': {
-      border: 0,
-      borderRadius: 4,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-      marginTop: 12,
-      maxWidth: '100% !important',
-    },
-    '& .react-select__menu-list': {
-      maxHeight: '100% !important',
-      overflowX: 'auto',
-      padding: 0,
-    },
-    '& .react-select__option--is-focused': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-    },
-    '& .react-select__value-container': {
-      '& p': {
-        fontSize: '1rem',
-        overflow: 'visible',
-      },
-      overflow: 'auto',
-    },
-    overflow: 'visible',
-    position: 'absolute',
-    top: '10%',
-  },
-}));
+export const GoTo = React.memo(() => {
+  const navigate = useNavigate();
 
-interface Props {
-  onClose: () => void;
-  open: boolean;
-}
+  const { data: accountSettings } = useAccountSettings();
 
-export const GoTo = React.memo((props: Props) => {
-  const classes = useStyles();
-  const routerHistory = useHistory();
-  const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
-  const flags = useFlags();
+  const isManagedAccount = accountSettings?.managed ?? false;
 
-  const onSelect = (item: Item<string>) => {
-    routerHistory.push(item.value);
-    props.onClose();
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
+
+  const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
+
+  const onClose = () => {
+    setGoToOpen(false);
+  };
+
+  const onSelect = (item: SelectOption<string>) => {
+    navigate({ to: item.value });
+    onClose();
   };
 
   const links = React.useMemo(
     () => [
       {
         display: 'Managed',
-        hide: !_isManagedAccount,
+        hide: !isManagedAccount,
         href: '/managed',
       },
       {
@@ -86,18 +53,22 @@ export const GoTo = React.memo((props: Props) => {
         href: '/volumes',
       },
       {
-        display: 'Load Balancers',
-        hide: !flags.aglb,
-        href: '/loadbalancers',
+        display: 'VPC',
+        href: '/vpcs',
       },
       {
-        display: 'VPC',
-        hide: !flags.vpc,
-        href: '/vpcs',
+        display: 'Network Load Balancer',
+        hide: !isNetworkLoadBalancerEnabled,
+        href: '/netloadbalancers',
       },
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
+      },
+      {
+        display: 'Reserved IPs',
+        hide: !isReserveIpEnabled,
+        href: '/reserved-ips',
       },
       {
         display: 'Firewalls',
@@ -111,6 +82,16 @@ export const GoTo = React.memo((props: Props) => {
       {
         display: 'Images',
         href: '/images',
+      },
+      {
+        display: 'Placement Groups',
+        hide: !isPlacementGroupsEnabled,
+        href: '/placement-groups',
+      },
+      {
+        display: 'Databases',
+        hide: !isDatabasesEnabled,
+        href: '/databases',
       },
       {
         display: 'Domains',
@@ -129,16 +110,18 @@ export const GoTo = React.memo((props: Props) => {
         display: 'Longview',
         href: '/longview',
       },
-
       {
-        display: 'Marketplace',
-        href: '/linodes/create?type=One-Click',
+        display: !isMarketplaceV2FeatureEnabled
+          ? 'Marketplace'
+          : 'Quick Deploy Apps',
+        href: '/linodes/create/marketplace',
       },
-      {
-        display: 'Account',
-        hide: !_hasAccountAccess,
-        href: '/account/billing',
-      },
+      { display: 'Billing', href: '/billing' },
+      { display: 'Identity & Access', href: '/iam' },
+      { display: 'Login History', href: '/login-history' },
+      { display: 'Service Transfers', href: '/service-transfers' },
+      { display: 'Maintenance', href: '/maintenance' },
+      { display: 'Settings', href: '/settings' },
       {
         display: 'Help & Support',
         href: '/support',
@@ -148,10 +131,17 @@ export const GoTo = React.memo((props: Props) => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount]
+    [
+      isDatabasesEnabled,
+      isManagedAccount,
+      isMarketplaceV2FeatureEnabled,
+      isNetworkLoadBalancerEnabled,
+      isPlacementGroupsEnabled,
+      isReserveIpEnabled,
+    ]
   );
 
-  const options: Item[] = React.useMemo(
+  const options: SelectOption<string>[] = React.useMemo(
     () =>
       links
         .filter((thisLink) => !thisLink.hide)
@@ -162,35 +152,50 @@ export const GoTo = React.memo((props: Props) => {
     [links]
   );
 
-  const dialogClasses = React.useMemo(() => ({ paper: classes.paper }), [
-    classes,
-  ]);
-
   return (
     <Dialog
-      classes={dialogClasses}
-      onClose={props.onClose}
-      open={props.open}
+      enableCloseOnBackdropClick
+      onClose={onClose}
+      open={goToOpen}
+      PaperProps={{
+        sx: {
+          '& .MuiAutocomplete-listbox': {
+            border: 0,
+            maxHeight: '75%',
+          },
+          '& .MuiDialogContent-root ': {
+            padding: '0 !important',
+          },
+          '& [data-qa-close-drawer="true"], & [data-qa-dialog-title="Go To..."], & [aria-label="Close"]':
+            {
+              display: 'none',
+            },
+          '& .MuiPaper-root': {
+            boxShadow: 'none',
+          },
+          height: '60%',
+          minHeight: '50%',
+          minWidth: 'auto !important',
+          padding: '0 !important',
+          width: 400,
+        },
+      }}
       title="Go To..."
     >
       {/* I was about to put a "@todo" item for mobile display, but realized
       keyboard shortcuts are not realistic on mobile devices. So I think an
       absolute width here is fine. */}
       <div style={{ maxHeight: 600, width: 400 }}>
-        <EnhancedSelect
+        <Select
           // eslint-disable-next-line
           autoFocus
-          blurInputOnSelect
           hideLabel
-          isClearable={false}
-          isMulti={false}
           label="Go To"
-          menuIsOpen={true}
-          onChange={onSelect}
-          openMenuOnClick={false}
-          openMenuOnFocus={false}
+          onChange={(_event, value) => onSelect(value)}
+          open
           options={options}
           placeholder="Go to..."
+          searchable
         />
       </div>
     </Dialog>

@@ -1,55 +1,39 @@
-import * as React from 'react';
-import { useQueryClient } from 'react-query';
-
-import { Notice } from 'src/components/Notice/Notice';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
+  useAllLinodeConfigsQuery,
   useDeleteLinodeMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { subnetQueryKey, vpcQueryKey } from 'src/queries/vpcs';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+  vpcQueries,
+} from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
+
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import { useEventsPollingActions } from 'src/queries/events/events';
 
 import { getVPCsFromLinodeConfigs } from './utils';
 
 interface Props {
   linodeId: number | undefined;
+  linodeLabel: string | undefined;
   onClose: () => void;
   onSuccess?: () => void;
   open: boolean;
 }
 
 export const DeleteLinodeDialog = (props: Props) => {
+  const { linodeId, linodeLabel, onClose, onSuccess, open } = props;
   const queryClient = useQueryClient();
-  const flags = useFlags();
-  const { data: account } = useAccount();
 
-  const enableVPCActions = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
-  const { linodeId, onClose, onSuccess, open } = props;
-
-  const { data: linode } = useLinodeQuery(
+  const { data: configs } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
     linodeId !== undefined && open
   );
 
-  const { data: configs } = useAllLinodeConfigsQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && open && enableVPCActions
-  );
-
-  const { error, isLoading, mutateAsync, reset } = useDeleteLinodeMutation(
+  const { error, isPending, mutateAsync, reset } = useDeleteLinodeMutation(
     linodeId ?? -1
   );
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   React.useEffect(() => {
     if (open) {
@@ -59,26 +43,26 @@ export const DeleteLinodeDialog = (props: Props) => {
 
   const onDelete = async () => {
     await mutateAsync();
-    const vpcIds = enableVPCActions
-      ? getVPCsFromLinodeConfigs(configs ?? [])
-      : [];
+    const vpcIds = getVPCsFromLinodeConfigs(configs ?? []);
+
     // @TODO VPC: potentially revisit using the linodeEventsHandler in linode/events.ts to invalidate queries rather than here
     // See PR #9814 for more details
     if (vpcIds.length > 0) {
-      queryClient.invalidateQueries([vpcQueryKey, 'paginated']);
-      // invalidate data for specific vpcs this linode is assigned to
-      vpcIds.forEach((vpcId) => {
-        queryClient.invalidateQueries([vpcQueryKey, 'vpc', vpcId]);
-        queryClient.invalidateQueries([
-          vpcQueryKey,
-          'vpc',
-          vpcId,
-          subnetQueryKey,
-        ]);
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.all._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      // invalidate data for specific vpcs this linode is assigned to
+      for (const vpcId of vpcIds) {
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.vpc(vpcId).queryKey,
+        });
+      }
     }
     onClose();
-    resetEventsPolling();
+    checkForNewEvents();
 
     if (onSuccess) {
       onSuccess();
@@ -89,17 +73,18 @@ export const DeleteLinodeDialog = (props: Props) => {
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: linode?.label,
+        name: linodeLabel,
         primaryBtnText: 'Delete',
         type: 'Linode',
       }}
       errors={error}
-      label={'Linode Label'}
-      loading={isLoading}
+      expand
+      label="Linode Label"
+      loading={isPending}
       onClick={onDelete}
       onClose={onClose}
       open={open}
-      title={`Delete ${linode?.label ?? ''}?`}
+      title={`Delete ${linodeLabel ?? ''}?`}
     >
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>

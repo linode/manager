@@ -1,20 +1,23 @@
 import {
   deleteBucket,
-  getBuckets,
+  getBucketsInRegion,
   getObjectList,
+  getObjectStorageEndpoints,
   getObjectStorageKeys,
   getObjectURL,
   revokeObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
-import {
-  ObjectStorageBucket,
-  ObjectStorageKey,
-  ObjectStorageObject,
-} from '@linode/api-v4/types';
 import axios from 'axios';
 import { authenticate } from 'support/api/authentication';
 import { isTestLabel } from 'support/api/common';
 import { depaginate } from 'support/util/paginate';
+
+import type {
+  ObjectStorageBucket,
+  ObjectStorageEndpoint,
+  ObjectStorageKey,
+  ObjectStorageObject,
+} from '@linode/api-v4';
 
 /**
  * Asynchronously deletes all objects within a test bucket.
@@ -39,7 +42,10 @@ export const deleteAllTestBucketObjects = async (
 
   authenticate();
   // @TODO Improve object retrieval to account for pagination for buckets with many objects.
-  const storageObjects = await getObjectList(clusterId, bucketLabel);
+  const storageObjects = await getObjectList({
+    bucket: bucketLabel,
+    clusterId,
+  });
   const storageObjectDeletePromises = storageObjects.data.map(
     async (storageObject: ObjectStorageObject) => {
       const objectUrl = await getObjectURL(
@@ -65,18 +71,40 @@ export const deleteAllTestBucketObjects = async (
  */
 export const deleteAllTestBuckets = async () => {
   authenticate();
-  const bucketsPage = (page: number) => getBuckets({ page });
-  const buckets: ObjectStorageBucket[] = (
-    await depaginate<ObjectStorageBucket>(bucketsPage)
-  ).filter((bucket: ObjectStorageBucket) => {
-    return isTestLabel(bucket.label);
-  });
+  const objEndpoints = await depaginate<ObjectStorageEndpoint>((page) =>
+    getObjectStorageEndpoints({ params: { page } })
+  );
+  const buckets = (
+    await Promise.all(
+      objEndpoints.map(async (endpoint) => {
+        try {
+          return depaginate<ObjectStorageBucket>((page) =>
+            getBucketsInRegion(endpoint.region, { page })
+          );
+        } catch (e) {
+          console.error(
+            `Failed to fetch buckets from Object Storage endpoint in '${endpoint.region}'`
+          );
+          if (e && e.message) {
+            console.error(e.message);
+            console.error(e);
+          }
+          return [];
+        }
+      })
+    )
+  )
+    .flat()
+    .filter((bucket) => isTestLabel(bucket.label));
 
   const deleteBucketsPromises = buckets.map(
     async (bucket: ObjectStorageBucket) => {
-      await deleteAllTestBucketObjects(bucket.cluster, bucket.label);
+      await deleteAllTestBucketObjects(
+        bucket.region || bucket.cluster,
+        bucket.label
+      );
       return deleteBucket({
-        cluster: bucket.cluster,
+        cluster: bucket.region || bucket.cluster,
         label: bucket.label,
       });
     }

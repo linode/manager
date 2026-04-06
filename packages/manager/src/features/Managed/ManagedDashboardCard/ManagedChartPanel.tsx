@@ -1,36 +1,36 @@
-import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import { useProfile } from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { getUserTimezone } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
-  formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
-import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
 
 import {
-  StyledCanvasContainerDiv,
   StyledGraphControlsDiv,
   StyledRootDiv,
 } from './ManagedChartPanel.styles';
 
+import type { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import type { Theme } from '@mui/material/styles';
+
 const chartHeight = 300;
 
-const formatData = (value: DataSeries[]): [number, number][] =>
-  value.map((thisPoint) => [thisPoint.x, thisPoint.y]);
+interface NetworkTransferProps {
+  'Network Traffic In': number;
+  'Network Traffic Out': number;
+  timestamp: number;
+}
 
-const _formatTooltip = (valueInBytes: number) =>
-  formatNetworkTooltip(valueInBytes / 8);
+const formatData2 = (value: DataSeries[], label: string) =>
+  value.map((thisPoint) => ({ [label]: thisPoint.y, timestamp: thisPoint.x }));
 
 const createTabs = (
   data: ManagedStatsData | undefined,
@@ -60,29 +60,41 @@ const createTabs = (
     return convertNetworkToUnit(value, unit as any);
   };
 
+  const networkTransferData: NetworkTransferProps[] = [];
+
+  for (let i = 0; i < data.net_in.length; i++) {
+    networkTransferData.push({
+      'Network Traffic In': convertNetworkData(data.net_in[i].y),
+      'Network Traffic Out': convertNetworkData(data.net_out[i].y),
+      timestamp: data.net_in[i].x,
+    });
+  }
+
   return [
     {
       render: () => {
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <StyledCanvasContainerDiv>
-              <LineGraph
-                data={[
+            <Box marginTop={2}>
+              <AreaChart
+                areas={[
                   {
-                    backgroundColor: theme.graphs.cpu.percent,
-                    borderColor: 'transparent',
-                    data: formatData(data.cpu),
-                    label: 'CPU %',
+                    color: theme.graphs.cpu.percent,
+                    dataKey: 'CPU %',
                   },
                 ]}
-                accessibleDataTable={{ unit: '%' }}
                 ariaLabel="CPU Usage Graph"
-                chartHeight={chartHeight}
-                showToday={true}
+                data={formatData2(data.cpu, 'CPU %')}
+                height={chartHeight}
                 timezone={timezone}
+                unit={'%'}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
               />
-            </StyledCanvasContainerDiv>
+            </Box>
           </StyledRootDiv>
         );
       },
@@ -93,33 +105,30 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <StyledCanvasContainerDiv>
-              <LineGraph
-                data={[
+            <Box marginTop={2}>
+              <AreaChart
+                areas={[
                   {
-                    backgroundColor: theme.graphs.network.inbound,
-                    borderColor: 'transparent',
-                    data: formatData(data.net_in),
-                    label: 'Network Traffic In',
+                    color: theme.graphs.darkGreen,
+                    dataKey: 'Network Traffic In',
                   },
                   {
-                    backgroundColor: theme.graphs.network.outbound,
-                    borderColor: 'transparent',
-                    data: formatData(data.net_out),
-                    label: 'Network Traffic Out',
+                    color: theme.graphs.lightGreen,
+                    dataKey: 'Network Traffic Out',
                   },
                 ]}
-                accessibleDataTable={{ unit: 'Kb/s"' }}
                 ariaLabel="Network Transfer Graph"
-                chartHeight={chartHeight}
-                formatData={convertNetworkData}
-                formatTooltip={_formatTooltip}
-                nativeLegend
-                showToday={true}
+                data={networkTransferData}
+                height={chartHeight}
+                showLegend
                 timezone={timezone}
-                unit="/s"
+                unit={' Kb/s'}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
               />
-            </StyledCanvasContainerDiv>
+            </Box>
           </StyledRootDiv>
         );
       },
@@ -130,23 +139,25 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <StyledCanvasContainerDiv>
-              <LineGraph
-                data={[
+            <Box marginTop={3}>
+              <AreaChart
+                areas={[
                   {
-                    backgroundColor: theme.graphs.yellow,
-                    borderColor: 'transparent',
-                    data: formatData(data.disk),
-                    label: 'Disk I/O',
+                    color: theme.graphs.yellow,
+                    dataKey: 'Disk I/O',
                   },
                 ]}
-                accessibleDataTable={{ unit: 'op/s' }}
                 ariaLabel="Disk I/O Graph"
-                chartHeight={chartHeight}
-                showToday={true}
+                data={formatData2(data.disk, 'Disk I/O')}
+                height={chartHeight}
                 timezone={timezone}
+                unit={' op/s'}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
               />
-            </StyledCanvasContainerDiv>
+            </Box>
           </StyledRootDiv>
         );
       },
@@ -175,7 +186,11 @@ export const ManagedChartPanel = () => {
   }
 
   if (isLoading) {
-    return <CircleProgress />;
+    return (
+      <StyledGraphControlsDiv>
+        <CircleProgress />
+      </StyledGraphControlsDiv>
+    );
   }
 
   if (!data) {

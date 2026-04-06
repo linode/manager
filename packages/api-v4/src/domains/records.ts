@@ -2,10 +2,12 @@ import {
   createRecordSchema,
   updateRecordSchema,
 } from '@linode/validation/lib/records.schema';
+
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
-import { Params, ResourcePage as Page } from '../types';
-import { DomainRecord } from './types';
+
+import type { ResourcePage as Page, Params } from '../types';
+import type { DomainRecord } from './types';
 
 /**
  * Returns a paginated list of Records configured on a Domain in Linode's DNS Manager.
@@ -17,7 +19,7 @@ export const getDomainRecords = (domainId: number, params?: Params) =>
   Request<Page<DomainRecord>>(
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}/records`),
     setParams(params),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -30,10 +32,10 @@ export const getDomainRecord = (domainId: number, recordId: number) =>
   Request<DomainRecord>(
     setURL(
       `${API_ROOT}/domains/${encodeURIComponent(
-        domainId
-      )}/records/${encodeURIComponent(recordId)}`
+        domainId,
+      )}/records/${encodeURIComponent(recordId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -44,12 +46,12 @@ export const getDomainRecord = (domainId: number, recordId: number) =>
  */
 export const createDomainRecord = (
   domainId: number,
-  data: Partial<DomainRecord>
+  data: Partial<DomainRecord>,
 ) =>
   Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${encodeURIComponent(domainId)}/records`),
     setMethod('POST'),
-    setData(data, createRecordSchema)
+    setData(data, createRecordSchema),
   );
 
 /**
@@ -62,16 +64,16 @@ export const createDomainRecord = (
 export const updateDomainRecord = (
   domainId: number,
   recordId: number,
-  data: Partial<DomainRecord>
+  data: Partial<DomainRecord>,
 ) =>
   Request<DomainRecord>(
     setURL(
       `${API_ROOT}/domains/${encodeURIComponent(
-        domainId
-      )}/records/${encodeURIComponent(recordId)}`
+        domainId,
+      )}/records/${encodeURIComponent(recordId)}`,
     ),
     setMethod('PUT'),
-    setData(data, updateRecordSchema)
+    setData(data, updateRecordSchema),
   );
 
 /**
@@ -84,8 +86,8 @@ export const deleteDomainRecord = (domainId: number, recordId: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/domains/${encodeURIComponent(
-        domainId
-      )}/records/${encodeURIComponent(recordId)}`
+        domainId,
+      )}/records/${encodeURIComponent(recordId)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );

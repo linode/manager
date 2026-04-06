@@ -1,64 +1,123 @@
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
+import { useRegionQuery } from '@linode/queries';
+import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
+import { useTabs } from 'src/hooks/useTabs';
+import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
-import { BucketAccess } from './BucketAccess';
-
-import type { ComponentType, LazyExoticComponent } from 'react';
-
-const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
-  import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))
+const ObjectList = React.lazy(() =>
+  import('./ObjectsTab/BucketDetail').then((module) => ({
+    default: module.BucketDetail,
+  }))
 );
+
+const BucketAccess = React.lazy(() =>
+  import('./AccessTab/BucketAccess').then((module) => ({
+    default: module.BucketAccess,
+  }))
+);
+
 const BucketSSL = React.lazy(() =>
-  import('./BucketSSL').then((module) => ({
+  import('./CertificatesTab/BucketSSL').then((module) => ({
     default: module.BucketSSL,
   }))
 );
 
-interface MatchProps {
-  bucketName: string;
-  clusterId: ObjectStorageClusterID;
-}
+const BucketMetrics = React.lazy(() =>
+  import('./MetricsTab/MetricsTab').then((module) => ({
+    default: module.MetricsTab,
+  }))
+);
 
-type Props = RouteComponentProps<MatchProps>;
+const BUCKET_DETAILS_URL = '/object-storage/buckets/$clusterId/$bucketName';
+const ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT = ['E0', 'E1'];
+const OBJECT_STORAGE_METRICS_KEY = 'Object Storage';
 
-export const BucketDetailLanding = React.memo((props: Props) => {
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-  const { bucketName, clusterId } = props.match.params;
+export const BucketDetailLanding = React.memo(() => {
+  const { bucketName, clusterId } = useParams({
+    from: BUCKET_DETAILS_URL,
+  });
 
-  const tabs = [
-    {
-      routeName: `${props.match.url}/objects`,
-      title: 'Objects',
-    },
-    {
-      routeName: `${props.match.url}/access`,
-      title: 'Access',
-    },
-    {
-      routeName: `${props.match.url}/ssl`,
-      title: 'SSL/TLS',
-    },
-  ];
+  const { aclpServices, objectStorageContextualMetrics } = useFlags();
+  const { isError: aclpServiceError, isLoading: aclServiceLoading } =
+    useCloudPulseServiceByServiceType('objectstorage', true);
 
-  const [index, setIndex] = React.useState(
-    tabs.findIndex((tab) => matches(tab.routeName)) || 0
+  const {
+    data: bucketsData,
+    isLoading: bucketsLoading,
+    error,
+    isPending,
+  } = useObjectStorageBuckets();
+
+  const bucket = bucketsData?.buckets.find(
+    ({ label, region }) => label === bucketName && region === clusterId
   );
 
-  const handleTabChange = (index: number) => {
-    setIndex(index);
-    props.history.push(tabs[index].routeName);
-  };
+  const {
+    data: region,
+    isLoading: regionLoading,
+    error: regionError,
+  } = useRegionQuery(bucket?.region || '');
+
+  const { endpoint_type } = bucket ?? {};
+
+  const isGen2Endpoint = endpoint_type === 'E2' || endpoint_type === 'E3';
+
+  const regionSupportsMetrics = region?.monitors?.metrics?.includes(
+    OBJECT_STORAGE_METRICS_KEY
+  );
+
+  const isBucketMetricsTabHidden =
+    !endpoint_type ||
+    ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT.includes(endpoint_type) ||
+    aclpServiceError ||
+    !aclpServices?.objectstorage?.metrics?.enabled ||
+    !objectStorageContextualMetrics ||
+    !regionSupportsMetrics ||
+    !!regionError;
+
+  const { handleTabChange, tabIndex, tabs, getTabIndex } = useTabs([
+    {
+      title: 'Objects',
+      to: `${BUCKET_DETAILS_URL}/objects`,
+    },
+    {
+      title: 'Access',
+      to: `${BUCKET_DETAILS_URL}/access`,
+    },
+    {
+      title: 'SSL/TLS',
+      to: `${BUCKET_DETAILS_URL}/ssl`,
+      hide: isGen2Endpoint,
+    },
+    {
+      title: 'Metrics',
+      to: `${BUCKET_DETAILS_URL}/metrics`,
+      hide: isBucketMetricsTabHidden,
+      chip: aclpServices?.objectstorage?.metrics?.beta ? <BetaChip /> : null,
+    },
+  ]);
+
+  if (isPending || bucketsLoading || regionLoading || aclServiceLoading) {
+    return <CircleProgress />;
+  }
+
+  if (!bucket || error) {
+    return <ErrorState errorText={error?.message ?? 'Not found'} />;
+  }
+
+  const sslTabIndex = getTabIndex(`${BUCKET_DETAILS_URL}/ssl`);
+  const metricsTabIndex = getTabIndex(`${BUCKET_DETAILS_URL}/metrics`);
 
   return (
     <>
@@ -77,22 +136,40 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         // Purposefully not using the title prop here because we want to use the `bucketName` override.
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
+        spacingBottom={4}
       />
 
-      <Tabs index={index} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} />
+              <ObjectList />
             </SafeTabPanel>
+
             <SafeTabPanel index={1}>
-              <BucketAccess bucketName={bucketName} clusterId={clusterId} />
+              <BucketAccess
+                bucketName={bucketName}
+                clusterId={clusterId}
+                endpointType={endpoint_type}
+              />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <BucketSSL bucketName={bucketName} clusterId={clusterId} />
-            </SafeTabPanel>
+
+            {!!sslTabIndex && (
+              <SafeTabPanel index={sslTabIndex}>
+                <BucketSSL bucketName={bucketName} clusterId={clusterId} />
+              </SafeTabPanel>
+            )}
+
+            {!!metricsTabIndex && (
+              <SafeTabPanel index={metricsTabIndex}>
+                <BucketMetrics
+                  hostname={bucket.hostname}
+                  region={bucket.region}
+                />
+              </SafeTabPanel>
+            )}
           </TabPanels>
         </React.Suspense>
       </Tabs>

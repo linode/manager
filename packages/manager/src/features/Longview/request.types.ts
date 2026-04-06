@@ -103,9 +103,8 @@ export interface InboundOutboundNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   tx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export type LongviewNetworkInterface<
-  WithDummy extends '' | 'yAsNull' = ''
-> = Record<string, InboundOutboundNetwork<WithDummy>>;
+export type LongviewNetworkInterface<WithDummy extends '' | 'yAsNull' = ''> =
+  Record<string, InboundOutboundNetwork<WithDummy>>;
 export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
     Interface: LongviewNetworkInterface<WithDummy>;
@@ -118,7 +117,7 @@ export interface LastUpdated {
 }
 
 export interface Uptime {
-  uptime: number;
+  Uptime: number;
 }
 
 export interface LongviewPackage {
@@ -175,9 +174,14 @@ export interface LongviewProcesses<WithDummy extends '' | 'yAsNull' = ''> {
   Processes?: Record<string, Process<WithDummy>>;
 }
 
-export type Process<WithDummy extends '' | 'yAsNull' = ''> = {
+export interface Process<WithDummy extends '' | 'yAsNull' = ''> {
+  count?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  cpu?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ioreadkbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  iowritekbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   longname: string;
-} & Record<string, ProcessStats<WithDummy>>;
+  mem?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+}
 
 export interface ProcessStats<WithDummy extends '' | 'yAsNull' = ''> {
   count?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
@@ -225,9 +229,11 @@ export interface Get {
     action: 'getLatestValue' | 'getValues' | 'lastUpdated',
     options?: Options
   ): Promise<LongviewResponse>;
-  (token: string, action: 'getTopProcesses', options?: Options): Promise<
-    LongviewResponse<LongviewTopProcesses>
-  >;
+  (
+    token: string,
+    action: 'getTopProcesses',
+    options?: Options
+  ): Promise<LongviewResponse<LongviewTopProcesses>>;
 }
 
 export type LongviewAction =
@@ -302,12 +308,12 @@ export interface NginxResponse {
 }
 
 export interface ApacheResponse {
-  'Total Accesses': Stat[];
-  'Total kBytes': Stat[];
-  Workers: Record<string, Stat[]>;
   status: number;
   status_message: string;
+  'Total Accesses': Stat[];
+  'Total kBytes': Stat[];
   version: string;
+  Workers: Record<string, Stat[]>;
 }
 
 export interface MySQLResponse {

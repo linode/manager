@@ -1,6 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { useEffect, useState } from 'react';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface UseAPIRequest<T> {
   data: T;
@@ -46,6 +47,8 @@ export interface UseAPIRequest<T> {
  *  [props.someProp] // Run the request when `props.someProp` changes
  * );
  * ```
+ *
+ * @deprecated Please don't use this. Use React Query!
  *
  * @param request The request function to execute when `deps` change.
  * @param defaultData Value to use for `data` before request is made.

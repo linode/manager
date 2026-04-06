@@ -1,7 +1,6 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -12,6 +11,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { BucketTableRow } from './BucketTableRow';
+
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
 interface Props {
   data: ObjectStorageBucket[];
@@ -31,6 +32,8 @@ export const BucketTable = (props: Props) => {
     order,
     orderBy,
   } = props;
+
+  const isEndpointTypeAvailable = Boolean(data[0]?.endpoint_type);
 
   return (
     <Paginate data={data} pageSize={25}>
@@ -66,6 +69,19 @@ export const BucketTable = (props: Props) => {
                     Region
                   </TableSortCell>
                 </Hidden>
+                {isEndpointTypeAvailable && (
+                  <Hidden lgDown>
+                    <TableSortCell
+                      active={orderBy === 'endpoint_type'}
+                      data-qa-created
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="endpoint_type"
+                    >
+                      Endpoint Type
+                    </TableSortCell>
+                  </Hidden>
+                )}
                 <Hidden lgDown>
                   <TableSortCell
                     active={orderBy === 'created'}
@@ -135,12 +151,11 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
   const { data, onDetails, onRemove } = props;
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {data.map((bucket) => (
+      {data.map((bucket, index) => (
         <BucketTableRow
           {...bucket}
-          key={`${bucket.label}-${bucket.cluster}`}
+          key={`${bucket.label}-${index}-${bucket.region ?? bucket.cluster}`}
           onDetails={() => onDetails(bucket)}
           onRemove={() => onRemove(bucket)}
         />

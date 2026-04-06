@@ -1,35 +1,61 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useProfile } from '@linode/queries';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useProfile } from 'src/queries/profile';
+
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  isProxyOrDelegateUser: boolean;
   onDelete: (username: string) => void;
   username: string;
 }
 
-export const UsersActionMenu = ({ onDelete, username }: Props) => {
-  const history = useHistory();
+export const UsersActionMenu = ({
+  isProxyOrDelegateUser,
+  onDelete,
+  username,
+}: Props) => {
+  const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
 
-  const actions: Action[] = [
+  const proxyUserActions: Action[] = [
     {
       onClick: () => {
-        history.push(`/account/users/${username}`);
+        navigate({
+          to: '/users/$username/permissions',
+          params: { username },
+        });
+      },
+      title: 'Manage Access',
+    },
+  ];
+
+  const nonProxyUserActions: Action[] = [
+    {
+      onClick: () => {
+        navigate({
+          to: '/users/$username',
+          params: { username },
+        });
       },
       title: 'User Profile',
     },
     {
       onClick: () => {
-        history.push(`/account/users/${username}/permissions`);
+        navigate({
+          to: '/users/$username/permissions',
+          params: { username },
+        });
       },
       title: 'User Permissions',
     },
@@ -45,6 +71,10 @@ export const UsersActionMenu = ({ onDelete, username }: Props) => {
           : undefined,
     },
   ];
+
+  const actions = isProxyOrDelegateUser
+    ? proxyUserActions
+    : nonProxyUserActions;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment

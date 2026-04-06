@@ -2,17 +2,22 @@
  * @file Integration tests for personal access token CRUD operations.
  */
 
-import { Token } from '@linode/api-v4/types';
-import { appTokenFactory } from 'src/factories/oauth';
+import { profileFactory } from '@linode/utilities';
 import {
   mockCreatePersonalAccessToken,
   mockGetAppTokens,
   mockGetPersonalAccessTokens,
+  mockGetProfile,
   mockRevokePersonalAccessToken,
   mockUpdatePersonalAccessToken,
 } from 'support/intercepts/profile';
-import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
+import { randomLabel, randomString } from 'support/util/random';
+
+import { appTokenFactory } from 'src/factories/oauth';
+import { DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+
+import type { Token } from '@linode/api-v4';
 
 describe('Personal access tokens', () => {
   /*
@@ -21,6 +26,8 @@ describe('Personal access tokens', () => {
    * - Confirms that user is shown the token secret upon successful PAT creation
    * - Confirms that new personal access token is shown in list
    * - Confirms that user can open and close "View Scopes" drawer
+   * - Confirm that the “Child account access” grant is not visible in the list of permissions.
+   * - Upon clicking “Create Token”, assert that the outgoing API request payload contains "scopes" value as defined in token.
    */
   it('can create personal access tokens', () => {
     const token = appTokenFactory.build({
@@ -60,29 +67,60 @@ describe('Personal access tokens', () => {
       .findByTitle('Add Personal Access Token')
       .should('be.visible')
       .within(() => {
-        // Attempt to submit form without specifying a label
+        // Confirm that the “Child account access” grant is not visible in the list of permissions.
+        cy.findAllByText('Child Account Access').should('not.exist');
+
+        // Confirm submit button is disabled without specifying scopes.
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        ui.buttonGroup.findButtonByTitle('Create Token').should('be.disabled');
+
+        // Select just one scope.
+        cy.get('[data-qa-row="Account"]').within(() => {
+          cy.get('[type="radio"]').first().click();
+        });
+
+        // Confirm submit button is still disabled without specifying ALL scopes.
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         ui.buttonGroup
           .findButtonByTitle('Create Token')
-          .scrollIntoView()
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Specify ALL scopes by selecting the "No Access" Select All radio button.
+        cy.get('[data-qa-perm-no-access-radio]').click();
+        cy.get('[data-qa-perm-no-access-radio]').should(
+          'have.attr',
+          'data-qa-radio',
+          'true'
+        );
+
+        // Confirm submit button is enabled; attempt to submit form without specifying a label.
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
           .should('be.visible')
           .should('be.enabled')
           .click();
 
-        cy.findByText('Label must be between 1 and 100 characters.')
-          .scrollIntoView()
-          .should('be.visible');
+        // Confirm validation error.
+        cy.findByText(
+          'Label must be between 1 and 100 characters.'
+        ).scrollIntoView();
+        cy.findByText('Label must be between 1 and 100 characters.').should(
+          'be.visible'
+        );
 
         // Specify a label and re-submit.
+        cy.findByLabelText('Label').scrollIntoView();
         cy.findByLabelText('Label')
-          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
-          .click()
-          .type(token.label);
+          .click();
+        cy.findByLabelText('Label').type(token.label);
 
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         ui.buttonGroup
           .findButtonByTitle('Create Token')
-          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -116,7 +154,12 @@ describe('Personal access tokens', () => {
       });
 
     // Confirm that new PAT is shown in list and "View Scopes" drawer works.
-    cy.wait('@getTokens');
+    // Upon clicking “Create Token”, assert that the outgoing API request payload contains "scopes" value as defined in token.
+    cy.wait('@getTokens').then((xhr) => {
+      const actualTokenData = xhr.response?.body.data;
+      const actualTokenScopes = actualTokenData[0].scopes;
+      expect(actualTokenScopes).to.equal(token.scopes);
+    });
     cy.findByText(token.label)
       .should('be.visible')
       .closest('tr')
@@ -134,6 +177,72 @@ describe('Personal access tokens', () => {
       .within(() => {
         ui.drawerCloseButton.find().click();
       });
+  });
+
+  it('sends scope as "*" when all permissions are set to read/write', () => {
+    const token = appTokenFactory.build({
+      label: randomLabel(),
+      token: randomString(64),
+    });
+
+    mockCreatePersonalAccessToken(token).as('createToken');
+
+    cy.visitWithLogin('/profile/tokens');
+
+    // Click create button, fill out and submit PAT create form.
+    ui.button
+      .findByTitle('Create a Personal Access Token')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.drawer
+      .findByTitle('Add Personal Access Token')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that the “Child account access” grant is not visible in the list of permissions.
+        cy.findAllByText('Child Account Access').should('not.exist');
+
+        // Confirm submit button is disabled without specifying scopes.
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        ui.buttonGroup.findButtonByTitle('Create Token').should('be.disabled');
+
+        // Select "Read/Write" for all scopes.
+        cy.get(
+          '[aria-label="Personal Access Token Permissions"] tr:gt(1)'
+        ).each((row) =>
+          cy.wrap(row).within(() => {
+            cy.get('[type="radio"]').eq(2).click();
+          })
+        );
+
+        // Verify "Select All" radio for "Read/Write" is active
+        cy.get('[data-qa-perm-rw-radio]').should(
+          'have.attr',
+          'data-qa-radio',
+          'true'
+        );
+
+        // Specify a label and submit.
+        cy.findByLabelText('Label').scrollIntoView();
+        cy.findByLabelText('Label')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByLabelText('Label').type(token.label);
+
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that new PAT's scopes are '*'
+    cy.wait('@createToken').then((xhr) => {
+      expect(xhr.request.body.scopes).to.equal('*');
+    });
   });
 
   /*
@@ -172,15 +281,15 @@ describe('Personal access tokens', () => {
           .click();
       });
 
+    mockGetPersonalAccessTokens([newToken]).as('getTokens');
+
     ui.drawer
       .findByTitle('Edit Personal Access Token')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newToken.label);
+        cy.findByLabelText('Label').as('qaLabel').should('be.visible').click();
+        cy.get('@qaLabel').clear();
+        cy.get('@qaLabel').type(newToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Save')
@@ -190,7 +299,8 @@ describe('Personal access tokens', () => {
       });
 
     // Confirm that token has been renamed, initiate revocation.
-    cy.wait('@updateToken');
+    cy.wait(['@updateToken', '@getTokens']);
+
     cy.findByText(newToken.label)
       .should('be.visible')
       .closest('tr')
@@ -221,6 +331,90 @@ describe('Personal access tokens', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText(newToken.label).should('not.exist');
+        cy.findByText('No items to display.').should('be.visible');
+      });
+  });
+
+  /*
+   * - Uses mocked API requests to confirm disabled states for proxy users
+   * - Confirms that a proxy user cannot create an API token
+   * - Confirms that a proxy user cannot edit (rename) an API token
+   * - Confirms that a proxy user can revoke an API token created for them
+   * - Confirms that token is removed from list after revoking it
+   */
+  it('disables API token creation and editing for a proxy user', () => {
+    const proxyToken: Token = appTokenFactory.build({
+      label: randomLabel(),
+      token: randomString(64),
+    });
+    const proxyUserProfile = profileFactory.build({ user_type: 'proxy' });
+
+    mockGetProfile(proxyUserProfile);
+    mockGetPersonalAccessTokens([proxyToken]).as('getTokens');
+    mockGetAppTokens([]).as('getAppTokens');
+    mockRevokePersonalAccessToken(proxyToken.id).as('revokeToken');
+
+    cy.visitWithLogin('/profile/tokens');
+    cy.wait(['@getTokens', '@getAppTokens']);
+
+    // Find token in list, confirm "Rename" is disabled and tooltip displays.
+    cy.findByText(proxyToken.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Rename')
+          .should('be.visible')
+          .should('be.disabled')
+          .click();
+      });
+
+    ui.tooltip
+      .findByText(DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT)
+      .should('be.visible');
+
+    // Confirm that token has not been renamed, initiate revocation.
+    cy.findByText(proxyToken.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Revoke')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockGetPersonalAccessTokens([]).as('getTokens');
+    ui.dialog
+      .findByTitle(`Revoke ${proxyToken.label}?`)
+      .should('be.visible')
+      .within(() => {
+        ui.buttonGroup
+          .findButtonByTitle('Revoke')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Find 'Create a Personal Access Token' button, confirm it is disabled and tooltip displays.
+    ui.button
+      .findByTitle('Create a Personal Access Token')
+      .should('be.visible')
+      .should('be.disabled')
+      .click();
+
+    ui.tooltip
+      .findByText(DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT)
+      .should('be.visible');
+
+    // Confirm that token is removed from list after revoking.
+    cy.wait(['@revokeToken', '@getTokens']);
+    ui.toast.assertMessage(`Successfully revoked ${proxyToken.label}`);
+    cy.findByLabelText('List of Personal Access Tokens')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(proxyToken.label).should('not.exist');
         cy.findByText('No items to display.').should('be.visible');
       });
   });

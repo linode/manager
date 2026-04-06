@@ -1,38 +1,54 @@
 import React from 'react';
-import { Preview } from '@storybook/react';
-import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
+import { Preview } from '@storybook/react-vite';
+import { storybookWorker } from '../src/mocks/mswWorkers';
+import { DocsContainer as BaseContainer } from '@storybook/addon-docs/blocks';
+import {
+  DARK_MODE_EVENT_NAME,
+  useDarkMode,
+} from '@vueless/storybook-dark-mode';
+import { PropsWithChildren } from 'react';
+import { addons } from 'storybook/preview-api';
+import { themes } from './themes';
 import {
   Title,
   Subtitle,
   Description,
   Primary,
   Controls,
-  Stories,
-} from '@storybook/blocks';
+  DocsContainerProps,
+} from '@storybook/addon-docs/blocks';
 import { wrapWithTheme } from '../src/utilities/testHelpers';
-import { useDarkMode } from 'storybook-dark-mode';
-import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
-import { themes } from '@storybook/theming';
-import { worker } from '../src/mocks/testBrowser';
-
 import '../src/index.css';
-// TODO: M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
-import '@reach/tabs/styles.css';
+import '@reach/tabs/styles.css'; // @todo M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
 
-MINIMAL_VIEWPORTS.mobile1.styles = {
-  height: '667px',
-  width: '375px',
-};
+const channel = addons.getChannel();
 
-export const DocsContainer = ({ children, context }) => {
-  const isDark = useDarkMode();
+storybookWorker.start({ onUnhandledRequest: 'bypass' });
+
+/**
+ * This exists as a workaround to get dark mode working in "docs" pages.
+ * See https://github.com/hipstersmoothie/storybook-dark-mode/issues/282#issuecomment-2246463856
+ */
+function useDocsDarkMode() {
+  const [isDark, setDark] = React.useState(channel.last(DARK_MODE_EVENT_NAME));
+
+  React.useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, setDark);
+    return () => channel.off(DARK_MODE_EVENT_NAME, setDark);
+  }, [channel, setDark]);
+
+  return isDark;
+}
+
+export const DocsContainer = ({
+  children,
+  context,
+}: PropsWithChildren<DocsContainerProps>) => {
+  const isDark = useDocsDarkMode();
 
   return (
     <BaseContainer
-      theme={{
-        ...themes[isDark ? 'dark' : 'normal'],
-        base: isDark ? 'dark' : 'light',
-      }}
+      theme={isDark ? themes.dark : themes.light}
       context={context}
     >
       {children}
@@ -47,30 +63,23 @@ const preview: Preview = {
       return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
     },
   ],
-  loaders: [
-    async () => ({
-      msw: await worker?.start(),
-    }),
-  ],
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
-    backgrounds: {
-      grid: {
-        disable: true,
-      },
-    },
     options: {
       storySort: {
         method: 'alphabetical',
-        order: ['Intro', 'Core Styles', 'Components', 'Features'],
+        order: [
+          'Intro',
+          'Design System',
+          'Icons',
+          'Foundations',
+          'Components',
+          'Features',
+        ],
       },
     },
-    viewport: {
-      viewports: MINIMAL_VIEWPORTS,
-    },
     darkMode: {
-      dark: { ...themes.dark },
-      light: { ...themes.normal },
+      dark: themes.dark,
+      light: themes.light,
     },
     controls: {
       expanded: true,
@@ -89,11 +98,12 @@ const preview: Preview = {
           <Description />
           <Primary />
           <Controls />
-          <Stories />
         </>
       ),
+      codePanel: true,
     },
   },
+  tags: ['autodocs'],
 };
 
 export default preview;

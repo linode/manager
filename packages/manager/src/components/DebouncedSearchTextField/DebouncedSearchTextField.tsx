@@ -1,97 +1,160 @@
-import Search from '@mui/icons-material/Search';
-import { styled } from '@mui/material/styles';
+import {
+  CircleProgress,
+  CloseIcon,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@linode/ui';
 import * as React from 'react';
+import { debounce } from 'throttle-debounce';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { TextField, TextFieldProps } from 'src/components/TextField';
-import { usePrevious } from 'src/hooks/usePrevious';
+import Search from 'src/assets/icons/search.svg';
 
-interface DebouncedSearchProps extends TextFieldProps {
+import type { InputProps, TextFieldProps } from '@linode/ui';
+
+export interface DebouncedSearchProps extends TextFieldProps {
+  /**
+   * Class name to apply to the component.
+   */
   className?: string;
+  /**
+   * Whether to show a clear button at the end of the input.
+   */
+  clearable?: boolean;
+  /**
+   * Interval in milliseconds of time that passes before search queries are accepted.
+   * @default 400
+   */
   debounceTime?: number;
+  /**
+   * Default value of the input.
+   */
   defaultValue?: string;
+  /**
+   * Whether to hide the label.
+   */
   hideLabel?: boolean;
+  /**
+   * Custom props to apply to the input element.
+   */
+  inputSlotProps?: InputProps;
+  /**
+   * Determines if the textbox is currently searching for inputted query
+   */
   isSearching?: boolean;
+  /**
+   * Function to perform when searching for query
+   */
   onSearch: (query: string) => void;
+  /**
+   * Value for data-pendo-id attribute for search input, used for analytics tracking.
+   */
+  pendoId?: string;
+  /**
+   * Placeholder text for the input.
+   */
   placeholder?: string;
+  /**
+   * Value of the input.
+   */
+  value: string;
 }
 
-const DebouncedSearch = (props: DebouncedSearchProps) => {
-  const {
-    InputProps,
-    className,
-    debounceTime,
-    defaultValue,
-    hideLabel,
-    isSearching,
-    label,
-    onSearch,
-    placeholder,
-    ...restOfTextFieldProps
-  } = props;
-  const [query, setQuery] = React.useState<string>('');
-  const prevQuery = usePrevious<string>(query);
+export const DebouncedSearchTextField = React.memo(
+  (props: DebouncedSearchProps) => {
+    const {
+      className,
+      clearable,
+      debounceTime,
+      defaultValue,
+      hideLabel,
+      inputSlotProps,
+      isSearching,
+      label,
+      onSearch,
+      pendoId,
+      placeholder,
+      value,
+      ...restOfTextFieldProps
+    } = props;
 
-  React.useEffect(() => {
-    /*
-      This `didCancel` business is to prevent a warning from React.
-      See: https://github.com/facebook/react/issues/14369#issuecomment-468267798
-    */
-    let didCancel = false;
-    /*
-      don't run the search if the query hasn't changed.
-      This is mostly to prevent this effect from running on first mount
-    */
-    if ((prevQuery || '') !== query) {
-      setTimeout(() => {
-        if (!didCancel) {
-          onSearch(query);
+    const [textFieldValue, setTextFieldValue] = React.useState<string>('');
+
+    const debouncedRef = React.useRef<null | ReturnType<typeof debounce>>(null);
+
+    React.useEffect(() => {
+      // Cancel any pending call from a previous instance.
+      debouncedRef.current?.cancel();
+
+      debouncedRef.current = debounce(
+        debounceTime ?? 400,
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+          onSearch(e.target.value);
+          setTextFieldValue(e.target.value);
         }
-      }, debounceTime || 400);
-    }
-    return () => {
-      didCancel = true;
-    };
-  }, [query]);
+      );
 
-  const _setQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
+      return () => {
+        debouncedRef.current?.cancel();
+      };
+    }, [debounceTime, onSearch]);
 
-  return (
-    <TextField
-      InputProps={{
-        endAdornment: isSearching ? (
-          <InputAdornment position="end">
-            <CircleProgress mini={true} />
-          </InputAdornment>
-        ) : (
-          <React.Fragment />
-        ),
-        startAdornment: (
-          <InputAdornment position="end">
-            <StyledSearchIcon />
-          </InputAdornment>
-        ),
-        ...InputProps,
-      }}
-      className={className}
-      data-qa-debounced-search
-      defaultValue={defaultValue}
-      hideLabel={hideLabel}
-      label={label}
-      onChange={_setQuery}
-      placeholder={placeholder || 'Filter by query'}
-      {...restOfTextFieldProps}
-    />
-  );
-};
+    const handleChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        debouncedRef.current?.(e);
+      },
+      []
+    );
 
-export const DebouncedSearchTextField = React.memo(DebouncedSearch);
+    // Synchronize the internal state with the prop value when the value prop changes.
+    React.useEffect(() => {
+      if (value !== textFieldValue) {
+        setTextFieldValue(value);
+      }
+    }, [value]);
 
-const StyledSearchIcon = styled(Search)(({ theme }) => ({
-  '&&, &&:hover': {
-    color: theme.color.grey1,
-  },
-}));
+    return (
+      <TextField
+        className={className}
+        data-pendo-id={pendoId}
+        data-qa-debounced-search
+        defaultValue={defaultValue}
+        hideLabel={hideLabel}
+        label={label}
+        onChange={handleChange}
+        placeholder={placeholder || 'Filter by query'}
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                {isSearching && <CircleProgress noPadding size="xs" />}
+                {clearable && Boolean(textFieldValue) && (
+                  <IconButton
+                    aria-label="Clear"
+                    onClick={() => {
+                      debouncedRef.current?.cancel();
+                      setTextFieldValue('');
+                      onSearch('');
+                    }}
+                    size="small"
+                    sx={{ padding: 0 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            ),
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search data-testid="SearchIcon" />
+              </InputAdornment>
+            ),
+            ...inputSlotProps,
+          },
+        }}
+        value={textFieldValue}
+        {...restOfTextFieldProps}
+      />
+    );
+  }
+);

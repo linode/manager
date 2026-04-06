@@ -1,62 +1,163 @@
-import { useTheme } from '@mui/material/styles';
+import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import { Notice } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  plansNoticesUtils,
+} from '@linode/utilities';
 import * as React from 'react';
+import type { JSX } from 'react';
 
+import {
+  getIsDistributedRegion,
+  isDistributedRegionSupported,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { useFlags } from 'src/hooks/useFlags';
 
+import { createDedicatedPlanFiltersRenderProp } from './DedicatedPlanFilters';
+import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
+import { createGPUPlanFilterRenderProp } from './GpuFilters';
 import { PlanContainer } from './PlanContainer';
 import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
+  extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCPlan,
   planTabInfoContent,
+  replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedPlansEnabled,
+  useShouldDisablePremiumPlansTab,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
-interface Props {
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+
+export interface PlansPanelProps {
+  additionalBanners?: React.ReactNode[];
   className?: string;
   copy?: string;
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  disabledSmallerPlans?: PlanSelectionType[];
+  disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
+  flow?: 'database' | 'kubernetes' | 'linode';
+  handleTabChange?: (index: number) => void;
   header?: string;
   isCreate?: boolean;
+  isLegacyDatabase?: boolean;
+  isResize?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
-  selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionID?: string;
-  showTransfer?: boolean;
+  showLimits?: boolean;
   tabbedPanelInnerClass?: string;
+  tabDisabledMessage?: string;
   types: PlanSelectionType[];
 }
 
-export const PlansPanel = (props: Props) => {
+/**
+ * PlansPanel is a tabbed panel that displays a list of plans for a Linode.
+ * It is used in the Linode create, Kubernetes and Database create flows.
+ * It contains ample logic to determine which plans are available based on the selected region availability and display related visual indicators:
+ * - If the region is not supported, show an error notice and disable all plans.
+ * - If more than half the plans are disabled, show the limited availability banner and hide the limited availability tooltip
+ * - If less than half the plans are disabled, hide the limited availability banner and show the limited availability tooltip
+ */
+export const PlansPanel = (props: PlansPanelProps) => {
   const {
+    additionalBanners,
     className,
     copy,
     currentPlanHeading,
     disabled,
+    disabledClasses,
+    disabledSmallerPlans,
     docsLink,
     error,
+    flow = 'linode',
+    handleTabChange,
     header,
     isCreate,
+    isLegacyDatabase,
+    isResize,
     linodeID,
     onSelect,
     regionsData,
     selectedId,
     selectedRegionID,
-    showTransfer,
+    showLimits,
     types,
   } = props;
 
-  const theme = useTheme();
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
+  const location = window.location;
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
-  const plans = getPlanSelectionsByPlanType(types);
+  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedPlansEnabled();
+
+  const { data: regionAvailabilities } = useRegionAvailabilityQuery(
+    selectedRegionID || '',
+    Boolean(flags.soldOutChips) && Boolean(selectedRegionID)
+  );
+
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
+  });
+
+  const _types = types.filter((type) => {
+    if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc?.enabled && isMTCPlan(type)) {
+      return false;
+    }
+
+    return (
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+    );
+  });
+  const _plans = getPlanSelectionsByPlanType(
+    flags.disableLargestGbPlans
+      ? replaceOrAppendPlaceholder512GbPlans(_types)
+      : _types
+  );
+
+  const hideDistributedRegions =
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(params.type);
+
+  const showDistributedRegionPlanTable =
+    !hideDistributedRegions &&
+    getIsDistributedRegion(regionsData ?? [], selectedRegionID ?? '');
+
+  const getDedicatedDistributedRegionPlanType = () => {
+    return types.filter(
+      (type) =>
+        type.id.includes('dedicated-edge') || type.id.includes('nanode-edge')
+    );
+  };
+
+  const plans = showDistributedRegionPlanTable
+    ? {
+        dedicated: getDedicatedDistributedRegionPlanType(),
+      }
+    : _plans;
+
   const {
     hasSelectedRegion,
     isPlanPanelDisabled,
@@ -66,39 +167,89 @@ export const PlansPanel = (props: Props) => {
     selectedRegionID,
   });
 
-  const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    return {
-      render: () => {
-        return (
-          <>
-            <PlanInformation
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
-                plan
+  const isDatabaseResize = flow === 'database' && isResize;
+
+  const tabs = Object.keys(plans)?.map(
+    (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
+      const plansMap: PlanSelectionType[] = plans[plan]!;
+      const {
+        allDisabledPlans,
+        hasMajorityOfPlansDisabled,
+        plansForThisLinodeTypeClass,
+      } = extractPlansInformation({
+        disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+        disabledClasses,
+        disabledSmallerPlans,
+        isLegacyDatabase,
+        isResize: isDatabaseResize ? false : isResize,
+        plans: plansMap,
+        regionAvailabilities,
+        selectedRegionId: selectedRegionID,
+      });
+
+      return {
+        disabled: props.disabledTabs
+          ? props.disabledTabs?.includes(plan)
+          : false,
+        render: () => {
+          return (
+            <>
+              <PlanInformation
+                additionalBanners={additionalBanners}
+                disabledClasses={disabledClasses}
+                flow={flow}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
+                hideLimitedAvailabilityBanner={
+                  showDistributedRegionPlanTable ||
+                  !flags.disableLargestGbPlans ||
+                  plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
+                }
+                isResize={isResize}
+                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                  plan
+                )}
+                plans={plansForThisLinodeTypeClass}
+                planType={plan}
+                regionsData={regionsData || []}
+              />
+              {showDistributedRegionPlanTable && !isGeckoLAEnabled && (
+                <Notice
+                  text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
+                  variant="warning"
+                />
               )}
-              disabledClasses={props.disabledClasses}
-              hasSelectedRegion={hasSelectedRegion}
-              planType={plan}
-              regionsData={regionsData || []}
-            />
-            <PlanContainer
-              currentPlanHeading={currentPlanHeading}
-              disabled={disabled || isPlanPanelDisabled(plan)}
-              disabledClasses={props.disabledClasses}
-              isCreate={isCreate}
-              linodeID={linodeID}
-              onSelect={onSelect}
-              plans={plans[plan]}
-              selectedDiskSize={props.selectedDiskSize}
-              selectedId={selectedId}
-              selectedRegionId={selectedRegionID}
-              showTransfer={showTransfer}
-            />
-          </>
-        );
-      },
-      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
-    };
-  });
+              <PlanContainer
+                allDisabledPlans={allDisabledPlans}
+                currentPlanHeading={currentPlanHeading}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                isCreate={isCreate}
+                linodeID={linodeID}
+                onSelect={onSelect}
+                planFilters={(() => {
+                  switch (plan) {
+                    case 'dedicated':
+                      return createDedicatedPlanFiltersRenderProp();
+                    case 'gpu':
+                      return createGPUPlanFilterRenderProp();
+                    default:
+                      return undefined;
+                  }
+                })()}
+                plans={plansForThisLinodeTypeClass}
+                planType={plan}
+                selectedId={selectedId}
+                selectedRegionId={selectedRegionID}
+                showLimits={showLimits}
+                wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
+              />
+            </>
+          );
+        },
+        title: planTabInfoContent[plan]?.title,
+      };
+    }
+  );
 
   const initialTab = determineInitialPlanCategoryTab(
     types,
@@ -106,17 +257,48 @@ export const PlansPanel = (props: Props) => {
     currentPlanHeading
   );
 
+  if (showDistributedRegionPlanTable) {
+    return (
+      <DistributedRegionPlanTable
+        copy={copy}
+        data-qa-select-plan
+        docsLink={docsLink}
+        error={error}
+        header={header || 'Linode Plan'}
+        innerClass={props.tabbedPanelInnerClass}
+        renderTable={tabs[0].render}
+        rootClass={`${className} tabbedPanel`}
+        sx={{ width: '100%' }}
+      />
+    );
+  }
+
+  // If there are no premium plans available, plans table will hide the premium tab.
+  // To override this behavior, we add the tab again and then disable it.
+  if (
+    shouldDisablePremiumPlansTab &&
+    !tabs.some((tab) => tab.title === planTabInfoContent.premium?.title)
+  ) {
+    tabs.push({
+      disabled: true,
+      render: () => <div />,
+      title: planTabInfoContent.premium?.title,
+    });
+  }
+
   return (
     <TabbedPanel
       copy={copy}
       data-qa-select-plan
       docsLink={docsLink}
       error={error}
+      handleTabChange={handleTabChange}
       header={header || 'Linode Plan'}
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
-      sx={{ marginTop: theme.spacing(3), width: '100%' }}
+      sx={{ width: '100%' }}
+      tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
   );

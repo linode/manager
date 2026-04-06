@@ -4,6 +4,15 @@
 
 import { makeResponse } from './response';
 
+import type { APIError } from '@linode/api-v4';
+
+/**
+ * Describes a mock API error.
+ *
+ * Can be expressed as a string, or as an actual `APIError` instance.
+ */
+export type APIErrorContents = APIError | string;
+
 /**
  * Creates an API error object that describes one or more errors.
  *
@@ -11,13 +20,18 @@ import { makeResponse } from './response';
  *
  * @returns API error object containing the given error or errors.
  */
-export const makeError = (error: string | string[]) => {
+export const makeError = (error: APIErrorContents | APIErrorContents[]) => {
   const errorArray = Array.isArray(error) ? error : [error];
+
   return {
-    errors: errorArray.map((errorString: string) => {
-      return {
-        reason: errorString,
-      };
+    errors: errorArray.map((error: APIErrorContents) => {
+      if (typeof error === 'string') {
+        return {
+          reason: error,
+        };
+      }
+
+      return error;
     }),
   };
 };
@@ -31,7 +45,7 @@ export const makeError = (error: string | string[]) => {
  * @returns HTTP response object containing the given error or errors.
  */
 export const makeErrorResponse = (
-  error: string | string[],
+  error: APIErrorContents | APIErrorContents[],
   statusCode: number = 400
 ) => {
   return makeResponse(makeError(error), statusCode);

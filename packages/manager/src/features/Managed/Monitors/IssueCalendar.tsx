@@ -1,12 +1,13 @@
-import { ManagedIssue } from '@linode/api-v4';
+import { useProfile } from '@linode/queries';
+import { getUserTimezone } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { useProfile } from 'src/queries/profile';
 import { parseAPIDate } from 'src/utilities/date';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
 
 import IssueDay from './IssueDay';
+
+import type { ManagedIssue } from '@linode/api-v4';
 
 const TOTAL_DAYS = 10;
 
@@ -51,10 +52,14 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
       createdOnTargetDay(timezone, thisIssue, day)
     );
 
-    days.push({
-      day: day.toISO(),
-      issues: relevantIssues,
-    });
+    const isoDate = day.toISO();
+
+    if (isoDate) {
+      days.push({
+        day: isoDate,
+        issues: relevantIssues,
+      });
+    }
   }
 
   return days;

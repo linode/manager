@@ -1,6 +1,9 @@
 # Perform Static Application Security Testing (SAST) scanning on Cloud Manager.
 name: Security Scan
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -12,22 +15,22 @@ jobs:
     container:
       image: returntocorp/semgrep
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # Perform scanning using Semgrep
-      # Pass even when it identifies issues or encounters errors.
-    - name: Run SAST scan
-      if: always()
-      run: semgrep ci || true
-      env:
-         SEMGREP_RULES: p/default
+        # Perform scanning using Semgrep
+        # Pass even when it identifies issues or encounters errors.
+      - name: Run SAST scan
+        if: always()
+        run: semgrep ci || true
+        env:
+          SEMGREP_RULES: p/default
 
-      # Post results to Slack notification channel.
-    - name: slack-notify
-      uses: rtCamp/action-slack-notify@master
-      env:
+        # Post results to Slack notification channel.
+      - name: slack-notify
+        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
+        env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_SAST_WEBHOOK }}
           SLACK_MESSAGE: "Message: ${{ github.event.head_commit.message }} \nRepository: ${{ github.event.repository.url }}"
           SLACK_COLOR: ${{ job.status }}
-          SLACK_FOOTER: ''
+          SLACK_FOOTER: ""
           MSG_MINIMAL: event,actions url,commit

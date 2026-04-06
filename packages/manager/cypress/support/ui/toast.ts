@@ -24,7 +24,11 @@ export const toast = {
     message: string,
     options?: ToastFindOptions | undefined
   ): void => {
-    cy.contains('[data-qa-toast]', message, options).should('be.visible');
+    cy.contains(
+      '[aria-describedby="notistack-snackbar"]',
+      message,
+      options
+    ).should('be.visible');
   },
 
   /**
@@ -42,6 +46,10 @@ export const toast = {
     message: string,
     options?: ToastFindOptions | undefined
   ): Cypress.Chainable => {
-    return cy.contains('[data-qa-toast]', message, options);
+    return cy.contains(
+      '[aria-describedby="notistack-snackbar"]',
+      message,
+      options
+    );
   },
 };

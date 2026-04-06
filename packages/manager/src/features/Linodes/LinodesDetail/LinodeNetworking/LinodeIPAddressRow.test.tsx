@@ -1,15 +1,24 @@
+import { linodeIPFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { linodeIPFactory } from 'src/factories/linodes';
-import { ipResponseToDisplayRows } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { vpcIPv4Factory } from 'src/factories';
+import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/constants';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
+import { LinodeIPAddressRow } from './LinodeIPAddressRow';
+import { createVPCIPv4Display, ipResponseToDisplayRows } from './utils';
+
+import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
-const ipDisplay = ipResponseToDisplayRows(ips)[0];
+const ipDisplay = ipResponseToDisplayRows({
+  ipResponse: ips,
+  isLinodeInterface: false,
+})[0];
+const [ipDisplayVPC, ipDisplayVPCNAT] = createVPCIPv4Display([
+  vpcIPv4Factory.build(),
+]);
 
 const handlers: IPAddressRowHandlers = {
   handleOpenEditRDNS: vi.fn(),
@@ -24,7 +33,8 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          isVPCOnlyLinode={false}
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -43,11 +53,53 @@ describe('LinodeIPAddressRow', () => {
     getAllByText('Edit RDNS');
   });
 
-  it('should disable the row if disabled is true and display a tooltip', async () => {
-    const { findByRole, getAllByRole } = renderWithTheme(
+  it('should render a VPC IP Address row', () => {
+    const { getAllByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          isVPCOnlyLinode={true}
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplayVPC}
+        />
+      )
+    );
+
+    getAllByText(ipDisplayVPC.address);
+    getAllByText(ipDisplayVPC.type);
+    // No actions should be rendered
+    expect(queryByText('Delete')).not.toBeInTheDocument();
+    expect(queryByText('Edit RDNS')).not.toBeInTheDocument();
+  });
+
+  it('should render a VPC NAT IPv4 Address row', () => {
+    const { getAllByText } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplayVPCNAT}
+        />
+      )
+    );
+
+    getAllByText(ipDisplayVPCNAT.address);
+    getAllByText(ipDisplayVPCNAT.type);
+    // Check if actions were rendered
+    getAllByText('Edit RDNS');
+  });
+
+  it('should disable the row if disabled is true and display a tooltip', async () => {
+    const { findByRole, getByTestId } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={true}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -56,24 +108,21 @@ describe('LinodeIPAddressRow', () => {
       )
     );
 
-    const buttons = getAllByRole('button');
-
-    const deleteBtn = buttons[1];
-    expect(deleteBtn).toBeDisabled();
-    const deleteBtnTooltip = buttons[2];
-    fireEvent.mouseEnter(deleteBtnTooltip);
-    const publicIpsUnassignedTooltip = await findByRole(/tooltip/);
+    const deleteBtn = getByTestId('action-menu-item-delete');
+    expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
+    fireEvent.mouseEnter(deleteBtn);
+    const publicIpsUnassignedTooltip = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip).toContainHTML(
-      PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
 
-    const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).toBeDisabled();
-    const editRDNSBtnTooltip = buttons[4];
-    fireEvent.mouseEnter(editRDNSBtnTooltip);
-    const publicIpsUnassignedTooltip2 = await findByRole(/tooltip/);
+    const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
+    expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
+
+    fireEvent.mouseEnter(editRDNSBtn);
+    const publicIpsUnassignedTooltip2 = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip2).toContainHTML(
-      PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
   });
 
@@ -81,7 +130,8 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
-          isVPCOnlyLinode={false}
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -93,8 +143,28 @@ describe('LinodeIPAddressRow', () => {
     const buttons = getAllByRole('button');
 
     const deleteBtn = buttons[1];
-    expect(deleteBtn).not.toBeDisabled();
+    expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+
     const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).not.toBeDisabled();
+    expect(editRDNSBtn).not.toHaveAttribute('aria-disabled', 'true');
+  });
+});
+
+describe('ipResponseToDisplayRows', () => {
+  it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
+    const ipDisplays = ipResponseToDisplayRows({
+      ipResponse: {
+        ...ips,
+        ipv4: { ...ips.ipv4, vpc: [vpcIPv4Factory.build()] },
+      },
+      isLinodeInterface: false,
+    });
+
+    expect(
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'Public – IPv4')
+    ).toBeUndefined();
+    expect(
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC NAT – IPv4')
+    ).toBeDefined();
   });
 });

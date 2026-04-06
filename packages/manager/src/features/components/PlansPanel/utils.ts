@@ -1,18 +1,42 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
+import { useAccount } from '@linode/queries';
+import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
 
-import { arrayToList } from 'src/utilities/arrayToList';
-import { ExtendedType } from 'src/utilities/extendType';
+import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
-import { PlanSelectionType } from './types';
+import {
+  DEDICATED_512_GB_PLAN,
+  LIMITED_AVAILABILITY_COPY,
+  MTC_AVAILABLE_PLAN_TYPES,
+  PLAN_IS_CURRENTLY_UNAVAILABLE_COPY,
+  PLAN_IS_SMALLER_THAN_USAGE_COPY,
+  PLAN_IS_TOO_SMALL_FOR_APL_COPY,
+  PLAN_NOT_AVAILABLE_IN_REGION_COPY,
+  PREMIUM_512_GB_PLAN,
+  SMALLER_PLAN_DISABLED_COPY,
+} from './constants';
 
-import type { LinodeTypeClass } from '@linode/api-v4';
+import type {
+  DisabledTooltipReasons,
+  PlanSelectionType,
+  PlanWithAvailability,
+} from './types';
+import type {
+  BaseType,
+  Capabilities,
+  LinodeType,
+  LinodeTypeClass,
+  Region,
+  RegionAvailability,
+} from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
-type PlansByType<T> = Omit<PlansTypes<T>, 'nanode' | 'standard'> & {
+interface PlansByType<T> extends Omit<PlansTypes<T>, 'nanode' | 'standard'> {
   shared: T[];
-};
+}
 
 // We could update this to add or remove any new or existing plan tabs.
 export const planTypeOrder: (
@@ -26,7 +50,42 @@ export const planTypeOrder: (
   'gpu',
   'metal',
   'premium',
+  'accelerated',
 ];
+
+export const useIsAcceleratedPlansEnabled = () => {
+  const flags = useFlags();
+
+  const { data: account } = useAccount();
+
+  const isAcceleratedLinodePlans = Boolean(
+    flags?.acceleratedPlans?.linodePlans
+  );
+  const isAcceleratedLKEPlans = Boolean(flags?.acceleratedPlans?.lkePlans);
+
+  const isAcceleratedLinodePlansEnabled = isFeatureEnabledV2(
+    'NETINT Quadra T1U',
+    isAcceleratedLinodePlans,
+    account?.capabilities ?? []
+  );
+  const isAcceleratedLKEPlansEnabled = isFeatureEnabledV2(
+    'NETINT Quadra T1U',
+    isAcceleratedLKEPlans,
+    account?.capabilities ?? []
+  );
+
+  return { isAcceleratedLKEPlansEnabled, isAcceleratedLinodePlansEnabled };
+};
+
+const shouldExcludePlan = (
+  type: { id: string },
+  options: { isLKE?: boolean } = {}
+): boolean => {
+  const { isLKE = false } = options;
+  const excludedPlanIdSubstring = 'rtx6000';
+  // Filter out RTX6000 plans when in LKE context
+  return isLKE && type.id.includes(excludedPlanIdSubstring);
+};
 
 /**
  * getPlanSelectionsByPlanType function takes an array of types, groups
@@ -39,24 +98,29 @@ export const planTypeOrder: (
  */
 
 export const getPlanSelectionsByPlanType = <
-  T extends { class: LinodeTypeClass }
+  T extends BaseType & { class: LinodeTypeClass },
 >(
-  types: T[]
-): PlansByType<T> => {
+  types: T[],
+  options: { isLKE?: boolean } = {}
+): Partial<PlansByType<T>> => {
   const plansByType: PlansByType<T> = planTypeOrder.reduce((acc, key) => {
     acc[key] = [];
     return acc;
   }, {} as PlansByType<T>);
+  const { isLKE = false } = options;
 
   // group plans by type
   for (const type of types) {
+    if (shouldExcludePlan(type, { isLKE })) {
+      continue;
+    }
     switch (type.class) {
       case 'nanode':
       case 'standard':
         plansByType['shared'].push(type);
         break;
       default:
-        if (plansByType.hasOwnProperty(type.class)) {
+        if (Object.prototype.hasOwnProperty.call(plansByType, type.class)) {
           plansByType[type.class].push(type);
         }
         break;
@@ -64,19 +128,23 @@ export const getPlanSelectionsByPlanType = <
   }
 
   // filter empty plan group
-  return Object.keys(plansByType).reduce((acc, key) => {
-    if (plansByType[key].length > 0) {
-      acc[key] = plansByType[key];
-    }
-    return acc;
-  }, {} as PlansByType<T>);
+  return Object.keys(plansByType).reduce<Partial<PlansByType<T>>>(
+    (acc, key) => {
+      if (plansByType[key as keyof PlansByType<T>].length > 0) {
+        acc[key as keyof PlansByType<T>] =
+          plansByType[key as keyof PlansByType<T>];
+      }
+      return acc;
+    },
+    {} as PlansByType<T>
+  );
 };
 
-export const determineInitialPlanCategoryTab = <T>(
+export const determineInitialPlanCategoryTab = (
   types: (ExtendedType | PlanSelectionType)[],
   selectedId?: string,
   currentPlanHeading?: string
-) => {
+): number => {
   const plans = getPlanSelectionsByPlanType(types);
 
   const tabOrder: LinodeTypeClass[] = Object.keys(plans).map((plan) =>
@@ -109,12 +177,68 @@ export const getRegionsWithCapability = (
   return arrayToList(withCapability ?? []);
 };
 
+interface LimitedAvailabilityPlanStatusOptions {
+  plan: PlanSelectionType;
+  regionAvailabilities: RegionAvailability[] | undefined;
+  selectedRegionId: Region['id'] | undefined;
+}
+
+/**
+ * Utility to determine if a plan is limited availability based on a region's availability.
+ */
+export const getIsLimitedAvailability = ({
+  plan,
+  regionAvailabilities,
+  selectedRegionId,
+}: LimitedAvailabilityPlanStatusOptions): boolean => {
+  if (!regionAvailabilities || !selectedRegionId) {
+    return false;
+  }
+
+  const availability = regionAvailabilities?.find((regionAvailability) => {
+    const regionMatch = regionAvailability?.region === selectedRegionId;
+
+    if (!regionMatch) {
+      return false;
+    }
+
+    if (regionAvailability.plan === plan.id) {
+      return regionAvailability.available === false;
+    }
+
+    return false;
+  });
+
+  return !!availability;
+};
+
+/**
+ * Checks if a plan is part of the MTC plan group.
+ * These plans have specific availability requirements and are treated differently
+ * from regular plans in terms of region availability and 512GB plan handling.
+ */
+export const isMTCPlan = (plan: Partial<PlanSelectionType>) => {
+  if (!plan.id) {
+    return false;
+  }
+  return plan.class === 'premium' && MTC_AVAILABLE_PLAN_TYPES.includes(plan.id);
+};
+
 export const planTabInfoContent = {
+  accelerated: {
+    dataId: 'data-qa-accelerated',
+    key: 'accelerated',
+    title: 'Accelerated',
+    typography:
+      'Accelerated instances leverage ASICs to accelerate specialized tasks such as video transcoding, media processing, and other compute heavy workloads.',
+  },
   dedicated: {
     dataId: 'data-qa-dedicated',
     key: 'dedicated',
     title: 'Dedicated CPU',
     typography:
+      'Dedicated CPU instances are built for full-duty workloads needing consistent performance. Choose from different hardware generations — newer plans feature the latest hardware. Select Compute Optimized (1:2) for CPU-heavy tasks or General Purpose (1:4) for balanced workloads.',
+    typographyOld:
       'Dedicated CPU instances are good for full-duty workloads where consistent performance is important.',
   },
   gpu: {
@@ -143,7 +267,7 @@ export const planTabInfoContent = {
     key: 'premium',
     title: 'Premium CPU',
     typography:
-      'Premium CPU instances guarantee a minimum processor generation of AMD EPYC\u2122 Milan or newer to ensure consistent high performance for more demanding workloads.',
+      'Run high-performance, latency-sensitive workloads on dedicated AMD EPYC\u2122 CPUs.',
   },
   prodedicated: {
     dataId: 'data-qa-prodedi',
@@ -157,6 +281,246 @@ export const planTabInfoContent = {
     key: 'shared',
     title: 'Shared CPU',
     typography:
-      ' Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
+      'Shared CPU instances are good for medium-duty workloads and are a good mix of performance, resources, and price.',
   },
+};
+
+/**
+ * If the Dedicated 512 GB plan is present in the response, overwrite it.
+ * If it isn't, insert a placeholder at the end of the array.
+ */
+export const replaceOrAppendPlaceholder512GbPlans = (
+  types: (ExtendedType | PlanSelectionType)[]
+) => {
+  // DBaaS does not currently offer a 512 GB plan
+  const isInDatabasesFlow = types.some((type) => type.label.includes('DBaaS'));
+  if (isInDatabasesFlow) {
+    return types;
+  }
+
+  // Function to replace or append a specific plan
+  const replaceOrAppendPlan = <T extends ExtendedType | PlanSelectionType>(
+    planLabel: string,
+    planData: T
+  ) => {
+    const index = types.findIndex((type) => type.label === planLabel);
+
+    if (index !== -1) {
+      types[index] = planData;
+    } else {
+      types.push(planData);
+    }
+  };
+
+  // For Linodes and LKE
+  replaceOrAppendPlan('Dedicated 512GB', DEDICATED_512_GB_PLAN);
+  replaceOrAppendPlan('Premium 512GB', PREMIUM_512_GB_PLAN);
+
+  return types;
+};
+
+interface ExtractPlansInformationProps {
+  disabledClasses?: LinodeTypeClass[];
+  disabledSmallerPlans?: PlanSelectionType[];
+  disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
+  isAPLEnabled?: boolean;
+  isLegacyDatabase?: boolean;
+  isResize?: boolean;
+  plans: PlanSelectionType[];
+  regionAvailabilities: RegionAvailability[] | undefined;
+  selectedRegionId: Region['id'] | undefined;
+}
+
+/**
+ * Extracts plan information and determines if any plans are disabled.
+ * Used for Linode and Kubernetes selection Plan tables and notices.
+ *
+ * @param disableLargestGbPlansFlag The flag to disable the largest GB plans.
+ * @param disabledClasses The disabled classes (aka linode types).
+ * @param plans The plans for the Linode type class.
+ * @param regionAvailabilities The region availabilities.
+ * @param selectedRegionId The selected region ID.
+ *
+ * @returns An object containing the plan information and disabled logic.
+ */
+export const extractPlansInformation = ({
+  disableLargestGbPlansFlag,
+  disabledClasses,
+  disabledSmallerPlans,
+  isAPLEnabled,
+  isLegacyDatabase,
+  isResize,
+  plans,
+  regionAvailabilities,
+  selectedRegionId,
+}: ExtractPlansInformationProps) => {
+  const plansForThisLinodeTypeClass: PlanWithAvailability[] = plans.map(
+    (plan) => {
+      const isCustomMTCPlan = isMTCPlan(plan);
+
+      // Special handling for 512GB plans:
+      // - Generally disabled when `disableLargestGbPlansFlag` is true
+      // - Exceptions: GPU plans and MTC plans
+      const planIsDisabled512Gb =
+        plan.label.includes('512GB') &&
+        Boolean(disableLargestGbPlansFlag) &&
+        !(plan.class === 'gpu' || isCustomMTCPlan);
+
+      // Resizing of MTC plan instances are not supported from any regions.
+      // Some Resizing scenarios:
+      // - Resizing existing MTC linodes is not supported at all (Disabled at the `Resize` Action Menu as well).
+      // - Resizing existing linodes (from non-MTC regions) to this MTC plan is not supported.
+      // - Resizing existing linodes (from MTC regions) to this MTC plan is not supported.
+      const planResizeNotSupported = isCustomMTCPlan && isResize;
+
+      const planHasLimitedAvailability = getIsLimitedAvailability({
+        plan,
+        regionAvailabilities,
+        selectedRegionId,
+      });
+      const planBelongsToDisabledClass = Boolean(
+        disabledClasses?.includes(plan.class)
+      );
+      const disabledPlans = Boolean(
+        disabledSmallerPlans?.find(
+          (disabledPlan) => disabledPlan.id === plan.id
+        )
+      );
+      const planIsTooSmall = Boolean(isLegacyDatabase && disabledPlans);
+      const planIsSmallerThanUsage = Boolean(
+        !isLegacyDatabase && disabledPlans
+      );
+
+      const planIsTooSmallForAPL =
+        isAPLEnabled && Boolean(plan.memory < 8000 || plan.vcpus < 4);
+
+      return {
+        ...plan,
+        planBelongsToDisabledClass,
+        planHasLimitedAvailability,
+        planIsDisabled512Gb,
+        planResizeNotSupported,
+        planIsSmallerThanUsage,
+        planIsTooSmall,
+        planIsTooSmallForAPL,
+      };
+    }
+  );
+
+  const allDisabledPlans = plansForThisLinodeTypeClass.reduce((acc, plan) => {
+    const isPlanDisabled = getIsPlanDisabled(plan);
+    if (isPlanDisabled) {
+      return [...acc, plan];
+    }
+
+    return acc;
+  }, []);
+  const hasDisabledPlans = allDisabledPlans.length > 0;
+  const hasMajorityOfPlansDisabled =
+    allDisabledPlans.length > plansForThisLinodeTypeClass.length / 2;
+
+  return {
+    allDisabledPlans,
+    hasDisabledPlans,
+    hasMajorityOfPlansDisabled,
+    plansForThisLinodeTypeClass,
+  };
+};
+
+/**
+ *
+ * A utility function to determine if a plan should be disabled based on criteria:
+ * - belonging to a disabled class
+ * - having limited availability (API based)
+ * - being a 512GB plan (hard coded)
+ *
+ */
+export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
+  const {
+    planBelongsToDisabledClass,
+    planHasLimitedAvailability,
+    planIsDisabled512Gb,
+    planResizeNotSupported,
+    planIsSmallerThanUsage,
+    planIsTooSmall,
+    planIsTooSmallForAPL,
+  } = plan;
+
+  return (
+    planBelongsToDisabledClass ||
+    planHasLimitedAvailability ||
+    planIsDisabled512Gb ||
+    planResizeNotSupported ||
+    planIsSmallerThanUsage ||
+    planIsTooSmall ||
+    planIsTooSmallForAPL
+  );
+};
+
+/**
+ * A utility function to determine what the disabled plan reason is.
+ * Defaults to the currently unavailable copy.
+ */
+export const getDisabledPlanReasonCopy = ({
+  planBelongsToDisabledClass,
+  planHasLimitedAvailability,
+  planIsDisabled512Gb,
+  planResizeNotSupported,
+  planIsSmallerThanUsage,
+  planIsTooSmall,
+  planIsTooSmallForAPL,
+  wholePanelIsDisabled,
+}: {
+  planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
+  planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
+  planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
+  planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
+  planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
+  planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
+  planResizeNotSupported?: DisabledTooltipReasons['planResizeNotSupported'];
+  wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
+}): string => {
+  if (wholePanelIsDisabled) {
+    return PLAN_NOT_AVAILABLE_IN_REGION_COPY;
+  }
+
+  if (planBelongsToDisabledClass) {
+    return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
+  }
+
+  if (planIsTooSmall) {
+    return SMALLER_PLAN_DISABLED_COPY;
+  } else if (planIsSmallerThanUsage) {
+    return PLAN_IS_SMALLER_THAN_USAGE_COPY;
+  }
+
+  if (planIsTooSmallForAPL) {
+    return PLAN_IS_TOO_SMALL_FOR_APL_COPY;
+  }
+
+  if (
+    planHasLimitedAvailability ||
+    planIsDisabled512Gb ||
+    planResizeNotSupported
+  ) {
+    return LIMITED_AVAILABILITY_COPY;
+  }
+
+  return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
+};
+
+export const useShouldDisablePremiumPlansTab = ({
+  types,
+}: {
+  types: LinodeType[] | PlanSelectionType[] | undefined;
+}): boolean => {
+  const { isGenerationalPlansEnabled, allowedPlans } =
+    useIsGenerationalPlansEnabled(types, 'premium');
+  // Check if any public premium plans are available.
+  // We can omit "Premium HT" and "Premium nested" plans as customers don't deploy them using cloud manager.
+  const arePublicPremiumPlansAvailable = types?.some(
+    (plan) => plan.class === 'premium' && allowedPlans.includes(plan.id)
+  );
+
+  return Boolean(isGenerationalPlansEnabled) && !arePublicPremiumPlansAvailable;
 };

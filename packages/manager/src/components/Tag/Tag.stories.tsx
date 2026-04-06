@@ -3,7 +3,7 @@ import React from 'react';
 import { Tag } from './Tag';
 
 import type { TagProps } from './Tag';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TagProps> = {
   render: (args: TagProps) => <Tag {...args} />,
@@ -21,6 +21,6 @@ const meta: Meta<TagProps> = {
     label: 'Tag',
   },
   component: Tag,
-  title: 'Components/Chip/Tag',
+  title: 'Components/Tags/Tag',
 };
 export default meta;

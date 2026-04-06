@@ -24,11 +24,12 @@
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
 
-import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
-import produce, { Draft, castDraft } from 'immer';
+import produce, { castDraft } from 'immer';
 import { compose, last, omit } from 'ramda';
 
-import { FirewallRuleError } from './shared';
+import type { FirewallRuleError } from './shared';
+import type { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
+import type { Draft, Immutable } from 'immer';
 
 export type RuleStatus =
   | 'MODIFIED'
@@ -91,49 +92,6 @@ const ruleEditorReducer = (
 ) => {
   let lastRevision;
   switch (action.type) {
-    case 'NEW_RULE':
-      draft.push([
-        {
-          ...action.rule,
-          originalIndex: draft.length,
-          status: 'NEW',
-        },
-      ]);
-      return;
-
-    case 'DELETE_RULE':
-      lastRevision = last(draft[action.idx]);
-
-      if (!lastRevision) {
-        return;
-      }
-
-      // Seems pointless to show errors on rules pending deletion.
-      delete lastRevision.errors;
-
-      draft[action.idx].push({
-        ...lastRevision,
-        status: 'PENDING_DELETION',
-      });
-      return;
-
-    case 'MODIFY_RULE':
-      lastRevision = last(draft[action.idx]);
-
-      if (!lastRevision) {
-        return;
-      }
-
-      // Errors might no longer apply to the modified rule, so we delete them.
-      delete lastRevision.errors;
-
-      draft[action.idx].push({
-        ...lastRevision,
-        ...action.modifiedRule,
-        status: 'MODIFIED',
-      });
-      return;
-
     case 'CLONE_RULE':
       const ruleToClone = last(draft[action.idx]);
       if (!ruleToClone) {
@@ -161,6 +119,66 @@ const ruleEditorReducer = (
       ]);
       return;
 
+    case 'DELETE_RULE':
+      lastRevision = last(draft[action.idx]);
+
+      if (!lastRevision) {
+        return;
+      }
+
+      // Seems pointless to show errors on rules pending deletion.
+      delete lastRevision.errors;
+
+      draft[action.idx].push({
+        ...lastRevision,
+        status: 'PENDING_DELETION',
+      });
+      return;
+
+    case 'DISCARD_CHANGES':
+      const original: Draft<RuleEditorState> = [];
+      draft.forEach((thisRevisionList) => {
+        const head = thisRevisionList[0];
+        if (head.status === 'NOT_MODIFIED') {
+          original[head.originalIndex] = [head];
+        }
+      });
+      return original;
+
+    case 'MODIFY_RULE':
+      lastRevision = last(draft[action.idx]);
+
+      if (!lastRevision) {
+        return;
+      }
+
+      // Errors might no longer apply to the modified rule, so we delete them.
+      delete lastRevision.errors;
+
+      draft[action.idx].push({
+        ...lastRevision,
+        ...action.modifiedRule,
+        status: 'MODIFIED',
+      });
+      return;
+
+    case 'NEW_RULE':
+      draft.push([
+        {
+          ...action.rule,
+          originalIndex: draft.length,
+          status: 'NEW',
+        },
+      ]);
+      return;
+    case 'REORDER':
+      const [removed] = draft.splice(action.startIdx, 1);
+      draft.splice(action.endIdx, 0, removed);
+      return;
+
+    case 'RESET':
+      return initRuleEditorState(action.rules);
+
     case 'SET_ERROR':
       lastRevision = last(draft[action.idx]);
 
@@ -176,8 +194,6 @@ const ruleEditorReducer = (
       return;
 
     case 'UNDO':
-      lastRevision = last(draft[action.idx]);
-
       draft[action.idx].pop();
 
       // If there's nothing left on the stack, we need to actually remove this revisionList.
@@ -186,24 +202,6 @@ const ruleEditorReducer = (
         draft.splice(action.idx, 1);
       }
 
-      return;
-
-    case 'DISCARD_CHANGES':
-      const original: Draft<RuleEditorState> = [];
-      draft.forEach((thisRevisionList) => {
-        const head = thisRevisionList[0];
-        if (head.status === 'NOT_MODIFIED') {
-          original[head.originalIndex] = [head];
-        }
-      });
-      return original;
-
-    case 'RESET':
-      return initRuleEditorState(action.rules);
-
-    case 'REORDER':
-      const [removed] = draft.splice(action.startIdx, 1);
-      draft.splice(action.endIdx, 0, removed);
       return;
   }
 };
@@ -220,7 +218,7 @@ export const initRuleEditorState = (
   );
 };
 
-export const editorStateToRules = (state: RuleEditorState) => {
+export const editorStateToRules = (state: Immutable<RuleEditorState>) => {
   // Cast the results of the Immer state to a mutable data structure.
   return castDraft(
     state.map((revisionList) =>
@@ -252,6 +250,11 @@ export const removeICMPPort = (
 
 const removeEmptyAddressArrays = (rules: ExtendedFirewallRule[]) => {
   return rules.map((rule) => {
+    // Ruleset references do not have addresses
+    if (rule.ruleset !== null && rule.ruleset !== undefined) {
+      return { ...rule };
+    }
+
     const keepIPv4 = rule.addresses?.ipv4 && rule.addresses.ipv4.length > 0;
     const keepIPv6 = rule.addresses?.ipv6 && rule.addresses.ipv6.length > 0;
 
@@ -277,7 +280,9 @@ export const prepareRules = compose(
   editorStateToRules
 );
 
-export const hasModified = (editorState: RuleEditorState): boolean => {
+export const hasModified = (
+  editorState: Immutable<RuleEditorState>
+): boolean => {
   const rules = editorStateToRules(editorState);
   return rules.some(
     (thisRule, idx) =>

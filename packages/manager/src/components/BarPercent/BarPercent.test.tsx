@@ -1,9 +1,27 @@
-import { getPercentage } from './BarPercent';
+import * as React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { BarPercent } from './BarPercent';
 
 describe('BarPercent', () => {
-  it('getPercentage() should correctly return a percentage of max value ', () => {
-    expect(getPercentage(50, 100)).toBe(50);
-    expect(getPercentage(0, 100)).toBe(0);
-    expect(getPercentage(2150, 10000)).toBe(21.5);
+  // Component
+  it('should render', () => {
+    const { getByRole } = renderWithTheme(<BarPercent max={100} value={50} />);
+    expect(getByRole('progressbar')).toBeInTheDocument();
+  });
+
+  it('should display the right colors when customColors is provided', () => {
+    const { getByTestId } = renderWithTheme(
+      <BarPercent
+        customColors={[{ color: 'red', percentage: 50 }]}
+        max={100}
+        value={51}
+      />
+    );
+
+    expect(getByTestId('linear-progress').firstChild).toHaveStyle(
+      'background-color: rgb(255, 0, 0)'
+    );
   });
 });

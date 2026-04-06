@@ -1,18 +1,20 @@
-import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { Linode, Volume } from '@linode/api-v4/types';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { interceptGetLinodeConfigs } from 'support/intercepts/configs';
 import {
   interceptAttachVolume,
-  interceptDetachVolume,
+  // interceptDetachVolume,
 } from 'support/intercepts/volumes';
-import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
-import { interceptGetLinodeConfigs } from 'support/intercepts/configs';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
+
+import type { Linode, Volume } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -26,28 +28,32 @@ const pageSizeOverride = {
  *
  * @returns Promise that resolves to an array containing created Linode and Volume.
  */
-const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
-  const commonRegion = chooseRegion();
-  const linodeRequest = createLinodeRequestFactory.build({
-    label: randomLabel(),
-    region: commonRegion.id,
-    root_pass: randomString(32),
-  });
+// TODO Uncomment `createAndAtttachVolume` once volume detach tests are unskipped, or delete if tests are removed.
+// const createLinodeAndAttachVolume = async (): Promise<[Linode, Volume]> => {
+//   const commonRegion = chooseRegion();
+//   const linodeRequest = createLinodeRequestFactory.build({
+//     label: randomLabel(),
+//     region: commonRegion.id,
+//     root_pass: randomString(32),
+//   });
 
-  const linode = await createLinode(linodeRequest);
-  const volumeRequest = volumeRequestPayloadFactory.build({
-    label: randomLabel(),
-    region: commonRegion.id,
-    linode_id: linode.id,
-  });
-  const volume = await createVolume(volumeRequest);
-  return [linode, volume];
-};
+//   const linode = await createLinode(linodeRequest);
+//   const volumeRequest = volumeRequestPayloadFactory.build({
+//     label: randomLabel(),
+//     region: commonRegion.id,
+//     linode_id: linode.id,
+//   });
+//   const volume = await createVolume(volumeRequest);
+//   return [linode, volume];
+// };
 
 authenticate();
 describe('volume attach and detach flows', () => {
   before(() => {
-    cleanUp('volumes');
+    cleanUp(['volumes', 'linodes']);
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*
@@ -62,6 +68,7 @@ describe('volume attach and detach flows', () => {
     });
 
     const linodeRequest = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: commonRegion.id,
       root_pass: randomString(32),
@@ -69,10 +76,10 @@ describe('volume attach and detach flows', () => {
 
     const entityPromise = Promise.all([
       createVolume(volumeRequest),
-      createLinode(linodeRequest),
+      createTestLinode(linodeRequest),
     ]);
 
-    cy.defer(entityPromise, 'creating Volume and Linode').then(
+    cy.defer(() => entityPromise, 'creating Volume and Linode').then(
       ([volume, linode]: [Volume, Linode]) => {
         interceptAttachVolume(volume.id).as('attachVolume');
         interceptGetLinodeConfigs(linode.id).as('getLinodeConfigs');
@@ -95,10 +102,8 @@ describe('volume attach and detach flows', () => {
           .click();
 
         ui.drawer.findByTitle(`Attach Volume ${volume.label}`).within(() => {
-          cy.findByLabelText('Linode')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)
@@ -112,7 +117,9 @@ describe('volume attach and detach flows', () => {
 
         // Confirm that volume has been attached to Linode.
         cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);
-        ui.toast.assertMessage(`Volume ${volume.label} successfully attached.`);
+        ui.toast.assertMessage(
+          `Volume ${volume.label} has been attached to Linode ${linode.label}.`
+        );
         cy.findByText(volume.label)
           .should('be.visible')
           .closest('tr')

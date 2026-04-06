@@ -1,50 +1,58 @@
-import type {
-  Linode,
-  Firewall,
-  FirewallRuleType,
-  CreateLinodeRequest,
-  CreateFirewallPayload,
-} from '@linode/api-v4';
-import { createLinode, createFirewall } from '@linode/api-v4';
-import {
-  createLinodeRequestFactory,
-  firewallFactory,
-  firewallRuleFactory,
-  linodeFactory,
-} from 'src/factories';
+import { createFirewall } from '@linode/api-v4';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
-import { containsClick } from 'support/helpers';
 import {
   interceptUpdateFirewallLinodes,
   interceptUpdateFirewallRules,
 } from 'support/intercepts/firewalls';
-import { randomItem, randomString, randomLabel } from 'support/util/random';
-import { fbtVisible, fbtClick } from 'support/helpers';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomItem, randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import {
+  firewallFactory,
+  firewallRuleFactory,
+  firewallRulesFactory,
+} from 'src/factories';
+
+import type {
+  CreateFirewallPayload,
+  CreateLinodeRequest,
+  Firewall,
+  FirewallPolicyType,
+  FirewallRuleType,
+  Linode,
+} from '@linode/api-v4';
 
 const portPresetMap = {
   '22': 'SSH',
+  '53': 'DNS',
   '80': 'HTTP',
   '443': 'HTTPS',
   '3306': 'MySQL',
-  '53': 'DNS',
 };
 
 const inboundRule = firewallRuleFactory.build({
-  label: randomLabel(),
+  action: 'ACCEPT',
   description: randomString(),
-  action: 'Accept',
+  label: randomLabel(),
   ports: randomItem(Object.keys(portPresetMap)),
 });
 
 const outboundRule = firewallRuleFactory.build({
-  label: randomLabel(),
+  action: 'DROP',
   description: randomString(),
-  action: 'Drop',
+  label: randomLabel(),
   ports: randomItem(Object.keys(portPresetMap)),
 });
+
+const getRuleActionLabel = (ruleAction: FirewallPolicyType): string => {
+  return `${ruleAction.charAt(0).toUpperCase()}${ruleAction
+    .slice(1)
+    .toLowerCase()}`;
+};
 
 /**
  * Adds an inbound / outbound firewall rule.
@@ -70,22 +78,20 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
     .should('be.visible')
     .within(() => {
       const port = rule.ports ? rule.ports : '22';
-      cy.get('[data-qa-enhanced-select="Select a rule preset..."]').type(
-        portPresetMap[port] + '{enter}'
+      cy.findByPlaceholderText('Select a rule preset...').type(
+        portPresetMap[port as keyof typeof portPresetMap] + '{enter}'
       );
-
       const label = rule.label ? rule.label : 'test-label';
       const description = rule.description
         ? rule.description
         : 'test-description';
-      containsClick('Label').type('{selectall}{backspace}' + label);
-      containsClick('Description').type(description);
+      cy.contains('Label').click();
+      cy.focused().type('{selectall}{backspace}' + label);
+      cy.contains('Description').click();
+      cy.focused().type(description);
 
-      const action = rule.action
-        ? rule.action.charAt(0).toUpperCase() +
-          rule.action.slice(1).toLowerCase()
-        : 'Accept';
-      containsClick(action).click();
+      const action = rule.action ? getRuleActionLabel(rule.action) : 'Accept';
+      cy.contains(action).click();
 
       ui.button
         .findByTitle('Add Rule')
@@ -136,17 +142,15 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
     .should('be.visible')
     .within(() => {
       // Fill out and submit firewall edit form.
-      cy.findByLabelText('Linodes')
-        .should('be.visible')
-        .click()
-        .type(linode.label);
+      cy.findByLabelText('Linodes').should('be.visible').click();
+      cy.focused().type(linode.label);
 
       ui.autocompletePopper
         .findByTitle(linode.label)
         .should('be.visible')
         .click();
 
-      cy.findByLabelText('Linodes').should('be.visible').click();
+      cy.focused().type('{esc}');
 
       ui.button.findByTitle('Add').should('be.visible').click();
     });
@@ -157,15 +161,20 @@ const createLinodeAndFirewall = async (
   firewallRequestPayload: CreateFirewallPayload
 ) => {
   return Promise.all([
-    createLinode(linodeRequestPayload),
+    createTestLinode(linodeRequestPayload, { securityMethod: 'powered_off' }),
     createFirewall(firewallRequestPayload),
   ]);
 };
 
 authenticate();
+// Firewall GET API request performance issues need to be addressed in order to unskip this test
+// See M3-9619
 describe('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*
@@ -185,15 +194,14 @@ describe('update firewall', () => {
 
     const firewallRequest = firewallFactory.build({
       label: randomLabel(),
-      region: region.id,
-      rules: firewallRuleFactory.build({
+      rules: firewallRulesFactory.build({
         inbound: [],
         outbound: [],
       }),
     });
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
@@ -215,26 +223,30 @@ describe('update firewall', () => {
       addFirewallRules(inboundRule, 'inbound');
 
       // Confirm that the inbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="0"]')
+      cy.findByText(inboundRule.label!)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
-          cy.findByText(inboundRule.label).should('be.visible');
-          cy.findByText(inboundRule.protocol).should('be.visible');
-          cy.findByText(inboundRule.ports).should('be.visible');
-          cy.findByText(inboundRule.action).should('be.visible');
+          cy.findByText(inboundRule.protocol!).should('be.visible');
+          cy.findByText(inboundRule.ports!).should('be.visible');
+          cy.findByText(getRuleActionLabel(inboundRule.action!)).should(
+            'be.visible'
+          );
         });
 
       // Add outbound rules
       addFirewallRules(outboundRule, 'outbound');
 
       // Confirm that the outbound rules are listed on edit page with expected configuration
-      cy.get('[data-rbd-droppable-context-id="1"]')
+      cy.findByText(outboundRule.label!)
         .should('be.visible')
+        .closest('tr')
         .within(() => {
-          cy.findByText(outboundRule.label).should('be.visible');
-          cy.findByText(outboundRule.protocol).should('be.visible');
-          cy.findByText(outboundRule.ports).should('be.visible');
-          cy.findByText(outboundRule.action).should('be.visible');
+          cy.findByText(outboundRule.protocol!).should('be.visible');
+          cy.findByText(outboundRule.ports!).should('be.visible');
+          cy.findByText(getRuleActionLabel(outboundRule.action!)).should(
+            'be.visible'
+          );
         });
 
       // Save configuration
@@ -258,10 +270,10 @@ describe('update firewall', () => {
       cy.findByText(firewall.label).click();
 
       // Remove inbound rules
-      removeFirewallRules(inboundRule.label);
+      removeFirewallRules(inboundRule.label!);
 
       // Remove outbound rules
-      removeFirewallRules(outboundRule.label);
+      removeFirewallRules(outboundRule.label!);
 
       // Save configuration
       interceptUpdateFirewallRules(firewall.id).as('updateFirewallRules');
@@ -302,7 +314,7 @@ describe('update firewall', () => {
   it("updates a firewall's status", () => {
     const region = chooseRegion();
 
-    const linodeRequest = linodeFactory.build({
+    const linodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
@@ -310,7 +322,6 @@ describe('update firewall', () => {
 
     const firewallRequest = firewallFactory.build({
       label: randomLabel(),
-      region: region.id,
       rules: {
         inbound: [],
         outbound: [],
@@ -318,7 +329,7 @@ describe('update firewall', () => {
     });
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([_linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
@@ -338,9 +349,17 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          fbtVisible('Disable');
-          fbtClick('Disable');
+          ui.actionMenu
+            .findByTitle(`Action menu for Firewall ${firewall.label}`)
+            .should('be.visible')
+            .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Disable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       ui.dialog
         .findByTitle(`Disable Firewall ${firewall.label}?`)
@@ -367,9 +386,17 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          fbtVisible('Enable');
-          fbtClick('Enable');
+          ui.actionMenu
+            .findByTitle(`Action menu for Firewall ${firewall.label}`)
+            .should('be.visible')
+            .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Enable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       ui.dialog
         .findByTitle(`Enable Firewall ${firewall.label}?`)
@@ -388,6 +415,66 @@ describe('update firewall', () => {
         .within(() => {
           cy.findByText('Enabled').should('be.visible');
         });
+    });
+  });
+
+  /*
+   * - Confirms that firewall's label can be updated on landing page.
+   */
+  it("updates a firewall's label", () => {
+    const region = chooseRegion();
+
+    const linodeRequest = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: region.id,
+      root_pass: randomString(16),
+    });
+
+    const firewallRequest = firewallFactory.build({
+      label: randomLabel(),
+      rules: {
+        inbound: [],
+        outbound: [],
+      },
+    });
+
+    const newFirewallLabel = randomLabel();
+
+    cy.defer(
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
+      'creating Linode and firewall'
+    ).then(([_linode, firewall]) => {
+      cy.visitWithLogin('/firewalls');
+
+      // Confirm that firewall is listed on landing page with expected configuration.
+      cy.findByText(firewall.label)
+        .closest('tr')
+        .within(() => {
+          cy.findByText(firewall.label).should('be.visible');
+          cy.findByText('Enabled').should('be.visible');
+          cy.findByText('No rules').should('be.visible');
+          cy.findByText('None assigned').should('be.visible');
+        });
+
+      cy.visitWithLogin(`/firewalls/${firewall.id}`);
+
+      cy.findByLabelText(`Edit ${firewall.label}`).click();
+      cy.get(`[id="edit-${firewall.label}-label"]`).click();
+      cy.focused().clear();
+      cy.focused().type(`${newFirewallLabel}{enter}`);
+
+      // Confirm Firewall label updates in breadcrumbs.
+      ui.entityHeader.find().within(() => {
+        cy.findByText(newFirewallLabel).should('be.visible');
+        cy.findByText('firewalls').click();
+      });
+
+      // Confirm firewall label is updated on landing page without refresh.
+      cy.findByText(newFirewallLabel).should('be.visible');
+
+      // Confirm firewall label is updated on landing page after refresh.
+      cy.reload();
+      cy.findByText(newFirewallLabel).should('be.visible');
     });
   });
 });

@@ -1,14 +1,12 @@
-import { Linode, deleteLinode, getLinodes } from '@linode/api-v4';
-import { CreateLinodeRequest } from '@linode/api-v4/types';
-import { linodeFactory } from '@src/factories';
+import { deleteLinode, getLinodes } from '@linode/api-v4';
+import { linodeFactory } from '@linode/utilities';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { oauthToken, pageSize } from 'support/constants/api';
-import { entityTag } from 'support/constants/cypress';
+import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
-import { randomLabel, randomString } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 
-import { apiCheckErrors, deleteById, isTestLabel } from './common';
+import { deleteById, isTestLabel } from './common';
+
+import type { Linode } from '@linode/api-v4';
 
 export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   return makeResourcePage(
@@ -16,42 +14,6 @@ export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
       ...data,
     })
   );
-};
-
-const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
-  authorized_users: [],
-  backups_enabled: false,
-  booted: true,
-  image: 'linode/debian10',
-  private_ip: true,
-  region: chooseRegion().id,
-  root_pass: randomString(32),
-  tags: [entityTag],
-  type: 'g6-standard-2',
-};
-
-const linodeRequest = (linodeData) => {
-  return cy.request({
-    auth: {
-      bearer: oauthToken,
-    },
-    body: linodeData,
-    method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
-  });
-};
-
-export const requestBody = (data: Partial<CreateLinodeRequest>) => {
-  const label = randomLabel();
-  return linodeRequest({ label, ...defaultLinodeRequestBody, ...data });
-};
-
-export const createLinode = (data = {}) => {
-  return requestBody(data).then((resp) => {
-    apiCheckErrors(resp);
-    console.log(`Created Linode ${resp.body.label} successfully`, resp);
-    return resp.body;
-  });
 };
 
 export const deleteLinodeById = (linodeId: number) =>
@@ -68,7 +30,11 @@ export const deleteAllTestLinodes = async (): Promise<void> => {
   );
 
   const deletePromises = linodes
-    .filter((linode: Linode) => isTestLabel(linode.label))
+    .filter(
+      (linode: Linode) =>
+        isTestLabel(linode.label) &&
+        ['offline', 'running'].includes(linode.status)
+    )
     .map((linode: Linode) => deleteLinode(linode.id));
 
   await Promise.all(deletePromises);

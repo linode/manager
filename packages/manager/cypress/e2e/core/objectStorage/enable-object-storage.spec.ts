@@ -1,58 +1,56 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
-
-import type { Region } from '@linode/api-v4';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import {
+  accountFactory,
   accountSettingsFactory,
-  objectStorageClusterFactory,
-  profileFactory,
-  regionFactory,
   objectStorageKeyFactory,
 } from '@src/factories';
-import { mockGetAccountSettings } from 'support/intercepts/account';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetPrices } from 'support/intercepts/network-transfer';
 import {
   mockCancelObjectStorage,
   mockCreateAccessKey,
+  mockGetAccessKeys,
   mockGetBuckets,
-  mockGetClusters,
+  mockGetObjectStorageTypes,
 } from 'support/intercepts/object-storage';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
+
+import type { AccountSettings, PriceType, Region } from '@linode/api-v4';
 
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.
 const objNotes = {
-  // When enabling OBJ using a region with a regular pricing structure, when OBJ DC-specific pricing is disabled.
-  regularPricing: /Linode Object Storage costs a flat rate of \$5\/month, and includes 250 GB of storage and 1 TB of outbound data transfer. Beyond that, it.*s \$0.02 per GB per month./,
-
-  // When enabling OBJ using a region with special pricing during the free beta period (OBJ DC-specific pricing is disabled).
-  dcSpecificBetaPricing: /Object Storage for .* is currently in beta\. During the beta period, Object Storage in these regions is free\. After the beta period, customers will be notified before charges for this service begin./,
-
-  // When enabling OBJ without having selected a region, when OBJ DC-specific pricing is disabled.
-  dcPricingGenericExplanation:
-    'Pricing for monthly rate and overage costs will depend on the data center you select for deployment.',
-
-  // When enabling OBJ, in both the Access Key flow and Create Bucket flow, when OBJ DC-specific pricing is enabled.
-  objDCPricing:
-    'Object Storage costs a flat rate of $5/month, and includes 250 GB of storage. When you enable Object Storage, 1 TB of outbound data transfer will be added to your global network transfer pool.',
+  // Information regarding the Object Storage cancellation process.
+  cancellationExplanation:
+    /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
 
   // Link to further DC-specific pricing information.
   dcPricingLearnMoreNote: 'Learn more about pricing and specifications.',
 
-  // Information regarding the Object Storage cancellation process.
-  cancellationExplanation: /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
+  // When enabling OBJ, in both the Access Key flow and Create Bucket flow, when OBJ DC-specific pricing is enabled.
+  objDCPricing:
+    'Object Storage costs a flat rate of $5/month, and includes 250 GB of storage. When you enable Object Storage, 1 TB of outbound data transfer will be added to your global network transfer pool.',
 };
 
 describe('Object Storage enrollment', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      iam: {
+        enabled: false,
+      },
+    });
+  });
+
   /*
    * - Confirms that Object Storage can be enabled using mock API data.
    * - Confirms that pricing information link is present in enrollment dialog.
@@ -61,12 +59,18 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
+    mockAppendFeatureFlags({
+      objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
+    });
+
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
       object_storage: 'disabled',
     });
 
-    const mockAccountSettingsEnabled = {
+    const mockAccountSettingsEnabled: AccountSettings = {
       ...mockAccountSettings,
       object_storage: 'active',
     };
@@ -74,58 +78,112 @@ describe('Object Storage enrollment', () => {
     const mockRegions: Region[] = [
       regionFactory.build({
         capabilities: ['Object Storage'],
-        label: 'Newark, NJ',
         id: 'us-east',
+        label: 'Newark, NJ',
       }),
       regionFactory.build({
         capabilities: ['Object Storage'],
-        label: 'Sao Paulo, BR',
         id: 'br-gru',
+        label: 'Sao Paulo, BR',
       }),
       regionFactory.build({
         capabilities: ['Object Storage'],
-        label: 'Jakarta, ID',
         id: 'id-cgk',
+        label: 'Jakarta, ID',
       }),
     ];
 
-    // Clusters with special pricing are currently hardcoded rather than
-    // retrieved via API, so we have to mock the cluster API request to correspond
-    // with that hardcoded data.
-    const mockClusters = [
-      // Regions with special pricing.
-      objectStorageClusterFactory.build({
-        id: 'br-gru-0',
-        region: 'br-gru',
-      }),
-      objectStorageClusterFactory.build({
-        id: 'id-cgk-1',
-        region: 'id-cgk',
-      }),
-      // A region that does not have special pricing.
-      objectStorageClusterFactory.build({
-        id: 'us-east-1',
-        region: 'us-east',
-      }),
+    const mockPrices: PriceType[] = [
+      {
+        id: 'distributed_network_transfer',
+        label: 'Distributed Network Transfer',
+        price: {
+          hourly: 0.01,
+          monthly: null,
+        },
+        region_prices: [],
+        transfer: 0,
+      },
+      {
+        id: 'network_transfer',
+        label: 'Network Transfer',
+        price: {
+          hourly: 0.005,
+          monthly: null,
+        },
+        region_prices: [
+          {
+            id: 'id-cgk',
+            hourly: 0.015,
+            monthly: null,
+          },
+          {
+            id: 'br-gru',
+            hourly: 0.007,
+            monthly: null,
+          },
+        ],
+        transfer: 0,
+      },
     ];
-
+    const mockObjectStorageTypes = [
+      {
+        id: 'objectstorage',
+        label: 'Object Storage',
+        price: {
+          hourly: 0.0075,
+          monthly: 5,
+        },
+        region_prices: [
+          {
+            id: 'id-cgk',
+            hourly: 0.0075,
+            monthly: 5,
+          },
+          {
+            id: 'br-gru',
+            hourly: 0.0075,
+            monthly: 5,
+          },
+        ],
+        transfer: 1000,
+      },
+      {
+        id: 'objectstorage-overage',
+        label: 'Object Storage Overage',
+        price: {
+          hourly: 0.02,
+          monthly: null,
+        },
+        region_prices: [
+          {
+            id: 'id-cgk',
+            hourly: 0.024,
+            monthly: null,
+          },
+          {
+            id: 'br-gru',
+            hourly: 0.028,
+            monthly: null,
+          },
+        ],
+        transfer: 0,
+      },
+    ];
     const mockAccessKey = objectStorageKeyFactory.build({
       label: randomLabel(),
     });
-
+    mockGetPrices(mockPrices).as('getPrices');
+    mockGetObjectStorageTypes(mockObjectStorageTypes).as(
+      'getObjectStorageTypes'
+    );
     mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
-    mockGetClusters(mockClusters).as('getClusters');
     mockGetBuckets([]).as('getBuckets');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccessKeys([]);
 
     cy.visitWithLogin('/object-storage/buckets');
-    cy.wait([
-      '@getAccountSettings',
-      '@getClusters',
-      '@getBuckets',
-      '@getRegions',
-    ]);
+    cy.wait(['@getAccountSettings', '@getBuckets', '@getRegions']);
 
     // Confirm that empty-state message is shown before proceeding.
     cy.findByText('S3-compatible storage solution').should('be.visible');
@@ -136,11 +194,15 @@ describe('Object Storage enrollment', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-
+    cy.wait(['@getPrices', '@getObjectStorageTypes']);
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Bucket Name (required)')
+          .should('be.visible')
+          .type(randomLabel());
+
         // Select a region with special pricing structure.
         ui.regionSelect.find().click().type('Jakarta, ID{enter}');
 
@@ -342,8 +404,7 @@ describe('Object Storage enrollment', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getProfile', '@getAccountSettings']);
 
-    ui.accordion
-      .findByTitle('Object Storage')
+    cy.findByTestId('object-storage')
       .should('be.visible')
       .within(() => {
         // Confirm that the user is informed that cancelling OBJ will delete their buckets and keys.
@@ -373,6 +434,8 @@ describe('Object Storage enrollment', () => {
       });
 
     cy.wait('@cancelObjectStorage');
+
+    ui.toast.assertMessage('Object Storage successfully canceled.');
 
     // Confirm that settings page updates to reflect that Object Storage is disabled.
     cy.contains(getStartedNote).should('be.visible');

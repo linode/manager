@@ -1,0 +1,111 @@
+import { profileFactory } from '@linode/utilities';
+import { fireEvent } from '@testing-library/react';
+import React from 'react';
+
+import { accountUserFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { DeleteUserPanel } from './DeleteUserPanel';
+
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useProfile: queryMocks.useProfile,
+  };
+});
+
+describe('DeleteUserPanel', () => {
+  it('should disable the delete button for proxy user', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'proxy',
+      username: 'current_user',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
+
+    const deleteButton = getByTestId('button');
+    expect(deleteButton).toBeDisabled();
+  });
+
+  it('should disable the delete button for the current user', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'default',
+      username: 'current_user',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
+
+    const deleteButton = getByTestId('button');
+    expect(deleteButton).toBeDisabled();
+  });
+
+  it('should enable the delete button for deletable users', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'default',
+      username: 'user',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
+
+    const deleteButton = getByTestId('button');
+    expect(deleteButton).toBeEnabled();
+  });
+
+  it('should open the delete confirmation dialog when the delete button is clicked', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'default',
+      username: 'user',
+    });
+
+    const { getByTestId, getByText } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={true} />
+    );
+
+    const deleteButton = getByTestId('button');
+    fireEvent.click(deleteButton);
+
+    expect(
+      getByText('The user will be deleted permanently.')
+    ).toBeInTheDocument();
+  });
+
+  it('disables the delete button when the user does not have delete_user permission', async () => {
+    const user = accountUserFactory.build({
+      username: 'my-linode-username',
+    });
+
+    const { getByTestId } = renderWithTheme(
+      <DeleteUserPanel activeUser={user} canDeleteUser={false} />
+    );
+
+    const deleteButton = getByTestId('button');
+    expect(deleteButton).toBeDisabled();
+  });
+});

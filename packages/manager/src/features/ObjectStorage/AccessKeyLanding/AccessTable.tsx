@@ -1,8 +1,6 @@
-import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
-import { update } from 'ramda';
+import { Radio } from '@linode/ui';
 import * as React from 'react';
 
-import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -18,34 +16,40 @@ import {
 } from './AccessTable.styles';
 
 import type { MODE } from './types';
+import type {
+  ObjectStorageKeyBucketAccess,
+  ObjectStorageKeyBucketAccessPermissions,
+} from '@linode/api-v4/lib/object-storage/types';
 
 export const getUpdatedScopes = (
-  oldScopes: Scope[],
-  newScope: Scope
-): Scope[] => {
+  oldScopes: ObjectStorageKeyBucketAccess[],
+  newScope: ObjectStorageKeyBucketAccess
+): ObjectStorageKeyBucketAccess[] => {
   // Cluster and bucket together form a primary key
-  const scopeToUpdate = oldScopes.findIndex(
+  const scopeToUpdateIndex = oldScopes.findIndex(
     (thisScope) =>
       thisScope.bucket_name === newScope.bucket_name &&
       thisScope.cluster === newScope.cluster
   );
-  if (scopeToUpdate < 0) {
+  if (scopeToUpdateIndex < 0) {
     return oldScopes;
   }
-  return update(scopeToUpdate, newScope, oldScopes);
+  const updatedScopes = [...oldScopes];
+  updatedScopes[scopeToUpdateIndex] = newScope;
+  return updatedScopes;
 };
 
-export const SCOPES: Record<string, AccessType> = {
+export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
   none: 'none',
   read: 'read_only',
   write: 'read_write',
 };
 
 interface TableProps {
-  bucket_access: Scope[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   checked: boolean;
   mode: MODE;
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const AccessTable = React.memo((props: TableProps) => {
@@ -55,12 +59,14 @@ export const AccessTable = React.memo((props: TableProps) => {
     return null;
   }
 
-  const updateSingleScope = (newScope: Scope) => {
+  const updateSingleScope = (newScope: ObjectStorageKeyBucketAccess) => {
     const newScopes = getUpdatedScopes(bucket_access, newScope);
     updateScopes(newScopes);
   };
 
-  const updateAllScopes = (accessType: AccessType) => {
+  const updateAllScopes = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     const newScopes = bucket_access.map((thisScope) => ({
       ...thisScope,
       permissions: accessType,
@@ -68,7 +74,9 @@ export const AccessTable = React.memo((props: TableProps) => {
     updateScopes(newScopes);
   };
 
-  const allScopesEqual = (accessType: AccessType) => {
+  const allScopesEqual = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     return bucket_access.every(
       (thisScope) => thisScope.permissions === accessType
     );
@@ -93,46 +101,46 @@ export const AccessTable = React.memo((props: TableProps) => {
       <TableBody>
         {mode === 'creating' && (
           <StyledRadioRow data-qa-row="Select All" disabled={disabled}>
-            <TableCell colSpan={2} padding="checkbox" parentColumn="Cluster">
+            <TableCell colSpan={2} padding="checkbox">
               <strong>Select All</strong>
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="None">
+            <TableCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select none for all',
-                }}
                 checked={allScopesEqual(SCOPES.none)}
                 data-qa-perm-none-radio
                 data-testid="set-all-none"
                 disabled={disabled}
+                inputProps={{
+                  'aria-label': 'Select none for all',
+                }}
                 name="Select All"
                 onChange={() => updateAllScopes(SCOPES.none)}
                 value="none"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read Only">
+            <TableCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select read-only for all',
-                }}
                 checked={allScopesEqual('read_only')}
                 data-qa-perm-read-radio
                 data-testid="set-all-read"
                 disabled={disabled}
+                inputProps={{
+                  'aria-label': 'Select read-only for all',
+                }}
                 name="Select All"
                 onChange={() => updateAllScopes('read_only')}
                 value="read-only"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read/Write">
+            <TableCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select read/write for all',
-                }}
                 checked={allScopesEqual(SCOPES.write)}
                 data-qa-perm-rw-radio
                 data-testid="set-all-write"
                 disabled={disabled}
+                inputProps={{
+                  'aria-label': 'Select read/write for all',
+                }}
                 name="Select All"
                 onChange={() => updateAllScopes(SCOPES.write)}
                 value="read-write"
@@ -157,14 +165,14 @@ export const AccessTable = React.memo((props: TableProps) => {
               </StyledBucketCell>
               <StyledRadioCell padding="checkbox">
                 <AccessCell
+                  active={thisScope.permissions === SCOPES.none}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.none,
                     })
                   }
-                  active={thisScope.permissions === SCOPES.none}
-                  disabled={disabled}
                   scope="none"
                   scopeDisplay={scopeName}
                   viewOnly={mode === 'viewing'}
@@ -172,14 +180,14 @@ export const AccessTable = React.memo((props: TableProps) => {
               </StyledRadioCell>
               <StyledRadioCell padding="checkbox">
                 <AccessCell
+                  active={thisScope.permissions === SCOPES.read}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.read,
                     })
                   }
-                  active={thisScope.permissions === SCOPES.read}
-                  disabled={disabled}
                   scope="read-only"
                   scopeDisplay={scopeName}
                   viewOnly={mode === 'viewing'}
@@ -187,14 +195,14 @@ export const AccessTable = React.memo((props: TableProps) => {
               </StyledRadioCell>
               <StyledRadioCell padding="checkbox">
                 <AccessCell
+                  active={thisScope.permissions === SCOPES.write}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.write,
                     })
                   }
-                  active={thisScope.permissions === SCOPES.write}
-                  disabled={disabled}
                   scope="read-write"
                   scopeDisplay={scopeName}
                   viewOnly={mode === 'viewing'}

@@ -1,16 +1,18 @@
-import { boolean, number, object, string } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 
 const labelSchema = string()
-  .max(50, 'Length must be 50 characters or less.')
+  .min(1, 'Label must be between 1 and 50 characters.')
+  .max(50, 'Label must be between 1 and 50 characters.')
   .matches(
     /^[a-zA-Z0-9,.?\-_\s']+$/,
-    'Image labels cannot contain special characters.'
+    'Image labels cannot contain special characters.',
   );
 
-export const baseImageSchema = object().shape({
-  label: labelSchema.notRequired(),
-  description: string().notRequired().min(1).max(65000),
-  cloud_init: boolean().notRequired(),
+export const baseImageSchema = object({
+  label: labelSchema.optional(),
+  description: string().optional().min(1).max(65000),
+  cloud_init: boolean().optional(),
+  tags: array(string().min(3).max(50).required()).max(500).optional(),
 });
 
 export const createImageSchema = baseImageSchema.shape({
@@ -24,15 +26,62 @@ export const uploadImageSchema = baseImageSchema.shape({
   region: string().required('Region is required.'),
 });
 
-export const updateImageSchema = object().shape({
-  label: string()
-    .notRequired()
-    .max(50, 'Length must be 50 characters or less.')
-    .matches(
-      /^[a-zA-Z0-9,.?\-_\s']+$/,
-      'Image labels cannot contain special characters.'
-    ),
+export const updateImageSchema = object({
+  label: labelSchema.optional(),
   description: string()
-    .notRequired()
+    .optional()
     .max(65000, 'Length must be 65000 characters or less.'),
+  tags: array(string().required()).optional(),
+});
+
+export const updateImageRegionsSchema = object({
+  regions: array(string())
+    .required('Regions are required.')
+    .min(1, 'Must specify at least one region.'),
+});
+
+export const sharegroupImageSchema = object({
+  id: string().required('Image ID is required'),
+  label: labelSchema.optional(),
+  description: string().optional(),
+});
+
+export const addSharegroupImagesSchema = object({
+  images: array(sharegroupImageSchema).required('Images are required.'),
+});
+
+export const updateSharegroupImageSchema = object({
+  label: labelSchema.optional(),
+  description: string().optional(),
+});
+
+export const createSharegroupSchema = object({
+  label: labelSchema.required('Label is required.'),
+  description: string().optional(),
+  images: array(sharegroupImageSchema).notRequired(),
+});
+
+export const updateSharegroupSchema = object({
+  label: labelSchema.optional(),
+  description: string().optional(),
+});
+
+export const addSharegroupMemberSchema = object({
+  token: string().required('Token is required.'),
+  label: labelSchema.required('Label is required.'),
+});
+
+export const updateSharegroupMemberSchema = object({
+  label: labelSchema.required('Label is required.'),
+});
+
+export const generateSharegroupTokenSchema = object({
+  label: labelSchema.optional(),
+  valid_for_sharegroup_uuid: boolean().required(
+    'Valid sharegroup UUID required.',
+  ),
+});
+
+export const updateSharegroupTokenSchema = object({
+  label: labelSchema.required('Label is required.'),
 });

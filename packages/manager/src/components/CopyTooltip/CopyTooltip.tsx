@@ -1,10 +1,13 @@
+import { omittedProps, Tooltip, VisibilityTooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
-import { Tooltip, TooltipProps } from 'src/components/Tooltip';
-import { omittedProps } from 'src/utilities/omittedProps';
+import { createMaskedText } from 'src/utilities/createMaskedText';
+
+import type { MaskableTextLength } from '../MaskableText/MaskableText';
+import type { TooltipProps } from '@linode/ui';
 
 export interface CopyTooltipProps {
   /**
@@ -21,6 +24,24 @@ export interface CopyTooltipProps {
    * @default false
    */
   disabled?: boolean;
+  /**
+   * Optionally display disabled reason as tooltip
+   */
+  disabledReason?: string;
+  /**
+   * If true, the component is in controlled mode for text masking, meaning the parent component handles the visibility toggle.
+   * @default false
+   */
+  isMaskingControlled?: boolean;
+  /**
+   * If true, the text will be masked with dots when displayed. It will still be copyable.
+   * @default false
+   */
+  masked?: boolean;
+  /**
+   * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
+   */
+  maskedTextLength?: MaskableTextLength | number;
   /**
    * Callback to be executed when the icon is clicked.
    */
@@ -42,15 +63,29 @@ export interface CopyTooltipProps {
  */
 
 export const CopyTooltip = (props: CopyTooltipProps) => {
-  const [copied, setCopied] = React.useState<boolean>(false);
   const {
     className,
     copyableText,
     disabled,
+    disabledReason,
+    isMaskingControlled,
+    masked,
+    maskedTextLength,
     onClickCallback,
     placement,
     text,
   } = props;
+
+  const [copied, setCopied] = React.useState<boolean>(false);
+  const [isTextMaskedInternally, setIsTextMaskedInternally] =
+    React.useState(masked);
+
+  // Use the parent component's state for text masking if in controlled mode; otherwise use the internal state.
+  const isTextMasked = isMaskingControlled ? masked : isTextMaskedInternally;
+
+  const displayText = isTextMasked
+    ? createMaskedText(text, maskedTextLength)
+    : text;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -62,7 +97,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   };
 
   const CopyButton = (
-    <StyledCopyButton
+    <StyledIconButton
       aria-label={`Copy ${text} to clipboard`}
       className={className}
       data-qa-copy-btn
@@ -71,29 +106,60 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       type="button"
       {...props}
     >
-      {copyableText ? text : <FileCopy />}
-    </StyledCopyButton>
+      {copyableText ? displayText : <FileCopy />}
+    </StyledIconButton>
   );
+
+  if (disabled && disabledReason) {
+    return (
+      <Tooltip
+        className="copy-tooltip"
+        data-qa-copied
+        disableInteractive
+        placement={placement ?? 'top'}
+        title={disabledReason}
+      >
+        <span>{CopyButton}</span>
+      </Tooltip>
+    );
+  }
 
   if (disabled) {
     return CopyButton;
   }
 
   return (
-    <Tooltip
-      className="copy-tooltip"
-      data-qa-copied
-      placement={placement ?? 'top'}
-      title={copied ? 'Copied!' : 'Copy'}
-    >
-      {CopyButton}
-    </Tooltip>
+    <>
+      <Tooltip
+        className="copy-tooltip"
+        data-qa-copied
+        disableInteractive
+        placement={placement ?? 'top'}
+        title={copied ? 'Copied!' : 'Copy'}
+      >
+        {CopyButton}
+      </Tooltip>
+      {masked && !isMaskingControlled && (
+        <VisibilityTooltip
+          handleClick={() => setIsTextMaskedInternally(!isTextMaskedInternally)}
+          isVisible={!isTextMasked}
+        />
+      )}
+    </>
   );
 };
 
-const StyledCopyButton = styled('button', {
-  label: 'StyledCopyButton',
-  shouldForwardProp: omittedProps(['copyableText', 'text']),
+export const StyledIconButton = styled('button', {
+  label: 'StyledIconButton',
+  shouldForwardProp: omittedProps([
+    'copyableText',
+    'disabledReason',
+    'text',
+    'onClickCallback',
+    'masked',
+    'maskedTextLength',
+    'isMaskingControlled',
+  ]),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {
     color: theme.color.grey1,

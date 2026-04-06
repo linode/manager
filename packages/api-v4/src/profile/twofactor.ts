@@ -1,7 +1,9 @@
 import { enableTwoFactorSchema } from '@linode/validation/lib/twofactor.schema';
+
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { Secret } from './types';
+
+import type { Secret } from './types';
 
 /**
  * getTFAToken
@@ -46,5 +48,5 @@ export const confirmTwoFactor = (tfa_code: string) =>
   Request<{ scratch: string }>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tfa-enable-confirm`),
-    setData({ tfa_code }, enableTwoFactorSchema)
+    setData({ tfa_code }, enableTwoFactorSchema),
   );

@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 interface ResourcesLinksSectionProps {
   children: JSX.Element | JSX.Element[];
   /**
@@ -18,13 +19,16 @@ const StyledResourcesLinksSection = styled('div', {
   display: 'grid',
   gridAutoColumns: '1fr',
   gridAutoFlow: 'column',
-  justifyItems: 'center',
-  maxWidth: props.wide === false ? 762 : '100%',
+  [theme.breakpoints.between('md', 'lg')]: {
+    width: 'auto',
+  },
   [theme.breakpoints.down(props.wide ? 'lg' : 'md')]: {
     gridAutoFlow: 'row',
     justifyItems: 'start',
+    maxWidth: props.wide === false ? 361 : '100%',
     rowGap: theme.spacing(8),
   },
+  width: props.wide === false ? 762 : '100%',
 }));
 
 export const ResourcesLinksSection = ({

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+import { Button } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from '../Button/Button';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 import type { RemovableItem } from './RemovableSelectionsList';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof RemovableSelectionsList>;
 
@@ -108,6 +107,52 @@ export const CustomHeightAndWidth: Story = {
   render: () => (
     <DefaultRemovableSelectionsListWrapper maxHeight={300} maxWidth={200} />
   ),
+};
+
+/**
+ * Example of a RemovableSelectionsList with no data to remove
+ */
+export const WithReadableRemoveCTA: Story = {
+  render: () => {
+    const SpecifiedLabelWrapper = () => {
+      const [data, setData] = React.useState(diffLabelListItems);
+
+      const handleRemove = (item: RemovableItem) => {
+        setData([...data].filter((data) => data.id !== item.id));
+      };
+
+      const resetList = () => {
+        setData([...diffLabelListItems]);
+      };
+
+      return (
+        <>
+          <RemovableSelectionsList
+            headerText="Linodes to remove"
+            noDataText="No Linodes available"
+            onRemove={handleRemove}
+            RemoveButton={() => (
+              <Button
+                sx={(theme) => ({
+                  font: theme.font.normal,
+                  fontSize: '0.875rem',
+                })}
+                variant="text"
+              >
+                Remove
+              </Button>
+            )}
+            selectionData={data}
+          />
+          <Button onClick={resetList} sx={{ marginTop: 2 }}>
+            Reset list
+          </Button>
+        </>
+      );
+    };
+
+    return <SpecifiedLabelWrapper />;
+  },
 };
 
 /**

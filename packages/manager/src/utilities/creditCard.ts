@@ -1,8 +1,11 @@
 import { DateTime } from 'luxon';
-import { take, takeLast } from 'ramda';
 /**
- * Expiration is the beginning of the day of the first day of the month.
- * Expiration: yyyy-MM-01 00:00:00
+ * Credit cards generally are valid through the expiry month (inclusive).
+ *
+ * For example,
+ * A credit card with an expiry of 01/2019 expires the last day of January.
+ *
+ * @param expDate The expiry date in the format MM/YYYY
  */
 const expirationDateFromString = (expDate: string /* MM/YYYY */) => {
   const pattern = /^((0[1-9])|(1[0-2]))\/(\d{4})$/i;
@@ -11,16 +14,22 @@ const expirationDateFromString = (expDate: string /* MM/YYYY */) => {
   }
 
   // month are 1 based in luxon
-  const month = +expDate.substr(0, 2);
-  const year = +expDate.substr(3, 8);
+  const month = +expDate.substring(0, 2);
+  const year = +expDate.substring(3, 8);
 
-  return DateTime.fromObject({ day: 1, month, year }).endOf('month');
+  return DateTime.fromObject({ month, year }).endOf('month');
 };
 
-export const hasExpirationPassedFor = (today: DateTime = DateTime.local()) => (
-  expDate: string /** MM/YYYY */
-) => {
-  return today > expirationDateFromString(expDate);
+/**
+ * Returns true if a credit card is expired.
+ *
+ * For example, if a card has an expiry of 1/1/2023 and the current date is
+ * 1/1/2023, the card is is not expired.
+ *
+ * @param expDate The expiry date in the format MM/YYYY
+ */
+export const isCreditCardExpired = (expDate: string) => {
+  return DateTime.local() > expirationDateFromString(expDate);
 };
 
 /**
@@ -31,7 +40,7 @@ export const hasExpirationPassedFor = (today: DateTime = DateTime.local()) => (
 export const formatExpiry = (expiry: string): string => {
   const expiryData = expiry.split('/');
   return expiryData[1].length > 2
-    ? `${expiryData[0]}/${takeLast(2, expiryData[1])}`
+    ? `${expiryData[0]}/${expiryData[1].slice(-2)}`
     : expiry;
 };
 
@@ -46,7 +55,5 @@ export const parseExpiryYear = (
     return expiryYear;
   }
 
-  return take(2, String(new Date().getFullYear())) + expiryYear;
+  return String(new Date().getFullYear()).slice(0, 2) + expiryYear;
 };
-
-export default hasExpirationPassedFor();

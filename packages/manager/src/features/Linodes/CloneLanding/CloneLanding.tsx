@@ -1,41 +1,26 @@
+import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import {
-  Disk,
-  Linode,
-  cloneLinode,
-  cloneLinodeDisk,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
-import { castDraft } from 'immer';
-import { intersection, pathOr } from 'ramda';
-import * as React from 'react';
-import {
-  matchPath,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
-
-import { Box } from 'src/components/Box';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
+  useAllLinodeConfigsQuery,
+  useAllLinodeDisksQuery,
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
+import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { castDraft } from 'immer';
+import * as React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
@@ -46,18 +31,26 @@ import {
   defaultState,
 } from './utilities';
 
+import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader = React.lazy(
-  () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 
-const CloneLanding = () => {
-  const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
-  const history = useHistory();
-  const match = useRouteMatch();
-  const location = useLocation();
+export const CloneLanding = () => {
+  const { linodeId: _linodeId } = useParams({ from: '/linodes/$linodeId' });
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const linodeId = Number(_linodeId);
 
@@ -69,29 +62,17 @@ const CloneLanding = () => {
   const configs = _configs ?? [];
   const disks = _disks ?? [];
 
-  /**
-   * ROUTING
-   */
-  const tabs = [
+  const { tabs, handleTabChange, tabIndex } = useTabs([
     // These must correspond to the routes inside the Switch
     {
-      routeName: `${match.url}/configs`,
+      to: '/linodes/$linodeId/clone/configs',
       title: 'Configuration Profiles',
     },
     {
-      routeName: `${match.url}/disks`,
+      to: '/linodes/$linodeId/clone/disks',
       title: 'Disks',
     },
-  ];
-
-  // Helper function for the <Tabs /> component
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
+  ]);
 
   /**
    * STATE MANAGEMENT
@@ -124,7 +105,10 @@ const CloneLanding = () => {
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
   const queryParams = React.useMemo(
-    () => getQueryParamsFromQueryString(location.search),
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
     [location.search]
   );
 
@@ -169,7 +153,7 @@ const CloneLanding = () => {
 
   // The configs we know about in our configSelection state.
   const configsInState = configs.filter((eachConfig) =>
-    state.configSelection.hasOwnProperty(eachConfig.id)
+    Object.prototype.hasOwnProperty.call(state.configSelection, eachConfig.id)
   );
   // The configs that are selected.
   const selectedConfigs = configsInState.filter(
@@ -180,7 +164,7 @@ const CloneLanding = () => {
 
   // The disks we know about in our diskSelection state.
   const disksInState = disks.filter((eachDisk) =>
-    state.diskSelection.hasOwnProperty(eachDisk.id)
+    Object.prototype.hasOwnProperty.call(state.diskSelection, eachDisk.id)
   );
   // The disks that are selected.
   const selectedDisks = disksInState.filter(
@@ -240,8 +224,11 @@ const CloneLanding = () => {
     request()
       .then(() => {
         setSubmitting(false);
-        resetEventsPolling();
-        history.push(`/linodes/${linodeId}/configurations`);
+        checkForNewEvents();
+        navigate({
+          to: '/linodes/$linodeId/configurations',
+          params: { linodeId },
+        });
       })
       .catch((errors) => {
         setSubmitting(false);
@@ -250,7 +237,10 @@ const CloneLanding = () => {
   };
 
   const handleCancel = () => {
-    history.push(`/linodes/${linodeId}/configurations`);
+    navigate({
+      to: '/linodes/$linodeId/configurations',
+      params: { linodeId },
+    });
   };
 
   // Cast the results of the Immer state to a mutable data structure.
@@ -269,10 +259,17 @@ const CloneLanding = () => {
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
           container
-          justifyContent="space-between"
-          sx={{ marginTop: theme.spacing(1) }}
+          sx={{
+            justifyContent: 'space-between',
+            marginTop: theme.spacing(1),
+          }}
         >
-          <Grid md={7} xs={12}>
+          <Grid
+            size={{
+              md: 7,
+              xs: 12,
+            }}
+          >
             <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
@@ -284,21 +281,15 @@ const CloneLanding = () => {
                 Clone
               </Typography>
 
-              <Tabs
-                index={Math.max(
-                  tabs.findIndex((tab) => matches(tab.routeName)),
-                  0
-                )}
-                onChange={navToURL}
-              >
-                <TabLinkList tabs={tabs} />
+              <Tabs index={tabIndex} onChange={handleTabChange}>
+                <TanStackTabLinkList tabs={tabs} />
                 <TabPanels>
                   <SafeTabPanel index={0}>
                     <Box>
                       <Configs
+                        configs={configsInState}
                         // Cast the results of the Immer state to a mutable data structure.
                         configSelection={castDraft(state.configSelection)}
-                        configs={configsInState}
                         handleSelect={toggleConfig}
                       />
                     </Box>
@@ -314,9 +305,9 @@ const CloneLanding = () => {
                       </Notice>
                       <div>
                         <Disks
+                          disks={disksInState}
                           // Cast the results of the Immer state to a mutable data structure.
                           diskSelection={castDraft(state.diskSelection)}
-                          disks={disksInState}
                           handleSelect={toggleDisk}
                           selectedConfigIds={selectedConfigIds}
                         />
@@ -327,28 +318,13 @@ const CloneLanding = () => {
               </Tabs>
             </Paper>
           </Grid>
-          <Grid md={4} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              xs: 12,
+            }}
+          >
             <Details
-              selectedConfigs={attachAssociatedDisksToConfigs(
-                selectedConfigs,
-                disks
-              )}
-              // cloning the config takes precedence.
-              selectedDisks={disksInState.filter((disk) => {
-                return (
-                  // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected &&
-                  // ... AND it's associated configs are NOT selected
-                  intersection(
-                    pathOr(
-                      [],
-                      [disk.id, 'associatedConfigIds'],
-                      state.diskSelection
-                    ),
-                    selectedConfigIds
-                  ).length === 0
-                );
-              })}
               // If a selected disk is associated with a selected config, we
               // don't want it to appear in the Details component, since
               clearAll={clearAll}
@@ -360,6 +336,22 @@ const CloneLanding = () => {
               handleToggleConfig={toggleConfig}
               handleToggleDisk={toggleDisk}
               isSubmitting={state.isSubmitting}
+              selectedConfigs={attachAssociatedDisksToConfigs(
+                selectedConfigs,
+                disks
+              )}
+              // cloning the config takes precedence.
+              selectedDisks={disksInState.filter((disk) => {
+                return (
+                  // This disk has been individually selected ...
+                  // ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected &&
+                  (
+                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                  ).filter((num) => selectedConfigIds.includes(num)).length ===
+                    0
+                );
+              })}
               selectedLinodeId={state.selectedLinodeId}
               selectedLinodeRegion={selectedLinodeRegion}
               thisLinodeRegion={linode?.region ?? ''}
@@ -370,5 +362,3 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
-
-export default CloneLanding;

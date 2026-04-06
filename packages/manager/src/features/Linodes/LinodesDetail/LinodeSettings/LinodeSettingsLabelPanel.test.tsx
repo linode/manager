@@ -1,8 +1,8 @@
+import { linodeFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
@@ -10,9 +10,9 @@ import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
 describe('LinodeSettingsLabelPanel', () => {
   it('should render and the linode label', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
-        return res(
-          ctx.json(linodeFactory.build({ id: 1, label: 'my-linode-1' }))
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ id: 1, label: 'my-linode-1' })
         );
       })
     );
@@ -29,18 +29,18 @@ describe('LinodeSettingsLabelPanel', () => {
 
     await waitFor(() => {
       // Verify the input contains the Linode's label when it loads it
-      expect(input).toHaveAttribute('value', 'my-linode-1');
+      expect(input).toHaveValue('my-linode-1');
     });
 
     // Verify that the save button is disabled (because the label is unmodified)
-    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
   it('should disable the input if the `isReadOnly` prop is true', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
-        return res(
-          ctx.json(linodeFactory.build({ id: 1, label: 'my-linode-1' }))
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ id: 1, label: 'my-linode-1' })
         );
       })
     );

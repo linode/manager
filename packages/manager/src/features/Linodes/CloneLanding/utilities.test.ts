@@ -2,8 +2,6 @@ import { disks, extDisk2, extDisk3, extDiskCopy } from 'src/__data__/disks';
 import { linodeConfig2, linodeConfigs } from 'src/__data__/linodeConfigs';
 
 import {
-  CloneLandingState,
-  ExtendedConfig,
   attachAssociatedDisksToConfigs,
   createConfigDiskSelection,
   getAllDisks,
@@ -11,6 +9,8 @@ import {
   getEstimatedCloneTime,
   curriedCloneLandingReducer as reducer,
 } from './utilities';
+
+import type { CloneLandingState, ExtendedConfig } from './utilities';
 
 describe('utilities', () => {
   describe('reducer', () => {
@@ -283,8 +283,7 @@ describe('utilities', () => {
       const allDisks = getAllDisks([extendedConfig], disks);
       expect(allDisks).toHaveLength(2);
       expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
-        19040623,
-        19040624,
+        19040623, 19040624,
       ]);
     });
 
@@ -292,8 +291,7 @@ describe('utilities', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDiskCopy]);
       expect(allDisks).toHaveLength(2);
       expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
-        19040623,
-        19040624,
+        19040623, 19040624,
       ]);
     });
 
@@ -301,9 +299,7 @@ describe('utilities', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDisk2]);
       expect(allDisks).toHaveLength(3);
       expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
-        19040623,
-        19040624,
-        19040625,
+        19040623, 19040624, 19040625,
       ]);
     });
   });

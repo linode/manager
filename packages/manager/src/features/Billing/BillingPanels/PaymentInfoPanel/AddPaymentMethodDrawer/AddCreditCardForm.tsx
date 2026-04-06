@@ -1,20 +1,20 @@
-import { addPaymentMethod } from '@linode/api-v4/lib';
+import { useAddPaymentMethodMutation } from '@linode/queries';
+import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
-import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import NumberFormat, { NumberFormatProps } from 'react-number-format';
-import { useQueryClient } from 'react-query';
+import NumberFormat from 'react-number-format';
+import type { NumberFormatProps } from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+
+import type { InputBaseComponentProps } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   error: {
@@ -46,13 +46,13 @@ interface Values {
   zip: string;
 }
 
-const AddCreditCardForm = (props: Props) => {
+export const AddCreditCardForm = (props: Props) => {
   const { disabled, onClose } = props;
   const [error, setError] = React.useState<string>();
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
   const expiryRef = React.useRef<HTMLInputElement>(null);
+  const { mutateAsync: addPaymentMethod } = useAddPaymentMethodMutation();
 
   const addCreditCard = async (
     { card_number, cvv, expiry_month, expiry_year }: Values,
@@ -81,7 +81,6 @@ const AddCreditCardForm = (props: Props) => {
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
       });
-      queryClient.invalidateQueries('account-payment-methods-all');
       onClose();
     } catch (errors) {
       handleAPIErrors(errors, setFieldError, setError);
@@ -154,34 +153,47 @@ const AddCreditCardForm = (props: Props) => {
   };
 
   const disableInput = isSubmitting || disabled;
+  const { data: permissions } = usePermissions('account', [
+    'create_payment_method',
+  ]);
 
   const disableAddButton =
-    disabled || !values.card_number || !values.cvv || !values.expiry_month;
+    disabled ||
+    !values.card_number ||
+    !values.cvv ||
+    !values.expiry_month ||
+    !permissions?.create_payment_method;
 
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <Grid className={classes.error} xs={12}>
+        <Grid className={classes.error} size={12}>
           <Notice text={error} variant="error" />
         </Grid>
       )}
       <Grid container spacing={1}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
-            InputProps={{
-              inputComponent: creditCardField,
-            }}
             disabled={disableInput}
             error={touched.card_number && Boolean(errors.card_number)}
             errorText={touched.card_number ? errors.card_number : undefined}
+            InputProps={{
+              inputComponent: creditCardField,
+            }}
             label="Credit Card Number"
             name="card_number"
             onChange={(e) => setFieldValue('card_number', e.target.value)}
             value={values.card_number}
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12,
+          }}
+        >
           <TextField
+            disabled={disableInput}
             error={
               (touched.expiry_month || touched.expiry_year) &&
               Boolean(errors.expiry_month || errors.expiry_year)
@@ -191,7 +203,6 @@ const AddCreditCardForm = (props: Props) => {
                 ? errors.expiry_month || errors.expiry_year
                 : undefined
             }
-            disabled={disableInput}
             inputRef={expiryRef}
             label="Expiration Date"
             name="expiry"
@@ -199,7 +210,12 @@ const AddCreditCardForm = (props: Props) => {
             placeholder="MM/YY"
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12,
+          }}
+        >
           <TextField
             disabled={disableInput}
             error={touched.cvv && Boolean(errors.cvv)}
@@ -223,7 +239,6 @@ const AddCreditCardForm = (props: Props) => {
           label: 'Cancel',
           onClick: onClose,
         }}
-        style={{ marginTop: 0 }}
       />
     </form>
   );
@@ -245,6 +260,8 @@ const creditCardField = ({
   return (
     <NumberFormat
       {...other}
+      format="#### #### #### #######"
+      getInputRef={inputRef}
       onValueChange={(values) => {
         onChange({
           target: {
@@ -252,10 +269,6 @@ const creditCardField = ({
           },
         });
       }}
-      format="#### #### #### #######"
-      getInputRef={inputRef}
     />
   );
 };
-
-export default AddCreditCardForm;

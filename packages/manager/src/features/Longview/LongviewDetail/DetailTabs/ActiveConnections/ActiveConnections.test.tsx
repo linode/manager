@@ -4,6 +4,7 @@ import { longviewPortFactory } from 'src/factories/longviewService';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ActiveConnections } from './ActiveConnections';
+
 import type { TableProps } from './ActiveConnections';
 
 const mockConnections = longviewPortFactory.buildList(10);
@@ -14,7 +15,7 @@ const props: TableProps = {
 };
 
 describe('ActiveConnections (and by extension ListeningServices)', () => {
-  it('should render a table with one row per active connection', () => {
+  it('should render a table with one row per active connection', async () => {
     const { queryAllByTestId } = renderWithTheme(
       <ActiveConnections {...props} />
     );
@@ -23,21 +24,21 @@ describe('ActiveConnections (and by extension ListeningServices)', () => {
     );
   });
 
-  it('should render a loading state', () => {
+  it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
       <ActiveConnections {...props} connectionsLoading={true} />
     );
     getByTestId('table-row-loading');
   });
 
-  it('should render an empty state', () => {
+  it('should render an empty state', async () => {
     const { getByTestId } = renderWithTheme(
       <ActiveConnections {...props} connections={[]} />
     );
     getByTestId('table-row-empty');
   });
 
-  it('should render an error state', () => {
+  it('should render an error state', async () => {
     const { getByTestId, getByText } = renderWithTheme(
       <ActiveConnections
         {...props}

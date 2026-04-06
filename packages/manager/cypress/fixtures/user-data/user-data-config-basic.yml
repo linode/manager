@@ -1,0 +1,11 @@
+#cloud-config
+
+# Sample cloud-init config data file.
+# See also: https://cloudinit.readthedocs.io/en/latest/explanation/format.html
+
+groups:
+  - foo-group
+
+users:
+  - name: foo
+    primary_group: foo-group

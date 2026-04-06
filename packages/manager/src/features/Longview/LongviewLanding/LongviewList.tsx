@@ -1,17 +1,20 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview/types';
+import {
+  Box,
+  CircleProgress,
+  ErrorState,
+  LinkButton,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { Props as LVProps } from 'src/containers/longview.container';
 
 import { LongviewListRows } from './LongviewListRows';
+
+import type { LongviewClient } from '@linode/api-v4/lib/longview/types';
+import type { Props as LVProps } from 'src/containers/longview.container';
 
 type LongviewProps = Omit<
   LVProps,
@@ -22,7 +25,7 @@ type LongviewProps = Omit<
   | 'updateLongviewClient'
 >;
 
-interface Props {
+interface Props extends LongviewProps {
   createLongviewClient: () => void;
   filteredData: LongviewClient[];
   loading: boolean;
@@ -34,9 +37,7 @@ interface Props {
   userCanCreateLongviewClient: boolean;
 }
 
-type CombinedProps = Props & LongviewProps;
-
-export const LongviewList = React.memo((props: CombinedProps) => {
+export const LongviewList = React.memo((props: Props) => {
   const {
     createLongviewClient,
     filteredData,
@@ -92,9 +93,9 @@ export const LongviewList = React.memo((props: CombinedProps) => {
           {userCanCreateLongviewClient ? (
             <React.Fragment>
               You have no Longview clients configured.{' '}
-              <StyledLinkButton onClick={createLongviewClient}>
+              <LinkButton onClick={createLongviewClient}>
                 Click here to add one.
-              </StyledLinkButton>
+              </LinkButton>
             </React.Fragment>
           ) : (
             'You have no Longview clients configured.'

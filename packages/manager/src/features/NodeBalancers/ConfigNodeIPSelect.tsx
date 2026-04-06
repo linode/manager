@@ -1,96 +1,122 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Box } from '@mui/material';
-import * as React from 'react';
+import { Autocomplete } from '@linode/ui';
+import React, { useMemo } from 'react';
 
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { privateIPRegex } from 'src/utilities/ipUtils';
+import { useGetLinodeIPAndVPCData } from 'src/hooks/useDataForLinodesInVPC';
 
-import type { TextFieldProps } from 'src/components/TextField';
+import {
+  getPrivateIPOptions,
+  getVPCIPOptions,
+} from './ConfigNodeIPSelect.utils';
+import { ConfigNodeOption } from './ConfigNodeOption';
 
-interface ConfigNodeIPSelectProps {
+import type { PrivateIPOption, VPCIPOption } from './ConfigNodeIPSelect.utils';
+
+interface Props {
+  /**
+   * Disables the select
+   */
   disabled?: boolean;
-  errorText?: string;
-  handleChange: (nodeIndex: number, ipAddress: null | string) => void;
+  /**
+   * Validation error text
+   */
+  errorText: string | undefined;
+  /**
+   * Function that is called when the select's value changes
+   */
+  handleChange: (
+    nodeIndex: number,
+    ipAddress: null | string,
+    subnetId?: number
+  ) => void;
+  /**
+   * Override the default input `id` for the select
+   */
   inputId?: string;
-  nodeAddress?: string;
+  /**
+   * The selected private IP address
+   */
+  nodeAddress: string | undefined;
+  /**
+   * The index of the config node in state
+   */
   nodeIndex: number;
-  selectedRegion?: string;
-  textfieldProps: Omit<TextFieldProps, 'label'>;
+  /**
+   * The region for which to load Linodes and to show private IPs
+   * @note IPs won't load until a region is passed
+   */
+  region: string | undefined;
+  /**
+   * The subnetID for which to load the available VPC IPs
+   */
+  subnetId?: number;
+  /**
+   * The vpcId for which to load available VPC IPs
+   */
+  vpcId?: number;
 }
 
-export const ConfigNodeIPSelect = React.memo(
-  (props: ConfigNodeIPSelectProps) => {
-    const {
-      handleChange: _handleChange,
-      inputId,
-      nodeAddress,
-      nodeIndex,
-    } = props;
+export type NodeOption = PrivateIPOption | VPCIPOption;
 
-    const handleChange = (linode: Linode | null) => {
-      if (!linode) {
-        _handleChange(nodeIndex, null);
-      }
+export const ConfigNodeIPSelect = React.memo((props: Props) => {
+  const {
+    disabled,
+    errorText,
+    handleChange,
+    inputId,
+    nodeAddress,
+    nodeIndex,
+    region,
+    vpcId,
+    subnetId,
+  } = props;
 
-      const thisLinodesPrivateIP = linode?.ipv4.find((ipv4) =>
-        ipv4.match(privateIPRegex)
-      );
+  const { linodes, error, isLoading, vpc, vpcIPs } = useGetLinodeIPAndVPCData({
+    region,
+    vpcId,
+  });
 
-      if (!thisLinodesPrivateIP) {
-        return;
-      }
+  let options: NodeOption[] = [];
 
-      /**
-       * we can be sure the selection has a private IP because of the
-       * filterCondition prop in the render method below
-       */
-      _handleChange(nodeIndex, thisLinodesPrivateIP);
-    };
-
-    return (
-      <LinodeSelect
-        noOptionsMessage={`No options - please ensure you have at least 1 Linode
-      with a private IP located in the selected region.`}
-        optionsFilter={(linode) => {
-          /**
-           * if the Linode doesn't have an private IP OR if the Linode
-           * is in a different region that the NodeBalancer, don't show it
-           * in the select dropdown
-           */
-          return (
-            !!linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) &&
-            linode.region === props.selectedRegion
-          );
-        }}
-        renderOption={(linode, selected) => (
-          <>
-            <Box
-              sx={{
-                flexGrow: 1,
-              }}
-            >
-              <strong>
-                {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
-              </strong>
-              <div>{linode.label}</div>
-            </Box>
-            <SelectedIcon visible={selected} />
-          </>
-        )}
-        renderOptionLabel={(linode) =>
-          linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) ?? ''
-        }
-        clearable
-        disabled={props.disabled}
-        errorText={props.errorText}
-        id={inputId}
-        label="IP Address"
-        noMarginTop
-        onSelectionChange={handleChange}
-        placeholder="Enter IP Address"
-        value={(linode) => linode.ipv4.some((ip) => ip === nodeAddress)}
-      />
-    );
+  if (region && !vpcId) {
+    options = getPrivateIPOptions(linodes);
+  } else if (region && vpcId && subnetId) {
+    options = getVPCIPOptions(vpcIPs, linodes, vpc?.subnets);
   }
-);
+
+  const noOptionsText = useMemo(() => {
+    if (!vpcId) {
+      return 'Please ensure you have at least 1 Linode with a private IP located in the selected region.';
+    } else if (vpcId && !subnetId) {
+      return 'Select a subnet within the chosen VPC.';
+    } else return 'The selected subnet must have at least one Linode.';
+  }, [vpcId, subnetId]);
+
+  return (
+    <Autocomplete
+      disabled={disabled}
+      errorText={errorText ?? error?.[0]?.reason}
+      id={inputId}
+      label="IP Address"
+      loading={isLoading}
+      noMarginTop
+      noOptionsText={noOptionsText}
+      onChange={(e, value: NodeOption) =>
+        handleChange(nodeIndex, value?.label ?? null, subnetId)
+      }
+      options={options}
+      placeholder="Enter IP Address"
+      renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+        return (
+          <ConfigNodeOption
+            key={key}
+            listItemProps={rest}
+            option={option}
+            selected={selected}
+          />
+        );
+      }}
+      value={options.find((o) => o.label === nodeAddress) ?? null}
+    />
+  );
+});

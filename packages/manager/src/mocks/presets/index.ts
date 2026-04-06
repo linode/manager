@@ -1,0 +1,67 @@
+import { baselineAccountActivationPreset } from './baseline/accountReview';
+import { baselineApiMaintenanceModePreset } from './baseline/apiMaintenanceMode';
+import { baselineApiOfflinePreset } from './baseline/apiOffline';
+import { baselineApiUnstablePreset } from './baseline/apiUnstable';
+import { baselineCrudPreset } from './baseline/crud';
+import { baselineLegacyPreset } from './baseline/legacy';
+import { baselineNoMocksPreset } from './baseline/noMocks';
+import { customAccountPreset } from './extra/account/customAccount';
+import { customEventsPreset } from './extra/account/customEvents';
+import { customMaintenancePreset } from './extra/account/customMaintenance';
+import { customNotificationsPreset } from './extra/account/customNotifications';
+import { customProfileAndGrantsPreset } from './extra/account/customProfileAndGrants';
+import { managedDisabledPreset } from './extra/account/managedDisabled';
+import { managedEnabledPreset } from './extra/account/managedEnabled';
+import { apiResponseTimePreset } from './extra/api/api';
+import { linodeLimitsPreset } from './extra/limits/linode-limits';
+import { lkeLimitsPreset } from './extra/limits/lke-limits';
+import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
+import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
+import { legacyRegionsPreset } from './extra/regions/legacyRegions';
+import { customUserAccountPermissionsPreset } from './extra/userPermissions/customUserAccountPermissions';
+import { customUserEntityPermissionsPreset } from './extra/userPermissions/customUserEntityPermissions';
+
+import type { MockPresetBaseline, MockPresetExtra } from '../types';
+
+/** The preset that we fall back on if the local storage value is unset or invalid. */
+export const defaultBaselineMockPreset = baselineNoMocksPreset;
+
+/** Baseline mock presets get applied before all other presets, and one must be selected. */
+export const baselineMockPresets: MockPresetBaseline[] = [
+  baselineNoMocksPreset,
+  baselineCrudPreset,
+  baselineLegacyPreset,
+  baselineAccountActivationPreset,
+  baselineApiMaintenanceModePreset,
+  baselineApiOfflinePreset,
+  baselineApiUnstablePreset,
+];
+
+/**
+ * Extra mock presets can be used to conditionally apply extra functionality via mocks.
+ *
+ * ⚠️ The order here is the order shown in the dev tools.
+ * */
+export const extraMockPresets: MockPresetExtra[] = [
+  apiResponseTimePreset,
+  customAccountPreset,
+  customProfileAndGrantsPreset,
+  customEventsPreset,
+  customUserAccountPermissionsPreset,
+  customUserEntityPermissionsPreset,
+  customMaintenancePreset,
+  customNotificationsPreset,
+  linodeLimitsPreset,
+  lkeLimitsPreset,
+  managedEnabledPreset,
+  managedDisabledPreset,
+  coreAndDistributedRegionsPreset,
+  coreOnlyRegionsPreset,
+  legacyRegionsPreset,
+];
+
+/** An array of all mock presets. */
+export const allMockPresets: (MockPresetBaseline | MockPresetExtra)[] = [
+  ...baselineMockPresets,
+  ...extraMockPresets,
+];

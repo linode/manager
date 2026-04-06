@@ -1,9 +1,9 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { DateTime } from 'luxon';
 import md5 from 'md5';
 import { useState } from 'react';
 
-import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { DismissedNotification } from 'src/types/ManagerPreferences';
+import type { DismissedNotification } from '@linode/utilities';
 
 /**
  * Handlers for dismissing notifications and checking if a notification has been dismissed.
@@ -34,11 +34,11 @@ export interface DismissibleNotificationOptions {
   prefix?: string;
 }
 export interface DismissibleNotificationsHook {
+  dismissedNotifications: Record<string, DismissedNotification>;
   dismissNotifications: (
     notifications: unknown[],
     options?: DismissibleNotificationOptions
   ) => void;
-  dismissedNotifications: Record<string, DismissedNotification>;
   hasDismissedNotifications: (
     notifications: unknown[],
     prefix?: string
@@ -46,11 +46,13 @@ export interface DismissibleNotificationsHook {
 }
 
 export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
-  const { data: preferences } = usePreferences();
+  const { data: dismissedNotificationPreferences } = usePreferences(
+    (preferences) => preferences?.dismissed_notifications
+  );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const [dismissed, setDismissed] = useState(false);
 
-  const dismissedNotifications = preferences?.dismissed_notifications ?? {};
+  const dismissedNotifications = dismissedNotificationPreferences ?? {};
 
   const dismissNotifications = (
     _notifications: unknown[],
@@ -108,7 +110,7 @@ export const updateDismissedNotifications = (
   notificationsToDismiss: unknown[],
   options: DismissibleNotificationOptions
 ) => {
-  const newNotifications = {};
+  const newNotifications: Record<string, DismissedNotification> = {};
   notificationsToDismiss.forEach((thisNotification) => {
     const hashKey = getHashKey(thisNotification, options.prefix);
     newNotifications[hashKey] = {

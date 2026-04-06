@@ -1,7 +1,8 @@
 import { authenticate } from 'support/api/authentication';
-import { stackScriptFactory } from 'src/factories';
 import { mockGetStackScripts } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+
+import { stackScriptFactory } from 'src/factories';
 
 authenticate();
 describe('Display stackscripts', () => {
@@ -15,7 +16,8 @@ describe('Display stackscripts', () => {
     cy.wait('@getStackScripts');
 
     cy.findByText('Automate deployment scripts').should('be.visible');
-    cy.get('[data-qa-stackscript-empty-msg="true"]')
+
+    cy.get('[data-qa-placeholder-container="resources-section"]')
       .should('be.visible')
       .within(() => {
         ui.button
@@ -36,7 +38,7 @@ describe('Display stackscripts', () => {
     cy.wait('@getStackScripts');
 
     stackScripts.forEach((stackScript) => {
-      cy.get(`[aria-label="${stackScript.label}"]`)
+      cy.get(`[data-qa-table-row="${stackScript.label}"]`)
         .closest('tr')
         .within(() => {
           cy.findByText(stackScript.deployments_total).should('be.visible');

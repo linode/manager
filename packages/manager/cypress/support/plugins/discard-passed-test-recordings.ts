@@ -1,7 +1,6 @@
-// @ts-expect-error for some reason, @node/types is v12 and it probably doesn't have this.
 import fs from 'fs/promises';
 
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 /**
  * Delete recordings for any specs that passed without requiring any

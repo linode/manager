@@ -1,12 +1,11 @@
-import { SxProps } from '@mui/system';
+import { Button, LinkButton } from '@linode/ui';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
-import type { ButtonType } from 'src/components/Button/Button';
+import type { ButtonType } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface DownloadCSVProps {
   buttonType?: 'styledLink' | ButtonType;
@@ -14,10 +13,13 @@ interface DownloadCSVProps {
   className?: string;
   csvRef?: React.RefObject<any>;
   data: unknown[];
+  dataPendoId?: string;
+  disabled?: boolean;
   filename: string;
   headers: { key: string; label: string }[];
+  iconStyles?: SxProps<Theme>;
   onClick: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text?: string;
 }
 
@@ -35,20 +37,34 @@ export const DownloadCSV = ({
   className,
   csvRef,
   data,
+  dataPendoId,
   filename,
   headers,
   onClick,
   sx,
   text = 'Download CSV',
+  disabled,
+  iconStyles,
 }: DownloadCSVProps) => {
   const renderButton =
     buttonType === 'styledLink' ? (
-      <StyledLinkButton onClick={onClick} sx={sx}>
-        <DownloadIcon />
+      <LinkButton
+        data-pendo-id={dataPendoId}
+        disabled={disabled}
+        onClick={onClick}
+        sx={sx}
+      >
+        <DownloadIcon style={iconStyles} />
         {text}
-      </StyledLinkButton>
+      </LinkButton>
     ) : (
-      <Button buttonType={buttonType} onClick={onClick} sx={sx}>
+      <Button
+        buttonType={buttonType}
+        data-pendo-id={dataPendoId}
+        disabled={disabled}
+        onClick={onClick}
+        sx={sx}
+      >
         {text}
       </Button>
     );
@@ -64,6 +80,7 @@ export const DownloadCSV = ({
         filename={filename}
         headers={headers}
         ref={csvRef}
+        style={{ display: 'none' }}
         tabIndex={-1}
       />
       {renderButton}
@@ -86,7 +103,7 @@ export const cleanCSVData = (data: any): any => {
 
   /** if it's an object, recursively sanitize each key value pair */
   if (typeof data === 'object') {
-    return Object.keys(data).reduce((acc, eachKey) => {
+    return Object.keys(data).reduce<{ [key: string]: any }>((acc, eachKey) => {
       acc[eachKey] = cleanCSVData(data[eachKey]);
       return acc;
     }, {});

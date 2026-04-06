@@ -1,6 +1,5 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material';
-
-import { Typography } from 'src/components/Typography';
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
@@ -8,20 +7,20 @@ export const StyledTypography = styled(Typography, {
   '&:hover': {
     textDecoration: 'underline',
   },
-  color: theme.textColors.tableHeader,
-  fontSize: '1.125rem',
+  fontSize: '1rem',
   lineHeight: 'normal',
   textTransform: 'capitalize',
   whiteSpace: 'nowrap',
+  color: theme.tokens.component.Breadcrumb.LastItem.Text,
 }));
 
 export const StyledSlashTypography = styled(Typography, {
   label: 'StyledSlashTypography',
 })(({ theme }) => ({
   color: theme.textColors.tableHeader,
-  fontSize: 20,
-  marginLeft: 2,
-  marginRight: 2,
+  fontSize: 16,
+  marginLeft: 4,
+  marginRight: 4,
 }));
 
 export const StyledDiv = styled('div', { label: 'StyledDiv' })({

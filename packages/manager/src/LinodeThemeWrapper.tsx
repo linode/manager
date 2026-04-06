@@ -1,14 +1,9 @@
-import { Theme, ThemeProvider } from '@mui/material/styles';
-import { StyledEngineProvider } from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ThemeName } from './foundations/themes';
 import { themes, useColorMode } from './utilities/theme';
 
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
+import type { ThemeName } from '@linode/ui';
 
 interface Props {
   children: React.ReactNode;
@@ -20,11 +15,20 @@ export const LinodeThemeWrapper = (props: Props) => {
   const { children, theme: themeOverride } = props;
   const { colorMode } = useColorMode();
 
+  const activeTheme = themeOverride ?? colorMode;
+
+  // Set custom data attribute on document body for third-party tools (like Pendo) to detect theme
+  // Pendo can use this as a selector: body[data-theme="dark"] or body[data-theme="light"]
+  React.useEffect(() => {
+    document.body.setAttribute('data-theme', activeTheme);
+    return () => {
+      document.body.removeAttribute('data-theme');
+    };
+  }, [activeTheme]);
+
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themes[themeOverride ?? colorMode]}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={themes[activeTheme]}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };

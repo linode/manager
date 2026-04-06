@@ -4,20 +4,22 @@ interface ResourcesLink {
   to: string;
 }
 
-export interface linkAnalyticsEvent {
+export interface LinkAnalyticsEvent {
   action: string;
   category: string;
 }
 
 export interface ResourcesHeaders {
   description: string;
+  logo?: React.ReactNode;
   subtitle: string;
   title: string;
 }
 
 export interface ResourcesLinks {
-  linkAnalyticsEvent: linkAnalyticsEvent;
+  linkAnalyticsEvent: LinkAnalyticsEvent;
   links: ResourcesLink[];
+  onClick?: () => void;
 }
 
 export interface ResourcesLinkSection {

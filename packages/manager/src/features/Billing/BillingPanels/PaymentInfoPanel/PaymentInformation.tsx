@@ -1,14 +1,16 @@
-import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { deletePaymentMethod } from '@linode/api-v4/lib/account';
+import { accountQueries } from '@linode/queries';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import { queryKey } from 'src/queries/accountPayment';
+import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -16,33 +18,43 @@ import {
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
-import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
+import { AddPaymentMethodDrawer } from './AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
+import type { Profile } from '@linode/api-v4';
+import type { PaymentMethod } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { BillingSearch } from 'src/routes/billing';
 interface Props {
   error?: APIError[] | null;
   isAkamaiCustomer: boolean;
   loading: boolean;
   paymentMethods: PaymentMethod[] | undefined;
+  profile: Profile | undefined;
 }
 
 const PaymentInformation = (props: Props) => {
-  const { error, isAkamaiCustomer, loading, paymentMethods } = props;
+  const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
+  const search = useSearch({
+    from: '/billing',
+  });
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
-
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] =
+    React.useState<boolean>(false);
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
-  const [
-    deletePaymentMethodSelection,
-    setDeletePaymentMethodSelection,
-  ] = React.useState<PaymentMethod | undefined>();
-  const { replace } = useHistory();
+  const [deletePaymentMethodSelection, setDeletePaymentMethodSelection] =
+    React.useState<PaymentMethod | undefined>();
   const queryClient = useQueryClient();
+  const addPaymentMethodRouteMatch = search.action === 'add-payment-method';
 
-  const drawerLink = '/account/billing/add-payment-method';
-  const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
+  const isChildUserType = profile?.user_type === 'child';
+
+  const { data: permissions } = usePermissions('account', [
+    'create_payment_method',
+  ]);
+
+  const isReadOnly = !permissions?.create_payment_method || isChildUserType;
 
   const doDelete = () => {
     setDeleteLoading(true);
@@ -50,7 +62,9 @@ const PaymentInformation = (props: Props) => {
       .then(() => {
         setDeleteLoading(false);
         closeDeleteDialog();
-        queryClient.invalidateQueries(`${queryKey}-all`);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.paymentMethods.queryKey,
+        });
       })
       .catch((e: APIError[]) => {
         setDeleteLoading(false);
@@ -64,8 +78,14 @@ const PaymentInformation = (props: Props) => {
 
   const closeAddDrawer = React.useCallback(() => {
     setAddDrawerOpen(false);
-    replace('/account/billing');
-  }, [replace]);
+    navigate({
+      to: '/billing',
+      search: (prev: BillingSearch) => ({
+        ...prev,
+        action: prev.action === 'add-payment-method' ? undefined : prev.action,
+      }),
+    });
+  }, [navigate]);
 
   const openDeleteDialog = (method: PaymentMethod) => {
     setDeleteError(undefined);
@@ -80,26 +100,51 @@ const PaymentInformation = (props: Props) => {
   React.useEffect(() => {
     if (addPaymentMethodRouteMatch) {
       openAddDrawer();
+    } else {
+      closeAddDrawer();
     }
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid md={6} xs={12}>
+    <Grid
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-billing-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Payment Methods</Typography>
           {!isAkamaiCustomer ? (
             <BillingActionButton
               data-testid="payment-info-add-payment-method"
-              onClick={() => replace(drawerLink)}
+              disabled={isReadOnly}
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+              onClick={() =>
+                navigate({
+                  to: '/billing',
+                  search: (prev) => ({
+                    ...prev,
+                    action: 'add-payment-method',
+                  }),
+                })
+              }
+              tooltipText={getRestrictedResourceText({
+                includeContactInfo: false,
+                isChildUserType,
+                resourceType: 'Account',
+              })}
             >
-              Add Payment Method
+              {ADD_PAYMENT_METHOD}
             </BillingActionButton>
           ) : null}
         </BillingBox>
         {!isAkamaiCustomer ? (
           <PaymentMethods
             error={error}
+            isChildUser={isChildUserType}
             loading={loading}
             openDeleteDialog={openDeleteDialog}
             paymentMethods={paymentMethods}

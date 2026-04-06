@@ -1,10 +1,5 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { TableRow, TableRowProps } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
-
-type StyledDisabledTableRowProps = Pick<TableRowProps, 'disabled'>;
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
@@ -13,24 +8,10 @@ export const StyledTypography = styled(Typography, {
     color: theme.textColors.linkActiveLight,
   },
   '& a:hover': {
-    color: '#3683dc',
+    color: theme.tokens.color.Ultramarine[70],
   },
   '& p': {
-    fontFamily: '"LatoWebBold", sans-serif',
+    font: theme.font.bold,
   },
   fontSize: '0.9em',
-}));
-
-export const StyledDisabledTableRow = styled(TableRow, {
-  label: 'StyledDisabledTableRow',
-  shouldForwardProp: omittedProps(['disabled']),
-})<StyledDisabledTableRowProps>(({ theme, ...props }) => ({
-  ...(props.disabled && {
-    backgroundColor: theme.bg.tableHeader,
-    cursor: 'not-allowed',
-    opacity: 0.4,
-  }),
-  '&:focus-within': {
-    backgroundColor: theme.bg.lightBlue1,
-  },
 }));

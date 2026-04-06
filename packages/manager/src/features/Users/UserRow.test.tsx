@@ -1,8 +1,8 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -16,7 +16,7 @@ import { UserRow } from './UserRow';
 beforeAll(() => mockMatchMedia());
 
 describe('UserRow', () => {
-  it('renders a username and email', () => {
+  it('renders a username and email', async () => {
     const user = accountUserFactory.build();
 
     const { getByText } = renderWithTheme(
@@ -26,7 +26,8 @@ describe('UserRow', () => {
     expect(getByText(user.username)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
   });
-  it('renders "Full" if the user is unrestricted', () => {
+
+  it('renders "Full" if the user is unrestricted', async () => {
     const user = accountUserFactory.build({ restricted: false });
 
     const { getByText } = renderWithTheme(
@@ -35,7 +36,8 @@ describe('UserRow', () => {
 
     expect(getByText('Full')).toBeVisible();
   });
-  it('renders "Limited" if the user is restricted', () => {
+
+  it('renders "Limited" if the user is restricted', async () => {
     const user = accountUserFactory.build({ restricted: true });
 
     const { getByText } = renderWithTheme(
@@ -44,7 +46,111 @@ describe('UserRow', () => {
 
     expect(getByText('Limited')).toBeVisible();
   });
-  it('renders "Never" if last_login is null', () => {
+
+  it('renders "Enabled" if a user on an active parent account has Child Account Access', async () => {
+    // Mock the additional user on the parent account.
+    const user = accountUserFactory.build();
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: true } })
+        );
+      }),
+      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
+    );
+    expect(await findByText('Enabled')).toBeVisible();
+  });
+
+  it('renders "Disabled" if a user on an active parent account does not have Child Account Access', async () => {
+    // Mock the additional user on the parent account.
+    const user = accountUserFactory.build();
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: false } })
+        );
+      }),
+      // Mock the active profile, which must be of `parent` user type to see the Child Account Access column.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'parent' }));
+      })
+    );
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
+    );
+    expect(await findByText('Disabled')).toBeVisible();
+  });
+
+  it('does not render the Child Account Access column for an active non-parent user', async () => {
+    // Mock the additional user on the parent account.
+    const user = accountUserFactory.build();
+
+    server.use(
+      // Mock the grants of the additional user on the parent account.
+      http.get('*/account/users/*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({ global: { child_account_access: true } })
+        );
+      }),
+      // Mock the active profile, which must NOT be of `parent` user type to hide the Child Account Access column.
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({ user_type: 'default' })
+        );
+      })
+    );
+
+    const { queryByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={user} />)
+    );
+    expect(queryByText('Enabled')).not.toBeInTheDocument();
+  });
+
+  it('renders only a username, email, and account access status for a Proxy user', async () => {
+    const mockLogin = {
+      login_datetime: '2022-02-09T16:19:26',
+    };
+    const proxyUser = accountUserFactory.build({
+      email: 'proxy@proxy.com',
+      last_login: mockLogin,
+      restricted: true,
+      user_type: 'proxy',
+      username: 'proxyUsername',
+    });
+
+    server.use(
+      // Mock the active profile for the child account.
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ user_type: 'child' }));
+      })
+    );
+
+    const { findByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />)
+    );
+
+    // Renders Username, Email, and Account Access fields for a proxy user.
+    expect(await findByText('proxyUsername')).toBeInTheDocument();
+    expect(await findByText('proxy@proxy.com')).toBeInTheDocument();
+    expect(await findByText('Limited')).toBeInTheDocument();
+
+    // Does not render the Last Login for a proxy user.
+    expect(queryByText('2022-02-09T16:19:26')).not.toBeInTheDocument();
+  });
+
+  it('renders "Never" if last_login is null', async () => {
     const user = accountUserFactory.build({ last_login: null });
 
     const { getByText } = renderWithTheme(
@@ -56,8 +162,8 @@ describe('UserRow', () => {
   it('renders a timestamp of the last_login if it was successful', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       })
     );
 
@@ -79,8 +185,8 @@ describe('UserRow', () => {
   it('renders a timestamp and "Failed" of the last_login if it was failed', async () => {
     // Because we are unit testing a timestamp, set our timezone to UTC
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(ctx.json(profileFactory.build({ timezone: 'utc' })));
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
       })
     );
 

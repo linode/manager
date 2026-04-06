@@ -1,4 +1,5 @@
 import { createPersonalAccessTokenSchema } from '@linode/validation/lib/profile.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,8 +8,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Token, TokenRequest } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { Token, TokenRequest } from './types';
 
 /**
  * getPersonalAccessTokens
@@ -21,7 +23,7 @@ export const getPersonalAccessTokens = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/profile/tokens`)
+    setURL(`${API_ROOT}/profile/tokens`),
   );
 
 /**
@@ -35,7 +37,7 @@ export const getPersonalAccessTokens = (params?: Params, filters?: Filter) =>
 export const getPersonalAccessToken = (id: number) =>
   Request<Token>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/profile/tokens/${encodeURIComponent(id)}`)
+    setURL(`${API_ROOT}/profile/tokens/${encodeURIComponent(id)}`),
   );
 
 /**
@@ -59,7 +61,7 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
   Request<Token>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tokens`),
-    setData(data, createPersonalAccessTokenSchema)
+    setData(data, createPersonalAccessTokenSchema),
   );
 
 /**
@@ -75,12 +77,12 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
  */
 export const updatePersonalAccessToken = (
   tokenId: number,
-  data: Partial<TokenRequest>
+  data: Partial<TokenRequest>,
 ) =>
   Request<Token>(
     setURL(`${API_ROOT}/profile/tokens/${encodeURIComponent(tokenId)}`),
     setMethod('PUT'),
-    setData(data, createPersonalAccessTokenSchema)
+    setData(data, createPersonalAccessTokenSchema),
   );
 
 /**
@@ -94,5 +96,5 @@ export const updatePersonalAccessToken = (
 export const deletePersonalAccessToken = (tokenId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/profile/tokens/${encodeURIComponent(tokenId)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );

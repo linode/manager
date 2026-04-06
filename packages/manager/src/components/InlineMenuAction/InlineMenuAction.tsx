@@ -1,15 +1,22 @@
-/* eslint-disable react/jsx-no-useless-fragment */
+import { StyledActionButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { StyledActionButton } from 'src/components/Button/StyledActionButton';
+import { Link } from 'src/components/Link';
+
+import type { SxProps } from '@mui/material/styles';
 
 interface InlineMenuActionProps {
   /** Required action text */
   actionText: string;
+  /** Optional aria label */
+  'aria-label'?: string;
+  /** Optional height when displayed as a button */
+  buttonHeight?: number;
   /** Optional class names */
   className?: string;
+  /** Optional test id */
+  'data-testid'?: string;
   /** Optional disabled */
   disabled?: boolean;
   /** Optional href */
@@ -18,6 +25,8 @@ interface InlineMenuActionProps {
   loading?: boolean;
   /** Optional onClick handler */
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  /** Optional custom styles */
+  sx?: SxProps;
   /** Optional tooltip text for help icon */
   tooltip?: string;
   /** Optional tooltip event handler for sending analytics */
@@ -27,18 +36,21 @@ interface InlineMenuActionProps {
 export const InlineMenuAction = (props: InlineMenuActionProps) => {
   const {
     actionText,
+    buttonHeight,
     className,
     disabled,
     href,
     loading,
     onClick,
+    sx,
     tooltip,
     tooltipAnalyticsEvent,
+    ...rest
   } = props;
 
   if (href) {
     return (
-      <StyledLink className={className} to={href}>
+      <StyledLink className={className} sx={sx} to={href}>
         <span>{actionText}</span>
       </StyledLink>
     );
@@ -47,12 +59,17 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
   return (
     <StyledActionButton
       // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
-      buttonType="secondary"
+      buttonType="primary"
       disabled={disabled}
       loading={loading}
       onClick={onClick}
+      sx={{
+        ...sx,
+        height: buttonHeight !== undefined ? buttonHeight : undefined,
+      }}
       tooltipAnalyticsEvent={tooltipAnalyticsEvent}
       tooltipText={tooltip}
+      {...rest}
     >
       {actionText}
     </StyledActionButton>

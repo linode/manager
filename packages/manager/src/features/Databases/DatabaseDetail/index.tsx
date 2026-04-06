@@ -1,48 +1,101 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { matchPath, useHistory, useParams } from 'react-router-dom';
-
-import { CircleProgress } from 'src/components/CircleProgress';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import {
   useDatabaseMutation,
   useDatabaseQuery,
   useDatabaseTypesQuery,
-} from 'src/queries/databases';
+} from '@linode/queries';
+import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { useEditableLabelState } from '@linode/utilities';
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
+import * as React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { DatabaseDetailContext } from 'src/features/Databases/DatabaseDetail/DatabaseDetailContext';
+import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
+import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useTabs } from 'src/hooks/useTabs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
-const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
-const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const DatabaseDetail = () => {
-  const history = useHistory();
+  const flags = useFlags();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const { databaseId, engine } = useParams<{
-    databaseId: string;
-    engine: Engine;
-  }>();
+  const { databaseId, engine } = useParams({
+    from: '/databases/$engine/$databaseId',
+  });
 
   const id = Number(databaseId);
 
   const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
-  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: database?.platform,
+  });
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const isDatabasesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'database',
+    id,
+  });
+
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
+
+  const isDefault = database?.platform === 'rdbms-default';
+  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isVPCEnabled = isDefault && flags.databaseVpc;
+  const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
+
+  const settingsTabPath = `/databases/$engine/$databaseId/settings`;
+
+  const { tabs, tabIndex, handleTabChange } = useTabs([
+    {
+      to: `/databases/$engine/$databaseId/summary`,
+      title: 'Summary',
+    },
+    {
+      to: `/databases/$engine/$databaseId/metrics`,
+      title: 'Metrics',
+      hide: !isMonitorEnabled,
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+    },
+    {
+      to: `/databases/$engine/$databaseId/networking`,
+      title: 'Networking',
+      hide: !isVPCEnabled,
+    },
+    {
+      to: `/databases/$engine/$databaseId/backups`,
+      title: 'Backups',
+    },
+    {
+      to: `/databases/$engine/$databaseId/resize`,
+      title: 'Resize',
+      hide: !flags.databaseResize,
+    },
+    {
+      to: settingsTabPath,
+      title: 'Settings',
+    },
+    {
+      to: `/databases/$engine/$databaseId/configs`,
+      title: 'Advanced Configuration',
+      hide: !isAdvancedConfigEnabled,
+    },
+  ]);
 
   if (error) {
     return (
@@ -54,6 +107,16 @@ export const DatabaseDetail = () => {
     );
   }
 
+  if (location.pathname === `/databases/${engine}/${databaseId}`) {
+    navigate({
+      to: `/databases/$engine/$databaseId/summary`,
+      params: {
+        engine,
+        databaseId,
+      },
+    });
+  }
+
   if (isLoading || isTypesLoading) {
     return <CircleProgress />;
   }
@@ -61,40 +124,6 @@ export const DatabaseDetail = () => {
   if (!database) {
     return null;
   }
-
-  const tabs = [
-    {
-      routeName: `/databases/${engine}/${id}/summary`,
-      title: 'Summary',
-    },
-    {
-      routeName: `/databases/${engine}/${id}/backups`,
-      title: 'Backups',
-    },
-    {
-      routeName: `/databases/${engine}/${id}/settings`,
-      title: 'Settings',
-    },
-  ];
-
-  const getTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
-    );
-
-    // Redirect to the landing page if the path does not exist
-    if (tabChoice < 0) {
-      history.push(`/databases/${engine}/${id}`);
-
-      return 0;
-    }
-
-    return tabChoice;
-  };
-
-  const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
 
   const handleSubmitLabelChange = (newLabel: string) => {
     // @TODO Update this to only send the label when the API supports it
@@ -116,8 +145,22 @@ export const DatabaseDetail = () => {
   };
 
   return (
-    <>
-      <DocumentTitleSegment segment={database.label} />
+    <DatabaseDetailContext.Provider
+      value={{
+        database,
+        disabled: isDatabasesGrantReadOnly,
+        engine,
+        isMonitorEnabled,
+        isVPCEnabled,
+        isResizeEnabled: flags.databaseResize,
+        isAdvancedConfigEnabled,
+      }}
+    >
+      <DocumentTitleSegment
+        segment={`${database?.label} - ${
+          tabs[tabIndex]?.title ?? 'Detail View'
+        }`}
+      />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -136,24 +179,25 @@ export const DatabaseDetail = () => {
           },
           pathname: location.pathname,
         }}
+        disabledBreadcrumbEditButton={isDatabasesGrantReadOnly}
+        spacingBottom={4}
         title={database.label}
       />
-      <Tabs index={getTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        {isDatabasesGrantReadOnly && (
+          <Notice
+            text={
+              "You don't have permissions to modify this Database. Please contact an account administrator for details."
+            }
+            variant="warning"
+          />
+        )}
         <TabPanels>
-          <SafeTabPanel index={0}>
-            <DatabaseSummary database={database} />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <DatabaseBackups />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <DatabaseSettings database={database} />
-          </SafeTabPanel>
+          <Outlet />
         </TabPanels>
       </Tabs>
-    </>
+      {isDefault && <DatabaseLogo />}
+    </DatabaseDetailContext.Provider>
   );
 };
-
-export default DatabaseDetail;

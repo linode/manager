@@ -1,7 +1,9 @@
-import { Agreements } from '@linode/api-v4/lib/account';
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
+
+import type { Agreements } from '@linode/api-v4/lib/account';
 
 export const accountAgreementsFactory = Factory.Sync.makeFactory<Agreements>({
+  billing_agreement: false,
   eu_model: false,
   privacy_policy: true,
 });

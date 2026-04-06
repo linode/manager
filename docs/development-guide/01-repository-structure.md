@@ -8,7 +8,7 @@ The linode/manager repository is a monorepo that houses three packages:
 
 The **manager** package is dependent on the **api-v4** package, which is itself dependent on the **validation** package.
 
-The repo has a root level `package.json` which defines project-level scripts, hooks, and dependencies. The code for dependencies shared across projects are hoisted up to the root-level `/node_modules` directory. There is a single `yarn.lock` file for the repo which lives at the root level.
+The repo has a root level `package.json` which defines project-level scripts, hooks, and dependencies. The code for dependencies shared across projects are hoisted up to the root-level `/node_modules` directory. There is a single `pnpm-lock.yaml` file for the repo which lives at the root level.
 
 Any files relevant to the entire project or repo should be included at the root level. Files belonging to a specific package belong in `/packages/<package_name>`.
 
@@ -52,15 +52,13 @@ Like api-v4, TypeScript files are compiled to /lib and compiled + minified to in
 A few notable directories in the root level of the manager package:
 
 - **/build**
-  - where the app is compiled to after running `yarn build` (gitignored)
+  - where the app is compiled to after running `pnpm build` (gitignored)
 - **/config**
   - configuration for unit tests
 - **/cypress**
   - end-to-end tests
 - **/e2e**
   - old end-to-end tests [deprecated]
-- **/patches**
-  - patches applied to dependencies via patch-package
 - **/public**
   - assets, fonts, HTML, and third-party JS
 - **/scripts**

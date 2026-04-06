@@ -1,8 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-
-import { Hidden } from 'src/components/Hidden';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import { ConfirmTransferDialog } from './ConfirmTransferDialog';
 import {
@@ -16,11 +13,19 @@ import {
   StyledTypography,
 } from './TransferControls.styles';
 
-export const TransferControls = React.memo(() => {
+import type { PermissionType } from '@linode/api-v4';
+
+interface Props {
+  permissions: Partial<Record<PermissionType, boolean>>;
+}
+
+export const TransferControls = React.memo((props: Props) => {
+  const { permissions } = props;
+
   const [token, setToken] = React.useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setToken(e.target.value);
@@ -32,7 +37,11 @@ export const TransferControls = React.memo(() => {
     setTimeout(() => setToken(''), 150);
   };
 
-  const handleCreateTransfer = () => push('/account/service-transfers/create');
+  const handleCreateTransfer = () =>
+    navigate({
+      to: '/service-transfers/create',
+    });
+
   return (
     <>
       <StyledRootGrid
@@ -52,6 +61,7 @@ export const TransferControls = React.memo(() => {
             direction="row"
           >
             <StyledTextField
+              disabled={!permissions.accept_service_transfer}
               hideLabel
               label="Receive a Service Transfer"
               onChange={handleInputChange}
@@ -60,22 +70,22 @@ export const TransferControls = React.memo(() => {
             />
             <StyledReviewButton
               buttonType="primary"
-              disabled={token === ''}
+              disabled={!permissions.accept_service_transfer || token === ''}
               onClick={() => setConfirmDialogOpen(true)}
+              tooltipText={
+                !permissions.accept_service_transfer
+                  ? 'You do not have permission to receive service transfers.'
+                  : 'Enter a service transfer token to review the details and accept the transfer.'
+              }
             >
               Review Details
             </StyledReviewButton>
-            <Hidden mdDown>
-              <TooltipIcon
-                status="help"
-                text="Enter a service transfer token to review the details and accept the transfer."
-              />
-            </Hidden>
           </StyledTransferWrapperGrid>
         </StyledLabelWrapperGrid>
         <StyledTransferGrid>
           <StyledTransferButton
             buttonType="primary"
+            disabled={!permissions.create_service_transfer}
             onClick={handleCreateTransfer}
           >
             Make a Service Transfer

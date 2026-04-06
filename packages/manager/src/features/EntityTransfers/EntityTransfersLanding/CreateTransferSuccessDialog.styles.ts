@@ -1,8 +1,7 @@
+import { Dialog, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Typography } from 'src/components/Typography';
 
 export const StyledCopyDiv = styled('div', {
   label: 'StyledCopyDiv',

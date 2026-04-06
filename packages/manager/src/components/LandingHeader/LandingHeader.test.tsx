@@ -56,7 +56,7 @@ describe('LandingHeader', () => {
     const { getByText } = renderWithTheme(
       <LandingHeader
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/products/compute/compute-instances/faqs/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
       />
     );
     expect(getByText('Docs')).toBeInTheDocument();
@@ -81,7 +81,10 @@ describe('LandingHeader', () => {
       />
     );
 
-    expect(getByText('Create My Entity').closest('button')).toBeDisabled();
+    expect(getByText('Create My Entity').closest('button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should render custom crumb path based removeCrumbX prop', () => {
@@ -110,7 +113,7 @@ describe('LandingHeader', () => {
           crumbOverrides: [
             {
               label: 'My First Crumb',
-              linkTo: '/someRoute',
+              linkTo: '/linodes',
               noCap: true,
               position: 1,
             },

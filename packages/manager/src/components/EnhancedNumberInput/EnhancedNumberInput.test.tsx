@@ -1,4 +1,5 @@
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
@@ -16,50 +17,63 @@ const disabledProps = {
   disabled: true,
 };
 
-beforeEach(vi.clearAllMocks);
-
 describe('EnhancedNumberInput', () => {
-  it("should increment the input's value by 1 when the plus button is clicked", () => {
+  it("should increment the input's value by 1 when the plus button is clicked", async () => {
     const { getByTestId } = render(
       wrapWithTheme(<EnhancedNumberInput {...props} />)
     );
 
     const addButton = getByTestId('increment-button');
 
-    fireEvent.click(addButton);
+    await userEvent.click(addButton);
     expect(setValue).toHaveBeenCalledWith(2);
   });
 
-  it("should decrement the input's value by 1 when the minus button is clicked", () => {
+  it("should decrement the input's value by 1 when the minus button is clicked", async () => {
     const { getByTestId } = render(
       wrapWithTheme(<EnhancedNumberInput {...props} />)
     );
 
     const subtractButton = getByTestId('decrement-button');
 
-    fireEvent.click(subtractButton);
+    await userEvent.click(subtractButton);
     expect(setValue).toHaveBeenCalledWith(0);
   });
 
-  it('should update the input if the user manually adds numeric text', () => {
+  it('should update the input if the user manually adds numeric text', async () => {
     const { getByTestId } = render(
       wrapWithTheme(<EnhancedNumberInput {...props} />)
     );
 
     const input = getByTestId('textfield-input');
-    fireEvent.change(input, { target: { value: '100' } });
+    await userEvent.type(input, '100');
     expect(setValue).toHaveBeenCalledWith(100);
   });
 
-  it('should set the value to 0 if the user inputs invalid data', () => {
+  it('should set the value to 0 if the user inputs invalid data', async () => {
     const { getByTestId } = render(
       wrapWithTheme(<EnhancedNumberInput {...props} />)
     );
 
     const input = getByTestId('textfield-input');
-    fireEvent.change(input, { target: { value: 'prestidigitation' } });
+    await userEvent.type(input, 'prestidigitation');
     expect(setValue).toHaveBeenCalledWith(0);
   });
+
+  const inputToPrevent = ['+', '--3', '.', 'e', 'E'];
+
+  it.each(inputToPrevent)(
+    'prevents the use of special characters like "%s", setting the value to the min',
+    async (inputValue) => {
+      const { getByTestId } = render(
+        wrapWithTheme(<EnhancedNumberInput {...props} />)
+      );
+
+      const input = getByTestId('textfield-input');
+      await userEvent.type(input, inputValue);
+      expect(setValue).toHaveBeenCalledWith(0);
+    }
+  );
 
   it('should respect min values', () => {
     const { getByTestId } = render(
@@ -68,7 +82,10 @@ describe('EnhancedNumberInput', () => {
 
     const input = getByTestId('textfield-input') as HTMLInputElement;
     expect(input.value).toBe('1');
-    expect(getByTestId('decrement-button')).toHaveAttribute('disabled');
+    expect(getByTestId('decrement-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should respect max values', () => {
@@ -78,7 +95,10 @@ describe('EnhancedNumberInput', () => {
 
     const input = getByTestId('textfield-input') as HTMLInputElement;
     expect(input.value).toBe('5');
-    expect(getByTestId('increment-button')).toHaveAttribute('disabled');
+    expect(getByTestId('increment-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 
   it('should display buttons and input as disabled when given the corresponding prop', () => {
@@ -86,7 +106,13 @@ describe('EnhancedNumberInput', () => {
       wrapWithTheme(<EnhancedNumberInput {...disabledProps} />)
     );
     expect(getByTestId('textfield-input')).toHaveAttribute('disabled');
-    expect(getByTestId('decrement-button')).toHaveAttribute('disabled');
-    expect(getByTestId('increment-button')).toHaveAttribute('disabled');
+    expect(getByTestId('decrement-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+    expect(getByTestId('increment-button')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
   });
 });

@@ -1,16 +1,19 @@
-import { OAuthClient, OAuthClientRequest } from '@linode/api-v4';
+import { useUpdateOAuthClientMutation } from '@linode/queries';
+import {
+  ActionsPanel,
+  Checkbox,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Checkbox } from 'src/components/Checkbox';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { useUpdateOAuthClientMutation } from 'src/queries/accountOAuth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+
+import type { OAuthClient, OAuthClientRequest } from '@linode/api-v4';
 
 interface Props {
   client: OAuthClient | undefined;
@@ -19,7 +22,7 @@ interface Props {
 }
 
 export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
-  const { error, isLoading, mutateAsync, reset } = useUpdateOAuthClientMutation(
+  const { error, isPending, mutateAsync, reset } = useUpdateOAuthClientMutation(
     client?.id ?? ''
   );
 
@@ -50,7 +53,7 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create OAuth App">
+    <Drawer onClose={onClose} open={open} title="Edit OAuth App">
       {hasErrorFor('none') && (
         <Notice text={hasErrorFor('none')} variant="error" />
       )}
@@ -81,7 +84,7 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
           primaryButtonProps={{
             disabled: !formik.dirty,
             label: 'Save Changes',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

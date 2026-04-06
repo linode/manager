@@ -1,7 +1,9 @@
-import { Theme } from '@mui/material/styles';
-import { Tab as ReachTab, TabProps } from '@reach/tabs';
+import { Tab as ReachTab } from '@reach/tabs';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
+import type { Theme } from '@mui/material/styles';
+import type { TabProps } from '@reach/tabs';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   tab: {
@@ -11,7 +13,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       '&:hover': {
         backgroundColor: theme.color.grey7,
-        color: theme.palette.primary.main,
+      },
+      '&:disabled': {
+        opacity: 1,
+        color: theme.tokens.component.Tab.Disabled.Text,
+        cursor: 'not-allowed',
+        pointerEvents: 'none',
       },
       alignItems: 'center',
       borderBottom: '2px solid transparent',
@@ -28,21 +35,18 @@ const useStyles = makeStyles()((theme: Theme) => ({
       textDecoration: 'none',
     },
     '&[data-reach-tab][data-selected]': {
-      '&:hover': {
-        color: theme.palette.primary.main,
-      },
       borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
       color: theme.textColors.headlineStatic,
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
   },
 }));
 
-const Tab = ({
-  children,
-  className,
-  ...rest
-}: TabProps & { className?: string }) => {
+interface TabPropsWithClassName extends TabProps {
+  className?: string;
+}
+
+const Tab = ({ children, className, ...rest }: TabPropsWithClassName) => {
   const { classes, cx } = useStyles();
 
   return (

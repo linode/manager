@@ -12,6 +12,15 @@ export const pagination = {
   },
 
   /**
+   * Finds the pagination page selection controls.
+   *
+   * @returns Cypress chainable.
+   */
+  findControls: () => {
+    return pagination.find().find('[data-qa-pagination-controls]');
+  },
+
+  /**
    * Finds the pagination page size selection.
    *
    * @returns Cypress chainable.
@@ -20,15 +29,6 @@ export const pagination = {
     return pagination
       .find()
       .find('[data-qa-pagination-page-size]')
-      .find('[data-qa-enhanced-select]');
-  },
-
-  /**
-   * Finds the pagination page selection controls.
-   *
-   * @returns Cypress chainable.
-   */
-  findControls: () => {
-    return pagination.find().find('[data-qa-pagination-controls]');
+      .find('[role="combobox"]');
   },
 };

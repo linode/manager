@@ -1,5 +1,7 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -7,18 +9,13 @@ import * as React from 'react';
 
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import { accountSettingsFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
-import { profileFactory } from 'src/factories/profile';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  LongviewPlansProps,
-  LONGVIEW_FREE_ID,
-  LongviewPlans,
-  formatPrice,
-} from './LongviewPlans';
+import { formatPrice, LONGVIEW_FREE_ID, LongviewPlans } from './LongviewPlans';
+
+import type { LongviewPlansProps } from './LongviewPlans';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 
@@ -56,8 +53,10 @@ const testRow = async (
 describe('LongviewPlans', () => {
   beforeEach(() => {
     server.use(
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(ctx.json(accountSettingsFactory.build({ managed: false })));
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(
+          accountSettingsFactory.build({ managed: false })
+        );
       })
     );
   });
@@ -67,11 +66,7 @@ describe('LongviewPlans', () => {
 
     renderWithTheme(<WrappedComponent {...props} />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('loading'), {
-      timeout: 5000,
-    });
-
-    expect(document.title).toMatch(/^Plan Details/);
+    await waitFor(() => expect(document.title).toMatch(/^Plan Details/));
   });
 
   it('renders all columns for all plan types', async () => {
@@ -90,7 +85,6 @@ describe('LongviewPlans', () => {
     // calls to `act()`, which can lead to undefined behavior.
     for (let i = 0; i < mockLongviewSubscriptions.length; i += 1) {
       const sub = mockLongviewSubscriptions[i];
-      // eslint-disable-next-line no-await-in-loop
       await testRow(
         sub.id,
         sub.label,
@@ -111,46 +105,46 @@ describe('LongviewPlans', () => {
   it('displays a notice if the user does not have permissions to modify', async () => {
     // Build a restricted user's profile so we get a permission error
     server.use(
-      rest.get('*/profile', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            profileFactory.build({
-              restricted: true,
-            })
-          )
+      http.get('*/profile', () => {
+        return HttpResponse.json(
+          profileFactory.build({
+            restricted: true,
+          })
         );
       })
     );
 
     server.use(
-      rest.get('*/grants', (req, res, ctx) => {
-        return res(
-          ctx.status(200),
-          ctx.json(
-            grantsFactory.build({
-              global: {
-                account_access: 'read_only',
-                longview_subscription: false,
-              },
-            })
-          )
+      http.get('*/grants', () => {
+        return HttpResponse.json(
+          grantsFactory.build({
+            global: {
+              account_access: 'read_only',
+              longview_subscription: false,
+            },
+          }),
+          {
+            status: 200,
+          }
         );
       })
     );
 
     renderWithTheme(<LongviewPlans {...props} />);
 
-    await waitForElementToBeRemoved(screen.getByTestId('loading'), {
+    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'), {
       timeout: 5000,
     });
 
-    screen.getByText(/don't have permission/gi);
+    screen.getByText(/don't have permission/i);
   });
 
   it('displays a message id the account is managed', async () => {
     server.use(
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(ctx.json(accountSettingsFactory.build({ managed: true })));
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(
+          accountSettingsFactory.build({ managed: true })
+        );
       })
     );
 

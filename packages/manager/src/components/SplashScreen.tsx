@@ -1,13 +1,9 @@
+import { Box, CircleProgress } from '@linode/ui';
+import { srSpeak } from '@linode/utilities';
 import * as React from 'react';
-
-import { CircleProgress } from 'src/components/CircleProgress';
-import { srSpeak } from 'src/utilities/accessibility';
-
-import { Box } from './Box';
 
 export const SplashScreen = () => {
   React.useEffect(() => {
-    // @TODO: The utilility cases a scrollbar to show in the browser, fix it.
     srSpeak('Loading Linode Cloud Manager', 'polite');
   }, []);
 

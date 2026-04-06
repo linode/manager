@@ -1,5 +1,11 @@
-import { array, boolean, number, object, string } from 'yup';
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
+import { array, boolean, number, object, string } from 'yup';
+
+// Using the same regex as the API to ensure consistent email validation across UI and backend.
+const EMAIL_VALIDATION_REGEX = new RegExp(
+  // eslint-disable-next-line sonarjs/regex-complexity
+  /^(?!-.*|.*(\.{2}|@-))[a-zA-Z0-9_.+"-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]*[a-zA-Z0-9]$/,
+);
 
 export const createPersonalAccessTokenSchema = object({
   scopes: string(),
@@ -26,8 +32,16 @@ export const updateSSHKeySchema = object({
     .trim(),
 });
 
+export const emailSchema = string()
+  .required('Email address is required.')
+  .max(128, 'Email address must be 128 characters or less.')
+  .email('Must be a valid email address.')
+  .matches(EMAIL_VALIDATION_REGEX, `Invalid email address.`);
+
 export const updateProfileSchema = object({
-  email: string().email(),
+  email: string()
+    .email()
+    .matches(EMAIL_VALIDATION_REGEX, `Invalid email address. `),
   timezone: string(),
   email_notifications: boolean(),
   authorized_keys: array().of(string()),
@@ -48,7 +62,7 @@ export const SendCodeToPhoneNumberSchema = object({
         return false;
       }
       return isPossiblePhoneNumber(phone_number, iso_code);
-    }
+    },
   ),
 });
 
@@ -64,7 +78,7 @@ export const VerifyPhoneNumberCodeSchema = object({
         }
 
         return /^\d+$/.test(value);
-      }
+      },
     ),
 });
 
@@ -77,7 +91,7 @@ export const SecurityQuestionsSchema = object({
           .min(3, 'Answers must be at least 3 characters.')
           .max(17, 'Answers must be at most 17 characters.')
           .required('You must provide an answer to each security question.'),
-      }).required()
+      }).required(),
     )
     .length(3, 'You must answer all 3 security questions.')
     .required(),

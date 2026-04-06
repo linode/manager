@@ -79,7 +79,7 @@ export const getTotalBackupsPrice = ({
       getMonthlyBackupsPrice({
         region: linode.region,
         type,
-      }) || undefined;
+      });
 
     if (backupsMonthlyPrice === null || backupsMonthlyPrice === undefined) {
       return undefined;

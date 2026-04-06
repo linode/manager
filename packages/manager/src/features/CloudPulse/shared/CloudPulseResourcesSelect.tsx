@@ -1,0 +1,245 @@
+import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
+import { Box } from '@mui/material';
+import React from 'react';
+
+import { useFlags } from 'src/hooks/useFlags';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
+
+import { CLUSTERS_TOOLTIP_TEXT, RESOURCE_FILTER_MAP } from '../Utils/constants';
+import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
+import { deepEqual } from '../Utils/utils';
+import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
+
+import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
+import type { QueryFunctionType } from '../Utils/models';
+import type { AssociatedEntityType } from './types';
+import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
+
+export interface CloudPulseResources {
+  clusterSize?: number;
+  endpoint?: string;
+  engineType?: string;
+  entities?: Record<string, string>;
+  id: string;
+  label: string;
+  region?: string;
+  tags?: string[];
+  volumeLinodeId?: string;
+  volumeLinodeLabel?: null | string;
+}
+
+export interface CloudPulseResourcesSelectProps {
+  /**
+   * The associated entity type for the dashboard
+   */
+  associatedEntityType?: AssociatedEntityType;
+  defaultValue?: Partial<FilterValue>;
+  disabled?: boolean;
+  /**
+   * The filter function to apply to the resources
+   */
+  filterFn?: (resources: QueryFunctionType) => QueryFunctionType;
+  handleResourcesSelection: (
+    resources: CloudPulseResources[],
+    savePref?: boolean
+  ) => void;
+  label: string;
+  placeholder?: string;
+  region?: string;
+  resourceType: CloudPulseServiceType | undefined;
+  savePreferences?: boolean;
+  tags?: string[];
+  xFilter?: CloudPulseMetricsFilter;
+}
+
+export const CloudPulseResourcesSelect = React.memo(
+  (props: CloudPulseResourcesSelectProps) => {
+    const {
+      defaultValue,
+      disabled,
+      handleResourcesSelection,
+      label,
+      placeholder,
+      region,
+      resourceType,
+      savePreferences,
+      xFilter,
+      associatedEntityType,
+      filterFn,
+    } = props;
+
+    const flags = useFlags();
+    const tooltipText =
+      resourceType === 'lke' ? CLUSTERS_TOOLTIP_TEXT : undefined;
+
+    const {
+      data: resources,
+      isError,
+      isLoading,
+    } = useResourcesQuery(
+      disabled !== undefined ? !disabled : Boolean(region && resourceType),
+      resourceType,
+      {},
+
+      RESOURCE_FILTER_MAP[resourceType ?? ''] ?? {},
+      associatedEntityType, // This is based on the filter configuration, used to keep associated entity id to label mapping for the supported entity type
+      filterFn
+    );
+
+    const [selectedResources, setSelectedResources] =
+      React.useState<CloudPulseResources[]>();
+
+    /**
+     * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
+     * When the autocomplete is already closed, we should publish the resources on clear action and deselect action as well since onclose will not be triggered at that time
+     * When the autocomplete is open, we should publish any resources on clear action until the autocomplete is close
+     */
+    const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
+
+    const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
+      return filterUsingDependentFilters(resources, xFilter) ?? [];
+    }, [resources, xFilter]);
+
+    // Maximum resource selection limit is fetched from launchdarkly
+    const maxResourceSelectionLimit = React.useMemo(() => {
+      const obj = flags.aclpResourceTypeMap?.find(
+        (item) => item.serviceType === resourceType
+      );
+      return obj?.maxResourceSelections || 10;
+    }, [resourceType, flags.aclpResourceTypeMap]);
+
+    const resourcesLimitReached = React.useMemo(() => {
+      return getResourcesList.length > maxResourceSelectionLimit;
+    }, [getResourcesList.length, maxResourceSelectionLimit]);
+
+    // Once the data is loaded, set the state variable with value stored in preferences
+    React.useEffect(() => {
+      if (disabled && !selectedResources) {
+        return;
+      }
+      // To save default values, go through side effects if disabled is false
+      if (resources && savePreferences && !selectedResources) {
+        const defaultResources =
+          defaultValue && Array.isArray(defaultValue)
+            ? defaultValue.map((resource) => String(resource))
+            : [];
+        const resource = getResourcesList.filter((resource) =>
+          defaultResources.includes(String(resource.id))
+        );
+
+        handleResourcesSelection(resource);
+        setSelectedResources(resource);
+      } else {
+        if (selectedResources) {
+          setSelectedResources([]);
+        }
+        handleResourcesSelection([]);
+      }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resources, region, xFilter, resourceType]);
+
+    return (
+      <Autocomplete
+        autoHighlight
+        clearOnBlur
+        data-pendo-id={label || 'Resources'} // Adding data-pendo-id for better tracking in Pendo analytics, using the label prop to create a unique identifier for the select element.
+        data-testid="resource-select"
+        disabled={disabled}
+        disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
+        errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        label={label || 'Resources'}
+        limitTags={1}
+        loading={isLoading}
+        multiple
+        noMarginTop
+        onChange={(e, resourceSelections) => {
+          setSelectedResources(resourceSelections);
+
+          if (!isAutocompleteOpen.current) {
+            handleResourcesSelection(resourceSelections, savePreferences);
+          }
+        }}
+        onClose={() => {
+          isAutocompleteOpen.current = false;
+          handleResourcesSelection(selectedResources ?? [], savePreferences);
+        }}
+        onOpen={() => {
+          isAutocompleteOpen.current = true;
+        }}
+        options={getResourcesList}
+        placeholder={
+          selectedResources?.length ? '' : placeholder || 'Select Resources'
+        }
+        renderOption={(props, option) => {
+          // After selecting resources up to the max resource selection limit, rest of the unselected options will be disabled if there are any
+          const { key, ...rest } = props;
+          const isResourceSelected = selectedResources?.some(
+            (item) => item.label === option.label
+          );
+
+          const isSelectAllORDeslectAllOption =
+            option.label === 'Select All ' || option.label === 'Deselect All ';
+
+          const isMaxSelectionsReached =
+            selectedResources &&
+            selectedResources.length >= maxResourceSelectionLimit &&
+            !isResourceSelected &&
+            !isSelectAllORDeslectAllOption;
+
+          const ListItem = isSelectAllORDeslectAllOption
+            ? StyledListItem
+            : 'li';
+
+          return (
+            <ListItem
+              {...rest}
+              aria-disabled={isMaxSelectionsReached}
+              data-pendo-id={option.label} // Adding data-pendo-id for better tracking in Pendo analytics, using the option label as the identifier for the option element.
+              data-qa-option
+              key={key}
+            >
+              <>
+                <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+                <SelectedIcon visible={isResourceSelected || false} />
+              </>
+            </ListItem>
+          );
+        }}
+        textFieldProps={{
+          ...CLOUD_PULSE_TEXT_FIELD_PROPS,
+          labelTooltipText: tooltipText,
+        }}
+        value={selectedResources ?? []}
+      />
+    );
+  },
+  compareProps
+);
+
+function compareProps(
+  prevProps: CloudPulseResourcesSelectProps,
+  nextProps: CloudPulseResourcesSelectProps
+): boolean {
+  // these properties can be extended going forward
+  const keysToCompare: (keyof CloudPulseResourcesSelectProps)[] = [
+    'region',
+    'resourceType',
+  ];
+
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+    return false;
+  }
+
+  // Ignore function props in comparison
+  return true;
+}

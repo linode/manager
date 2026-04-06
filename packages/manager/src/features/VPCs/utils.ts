@@ -1,4 +1,15 @@
-import type { Config, Subnet } from '@linode/api-v4';
+import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
+
+import type {
+  APIError,
+  Config,
+  CreateLinodeInterfacePayload,
+  InterfacePayload,
+  LinodeInterface,
+  Subnet,
+  VPC,
+} from '@linode/api-v4';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
@@ -12,31 +23,49 @@ export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   return linodes.length;
 };
 
-export const getSubnetInterfaceFromConfigs = (
-  configs: Config[],
-  subnetId: number
-) => {
-  for (const config of configs) {
-    for (const linodeInterface of config.interfaces) {
-      if (linodeInterface.ipv4?.vpc && linodeInterface.subnet_id === subnetId) {
-        return linodeInterface;
+export const getUniqueResourcesFromSubnets = (subnets: Subnet[]) => {
+  const linodes: number[] = [];
+  const nodeBalancer: number[] = [];
+  for (const subnet of subnets) {
+    subnet.linodes.forEach((linodeInfo) => {
+      if (!linodes.includes(linodeInfo.id)) {
+        linodes.push(linodeInfo.id);
       }
-    }
+    });
+    subnet.nodebalancers.forEach((nodeBalancerInfo) => {
+      if (!nodeBalancer.includes(nodeBalancerInfo.id)) {
+        nodeBalancer.push(nodeBalancerInfo.id);
+      }
+    });
   }
+  return linodes.length + nodeBalancer.length;
+};
 
-  return undefined;
+// Linode Interfaces: show unrecommended notice if (active) VPC interface has an IPv4 nat_1_1 address but isn't the default IPv4 route
+export const hasUnrecommendedConfigurationLinodeInterface = (
+  linodeInterface: LinodeInterface | undefined,
+  isInterfaceActive: boolean
+) => {
+  return (
+    isInterfaceActive &&
+    linodeInterface?.vpc?.ipv4?.addresses.some(
+      (address) => address.nat_1_1_address
+    ) &&
+    !linodeInterface?.default_route.ipv4
+  );
 };
 
 export const hasUnrecommendedConfiguration = (
-  configs: Config[],
+  config: Config | undefined,
   subnetId: number
 ) => {
-  for (const config of configs) {
+  if (config) {
     const configInterfaces = config.interfaces;
 
     /*
-     If there is a VPC interface marked as active but not primary, we want to display a
-     message re: it not being a recommended configuration.
+     If there is a VPC interface marked as active but not primary, we then check if it
+     is implicitly the primary interface. If not, then we want to display a message
+     re: it not being a recommended configuration.
 
      Rationale: when the VPC interface is not the primary interface, it can communicate
      to other VMs within the same subnet, but not to VMs in a different subnet
@@ -44,16 +73,170 @@ export const hasUnrecommendedConfiguration = (
     */
 
     if (
-      configInterfaces.some((_interface) => _interface.subnet_id === subnetId)
+      configInterfaces?.some((_interface) => _interface.subnet_id === subnetId)
     ) {
-      return configInterfaces.some(
+      const nonExplicitPrimaryVPCInterfaceIndex = configInterfaces.findIndex(
         (_interface) =>
           _interface.active &&
           _interface.purpose === 'vpc' &&
           !_interface.primary
       );
+
+      const primaryInterfaceIndex = getPrimaryInterfaceIndex(configInterfaces);
+
+      return (
+        // if there exists an active VPC interface not explicitly marked as primary,
+        nonExplicitPrimaryVPCInterfaceIndex !== -1 && // check if it actually is the (implicit) primary interface
+        primaryInterfaceIndex !== nonExplicitPrimaryVPCInterfaceIndex
+      );
     }
   }
 
   return false;
+};
+
+// This isn't great but will hopefully improve once we actually support editing VPCs for LKE-E
+export const getIsVPCLKEEnterpriseCluster = (vpc: VPC) =>
+  /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(vpc.description) &&
+  /^lke\d+/i.test(vpc.label);
+
+export const getLinodeInterfacePrimaryIPv4 = (iface: LinodeInterface) =>
+  iface.vpc?.ipv4?.addresses.find((address) => address.primary)?.address;
+
+export const getLinodeInterfaceIPv4Ranges = (iface: LinodeInterface) =>
+  iface.vpc?.ipv4?.ranges.map((range) => range.range);
+
+export const getLinodeInterfaceIPv6Ranges = (iface: LinodeInterface) =>
+  iface.vpc?.ipv6?.ranges.map((range) => range.range);
+
+// TODO: update this when converting to react-hook-form
+// gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload
+export const getVPCInterfacePayload = (inputs: {
+  allowPublicIPv4Access: boolean;
+  allowPublicIPv6Access?: boolean;
+  autoAssignVPCIPv4Address: boolean;
+  autoAssignVPCIPv6Address: boolean;
+  chosenIPv4: string;
+  chosenIPv6: string;
+  firewallId: null | number;
+  ipv4Ranges: ExtendedIP[];
+  ipv6Ranges?: ExtendedIP[];
+  isLinodeInterface: boolean;
+  subnetId: null | number | undefined;
+  vpcId: number;
+  vpcIPv6FeatureEnabled?: boolean;
+}): CreateLinodeInterfacePayload | InterfacePayload => {
+  const {
+    firewallId,
+    chosenIPv4,
+    chosenIPv6,
+    ipv4Ranges,
+    ipv6Ranges,
+    subnetId,
+    isLinodeInterface,
+    allowPublicIPv4Access,
+    allowPublicIPv6Access = false,
+    autoAssignVPCIPv4Address,
+    autoAssignVPCIPv6Address,
+    vpcId,
+    vpcIPv6FeatureEnabled,
+  } = inputs;
+
+  const filteredIPv4Ranges = ipv4Ranges.filter(
+    (ipRange) => ipRange.address !== ''
+  );
+
+  const filteredIPv6Ranges =
+    ipv6Ranges?.filter((ipRange) => ipRange.address !== '') ?? [];
+
+  if (isLinodeInterface) {
+    return {
+      firewall_id: firewallId,
+      vpc: {
+        subnet_id: subnetId ?? -1,
+        ipv4: {
+          addresses: [
+            {
+              nat_1_1_address: allowPublicIPv4Access ? 'auto' : null, // 'auto' keyword to enable the Linode's assigned public IPv4 address; null to block creation of 1:1 NAT
+              address: !autoAssignVPCIPv4Address ? chosenIPv4 : 'auto',
+            },
+          ],
+          ranges: filteredIPv4Ranges.map((ipRange) => {
+            return { range: ipRange.address };
+          }),
+        },
+        ipv6: vpcIPv6FeatureEnabled
+          ? {
+              slaac: [
+                {
+                  range: !autoAssignVPCIPv6Address ? chosenIPv6 : 'auto',
+                },
+              ],
+              ranges: filteredIPv6Ranges.map((ipRange) => {
+                return { range: ipRange.address };
+              }),
+              is_public: allowPublicIPv6Access,
+            }
+          : undefined,
+      },
+      public: null,
+      vlan: null,
+      default_route: null,
+    };
+  }
+
+  return {
+    ip_ranges: filteredIPv4Ranges.map((ipRange) => ipRange.address),
+    ipam_address: null,
+    ipv4: {
+      nat_1_1: allowPublicIPv4Access ? 'any' : '', // 'any' keyword to enable the Linode's assigned public IPv4 address; empty string to block creation of 1:1 NAT
+      vpc: !autoAssignVPCIPv4Address ? chosenIPv4 : undefined,
+    },
+    ipv6: vpcIPv6FeatureEnabled
+      ? {
+          is_public: allowPublicIPv6Access,
+          slaac: [
+            {
+              range: !autoAssignVPCIPv6Address ? chosenIPv6 : 'auto',
+            },
+          ],
+          ranges: filteredIPv6Ranges.map((ipRange) => {
+            return { range: ipRange.address };
+          }),
+        }
+      : undefined,
+    label: null,
+    primary: true,
+    purpose: 'vpc',
+    subnet_id: subnetId,
+    vpc_id: vpcId,
+  };
+};
+
+// TODO M3-9768: we can do something similar to LinodeCreate and use
+// transformLegacyInterfaceErrorsToLinodeInterfaceErrors
+// once we switch to react-hook-form (not doing this as part of M3-9250
+// due to time constraints). For now, this method essentially does the
+// opposite: it transforms LinodeInterface errors to an error format that formik
+// recognizes
+export const transformLinodeInterfaceErrorsToFormikErrors = (
+  errors: APIError[]
+): APIError[] => {
+  for (const error of errors) {
+    if (error.field && error.field.includes('vpc.ipv4.ranges')) {
+      if (error.field.match(/vpc.ipv4.ranges\[(\d+)\].range/)) {
+        error.field = error.field.replace(
+          /vpc.ipv4.ranges\[(\d+)\].range/,
+          'ip_ranges[$1]'
+        );
+      } else {
+        error.field = 'ip_ranges';
+      }
+    }
+    if (error.field && error.field.includes('vpc.ipv4.addresses')) {
+      error.field = 'ipv4.vpc';
+    }
+  }
+
+  return errors;
 };

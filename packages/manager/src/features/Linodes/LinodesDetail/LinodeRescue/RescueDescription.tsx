@@ -1,17 +1,15 @@
+import { useLinodeFirewallsQuery } from '@linode/queries';
+import { LinkButton, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 const rescueDescription = {
   firewallWarning:
     'Cloud Firewall rules are not enabled when booting into Rescue Mode.',
-  link: 'https://www.linode.com/docs/guides/rescue-and-rebuild/',
+  link: 'https://techdocs.akamai.com/cloud-computing/docs/rescue-and-rebuild',
   text: `If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot your Linode into Rescue Mode. This is a safe environment for performing many system recovery and disk management tasks.`,
 };
 
@@ -45,9 +43,9 @@ export const RescueDescription = (props: Props) => {
       {linodeId && isBareMetal ? (
         <Typography sx={{ marginTop: theme.spacing(1) }}>
           {`When your Linode has successfully rebooted into Rescue Mode, use the `}
-          <StyledLinkButton onClick={() => lishLaunch(linodeId)}>
+          <LinkButton onClick={() => lishLaunch(linodeId)}>
             LISH Console
-          </StyledLinkButton>
+          </LinkButton>
           {` to access it.`}
         </Typography>
       ) : null}

@@ -1,7 +1,8 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { DownloadTooltip } from './DownloadTooltip';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DownloadTooltip> = {
   component: DownloadTooltip,

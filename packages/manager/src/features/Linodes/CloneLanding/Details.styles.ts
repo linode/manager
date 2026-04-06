@@ -1,5 +1,5 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { Typography } from 'src/components/Typography';
 
 export const StyledButton = styled('button', { label: 'StyledButton' })(
   ({ theme }) => ({

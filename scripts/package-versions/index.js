@@ -3,12 +3,16 @@
  *
  * Usage:
  *
- * package-versions <manager-version> <api-version> <validation-version> [-f | --force]
+ * package-versions <manager-version> <api-version> <validation-version> <ui-version> <utilities-version> <queries-version> [-f | --force]
  *
  * Positional Parameters:
  * - `<manager-version>`    (Optional) Desired Cloud Manager package version.
  * - `<api-version>`        (Optional) Desired APIv4 package version.
  * - `<validation-version>` (Optional) Desired Validation package version.
+ * - `<ui-version>`         (Optional) Desired UI package version.
+ * - `<utilities-version>`  (Optional) Desired Utilities package version.
+ * - `<queries-version>`    (Optional) Desired Queries package version.
+ * - `<shared-version>`     (Optional) Desired Shared package version.
  *
  * Optional Flags:
  * - `-f | --force`         Forces the script to update package versions without
@@ -18,9 +22,9 @@
  *                          will fail otherwise.
  */
 
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+import fs from 'fs';
+import path from 'path';
+import readline from 'readline';
 
 // Command line arguments with executable path and name excluded.
 const args = process.argv.slice(2);
@@ -48,7 +52,17 @@ const flags = args.filter((arg) => {
  *
  * @var {string}
  */
-const root = path.resolve(__dirname, '..', '..');
+const root = path.resolve(import.meta.dirname, '..', '..');
+
+const PACKAGE_PATHS = {
+  'manager': path.resolve(root, 'packages', 'manager', 'package.json'),
+  'api-v4': path.resolve(root, 'packages', 'api-v4', 'package.json'),
+  'validation': path.resolve(root, 'packages', 'validation', 'package.json'),
+  'shared': path.resolve(root, 'packages', 'shared', 'package.json'),
+  'ui': path.resolve(root, 'packages', 'ui', 'package.json'),
+  'utilities': path.resolve(root, 'packages', 'utilities', 'package.json'),
+  'queries': path.resolve(root, 'packages', 'queries', 'package.json')
+};
 
 /**
  * Gets the path to the package.json file for the package with the given name.
@@ -58,7 +72,11 @@ const root = path.resolve(__dirname, '..', '..');
  * @returns {string} Package path for `packageName`.
  */
 const getPackagePath = (packageName) => {
-  return path.join(root, 'packages', packageName, 'package.json');
+  if (!PACKAGE_PATHS[packageName]) {
+    throw new Error(`Invalid package name: ${packageName}`);
+  }
+
+  return PACKAGE_PATHS[packageName];
 };
 
 /**
@@ -99,6 +117,10 @@ const [
   desiredManagerVersion,
   desiredApiVersion,
   desiredValidationVersion,
+  desiredUiVersion,
+  desiredUtilitiesVersion,
+  desiredQueriesVersion,
+  desiredSharedVersion,
 ] = desiredVersions;
 
 // Describes packages that should be modified by this script.
@@ -106,6 +128,10 @@ const jobs = [
   { name: 'manager', path: getPackagePath('manager'), desiredVersion: desiredManagerVersion },
   { name: 'api-v4', path: getPackagePath('api-v4'), desiredVersion: desiredApiVersion },
   { name: 'validation', path: getPackagePath('validation'), desiredVersion: desiredValidationVersion },
+  { name: 'ui', path: getPackagePath('ui'), desiredVersion: desiredUiVersion },
+  { name: 'utilities', path: getPackagePath('utilities'), desiredVersion: desiredUtilitiesVersion },
+  { name: 'queries', path: getPackagePath('queries'), desiredVersion: desiredQueriesVersion },
+  { name: 'shared', path: getPackagePath('shared'), desiredVersion: desiredSharedVersion },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.
@@ -135,7 +161,7 @@ const main = async () => {
   console.info('Package info:');
   console.table(currentPackageInfo);
 
-  for (job of jobs) {
+  for (const job of jobs) {
     const jobName = job.name;
     const jobPath = job.path;
     const jobVersion = job.desiredVersion;
@@ -155,7 +181,7 @@ const main = async () => {
         return `${major || 0}.${Number(minor || 0) + 1}.0`;
       })();
 
-      const prompt = `New version for '${jobName}' package? (${ suggestedVersion })\n`;
+      const prompt = `New version for '${jobName}' package? (${suggestedVersion})\n`;
       result = await readlinePromise(prompt);
       if (!result) {
         result = suggestedVersion;
@@ -181,7 +207,7 @@ const main = async () => {
     });
   };
 
-  for (writeTask of writeTasks) {
+  for (const writeTask of writeTasks) {
     try {
       fs.writeFileSync(writeTask.filepath, writeTask.contents);
       summary.push({

@@ -1,5 +1,9 @@
-import { SupportReply, SupportTicket } from '@linode/api-v4/lib/support/types';
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
+
+import type {
+  SupportReply,
+  SupportTicket,
+} from '@linode/api-v4/lib/support/types';
 
 export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   attachments: [],
@@ -11,6 +15,7 @@ export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   id: Factory.each((i) => i),
   opened: '2018-11-01T01:00:00',
   opened_by: 'test-account',
+  severity: null,
   status: 'new',
   summary: Factory.each((i) => `TEST Support Ticket ${i}`),
   updated: '2018-11-01T01:00:00',

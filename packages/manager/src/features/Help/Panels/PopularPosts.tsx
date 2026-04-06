@@ -1,18 +1,16 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { Paper, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
 
-const useStyles = makeStyles((theme: Theme) => ({
+import type { Theme } from '@mui/material/styles';
+
+const useStyles = makeStyles()((theme: Theme) => ({
   post: {
     marginBottom: theme.spacing(0.5),
-    ...theme.typography.body1,
   },
-
   postTitle: {
     marginBottom: theme.spacing(2),
   },
@@ -20,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `${theme.spacing(6)} 0`,
   },
   withSeparator: {
-    borderLeft: `1px solid ${theme.palette.divider}`,
+    borderLeft: `1px solid ${theme.borderColors.divider}`,
     paddingLeft: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
       borderLeft: 'none',
@@ -31,23 +29,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const PopularPosts = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const renderPopularDocs = () => {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <Link to="https://www.linode.com/docs/getting-started/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started">
             Getting Started with Linode
           </Link>
         </div>
         <div className={classes.post}>
-          <Link to="https://www.linode.com/docs/security/securing-your-server/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance">
             How to Secure Your Server
           </Link>
         </div>
         <div className={classes.post}>
-          <Link to="https://www.linode.com/docs/troubleshooting/troubleshooting/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/troubleshooting-general-issues-on-compute-instances">
             Troubleshooting
           </Link>
         </div>
@@ -80,7 +78,13 @@ export const PopularPosts = () => {
   return (
     <Paper className={classes.root} variant="outlined">
       <Grid container>
-        <Grid data-qa-documentation-link sm={6} xs={12}>
+        <Grid
+          data-qa-documentation-link
+          size={{
+            sm: 6,
+            xs: 12,
+          }}
+        >
           <Typography className={classes.postTitle} variant="h3">
             Most Popular Documentation:
           </Typography>
@@ -89,8 +93,10 @@ export const PopularPosts = () => {
         <Grid
           className={classes.withSeparator}
           data-qa-community-link
-          sm={6}
-          xs={12}
+          size={{
+            sm: 6,
+            xs: 12,
+          }}
         >
           <Typography className={classes.postTitle} variant="h3">
             Most Popular Community Posts:

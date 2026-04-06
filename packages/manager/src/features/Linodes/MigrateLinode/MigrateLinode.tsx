@@ -1,45 +1,54 @@
-import { Event } from '@linode/api-v4/lib/account';
+import {
+  useAccountAgreements,
+  useAllLinodeDisksQuery,
+  useImageQuery,
+  useLinodeMigrateMutation,
+  useLinodeQuery,
+  useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
+import {
+  Box,
+  Button,
+  Dialog,
+  Notice,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
+import {
+  formatStorageUnits,
+  regionSupportsMetadata,
+  scrollErrorIntoView,
+} from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
+import { ErrorMessage } from 'src/components/ErrorMessage';
+import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { MBpsInterDC } from 'src/constants';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
-import useEvents from 'src/hooks/useEvents';
+import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
-import { useImageQuery } from 'src/queries/images';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeMigrateMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useTypeQuery } from 'src/queries/types';
-import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
-import { sendMigrationInitiatedEvent } from 'src/utilities/analytics';
+  useEventsPollingActions,
+  useInProgressEvents,
+} from 'src/queries/events/events';
+import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
-import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
+import { addUsedDiskSpace } from '../LinodesDetail/utilities';
 import { CautionNotice } from './CautionNotice';
 import { ConfigureForm } from './ConfigureForm';
+
+import type { PlacementGroup } from '@linode/api-v4';
+import type { Event } from '@linode/api-v4/lib/account';
 
 interface Props {
   linodeId: number | undefined;
@@ -51,6 +60,8 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { linodeId, onClose, open } = props;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -72,15 +83,16 @@ export const MigrateLinode = React.memo((props: Props) => {
     linodeId !== undefined && open
   );
 
-  const { events } = useEvents();
+  const { data: events } = useInProgressEvents();
 
   const eventsForLinode = linodeId
-    ? events.filter((event) => isEventRelevantToLinode(event, linodeId))
+    ? (events?.filter((event) => isEventRelevantToLinode(event, linodeId)) ??
+      [])
     : [];
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: migrateLinode,
     reset,
   } = useLinodeMigrateMutation(linodeId ?? -1);
@@ -91,20 +103,22 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { data: regionsData } = useRegionsQuery();
   const flags = useFlags();
 
-  const [selectedRegion, handleSelectRegion] = React.useState<null | string>(
-    null
-  );
+  const [selectedRegion, handleSelectRegion] = React.useState<
+    string | undefined
+  >();
+  const [placementGroupSelection, setPlacementGroupSelection] =
+    React.useState<null | PlacementGroup>();
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
     regions: regionsData,
-    selectedRegionId: selectedRegion ?? '',
+    selectedRegionId: selectedRegion,
   });
 
   React.useEffect(() => {
@@ -117,7 +131,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     if (open) {
       reset();
       setConfirmed(false);
-      handleSelectRegion(null);
+      handleSelectRegion(undefined);
     }
   }, [open]);
 
@@ -140,6 +154,16 @@ export const MigrateLinode = React.memo((props: Props) => {
       : undefined;
   }, [flags.metadata, linode, regionsData, selectedRegion]);
 
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
+    regionsData ?? [],
+    linode?.region ?? ''
+  );
+
+  const distributedRegionWarning =
+    flags.gecko2?.enabled && linodeIsInDistributedRegion
+      ? 'Distributed regions may only be migrated to other distributed regions.'
+      : undefined;
+
   if (!linode) {
     return null;
   }
@@ -153,10 +177,15 @@ export const MigrateLinode = React.memo((props: Props) => {
       return;
     }
 
+    const placementGroupPayload = placementGroupSelection?.id
+      ? { id: placementGroupSelection.id }
+      : undefined;
+
     return migrateLinode({
+      placement_group: placementGroupPayload,
       region: selectedRegion,
     }).then(() => {
-      resetEventsPolling();
+      checkForNewEvents();
       sendMigrationInitiatedEvent(
         region,
         selectedRegion,
@@ -180,7 +209,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   };
 
   const newLabel = getLinodeDescription(
-    type ? formatStorageUnits(type.label) : linode.type ?? 'Unknown Type',
+    type ? formatStorageUnits(type.label) : (linode.type ?? 'Unknown Type'),
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,
@@ -198,6 +227,8 @@ export const MigrateLinode = React.memo((props: Props) => {
     addUsedDiskSpace(disks ?? []) / MBpsInterDC / 60
   );
 
+  const isMTCLinode = Boolean(type && isMTCPlan(type));
+
   return (
     <Dialog
       fullHeight
@@ -207,7 +238,14 @@ export const MigrateLinode = React.memo((props: Props) => {
       open={open}
       title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
-      {error && <Notice text={error?.[0].reason} variant="error" />}
+      {error && (
+        <Notice variant="error">
+          <ErrorMessage
+            entity={{ id: linode.id, type: 'linode_id' }}
+            message={error[0].reason}
+          />
+        </Notice>
+      )}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">
         {newLabel}
       </Typography>
@@ -220,6 +258,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
+        distributedRegionWarning={distributedRegionWarning}
         hasConfirmed={hasConfirmed}
         linodeId={linodeId}
         metadataWarning={metadataMigrateWarning}
@@ -229,11 +268,16 @@ export const MigrateLinode = React.memo((props: Props) => {
       <ConfigureForm
         backupEnabled={linode.backups.enabled}
         currentRegion={region}
+        handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
+        isMTCLinode={isMTCLinode}
         linodeType={linode.type}
         selectedRegion={selectedRegion}
       />
       <Box
+        alignItems="center"
+        display="flex"
+        justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
         sx={{
           marginTop: theme.spacing(3),
           [theme.breakpoints.down('md')]: {
@@ -241,9 +285,6 @@ export const MigrateLinode = React.memo((props: Props) => {
             justifyContent: 'flex-end',
           },
         }}
-        alignItems="center"
-        display="flex"
-        justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
       >
         {showGDPRCheckbox ? (
           <StyledAgreementCheckbox
@@ -253,24 +294,24 @@ export const MigrateLinode = React.memo((props: Props) => {
           />
         ) : null}
         <Button
+          buttonType="primary"
           disabled={
             !!disabledText ||
             !hasConfirmed ||
             !selectedRegion ||
             (showGDPRCheckbox && !hasSignedAgreement)
           }
+          loading={isPending}
+          onClick={handleMigrate}
           sx={{
             [theme.breakpoints.down('md')]: {
               marginTop: theme.spacing(2),
             },
           }}
-          buttonType="primary"
-          loading={isLoading}
-          onClick={handleMigrate}
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && <TooltipIcon status="help" text={disabledText} />}
+        {!!disabledText && <TooltipIcon status="info" text={disabledText} />}
       </Box>
     </Dialog>
   );

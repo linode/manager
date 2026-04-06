@@ -1,42 +1,30 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
-import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
+import { Hidden, Stack } from '@linode/ui';
+import React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useEvents } from 'src/hooks/useEvents';
+import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
 
+import type { Disk, EventAction, Linode } from '@linode/api-v4';
+
 interface Props {
   disk: Disk;
-  linodeId?: number;
-  linodeStatus: string;
+  linodeId: number;
+  linodeStatus: Linode['status'];
   onDelete: () => void;
-  onImagize: () => void;
   onRename: () => void;
   onResize: () => void;
-  readOnly: boolean;
 }
 
 export const LinodeDiskRow = React.memo((props: Props) => {
-  const { inProgressEvents } = useEvents();
-  const theme = useTheme();
-  const {
-    disk,
-    linodeId,
-    linodeStatus,
-    onDelete,
-    onImagize,
-    onRename,
-    onResize,
-    readOnly,
-  } = props;
+  const { data: events } = useInProgressEvents();
+  const { disk, linodeId, linodeStatus, onDelete, onRename, onResize } = props;
 
-  const diskEventLabelMap = {
+  const diskEventLabelMap: Partial<Record<EventAction, string>> = {
     disk_create: 'Creating',
     disk_delete: 'Deleting',
     disk_resize: 'Resizing',
@@ -44,7 +32,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
 
   const diskEventsToShowProgressFor = Object.keys(diskEventLabelMap);
 
-  const event = inProgressEvents.find(
+  const event = events?.find(
     (event) =>
       event.secondary_entity?.id === disk.id &&
       diskEventsToShowProgressFor.includes(event.action)
@@ -56,25 +44,16 @@ export const LinodeDiskRow = React.memo((props: Props) => {
       <TableCell sx={{ width: '10%' }}>{disk.filesystem}</TableCell>
       <TableCell sx={{ width: '15%' }}>
         {event ? (
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              flexFlow: 'row nowrap',
-            }}
-          >
+          <Stack direction="row" gap={2} whiteSpace="nowrap">
             {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
-              sx={{
-                paddingLeft: theme.spacing(),
-                width: 250,
-              }}
               max={100}
               narrow
               rounded
+              sx={{ minWidth: 250 }}
               value={event?.percent_complete ?? 0}
             />
-          </div>
+          </Stack>
         ) : (
           `${disk.size} MB`
         )}
@@ -84,17 +63,14 @@ export const LinodeDiskRow = React.memo((props: Props) => {
           <DateTimeDisplay value={disk.created} />
         </TableCell>
       </Hidden>
-      <TableCell>
+      <TableCell actionCell>
         <LinodeDiskActionMenu
-          diskId={disk.id}
-          label={disk.label}
+          disk={disk}
           linodeId={linodeId}
           linodeStatus={linodeStatus || 'offline'}
           onDelete={onDelete}
-          onImagize={onImagize}
           onRename={onRename}
           onResize={onResize}
-          readOnly={readOnly}
         />
       </TableCell>
     </TableRow>

@@ -1,10 +1,9 @@
+import { Box, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-import { LOGIN_ROOT } from 'src/constants';
+import { getLoginURL } from 'src/OAuth/constants';
 
 interface Props {
   username?: string;
@@ -21,7 +20,7 @@ export const ResetPassword = (props: Props) => {
         If you’ve forgotten your password or would like to change it, we’ll send
         you an e-mail with instructions.
       </StyledCopy>
-      <StyledLink to={`${LOGIN_ROOT}/forgot/password?username=${username}`}>
+      <StyledLink to={`${getLoginURL()}/forgot/password?username=${username}`}>
         Reset Password
       </StyledLink>
     </Box>

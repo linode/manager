@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -5,94 +6,60 @@ import * as React from 'react';
 import {
   accountSettingsFactory,
   objectStorageClusterFactory,
-  regionFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { QueryClient, setLogger } from 'react-query';
 
 import { CreateBucketDrawer } from './CreateBucketDrawer';
-
-const queryClient = new QueryClient();
 
 const props = {
   isOpen: true,
   onClose: vi.fn(),
 };
 
-vi.mock('src/components/EnhancedSelect/Select');
-
 describe('CreateBucketDrawer', () => {
-  afterEach(() => {
-    // Reset React Query logger.
-    setLogger(console);
-  });
-
-  // I tried to fix this test after changing the Select component to use
-  // Autocomplete but something is still wrong. I'm skipping this test for now
-  // hoping we can get rid of it and use an end-to-end test instead.
-  // Will add a follow-up issue.
   it.skip('Should show a general error notice if the API returns one', async () => {
-    // Suppress logging React Query errors to CLI since this test is expected
-    // to trigger errors.
-    //
-    // Note: Logging options improved in React Query v4 and `setLogger` will
-    // be removed in v5. We will be able to accomplish this more cleanly once
-    // we upgrade.
-    //
-    // See also:
-    // - https://github.com/TanStack/query/issues/125
-    // - https://github.com/TanStack/query/discussions/4252
-    setLogger({
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    });
-
     server.use(
-      rest.post('*/object-storage/buckets', (req, res, ctx) => {
-        return res(
-          ctx.status(500),
-          ctx.json({ errors: [{ reason: 'Object Storage is offline!' }] })
+      http.post('*/object-storage/buckets', () => {
+        return HttpResponse.json(
+          { errors: [{ reason: 'Object Storage is offline!' }] },
+          {
+            status: 500,
+          }
         );
       }),
-      rest.get('*/regions', async (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' })
-            )
+      http.get('*/regions', async () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            regionFactory.buildList(1, { id: 'us-east', label: 'Newark, NJ' })
           )
         );
       }),
-      rest.get('*object-storage/clusters', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            makeResourcePage(
-              objectStorageClusterFactory.buildList(1, {
-                id: 'us-east-1',
-                region: 'us-east',
-              })
-            )
+      http.get('*object-storage/clusters', () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            objectStorageClusterFactory.buildList(1, {
+              id: 'us-east-1',
+              region: 'us-east',
+            })
           )
         );
       }),
-      rest.get('*/account/settings', (req, res, ctx) => {
-        return res(
-          ctx.json(accountSettingsFactory.build({ object_storage: 'active' }))
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(
+          accountSettingsFactory.build({ object_storage: 'active' })
         );
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      getByPlaceholderText,
-      getByTestId,
-    } = renderWithTheme(<CreateBucketDrawer {...props} />, { queryClient });
+    const { findByText, getByLabelText, getByPlaceholderText, getByTestId } =
+      renderWithTheme(<CreateBucketDrawer {...props} />);
 
-    userEvent.type(getByLabelText('Label', { exact: false }), 'my-test-bucket');
+    await userEvent.type(
+      getByLabelText('Label', { exact: false }),
+      'my-test-bucket'
+    );
 
     // We must waitFor because we need to load region and cluster data from the API
     await waitFor(() =>
@@ -104,7 +71,7 @@ describe('CreateBucketDrawer', () => {
 
     const saveButton = getByTestId('create-bucket-button');
 
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await findByText('Object Storage is offline!');
   });

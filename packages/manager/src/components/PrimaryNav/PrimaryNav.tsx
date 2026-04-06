@@ -1,491 +1,579 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
-import { Link, LinkProps, useLocation } from 'react-router-dom';
-
-import Account from 'src/assets/icons/account.svg';
-import Beta from 'src/assets/icons/entityIcons/beta.svg';
-import Storage from 'src/assets/icons/entityIcons/bucket.svg';
-import Database from 'src/assets/icons/entityIcons/database.svg';
-import Domain from 'src/assets/icons/entityIcons/domain.svg';
-import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
-import Image from 'src/assets/icons/entityIcons/image.svg';
-import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
-import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import Managed from 'src/assets/icons/entityIcons/managed.svg';
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
-import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
-import Volume from 'src/assets/icons/entityIcons/volume.svg';
-import VPC from 'src/assets/icons/entityIcons/vpc.svg';
-import TooltipIcon from 'src/assets/icons/get_help.svg';
-import Longview from 'src/assets/icons/longview.svg';
-import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import { Divider } from 'src/components/Divider';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
-import { usePrefetch } from 'src/hooks/usePreFetch';
-import { useDatabaseEnginesQuery } from 'src/queries/databases';
 import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useStackScriptsOCA } from 'src/queries/stackscripts';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+  useAccountSettings,
+  useMutatePreferences,
+  usePreferences,
+} from '@linode/queries';
+import { Box } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
+import * as React from 'react';
 
-import useStyles from './PrimaryNav.styles';
+import Compute from 'src/assets/icons/entityIcons/compute.svg';
+import CoreUser from 'src/assets/icons/entityIcons/coreuser.svg';
+import Database from 'src/assets/icons/entityIcons/database.svg';
+import Monitor from 'src/assets/icons/entityIcons/monitor.svg';
+import Networking from 'src/assets/icons/entityIcons/networking.svg';
+import Storage from 'src/assets/icons/entityIcons/storage.svg';
+import More from 'src/assets/icons/more.svg';
+import {
+  PRIMARY_NAV_TOGGLE_HEIGHT,
+  SIDEBAR_WIDTH,
+} from 'src/components/PrimaryNav/constants';
+import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
+import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
+import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
+import { useFlags } from 'src/hooks/useFlags';
+
+import PrimaryLink from './PrimaryLink';
+import { StyledAccordion } from './PrimaryNav.styles';
+import { PrimaryNavToggle } from './PrimaryNavToggle';
 import { linkIsActive } from './utils';
 
-type NavEntity =
+import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
+
+export type NavEntity =
   | 'Account'
-  | 'Account'
+  | 'Account Settings'
+  | 'Alerts'
   | 'Betas'
+  | 'Billing'
+  | 'Cloud Load Balancers'
   | 'Dashboard'
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
-  | 'Global Load Balancers'
   | 'Help & Support'
+  | 'Identity & Access'
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
+  | 'Login History'
+  | 'Logs'
   | 'Longview'
+  | 'Maintenance'
   | 'Managed'
-  | 'Marketplace'
+  | 'Marketplace' // TODO: Cloud Manager Marketplace - Remove marketplace references once 'Quick Deploy Apps' is fully rolled out
+  | 'Metrics'
+  | 'Monitor'
+  | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Partner Referrals'
+  | 'Placement Groups'
+  | 'Quick Deploy Apps'
+  | 'Quotas'
+  | 'Reserved IPs'
+  | 'Service Transfers'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Users & Grants'
+  | 'Volumes'
+  | 'VPC';
 
-interface PrimaryLink {
-  activeLinks?: Array<string>;
-  attr?: { [key: string]: any };
-  betaChipClassName?: string;
-  display: NavEntity;
-  hide?: boolean;
-  href: string;
-  icon?: JSX.Element;
-  isBeta?: boolean;
-  onClick?: (e: React.ChangeEvent<any>) => void;
-  prefetchRequestCondition?: boolean;
-  prefetchRequestFn?: () => void;
+export type ProductFamily =
+  | 'Administration'
+  | 'Compute'
+  | 'Databases'
+  | 'Monitor'
+  | 'More'
+  | 'Networking'
+  | 'Storage';
+
+export interface ProductFamilyLinkGroup<T> {
+  icon?: React.JSX.Element;
+  links: T;
+  name?: ProductFamily;
 }
 
 export interface PrimaryNavProps {
   closeMenu: () => void;
+  desktopMenuToggle: () => void;
   isCollapsed: boolean;
 }
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
-  const { closeMenu, isCollapsed } = props;
-  const { classes, cx } = useStyles();
+  const { closeMenu, desktopMenuToggle, isCollapsed } = props;
+  const navItemsRef = React.useRef<HTMLDivElement>(null);
+  const primaryNavRef = React.useRef<HTMLDivElement>(null);
+  const [navItemsOverflowing, setNavItemsOverflowing] = React.useState(false);
 
   const flags = useFlags();
   const location = useLocation();
 
-  const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
+  const { data: accountSettings } = useAccountSettings();
 
-  const [
-    enableMarketplacePrefetch,
-    setEnableMarketplacePrefetch,
-  ] = React.useState(false);
+  const isManaged = accountSettings?.managed ?? false;
 
-  const { _isManagedAccount, account, accountError } = useAccountManagement();
+  const { isACLPEnabled } = useIsACLPEnabled();
+  const { isACLPLogsEnabled, isACLPLogsBeta, isACLPLogsNew } =
+    useIsACLPLogsEnabled();
+
+  const isAlertsEnabled =
+    isACLPEnabled &&
+    (flags.aclpAlerting?.alertDefinitions ||
+      flags.aclpAlerting?.recentActivity ||
+      flags.aclpAlerting?.notificationChannels);
+
+  const { limitsEvolution } = flags;
+
+  const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
+  const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
+
+  const { isIAMEnabled } = useIsIAMEnabled();
+  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
+
+  const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
+
+  const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
   const {
-    data: oneClickApps,
-    error: oneClickAppsError,
-    isLoading: oneClickAppsLoading,
-  } = useStackScriptsOCA(enableMarketplacePrefetch);
+    data: preferences,
+    error: preferencesError,
+    isLoading: preferencesLoading,
+  } = usePreferences();
 
-  const {
-    data: clusters,
-    error: clustersError,
-    isLoading: clustersLoading,
-  } = useObjectStorageClusters(enableObjectPrefetch);
+  const collapsedSideNavPreference =
+    preferences?.collapsedSideNavProductFamilies;
 
-  const {
-    data: buckets,
-    error: bucketsError,
-    isLoading: bucketsLoading,
-  } = useObjectStorageBuckets(clusters, enableObjectPrefetch);
-
-  const allowObjPrefetch =
-    !buckets &&
-    !clusters &&
-    !clustersLoading &&
-    !bucketsLoading &&
-    !clustersError &&
-    !bucketsError;
-
-  const allowMarketplacePrefetch =
-    !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
-
-  const checkRestrictedUser = !Boolean(flags.databases) && !!accountError;
-  const {
-    error: enginesError,
-    isLoading: enginesLoading,
-  } = useDatabaseEnginesQuery(checkRestrictedUser);
-
-  const showDatabases =
-    isFeatureEnabled(
-      'Managed Databases',
-      Boolean(flags.databases),
-      account?.capabilities ?? []
-    ) ||
-    (checkRestrictedUser && !enginesLoading && !enginesError);
-
-  const showVPCs = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
+  const collapsedAccordions = React.useMemo(
+    () => collapsedSideNavPreference ?? [1, 2, 3, 4, 5, 6, 7], // by default, we collapse all categories if no preference is set;
+    [collapsedSideNavPreference]
   );
 
-  const prefetchObjectStorage = () => {
-    if (!enableObjectPrefetch) {
-      setEnableObjectPrefetch(true);
-    }
-  };
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const prefetchMarketplace = () => {
-    if (!enableMarketplacePrefetch) {
-      setEnableMarketplacePrefetch(true);
-    }
-  };
+  const productFamilyLinkGroups: ProductFamilyLinkGroup<PrimaryLinkType[]>[] =
+    React.useMemo(
+      () => {
+        const groups: ProductFamilyLinkGroup<PrimaryLinkType[]>[] = [
+          {
+            links: [],
+          },
+          {
+            icon: <Compute />,
+            links: [
+              {
+                display: 'Managed',
+                hide: !isManaged,
+                to: '/managed',
+              },
+              {
+                display: 'Linodes',
+                to: '/linodes',
+              },
+              {
+                display: 'Images',
+                to: '/images',
+              },
+              {
+                display: 'Kubernetes',
+                to: '/kubernetes/clusters',
+              },
+              {
+                display: 'StackScripts',
+                to: '/stackscripts',
+              },
+              {
+                betaChipClassName: 'beta-chip-placement-groups',
+                display: 'Placement Groups',
+                hide: !isPlacementGroupsEnabled,
+                to: '/placement-groups',
+              },
+              {
+                attr: { 'data-qa-one-click-nav-btn': true },
+                display: !isMarketplaceV2FeatureEnabled
+                  ? 'Marketplace'
+                  : 'Quick Deploy Apps',
+                to: '/linodes/create/marketplace',
+              },
+              {
+                attr: {
+                  'data-qa-one-click-nav-btn': true,
+                  'data-pendo-id': 'menu-item-Cloud Marketplace',
+                },
+                display: 'Partner Referrals',
+                hide: !isMarketplaceV2FeatureEnabled,
+                isBeta: isMarketplaceV2FeatureEnabled,
+                to: '/cloud-marketplace/catalog',
+              },
+            ],
+            name: 'Compute',
+          },
+          {
+            icon: <Storage />,
+            links: [
+              {
+                display: 'Object Storage',
+                to: '/object-storage',
+              },
+              {
+                display: 'Volumes',
+                to: '/volumes',
+              },
+            ],
+            name: 'Storage',
+          },
+          {
+            icon: <Networking />,
+            links: [
+              {
+                display: 'VPC',
+                to: '/vpcs',
+              },
+              {
+                display: 'Firewalls',
+                to: '/firewalls',
+              },
+              {
+                display: 'Network Load Balancer',
+                hide: !isNetworkLoadBalancerEnabled,
+                to: '/netloadbalancers',
+              },
+              {
+                display: 'NodeBalancers',
+                to: '/nodebalancers',
+              },
+              {
+                display: 'Reserved IPs',
+                hide: !isReserveIpEnabled,
+                to: '/reserved-ips',
+              },
+              {
+                display: 'Domains',
+                to: '/domains',
+              },
+            ],
+            name: 'Networking',
+          },
+          {
+            icon: <Database />,
+            links: [
+              {
+                display: 'Databases',
+                hide: !isDatabasesEnabled,
+                to: '/databases',
+                isBeta: isDatabasesV2Beta,
+              },
+            ],
+            name: 'Databases',
+          },
+          {
+            icon: <Monitor />,
+            links: [
+              {
+                display: 'Metrics',
+                hide: !isACLPEnabled,
+                to: '/metrics',
+                isBeta: flags.aclp?.beta,
+                isNew: !flags.aclp?.beta && flags.aclp?.new,
+              },
+              {
+                display: 'Alerts',
+                hide: !isAlertsEnabled,
+                to: '/alerts',
+                isBeta: flags.aclpAlerting?.beta,
+              },
+              {
+                display: 'Logs',
+                hide: !isACLPLogsEnabled,
+                to: '/logs/delivery',
+                isBeta: isACLPLogsBeta,
+                isNew: !isACLPLogsBeta && isACLPLogsNew,
+              },
+              {
+                display: 'Longview',
+                to: '/longview',
+              },
+            ],
+            name: 'Monitor',
+          },
+          {
+            icon: <CoreUser />,
+            links: [
+              {
+                display: 'Billing',
+                to: '/billing',
+              },
+              {
+                display: 'Users & Grants',
+                hide: isIAMEnabled,
+                to: '/users',
+              },
+              {
+                display: 'Identity & Access',
+                hide: !isIAMEnabled,
+                to: '/iam',
+                isNew: isIAMEnabled && showLimitedAvailabilityBadges,
+              },
+              {
+                display: 'Quotas',
+                hide: !limitsEvolution?.enabled,
+                to: '/quotas',
+              },
+              {
+                display: 'Login History',
+                to: '/login-history',
+              },
+              {
+                display: 'Service Transfers',
+                to: '/service-transfers',
+              },
+              {
+                display: 'Maintenance',
+                to: '/maintenance',
+              },
+              {
+                display: 'Account Settings',
+                to: '/account-settings',
+              },
+            ],
+            name: 'Administration',
+          },
+          {
+            icon: <More />,
+            links: [
+              {
+                display: 'Betas',
+                hide: !flags.selfServeBetas,
+                to: '/betas',
+              },
+              {
+                display: 'Help & Support',
+                to: '/support',
+              },
+            ],
+            name: 'More',
+          },
+        ];
 
-  const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
-    () => [
+        return groups;
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [
-        {
-          display: 'Managed',
-          hide: !_isManagedAccount,
-          href: '/managed',
-          icon: <Managed />,
-        },
-      ],
-      [
-        {
-          activeLinks: ['/linodes', '/linodes/create'],
-          display: 'Linodes',
-          href: '/linodes',
-          icon: <Linode />,
-        },
-        {
-          display: 'Volumes',
-          href: '/volumes',
-          icon: <Volume />,
-        },
-        {
-          betaChipClassName: 'beta-chip-aglb',
-          display: 'Global Load Balancers',
-          hide: !flags.aglb,
-          href: '/loadbalancers',
-          // TODO AGLB: replace icon when available
-          icon: <Domain />,
-          isBeta: true,
-        },
-        {
-          display: 'NodeBalancers',
-          href: '/nodebalancers',
-          icon: <NodeBalancer />,
-        },
-        {
-          display: 'VPC',
-          hide: !showVPCs,
-          href: '/vpcs',
-          icon: <VPC />,
-          isBeta: true,
-        },
-        {
-          display: 'Firewalls',
-          href: '/firewalls',
-          icon: <Firewall />,
-        },
-        {
-          display: 'StackScripts',
-          href: '/stackscripts',
-          icon: <StackScript />,
-        },
-        {
-          activeLinks: [
-            '/images/create/create-image',
-            '/images/create/upload-image',
-          ],
-          display: 'Images',
-          href: '/images',
-          icon: <Image />,
-        },
-      ],
-      [
-        {
-          display: 'Domains',
-          href: '/domains',
-          icon: <Domain />,
-        },
-        {
-          display: 'Databases',
-          hide: !showDatabases,
-          href: '/databases',
-          icon: <Database />,
-          isBeta: flags.databaseBeta,
-        },
-        {
-          activeLinks: ['/kubernetes/create'],
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-          icon: <Kubernetes />,
-        },
-        {
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys',
-          ],
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-          icon: <Storage />,
-          prefetchRequestCondition: allowObjPrefetch,
-          prefetchRequestFn: prefetchObjectStorage,
-        },
-        {
-          display: 'Longview',
-          href: '/longview',
-          icon: <Longview />,
-        },
-        {
-          attr: { 'data-qa-one-click-nav-btn': true },
-          display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
-          icon: <OCA />,
-          prefetchRequestCondition: allowMarketplacePrefetch,
-          prefetchRequestFn: prefetchMarketplace,
-        },
-      ],
-      [
-        {
-          display: 'Account',
-          href: '/account',
-          icon: <Account />,
-        },
-        {
-          display: 'Betas',
-          hide: !flags.selfServeBetas,
-          href: '/betas',
-          icon: <Beta />,
-        },
-        {
-          display: 'Help & Support',
-          href: '/support',
-          icon: <TooltipIcon status="help" />,
-        },
-      ],
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      showDatabases,
-      _isManagedAccount,
-      allowObjPrefetch,
-      allowMarketplacePrefetch,
-      flags.databaseBeta,
-      flags.aglb,
-      showVPCs,
-    ]
+        isDatabasesEnabled,
+        isDatabasesV2Beta,
+        isManaged,
+        isPlacementGroupsEnabled,
+        isACLPEnabled,
+        isACLPLogsBeta,
+        isACLPLogsNew,
+        isACLPLogsEnabled,
+        isIAMEnabled,
+        isMarketplaceV2FeatureEnabled,
+        isNetworkLoadBalancerEnabled,
+        isReserveIpEnabled,
+        limitsEvolution,
+      ]
+    );
+
+  const accordionClicked = React.useCallback(
+    (index: number) => {
+      let updatedCollapsedAccordions: number[];
+      if (collapsedAccordions.includes(index)) {
+        updatedCollapsedAccordions = collapsedAccordions.filter(
+          (accIndex) => accIndex !== index
+        );
+      } else {
+        updatedCollapsedAccordions = [...collapsedAccordions, index];
+      }
+      updatePreferences({
+        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
+      });
+    },
+    [collapsedAccordions, updatePreferences]
   );
+
+  const checkOverflow = React.useCallback(() => {
+    if (navItemsRef.current && primaryNavRef.current) {
+      const navItemsHeight = navItemsRef.current.scrollHeight;
+      const primaryNavHeight = primaryNavRef.current.scrollHeight;
+      setNavItemsOverflowing(navItemsHeight > primaryNavHeight);
+    }
+  }, []);
+
+  // Effects to determine if we need to show a visual overflow indicator
+  // if the nav items are taller than the primary nav
+  React.useEffect(() => {
+    if (!navItemsRef.current || !primaryNavRef.current) {
+      return;
+    }
+
+    // MutationObserver for DOM changes
+    const observer = new MutationObserver(() => {
+      checkOverflow();
+    });
+
+    // Observe both elements for any changes to their subtrees
+    observer.observe(navItemsRef.current, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+    observer.observe(primaryNavRef.current, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+
+    // ResizeObserver for size changes
+    const resizeObserver = new ResizeObserver(() => {
+      checkOverflow();
+    });
+    resizeObserver.observe(document.body);
+
+    // Initial check
+    checkOverflow();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [checkOverflow]);
+
+  // This effect will only run if the collapsedSideNavPreference is not set
+  // When a user lands on a page and does not have any preference set,
+  // we want to expand the accordion that contains the active link for convenience and discoverability
+  React.useEffect(() => {
+    // Wait for preferences to load or if there's an error
+    if (preferencesLoading || preferencesError) {
+      return;
+    }
+
+    // Wait for preferences data to be available (not just the field, but the whole object)
+    if (!preferences) {
+      return;
+    }
+
+    // If user has already set collapsedSideNavProductFamilies preference, don't override it
+    if (collapsedSideNavPreference) {
+      return;
+    }
+
+    // Find the index of the group containing the active link and expand it
+    const activeGroupIndex = productFamilyLinkGroups.findIndex((group) => {
+      const filteredLinks = group.links.filter((link) => !link.hide);
+
+      return filteredLinks.some((link) =>
+        linkIsActive(location.pathname, link.to)
+      );
+    });
+
+    if (activeGroupIndex !== -1) {
+      accordionClicked(activeGroupIndex);
+    }
+  }, [
+    accordionClicked,
+    location.pathname,
+    location.search,
+    productFamilyLinkGroups,
+    collapsedSideNavPreference,
+    preferences,
+    preferencesLoading,
+    preferencesError,
+  ]);
+
+  let activeProductFamily = '';
 
   return (
-    <Grid
+    <Box
       alignItems="flex-start"
-      className={classes.menuGrid}
-      component="nav"
-      container
-      direction="column"
+      display="flex"
+      flexDirection="column"
+      gap={0}
+      height={{
+        md: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
+        xs: '100%',
+      }}
       id="main-navigation"
       justifyContent="flex-start"
+      ref={primaryNavRef}
       role="navigation"
-      spacing={0}
-      wrap="nowrap"
+      sx={{
+        '&:hover': {
+          '.primary-nav-toggle': {
+            justifyContent: 'flex-end',
+            width: SIDEBAR_WIDTH,
+          },
+        },
+      }}
     >
-      <Grid>
-        <div
-          className={cx(classes.logoItemAkamai, {
-            [classes.logoItemAkamaiCollapsed]: isCollapsed,
-          })}
-        >
-          <Link
-            className={cx({
-              [classes.logoContainer]: isCollapsed,
-            })}
-            aria-label="Akamai - Dashboard"
-            onClick={closeMenu}
-            title="Akamai - Dashboard"
-            to={`/dashboard`}
-          >
-            <AkamaiLogo
-              className={cx(
-                {
-                  [classes.logoAkamaiCollapsed]: isCollapsed,
-                },
-                classes.logo
-              )}
-              width={128}
-            />
-          </Link>
-        </div>
-      </Grid>
-      <div
-        className={cx({
-          [classes.fadeContainer]: true,
-          ['fade-in-table']: true,
+      <Box
+        display="flex"
+        flexDirection="column"
+        ref={navItemsRef}
+        sx={(theme) => ({
+          flexGrow: 1,
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          scrollbarColor: `${theme.color.grey4} transparent `,
         })}
+        width="100%"
       >
-        {primaryLinkGroups.map((thisGroup, idx) => {
-          const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
+        {productFamilyLinkGroups.map((productFamily, idx) => {
+          const filteredLinks = productFamily.links.filter(
+            (link) => !link.hide
+          );
+
           if (filteredLinks.length === 0) {
             return null;
           }
-          return (
-            <div key={idx}>
-              <Divider
-                className={classes.divider}
-                spacingBottom={12}
-                spacingTop={12}
-              />
-              {filteredLinks.map((thisLink) => {
-                const props = {
-                  closeMenu,
-                  isCollapsed,
-                  key: thisLink.display,
-                  locationPathname: location.pathname,
-                  locationSearch: location.search,
-                  ...thisLink,
-                };
 
-                // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
-                // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
-                // that includes the usePrefetch hook.
-                return thisLink.prefetchRequestFn &&
-                  thisLink.prefetchRequestCondition !== undefined ? (
-                  <PrefetchPrimaryLink
-                    {...props}
-                    prefetchRequestCondition={thisLink.prefetchRequestCondition}
-                    prefetchRequestFn={thisLink.prefetchRequestFn}
-                  />
-                ) : (
-                  <PrimaryLink {...props} />
-                );
-              })}
+          const PrimaryLinks = filteredLinks.map((link) => {
+            const isActiveLink = Boolean(
+              linkIsActive(location.pathname, link.to)
+            );
+
+            if (isActiveLink) {
+              activeProductFamily = productFamily.name ?? '';
+            }
+
+            const props = {
+              closeMenu,
+              isActiveLink,
+              isCollapsed,
+              ...link,
+            };
+
+            return <PrimaryLink {...props} key={link.display} />;
+          });
+
+          return (
+            <div key={idx} style={{ width: 'inherit' }}>
+              <StyledAccordion
+                expanded={!collapsedAccordions.includes(idx)}
+                heading={
+                  <>
+                    <Box component="span" flexShrink={0}>
+                      {productFamily.icon}
+                    </Box>
+                    <span className="productFamilyName">
+                      {productFamily.name}
+                    </span>
+                  </>
+                }
+                isActiveProductFamily={
+                  activeProductFamily === productFamily.name
+                }
+                isCollapsed={isCollapsed}
+                onChange={() => accordionClicked(idx)}
+              >
+                {PrimaryLinks}
+              </StyledAccordion>
             </div>
           );
         })}
-      </div>
-    </Grid>
+      </Box>
+      <PrimaryNavToggle
+        areNavItemsOverflowing={navItemsOverflowing}
+        desktopMenuToggle={desktopMenuToggle}
+        isCollapsed={isCollapsed}
+      />
+    </Box>
   );
 };
 
 export default React.memo(PrimaryNav);
-
-interface PrimaryLinkProps extends PrimaryLink {
-  closeMenu: () => void;
-  isBeta?: boolean;
-  isCollapsed: boolean;
-  locationPathname: string;
-  locationSearch: string;
-  prefetchProps?: {
-    onBlur: LinkProps['onBlur'];
-    onFocus: LinkProps['onFocus'];
-    onMouseEnter: LinkProps['onMouseEnter'];
-    onMouseLeave: LinkProps['onMouseLeave'];
-  };
-}
-
-const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const { classes, cx } = useStyles();
-
-  const {
-    activeLinks,
-    attr,
-    betaChipClassName,
-    closeMenu,
-    display,
-    href,
-    icon,
-    isBeta,
-    isCollapsed,
-    locationPathname,
-    locationSearch,
-    onClick,
-    prefetchProps,
-  } = props;
-
-  const isActiveLink = Boolean(
-    linkIsActive(href, locationSearch, locationPathname, activeLinks)
-  );
-
-  return (
-    <Link
-      onClick={(e: React.ChangeEvent<any>) => {
-        closeMenu();
-        if (onClick) {
-          onClick(e);
-        }
-      }}
-      to={href}
-      {...prefetchProps}
-      {...attr}
-      className={cx({
-        [classes.active]: isActiveLink,
-        [classes.listItem]: true,
-      })}
-      aria-current={isActiveLink}
-      data-testid={`menu-item-${display}`}
-    >
-      {icon && (
-        <div aria-hidden className="icon">
-          {icon}
-        </div>
-      )}
-      <p
-        className={cx({
-          [classes.linkItem]: true,
-          hiddenWhenCollapsed: isCollapsed,
-          primaryNavLink: true,
-        })}
-      >
-        {display}
-        {isBeta ? (
-          <BetaChip
-            className={cx(betaChipClassName ? betaChipClassName : '', {
-              [classes.chip]: true,
-            })}
-            color="primary"
-            component="span"
-          />
-        ) : null}
-      </p>
-    </Link>
-  );
-});
-
-interface PrefetchPrimaryLinkProps {
-  prefetchRequestCondition: boolean;
-  prefetchRequestFn: () => void;
-}
-
-// Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink = React.memo(
-  (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
-    const { cancelRequest, makeRequest } = usePrefetch(
-      props.prefetchRequestFn,
-      props.prefetchRequestCondition
-    );
-
-    const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-      onBlur: cancelRequest,
-      onFocus: makeRequest,
-      onMouseEnter: makeRequest,
-      onMouseLeave: cancelRequest,
-    };
-
-    return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
-  }
-);

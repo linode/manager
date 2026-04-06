@@ -1,45 +1,52 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Box } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { capitalize } from 'src/utilities/capitalize';
+import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallChipInformation';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { ActionHandlers, FirewallActionMenu } from './FirewallActionMenu';
+import { DefaultFirewallChip } from '../components/DefaultFirewallChip';
+import { FirewallActionMenu } from './FirewallActionMenu';
 
-export type Props = Firewall & ActionHandlers;
+import type { ActionHandlers } from './FirewallActionMenu';
+import type { Firewall, FirewallDeviceEntity } from '@linode/api-v4';
 
-export const FirewallRow = React.memo((props: Props) => {
-  const flags = useFlags();
-  const { id, label, rules, status, ...actionHandlers } = props;
+export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
-  const { data: devices, error, isLoading } = useAllFirewallDevicesQuery(id);
+export const FirewallRow = React.memo((props: FirewallRowProps) => {
+  const { entities, id, label, rules, status, ...actionHandlers } = props;
 
-  let featureFlaggedDevices: FirewallDevice[] = devices ?? [];
-  if (!flags.firewallNodebalancer) {
-    featureFlaggedDevices =
-      devices?.filter((thisDevice) => {
-        return thisDevice.entity.type === 'linode';
-      }) ?? [];
-  }
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
+  const { defaultNumEntities, isDefault, tooltipText } =
+    useDefaultFirewallChipInformation(id);
 
   const count = getCountOfRules(rules);
 
   return (
-    <TableRow
-      ariaLabel={`Firewall ${label}`}
-      data-testid={`firewall-row-${id}`}
-    >
+    <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
-        <Link tabIndex={0} to={`/firewalls/${id}`}>
-          {label}
-        </Link>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+          }}
+        >
+          <Link to={`/firewalls/${id}`}>{label}</Link>
+          {isLinodeInterfacesEnabled && isDefault && (
+            <DefaultFirewallChip
+              chipProps={{ sx: { marginLeft: 1 } }}
+              defaultNumEntities={defaultNumEntities}
+              tooltipText={tooltipText}
+            />
+          )}
+        </Box>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
@@ -48,18 +55,20 @@ export const FirewallRow = React.memo((props: Props) => {
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
-          {getDevicesCellString(
-            featureFlaggedDevices ?? [],
-            isLoading,
-            error ?? undefined
-          )}
+          {getDevicesCellString({
+            entities,
+            isLinodeInterfacesEnabled,
+          })}
         </TableCell>
       </Hidden>
-      <TableCell sx={{ textAlign: 'end', whiteSpace: 'nowrap' }}>
+      <TableCell
+        sx={{ paddingRight: 0, textAlign: 'end', whiteSpace: 'nowrap' }}
+      >
         <FirewallActionMenu
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
+          isDefaultFirewall={isDefault}
           {...actionHandlers}
         />
       </TableCell>
@@ -93,50 +102,67 @@ export const getRuleString = (count: [number, number]): string => {
 };
 
 export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
-  return [(rules.inbound || []).length, (rules.outbound || []).length];
+  return [(rules?.inbound || []).length, (rules?.outbound || []).length];
 };
 
-const getDevicesCellString = (
-  data: FirewallDevice[],
-  loading: boolean,
-  error?: APIError[]
-): JSX.Element | string => {
-  if (loading) {
-    return 'Loading...';
-  }
+interface DeviceLinkInputs {
+  entities: FirewallDeviceEntity[];
+  isLinodeInterfacesEnabled: boolean;
+}
+const getDevicesCellString = (inputs: DeviceLinkInputs) => {
+  const { entities, isLinodeInterfacesEnabled } = inputs;
+  const filteredEntities = isLinodeInterfacesEnabled
+    ? entities
+    : entities.filter((entity) => entity.type !== 'linode_interface');
 
-  if (error) {
-    return 'Error retrieving Linodes';
-  }
-
-  if (data.length === 0) {
+  if (filteredEntities.length === 0) {
     return 'None assigned';
   }
 
-  return getDeviceLinks(data);
+  return getDeviceLinks({
+    entities: filteredEntities,
+  });
 };
 
-export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
-  const firstThree = data.slice(0, 3);
+export const getDeviceLinks = (
+  inputs: Omit<DeviceLinkInputs, 'isLinodeInterfacesEnabled'>
+) => {
+  const { entities } = inputs;
+  const firstThree = entities.slice(0, 3);
 
   return (
     <>
-      {firstThree.map((thisDevice, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={thisDevice.id}
-          to={`/${thisDevice.entity.type}s/${thisDevice.entity.id}`}
-        >
-          {idx > 0 && `, `}
-          {thisDevice.entity.label}
-        </Link>
-      ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
+      {firstThree.map((entity, idx) => {
+        const { entityLabel, entityLink } = getDeviceLinkAndLabel(entity);
+
+        return (
+          <React.Fragment key={entity.url}>
+            {idx > 0 && ', '}
+            <Link
+              className="link secondaryLink"
+              data-testid="firewall-row-link"
+              to={entityLink}
+            >
+              {entityLabel}
+            </Link>
+          </React.Fragment>
+        );
+      })}
+      {entities.length > 3 && <span>, plus {entities.length - 3} more.</span>}
     </>
   );
+};
+
+export const getDeviceLinkAndLabel = (entity: FirewallDeviceEntity) => {
+  const { id, label, parent_entity, type } = entity;
+  const isInterfaceDevice = type === 'linode_interface';
+
+  const entityLabel =
+    isInterfaceDevice && parent_entity ? parent_entity.label : label;
+  const entityLink =
+    isInterfaceDevice && parent_entity
+      ? `/linodes/${parent_entity.id}/networking/interfaces/${id}`
+      : `/${type}s/${id}/${type === 'linode' ? 'networking' : 'summary'}`;
+
+  return { entityLabel, entityLink };
 };

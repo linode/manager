@@ -1,31 +1,71 @@
+import { Button, fadeIn, H1Header, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import { Button, ButtonProps } from 'src/components/Button/Button';
-import { H1Header } from 'src/components/H1Header/H1Header';
-import { Typography } from 'src/components/Typography';
-import { fadeIn } from 'src/styles/keyframes';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 
 import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
+
+import type { ButtonProps } from '@linode/ui';
 
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
 }
 
 export interface PlaceholderProps {
+  /**
+   * Additional copy text to display
+   */
   additionalCopy?: React.ReactNode | string;
+  /**
+   * Determines the buttons to display
+   */
   buttonProps?: ExtendedButtonProps[];
+  /**
+   * Additional children to pass in
+   */
   children?: React.ReactNode | string;
+  /**
+   * Additional styles to pass to the root element
+   */
   className?: string;
+  /**
+   * Used for testing
+   */
   dataQAPlaceholder?: boolean | string;
+  /**
+   * If provided, determines the max width of any children or additional copy text
+   */
   descriptionMaxWidth?: number;
+  /**
+   * Icon to display as placeholder
+   * @default LinodeIcon
+   */
   icon?: React.ComponentType<any>;
+  /**
+   * If true, applies additional styles to the icon container
+   */
   isEntity?: boolean;
+  /**
+   * Links to display
+   */
   linksSection?: JSX.Element;
+  /**
+   *If true, uses 'h2' as the root node of the title instead of 'h1'
+   */
   renderAsSecondary?: boolean;
+  /**
+   * If true, displays transfer display
+   */
   showTransferDisplay?: boolean;
+  /**
+   * Subtitle text to display
+   */
   subtitle?: string;
+  /**
+   * Title text to display as placeholder
+   */
   title: string;
 }
 
@@ -35,7 +75,7 @@ export const Placeholder = (props: PlaceholderProps) => {
     buttonProps,
     dataQAPlaceholder,
     descriptionMaxWidth,
-    icon: Icon = LinodeIcon,
+    icon: Icon = ComputeIcon,
     isEntity,
     linksSection,
     renderAsSecondary,
@@ -56,14 +96,20 @@ export const Placeholder = (props: PlaceholderProps) => {
       fill: theme.palette.primary.main,
     },
     '& .circle': {
-      fill: theme.name === 'light' ? '#fff' : '#000',
+      fill:
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals.White
+          : theme.tokens.color.Neutrals.Black,
     },
     '& .insidePath path': {
       opacity: 0,
       stroke: theme.palette.primary.main,
     },
     '& .outerCircle': {
-      fill: theme.name === 'light' ? '#fff' : '#000',
+      fill:
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals.White
+          : theme.tokens.color.Neutrals.Black,
       stroke: theme.bg.offWhite,
     },
     height: '160px',
@@ -78,16 +124,16 @@ export const Placeholder = (props: PlaceholderProps) => {
         data-qa-placeholder-container={dataQAPlaceholder || true}
       >
         <StyledIconWrapper isEntity={isEntity}>
-          {Icon && <Icon style={IconStyles} />}
+          {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
         </StyledIconWrapper>
 
         <H1Header
+          data-qa-placeholder-title
+          renderAsSecondary={renderAsSecondary}
           sx={{
             gridArea: 'title',
             textAlign: 'center',
           }}
-          data-qa-placeholder-title
-          renderAsSecondary={renderAsSecondary}
           title={title}
         />
         {hasSubtitle ? (
@@ -172,12 +218,20 @@ const StyledButtonWrapper = styled('div')(({ theme }) => ({
 const StyledLinksSection = styled('div')<
   Pick<PlaceholderProps, 'showTransferDisplay'>
 >(({ theme, ...props }) => ({
-  borderTop: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+  borderTop: `1px solid ${
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[20]
+      : theme.tokens.color.Neutrals[100]
+  }`,
   gridArea: 'links',
   paddingTop: '38px',
 
   ...(props.showTransferDisplay && {
-    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+    borderBottom: `1px solid ${
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[20]
+        : theme.tokens.color.Neutrals[100]
+    }`,
     paddingBottom: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       paddingBottom: theme.spacing(4),
@@ -251,8 +305,8 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
       : `${theme.spacing(2)} 0`,
     [theme.breakpoints.up('md')]: {
       padding: props.showTransferDisplay
-        ? `${theme.spacing(10)} 0 ${theme.spacing(4)}`
-        : `${theme.spacing(10)} 0`,
+        ? `${theme.spacing(8)} 0 ${theme.spacing(4)}`
+        : `${theme.spacing(8)} 0`,
     },
   })
 );

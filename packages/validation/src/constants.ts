@@ -1,1 +1,1 @@
-export const MAX_VOLUME_SIZE = 10240;
+export const MAX_VOLUME_SIZE = 16384;

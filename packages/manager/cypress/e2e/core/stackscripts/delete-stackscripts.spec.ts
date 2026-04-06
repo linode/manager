@@ -1,10 +1,12 @@
 import { authenticate } from 'support/api/authentication';
-import { stackScriptFactory } from 'src/factories';
 import {
   mockDeleteStackScript,
+  mockGetStackScript,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+
+import { stackScriptFactory } from 'src/factories';
 
 authenticate();
 describe('Delete stackscripts', () => {
@@ -19,19 +21,24 @@ describe('Delete stackscripts', () => {
       is_public: false,
     });
     mockGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+      'getStackScript'
+    );
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
     // Do nothing when cancelling
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`)
       .closest('tr')
       .within(() => {
         ui.actionMenu
           .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
       });
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    cy.wait('@getStackScript');
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)
       .should('be.visible')
@@ -47,17 +54,21 @@ describe('Delete stackscripts', () => {
       });
 
     // The StackScript is deleted successfully.
-    cy.get(`[aria-label="${stackScripts[0].label}"]`)
+    mockDeleteStackScript(stackScripts[0].id).as('deleteStackScript');
+    mockGetStackScripts([stackScripts[1]]).as('getUpdatedStackScripts');
+    mockGetStackScript(stackScripts[1].id, stackScripts[1]).as(
+      'getUpdatedStackScript'
+    );
+    cy.get(`[data-qa-table-row="${stackScripts[0].label}"]`)
       .closest('tr')
       .within(() => {
         ui.actionMenu
           .findByTitle(`Action menu for StackScript ${stackScripts[0].label}`)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
       });
-    mockDeleteStackScript(stackScripts[0].id).as('deleteStackScript');
-    mockGetStackScripts([stackScripts[1]]).as('getUpdatedStackScripts');
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)
       .should('be.visible')
@@ -67,23 +78,23 @@ describe('Delete stackscripts', () => {
           .should('be.visible')
           .click();
       });
-    cy.wait('@deleteStackScript');
-    cy.wait('@getUpdatedStackScripts');
-
+    cy.wait(['@deleteStackScript', '@getUpdatedStackScripts']);
     cy.findByText(stackScripts[0].label).should('not.exist');
 
     // The "Automate Deployment with StackScripts!" welcome page appears when no StackScript exists.
-    cy.get(`[aria-label="${stackScripts[1].label}"]`)
+    mockDeleteStackScript(stackScripts[1].id).as('deleteStackScript');
+    mockGetStackScripts([]).as('getUpdatedStackScripts');
+    cy.get(`[data-qa-table-row="${stackScripts[1].label}"]`)
       .closest('tr')
       .within(() => {
         ui.actionMenu
           .findByTitle(`Action menu for StackScript ${stackScripts[1].label}`)
           .should('be.visible')
           .click();
+        ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
       });
-    mockDeleteStackScript(stackScripts[1].id).as('deleteStackScript');
-    mockGetStackScripts([]).as('getUpdatedStackScripts');
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    cy.wait('@getUpdatedStackScript');
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[1].label}?`)
       .should('be.visible')

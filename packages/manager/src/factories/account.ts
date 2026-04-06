@@ -1,9 +1,10 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
   Account,
   ActivePromotion,
   RegionalNetworkUtilization,
 } from '@linode/api-v4/lib/account/types';
-import * as Factory from 'factory.ts';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   credit_monthly_cap: '20.00',
@@ -36,36 +37,46 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   balance_uninvoiced: 0.0,
   billing_source: 'linode',
   capabilities: [
-    'Linodes',
-    'NodeBalancers',
+    'Akamai Cloud Pulse',
     'Block Storage',
-    'Object Storage',
-    'Kubernetes',
     'Cloud Firewall',
-    'Vlans',
+    'Disk Encryption',
+    'Kubernetes',
+    'Linodes',
     'LKE HA Control Planes',
     'Machine Images',
     'Managed Databases',
+    'Managed Databases Beta',
+    'NETINT Quadra T1U',
+    'Network LoadBalancer',
+    'NodeBalancers',
+    'Object Storage Access Key Regions',
+    'Object Storage Endpoint Types',
+    'Object Storage',
+    'Placement Group',
+    'Vlans',
+    'Kubernetes Enterprise',
+    'VPC Dual Stack',
   ],
-  city: 'Colorado',
-  company: 'xrTHcxhFdaDW1XyYWSNWsccDa07iUy',
-  country: 'CA',
+  city: 'Philadelphia',
+  company: Factory.each((i) => `company-${i}`),
+  country: 'US',
   credit_card: {
-    expiry: '01/2018',
+    expiry: '01/2028',
     last_four: '1111',
   },
   email: 'my-email@example.com',
-  euuid: '278EC57D-7424-4B3A-B35C3CE395787567',
-  first_name: 'XRbganOEO',
-  last_name: 'demo2',
-  phone: '19005553221',
-  state: 'BC',
+  euuid: Factory.each((i) => `278EC57D-7424-4B3A-B35C3CE395787567-${i}`),
+  first_name: 'John',
+  last_name: 'Doe',
+  phone: '1215550001',
+  state: 'PA',
   tax_id: '111111111',
   zip: '19106',
 });
 
-export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
-  {
+export const accountTransferFactory =
+  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
     billable: 0,
     quota: 25000, // GB
     region_transfers: [
@@ -83,14 +94,12 @@ export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUt
       },
     ],
     used: 9000, // GB
-  }
-);
+  });
 
-export const accountTransferNoResourceFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
-  {
+export const accountTransferNoResourceFactory =
+  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
     billable: 0,
     quota: 0,
     region_transfers: [],
     used: 0,
-  }
-);
+  });

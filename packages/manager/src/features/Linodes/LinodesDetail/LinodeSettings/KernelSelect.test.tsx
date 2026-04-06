@@ -1,42 +1,56 @@
-import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
+import { kernelFactory } from 'src/factories/kernels';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   KernelSelect,
-  KernelSelectProps,
   kernelsToGroupedItems,
   sortCurrentKernels,
 } from './KernelSelect';
 
-let kernels: Kernel[] = [];
-beforeAll(async () => {
-  const cachedKernelData = await vi.importActual<any>(
-    'src/cachedData/kernels.json'
-  );
-  kernels = (cachedKernelData['data'] || []).filter(
-    (kernel: Kernel) => !!kernel.kvm
-  );
-});
+import type { KernelSelectProps } from './KernelSelect';
 
-vi.mock('src/components/EnhancedSelect/Select');
+const kernels = [
+  kernelFactory.build({ id: 'linode/grub2', label: 'GRUB 2' }),
+  kernelFactory.build({ id: 'linode/grub-legacy', label: 'GRUB (Legacy)' }),
+  kernelFactory.build({
+    id: 'linode/latest-64bit',
+    label: 'Latest 64 bit',
+    architecture: 'x86_64',
+  }),
+  kernelFactory.build({
+    id: 'linode/latest-32bit',
+    label: 'Latest 32 bit',
+    architecture: 'i386',
+  }),
+  kernelFactory.build({ id: 'linode/direct-disk', label: 'Direct Disk' }),
+];
 
 describe('Kernel Select component', () => {
-  it('should render a select with the correct number of options', () => {
+  it('should render a select with the correct number of options', async () => {
     const props: KernelSelectProps = {
       kernels,
       onChange: vi.fn(),
     };
-    renderWithTheme(<KernelSelect {...props} />);
-    expect(screen.getAllByTestId('mock-option')).toHaveLength(kernels.length);
+    const { getByPlaceholderText } = renderWithTheme(
+      <KernelSelect {...props} />
+    );
+    const kernelSelectMenu = getByPlaceholderText('Select a Kernel');
+
+    await userEvent.click(kernelSelectMenu);
+
+    expect(screen.getAllByTestId('kernel-option')).toHaveLength(kernels.length);
   });
 
   it('should group kernels correctly', () => {
     const groupedKernels = kernelsToGroupedItems(kernels);
-    const current = groupedKernels[0];
-    expect(current.options.map((k: any) => k.value)).toEqual([
+    const current = groupedKernels.filter(
+      (kernel) => kernel.kernelType === 'Current'
+    );
+    expect(current.map((k) => k.value)).toEqual([
       'linode/latest-64bit',
       'linode/latest-32bit',
       'linode/direct-disk',

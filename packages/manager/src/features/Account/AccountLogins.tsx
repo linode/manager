@@ -1,9 +1,10 @@
-import { AccountLogin } from '@linode/api-v4/lib/account/types';
-import { Theme } from '@mui/material/styles';
+import { useAccountLoginsQuery } from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Hidden } from 'src/components/Hidden';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,12 +15,16 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useAccountLoginsQuery } from 'src/queries/accountLogins';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import AccountLoginsTableRow from './AccountLoginsTableRow';
+import { getRestrictedResourceText } from './utils';
+
+import type { AccountLogin } from '@linode/api-v4/lib/account/types';
+import type { Theme } from '@mui/material/styles';
 
 const preferenceKey = 'account-logins';
 
@@ -39,15 +44,24 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 const AccountLogins = () => {
   const { classes } = useStyles();
-  const pagination = usePagination(1, preferenceKey);
+  const { data: permissions } = usePermissions('account', [
+    'list_account_logins',
+  ]);
+  const pagination = usePaginationV2({
+    currentRoute: '/login-history',
+    preferenceKey: 'account-logins-pagination',
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'datetime',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'datetime',
+      },
+      from: '/login-history',
     },
-    `${preferenceKey}-order}`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+  });
 
   const filter = {
     ['+order']: order,
@@ -61,16 +75,18 @@ const AccountLogins = () => {
     },
     filter
   );
+  const { isChildUserType } = useDelegationRole();
+  const canViewAccountLogins = permissions.list_account_logins;
 
   const renderTableContent = () => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={5}
           responsive={{
             2: { smDown: true },
             3: { mdDown: true },
           }}
-          columns={5}
           rows={1}
         />
       );
@@ -90,12 +106,13 @@ const AccountLogins = () => {
     return null;
   };
 
-  return (
+  return canViewAccountLogins ? (
     <>
+      <DocumentTitleSegment segment="Login History" />
       <Typography className={classes.copy} variant="body1">
         Logins across all users on your account over the last 90 days.
       </Typography>
-      <Table>
+      <Table aria-label="Account Logins">
         <TableHead>
           <TableRow>
             <TableSortCell
@@ -152,6 +169,14 @@ const AccountLogins = () => {
         pageSize={pagination.pageSize}
       />
     </>
+  ) : (
+    <Notice
+      text={getRestrictedResourceText({
+        isChildUserType,
+        resourceType: 'Account',
+      })}
+      variant="warning"
+    />
   );
 };
 

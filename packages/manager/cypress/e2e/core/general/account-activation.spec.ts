@@ -1,5 +1,8 @@
 import { apiMatcher } from 'support/util/intercepts';
 
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('account activation', () => {
   /**
    * The API will return 403 with the body below for most endpoint except `/v4/profile`.
@@ -8,7 +11,6 @@ describe('account activation', () => {
    */
   it('should render an activation landing page if the customer is not activated', () => {
     cy.intercept('GET', apiMatcher('*'), {
-      statusCode: 403,
       body: {
         errors: [
           {
@@ -17,6 +19,7 @@ describe('account activation', () => {
           },
         ],
       },
+      statusCode: 403,
     });
 
     cy.visitWithLogin('/');

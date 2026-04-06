@@ -1,9 +1,11 @@
-import { CreditCardData } from '@linode/api-v4';
+import { Settings } from 'luxon';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CreditCard from './CreditCard';
+
+import type { CreditCardData } from '@linode/api-v4';
 
 it('Displays credit card type and last four digits', () => {
   const creditCardData: CreditCardData = {
@@ -20,6 +22,9 @@ it('Displays credit card type and last four digits', () => {
 });
 
 it('Displays formatted expiration date for cards with expiration', () => {
+  // Mock that the current date is in 2023 so that the card is not expired.
+  Settings.now = () => new Date(2023, 11, 7).valueOf();
+
   const creditCardData: CreditCardData = {
     card_type: 'Visa',
     expiry: '12/2023',

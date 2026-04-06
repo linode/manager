@@ -1,8 +1,12 @@
 import { API_ROOT } from '../constants';
-import { RegionalNetworkUtilization, NetworkTransfer } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Kernel, LinodeType as Type, Stats } from './types';
+
+import type {
+  NetworkTransfer,
+  RegionalNetworkUtilization,
+} from '../account/types';
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { Kernel, Stats, LinodeType as Type } from './types';
 
 /**
  * getLinodeStats
@@ -14,9 +18,9 @@ import { Kernel, LinodeType as Type, Stats } from './types';
 export const getLinodeStats = (linodeId: number) =>
   Request<Stats>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/stats`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/stats`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -33,15 +37,15 @@ export const getLinodeStats = (linodeId: number) =>
 export const getLinodeStatsByDate = (
   linodeId: number,
   year: string,
-  month: string
+  month: string,
 ) =>
   Request<Stats>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/stats/${encodeURIComponent(year)}/${encodeURIComponent(month)}`
+        linodeId,
+      )}/stats/${encodeURIComponent(year)}/${encodeURIComponent(month)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -54,9 +58,9 @@ export const getLinodeStatsByDate = (
 export const getLinodeTransfer = (linodeId: number) =>
   Request<RegionalNetworkUtilization>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/transfer`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/transfer`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -71,15 +75,15 @@ export const getLinodeTransfer = (linodeId: number) =>
 export const getLinodeTransferByDate = (
   linodeId: number,
   year: string,
-  month: string
+  month: string,
 ) =>
   Request<NetworkTransfer>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/transfer/${encodeURIComponent(year)}/${encodeURIComponent(month)}`
+        linodeId,
+      )}/transfer/${encodeURIComponent(year)}/${encodeURIComponent(month)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -94,7 +98,7 @@ export const getLinodeKernels = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/linode/kernels`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -109,7 +113,7 @@ export const getLinodeKernels = (params?: Params, filter?: Filter) =>
 export const getLinodeKernel = (kernelId: string) =>
   Request<Kernel>(
     setURL(`${API_ROOT}/linode/kernels/${encodeURIComponent(kernelId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -122,7 +126,7 @@ export const getLinodeTypes = (params?: Params) =>
   Request<Page<Type>>(
     setURL(`${API_ROOT}/linode/types`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -136,7 +140,7 @@ export const getLinodeTypes = (params?: Params) =>
 export const getType = (typeId: string) =>
   Request<Type>(
     setURL(`${API_ROOT}/linode/types/${encodeURIComponent(typeId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -149,5 +153,5 @@ export const getType = (typeId: string) =>
 export const getDeprecatedLinodeTypes = () =>
   Request<Page<Type>>(
     setURL(`${API_ROOT}/linode/types-legacy`),
-    setMethod('GET')
+    setMethod('GET'),
   );

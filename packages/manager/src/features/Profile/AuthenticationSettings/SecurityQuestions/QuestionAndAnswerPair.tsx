@@ -1,21 +1,22 @@
-import { SecurityQuestion } from '@linode/api-v4/lib/profile';
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Item } from 'src/components/EnhancedSelect';
-
 import { Answer } from './Answer';
 import { Question } from './Question';
+
+import type { SelectQuestionOption } from './Question';
+import type { SecurityQuestion } from '@linode/api-v4/lib/profile';
 
 interface Props {
   edit: boolean;
   handleChange: any;
   index: number;
   onEdit: () => void;
-  options: Item<number>[];
+  options: SelectQuestionOption[];
   questionResponse: SecurityQuestion | undefined;
-  setFieldValue: (field: string, value: SecurityQuestion | number) => void;
+  securityQuestionRef?: React.RefObject<HTMLInputElement | null>;
+  setFieldValue: (field: string, value: number | SecurityQuestion) => void;
 }
 
 export const QuestionAndAnswerPair = (props: Props) => {
@@ -25,6 +26,7 @@ export const QuestionAndAnswerPair = (props: Props) => {
     onEdit,
     options,
     questionResponse,
+    securityQuestionRef,
     setFieldValue,
     ...rest
   } = props;
@@ -46,6 +48,7 @@ export const QuestionAndAnswerPair = (props: Props) => {
           handleChange={handleChange}
           isReadOnly={!edit}
           questionResponse={questionResponse}
+          securityQuestionRef={securityQuestionRef}
           {...rest}
         />
       </StyledAnswerContainer>

@@ -1,37 +1,55 @@
+import { useRegionAvailabilityQuery } from '@linode/queries';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
+import { createDedicatedPlanFiltersRenderProp } from 'src/features/components/PlansPanel/DedicatedPlanFilters';
+import { createGPUPlanFilterRenderProp } from 'src/features/components/PlansPanel/GpuFilters';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
 import {
   determineInitialPlanCategoryTab,
+  extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCPlan,
   planTabInfoContent,
+  replaceOrAppendPlaceholder512GbPlans,
+  useShouldDisablePremiumPlansTab,
 } from 'src/features/components/PlansPanel/utils';
-import { ExtendedType } from 'src/utilities/extendType';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
-import type { CreateNodePoolData, Region } from '@linode/api-v4';
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
+import type {
+  CreateNodePoolData,
+  KubernetesTier,
+  Region,
+} from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
   copy?: string;
   currentPlanHeading?: string;
-  disabled?: boolean;
   error?: string;
   getTypeCount: (planId: string) => number;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasSelectedRegion: boolean;
   header?: string;
+  isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
+  notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
   selectedId?: string;
-  selectedRegionID?: Region['id'] | string;
+  selectedRegionId?: Region['id'] | string;
+  selectedTier: KubernetesTier;
   types: ExtendedType[];
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -40,60 +58,153 @@ export const KubernetesPlansPanel = (props: Props) => {
   const {
     copy,
     currentPlanHeading,
-    disabled,
     error,
     getTypeCount,
     hasSelectedRegion,
     header,
+    isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     onAdd,
+    handleConfigurePool,
     onSelect,
+    notice,
     regionsData,
     resetValues,
     selectedId,
-    selectedRegionID,
+    selectedRegionId,
+    selectedTier,
     types,
     updatePlanCount,
   } = props;
 
-  const plans = getPlanSelectionsByPlanType(types);
+  const flags = useFlags();
 
-  const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    return {
-      render: () => {
-        return (
-          <>
-            <PlanInformation
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
-                plan
-              )}
-              hasSelectedRegion={hasSelectedRegion}
-              planType={plan}
-              regionsData={regionsData}
-            />
-            <KubernetesPlanContainer
-              disabled={disabled || isPlanPanelDisabled(plan)}
-              getTypeCount={getTypeCount}
-              onAdd={onAdd}
-              onSelect={onSelect}
-              plans={plans[plan]}
-              selectedId={selectedId}
-              selectedRegionID={selectedRegionID}
-              updatePlanCount={updatePlanCount}
-            />
-          </>
-        );
-      },
-      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
-    };
+  const { data: regionAvailabilities } = useRegionAvailabilityQuery(
+    selectedRegionId || '',
+    Boolean(flags.soldOutChips) && Boolean(selectedRegionId)
+  );
+
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types,
   });
+
+  const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
+    plan === 'shared' && Boolean(isAPLEnabled);
+
+  const _types = types.filter((type) => {
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc?.enabled && isMTCPlan(type)) {
+      return false;
+    }
+
+    return (
+      !type.id.includes('dedicated-edge') &&
+      !type.id.includes('nanode-edge') &&
+      // Filter out Blackwell plans for kubernetes (for now)
+      !(type.id.includes('blackwell') && !flags.kubernetesBlackwellPlans)
+    );
+  });
+
+  const plans = getPlanSelectionsByPlanType(
+    flags.disableLargestGbPlans
+      ? replaceOrAppendPlaceholder512GbPlans(_types)
+      : _types,
+    { isLKE: true }
+  );
+
+  const tabs = Object.keys(plans)?.map(
+    (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
+      const plansMap: PlanSelectionType[] = plans[plan]!;
+      const {
+        allDisabledPlans,
+        hasMajorityOfPlansDisabled,
+        plansForThisLinodeTypeClass,
+      } = extractPlansInformation({
+        disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+        isAPLEnabled,
+        plans: plansMap,
+        regionAvailabilities,
+        selectedRegionId,
+      });
+
+      return {
+        disabled: false,
+        render: () => {
+          return (
+            <>
+              <PlanInformation
+                flow="kubernetes"
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
+                isAPLEnabled={isAPLEnabled}
+                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                  plan
+                )}
+                plans={plansForThisLinodeTypeClass}
+                planType={plan}
+                regionsData={regionsData}
+              />
+              <KubernetesPlanContainer
+                allDisabledPlans={allDisabledPlans}
+                getTypeCount={getTypeCount}
+                handleConfigurePool={handleConfigurePool}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                planFilters={(() => {
+                  switch (plan) {
+                    case 'dedicated':
+                      return createDedicatedPlanFiltersRenderProp();
+                    case 'gpu':
+                      return createGPUPlanFilterRenderProp();
+                    default:
+                      return undefined;
+                  }
+                })()}
+                plans={plansForThisLinodeTypeClass}
+                planType={plan}
+                selectedId={selectedId}
+                selectedRegionId={selectedRegionId}
+                selectedTier={selectedTier}
+                updatePlanCount={updatePlanCount}
+                wholePanelIsDisabled={
+                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
+                }
+              />
+            </>
+          );
+        },
+        title: planTabInfoContent[plan]?.title,
+      };
+    }
+  );
 
   const initialTab = determineInitialPlanCategoryTab(
     types,
     selectedId,
     currentPlanHeading
   );
+
+  // If there are no premium plans available, plans table will hide the premium tab.
+  // To override this behavior, we add the tab again and then disable it.
+  // If there are plans but they should be disabled, we disable the existing tab.
+  if (
+    shouldDisablePremiumPlansTab &&
+    !tabs.some((tab) => tab.title === planTabInfoContent.premium?.title)
+  ) {
+    tabs.push({
+      disabled: true,
+      render: () => <div />,
+      title: planTabInfoContent.premium?.title,
+    });
+  } else if (shouldDisablePremiumPlansTab) {
+    tabs.forEach((tab) => {
+      if (tab.title === planTabInfoContent.premium?.title) {
+        tab.disabled = true;
+      }
+    });
+  }
 
   return (
     <TabbedPanel
@@ -102,7 +213,13 @@ export const KubernetesPlansPanel = (props: Props) => {
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
+      notice={notice}
       sx={{ padding: 0 }}
+      tabDisabledMessage={
+        shouldDisablePremiumPlansTab
+          ? 'Premium CPUs are now called G7 Dedicated plans.'
+          : undefined
+      }
       tabs={tabs}
     />
   );

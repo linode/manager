@@ -7,7 +7,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Subnet, VPC } from '@linode/api-v4';
+import type { Subnet, VPC, VPCIP } from '@linode/api-v4';
 
 export const MOCK_DELETE_VPC_ERROR =
   'Before deleting this VPC, you must remove all of its Linodes';
@@ -32,6 +32,25 @@ export const mockGetVPC = (vpc: VPC): Cypress.Chainable<null> => {
  */
 export const mockGetVPCs = (vpcs: VPC[]): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('vpcs*'), paginateResponse(vpcs));
+};
+
+/**
+ * Intercepts GET request to fetch a VPC's IPs and mocks response.
+ *
+ * @param vpcId - The ID of the VPC.
+ * @param vpcIPs - Array of VPC IPs with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetVPCIPs = (
+  vpcId: number,
+  vpcIPs: VPCIP[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`vpcs/${vpcId}/ips*`),
+    paginateResponse(vpcIPs)
+  );
 };
 
 /**
@@ -129,6 +148,27 @@ export const mockGetSubnets = (
     'GET',
     apiMatcher(`vpcs/${vpcId}/subnets*`),
     paginateResponse(subnets)
+  );
+};
+
+/**
+ * Intercepts GET request to get a specific subnet and mocks response.
+ *
+ * @param vpcId - ID of VPC for which to mock response.
+ * @param subnetId - ID of subnet for which to mock response.
+ * @param subnet - Subnet for which to mock response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSubnet = (
+  vpcId: number,
+  subnetId: number,
+  subnet: Subnet
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`vpcs/${vpcId}/subnets/${subnetId}`),
+    subnet
   );
 };
 

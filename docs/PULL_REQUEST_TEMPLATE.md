@@ -1,15 +1,33 @@
 ## Description 📝
+
 Highlight the Pull Request's context and intentions.
 
 ## Changes  🔄
-List any change relevant to the reviewer.
+
+List any change(s) relevant to the reviewer.
+
 - ...
 - ...
+
+### Scope 🚢
+
+ Upon production release, changes in this PR will be visible to:
+
+- [ ] All customers
+- [ ] Some customers (e.g. in Beta or Limited Availability)
+- [ ] No customers / Not applicable
+
+## Target release date 🗓️
+
+Please specify a release date (and environment, if applicable) to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
 
 ## Preview 📷
-**Include a screenshot or screen recording of the change**
 
-:bulb: Use `<video src="" />` tag when including recordings in table.
+**Include a screenshot `<img src="" />` or video `<video src="" />` of the change.**
+
+:lock: Use the [Mask Sensitive Data](https://cloud.linode.com/profile/settings) setting for security.
+
+:bulb: For changes requiring multiple steps to validate, prefer a video for clarity.
 
 | Before  | After   |
 | ------- | ------- |
@@ -18,38 +36,58 @@ List any change relevant to the reviewer.
 ## How to test 🧪
 
 ### Prerequisites
+
 (How to setup test environment)
+
 - ...
 - ...
 
 ### Reproduction steps
+
 (How to reproduce the issue, if applicable)
-- ...
-- ...
 
-### Verification steps 
+- [ ] ...
+- [ ] ...
+
+### Verification steps
+
 (How to verify changes)
-- ...
-- ...
 
-## As an Author I have considered 🤔
+- [ ] ...
+- [ ] ...
 
-*Check all that apply*
+<details>
+<summary> Author Checklists </summary>
 
-- [ ] 👀 Doing a self review
-- [ ] ❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)
-- [ ] 🤏 Splitting feature into small PRs
-- [ ] ➕ Adding a changeset
-- [ ] 🧪 Providing/Improving test coverage
-- [ ] 🔐 Removing all sensitive information from the code and PR description
-- [ ] 🚩 Using a feature flag to protect the release
-- [ ] 👣 Providing comprehensive reproduction steps
-- [ ] 📑 Providing or updating our documentation
-- [ ] 🕛 Scheduling a pair reviewing session
-- [ ] 📱 Providing mobile support
-- [ ] ♿  Providing accessibility support
+## As an Author, to speed up the review process, I considered 🤔
 
----
+👀 Doing a self review
+❔ Our [contribution guidelines](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md)
+🤏 Splitting feature into small PRs
+➕ Adding a [changeset](https://github.com/linode/manager/blob/develop/docs/CONTRIBUTING.md#writing-a-changeset)
+🧪 Providing/improving test coverage
+ 🔐 Removing all sensitive information from the code and PR description
+🚩 Using a feature flag to protect the release
+👣 Providing comprehensive reproduction steps
+📑 Providing or updating our documentation
+🕛 Scheduling a pair reviewing session
+📱 Providing mobile support
+♿  Providing accessibility support
+
+<br/>
+
+- [ ] I have read and considered all applicable items listed above.
+
+## As an Author, before moving this PR from Draft to Open, I confirmed ✅
+
+- [ ] All tests and CI checks are passing
+- [ ] TypeScript compilation succeeded without errors
+- [ ] Code passes all linting rules
+
+</details>
+
+<!-- This content will not appear in the rendered Markdown 
+
 ## Commit message and pull request title format standards
 
 > **Note**: Remove this section before opening the pull request
@@ -58,6 +96,7 @@ List any change relevant to the reviewer.
 `<commit type>: [JIRA-ticket-number] - <description>`
 
 **Commit Types:**
+
 - `feat`: New feature for the user (not a part of the code, or ci, ...).
 - `fix`: Bugfix for the user (not a fix to build something, ...).
 - `change`: Modifying an existing visual UI instance. Such as a component or a feature.
@@ -67,4 +106,4 @@ List any change relevant to the reviewer.
 
 **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
----
+-->

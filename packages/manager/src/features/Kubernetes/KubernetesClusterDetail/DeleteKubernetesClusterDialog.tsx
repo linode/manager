@@ -1,11 +1,11 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { List, ListItem, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 export interface Props {
   clusterId: number;
@@ -13,6 +13,15 @@ export interface Props {
   onClose: () => void;
   open: boolean;
 }
+
+const CLUSTER_DELETION_WARNINGS = [
+  {
+    text: "Deleting a cluster is permanent and can't be undone.",
+  },
+  {
+    text: 'Attached Block Storage Volumes or NodeBalancers must be deleted separately.',
+  },
+];
 
 export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
   return pools.reduce((accum, thisPool) => {
@@ -24,15 +33,15 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterId, clusterLabel, onClose, open } = props;
   const {
     error,
-    isLoading: isDeleting,
+    isPending: isDeleting,
     mutateAsync: deleteCluster,
   } = useDeleteKubernetesClusterMutation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
-      history.replace('/kubernetes/clusters');
+      navigate({ to: '/kubernetes/clusters' });
     });
   };
 
@@ -45,6 +54,8 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         subType: 'Cluster',
         type: 'Kubernetes',
       }}
+      errors={error}
+      expand
       label={'Cluster Name'}
       loading={isDeleting}
       onClick={onDelete}
@@ -52,18 +63,15 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       open={open}
       title={`Delete Cluster ${clusterLabel}`}
     >
-      {error ? <Notice text={error?.[0].reason} variant="error" /> : null}
       <Notice variant="warning">
-        <Typography style={{ fontSize: '0.875rem' }}>
+        <Typography>
           <strong>Warning:</strong>
-          <ul style={{ margin: '5px 0px 0px', paddingLeft: '15px' }}>
-            <li>Deleting a cluster is permanent and can&apos;t be undone.</li>
-            <li>
-              Attached Block Storage Volumes or NodeBalancers must be deleted
-              separately.
-            </li>
-          </ul>
         </Typography>
+        <List>
+          {CLUSTER_DELETION_WARNINGS.map((notice, idx) => (
+            <ListItem key={idx}>{notice.text}</ListItem>
+          ))}
+        </List>
       </Notice>
     </TypeToConfirmDialog>
   );

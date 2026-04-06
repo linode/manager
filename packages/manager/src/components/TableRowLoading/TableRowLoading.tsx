@@ -1,9 +1,12 @@
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden, HiddenProps } from '../Hidden';
 import { Skeleton } from '../Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
+
+import type { HiddenProps } from '@linode/ui';
+import type { SxProps } from '@mui/material/styles';
 
 export interface TableRowLoadingProps {
   /**
@@ -20,12 +23,17 @@ export interface TableRowLoadingProps {
    * @default 1
    */
   rows?: number;
+  /**
+   * The style overrides for the TableRow
+   */
+  sx?: SxProps;
 }
 
 export const TableRowLoading = ({
   columns = 1,
   responsive,
   rows = 1,
+  sx,
 }: TableRowLoadingProps) => {
   const cols = [];
 
@@ -52,14 +60,15 @@ export const TableRowLoading = ({
   for (let i = 0; i < rows; i++) {
     tableRows.push(
       <TableRow
+        aria-label="Table content is loading"
+        data-testid="table-row-loading"
+        key={`table-loading-row-${i}`}
         sx={{
+          ...sx,
           '&& :last-child': {
             paddingRight: '15px',
           },
         }}
-        aria-label="Table content is loading"
-        data-testid="table-row-loading"
-        key={`table-loading-row-${i}`}
       >
         {cols}
       </TableRow>

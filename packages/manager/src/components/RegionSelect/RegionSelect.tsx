@@ -1,205 +1,179 @@
-import { visuallyHidden } from '@mui/utils';
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
+import { Autocomplete, InputAdornment } from '@linode/ui';
+import PublicIcon from '@mui/icons-material/Public';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
-import { Flag } from 'src/components/Flag';
-import { Link } from 'src/components/Link';
-import { Tooltip } from 'src/components/Tooltip';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccountAvailabilitiesQueryUnpaginated } from 'src/queries/accountAvailability';
+// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
+// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
+import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
+import { RegionOption } from './RegionOption';
+import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
-  SelectedIcon,
-  StyledAutocompleteContainer,
-  StyledFlagContainer,
-  StyledListItem,
-} from './RegionSelect.styles';
-import { getRegionOptions, getSelectedRegionById } from './RegionSelect.utils';
+  getRegionOptions,
+  isRegionOptionUnavailable,
+} from './RegionSelect.utils';
 
-import type {
-  RegionSelectOption,
-  RegionSelectProps,
-} from './RegionSelect.types';
-import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
+import type { RegionSelectProps } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
+import type { DisableItemOption } from '@linode/ui';
 
 /**
  * A specific select for regions.
  *
  * The RegionSelect automatically filters regions based on capability using its `currentCapability` prop. For example, if
- * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. There is no need to
- * prefilter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ * `currentCapability="VPCs"`, only regions that support VPCs will appear in the RegionSelect dropdown. Distributed regions are filtered based on the `regionFilter` prop.
+ * There is no need to pre-filter regions when passing them to the RegionSelect. See the description of `currentCapability` prop for more information.
+ *
+ * We do not display the selected check mark for single selects.
  */
-export const RegionSelect = React.memo((props: RegionSelectProps) => {
+export const RegionSelect = <
+  DisableClearable extends boolean | undefined = undefined,
+>(
+  props: RegionSelectProps<DisableClearable>
+) => {
   const {
     currentCapability,
+    disableClearable,
     disabled,
+    disabledRegions: disabledRegionsFromProps,
     errorText,
-    handleSelection,
     helperText,
-    isClearable,
+    isGeckoLAEnabled,
     label,
+    noMarginTop,
+    onChange,
+    placeholder,
+    regionFilter,
     regions,
     required,
-    selectedId,
+    sx,
+    tooltipText,
+    value,
     width,
   } = props;
 
-  const flags = useFlags();
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAccountAvailabilitiesQueryUnpaginated(flags.dcGetWell);
+  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
+    useAllAccountAvailabilitiesQuery(!!currentCapability);
 
-  const regionFromSelectedId: RegionSelectOption | null =
-    getSelectedRegionById({
-      accountAvailabilityData: accountAvailability,
-      currentCapability,
-      regions,
-      selectedRegionId: selectedId ?? '',
-    }) ?? null;
+  const regionOptions = getRegionOptions({
+    currentCapability,
+    regionFilter,
+    regions,
+  });
 
-  const [selectedRegion, setSelectedRegion] = React.useState<
-    RegionSelectOption | null | undefined
-  >(regionFromSelectedId);
+  const selectedRegion = value
+    ? (regionOptions.find((r) => r.id === value) ?? null)
+    : null;
 
-  const handleRegionChange = (selection: RegionSelectOption) => {
-    setSelectedRegion(selection);
-    handleSelection(selection?.value);
-  };
-
-  React.useEffect(() => {
-    if (selectedId) {
-      setSelectedRegion(regionFromSelectedId);
-    } else {
-      // We need to reset the state when create types change
-      setSelectedRegion(null);
+  const disabledRegions = regionOptions.reduce<
+    Record<string, DisableItemOption>
+  >((acc, region) => {
+    if (disabledRegionsFromProps?.[region.id]) {
+      acc[region.id] = disabledRegionsFromProps[region.id];
     }
-  }, [selectedId]);
-
-  const options = React.useMemo(
-    () =>
-      getRegionOptions({
+    if (
+      isRegionOptionUnavailable({
         accountAvailabilityData: accountAvailability,
         currentCapability,
-        regions,
-      }),
-    [accountAvailability, currentCapability, regions]
-  );
+        region,
+      })
+    ) {
+      acc[region.id] = {
+        reason:
+          'This region is currently unavailable. For help, open a support ticket.',
+      };
+    }
+    return acc;
+  }, {});
+
+  /*
+   * When Gecko is enabled, allow regions to be searched by ID by passing a
+   * custom stringify function.
+   */
+  const filterOptions = isGeckoLAEnabled
+    ? createFilterOptions({
+        stringify: (region: Region) => `${region.label} (${region.id})`,
+      })
+    : undefined;
 
   return (
     <StyledAutocompleteContainer sx={{ width }}>
-      <Autocomplete
-        getOptionDisabled={(option: RegionSelectOption) =>
-          Boolean(flags.dcGetWell) && Boolean(option.unavailable)
-        }
-        isOptionEqualToValue={(
-          option: RegionSelectOption,
-          { value }: RegionSelectOption
-        ) => option.value === value}
-        onChange={(_, selectedOption: RegionSelectOption) => {
-          handleRegionChange(selectedOption);
-        }}
-        onKeyDown={() => {
-          setSelectedRegion(null);
-        }}
-        renderOption={(props, option, { selected }) => {
-          const isDisabledMenuItem =
-            Boolean(flags.dcGetWell) && Boolean(option.unavailable);
-          return (
-            <Tooltip
-              PopperProps={{
-                sx: { '& .MuiTooltip-tooltip': { minWidth: 215 } },
-              }}
-              title={
-                isDisabledMenuItem ? (
-                  <>
-                    There may be limited capacity in this region.{' '}
-                    <Link to="https://www.linode.com/global-infrastructure/availability">
-                      Learn more
-                    </Link>
-                    .
-                  </>
-                ) : (
-                  ''
-                )
-              }
-              disableFocusListener={!isDisabledMenuItem}
-              disableHoverListener={!isDisabledMenuItem}
-              disableTouchListener={!isDisabledMenuItem}
-              enterDelay={200}
-              enterNextDelay={200}
-              enterTouchDelay={200}
-              key={option.value}
-            >
-              <StyledListItem
-                {...props}
-                className={
-                  isDisabledMenuItem
-                    ? `${props.className} Mui-disabled`
-                    : props.className
-                }
-                componentsProps={{
-                  root: {
-                    'data-qa-option': option.value,
-                    'data-testid': option.value,
-                  } as ListItemComponentsPropsOverrides,
-                }}
-                onClick={(e) =>
-                  isDisabledMenuItem
-                    ? e.preventDefault()
-                    : props.onClick
-                    ? props.onClick(e)
-                    : null
-                }
-                aria-disabled={undefined}
-              >
-                <>
-                  <Box alignItems="center" display="flex" flexGrow={1}>
-                    <StyledFlagContainer>
-                      <Flag country={option.data.country} />
-                    </StyledFlagContainer>
-                    {option.label}
-                    {isDisabledMenuItem && (
-                      <Box sx={visuallyHidden}>
-                        Disabled option - There may be limited capacity in this
-                        region. Learn more at
-                        https://www.linode.com/global-infrastructure/availability.
-                      </Box>
-                    )}
-                  </Box>
-                  {selected && <SelectedIcon visible={selected} />}
-                </>
-              </StyledListItem>
-            </Tooltip>
-          );
-        }}
-        textFieldProps={{
-          InputProps: {
-            required,
-            startAdornment: selectedRegion && (
-              <StyledFlagContainer>
-                <Flag country={selectedRegion?.data.country} />
-              </StyledFlagContainer>
-            ),
-          },
-          tooltipText: helperText,
-        }}
+      <Autocomplete<Region, false, DisableClearable>
         autoHighlight
         clearOnBlur
         data-testid="region-select"
-        disableClearable={!isClearable}
+        disableClearable={disableClearable}
         disabled={disabled}
+        disabledItemsFocusable
         errorText={errorText}
-        groupBy={(option: RegionSelectOption) => option.data.region}
+        filterOptions={filterOptions}
+        getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
+        getOptionLabel={(region) =>
+          isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`
+        }
+        groupBy={(option) => getRegionCountryGroup(option)}
+        helperText={helperText}
         label={label ?? 'Region'}
-        loading={accountAvailabilityLoading}
+        loading={accountAvailabilityLoading || props.loading}
         loadingText="Loading regions..."
-        noOptionsText="No results"
-        options={options}
-        placeholder="Select a Region"
-        value={selectedRegion}
+        noMarginTop={noMarginTop}
+        noOptionsText={props.noOptionsText ?? 'No results'}
+        onChange={onChange}
+        options={regionOptions}
+        placeholder={placeholder ?? 'Select a Region'}
+        renderOption={(props, region, state) => {
+          const { key, ...rest } = props;
+
+          return (
+            <RegionOption
+              disabledOptions={disabledRegions[region.id]}
+              isGeckoLAEnabled={isGeckoLAEnabled}
+              item={region}
+              key={`${region.id}-${key}`}
+              props={rest}
+              selected={state.selected}
+            />
+          );
+        }}
+        sx={(theme) => ({
+          ...sx,
+          [theme.breakpoints.up('md')]: {
+            width: tooltipText ? '458px' : '416px',
+          },
+        })}
+        textFieldProps={{
+          ...props.textFieldProps,
+          InputProps: {
+            ...props.textFieldProps?.InputProps,
+            endAdornment: isGeckoLAEnabled && selectedRegion && (
+              <InputAdornment position="end">
+                ({selectedRegion?.id})
+              </InputAdornment>
+            ),
+            required,
+            startAdornment: selectedRegion && (
+              <InputAdornment position="start">
+                {selectedRegion.id === 'global' ? (
+                  <PublicIcon
+                    sx={{
+                      height: '24px',
+                      width: '24px',
+                    }}
+                  />
+                ) : (
+                  <Flag country={selectedRegion?.country} />
+                )}
+              </InputAdornment>
+            ),
+          },
+          tooltipText,
+        }}
+        value={selectedRegion as Region}
       />
     </StyledAutocompleteContainer>
   );
-});
+};

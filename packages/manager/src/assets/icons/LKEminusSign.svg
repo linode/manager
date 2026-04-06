@@ -1,11 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="11px" height="3px" viewBox="0 0 11 3" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Group 3</title>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="LKE-Create" transform="translate(-1030.000000, -227.000000)" stroke="#3682DB" stroke-width="1.8">
-            <g id="Group-3" transform="translate(1030.000000, 228.000000)">
-                <line x1="0" y1="0.5" x2="11" y2="0.5" id="Line-8"></line>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.66821 8.00002C2.66821 7.63275 2.96594 7.33502 3.33321 7.33502H12.6665C13.0338 7.33502 13.3315 7.63275 13.3315 8.00002C13.3315 8.36729 13.0338 8.66502 12.6665 8.66502H3.33321C2.96594 8.66502 2.66821 8.36729 2.66821 8.00002Z" fill="currentColor"/>
 </svg>

@@ -1,65 +1,56 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  example: {
-    backgroundColor: theme.name === 'dark' ? theme.bg.white : theme.bg.offWhite,
-    margin: `${theme.spacing(2)} 0`,
-    padding: theme.spacing(2),
-  },
-  header: {
-    marginBottom: theme.spacing(),
-    marginTop: theme.spacing(2),
-  },
-}));
+import { Markdown } from 'src/components/Markdown/Markdown';
 
 interface Props {
   isReply?: boolean;
-  rootClass?: string;
 }
 
 export const MarkdownReference = (props: Props) => {
-  const { classes } = useStyles();
-
   return (
-    <div className={props.rootClass}>
+    <Stack spacing={2}>
       <Typography>
         You can use Markdown to format your{' '}
-        {props.isReply ? 'reply' : 'question'}. For more examples see this{' '}
-        <Link external to="http://demo.showdownjs.com/">
+        {props.isReply ? 'reply' : 'question'}. For more examples, see this{' '}
+        <Link external to="https://commonmark.org/help/">
           Markdown cheatsheet
         </Link>
       </Typography>
-      <Typography className={classes.header}>
-        <strong>Examples</strong>
+      <Typography sx={(theme) => ({ font: theme.font.bold })}>
+        Examples
       </Typography>
-      <div className={classes.example}>
+      <Paper
+        sx={(theme) => ({
+          backgroundColor: theme.palette.background.default,
+          p: 2,
+        })}
+      >
         <Typography>[I am a link](https://google.com)</Typography>
-        <br />
         <Typography
           dangerouslySetInnerHTML={{
             __html: '<a>I am a link</a>',
           }}
         />
-      </div>
-      <div className={classes.example}>
+      </Paper>
+      <Paper
+        sx={(theme) => ({
+          backgroundColor: theme.palette.background.default,
+          p: 2,
+        })}
+      >
         <Typography>
-          ```
+          ```js
           <br />
-          const someCode = 'hello world';
+          const someCode = "hello world";
           <br />
           ```
         </Typography>
-        <Typography
-          dangerouslySetInnerHTML={{
-            __html: `<pre style="white-space: pre-wrap;">const someCode = "hello world"</pre>`,
-          }}
+        <Markdown
+          textOrMarkdown={'```ts\nconst someCode = "hello world";\n```'}
         />
-      </div>
-    </div>
+      </Paper>
+    </Stack>
   );
 };

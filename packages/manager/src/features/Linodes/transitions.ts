@@ -1,13 +1,13 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { getFormattedStatus } from '@linode/utilities';
 
-import { isInProgressEvent } from 'src/store/events/event.helpers';
 import {
   isEventRelevantToLinode,
+  isInProgressEvent,
   isPrimaryEntity,
   isSecondaryEntity,
-} from 'src/store/events/event.selectors';
-import { ExtendedEvent } from 'src/store/events/event.types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
+} from 'src/queries/events/event.helpers';
+
+import type { Event, EventAction } from '@linode/api-v4/lib/account';
 
 export const transitionStatus = [
   'booting',
@@ -46,7 +46,10 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    transitionActionMap.hasOwnProperty(recentEvent.action) &&
+    Object.prototype.hasOwnProperty.call(
+      transitionActionMap,
+      recentEvent.action
+    ) &&
     recentEvent.percent_complete !== null &&
     recentEvent.percent_complete < 100
   );
@@ -70,7 +73,7 @@ export const transitionText = (
     return transitionActionMap[recentEvent.action];
   }
 
-  return capitalizeAllWords(status.replace('_', ' '));
+  return getFormattedStatus(status);
 };
 
 // Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
@@ -96,10 +99,8 @@ export const linodesInTransition = (events: Event[]) => {
 // an in-progress event, but we don't have the updated status from the API  yet.
 // In this case it doesn't have a recentEvent attached (since it has completed),
 // but its status is still briefly in transition, so give it a progress of 100.
-export const getProgressOrDefault = (
-  event?: ExtendedEvent,
-  defaultProgress = 0
-) => event?.percent_complete ?? defaultProgress;
+export const getProgressOrDefault = (event?: Event, defaultProgress = 0) =>
+  event?.percent_complete ?? defaultProgress;
 
 // Linodes have a literal "status" given by the API (linode.status). There are
 // states the Linode can be in which aren't entirely communicated with the

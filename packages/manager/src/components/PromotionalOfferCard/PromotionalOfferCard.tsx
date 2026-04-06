@@ -1,15 +1,15 @@
+import { Paper, Typography } from '@linode/ui';
 import Button from '@mui/material/Button';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { PromotionalOffer } from 'src/featureFlags';
-import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { Link } from 'src/components/Link';
 import { OFFSITE_URL_REGEX, ONSITE_URL_REGEX } from 'src/constants';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+
+import type { Theme } from '@mui/material/styles';
+import type { PromotionalOffer } from 'src/featureFlags';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alignLeft: {
@@ -17,11 +17,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   button: {
     '&:hover, &:focus': {
-      backgroundColor: '#3f8a4e',
-      color: 'white',
+      backgroundColor: theme.tokens.color.Green[70],
+      color: theme.tokens.color.Neutrals.White,
     },
-    backgroundColor: '#4FAD62',
-    color: 'white',
+    backgroundColor: theme.tokens.color.Green[60],
+    color: theme.tokens.color.Neutrals.White,
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     textAlign: 'center',
@@ -29,13 +29,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
   buttonSecondary: {
     '&:hover, &:focus': {
       backgroundColor: 'inherit',
-      borderColor: '#72BD81',
-      color: '#72BD81',
+      borderColor: theme.tokens.color.Green[50],
+      color: theme.tokens.color.Green[50],
     },
     backgroundColor: 'inherit',
     border: '1px solid transparent',
-    borderColor: '#4FAD62',
-    color: '#4FAD62',
+    borderColor: theme.tokens.color.Green[60],
+    color: theme.tokens.color.Green[60],
     transition: theme.transitions.create(['color', 'border-color']),
   },
   buttonSection: {

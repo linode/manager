@@ -1,8 +1,11 @@
 import * as React from 'react';
 
 import { StyledPreContainerDiv, StyledRootDiv } from './Breadcrumb.styles';
-import { CrumbOverridesProps, Crumbs } from './Crumbs';
-import { EditableProps, LabelProps } from './types';
+import { Crumbs } from './Crumbs';
+
+import type { CrumbOverridesProps } from './Crumbs';
+import type { EditableProps, LabelProps } from './types';
+import type { SxProps, Theme } from '@linode/ui';
 
 export interface BreadcrumbProps {
   /**
@@ -13,6 +16,10 @@ export interface BreadcrumbProps {
    * An array of objects that can be used to customize any crumb.
    */
   crumbOverrides?: CrumbOverridesProps[];
+  /**
+   * A boolean that if true will disable the pencil icon button.
+   */
+  disabledBreadcrumbEditButton?: boolean;
   /**
    * A boolean that if true will only show the first and last crumb.
    */
@@ -36,7 +43,11 @@ export interface BreadcrumbProps {
   /**
    * A number indicating the position of the crumb to remove. Not zero indexed.
    */
-  removeCrumbX?: number;
+  removeCrumbX?: number | number[];
+  /*
+   * Optional Styles
+   */
+  sx?: SxProps<Theme>;
 }
 
 /**
@@ -48,21 +59,32 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
   const {
     breadcrumbDataAttrs,
     crumbOverrides,
+    disabledBreadcrumbEditButton,
     firstAndLastOnly,
     labelOptions,
     labelTitle,
     onEditHandlers,
     pathname,
     removeCrumbX,
+    sx,
   } = props;
 
   const url = pathname && pathname.slice(1);
   const allPaths = url.split('/');
 
-  const pathMap = removeCrumbX
-    ? removeByIndex(allPaths, removeCrumbX - 1)
-    : allPaths;
+  let pathMap;
 
+  if (Array.isArray(removeCrumbX)) {
+    // Sort the indices in descending order
+    const indicesToRemove = new Set(removeCrumbX.map((index) => index - 1));
+
+    // Filter out the indices to remove
+    pathMap = allPaths.filter((_, index) => !indicesToRemove.has(index));
+  } else if (removeCrumbX != null) {
+    pathMap = removeByIndex(allPaths, removeCrumbX - 1);
+  } else {
+    pathMap = allPaths;
+  }
   const hasError = Boolean(onEditHandlers?.errorText);
 
   return (
@@ -71,10 +93,14 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
       {...breadcrumbDataAttrs}
     >
       <StyledPreContainerDiv
-        sx={{ ...(onEditHandlers !== undefined && { alignItems: 'center' }) }}
+        sx={{
+          ...(onEditHandlers !== undefined && { alignItems: 'center' }),
+          ...sx,
+        }}
       >
         <Crumbs
           crumbOverrides={crumbOverrides}
+          disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
           firstAndLastOnly={firstAndLastOnly}
           labelOptions={labelOptions}
           labelTitle={labelTitle}

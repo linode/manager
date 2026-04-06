@@ -1,12 +1,17 @@
-import { Token } from '@linode/api-v4/lib/profile';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
+
+import type { Token } from '@linode/api-v4/lib/profile';
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  isProxyOrDelegateUserType: boolean;
   isThirdPartyAccessToken: boolean;
   openEditDrawer: (token: Token) => void;
   openRevokeDialog: (token: Token, type: string) => void;
@@ -20,6 +25,7 @@ export const APITokenMenu = (props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
+    isProxyOrDelegateUserType,
     isThirdPartyAccessToken,
     openEditDrawer,
     openRevokeDialog,
@@ -37,10 +43,14 @@ export const APITokenMenu = (props: Props) => {
     },
     !isThirdPartyAccessToken
       ? {
+          disabled: isProxyOrDelegateUserType,
           onClick: () => {
             openEditDrawer(token);
           },
           title: 'Rename',
+          tooltip: isProxyOrDelegateUserType
+            ? DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT
+            : undefined,
         }
       : null,
     {
@@ -65,8 +75,10 @@ export const APITokenMenu = (props: Props) => {
       {actions.map((action) => (
         <InlineMenuAction
           actionText={action.title}
+          disabled={action.disabled}
           key={action.title}
           onClick={action.onClick}
+          tooltip={action.tooltip}
         />
       ))}
     </>

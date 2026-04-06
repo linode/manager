@@ -1,17 +1,22 @@
-import { fireEvent } from '@testing-library/react';
+import { breakpoints } from '@linode/ui';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { planSelectionTypeFactory } from 'src/factories/types';
-import { breakpoints } from 'src/foundations/breakpoints';
-import { resizeScreenSize } from 'src/utilities/testHelpers';
+import {
+  extendedTypeFactory,
+  planSelectionTypeFactory,
+} from 'src/factories/types';
+import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
+import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
-import type { PlanSelectionType } from './types';
+import type { PlanSelectionProps } from './PlanSelection';
+import type { PlanWithAvailability } from './types';
 
-const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
+const mockPlan: PlanWithAvailability = planSelectionTypeFactory.build({
   heading: 'Dedicated 20 GB',
   subHeadings: [
     '$10/mo ($0.015/hr)',
@@ -21,20 +26,25 @@ const mockPlan: PlanSelectionType = planSelectionTypeFactory.build({
   ],
 });
 
+const defaultProps: PlanSelectionProps = {
+  hasMajorityOfPlansDisabled: false,
+  idx: 0,
+  onSelect: () => vi.fn(),
+  plan: mockPlan,
+};
+
 describe('PlanSelection (table, desktop)', () => {
   beforeAll(() => {
     resizeScreenSize(breakpoints.values.lg);
   });
 
   it('renders the table row', () => {
-    const { container } = renderWithTheme(
+    const { container, queryByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <PlanSelection
-          idx={0}
+          {...defaultProps}
           isCreate={true}
-          onSelect={() => vi.fn()}
           selectedRegionId={'us-east'}
-          type={mockPlan}
         />
       )
     );
@@ -54,18 +64,12 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
     );
+    expect(queryByLabelText(LIMITED_AVAILABILITY_COPY)).toBeNull();
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
     const { container } = renderWithTheme(
-      wrapWithTableBody(
-        <PlanSelection
-          idx={0}
-          isCreate={true}
-          onSelect={() => vi.fn()}
-          type={mockPlan}
-        />
-      )
+      wrapWithTableBody(<PlanSelection {...defaultProps} isCreate={true} />)
     );
 
     expect(container.querySelector('[data-qa-plan-row]')).toBeInTheDocument();
@@ -85,7 +89,7 @@ describe('PlanSelection (table, desktop)', () => {
 
     const { getByRole } = renderWithTheme(
       wrapWithTableBody(
-        <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />
+        <PlanSelection {...defaultProps} onSelect={mockOnSelect} />
       )
     );
 
@@ -98,12 +102,7 @@ describe('PlanSelection (table, desktop)', () => {
   it('shows the dynamic prices for a region with DC-specific pricing', () => {
     const { container } = renderWithTheme(
       wrapWithTableBody(
-        <PlanSelection
-          idx={0}
-          onSelect={() => {}}
-          selectedRegionId={'br-gru'}
-          type={mockPlan}
-        />
+        <PlanSelection {...defaultProps} selectedRegionId={'br-gru'} />
       )
     );
 
@@ -123,6 +122,91 @@ describe('PlanSelection (table, desktop)', () => {
       '1024 GB'
     );
   });
+
+  it('shows the same network_in and network_out values for distributed regions', () => {
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...defaultProps}
+          plan={{
+            ...mockPlan,
+            class: 'dedicated',
+            id: 'g6-dedicated-edge-2',
+
+            network_out: 4000,
+          }}
+          selectedRegionId={'us-den-1'}
+          showNetwork
+        />
+      )
+    );
+    expect(container.querySelector('[data-qa-network]')).toHaveTextContent(
+      '4 Gbps / 4 Gbps'
+    );
+  });
+
+  it('should not display an error message for $0 regions', () => {
+    const propsWithRegionZeroPrice = {
+      ...defaultProps,
+      plan: planSelectionTypeFactory.build({
+        heading: 'Dedicated 20 GB',
+        region_prices: [
+          {
+            hourly: 0,
+            id: 'br-gru',
+            monthly: 0,
+          },
+        ],
+        subHeadings: [
+          '$10/mo ($0.015/hr)',
+          '1 CPU, 50 GB Storage, 2 GB RAM',
+          '2 TB Transfer',
+          '40 Gbps In / 2 Gbps Out',
+        ],
+      }),
+    };
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...propsWithRegionZeroPrice}
+          selectedRegionId={'br-gru'}
+        />
+      )
+    );
+
+    const monthlyTableCell = container.querySelector('[data-qa-monthly]');
+    const hourlyTableCell = container.querySelector('[data-qa-hourly]');
+    expect(monthlyTableCell).toHaveTextContent('$0');
+    // error tooltip button should not display
+    expect(
+      monthlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+    expect(hourlyTableCell).toHaveTextContent('$0');
+    expect(
+      hourlyTableCell?.querySelector('[data-qa-help-button]')
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows limited availability messaging for 512 GB plans', async () => {
+    const bigPlanType = extendedTypeFactory.build({
+      heading: 'Dedicated 512 GB',
+      label: 'Dedicated 512GB',
+      planHasLimitedAvailability: true,
+    });
+
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      wrapWithTableBody(<PlanSelection {...defaultProps} plan={bigPlanType} />)
+    );
+
+    const button = getByTestId('tooltip-info-icon');
+    fireEvent.mouseOver(button);
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+    });
+
+    expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
+  });
 });
 
 describe('PlanSelection (card, mobile)', () => {
@@ -132,12 +216,7 @@ describe('PlanSelection (card, mobile)', () => {
 
   it('renders the table row', () => {
     const { container } = renderWithTheme(
-      <PlanSelection
-        idx={0}
-        onSelect={() => {}}
-        selectedRegionId={'us-east'}
-        type={mockPlan}
-      />
+      <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
     );
 
     expect(
@@ -161,9 +240,7 @@ describe('PlanSelection (card, mobile)', () => {
   });
 
   it('renders the table row with unknown prices if a region is not selected', () => {
-    const { container } = renderWithTheme(
-      <PlanSelection idx={0} onSelect={() => {}} type={mockPlan} />
-    );
+    const { container } = renderWithTheme(<PlanSelection {...defaultProps} />);
 
     expect(
       container.querySelector('[data-qa-selection-card]')
@@ -180,7 +257,7 @@ describe('PlanSelection (card, mobile)', () => {
     const mockOnSelect = vi.fn();
 
     const { container } = renderWithTheme(
-      <PlanSelection idx={0} onSelect={mockOnSelect} type={mockPlan} />
+      <PlanSelection {...defaultProps} onSelect={mockOnSelect} />
     );
 
     fireEvent.click(container.querySelector('[data-qa-selection-card]')!);
@@ -190,12 +267,7 @@ describe('PlanSelection (card, mobile)', () => {
 
   it('shows the dynamic prices for a region with DC-specific pricing', () => {
     const { container } = renderWithTheme(
-      <PlanSelection
-        idx={0}
-        onSelect={() => {}}
-        selectedRegionId={'br-gru'}
-        type={mockPlan}
-      />
+      <PlanSelection {...defaultProps} selectedRegionId={'br-gru'} />
     );
 
     expect(

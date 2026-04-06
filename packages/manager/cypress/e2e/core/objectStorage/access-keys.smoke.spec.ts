@@ -2,14 +2,18 @@
  * @file Smoke tests for crucial Object Storage Access Keys operations.
  */
 
-import { objectStorageKeyFactory } from 'src/factories/objectStorage';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateAccessKey,
   mockDeleteAccessKey,
   mockGetAccessKeys,
 } from 'support/intercepts/object-storage';
-import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
+
+import { accountFactory } from 'src/factories';
+import { objectStorageKeyFactory } from 'src/factories/objectStorage';
 
 describe('object storage access keys smoke tests', () => {
   /*
@@ -21,8 +25,12 @@ describe('object storage access keys smoke tests', () => {
   it('can create access key - smoke', () => {
     const mockAccessKey = objectStorageKeyFactory.build({
       label: randomLabel(),
-      access_key: randomString(20),
-      secret_key: randomString(39),
+    });
+
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
+    mockAppendFeatureFlags({
+      objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
 
     mockGetAccessKeys([]).as('getKeys');
@@ -42,9 +50,13 @@ describe('object storage access keys smoke tests', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label').click().type(mockAccessKey.label);
+        cy.findByLabelText('Label').click();
+        cy.focused().type(mockAccessKey.label);
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
+          .as('qaCreateAccessKey')
+          .scrollIntoView();
+        cy.get('@qaCreateAccessKey')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -84,10 +96,14 @@ describe('object storage access keys smoke tests', () => {
    */
   it('can revoke access key - smoke', () => {
     const accessKey = objectStorageKeyFactory.build({
-      label: randomLabel(),
       id: randomNumber(1, 99999),
-      access_key: randomString(20),
-      secret_key: randomString(39),
+      label: randomLabel(),
+    });
+
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
+    mockAppendFeatureFlags({
+      objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
 
     // Mock initial GET request to include an access key.

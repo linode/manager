@@ -13,18 +13,64 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+import '@testing-library/cypress/add-commands';
+// reporter needs to register for events in order to attach media to test results in html report
+import 'cypress-mochawesome-reporter/register';
 // Cypress command and assertion setup.
 import chaiString from 'chai-string';
-import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
 import 'cypress-real-events/support';
-import './setup/login-command';
+
 import './setup/defer-command';
+import './setup/login-command';
+import './setup/page-visit-tracking-commands';
+import './setup/test-tagging';
+
 chai.use(chaiString);
 
+chai.use(function (chai, utils) {
+  utils.overwriteProperty(chai.Assertion.prototype, 'disabled', function () {
+    return function (this: Chai.AssertionStatic) {
+      const obj = utils.flag(this, 'object');
+      const isDisabled = Cypress.$(obj).is(':disabled');
+      const isAriaDisabled = Cypress.$(obj).attr('aria-disabled') === 'true';
+
+      this.assert(
+        isDisabled || isAriaDisabled,
+        'expected #{this} to be disabled',
+        'expected #{this} not to be disabled',
+        undefined
+      );
+    };
+  });
+
+  utils.overwriteProperty(chai.Assertion.prototype, 'enabled', function () {
+    return function (this: Chai.AssertionStatic) {
+      const obj = utils.flag(this, 'object');
+      const isDisabled = Cypress.$(obj).is(':disabled');
+      const isAriaDisabled = Cypress.$(obj).attr('aria-disabled') === 'true';
+
+      this.assert(
+        !isDisabled && !isAriaDisabled,
+        'expected #{this} to be enabled',
+        'expected #{this} not to be enabled',
+        undefined
+      );
+    };
+  });
+});
+
 // Test setup.
-import { trackApiRequests } from './setup/request-tracking';
+import { blockAnalytics } from './setup/block-analytics';
+import { deleteInternalHeader } from './setup/delete-internal-header';
+import { mockFeatureFlagClientstream } from './setup/feature-flag-clientstream';
 import { mockAccountRequest } from './setup/mock-account-request';
+import { mockFeatureFlagRequests } from './setup/mock-feature-flags-request';
+import { trackApiRequests } from './setup/request-tracking';
 
 trackApiRequests();
 mockAccountRequest();
+mockFeatureFlagRequests();
+mockFeatureFlagClientstream();
+deleteInternalHeader();
+blockAnalytics();

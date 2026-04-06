@@ -1,20 +1,20 @@
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { Grid } from '../Grid';
-import { Typography } from '../Typography';
-import { SummaryItem as Props } from './CheckoutSummary';
+import type { SummaryItem as Props } from './CheckoutSummary';
 
 export const SummaryItem = ({ details, title }: Props) => {
   return (
-    <StyledGrid item>
+    <StyledGrid>
       {title ? (
         <>
           <Typography
-            sx={(theme) => ({
-              fontFamily: theme.font.bold,
-            })}
             component="span"
+            sx={(theme) => ({
+              font: theme.font.bold,
+            })}
           >
             {title}
           </Typography>{' '}

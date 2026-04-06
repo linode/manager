@@ -12,8 +12,9 @@ export const StyledPermsTable = styled(Table, {
 
 export const StyledSelectCell = styled(TableCell, {
   label: 'StyledSelectCell',
-})(() => ({
-  fontFamily: 'LatoWebBold', // we keep this bold at all times
+})(({ theme }) => ({
+  borderBottom: `2px solid ${theme.color.grey2}`,
+  font: theme.font.bold,
   fontSize: '.9rem',
 }));
 
@@ -34,4 +35,10 @@ export const StyledPermissionsCell = styled(TableCell, {
     width: '100%',
   },
   width: '23%',
+}));
+
+export const StyledSelectAllPermissionsCell = styled(StyledPermissionsCell, {
+  label: 'StyledSelectAllPermissionsCell',
+})(({ theme }) => ({
+  borderBottom: `2px solid ${theme.color.grey2}`,
 }));

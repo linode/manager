@@ -2,8 +2,9 @@
  * @file Integration tests for account security questions.
  */
 
-import { securityQuestionsFactory } from 'src/factories/profile';
+import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
 import {
+  mockGetProfile,
   mockGetSecurityQuestions,
   mockUpdateSecurityQuestions,
 } from 'support/intercepts/profile';
@@ -91,18 +92,18 @@ const setSecurityQuestionAnswer = (
   answer: string
 ) => {
   getSecurityQuestion(questionNumber).within(() => {
-    cy.get('[data-qa-enhanced-select]')
+    cy.findByLabelText(`Question ${questionNumber}`)
       .should('be.visible')
-      .click()
-      .type(`${question}{enter}`);
+      .click();
+    cy.focused().type(`${question}{enter}`);
   });
 
   getSecurityQuestionAnswer(questionNumber).within(() => {
-    cy.get('[data-testid="textfield-input"]')
+    cy.findByLabelText(`Answer ${questionNumber}`)
       .should('be.visible')
       .should('be.enabled')
-      .click()
-      .type(answer);
+      .click();
+    cy.focused().type(answer);
   });
 };
 
@@ -117,6 +118,10 @@ describe('Account security questions', () => {
     const securityQuestions = securityQuestionsFactory.build();
     const securityQuestionAnswers = ['Answer 1', 'Answer 2', 'Answer 3'];
 
+    const mockProfile = profileFactory.build({
+      two_factor_auth: false,
+    });
+
     const securityQuestionsPayload = {
       security_questions: [
         { question_id: 1, response: securityQuestionAnswers[0] },
@@ -128,6 +133,7 @@ describe('Account security questions', () => {
     const tfaSecurityQuestionsWarning =
       'To use two-factor authentication you must set up your security questions listed below.';
 
+    mockGetProfile(mockProfile);
     mockGetSecurityQuestions(securityQuestions).as('getSecurityQuestions');
     mockUpdateSecurityQuestions(securityQuestionsPayload).as(
       'setSecurityQuestions'

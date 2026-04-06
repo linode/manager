@@ -1,34 +1,88 @@
-import { styled } from '@mui/material/styles';
-import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
-
-import { Paper } from 'src/components/Paper';
-import { TagsPanel } from 'src/components/TagsPanel/TagsPanel';
-import { Typography } from 'src/components/Typography';
-import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
+  useNodeBalancersFirewallsQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
-import { useRegionsQuery } from 'src/queries/regions';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+  useNodeBalancerVPCConfigsBetaQuery,
+  useRegionsQuery,
+  useVPCQuery,
+} from '@linode/queries';
+import { Paper, Typography } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
+import { styled } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { TagCell } from 'src/components/TagCell/TagCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
+
+import { useIsNodebalancerVPCEnabled } from '../../utils';
 
 export const SummaryPanel = () => {
-  const flags = useFlags();
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
+  const { id } = useParams({
+    from: '/nodebalancers/$id/summary',
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
+    Number(id)
+  );
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
+    Number(id)
+  );
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
+
+  const { data: accountPermissions } = usePermissions('account', [
+    'is_account_admin',
+  ]);
+
+  const flags = useIsNodebalancerVPCEnabled();
+
+  const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(id),
+    flags.isNodebalancerVPCEnabled
+  );
+
+  // "/nodebalancers/:id/vpcs" returns both frontend and backend VPC configs,
+  // but we only want to display the backend configs and
+  // a nodebalancer can have only one backend VPC.
+  const nbBackendVpcConfig =
+    vpcConfig?.data.find((v) => v.purpose === 'backend') ?? null;
+
+  const { data: vpcDetails } = useVPCQuery(
+    Number(nbBackendVpcConfig?.vpc_id) || -1,
+    Boolean(nbBackendVpcConfig?.vpc_id)
+  );
+
+  const subnets = vpcDetails?.subnets ?? [];
+
+  const subnet = subnets.find((s) => s.id === nbBackendVpcConfig?.subnet_id);
+
+  const subnetWithConfigData = {
+    id: nbBackendVpcConfig?.subnet_id,
+    label: subnet?.label ?? `Subnet ${nbBackendVpcConfig?.subnet_id}`,
+    ipv4Range: nbBackendVpcConfig?.ipv4_range,
+    ipv6Range: nbBackendVpcConfig?.ipv6_range,
+  };
+
+  // If we can't get the cluster (status === 'error'), we can assume it's been deleted
+  const { status: clusterStatus } = useKubernetesClusterQuery({
+    enabled: Boolean(nodebalancer?.lke_cluster),
+    id: nodebalancer?.lke_cluster?.id ?? -1,
+    options: {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  });
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
@@ -51,8 +105,16 @@ export const SummaryPanel = () => {
       <StyledSummarySectionWrapper>
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
-            NodeBalancer Details
+            Details
           </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-type variant="body1">
+              <strong>Type: </strong>
+              {nodebalancer.type === 'common' && 'Basic'}
+              {nodebalancer.type === 'premium' && 'Premium'}
+              {nodebalancer.type === 'premium_40gb' && 'Enterprise'}
+            </Typography>
+          </StyledSection>
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>
@@ -60,6 +122,7 @@ export const SummaryPanel = () => {
               {configPorts?.map(({ configId, port }, i) => (
                 <React.Fragment key={configId}>
                   <Link
+                    accessibleAriaLabel={`Port ${port}`}
                     className="secondaryLink"
                     to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
                   >
@@ -85,7 +148,7 @@ export const SummaryPanel = () => {
           <StyledSection>
             <Typography style={{ wordBreak: 'break-word' }} variant="body1">
               <strong>Host Name: </strong>
-              {nodebalancer.hostname}
+              {nodebalancer.hostname || 'None'}
             </Typography>
           </StyledSection>
           <StyledSection>
@@ -95,13 +158,135 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-      {displayFirewallLink && flags.firewallNodebalancer && (
+      {nodebalancer.lke_cluster && (
+        <StyledSummarySection>
+          <StyledTitle data-qa-title variant="h3">
+            LKE Cluster
+          </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-cluster variant="body1">
+              <strong>Cluster: </strong>
+              {clusterStatus === 'error' ? (
+                <>
+                  <span style={{ textDecoration: 'line-through' }}>
+                    {nodebalancer.lke_cluster.label}
+                  </span>
+                  <span style={{ fontStyle: 'italic' }}> (deleted)</span>
+                </>
+              ) : (
+                <Link
+                  accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
+                  to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
+                >
+                  {nodebalancer.lke_cluster.label}
+                </Link>
+              )}
+            </Typography>
+          </StyledSection>
+        </StyledSummarySection>
+      )}
+      <StyledSummarySection>
+        <StyledTitle data-qa-title variant="h3">
+          Frontend Configuration
+        </StyledTitle>
+        <StyledSection>
+          <Typography data-qa-frontend-type variant="body1">
+            <strong>Type: </strong>
+            {nodebalancer.frontend_address_type === 'public'
+              ? 'Public'
+              : nodebalancer.frontend_address_type === 'vpc'
+                ? 'VPC'
+                : ''}
+          </Typography>
+        </StyledSection>
+        <StyledIPGrouping data-qa-ip>
+          {nodebalancer?.ipv4 && (
+            <StyledSection>
+              <IPAddress ips={[nodebalancer?.ipv4]} isHovered={true} showMore />
+            </StyledSection>
+          )}
+          {nodebalancer?.ipv6 && (
+            <StyledSection>
+              <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
+            </StyledSection>
+          )}
+        </StyledIPGrouping>
+      </StyledSummarySection>
+      {flags.isNodebalancerVPCEnabled && nbBackendVpcConfig && (
+        <StyledSummarySection>
+          <StyledTitle
+            data-qa-title
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            variant="h3"
+          >
+            Backend Configuration - VPC
+          </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-ports variant="body1">
+              <strong>VPC:</strong>{' '}
+              <React.Fragment key={nbBackendVpcConfig.id}>
+                <Link
+                  accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
+                  className="secondaryLink"
+                  to={`/vpcs/${nbBackendVpcConfig.vpc_id}`}
+                >
+                  {vpcDetails?.label}
+                </Link>
+              </React.Fragment>
+            </Typography>
+          </StyledSection>
+          <StyledSection>
+            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+              <strong>Subnets:</strong>
+            </Typography>
+
+            {subnetWithConfigData && (
+              <React.Fragment key={subnetWithConfigData.id}>
+                <Typography
+                  style={{
+                    wordBreak: 'break-word',
+                    marginTop: '8px',
+                    marginBottom: '8px',
+                  }}
+                  variant="body1"
+                >
+                  {`${subnetWithConfigData.label}`}
+                </Typography>
+                <StyledIPGrouping data-qa-ip>
+                  {subnetWithConfigData.ipv4Range && (
+                    <StyledSection>
+                      <IPAddress
+                        ips={[subnetWithConfigData.ipv4Range]}
+                        isHovered={true}
+                        showMore
+                      />
+                    </StyledSection>
+                  )}
+                  {subnetWithConfigData.ipv6Range && (
+                    <StyledSection>
+                      <IPAddress
+                        ips={[subnetWithConfigData.ipv6Range]}
+                        isHovered={true}
+                      />
+                    </StyledSection>
+                  )}
+                </StyledIPGrouping>
+              </React.Fragment>
+            )}
+          </StyledSection>
+        </StyledSummarySection>
+      )}
+      {displayFirewallLink && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
             Firewall
           </StyledTitle>
           <Typography data-qa-firewall variant="body1">
-            <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+            <Link
+              accessibleAriaLabel={`Firewall ${linkText}`}
+              className="secondaryLink"
+              to={`/firewalls/${linkID}`}
+            >
               {linkText}
             </Link>
           </Typography>
@@ -109,26 +294,14 @@ export const SummaryPanel = () => {
       )}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
-          IP Addresses
-        </StyledTitle>
-        <StyledSection>
-          <StyledIPGrouping data-qa-ip>
-            {nodebalancer?.ipv4 && (
-              <IPAddress ips={[nodebalancer?.ipv4]} isHovered={true} showMore />
-            )}
-            {nodebalancer?.ipv6 && (
-              <IPAddress ips={[nodebalancer?.ipv6]} isHovered={true} />
-            )}
-          </StyledIPGrouping>
-        </StyledSection>
-      </StyledSummarySection>
-      <StyledSummarySection>
-        <StyledTitle data-qa-title variant="h3">
           Tags
         </StyledTitle>
-        <TagsPanel
+        <TagCell
+          disabled={!accountPermissions.is_account_admin}
+          entity="NodeBalancer"
           tags={nodebalancer?.tags}
           updateTags={(tags) => updateNodeBalancer({ tags })}
+          view="panel"
         />
       </StyledSummarySection>
     </StyledRootDiv>
@@ -154,7 +327,6 @@ const StyledSummarySection = styled(Paper, {
 })(({ theme }) => ({
   height: '93%',
   marginBottom: theme.spacing(2),
-  minHeight: '160px',
   padding: theme.spacing(2.5),
 }));
 

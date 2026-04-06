@@ -1,12 +1,13 @@
-import { Token } from '@linode/api-v4/lib/profile/types';
+import { useProfile } from '@linode/queries';
+import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import {
   StyledAccessCell,
@@ -14,6 +15,8 @@ import {
   StyledPermsTable,
 } from './APITokenDrawer.styles';
 import { basePermNameMap, scopeStringToPermTuples } from './utils';
+
+import type { Token } from '@linode/api-v4/lib/profile/types';
 
 interface Props {
   onClose: () => void;
@@ -24,7 +27,17 @@ interface Props {
 export const ViewAPITokenDrawer = (props: Props) => {
   const { onClose, open, token } = props;
 
-  const permissions = scopeStringToPermTuples(token?.scopes ?? '');
+  const { data: profile } = useProfile();
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
+  const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
+
+  // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
+  const hideChildAccountAccessScope =
+    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
@@ -36,8 +49,8 @@ export const ViewAPITokenDrawer = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none style={{ textAlign: 'center' }}>
-              None
+            <TableCell data-qa-perm-no-access style={{ textAlign: 'center' }}>
+              No Access
             </TableCell>
             <TableCell data-qa-perm-read noWrap style={{ textAlign: 'center' }}>
               Read Only
@@ -48,8 +61,12 @@ export const ViewAPITokenDrawer = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {permissions.map((scopeTup) => {
-            if (!basePermNameMap[scopeTup[0]]) {
+          {allPermissions.map((scopeTup) => {
+            if (
+              !basePermNameMap[scopeTup[0]] ||
+              (hideChildAccountAccessScope &&
+                basePermNameMap[scopeTup[0]] === 'Child Account Access')
+            ) {
               return null;
             }
             return (
@@ -57,10 +74,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
                 data-qa-row={basePermNameMap[scopeTup[0]]}
                 key={scopeTup[0]}
               >
-                <StyledAccessCell padding="checkbox" parentColumn="Access">
+                <StyledAccessCell padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell padding="checkbox" parentColumn="None">
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     disabled={false}
@@ -70,10 +87,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     viewOnly={true}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read Only"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 1}
                     disabled={false}
@@ -83,7 +97,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     viewOnly={true}
                   />
                 </StyledPermissionsCell>
-                <TableCell padding="checkbox" parentColumn="Read/Write">
+                <TableCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 2}
                     disabled={false}

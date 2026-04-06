@@ -2,17 +2,18 @@ import {
   addPaymentMethod,
   makePayment,
 } from '@linode/api-v4/lib/account/payments';
-import { APIWarning } from '@linode/api-v4/lib/types';
-import braintree, { GooglePayment } from 'braintree-web';
-import { VariantType } from 'notistack';
-import { QueryClient } from 'react-query';
+import { accountQueries } from '@linode/queries';
+import braintree from 'braintree-web';
 
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIWarning } from '@linode/api-v4/lib/types';
+import type { QueryClient } from '@tanstack/react-query';
+import type { GooglePayment } from 'braintree-web';
+import type { VariantType } from 'notistack';
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
   merchantId: GPAY_MERCHANT_ID || '',
@@ -25,9 +26,7 @@ let googlePaymentInstance: GooglePayment;
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
 ): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    resolve({ transactionState: 'SUCCESS' });
-  });
+  return Promise.resolve({ transactionState: 'SUCCESS' });
 };
 
 export const initGooglePaymentInstance = async (
@@ -52,23 +51,23 @@ export const initGooglePaymentInstance = async (
   return { error: false };
 };
 
-const tokenizePaymentDataRequest = async (
-  transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
-    totalPrice?: string;
-  }
-) => {
+interface TransactionInfo
+  extends Omit<google.payments.api.TransactionInfo, 'totalPrice'> {
+  totalPrice?: string;
+}
+
+const tokenizePaymentDataRequest = async (transactionInfo: TransactionInfo) => {
   if (!googlePaymentInstance) {
     return Promise.reject(unableToOpenGPayError);
   }
 
-  const paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest(
-    {
+  const paymentDataRequest =
+    await googlePaymentInstance.createPaymentDataRequest({
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
       merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
-    }
-  );
+    });
 
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
@@ -89,9 +88,8 @@ const tokenizePaymentDataRequest = async (
 
   const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
 
-  const { nonce: realNonce } = await googlePaymentInstance.parseResponse(
-    paymentData
-  );
+  const { nonce: realNonce } =
+    await googlePaymentInstance.parseResponse(paymentData);
 
   // Use the real nonce (real money) when the Google Merchant ID is provided and
   // the Google Pay environment is set to production.
@@ -104,9 +102,7 @@ const tokenizePaymentDataRequest = async (
 
 export const gPay = async (
   action: 'add-recurring-payment' | 'one-time-payment',
-  transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
-    totalPrice?: string;
-  },
+  transactionInfo: TransactionInfo,
   setMessage: (message: PaymentMessage, warnings?: APIWarning[]) => void,
   setProcessing: (processing: boolean) => void,
   queryClient: QueryClient
@@ -116,7 +112,9 @@ export const gPay = async (
       nonce,
       usd: transactionInfo.totalPrice as string,
     });
-    queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.payments._def,
+    });
     const message = {
       text: `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
       variant: 'success' as VariantType,
@@ -130,7 +128,9 @@ export const gPay = async (
       is_default: true,
       type: 'payment_method_nonce',
     });
-    queryClient.invalidateQueries(`${accountPaymentKey}-all`);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.paymentMethods.queryKey,
+    });
     setMessage({
       text: 'Successfully added Google Pay',
       variant: 'success',

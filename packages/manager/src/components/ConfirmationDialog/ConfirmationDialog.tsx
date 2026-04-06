@@ -1,40 +1,19 @@
-import Dialog, { DialogProps } from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import { Theme } from '@mui/material/styles';
+import { Dialog, Stack } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import type { JSX } from 'react';
 
-import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  actions: {
-    '& button': {
-      marginBottom: 0,
-    },
-    justifyContent: 'flex-end',
-  },
-  dialogContent: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  error: {
-    color: '#C44742',
-    marginTop: theme.spacing(2),
-  },
-  root: {
-    '& .MuiDialogTitle-root': {
-      marginBottom: 10,
-    },
-  },
-}));
-
+import type { APIError } from '@linode/api-v4';
+import type { DialogProps } from '@linode/ui';
 export interface ConfirmationDialogProps extends DialogProps {
-  actions?: ((props: any) => JSX.Element) | JSX.Element;
-  error?: JSX.Element | string;
-  onClose: () => void;
-  title: string;
+  /**
+   * The actions to be displayed in the dialog.
+   */
+  actions?: ((props: DialogProps) => JSX.Element) | JSX.Element;
+  /**
+   * The error to be displayed in case fetching the entity failed.
+   */
+  entityError?: APIError[] | null | string;
 }
 
 /**
@@ -46,40 +25,32 @@ export interface ConfirmationDialogProps extends DialogProps {
  * - Avoid “Are you sure?” language. Assume the user knows what they want to do while helping them avoid unintended consequences.
  *
  */
-export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
-  const { classes } = useStyles();
-
-  const { actions, children, error, onClose, title, ...dialogProps } = props;
+export const ConfirmationDialog = React.forwardRef<
+  HTMLDivElement,
+  ConfirmationDialogProps
+>((props, ref) => {
+  const { actions, children, entityError, ...dialogProps } = props;
 
   return (
     <Dialog
       {...dialogProps}
-      onClose={(_, reason) => {
-        if (reason !== 'backdropClick') {
-          onClose();
-        }
-      }}
+      error={props.error || entityError}
       PaperProps={{ role: undefined }}
-      className={classes.root}
-      data-qa-dialog
-      data-qa-drawer
-      data-testid="drawer"
-      role="dialog"
+      ref={ref}
     >
-      <DialogTitle onClose={onClose} title={title} />
-      <DialogContent className={classes.dialogContent} data-qa-dialog-content>
-        {children}
-        {error && (
-          <DialogContentText className={`${classes.error} error-for-scroll`}>
-            {error}
-          </DialogContentText>
-        )}
-      </DialogContent>
-      <DialogActions className={classes.actions}>
+      <StyledDialogContentSection>{children}</StyledDialogContentSection>
+      <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {actions && typeof actions === 'function'
           ? actions(dialogProps)
           : actions}
-      </DialogActions>
+      </Stack>
     </Dialog>
   );
-};
+});
+
+const StyledDialogContentSection = styled(Stack, {
+  label: 'StyledDialogContentSection',
+})(({ theme: { spacing } }) => ({
+  marginBottom: spacing(2),
+  order: -1,
+}));

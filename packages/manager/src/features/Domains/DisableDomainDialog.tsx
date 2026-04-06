@@ -1,23 +1,26 @@
-import { Domain } from '@linode/api-v4/lib/domains';
+import { useUpdateDomainMutation } from '@linode/queries';
+import { ActionsPanel } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useUpdateDomainMutation } from 'src/queries/domains';
-import { sendDomainStatusChangeEvent } from 'src/utilities/analytics';
+import { sendDomainStatusChangeEvent } from 'src/utilities/analytics/customEventAnalytics';
+
+import type { APIError, Domain } from '@linode/api-v4';
 
 interface DisableDomainDialogProps {
   domain: Domain | undefined;
+  domainError: APIError[] | null;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const DisableDomainDialog = React.memo(
   (props: DisableDomainDialogProps) => {
-    const { domain, onClose, open } = props;
+    const { domain, domainError, isFetching, onClose, open } = props;
     const {
       error,
-      isLoading,
+      isPending,
       mutateAsync: updateDomain,
       reset,
     } = useUpdateDomainMutation();
@@ -48,16 +51,18 @@ export const DisableDomainDialog = React.memo(
           <ActionsPanel
             primaryButtonProps={{
               label: 'Disable Domain',
-              loading: isLoading,
+              loading: isPending,
               onClick: onSubmit,
             }}
             secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           />
         }
+        entityError={domainError}
         error={error?.[0]?.reason}
+        isFetching={isFetching}
         onClose={onClose}
         open={open}
-        title={`Disable Domain ${domain?.domain}?`}
+        title={`Disable Domain${domain ? ` ${domain.domain}` : ''}?`}
       >
         Are you sure you want to disable this DNS zone?
       </ConfirmationDialog>

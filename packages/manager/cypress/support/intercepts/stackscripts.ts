@@ -6,7 +6,7 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { StackScript } from '@linode/api-v4/types';
+import type { StackScript } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to list StackScripts.
@@ -15,6 +15,17 @@ import type { StackScript } from '@linode/api-v4/types';
  */
 export const interceptGetStackScripts = (): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('linode/stackscripts*'));
+};
+
+/**
+ * Intercepts GET request to a StackScript.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetStackScript = (
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`linode/stackscripts/${id}`));
 };
 
 /**

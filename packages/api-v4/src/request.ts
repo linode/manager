@@ -1,17 +1,16 @@
-import Axios, {
-  AxiosError,
-  AxiosHeaders,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
-import { ValidationError, AnySchema } from 'yup';
-import { APIError, Filter, Params } from './types';
+import Axios, { AxiosHeaders } from 'axios';
+
+import type { APIError, Filter, Params } from './types';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AnySchema, ValidationError } from 'yup';
 
 interface RequestConfig extends AxiosRequestConfig {
   validationErrors?: APIError[];
 }
 
-type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
+type RequestConfigFn = (config: RequestConfig) => RequestConfig;
+
+type ConfigField = 'data' | 'headers' | 'method' | 'params' | 'url';
 
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4',
@@ -65,23 +64,24 @@ export const isEmpty = (v: any) =>
 export const setURL = (url: string) => set('url', url);
 
 /** METHOD */
-export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
+export const setMethod = (method: 'DELETE' | 'GET' | 'POST' | 'PUT') =>
   set('method', method);
 
 /** Param */
 export const setParams = (params: Params | undefined) => set('params', params);
 
-export const setHeaders = (newHeaders: any = {}) => (object: any) => {
-  return !isEmpty(newHeaders)
-    ? { ...object, headers: { ...object.headers, ...newHeaders } }
-    : object;
-};
+export const setHeaders =
+  (newHeaders: any = {}) =>
+  (object: any) => {
+    return !isEmpty(newHeaders)
+      ? { ...object, headers: { ...object.headers, ...newHeaders } }
+      : object;
+  };
 
 /**
  * Validate and set data in the request configuration object.
  */
 export const setData = (
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   data: any,
   /**
    * If a schema is provided, execute its validate method. If the validation fails, the
@@ -93,7 +93,7 @@ export const setData = (
    * object, after the validation has happened. Use with caution: It was created as a trap door for
    * merging IPv4 addresses and ports in the NodeBalancer creation flow.
    */
-  postValidationTransform?: (_: any) => any
+  postValidationTransform?: (_: any) => any,
 ): any => {
   if (!schema) {
     return set('data', data);
@@ -121,7 +121,7 @@ export const setData = (
  * to itself since we have nested structures (think NodeBalancers).
  */
 export const convertYupToLinodeErrors = (
-  validationError: ValidationError
+  validationError: ValidationError,
 ): APIError[] => {
   const { inner } = validationError;
 
@@ -169,18 +169,18 @@ export const setXFilter = (xFilter: Filter | undefined) => {
  * is an error.
  * @param fns An array of functions to be applied to the config object.
  */
-const reduceRequestConfig = (...fns: Function[]): RequestConfig =>
-  fns.reduceRight((result, fn) => fn(result), {
+const reduceRequestConfig = (...fns: RequestConfigFn[]): RequestConfig =>
+  fns.reduceRight<RequestConfig>((result, fn) => fn(result), {
     url: 'https://api.linode.com/v4',
     headers: {},
   });
 
 /** Generator */
-export const requestGenerator = <T>(...fns: Function[]): Promise<T> => {
+export const requestGenerator = <T>(...fns: RequestConfigFn[]): Promise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject(
-      config.validationErrors // All failed requests, client or server errors, should be APIError[]
+      config.validationErrors, // All failed requests, client or server errors, should be APIError[]
     );
   }
   return baseRequest(config).then((response) => response.data);
@@ -199,7 +199,7 @@ export const requestGenerator = <T>(...fns: Function[]): Promise<T> => {
 export const mockAPIError = (
   status: number = 400,
   statusText: string = 'Internal Server Error',
-  data: any = {}
+  data: any = {},
 ): Promise<AxiosError> =>
   new Promise((resolve, reject) =>
     setTimeout(
@@ -213,10 +213,10 @@ export const mockAPIError = (
             config: {
               headers: new AxiosHeaders(),
             },
-          })
+          }),
         ),
-      process.env.NODE_ENV === 'test' ? 0 : 250
-    )
+      process.env.NODE_ENV === 'test' ? 0 : 250,
+    ),
   );
 
 const createError = (message: string, response: AxiosResponse) => {
@@ -226,12 +226,12 @@ const createError = (message: string, response: AxiosResponse) => {
 };
 
 export interface CancellableRequest<T> {
-  request: () => Promise<T>;
   cancel: () => void;
+  request: () => Promise<T>;
 }
 
 export const CancellableRequest = <T>(
-  ...fns: Function[]
+  ...fns: RequestConfigFn[]
 ): CancellableRequest<T> => {
   const config = reduceRequestConfig(...fns);
   const source = Axios.CancelToken.source();
@@ -251,7 +251,7 @@ export const CancellableRequest = <T>(
     cancel: source.cancel,
     request: () =>
       baseRequest({ ...config, cancelToken: source.token }).then(
-        (response) => response.data
+        (response) => response.data,
       ),
   };
 };

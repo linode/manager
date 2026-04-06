@@ -1,9 +1,12 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
-import { QueryClient } from 'react-query';
-import { linodeFactory } from 'src/factories/linodes';
+
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { Props, RescueDialog } from './RescueDialog';
+
+import { RescueDialog } from './RescueDialog';
+
+import type { Props } from './RescueDialog';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
@@ -20,16 +23,16 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual<any>('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
   };
 });
 
-vi.mock('src/queries/types', async () => {
-  const actual = await vi.importActual<any>('src/queries/types');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useTypeQuery: queryMocks.useTypeQuery,
@@ -38,6 +41,7 @@ vi.mock('src/queries/types', async () => {
 
 const props: Props = {
   linodeId: normalLinode.id,
+  linodeLabel: normalLinode.label,
   onClose: vi.fn(),
   open: true,
 };
@@ -52,11 +56,8 @@ describe('RescueDialog', () => {
       data: normalLinode,
     });
 
-    const { getByText, getByTestId } = renderWithTheme(
-      <RescueDialog {...props} />,
-      {
-        queryClient: new QueryClient(),
-      }
+    const { getByTestId, getByText } = renderWithTheme(
+      <RescueDialog {...props} />
     );
 
     expect(getByText(/Rescue Linode/)).toBeInTheDocument();
@@ -73,10 +74,7 @@ describe('RescueDialog', () => {
     });
 
     const { getByText, queryByTestId } = renderWithTheme(
-      <RescueDialog {...props} linodeId={metalLinode.id} />,
-      {
-        queryClient: new QueryClient(),
-      }
+      <RescueDialog {...props} linodeId={metalLinode.id} />
     );
 
     expect(getByText(/Rescue Linode/)).toBeInTheDocument();

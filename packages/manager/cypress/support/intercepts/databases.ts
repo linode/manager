@@ -2,17 +2,20 @@
  * @file Cypress intercepts and mocks for Cloud Manager DBaaS operations.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
+import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
+import { randomString } from 'support/util/random';
+import { makeResponse } from 'support/util/response';
+
 import type {
   Database,
   DatabaseCredentials,
   DatabaseEngine,
+  DatabaseEngineConfig,
   DatabaseType,
-} from '@linode/api-v4/types';
-import { makeErrorResponse } from 'support/util/errors';
-import { apiMatcher } from 'support/util/intercepts';
-import { paginateResponse } from 'support/util/paginate';
-import { makeResponse } from 'support/util/response';
-import { randomString } from 'support/util/random';
+  Engine,
+} from '@linode/api-v4';
 
 /**
  * Default message to use when performing operations on provisioning DBs.
@@ -20,6 +23,8 @@ import { randomString } from 'support/util/random';
 const defaultErrorMessageProvisioning =
   'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
 
+const defaultErrorMessageSuspendResume =
+  'Your database is suspended/resuming; please wait until provisioning is complete to perform this operation.';
 /**
  * Intercepts GET request to fetch database instance and mocks response.
  *
@@ -127,15 +132,76 @@ export const mockUpdateDatabase = (
 };
 
 /**
- * Intercepts PUT request to update a provisioning database and mocks response.
+ * Intercepts POST request to suspend an active database and mocks response.
  *
  * @param id - Database ID.
  * @param engine - Database engine type.
- * @param responseErrorMessage - Optional error message for mocked response.
  *
  * @returns Cypress chainable.
  */
-export const mockUpdateProvisioningDatabase = (
+export const mockSuspendDatabase = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`databases/${engine}/instances/${id}/suspend`),
+    responseData
+  );
+};
+
+/**
+ * Intercepts POST request to resume an active database and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockResumeDatabase = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`databases/${engine}/instances/${id}/resume`),
+    responseData
+  );
+};
+
+/**
+ * Intercepts PUT request to resize an active database cluster and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+
+export const mockResize = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    responseData
+  );
+};
+
+/**
+ * Intercepts PUT request to resize a provisioning database cluster and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+
+export const mockResizeProvisioningDatabase = (
   id: number,
   engine: string,
   responseErrorMessage?: string | undefined
@@ -143,6 +209,57 @@ export const mockUpdateProvisioningDatabase = (
   const error = makeErrorResponse(
     responseErrorMessage || defaultErrorMessageProvisioning
   );
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    error
+  );
+};
+
+/**
+ * Intercepts PUT request to update a suspended/resuming database and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ * @param responseErrorMessage - Optional error message for mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateSuspendResumeDatabase = (
+  id: number,
+  engine: string,
+  responseErrorMessage?: string | undefined
+): Cypress.Chainable<null> => {
+  const error = makeErrorResponse(
+    responseErrorMessage || defaultErrorMessageSuspendResume
+  );
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    error
+  );
+};
+
+/**
+ * Intercepts PUT request to update database and mocks error with custom field and reason.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ * @param field - Error field name.
+ * @param reason - Error reason message.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateDatabaseError = (
+  id: number,
+  engine: string,
+  field: string,
+  reason: string
+): Cypress.Chainable<null> => {
+  const error = makeErrorResponse({
+    field,
+    reason,
+  });
   return cy.intercept(
     'PUT',
     apiMatcher(`databases/${engine}/instances/${id}`),
@@ -166,6 +283,30 @@ export const mockResetPassword = (
     'POST',
     apiMatcher(`databases/${engine}/instances/${id}/credentials/reset`),
     {}
+  );
+};
+
+/**
+ * Intercepts POST request to reset a suspended/resuming database's password and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ * @param responseErrorMessage - Optional error message for mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockResetPasswordSuspendResumeDatabase = (
+  id: number,
+  engine: string,
+  responseErrorMessage?: string | undefined
+): Cypress.Chainable<null> => {
+  const error = makeErrorResponse(
+    responseErrorMessage || defaultErrorMessageSuspendResume
+  );
+  return cy.intercept(
+    'POST',
+    apiMatcher(`databases/${engine}/instances/${id}/credentials/reset`),
+    error
   );
 };
 
@@ -267,5 +408,38 @@ export const mockGetDatabaseEngines = (
     'GET',
     apiMatcher('databases/engines*'),
     paginateResponse(engines)
+  );
+};
+
+/**
+ * Mocks an error response for the GET request to retrieve database instances in CloudPulse.
+ *
+ * This function intercepts the 'GET' request made to the CloudPulse API endpoint for retrieving database instances
+ * and simulates an error response with a customizable error message and HTTP status code.
+ *
+ * @param {string} errorMessage - The error message to include in the mock response body.
+ * @param {number} [status=500] - The HTTP status code for the mock response (defaults to 500 if not provided).
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object, indicating that the interception is part of a Cypress test chain.
+ */
+export const mockGetDatabasesError = (
+  errorMessage: string,
+  status: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('databases/instances*'),
+    makeErrorResponse(errorMessage, status)
+  );
+};
+
+export const mockGetDatabaseEngineConfigs = (
+  engine: Engine,
+  engineConfigs: DatabaseEngineConfig
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`databases/${engine}/config`),
+    makeResponse(engineConfigs)
   );
 };

@@ -1,12 +1,10 @@
-import {
-  LongviewClient,
-  deleteLongviewClient,
-  getLongviewClients,
-} from '@linode/api-v4';
+import { deleteLongviewClient, getLongviewClients } from '@linode/api-v4';
 import { oauthToken, pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
 import { apiCheckErrors, isTestLabel } from './common';
+
+import type { LongviewClient } from '@linode/api-v4';
 
 /**
  * Deletes all Longview clients whose labels are prefixed "cy-test-".
@@ -25,7 +23,10 @@ export const deleteAllTestClients = async (): Promise<void> => {
   await Promise.all(deletionPromises);
 };
 
-const makeClientCreateReq = (client, label) => {
+const makeClientCreateReq = (
+  client: LongviewClient | undefined,
+  label: string
+) => {
   const linodeData = client
     ? client
     : {
@@ -38,11 +39,14 @@ const makeClientCreateReq = (client, label) => {
     },
     body: linodeData,
     method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/longview/clients',
+    url: Cypress.expose('REACT_APP_API_ROOT') + '/longview/clients',
   });
 };
 
-export const createClient = (client = undefined, label) => {
+export const createClient = (
+  client: LongviewClient | undefined,
+  label: string
+) => {
   return makeClientCreateReq(client, label).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Client ${resp.body.label} successfully`, resp);

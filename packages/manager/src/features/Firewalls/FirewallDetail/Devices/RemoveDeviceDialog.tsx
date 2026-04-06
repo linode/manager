@@ -1,44 +1,86 @@
-import { FirewallDevice } from '@linode/api-v4';
+import {
+  linodeQueries,
+  nodebalancerQueries,
+  useRemoveFirewallDeviceMutation,
+} from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from 'react-query';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
-import { queryKey as nodeBalancerQueryKey } from 'src/queries/nodebalancers';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import { formattedTypes } from './constants';
+
+import type { APIError, FirewallDevice } from '@linode/api-v4';
 
 export interface Props {
   device: FirewallDevice | undefined;
+  firewallError?: APIError[] | null;
   firewallId: number;
   firewallLabel: string;
+  isFetching?: boolean;
   onClose: () => void;
   onService: boolean | undefined;
   open: boolean;
 }
 
 export const RemoveDeviceDialog = React.memo((props: Props) => {
-  const { device, firewallId, firewallLabel, onClose, onService, open } = props;
+  const {
+    device,
+    firewallError,
+    firewallId,
+    firewallLabel,
+    isFetching,
+    onClose,
+    onService,
+    open,
+  } = props;
 
   const { enqueueSnackbar } = useSnackbar();
   const deviceType = device?.entity.type;
 
-  const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
-    firewallId,
-    device?.id ?? -1
-  );
+  const entityLabelToUse =
+    deviceType === 'linode_interface'
+      ? `(ID: ${device?.entity.id})`
+      : device?.entity.label;
+
+  const { error, isPending, mutateAsync } = useRemoveFirewallDeviceMutation();
 
   const queryClient = useQueryClient();
 
-  const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
+  const deviceDialog = formattedTypes[deviceType ?? 'linode'];
+
+  const { data: firewallPermissions } = usePermissions(
+    'firewall',
+    ['delete_firewall_device'],
+    firewallId,
+    firewallId !== -1
+  );
+
+  const { data: linodePermissions } = usePermissions(
+    'linode',
+    ['update_linode'],
+    device?.entity.id
+  );
+
+  const deleteDisabled =
+    deviceType === 'nodebalancer'
+      ? !firewallPermissions.delete_firewall_device
+      : !linodePermissions.update_linode;
 
   const onDelete = async () => {
-    await mutateAsync();
+    if (!device) {
+      return;
+    }
+
+    await mutateAsync({ firewallId, deviceId: device.id });
+
     const toastMessage = onService
       ? `Firewall ${firewallLabel} successfully unassigned`
-      : `${deviceDialog} ${device?.entity.label} successfully removed`;
+      : `${deviceDialog} ${entityLabelToUse} successfully removed`;
+
     enqueueSnackbar(toastMessage, {
       variant: 'success',
     });
@@ -47,30 +89,43 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       enqueueSnackbar(error[0].reason, { variant: 'error' });
     }
 
-    const querykey =
-      deviceType === 'linode' ? linodesQueryKey : nodeBalancerQueryKey;
-
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
-    queryClient.invalidateQueries([
-      querykey,
-      deviceType,
-      device?.entity.id,
-      'firewalls',
-    ]);
+    if (deviceType === 'linode') {
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(device.entity.id)._ctx.firewalls
+          .queryKey,
+      });
+    }
+
+    if (deviceType === 'nodebalancer') {
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancer(device.entity.id)._ctx
+          .firewalls.queryKey,
+      });
+    }
+
+    if (deviceType === 'linode_interface' && device.entity.parent_entity) {
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries
+          .linode(device.entity.parent_entity.id)
+          ._ctx.interfaces._ctx.interface(device.entity.id)._ctx.firewalls
+          .queryKey,
+      });
+    }
 
     onClose();
   };
 
   const dialogTitle = onService
     ? `Unassign Firewall ${firewallLabel}?`
-    : `Remove ${deviceDialog} ${device?.entity.label}?`;
+    : `Remove ${deviceDialog} ${entityLabelToUse}?`;
 
   const confirmationText = (
     <Typography>
       Are you sure you want to{' '}
       {onService
         ? `unassign Firewall ${firewallLabel} from ${deviceDialog} ${device?.entity.label}?`
-        : `remove ${deviceDialog} ${device?.entity.label} from Firewall ${firewallLabel}?`}
+        : `remove ${deviceDialog} ${entityLabelToUse} from Firewall ${firewallLabel}?`}
     </Typography>
   );
 
@@ -82,8 +137,9 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: primaryButtonText,
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
+            disabled: deleteDisabled,
           }}
           secondaryButtonProps={{
             label: 'Cancel',
@@ -92,7 +148,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
           style={{ padding: 0 }}
         />
       }
-      error={error?.[0]?.reason}
+      error={error?.[0]?.reason || firewallError?.[0]?.reason}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={dialogTitle}

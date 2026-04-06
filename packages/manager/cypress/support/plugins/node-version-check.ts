@@ -1,8 +1,8 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 // Supported major versions of Node.js.
 // Running Cypress using other versions will cause a warning to be displayed.
-const supportedVersions = [16, 18];
+const supportedVersions = [20, 22, 24];
 
 /**
  * Returns a string describing the version of Node.js that is running the tests.

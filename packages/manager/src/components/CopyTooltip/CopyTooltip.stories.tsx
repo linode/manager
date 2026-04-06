@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 import type { CopyTooltipProps } from './CopyTooltip';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<CopyTooltipProps> = {
   render: (args) => <CopyTooltip {...args} />,

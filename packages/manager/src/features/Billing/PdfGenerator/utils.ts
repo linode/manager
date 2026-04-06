@@ -1,12 +1,4 @@
-import {
-  Invoice,
-  InvoiceItem,
-  Payment,
-  TaxSummary,
-} from '@linode/api-v4/lib/account';
-import JSPDF from 'jspdf';
-import autoTable, { CellHookData } from 'jspdf-autotable';
-import { pathOr } from 'ramda';
+import autoTable from 'jspdf-autotable';
 
 import { ADDRESSES } from 'src/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -15,6 +7,14 @@ import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utiliti
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 import type { Region } from '@linode/api-v4';
+import type {
+  Invoice,
+  InvoiceItem,
+  Payment,
+  TaxSummary,
+} from '@linode/api-v4/lib/account';
+import type JSPDF from 'jspdf';
+import type { CellHookData } from 'jspdf-autotable';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -33,7 +33,7 @@ const formatDateForTable = (
   const res = formatDate(date, { timezone });
 
   /** basically, if we have an invalid date, return empty strings */
-  return !!res.match(/invalid/gim)
+  return res.match(/invalid/gim)
     ? ['', '']
     : (res.split(' ') as [string, string]);
 };
@@ -109,7 +109,7 @@ interface CreateInvoiceItemsTableOptions {
 export const createInvoiceItemsTable = (
   options: CreateInvoiceItemsTableOptions
 ) => {
-  const { doc, items, regions, timezone, shouldShowRegions, startY } = options;
+  const { doc, items, regions, shouldShowRegions, startY, timezone } = options;
 
   autoTable(doc, {
     body: items.map((item) => {
@@ -194,7 +194,7 @@ export const createInvoiceItemsTable = (
   });
 };
 
-const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
+export const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
   if (!taxSummary) {
     return [];
   }
@@ -232,6 +232,30 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
           top: 5,
         },
       },
+    },
+    didDrawPage: (data) => {
+      let finalY = 0; // Initialize a variable to hold the final Y position after the table is drawn
+
+      if (data?.cursor?.y) {
+        finalY = data.cursor.y;
+      }
+
+      const footerText =
+        'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing) from your account.';
+      const textHeight = doc.getTextDimensions(footerText).h;
+      const bottomMargin = pageMargin;
+      const pageHeight = doc.internal.pageSize.height;
+
+      // Check if adding footerText would exceed page height
+      if (finalY + 20 + textHeight + bottomMargin > pageHeight) {
+        doc.addPage();
+        finalY = pageMargin; // Reset finalY for the new page
+      }
+
+      doc.text(footerText, pageMargin, finalY + 20, {
+        align: 'justify',
+        maxWidth: doc.internal.pageSize.width - pageMargin * 2,
+      });
     },
     headStyles: {
       fillColor: '#444444',
@@ -279,11 +303,7 @@ export const createFooter = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['CA', 'US'].includes(country);
 
-  const remitAddress = isAkamaiBilling
-    ? ['CA', 'US'].includes(country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
 
   const footerText = [];
 
@@ -305,10 +325,6 @@ export const createFooter = (
     align: 'center',
     charSpace: 0.75,
   });
-};
-
-const truncateLabel = (label: string) => {
-  return label.length > 20 ? `${label.substr(0, 20)}...` : label;
 };
 
 export const getInvoiceRegion = (
@@ -361,17 +377,14 @@ const formatDescription = (desc?: string) => {
 
   if (descChunks.length < 2) {
     /** in this case, it's probably a manual payment from admin */
-    // return desc;
-    return truncateLabel(desc);
+    return desc;
   }
 
   if (isVolume) {
     const [volLabel, volID] = descChunks[1].split(' ');
-    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${pathOr(
-      '',
-      [2],
-      descChunks
-    )}\r\n${volID}`;
+    return `${descChunks[0]}\r\n${volLabel} ${
+      descChunks?.[2] ?? ''
+    }\r\n${volID}`;
   }
 
   if (isBackup) {
@@ -384,14 +397,14 @@ const formatDescription = (desc?: string) => {
        * If we arrive here, we're dealing with the former.
        */
       const [backupLabel, backupID] = descChunks[2].split(' ');
-      return `${base}\r\n${truncateLabel(backupLabel)}\r\n${backupID}`;
+      return `${base}\r\n${backupLabel}\r\n${backupID}`;
     }
     return base;
   }
 
   const [entityLabel, entityID] = descChunks[1].split(' ');
   const cleanedType = descChunks[0].replace(/\(pending upgrade\)/, '');
-  return `${cleanedType}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
+  return `${cleanedType}\r\n${entityLabel}\r\n${entityID}`;
 };
 
 export interface PdfResult {
@@ -421,4 +434,16 @@ export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
   }
 
   return invoiceDate >= dcPricingDate;
+};
+
+export const getRemitAddress = (country: string, isAkamaiBilling: boolean) => {
+  if (!isAkamaiBilling) {
+    return ADDRESSES.linode;
+  }
+
+  if (['CA', 'US'].includes(country)) {
+    return ADDRESSES.akamai.us;
+  }
+
+  return ADDRESSES.akamai.international;
 };

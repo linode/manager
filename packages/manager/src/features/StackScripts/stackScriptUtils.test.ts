@@ -1,6 +1,9 @@
-import { Grant } from '@linode/api-v4/lib/account';
+import {
+  canUserModifyAccountStackScript,
+  getStackScriptImages,
+} from './stackScriptUtils';
 
-import { canUserModifyAccountStackScript } from './stackScriptUtils';
+import type { Grant } from '@linode/api-v4';
 
 describe('canUserModifyStackScript', () => {
   let isRestrictedUser = false;
@@ -49,5 +52,21 @@ describe('canUserModifyStackScript', () => {
         stackScriptID
       )
     ).toBe(false);
+  });
+});
+
+describe('getStackScriptImages', () => {
+  it('removes the linode/ prefix from Image IDs', () => {
+    const images = ['linode/ubuntu20.04', 'linode/debian9'];
+    expect(getStackScriptImages(images)).toBe('ubuntu20.04, debian9');
+  });
+  it('removes the handles images without the linode/ prefix', () => {
+    const images = ['ubuntu20.04', 'linode/debian9'];
+    expect(getStackScriptImages(images)).toBe('ubuntu20.04, debian9');
+  });
+  it('gracefully handles a null image', () => {
+    const images = ['linode/ubuntu20.04', null, 'linode/debian9'];
+    // @ts-expect-error intentionally testing invalid value because API is known to return null
+    expect(getStackScriptImages(images)).toBe('ubuntu20.04, debian9');
   });
 });

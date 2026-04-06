@@ -1,15 +1,12 @@
-import DoneIcon from '@mui/icons-material/Done';
+import { Box, Chip, ListItem } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Box } from 'src/components/Box';
-import { ListItem } from 'src/components/ListItem';
 
 export const StyledAutocompleteContainer = styled(Box, {
   label: 'RegionSelect',
 })(({ theme }) => ({
   '& .MuiAutocomplete-groupLabel': {
     color: theme.color.headline,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
     lineHeight: 1,
     padding: '16px 4px 8px 10px',
@@ -20,12 +17,18 @@ export const StyledAutocompleteContainer = styled(Box, {
       marginTop: -8,
     },
   },
-}));
-
-export const StyledFlagContainer = styled('div', {
-  label: 'RegionSelectFlagContainer',
-})(({ theme }) => ({
-  marginRight: theme.spacing(1),
+  '& .MuiAutocomplete-root .MuiAutocomplete-inputRoot': {
+    paddingRight: 8,
+  },
+  // If the subheader is empty, hide it to avoid empty padded space
+  // This can happen for options that do not belong to a region (e.g. "Global")
+  '& .MuiListSubheader-root:empty': {
+    display: 'none',
+  },
+  display: 'flex',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
 }));
 
 export const StyledLParentListItem = styled(ListItem, {
@@ -40,28 +43,19 @@ export const StyledLParentListItem = styled(ListItem, {
   },
 }));
 
-export const StyledListItem = styled(ListItem, {
-  label: 'RegionSelectListItem',
-})(() => ({
-  '&.Mui-disabled': {
-    cursor: 'not-allowed',
+export const StyledChip = styled(Chip)(({ theme }) => ({
+  '& .MuiChip-deleteIcon': {
+    '& svg': {
+      borderRadius: '50%',
+    },
+    padding: 0,
   },
-  '&.MuiAutocomplete-option': {
-    minHeight: 'auto !important',
-    padding: '8px 10px !important',
+  '& .MuiChip-deleteIcon.MuiSvgIcon-root': {
+    '&:hover': {
+      backgroundColor: theme.tokens.color.Neutrals.White,
+      color: theme.tokens.color.Ultramarine[70],
+    },
+    backgroundColor: theme.tokens.color.Ultramarine[70],
+    color: theme.tokens.color.Neutrals.White,
   },
-  '&.MuiListItem-root[aria-disabled="true"]:active': {
-    pointerEvents: 'none !important',
-  },
-}));
-
-export const SelectedIcon = styled(DoneIcon, {
-  label: 'RegionSelectSelectedIcon',
-  shouldForwardProp: (prop) => prop != 'visible',
-})<{ visible: boolean }>(({ visible }) => ({
-  height: 17,
-  marginLeft: '-2px',
-  marginRight: '5px',
-  visibility: visible ? 'visible' : 'hidden',
-  width: 17,
 }));

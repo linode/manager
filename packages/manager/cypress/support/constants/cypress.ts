@@ -3,9 +3,10 @@
  */
 
 /**
- * Tag to use to identify test entities, resources, etc.
+ * Tag to identify test entities, resources, etc.
  */
-export const entityTag = 'cy-test';
+export const entityTag =
+  Cypress.expose()['CY_TEST_RESOURCE_PREFIX'] || 'cy-test';
 
 /**
  * Prefix for entity names and labels that will be created by Cypress tests.

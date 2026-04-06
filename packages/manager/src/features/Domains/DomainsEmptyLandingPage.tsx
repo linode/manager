@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,
@@ -13,13 +13,13 @@ import {
 
 interface DomainsEmptyLandingStateProps {
   navigateToCreate: () => void;
-  openImportZoneDrawer: () => void;
+  navigateToImportZone: () => void;
 }
 
 export const DomainsEmptyLandingState = (
   props: DomainsEmptyLandingStateProps
 ) => {
-  const { navigateToCreate, openImportZoneDrawer } = props;
+  const { navigateToCreate, navigateToImportZone } = props;
 
   return (
     <ResourcesSection
@@ -43,13 +43,13 @@ export const DomainsEmptyLandingState = (
               category: linkAnalyticsEvent.category,
               label: 'Import a Zone',
             });
-            openImportZoneDrawer();
+            navigateToImportZone();
           },
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={DomainIcon}
+      icon={NetworkIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

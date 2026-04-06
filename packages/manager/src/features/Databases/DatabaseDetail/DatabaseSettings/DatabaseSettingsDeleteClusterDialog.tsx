@@ -1,13 +1,13 @@
-import { Engine } from '@linode/api-v4/lib/databases';
+import { useDeleteDatabaseMutation } from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { useDeleteDatabaseMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { Engine } from '@linode/api-v4/lib/databases';
 
 interface Props {
   databaseEngine: Engine;
@@ -17,33 +17,33 @@ interface Props {
   open: boolean;
 }
 
-export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
+export const DatabaseSettingsDeleteClusterDialog = (props: Props) => {
   const { databaseEngine, databaseID, databaseLabel, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(
-    databaseEngine,
-    databaseID
-  );
-  const defaultError = 'There was an error deleting this Database Cluster.';
-  const [error, setError] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { push } = useHistory();
+  const {
+    mutateAsync: deleteDatabase,
+    error,
+    isPending,
+    reset,
+  } = useDeleteDatabaseMutation(databaseEngine, databaseID);
+  const navigate = useNavigate();
+
+  const _onClose = () => {
+    onClose();
+    reset();
+  };
 
   const onDeleteCluster = () => {
-    setIsLoading(true);
-    deleteDatabase()
-      .then(() => {
-        setIsLoading(false);
-        enqueueSnackbar('Database Cluster deleted successfully.', {
-          variant: 'success',
-        });
-        onClose();
-        push('/databases');
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
+    deleteDatabase().then(() => {
+      enqueueSnackbar('Database Cluster deleted successfully.', {
+        variant: 'success',
       });
+      _onClose();
+      reset();
+      navigate({
+        to: '/databases',
+      });
+    });
   };
 
   return (
@@ -55,14 +55,25 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
         subType: 'Cluster',
         type: 'Database',
       }}
+      expand
       label={'Cluster Name'}
-      loading={isLoading}
+      loading={isPending}
       onClick={onDeleteCluster}
-      onClose={onClose}
+      onClose={_onClose}
       open={open}
       title={`Delete Database Cluster ${databaseLabel}`}
     >
-      {error ? <Notice text={error} variant="error" /> : null}
+      {error ? (
+        <Notice
+          text={
+            getAPIErrorOrDefault(
+              error,
+              'There was an error deleting this Database Cluster.'
+            )[0].reason
+          }
+          variant="error"
+        />
+      ) : null}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting your entire database will delete
@@ -73,5 +84,3 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
     </TypeToConfirmDialog>
   );
 };
-
-export default DatabaseSettingsDeleteClusterDialog;

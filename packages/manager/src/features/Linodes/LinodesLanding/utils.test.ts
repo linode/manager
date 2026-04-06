@@ -1,9 +1,10 @@
-import { parseMaintenanceStartTime, getVPCsFromLinodeConfigs } from './utils';
 import {
   configFactory,
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-} from 'src/factories';
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
+
+import { getVPCsFromLinodeConfigs, parseMaintenanceStartTime } from './utils';
 
 describe('Linode Landing Utilites', () => {
   it('should return "Maintenance Window Unknown" for invalid dates', () => {
@@ -33,7 +34,7 @@ describe('Linode Landing Utilites', () => {
   });
 
   describe('getVPCsFromLinodeConfigs', () => {
-    const vpcInterfaceList = LinodeConfigInterfaceFactoryWithVPC.buildList(2);
+    const vpcInterfaceList = linodeConfigInterfaceFactoryWithVPC.buildList(2);
 
     it('returns an empty list if there are no vpc interfaces in the configs', () => {
       const configs = configFactory.buildList(3);
@@ -45,25 +46,25 @@ describe('Linode Landing Utilites', () => {
       const config = configFactory.build({
         interfaces: [
           ...vpcInterfaceList,
-          ...LinodeConfigInterfaceFactory.buildList(4),
+          ...linodeConfigInterfaceFactory.buildList(4),
         ],
       });
       const vpcIds = getVPCsFromLinodeConfigs([
         ...configFactory.buildList(3),
         config,
       ]);
-      expect(vpcIds).toEqual([2, 3]);
+      expect(vpcIds).toEqual([3, 4]);
     });
 
     it('returns unique vpc ids (no duplicates)', () => {
-      const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-        vpc_id: 2,
+      const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
+        vpc_id: 3,
       });
       const config = configFactory.build({
         interfaces: [...vpcInterfaceList, vpcInterface],
       });
       const vpcIds = getVPCsFromLinodeConfigs([config]);
-      expect(vpcIds).toEqual([2, 3]);
+      expect(vpcIds).toEqual([3, 4]);
     });
   });
 });

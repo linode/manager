@@ -1,33 +1,59 @@
-import { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
+import { useFirewallsQuery } from '@linode/queries';
+import {
+  Autocomplete,
+  Box,
+  LinkButton,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import { Box } from 'src/components/Box';
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
-import { useFirewallsQuery } from 'src/queries/firewalls';
+import { useFlags } from 'src/hooks/useFlags';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 
-import { Autocomplete } from '../Autocomplete/Autocomplete';
-import { LinkButton } from '../LinkButton';
+import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
+import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
+
+import type {
+  Firewall,
+  FirewallDeviceEntityType,
+  PermissionType,
+} from '@linode/api-v4';
+
+type PermissionsSubset<T extends PermissionType> = T;
+type SelectFirewallPanelPermissions = PermissionsSubset<
+  'create_firewall' | 'create_nodebalancer'
+>;
 
 interface Props {
   entityType: FirewallDeviceEntityType | undefined;
-  handleFirewallChange: (firewallID: number) => void;
+  handleFirewallChange: (firewallID: number | undefined) => void;
   helperText: JSX.Element;
-  selectedFirewallId: number;
+  permissions: Record<SelectFirewallPanelPermissions, boolean>;
+  selectedFirewallId: number | undefined;
 }
 
 export const SelectFirewallPanel = (props: Props) => {
   const {
     entityType,
+    permissions,
     handleFirewallChange,
     helperText,
     selectedFirewallId,
   } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isFirewallDialogOpen, setIsFirewallDialogOpen] = React.useState(false);
+
+  const flags = useFlags();
+
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const secureVMFirewallBanner =
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
@@ -46,17 +72,14 @@ export const SelectFirewallPanel = (props: Props) => {
   }));
 
   const selectedFirewall =
-    selectedFirewallId !== -1
+    selectedFirewallId !== undefined
       ? firewallsDropdownOptions.find(
           (option) => option.value === selectedFirewallId
         ) || null
       : null;
 
   return (
-    <Paper
-      data-testid="select-firewall-panel"
-      sx={(theme) => ({ marginTop: theme.spacing(3) })}
-    >
+    <Paper data-testid="select-firewall-panel">
       <Typography
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
         variant="h2"
@@ -65,20 +88,36 @@ export const SelectFirewallPanel = (props: Props) => {
       </Typography>
       <Stack>
         {helperText}
+        {secureVMFirewallBanner !== false &&
+          secureVMFirewallBanner.linodeCreate && (
+            <AkamaiBanner
+              action={
+                secureVMFirewallBanner.generateActionText ? (
+                  <LinkButton onClick={() => setIsFirewallDialogOpen(true)}>
+                    {secureVMFirewallBanner.generateActionText}
+                  </LinkButton>
+                ) : undefined
+              }
+              margin={2}
+              {...secureVMFirewallBanner.linodeCreate}
+            />
+          )}
         <Autocomplete
-          onChange={(_, selection) => {
-            handleFirewallChange(selection?.value ?? -1);
-          }}
+          disabled={!permissions.create_nodebalancer}
           errorText={error?.[0].reason}
           label="Assign Firewall"
           loading={isLoading}
           noOptionsText="No Firewalls available"
+          onChange={(_, selection) => handleFirewallChange(selection?.value)}
           options={firewallsDropdownOptions}
           placeholder={'None'}
           value={selectedFirewall}
         />
         <StyledLinkButtonBox>
-          <LinkButton onClick={handleCreateFirewallClick}>
+          <LinkButton
+            disabled={!permissions.create_firewall}
+            onClick={handleCreateFirewallClick}
+          >
             Create Firewall
           </LinkButton>
         </StyledLinkButtonBox>
@@ -87,6 +126,11 @@ export const SelectFirewallPanel = (props: Props) => {
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}
+        />
+        <GenerateFirewallDialog
+          onClose={() => setIsFirewallDialogOpen(false)}
+          onFirewallGenerated={handleFirewallCreated}
+          open={isFirewallDialogOpen}
         />
       </Stack>
     </Paper>

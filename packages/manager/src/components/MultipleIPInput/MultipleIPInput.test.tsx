@@ -52,4 +52,43 @@ describe('MultipleIPInput', () => {
       { address: 'ip3' },
     ]);
   });
+
+  it('should enable all actions by default', async () => {
+    const props = {
+      ...baseProps,
+      ips: [{ address: 'ip1' }, { address: 'ip2' }],
+    };
+    const { getByTestId, getByLabelText, getByText } = renderWithTheme(
+      <MultipleIPInput {...props} />
+    );
+    const ip0 = getByLabelText('domain-transfer-ip-0');
+    const ip1 = getByLabelText('domain-transfer-ip-1');
+    const closeButton = getByTestId('delete-ip-1').closest('button');
+    const addButton = getByText('Add an IP').closest('button');
+
+    expect(ip0).toBeEnabled();
+    expect(ip1).toBeEnabled();
+    expect(closeButton).toBeEnabled();
+    expect(addButton).toBeEnabled();
+  });
+
+  it('should disable all actions', async () => {
+    const props = {
+      ...baseProps,
+      disabled: true,
+      ips: [{ address: 'ip1' }, { address: 'ip2' }],
+    };
+    const { getByTestId, getByLabelText, getByText } = renderWithTheme(
+      <MultipleIPInput {...props} />
+    );
+    const ip0 = getByLabelText('domain-transfer-ip-0');
+    const ip1 = getByLabelText('domain-transfer-ip-1');
+    const closeButton = getByTestId('delete-ip-1').closest('button');
+    const addButton = getByText('Add an IP').closest('button');
+
+    expect(ip0).toBeDisabled();
+    expect(ip1).toBeDisabled();
+    expect(closeButton).toBeDisabled();
+    expect(addButton).toBeDisabled();
+  });
 });

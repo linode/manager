@@ -1,36 +1,55 @@
-import { CredentialPayload } from '@linode/api-v4/lib/managed';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { TextField } from 'src/components/TextField';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+import type { FormikProps } from './CredentialList';
+import type { APIError, CredentialPayload } from '@linode/api-v4';
+
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 export interface CredentialDrawerProps {
+  credentialError: APIError[] | null;
+  isFetching: boolean;
   label: string;
   onClose: () => void;
-  onSubmitLabel: (values: Partial<CredentialPayload>, formikProps: any) => void;
+  onSubmitLabel: (
+    values: Partial<CredentialPayload>,
+    formikProps: FormikProps
+  ) => void;
   onSubmitPassword: (
     values: Partial<CredentialPayload>,
-    formikProps: any
+    formikProps: FormikProps
   ) => void;
   open: boolean;
 }
 
 const CredentialDrawer = (props: CredentialDrawerProps) => {
-  const { label, onClose, onSubmitLabel, onSubmitPassword, open } = props;
-
+  const {
+    credentialError,
+    isFetching,
+    label,
+    onClose,
+    onSubmitLabel,
+    onSubmitPassword,
+    open,
+  } = props;
   return (
-    <Drawer onClose={onClose} open={open} title={`Edit Credential: ${label}`}>
+    <Drawer
+      error={credentialError}
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title={`Edit Credential: ${label || 'Unknown'}`}
+    >
       <Formik
         initialValues={{
           label,

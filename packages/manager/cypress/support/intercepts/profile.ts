@@ -8,13 +8,15 @@ import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
 import type {
+  Grants,
   OAuthClient,
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  SSHKey,
   Token,
   UserPreferences,
-} from '@linode/api-v4/types';
+} from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch user profile.
@@ -46,7 +48,24 @@ export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
 export const mockUpdateProfile = (
   profile: Profile
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', apiMatcher(`profile`), makeResponse(profile));
+  return cy.intercept('PUT', apiMatcher('profile'), makeResponse(profile));
+};
+
+/**
+ * Intercepts GET request to fetch profile grants and mocks response.
+ *
+ * @param grants - Grants object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetProfileGrants = (
+  grants: Grants
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/grants'),
+    makeResponse(grants)
+  );
 };
 
 /**
@@ -59,7 +78,27 @@ export const mockUpdateProfile = (
 export const mockGetUserPreferences = (
   preferences: UserPreferences
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('profile/preferences'), preferences);
+  const defaultPreferences = {
+    // All sidebar categories are expanded.
+    collapsedSideNavProductFamilies: [],
+
+    // Sidebar is not pinned.
+    desktop_sidebar_open: false,
+
+    // Type-to-confirm is enabled.
+    type_to_confirm: true,
+  };
+
+  const resolvedPreferences = {
+    ...defaultPreferences,
+    ...preferences,
+  };
+
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/preferences'),
+    resolvedPreferences
+  );
 };
 
 /**
@@ -106,7 +145,7 @@ export const mockSendVerificationCode = (): Cypress.Chainable<null> => {
 export const mockVerifyVerificationCode = (
   errorMessage?: string | undefined
 ): Cypress.Chainable<null> => {
-  const response = !!errorMessage ? makeErrorResponse(errorMessage) : {};
+  const response = errorMessage ? makeErrorResponse(errorMessage) : {};
   return cy.intercept(
     'POST',
     apiMatcher('profile/phone-number/verify'),
@@ -369,4 +408,118 @@ export const mockResetOAuthApps = (
     apiMatcher(`account/oauth-clients/${appId}/reset-secret`),
     oauthApp
   );
+};
+
+/**
+ * Intercepts GET request to fetch SSH keys and mocks the response.
+ *
+ * @param sshKeys - Array of SSH key objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKeys = (sshKeys: SSHKey[]): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/profile/sshkeys*'),
+    paginateResponse(sshKeys)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch SSH keys and mocks an error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKeysError = (
+  errorMessage: string,
+  status: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/profile/sshkeys*'),
+    makeErrorResponse(errorMessage, status)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch an SSH key and mocks the response.
+ *
+ * @param sshKey - SSH key object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/profile/sshkeys/${sshKey.id}`),
+    makeResponse(sshKey)
+  );
+};
+
+/**
+ * Intercepts POST request to create an SSH key.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateSSHKey = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`profile/sshkeys*`));
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks response.
+ *
+ * @param sshKey - An SSH key with which to create.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`profile/sshkeys`), sshKey);
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks an API error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSSHKeyError = (
+  errorMessage: string,
+  status: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('profile/sshkeys'),
+    makeErrorResponse(errorMessage, status)
+  );
+};
+
+/**
+ * Intercepts PUT request to update an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to update
+ * @param sshKey - An SSH key with which to update.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateSSHKey = (
+  sshKeyId: number,
+  sshKey: SSHKey
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher(`profile/sshkeys/${sshKeyId}`), sshKey);
+};
+
+/**
+ * Intercepts DELETE request to delete an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to delete
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteSSHKey = (sshKeyId: number): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`profile/sshkeys/${sshKeyId}`), {});
 };

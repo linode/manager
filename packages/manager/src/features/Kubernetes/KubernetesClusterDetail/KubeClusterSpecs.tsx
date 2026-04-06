@@ -1,28 +1,35 @@
-import { KubernetesCluster } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { useRegionsQuery, useSpecificTypes } from '@linode/queries';
+import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
+import { useMediaQuery } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useSpecificTypes } from 'src/queries/types';
+import {
+  useAllKubernetesNodePoolQuery,
+  useKubernetesTypesQuery,
+} from 'src/queries/kubernetes';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { pluralize } from 'src/utilities/pluralize';
-import { LKE_HA_PRICE } from 'src/utilities/pricing/constants';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import {
+  HA_PRICE_ERROR_MESSAGE,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import { getTotalClusterMemoryCPUAndStorage } from '../kubeUtils';
+
+import type { KubernetesCluster } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   cluster: KubernetesCluster;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   iconTextOuter: {
-    flexBasis: '72%',
     minWidth: 115,
   },
   item: {
@@ -35,25 +42,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(1),
     paddingTop: theme.spacing(1),
   },
-  mainGridContainer: {
-    position: 'relative',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'space-between',
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 320,
     },
-  },
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
 }));
 
-export const KubeClusterSpecs = (props: Props) => {
+export const KubeClusterSpecs = React.memo((props: Props) => {
   const { cluster } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data: regions } = useRegionsQuery();
-
+  const theme = useTheme();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
-
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
   const types = extendTypesQueryResult(typesQuery);
 
@@ -62,30 +63,66 @@ export const KubeClusterSpecs = (props: Props) => {
     types ?? []
   );
 
-  const region = regions?.find((r) => r.id === cluster.region);
+  const {
+    data: kubernetesHighAvailabilityTypesData,
+    isError: isErrorKubernetesTypes,
+    isLoading: isLoadingKubernetesTypes,
+  } = useKubernetesTypesQuery();
 
+  const matchesColGapBreakpointDown = useMediaQuery(
+    theme.breakpoints.down(theme.breakpoints.values.lg)
+  );
+
+  const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-ha'
+  );
+
+  const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-e'
+  );
+
+  const region = regions?.find((r) => r.id === cluster.region);
   const displayRegion = region?.label ?? cluster.region;
 
-  const dcSpecificPrice = cluster.control_plane.high_availability
-    ? getDCSpecificPrice({
-        basePrice: LKE_HA_PRICE,
-        regionId: region?.id,
-      })
+  const highAvailabilityPrice = cluster.control_plane.high_availability
+    ? getDCSpecificPriceByType({ regionId: region?.id, type: lkeHAType })
     : undefined;
-
-  const highAvailabilityPrice = dcSpecificPrice
-    ? parseFloat(dcSpecificPrice)
-    : undefined;
+  const enterprisePrice =
+    cluster.tier === 'enterprise' && lkeEnterpriseType?.price.monthly
+      ? lkeEnterpriseType?.price.monthly
+      : undefined;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,
     displayRegion,
-    `$${getTotalClusterPrice({
-      highAvailabilityPrice,
-      pools: pools ?? [],
-      region: region?.id,
-      types: types ?? [],
-    }).toFixed(2)}/month`,
+    isLoadingKubernetesTypes ? (
+      <CircleProgress size="sm" sx={{ marginTop: 2 }} />
+    ) : cluster.control_plane.high_availability && isErrorKubernetesTypes ? (
+      <>
+        ${UNKNOWN_PRICE}/month
+        <TooltipIcon
+          classes={{ popper: classes.tooltip }}
+          status="info"
+          sxTooltipIcon={{
+            marginBottom: theme.spacing(0.5),
+            marginLeft: theme.spacing(1),
+            padding: 0,
+          }}
+          text={HA_PRICE_ERROR_MESSAGE}
+          tooltipPosition="bottom"
+        />
+      </>
+    ) : (
+      `$${getTotalClusterPrice({
+        enterprisePrice,
+        highAvailabilityPrice: highAvailabilityPrice
+          ? Number(highAvailabilityPrice)
+          : undefined,
+        pools: pools ?? [],
+        region: region?.id,
+        types: types ?? [],
+      }).toFixed(2)}/month`
+    ),
   ];
 
   const kubeSpecsRight = [
@@ -97,9 +134,11 @@ export const KubeClusterSpecs = (props: Props) => {
   const kubeSpecItem = (spec: string, idx: number) => {
     return (
       <Grid
-        alignItems="center"
         className={classes.item}
         key={`spec-${idx}`}
+        sx={{
+          alignItems: 'center',
+        }}
         wrap="nowrap"
       >
         <Grid className={classes.iconTextOuter}>
@@ -110,11 +149,31 @@ export const KubeClusterSpecs = (props: Props) => {
   };
 
   return (
-    <Grid container direction="row" lg={3} spacing={0} xs={12}>
-      <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
-      <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
+    <Grid
+      container
+      direction="row"
+      size={{
+        lg: 3,
+        xs: 12,
+      }}
+      sx={{
+        columnGap: matchesColGapBreakpointDown ? 2 : 0,
+      }}
+    >
+      <Grid
+        size={{
+          lg: 6,
+        }}
+      >
+        {kubeSpecsLeft.map(kubeSpecItem)}
+      </Grid>
+      <Grid
+        size={{
+          lg: 6,
+        }}
+      >
+        {kubeSpecsRight.map(kubeSpecItem)}
+      </Grid>
     </Grid>
   );
-};
-
-export default KubeClusterSpecs;
+});

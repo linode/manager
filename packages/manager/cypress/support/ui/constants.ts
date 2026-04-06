@@ -1,19 +1,18 @@
-import { containsClick, containsVisible, getVisible } from '../helpers';
 import { waitForAppLoad } from './common';
 
-export const loadAppNoLogin = (path) => waitForAppLoad(path, false);
+export const loadAppNoLogin = (path: string) => waitForAppLoad(path, false);
 
 /* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
   account: '/account',
   createLinode: '/linodes/create',
-  createLinodeOCA: '/linodes/create?type=One-Click',
+  createLinodeOCA: '/linodes/create/marketplace',
   linodeLanding: '/linodes',
   profile: '/profile',
   support: '/support',
   supportTickets: '/support/tickets',
-  supportTicketsClosed: '/support/tickets?type=closed',
-  supportTicketsOpen: '/support/tickets?type=open',
+  supportTicketsClosed: '/support/tickets/closed',
+  supportTicketsOpen: '/support/tickets/open',
 };
 /**
  * due 2 rerender of the page that i could not deterministically check i added this wait
@@ -24,22 +23,33 @@ const waitDoubleRerender = () => {
   cy.wait(500);
 };
 
+interface GoWithUI {
+  go: () => void;
+  name: string;
+}
+
+export interface Page {
+  assertIsLoaded: () => void;
+  goWithUI?: GoWithUI[];
+  name: string;
+  url: string;
+}
+
 // List of Routes and validator of the route
-export const pages = [
+export const pages: Page[] = [
   {
-    assertIsLoaded: () =>
-      cy.findByText('Choose a Distribution').should('be.visible'),
+    assertIsLoaded: () => cy.findByText('Choose an OS').should('be.visible'),
     goWithUI: [
       {
         go: () => {
           loadAppNoLogin(routes.createLinodeOCA);
-          cy.findByText('Distributions').click();
+          cy.findByText('OS').click();
         },
         name: 'Tab',
       },
     ],
-    name: 'Linode/Create/Distribution',
-    url: `${routes.createLinode}?type=Distributions`,
+    name: 'Linode/Create/OS',
+    url: `${routes.createLinode}/os`,
   },
   {
     assertIsLoaded: () => cy.findByText('Select App').should('be.visible'),
@@ -47,7 +57,7 @@ export const pages = [
       {
         go: () => {
           loadAppNoLogin(routes.createLinode);
-          cy.get('[data-reach-tab]').contains('Marketplace').click();
+          cy.get('[data-reach-tab]').contains('Quick Deploy Apps').click();
         },
         name: 'Tab',
       },
@@ -79,18 +89,18 @@ export const pages = [
   {
     assertIsLoaded: () => cy.findByText('Choose an Image').should('be.visible'),
     name: 'Linode/Create/FromImages',
-    url: `${routes.createLinode}?type=Images`,
+    url: `${routes.createLinode}/images`,
   },
   {
     assertIsLoaded: () => cy.findByText('Select Backup').should('be.visible'),
     name: 'Linode/Create/FromBackup',
-    url: `${routes.createLinode}?type=Backups`,
+    url: `${routes.createLinode}/backups`,
   },
   {
     assertIsLoaded: () =>
       cy.findByText('Select Linode to Clone From').should('be.visible'),
     name: 'Linode/Create/Clone',
-    url: `${routes.createLinode}?type=Clone%20Linode`,
+    url: `${routes.createLinode}/clone`,
   },
   {
     assertIsLoaded: () => cy.findByText('My Profile').should('be.visible'),
@@ -104,10 +114,10 @@ export const pages = [
         go: () => {
           const url = `${routes.profile}/auth`;
           loadAppNoLogin(url);
-          getVisible('[data-qa-header="My Profile"]');
-          containsVisible(
+          cy.get('[data-qa-header="My Profile"]').should('be.visible');
+          cy.contains(
             'How to Enable Third Party Authentication on Your User Account'
-          );
+          ).should('be.visible');
           waitDoubleRerender();
           cy.contains('Display').should('be.visible').click();
         },
@@ -136,7 +146,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
           waitDoubleRerender();
-          containsClick('Login & Authentication');
+          cy.contains('Login & Authentication').click();
         },
         name: 'Tab',
       },
@@ -169,7 +179,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           waitDoubleRerender();
-          containsClick('LISH Console Settings');
+          cy.contains('LISH Console Settings').click();
         },
         name: 'Tab',
       },
@@ -191,7 +201,7 @@ export const pages = [
         name: 'Tab',
       },
     ],
-    name: 'Profile/API tokens',
+    name: 'Profile/API Tokens',
     url: `${routes.profile}/tokens`,
   },
   {
@@ -202,7 +212,7 @@ export const pages = [
   },
   {
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
-    name: 'Support/tickets',
+    name: 'Support/Tickets',
     url: `${routes.supportTickets}`,
   },
   {
@@ -216,7 +226,7 @@ export const pages = [
         name: 'Tab',
       },
     ],
-    name: 'Support/tickets/open',
+    name: 'Support/Tickets/Open',
     url: `${routes.supportTicketsOpen}`,
   },
   {
@@ -230,46 +240,8 @@ export const pages = [
         name: 'Tab',
       },
     ],
-    name: 'Support/tickets/closed',
+    name: 'Support/Tickets/Closed',
     url: `${routes.supportTicketsClosed}`,
-  },
-  {
-    assertIsLoaded: () => cy.findByText('Billing Info').should('be.visible'),
-    name: 'Account',
-    url: `${routes.account}`,
-  },
-  {
-    assertIsLoaded: () =>
-      cy.findByText('Update Contact Information').should('be.visible'),
-    goWithUI: [
-      {
-        go: () => {
-          loadAppNoLogin(`${routes.account}/users`);
-          cy.findByText('Username');
-          waitDoubleRerender();
-          cy.findByText('Billing Info').should('be.visible').click();
-        },
-        name: 'Tab',
-      },
-    ],
-    name: 'Account/Billing',
-    url: `${routes.account}/billing`,
-  },
-  {
-    assertIsLoaded: () => cy.findByText('Add a User').should('be.visible'),
-    goWithUI: [
-      {
-        go: () => {
-          loadAppNoLogin(`${routes.account}/billing`);
-          cy.findByText('Billing Contact');
-          waitDoubleRerender();
-          cy.get('[data-reach-tab]').contains('Users').click();
-        },
-        name: 'Tab',
-      },
-    ],
-    name: 'account/Users',
-    url: `${routes.account}/users`,
   },
   {
     assertIsLoaded: () =>
@@ -277,7 +249,7 @@ export const pages = [
     goWithUI: [
       {
         go: () => {
-          loadAppNoLogin(`${routes.account}/billing`);
+          loadAppNoLogin(`/billing`);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
           cy.contains('Settings').click();
@@ -285,7 +257,7 @@ export const pages = [
         name: 'Tab',
       },
     ],
-    name: 'account/Settings',
-    url: `${routes.account}/settings`,
+    name: 'Settings',
+    url: '/account-settings',
   },
 ];

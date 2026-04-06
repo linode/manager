@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { LOGIN_ROOT } from 'src/constants';
+import { getLoginURL } from 'src/OAuth/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TPADialog } from './TPADialog';
@@ -77,19 +77,19 @@ describe('TPADialog', () => {
     const title = screen.getByText('Change login method to GitHub?');
     expect(title).toBeInTheDocument();
   });
-  it('Should close TPADialog upon clicking close button', () => {
+  it('Should close TPADialog upon clicking close button', async () => {
     renderWithTheme(<TPADialog {...props} />);
     const cancelButton = screen.getByTestId('confirm-cancel');
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();
   });
   it('Should redirect to disable TPA', async () => {
-    const expectedUrl = `${LOGIN_ROOT}/tpa/disable`;
+    const expectedUrl = `${getLoginURL()}/tpa/disable`;
     const mockWindow = vi.spyOn(window, 'open').mockReturnValue(null);
     renderWithTheme(<TPADialog {...props} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
-    userEvent.click(changeButton);
+    await userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
     expect(mockWindow).toHaveBeenCalledWith(
@@ -109,12 +109,12 @@ describe('TPADialog', () => {
       },
       newProvider: 'google',
     };
-    const expectedUrl = `${LOGIN_ROOT}/tpa/enable/google`;
+    const expectedUrl = `${getLoginURL()}/tpa/enable/google`;
     const mockWindow = vi.spyOn(window, 'open').mockReturnValue(null);
     renderWithTheme(<TPADialog {...newProps} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
-    userEvent.click(changeButton);
+    await userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
     expect(mockWindow).toHaveBeenCalledWith(
@@ -134,12 +134,12 @@ describe('TPADialog', () => {
       },
       newProvider: 'github',
     };
-    const expectedUrl = `${LOGIN_ROOT}/tpa/enable/github`;
+    const expectedUrl = `${getLoginURL()}/tpa/enable/github`;
     const mockWindow = vi.spyOn(window, 'open').mockReturnValue(null);
     renderWithTheme(<TPADialog {...newProps} />);
 
     const changeButton = screen.getByTestId('confirm-login-change');
-    userEvent.click(changeButton);
+    await userEvent.click(changeButton);
 
     expect(props.onClose).toBeCalled();
     expect(mockWindow).toHaveBeenCalledWith(

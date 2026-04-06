@@ -1,41 +1,65 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { buckets } from 'src/__data__/buckets';
+import {
+  objectStorageBucketFactory,
+  objectStorageBucketFactoryGen2,
+} from 'src/factories';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketTable } from './BucketTable';
 
+beforeAll(() => mockMatchMedia());
+
 describe('BucketTable', () => {
-  const wrapper = shallow(
-    <BucketTable
-      data={buckets}
-      handleClickDetails={vi.fn()}
-      handleClickRemove={vi.fn()}
-      handleOrderChange={vi.fn()}
-      order="asc"
-      orderBy="label"
-    />
-  );
+  it('renders table column headers', () => {
+    const { getByText } = renderWithTheme(
+      <BucketTable
+        data={[]}
+        handleClickDetails={vi.fn()}
+        handleClickRemove={vi.fn()}
+        handleOrderChange={vi.fn()}
+        order="asc"
+        orderBy="label"
+      />
+    );
 
-  const innerComponent = wrapper.dive();
-
-  it('renders without crashing', () => {
-    expect(wrapper).toHaveLength(1);
+    expect(getByText('Name')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('Created')).toBeVisible();
+    expect(getByText('Size')).toBeVisible();
   });
 
-  it('renders a "Name" column', () => {
-    expect(innerComponent.find('[data-qa-name]')).toHaveLength(1);
+  it('renders buckets', () => {
+    const buckets = objectStorageBucketFactory.buildList(3);
+    const { getByText } = renderWithTheme(
+      <BucketTable
+        data={buckets}
+        handleClickDetails={vi.fn()}
+        handleClickRemove={vi.fn()}
+        handleOrderChange={vi.fn()}
+        order="asc"
+        orderBy="label"
+      />
+    );
+
+    for (const bucket of buckets) {
+      expect(getByText(bucket.label)).toBeVisible();
+    }
   });
-  it('renders a "Region" column', () => {
-    expect(innerComponent.find('[data-qa-region]')).toHaveLength(1);
-  });
-  it('renders a "Created" column', () => {
-    expect(innerComponent.find('[data-qa-created]')).toHaveLength(1);
-  });
-  it('renders a "Size" column', () => {
-    expect(innerComponent.find('[data-qa-size]')).toHaveLength(1);
-  });
-  it('renders a RenderData component with the provided data', () => {
-    expect(innerComponent.find('RenderData').prop('data')).toEqual(buckets);
+
+  it('renders "Endpoint Type" column when Gen 2 is enabled', () => {
+    const bucket = objectStorageBucketFactoryGen2.buildList(1);
+    const { getByText } = renderWithTheme(
+      <BucketTable
+        data={bucket}
+        handleClickDetails={vi.fn()}
+        handleClickRemove={vi.fn()}
+        handleOrderChange={vi.fn()}
+        order="asc"
+        orderBy="label"
+      />
+    );
+    expect(getByText('Endpoint Type')).toBeVisible();
+    expect(getByText('Standard (E3)')).toBeVisible();
   });
 });

@@ -1,21 +1,19 @@
 import { CreditCardSchema } from '@linode/validation';
-import { DateTime } from 'luxon';
-import { take, takeLast } from 'ramda';
+import { Settings } from 'luxon';
 
 import {
   formatExpiry,
-  hasExpirationPassedFor,
+  isCreditCardExpired,
   parseExpiryYear,
 } from './creditCard';
 
 const currentYear = new Date().getFullYear();
-const currentYearFirstTwoDigits = take(2, String(currentYear));
+const currentYearFirstTwoDigits = String(currentYear).slice(0, 2);
 
 describe('isCreditCardExpired', () => {
-  describe('give today is 01/01/2019', () => {
-    const date = DateTime.fromObject({ day: 1, month: 1, year: 2019 });
-
-    const isCreditCardExpired = hasExpirationPassedFor(date);
+  describe('given today is 01/01/2019', () => {
+    // Mock that the current date is 1/1/2019
+    Settings.now = () => new Date(2019, 0, 1).valueOf();
 
     [
       ['01/2018', true],
@@ -30,7 +28,7 @@ describe('isCreditCardExpired', () => {
       ['10/2018', true],
       ['11/2018', true],
       ['12/2018', true],
-      ['01/2019', false],
+      ['01/2019', false], // A card is still valid until the end of the month
       ['02/2019', false],
       ['03/2019', false],
       ['04/2019', false],
@@ -90,7 +88,7 @@ describe('credit card expiry date parsing and validation', () => {
       data: {
         card_number: '1111111111111111',
         cvv: '123',
-        expiry: `09/${takeLast(2, String(currentYear + 19))}`,
+        expiry: `09/${String(currentYear + 19).slice(-2)}`,
       },
       result: true,
     },
@@ -98,7 +96,7 @@ describe('credit card expiry date parsing and validation', () => {
       data: {
         card_number: '1111111111111111',
         cvv: '123',
-        expiry: `09/${takeLast(2, String(currentYear + 1))}`,
+        expiry: `09/${String(currentYear + 1).slice(-2)}`,
       },
       result: true,
     },
@@ -109,8 +107,8 @@ describe('credit card expiry date parsing and validation', () => {
         // We also use currentYear to make sure this test does not fail in many
         // years down the road.
         cvv: '123',
-        // Using takeLast to simulate a user entering the year in a 2 digit format.
-        expiry: `09/${takeLast(2, String(currentYear + 21))}`,
+        // Using slice() to simulate a user entering the year in a 2 digit format.
+        expiry: `09/${String(currentYear + 21).slice(-2)}`,
       },
       result: 'Expiry too far in the future.',
     },

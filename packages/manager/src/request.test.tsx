@@ -1,20 +1,21 @@
-import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
+import { profileFactory } from '@linode/utilities';
+import { AxiosHeaders } from 'axios';
 
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
-
-import { profileFactory } from './factories';
-import { queryClientFactory } from './queries/base';
+import { setAuthDataInLocalStorage } from './OAuth/oauth';
 import {
-  LinodeError,
   getURL,
   handleError,
+  injectAkamaiAccountHeader,
   injectEuuidToProfile,
 } from './request';
 import { storeFactory } from './store';
+import { storage } from './utilities/storage';
 
+import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
+import type { AxiosError, AxiosResponse } from 'axios';
 
-const store = storeFactory(queryClientFactory());
+const store = storeFactory();
 
 const mockAxiosError = {
   isAxiosError: true,
@@ -42,61 +43,21 @@ const error400: AxiosError<LinodeError> = {
   },
 };
 
-const error401: AxiosError<LinodeError> = {
-  ...baseErrorWithJson,
-  response: {
-    ...mockAxiosError.response,
-    status: 401,
-  },
-};
-
 describe('Expiring Tokens', () => {
-  it('should properly expire tokens if given a 401 error', () => {
-    store.dispatch(
-      handleStartSession({
-        expires: 'never',
-        scopes: '*',
-        token: 'helloworld',
-      })
-    );
-    const expireToken = handleError(error401, store);
-
-    /**
-     * the redux state should nulled out and the function should return
-     * our original error
-     */
-    expect(store.getState().authentication).toEqual({
-      expiration: null,
-      loggedInAsCustomer: false,
-      scopes: null,
-      token: null,
-    });
-    expireToken.catch((e: APIError[]) =>
-      expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
-    );
-  });
-
   it('should just promise reject if a non-401 error', () => {
-    store.dispatch(
-      handleStartSession({
-        expires: 'never',
-        scopes: '*',
-        token: 'helloworld',
-      })
-    );
-    const expireToken = handleError(error400, store);
-
-    /**
-     * the redux state should nulled out and the function should return
-     * our original error
-     */
-    expect(store.getState().authentication).toEqual({
-      expiration: 'never',
-      loggedInAsCustomer: false,
+    setAuthDataInLocalStorage({
+      expires: 'never',
       scopes: '*',
       token: 'helloworld',
     });
-    expireToken.catch((e: APIError[]) =>
+
+    const result = handleError(error400, store);
+
+    expect(storage.authentication.token.get()).toEqual('helloworld');
+    expect(storage.authentication.expire.get()).toEqual('never');
+    expect(storage.authentication.scopes.get()).toEqual('*');
+
+    result.catch((e: APIError[]) =>
       expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
     );
   });
@@ -117,53 +78,67 @@ describe('getURL', () => {
   });
 });
 
-describe('injectEuuidToProfile', () => {
+describe('injectAkamaiAccountHeader', () => {
   const profile = profileFactory.build();
   const response: Partial<AxiosResponse> = {
     config: { headers: new AxiosHeaders(), method: 'get', url: '/profile' },
     data: profile,
-    headers: { 'x-customer-uuid': '1234' },
+    headers: { 'akamai-internal-account': '*' },
     status: 200,
   };
 
-  it('injects the euuid on successful GET profile response ', () => {
-    const results = injectEuuidToProfile(response as any);
-    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+  it('injects akamai account header on successful GET profile response ', () => {
+    const results = injectAkamaiAccountHeader(response as any);
+    expect(results.data).toHaveProperty('_akamaiAccount', true);
     // eslint-disable-next-line
-    const { _euuidFromHttpHeader, ...originalData } = results.data;
+    const { _akamaiAccount, ...originalData } = results.data;
     expect(originalData).toEqual(profile);
   });
 
   it('returns the original profile data if no header is present', () => {
     const responseWithNoHeaders = { ...response, headers: {} };
-    expect(injectEuuidToProfile(responseWithNoHeaders as any).data).toEqual(
+    const results = injectAkamaiAccountHeader(responseWithNoHeaders as any);
+    expect(results.data).toHaveProperty('_akamaiAccount', false);
+    // eslint-disable-next-line
+    const { _akamaiAccount, ...originalData } = results.data;
+    expect(originalData).toEqual(profile);
+  });
+
+  it("doesn't inject the header on other endpoints", () => {
+    const accountResponse = { ...response, config: { url: '/account' } };
+    expect(injectAkamaiAccountHeader(accountResponse as any).data).toEqual(
       profile
     );
   });
-
-  it("doesn't inject the euuid on other endpoints", () => {
-    const accountResponse = { ...response, config: { url: '/account' } };
-    expect(injectEuuidToProfile(accountResponse as any).data).toEqual(profile);
-  });
 });
 
-describe('setupInterceptors', () => {
-  it('should set the authorization header if it is explicitly set', () => {
-    const config = {
-      headers: {
-        Authorization: 'Bearer 1234',
-      },
+describe('injectEuuidToProfile', () => {
+  const profile = profileFactory.build();
+  const response: AxiosResponse = {
+    data: profile,
+    status: 200,
+    statusText: 'OK',
+    config: { headers: new AxiosHeaders(), url: '/profile', method: 'get' },
+    headers: { 'x-customer-uuid': '1234' },
+  };
+
+  it('injects the euuid on successful GET profile response ', () => {
+    const results = injectEuuidToProfile(response);
+    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+    const { _euuidFromHttpHeader, ...originalData } = results.data;
+    expect(originalData).toEqual(profile);
+  });
+
+  it('returns the original profile data if no header is present', () => {
+    const responseWithNoHeaders: AxiosResponse = { ...response, headers: {} };
+    expect(injectEuuidToProfile(responseWithNoHeaders).data).toEqual(profile);
+  });
+
+  it("doesn't inject the euuid on other endpoints", () => {
+    const accountResponse: AxiosResponse = {
+      ...response,
+      config: { ...response.config, url: '/account' },
     };
-
-    const state = store.getState();
-    const token = state.authentication?.token ?? '';
-
-    const headers = new AxiosHeaders(config.headers);
-    const hasExplicitAuthToken = headers.hasAuthorization();
-    const bearer = hasExplicitAuthToken ? headers.getAuthorization() : token;
-
-    headers.setAuthorization(bearer);
-
-    expect(headers.getAuthorization()).toEqual('Bearer 1234');
+    expect(injectEuuidToProfile(accountResponse).data).toEqual(profile);
   });
 });

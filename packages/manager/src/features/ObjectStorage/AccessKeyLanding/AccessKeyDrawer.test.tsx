@@ -1,4 +1,3 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
@@ -7,9 +6,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessKeyDrawer, getDefaultScopes } from './AccessKeyDrawer';
 import { getUpdatedScopes } from './AccessTable';
-import { MODE } from './types';
 
 import type { AccessKeyDrawerProps } from './AccessKeyDrawer';
+import type { MODE } from './types';
+import type { ObjectStorageKeyBucketAccess } from '@linode/api-v4/lib/object-storage/types';
 
 describe('AccessKeyDrawer', () => {
   const props: AccessKeyDrawerProps = {
@@ -36,6 +36,7 @@ describe('AccessKeyDrawer', () => {
         bucket_name: bucket.label,
         cluster: bucket.cluster,
         permissions: 'none',
+        region: 'us-east',
       });
     });
 
@@ -62,7 +63,10 @@ describe('AccessKeyDrawer', () => {
     const mockScopes = getDefaultScopes(mockBuckets);
 
     it('should update the correct scope', () => {
-      const newScope = { ...mockScopes[2], permissions: 'read_write' } as Scope;
+      const newScope = {
+        ...mockScopes[2],
+        permissions: 'read_write',
+      } as ObjectStorageKeyBucketAccess;
       expect(getUpdatedScopes(mockScopes, newScope)[2]).toHaveProperty(
         'permissions',
         'read_write'
@@ -70,7 +74,10 @@ describe('AccessKeyDrawer', () => {
     });
 
     it('should leave other scopes unchanged', () => {
-      const newScope = { ...mockScopes[2], access: 'read_write' } as Scope;
+      const newScope = {
+        ...mockScopes[2],
+        access: 'read_write',
+      } as ObjectStorageKeyBucketAccess;
       const updatedScopes = getUpdatedScopes(mockScopes, newScope);
       expect(updatedScopes[0]).toEqual(mockScopes[0]);
       expect(updatedScopes[1]).toEqual(mockScopes[1]);
@@ -82,7 +89,8 @@ describe('AccessKeyDrawer', () => {
         bucket_name: 'not-real',
         cluster: 'totally-fake',
         permissions: 'read_only',
-      } as Scope;
+        region: 'us-east',
+      } as ObjectStorageKeyBucketAccess;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });
   });

@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "@linode/tsconfig/package",
+    "@linode/tsconfig/react",
+    "@linode/tsconfig/non-strict"
+  ],
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom"]
+  },
+  "include": ["src"]
+}

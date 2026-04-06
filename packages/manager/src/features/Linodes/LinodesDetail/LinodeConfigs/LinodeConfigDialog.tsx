@@ -1,76 +1,61 @@
 import {
-  Config,
-  Interface,
-  LinodeConfigCreationData,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
-import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import { equals, pathOr, repeat } from 'ramda';
-import * as React from 'react';
-import { useQueryClient } from 'react-query';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { FormLabel } from 'src/components/FormLabel';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
-import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { titlecase } from 'src/features/Linodes/presentation';
-import {
-  LINODE_UNREACHABLE_HELPER_TEXT,
-  NATTED_PUBLIC_IP_HELPER_TEXT,
-  NOT_NATTED_HELPER_TEXT,
-} from 'src/features/VPCs/constants';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
-import {
+  useAllLinodeDisksQuery,
+  useAllLinodeKernelsQuery,
+  useAllVolumesQuery,
   useLinodeConfigCreateMutation,
   useLinodeConfigUpdateMutation,
-} from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useAllLinodeKernelsQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions';
-import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import { useAllVolumesQuery } from 'src/queries/volumes';
-import { vpcQueryKey } from 'src/queries/vpcs';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+  useRegionsQuery,
+  vlanQueries,
+  vpcQueries,
+} from '@linode/queries';
 import {
-  DevicesAsStrings,
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Button,
+  CircleProgress,
+  Dialog,
+  Divider,
+  ErrorState,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Notice,
+  omitProps,
+  Radio,
+  TextField,
+  Toggle,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
+import {
   createDevicesFromStrings,
-} from 'src/utilities/createDevicesFromStrings';
-import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
+  createStringsFromDevices,
+  scrollErrorIntoViewV2,
+} from '@linode/utilities';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import type { JSX } from 'react';
+
+import { FormLabel } from 'src/components/FormLabel';
+import { Link } from 'src/components/Link';
+import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { titlecase } from 'src/features/Linodes/presentation';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import {
-  ExtendedInterface,
-  InterfaceSelect,
-} from '../LinodeSettings/InterfaceSelect';
+import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
+import { getSelectedDeviceOption } from '../utilities';
+import { deviceSlots, pathsOptions, pathsOptionsLabels } from './constants';
 import {
   StyledDivider,
   StyledFormControl,
@@ -78,12 +63,27 @@ import {
   StyledFormGroup,
   StyledRadioGroup,
 } from './LinodeConfigDialog.styles';
+import {
+  getPrimaryInterfaceIndex,
+  unrecommendedConfigNoticeSelector,
+  useGetDeviceLimit,
+} from './utilities';
+
+import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
+import type {
+  APIError,
+  Config,
+  Interface,
+  LinodeConfigCreationData,
+} from '@linode/api-v4';
+import type { DevicesAsStrings } from '@linode/utilities';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Helpers {
   devtmpfs_automount: boolean;
   distro: boolean;
   modules_dep: boolean;
-  network: boolean;
+  network?: boolean;
   updatedb_disabled: boolean;
 }
 
@@ -91,12 +91,12 @@ type RunLevel = 'binbash' | 'default' | 'single';
 type VirtMode = 'fullvirt' | 'paravirt';
 export type MemoryLimit = 'no_limit' | 'set_limit';
 
-interface EditableFields {
+export interface EditableFields {
   comments?: string;
   devices: DevicesAsStrings;
   helpers: Helpers;
-  initrd: null | number | string;
-  interfaces: ExtendedInterface[];
+  initrd: null | string;
+  interfaces?: ExtendedInterface[] | null;
   kernel?: string;
   label: string;
   memory_limit?: number;
@@ -109,13 +109,13 @@ interface EditableFields {
 
 interface Props {
   config: Config | undefined;
-  isReadOnly: boolean;
   linodeId: number;
   onClose: () => void;
   open: boolean;
 }
 
 const defaultInterface = {
+  ip_ranges: [],
   ipam_address: '',
   label: '',
   purpose: 'none',
@@ -128,13 +128,12 @@ const defaultInterface = {
  * they are only used as placeholders presented to the user as empty selects.
  */
 export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
-  return [...list, ...repeat(filler, Math.max(0, size - list.length))];
+  return [...list, ...Array(Math.max(0, size - list.length)).fill(filler)];
 };
 
 const padInterfaceList = (interfaces: ExtendedInterface[]) => {
   return padList<ExtendedInterface>(interfaces, defaultInterface, 3);
 };
-
 const defaultInterfaceList = padInterfaceList([
   {
     ipam_address: '',
@@ -143,18 +142,18 @@ const defaultInterfaceList = padInterfaceList([
   },
 ]);
 
-const defaultFieldsValues = {
+const baseHelpers: Helpers = {
+  devtmpfs_automount: true,
+  distro: true,
+  modules_dep: true,
+  updatedb_disabled: true,
+};
+
+const baseFieldValues: EditableFields = {
   comments: '',
   devices: {},
-  helpers: {
-    devtmpfs_automount: true,
-    distro: true,
-    modules_dep: true,
-    network: true,
-    updatedb_disabled: true,
-  },
+  helpers: baseHelpers,
   initrd: '',
-  interfaces: defaultInterfaceList,
   kernel: 'linode/latest-64bit',
   label: '',
   memory_limit: 0,
@@ -165,26 +164,23 @@ const defaultFieldsValues = {
   virt_mode: 'paravirt' as VirtMode,
 };
 
-const pathsOptions = [
-  { label: '/dev/sda', value: '/dev/sda' },
-  { label: '/dev/sdb', value: '/dev/sdb' },
-  { label: '/dev/sdc', value: '/dev/sdc' },
-  { label: '/dev/sdd', value: '/dev/sdd' },
-  { label: '/dev/sde', value: '/dev/sde' },
-  { label: '/dev/sdf', value: '/dev/sdf' },
-  { label: '/dev/sdg', value: '/dev/sdg' },
-  { label: '/dev/sdh', value: '/dev/sdh' },
-];
+const defaultLegacyInterfaceFieldValues: EditableFields = {
+  ...baseFieldValues,
+  helpers: { ...baseHelpers, network: true },
+  interfaces: defaultInterfaceList,
+};
 
-const interfacesToState = (interfaces?: Interface[]) => {
+const interfacesToState = (interfaces?: Interface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return defaultInterfaceList;
   }
   const interfacesPayload = interfaces.map(
     ({
       id,
+      ip_ranges,
       ipam_address,
       ipv4,
+      ipv6,
       label,
       primary,
       purpose,
@@ -192,8 +188,10 @@ const interfacesToState = (interfaces?: Interface[]) => {
       vpc_id,
     }) => ({
       id,
+      ip_ranges,
       ipam_address,
       ipv4,
+      ipv6,
       label,
       primary,
       purpose,
@@ -204,42 +202,55 @@ const interfacesToState = (interfaces?: Interface[]) => {
   return padInterfaceList(interfacesPayload);
 };
 
-const interfacesToPayload = (
-  interfaces?: ExtendedInterface[],
-  primaryInterfaceIndex?: number
-) => {
+const interfacesToPayload = (interfaces?: ExtendedInterface[] | null) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
 
-  if (equals(interfaces, defaultInterfaceList)) {
+  const filteredInterfaces = interfaces.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  );
+
+  const defaultNonNoneInterfaces = defaultInterfaceList.filter(
+    (thisInterface) => thisInterface.purpose !== 'none'
+  );
+
+  if (
+    filteredInterfaces.length === defaultNonNoneInterfaces.length &&
+    JSON.stringify(filteredInterfaces) ===
+      JSON.stringify(defaultNonNoneInterfaces)
+  ) {
     // In this case, where eth0 is set to public interface
     // and no other interfaces are specified, the API prefers
     // to receive an empty array.
     return [];
   }
 
-  if (primaryInterfaceIndex !== undefined) {
-    interfaces[primaryInterfaceIndex].primary = true;
-  }
-
-  return interfaces.filter(
-    (thisInterface) => thisInterface.purpose !== 'none'
-  ) as Interface[];
+  return filteredInterfaces as Interface[];
 };
 
-const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 const deviceCounterDefault = 1;
 
 // DiskID reserved on the back-end to indicate Finnix.
 const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
-  const { config, isReadOnly, linodeId, onClose, open } = props;
+  const formContainerRef = React.useRef<HTMLDivElement>(null);
+  const { config, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
+  const availableMemory = linode?.specs.memory ?? 0;
+  if (availableMemory < 0) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid memory value:', availableMemory);
+  }
+  const deviceLimit = useGetDeviceLimit(availableMemory);
+
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const virtModeCaptionId = React.useId();
 
   const {
     data: kernels,
@@ -261,24 +272,19 @@ export const LinodeConfigDialog = (props: Props) => {
     config?.id ?? -1
   );
 
+  const isLinodeInterface = linode?.interface_generation === 'linode';
+  const isLegacyConfigInterface = !isLinodeInterface;
+
   const theme = useTheme();
-  const flags = useFlags();
-  const { account } = useAccountManagement();
 
   const regions = useRegionsQuery().data ?? [];
 
   const queryClient = useQueryClient();
 
-  const [deviceCounter, setDeviceCounter] = React.useState(
-    deviceCounterDefault
-  );
+  const [deviceCounter, setDeviceCounter] =
+    React.useState(deviceCounterDefault);
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
-
-  const [
-    primaryInterfaceIndex,
-    setPrimaryInterfaceIndex,
-  ] = React.useState<number>();
 
   const regionHasVLANS = regions.some(
     (thisRegion) =>
@@ -291,17 +297,15 @@ export const LinodeConfigDialog = (props: Props) => {
       thisRegion.capabilities.includes('VPCs')
   );
 
-  // @TODO VPC: remove once VPC is fully rolled out
-  const vpcEnabled = isFeatureEnabled(
-    'VPCs',
-    Boolean(flags.vpc),
-    account?.capabilities ?? []
-  );
-
   const { resetForm, setFieldValue, values, ...formik } = useFormik({
-    initialValues: defaultFieldsValues,
+    initialValues: isLinodeInterface
+      ? baseFieldValues
+      : defaultLegacyInterfaceFieldValues,
     onSubmit: (values) => onSubmit(values),
-    validate: (values) => onValidate(values),
+    validate: (values) => {
+      onValidate(values);
+      scrollErrorIntoViewV2(formContainerRef);
+    },
     validateOnChange: false,
     validateOnMount: false,
   });
@@ -324,12 +328,11 @@ export const LinodeConfigDialog = (props: Props) => {
       virt_mode,
     } = state;
 
-    return {
+    const baseValuesToReturn = {
       comments,
       devices: createDevicesFromStrings(devices),
       helpers,
       initrd: initrd !== '' ? initrd : null,
-      interfaces: interfacesToPayload(interfaces, primaryInterfaceIndex),
       kernel,
       label,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -338,6 +341,12 @@ export const LinodeConfigDialog = (props: Props) => {
       run_level,
       virt_mode,
     };
+    return isLinodeInterface
+      ? baseValuesToReturn
+      : {
+          ...baseValuesToReturn,
+          interfaces: interfacesToPayload(interfaces),
+        };
   };
 
   // This validation runs BEFORE Yup schema validation. This validation logic
@@ -347,22 +356,24 @@ export const LinodeConfigDialog = (props: Props) => {
     const errors: any = {};
     const { interfaces } = values;
 
-    const eth1 = interfaces[1];
-    const eth2 = interfaces[2];
+    if (interfaces) {
+      const eth1 = interfaces[1];
+      const eth2 = interfaces[2];
 
-    if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
-      errors.interfaces =
-        'You cannot assign an interface to eth2 without an interface assigned to eth1.';
-      return errors;
-    }
-
-    // The API field is called "label" and thus the Validation package error
-    // message is "Label is required." Our field in Cloud is called "VLAN".
-    interfaces.forEach((thisInterface, idx) => {
-      if (thisInterface.purpose === 'vlan' && !thisInterface.label) {
-        errors[`interfaces[${idx}].label`] = 'VLAN is required.';
+      if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
+        errors.interfaces =
+          'You cannot assign an interface to eth2 without an interface assigned to eth1.';
+        return errors;
       }
-    });
+
+      // The API field is called "label" and thus the Validation package error
+      // message is "Label is required." Our field in Cloud is called "VLAN".
+      interfaces.forEach((thisInterface, idx) => {
+        if (thisInterface.purpose === 'vlan' && !thisInterface.label) {
+          errors[`interfaces[${idx}].label`] = 'VLAN is required.';
+        }
+      });
+    }
 
     return errors;
   };
@@ -371,7 +382,6 @@ export const LinodeConfigDialog = (props: Props) => {
     formik.setSubmitting(true);
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
-
     // If Finnix was selected, make sure it gets sent as a number in the payload, not a string.
     if (Number(configData.initrd) === finnixDiskID) {
       configData.initrd = finnixDiskID;
@@ -389,26 +399,35 @@ export const LinodeConfigDialog = (props: Props) => {
       );
     }
 
-    const actionType = Boolean(config) ? 'updated' : 'created';
+    const actionType = config ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
-      queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
       // If there's any chance a VLAN changed here, make sure our query data is up to date
       if (
         configData.interfaces?.some(
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries(vlansQueryKey);
+        queryClient.invalidateQueries({
+          queryKey: vlanQueries._def,
+        });
       }
 
       // Ensure VPC query data is up-to-date
-      if (
-        configData.interfaces?.some(
-          (thisInterface) => thisInterface.purpose === 'vpc'
-        )
-      ) {
-        queryClient.invalidateQueries(vpcQueryKey);
+      const vpcId = configData.interfaces?.find(
+        (thisInterface) => thisInterface.purpose === 'vpc'
+      )?.vpc_id;
+
+      if (vpcId) {
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.all._def,
+        });
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.paginated._def,
+        });
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.vpc(vpcId).queryKey,
+        });
       }
 
       enqueueSnackbar(
@@ -444,7 +463,6 @@ export const LinodeConfigDialog = (props: Props) => {
         error,
         'An unexpected error occurred.'
       );
-      scrollErrorIntoView('linode-config-dialog');
     };
 
     /** Editing */
@@ -458,16 +476,12 @@ export const LinodeConfigDialog = (props: Props) => {
 
   React.useEffect(() => {
     if (open) {
-      // Ensure VLANs are fresh.
-      queryClient.invalidateQueries(vlansQueryKey);
-
       /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.
        */
       if (config) {
         const devices = createStringsFromDevices(config.devices);
-
         /*
         If device slots are populated out of sequential order (e.g. sda and sdb are assigned
         but no others are until sdf), ascertain the last assigned slot to determine how many
@@ -489,41 +503,53 @@ export const LinodeConfigDialog = (props: Props) => {
           )
         );
 
-        const indexOfExistingPrimaryInterface = config.interfaces.findIndex(
-          (_interface) => _interface.primary === true
-        );
-
-        if (vpcEnabled && indexOfExistingPrimaryInterface !== -1) {
-          setPrimaryInterfaceIndex(indexOfExistingPrimaryInterface);
-        }
+        const baseValues = {
+          comments: config.comments,
+          devices,
+          helpers: isLinodeInterface
+            ? omitProps(config.helpers, ['network'])
+            : config.helpers,
+          initrd: initrdFromConfig,
+          kernel: config.kernel,
+          label: config.label,
+          memory_limit: config.memory_limit,
+          root_device: config.root_device,
+          run_level: config.run_level,
+          setMemoryLimit: (config.memory_limit !== 0
+            ? 'set_limit'
+            : 'no_limit') as MemoryLimit,
+          useCustomRoot: isUsingCustomRoot(config.root_device),
+          virt_mode: config.virt_mode,
+        };
 
         resetForm({
-          values: {
-            comments: config.comments,
-            devices,
-            helpers: config.helpers,
-            initrd: initrdFromConfig,
-            interfaces: interfacesToState(config.interfaces),
-            kernel: config.kernel,
-            label: config.label,
-            memory_limit: config.memory_limit,
-            root_device: config.root_device,
-            run_level: config.run_level,
-            setMemoryLimit:
-              config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
-            useCustomRoot: isUsingCustomRoot(config.root_device),
-            virt_mode: config.virt_mode,
-          },
+          values: isLinodeInterface
+            ? baseValues
+            : {
+                ...baseValues,
+                interfaces: interfacesToState(config.interfaces),
+              },
         });
       } else {
         // Create mode; make sure loading/error states are cleared.
-        resetForm({ values: defaultFieldsValues });
+        resetForm({
+          values: isLinodeInterface
+            ? baseFieldValues
+            : defaultLegacyInterfaceFieldValues,
+        });
         setUseCustomRoot(false);
         setDeviceCounter(deviceCounterDefault);
-        setPrimaryInterfaceIndex(0);
       }
     }
-  }, [open, config, initrdFromConfig, resetForm, queryClient, vpcEnabled]);
+  }, [
+    open,
+    linode,
+    isLinodeInterface,
+    config,
+    initrdFromConfig,
+    resetForm,
+    queryClient,
+  ]);
 
   const generalError = formik.status?.generalError;
 
@@ -573,45 +599,49 @@ export const LinodeConfigDialog = (props: Props) => {
     disks: initrdDisks,
   };
 
-  const categorizedInitrdOptions = Object.entries(initrdDisksObject).map(
-    ([category, items]) => {
-      const categoryTitle = titlecase(category);
-      return {
-        label: categoryTitle,
-        options: [
-          ...items.map(({ id, label }) => {
-            return {
-              label,
-              value: String(id) as null | number | string,
-            };
-          }),
-          { label: 'Recovery – Finnix (initrd)', value: String(finnixDiskID) },
-        ],
-        value: category,
-      };
-    }
-  );
+  const categorizedInitrdOptions: {
+    deviceType: string;
+    label: string;
+    value: null | string;
+  }[] = Object.entries(initrdDisksObject).reduce((acc, [category, items]) => {
+    const categoryTitle = titlecase(category);
+    const options = [
+      ...items.map(({ id, label }) => {
+        return {
+          deviceType: categoryTitle,
+          label,
+          value: String(id),
+        };
+      }),
+      {
+        deviceType: categoryTitle,
+        label: 'Recovery – Finnix (initrd)',
+        value: String(finnixDiskID),
+      },
+    ];
+    return [...acc, ...options];
+  }, []);
 
   categorizedInitrdOptions.unshift({
-    label: '',
-    options: [{ label: 'None', value: null }],
-    value: '',
+    deviceType: '',
+    label: 'None',
+    value: null,
   });
 
-  const getPrimaryInterfaceOptions = (interfaces: ExtendedInterface[]) => {
-    return interfaces.map((_interface, idx) => {
-      return {
-        label: `eth${idx}`,
-        value: idx,
-      };
-    });
-  };
+  const interfacesWithoutPlaceholderInterfaces = (values.interfaces?.filter(
+    (i) => i.purpose !== 'none'
+  ) ?? []) as Interface[];
 
-  const primaryInterfaceOptions = getPrimaryInterfaceOptions(values.interfaces);
+  const primaryInterfaceOptions = interfacesWithoutPlaceholderInterfaces.map(
+    (networkInterface, idx) => ({
+      label: `eth${idx}`,
+      value: idx,
+    })
+  );
 
-  const handlePrimaryInterfaceChange = (selected: Item<number>) => {
-    setPrimaryInterfaceIndex(selected.value);
-  };
+  const primaryInterfaceIndex = getPrimaryInterfaceIndex(
+    interfacesWithoutPlaceholderInterfaces
+  );
 
   /**
    * Form change handlers
@@ -619,8 +649,8 @@ export const LinodeConfigDialog = (props: Props) => {
    */
 
   const handleChangeKernel = React.useCallback(
-    (selected: Item<string>) => {
-      setFieldValue('kernel', selected?.value ?? '');
+    (selectedValue: string) => {
+      setFieldValue('kernel', selectedValue);
     },
     [setFieldValue]
   );
@@ -634,7 +664,7 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const handleInterfaceChange = React.useCallback(
-    (slot: number, updatedInterface: Interface) => {
+    (slot: number, updatedInterface: ExtendedInterface) => {
       setFieldValue(`interfaces[${slot}]`, updatedInterface);
     },
     [setFieldValue]
@@ -652,28 +682,25 @@ export const LinodeConfigDialog = (props: Props) => {
   );
 
   const handleRootDeviceChange = React.useCallback(
-    (selected: Item<string>) => {
-      setFieldValue('root_device', selected.value);
+    (selectedValue: string) => {
+      setFieldValue('root_device', selectedValue);
     },
     [setFieldValue]
   );
 
   const handleInitrdChange = React.useCallback(
-    (selectedDisk: Item<string>) => {
-      setFieldValue('initrd', selectedDisk.value);
+    (selectedDiskValue: string) => {
+      setFieldValue('initrd', selectedDiskValue);
     },
     [setFieldValue]
   );
 
   const networkInterfacesHelperText = (
     <Typography>
-      Configure the network that a selected interface will connect to (
-      {vpcEnabled
-        ? '"Public Internet", VLAN, or VPC'
-        : 'either "Public Internet" or a VLAN'}
-      ) . Each Linode can have up to three Network Interfaces. For more
-      information, see our{' '}
-      <Link to="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance">
+      Configure the network that a selected interface will connect to
+      &quot;Public Internet&quot;, VLAN, or VPC. Each Linode can have up to
+      three Network Interfaces. For more information, see our{' '}
+      <Link to="https://techdocs.akamai.com/cloud-computing/docs/attach-a-vlan-to-a-compute-instance#attaching-a-vlan-to-an-existing-compute-instance">
         Network Interfaces guide
       </Link>
       .
@@ -688,7 +715,7 @@ export const LinodeConfigDialog = (props: Props) => {
       open={open}
       title={`${config ? 'Edit' : 'Add'} Configuration`}
     >
-      <Grid container direction="row">
+      <Grid container direction="row" ref={formContainerRef}>
         <DialogContent errors={kernelsError} loading={kernelsLoading}>
           <React.Fragment>
             {generalError && (
@@ -701,9 +728,8 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
               </Grid>
             )}
-            <Grid xs={12}>
+            <Grid size={12}>
               <TextField
-                disabled={isReadOnly}
                 errorGroup="linode-config-dialog"
                 errorText={formik.errors.label}
                 label="Label"
@@ -714,7 +740,6 @@ export const LinodeConfigDialog = (props: Props) => {
               />
 
               <TextField
-                disabled={isReadOnly}
                 errorGroup="linode-config-dialog"
                 errorText={formik.errors.comments}
                 label="Comments"
@@ -728,12 +753,11 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
-                  aria-describedby="virtModeCaption"
-                  disabled={isReadOnly}
+                  aria-describedby={virtModeCaptionId}
                   htmlFor="virt_mode"
                 >
                   VM Mode
@@ -746,17 +770,15 @@ export const LinodeConfigDialog = (props: Props) => {
                 >
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Paravirtualization"
                     value="paravirt"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Full virtualization"
                     value="fullvirt"
                   />
-                  <FormHelperText id="virtModeCaption">
+                  <FormHelperText id={virtModeCaptionId}>
                     Controls if devices inside your virtual machine are
                     paravirtualized or fully virtualized. Paravirt is what you
                     want, unless you&rsquo;re doing weird things.
@@ -767,19 +789,18 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Boot Settings</Typography>
               {kernels && (
                 <KernelSelect
                   errorText={formik.errors.kernel}
                   kernels={kernels}
                   onChange={handleChangeKernel}
-                  readOnly={isReadOnly}
                   selectedKernel={values.kernel}
                 />
               )}
 
-              <FormControl disabled={isReadOnly} fullWidth>
+              <FormControl fullWidth>
                 <FormLabel htmlFor="run_level">Run Level</FormLabel>
                 <StyledRadioGroup
                   aria-label="run_level"
@@ -789,19 +810,16 @@ export const LinodeConfigDialog = (props: Props) => {
                 >
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Run Default Level"
                     value="default"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Single user mode"
                     value="single"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="init=/bin/bash"
                     value="binbash"
                   />
@@ -820,9 +838,7 @@ export const LinodeConfigDialog = (props: Props) => {
                 memory limit.
               */}
               <FormControl>
-                <FormLabel disabled={isReadOnly} htmlFor="memory_limit">
-                  Memory Limit
-                </FormLabel>
+                <FormLabel htmlFor="memory_limit">Memory Limit</FormLabel>
                 <StyledRadioGroup
                   aria-label="memory_limit"
                   name="setMemoryLimit"
@@ -831,13 +847,11 @@ export const LinodeConfigDialog = (props: Props) => {
                 >
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Do not set any limits on memory usage"
                     value="no_limit"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Limit the amount of RAM this config uses"
                     value="set_limit"
                   />
@@ -846,7 +860,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
               {values.setMemoryLimit === 'set_limit' && (
                 <TextField
-                  disabled={isReadOnly}
                   errorText={formik.errors.memory_limit}
                   helperText={`Max: ${linode?.specs.memory} MB`}
                   label="Memory Limit Allotment (in MB)"
@@ -862,44 +875,52 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
                 devices={availableDevices}
-                disabled={isReadOnly}
                 errorText={formik.errors.devices as string}
-                getSelected={(slot) => pathOr('', [slot], values.devices)}
+                getSelected={(slot) =>
+                  values.devices?.[slot as keyof DevicesAsStrings] ?? ''
+                }
                 onChange={handleDevicesChanges}
-                slots={deviceSlots}
+                slots={deviceSlots.slice(0, deviceLimit)}
               />
               <FormControl fullWidth>
-                <Select
-                  defaultValue={getSelectedOptionFromGroupedOptions(
+                <Autocomplete
+                  autoHighlight
+                  clearIcon={null}
+                  defaultValue={getSelectedDeviceOption(
                     initrdFromConfig,
                     categorizedInitrdOptions
                   )}
-                  value={getSelectedOptionFromGroupedOptions(
+                  groupBy={(option) => option.deviceType}
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
+                  label="initrd"
+                  noMarginTop
+                  onChange={(_, selected) =>
+                    handleInitrdChange(selected?.value)
+                  }
+                  options={categorizedInitrdOptions}
+                  placeholder="None"
+                  value={getSelectedDeviceOption(
                     values.initrd,
                     categorizedInitrdOptions
                   )}
-                  isClearable={false}
-                  label="initrd"
-                  noMarginTop
-                  onChange={handleInitrdChange}
-                  options={categorizedInitrdOptions}
-                  placeholder="None"
                 />
               </FormControl>
               <Button
+                buttonType="secondary"
+                compactX
+                disabled={deviceCounter >= deviceLimit - 1}
+                onClick={() => setDeviceCounter((counter) => counter + 1)}
                 sx={{
                   marginLeft: `1px`,
                   marginTop: theme.spacing(),
                 }}
-                buttonType="secondary"
-                compactX
-                disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
-                onClick={() => setDeviceCounter((counter) => counter + 1)}
               >
                 Add a Device
               </Button>
@@ -909,7 +930,6 @@ export const LinodeConfigDialog = (props: Props) => {
                   control={
                     <Toggle
                       checked={useCustomRoot}
-                      disabled={isReadOnly}
                       onChange={handleToggleCustomRoot}
                     />
                   }
@@ -917,23 +937,23 @@ export const LinodeConfigDialog = (props: Props) => {
                   name="useCustomRoot"
                 />
                 {!useCustomRoot ? (
-                  <Select
+                  <Autocomplete
+                    autoHighlight
+                    disableClearable
+                    errorText={formik.errors.root_device}
+                    id="root_device"
+                    label="Root Device"
+                    onChange={(_, selected) =>
+                      handleRootDeviceChange(selected?.value)
+                    }
+                    options={pathsOptions}
+                    placeholder="None"
                     value={pathsOptions.find(
                       (device) => device.value === values.root_device
                     )}
-                    disabled={isReadOnly}
-                    errorText={formik.errors.root_device}
-                    id="root_device"
-                    isClearable={false}
-                    label="Root Device"
-                    name="root_device"
-                    onChange={handleRootDeviceChange}
-                    options={pathsOptions}
-                    placeholder="None"
                   />
                 ) : (
                   <TextField
-                    disabled={isReadOnly}
                     errorGroup="linode-config-dialog"
                     errorText={formik.errors.root_device}
                     fullWidth
@@ -949,98 +969,205 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <StyledDivider />
 
-            <Grid xs={12}>
+            <Grid size={12}>
               <Box alignItems="center" display="flex">
-                <Typography variant="h3">
-                  {vpcEnabled ? 'Networking' : 'Network Interfaces'}
-                </Typography>
-                <TooltipIcon
-                  sxTooltipIcon={{
-                    paddingBottom: 0,
-                    paddingTop: 0,
-                  }}
-                  interactive
-                  status="help"
-                  sx={{ tooltip: { maxWidth: 350 } }}
-                  text={networkInterfacesHelperText}
-                />
-              </Box>
-              {formik.errors.interfaces && (
-                <Notice
-                  text={formik.errors.interfaces as string}
-                  variant="error"
-                />
-              )}
-              {vpcEnabled && (
-                <>
-                  <Select
-                    defaultValue={
-                      primaryInterfaceOptions[primaryInterfaceIndex ?? 0]
-                    }
-                    data-testid="primary-interface-dropdown"
-                    disabled={isReadOnly}
-                    isClearable={false}
-                    label="Primary Interface (Default Route)"
-                    onChange={handlePrimaryInterfaceChange}
-                    options={getPrimaryInterfaceOptions(values.interfaces)}
-                  />
-                  <Divider
-                    sx={{
-                      margin: `${theme.spacing(
-                        4.5
-                      )} ${theme.spacing()} ${theme.spacing(1.5)} `,
-                      width: `calc(100% - ${theme.spacing(2)})`,
+                {(isLegacyConfigInterface ||
+                  (isLinodeInterface && isLinodeInterfacesEnabled)) && (
+                  <Typography variant="h3">Networking</Typography>
+                )}
+                {isLegacyConfigInterface && (
+                  <TooltipIcon
+                    status="info"
+                    sx={{ tooltip: { maxWidth: 350 } }}
+                    sxTooltipIcon={{
+                      paddingBottom: 0,
+                      paddingTop: 0,
                     }}
+                    text={networkInterfacesHelperText}
                   />
+                )}
+              </Box>
+              {isLinodeInterface && isLinodeInterfacesEnabled && (
+                <>
+                  <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+                    Go to{' '}
+                    <Link to={`/linodes/${linodeId}/networking`}>Network</Link>{' '}
+                    to view your Linode&apos;s Network interfaces.
+                  </Typography>
+
+                  <StyledDivider />
                 </>
               )}
-              {values.interfaces.map((thisInterface, idx) => {
-                return (
+              {isLegacyConfigInterface && (
+                <>
+                  {formik.errors.interfaces && (
+                    <Notice
+                      text={formik.errors.interfaces as string}
+                      variant="error"
+                    />
+                  )}
                   <>
-                    {unrecommendedConfigNoticeSelector({
-                      _interface: thisInterface,
-                      primaryInterfaceIndex,
-                      thisIndex: idx,
-                      values,
-                    })}
-                    <InterfaceSelect
-                      errors={{
-                        ipamError:
-                          formik.errors[`interfaces[${idx}].ipam_address`],
-                        labelError: formik.errors[`interfaces[${idx}].label`],
-                        primaryError:
-                          formik.errors[`interfaces[${idx}].primary`],
-                        publicIPv4Error:
-                          formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
-                        subnetError:
-                          formik.errors[`interfaces[${idx}].subnet_id`],
-                        vpcError: formik.errors[`interfaces[${idx}].vpc_id`],
-                        vpcIPv4Error:
-                          formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                    <Autocomplete
+                      autoHighlight
+                      data-testid="primary-interface-dropdown"
+                      disableClearable={interfacesWithoutPlaceholderInterfaces.some(
+                        (i) => i.purpose === 'public' || i.purpose === 'vpc'
+                      )}
+                      label="Primary Interface (Default Route)"
+                      onChange={(_, selected) => {
+                        const updatedInterfaces = [
+                          ...(values.interfaces ?? []),
+                        ];
+
+                        for (let i = 0; i < updatedInterfaces.length; i++) {
+                          if (selected && selected.value === i) {
+                            updatedInterfaces[i].primary = true;
+                          } else {
+                            updatedInterfaces[i].primary = false;
+                          }
+                        }
+
+                        formik.setValues({
+                          ...values,
+                          interfaces: updatedInterfaces,
+                        });
                       }}
-                      handleChange={(newInterface: Interface) =>
-                        handleInterfaceChange(idx, newInterface)
+                      options={primaryInterfaceOptions}
+                      placeholder="None"
+                      value={
+                        primaryInterfaceIndex !== null
+                          ? primaryInterfaceOptions[primaryInterfaceIndex]
+                          : null
                       }
-                      ipamAddress={thisInterface.ipam_address}
-                      key={`eth${idx}-interface`}
-                      label={thisInterface.label}
-                      nattedIPv4Address={thisInterface.ipv4?.nat_1_1}
-                      purpose={thisInterface.purpose}
-                      readOnly={isReadOnly}
-                      region={linode?.region}
-                      regionHasVLANs={regionHasVLANS}
-                      regionHasVPCs={regionHasVPCs}
-                      slotNumber={idx}
-                      subnetId={thisInterface.subnet_id}
-                      vpcIPv4={thisInterface.ipv4?.vpc}
-                      vpcId={thisInterface.vpc_id}
+                    />
+                    <Divider
+                      sx={{
+                        margin: `${theme.spacing(
+                          4.5
+                        )} ${theme.spacing()} ${theme.spacing(1.5)} `,
+                        width: `calc(100% - ${theme.spacing(2)})`,
+                      }}
                     />
                   </>
-                );
-              })}
-            </Grid>
+                  {values.interfaces?.map((thisInterface, idx) => {
+                    const thisInterfaceIPv4Ranges: ExtendedIP[] = (
+                      thisInterface.ip_ranges ?? []
+                    ).map((ip_range, index) => {
+                      // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ip_ranges[1] is invalid"
+                      // @ts-expect-error this form intentionally breaks formik's error type
+                      const errorString: string = formik.errors[
+                        `interfaces[${idx}].ip_ranges[${index}]`
+                      ]?.includes('is invalid')
+                        ? 'Invalid IP range'
+                        : // @ts-expect-error this form intentionally breaks formik's error type
+                          formik.errors[
+                            `interfaces[${idx}].ip_ranges[${index}]`
+                          ];
 
-            <Grid xs={12}>
+                      return {
+                        address: ip_range,
+                        error: errorString,
+                      };
+                    });
+
+                    const thisInterfaceIPv6Ranges: ExtendedIP[] = (
+                      thisInterface.ipv6?.ranges ?? []
+                    ).map((ipv6Range, index) => {
+                      // Display a more user-friendly error to the user as opposed to, for example, "interfaces[1].ipv6.ranges[1] is invalid"
+                      // @ts-expect-error this form intentionally breaks formik's error type
+                      const errorString: string = formik.errors[
+                        `interfaces[${idx}].ipv6.ranges[${index}].range`
+                      ]?.includes('is invalid')
+                        ? 'Invalid IPv6 range'
+                        : // @ts-expect-error this form intentionally breaks formik's error type
+                          formik.errors[
+                            `interfaces[${idx}].ipv6.ranges[${index}].range`
+                          ];
+
+                      return {
+                        address: ipv6Range.range,
+                        error: errorString,
+                      };
+                    });
+
+                    return (
+                      <React.Fragment key={`${idx}-interface`}>
+                        {unrecommendedConfigNoticeSelector({
+                          _interface: thisInterface,
+                          primaryInterfaceIndex,
+                          thisIndex: idx,
+                          values,
+                        })}
+                        <InterfaceSelect
+                          additionalIPv4RangesForVPC={thisInterfaceIPv4Ranges}
+                          additionalIPv6RangesForVPC={thisInterfaceIPv6Ranges}
+                          errors={{
+                            ipRangeError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ip_ranges`],
+                            ipamError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ipam_address`],
+                            labelError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].label`],
+                            primaryError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].primary`],
+                            publicIPv4Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ipv4.nat_1_1`],
+                            publicIPv6Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[
+                                `interfaces[${idx}].ipv6.is_public`
+                              ],
+                            subnetError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].subnet_id`],
+                            vpcError:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].vpc_id`],
+                            vpcIPv4Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[`interfaces[${idx}].ipv4.vpc`],
+                            vpcIPv6Error:
+                              // @ts-expect-error this form intentionally breaks formik's error type
+                              formik.errors[
+                                `interfaces[${idx}].ipv6.slaac[0].range`
+                              ],
+                          }}
+                          handleChange={(newInterface: ExtendedInterface) => {
+                            handleInterfaceChange(idx, newInterface);
+                          }}
+                          ipamAddress={thisInterface.ipam_address}
+                          key={`eth${idx}-interface`}
+                          label={thisInterface.label}
+                          nattedIPv4Address={
+                            thisInterface.ipv4?.nat_1_1 ?? undefined
+                          }
+                          purpose={thisInterface.purpose}
+                          region={linode?.region}
+                          regionHasVLANs={regionHasVLANS}
+                          regionHasVPCs={regionHasVPCs}
+                          slotNumber={idx}
+                          subnetId={thisInterface.subnet_id}
+                          vpcId={thisInterface.vpc_id}
+                          vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
+                          vpcIPv6={
+                            thisInterface.ipv6?.slaac?.[0]?.range ?? undefined
+                          }
+                          vpcIPv6IsPublic={
+                            thisInterface.ipv6?.is_public ?? false
+                          }
+                        />
+                      </React.Fragment>
+                    );
+                  })}
+                </>
+              )}
+            </Grid>
+            <Grid size={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
               <FormControl fullWidth>
                 <StyledFormGroup>
@@ -1048,7 +1175,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.distro}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Helps maintain correct inittab/upstart console device"
                       />
@@ -1061,7 +1187,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.updatedb_disabled}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Disables updatedb cron job to avoid disk thrashing"
                       />
@@ -1074,7 +1199,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.modules_dep}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Creates a modules dependency file for the kernel you run"
                       />
@@ -1087,7 +1211,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.devtmpfs_automount}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                       />
@@ -1096,26 +1219,27 @@ export const LinodeConfigDialog = (props: Props) => {
                     name="helpers.devtmpfs_automount"
                   />
 
-                  <StyledFormControlLabel
-                    control={
-                      <Toggle
-                        tooltipText={
-                          <>
-                            Automatically configure static networking
-                            <Link to="https://www.linode.com/docs/platform/network-helper/">
-                              (more info)
-                            </Link>
-                          </>
-                        }
-                        checked={values.helpers.network}
-                        disabled={isReadOnly}
-                        interactive={true}
-                        onChange={formik.handleChange}
-                      />
-                    }
-                    label="Auto-configure networking"
-                    name="helpers.network"
-                  />
+                  {isLegacyConfigInterface && (
+                    <StyledFormControlLabel
+                      control={
+                        <Toggle
+                          checked={values.helpers.network}
+                          onChange={formik.handleChange}
+                          tooltipText={
+                            <>
+                              Automatically configure static networking
+                              <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
+                                {' '}
+                                (more info)
+                              </Link>
+                            </>
+                          }
+                        />
+                      }
+                      label="Auto-configure networking"
+                      name="helpers.network"
+                    />
+                  )}
                 </StyledFormGroup>
               </FormControl>
             </Grid>
@@ -1124,7 +1248,6 @@ export const LinodeConfigDialog = (props: Props) => {
       </Grid>
       <ActionsPanel
         primaryButtonProps={{
-          disabled: isReadOnly,
           label: config ? 'Save Changes' : 'Add Configuration',
           loading: formik.isSubmitting,
           onClick: formik.submitForm,
@@ -1157,84 +1280,4 @@ const DialogContent = (props: ConfigFormProps) => {
 };
 
 const isUsingCustomRoot = (value: string) =>
-  [
-    '/dev/sda',
-    '/dev/sdb',
-    '/dev/sdc',
-    '/dev/sdd',
-    '/dev/sde',
-    '/dev/sdf',
-    '/dev/sdg',
-    '/dev/sdh',
-  ].includes(value) === false;
-
-const noticeForScenario = (scenarioText: string) => (
-  <Notice
-    data-testid={'notice-for-unrecommended-scenario'}
-    text={scenarioText}
-    variant="warning"
-  />
-);
-
-/**
- *
- * @param _interface the current config interface being passed in
- * @param primaryInterfaceIndex the index of the primary interface
- * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
- * @param values the values held in Formik state, having a type of `EditableFields`
- * @returns JSX.Element | null
- */
-export const unrecommendedConfigNoticeSelector = ({
-  _interface,
-  primaryInterfaceIndex,
-  thisIndex,
-  values,
-}: {
-  _interface: ExtendedInterface;
-  primaryInterfaceIndex: number | undefined;
-  thisIndex: number;
-  values: EditableFields;
-}): JSX.Element | null => {
-  const vpcInterface = _interface.purpose === 'vpc';
-  const nattedIPv4Address = Boolean(_interface.ipv4?.nat_1_1);
-
-  const filteredInterfaces = values.interfaces.filter(
-    (_interface) => _interface.purpose !== 'none'
-  );
-
-  // Edge case: users w/ ability to have multiple VPC interfaces. Scenario 1 & 2 notices not helpful if that's done
-  const primaryInterfaceIsVPC =
-    primaryInterfaceIndex !== undefined
-      ? values.interfaces[primaryInterfaceIndex].purpose === 'vpc'
-      : false;
-
-  /*
-   Scenario 1:
-    - the interface passed in to this function is a VPC interface
-    - the index of the primary interface !== the index of the interface passed in to this function
-    - nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" checked)
-
-   Scenario 2:
-    - all of Scenario 1, except: !nattedIPv4Address (i.e., "Assign a public IPv4 address for this Linode" unchecked)
-
-   Scenario 3:
-    - only eth0 populated, and it is a VPC interface
-
-   If not one of the above scenarios, do not display a warning notice re: configuration
-  */
-  if (
-    vpcInterface &&
-    primaryInterfaceIndex !== thisIndex &&
-    !primaryInterfaceIsVPC
-  ) {
-    return nattedIPv4Address
-      ? noticeForScenario(NATTED_PUBLIC_IP_HELPER_TEXT)
-      : noticeForScenario(LINODE_UNREACHABLE_HELPER_TEXT);
-  }
-
-  if (filteredInterfaces.length === 1 && vpcInterface && !nattedIPv4Address) {
-    return noticeForScenario(NOT_NATTED_HELPER_TEXT);
-  }
-
-  return null;
-};
+  pathsOptionsLabels.includes(value) === false;

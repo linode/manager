@@ -1,12 +1,11 @@
+import { useLinodeBackupsCancelMutation } from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
-import { sendBackupsDisabledEvent } from 'src/utilities/analytics';
+import { useEventsPollingActions } from 'src/queries/events/events';
+import { sendBackupsDisabledEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
   isOpen: boolean;
@@ -20,9 +19,11 @@ export const CancelBackupsDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: cancelBackups,
   } = useLinodeBackupsCancelMutation(linodeId);
+
+  const { checkForNewEvents } = useEventsPollingActions();
 
   const onCancelBackups = async () => {
     await cancelBackups();
@@ -30,7 +31,7 @@ export const CancelBackupsDialog = (props: Props) => {
       variant: 'info',
     });
     onClose();
-    resetEventsPolling();
+    checkForNewEvents();
     sendBackupsDisabledEvent();
   };
 
@@ -41,7 +42,7 @@ export const CancelBackupsDialog = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'confirm-cancel',
             label: 'Cancel Backups',
-            loading: isLoading,
+            loading: isPending,
             onClick: onCancelBackups,
           }}
           secondaryButtonProps={{

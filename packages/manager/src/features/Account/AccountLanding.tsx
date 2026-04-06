@@ -1,116 +1,148 @@
+import { useAccount } from '@linode/queries';
+import {
+  Outlet,
+  useLocation,
+  useMatch,
+  useNavigate,
+} from '@tanstack/react-router';
 import * as React from 'react';
-import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import {
-  LandingHeader,
-  LandingHeaderProps,
-} from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useAccount } from 'src/queries/account';
-import { useGrants } from 'src/queries/profile';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
+import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useTabs } from 'src/hooks/useTabs';
+import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import AccountLogins from './AccountLogins';
+import { PlatformMaintenanceBanner } from '../../components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
+import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
+import { useIsIAMDelegationEnabled } from '../IAM/hooks/useIsIAMEnabled';
+import { usePermissions } from '../IAM/hooks/usePermissions';
+import { SwitchAccountButton } from './SwitchAccountButton';
+import { SwitchAccountDrawer } from './SwitchAccountDrawer';
 
-const Billing = React.lazy(() =>
-  import('src/features/Billing/BillingDetail').then((module) => ({
-    default: module.BillingDetail,
-  }))
-);
-const EntityTransfersLanding = React.lazy(() =>
-  import(
-    'src/features/EntityTransfers/EntityTransfersLanding/EntityTransfersLanding'
-  ).then((module) => ({
-    default: module.EntityTransfersLanding,
-  }))
-);
-const Users = React.lazy(() =>
-  import('../Users/UsersLanding').then((module) => ({
-    default: module.UsersLanding,
-  }))
-);
-const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
-const MaintenanceLanding = React.lazy(
-  () => import('./Maintenance/MaintenanceLanding')
-);
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
-const AccountLanding = () => {
-  const history = useHistory();
+export const AccountLanding = () => {
+  const navigate = useNavigate();
   const location = useLocation();
+  const match = useMatch({
+    strict: false,
+  });
   const { data: account } = useAccount();
-  const { data: grants } = useGrants();
+  const {
+    isProxyOrDelegateUserType,
+    isChildUserType,
+    isParentUserType,
+    profileUserType,
+  } = useDelegationRole();
+  const { limitsEvolution } = useFlags();
 
-  const accountAccessGrant = grants?.global?.account_access;
-  const readOnlyAccountAccess = accountAccessGrant === 'read_only';
+  const { data: permissions } = usePermissions('account', [
+    'make_billing_payment',
+  ]);
+
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+  const sessionContext = React.useContext(switchAccountSessionContext);
+
   const isAkamaiAccount = account?.billing_source === 'akamai';
 
-  const tabs = [
+  const showQuotasTab = limitsEvolution?.enabled ?? false;
+
+  const isReadOnly = !permissions.make_billing_payment || isChildUserType;
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
+  const { isParentTokenExpired } = useIsParentTokenExpired({
+    isProxyOrDelegateUserType,
+  });
+
+  const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
-      routeName: '/account/billing',
+      to: '/account/billing',
       title: 'Billing Info',
     },
     {
-      routeName: '/account/users',
+      to: '/account/users',
       title: 'Users & Grants',
     },
     {
-      routeName: '/account/login-history',
+      to: '/account/quotas',
+      title: 'Quotas',
+      hide: !showQuotasTab,
+    },
+
+    {
+      to: '/account/login-history',
       title: 'Login History',
     },
     {
-      routeName: '/account/service-transfers',
+      to: '/account/service-transfers',
       title: 'Service Transfers',
     },
     {
-      routeName: '/account/maintenance',
+      to: '/account/maintenance',
       title: 'Maintenance',
     },
     {
-      routeName: '/account/settings',
+      to: '/account/settings',
       title: 'Settings',
     },
-  ];
+  ]);
 
-  const overrideWhitelist = [
-    '/account/billing/make-payment',
-    '/account/billing/add-payment-method',
-    '/account/billing/edit',
-  ];
-
-  const getDefaultTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
-    );
-
-    if (tabChoice < 0) {
-      // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
-      // and `/account/billing/edit`
-      if (!overrideWhitelist.includes(location.pathname)) {
-        history.push('/account/billing');
-      }
-
-      // Redirect to the landing page if the path does not exist
-      return 0;
-    } else {
-      return tabChoice;
+  React.useEffect(() => {
+    if (match.routeId === '/account/quotas' && !showQuotasTab) {
+      navigate({
+        to: '/quotas',
+      });
     }
+  }, [match.routeId, showQuotasTab, navigate]);
+
+  // This is the default route for the account route, so we need to redirect to the billing tab but keep /account as legacy
+  if (location.pathname === '/account') {
+    navigate({
+      to: '/account/billing',
+    });
+  }
+
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired) {
+      return sessionContext.updateState({
+        isOpen: true,
+      });
+    }
+
+    setIsDrawerOpen(true);
   };
 
-  const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  let idx = 0;
-
-  const isBillingTabSelected = location.pathname.match(/billing/);
+  const isBillingTabSelected = getTabIndex('/account/billing') === tabIndex;
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? isParentUserType
+    : (!isChildAccountAccessRestricted && isParentUserType) ||
+      isProxyOrDelegateUserType;
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
       pathname: '/account',
+    },
+    buttonDataAttrs: {
+      disabled: isReadOnly,
+      tooltipText: getRestrictedResourceText({
+        isChildUserType,
+        resourceType: 'Account',
+      }),
     },
     title: 'Account',
   };
@@ -118,48 +150,45 @@ const AccountLanding = () => {
   if (isBillingTabSelected) {
     landingHeaderProps.docsLabel = 'How Linode Billing Works';
     landingHeaderProps.docsLink =
-      'https://www.linode.com/docs/guides/how-linode-billing-works/';
+      'https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works';
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
-        history.replace('/account/billing/make-payment');
+        navigate({
+          to: '/billing',
+          search: { action: 'make-payment' },
+        });
     }
-    landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
+    landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
+      <SwitchAccountButton
+        data-testid="switch-account-button"
+        onClick={() => {
+          sendSwitchAccountEvent('Account Landing');
+          handleAccountSwitch();
+        }}
+      />
+    ) : undefined;
   }
 
   return (
     <React.Fragment>
+      <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <DocumentTitleSegment segment="Account Settings" />
-      <LandingHeader {...landingHeaderProps} />
-
-      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
-
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={idx}>
-              <Billing />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <Users />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <AccountLogins />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <EntityTransfersLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <MaintenanceLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <GlobalSettings />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+      <LandingHeader {...landingHeaderProps} spacingBottom={4} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <TabPanels>
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <Outlet />
+          </React.Suspense>
+        </TabPanels>
       </Tabs>
+      <SwitchAccountDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        userType={profileUserType}
+      />
     </React.Fragment>
   );
 };
-
-export default AccountLanding;

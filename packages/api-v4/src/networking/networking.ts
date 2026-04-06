@@ -1,9 +1,11 @@
 import {
   allocateIPSchema,
   assignAddressesSchema,
+  reserveIPSchema,
   shareAddressesSchema,
   updateIPSchema,
 } from '@linode/validation/lib/networking.schema';
+
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -12,14 +14,17 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params, PriceType } from '../types';
+import type {
+  AllocateIPPayload,
   CreateIPv6RangePayload,
   IPAddress,
   IPAssignmentPayload,
   IPRange,
   IPRangeInformation,
   IPSharingPayload,
+  ReserveIPPayload,
 } from './types';
 
 /**
@@ -32,7 +37,7 @@ export const getIPs = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/networking/ips`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -43,24 +48,32 @@ export const getIPs = (params?: Params, filters?: Filter) =>
 export const getIP = (address: string) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
  * Sets RDNS on an IP Address. Forward DNS must already be set up for reverse
  * DNS to be applied. If you set the RDNS to null for public IPv4 addresses,
  * it will be reset to the default members.linode.com RDNS value.
+ * Also setting “reserved” field to true converts an Ephemeral IP to an Reserved IP.
+ * setting “reserved” field set to false converts a Reserved IP to an Ephemeral IP.
+ * An Ephemeral IP is an IP that’s assigned to a Linode but not reserved.
  *
  * @param address { string } The address to operate on.
  * @param rdns { string } The reverse DNS assigned to this address. For public
  * IPv4 addresses, this will be set to a default value provided by Linode if not
  * explicitly set.
+ * @param reserved { boolean } Whether to reserve the IP address.
  */
-export const updateIP = (address: string, rdns: string | null = null) =>
+export const updateIP = (
+  address: string,
+  rdns: null | string = null,
+  reserved?: boolean,
+) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
-    setData({ rdns }, updateIPSchema),
-    setMethod('PUT')
+    setData({ rdns, reserved }, updateIPSchema),
+    setMethod('PUT'),
   );
 
 /**
@@ -75,12 +88,15 @@ export const updateIP = (address: string, rdns: string | null = null) =>
  * address.
  * @param payload.linode_id { number } The ID of a Linode you you have access to
  *  that this address will be allocated to.
+ * @param payload.reserved { boolean } Whether to reserve the IP address.
+ * @param payload.region { string } The ID of the Region in which this address * will be allocated.
+ * Required when reserving an IP address, not required when allocating an ephemeral IP address.
  */
-export const allocateIp = (payload: any) =>
+export const allocateIp = (payload: AllocateIPPayload) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/`),
     setData(payload, allocateIPSchema),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -99,7 +115,7 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ips/assign`),
     setMethod('POST'),
-    setData(payload, assignAddressesSchema)
+    setData(payload, assignAddressesSchema),
   );
 
 /**
@@ -121,7 +137,7 @@ export const shareAddressesv4 = (payload: IPSharingPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ipv4/share`),
     setMethod('POST'),
-    setData(payload, shareAddressesSchema)
+    setData(payload, shareAddressesSchema),
   );
 
 /**
@@ -142,7 +158,7 @@ export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
     setURL(`${BETA_API_ROOT}/networking/ips/share`),
     setMethod('POST'),
-    setData(payload, shareAddressesSchema)
+    setData(payload, shareAddressesSchema),
   );
 
 /**
@@ -153,7 +169,7 @@ export const getIPv6Pools = (params?: Params) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/pools`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -165,7 +181,7 @@ export const getIPv6Ranges = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -177,7 +193,7 @@ export const getIPv6RangeInfo = (range: string, params?: Params) =>
   Request<IPRangeInformation>(
     setURL(`${API_ROOT}/networking/ipv6/ranges/${encodeURIComponent(range)}`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -189,6 +205,96 @@ export const createIPv6Range = (payload: CreateIPv6RangePayload) => {
   return Request<{}>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('POST'),
-    setData(payload)
+    setData(payload),
   );
 };
+
+// Reserve IP queries
+/**
+ * getReservedIps
+ *
+ * Returns a paginated list of all Reserved IP addresses on this account.
+ */
+export const getReservedIPs = (params?: Params, filters?: Filter) =>
+  Request<Page<IPAddress>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${BETA_API_ROOT}/networking/reserved/ips`),
+  );
+
+/**
+ * Returns information about a single Reserved IP Address on your Account.
+ *
+ * @param address { string } The address to operate on.
+ */
+export const getReservedIP = (address: string) =>
+  Request<IPAddress>(
+    setURL(
+      `${BETA_API_ROOT}/networking/reserved/ips/${encodeURIComponent(address)}`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * Tags associated with the reserved IP can be updated.
+ * The tags associated with the reserved IP will be completely replaced with the values specified in the request body,
+ * rather than just adding additional tags to what’s already there
+ *
+ * @param address { string } The address to operate on.
+ * @param tags { string[] | null } The tags to associate with this reserved IP. If null, all tags will be removed.
+ */
+export const updateReservedIP = (
+  address: string,
+  tags: null | string[] = null,
+) =>
+  Request<IPAddress>(
+    setURL(
+      `${BETA_API_ROOT}/networking/reserved/ips/${encodeURIComponent(address)}`,
+    ),
+    setData({ tags }),
+    setMethod('PUT'),
+  );
+
+/**
+ * Makes one of the IP address available in the provided region as reserved.
+ * Only IPv4 addresses may be reserved through this endpoint.
+ *
+ * @param payload { Object }
+ * @param payload.region { string } The ID of the Region in which these
+ * assignments are to take place. All IPs and Linodes must exist in this Region.
+ * @param payload.tags { string[] } A list of tags to associate with this reserved IP.
+ */
+export const reserveIP = (payload: ReserveIPPayload) =>
+  Request<IPAddress>(
+    setURL(`${BETA_API_ROOT}/networking/reserved/ips`),
+    setData(payload, reserveIPSchema),
+    setMethod('POST'),
+  );
+
+/**
+ * unReserveIP
+ *
+ * Unreserves an IP address, making it available for general use.
+ * Any Tag associations will be removed when the IP address is un-reserved via this endpoint.
+ *
+ */
+export const unReserveIP = (ipAddress: string) =>
+  Request<object>(
+    setURL(
+      `${BETA_API_ROOT}/networking/reserved/ips/${encodeURIComponent(ipAddress)}`,
+    ),
+    setMethod('DELETE'),
+  );
+
+/**
+ * getReservedIPsTypes
+ *
+ * Returns a paginated list of available Reserved IP types; used for pricing.
+ */
+export const getReservedIPsTypes = (params?: Params) =>
+  Request<Page<PriceType>>(
+    setURL(`${API_ROOT}/networking/reserved/ips/types`),
+    setMethod('GET'),
+    setParams(params),
+  );

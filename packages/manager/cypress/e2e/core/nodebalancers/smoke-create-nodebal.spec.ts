@@ -1,33 +1,42 @@
+import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
-import { createLinode } from 'support/api/linodes';
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
-import { apiMatcher } from 'support/util/intercepts';
-import { randomLabel } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
+
+import type { NodeBalancer } from '@linode/api-v4';
 
 const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
+import {
+  linodeFactory,
+  nodeBalancerFactory,
+  regionFactory,
+} from '@linode/utilities';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
+import { mockGetRegions } from 'support/intercepts/regions';
+
+const createNodeBalancerWithUI = (
+  nodeBal: NodeBalancer,
+  isDcPricingTest = false
+) => {
   const regionName = getRegionById(nodeBal.region).label;
 
   cy.visitWithLogin('/nodebalancers/create');
-  getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
-  containsClick('create a tag').type(entityTag);
+  cy.get('[id="nodebalancer-label"]').should('be.visible').click();
+  cy.focused().clear();
+  cy.focused().type(nodeBal.label);
+  cy.findByPlaceholderText(/create a tag/i).click();
+  cy.focused().type(entityTag);
 
   if (isDcPricingTest) {
     const newRegion = getRegionById('br-gru');
@@ -58,40 +67,43 @@ const createNodeBalancerWithUI = (nodeBal, isDcPricingTest = false) => {
   ui.regionSelect.find().click().clear().type(`${regionName}{enter}`);
 
   // node backend config
-  fbtClick('Label').type(randomLabel());
+  cy.findByText('Label').click();
+  cy.focused().type(randomLabel());
 
-  cy.findByLabelText('IP Address')
-    .should('be.visible')
-    .click()
-    .type(nodeBal.linodePrivateIp);
+  cy.findByLabelText('IP Address').should('be.visible').click();
+  cy.focused().type(nodeBal.ipv4);
 
-  ui.autocompletePopper
-    .findByTitle(nodeBal.linodePrivateIp)
-    .should('be.visible')
-    .click();
+  ui.autocompletePopper.findByTitle(nodeBal.ipv4).should('be.visible').click();
 
   deployNodeBalancer();
 };
 
 authenticate();
+beforeEach(() => {
+  cy.tag('method:e2e', 'purpose:dcTesting');
+});
 describe('create NodeBalancer', () => {
   before(() => {
     cleanUp(['tags', 'node-balancers', 'linodes']);
   });
 
   it('creates a NodeBalancer in a region with base pricing', () => {
-    // create a linode in NW where the NB will be created
     const region = chooseRegion();
-    createLinode({ region: region.id }).then((linode) => {
-      const nodeBal = {
+    const linodePayload = {
+      // NodeBalancers require Linodes with private IPs.
+      private_ip: true,
+      region: region.id,
+    };
+
+    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
+      const nodeBal = nodeBalancerFactory.build({
+        ipv4: linode.ipv4[1],
         label: randomLabel(),
         region: region.id,
-        linodePrivateIp: linode.ipv4[1],
-      };
+      });
       // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+      interceptCreateNodeBalancer().as('createNodeBalancer');
+
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
         .its('response.statusCode')
@@ -104,36 +116,54 @@ describe('create NodeBalancer', () => {
    * - Confirms session stickiness field displays error if protocol is not HTTP or HTTPS.
    */
   it('displays API errors for NodeBalancer Create form fields', () => {
-    const region = chooseRegion();
-    createLinode({ region: region.id }).then((linode) => {
-      // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
-      createNodeBalancerWithUI({
-        // Label should have a special character to trigger API error.
-        label: `${randomLabel()}-^`,
-        linodePrivateIp: linode.ipv4[1],
-        region: region.id,
+    const region = regionFactory.build({ capabilities: ['NodeBalancers'] });
+    const linode = linodeFactory.build({ ipv4: ['192.168.1.213'] });
+
+    mockGetRegions([region]);
+    mockGetLinodes([linode]);
+    interceptCreateNodeBalancer().as('createNodeBalancer');
+
+    cy.visitWithLogin('/nodebalancers/create');
+
+    cy.findByLabelText('NodeBalancer Label')
+      .should('be.visible')
+      .type('my-nodebalancer-1');
+
+    ui.autocomplete.findByLabel('Region').should('be.visible').click();
+
+    ui.autocompletePopper
+      .findByTitle(region.id, { exact: false })
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByLabelText('Label').type('my-node-1');
+
+    cy.findByLabelText('IP Address').click();
+    cy.focused().type(linode.ipv4[0]);
+
+    ui.autocompletePopper.findByTitle(linode.label).click();
+
+    ui.button
+      .findByTitle('Create NodeBalancer')
+      .scrollIntoView()
+      .should('be.enabled')
+      .should('be.visible')
+      .click();
+
+    const expectedError =
+      'Address Restricted: IP must not be within 192.168.0.0/17';
+
+    cy.wait('@createNodeBalancer')
+      .its('response.body')
+      .should('deep.equal', {
+        errors: [
+          { field: 'region', reason: 'region is not valid' },
+          { field: 'configs[0].nodes[0].address', reason: expectedError },
+        ],
       });
-      fbtVisible(`Label can't contain special characters or spaces.`);
-      getVisible('[id="nodebalancer-label"]')
-        .click()
-        .clear()
-        .type(randomLabel());
-      getClick('[data-qa-protocol-select="true"]').type('TCP{enter}');
-      getClick('[data-qa-session-stickiness-select]').type(
-        'HTTP Cookie{enter}'
-      );
-      deployNodeBalancer();
-      const errMessage = `Stickiness http_cookie requires protocol 'http' or 'https'`;
-      cy.wait('@createNodeBalancer')
-        .its('response.body')
-        .should('deep.equal', {
-          errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
-        });
-      fbtVisible(errMessage);
-    });
+
+    cy.findByText(expectedError).should('be.visible');
   });
 
   /*
@@ -141,20 +171,27 @@ describe('create NodeBalancer', () => {
    * - Confirms that pricing docs link is shown in "Region" section.
    */
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
-    const initialRegion = getRegionById('us-west');
-    createLinode({ region: initialRegion.id }).then((linode) => {
-      const nodeBal = {
-        label: randomLabel(),
+    // test fails in environments w/ only one region
+    cy.tag('env:multipleRegions');
+    cy.defer(async () => {}).then(() => {
+      const initialRegion = getRegionById('us-west');
+      const linodePayload = {
+        // NodeBalancers require Linodes with private IPs.
+        private_ip: true,
         region: initialRegion.id,
-        linodePrivateIp: linode.ipv4[1],
       };
+      cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
+        const nodeBal = nodeBalancerFactory.build({
+          ipv4: linode.ipv4[1],
+          label: randomLabel(),
+          region: initialRegion.id,
+        });
 
-      // catch request
-      cy.intercept('POST', apiMatcher('nodebalancers')).as(
-        'createNodeBalancer'
-      );
+        // catch request
+        interceptCreateNodeBalancer().as('createNodeBalancer');
 
-      createNodeBalancerWithUI(nodeBal, true);
+        createNodeBalancerWithUI(nodeBal, true);
+      });
     });
   });
 });

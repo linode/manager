@@ -1,5 +1,6 @@
-import { Image } from '@linode/api-v4/lib/images/types';
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
+
+import type { Image } from '@linode/api-v4';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
   capabilities: [],
@@ -12,8 +13,11 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   id: Factory.each((id) => `private/${id}`),
   is_public: false,
   label: Factory.each((i) => `image-${i}`),
+  regions: [],
   size: 1500,
   status: 'available',
+  tags: [],
+  total_size: 1500,
   type: 'manual',
   updated: new Date().toISOString(),
   vendor: null,

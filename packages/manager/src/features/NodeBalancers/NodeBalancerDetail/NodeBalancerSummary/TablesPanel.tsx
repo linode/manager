@@ -1,26 +1,27 @@
-import { styled } from '@mui/material/styles';
-import { Theme, useTheme } from '@mui/material/styles';
+import {
+  useNodeBalancerQuery,
+  useNodeBalancerStatsQuery,
+  useProfile,
+} from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
+import { formatNumber, getMetrics, getUserTimezone } from '@linode/utilities';
+import { styled, useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
+import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
-import {
-  NODEBALANCER_STATS_NOT_READY_API_MESSAGE,
-  useNodeBalancerQuery,
-  useNodeBalancerStats,
-} from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
-import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
+import type { Theme } from '@mui/material/styles';
+import type {
+  NodeBalancerConnectionsTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
+
+const NODEBALANCER_STATS_NOT_READY_API_MESSAGE =
+  'Stats are unavailable at this time.';
 const STATS_NOT_READY_TITLE =
   'Stats for this NodeBalancer are not available yet';
 
@@ -28,14 +29,16 @@ export const TablesPanel = () => {
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
+  const { id } = useParams({
+    from: '/nodebalancers/$id/summary',
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const { data: stats, error, isLoading } = useNodeBalancerStats(
-    nodebalancer?.id ?? -1,
-    nodebalancer?.created
-  );
+  const {
+    data: stats,
+    error,
+    isLoading,
+  } = useNodeBalancerStatsQuery(nodebalancer?.id ?? -1);
 
   const statsErrorString = error
     ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason
@@ -50,6 +53,12 @@ export const TablesPanel = () => {
     if (statsNotReadyError) {
       return (
         <ErrorState
+          CustomIcon={() => (
+            <PendingIcon
+              style={{ color: theme.tokens.alias.Content.Icon.Positive }}
+            />
+          )}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -64,8 +73,6 @@ export const TablesPanel = () => {
               </div>
             </>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       );
     }
@@ -80,47 +87,75 @@ export const TablesPanel = () => {
 
     const metrics = getMetrics(data);
 
+    const timeData = data.reduce(
+      (acc: NodeBalancerConnectionsTimeData[], point: Point) => {
+        acc.push({
+          Connections: point[1],
+          timestamp: point[0],
+        });
+        return acc;
+      },
+      []
+    );
+
     return (
-      <React.Fragment>
-        <StyledChart>
-          <LineGraph
-            data={[
-              {
-                backgroundColor: theme.graphs.purple,
-                borderColor: 'transparent',
-                data,
-                label: 'Connections',
-              },
-            ]}
-            accessibleDataTable={{ unit: 'CXN/s' }}
-            ariaLabel="Connections Graph"
-            showToday={true}
-            timezone={timezone}
-          />
-        </StyledChart>
-        <StyledBottomLegend>
-          <MetricsDisplay
-            rows={[
-              {
-                data: metrics,
-                format: formatNumber,
-                legendColor: 'purple',
-                legendTitle: 'Connections',
-              },
-            ]}
-          />
-        </StyledBottomLegend>
-      </React.Fragment>
+      <Box>
+        <AreaChart
+          areas={[
+            {
+              color: theme.graphs.purple,
+              dataKey: 'Connections',
+            },
+          ]}
+          ariaLabel="Connections Graph"
+          data={timeData}
+          height={412}
+          legendRows={[
+            {
+              data: metrics,
+              format: formatNumber,
+              legendColor: theme.graphs.purple,
+              legendTitle: 'Connections',
+            },
+          ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
+          showLegend
+          timezone={timezone}
+          unit={' CXN/s'}
+          xAxis={{
+            tickFormat: 'hh a',
+            tickGap: 60,
+          }}
+        />
+      </Box>
     );
   };
 
   const renderTrafficChart = () => {
     const trafficIn = stats?.data.traffic.in ?? [];
     const trafficOut = stats?.data.traffic.out ?? [];
+    const timeData = [];
+
+    if (trafficIn) {
+      for (let i = 0; i < trafficIn.length; i++) {
+        timeData.push({
+          'Traffic In': trafficIn[i][1],
+          'Traffic Out': trafficOut[i][1],
+          timestamp: trafficIn[i][0],
+        });
+      }
+    }
 
     if (statsNotReadyError) {
       return (
         <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -135,8 +170,6 @@ export const TablesPanel = () => {
               </div>
             </>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       );
     }
@@ -150,56 +183,56 @@ export const TablesPanel = () => {
     }
 
     return (
-      <React.Fragment>
-        <StyledChart>
-          <LineGraph
-            data={[
-              {
-                backgroundColor: theme.graphs.network.inbound,
-                borderColor: 'transparent',
-                data: trafficIn,
-                label: 'Traffic In',
-              },
-              {
-                backgroundColor: theme.graphs.network.outbound,
-                borderColor: 'transparent',
-                data: trafficOut,
-                label: 'Traffic Out',
-              },
-            ]}
-            accessibleDataTable={{ unit: 'bits/s' }}
-            ariaLabel="Traffic Graph"
-            showToday={true}
-            timezone={timezone}
-          />
-        </StyledChart>
-        <StyledBottomLegend>
-          <MetricsDisplay
-            rows={[
-              {
-                data: getMetrics(trafficIn),
-                format: formatBitsPerSecond,
-                legendColor: 'darkGreen',
-                legendTitle: 'Inbound',
-              },
-              {
-                data: getMetrics(trafficOut),
-                format: formatBitsPerSecond,
-                legendColor: 'lightGreen',
-                legendTitle: 'Outbound',
-              },
-            ]}
-          />
-        </StyledBottomLegend>
-      </React.Fragment>
+      <Box>
+        <AreaChart
+          areas={[
+            {
+              color: theme.graphs.darkGreen,
+              dataKey: 'Traffic In',
+            },
+            {
+              color: theme.graphs.lightGreen,
+              dataKey: 'Traffic Out',
+            },
+          ]}
+          ariaLabel="Network Traffic Graph"
+          data={timeData}
+          height={412}
+          legendRows={[
+            {
+              data: getMetrics(trafficIn),
+              format: formatBitsPerSecond,
+              legendColor: theme.graphs.darkGreen,
+              legendTitle: 'Traffic In',
+            },
+            {
+              data: getMetrics(trafficOut),
+              format: formatBitsPerSecond,
+              legendColor: theme.graphs.lightGreen,
+              legendTitle: 'Traffic Out',
+            },
+          ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
+          showLegend
+          timezone={timezone}
+          unit={' bits/s'}
+          xAxis={{
+            tickFormat: 'hh a',
+            tickGap: 60,
+          }}
+        />
+      </Box>
     );
   };
 
   return (
     <React.Fragment>
-      <StyledgGraphControls>
-        <StyledTitle variant="h2">Graphs</StyledTitle>
-      </StyledgGraphControls>
+      <StyledTitle variant="h2">Graphs</StyledTitle>
       <StyledPanel>
         <StyledHeader variant="h3">
           Connections (CXN/s, 5 min avg.)
@@ -223,38 +256,24 @@ const StyledHeader = styled(Typography, {
 const StyledTitle = styled(Typography, {
   label: 'StyledTitle',
 })(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
   [theme.breakpoints.down('lg')]: {
     marginLeft: theme.spacing(),
   },
-}));
-
-const StyledChart = styled('div', {
-  label: 'StyledChart',
-})(({ theme }) => ({
-  paddingLeft: theme.spacing(1),
-  position: 'relative',
-  width: '100%',
-}));
-
-const StyledBottomLegend = styled('div', {
-  label: 'StyledBottomLegend',
-})(({ theme }) => ({
-  backgroundColor: theme.bg.offWhite,
-  border: `1px solid ${theme.color.border3}`,
-  color: '#777',
-  fontSize: 14,
-  margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
-  padding: 10,
-}));
-
-const StyledgGraphControls = styled(Typography, {
-  label: 'StyledgGraphControls',
-})(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
   [theme.breakpoints.up('md')]: {
     margin: `${theme.spacing(2)} 0`,
   },
+}));
+
+export const StyledBottomLegend = styled('div', {
+  label: 'StyledBottomLegend',
+  shouldForwardProp: (prop) => prop !== 'legendHeight',
+})<{ legendHeight?: string }>(({ legendHeight, theme }) => ({
+  color: theme.tokens.color.Neutrals[70],
+  fontSize: 14,
+  height: legendHeight,
+  overflowY: 'auto',
 }));
 
 const StyledPanel = styled(Paper, {
@@ -280,6 +299,6 @@ const Loading = () => (
       minHeight: 300,
     }}
   >
-    <CircleProgress mini />
+    <CircleProgress size="sm" />
   </div>
 );

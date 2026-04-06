@@ -5,6 +5,7 @@ import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { Disks } from './Disks';
+
 import type { DisksProps } from './Disks';
 
 const disks = [extDisk3, swapDisk];

@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -5,89 +6,101 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { Metrics } from 'src/utilities/statMetrics';
 
-import styled, { StyleProps } from './MetricDisplay.styles';
+import { StyledLegend } from './MetricsDisplay.styles';
 
-interface MetricsDisplayProps {
+import type { Metrics } from '@linode/utilities';
+
+const ROW_HEADERS = ['Max', 'Avg', 'Last'] as const;
+
+type MetricKey = 'average' | 'last' | 'max';
+const METRIC_KEYS: MetricKey[] = ['max', 'average', 'last'];
+
+interface Props {
+  /**
+   * Array of rows to hide. Each row should contain the legend title.
+   */
+  hiddenRows?: string[];
+  /**
+   * Array of rows to display. Each row should contain the data to display, the format function to use, the legend color, and the legend title.
+   */
   rows: MetricsDisplayRow[];
 }
 
-interface MetricsDisplayRow {
+export interface MetricsDisplayRow {
   data: Metrics;
   format: (n: number) => string;
-  legendColor:
-    | 'blue'
-    | 'darkGreen'
-    | 'green'
-    | 'lightGreen'
-    | 'purple'
-    | 'red'
-    | 'yellow';
+  handleLegendClick?: () => void;
+  legendColor: string;
   legendTitle: string;
 }
 
-type CombinedProps = MetricsDisplayProps & StyleProps;
-
-export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
-  const rowHeaders = ['Max', 'Avg', 'Last'];
-
+const HeaderRow = () => {
   return (
-    <Table aria-label="Stats and metrics" className={classes.root} noBorder>
-      <TableHead>
-        <TableRow>
-          <TableCell>{''}</TableCell>
-          {rowHeaders.map((section, idx) => (
-            <TableCell
-              className={classes.tableHeadInner}
-              data-qa-header-cell
-              key={idx}
-            >
-              <Typography className={classes.text} variant="body1">
-                {section}
-              </Typography>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map((row) => {
-          const { data, format, legendColor, legendTitle } = row;
-          return (
-            <TableRow data-qa-metric-row key={legendTitle}>
-              <TableCell className={classes.legend}>
-                <div className={classes[legendColor]} data-qa-legend-title>
-                  <Typography component="span">{legendTitle}</Typography>
-                </div>
-              </TableCell>
-              {metricsBySection(data).map((section, idx) => {
-                return (
-                  <TableCell
-                    data-qa-body-cell
-                    key={idx}
-                    parentColumn={rowHeaders[idx]}
-                  >
-                    <Typography className={classes.text} variant="body1">
-                      {format(section)}
-                    </Typography>
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+    <TableHead sx={{ position: 'sticky', top: 0, zIndex: 2 }}>
+      <TableRow>
+        <TableCell />
+        {ROW_HEADERS.map((header) => (
+          <TableCell data-qa-header-cell key={header}>
+            {header}
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
 };
 
-// Grabs the sections we want (max, average, last) and puts them in an array
-// so we can map through them and create JSX
-export const metricsBySection = (data: Metrics): number[] => [
-  data.max,
-  data.average,
-  data.last,
-];
+const MetricRow = ({
+  hidden,
+  row,
+}: {
+  hidden?: boolean;
+  row: MetricsDisplayRow;
+}) => {
+  const { data, format, handleLegendClick, legendColor, legendTitle } = row;
 
-export default styled(MetricsDisplay);
+  return (
+    <TableRow data-qa-metric-row>
+      <TableCell>
+        <StyledLegend
+          data-testid="legend-title"
+          disableTouchRipple
+          hidden={hidden}
+          legendColor={legendColor}
+          onClick={handleLegendClick}
+        >
+          <Typography component="span" data-qa-graph-row-title={legendTitle}>
+            {legendTitle}
+          </Typography>
+        </StyledLegend>
+      </TableCell>
+      {METRIC_KEYS.map((key, idx) => (
+        <TableCell
+          data-qa-body-cell
+          data-qa-graph-column-title={ROW_HEADERS[idx]}
+          key={key}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          {format(data[key])}
+        </TableCell>
+      ))}
+    </TableRow>
+  );
+};
+
+export const MetricsDisplay = ({ hiddenRows = [], rows }: Props) => (
+  <Table aria-label="Stats and metrics" noOverflow stickyHeader>
+    <HeaderRow />
+    <TableBody>
+      {rows.map((row) => (
+        <MetricRow
+          hidden={hiddenRows.includes(row.legendTitle)}
+          key={row.legendTitle}
+          row={row}
+        />
+      ))}
+    </TableBody>
+  </Table>
+);
+
+export default MetricsDisplay;

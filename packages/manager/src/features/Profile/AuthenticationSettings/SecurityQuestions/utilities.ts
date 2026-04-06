@@ -1,4 +1,4 @@
-import {
+import type {
   SecurityQuestion,
   SecurityQuestionsData,
 } from '@linode/api-v4/lib/profile';

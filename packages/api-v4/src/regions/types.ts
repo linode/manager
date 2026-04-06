@@ -1,19 +1,39 @@
-import { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
+import type { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
 
 export type Capabilities =
+  | 'ACLP Logs Datacenter LKE-E'
+  | 'Backups'
   | 'Bare Metal'
   | 'Block Storage'
+  | 'Block Storage Encryption'
+  | 'Block Storage Migrations'
   | 'Cloud Firewall'
+  | 'Disk Encryption'
+  | 'Distributed Plans'
   | 'GPU Linodes'
   | 'Kubernetes'
+  | 'Kubernetes Enterprise'
+  | 'LA Disk Encryption' // @TODO LDE: Remove once LDE is fully rolled out in every DC
+  | 'Linode Interfaces'
   | 'Linodes'
+  | 'Maintenance Policy'
   | 'Managed Databases'
   | 'Metadata'
+  | 'NETINT Quadra T1U'
+  | 'Network LoadBalancer'
   | 'NodeBalancers'
   | 'Object Storage'
+  | 'Placement Group'
   | 'Premium Plans'
+  | 'StackScripts'
   | 'Vlans'
+  | 'VPC Dual Stack'
   | 'VPCs';
+
+export interface MonitoringCapabilities {
+  alerts: Capabilities[];
+  metrics: Capabilities[];
+}
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses
@@ -22,13 +42,27 @@ export interface DNSResolvers {
 
 export type RegionStatus = 'ok' | 'outage';
 
+export type RegionSite = 'core' | 'distributed';
+
 export interface Region {
+  capabilities: Capabilities[];
+  country: Country;
   id: string;
   label: string;
-  country: Country;
-  capabilities: Capabilities[];
-  status: RegionStatus;
+  /**
+   * CloudPulse monitoring capabilities that are available in the region.
+   *
+   * **Upcoming Feature Notice:** this property may not be available to all customers
+   * and may change in subsequent releases.
+   */
+  monitors?: MonitoringCapabilities;
+  placement_group_limits: {
+    maximum_linodes_per_pg: number;
+    maximum_pgs_per_customer: null | number; // This value can be unlimited for some customers, for which the API returns the `null` value.
+  };
   resolvers: DNSResolvers;
+  site_type: RegionSite;
+  status: RegionStatus;
 }
 
 export interface RegionAvailability {
@@ -37,6 +71,12 @@ export interface RegionAvailability {
   region: string;
 }
 
-type ContinentCode = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
+export interface RegionVPCAvailability {
+  available: boolean; // True if Region has VPC capabilities
+  available_ipv6_prefix_lengths: number[];
+  region: string;
+}
 
-export type Country = Lowercase<ContinentCode>;
+type CountryCode = keyof typeof COUNTRY_CODE_TO_CONTINENT_CODE;
+
+export type Country = Lowercase<CountryCode>;

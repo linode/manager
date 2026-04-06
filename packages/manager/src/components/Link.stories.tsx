@@ -3,7 +3,7 @@ import React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { LinkProps } from 'src/components/Link';
 
 /**
@@ -24,9 +24,9 @@ export const External: StoryObj<LinkProps> = {
   render: (args: LinkProps) => (
     <Link
       {...args}
-      to="https://www.linode.com/docs/products/compute/compute-instances/faqs"
+      to="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
     >
-      https://www.linode.com/docs/products/compute/compute-instances/faqs
+      https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances
     </Link>
   ),
 };
@@ -130,7 +130,7 @@ const meta: Meta<LinkProps> = {
     to: '/internal-link',
   },
   component: Link,
-  title: 'Components/Link',
+  title: 'Foundations/Link',
 };
 
 export default meta;

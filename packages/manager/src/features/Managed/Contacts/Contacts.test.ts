@@ -2,7 +2,7 @@ import managedContacts, {
   contactWithoutGroup,
 } from 'src/__data__/managedContacts';
 
-import { generateGroupsFromContacts } from './Contacts';
+import { generateGroupsFromContacts } from '../utils';
 
 describe('groupsToContacts', () => {
   it('returns an element for each group represented in contacts', () => {

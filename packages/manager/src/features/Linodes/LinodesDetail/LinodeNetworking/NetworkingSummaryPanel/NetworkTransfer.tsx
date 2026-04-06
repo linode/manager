@@ -1,17 +1,18 @@
-import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
+import {
+  useAccountNetworkTransfer,
+  useLinodeTransfer,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
+import { Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountTransfer } from 'src/queries/accountTransfer';
-import { useRegionsQuery } from 'src/queries/regions';
-import { useTypeQuery } from 'src/queries/types';
 import {
   getDynamicDCNetworkTransferData,
   isLinodeInDynamicPricingDC,
 } from 'src/utilities/pricing/linodes';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { TransferContent } from './TransferContent';
 
@@ -28,18 +29,14 @@ export const NetworkTransfer = React.memo((props: Props) => {
   const { linodeId, linodeLabel, linodeRegionId, linodeType } = props;
   const theme = useTheme();
 
-  const linodeTransfer = useAPIRequest(
-    () => getLinodeTransfer(linodeId),
-    { billable: 0, quota: 0, region_transfers: [], used: 0 },
-    [linodeId]
-  );
+  const linodeTransfer = useLinodeTransfer(linodeId);
   const regions = useRegionsQuery();
   const { data: type } = useTypeQuery(linodeType || '', Boolean(linodeType));
   const {
     data: accountTransfer,
     error: accountTransferError,
     isLoading: accountTransferLoading,
-  } = useAccountTransfer();
+  } = useAccountNetworkTransfer();
 
   const currentRegion = regions.data?.find(
     (region) => region.id === linodeRegionId
@@ -58,7 +55,7 @@ export const NetworkTransfer = React.memo((props: Props) => {
   const totalUsedInGB = dynamicDCPoolData.used;
   const accountQuotaInGB = dynamicDCPoolData.quota;
   const error = Boolean(linodeTransfer.error || accountTransferError);
-  const loading = linodeTransfer.loading || accountTransferLoading;
+  const loading = linodeTransfer.isLoading || accountTransferLoading;
   const isDynamicPricingDC = isLinodeInDynamicPricingDC(linodeRegionId, type);
 
   return (

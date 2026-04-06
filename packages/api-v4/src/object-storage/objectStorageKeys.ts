@@ -1,4 +1,8 @@
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import {
+  createObjectStorageKeysSchema,
+  updateObjectStorageKeysSchema,
+} from '@linode/validation/lib/objectStorageKeys.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,11 +11,12 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
+  CreateObjectStorageKeyPayload,
   ObjectStorageKey,
-  ObjectStorageKeyRequest,
-  UpdateObjectStorageKeyRequest,
+  UpdateObjectStorageKeyPayload,
 } from './types';
 
 /**
@@ -24,7 +29,7 @@ export const getObjectStorageKeys = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/object-storage/keys`)
+    setURL(`${API_ROOT}/object-storage/keys`),
   );
 
 /**
@@ -32,11 +37,11 @@ export const getObjectStorageKeys = (params?: Params, filters?: Filter) =>
  *
  * Creates an Object Storage key
  */
-export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
+export const createObjectStorageKeys = (data: CreateObjectStorageKeyPayload) =>
   Request<ObjectStorageKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}/object-storage/keys`),
-    setData(data, createObjectStorageKeysSchema)
+    setData(data, createObjectStorageKeysSchema),
   );
 
 /**
@@ -46,12 +51,12 @@ export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
  */
 export const updateObjectStorageKey = (
   id: number,
-  data: UpdateObjectStorageKeyRequest
+  data: UpdateObjectStorageKeyPayload,
 ) =>
   Request<ObjectStorageKey>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/object-storage/keys/${encodeURIComponent(id)}`),
-    setData(data, createObjectStorageKeysSchema)
+    setData(data, updateObjectStorageKeysSchema),
   );
 
 /**
@@ -62,5 +67,5 @@ export const updateObjectStorageKey = (
 export const revokeObjectStorageKey = (id: number) =>
   Request<ObjectStorageKey>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/object-storage/keys/${encodeURIComponent(id)}`)
+    setURL(`${API_ROOT}/object-storage/keys/${encodeURIComponent(id)}`),
   );

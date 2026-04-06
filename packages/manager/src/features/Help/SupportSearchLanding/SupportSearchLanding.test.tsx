@@ -1,9 +1,7 @@
+import { H1Header } from '@linode/ui';
 import { screen } from '@testing-library/react';
-import { assocPath } from 'ramda';
 import * as React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import SupportSearchLanding from './SupportSearchLanding';
@@ -12,16 +10,35 @@ const props = {
   searchAlgolia: vi.fn(),
   searchEnabled: true,
   searchResults: [[], []],
-  ...reactRouterProps,
+  location: {
+    search: '?query=test',
+  },
 };
 
-const propsWithMultiWordURLQuery = assocPath(
-  ['location', 'search'],
-  '?query=two%20words',
-  props
-);
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useLocation: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useLocation: queryMocks.useLocation,
+  };
+});
 
 describe('SupportSearchLanding Component', () => {
+  beforeEach(() => {
+    queryMocks.useLocation.mockReturnValue({
+      search: '?query=test',
+      state: {
+        supportTicketFormFields: {},
+      },
+    });
+  });
+
   it('should render', () => {
     renderWithTheme(<SupportSearchLanding {...props} />);
     expect(screen.getByTestId('support-search-landing')).toBeInTheDocument();
@@ -38,18 +55,13 @@ describe('SupportSearchLanding Component', () => {
   });
 
   it('should display multi-word query string in the header', () => {
-    renderWithTheme(
-      <H1Header title={propsWithMultiWordURLQuery.location.search} />
-    );
-    expect(
-      screen.getByText(propsWithMultiWordURLQuery.location.search)
-    ).toBeInTheDocument();
+    // what is going on here?
+    renderWithTheme(<H1Header title="?query=two%20words" />);
+    expect(screen.getByText('?query=two%20words')).toBeInTheDocument();
   });
 
   it('should display empty DocumentationResults components with empty query string', () => {
-    const newProps = assocPath(['location', 'search'], '?query=', props);
-
-    renderWithTheme(<SupportSearchLanding {...newProps} />);
+    renderWithTheme(<SupportSearchLanding {...props} />);
     expect(
       screen.getAllByTestId('data-qa-documentation-no-results')
     ).toHaveLength(2);

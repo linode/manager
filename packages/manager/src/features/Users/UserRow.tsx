@@ -1,16 +1,16 @@
-import { Stack } from 'src/components/Stack';
+import { useAccountUserGrants, useProfile } from '@linode/queries';
+import { Box, Chip, Stack, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/Chip';
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { capitalize } from 'src/utilities/capitalize';
 
 import { UsersActionMenu } from './UsersActionMenu';
 
@@ -22,27 +22,61 @@ interface Props {
 }
 
 export const UserRow = ({ onDelete, user }: Props) => {
+  const theme = useTheme();
+  const { data: grants } = useAccountUserGrants(user.username, user.restricted);
+  const { data: profile } = useProfile();
+
+  const isProxyOrDelegateUser = Boolean(
+    user.user_type === 'proxy' || user.user_type === 'delegate'
+  );
+  const showChildAccountAccessCol = profile?.user_type === 'parent';
+
   return (
-    <TableRow ariaLabel={`User ${user.username}`} key={user.username}>
+    <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          <GravatarByEmail email={user.email} />
-          <Typography>{user.username}</Typography>
+          <Avatar
+            color={
+              user.username !== profile?.username
+                ? theme.palette.primary.dark
+                : undefined
+            }
+            username={user.username}
+          />
+          <MaskableText isToggleable text={user.username} />
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
       <Hidden smDown>
-        <TableCell>{user.email}</TableCell>
-      </Hidden>
-      <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
-      <Hidden lgDown>
         <TableCell>
-          <LastLogin last_login={user.last_login} />
+          {' '}
+          <MaskableText isToggleable text={user.email} />
         </TableCell>
       </Hidden>
+      <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
+      {showChildAccountAccessCol && (
+        <Hidden lgDown>
+          <TableCell>
+            {user.restricted && !grants?.global?.child_account_access
+              ? 'Disabled'
+              : 'Enabled'}
+          </TableCell>
+        </Hidden>
+      )}
+      {!isProxyOrDelegateUser && (
+        <Hidden lgDown>
+          <TableCell>
+            <LastLogin last_login={user.last_login} />
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
-        <UsersActionMenu onDelete={onDelete} username={user.username} />
+        <UsersActionMenu
+          isProxyOrDelegateUser={isProxyOrDelegateUser}
+          onDelete={onDelete}
+          username={user.username}
+        />
       </TableCell>
     </TableRow>
   );

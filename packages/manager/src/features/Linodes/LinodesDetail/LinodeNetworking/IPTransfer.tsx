@@ -1,40 +1,28 @@
-import { IPRange } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { styled, useTheme } from '@mui/material/styles';
-import {
-  both,
-  compose,
-  equals,
-  isNil,
-  lensPath,
-  over,
-  set,
-  uniq,
-  view,
-  when,
-} from 'ramda';
-import * as React from 'react';
-import { debounce } from 'throttle-debounce';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { usePrevious } from 'src/hooks/usePrevious';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
 import {
   useAllIPv6RangesQuery,
+  useAllLinodesQuery,
   useAssignAdressesMutation,
   useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
+  useLinodeQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  CircleProgress,
+  Dialog,
+  Divider,
+  Notice,
+  Typography,
+} from '@linode/ui';
+import { usePrevious } from '@linode/utilities';
+import Grid from '@mui/material/Grid';
+import { styled, useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import type { JSX } from 'react';
+
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIError, IPRange } from '@linode/api-v4';
 
 interface Props {
   linodeId: number;
@@ -91,19 +79,27 @@ export const getLinodeIPv6Ranges = (
   );
 };
 
-const LinodeNetworkingIPTransferPanel = (props: Props) => {
+export const IPTransfer = (props: Props) => {
   const { linodeId, onClose, open, readOnly } = props;
   const theme = useTheme();
-  const { mutateAsync: assignAddresses } = useAssignAdressesMutation();
+  const { mutateAsync: assignAddresses } = useAssignAdressesMutation({
+    currentLinodeId: linodeId,
+  });
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const { data: _ips } = useLinodeIPsQuery(linodeId);
 
-  const publicIPs = _ips?.ipv4.public.map((i) => i.address) ?? [];
-  const privateIPs = _ips?.ipv4.private.map((i) => i.address) ?? [];
+  const publicIPv4Addresses = _ips?.ipv4.public.map((i) => i.address) ?? [];
+  const privateIPv4Addresses = _ips?.ipv4.private.map((i) => i.address) ?? [];
+  const ipv6Addresses =
+    _ips?.ipv6?.global.map((i) => `${i.range}/${i.prefix}`) ?? [];
 
-  const ipAddresses = [...publicIPs, ...privateIPs];
+  const ipAddresses = [
+    ...publicIPv4Addresses,
+    ...privateIPv4Addresses,
+    ...ipv6Addresses,
+  ];
 
   const [ips, setIPs] = React.useState<IPRowState>(
     ipAddresses.reduce(
@@ -117,7 +113,6 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
-  const [searchText, setSearchText] = React.useState('');
 
   React.useEffect(() => {
     // Not using onReset here because we don't want to reset the IPs.
@@ -126,12 +121,6 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     setSuccessMessage('');
   }, [open]);
 
-  const handleInputChange = React.useRef(
-    debounce(500, false, (_searchText: string) => {
-      setSearchText(_searchText);
-    })
-  ).current;
-
   const {
     data: allLinodes,
     error: linodesError,
@@ -139,7 +128,6 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
   } = useAllLinodesQuery(
     {},
     {
-      label: { '+contains': searchText ? searchText : undefined },
       region: linode?.region,
     },
     open // only run the query if the modal is open
@@ -153,93 +141,99 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
 
   const linodes = (allLinodes ?? []).filter((l) => l.id !== linodeId);
 
-  const onModeChange = (ip: string) => (e: Item) => {
-    const mode = e.value as Mode;
-    const firstLinode = linodes[0];
+  const onModeChange =
+    (ip: string) =>
+    (
+      event: React.SyntheticEvent<Element, Event>,
+      selected: { label: string; value: string }
+    ) => {
+      const mode = (selected?.value as Mode) || 'none';
+      const firstLinode = linodes[0];
+      const newState = structuredClone(ips);
+      switch (mode) {
+        /** When we're swapping/moving we default to the head of the list if it's not set already. */
+        case 'move':
+          const moveState = newState[ip] as Move | Swap;
+          if (!moveState['selectedLinodeID']) {
+            moveState['selectedLinodeID'] = firstLinode.id;
+          }
+          break;
+        /** When we're swapping we defaulting the selectedIP to the first in the list and setting
+         * the selectedLinodesIPs to the same Linode's IPs (which are used in the select IP menu).
+         */
+        case 'swap':
+          const swapState = newState[ip] as Swap;
+          swapState['selectedIP'] = firstLinode.ipv4[0];
+          const linodeIPv6Ranges = getLinodeIPv6Ranges(
+            ipv6RangesData,
+            firstLinode.ipv6
+          );
+          swapState['selectedLinodesIPs'] = [
+            ...firstLinode.ipv4,
+            ...linodeIPv6Ranges,
+          ];
+          swapState['selectedLinodeID'] = firstLinode.id;
+          break;
+        /** When switching back to none, reset the ipState. */
 
-    const newState = compose<any, any, any, any, any>(
-      /** Always update the mode. */
-      setMode(ip, mode),
+        case 'none':
+          newState[ip] = defaultState(
+            ips[ip].sourceIP,
+            ips[ip].sourceIPsLinodeID
+          );
+      }
+      newState[ip]['mode'] = mode; /** Always update the mode. */
 
-      /** When switching back to none, reset the ipState. */
-      when(
-        () => isNone(mode),
-        updateIPState(ip, (ipState) =>
-          defaultState(ipState.sourceIP, ipState.sourceIPsLinodeID)
-        )
-      ),
+      setIPs(newState);
+    };
 
-      /** When we're swapping/moving we default to the head of the list if it's not set already. */
-      when(
-        both(
-          () => isSwapping(mode) || isMoving(mode),
-          compose(isNil, view(L.selectedLinodeID(ip)))
-        ),
-        setSelectedLinodeID(ip, firstLinode.id)
-      ),
-
-      /** When we're swapping we defaulting the selectedIP to the first in the list and setting
-       * the selectedLinodesIPs so the same Linode's IPs (which are used in the select IP menu).
-       */
-      when(
-        () => isSwapping(mode),
-        compose(
-          setSelectedIP(ip, firstLinode.ipv4[0]),
-          updateSelectedLinodesIPs(ip, () => {
-            const linodeIPv6Ranges = getLinodeIPv6Ranges(
-              ipv6RangesData,
-              firstLinode.ipv6
-            );
-            return [...firstLinode.ipv4, ...linodeIPv6Ranges];
-          })
-        )
-      )
-    );
-    setIPs((currentState) => newState(currentState));
-  };
-
-  const onSelectedLinodeChange = (ip: string) => (e: Item) => {
-    const newState = compose<any, any, any>(
-      setSelectedLinodeID(ip, e.value),
+  const onSelectedLinodeChange =
+    (ip: string) =>
+    (
+      event: React.SyntheticEvent,
+      selected: { label: string; value: number }
+    ) => {
+      const newState = structuredClone(ips);
       /**
        * When mode is swapping;
        *  Update the selectedLinodesIPs (since the Linode has changed, the available IPs certainly have)
        *  Update the selectedIP (to provide a sensible default).
        */
-      when(
-        compose(equals('swap'), view(L.mode(ip))),
+      if (isSwapState(newState[ip])) {
+        /** We need to find and return the newly selected Linode's IPs. */
+        const linode = linodes.find((l) => l.id === Number(selected.value));
+        if (linode) {
+          const linodeIPv6Ranges = getLinodeIPv6Ranges(
+            ipv6RangesData,
+            linode?.ipv6
+          );
+          newState[ip]['selectedLinodesIPs'] = [
+            ...linode.ipv4,
+            ...linodeIPv6Ranges,
+          ];
+          newState[ip]['selectedIP'] = linode.ipv4[0];
+        } else {
+          newState[ip]['selectedLinodesIPs'] = [];
+          newState[ip]['selectedIP'] = '';
+        }
+      }
+      if (isMoveState(newState[ip]) || isSwapState(newState[ip])) {
+        newState[ip]['selectedLinodeID'] = selected.value;
+      }
+      setIPs(newState);
+    };
 
-        compose(
-          /** We need to find and return the newly selected Linode's IPs. */
-          updateSelectedLinodesIPs(ip, () => {
-            const linode = linodes.find((l) => l.id === Number(e.value));
-            if (linode) {
-              const linodeIPv6Ranges = getLinodeIPv6Ranges(
-                ipv6RangesData,
-                linode?.ipv6
-              );
-              return [...linode.ipv4, ...linodeIPv6Ranges];
-            }
-            return [];
-          }),
-
-          /** We need to find the selected Linode's IPs and return the first. */
-          updateSelectedIP(ip, () => {
-            const linode = linodes.find((l) => l.id === Number(e.value));
-            if (linode) {
-              return linode.ipv4[0];
-            }
-            return undefined;
-          })
-        )
-      )
-    );
-    setIPs((currentState) => newState(currentState));
-  };
-
-  const onSelectedIPChange = (ip: string) => (e: Item<string>) => {
-    setIPs(setSelectedIP(ip, e.value));
-  };
+  const onSelectedIPChange =
+    (ip: string) =>
+    (
+      event: React.SyntheticEvent,
+      selected: { label: string; value: string }
+    ) => {
+      // comeback
+      const newState = structuredClone(ips);
+      (newState[ip] as Swap)['selectedIP'] = selected.value;
+      setIPs(newState);
+    };
 
   const renderRow = (
     state: IPStates,
@@ -252,35 +246,63 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     ];
 
     return (
-      <Grid container key={state.sourceIP} spacing={2} sx={{ width: '100%' }}>
+      <Grid
+        container
+        data-testid="ip-row"
+        key={state.sourceIP}
+        size={12}
+        spacing={2}
+        sx={{
+          [theme.breakpoints.down('md')]: {
+            backgroundColor: theme.color.grey5,
+            mb: 3,
+          },
+        }}
+      >
         <Grid
+          size={{
+            md: 3,
+            xs: 12,
+          }}
           sx={{
             alignItems: 'center',
             display: 'flex',
-            [theme.breakpoints.down('sm')]: {
-              width: '100%',
-            },
           }}
         >
-          <Typography
-            sx={{
-              marginTop: 0,
-              [theme.breakpoints.up('sm')]: {
-                width: 175,
-              },
-              width: '100%',
-            }}
-            variant="body1"
-          >
+          <Typography>
+            <Typography
+              component="span"
+              sx={(theme) => ({
+                font: theme.font.bold,
+                [theme.breakpoints.up('md')]: {
+                  display: 'none',
+                },
+              })}
+            >
+              IP address:{' '}
+            </Typography>
             {state.sourceIP}
           </Typography>
         </Grid>
-        <StyledAudoGrid>
-          <Select
+        <StyledAutoGrid size={{ md: 3, xs: 12 }}>
+          <Autocomplete
+            autoHighlight
+            clearIcon={null}
+            disablePortal={false}
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
+            label="Select Action"
+            noMarginTop
+            onChange={onModeChange(state.sourceIP)}
+            options={actionsList}
+            placeholder="Select Action"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-ip-transfer-action-menu': state.mode,
               },
+              disabled: readOnly,
+              hideLabel: true,
             }}
             value={
               state.mode === 'none'
@@ -289,17 +311,8 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                     (eachAction) => eachAction.value === state.mode
                   )
             }
-            disabled={readOnly}
-            hideLabel
-            isClearable={false}
-            label={`Select Action for IP Address ${state.sourceIP}`}
-            noMarginTop
-            onChange={onModeChange(state.sourceIP)}
-            options={actionsList}
-            overflowPortal
-            placeholder="Select Action"
           />
-        </StyledAudoGrid>
+        </StyledAutoGrid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
         {renderIPSelect && renderIPSelect(state as Swap)}
       </Grid>
@@ -316,27 +329,27 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     });
 
     return (
-      <StyledAudoGrid xs={12}>
-        <Select
+      <StyledAutoGrid size={{ md: 3, xs: 12 }}>
+        <Autocomplete
+          autoHighlight
+          disableClearable
+          disabled={readOnly || linodes.length === 1}
+          errorText={linodesError?.[0].reason}
+          label="Select Linode"
+          loading={isLoading || ipv6RangesLoading}
+          noMarginTop
+          onChange={onSelectedLinodeChange(sourceIP)}
+          options={linodeList}
+          placeholder="Select Linode"
           textFieldProps={{
             dataAttrs: {
               'data-qa-linode-select': true,
             },
+            hideLabel: true,
           }}
-          disabled={readOnly || linodes.length === 1}
-          errorText={linodesError?.[0].reason}
-          hideLabel
-          isClearable={false}
-          isLoading={isLoading || ipv6RangesLoading}
-          label="Select Linode"
-          noMarginTop
-          onChange={onSelectedLinodeChange(sourceIP)}
-          onInputChange={handleInputChange}
-          options={linodeList}
-          overflowPortal
           value={defaultLinode}
         />
-      </StyledAudoGrid>
+      </StyledAutoGrid>
     );
   };
 
@@ -350,24 +363,26 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
     });
 
     return (
-      <StyledAudoGrid xs={12}>
-        <Select
-          textFieldProps={{
-            dataAttrs: {
-              'data-qa-swap-ip-action-menu': true,
-            },
-          }}
+      <StyledAutoGrid size={{ md: 3, xs: 12 }}>
+        <Autocomplete
+          autoHighlight
+          disableClearable
           disabled={readOnly}
-          hideLabel
-          isClearable={false}
+          disablePortal={false}
           label="Select IP Address"
           noMarginTop
           onChange={onSelectedIPChange(sourceIP)}
           options={IPList}
-          overflowPortal
+          placeholder="Select IP Address"
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-swap-ip-action-menu': true,
+            },
+            hideLabel: true,
+          }}
           value={defaultIP}
         />
-      </StyledAudoGrid>
+      </StyledAutoGrid>
     );
   };
 
@@ -378,9 +393,12 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
      * if new ip addresses were provided as props, massage the data so it matches
      * the default shape we need to append to state
      */
-    if (!equals(previousIPAddresses, ipAddresses)) {
+    if (
+      previousIPAddresses?.length !== ipAddresses.length ||
+      previousIPAddresses.some((val, index) => val !== ipAddresses[index])
+    ) {
       setIPs(
-        ipAddresses.reduce((acc, ip) => {
+        ipAddresses.reduce<IPRowState>((acc, ip) => {
           acc[ip] = defaultState(ip, linodeId);
           return acc;
         }, {})
@@ -432,7 +450,12 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           'Unable to transfer IP addresses at this time. Please try again later.'
         );
 
-        setError(uniq(apiErrors));
+        setError(
+          apiErrors.reduce(
+            (acc: APIError[], err) => (acc.includes(err) ? acc : [...acc, err]),
+            []
+          )
+        );
         setSubmitting(false);
       });
   };
@@ -454,18 +477,24 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
   return (
     <Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
       {error && (
-        <Grid xs={12}>
+        <Grid size={12}>
           {error.map(({ reason }, idx) => (
             <Notice key={idx} text={reason} variant="error" />
           ))}
         </Grid>
       )}
       {successMessage && (
-        <Grid xs={12}>
+        <Grid size={12}>
           <Notice text={successMessage} variant="success" />
         </Grid>
       )}
-      <Grid lg={8} sm={12} xl={6}>
+      <Grid
+        size={{
+          lg: 8,
+          sm: 12,
+          xl: 6,
+        }}
+      >
         <Typography sx={{ marginBottom: theme.spacing(2) }}>
           If you have two Linodes in the same data center, you can use the IP
           transfer feature to switch their IP addresses. This could be useful in
@@ -474,34 +503,38 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
           the DNS records.
         </Typography>
       </Grid>
-      <Grid container spacing={2} xs={12}>
+      <Grid container size={12}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
           <Notice
             text={'There was an error loading IPv6 Ranges'}
             variant="error"
           />
         ) : null}
-        {(isLoading || ipv6RangesLoading) && searchText === '' ? (
+        {isLoading || ipv6RangesLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <CircleProgress mini />
+            <CircleProgress size="sm" />
           </div>
         ) : (
           <>
-            <Grid container spacing={2} sx={{ width: '100%' }}>
+            <Grid container size={12}>
               <Grid
-                sx={{
-                  [theme.breakpoints.up('sm')]: {
-                    width: `calc(175px + ${theme.spacing(2)})`,
-                  },
-                  width: '100%',
-                }}
                 data-qa-transfer-ip-label
+                size={{
+                  sm: 3,
+                  xs: 12,
+                }}
+                sx={{
+                  [theme.breakpoints.down('md')]: {
+                    display: 'none',
+                  },
+                }}
               >
                 <Typography>IP Address</Typography>
               </Grid>
               <Grid
                 sx={{
-                  [theme.breakpoints.down('sm')]: {
+                  pl: 0.5,
+                  [theme.breakpoints.down('md')]: {
                     display: 'none',
                   },
                 }}
@@ -509,10 +542,17 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                 <Typography>Actions</Typography>
               </Grid>
             </Grid>
-            <Grid sx={{ paddingTop: 0 }} xs={12}>
-              <Divider spacingBottom={0} />
+            <Grid
+              size={12}
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  visibility: 'hidden',
+                },
+              }}
+            >
+              <Divider />
             </Grid>
-            {linodes.length === 0 && searchText === '' ? (
+            {linodes.length === 0 ? (
               <Typography
                 sx={{
                   color: theme.color.grey1,
@@ -523,33 +563,41 @@ const LinodeNetworkingIPTransferPanel = (props: Props) => {
                 with which to transfer IPs.
               </Typography>
             ) : (
-              <Grid container spacing={2} sx={{ width: '100%' }}>
+              <Grid size={12} spacing={2}>
                 {Object.values(ips).map(ipRow)}
               </Grid>
             )}
           </>
         )}
       </Grid>
-      <ActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'ip-transfer-save',
-          disabled: readOnly || linodes.length === 0,
-          label: 'Save',
-          loading: submitting,
-          onClick: onSubmit,
+      <Grid
+        container
+        size={12}
+        sx={{
+          justifyContent: 'flex-end',
         }}
-        secondaryButtonProps={{
-          'data-testid': 'ip-transfer-reset',
-          disabled: submitting || linodes.length === 0,
-          label: 'Reset Form',
-          onClick: onReset,
-        }}
-      />
+      >
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'ip-transfer-save',
+            disabled: readOnly || linodes.length === 0,
+            label: 'Save',
+            loading: submitting,
+            onClick: onSubmit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'ip-transfer-reset',
+            disabled: submitting || linodes.length === 0,
+            label: 'Reset Form',
+            onClick: onReset,
+          }}
+        />
+      </Grid>
     </Dialog>
   );
 };
 
-const StyledAudoGrid = styled(Grid, { label: 'StyledAutoGrid' })(
+const StyledAutoGrid = styled(Grid, { label: 'StyledAutoGrid' })(
   ({ theme }) => ({
     minWidth: 175,
     [theme.breakpoints.up('sm')]: {
@@ -558,39 +606,6 @@ const StyledAudoGrid = styled(Grid, { label: 'StyledAutoGrid' })(
     },
   })
 );
-
-const L = {
-  ip: (ip: string) => lensPath([ip]),
-  mode: (ip: string) => lensPath([ip, 'mode']),
-  selectedIP: (ip: string) => lensPath([ip, 'selectedIP']),
-  selectedLinodeID: (ip: string) => lensPath([ip, 'selectedLinodeID']),
-  selectedLinodesIPs: (ip: string) => lensPath([ip, 'selectedLinodesIPs']),
-  sourceIP: (ip: string) => lensPath([ip, 'sourceIP']),
-  sourceIPsLinodeID: (ip: string) => lensPath([ip, 'sourceIPsLinodeID']),
-};
-
-const setMode = (ip: string, mode: Mode) => set(L.mode(ip), mode);
-
-const setSelectedIP = (ip: string, selectedIP: string) =>
-  set(L.selectedIP(ip), selectedIP);
-
-const setSelectedLinodeID = (ip: string, selectedLinodeID: number | string) =>
-  set(L.selectedLinodeID(ip), selectedLinodeID);
-
-const updateSelectedLinodesIPs = (ip: string, fn: (s: string[]) => string[]) =>
-  over(L.selectedLinodesIPs(ip), fn);
-
-const updateSelectedIP = (ip: string, fn: (a: string) => string | undefined) =>
-  over(L.selectedIP(ip), fn);
-
-const updateIPState = (ip: string, fn: (v: IPStates) => IPStates) =>
-  over(L.ip(ip), fn);
-
-const isMoving = (mode: Mode) => mode === 'move';
-
-const isSwapping = (mode: Mode) => mode === 'swap';
-
-const isNone = (mode: Mode) => mode === 'none';
 
 const isNoneState = (state: Move | NoAction | Swap): state is NoAction =>
   state.mode === 'none';
@@ -636,5 +651,3 @@ const createRequestData = (state: IPRowState, region: string) => ({
   assignments: Object.values(state).reduce(stateToAssignmentsReducer, []),
   region,
 });
-
-export default LinodeNetworkingIPTransferPanel;

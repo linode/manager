@@ -1,16 +1,15 @@
+import { Box, IconButton } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useArgs } from '@storybook/client-api';
 import * as React from 'react';
+import { useArgs } from 'storybook/preview-api';
 
-import { Box } from 'src/components/Box';
-import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
-import { TopMenuIcon } from 'src/features/TopMenu/TopMenuIcon';
+import { TopMenuTooltip } from 'src/features/TopMenu/TopMenuTooltip';
 
 import { SideMenu } from './SideMenu';
 
 import type { SideMenuProps } from './SideMenu';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<SideMenuProps> = {
   render: (args) => {
@@ -34,9 +33,9 @@ export const Default: StoryObj<SideMenuProps> = {
               open={args.open || open}
             />
           </Box>
-          <Box sx={{ ml: '200px' }}>
+          <Box sx={{ ml: '230px' }}>
             <Hidden mdDown>
-              <TopMenuIcon key={navHoverText} title={navHoverText}>
+              <TopMenuTooltip key={navHoverText} title={navHoverText}>
                 <IconButton
                   aria-label="open menu"
                   color="inherit"
@@ -46,10 +45,10 @@ export const Default: StoryObj<SideMenuProps> = {
                 >
                   <MenuIcon />
                 </IconButton>
-              </TopMenuIcon>
+              </TopMenuTooltip>
             </Hidden>
             <Hidden mdUp>
-              <TopMenuIcon key={navHoverText} title={navHoverText}>
+              <TopMenuTooltip key={navHoverText} title={navHoverText}>
                 <IconButton
                   aria-label="open menu"
                   color="inherit"
@@ -58,7 +57,7 @@ export const Default: StoryObj<SideMenuProps> = {
                 >
                   <MenuIcon />
                 </IconButton>
-              </TopMenuIcon>
+              </TopMenuTooltip>
             </Hidden>
           </Box>
         </Box>

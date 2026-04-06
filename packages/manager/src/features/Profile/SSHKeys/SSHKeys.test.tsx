@@ -1,9 +1,9 @@
+import { sshKeyFactory } from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { sshKeyFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SSHKeys } from './SSHKeys';
@@ -16,8 +16,8 @@ describe('SSHKeys', () => {
     const sshKeys = sshKeyFactory.buildList(5);
 
     server.use(
-      rest.get('*/profile/sshkeys', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(sshKeys)));
+      http.get('*/profile/sshkeys', () => {
+        return HttpResponse.json(makeResourcePage(sshKeys));
       })
     );
 

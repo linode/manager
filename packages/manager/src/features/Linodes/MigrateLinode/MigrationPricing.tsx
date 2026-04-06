@@ -1,15 +1,15 @@
-import { PriceObject } from '@linode/api-v4';
-import { styled } from '@mui/material/styles';
+import { Box, Typography } from '@linode/ui';
+import { isNumber } from '@linode/utilities';
 import { useTheme } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import { Typography } from 'src/components/Typography';
 
 import { StyledSpan } from './ConfigureForm.styles';
 
 import type { MigratePricePanelType } from './ConfigureForm';
+import type { PriceObject } from '@linode/api-v4';
 
 export interface MigrationPricingProps {
   backups: 'disabled' | PriceObject | undefined;
@@ -24,8 +24,17 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
   const theme = useTheme();
   const priceFontSize = `${theme.typography.body1.fontSize}`;
 
-  return monthly && hourly && backups ? (
-    <StyledMigrationPricingContainer panelType={panelType}>
+  const shouldShowPrice =
+    isNumber(monthly) && isNumber(hourly) && backups !== undefined;
+
+  const shouldShowBackupsPrice =
+    backups && backups !== 'disabled' && backups.monthly !== null;
+
+  return shouldShowPrice ? (
+    <StyledMigrationPricingContainer
+      data-testid="migration-pricing"
+      panelType={panelType}
+    >
       <StyledSpan>{currentPanel ? 'Current' : 'New'} Price</StyledSpan>
       <Box
         alignItems="baseline"
@@ -44,16 +53,16 @@ export const MigrationPricing = (props: MigrationPricingProps) => {
           interval="hour"
           price={hourly}
         />
-        {backups !== 'disabled' && backups?.monthly && (
+        {shouldShowBackupsPrice && (
           <>
             &nbsp;
-            <Typography fontFamily={theme.font.bold} fontSize={priceFontSize}>
+            <Typography fontSize={priceFontSize} sx={{ font: theme.font.bold }}>
               | Backups&nbsp;
             </Typography>
             <DisplayPrice
               fontSize={priceFontSize}
               interval="month"
-              price={backups.monthly}
+              price={backups.monthly ?? '--.--'}
             />
           </>
         )}

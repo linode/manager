@@ -1,7 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
+
+import { DevToolSelect } from './components/DevToolSelect';
 
 interface EnvironmentOption {
   apiRoot: string;
@@ -35,10 +37,10 @@ export const getOptions = (env: Partial<ImportMetaEnv>) => {
     return [
       ...acc,
       {
-        apiRoot: env[`${base}_API_ROOT`] ?? '',
-        clientID: env[`${base}_CLIENT_ID`] ?? '',
-        label: env[thisEnvVariable] ?? '',
-        loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
+        apiRoot: (env as any)[`${base}_API_ROOT`] ?? '',
+        clientID: (env as any)[`${base}_CLIENT_ID`] ?? '',
+        label: (env as any)[thisEnvVariable] ?? '',
+        loginRoot: (env as any)[`${base}_LOGIN_ROOT`] ?? '',
       },
     ];
   }, []);
@@ -53,22 +55,26 @@ export const EnvironmentToggleTool = () => {
 
   const localStorageEnv = storage.devToolsEnv.get();
   const currentEnvLabel = localStorageEnv?.label;
+  const selectedOptionLabel = options[selectedOption]?.label;
 
   return (
     <Grid container>
-      <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Environment</h4>
-      </Grid>
-      <Grid xs={12}>
-        <select
-          onBlur={(e) => {
+      <Grid
+        size={12}
+        sx={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+        }}
+      >
+        <DevToolSelect
+          defaultValue={currentEnvLabel}
+          onChange={(e) => {
             const selectedIndex = options.findIndex(
               (o) => o.label === e.target.value
             );
             setSelectedOption(Math.max(selectedIndex, 0));
           }}
-          defaultValue={currentEnvLabel}
-          style={{ marginRight: 8 }}
+          style={{ marginRight: 8, maxWidth: '100%' }}
         >
           <option disabled value="">
             Select an environment
@@ -81,8 +87,10 @@ export const EnvironmentToggleTool = () => {
               </option>
             );
           })}
-        </select>
+        </DevToolSelect>
         <button
+          className="dev-tools-button green"
+          disabled={selectedOptionLabel === currentEnvLabel}
           onClick={() => {
             const selected = options[selectedOption];
             if (selected) {

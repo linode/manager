@@ -1,22 +1,22 @@
+import { Box, Drawer } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import withLongviewStats, {
+import withLongviewStats from 'src/containers/longview.stats.container';
+
+import { LongviewPackageRow } from './LongviewPackageRow';
+
+import type { LongviewPackage } from './request.types';
+import type {
   DispatchProps,
   LVClientData,
 } from 'src/containers/longview.stats.container';
-
-import { LongviewPackageRow } from './LongviewPackageRow';
-import { LongviewPackage } from './request.types';
 
 interface Props {
   clientID: number;
@@ -25,19 +25,18 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & DispatchProps & LVClientData;
+interface LongviewPackageDrawerProps
+  extends Props,
+    DispatchProps,
+    LVClientData {}
 
 export const LongviewPackageDrawer = withLongviewStats<Props>(
   (own) => own.clientID
-)((props: CombinedProps) => {
+)((props: LongviewPackageDrawerProps) => {
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
   const theme = useTheme();
 
-  const lvPackages: LongviewPackage[] = pathOr(
-    [],
-    ['Packages'],
-    longviewClientData
-  );
+  const lvPackages: LongviewPackage[] = longviewClientData?.Packages ?? [];
 
   return (
     <Drawer
@@ -51,7 +50,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
             <TableCell style={{ width: '40%' }}>Package</TableCell>
             <TableCell>
               Installed Version{` `}/{` `}
-              <Box component="span" color={theme.color.green}>
+              <Box color={theme.color.green} component="span">
                 Latest Version
               </Box>
             </TableCell>

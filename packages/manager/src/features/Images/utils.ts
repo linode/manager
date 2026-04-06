@@ -1,27 +1,120 @@
-import { useGrants, useProfile } from 'src/queries/profile';
+import { useRegionsQuery } from '@linode/queries';
 
-import type { Image, Linode } from '@linode/api-v4';
+import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
+import { useFlags } from 'src/hooks/useFlags';
 
-export const useImageAndLinodeGrantCheck = () => {
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+import type { Event, Image, Linode } from '@linode/api-v4';
 
-  const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+export type ImageLibraryType =
+  | 'owned-by-me'
+  | 'recovery-images'
+  | 'shared-with-me';
 
-  // Unrestricted users can create Images from any disk;
-  // Restricted users need read_write on the Linode they're trying to Imagize
-  // (in addition to the global add_images grant).
-  const permissionedLinodes = profile?.restricted
-    ? grants?.linode
-        .filter((thisGrant) => thisGrant.permissions === 'read_write')
-        .map((thisGrant) => thisGrant.id) ?? []
-    : null;
+export type ShareGroupsType =
+  | 'joined-groups'
+  | 'membership-requests'
+  | 'owned-groups';
 
-  return { canCreateImage, permissionedLinodes };
-};
+/**
+ * Generic configuration for image sub-tabs within the Images feature for Image Library and Share Groups.
+ */
+export interface ImageSubTab<T> {
+  /** Whether this tab represents a beta feature */
+  isBeta?: boolean;
+  /** Pendo ID for the tab, used for analytics tracking */
+  pendoId?: string;
+  /** Display title for the tab */
+  title: string;
+  /** The type this tab represents */
+  type: T;
+}
 
 export const getImageLabelForLinode = (linode: Linode, images: Image[]) => {
   const image = images?.find((image) => image.id === linode.image);
   return image?.label ?? linode.image;
+};
+
+export const getEventsForImages = (images: Image[], events: Event[]) =>
+  Object.fromEntries(
+    images.map(({ id: imageId }) => [
+      imageId,
+      events.find(
+        (thisEvent) =>
+          `private/${thisEvent.secondary_entity?.id}` === imageId ||
+          (`private/${thisEvent.entity?.id}` === imageId &&
+            thisEvent.status === 'failed')
+      ),
+    ])
+  );
+
+/**
+ * We don't have a nice region capability for Images
+ * so we can use this useRegionsQuery wrapper to do
+ * some filtering to get compatible regions.
+ */
+export const useRegionsThatSupportImageStorage = () => {
+  const { data: regions } = useRegionsQuery();
+
+  return {
+    regions:
+      regions?.filter(
+        (r) =>
+          r.capabilities.includes('Object Storage') &&
+          !DISALLOWED_IMAGE_REGIONS.includes(r.id)
+      ) ?? [],
+  };
+};
+
+/**
+ * Returns whether or not features related to the Private Image Sharing project
+ * should be enabled.
+ *
+ * Currently, this just uses the `privateImageSharing` feature flag as a source of truth,
+ * but will eventually also look at account capabilities.
+ */
+
+export const useIsPrivateImageSharingEnabled = () => {
+  const flags = useFlags();
+
+  // @TODO Private Image Sharing: check for customer tag/account capability when it exists
+  return { isPrivateImageSharingEnabled: flags.privateImageSharing ?? false };
+};
+
+/**
+ * Returns the index of the currently selected sub-tab from an array of sub-tabs.
+ *
+ * @param subTabs - Array of sub-tabs with `type` and `title` properties.
+ * @param selectedTab - The type of currently selected sub-tab.
+ * Currently, this value comes from 'imageType' param on the Image Library tab.
+ *
+ * @returns the index of the selected sub-tab
+ */
+export const getSubTabIndex = (
+  subTabs: ImageSubTab<ImageLibraryType | ShareGroupsType>[],
+  selectedTab: ImageLibraryType | ShareGroupsType | undefined
+) => {
+  if (selectedTab === undefined) {
+    return 0;
+  }
+
+  const tabIndex = subTabs.findIndex((tab) => tab.type === selectedTab);
+
+  if (tabIndex === -1) {
+    return 0;
+  }
+
+  return tabIndex;
+};
+
+export const getImageTypeToImageLibraryType = (
+  imageType: Image['type']
+): ImageLibraryType => {
+  switch (imageType) {
+    case 'automatic':
+      return 'recovery-images';
+    case 'manual':
+      return 'owned-by-me';
+    default:
+      return 'shared-with-me';
+  }
 };

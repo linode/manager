@@ -1,0 +1,327 @@
+import { useAccount, useProfile } from '@linode/queries';
+import {
+  BetaChip,
+  Box,
+  Divider,
+  NewFeatureChip,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { styled } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Popover from '@mui/material/Popover';
+import { useTheme } from '@mui/material/styles';
+import React from 'react';
+
+import { Link } from 'src/components/Link';
+import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
+import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
+import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
+import {
+  useIsIAMDelegationEnabled,
+  useIsIAMEnabled,
+} from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import {
+  sendSwitchAccountEvent,
+  sendSwitchToParentAccountEvent,
+} from 'src/utilities/analytics/customEventAnalytics';
+import { getStorage } from 'src/utilities/storage';
+
+import { getCompanyNameOrEmail } from './utils';
+
+interface UserMenuPopoverProps {
+  anchorEl: HTMLElement | null;
+  isDrawerOpen: boolean;
+  onClose: () => void;
+  onDrawerOpen: (open: boolean) => void;
+}
+
+interface MenuLink {
+  display: string;
+  hide?: boolean;
+  isBeta?: boolean;
+  isNew?: boolean;
+  to: string;
+}
+
+export const UserMenuPopover = (props: UserMenuPopoverProps) => {
+  const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
+  const sessionContext = React.useContext(switchAccountSessionContext);
+  const { limitsEvolution, iamLimitedAvailabilityBadges } = useFlags();
+  const {
+    isProxyOrDelegateUserType,
+    isParentUserType,
+    isDelegateUserType,
+    isProxyUserType,
+    profile,
+  } = useDelegationRole();
+  const theme = useTheme();
+
+  const { handleSwitchToParentAccount, isSubmitting } =
+    useSwitchToParentAccount({
+      isDelegateUserType,
+      isProxyUserType,
+      onClose,
+      onTokenExpired: () => {
+        sessionContext.updateState({
+          isOpen: true,
+        });
+      },
+    });
+
+  const { data: account } = useAccount();
+  const { isIAMEnabled } = useIsIAMEnabled();
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
+  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
+
+  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
+    ? isParentUserType || isProxyOrDelegateUserType
+    : (isParentUserType && !isChildAccountAccessRestricted) ||
+      isProxyOrDelegateUserType;
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'user-menu-popover' : undefined;
+
+  const profileLinks: MenuLink[] = [
+    {
+      display: 'Display',
+      to: '/profile/display',
+    },
+    { display: 'Login & Authentication', to: '/profile/auth' },
+    { display: 'SSH Keys', to: '/profile/keys' },
+    { display: 'LISH Console Settings', to: '/profile/lish' },
+    {
+      display: 'API Tokens',
+      to: '/profile/tokens',
+    },
+    { display: 'OAuth Apps', to: '/profile/clients' },
+    {
+      display: 'Preferences',
+      to: '/profile/preferences',
+    },
+    {
+      display: 'Referrals',
+      to: '/profile/referrals',
+    },
+    { display: 'Log Out', to: '/logout' },
+  ];
+
+  // Used for fetching parent profile and account data by making a request with the parent's token.
+  const proxyHeaders = isProxyOrDelegateUserType
+    ? {
+        Authorization: getStorage(`authentication/parent_token/token`),
+      }
+    : undefined;
+
+  const companyNameOrEmail = getCompanyNameOrEmail({
+    company: account?.company,
+    profile,
+  });
+  const { data: parentProfile } = useProfile({ headers: proxyHeaders });
+  const userName =
+    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
+
+  const { isParentTokenExpired } = useIsParentTokenExpired({
+    isProxyOrDelegateUserType,
+  });
+
+  const accountLinks: MenuLink[] = React.useMemo(
+    () => [
+      {
+        display: 'Billing',
+        to: '/billing',
+      },
+      {
+        display: isIAMEnabled ? 'Identity & Access' : 'Users & Grants',
+        to: isIAMEnabled ? '/iam' : '/users',
+        isNew: isIAMEnabled && iamLimitedAvailabilityBadges,
+      },
+      {
+        display: 'Quotas',
+        hide: !limitsEvolution?.enabled,
+        to: '/quotas',
+      },
+      {
+        display: 'Login History',
+        to: '/login-history',
+      },
+      {
+        display: 'Service Transfers',
+        to: '/service-transfers',
+      },
+      {
+        display: 'Maintenance',
+        to: '/maintenance',
+      },
+      {
+        display: 'Account Settings',
+        to: '/account-settings',
+      },
+    ],
+    [isIAMEnabled, limitsEvolution, iamLimitedAvailabilityBadges]
+  );
+
+  const renderLink = (link: MenuLink) => {
+    if (link.hide) {
+      return null;
+    }
+
+    return (
+      <Grid key={link.display} size={12}>
+        <Link
+          data-testid={`menu-item-${link.display}`}
+          onClick={onClose}
+          style={{
+            color: theme.tokens.alias.Content.Text.Link.Default,
+            font: theme.tokens.alias.Typography.Body.Semibold,
+          }}
+          to={link.to}
+        >
+          {link.display}
+        </Link>
+      </Grid>
+    );
+  };
+
+  const handleAccountSwitch = () => {
+    if (isParentTokenExpired) {
+      return sessionContext.updateState({
+        isOpen: true,
+      });
+    }
+
+    if (isDelegateUserType) {
+      sendSwitchToParentAccountEvent();
+      return handleSwitchToParentAccount();
+    }
+
+    onDrawerOpen(true);
+  };
+
+  return (
+    <Popover
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        horizontal: 'right',
+        vertical: 'bottom',
+      }}
+      data-testid={id}
+      id={id}
+      marginThreshold={0}
+      onClose={onClose}
+      open={open}
+      slotProps={{
+        paper: {
+          sx: (theme) => ({
+            backgroundColor: theme.tokens.alias.Background.Normal,
+            paddingX: theme.tokens.spacing.S24,
+            paddingY: theme.tokens.spacing.S16,
+            maxWidth: 304,
+          }),
+        },
+      }}
+      // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
+      sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
+    >
+      <Stack
+        data-qa-user-menu
+        gap={(theme) => theme.tokens.spacing.S16}
+        minWidth={250}
+      >
+        <Stack
+          display="flex"
+          gap={(theme) => (companyNameOrEmail ? theme.tokens.spacing.S8 : 0)}
+        >
+          {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail && (
+            <Typography
+              sx={(theme) => ({
+                color: theme.tokens.alias.Content.Text.Primary.Default,
+                font: theme.tokens.alias.Typography.Label.Semibold.S,
+              })}
+            >
+              Current account:
+            </Typography>
+          )}
+          <Typography
+            sx={(theme) => ({
+              color: theme.tokens.alias.Content.Text.Primary.Default,
+              font: theme.tokens.alias.Typography.Label.Bold.L,
+              overflowWrap: 'break-word',
+            })}
+          >
+            {canSwitchBetweenParentOrProxyAccount
+              ? companyNameOrEmail || null
+              : userName}
+          </Typography>
+          {canSwitchBetweenParentOrProxyAccount && (
+            <SwitchAccountButton
+              buttonType="outlined"
+              data-testid="switch-account-button"
+              disabled={isSubmitting}
+              onClick={() => {
+                if (!isDelegateUserType) {
+                  sendSwitchAccountEvent('User Menu');
+                }
+                handleAccountSwitch();
+              }}
+            />
+          )}
+        </Stack>
+        <Box>
+          <Heading>My Profile</Heading>
+          <Divider />
+          <Grid columnSpacing={2} container rowSpacing={1}>
+            <Grid container direction="column" size={6} wrap="nowrap">
+              {profileLinks.slice(0, 4).map(renderLink)}
+            </Grid>
+            <Grid container direction="column" size={6} wrap="nowrap">
+              {profileLinks.slice(4).map(renderLink)}
+            </Grid>
+          </Grid>
+        </Box>
+        <Box>
+          <Heading>Administration</Heading>
+          <Divider />
+          <Stack
+            gap={(theme) => theme.tokens.spacing.S8}
+            mt={(theme) => theme.tokens.spacing.S8}
+          >
+            {accountLinks.map((menuLink) =>
+              menuLink.hide ? null : (
+                <Link
+                  data-testid={`menu-item-${menuLink.display}`}
+                  key={menuLink.display}
+                  onClick={onClose}
+                  style={{
+                    color: theme.tokens.alias.Content.Text.Link.Default,
+                    font: theme.tokens.alias.Typography.Body.Semibold,
+                  }}
+                  to={menuLink.to}
+                >
+                  {menuLink.display}
+                  {menuLink?.isBeta ? <BetaChip component="span" /> : null}
+                  {menuLink?.isNew ? <NewFeatureChip component="span" /> : null}
+                </Link>
+              )
+            )}
+          </Stack>
+        </Box>
+      </Stack>
+    </Popover>
+  );
+};
+
+const Heading = styled(Typography)(({ theme }) => ({
+  color: theme.tokens.alias.Content.Text.Primary.Default,
+  font: theme.tokens.alias.Typography.Heading.Overline,
+  letterSpacing: theme.tokens.alias.Typography.Heading.OverlineLetterSpacing,
+  textTransform: theme.tokens.alias.Typography.Heading.OverlineTextCase,
+}));

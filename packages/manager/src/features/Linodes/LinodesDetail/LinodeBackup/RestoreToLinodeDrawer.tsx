@@ -1,23 +1,26 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import {
+  useLinodeBackupRestoreMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Checkbox,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Notice,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Checkbox } from 'src/components/Checkbox';
-import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { Notice } from 'src/components/Notice/Notice';
-import { resetEventsPolling } from 'src/eventsPolling';
-import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
+import { useEventsPollingActions } from 'src/queries/events/events';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { Linode, LinodeBackup } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   backup: LinodeBackup | undefined;
@@ -31,21 +34,28 @@ export const RestoreToLinodeDrawer = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: linode } = useLinodeQuery(linodeId, open);
 
+  const { checkForNewEvents } = useEventsPollingActions();
+
+  const regionFilter = {
+    region: linode?.region,
+  };
   const {
-    data: linodes,
-    error: linodeError,
-    isLoading: linodesLoading,
-  } = useAllLinodesQuery(
-    {},
-    {
-      region: linode?.region,
-    },
-    open && linode !== undefined
+    data: availableLinodes,
+    isLoading: availableLinodesLoading,
+    error: availableLinodesError,
+  } = useGetAllUserEntitiesByPermission<Linode>({
+    entityType: 'linode',
+    permission: 'update_linode',
+    enabled: open,
+    filter: regionFilter,
+  });
+  const linodes = availableLinodes?.filter(
+    (l: Linode) => l.region === linode?.region
   );
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: restoreBackup,
     reset: resetMutation,
   } = useLinodeBackupRestoreMutation();
@@ -67,7 +77,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         `Started restoring Linode ${selectedLinodeOption?.label} from a backup`,
         { variant: 'info' }
       );
-      resetEventsPolling();
+      checkForNewEvents();
       onClose();
     },
   });
@@ -100,19 +110,22 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         {Boolean(errorMap.none) && (
           <Notice variant="error">{errorMap.none}</Notice>
         )}
-        <Select
+        <Autocomplete
+          autoHighlight
+          disableClearable
+          errorText={availableLinodesError?.[0].reason ?? errorMap.linode_id}
+          label="Linode"
+          loading={availableLinodesLoading}
+          onChange={(_, selected) =>
+            formik.setFieldValue('linode_id', selected?.value)
+          }
+          options={linodeOptions}
+          placeholder="Select a Linode"
           textFieldProps={{
             dataAttrs: {
               'data-qa-select-linode': true,
             },
           }}
-          errorText={linodeError?.[0].reason ?? errorMap.linode_id}
-          isClearable={false}
-          isLoading={linodesLoading}
-          label="Linode"
-          onChange={(item) => formik.setFieldValue('linode_id', item.value)}
-          options={linodeOptions}
-          placeholder="Select a Linode"
           value={selectedLinodeOption}
         />
         <FormControl sx={{ paddingLeft: 0.4 }}>
@@ -136,13 +149,13 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         )}
         {formik.values.overwrite && (
           <Notice
+            spacingBottom={0}
+            spacingTop={12}
             text={`This will delete all disks and configs on ${
               selectedLinodeOption
                 ? `Linode ${selectedLinodeOption.label}`
                 : 'the selcted Linode'
             }`}
-            spacingBottom={0}
-            spacingTop={12}
             variant="warning"
           />
         )}
@@ -150,7 +163,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'restore-submit',
             label: 'Restore',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{

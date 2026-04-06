@@ -1,30 +1,53 @@
-import { LinodeBackupsResponse } from '@linode/api-v4';
+import { backupFactory, linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { backupFactory, linodeFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeBackups } from './LinodeBackups';
 
-// I'm so sorry, but I don't know a better way to mock react-router-dom params.
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
+import type { LinodeBackupsResponse } from '@linode/api-v4';
+
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn(),
+  usePermissions: vi.fn(() => ({
+    data: {
+      list_linode_backups: true,
+      create_linode_backup_snapshot: true,
+      cancel_linode_backups: true,
+      enable_linode_backups: true,
+      restore_linode_backup: true,
+    },
+  })),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useParams: vi.fn(() => ({ linodeId: 1 })),
+    useParams: queryMocks.useParams,
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.usePermissions,
+}));
+
 describe('LinodeBackups', () => {
-  it('renders a list of different types of backups if backups are enabled', async () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      linodeId: '1',
+    });
+  });
+
+  it('renders a list of different types of backups if backups are enabled and the user has permission', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
-        return res(
-          ctx.json(linodeFactory.build({ backups: { enabled: true }, id: 1 }))
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ backups: { enabled: true }, id: 1 })
         );
       }),
-      rest.get('*/linode/instances/1/backups', (req, res, ctx) => {
+      http.get('*/linode/instances/1/backups', () => {
         const response: LinodeBackupsResponse = {
           automatic: backupFactory.buildList(1, { label: null, type: 'auto' }),
           snapshot: {
@@ -41,7 +64,7 @@ describe('LinodeBackups', () => {
             }),
           },
         };
-        return res(ctx.json(response));
+        return HttpResponse.json(response);
       })
     );
 
@@ -62,9 +85,9 @@ describe('LinodeBackups', () => {
 
   it('renders BackupsPlaceholder is backups are not enabled on this linode', async () => {
     server.use(
-      rest.get('*/linode/instances/1', (req, res, ctx) => {
-        return res(
-          ctx.json(linodeFactory.build({ backups: { enabled: false }, id: 1 }))
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ backups: { enabled: false }, id: 1 })
         );
       })
     );

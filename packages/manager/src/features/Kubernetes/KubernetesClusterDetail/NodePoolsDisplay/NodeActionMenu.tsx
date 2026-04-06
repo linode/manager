@@ -1,34 +1,33 @@
-import { Theme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { makeStyles, useTheme } from '@mui/styles';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
+import type { Theme } from '@mui/material/styles';
+
 interface Props {
   instanceLabel?: string;
+  isLkeClusterRestricted: boolean;
   nodeId?: string;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-const useStyles = makeStyles(() => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-}));
-
-export const NodeActionMenu: React.FC<Props> = (props) => {
-  const { instanceLabel, nodeId, openRecycleNodeDialog } = props;
+export const NodeActionMenu = (props: Props) => {
+  const {
+    instanceLabel,
+    isLkeClusterRestricted,
+    nodeId,
+    openRecycleNodeDialog,
+  } = props;
   const theme = useTheme<Theme>();
-  const classes = useStyles();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
     {
-      disabled: !nodeId || !instanceLabel,
+      disabled: !nodeId || !instanceLabel || isLkeClusterRestricted,
       onClick: () => {
         if (!nodeId || !instanceLabel) {
           return;
@@ -40,7 +39,7 @@ export const NodeActionMenu: React.FC<Props> = (props) => {
   ];
 
   return (
-    <div className={classes.root}>
+    <Box alignItems="center" display="flex" justifyContent="flex-end">
       {!matchesSmDown ? (
         actions.map((action) => (
           <InlineMenuAction
@@ -56,8 +55,6 @@ export const NodeActionMenu: React.FC<Props> = (props) => {
           ariaLabel={`Action menu for Node ${instanceLabel}`}
         />
       )}
-    </div>
+    </Box>
   );
 };
-
-export default React.memo(NodeActionMenu);

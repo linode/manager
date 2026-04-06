@@ -1,76 +1,113 @@
-import { Theme } from '@mui/material/styles';
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
+import {
+  ErrorOutlinedIcon,
+  InfoOutlinedIcon,
+  SuccessOutlinedIcon,
+  TipOutlinedIcon,
+  WarningOutlinedIcon,
+} from '@linode/ui';
+import { styled } from '@mui/material/styles';
+import { closeSnackbar, MaterialDesignContent } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  error: {
-    borderLeft: `6px solid ${theme.palette.error.dark}`,
-  },
-  info: {
-    borderLeft: `6px solid ${theme.palette.primary.main}`,
-  },
-  root: {
-    '& div': {
-      backgroundColor: `${theme.bg.white} !important`,
-      color: theme.palette.text.primary,
-      fontSize: '0.875rem',
+import type { Theme } from '@mui/material/styles';
+import type { SnackbarProviderProps } from 'notistack';
+
+// Add override for "tip" variant which is Akamai specific and not built into Notistack
+declare module 'notistack' {
+  interface VariantOverrides {
+    tip: true;
+  }
+}
+
+const StyledMaterialDesignContent = styled(MaterialDesignContent)(
+  ({ theme }: { theme: Theme }) => ({
+    '#notistack-snackbar': {
+      alignItems: 'flex-start',
+      position: 'relative',
     },
-    [theme.breakpoints.down('md')]: {
-      '& .SnackbarItem-contentRoot': {
-        flexWrap: 'nowrap',
-      },
-      '& .SnackbarItem-message': {
-        display: 'unset',
-      },
-    },
-    [theme.breakpoints.down('sm')]: {
-      '& .SnackbarItem-action': {
-        paddingLeft: 0,
+    '#notistack-snackbar > svg': {
+      position: 'absolute',
+      left: '-48px',
+      top: 6,
+      '& path': {
+        fill: theme.notificationToast.default.icon,
       },
     },
-  },
-  success: {
-    borderLeft: `6px solid ${theme.color.green}`,
-  },
-  warning: {
-    borderLeft: `6px solid ${theme.palette.warning.dark}`,
-  },
-}));
+    '&.notistack-MuiContent': {
+      color: theme.notificationToast.default.color,
+      flexWrap: 'unset',
+      borderRadius: 0,
+      paddingLeft: theme.spacingFunction(12),
+      paddingRight: theme.spacingFunction(12),
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '400px',
+      },
+    },
+    '&.notistack-MuiContent-default': {
+      backgroundColor: theme.notificationToast.default.backgroundColor,
+      borderLeft: theme.notificationToast.default.borderLeft,
+    },
+    '&.notistack-MuiContent-error': {
+      backgroundColor: theme.notificationToast.error.backgroundColor,
+      borderLeft: theme.notificationToast.error.borderLeft,
+    },
+    '&.notistack-MuiContent-info, &.notistack-MuiContent-tip': {
+      backgroundColor: theme.notificationToast.info.backgroundColor,
+      borderLeft: theme.notificationToast.info.borderLeft,
+    },
+    '&.notistack-MuiContent-success': {
+      backgroundColor: theme.notificationToast.success.backgroundColor,
+      borderLeft: theme.notificationToast.success.borderLeft,
+    },
+    '&.notistack-MuiContent-warning': {
+      backgroundColor: theme.notificationToast.warning.backgroundColor,
+      borderLeft: theme.notificationToast.warning.borderLeft,
+      '& #notistack-snackbar svg > path': {
+        fill: theme.notificationToast.warning.icon,
+      },
+    },
+    '& #notistack-snackbar + div': {
+      alignSelf: 'flex-start',
+      paddingLeft: theme.spacingFunction(12),
+    },
+  })
+);
 
 export const Snackbar = (props: SnackbarProviderProps) => {
-  const { classes } = useStyles();
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
    */
-  const notistackRef: React.Ref<SnackbarProvider> = React.createRef();
-  const onClickDismiss = (key: number | string | undefined) => () => {
-    if (notistackRef.current) {
-      notistackRef.current.closeSnackbar(key);
-    }
-  };
 
   const { children, ...rest } = props;
 
   return (
     <SnackbarProvider
-      ref={notistackRef}
+      iconVariant={{
+        default: <InfoOutlinedIcon />,
+        info: <InfoOutlinedIcon />,
+        tip: <TipOutlinedIcon />,
+        warning: <WarningOutlinedIcon />,
+        error: <ErrorOutlinedIcon />,
+        success: <SuccessOutlinedIcon />,
+      }}
       {...rest}
-      action={(key) => (
+      action={(snackbarId) => (
         <CloseSnackbar
-          onClick={onClickDismiss(key)}
+          onClick={() => closeSnackbar(snackbarId)}
           text="Dismiss Notification"
         />
       )}
-      classes={{
-        root: classes.root,
-        variantError: classes.error,
-        variantInfo: classes.info,
-        variantSuccess: classes.success,
-        variantWarning: classes.warning,
+      Components={{
+        default: StyledMaterialDesignContent,
+        info: StyledMaterialDesignContent,
+        tip: StyledMaterialDesignContent,
+        warning: StyledMaterialDesignContent,
+        error: StyledMaterialDesignContent,
+        success: StyledMaterialDesignContent,
       }}
     >
       {children}

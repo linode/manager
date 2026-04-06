@@ -1,6 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { ErrorEvent } from '@sentry/react';
 
-import { normalizeErrorMessage } from './initSentry';
+import { beforeSend, normalizeErrorMessage } from './initSentry';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 const INVALID_TOKEN = 'Invalid Token';
 
@@ -19,5 +21,39 @@ describe('normalizeErrorMessage', () => {
       '["Invalid Token"]'
     );
     expect(normalizeErrorMessage(null as any)).toBe('null');
+  });
+});
+
+describe('beforeSend', () => {
+  it('should return null when user agent contains Catchpoint', () => {
+    const mockSentryEvent: ErrorEvent = {
+      message: 'Some error occurred',
+      request: {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; Catchpoint)',
+        },
+      },
+      type: undefined,
+    };
+
+    const result = beforeSend(mockSentryEvent);
+    expect(result).toBeNull();
+  });
+
+  it('should process normal events when user agent does not contain Catchpoint', () => {
+    const mockSentryEvent: ErrorEvent = {
+      message: 'Some error occurred',
+      request: {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        },
+      },
+      type: undefined,
+    };
+
+    const result = beforeSend(mockSentryEvent);
+    expect(result).not.toBeNull();
+    expect(result?.message).toBe('Some error occurred');
   });
 });

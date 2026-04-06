@@ -1,42 +1,46 @@
+import { queryClientFactory } from '@linode/queries';
+import { CssBaseline } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
-  MatcherFunction,
-  RenderResult,
-  render,
-  screen,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router';
+import { render } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
-import { Formik, FormikConfig, FormikValues } from 'formik';
-import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
+import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
-import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { FormProvider, useForm } from 'react-hook-form';
+import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { MemoryRouterProps } from 'react-router';
-import { MemoryRouter } from 'react-router-dom';
-import { DeepPartial } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { FlagSet } from 'src/featureFlags';
-import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
-import {
-  ApplicationState,
-  ApplicationStore,
-  defaultState,
-  storeFactory,
-} from 'src/store';
+import { defaultState, storeFactory } from 'src/store';
+
+import { mergeDeepRight } from './mergeDeepRight';
+
+import type { QueryClient } from '@tanstack/react-query';
+import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
+import type { MatcherFunction } from '@testing-library/react';
+import type { DeepPartial } from 'redux';
+import type { FlagSet } from 'src/featureFlags';
+import type { ApplicationState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
+      addEventListener: () => vi.fn(),
       addListener: vi.fn(),
       matches,
       media: query,
       onchange: null,
+      removeEventListener: () => vi.fn(),
       removeListener: vi.fn(),
     };
   });
@@ -62,13 +66,15 @@ export const resizeScreenSize = (width: number) => {
 };
 
 interface Options {
-  MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
+  initialEntries?: string[];
+  initialRoute?: string;
   queryClient?: QueryClient;
+  router?: AnyRouter;
+  routeTree?: AnyRootRoute;
   theme?: 'dark' | 'light';
 }
-
 /**
  * preference state is necessary for all tests using the
  * renderWithTheme() helper function, since the whole app is wrapped with
@@ -82,59 +88,49 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore, queryClient: passedQueryClient } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
-  const storeToPass = customStore
-    ? baseStore(customStore)
-    : storeFactory(queryClient);
+  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
+
+  const uiToRender = ui.children ?? ui;
+
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => uiToRender,
+    getParentRoute: () => rootRoute,
+    path: options.initialRoute ?? '/',
+  });
+
+  const router: AnyRouter =
+    options.router ??
+    createRouter({
+      history: createMemoryHistory({
+        initialEntries: options.initialEntries ?? [options.initialRoute ?? '/'],
+      }),
+      routeTree: rootRoute.addChildren([indexRoute]),
+    });
 
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
-            value={{
-              flagKeyMap: {},
-              flags: options.flags ?? {},
-            }}
+            clientSideID={''}
+            deferInitialization
+            flags={options.flags ?? {}}
+            options={{ bootstrap: options.flags }}
           >
+            <CssBaseline enableColorScheme />
             <SnackbarProvider>
-              <MemoryRouter {...options.MemoryRouter}>
-                {ui.children ?? ui}
-              </MemoryRouter>
+              <RouterProvider router={router} />
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>
       </QueryClientProvider>
     </Provider>
   );
-};
-
-/**
- * Wraps children with just the Redux Store. This is
- * useful for testing React hooks that need to access
- * the Redux store.
- * @example
- * ```ts
- * const { result } = renderHook(() => useOrder(defaultOrder), {
- *   wrapper: wrapWithStore,
- * });
- * ```
- * @param param {object} contains children to render
- * @returns {JSX.Element} wrapped component with Redux available for use
- */
-export const wrapWithStore = (props: {
-  children: React.ReactNode;
-  queryClient?: QueryClient;
-  store?: ApplicationStore;
-}) => {
-  const queryClient = props.queryClient ?? queryClientFactory();
-  const store = props.store ?? storeFactory(queryClient);
-  return <Provider store={store}>{props.children}</Provider>;
 };
 
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting
@@ -149,112 +145,85 @@ export const wrapWithTableBody = (ui: any, options: Options = {}) =>
     options
   );
 
-export const renderWithTheme = (ui: any, options: Options = {}) => {
-  return render(wrapWithTheme(ui, options));
+export const renderWithTheme = (ui: React.ReactNode, options: Options = {}) => {
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => ui,
+    getParentRoute: () => rootRoute,
+    path: options.initialRoute ?? '/',
+  });
+
+  const router: AnyRouter = createRouter({
+    history: createMemoryHistory({
+      initialEntries: (options.initialEntries as string[]) ?? [
+        options.initialRoute ?? '/',
+      ],
+    }),
+    routeTree: rootRoute.addChildren([indexRoute]),
+  });
+
+  const utils = render(wrapWithTheme(ui, { ...options, router }));
+  return {
+    ...utils,
+    rerender: (ui: React.ReactNode) =>
+      utils.rerender(wrapWithTheme(ui, options)),
+    router,
+  };
 };
 
-/**
- * Renders the given UI component within both the Formik and renderWithTheme.
- *
- * @param {React.ReactElement} ui - The React component that you want to render. This component
- *                                  typically will be a part of or a whole form.
- * @param {FormikConfig<T>} configObj - Formik configuration object which includes all the necessary
- *                                      configurations for the Formik context such as initialValues,
- *                                      validationSchema, and onSubmit.
- */
-
-export const renderWithThemeAndFormik = <T extends FormikValues>(
-  ui: React.ReactElement,
-  configObj: FormikConfig<T>
-) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
-
-declare global {
-  // export would be better, but i m aligning with how the namespace is declared by vi-axe
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace vi {
-    interface Matchers<R, T> {
-      toPassAxeCheck(): R;
-    }
-  }
+interface UseFormPropsWithChildren<T extends FieldValues>
+  extends UseFormProps<T> {
+  children: React.ReactNode;
 }
-export const toPassAxeCheck = {
-  toPassAxeCheck(received: RenderResult) {
-    // if ((typeof rec) !== RenderResult){
-    //   return {
-    //     pass:false,
-    //     message:()=> `Expected type RenderResult (result of function call render...)`
-    //   };
-    // }
-    const anchors = received.container.querySelectorAll('a');
-    // Here i want to use forEach but tslint has a bug saying not all my pth return a value,
-    // which is intended as i want to return only if there is an error, if not keep traversing
-    // Also i could have used For .. Of but this was making tslint think e was a string...
-    for (let i = 0; i < anchors.length; i++) {
-      const e = anchors[i];
-      const hasHref = e.hasAttribute('href');
-      if (!hasHref) {
-        return {
-          message: () => `anchors has no href - specify a value for href
-        \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
-          pass: false,
-        };
-      }
-      let hrefAtt = e.getAttribute('href');
-      if (hrefAtt == null) {
-        return {
-          message: () => `anchors has bad href - specify a non null value for href
-        \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
-          pass: false,
-        };
-      }
-      hrefAtt = hrefAtt as string;
-      if (['#', ''].includes(hrefAtt) || hrefAtt.includes('javascript')) {
-        return {
-          message: () => `anchors has invalid href - specify a valid value not #,'' or javascript(void)
-        \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
-          pass: false,
-        };
-      }
-      // ugly trick to bypass tslint inablility to understand it s normal not to return
-      continue;
-    }
-    return { message: () => '!', pass: true };
-  },
+
+const FormContextWrapper = <T extends FieldValues>(
+  props: UseFormPropsWithChildren<T>
+) => {
+  const formMethods = useForm<T>(props);
+
+  return <FormProvider {...formMethods}>{props.children}</FormProvider>;
 };
 
-export const includesActions = (
-  actions: string[],
-  query: any,
-  includes = true
+interface RenderWithThemeAndHookFormOptions<T extends FieldValues> {
+  component: React.ReactElement<any>;
+  options?: Options;
+  useFormOptions?: UseFormProps<T>;
+}
+
+export const wrapWithFormContext = <T extends FieldValues>(
+  options: RenderWithThemeAndHookFormOptions<T>
 ) => {
-  const actionMenuButton = screen.queryByLabelText(/^Action menu for/);
-  if (actionMenuButton) {
-    userEvent.click(actionMenuButton);
-  }
-  for (const action of actions) {
-    includes
-      ? expect(query(action)).toBeInTheDocument()
-      : expect(query(action)).not.toBeInTheDocument();
-  }
+  return (
+    <FormContextWrapper {...options.useFormOptions}>
+      {options.component}
+    </FormContextWrapper>
+  );
+};
+
+export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
+  options: RenderWithThemeAndHookFormOptions<T>
+) => {
+  return renderWithTheme(
+    <FormContextWrapper {...options.useFormOptions}>
+      {options.component}
+    </FormContextWrapper>,
+    options.options
+  );
 };
 
 type Query = (f: MatcherFunction) => HTMLElement;
 
 /** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
-export const withMarkup = (query: Query) => (text: string): HTMLElement =>
-  query((content: string, node: HTMLElement) => {
-    const hasText = (node: HTMLElement) => node.textContent === text;
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child) => !hasText(child as HTMLElement)
-    );
-    return hasText(node) && childrenDontHaveText;
-  });
+export const withMarkup =
+  (query: Query) =>
+  (text: string): HTMLElement =>
+    query((content: string, node: HTMLElement) => {
+      const hasText = (node: HTMLElement) => node.textContent === text;
+      const childrenDontHaveText = Array.from(node.children).every(
+        (child) => !hasText(child as HTMLElement)
+      );
+      return hasText(node) && childrenDontHaveText;
+    });
 
 /**
  * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent
@@ -275,4 +244,44 @@ export const assertOrder = (
   expect(Array.from(elements).map((el) => el.textContent)).toMatchObject(
     expectedOrder
   );
+};
+
+/**
+ * Utility function to query an element inside the Shadow DOM of a web component.
+ * Uses MutationObserver to detect changes in the Shadow DOM and resolve the promise
+ * when the desired element is available.
+ * @param host - The web component host element.
+ * @param selector - The CSS selector for the element to query.
+ * @returns A promise that resolves to the queried element inside the Shadow DOM, or null if not found.
+ */
+export const getShadowRootElement = <T extends Element>(
+  host: HTMLElement,
+  selector: string
+): Promise<null | T> => {
+  return new Promise((resolve) => {
+    const shadowRoot = host.shadowRoot;
+
+    if (!shadowRoot) {
+      resolve(null);
+      return;
+    }
+
+    // Check if the element already exists
+    const element = shadowRoot.querySelector<T>(selector);
+    if (element) {
+      resolve(element);
+      return;
+    }
+
+    // Use MutationObserver to detect changes in the Shadow DOM
+    const observer = new MutationObserver(() => {
+      const element = shadowRoot.querySelector<T>(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
+
+    observer.observe(shadowRoot, { childList: true, subtree: true });
+  });
 };

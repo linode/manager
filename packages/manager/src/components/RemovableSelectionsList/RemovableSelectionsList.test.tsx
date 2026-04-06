@@ -1,3 +1,4 @@
+import { Button } from '@linode/ui';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -88,5 +89,16 @@ describe('Removable Selections List', () => {
     );
     const removeButton = screen.queryByLabelText(`remove my-linode-1`);
     expect(removeButton).not.toBeInTheDocument();
+  });
+
+  it('should render the remove button as text when removeButtonText is declared', () => {
+    const { queryAllByText } = renderWithTheme(
+      <RemovableSelectionsList
+        {...props}
+        isRemovable
+        RemoveButton={() => <Button>Remove Linode</Button>}
+      />
+    );
+    expect(queryAllByText('Remove Linode')).toHaveLength(5);
   });
 });

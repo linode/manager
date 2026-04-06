@@ -1,137 +1,111 @@
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Theme, styled, useMediaQuery } from '@mui/material';
-import Popover from '@mui/material/Popover';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useAccount, useProfile } from '@linode/queries';
+import {
+  Button,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  omittedProps,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
+import { truncateEnd } from '@linode/utilities';
+import { styled, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { Hidden } from 'src/components/Hidden';
-import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useGrants } from 'src/queries/profile';
+import { Avatar } from 'src/components/Avatar/Avatar';
+import { AvatarForDelegateUser } from 'src/components/AvatarForDelegateUser';
+import { TruncatedUsername } from 'src/components/TruncatedUsername';
+import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
+import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
+import { getStorage, setStorage } from 'src/utilities/storage';
 
-interface MenuLink {
-  display: string;
-  hide?: boolean;
-  href: string;
-}
+import { UserMenuPopover } from './UserMenuPopover';
+import { getCompanyNameOrEmail } from './utils';
 
-const profileLinks: MenuLink[] = [
-  {
-    display: 'Display',
-    href: '/profile/display',
-  },
-  { display: 'Login & Authentication', href: '/profile/auth' },
-  { display: 'SSH Keys', href: '/profile/keys' },
-  { display: 'LISH Console Settings', href: '/profile/lish' },
-  {
-    display: 'API Tokens',
-    href: '/profile/tokens',
-  },
-  { display: 'OAuth Apps', href: '/profile/clients' },
-  { display: 'Referrals', href: '/profile/referrals' },
-  { display: 'My Settings', href: '/profile/settings' },
-  { display: 'Log Out', href: '/logout' },
-];
+import type { Theme } from '@mui/material';
 
 export const UserMenu = React.memo(() => {
-  const {
-    _hasAccountAccess,
-    _isRestrictedUser,
+  const { isProxyOrDelegateUserType, isProxyUserType, isDelegateUserType } =
+    useDelegationRole();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+
+  const theme = useTheme();
+
+  const { data: account } = useAccount();
+  const { data: profile } = useProfile();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'user-menu-popover' : undefined;
+
+  const companyNameOrEmail = getCompanyNameOrEmail({
+    company: account?.company,
     profile,
-  } = useAccountManagement();
+  });
+
+  // Used for fetching parent profile and account data by making a request with the parent's token.
+  const proxyHeaders = isProxyOrDelegateUserType
+    ? {
+        Authorization: getStorage(`authentication/parent_token/token`),
+      }
+    : undefined;
+
+  const { data: parentProfile } = useProfile({ headers: proxyHeaders });
+
+  const userName = (isProxyUserType ? parentProfile : profile)?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
+  const matchesMdDown = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('md')
   );
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  React.useEffect(() => {
+    // Run after we've switched to a proxy user.
+    if (
+      (isProxyOrDelegateUserType &&
+        isProxyUserType &&
+        !getStorage('is_proxy_user_type')) ||
+      (isDelegateUserType && !getStorage('is_delegate_user_type'))
+    ) {
+      // Flag for proxy user to display success toast once.
+      if (isProxyUserType) {
+        setStorage('is_proxy_user_type', 'true');
+      }
+      if (isDelegateUserType) {
+        setStorage('is_delegate_user_type', 'true');
+      }
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'user-menu-popover' : undefined;
-
-  const { data: grants } = useGrants();
-  const userName = profile?.username ?? '';
-  const hasFullAccountAccess =
-    grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
-
-  const accountLinks: MenuLink[] = React.useMemo(
-    () => [
-      {
-        display: 'Billing & Contact Information',
-        href: '/account/billing',
-      },
-      // Restricted users can't view the Users tab regardless of their grants
-      {
-        display: 'Users & Grants',
-        hide: _isRestrictedUser,
-        href: '/account/users',
-      },
-      // Restricted users can't view the Transfers tab regardless of their grants
-      {
-        display: 'Service Transfers',
-        hide: _isRestrictedUser,
-        href: '/account/service-transfers',
-      },
-      {
-        display: 'Maintenance',
-        href: '/account/maintenance',
-      },
-      // Restricted users with read_write account access can view Settings.
-      {
-        display: 'Account Settings',
-        hide: !hasFullAccountAccess,
-        href: '/account/settings',
-      },
-    ],
-    [hasFullAccountAccess, _isRestrictedUser]
-  );
-
-  const renderLink = (link: MenuLink) => {
-    if (link.hide) {
-      return null;
+      const message = companyNameOrEmail
+        ? `Account switched to ${companyNameOrEmail}.`
+        : 'Account switched.';
+      enqueueSnackbar(message, { variant: 'success' });
     }
-
-    return (
-      <Grid key={link.display} xs={12}>
-        <Link
-          data-testid={`menu-item-${link.display}`}
-          onClick={handleClose}
-          style={{ fontSize: '0.875rem' }}
-          to={link.href}
-        >
-          {link.display}
-        </Link>
-      </Grid>
-    );
-  };
+  }, [
+    isProxyOrDelegateUserType,
+    companyNameOrEmail,
+    enqueueSnackbar,
+    isProxyUserType,
+    isDelegateUserType,
+  ]);
 
   const getEndIcon = () => {
     if (matchesSmDown) {
       return undefined;
     }
-    if (open) {
-      return <KeyboardArrowUp sx={{ height: 26, width: 26 }} />;
-    }
-    return (
-      <KeyboardArrowDown sx={{ color: '#9ea4ae', height: 26, width: 26 }} />
+    return open ? (
+      <ChevronUpIcon color={theme.tokens.component.GlobalHeader.Text.Hover} />
+    ) : (
+      <ChevronDownIcon
+        color={theme.tokens.component.GlobalHeader.Text.Default}
+      />
     );
   };
 
@@ -143,108 +117,96 @@ export const UserMenu = React.memo(() => {
         leaveDelay={0}
         title="Profile & Account"
       >
-        <Button
-          sx={(theme) => ({
-            '& .MuiButton-endIcon': {
-              marginLeft: '4px',
-            },
-            backgroundColor: open ? theme.bg.app : undefined,
-            height: '50px',
-            minWidth: 'unset',
-            textTransform: 'none',
-          })}
+        <StyledUserMenuButton
           aria-describedby={id}
           data-testid="nav-group-profile"
           disableRipple
-          endIcon={getEndIcon()}
-          onClick={handleClick}
-          startIcon={<GravatarByEmail email={profile?.email ?? ''} />}
+          endIcon={!matchesMdDown && getEndIcon()}
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+          open={open}
+          startIcon={
+            isProxyOrDelegateUserType ? <AvatarForDelegateUser /> : <Avatar />
+          }
         >
-          <Hidden mdDown>
-            <Typography sx={{ fontSize: '0.875rem' }}>{userName}</Typography>
-          </Hidden>
-        </Button>
-      </Tooltip>
-      <Popover
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              paddingX: 2.5,
-              paddingY: 2,
-            },
-          },
-        }}
-        anchorEl={anchorEl}
-        id={id}
-        marginThreshold={0}
-        onClose={handleClose}
-        open={open}
-      >
-        <Stack data-qa-user-menu minWidth={250} spacing={2}>
-          <Typography
-            color={(theme) => theme.textColors.headlineStatic}
-            fontSize="1.1rem"
+          <Stack
+            alignItems={'flex-start'}
+            sx={{ display: { md: 'flex', xs: 'none' } }}
           >
-            <strong>{userName}</strong>
-          </Typography>
-          <Box>
-            <Heading>My Profile</Heading>
-            <Divider color="#9ea4ae" />
-            <Grid container>
-              <Grid
-                container
-                direction="column"
-                rowGap={1}
-                wrap="nowrap"
-                xs={6}
+            <TruncatedUsername
+              sx={{ font: theme.font.semibold }}
+              username={userName}
+            />
+            {companyNameOrEmail && (
+              <Typography
+                letterSpacing={
+                  theme.tokens.alias.Typography.Heading.OverlineLetterSpacing
+                }
+                sx={{
+                  font: theme.tokens.alias.Typography.Heading.Overline,
+                }}
+                textTransform={
+                  theme.tokens.alias.Typography.Heading.OverlineTextCase
+                }
               >
-                {profileLinks.slice(0, 4).map(renderLink)}
-              </Grid>
-              <Grid
-                container
-                direction="column"
-                rowGap={1}
-                wrap="nowrap"
-                xs={6}
-              >
-                {profileLinks.slice(4).map(renderLink)}
-              </Grid>
-            </Grid>
-          </Box>
-          {_hasAccountAccess && (
-            <Box>
-              <Heading>Account</Heading>
-              <Divider color="#9ea4ae" />
-              <Stack mt={1} spacing={1.5}>
-                {accountLinks.map((menuLink) =>
-                  menuLink.hide ? null : (
-                    <Link
-                      data-testid={`menu-item-${menuLink.display}`}
-                      key={menuLink.display}
-                      onClick={handleClose}
-                      style={{ fontSize: '0.875rem' }}
-                      to={menuLink.href}
-                    >
-                      {menuLink.display}
-                    </Link>
-                  )
-                )}
-              </Stack>
-            </Box>
-          )}
-        </Stack>
-      </Popover>
+                {truncateEnd(companyNameOrEmail, 24)}
+              </Typography>
+            )}
+          </Stack>
+        </StyledUserMenuButton>
+      </Tooltip>
+      <UserMenuPopover
+        anchorEl={anchorEl}
+        isDrawerOpen={isDrawerOpen}
+        onClose={() => setAnchorEl(null)}
+        onDrawerOpen={() => setIsDrawerOpen(true)}
+      />
+      <SwitchAccountDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        userType={profile?.user_type}
+      />
     </>
   );
 });
 
-const Heading = styled(Typography)(({ theme }) => ({
-  color: theme.textColors.headlineStatic,
-  fontSize: '.75rem',
-  letterSpacing: 1.875,
-  textTransform: 'uppercase',
+const StyledUserMenuButton = styled(Button, {
+  label: 'StyledUserMenuButton',
+  shouldForwardProp: omittedProps(['open']),
+})<{ open: boolean }>(({ open, theme }) => ({
+  '&:hover, &:focus, &:active': {
+    '.MuiButton-icon svg, .MuiStack-root .MuiTypography-root': {
+      color: theme.tokens.component.GlobalHeader.Text.Hover,
+    },
+  },
+  '.MuiButton-endIcon svg': {
+    height: '16px',
+    width: '16px',
+  },
+  '.MuiButton-icon svg': {
+    color: open
+      ? theme.tokens.component.GlobalHeader.Text.Hover
+      : theme.tokens.component.GlobalHeader.Text.Default,
+  },
+  '.MuiButton-startIcon': {
+    '.MuiAvatar-root, .MuiTypography-root': {
+      font: theme.tokens.alias.Typography.Label.Bold.S,
+    },
+    marginLeft: 0,
+    marginRight: theme.tokens.spacing.S8,
+  },
+  '.MuiStack-root .MuiTypography-root': {
+    color: open
+      ? theme.tokens.component.GlobalHeader.Text.Hover
+      : theme.tokens.component.GlobalHeader.Text.Default,
+  },
+  padding: 0,
+  textTransform: 'none',
+  [theme.breakpoints.down('md')]: {
+    '.MuiButton-startIcon': {
+      margin: 0,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
+  },
 }));

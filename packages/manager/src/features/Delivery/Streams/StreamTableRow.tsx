@@ -1,0 +1,82 @@
+import { Hidden } from '@linode/ui';
+import * as React from 'react';
+
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
+import {
+  getDestinationTypeOption,
+  getStreamTypeOption,
+} from 'src/features/Delivery/deliveryUtils';
+import { LinkWithTooltipAndEllipsis } from 'src/features/Delivery/Shared/LinkWithTooltipAndEllipsis';
+import { StreamActionMenu } from 'src/features/Delivery/Streams/StreamActionMenu';
+
+import type { Stream, StreamStatus } from '@linode/api-v4';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
+import type { StreamHandlers } from 'src/features/Delivery/Streams/StreamActionMenu';
+
+interface StreamTableRowProps extends StreamHandlers {
+  stream: Stream;
+}
+
+export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
+  const { stream, onDelete, onDisableOrEnable, onEdit } = props;
+  const { id, status } = stream;
+  const iconStatus = (
+    ['active', 'error', 'inactive'].includes(status) ? status : 'other'
+  ) as Status;
+
+  return (
+    <TableRow key={id}>
+      <TableCell>
+        <LinkWithTooltipAndEllipsis
+          pendoId="Logs Delivery Streams-Name"
+          to={`/logs/delivery/streams/${id}/edit`}
+        >
+          {stream.label}
+        </LinkWithTooltipAndEllipsis>
+      </TableCell>
+      <TableCell>{getStreamTypeOption(stream.type)?.label}</TableCell>
+      <TableCell statusCell>
+        <StatusIcon pulse={false} status={iconStatus} />
+        {humanizeStreamStatus(status)}
+      </TableCell>
+      <TableCell>{id}</TableCell>
+      <Hidden mdDown>
+        <TableCell>
+          {getDestinationTypeOption(stream.destinations[0]?.type)?.label}
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>
+          <DateTimeDisplay value={stream.updated} />
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>{stream.updated_by}</TableCell>
+      </Hidden>
+      <TableCell actionCell>
+        <StreamActionMenu
+          onDelete={onDelete}
+          onDisableOrEnable={onDisableOrEnable}
+          onEdit={onEdit}
+          stream={stream}
+        />
+      </TableCell>
+    </TableRow>
+  );
+});
+
+const humanizeStreamStatus = (status: StreamStatus) => {
+  switch (status) {
+    case 'active':
+      return 'Active';
+    case 'inactive':
+      return 'Inactive';
+    case 'provisioning':
+      return 'Provisioning';
+    default:
+      return 'Unknown';
+  }
+};

@@ -3,7 +3,6 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import path from "path";
 import { deleteChangesets } from "./utils/deleteChangesets.mjs";
-import { incrementSemver } from "./utils/incrementSemver.mjs";
 import { initiateChangelogEntry } from "./utils/initiateChangelogEntry.mjs";
 import { logger } from "./utils/logger.mjs";
 import { populateChangelogEntry } from "./utils/populateChangelogEntry.mjs";
@@ -59,7 +58,7 @@ try {
             )}`,
             name: "releaseDate",
             message:
-              "\nEnter the release date (YYYY-MM-DD, press enter to select today's date:",
+              "\nEnter the release date (YYYY-MM-DD), press enter to select today's date:",
             validate: (input) => {
               if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 return "Please enter a valid date in the format YYYY-MM-DD.";
@@ -70,17 +69,6 @@ try {
             default: today,
           },
         ]);
-        const { semverBump } = await inquirer.prompt([
-          {
-            type: "list",
-            prefix: `📦 Semver bump for ${chalk.red(
-              `@linode/${linodePackage}`
-            )}`,
-            name: "semverBump",
-            message: "\nChoose the type of version bump:",
-            choices: ["patch", "minor", "major"],
-          },
-        ]);
 
         try {
           files.forEach((file) => {
@@ -88,9 +76,9 @@ try {
             if (file === "README.md") {
               return;
             }
-
+            
             // Logic to parse the changeset file and generate the changelog content
-            const filePath = path.join(changesetDirectory(linodePackage), file);
+            const filePath = changesetDirectory(linodePackage) + path.sep + file;
             const content = fs.readFileSync(filePath, "utf-8");
             const matches = content.match(
               new RegExp(`"@linode/${linodePackage}": ([^\n]+)`)
@@ -113,8 +101,7 @@ try {
           });
         }
 
-        const newSemver = incrementSemver(currentSemver, semverBump);
-        const changelogContent = initiateChangelogEntry(releaseDate, newSemver);
+        const changelogContent = initiateChangelogEntry(releaseDate, currentSemver);
         // Generate the final changelog content
         populateChangelogEntry(changesetEntries, changelogContent);
 
@@ -156,7 +143,7 @@ try {
         }
 
         // Delete the changeset files for each package
-        deleteChangesets(linodePackage);
+        await deleteChangesets(linodePackage);
       }
     } catch (error) {
       logger.error({
