@@ -7,7 +7,7 @@ export const StyledActionMenuWrapper = styled(TableCell, {
   justifyContent: 'flex-end',
   display: 'flex',
   alignItems: 'center',
-  flex: '0 1 5%',
+  maxWidth: '5%',
   '& button': {
     padding: 0,
     color: theme.tokens.alias.Content.Icon.Primary.Default,
@@ -19,77 +19,63 @@ export const StyledActionMenuWrapper = styled(TableCell, {
   },
 }));
 
-export const StyledGroupCell = styled(TableCell, {
-  label: 'StyledGroupCell',
-})(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  flex: '0 1 20%',
-  [theme.breakpoints.down('lg')]: {
-    flex: '0 1 30%',
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: '20%',
-  },
-}));
-
-export const StyledDescriptionCell = styled(TableCell, {
-  label: 'StyledDescriptionCell',
-})(({ theme }) => ({
-  flex: '0 1 25%',
+const TABLE_CELL_BASE_STYLES: React.CSSProperties = {
+  boxSizing: 'border-box',
+};
+const TABLE_CELL_OVERFLOW_STYLES: React.CSSProperties = {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   display: 'block',
+};
 
-  [theme.breakpoints.down('lg')]: {
-    flex: '0 1 35%',
+export const StyledShareGroupsTableContainer = styled('div', {
+  label: 'StyledShareGroupsTable',
+})(({ theme }) => ({
+  '& .group-column': {
+    minWidth: '20%',
+    ...TABLE_CELL_BASE_STYLES,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: '30%',
+    },
   },
-  [theme.breakpoints.down('sm')]: {
-    width: '25%',
+  '& .description-column': {
+    minWidth: '25%',
+    ...TABLE_CELL_OVERFLOW_STYLES,
+    ...TABLE_CELL_BASE_STYLES,
+    [theme.breakpoints.down('lg')]: {
+      minWidth: '45%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      minWidth: '40%',
+    },
   },
-}));
-
-export const StyledMemberCountCell = styled(TableCell, {
-  label: 'StyledMemberCountCell',
-})(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  flex: '0 1 10%',
-  [theme.breakpoints.down('lg')]: {
-    flex: '0 1 15%',
+  '& .membersCount-column': {
+    minWidth: '11%',
+    ...TABLE_CELL_BASE_STYLES,
+    [theme.breakpoints.down('lg')]: {
+      minWidth: '15%',
+    },
   },
-}));
-
-export const StyledImageCountCell = styled(TableCell, {
-  label: 'StyledImageCountCell',
-})(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  width: '10%',
-  flex: '0 1 10%',
-  [theme.breakpoints.down('lg')]: {
-    flex: '0 1 15%',
+  '& .imagesCount-column': {
+    minWidth: '9%',
+    ...TABLE_CELL_BASE_STYLES,
+    [theme.breakpoints.down('lg')]: {
+      minWidth: '15%',
+    },
   },
-}));
-
-export const StyledCreatedCell = styled(TableCell, {
-  label: 'StyledCreatedCell',
-})(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  width: '15%',
-  flex: '0 1 15%',
-}));
-
-export const StyledUpdatedCell = styled(TableCell, {
-  label: 'StyledUpdatedCell',
-})(({ theme }) => ({
-  whiteSpace: 'nowrap',
-  width: '15%',
-  flex: '0 1 15%',
-}));
-
-export const StyledShareGroupsTableHeader = styled('div', {
-  label: 'StyledShareGroupsTableHeader',
-})(({ theme }) => ({
-  '& div.row': {
-    padding: 0,
+  '& .created-column': {
+    minWidth: '15%',
+    ...TABLE_CELL_BASE_STYLES,
+    whiteSpace: 'nowrap',
+  },
+  '& .updated-column': {
+    minWidth: '15%',
+    ...TABLE_CELL_BASE_STYLES,
+    whiteSpace: 'nowrap',
+  },
+  '& .action-column': {
+    maxWidth: '5%',
+    ...TABLE_CELL_BASE_STYLES,
   },
 }));

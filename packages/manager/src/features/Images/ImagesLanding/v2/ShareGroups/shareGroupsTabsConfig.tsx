@@ -1,16 +1,18 @@
 import React from 'react';
 
 import type { APIError } from '@linode/api-v4';
-import type { HiddenProps, SxProps } from '@linode/ui';
+import type { HiddenProps } from '@linode/ui';
 import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
 
 export interface ShareGroupsViewTableColConfig {
+  /* Class name for this column */
+  className?: string;
+
   /* Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
   hidden?: Exclude<keyof HiddenProps, 'children'>;
 
   /* Column name */
   name: string;
-
   /* Provide sortableProps to enable sorting for this column. */
   sortableProps?: {
     /* API field used for sorting this column */
@@ -59,56 +61,37 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
   },
 ];
 
-const COLUMN_WIDTHS = {
-  group: '20%',
-  description: '25%',
-  membersCount: '10%',
-  imagesCount: '10%',
-  created: '15%',
-  updated: '15%',
-  action: '5%',
-};
-
-const tableStyles: SxProps = {
-  flex: {
-    lg: '0 1 30%',
-    md: '0 1 20%',
-    sm: '100%',
-  },
-};
-
-
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
   {
     name: 'Group',
     sortableProps: { label: 'label' },
-    style: { flex: '0 1 20%' },
+    className: 'group-column',
   },
   {
     name: 'Description',
     sortableProps: { label: 'description' },
-    style: { flex: '0 1 25%' },
+    className: 'description-column',
   },
   {
     name: '# of members',
-    style: { flex: '0 1 10%' },
+    className: 'membersCount-column',
   },
   {
     name: '# of images',
     hidden: 'smDown',
-    style: { flex: '0 1 10%' },
+    className: 'imagesCount-column',
   },
   {
     name: 'Created',
     sortableProps: { label: 'created' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap', flex: '0 1 15%' },
+    className: 'created-column',
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap', flex: '0 1 15%' },
+    className: 'updated-column',
   },
 ];
 

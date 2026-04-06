@@ -28,7 +28,7 @@ import {
   StyledImageTableSubheader,
 } from '../ImageLibrary/ImagesTable.styles';
 import { ShareGroupRow } from './ShareGroupRow';
-import { StyledShareGroupsTableHeader } from './ShareGroupTable.styles';
+import { StyledShareGroupsTableContainer } from './ShareGroupTable.styles';
 
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
 import type { APIError, Sharegroup } from '@linode/api-v4';
@@ -133,8 +133,8 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
         </StyledImageTableHeader>
       )}
       <StyledImageTableContainer>
-        <Table style={{ boxSizing: 'border-box' }}>
-          <StyledShareGroupsTableHeader>
+        <StyledShareGroupsTableContainer>
+          <Table>
             <TableHead>
               <TableRow
                 headerbackground={
@@ -145,6 +145,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                 {columns.map((col, idx) => {
                   const cell = col.sortableProps ? (
                     <TableHeaderCell
+                      className={col.className}
                       key={idx}
                       sort={() =>
                         handleOrderChange(
@@ -161,7 +162,11 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                       {col.name}
                     </TableHeaderCell>
                   ) : (
-                    <TableHeaderCell key={idx} style={{ ...col.style }}>
+                    <TableHeaderCell
+                      className={col.className}
+                      key={idx}
+                      style={{ ...col.style }}
+                    >
                       {col.name}
                     </TableHeaderCell>
                   );
@@ -174,55 +179,54 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                     cell
                   );
                 })}
-                <TableHeaderCell style={{ flex: '0 0 5%' }} />
+                <TableHeaderCell className="action-column" />
               </TableRow>
             </TableHead>
-          </StyledShareGroupsTableHeader>
-
-          <TableBody>
-            {!error && shareGroups.length === 0 && (
-              <TableRow rowborder>
-                <TableCell
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    padding: 0,
-                  }}
-                >
-                  <Box
-                    sx={(theme) => ({
+            <TableBody>
+              {!error && shareGroups.length === 0 && (
+                <TableRow rowborder>
+                  <TableCell
+                    style={{
                       display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: theme.spacingFunction(4),
-                      p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
-                      width: '100%',
-                    })}
+                      justifyContent: 'center',
+                      padding: 0,
+                    }}
                   >
-                    <ZeroStateSearchNarrowIcon />
-                    <Typography variant="h3">{emptyMessage.main}</Typography>
-                    {!query && emptyMessage.instruction && (
-                      <Typography variant="body1">
-                        {emptyMessage.instruction}
-                      </Typography>
-                    )}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            )}
-            {error && query && (
-              <TableRow rowborder>
-                <TableCell style={{ padding: 0 }}>
-                  <ErrorState compact errorText={error[0].reason} />
-                </TableCell>
-              </TableRow>
-            )}
+                    <Box
+                      sx={(theme) => ({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: theme.spacingFunction(4),
+                        p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
+                        width: '100%',
+                      })}
+                    >
+                      <ZeroStateSearchNarrowIcon />
+                      <Typography variant="h3">{emptyMessage.main}</Typography>
+                      {!query && emptyMessage.instruction && (
+                        <Typography variant="body1">
+                          {emptyMessage.instruction}
+                        </Typography>
+                      )}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              )}
+              {error && query && (
+                <TableRow rowborder>
+                  <TableCell style={{ padding: 0 }}>
+                    <ErrorState compact errorText={error[0].reason} />
+                  </TableCell>
+                </TableRow>
+              )}
 
-            {shareGroups.map((sharegroup) => (
-              <ShareGroupRow key={sharegroup.id} shareGroup={sharegroup} />
-            ))}
-          </TableBody>
-        </Table>
+              {shareGroups.map((sharegroup) => (
+                <ShareGroupRow key={sharegroup.id} shareGroup={sharegroup} />
+              ))}
+            </TableBody>
+          </Table>
+        </StyledShareGroupsTableContainer>
         {pagination.count > DEFAULT_PAGE_SIZES[0] && (
           <Pagination
             count={pagination.count}
