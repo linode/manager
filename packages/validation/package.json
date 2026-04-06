@@ -43,7 +43,7 @@
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
     "concurrently": "^9.0.1",
-    "tsup": "^8.4.0"
+    "tsup": "^8.5.1"
   },
   "keywords": [
     "linode",
