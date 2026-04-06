@@ -136,7 +136,7 @@ export const SHAREGROUPS_CONFIG: Record<
     },
     columns: OWNED_GROUPS_TABLE_COLUMNS,
     emptyMessage: {
-      main: 'No Share groups to display',
+      main: 'No share groups to display',
       instruction:
         'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
     },

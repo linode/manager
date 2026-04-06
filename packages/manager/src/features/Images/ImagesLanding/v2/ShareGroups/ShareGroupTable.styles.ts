@@ -22,12 +22,6 @@ export const StyledActionMenuWrapper = styled(TableCell, {
 const TABLE_CELL_BASE_STYLES: React.CSSProperties = {
   boxSizing: 'border-box',
 };
-const TABLE_CELL_OVERFLOW_STYLES: React.CSSProperties = {
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  display: 'block',
-};
 
 export const StyledShareGroupsTableContainer = styled('div', {
   label: 'StyledShareGroupsTable',
@@ -41,10 +35,13 @@ export const StyledShareGroupsTableContainer = styled('div', {
   },
   '& .description-column': {
     minWidth: '25%',
-    ...TABLE_CELL_OVERFLOW_STYLES,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    display: 'block',
     ...TABLE_CELL_BASE_STYLES,
     [theme.breakpoints.down('lg')]: {
-      minWidth: '45%',
+      minWidth: '40%',
     },
     [theme.breakpoints.down('sm')]: {
       minWidth: '40%',
