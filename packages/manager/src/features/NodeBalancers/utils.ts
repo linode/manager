@@ -236,7 +236,7 @@ export const useIsNodebalancerVPCEnabled = () => {
 };
 
 /**
- * Returns whether or not features related to the NodeBalancer Dual Stack project
+ * Returns whether or not features related to the NodeBalancer IPv6 project
  * should be enabled.
  *
  * Currently, this just uses the `nodebalancerIPv6` feature flag as a source of truth,
@@ -249,4 +249,22 @@ export const useIsNodebalancerIpv6Enabled = () => {
   // @TODO NB-IPv6: check for customer tag/account capability when it exists
 
   return { isNodebalancerIpv6Enabled: flags.nodebalancerIpv6 ?? false };
+};
+
+/**
+ * Returns whether or not features related to the ACLP NB Metrics Integration
+ * should be enabled.
+ *
+ * Currently, this just uses the `aclpNbMetricsIntegration` feature flag as a source of truth,
+ * but will eventually also look at account capabilities.
+ */
+
+export const useIsAclpNbMetricsIntegrationEnabled = () => {
+  const flags = useFlags();
+
+  // @TODO ACLP NB Metrics Integration: check for customer tag/account capability when it exists
+
+  return {
+    isAclpNbMetricsIntegrationEnabled: flags.aclpNbMetricsIntegration ?? false,
+  };
 };
