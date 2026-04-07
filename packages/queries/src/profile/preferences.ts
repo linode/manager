@@ -13,20 +13,6 @@ import type { APIError } from '@linode/api-v4';
 import type { ManagerPreferences } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
 
-/**
- * `PUT /profile/preferences` replaces the entire blob. Merge mode must spread a real base object.
- * This rejects `undefined` / null / arrays — not an empty object `{}`.
- * An empty object is still dangerous if it *should* have contained server keys (stale cache); we
- * address that by calling `getUserPreferences()` in the mutation (without writing the React Query
- * cache) so optimistic UI from `onMutate` is not overwritten by a mid-flight GET.
- */
-export const PREFERENCES_MERGE_FAILED: APIError[] = [
-  {
-    reason:
-      'Preferences could not be loaded, so your change was not saved. Refresh the page and try again.',
-  },
-];
-
 const isPreferencesMergeBase = (
   value: ManagerPreferences | undefined,
 ): value is ManagerPreferences =>
@@ -63,9 +49,7 @@ export const useMutatePreferences = (replace = false) => {
       const existingPreferences = await queryClient.ensureQueryData(
         preferencesQueryOptions,
       );
-      if (!isPreferencesMergeBase(existingPreferences)) {
-        throw PREFERENCES_MERGE_FAILED;
-      }
+
       return updateUserPreferences({ ...existingPreferences, ...data });
     },
     onError: () =>
