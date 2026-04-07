@@ -727,3 +727,50 @@ export const humanizeLargeData = (value: number) => {
   }
   return `${roundTo(value, 2)}`;
 };
+
+/**
+ * Formats an object storage URL by removing the domain suffix and wrapping the region in brackets.
+ * @param url The object storage URL (e.g., 'xyz123.yuhh.us-ord.linodeobjects.com')
+ * @returns The formatted URL (e.g., 'xyz123.yuhh[us-ord]')
+ * @example
+ * formatObjectStorageUrl('xyz123.yuhh.us-ord.linodeobjects.com') // Returns: 'xyz123.yuhh[us-ord]'
+ * formatObjectStorageUrl('xzz12.yuh.hhh.us-iad.linodeobjects.com') // Returns: 'xzz12.yuh.hhh[us-iad]'
+ */
+export const formatObjectStorageUrl = (url: string): string => {
+  if (!url) {
+    return url;
+  }
+
+  const parts = url.split('.');
+
+  // Need at least 3 parts for a valid object storage URL
+  // e.g., 'bucket.region.linodeobjects.com' has 4 parts minimum
+  if (parts.length < 3) {
+    return url; // Return original if format doesn't match
+  }
+
+  // Remove 'linodeobjects' and 'com' from the end
+  const withoutDomain = parts.slice(0, -2);
+
+  if (withoutDomain.length === 0) {
+    return url; // Return original if nothing left after removing domain
+  }
+
+  // Get the region (last part after removing domain)
+  const region = withoutDomain[withoutDomain.length - 1];
+
+  if (!region) {
+    return url; // Return original if no region found
+  }
+
+  // Get everything before the region
+  const prefix = withoutDomain.slice(0, -1).join('.');
+
+  // If there's no prefix, just return the region in brackets
+  if (!prefix) {
+    return `[${region}]`;
+  }
+
+  // Combine prefix and region in brackets
+  return `${prefix}[${region}]`;
+};
