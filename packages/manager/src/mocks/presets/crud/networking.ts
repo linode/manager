@@ -1,9 +1,9 @@
 import {
   allocateIP,
   getIPAddresses,
+  getReservedIPs,
   getReservedIPsTypes,
   reserveIP,
-  getReservedIPs,
 } from 'src/mocks/presets/crud/handlers/networking';
 
 import type { MockPresetCrud } from 'src/mocks/types';

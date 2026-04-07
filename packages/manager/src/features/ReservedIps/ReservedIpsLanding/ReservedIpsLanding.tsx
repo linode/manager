@@ -7,32 +7,24 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { ReserveIPDrawer } from '../ReserveIPDrawer';
 import { ReservedIpsLandingEmptyState } from './ReservedIpsLandingEmptyState';
 import { ReservedIpsLandingTable } from './ReservedIpsLandingTable';
 
+import type { ReserveIPDrawerMode } from '../ReserveIPDrawer';
 import type { ReservedIpsActionHandlers } from './ReservedIpsActionMenu';
+import type { IPAddress } from '@linode/api-v4';
 
 const preferenceKey = 'reserved-ips';
 
 export const ReservedIpsLanding = () => {
-  // TODO: These will be used by the Edit drawer and Unreserve dialog component
-  // const [_selectedIP, setSelectedIP] = React.useState<IPAddress>();
-  // const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [drawerMode, setDrawerMode] =
+    React.useState<ReserveIPDrawerMode>('create');
+  const [selectedIP, setSelectedIP] = React.useState<IPAddress | undefined>();
 
-  // const [_isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-
-  // const [_isUnreserveDialogOpen, setIsUnreserveDialogOpen] = React.useState(false);
-
-  const handlers: ReservedIpsActionHandlers = {
-    onEdit: (ip) => {
-      // setSelectedIP(ip);
-      // setIsEditDrawerOpen(true);
-    },
-    onUnreserve: (ip) => {
-      // setSelectedIP(ip);
-      // setIsUnreserveDialogOpen(true);
-    },
-  };
+  // TODO: Integrate Unreserve dialog
+  // const [isUnreserveDialogOpen, setIsUnreserveDialogOpen] = React.useState(false);
 
   const pagination = usePaginationV2({
     currentRoute: '/reserved-ips',
@@ -67,6 +59,30 @@ export const ReservedIpsLanding = () => {
     filter
   );
 
+  const openDrawer = (mode: ReserveIPDrawerMode, ip?: IPAddress) => {
+    setSelectedIP(ip);
+    setDrawerMode(mode);
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setSelectedIP(undefined);
+  };
+
+  const handlers: ReservedIpsActionHandlers = {
+    onEdit: (ip) => openDrawer('edit', ip),
+    onUnreserve: (_ip) => {
+      // TODO: Integrate Unreserve dialog
+      // setSelectedIP(ip);
+      // setIsUnreserveDialogOpen(true);
+    },
+  };
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
   if (error) {
     return (
       <ErrorState
@@ -80,22 +96,27 @@ export const ReservedIpsLanding = () => {
     );
   }
 
-  if (isLoading) {
-    return <CircleProgress />;
-  }
-
-  if (!reservedIps?.data.length) {
-    return <ReservedIpsLandingEmptyState />;
+  if (reservedIps?.results === 0) {
+    return (
+      <>
+        <ReservedIpsLandingEmptyState
+          openReserveIPDrawer={() => openDrawer('create')}
+        />
+        <ReserveIPDrawer
+          ipAddress={selectedIP}
+          mode={drawerMode}
+          onClose={closeDrawer}
+          open={isDrawerOpen}
+        />
+      </>
+    );
   }
 
   return (
     <>
       <LandingHeader
         createButtonText="Reserve an IP Address"
-        onButtonClick={() => {
-          /*To be updated
-          setIsDrawerOpen(true) */
-        }}
+        onButtonClick={() => openDrawer('create')}
         spacingBottom={16}
         title="Reserved IP Addresses"
       />
@@ -107,6 +128,12 @@ export const ReservedIpsLanding = () => {
         orderBy={orderBy}
         pagination={pagination}
         results={reservedIps?.results}
+      />
+      <ReserveIPDrawer
+        ipAddress={selectedIP}
+        mode={drawerMode}
+        onClose={closeDrawer}
+        open={isDrawerOpen}
       />
     </>
   );

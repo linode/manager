@@ -56,6 +56,7 @@ export const reservedIPSeeder: MockSeeder = {
     };
 
     await mswDB.saveStore(updatedMockState, 'seedState');
+
     return updatedMockState;
   },
 };
