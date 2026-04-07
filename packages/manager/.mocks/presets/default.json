@@ -1,0 +1,63 @@
+[
+  {
+    "endpoint": "/v4beta/linode/instances",
+    "method": "GET",
+    "paginated": true,
+    "data": [
+      {
+        "id": 1,
+        "label": "my-linode-1",
+        "status": "offline",
+        "region": "eu-west",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-03T15:16:07.025Z",
+        "disk_encryption": "(null)",
+        "group": "(null)",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": "(null)",
+        "interface_generation": "(null)",
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": "(null)",
+        "lke_cluster_id": "(null)",
+        "locks": [],
+        "maintenance_policy": "(null)",
+        "placement_group": "(null)",
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": "(null)",
+        "updated": "2026-04-03T15:16:07.025Z",
+        "watchdog_enabled": true
+      }
+    ]
+  }
+]

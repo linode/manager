@@ -1,3 +1,4 @@
+import { computeUiMocksPlugin } from '@akamai/compute-ui-mocks/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
 import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
@@ -17,6 +18,7 @@ export default defineConfig({
     react(),
     svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
     urlCanParsePolyfill(),
+    computeUiMocksPlugin() as any,
   ],
   resolve: {
     alias: {
