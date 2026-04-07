@@ -6,6 +6,7 @@ import {
 
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import {
+  subnetAssignedDatabaseDataFactory,
   subnetAssignedLinodeDataFactory,
   subnetAssignedNodebalancerDataFactory,
   subnetFactory,
@@ -36,14 +37,23 @@ const subnetNodeBalancerInfoId1 = subnetAssignedNodebalancerDataFactory.build({
 const subnetNodeBalancerInfoId3 = subnetAssignedNodebalancerDataFactory.build({
   id: 3,
 });
+const subnetdatabaseInfoId1 = subnetAssignedDatabaseDataFactory.build({
+  id: 1,
+});
+const subnetdatabaseInfoId2 = subnetAssignedDatabaseDataFactory.build({
+  id: 2,
+});
 
 describe('getUniqueResourcesFromSubnets', () => {
-  it(`returns the number of unique linodes and nodeBalancers within a VPC's subnets`, () => {
-    const subnets0 = [subnetFactory.build({ linodes: [], nodebalancers: [] })];
+  it(`returns the number of unique linodes, nodeBalancers, and databases within a VPC's subnets`, () => {
+    const subnets0 = [
+      subnetFactory.build({ linodes: [], nodebalancers: [], databases: [] }),
+    ];
     const subnets1 = [
       subnetFactory.build({
         linodes: subnetLinodeInfoList1,
         nodebalancers: subnetNodeBalancerInfoList1,
+        databases: [],
       }),
     ];
     const subnets2 = [
@@ -60,17 +70,20 @@ describe('getUniqueResourcesFromSubnets', () => {
           subnetNodeBalancerInfoId3,
           subnetNodeBalancerInfoId3,
         ],
+        databases: [],
       }),
     ];
     const subnets3 = [
       subnetFactory.build({
         linodes: subnetLinodeInfoList1,
         nodebalancers: subnetNodeBalancerInfoList1,
+        databases: [],
       }),
-      subnetFactory.build({ linodes: [], nodebalancers: [] }),
+      subnetFactory.build({ linodes: [], nodebalancers: [], databases: [] }),
       subnetFactory.build({
         linodes: [subnetLinodeInfoId3],
         nodebalancers: [subnetNodeBalancerInfoId3],
+        databases: [],
       }),
       subnetFactory.build({
         linodes: [
@@ -87,6 +100,21 @@ describe('getUniqueResourcesFromSubnets', () => {
           subnetAssignedNodebalancerDataFactory.build({ id: 9 }),
           subnetNodeBalancerInfoId1,
         ],
+        databases: [],
+      }),
+    ];
+
+    const subnets4 = [
+      ...subnets3,
+      subnetFactory.build({
+        databases: [subnetdatabaseInfoId1],
+        linodes: [],
+        nodebalancers: [],
+      }),
+      subnetFactory.build({
+        databases: [subnetdatabaseInfoId2],
+        linodes: [],
+        nodebalancers: [],
       }),
     ];
 
@@ -95,6 +123,8 @@ describe('getUniqueResourcesFromSubnets', () => {
     expect(getUniqueResourcesFromSubnets(subnets2, false)).toBe(4);
     // updated factory for generating linode ids, so unique linodes will be different
     expect(getUniqueResourcesFromSubnets(subnets3, false)).toBe(16);
+    // Test databases count when getUniqueLinodesFromSubnets countDatabases param is true
+    expect(getUniqueResourcesFromSubnets(subnets4, true)).toBe(18);
   });
 });
 
