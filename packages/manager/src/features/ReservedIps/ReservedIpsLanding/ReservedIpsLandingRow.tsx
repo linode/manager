@@ -1,5 +1,6 @@
-import { Chip, Hidden, Stack, styled } from '@linode/ui';
+import { Hidden, Stack, styled } from '@linode/ui';
 import { splitAt } from '@linode/utilities';
+import { Badge } from 'akamai-cds-react-components/Badge';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import * as React from 'react';
 
@@ -84,7 +85,7 @@ const TagsList = ({ tags }: { tags: string[] }) => {
   return (
     <>
       {visible.map((tag) => (
-        <StyledTagChip key={tag} label={tag} />
+        <Badge key={tag}>{tag}</Badge>
       ))}
       {overflow.length > 0 && (
         <ShowMore
@@ -102,16 +103,6 @@ const TagsList = ({ tags }: { tags: string[] }) => {
     </>
   );
 };
-
-const StyledTagChip = styled(Chip, {
-  label: 'StyledTagChip',
-})(({ theme }) => ({
-  '& .MuiChip-label': {
-    color: theme.tokens.component.Badge.Informative.Subtle.Text,
-    font: theme.font.bold,
-    fontSize: theme.tokens.font.FontSize.Xxxs,
-  },
-}));
 
 const StyledActionMenuCell = styled(TableCell, {
   label: 'StyledActionMenuCell',
