@@ -7,6 +7,14 @@ import { ReservedIpsLandingRow } from './ReservedIpsLandingRow';
 
 import type { ReservedIpsActionHandlers } from './ReservedIpsActionMenu';
 
+vi.mock('@mui/material', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@mui/material')>();
+  return {
+    ...actual,
+    useMediaQuery: vi.fn().mockReturnValue(true),
+  };
+});
+
 const mockHandlers: ReservedIpsActionHandlers = {
   onEdit: vi.fn(),
   onUnreserve: vi.fn(),
@@ -20,7 +28,7 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
@@ -41,7 +49,7 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
@@ -64,7 +72,7 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
@@ -80,7 +88,7 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
@@ -94,32 +102,31 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Krakow, PL"
+        regionLabel="PL, Krakow"
       />
     );
 
-    expect(getByText('Krakow, PL')).toBeVisible();
+    expect(getByText('PL, Krakow')).toBeVisible();
   });
 
   it('renders visible tags as chips', () => {
     const ip = reservedIPsFactory.build({
-      tags: ['web', 'production', 'staging'],
+      tags: ['web', 'production'],
     });
 
     const { getByText } = renderWithTheme(
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
-    expect(getByText('web')).toBeVisible();
-    expect(getByText('production')).toBeVisible();
-    expect(getByText('staging')).toBeVisible();
+    expect(getByText('web')).toBeInTheDocument();
+    expect(getByText('production')).toBeInTheDocument();
   });
 
-  it('renders a ShowMore chip when there are more than 3 tags', () => {
+  it('renders a ShowMore chip when there are more than 2 tags', () => {
     const ip = reservedIPsFactory.build({
       tags: ['web', 'production', 'staging', 'db', 'internal'],
     });
@@ -128,14 +135,13 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
     expect(getByText('web')).toBeVisible();
     expect(getByText('production')).toBeVisible();
-    expect(getByText('staging')).toBeVisible();
-    expect(getByText('+2')).toBeVisible();
+    expect(getByText('+3')).toBeVisible();
   });
 
   it('renders no tags when the tags array is empty', () => {
@@ -145,7 +151,7 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 
@@ -159,7 +165,7 @@ describe('ReservedIpsLandingRow', () => {
       <ReservedIpsLandingRow
         handlers={mockHandlers}
         ip={ip}
-        regionLabel="Newark, NJ"
+        regionLabel="PL, Krakow"
       />
     );
 

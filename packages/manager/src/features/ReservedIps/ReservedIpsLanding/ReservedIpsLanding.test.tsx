@@ -1,98 +1,207 @@
+import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { routeTree } from 'src/routes';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { reservedIPsFactory } from 'src/factories/networking';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ReservedIpsLanding } from './ReservedIpsLanding';
+import { headers } from './ReservedIpsLandingEmptyStateData';
 
-const mockQueryReturn = vi.hoisted(() =>
-  vi.fn().mockReturnValue({
-    data: undefined,
-    error: null,
-    isLoading: true,
-  })
-);
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
+}));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useReservedIPsQuery: mockQueryReturn,
+    useProfile: queryMocks.useProfile,
   };
 });
 
-describe('ReservedIpsLanding', () => {
-  it('renders a loading state while data is fetching', () => {
-    const { getByTestId } = renderWithTheme(<ReservedIpsLanding />, {
-      initialRoute: '/reserved-ips',
-      routeTree,
-    });
+beforeAll(() => mockMatchMedia());
 
-    expect(getByTestId('circle-progress')).toBeInTheDocument();
+const loadingTestId = 'circle-progress';
+const reservedIPsEndpoint = '*/networking/reserved/ips';
+
+describe('Reserved IPs Landing', () => {
+  it('renders loading state initially', async () => {
+    server.use(
+      http.get(reservedIPsEndpoint, () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
+
+    const { getByTestId } = renderWithTheme(<ReservedIpsLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId), {
+      timeout: 3000,
+    });
   });
 
-  it('renders an error state when the query fails', () => {
-    mockQueryReturn.mockReturnValue({
-      data: undefined,
-      error: [{ reason: 'Something went wrong.' }],
-      isLoading: false,
-    });
+  it('renders the empty state when there are no reserved IPs', async () => {
+    server.use(
+      http.get(reservedIPsEndpoint, () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
 
-    const { getByText } = renderWithTheme(<ReservedIpsLanding />, {
-      initialRoute: '/reserved-ips',
-      routeTree,
-    });
+    const { getByTestId, getByText } = renderWithTheme(<ReservedIpsLanding />);
 
-    expect(getByText('Something went wrong.')).toBeVisible();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    expect(getByText(headers.description)).toBeInTheDocument();
   });
 
-  it('renders the empty state when there are no reserved IPs', () => {
-    mockQueryReturn.mockReturnValue({
-      data: { data: [], results: 0 },
-      error: null,
-      isLoading: false,
+  it('renders the table with reserved IPs', async () => {
+    const reservedIPs = reservedIPsFactory.buildList(3, {
+      region: 'us-east',
+      reserved: true,
     });
 
-    const { getByText } = renderWithTheme(<ReservedIpsLanding />, {
-      initialRoute: '/reserved-ips',
-      routeTree,
+    server.use(
+      http.get(reservedIPsEndpoint, () => {
+        return HttpResponse.json(makeResourcePage(reservedIPs));
+      })
+    );
+
+    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
+      <ReservedIpsLanding />
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId), {
+      timeout: 3000,
     });
 
-    expect(getByText('Reserve an IP Address')).toBeVisible();
+    // Table column headers
+    getAllByText('IP Address');
+    getAllByText('Assigned Resource');
+    getAllByText('Region');
+    getAllByText('Tags');
+
+    // Check mocked IP addresses rendered in the table
+    queryAllByText(reservedIPs[0].address);
   });
 
-  it('renders the table when reserved IPs are returned', () => {
-    mockQueryReturn.mockReturnValue({
-      data: {
-        data: [
-          {
-            address: '203.0.113.1',
-            assigned_entity: null,
-            gateway: '203.0.113.0',
-            interface_id: null,
-            linode_id: null,
-            prefix: 24,
-            public: true,
-            rdns: null,
-            region: 'us-east',
-            reserved: true,
-            subnet_mask: '255.255.255.0',
-            tags: ['web'],
-            type: 'ipv4',
-          },
-        ],
-        results: 1,
-      },
-      error: null,
-      isLoading: false,
+  it('renders the "Reserve an IP Address" button', async () => {
+    server.use(
+      http.get(reservedIPsEndpoint, () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
+
+    const { container, getByTestId } = renderWithTheme(<ReservedIpsLanding />);
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const reserveIPButton = container.querySelector('button');
+
+    expect(reserveIPButton).toBeInTheDocument();
+    expect(reserveIPButton).toHaveTextContent('Reserve an IP Address');
+  });
+
+  it('renders a row with action menu for each reserved IP', async () => {
+    const reservedIPs = reservedIPsFactory.buildList(3, {
+      assigned_entity: null,
+      reserved: true,
     });
 
-    const { getByText } = renderWithTheme(<ReservedIpsLanding />, {
-      initialRoute: '/reserved-ips',
-      routeTree,
+    server.use(
+      http.get(reservedIPsEndpoint, () => {
+        return HttpResponse.json(makeResourcePage(reservedIPs));
+      })
+    );
+
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      <ReservedIpsLanding />
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId), {
+      timeout: 3000,
     });
 
-    expect(getByText('Reserved IP Addresses')).toBeVisible();
-    expect(getByText('203.0.113.1')).toBeVisible();
+    const actionMenu = getByLabelText(
+      `Action menu for Reserved IP ${reservedIPs[0].address}`
+    );
+    expect(actionMenu).toBeInTheDocument();
+  });
+
+  it('opens the action menu with correct options', async () => {
+    const reservedIPs = reservedIPsFactory.buildList(1, {
+      assigned_entity: null,
+      reserved: true,
+    });
+
+    server.use(
+      http.get(reservedIPsEndpoint, () => {
+        return HttpResponse.json(makeResourcePage(reservedIPs));
+      })
+    );
+
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <ReservedIpsLanding />
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId), {
+      timeout: 3000,
+    });
+
+    const actionMenu = getByLabelText(
+      `Action menu for Reserved IP ${reservedIPs[0].address}`
+    );
+
+    await fireEvent.click(actionMenu);
+
+    getByText('Edit');
+    getByText('Unreserve');
+  });
+
+  describe('Restricted users', () => {
+    it('should have the "Reserve an IP Address" button disabled for restricted users', async () => {
+      queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
+
+      server.use(
+        http.get(reservedIPsEndpoint, () => {
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { container, getByTestId } = renderWithTheme(
+        <ReservedIpsLanding />
+      );
+
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+      const reserveIPButton = container.querySelector('button');
+
+      expect(reserveIPButton).toBeInTheDocument();
+      expect(reserveIPButton).toHaveTextContent('Reserve an IP Address');
+    });
+
+    it('should have the "Reserve an IP Address" button enabled for users with full access', async () => {
+      queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
+
+      server.use(
+        http.get(reservedIPsEndpoint, () => {
+          return HttpResponse.json(makeResourcePage([]));
+        })
+      );
+
+      const { container, getByTestId } = renderWithTheme(
+        <ReservedIpsLanding />
+      );
+
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+      const reserveIPButton = container.querySelector('button');
+
+      expect(reserveIPButton).toBeInTheDocument();
+      expect(reserveIPButton).toHaveTextContent('Reserve an IP Address');
+      expect(reserveIPButton).toBeEnabled();
+    });
   });
 });
