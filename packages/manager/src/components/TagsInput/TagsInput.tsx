@@ -48,6 +48,10 @@ export interface TagsInputProps {
    */
   onChange: (selected: TagOption[]) => void;
   /**
+   * If true, displays "(optional)" after the label.
+   */
+  optional?: boolean;
+  /**
    * An error to display beneath the input.
    */
   tagError?: string;
@@ -58,8 +62,16 @@ export interface TagsInputProps {
 }
 
 export const TagsInput = (props: TagsInputProps) => {
-  const { disabled, hideLabel, label, noMarginTop, onChange, tagError, value } =
-    props;
+  const {
+    disabled,
+    hideLabel,
+    label,
+    noMarginTop,
+    onChange,
+    optional,
+    tagError,
+    value,
+  } = props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
@@ -185,7 +197,7 @@ export const TagsInput = (props: TagsInputProps) => {
           />
         ));
       }}
-      textFieldProps={{ hideLabel, noMarginTop }}
+      textFieldProps={{ hideLabel, noMarginTop, optional }}
       value={value}
     />
   );
