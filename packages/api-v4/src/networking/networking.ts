@@ -294,7 +294,7 @@ export const unReserveIP = (ipAddress: string) =>
  */
 export const getReservedIPsTypes = (params?: Params) =>
   Request<Page<PriceType>>(
-    setURL(`${API_ROOT}/networking/reserved/ips/types`),
+    setURL(`${BETA_API_ROOT}/networking/reserved/ips/types`),
     setMethod('GET'),
     setParams(params),
   );
