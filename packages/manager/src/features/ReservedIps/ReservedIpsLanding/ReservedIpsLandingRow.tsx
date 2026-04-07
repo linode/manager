@@ -1,4 +1,4 @@
-import { Chip, Stack, styled } from '@linode/ui';
+import { Chip, Hidden, Stack, styled } from '@linode/ui';
 import { splitAt } from '@linode/utilities';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import * as React from 'react';
@@ -57,8 +57,14 @@ export const ReservedIpsLandingRow = ({ handlers, ip, regionLabel }: Props) => {
           'Unassigned'
         )}
       </TableCell>
-      <TableCell>{regionLabel}</TableCell>
-      <TableCell>{tags?.length > 0 ? <TagsList tags={tags} /> : ''}</TableCell>
+      <Hidden smDown>
+        <TableCell>{regionLabel}</TableCell>
+        <Hidden mdDown>
+          <TableCell>
+            {tags?.length > 0 ? <TagsList tags={tags} /> : ''}
+          </TableCell>
+        </Hidden>
+      </Hidden>
       <StyledActionMenuCell>
         <ReservedIpsActionMenu handlers={handlers} ip={ip} />
       </StyledActionMenuCell>
@@ -70,7 +76,7 @@ export const ReservedIpsLandingRow = ({ handlers, ip, regionLabel }: Props) => {
  * Displays up to 3 non-clickable tag chips, with a "+N" ShowMore popover
  * for any overflow tags.
  */
-const MAX_VISIBLE_TAGS = 3;
+const MAX_VISIBLE_TAGS = 2;
 
 const TagsList = ({ tags }: { tags: string[] }) => {
   const [visible, overflow] = splitAt(MAX_VISIBLE_TAGS, tags);

@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
@@ -60,7 +61,6 @@ export const ReservedIpsLandingTable = ({
             {
               border: `1px solid ${theme.tokens.alias.Border.Normal}`,
               marginTop: '10px',
-              minWidth: '600px',
               '--token-component-table-header-outlined-border':
                 theme.tokens.component.Table.Row.Border,
             } as React.CSSProperties
@@ -83,16 +83,23 @@ export const ReservedIpsLandingTable = ({
                 IP Address
               </TableHeaderCell>
               <TableHeaderCell>Assigned Resource</TableHeaderCell>
-              <TableHeaderCell
-                sort={() =>
-                  handleOrderChange('region', order === 'asc' ? 'desc' : 'asc')
-                }
-                sortable
-                sorted={orderBy === 'region' ? order : undefined}
-              >
-                Region
-              </TableHeaderCell>
-              <TableHeaderCell>Tags</TableHeaderCell>
+              <Hidden smDown>
+                <TableHeaderCell
+                  sort={() =>
+                    handleOrderChange(
+                      'region',
+                      order === 'asc' ? 'desc' : 'asc'
+                    )
+                  }
+                  sortable
+                  sorted={orderBy === 'region' ? order : undefined}
+                >
+                  Region
+                </TableHeaderCell>
+                <Hidden mdDown>
+                  <TableHeaderCell>Tags</TableHeaderCell>
+                </Hidden>
+              </Hidden>
               <TableHeaderCell style={{ maxWidth: 40 }} />
             </TableRow>
           </TableHead>
