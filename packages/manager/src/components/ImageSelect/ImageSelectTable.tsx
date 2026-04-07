@@ -129,8 +129,6 @@ export const ImageSelectTable = (props: Props) => {
     {},
     {
       ...combinedFilter,
-      is_public: false,
-      type: 'manual',
     }
   );
 
