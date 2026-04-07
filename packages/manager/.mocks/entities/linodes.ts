@@ -56,8 +56,36 @@ export const linodeList = defineMockEntity<Linode>({
     updated: overrides.updated ?? new Date().toISOString(),
     watchdog_enabled: overrides.watchdog_enabled ?? true,
   }),
-  fields: {
-    status: ['running', 'offline', 'booting', 'rebooting', 'shutting_down'],
-    region: ['us-east', 'eu-west', 'ap-southeast'],
-  },
+});
+
+// GET single linode
+export const linodeGet = defineMockEntity<Linode>({
+  name: 'linodes',
+  endpoint: '/v4beta/linode/instances/:id',
+  method: 'GET',
+  factory: linodeList.factory,
+});
+
+// PUT (update) a linode — echoes body back, writes to store if storeKey set
+export const linodePut = defineMockEntity<Linode>({
+  name: 'linodes',
+  endpoint: '/v4beta/linode/instances/:id',
+  method: 'PUT',
+  factory: linodeList.factory,
+});
+
+// DELETE a linode — always returns 204, no factory needed
+export const linodeDelete = defineMockEntity({
+  name: 'linodes',
+  endpoint: '/v4/linode/instances/:id',
+  method: 'DELETE',
+  factory: () => ({}),
+});
+
+// POST (create) a linode — echoes body back
+export const linodeCreate = defineMockEntity<Linode>({
+  name: 'linodes',
+  endpoint: '/v4beta/linode/instances',
+  method: 'POST',
+  factory: linodeList.factory,
 });
