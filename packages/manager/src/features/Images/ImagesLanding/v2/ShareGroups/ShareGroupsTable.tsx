@@ -28,6 +28,7 @@ import {
   StyledImageTableSubheader,
 } from '../ImageLibrary/ImagesTable.styles';
 import { ShareGroupRow } from './ShareGroupRow';
+import { StyledShareGroupsTableContainer } from './ShareGroupTable.styles';
 
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
 import type { APIError, Sharegroup } from '@linode/api-v4';
@@ -132,93 +133,100 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
         </StyledImageTableHeader>
       )}
       <StyledImageTableContainer>
-        <Table>
-          <TableHead>
-            <TableRow
-              headerbackground={
-                theme.tokens.component.Table.HeaderNested.Background
-              }
-              headerborder
-            >
-              {columns.map((col, idx) => {
-                const cell = col.sortableProps ? (
-                  <TableHeaderCell
-                    key={idx}
-                    sort={() =>
-                      handleOrderChange(
-                        col.sortableProps?.label ?? col.name,
-                        order === 'asc' ? 'desc' : 'asc'
-                      )
-                    }
-                    sortable
-                    sorted={
-                      orderBy === col.sortableProps?.label ? order : undefined
-                    }
-                    style={{ ...col.style }}
-                  >
-                    {col.name}
-                  </TableHeaderCell>
-                ) : (
-                  <TableHeaderCell key={idx} style={{ ...col.style }}>
-                    {col.name}
-                  </TableHeaderCell>
-                );
+        <StyledShareGroupsTableContainer>
+          <Table>
+            <TableHead>
+              <TableRow
+                headerbackground={
+                  theme.tokens.component.Table.HeaderNested.Background
+                }
+                headerborder
+              >
+                {columns.map((col, idx) => {
+                  const cell = col.sortableProps ? (
+                    <TableHeaderCell
+                      className={col.className}
+                      key={idx}
+                      sort={() =>
+                        handleOrderChange(
+                          col.sortableProps?.label ?? col.name,
+                          order === 'asc' ? 'desc' : 'asc'
+                        )
+                      }
+                      sortable
+                      sorted={
+                        orderBy === col.sortableProps?.label ? order : undefined
+                      }
+                      style={{ ...col.style }}
+                    >
+                      {col.name}
+                    </TableHeaderCell>
+                  ) : (
+                    <TableHeaderCell
+                      className={col.className}
+                      key={idx}
+                      style={{ ...col.style }}
+                    >
+                      {col.name}
+                    </TableHeaderCell>
+                  );
 
-                return col.hidden ? (
-                  <Hidden key={idx} {...{ [col.hidden]: true }}>
-                    {cell}
-                  </Hidden>
-                ) : (
-                  cell
-                );
-              })}
-              <TableHeaderCell style={{ maxWidth: '40px' }} />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {!error && shareGroups.length === 0 && (
-              <TableRow rowborder>
-                <TableCell
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    padding: 0,
-                  }}
-                >
-                  <Box
-                    sx={(theme) => ({
+                  return col.hidden ? (
+                    <Hidden key={idx} {...{ [col.hidden]: true }}>
+                      {cell}
+                    </Hidden>
+                  ) : (
+                    cell
+                  );
+                })}
+                <TableHeaderCell className="action-column" />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {!error && shareGroups.length === 0 && (
+                <TableRow rowborder>
+                  <TableCell
+                    style={{
                       display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: theme.spacingFunction(4),
-                      p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
-                      width: '100%',
-                    })}
+                      justifyContent: 'center',
+                      padding: 0,
+                    }}
                   >
-                    <ZeroStateSearchNarrowIcon />
-                    <Typography variant="h3">{emptyMessage.main}</Typography>
-                    {!query && emptyMessage.instruction && (
-                      <Typography variant="body1">
-                        {emptyMessage.instruction}
-                      </Typography>
-                    )}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            )}
-            {error && query && (
-              <TableRow rowborder>
-                <TableCell style={{ padding: 0 }}>
-                  <ErrorState compact errorText={error[0].reason} />
-                </TableCell>
-              </TableRow>
-            )}
+                    <Box
+                      sx={(theme) => ({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: theme.spacingFunction(4),
+                        p: `${theme.spacingFunction(24)} ${theme.spacingFunction(32)}`,
+                        width: '100%',
+                      })}
+                    >
+                      <ZeroStateSearchNarrowIcon />
+                      <Typography variant="h3">{emptyMessage.main}</Typography>
+                      {!query && emptyMessage.instruction && (
+                        <Typography variant="body1">
+                          {emptyMessage.instruction}
+                        </Typography>
+                      )}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              )}
+              {error && query && (
+                <TableRow rowborder>
+                  <TableCell style={{ padding: 0 }}>
+                    <ErrorState compact errorText={error[0].reason} />
+                  </TableCell>
+                </TableRow>
+              )}
 
-            {shareGroups.map((sharegroup) => (
-              <ShareGroupRow key={sharegroup.id} shareGroup={sharegroup} />
-            ))}
-          </TableBody>
-        </Table>
+              {shareGroups.map((sharegroup) => (
+                <ShareGroupRow key={sharegroup.id} shareGroup={sharegroup} />
+              ))}
+            </TableBody>
+          </Table>
+        </StyledShareGroupsTableContainer>
         {pagination.count > DEFAULT_PAGE_SIZES[0] && (
           <Pagination
             count={pagination.count}
