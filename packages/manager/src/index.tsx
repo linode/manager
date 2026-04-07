@@ -13,7 +13,7 @@ import { storeFactory } from 'src/store';
 
 import './index.css';
 import { App } from './App';
-import { ENABLE_DEV_TOOLS } from './constants';
+import { VITE_MOCKS_ENABLED } from './constants';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 
 const queryClient = queryClientFactory('longLived');
@@ -41,19 +41,24 @@ const Main = () => {
 };
 
 async function loadApp() {
-  if (ENABLE_DEV_TOOLS && !window.location.pathname.includes('/lish/')) {
-    const devTools = await import('./dev-tools/load');
-    await devTools.loadDevTools();
+  // if (ENABLE_DEV_TOOLS && !window.location.pathname.includes('/lish/')) {
+  //   const devTools = await import('./dev-tools/load');
+  //   await devTools.loadDevTools();
 
-    const { DevTools } = await import('./dev-tools/DevTools');
+  //   const { DevTools } = await import('./dev-tools/DevTools');
 
-    const devToolsRootContainer = document.createElement('div');
-    devToolsRootContainer.id = 'dev-tools-root';
-    document.body.appendChild(devToolsRootContainer);
+  //   const devToolsRootContainer = document.createElement('div');
+  //   devToolsRootContainer.id = 'dev-tools-root';
+  //   document.body.appendChild(devToolsRootContainer);
 
-    const root = createRoot(devToolsRootContainer);
+  //   const root = createRoot(devToolsRootContainer);
 
-    root.render(<DevTools queryClient={queryClient} store={store} />);
+  //   root.render(<DevTools queryClient={queryClient} store={store} />);
+  // }
+
+  if (VITE_MOCKS_ENABLED) {
+    const { initMocks } = await import('@akamai/compute-ui-mocks');
+    await initMocks();
   }
 
   const container = document.getElementById('root');

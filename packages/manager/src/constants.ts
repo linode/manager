@@ -11,6 +11,11 @@ export const ENABLE_DEV_TOOLS =
     ? import.meta.env.DEV
     : getBooleanEnv(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
 
+export const VITE_MOCKS_ENABLED =
+  import.meta.env.VITE_MOCKS_ENABLED === undefined
+    ? import.meta.env.DEV
+    : getBooleanEnv(import.meta.env.VITE_MOCKS_ENABLED);
+
 // allow us to explicity enable maintenance mode
 export const ENABLE_MAINTENANCE_MODE = getBooleanEnv(
   import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE
