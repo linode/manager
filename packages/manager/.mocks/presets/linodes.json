@@ -1,0 +1,1069 @@
+[
+  {
+    "endpoint": "/v4beta/linode/instances",
+    "method": "POST"
+  },
+  {
+    "endpoint": "/v4/linode/instances/:id",
+    "method": "DELETE",
+    "storeKey": "linodes"
+  },
+  {
+    "endpoint": "/v4beta/linode/instances/:id",
+    "method": "GET",
+    "storeKey": "linodes"
+  },
+  {
+    "endpoint": "/v4beta/linode/instances",
+    "method": "GET",
+    "paginated": true,
+    "data": [
+      {
+        "id": 1,
+        "label": "my-linode-1",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.181Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.181Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 2,
+        "label": "my-linode-2",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 3,
+        "label": "my-linode-3",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 4,
+        "label": "my-linode-4",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 5,
+        "label": "my-linode-5",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 6,
+        "label": "my-linode-6",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 7,
+        "label": "my-linode-7",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 8,
+        "label": "my-linode-8",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 9,
+        "label": "my-linode-9",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 10,
+        "label": "my-linode-10",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 11,
+        "label": "my-linode-11",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 12,
+        "label": "my-linode-12",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 13,
+        "label": "my-linode-13",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 14,
+        "label": "my-linode-14",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 15,
+        "label": "my-linode-15",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 16,
+        "label": "my-linode-16",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 17,
+        "label": "my-linode-17",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 18,
+        "label": "my-linode-18",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 19,
+        "label": "my-linode-19",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      },
+      {
+        "id": 20,
+        "label": "my-linode-20",
+        "status": "running",
+        "region": "us-east",
+        "alerts": {
+          "cpu": 0,
+          "io": 0,
+          "network_in": 0,
+          "network_out": 0,
+          "transfer_quota": 0,
+          "system_alerts": [],
+          "user_alerts": []
+        },
+        "backups": {
+          "enabled": false,
+          "last_successful": null,
+          "schedule": {
+            "day": "Monday",
+            "window": "W0"
+          }
+        },
+        "capabilities": [
+          "Block Storage Encryption"
+        ],
+        "created": "2026-04-07T10:06:13.182Z",
+        "group": "",
+        "has_user_data": false,
+        "hypervisor": "kvm",
+        "image": null,
+        "ipv4": [
+          "192.0.2.1"
+        ],
+        "ipv6": null,
+        "lke_cluster_id": null,
+        "locks": [],
+        "maintenance_policy": null,
+        "placement_group": null,
+        "site_type": "core",
+        "specs": {
+          "accelerated_devices": 0,
+          "disk": 51200,
+          "gpus": 0,
+          "memory": 2048,
+          "transfer": 2000,
+          "vcpus": 1
+        },
+        "tags": [],
+        "type": null,
+        "updated": "2026-04-07T10:06:13.182Z",
+        "watchdog_enabled": true
+      }
+    ],
+    "storeKey": "linodes"
+  },
+  {
+    "endpoint": "/v4beta/linode/instances/:id",
+    "method": "PUT",
+    "storeKey": "linodes"
+  }
+]
