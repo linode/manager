@@ -85,8 +85,8 @@ export const fetchAccount: CypressPlugin = async (_on, config) => {
 
   return {
     ...config,
-    env: {
-      ...config.env,
+    expose: {
+      ...config.expose,
       cloudManagerAccount: account || accountCacheData,
       cloudManagerAccountSettings: accountSettings,
     },
