@@ -597,3 +597,38 @@ export const databaseConfigurationsAdvConfig: DatabaseClusterConfiguration[] = [
     ip: randomIp(),
   },
 ];
+
+export const databaseConfigurationsUpdate: DatabaseClusterConfiguration[] = [
+  {
+    clusterSize: 1,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 3,
+    dbType: 'postgresql',
+    engine: 'PostgreSQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '13',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 2,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g7-premium-4',
+    region: chooseRegion({
+      capabilities: ['Managed Databases', 'Premium Plans'],
+    }),
+    version: '8',
+    ip: randomIp(),
+  },
+];
