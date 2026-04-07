@@ -26,7 +26,7 @@ export const makeNodeBalCreateReq = (nodeBal: NodeBalancer) => {
     },
     body: nodeBalData,
     method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/v4/nodebalancers',
+    url: Cypress.expose('REACT_APP_API_ROOT') + '/v4/nodebalancers',
   });
 };
 

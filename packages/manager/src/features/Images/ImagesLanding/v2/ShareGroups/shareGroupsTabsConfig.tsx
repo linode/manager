@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { SHARE_GROUPS_OWNED_TAB_PENDO_IDS } from 'src/features/Images/constants';
+
 import type { APIError } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
 import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
@@ -123,7 +125,7 @@ export const SHAREGROUPS_CONFIG: Record<
     docsLink: {
       href: `https://techdocs.akamai.com/cloud-computing/docs/image-sharing`,
       label: 'Image sharing',
-      pendoId: 'Images Groups Owned-Docs Link',
+      pendoId: SHARE_GROUPS_OWNED_TAB_PENDO_IDS.imageSharingDocsLink,
     },
     columns: OWNED_GROUPS_TABLE_COLUMNS,
     emptyMessage: {
@@ -138,9 +140,9 @@ export const SHAREGROUPS_CONFIG: Record<
       buttonText: 'Create Share Group',
       navigateTo: '/images/share-groups/create',
       disabledToolTipText: 'You do not have permissions to create share groups',
-      pendoId: 'Images Groups Owned-Create Button',
+      pendoId: SHARE_GROUPS_OWNED_TAB_PENDO_IDS.createButton,
     },
-    searchFieldPendoId: 'Images Groups Owned-Search',
+    searchFieldPendoId: SHARE_GROUPS_OWNED_TAB_PENDO_IDS.searchShareGroupsBar,
   },
   'joined-groups': {
     title: 'Joined groups',
