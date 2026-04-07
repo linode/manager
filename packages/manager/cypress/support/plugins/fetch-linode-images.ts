@@ -12,8 +12,8 @@ export const fetchLinodeImages: CypressPlugin = async (_, config) => {
   const images = data.data;
   return {
     ...config,
-    env: {
-      ...config.env,
+    expose: {
+      ...config.expose,
       cloudManagerImages: images,
     },
   };

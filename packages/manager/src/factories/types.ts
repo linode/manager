@@ -298,3 +298,20 @@ export const networkTransferPriceTypeFactory =
     ],
     transfer: 0,
   });
+
+export const reservedIPsTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'reserved-ipv4',
+  label: 'Reserved IPv4 Address',
+  price: {
+    hourly: 0.007,
+    monthly: 5,
+  },
+  region_prices: [
+    {
+      hourly: 0.014,
+      id: 'pl-labkrk-2',
+      monthly: 10,
+    },
+  ],
+  transfer: 0,
+});
