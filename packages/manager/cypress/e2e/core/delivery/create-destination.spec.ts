@@ -163,7 +163,7 @@ describe('Create Destination', () => {
         );
 
         // Switch to manual mode and fill in values
-        cy.findByLabelText('Enter Bucket manually').click();
+        cy.findByLabelText('Enter Bucket details manually').click();
         logsDestinationForm.setBucket('my-manual-bucket');
         logsDestinationForm.setEndpoint('my-endpoint.com');
 
