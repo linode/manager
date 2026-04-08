@@ -160,7 +160,9 @@ describe('Edit Destination', () => {
         ]);
 
         // Edit mode defaults to manual bucket entry
-        cy.findByLabelText('Enter Bucket manually').should('be.checked');
+        cy.findByLabelText('Enter Bucket details manually').should(
+          'be.checked'
+        );
 
         // Endpoint should be enabled in manual mode
         cy.findByLabelText('Endpoint').should('be.enabled');

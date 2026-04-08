@@ -95,7 +95,7 @@ export const StreamFormClusterTableContent = ({
           >
             Region
           </TableSortCell>
-          <TableCell sx={{ width: '25%' }}>Log Generation</TableCell>
+          <TableCell sx={{ width: '25%' }}>Logging Status</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
