@@ -56,7 +56,7 @@ export const ShareGroupsCreate = () => {
     const selectedImages = imagesController.value ?? [];
 
     const { id, label, description } = image;
-    const imagePayload = { id, label, description: description ?? undefined };
+    const imagePayload = { id, label, ...(description && { description }) };
 
     if (!selectedImages.some((img) => img.id === id)) {
       imagesController.onChange([...selectedImages, imagePayload]);
