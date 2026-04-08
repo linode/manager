@@ -20,6 +20,7 @@ export const SSHKeys = () => {
         <UserSSHKeyPanel
           authorizedUsers={field.value ?? []}
           disabled={!permissions.create_linode}
+          headingVariant={isPasswordLessLinodesEnabled ? 'h3' : 'h2'}
           setAuthorizedUsers={(values) => {
             field.onChange(values);
             if (isPasswordLessLinodesEnabled) {
