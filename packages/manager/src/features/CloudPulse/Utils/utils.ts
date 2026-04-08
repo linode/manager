@@ -737,10 +737,6 @@ export const humanizeLargeData = (value: number) => {
  * formatObjectStorageUrl('xzz12.yuh.hhh.us-iad.linodeobjects.com') // Returns: 'xzz12.yuh.hhh[us-iad]'
  */
 export const formatObjectStorageUrl = (url: string): string => {
-  if (!url) {
-    return url;
-  }
-
   const parts = url.split('.');
 
   // Need at least 3 parts for a valid object storage URL
