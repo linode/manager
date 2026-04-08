@@ -114,10 +114,12 @@ describe('DestinationEdit', () => {
       await waitForElementToBeRemoved(loadingElement);
     };
 
-    it('should default to "Enter Bucket manually" radio in edit mode', async () => {
+    it('should default to "Enter Bucket details manually" radio in edit mode', async () => {
       await renderEditWithMockDestination();
 
-      const manualRadio = screen.getByLabelText('Enter Bucket manually');
+      const manualRadio = screen.getByLabelText(
+        'Enter Bucket details manually'
+      );
       expect(manualRadio).toBeChecked();
     });
 

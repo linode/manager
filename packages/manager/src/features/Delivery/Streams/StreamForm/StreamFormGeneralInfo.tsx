@@ -42,9 +42,9 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
   const capitalizedMode = capitalize(mode);
   const description = {
     audit_logs:
-      'Audit logs record state-changing operations on cloud resources and authentication events, delivered in CloudEvents JSON format.',
+      'Audit logs record state-changing operations on cloud resources and authentication events, and are delivered in CloudEvents JSON format.',
     lke_audit_logs:
-      'Kubernetes API server audit logs capture state-changing operations on LKE-E cluster resources.',
+      'Kubernetes API server audit logs capture state-changing operations on LKE-E cluster resources, and are delivered in native Kubernetes audit format.',
   };
   const pendoIds = {
     audit_logs: `Logs Delivery Streams ${capitalizedMode}-Audit Logs`,

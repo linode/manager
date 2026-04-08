@@ -41,8 +41,8 @@ export const fetchLinodeRegions: CypressPlugin = async (on, config) => {
 
   return {
     ...config,
-    env: {
-      ...config.env,
+    expose: {
+      ...config.expose,
       cloudManagerRegions: extendedRegions,
       cloudManagerAvailability: availability.data,
     },

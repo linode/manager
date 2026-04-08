@@ -5,4 +5,4 @@
 /**
  * Login base URL for Cloud Manager.
  */
-export const loginBaseUrl = Cypress.env('REACT_APP_LOGIN_ROOT');
+export const loginBaseUrl = Cypress.expose('REACT_APP_LOGIN_ROOT');

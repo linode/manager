@@ -56,7 +56,9 @@ describe('StreamCreate', () => {
         );
         await userEvent.click(createNewTestDestination);
 
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
