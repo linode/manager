@@ -1,5 +1,4 @@
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -9,20 +8,15 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 
-import { convertResourceMetric, getQuotaError } from '../utils';
+import { convertResourceMetric } from '../utils';
 
 import type { QuotaWithUsage } from '../utils';
-import type { Quota, QuotaUsage } from '@linode/api-v4';
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { Quota } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface QuotasTableRowProps {
-  hasUsage: boolean;
-  index: number;
-  isDataPresent: boolean;
-  quota: QuotaWithUsage;
   quotaRowMinHeight: number;
-  quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[];
+  quotaWithUsage: QuotaWithUsage;
   setConvertedResourceMetrics: (resourceMetric: {
     limit: number;
     metric: string;
@@ -33,19 +27,15 @@ interface QuotasTableRowProps {
 
 export const QuotasTableRow = (props: QuotasTableRowProps) => {
   const {
-    hasUsage,
-    isDataPresent,
-    index,
-    quota,
+    quotaWithUsage,
     quotaRowMinHeight,
-    quotaUsageQueries,
     setSelectedQuota,
     setSupportModalOpen,
     setConvertedResourceMetrics,
   } = props;
   const flags = useFlags();
   const { isAkamaiAccount } = useIsAkamaiAccount();
-  // These conditions are meant to achieve a couple things:
+  // These conditions are meant to achieve a couple of things:
   // 1. Ability to disable the request for increase button for Internal accounts (this will be used for early adopters, and removed eventually).
   // 2. Ability to disable the request for increase button for All accounts (this is a prevention measure when beta is in GA).
   const isRequestForQuotaButtonDisabled =
@@ -53,16 +43,18 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
       isAkamaiAccount);
 
+  const quota = quotaWithUsage.quota;
+
   const { convertedLimit, convertedResourceMetric } = convertResourceMetric({
     initialResourceMetric: quota.resource_metric,
-    initialUsage: quota.usage?.usage ?? 0,
+    initialUsage: quotaWithUsage.usage ?? 0,
     initialLimit: quota.quota_limit,
   });
 
   const requestIncreaseAction: Action = {
     disabled: isRequestForQuotaButtonDisabled,
     onClick: () => {
-      setSelectedQuota(quota);
+      setSelectedQuota(quotaWithUsage.quota);
       setSupportModalOpen(true);
       setConvertedResourceMetrics({
         limit: Number(convertedLimit),
@@ -101,12 +93,12 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
       </TableCell>
       <TableCell>
         <Box sx={{ maxWidth: '80%' }}>
-          {quotaUsageQueries[index]?.isLoading ? (
+          {quotaWithUsage.isFetchingUsage ? (
             <Box alignItems="center" display="flex" gap={1}>
               <CircleProgress size="sm" />{' '}
-              <Typography>Fetching Data...</Typography>
+              <Typography>Fetching data...</Typography>
             </Box>
-          ) : quotaUsageQueries[index]?.error ? (
+          ) : quotaWithUsage.fetchingUsageFailed ? (
             <Typography
               sx={{
                 alignItems: 'center',
@@ -115,16 +107,23 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
                 lineHeight: 1,
               }}
             >
-              <ErrorOutline />
-              {getQuotaError(quotaUsageQueries, index)}
+              <TooltipIcon
+                status="warning"
+                sxTooltipIcon={{ padding: `0px 0px` }}
+                text={
+                  quotaWithUsage.usageFetchErrorMessage ??
+                  'An unexpected error occurred.'
+                }
+              />
+              Failed to fetch data
             </Typography>
-          ) : hasUsage && isDataPresent ? (
+          ) : quotaWithUsage.usage !== null ? (
             <QuotaUsageBar
               limit={quota.quota_limit}
               resourceMetric={quota.resource_metric}
-              usage={quota.usage?.usage ?? 0}
+              usage={quotaWithUsage.usage}
             />
-          ) : hasUsage ? (
+          ) : quotaWithUsage.hasUsage ? (
             <Typography>Data not available</Typography>
           ) : (
             <Typography>Not applicable</Typography>

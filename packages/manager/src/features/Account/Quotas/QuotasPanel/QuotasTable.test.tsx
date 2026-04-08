@@ -1,8 +1,15 @@
-import { QuotaResourceMetrics } from '@linode/api-v4';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import {
+  linodeQuotaFactory,
+  objEndpointQuotaFactory,
+  quotaUsageFactory,
+} from 'src/factories/quotas';
+import {
+  linodeQuotaService,
+  objectStorageQuotaService,
+} from 'src/features/Account/Quotas/quotaServices';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { QuotasTable } from './QuotasTable';
@@ -42,12 +49,9 @@ describe('QuotasTable', () => {
   it('should render', async () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       <QuotasTable
-        isGlobalScope={false}
-        selectedLocation={null}
-        selectedService={{
-          label: 'Linodes',
-          value: 'linode',
-        }}
+        scope={'region'}
+        scopeValue={null}
+        service={linodeQuotaService}
       />
     );
     expect(
@@ -65,7 +69,7 @@ describe('QuotasTable', () => {
 
   it('should render a table with the correct data', async () => {
     const quotas = [
-      quotaFactory.build({
+      linodeQuotaFactory.build({
         description: 'Random Quota Description',
         quota_limit: 100,
         quota_name: 'Random Quota',
@@ -93,15 +97,9 @@ describe('QuotasTable', () => {
 
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
       <QuotasTable
-        isGlobalScope={false}
-        selectedLocation={{
-          label: 'NJ',
-          value: 'us-east',
-        }}
-        selectedService={{
-          label: 'Linodes',
-          value: 'linode',
-        }}
+        scope={'region'}
+        scopeValue={'us-east'}
+        service={linodeQuotaService}
       />
     );
 
@@ -123,16 +121,16 @@ describe('QuotasTable', () => {
     });
   });
 
-  it('should display object storage thoughput quotas correctly', async () => {
+  it('should display object storage throughput quotas correctly', async () => {
     queryMocks.useAllQuotasQuery.mockReturnValue({
       data: [
-        quotaFactory.build({
+        objEndpointQuotaFactory.build({
           quota_name: 'Ingress Throughput (per endpoint)',
           description:
             'Current total ingress bandwidth per account, per endpoint',
           quota_limit: 1250000000,
           quota_type: 'obj-total-ingress-throughput',
-          resource_metric: QuotaResourceMetrics.BYTE_PER_SECOND,
+          resource_metric: 'byte_per_second',
           has_usage: false,
         }),
       ],
@@ -151,15 +149,9 @@ describe('QuotasTable', () => {
 
     const { getByLabelText, getByText } = renderWithTheme(
       <QuotasTable
-        isGlobalScope={false}
-        selectedLocation={{
-          label: 'NJ',
-          value: 'us-east',
-        }}
-        selectedService={{
-          label: 'Object Storage',
-          value: 'object-storage',
-        }}
+        scope={'obj-endpoint'}
+        scopeValue={'endpoint.linodeobjects.com'}
+        service={objectStorageQuotaService()}
       />
     );
 

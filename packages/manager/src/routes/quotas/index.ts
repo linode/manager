@@ -3,10 +3,17 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { QuotasRoute } from './QuotasRoute';
 
+import type { QuotaServiceType } from '@linode/api-v4';
+
+interface QuotasSearchParams {
+  service?: QuotaServiceType;
+}
+
 const quotasRoute = createRoute({
   component: QuotasRoute,
   getParentRoute: () => rootRoute,
   path: 'quotas',
+  validateSearch: (search: QuotasSearchParams) => search,
 });
 
 // Catch all route for quotas page
