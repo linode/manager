@@ -76,7 +76,7 @@ export const logsDestinationForm = {
     cy.findByLabelText('Endpoint')
       .should('be.visible')
       .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Endpoint for the destination')
+      .should('have.attr', 'placeholder', 'https://us-ord-1.linodeobjects.com')
       .clear();
     cy.focused().type(endpoint);
   },
@@ -129,7 +129,7 @@ export const logsDestinationForm = {
     data: AkamaiObjectStorageDetailsExtended
   ) => {
     // Switch to manual bucket entry
-    cy.findByLabelText('Enter Bucket manually').click();
+    cy.findByLabelText('Enter Bucket details manually').click();
 
     logsDestinationForm.setBucket(data.bucket_name);
     logsDestinationForm.setEndpoint(data.host);

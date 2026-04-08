@@ -240,7 +240,9 @@ describe('StreamFormDelivery', () => {
           expect(endpointInput).toBeDisabled();
 
           // Switch to manual mode
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           // Now Endpoint should be enabled
@@ -256,7 +258,9 @@ describe('StreamFormDelivery', () => {
           );
 
           // Switch to manual mode
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           // Type the test value inside the input
@@ -332,13 +336,15 @@ describe('StreamFormDelivery', () => {
           expect(endpointInput).toBeDisabled();
         });
 
-        it('should enable the Endpoint field when "Enter Bucket manually" is selected', async () => {
+        it('should enable the Endpoint field when "Enter Bucket details manually" is selected', async () => {
           await renderComponentAndAddNewDestinationName(
             destinationType.AkamaiObjectStorage,
             flags
           );
 
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');
@@ -352,7 +358,9 @@ describe('StreamFormDelivery', () => {
           );
 
           // Switch to manual mode and fill in values
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const bucketInput = screen.getByLabelText('Bucket');
