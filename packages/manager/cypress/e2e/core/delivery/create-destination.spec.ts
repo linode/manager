@@ -1,4 +1,5 @@
 import {
+  CREATE_DESTINATION_ERROR_MESSAGE,
   mockAkamaiObjectStorageDestination,
   mockAkamaiObjectStorageDestinationPayload,
   mockCustomHttpsDestination,
@@ -78,13 +79,16 @@ describe('Create Destination', () => {
       );
 
       // Submit the destination create form - failure
-      mockCreateDestination({}, 400);
+      mockCreateDestination(
+        { errors: [{ reason: CREATE_DESTINATION_ERROR_MESSAGE }] },
+        500
+      );
       cy.findByRole('button', { name: 'Create Destination' })
         .should('be.enabled')
         .should('have.attr', 'type', 'button')
         .click();
 
-      ui.toast.assertMessage(`There was an issue creating your destination`);
+      ui.toast.assertMessage(CREATE_DESTINATION_ERROR_MESSAGE);
 
       // Submit the destination create form - success
       mockCreateDestination(mockAkamaiObjectStorageDestination);
@@ -159,7 +163,7 @@ describe('Create Destination', () => {
         );
 
         // Switch to manual mode and fill in values
-        cy.findByLabelText('Enter Bucket manually').click();
+        cy.findByLabelText('Enter Bucket details manually').click();
         logsDestinationForm.setBucket('my-manual-bucket');
         logsDestinationForm.setEndpoint('my-endpoint.com');
 
@@ -223,13 +227,16 @@ describe('Create Destination', () => {
       );
 
       // Submit the destination create form - failure
-      mockCreateDestination({}, 400);
+      mockCreateDestination(
+        { errors: [{ reason: CREATE_DESTINATION_ERROR_MESSAGE }] },
+        500
+      );
       cy.findByRole('button', { name: 'Create Destination' })
         .should('be.enabled')
         .should('have.attr', 'type', 'button')
         .click();
 
-      ui.toast.assertMessage(`There was an issue creating your destination`);
+      ui.toast.assertMessage(CREATE_DESTINATION_ERROR_MESSAGE);
 
       // Submit the destination create form - success
       mockCreateDestination(mockCustomHttpsDestination);
