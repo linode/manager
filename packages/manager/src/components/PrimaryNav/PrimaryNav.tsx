@@ -282,6 +282,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isAlertsEnabled,
                 to: '/alerts',
                 isBeta: flags.aclpAlerting?.beta,
+                isNew: !flags.aclpAlerting?.beta && flags.aclpAlerting?.new,
               },
               {
                 display: 'Logs',
