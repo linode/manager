@@ -30,15 +30,13 @@ import type { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/compon
 
 interface Props {
   image: Image;
-  onCheckboxSelect?: () => void;
   onSelect?: () => void;
   pendoIDs:
     | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
     | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
     | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
   regions: Region[];
-  selected?: boolean;
-  selectedImages: string[];
+  selectedImageIds: string[];
   selectionMode: 'multi' | 'single';
   timezone?: string;
 }
@@ -47,11 +45,9 @@ export const ImageSelectTableRow = (props: Props) => {
   const {
     image,
     onSelect,
-    onCheckboxSelect,
     pendoIDs,
     regions,
-    selected,
-    selectedImages,
+    selectedImageIds,
     timezone,
     selectionMode,
   } = props;
@@ -104,13 +100,14 @@ export const ImageSelectTableRow = (props: Props) => {
     </StyledFormattedRegionList>
   );
 
+  const selected = selectedImageIds.includes(id);
   return (
     <TableRow
       key={id}
       rowborder
-      select={onCheckboxSelect}
+      select={onSelect}
       selectable={selectionMode === 'multi'}
-      selected={selectedImages.includes(id)}
+      selected={selected}
     >
       <TableCell style={{ ...TABLE_CELL_BASE_STYLE }}>
         {selectionMode === 'single' ? (

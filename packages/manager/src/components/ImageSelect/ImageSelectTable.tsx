@@ -60,7 +60,6 @@ interface Props {
    */
   errorText?: string;
 
-  onCheckboxSelect?: (image: Image) => void;
   /**
    * Callback fired when the user selects an image row.
    */
@@ -77,7 +76,6 @@ interface Props {
    * The IDs of the currently selected images, when using multi-select mode with checkboxes.
    */
   selectedImageIds: string[];
-
   /**
    * Whether this table should use single-select mode with radio buttons, or multi-select mode with checkboxes.
    * The default is single select.
@@ -94,7 +92,7 @@ export const ImageSelectTable = (props: Props) => {
     onSelect,
     pendoIDs,
     queryParamsPrefix,
-    selectionMode = 'single',
+    selectionMode,
     selectedImageIds,
   } = props;
 
@@ -327,7 +325,6 @@ export const ImageSelectTable = (props: Props) => {
             )}
             {!isLoading &&
               !imagesError &&
-              selectionMode === 'single' &&
               pagination.paginatedData.map((image) => (
                 <ImageSelectTableRow
                   image={image}
@@ -335,22 +332,7 @@ export const ImageSelectTable = (props: Props) => {
                   onSelect={() => onSelect(image)}
                   pendoIDs={pendoIDs}
                   regions={regions ?? []}
-                  selected={selectedImageIds?.includes(image.id)}
-                  selectedImages={selectedImageIds}
-                  selectionMode={selectionMode}
-                  timezone={profile?.timezone}
-                />
-              ))}
-            {!isLoading &&
-              !imagesError &&
-              pagination.paginatedData.map((image) => (
-                <ImageSelectTableRow
-                  image={image}
-                  key={image.id}
-                  onCheckboxSelect={() => onSelect(image)}
-                  pendoIDs={pendoIDs}
-                  regions={regions ?? []}
-                  selectedImages={selectedImageIds ?? []}
+                  selectedImageIds={selectedImageIds}
                   selectionMode={selectionMode}
                   timezone={profile?.timezone}
                 />
