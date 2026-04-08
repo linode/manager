@@ -112,30 +112,39 @@ export const DestinationEdit = () => {
       });
   };
 
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center">
+        <CircleProgress size="md" />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        compact
+        errorText={
+          getAPIErrorOrDefault(
+            error,
+            'There was an error retrieving destination. Please reload and try again.'
+          )[0].reason
+        }
+      />
+    );
+  }
+
   return (
     <>
       <DocumentTitleSegment segment="Edit Destination" />
       <LandingHeader {...landingHeaderProps} />
-      {isLoading && (
-        <Box display="flex" justifyContent="center">
-          <CircleProgress size="md" />
-        </Box>
-      )}
-      {error && (
-        <ErrorState
-          compact
-          errorText="There was an error retrieving destination. Please reload and try again."
+      <FormProvider {...form}>
+        <DestinationForm
+          isSubmitting={isUpdatingDestination}
+          mode="edit"
+          onSubmit={onSubmit}
         />
-      )}
-      {!isLoading && !error && (
-        <FormProvider {...form}>
-          <DestinationForm
-            isSubmitting={isUpdatingDestination}
-            mode="edit"
-            onSubmit={onSubmit}
-          />
-        </FormProvider>
-      )}
+      </FormProvider>
     </>
   );
 };
