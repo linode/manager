@@ -7,6 +7,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { RESERVED_IPS_DOCS_LINK } from '../constants';
 import { ReserveIPDrawer } from '../ReserveIPDrawer';
 import { ReservedIpsLandingEmptyState } from './ReservedIpsLandingEmptyState';
 import { ReservedIpsLandingTable } from './ReservedIpsLandingTable';
@@ -116,6 +117,7 @@ export const ReservedIpsLanding = () => {
     <>
       <LandingHeader
         createButtonText="Reserve an IP Address"
+        docsLink={RESERVED_IPS_DOCS_LINK}
         onButtonClick={() => openDrawer('create')}
         spacingBottom={16}
         title="Reserved IP Addresses"
