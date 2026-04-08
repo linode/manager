@@ -26,20 +26,35 @@ import type {
 } from './constants';
 import type { Image, ImageRegion, Region } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
+import type { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 
 interface Props {
   image: Image;
-  onSelect: () => void;
+  onCheckboxSelect?: () => void;
+  onSelect?: () => void;
   pendoIDs:
     | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
-    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS;
+    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
+    | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
   regions: Region[];
-  selected: boolean;
+  selected?: boolean;
+  selectedImages: string[];
+  selectionMode: 'multi' | 'single';
   timezone?: string;
 }
 
 export const ImageSelectTableRow = (props: Props) => {
-  const { image, onSelect, pendoIDs, regions, selected, timezone } = props;
+  const {
+    image,
+    onSelect,
+    onCheckboxSelect,
+    pendoIDs,
+    regions,
+    selected,
+    selectedImages,
+    timezone,
+    selectionMode,
+  } = props;
 
   const {
     capabilities,
@@ -90,15 +105,25 @@ export const ImageSelectTableRow = (props: Props) => {
   );
 
   return (
-    <TableRow key={id} rowborder>
+    <TableRow
+      key={id}
+      rowborder
+      select={onCheckboxSelect}
+      selectable={selectionMode === 'multi'}
+      selected={selectedImages.includes(id)}
+    >
       <TableCell style={{ ...TABLE_CELL_BASE_STYLE }}>
-        <FormControlLabel
-          checked={selected}
-          control={<Radio />}
-          label={label}
-          onChange={onSelect}
-          sx={{ gap: 2 }}
-        />
+        {selectionMode === 'single' ? (
+          <FormControlLabel
+            checked={selected}
+            control={<Radio />}
+            label={label}
+            onChange={onSelect}
+            sx={{ gap: 2 }}
+          />
+        ) : (
+          label
+        )}
         {type === 'manual' && capabilities.includes('cloud-init') && (
           <TooltipIcon
             data-pendo-id={pendoIDs.metadataSupportedIcon}
@@ -129,17 +154,19 @@ export const ImageSelectTableRow = (props: Props) => {
           />
         </TableCell>
       </Hidden>
-      <Hidden smDown>
-        <TableCell
-          style={{
-            whiteSpace: 'nowrap',
-            paddingLeft: matchesLgDown ? '58px' : undefined,
-            ...TABLE_CELL_BASE_STYLE,
-          }}
-        >
-          {getShareGroupDisplay()}
-        </TableCell>
-      </Hidden>
+      {selectionMode === 'single' && (
+        <Hidden smDown>
+          <TableCell
+            style={{
+              whiteSpace: 'nowrap',
+              paddingLeft: matchesLgDown ? '58px' : undefined,
+              ...TABLE_CELL_BASE_STYLE,
+            }}
+          >
+            {getShareGroupDisplay()}
+          </TableCell>
+        </Hidden>
+      )}
       <Hidden lgDown>
         <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
           {getSizeDisplay()}
