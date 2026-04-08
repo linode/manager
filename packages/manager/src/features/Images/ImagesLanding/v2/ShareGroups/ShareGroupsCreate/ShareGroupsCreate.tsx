@@ -28,7 +28,7 @@ export const ShareGroupsCreate = () => {
   const { control, handleSubmit, setError } =
     useForm<CreateSharegroupPayload>();
 
-  const { field: imagesField, fieldState } = useController({
+  const { field: imagesController, fieldState } = useController({
     control,
     name: 'images',
   });
@@ -53,15 +53,15 @@ export const ShareGroupsCreate = () => {
   });
 
   const onChange = (image: Image) => {
-    const selectedImages = imagesField.value ?? [];
+    const selectedImages = imagesController.value ?? [];
 
     const { id, label, description } = image;
     const imagePayload = { id, label, description: description ?? undefined };
 
     if (!selectedImages.some((img) => img.id === id)) {
-      imagesField.onChange([...selectedImages, imagePayload]);
+      imagesController.onChange([...selectedImages, imagePayload]);
     } else {
-      imagesField.onChange(selectedImages.filter((img) => img.id !== id));
+      imagesController.onChange(selectedImages.filter((img) => img.id !== id));
     }
   };
 
@@ -124,14 +124,16 @@ export const ShareGroupsCreate = () => {
             errorText={fieldState.error?.message}
             onSelect={onChange}
             pendoIDs={IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS}
-            selectedImageIds={imagesField.value?.map((img) => img.id) ?? []}
+            selectedImageIds={
+              imagesController.value?.map((img) => img.id) ?? []
+            }
             selectionMode="multi"
           />
         </Stack>
         <Divider sx={{ marginTop: 4, marginBottom: 4 }} />
         <Stack spacing={2}>
           <Typography variant="h2">
-            Selected images ({imagesField.value?.length ?? 0})
+            Selected images ({imagesController.value?.length ?? 0})
           </Typography>
           <Notice variant="info">Selected images is coming soon...</Notice>
         </Stack>
