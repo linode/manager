@@ -21,6 +21,7 @@ import { ui } from 'support/ui';
 import { logsStreamForm } from 'support/ui/pages/logs-stream-form';
 import { randomLabel } from 'support/util/random';
 
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { kubernetesClusterFactory } from 'src/factories';
 
 describe('Edit Stream', () => {
@@ -114,7 +115,7 @@ describe('Edit Stream', () => {
       mockCreateDestination({}, 400);
       ui.button.findByTitle(saveChangesButtonText).should('be.enabled').click();
 
-      ui.toast.assertMessage(`There was an issue creating your destination`);
+      ui.toast.assertMessage(DEFAULT_ERROR_MESSAGE);
 
       // Submit the stream edit form - success
       mockCreateDestination(mockAkamaiObjectStorageDestination);
@@ -309,7 +310,7 @@ describe('Edit Stream', () => {
 
       ui.button.findByTitle(saveChangesButtonText).click();
       cy.wait('@updateStreamFail');
-      ui.toast.assertMessage('There was an issue editing your stream');
+      ui.toast.assertMessage(DEFAULT_ERROR_MESSAGE);
 
       // Submit the stream edit form - success
       mockUpdateStream(
