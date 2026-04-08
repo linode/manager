@@ -15,10 +15,13 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
 
-import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
+import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from '../utils';
 
-import type { APIError, Quota, QuotaType, TicketRequest } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
+import type { APIError, Quota, TicketRequest } from '@linode/api-v4';
+import type {
+  QuotaScope,
+  QuotaService,
+} from 'src/features/Account/Quotas/quotaServices';
 
 interface QuotasIncreaseFormProps {
   convertedResourceMetrics: {
@@ -29,7 +32,9 @@ interface QuotasIncreaseFormProps {
   onSuccess: (ticketId: number) => void;
   open: boolean;
   quota: Quota;
-  selectedService: SelectOption<QuotaType>;
+  scope: QuotaScope;
+  scopeValue: null | string;
+  service: QuotaService;
 }
 
 export interface QuotaIncreaseFormFields extends TicketRequest {
@@ -39,7 +44,14 @@ export interface QuotaIncreaseFormFields extends TicketRequest {
 }
 
 export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
-  const { onClose, quota, convertedResourceMetrics, selectedService } = props;
+  const {
+    onClose,
+    quota,
+    convertedResourceMetrics,
+    service,
+    scope,
+    scopeValue,
+  } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<null | string>(null);
   const formContainerRef = React.useRef<HTMLFormElement>(null);
@@ -54,9 +66,11 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
         profile,
         quantity: convertedResourceMetrics?.limit ?? 0,
         quota,
-        selectedService,
+        service,
+        scope,
+        scopeValue,
       }),
-    [quota, profile, selectedService, convertedResourceMetrics]
+    [quota, profile, service, convertedResourceMetrics, scope, scopeValue]
   );
   const form = useForm<QuotaIncreaseFormFields>({
     defaultValues,
@@ -74,7 +88,9 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
     profile,
     quantity: Number(quantity),
     quota,
-    selectedService,
+    service,
+    scope,
+    scopeValue,
   }).description;
 
   const handleSubmit = form.handleSubmit(async (values) => {
@@ -130,7 +146,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
               <Stack direction="row" gap={2}>
                 <TextField
                   errorText={fieldState.error?.message}
-                  helperText={`Current quota in ${quota.region_applied || quota.s3_endpoint}: ${convertedResourceMetrics?.limit?.toLocaleString() ?? 'unknown'} ${convertedResourceMetrics?.metric}`}
+                  helperText={`Current quota${scopeValue ? ` in ${scopeValue}` : ''}: ${convertedResourceMetrics?.limit?.toLocaleString() ?? 'unknown'} ${convertedResourceMetrics?.metric}`}
                   label="New Quota"
                   min={convertedResourceMetrics?.limit}
                   name="quantity"

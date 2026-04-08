@@ -4,11 +4,11 @@ import * as React from 'react';
 import { BarPercent } from 'src/components/BarPercent';
 import { convertResourceMetric } from 'src/features/Account/Quotas/utils';
 
-import type { QuotaResourceMetrics } from '@linode/api-v4';
+import type { Quota } from '@linode/api-v4';
 
 interface Props {
   limit: number;
-  resourceMetric: QuotaResourceMetrics;
+  resourceMetric: Quota['resource_metric'];
   usage: number;
 }
 

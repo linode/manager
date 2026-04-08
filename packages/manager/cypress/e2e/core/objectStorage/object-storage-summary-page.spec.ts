@@ -1,4 +1,3 @@
-import { QuotaResourceMetrics } from '@linode/api-v4';
 import { regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -11,7 +10,10 @@ import { ui } from 'support/ui';
 import { randomDomainName, randomLabel } from 'support/util/random';
 
 import { objectStorageEndpointsFactory } from 'src/factories';
-import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import {
+  objEndpointQuotaFactory,
+  quotaUsageFactory,
+} from 'src/factories/quotas';
 
 const mockFeatureFlags = {
   objSummaryPage: true,
@@ -51,35 +53,36 @@ const mockEndpoints = [
 const mockSelectedEndpoint = mockEndpoints[1];
 const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
 
+// the order must match the display order in the UI
 const mockQuotas = [
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-bytes-${selectedDomain}`,
     quota_type: 'obj-bytes',
     description: randomLabel(50),
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 10,
     quota_name: 'Total Capacity',
-    resource_metric: QuotaResourceMetrics.BYTE,
+    resource_metric: 'byte',
     s3_endpoint: selectedDomain,
   }),
-  quotaFactory.build({
-    quota_id: `obj-buckets-${selectedDomain}`,
-    quota_type: 'obj-buckets',
-    description: randomLabel(50),
-    endpoint_type: mockSelectedEndpoint.endpoint_type,
-    quota_limit: 78,
-    quota_name: 'Number of Objects',
-    resource_metric: QuotaResourceMetrics.BUCKET,
-    s3_endpoint: selectedDomain,
-  }),
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-objects-${selectedDomain}`,
     quota_type: 'obj-objects',
     description: randomLabel(50),
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 400,
+    quota_name: 'Number of Objects',
+    resource_metric: 'object',
+    s3_endpoint: selectedDomain,
+  }),
+  objEndpointQuotaFactory.build({
+    quota_id: `obj-buckets-${selectedDomain}`,
+    quota_type: 'obj-buckets',
+    description: randomLabel(50),
+    endpoint_type: mockSelectedEndpoint.endpoint_type,
+    quota_limit: 78,
     quota_name: 'Number of Buckets',
-    resource_metric: QuotaResourceMetrics.OBJECT,
+    resource_metric: 'bucket',
     s3_endpoint: selectedDomain,
   }),
 ];
@@ -108,30 +111,25 @@ describe('Object storage summary page test', () => {
       'getObjectStorageEndpoints'
     );
 
-    cy.wrap(selectedDomain).as('selectedDomain');
-    cy.wrap(mockEndpoints).as('mockEndpoints');
-    cy.wrap(mockQuotas).as('mockQuotas');
-    cy.wrap(mockQuotaUsages).as('mockQuotaUsages');
-
     mockGetObjectStorageQuotas(selectedDomain, mockQuotas).as('getQuotas');
 
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
       'bytes',
       mockQuotaUsages[0]
-    );
+    ).as('getQuotaUsageBytes');
 
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
       'buckets',
       mockQuotaUsages[1]
-    );
+    ).as('getQuotaUsageBuckets');
 
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
       'objects',
       mockQuotaUsages[2]
-    ).as('getQuotaUsages');
+    ).as('getQuotaUsageObjects');
   });
 
   it('should display table with user quotas', () => {
@@ -152,7 +150,12 @@ describe('Object storage summary page test', () => {
       .click();
     endpointSelect.click();
 
-    cy.wait(['@getQuotas', '@getQuotaUsages']);
+    cy.wait([
+      '@getQuotas',
+      '@getQuotaUsageBytes',
+      '@getQuotaUsageBuckets',
+      '@getQuotaUsageObjects',
+    ]);
 
     cy.findByTestId('table-endpoint-summary')
       .find('tbody')

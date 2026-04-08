@@ -1,4 +1,4 @@
-import { Dialog, ErrorState } from '@linode/ui';
+import { Dialog, ErrorState, Stack } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -10,27 +10,31 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
-import { useGetQuotas } from '../hooks/useGetQuotas';
-import { QuotasIncreaseForm } from '../QuotasIncreaseForm';
-import { QUOTA_ROW_MIN_HEIGHT } from '../utils';
+import { useQuotasWithUsageQuery } from '../hooks/useQuotasWithUsageQuery';
+import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';
 
-import type { Quota, QuotaType } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
+import type { Quota } from '@linode/api-v4';
+import type {
+  QuotaScope,
+  QuotaService,
+} from 'src/features/Account/Quotas/quotaServices';
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 interface QuotasTableProps {
-  isGlobalScope: boolean;
-  selectedLocation: null | SelectOption<Quota['region_applied']>;
-  selectedService: SelectOption<QuotaType>;
+  scope: QuotaScope;
+  scopeValue: null | string;
+  service: QuotaService;
 }
 
+const QUOTA_ROW_MIN_HEIGHT = 58;
+
 export const QuotasTable = (props: QuotasTableProps) => {
-  const { selectedLocation, selectedService, isGlobalScope } = props;
+  const { scopeValue, service, scope } = props;
   const navigate = useNavigate();
 
-  const hasSelectedLocation = Boolean(selectedLocation?.value);
-  const collectionName = isGlobalScope ? 'global-quotas' : 'quotas';
+  const isScopeValueProvided = Boolean(scopeValue);
+  const isGlobalScope = scope === 'global';
 
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
   const [selectedQuota, setSelectedQuota] = React.useState<Quota | undefined>();
@@ -45,20 +49,24 @@ export const QuotasTable = (props: QuotasTableProps) => {
 
   const {
     data: quotasWithUsage,
-    errorMessage: quotasErrorMessage,
-    queries: quotaUsageQueries,
+    error: quotasError,
     isFetching: isFetchingQuotas,
-  } = useGetQuotas({
-    selectedLocation: selectedLocation?.value,
-    selectedService: selectedService.value,
-    collectionName,
-    enabled: isGlobalScope ? true : hasSelectedLocation,
+  } = useQuotasWithUsageQuery({
+    service,
+    scope,
+    scopeValue,
+    enabled: isGlobalScope || isScopeValueProvided,
   });
 
-  const isNotFoundErrorIgnored = quotasErrorMessage === 'Not found';
+  const testId = `quotas-table-${scope}`;
 
-  if (quotasErrorMessage && !isNotFoundErrorIgnored) {
-    return <ErrorState errorText={quotasErrorMessage} />;
+  if (quotasError) {
+    return (
+      <Stack data-testid={testId}>
+        {' '}
+        <ErrorState errorText={quotasError} />;{' '}
+      </Stack>
+    );
   }
 
   const onIncreaseQuotaTicketCreated = (
@@ -78,7 +86,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
   return (
     <>
       <Table
-        data-testid="table-endpoint-quotas"
+        data-testid={testId}
         sx={(theme) => ({
           marginTop: theme.spacingFunction(16),
           minWidth: theme.breakpoints.values.sm,
@@ -96,40 +104,28 @@ export const QuotasTable = (props: QuotasTableProps) => {
           {isFetchingQuotas ? (
             <TableRowLoading
               columns={4}
-              rows={isGlobalScope ? 1 : 3}
+              rows={1}
               sx={{ height: QUOTA_ROW_MIN_HEIGHT }}
             />
-          ) : !isGlobalScope && !hasSelectedLocation ? (
+          ) : !isGlobalScope && !isScopeValueProvided ? (
             <TableRowEmpty
               colSpan={4}
               message="Apply filters above to see quotas and current usage."
               sx={{ height: QUOTA_ROW_MIN_HEIGHT }}
             />
-          ) : isNotFoundErrorIgnored ? (
+          ) : quotasWithUsage.length === 0 ? (
             <TableRowEmpty
               colSpan={4}
               message="No quotas to display."
               sx={{ height: QUOTA_ROW_MIN_HEIGHT }}
             />
-          ) : quotasWithUsage.length === 0 ? (
-            <TableRowEmpty
-              colSpan={4}
-              message="There is no data available for this service and region."
-              sx={{ height: QUOTA_ROW_MIN_HEIGHT }}
-            />
           ) : (
-            quotasWithUsage.map((quota, index) => {
+            quotasWithUsage.map((quotaWithUsage, index) => {
               return (
                 <QuotasTableRow
-                  hasUsage={
-                    quota.has_usage === true || quota.has_usage === undefined
-                  }
-                  index={index}
-                  isDataPresent={quota.usage?.usage !== null}
-                  key={quota.quota_id}
-                  quota={quota}
+                  key={quotaWithUsage.quota.quota_id}
                   quotaRowMinHeight={QUOTA_ROW_MIN_HEIGHT}
-                  quotaUsageQueries={quotaUsageQueries}
+                  quotaWithUsage={quotaWithUsage}
                   setConvertedResourceMetrics={setConvertedResourceMetrics}
                   setSelectedQuota={setSelectedQuota}
                   setSupportModalOpen={setSupportModalOpen}
@@ -149,7 +145,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
             width: '100%',
           },
         }}
-        title={`Contact Support: Increase ${selectedService.label} Quota`}
+        title={`Contact Support: Increase ${service.label} Quota`}
       >
         {selectedQuota && (
           <QuotasIncreaseForm
@@ -158,7 +154,9 @@ export const QuotasTable = (props: QuotasTableProps) => {
             onSuccess={onIncreaseQuotaTicketCreated}
             open={supportModalOpen}
             quota={selectedQuota}
-            selectedService={selectedService}
+            scope={scope}
+            scopeValue={scopeValue}
+            service={service}
           />
         )}
       </Dialog>

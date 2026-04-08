@@ -1,7 +1,8 @@
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import { linodeQuotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import { linodeQuotaService } from 'src/features/Account/Quotas/quotaServices';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
@@ -19,18 +20,17 @@ describe('QuotasIncreaseForm', () => {
           onSuccess={() => {}}
           open={true}
           quota={{
-            ...quotaFactory.build(),
+            ...linodeQuotaFactory.build(),
             ...quotaUsageFactory.build(),
           }}
-          selectedService={{
-            label: 'Object Storage',
-            value: 'object-storage',
-          }}
+          scope={'region'}
+          scopeValue={'us-east'}
+          service={linodeQuotaService}
         />
       );
 
     expect(getByLabelText('Title (required)')).toHaveValue(
-      'Increase Object Storage Quota'
+      'Increase Linodes Quota'
     );
     expect(getByLabelText('New Quota (required)')).toHaveValue(0);
     expect(getByText('Current quota in us-east: 100 GB')).toBeInTheDocument();
@@ -55,13 +55,12 @@ describe('QuotasIncreaseForm', () => {
         onSuccess={() => {}}
         open={true}
         quota={{
-          ...quotaFactory.build(),
+          ...linodeQuotaFactory.build(),
           ...quotaUsageFactory.build(),
         }}
-        selectedService={{
-          label: 'Object Storage',
-          value: 'object-storage',
-        }}
+        scope={'region'}
+        scopeValue={'us-east'}
+        service={linodeQuotaService}
       />
     );
 
@@ -80,7 +79,7 @@ describe('QuotasIncreaseForm', () => {
 
     await waitFor(() => {
       expect(previewContent).toHaveTextContent(
-        'Increase Object Storage QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GB Needed in: Fewer than 7 days Region: us-east test!'
+        'Increase Linodes QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GB Needed in: Fewer than 7 days Region: us-east test!'
       );
     });
   });
