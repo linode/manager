@@ -29,10 +29,10 @@ describe('SubnetDatabaseRow', () => {
   });
 
   it('should render SubnetDatabaseRow', () => {
-    const dbWithPrimary = {
+    const dbWithPrimary: DatabaseInstance = {
       ...mockDatabase,
       members: { '2.2.2.2': 'primary' },
-    } as DatabaseInstance;
+    };
 
     const { getByText } = renderWithTheme(
       wrapWithTableBody(
@@ -49,14 +49,14 @@ describe('SubnetDatabaseRow', () => {
   });
 
   it('should render SubnetDatabaseRow with multiple failover IPs', () => {
-    const dbWithFailovers = {
+    const dbWithFailovers: DatabaseInstance = {
       ...mockDatabase,
       members: {
         '2.2.2.2': 'primary',
         '2.2.2.3': 'failover',
         '2.2.2.4': 'failover',
       },
-    } as DatabaseInstance;
+    };
 
     const { getByText } = renderWithTheme(
       wrapWithTableBody(
@@ -76,7 +76,7 @@ describe('SubnetDatabaseRow', () => {
     const dbWithNoMembers = {
       ...mockDatabase,
       members: {},
-    } as DatabaseInstance;
+    };
 
     const { getByText } = renderWithTheme(
       wrapWithTableBody(
