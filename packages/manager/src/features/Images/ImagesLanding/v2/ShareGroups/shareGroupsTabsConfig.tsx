@@ -7,12 +7,14 @@ import type { HiddenProps } from '@linode/ui';
 import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
 
 export interface ShareGroupsViewTableColConfig {
+  /* Class name for this column */
+  className?: string;
+
   /* Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
   hidden?: Exclude<keyof HiddenProps, 'children'>;
 
   /* Column name */
   name: string;
-
   /* Provide sortableProps to enable sorting for this column. */
   sortableProps?: {
     /* API field used for sorting this column */
@@ -62,29 +64,36 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
 ];
 
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
-  { name: 'Group', sortableProps: { label: 'label' } },
+  {
+    name: 'Group',
+    sortableProps: { label: 'label' },
+    className: 'group-column',
+  },
   {
     name: 'Description',
     sortableProps: { label: 'description' },
+    className: 'description-column',
   },
   {
     name: '# of members',
+    className: 'membersCount-column',
   },
   {
     name: '# of images',
     hidden: 'smDown',
+    className: 'imagesCount-column',
   },
   {
     name: 'Created',
     sortableProps: { label: 'created' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap' },
+    className: 'created-column',
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap' },
+    className: 'updated-column',
   },
 ];
 
@@ -129,7 +138,7 @@ export const SHAREGROUPS_CONFIG: Record<
     },
     columns: OWNED_GROUPS_TABLE_COLUMNS,
     emptyMessage: {
-      main: 'No Share groups to display',
+      main: 'No share groups to display',
       instruction:
         'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
     },
