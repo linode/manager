@@ -7,7 +7,7 @@ import { Link } from 'src/components/Link';
 import { sendHelpButtonClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export interface DocsLinkProps {
-  /** The label to use for analytics purposes */
+  /** DEPRECATED: The label to use for Adobe Analytics purposes */
   analyticsLabel?: string;
   /** The URL to link to */
   href: string;
@@ -20,6 +20,8 @@ export interface DocsLinkProps {
   label?: string;
   /** A callback function when the link is clicked */
   onClick?: () => void;
+  /** The Pendo ID to use for tracking purposes */
+  pendoId?: string;
 }
 
 /**
@@ -28,7 +30,7 @@ export interface DocsLinkProps {
  * - Consider displaying the title of a key guide or product document as the link instead of the generic “Docs”.
  */
 export const DocsLink = (props: DocsLinkProps) => {
-  const { analyticsLabel, href, label, onClick, icon } = props;
+  const { analyticsLabel, href, label, onClick, icon, pendoId } = props;
 
   return (
     <StyledDocsLink
@@ -40,6 +42,7 @@ export const DocsLink = (props: DocsLinkProps) => {
           onClick();
         }
       }}
+      pendoId={pendoId}
       to={href}
     >
       {icon ?? <DocsIcon />}

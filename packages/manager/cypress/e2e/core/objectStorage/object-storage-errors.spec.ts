@@ -21,10 +21,10 @@ describe('object storage failure paths', () => {
    */
   it('shows error upon object upload failure', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const bucketRegion = 'us-southeast';
     const bucketMock = objectStorageBucketFactory.build({
-      cluster: bucketCluster,
-      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      region: bucketRegion,
+      hostname: `${bucketLabel}.${bucketRegion}-1.linodeobjects.com`,
       label: bucketLabel,
       objects: 0,
     });
@@ -39,19 +39,17 @@ describe('object storage failure paths', () => {
 
     // Mock empty object list and failed object-url upload request.
     mockGetBuckets([bucketMock]).as('getBuckets');
-    mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
+    mockGetBucketObjects(bucketLabel, bucketRegion, []).as('getBucketObjects');
     mockUploadBucketObject(
       bucketLabel,
-      bucketCluster,
+      bucketRegion,
       bucketFilename,
       makeError(randomString()),
       404
     ).as('uploadBucketObject');
 
     // Visit bucket details page, initiate object upload.
-    cy.visitWithLogin(
-      `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
-    );
+    cy.visitWithLogin(`/object-storage/buckets/${bucketRegion}/${bucketLabel}`);
     cy.wait('@getBucketObjects');
 
     cy.fixture(bucketFile, null).then((bucketFileContents) => {
@@ -82,10 +80,10 @@ describe('object storage failure paths', () => {
    */
   it('shows error upon object list retrieval failure', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const bucketRegion = 'us-southeast';
     const bucketMock = objectStorageBucketFactory.build({
-      cluster: bucketCluster,
-      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      region: bucketRegion,
+      hostname: `${bucketLabel}.${bucketRegion}-1.linodeobjects.com`,
       label: bucketLabel,
       objects: 0,
     });
@@ -93,14 +91,12 @@ describe('object storage failure paths', () => {
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockGetBucketObjects(
       bucketLabel,
-      bucketCluster,
+      bucketRegion,
       makeError(randomString()),
       404
     ).as('getBucketObjects');
 
-    cy.visitWithLogin(
-      `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
-    );
+    cy.visitWithLogin(`/object-storage/buckets/${bucketRegion}/${bucketLabel}`);
     cy.wait('@getBucketObjects');
     cy.findByText('We were unable to load your Objects.').should('be.visible');
   });

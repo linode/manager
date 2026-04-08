@@ -1,4 +1,4 @@
-import { mockDestination } from 'support/constants/delivery';
+import { mockAkamaiObjectStorageDestination } from 'support/constants/delivery';
 import {
   mockDeleteStream,
   mockGetDestinations,
@@ -174,7 +174,9 @@ describe('Streams non-empty landing page', () => {
     deactivateStreamViaActionMenu('@streamsTable', exampleStream);
 
     mockGetStream(exampleStream).as('getStream');
-    mockGetDestinations([mockDestination]).as('getDestinations');
+    mockGetDestinations([mockAkamaiObjectStorageDestination]).as(
+      'getDestinations'
+    );
 
     // Redirect to stream edit page via name
     cy.findByText(exampleStream.label).click();

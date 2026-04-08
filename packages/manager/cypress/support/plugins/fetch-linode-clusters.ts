@@ -14,8 +14,8 @@ export const fetchLinodeClusters: CypressPlugin = async (on, config) => {
   });
   return {
     ...config,
-    env: {
-      ...config.env,
+    expose: {
+      ...config.expose,
       cloudManagerClusters: clusters.data,
     },
   };
