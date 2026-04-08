@@ -26,8 +26,6 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
       },
       title: 'Edit',
       pendoId: 'Logs Delivery Streams-Edit',
-      disabled:
-        status === streamStatus.Deactivating || status === streamStatus.Failed,
     },
     {
       onClick: () => {
