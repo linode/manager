@@ -123,7 +123,7 @@ export const ImageSelectTableRow = (props: Props) => {
           <PlanTextTooltip
             data-pendo-id={pendoIDs.replicatedRegionPopover}
             displayText={
-              imageRegions?.length > 0
+              imageRegions.length > 0
                 ? pluralize('Region', 'Regions', imageRegions.length)
                 : '—'
             }
