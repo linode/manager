@@ -177,7 +177,7 @@ export const LinodeRebuildForm = (props: Props) => {
               <>
                 <SSHKeys disabled={!permissions.rebuild_linode} />
                 <Divider spacingBottom={20} spacingTop={24} />
-                <Typography variant="h2">Authentication Method</Typography>
+                <Typography variant="h3">Authentication Method</Typography>
                 {form.formState.errors.root_pass?.message && (
                   <Notice
                     text={form.formState.errors.root_pass.message}

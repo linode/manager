@@ -23,7 +23,7 @@ export const Password = () => {
     <>
       {isPasswordLessLinodesEnabled && (
         <>
-          <Typography mb={2} variant="h2">
+          <Typography mb={2} variant="h3">
             Authentication Method
           </Typography>
           {formState.errors.root_pass?.message && (

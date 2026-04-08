@@ -47,13 +47,17 @@ export const ImageAndPassword = (props: Props) => {
       {isPasswordLessLinodesEnabled ? (
         <Stack>
           <Divider spacingBottom={20} spacingTop={24} />
+          <Typography sx={{ mb: 2 }} variant="h2">
+            Security
+          </Typography>
           <UserSSHKeyPanel
             authorizedUsers={authorizedUsers}
             disabled={disabled}
+            headingVariant="h3"
             setAuthorizedUsers={setAuthorizedUsers}
           />
           <Divider spacingBottom={20} spacingTop={24} />
-          <Typography variant="h2">Authentication Method</Typography>
+          <Typography variant="h3">Authentication Method</Typography>
           {passwordError && (
             <Notice
               sx={{ mb: 0, mt: 2 }}
