@@ -20,18 +20,19 @@ import {
 
 import type { SubnetAssignedDatabaseData } from '@linode/api-v4';
 interface Props {
-  databasesData: SubnetAssignedDatabaseData[];
+  subnetDatabasesData: SubnetAssignedDatabaseData[];
 }
 
-export const SubnetDatabasesTable = ({ databasesData }: Props) => {
+export const SubnetDatabasesTable = ({ subnetDatabasesData }: Props) => {
   const theme = useTheme();
 
   const [pageSize, setPageSize] = React.useState(25);
   const [page, setPage] = React.useState(1);
 
-  const assignedDatabasesMap: Record<number, SubnetAssignedDatabaseData> = {}; // Store assigned databases in map for easy lookup when rendering subnet database rows
-  const databaseIDsToFilter = databasesData.map((database) => {
-    assignedDatabasesMap[database.id] = database;
+  const assignedSubnetDatabasesMap: Record<number, SubnetAssignedDatabaseData> =
+    {}; // Store assigned databases in map for easy lookup when rendering subnet database rows
+  const databaseIDsToFilter = subnetDatabasesData.map((database) => {
+    assignedSubnetDatabasesMap[database.id] = database;
     return {
       id: database.id,
     };
@@ -110,7 +111,7 @@ export const SubnetDatabasesTable = ({ databasesData }: Props) => {
       <DatabasesTableWrapper>
         {databases?.data.map((database) => (
           <SubnetDatabaseRow
-            assignedDatabase={assignedDatabasesMap[database.id]}
+            assignedDatabase={assignedSubnetDatabasesMap[database.id]}
             database={database}
             key={database.id}
           />

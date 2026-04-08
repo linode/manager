@@ -110,7 +110,7 @@ const VPCDetail = () => {
   const numResources = isNodebalancerVPCEnabled
     ? getUniqueResourcesFromSubnets(
         vpc.subnets,
-        flags.vpcDbaasResources ?? false
+        Boolean(flags.vpcDbaasResources)
       )
     : getUniqueLinodesFromSubnets(vpc.subnets);
 

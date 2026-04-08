@@ -15,7 +15,9 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-const mockDatabasesData = [subnetAssignedDatabaseDataFactory.build({ id: 1 })];
+const mockSubnetDatabasesData = [
+  subnetAssignedDatabaseDataFactory.build({ id: 1 }),
+];
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
@@ -39,7 +41,7 @@ describe('SubnetDatabasesTable', () => {
       error: null,
     });
     const { getByText } = renderWithTheme(
-      <SubnetDatabasesTable databasesData={mockDatabasesData} />
+      <SubnetDatabasesTable subnetDatabasesData={mockSubnetDatabasesData} />
     );
     getByText('test-database-1');
     getByText('Database Cluster');
@@ -53,7 +55,7 @@ describe('SubnetDatabasesTable', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <SubnetDatabasesTable databasesData={mockDatabasesData} />
+      <SubnetDatabasesTable subnetDatabasesData={mockSubnetDatabasesData} />
     );
     getByTestId('circle-progress');
   });
@@ -66,7 +68,7 @@ describe('SubnetDatabasesTable', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <SubnetDatabasesTable databasesData={mockDatabasesData} />
+      <SubnetDatabasesTable subnetDatabasesData={mockSubnetDatabasesData} />
     );
     getByTestId('table-row-empty');
   });
@@ -80,7 +82,7 @@ describe('SubnetDatabasesTable', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <SubnetDatabasesTable databasesData={mockDatabasesData} />
+      <SubnetDatabasesTable subnetDatabasesData={mockSubnetDatabasesData} />
     );
     getByText(expectedErrorMessage);
   });

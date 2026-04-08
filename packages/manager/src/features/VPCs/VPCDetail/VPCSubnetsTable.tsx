@@ -407,7 +407,7 @@ export const VPCSubnetsTable = (props: Props) => {
             </Table>
           )}
           {flags.vpcDbaasResources && subnet.databases?.length > 0 && (
-            <SubnetDatabasesTable databasesData={subnet.databases} />
+            <SubnetDatabasesTable subnetDatabasesData={subnet.databases} />
           )}
         </>
       );

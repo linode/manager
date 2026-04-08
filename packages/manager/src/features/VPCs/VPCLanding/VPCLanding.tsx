@@ -178,7 +178,7 @@ const VPCLanding = () => {
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
             <VPCRow
-              displayVPCDBaaSResources={flags.vpcDbaasResources ?? false}
+              displayVPCDBaaSResources={Boolean(flags.vpcDbaasResources)}
               handleDeleteVPC={() => handleDeleteVPC(vpc)}
               handleEditVPC={() => handleEditVPC(vpc)}
               isNodebalancerVPCEnabled={isNodebalancerVPCEnabled}
