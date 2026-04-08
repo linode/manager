@@ -307,31 +307,102 @@ describe('helper functions', () => {
       const result = getNextVersion(currentVersion, versions);
       expect(result).toEqual('2.00');
     });
-  });
 
-  it('should get the next version when given a current enterprise version', () => {
-    const versions: KubernetesTieredVersion[] = [
-      { id: 'v1.31.1+lke4', tier: 'enterprise' },
-      { id: 'v1.31.6+lke2', tier: 'enterprise' },
-      { id: 'v1.31.6+lke3', tier: 'enterprise' },
-      { id: 'v1.31.8+lke1', tier: 'enterprise' },
-    ];
-    const currentVersion = 'v1.31.6+lke2';
+    it('should get the next version when given a current enterprise version', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.31.1+lke4', tier: 'enterprise' },
+        { id: 'v1.31.6+lke2', tier: 'enterprise' },
+        { id: 'v1.31.6+lke3', tier: 'enterprise' },
+        { id: 'v1.31.8+lke1', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.31.6+lke2';
 
-    const result = getNextVersion(currentVersion, versions);
-    expect(result).toEqual('v1.31.6+lke3');
-  });
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('v1.31.6+lke3');
+    });
 
-  it('should get the next version when given an obsolete current version', () => {
-    const versions: KubernetesVersion[] = [
-      { id: '1.16' },
-      { id: '1.17' },
-      { id: '1.18' },
-    ];
-    const currentVersion = '1.15';
+    it('should get the next version when given an obsolete current version', () => {
+      const versions: KubernetesVersion[] = [
+        { id: '1.16' },
+        { id: '1.17' },
+        { id: '1.18' },
+      ];
+      const currentVersion = '1.15';
 
-    const result = getNextVersion(currentVersion, versions);
-    expect(result).toEqual('1.16');
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('1.16');
+    });
+
+    it('should correctly sort enterprise versions across different minor versions', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.31.8+lke5', tier: 'enterprise' },
+        { id: 'v1.32.9+lke1', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.31.8+lke5';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('v1.32.9+lke1');
+    });
+
+    it('should not suggest a downgrade when cluster version is higher than all available versions', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.31.8+lke5', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.32.9+lke1';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toBeNull();
+    });
+
+    it('should handle multi-digit lke release numbers correctly', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.31.8+lke2', tier: 'enterprise' },
+        { id: 'v1.31.8+lke5', tier: 'enterprise' },
+        { id: 'v1.31.8+lke10', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.31.8+lke5';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('v1.31.8+lke10');
+    });
+
+    it('should handle multi-digit patch versions correctly', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.32.9+lke1', tier: 'enterprise' },
+        { id: 'v1.32.10+lke1', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.32.9+lke1';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('v1.32.10+lke1');
+    });
+
+    it('should return null when the cluster is already on the latest version', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.31.8+lke5', tier: 'enterprise' },
+        { id: 'v1.32.9+lke1', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.32.9+lke1';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toBeNull();
+    });
+
+    it('should return the correct next version for an obsolete enterprise version', () => {
+      const versions: KubernetesTieredVersion[] = [
+        { id: 'v1.31.8+lke5', tier: 'enterprise' },
+        { id: 'v1.32.9+lke1', tier: 'enterprise' },
+      ];
+      const currentVersion = 'v1.30.0+lke1';
+
+      const result = getNextVersion(currentVersion, versions);
+      expect(result).toEqual('v1.31.8+lke5');
+    });
+
+    it('should return null when there are no versions available', () => {
+      const result = getNextVersion('v1.32.9+lke1', []);
+      expect(result).toBeNull();
+    });
   });
 });
 

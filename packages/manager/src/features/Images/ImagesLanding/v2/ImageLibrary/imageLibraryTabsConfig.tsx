@@ -9,6 +9,8 @@ import {
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
+  OWNED_BY_ME_IMAGES_TAB_PENDO_IDS,
+  RECOVERY_IMAGES_TAB_PENDO_IDS,
   SHARED_IMAGES_DEFAULT_ORDER,
   SHARED_IMAGES_DEFAULT_ORDER_BY,
   SHARED_IMAGES_PREFERENCE_KEY,
@@ -54,6 +56,7 @@ export interface ImageConfig {
   orderByDefault: string;
   orderDefault: 'asc' | 'desc';
   preferenceKey: string;
+  searchBarPendoId: string;
   title: string;
   type: Image['type'];
 }
@@ -160,6 +163,7 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
       instruction:
         'Click \u2018Create Image\u2019 to create your first custom image',
     },
+    searchBarPendoId: OWNED_BY_ME_IMAGES_TAB_PENDO_IDS.searchImagesBar,
   },
   'recovery-images': {
     title: 'Recovery images',
@@ -179,7 +183,9 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
     emptyMessage: {
       main: 'No recovery images to display',
     },
+    searchBarPendoId: RECOVERY_IMAGES_TAB_PENDO_IDS.searchImagesBar,
     docsLink: {
+      dataPendoId: RECOVERY_IMAGES_TAB_PENDO_IDS.recoverDeletedLinodeDocsLink,
       label: 'Recover a deleted Linode',
       href: 'https://techdocs.akamai.com/cloud-computing/docs/images#recover-a-deleted',
     },
@@ -225,5 +231,6 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
       href: 'https://techdocs.akamai.com/cloud-computing/docs/image-sharing',
       dataPendoId: SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.imageSharingDocsLink,
     },
+    searchBarPendoId: SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.searchImagesBar,
   },
 };

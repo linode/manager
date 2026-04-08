@@ -1,4 +1,7 @@
-import { mockDestinationPayload } from 'support/constants/delivery';
+import {
+  mockAkamaiObjectStorageDestinationPayload,
+  mockCustomHttpsDestinationPayload,
+} from 'support/constants/delivery';
 /**
  * @file Page utilities for Logs Delivery Stream Form.
  * Create/Edit Stream Page
@@ -11,6 +14,7 @@ import { getStreamTypeOption } from 'src/features/Delivery/deliveryUtils';
 
 import type {
   AkamaiObjectStorageDetailsExtended,
+  CustomHTTPSDetailsExtended,
   StreamType,
 } from '@linode/api-v4';
 
@@ -26,6 +30,25 @@ export const logsStreamForm = {
       .should('be.enabled')
       .clear();
     cy.focused().type(label);
+  },
+
+  /**
+   * Sets destination's label
+   *
+   * @param label - destination label to set
+   */
+  setDestinationLabel: (label: string) => {
+    cy.findByLabelText('Destination Name')
+      .should('be.visible')
+      .should('be.enabled')
+      .should(
+        'have.attr',
+        'placeholder',
+        'Select existing or enter new destination'
+      )
+      .clear();
+    cy.focused().type(label);
+    cy.findByText(new RegExp(`"${label}"`)).click();
   },
 
   /**
@@ -83,29 +106,38 @@ export const logsStreamForm = {
   },
 
   /**
-   * Fills all form fields related to destination's details (AkamaiObjectStorageDetails type)
+   * Fills all form fields related to Akamai Object Storage destination's details
    *
    * @param label - new destination label to set
-   * @param details - object with destination details of AkamaiObjectStorageDetails type
+   * @param details - object with destination details of AkamaiObjectStorageDetailsExtended type
    */
   fillOutNewAkamaiObjectStorageDestination: (
     label = randomLabel(),
-    details: AkamaiObjectStorageDetailsExtended = mockDestinationPayload.details as AkamaiObjectStorageDetailsExtended
+    details: AkamaiObjectStorageDetailsExtended = mockAkamaiObjectStorageDestinationPayload.details as AkamaiObjectStorageDetailsExtended
   ) => {
-    // Create new destination label
-    cy.findByLabelText('Destination Name')
-      .should('be.visible')
-      .should('be.enabled')
-      .should(
-        'have.attr',
-        'placeholder',
-        'Select existing or enter new destination'
-      )
-      .clear();
-    cy.focused().type(label);
-    cy.findByText(new RegExp(`"${label}"`)).click();
+    logsStreamForm.setDestinationLabel(label);
 
     // Fills all form fields related to destination's details
-    logsDestinationForm.fillDestinationDetailsForm(details);
+    logsDestinationForm.fillAkamaiObjectStorageDestinationDetailsForm(details);
+  },
+
+  /**
+   * Fills all form fields related to Custom HTTPS destination's details
+   *
+   * @param label - new destination label to set
+   * @param details - object with destination details of CustomHTTPSDetailsExtended type
+   */
+  fillOutNewCustomHttpsDestination: (
+    label = randomLabel(),
+    details: CustomHTTPSDetailsExtended = mockCustomHttpsDestinationPayload.details as CustomHTTPSDetailsExtended
+  ) => {
+    // Select Custom HTTPS destination type first (changing type resets the form)
+    logsDestinationForm.selectDestinationType('Custom HTTPS');
+
+    // Create new destination label
+    logsStreamForm.setDestinationLabel(label);
+
+    // Fills all form fields related to destination's details
+    logsDestinationForm.fillCustomHttpsDestinationDetailsForm(details);
   },
 };

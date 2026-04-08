@@ -20,7 +20,6 @@ type ShareGroupsConfigMock = {
   description: string;
   docsLink: { href: string; label: string };
   emptyMessage: { instruction: string; main: string };
-  eventCategory: string;
   orderByDefault: string;
   orderDefault: 'asc' | 'desc';
   preferenceKey: string;
@@ -40,7 +39,6 @@ const queryMocks = vi.hoisted(() => {
       main: 'No Share groups to display',
       instruction: 'Create your first share group',
     },
-    eventCategory: 'shareGroups',
     orderByDefault: 'label',
     orderDefault: 'asc' as const,
     preferenceKey: 'owned-sharegroups',
@@ -319,7 +317,6 @@ describe('For Owned groups', () => {
     expect(queryMocks.tableProps).toMatchObject({
       columns: queryMocks.shareGroupsConfig['owned-groups'].columns,
       emptyMessage: queryMocks.shareGroupsConfig['owned-groups'].emptyMessage,
-      eventCategory: queryMocks.shareGroupsConfig['owned-groups'].eventCategory,
       handleOrderChange,
       order: 'desc',
       orderBy: 'created',

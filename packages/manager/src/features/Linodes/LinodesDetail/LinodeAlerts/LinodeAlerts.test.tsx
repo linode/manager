@@ -22,13 +22,18 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
 
-vi.mock('src/features/CloudPulse/Utils/utils', () => ({
-  useIsAclpSupportedRegion: queryMocks.useIsAclpSupportedRegion,
-}));
+vi.mock('src/features/CloudPulse/Utils/utils', async () => {
+  const actual = await vi.importActual('src/features/CloudPulse/Utils/utils');
+  return {
+    ...actual,
+    useIsAclpSupportedRegion: queryMocks.useIsAclpSupportedRegion,
+  };
+});
 
 // Keep AlertReusableComponent lightweight in tests - it has its own test coverage.
 // Renders a button so tests can simulate ACLP alert changes via onToggleAlert.
-// Calls onStatusChange(true) on mount to simulate a successful alerts load.
+// On mount, calls onStatusChange(true) and onToggleAlert({}) to simulate the real
+// component's initialization: reporting ready and sending the initial server state.
 vi.mock(
   'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent',
   () => ({
@@ -37,17 +42,18 @@ vi.mock(
       onToggleAlert,
     }: {
       onStatusChange?: (isReady: boolean) => void;
-      onToggleAlert: (payload: unknown, hasUnsavedChanges: boolean) => void;
+      onToggleAlert: (payload: unknown) => void;
     }) => {
       React.useEffect(() => {
         onStatusChange?.(true);
-      }, [onStatusChange]);
+        onToggleAlert({});
+      }, []);
 
       return (
         <div data-testid="aclp-alerts">
           <button
             data-testid="aclp-toggle"
-            onClick={() => onToggleAlert({}, true)}
+            onClick={() => onToggleAlert({ system_alerts: [1] })}
           >
             Toggle ACLP Alert
           </button>
@@ -195,6 +201,7 @@ describe('LinodeAlerts — unified mode (aclpServices.linode.alerts.enabled + re
     const saveBtn = getByTestId('unified-alerts-save');
     expect(saveBtn).toHaveAttribute('aria-disabled', 'true');
 
+    // Simulate the user toggling an alert away from the initial state.
     await userEvent.click(getByTestId('aclp-toggle'));
 
     await waitFor(() => {

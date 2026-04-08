@@ -20,6 +20,6 @@
     "@linode/tsconfig": "workspace:*"
   },
   "peerDependencies": {
-    "vite": "*"
+    "vite": "^7.3.2"
   }
 }

@@ -4,6 +4,7 @@ import NetworkingIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 
+import { ReserveIPDrawer } from '../ReserveIPDrawer';
 import {
   gettingStartedGuides,
   headers,
@@ -11,6 +12,8 @@ import {
 } from './ReservedIpsLandingEmptyStateData';
 
 export const ReservedIpsLandingEmptyState = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Reserved IP Addresses" />
@@ -18,9 +21,7 @@ export const ReservedIpsLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Reserve an IP Address',
-            onClick: () => {
-              // TODO: Open Reserve IP create drawer once ready
-            },
+            onClick: () => setIsDrawerOpen(true),
           },
         ]}
         descriptionMaxWidth={500}
@@ -29,6 +30,11 @@ export const ReservedIpsLandingEmptyState = () => {
         icon={NetworkingIcon}
         linkAnalyticsEvent={linkAnalyticsEvent}
         wide={true}
+      />
+      <ReserveIPDrawer
+        mode="create"
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
       />
     </React.Fragment>
   );
