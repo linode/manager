@@ -1,151 +1,86 @@
-import {
-  Box,
-  Divider,
-  Notice,
-  Paper,
-  Select,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Link } from 'src/components/Link';
-import { useFlags } from 'src/hooks/useFlags';
+import { useQuotaServices } from 'src/features/Account/Quotas/hooks/useQuotaServices';
+import { QuotaServicePanel } from 'src/features/Account/Quotas/QuotaServicePanel';
+import { QuotasPanel } from 'src/features/Account/Quotas/QuotasPanel/QuotasPanel';
 
-import { QuotasTable } from './QuotasTable/QuotasTable';
-import { useGetLocationsForQuotaService } from './utils';
-
-import type { Quota } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
-import type { Theme } from '@mui/material';
+import type { QuotaServiceType } from '@linode/api-v4';
+import type {
+  QuotaScope,
+  QuotaService,
+} from 'src/features/Account/Quotas/quotaServices';
 
 export const Quotas = () => {
-  const navigate = useNavigate();
-  const { objectStorageGlobalQuotas } = useFlags();
-  const [selectedLocation, setSelectedLocation] =
-    React.useState<null | SelectOption<Quota['region_applied']>>(null);
-  const locationData = useGetLocationsForQuotaService('object-storage');
-  const { s3Endpoints } = locationData;
-  const isFetchingLocations =
-    'isFetchingS3Endpoints' in locationData
-      ? locationData.isFetchingS3Endpoints
-      : locationData.isFetchingRegions;
+  const { data: availableServices, isFetching: isFetchingServices } =
+    useQuotaServices();
+  const navigate = useNavigate({ from: '/quotas' });
+  const search = useSearch({ from: '/quotas' });
 
-  const sortedS3Endpoints = React.useMemo(() => {
-    return s3Endpoints?.sort((a, b) => a.label.localeCompare(b.label));
-  }, [s3Endpoints]);
+  const servicesByType = React.useMemo(() => {
+    if (!availableServices) {
+      return null;
+    }
+    return new Map<QuotaServiceType, QuotaService>(
+      availableServices?.map((service) => [service.type, service])
+    );
+  }, [availableServices]);
+
+  const selectedServiceType = (search.service ??
+    null) as null | QuotaServiceType;
+
+  const selectedService = React.useMemo(() => {
+    return selectedServiceType && servicesByType
+      ? (servicesByType.get(selectedServiceType) ?? null)
+      : null;
+  }, [selectedServiceType, servicesByType]);
+
+  const updateSearchService = React.useCallback(
+    (service: null | QuotaService) => {
+      navigate({
+        search: (prev) => ({
+          ...prev,
+          service: service ? service.type : undefined,
+        }),
+        replace: true,
+      });
+    },
+    [navigate]
+  );
+
+  // reset service query param if the provided service is not available to the user
+  React.useEffect(() => {
+    if (!isFetchingServices && selectedServiceType && !selectedService) {
+      updateSearchService(null);
+    }
+  }, [
+    isFetchingServices,
+    selectedServiceType,
+    selectedService,
+    updateSearchService,
+  ]);
+
+  const availableScopes = React.useMemo(() => {
+    return selectedService
+      ? (Object.keys(selectedService.scopes) as QuotaScope[])
+      : [];
+  }, [selectedService]);
 
   return (
     <>
       <DocumentTitleSegment segment="Quotas" />
+      <QuotaServicePanel
+        availableServices={availableServices}
+        isFetchingServices={isFetchingServices}
+        onServiceChange={updateSearchService}
+        selectedService={selectedService}
+      />
 
-      {objectStorageGlobalQuotas && (
-        <Paper
-          sx={(theme: Theme) => ({
-            marginTop: theme.spacingFunction(16),
-          })}
-          variant="outlined"
-        >
-          <Typography variant="h2">Object Storage: global</Typography>
-
-          <QuotasTable
-            isGlobalScope={true}
-            selectedLocation={null}
-            selectedService={{
-              label: 'Object Storage',
-              value: 'object-storage',
-            }}
-          />
-        </Paper>
-      )}
-
-      <Paper
-        sx={(theme: Theme) => ({
-          marginTop: theme.spacingFunction(16),
-        })}
-        variant="outlined"
-      >
-        <Stack>
-          <Typography variant="h2">
-            Object Storage{objectStorageGlobalQuotas ? ': per-endpoint' : ''}
-          </Typography>
-          <Box sx={{ display: 'flex' }}>
-            <Notice spacingTop={16} variant="info">
-              <Typography>
-                View your Object Storage quotas by applying the endpoint filter
-                below.{' '}
-                <Link to="https://techdocs.akamai.com/cloud-computing/docs/quotas">
-                  Learn more about quotas
-                </Link>
-                .
-              </Typography>
-            </Notice>
-          </Box>
-          <Stack spacing={1}>
-            <Select
-              disabled={isFetchingLocations}
-              label="Object Storage Endpoint"
-              loading={isFetchingLocations}
-              onChange={(_event, value) => {
-                setSelectedLocation({
-                  label: value?.label,
-                  value: value?.value,
-                });
-                navigate({
-                  to: '/quotas',
-                });
-              }}
-              options={
-                sortedS3Endpoints?.map((location) => ({
-                  label: location.label,
-                  value: location.value,
-                })) ?? []
-              }
-              placeholder={
-                isFetchingLocations
-                  ? `Loading S3 endpoints...`
-                  : 'Select an Object Storage S3 endpoint'
-              }
-              searchable
-              sx={{ flexGrow: 1, mr: 2 }}
-            />
-          </Stack>
-          <Divider spacingBottom={40} spacingTop={40} />
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            marginBottom={2}
-          >
-            <Typography variant="h3">Quotas</Typography>
-          </Stack>
-          <Typography>
-            If you need to increase a quota, select{' '}
-            <strong>Request Increase</strong> from the Actions menu. Usage can
-            also be found using third-party tools like{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-s3cmd-with-object-storage#check-disk-usage-by-bucket">
-              s3cmd
-            </Link>
-            .
-          </Typography>
-
-          <Stack
-            data-testid="endpoint-quotas-table-container"
-            direction="column"
-            spacing={2}
-          >
-            <QuotasTable
-              isGlobalScope={false}
-              selectedLocation={selectedLocation}
-              selectedService={{
-                label: 'Object Storage',
-                value: 'object-storage',
-              }}
-            />
-          </Stack>
-        </Stack>
-      </Paper>
+      {selectedService &&
+        availableScopes.map((scope) => (
+          <QuotasPanel key={scope} scope={scope} service={selectedService} />
+        ))}
     </>
   );
 };
