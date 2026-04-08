@@ -230,8 +230,6 @@ export const createDestinations = (mockState: MockState) => [
       const payload: CreateDestinationPayload = await request.clone().json();
       const { label, type, details } = payload;
 
-      const authenticationDetails = (details as CustomHTTPSDetailsExtended)
-        .authentication?.details;
       const created = DateTime.now().toISO();
       const updated = DateTime.now().toISO();
 
@@ -258,11 +256,7 @@ export const createDestinations = (mockState: MockState) => [
                 ...details,
                 authentication: {
                   ...(details as CustomHTTPSDetailsExtended).authentication,
-                  details: authenticationDetails
-                    ? omitProps(authenticationDetails, [
-                        'basic_authentication_password',
-                      ])
-                    : undefined,
+                  details: undefined,
                 },
               },
               created,

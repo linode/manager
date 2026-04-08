@@ -95,6 +95,11 @@ interface AclpFlag {
    */
   bypassAccountCapabilities?: boolean;
   /**
+   * This property indicates whether to show the "Download CSV" icon in the alert details page or not
+   */
+  enableCSVDownload?: boolean;
+
+  /**
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
@@ -176,6 +181,7 @@ interface AclpAlerting {
   editDisabledStatuses?: AlertStatusType[];
   maxDimensionFiltersValues?: number;
   maxEmailChannelRecipients?: number;
+  new?: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;
   systemChannelSupportedServices?: CloudPulseServiceType[]; // linode, dbaas, etc.

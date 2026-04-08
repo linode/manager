@@ -15,23 +15,17 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptions {
   currentCapability: Capabilities | undefined;
-  forcefullyShownRegionIds?: Set<string>;
   regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
 export const getRegionOptions = ({
   currentCapability,
-  forcefullyShownRegionIds,
   regionFilter,
   regions,
 }: RegionSelectOptions) => {
   return regions
     .filter((region) => {
-      if (forcefullyShownRegionIds?.has(region.id)) {
-        return true;
-      }
-
       if (
         currentCapability &&
         !region.capabilities.includes(currentCapability)

@@ -145,6 +145,7 @@ const ipAddressForVPC = (
 ): IPAddress => {
   return {
     address: ipAddress,
+    assigned_entity: null,
     gateway: ip.gateway,
     interface_id: ip.interface_id,
     linode_id: ip.linode_id!,
@@ -154,6 +155,8 @@ const ipAddressForVPC = (
     region: ip.region,
     subnet_mask: ip.subnet_mask,
     type: ipType,
+    reserved: false,
+    tags: [],
   };
 };
 

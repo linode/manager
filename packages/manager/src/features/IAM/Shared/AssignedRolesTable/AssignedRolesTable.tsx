@@ -27,6 +27,7 @@ import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
 import {
   ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+  IAM_ROLES_PENDO_IDS,
   ROLES_LEARN_MORE_LINK,
 } from '../constants';
 import { Permissions } from '../Permissions/Permissions';
@@ -472,6 +473,11 @@ export const AssignedRolesTable = () => {
         <Grid sx={{ alignSelf: 'flex-start' }}>
           <Button
             buttonType="primary"
+            data-pendo-id={
+              isDefaultDelegationRolesForChildAccount
+                ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
+                : undefined
+            }
             disabled={!permissionToCheck}
             onClick={() => setIsAssignNewRoleDrawerOpen(true)}
             tooltipText={

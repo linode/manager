@@ -11,6 +11,7 @@ import {
   akamaiObjectStorageDestinationFactory,
   streamFactory,
 } from 'src/factories';
+import { MASKED_VALUE } from 'src/features/Delivery/Destinations/constants';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -75,12 +76,10 @@ describe('StreamEdit', () => {
     // Bucket:
     expect(screen.getByText('destinations-bucket-name')).toBeVisible();
     // Access Key ID:
-    expect(screen.getByTestId('access-key-id')).toHaveTextContent(
-      '*****************'
-    );
+    expect(screen.getByTestId('access-key-id')).toHaveTextContent(MASKED_VALUE);
     // Secret Access Key:
     expect(screen.getByTestId('secret-access-key')).toHaveTextContent(
-      '*****************'
+      MASKED_VALUE
     );
     // Log Path:
     expect(screen.getByText('file')).toBeVisible();
@@ -103,7 +102,9 @@ describe('StreamEdit', () => {
         await userEvent.click(createNewTestDestination);
 
         // Switch to manual bucket entry mode
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
