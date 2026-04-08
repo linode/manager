@@ -1,6 +1,8 @@
 import { streamType } from '@linode/api-v4';
 import { regionFactory } from '@linode/utilities';
 import {
+  CREATE_DESTINATION_ERROR_MESSAGE,
+  CREATE_STREAM_ERROR_MESSAGE,
   mockAkamaiObjectStorageDestination,
   mockCustomHttpsDestination,
 } from 'support/constants/delivery';
@@ -19,6 +21,7 @@ import { logsDestinationForm } from 'support/ui/pages/logs-destination-form';
 import { logsStreamForm } from 'support/ui/pages/logs-stream-form';
 import { randomLabel } from 'support/util/random';
 
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { accountFactory, kubernetesClusterFactory } from 'src/factories';
 
 describe('Create Stream', () => {
@@ -107,7 +110,7 @@ describe('Create Stream', () => {
           .should('have.attr', 'type', 'button')
           .click();
 
-        ui.toast.assertMessage(`There was an issue creating your destination`);
+        ui.toast.assertMessage(DEFAULT_ERROR_MESSAGE);
 
         // Submit the stream create form - success
         mockCreateDestination(mockAkamaiObjectStorageDestination);
@@ -167,7 +170,7 @@ describe('Create Stream', () => {
 
         cy.findByRole('button', { name: 'Create Stream' }).click();
         cy.wait('@createStreamFail');
-        ui.toast.assertMessage('There was an issue creating your stream');
+        ui.toast.assertMessage(DEFAULT_ERROR_MESSAGE);
 
         // Submit the stream create form - success
         mockCreateStream({ label: streamName }).as('createStream');
@@ -248,13 +251,16 @@ describe('Create Stream', () => {
           .should('have.attr', 'type', 'button');
 
         // Submit the stream create form - failure in creating destination
-        mockCreateDestination({}, 400);
+        mockCreateDestination(
+          { errors: [{ reason: CREATE_DESTINATION_ERROR_MESSAGE }] },
+          500
+        );
         cy.findByRole('button', { name: 'Create Stream' })
           .should('be.enabled')
           .should('have.attr', 'type', 'button')
           .click();
 
-        ui.toast.assertMessage(`There was an issue creating your destination`);
+        ui.toast.assertMessage(CREATE_DESTINATION_ERROR_MESSAGE);
 
         // Submit the stream create form - success
         mockCreateDestination(mockCustomHttpsDestination);
@@ -313,11 +319,14 @@ describe('Create Stream', () => {
           .should('have.attr', 'type', 'button');
 
         // Submit the stream create form - failure
-        mockCreateStream({}, 400).as('createStreamFail');
+        mockCreateStream(
+          { errors: [{ reason: CREATE_STREAM_ERROR_MESSAGE }] },
+          400
+        ).as('createStreamFail');
 
         cy.findByRole('button', { name: 'Create Stream' }).click();
         cy.wait('@createStreamFail');
-        ui.toast.assertMessage('There was an issue creating your stream');
+        ui.toast.assertMessage(CREATE_STREAM_ERROR_MESSAGE);
 
         // Submit the stream create form - success
         mockCreateStream({ label: streamName }).as('createStream');
