@@ -1,8 +1,8 @@
 import { oauthToken } from 'support/constants/api';
 import { entityPrefix, entityTag } from 'support/constants/cypress';
 
-const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
-const apirootBeta = Cypress.env('REACT_APP_API_ROOT') + 'beta/';
+const apiroot = Cypress.expose('REACT_APP_API_ROOT') + '/';
+const apirootBeta = Cypress.expose('REACT_APP_API_ROOT') + 'beta/';
 
 export const apiCheckErrors = (
   resp: Cypress.Response<any>,

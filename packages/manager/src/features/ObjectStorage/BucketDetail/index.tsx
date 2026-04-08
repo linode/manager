@@ -59,7 +59,9 @@ export const BucketDetailLanding = React.memo(() => {
     isPending,
   } = useObjectStorageBuckets();
 
-  const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
+  const bucket = bucketsData?.buckets.find(
+    ({ label, region }) => label === bucketName && region === clusterId
+  );
 
   const {
     data: region,

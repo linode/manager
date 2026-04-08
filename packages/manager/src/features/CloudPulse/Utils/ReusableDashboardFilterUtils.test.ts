@@ -30,6 +30,21 @@ it('test getDashboardProperties method', () => {
   expect(result.region).toEqual('us-east');
 });
 
+it('test getDashboardProperties method with selected groupBy values', () => {
+  const result = getDashboardProperties({
+    dashboardObj: mockDashboard,
+    filterValue: {
+      region: 'us-east',
+    },
+    resource: 1,
+    groupBy: ['entity_id', 'region'],
+    region: 'us-east',
+  });
+
+  expect(result).toBeDefined();
+  expect(result.groupBy).toEqual(['entity_id', 'region']);
+});
+
 it('test checkMandatoryFiltersSelected method for time duration and resource', () => {
   let result = checkMandatoryFiltersSelected({
     dashboardObj: mockDashboard,

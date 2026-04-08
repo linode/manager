@@ -39,7 +39,7 @@ const makeClientCreateReq = (
     },
     body: linodeData,
     method: 'POST',
-    url: Cypress.env('REACT_APP_API_ROOT') + '/longview/clients',
+    url: Cypress.expose('REACT_APP_API_ROOT') + '/longview/clients',
   });
 };
 

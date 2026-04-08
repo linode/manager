@@ -3,6 +3,7 @@ import React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { IAM_ROLES_PENDO_IDS } from '../constants';
 
 import type { ExtendedRoleView } from '../types';
 import type { PickPermissions } from '@linode/api-v4';
@@ -109,6 +110,11 @@ export const AssignedRolesActionMenu = ({
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for role ${role.name}`}
+      pendoId={
+        isDefaultDelegationRolesForChildAccount
+          ? IAM_ROLES_PENDO_IDS.delegateUsersActionMenu
+          : undefined
+      }
     />
   );
 };

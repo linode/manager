@@ -1,5 +1,5 @@
 import { imageQueries, useImageQuery, useQueryClient } from '@linode/queries';
-import { BetaChip, Drawer, Notice, Stack } from '@linode/ui';
+import { BetaChip, Drawer, Stack } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -139,9 +139,7 @@ export const ImageLibraryTabs = () => {
                   <ImagesView handlers={handlers} type="owned-by-me" />
                 )}
                 {tab.type === 'shared-with-me' && (
-                  <Notice variant="info">
-                    Share with me is coming soon...
-                  </Notice>
+                  <ImagesView handlers={handlers} type="shared-with-me" />
                 )}
                 {tab.type === 'recovery-images' && (
                   <ImagesView handlers={handlers} type="recovery-images" />

@@ -47,6 +47,10 @@ export interface DebouncedSearchProps extends TextFieldProps {
    */
   onSearch: (query: string) => void;
   /**
+   * Value for data-pendo-id attribute for search input, used for analytics tracking.
+   */
+  pendoId?: string;
+  /**
    * Placeholder text for the input.
    */
   placeholder?: string;
@@ -68,6 +72,7 @@ export const DebouncedSearchTextField = React.memo(
       isSearching,
       label,
       onSearch,
+      pendoId,
       placeholder,
       value,
       ...restOfTextFieldProps
@@ -111,6 +116,7 @@ export const DebouncedSearchTextField = React.memo(
     return (
       <TextField
         className={className}
+        data-pendo-id={pendoId}
         data-qa-debounced-search
         defaultValue={defaultValue}
         hideLabel={hideLabel}

@@ -20,6 +20,7 @@ import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../hooks/usePermissions';
+import { IAM_PARENT_USERS_PENDO_IDS } from '../Shared/constants';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
 
@@ -296,6 +297,7 @@ export const UpdateDelegationForm = ({
             primaryButtonProps={{
               'data-testid': 'submit',
               label: 'Save Changes',
+              'data-pendo-id': IAM_PARENT_USERS_PENDO_IDS.updateDelegationSave,
               loading: isSubmitting,
               type: 'submit',
               disabled: !permissions?.update_delegate_users,

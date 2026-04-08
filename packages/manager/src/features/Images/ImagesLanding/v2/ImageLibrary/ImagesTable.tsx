@@ -1,4 +1,5 @@
 import {
+  BetaChip,
   Box,
   Button,
   Hidden,
@@ -17,8 +18,10 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from 'src/features/Images/constants';
 
 import { ImageRow } from '../../ImageRow';
+import { SharedImageRow } from '../../SharedImageRow';
 import {
   StyledImageContainer,
   StyledImageTableContainer,
@@ -43,6 +46,7 @@ interface HeaderProps {
   };
   description?: React.ReactNode;
   docsLink?: ImageConfig['docsLink'];
+  isBeta?: ImageConfig['isBeta'];
   title: string;
 }
 
@@ -72,19 +76,19 @@ interface ImagesTableProps {
 
 export const ImagesTable = (props: ImagesTableProps) => {
   const {
+    columns,
+    emptyMessage,
+    error,
+    eventCategory,
+    events,
+    handleOrderChange,
+    handlers,
     headerProps,
     images,
-    orderBy,
     order,
-    handleOrderChange,
-    columns,
-    events,
-    handlers,
-    error,
-    query,
+    orderBy,
     pagination,
-    eventCategory,
-    emptyMessage,
+    query,
   } = props;
 
   return (
@@ -98,7 +102,9 @@ export const ImagesTable = (props: ImagesTableProps) => {
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant="h3">{headerProps.title}</Typography>
+            <Typography variant="h3">
+              {headerProps.title} {headerProps.isBeta && <BetaChip />}
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
@@ -109,9 +115,9 @@ export const ImagesTable = (props: ImagesTableProps) => {
             >
               {headerProps.docsLink && (
                 <DocsLink
-                  analyticsLabel={headerProps.title}
                   href={headerProps.docsLink.href}
                   label={headerProps.docsLink.label}
+                  pendoId={headerProps.docsLink.dataPendoId}
                 />
               )}
               {headerProps.buttonProps && (
@@ -194,14 +200,24 @@ export const ImagesTable = (props: ImagesTableProps) => {
                 message={error[0].reason}
               />
             )}
-            {images?.map((image) => (
-              <ImageRow
-                event={events[image.id]}
-                handlers={handlers}
-                image={image}
-                key={image.id}
-              />
-            ))}
+            {images?.map((image) =>
+              image.type === 'shared' ? (
+                <SharedImageRow
+                  event={events[image.id]}
+                  handlers={handlers}
+                  image={image}
+                  key={image.id}
+                  pendoIDs={SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS}
+                />
+              ) : (
+                <ImageRow
+                  event={events[image.id]}
+                  handlers={handlers}
+                  image={image}
+                  key={image.id}
+                />
+              )
+            )}
           </TableBody>
         </Table>
         <PaginationFooter
