@@ -1,4 +1,9 @@
 import {
+  Button,
+  Drawer,
+  NotificationBanner,
+} from '@akamai/cds-components/react';
+import {
   delegationQueries,
   iamQueries,
   useAccountRoles,
@@ -6,22 +11,12 @@ import {
   useUpdateDefaultDelegationAccessQuery,
   useUserRolesMutation,
 } from '@linode/queries';
-import {
-  ActionsPanel,
-  Drawer,
-  LinkButton,
-  Notice,
-  Typography,
-} from '@linode/ui';
 import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
-import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
@@ -131,8 +126,8 @@ export const AssignNewRoleDrawer = ({
       }
       enqueueSnackbar(`Roles added.`, { variant: 'success' });
       handleClose();
-    } catch (error) {
-      setError(error.field ?? 'root', {
+    } catch {
+      setError('root', {
         message: INTERNAL_ERROR_NO_CHANGES_SAVED,
       });
     }
@@ -152,50 +147,51 @@ export const AssignNewRoleDrawer = ({
   }, [open, reset]);
 
   return (
-    <Drawer
-      onClose={handleClose}
-      open={open}
-      title={
-        isDefaultDelegationRolesForChildAccount
+    <Drawer onClose={handleClose} open={open}>
+      <span slot="header">
+        {isDefaultDelegationRolesForChildAccount
           ? 'Add New Default Roles'
-          : 'Assign New Roles'
-      }
-    >
+          : 'Assign New Roles'}
+      </span>
+
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
-            <Notice text={formState.errors.root?.message} variant="error" />
+            <NotificationBanner
+              style={{ marginBottom: theme.tokens.spacing.S16 }}
+              text={formState.errors.root?.message}
+              type="error"
+            />
           )}
-
-          <Typography sx={{ marginBottom: 2.5 }}>
+          <p style={{ marginBottom: theme.tokens.spacing.S20, marginTop: 0 }}>
             {isDefaultDelegationRolesForChildAccount
               ? 'Add a role you want to assign by default to new delegate users. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'
               : 'Select a role you want to assign to a user. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'}{' '}
-            <Link to={ROLES_LEARN_MORE_LINK}>
+            <a href={ROLES_LEARN_MORE_LINK}>
               Learn more about roles and permissions
-            </Link>
+            </a>
             .
-          </Typography>
-          <Grid
-            container
-            direction="row"
-            spacing={2}
-            sx={() => ({
+          </p>
+          <div
+            style={{
+              display: 'flex',
               justifyContent: 'space-between',
               marginBottom: theme.tokens.spacing.S16,
-            })}
+            }}
           >
-            <Typography variant={'h3'}>Roles</Typography>
+            <h3 style={{ margin: 0, fontSize: theme.tokens.font.FontSize.S }}>
+              Roles
+            </h3>
             {roles.length > 0 && roles.some((field) => field.role) && (
-              <StyledLinkButtonBox sx={{ marginTop: 0 }}>
-                <LinkButton
-                  onClick={() => setAreDetailsHidden(!areDetailsHidden)}
-                >
-                  {areDetailsHidden ? 'Show' : 'Hide'} details
-                </LinkButton>
-              </StyledLinkButtonBox>
+              <Button
+                onClick={() => setAreDetailsHidden(!areDetailsHidden)}
+                style={{ marginTop: 0 }}
+                variant="link"
+              >
+                {areDetailsHidden ? 'Show' : 'Hide'} details
+              </Button>
             )}
-          </Grid>
+          </div>
 
           {!!accountRoles &&
             fields.map((field, index) => (
@@ -211,31 +207,50 @@ export const AssignNewRoleDrawer = ({
 
           {/* If all roles are filled, allow them to add another */}
           {roles.length > 0 && roles.every((field) => field.role?.value) && (
-            <StyledLinkButtonBox sx={{ marginTop: theme.tokens.spacing.S12 }}>
-              <LinkButton onClick={() => append({ role: null })}>
-                Add another role
-              </LinkButton>
-            </StyledLinkButtonBox>
+            <Button
+              onClick={() => append({ role: null })}
+              style={{ marginTop: theme.tokens.spacing.S12 }}
+              variant="link"
+            >
+              Add another role
+            </Button>
           )}
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: isDefaultDelegationRolesForChildAccount ? 'Add' : 'Assign',
-              type: 'submit',
-              loading:
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: theme.tokens.spacing.S8,
+              marginTop: theme.tokens.spacing.S16,
+              alignItems: 'center',
+            }}
+          >
+            {/* <Button onClick={handleClose} variant="secondary">
+              Cancel
+            </Button> */}
+            <Button
+              onClick={handleClose}
+              style={{ marginRight: theme.tokens.spacing.S8 }}
+              variant="link"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-pendo-id={
+                isDefaultDelegationRolesForChildAccount
+                  ? IAM_ROLES_PENDO_IDS.addNewDefaultRolesDrawer
+                  : undefined
+              }
+              processing={
                 isUserRolesPending ||
                 isDefaultRolesPending ||
-                formState.isSubmitting,
-              'data-pendo-id': isDefaultDelegationRolesForChildAccount
-                ? IAM_ROLES_PENDO_IDS.addNewDefaultRolesDrawer
-                : undefined,
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleClose,
-            }}
-          />
+                formState.isSubmitting
+              }
+              type="submit"
+              variant="primary"
+            >
+              {isDefaultDelegationRolesForChildAccount ? 'Add' : 'Assign'}
+            </Button>
+          </div>
         </form>
       </FormProvider>
     </Drawer>

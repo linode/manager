@@ -1,6 +1,6 @@
-import { Autocomplete, Button, DeleteIcon } from '@linode/ui';
+import { Button, Icon } from '@akamai/cds-components/react';
+import { Autocomplete } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -38,8 +38,10 @@ export const AssignSingleRole = ({
   const roles = watch('roles');
 
   return (
-    <Box display="flex">
-      <Box display="flex" flexDirection="column" sx={{ flex: '5 1 auto' }}>
+    <div style={{ display: 'flex' }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', flex: '5 1 auto' }}
+      >
         {index !== 0 && (
           <Divider
             spacingBottom={theme.tokens.spacing.S24}
@@ -52,6 +54,7 @@ export const AssignSingleRole = ({
           name={`roles.${index}.role`}
           render={({ field: { onChange, value }, fieldState }) => (
             <Autocomplete
+              disablePortal={false} // Keep the Autocomplete's popover within the drawer
               errorText={fieldState.error?.message}
               label="Assign New Roles"
               onChange={(event, newValue) => {
@@ -63,6 +66,23 @@ export const AssignSingleRole = ({
               textFieldProps={{ hideLabel: true }}
               value={value || null}
             />
+
+            // TODO: UIE-10739 - Replace with CDS Select
+            // <Select
+            //   autocomplete
+            //   clearable
+            //   error={Boolean(fieldState.error?.message)}
+            //   errorMessage={fieldState.error?.message ?? ''}
+            //   items={options}
+            //   onChange={(event) => {
+            //     const newValue = event.detail as unknown as null | RolesType;
+            //     onChange(newValue);
+            //     setValue(`roles.${index}.entities`, null);
+            //   }}
+            //   placeholder="Select a Role"
+            //   selected={value || null}
+            //   valueFn={(item) => (item as RolesType).label}
+            // />
           )}
           rules={{
             validate: (value) => {
@@ -106,9 +126,9 @@ export const AssignSingleRole = ({
             }}
           />
         )}
-      </Box>
-      <Box
-        sx={{
+      </div>
+      <div
+        style={{
           flex: '0 1 auto',
           marginTop:
             index === 0
@@ -120,13 +140,16 @@ export const AssignSingleRole = ({
       >
         <Button
           disabled={roles.length === 1}
-          disableRipple
-          onClick={() => onRemove(index)}
-          sx={{ paddingRight: 0 }}
+          onClick={(event) => {
+            event.preventDefault();
+            onRemove(index);
+          }}
+          style={{ paddingRight: 0, paddingLeft: theme.tokens.spacing.S12 }}
+          variant="icon"
         >
-          <DeleteIcon />
+          <Icon icon="delete" size="m" />
         </Button>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };

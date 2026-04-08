@@ -1,5 +1,9 @@
 import { updateUserRoles } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { useProfile } from '../profile';
@@ -14,6 +18,7 @@ import type {
   IamUserRoles,
   PermissionType,
 } from '@linode/api-v4';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 export const useUserRoles = (username?: string, enabled: boolean = true) => {
   return useQuery<IamUserRoles, APIError[]>({
@@ -23,7 +28,9 @@ export const useUserRoles = (username?: string, enabled: boolean = true) => {
   });
 };
 
-export const useAccountRoles = (enabled = true) => {
+export const useAccountRoles = (
+  enabled = true
+): UseQueryResult<IamAccountRoles, APIError[]> => {
   return useQuery<IamAccountRoles, APIError[]>({
     ...iamQueries.accountRoles,
     ...queryPresets.oneTimeFetch,
