@@ -79,8 +79,8 @@ export const DatabaseCreate = () => {
 
   const {
     data: dbtypes,
-    error: typesError,
-    isLoading: typesLoading,
+    // error: typesError,
+    // isLoading: typesLoading,
   } = useDatabaseTypesQuery({
     platform: 'rdbms-default',
   });
@@ -263,11 +263,11 @@ export const DatabaseCreate = () => {
     types: dbtypes,
   });
 
-  if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
+  if (regionsLoading || !regionsData || enginesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || typesError || enginesError) {
+  if (regionsError || enginesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 

@@ -38,8 +38,8 @@ import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
   RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
   RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
-  RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
 } from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
@@ -89,8 +89,8 @@ export const DatabaseResize = () => {
 
   const {
     data: dbTypes,
-    error: typesError,
-    isLoading: typesLoading,
+    // error: typesError,
+    // isLoading: typesLoading,
   } = useDatabaseTypesQuery({ platform: database.platform });
 
   // const dbTypes = dbtypesData.data as DatabaseType[];
@@ -116,60 +116,62 @@ export const DatabaseResize = () => {
     (type: DatabaseType) => type.id === database.type
   );
 
-  const { isGenerationalPlansEnabled, hasG7DedicatedPlans } =
-    useIsGenerationalPlansEnabled(dbTypes, currentPlanType?.class);
-
-  const isDisabledSharedTab = database.cluster_size === 2;
-
-  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
-  const premiumRestrictedTabsCopy = hasG7DedicatedPlans
-    ? 'Premium CPUs are now called G7 Dedicated plans.'
-    : currentPlanType?.class === 'premium'
-      ? RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT
-      : RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT;
-
-  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
-  const restrictPlanTabs = () => {
-    if (
-      flags.databaseResizeGenerationalPlans &&
-      currentPlanType?.class === 'premium'
-    ) {
-      return [];
-    }
-    if (!isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
-      return ['shared', 'dedicated'];
-    }
-    if (isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
-      return ['shared'];
-    } else {
-      return ['premium'];
-    }
-  };
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    dbTypes,
+    currentPlanType?.class
+  );
 
   const disabledTabsConfig: {
     disabledTabs: string[];
     disabledTabsCopy: string;
   } = React.useMemo(() => {
-    // For new database clusters, restrict plan types based on the current plan
-    if (isDefaultDatabase(database) && flags.databaseRestrictPlanResize) {
+    if (
+      !flags.databaseRestrictPlanResize ||
+      (flags.databaseResizeGenerationalPlans &&
+        currentPlanType?.class === 'premium')
+    ) {
       return {
-        disabledTabsCopy: premiumRestrictedTabsCopy,
-        disabledTabs: restrictPlanTabs(),
+        disabledTabs: [],
+        disabledTabsCopy: '',
       };
     }
-    // Disable shared tab for legacy database clusters when cluster size is 2
-    if (!isNewDatabaseGA && isDisabledSharedTab) {
+
+    if (!isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
       return {
-        disabledTabsCopy: RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
+        disabledTabs: ['shared', 'dedicated'],
+        disabledTabsCopy: RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+      };
+    }
+
+    if (isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
+      return {
         disabledTabs: ['shared'],
+        disabledTabsCopy:
+          RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
+      };
+    }
+
+    if (
+      isGenerationalPlansEnabled &&
+      flags.databaseResizeGenerationalPlans &&
+      currentPlanType?.class !== 'premium'
+    ) {
+      return {
+        disabledTabs: ['premium'],
+        disabledTabsCopy: 'Premium CPUs are now called G7 Dedicated plans.',
       };
     }
 
     return {
-      disabledTabs: [],
-      disabledTabsCopy: '',
+      disabledTabs: ['premium'],
+      disabledTabsCopy: RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
     };
-  }, [database, flags, isNewDatabaseGA]);
+  }, [
+    currentPlanType?.class,
+    flags.databaseResizeGenerationalPlans,
+    flags.databaseRestrictPlanResize,
+    isGenerationalPlansEnabled,
+  ]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -419,11 +421,11 @@ export const DatabaseResize = () => {
     return null;
   }
 
-  if (regionsLoading || typesLoading) {
+  if (regionsLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || typesError) {
+  if (regionsError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 

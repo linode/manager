@@ -133,9 +133,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const isDatabaseResizeFlow =
     location.pathname.match(/\/databases\/.*\/(\d+\/resize)/)?.[0] ===
     location.pathname;
+
   const shouldDisplayNoRegionSelectedMessage = Boolean(
     (!selectedRegionId && !isDatabaseCreateFlow) ||
-      (isDatabaseCreateFlow && hasG7DedicatedPlans)
+      (isDatabaseCreateFlow && hasG7DedicatedPlans && !selectedRegionId)
   );
 
   const isDatabaseGA =

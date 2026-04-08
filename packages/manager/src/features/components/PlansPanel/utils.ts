@@ -2,7 +2,7 @@ import { useAccount } from '@linode/queries';
 import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
 
 import {
-  RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
   RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
 } from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
@@ -548,7 +548,7 @@ export const getDisabledPlanReasonCopy = ({
   }
 
   if (planDBaaSResizeFromPremiumNotSupported) {
-    return RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT;
+    return RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT;
   }
 
   if (
