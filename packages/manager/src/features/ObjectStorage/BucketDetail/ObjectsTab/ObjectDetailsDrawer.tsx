@@ -45,7 +45,7 @@ export const ObjectDetailsDrawer = React.memo(
     const isLoadingEndpoint = isLoadingEndpointData || !bucketsData;
 
     const bucket = bucketsData?.buckets.find(
-      ({ label }) => label === bucketName
+      ({ label, region }) => label === bucketName && region === clusterId
     );
 
     const { endpoint_type: endpointType } = bucket ?? {};

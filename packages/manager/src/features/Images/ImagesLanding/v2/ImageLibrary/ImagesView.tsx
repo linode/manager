@@ -25,7 +25,7 @@ import type { Filter } from '@linode/api-v4';
 
 interface Props {
   handlers: ImageHandlers;
-  type: Exclude<ImageLibraryType, 'shared-with-me'>;
+  type: ImageLibraryType;
 }
 
 export const ImagesView = (props: Props) => {
@@ -176,6 +176,7 @@ export const ImagesView = (props: Props) => {
         isSearching={imagesIsFetching}
         label="Search"
         onSearch={onSearch}
+        pendoId={config.searchBarPendoId}
         placeholder="Search Images"
         value={search.query ?? ''}
       />
@@ -205,6 +206,7 @@ export const ImagesView = (props: Props) => {
             : undefined,
           docsLink: config.docsLink,
           description: config.description,
+          isBeta: config.isBeta,
         }}
         images={images?.data ?? []}
         order={imagesOrder}

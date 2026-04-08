@@ -13,7 +13,7 @@ import { launchDarklyUrlPattern } from 'support/constants/feature-flags';
  * priority in the event that both modify the same feature flag value.
  */
 export const mockFeatureFlagRequests = () => {
-  const featureFlagOverrides = Cypress.env('featureFlagOverrides');
+  const featureFlagOverrides = Cypress.expose('featureFlagOverrides');
 
   if (featureFlagOverrides) {
     beforeEach(() => {

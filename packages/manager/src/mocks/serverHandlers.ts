@@ -926,6 +926,23 @@ export const handlers = [
       return HttpResponse.json(makeResourcePage(images));
     }
 
+    if (filter?.includes('shared')) {
+      const images = imageFactory.buildList(5, {
+        capabilities: ['cloud-init'],
+        image_sharing: {
+          shared_by: {
+            sharegroup_id: 1,
+            sharegroup_label: 'test-sharegroup',
+            sharegroup_uuid: '123e4567-a12b-12d3-a456-123456789101',
+            source_image_id: 100,
+          },
+        },
+        regions: [],
+        type: 'shared',
+      });
+      return HttpResponse.json(makeResourcePage(images));
+    }
+
     return HttpResponse.json(makeResourcePage([]));
   }),
   http.post<any, UpdateImageRegionsPayload>(

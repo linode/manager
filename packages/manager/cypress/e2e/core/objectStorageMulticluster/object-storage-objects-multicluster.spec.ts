@@ -27,7 +27,7 @@ const emptyFolderMessage = 'This folder is empty.';
  * @returns Non-empty bucket error message.
  */
 const getNonEmptyBucketMessage = (bucketLabel: string) => {
-  return `Bucket ${bucketLabel} is not empty. Please delete all objects and try again.`;
+  return `The specified bucket '${bucketLabel}' is not empty. Please delete all objects before retrying.`;
 };
 
 /**

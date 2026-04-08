@@ -234,12 +234,20 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
         <ErrorState errorText="There was an error loading your Kubernetes clusters." />
       ) : (
         <>
+          <Typography sx={{ mt: 2 }}>
+            Select the LKE clusters that will send audit logs to the configured
+            destination. Logging must be enabled for a cluster before it can be
+            selected. To enable logging for a cluster, use the Linode API to{' '}
+            <Link
+              external
+              hideIcon
+              to="https://techdocs.akamai.com/linode-api/reference/put-lke-cluster"
+            >
+              update the cluster
+            </Link>{' '}
+            to set <i>audit_logs_enabled</i> to <i>true</i>.
+          </Typography>
           <div hidden={true}>
-            <Notice sx={{ mt: 2 }} variant="info">
-              Disabling this option allows you to manually define which clusters
-              will be included in the stream. Stream will not be updated
-              automatically with newly configured clusters.
-            </Notice>
             <Controller
               name={controlPaths.isAutoAddAllClustersEnabled}
               render={({ field }) => (
@@ -258,25 +266,17 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                     }
                     await trigger('stream.details');
                   }}
-                  sxFormLabel={{ ml: -1 }}
+                  sxFormLabel={{ ml: -1, mt: 2 }}
                   text="Automatically include all existing and recently configured clusters."
                 />
               )}
             />
+            <Notice sx={{ mt: 2 }} variant="info">
+              Disable this option if you wish to manually define which clusters
+              are included in the stream. The stream won’t be automatically
+              updated when new clusters are configured.
+            </Notice>
           </div>
-          <Typography sx={{ mt: 2 }}>
-            Select the LKE clusters that will send audit logs to the configured
-            destination. Logging must be enabled for a cluster before it can be
-            selected. To enable logging for a cluster, use the Linode API{' '}
-            <Link
-              external
-              hideIcon
-              to="https://techdocs.akamai.com/linode-api/reference/put-lke-cluster"
-            >
-              update the cluster
-            </Link>{' '}
-            to set audit_logs_enabled to true.
-          </Typography>
           <StyledGrid
             sx={{
               alignItems: 'center',
@@ -302,7 +302,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               }}
               label="Search"
               onSearch={(value) => setSearchText(value)}
-              placeholder="Search"
+              placeholder="Search for a cluster"
               value={searchText}
             />
             <StyledSelectsWrapper>
@@ -313,7 +313,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                 onChange={(_, region) => {
                   setRegionFilter(region?.id ?? '');
                 }}
-                placeholder="Select Region"
+                placeholder="Select a Region"
                 regionFilter="core"
                 regions={visibleRegions ?? []}
                 sx={{
@@ -325,7 +325,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                 label=""
                 onChange={(_, option) => setLogGenerationFilter(option?.value)}
                 options={logGenerationOptions}
-                placeholder="Log Generation"
+                placeholder="Logging Status"
                 sx={{
                   width: '160px !important',
                 }}
