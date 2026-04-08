@@ -52,7 +52,7 @@ export const ShareGroupsCreate = () => {
     }
   });
 
-  const onChange = async (image: Image) => {
+  const onChange = (image: Image) => {
     const selectedImages = imagesField.value ?? [];
 
     const { id, label, description } = image;
