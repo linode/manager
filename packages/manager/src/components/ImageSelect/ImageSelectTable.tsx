@@ -45,6 +45,9 @@ import type {
 } from './constants';
 import type { Filter, Image } from '@linode/api-v4';
 import type { LinkProps } from '@tanstack/react-router';
+import type { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
+
+type SelectionMode = 'multi' | 'single';
 
 interface Props {
   /**
@@ -56,6 +59,8 @@ interface Props {
    * Error message to display above the table, e.g. from form validation.
    */
   errorText?: string;
+
+  onCheckboxSelect?: (image: Image) => void;
   /**
    * Callback fired when the user selects an image row.
    */
@@ -65,12 +70,19 @@ interface Props {
    */
   pendoIDs:
     | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
-    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS;
+    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
+    | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
   queryParamsPrefix?: string;
   /**
-   * The ID of the currently selected image.
+   * The IDs of the currently selected images, when using multi-select mode with checkboxes.
    */
-  selectedImageId?: null | string;
+  selectedImageIds: string[];
+
+  /**
+   * Whether this table should use single-select mode with radio buttons, or multi-select mode with checkboxes.
+   * The default is single select.
+   */
+  selectionMode: SelectionMode;
 }
 
 type OptionType = { label: string; value: string };
@@ -82,7 +94,8 @@ export const ImageSelectTable = (props: Props) => {
     onSelect,
     pendoIDs,
     queryParamsPrefix,
-    selectedImageId,
+    selectionMode = 'single',
+    selectedImageIds,
   } = props;
 
   const theme = useTheme();
@@ -256,29 +269,31 @@ export const ImageSelectTable = (props: Props) => {
               <Hidden lgDown>
                 <TableHeaderCell>Replicated in</TableHeaderCell>
               </Hidden>
-              <Hidden smDown>
-                <TableHeaderCell
-                  style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-                >
-                  <Stack alignItems="center" direction="row">
-                    Share Group
-                    <TooltipIcon
-                      data-pendo-id={pendoIDs.shareGroupInfoIcon}
-                      status="info"
-                      sxTooltipIcon={{
-                        padding: '4px',
-                      }}
-                      text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
-                      tooltipPosition="right"
-                    />
-                  </Stack>
-                </TableHeaderCell>
-              </Hidden>
+              {selectionMode === 'single' && (
+                <Hidden smDown>
+                  <TableHeaderCell
+                    style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
+                  >
+                    <Stack alignItems="center" direction="row">
+                      Share Group
+                      <TooltipIcon
+                        data-pendo-id={pendoIDs.shareGroupInfoIcon}
+                        status="info"
+                        sxTooltipIcon={{
+                          padding: '4px',
+                        }}
+                        text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
+                        tooltipPosition="right"
+                      />
+                    </Stack>
+                  </TableHeaderCell>
+                </Hidden>
+              )}
               <Hidden lgDown>
                 <TableHeaderCell
                   style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
                 >
-                  Size
+                  {selectionMode === 'single' ? 'Size' : 'Original Image'}
                 </TableHeaderCell>
               </Hidden>
               <TableHeaderCell
@@ -312,6 +327,7 @@ export const ImageSelectTable = (props: Props) => {
             )}
             {!isLoading &&
               !imagesError &&
+              selectionMode === 'single' &&
               pagination.paginatedData.map((image) => (
                 <ImageSelectTableRow
                   image={image}
@@ -319,7 +335,23 @@ export const ImageSelectTable = (props: Props) => {
                   onSelect={() => onSelect(image)}
                   pendoIDs={pendoIDs}
                   regions={regions ?? []}
-                  selected={image.id === selectedImageId}
+                  selected={selectedImageIds?.includes(image.id)}
+                  selectedImages={selectedImageIds}
+                  selectionMode={selectionMode}
+                  timezone={profile?.timezone}
+                />
+              ))}
+            {!isLoading &&
+              !imagesError &&
+              pagination.paginatedData.map((image) => (
+                <ImageSelectTableRow
+                  image={image}
+                  key={image.id}
+                  onCheckboxSelect={() => onSelect(image)}
+                  pendoIDs={pendoIDs}
+                  regions={regions ?? []}
+                  selectedImages={selectedImageIds ?? []}
+                  selectionMode={selectionMode}
                   timezone={profile?.timezone}
                 />
               ))}
