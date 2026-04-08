@@ -341,6 +341,48 @@ describe('PrimaryNav', () => {
     expect(queryByTestId('betaChip')).toBeNull();
   });
 
+  it('should show the new chip for Alerts if the user has the account capability, aclpAlerting feature flag has beta false and new as true', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: true,
+      },
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: false,
+        new: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
+
+    const { findByTestId, queryByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorAlertsDisplayItem = await findByText('Alerts');
+    const betaChip = queryByTestId('betaChip');
+    const newFeatureChip = await findByTestId('newFeatureChip');
+
+    expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(betaChip).toBeNull();
+    expect(newFeatureChip).toBeVisible();
+  });
   it('should not show Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag does not have any of the properties true', async () => {
     const account = accountFactory.build({
       capabilities: ['Akamai Cloud Pulse'],
