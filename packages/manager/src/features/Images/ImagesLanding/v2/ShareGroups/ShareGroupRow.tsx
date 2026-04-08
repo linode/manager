@@ -1,5 +1,6 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Hidden, LinkButton } from '@linode/ui';
+import { Hidden, LinkButton, Tooltip } from '@linode/ui';
+import { truncateEnd } from '@linode/utilities';
 import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
@@ -42,18 +43,38 @@ export const ShareGroupRow = (props: Props) => {
       data-qa-sharegroup-row={id}
       key={id}
       rowborder={!isTableStripingEnabled}
+      style={{ padding: 0 }}
       zebra={isTableStripingEnabled}
     >
-      <TableCell data-pendo-id={`Images Groups Owned-Group name`}>
-        <LinkButton onClick={() => {}}>{label}</LinkButton>
-      </TableCell>
-      <TableCell>{description}</TableCell>
-      <TableCell>{members_count}</TableCell>
+      <Tooltip title={label.length > 32 ? label : ''}>
+        <TableCell
+          className="group-column"
+          data-pendo-id={`Images Groups Owned-Group name`}
+        >
+          <LinkButton
+            onClick={() => {}}
+            sx={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              display: 'block',
+            }}
+          >
+            {truncateEnd(label, 32)}
+          </LinkButton>
+        </TableCell>
+      </Tooltip>
+      <Tooltip title={description.length > 50 ? description : ''}>
+        <TableCell className="description-column">
+          {truncateEnd(description, 50)}
+        </TableCell>
+      </Tooltip>
+      <TableCell className="membersCount-column">{members_count}</TableCell>
       <Hidden smDown>
-        <TableCell>{images_count}</TableCell>
+        <TableCell className="imagesCount-column">{images_count}</TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>
+        <TableCell className="created-column">
           {created &&
             formatDate(created, {
               timezone: profile?.timezone,
@@ -61,7 +82,7 @@ export const ShareGroupRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden lgDown>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>
+        <TableCell className="updated-column">
           {updated !== null
             ? formatDate(updated, { timezone: profile?.timezone })
             : '–'}
