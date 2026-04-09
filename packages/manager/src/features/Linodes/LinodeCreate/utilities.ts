@@ -25,6 +25,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type {
   AccountSettings,
+  APIError,
   CloudPulseAlertsPayload,
   CreateLinodeRequest,
   FirewallSettings,
@@ -127,6 +128,25 @@ export const getLinodeCreatePayload = (
   }
 
   return values;
+};
+
+const missingAuthenticationMethodErrorReason =
+  'Must provide valid root_pass, authorized_keys, or authorized_users';
+const missingAuthenticationMethodMessage =
+  'Provide at least one authentication method. This can be a Root Password or an SSH Key, for added security.';
+
+/*
+ * Transforms the error message about invalid/missing authentication methods into a more user-friendly message.
+ */
+
+export const transformPasswordLessCreateErrors = (errors: APIError[]) => {
+  for (const error of errors) {
+    if (error.reason.includes(missingAuthenticationMethodErrorReason)) {
+      error.reason = missingAuthenticationMethodMessage;
+    }
+  }
+
+  return errors;
 };
 
 /**
