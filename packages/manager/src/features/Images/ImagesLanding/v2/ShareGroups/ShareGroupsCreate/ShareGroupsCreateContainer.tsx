@@ -12,9 +12,9 @@ export const ShareGroupsCreateContainer = () => {
     <>
       <DocumentTitleSegment segment="Create a Share Group" />
       <LandingHeader
-        data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.landingHeader}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/image-sharing"
+        pendoId={CREATE_SHARE_GROUP_PENDO_IDS.landingHeader}
         spacingBottom={4}
         title="Create"
       />
