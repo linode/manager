@@ -368,33 +368,14 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const database1 = databaseInstanceFactory.build({
-      cluster_size: 1,
-      id: 1,
-      label: 'database-instance-1',
-    });
-    const database2 = databaseInstanceFactory.build({
-      cluster_size: 2,
-      id: 2,
-      label: 'database-instance-2',
-    });
-    const database3 = databaseInstanceFactory.build({
-      cluster_size: 3,
-      id: 3,
-      label: 'database-instance-3',
-    });
-    const database4 = databaseInstanceFactory.build({
-      cluster_size: 1,
-      id: 4,
-      label: 'database-instance-4',
-    });
-    const database5 = databaseInstanceFactory.build({
-      cluster_size: 1,
-      id: 5,
-      label: 'database-instance-5',
-    });
+    const ids = Array.from({ length: 5 }, (_, i) => i + 1); // Update length to change the number of databases
 
-    const databases = [database1, database2, database3, database4, database5];
+    const databases = ids.map((id) => {
+      return databaseInstanceFactory.build({
+        id,
+        label: `databases-instance-${id}`,
+      });
+    });
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -613,6 +594,15 @@ const vpc = [
     );
   }),
   http.get('*/v4beta/vpcs/:vpcId/subnets', () => {
+    /* Uncomment to the code below to mock a subnet with assignedDatabases that can be found in the GET database instances call */
+    // const ids = Array.from({ length: 5 }, (_, i) => i + 1); // Update length to change the number of assigned databases
+    // const assignedDatabases = ids.map((id) => {
+    //   return subnetAssignedDatabaseDataFactory.build({
+    //     id,
+    //   });
+    // });
+    // const mockSubnet = subnetFactory.build({ databases: assignedDatabases });
+    // return HttpResponse.json(makeResourcePage([mockSubnet]));
     return HttpResponse.json(makeResourcePage(subnetFactory.buildList(30)));
   }),
   http.delete('*/v4beta/vpcs/:vpcId/subnets/:subnetId', () => {
