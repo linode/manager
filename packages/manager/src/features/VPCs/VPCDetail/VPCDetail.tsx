@@ -19,6 +19,7 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
   getIsVPCLKEEnterpriseCluster,
@@ -51,7 +52,9 @@ const VPCDetail = () => {
     isLoading,
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
 
-  const flags = useIsNodebalancerVPCEnabled();
+  const flags = useFlags();
+
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const { data: regions } = useRegionsQuery();
 
@@ -104,8 +107,11 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numResources = flags.isNodebalancerVPCEnabled
-    ? getUniqueResourcesFromSubnets(vpc.subnets)
+  const numResources = isNodebalancerVPCEnabled
+    ? getUniqueResourcesFromSubnets(
+        vpc.subnets,
+        Boolean(flags.vpcDbaasResources)
+      )
     : getUniqueLinodesFromSubnets(vpc.subnets);
 
   const summaryData = [
@@ -115,7 +121,7 @@ const VPCDetail = () => {
         value: vpc.subnets.length,
       },
       {
-        label: flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes',
+        label: isNodebalancerVPCEnabled ? 'Resources' : 'Linodes',
         value: numResources,
       },
     ],

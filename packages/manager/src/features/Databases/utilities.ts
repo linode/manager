@@ -9,6 +9,7 @@ import type {
   DatabaseEngine,
   DatabaseFork,
   DatabaseInstance,
+  DatabaseStatus,
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
@@ -256,3 +257,6 @@ export const convertPrivateToPublicHostname = (host: string) => {
   const baseHostName = host.slice(privateStrIndex + 1);
   return `public-${baseHostName}`;
 };
+
+export const getIsLinkInactive = (status: DatabaseStatus) =>
+  ['migrated', 'resuming', 'suspended', 'suspending'].includes(status);
