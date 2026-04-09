@@ -21,7 +21,7 @@ import { imageFactory } from 'src/factories/images';
 
 describe('create image (using mocks)', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags({ privateImageSharing: { enabled: false } });
+    mockAppendFeatureFlags({ privateImageSharing: false });
   });
 
   it('create image from a linode', () => {

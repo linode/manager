@@ -14,7 +14,7 @@ describe('create image (e2e)', () => {
   });
 
   beforeEach(() => {
-    mockAppendFeatureFlags({ privateImageSharing: { enabled: false } });
+    mockAppendFeatureFlags({ privateImageSharing: false });
   });
 
   it('create image from a linode', () => {

@@ -14,7 +14,7 @@ describe('Images empty landing page', () => {
   beforeEach(() => {
     // Mock setup to display the Image landing page in an empty state
     mockGetAllImages([]).as('getImages');
-    mockAppendFeatureFlags({ privateImageSharing: { enabled: false } });
+    mockAppendFeatureFlags({ privateImageSharing: false });
   });
 
   /*

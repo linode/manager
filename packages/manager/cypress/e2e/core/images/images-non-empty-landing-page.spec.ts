@@ -76,7 +76,7 @@ describe('image landing checks for non-empty state with restricted user', () => 
       });
 
     // Disable Private Image Sharing feature flag.
-    mockAppendFeatureFlags({ privateImageSharing: { enabled: false } });
+    mockAppendFeatureFlags({ privateImageSharing: false });
 
     // Mock setup to display the Image landing page in an non-empty state
     mockGetCustomImages(mockCustomImages).as('getCustomImages');

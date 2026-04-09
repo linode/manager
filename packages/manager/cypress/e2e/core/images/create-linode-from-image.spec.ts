@@ -83,7 +83,7 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
 
 describe('create linode from image, mocked data', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags({ privateImageSharing: { enabled: false } });
+    mockAppendFeatureFlags({ privateImageSharing: false });
   });
 
   /*
