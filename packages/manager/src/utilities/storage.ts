@@ -5,6 +5,7 @@ import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 const localStorageCache: Record<string, any> = {};
+const sessionStorageCache: Record<string, any> = {};
 
 export const getStorage = (key: string, fallback?: any) => {
   if (localStorageCache[key]) {
@@ -48,7 +49,6 @@ export const clearStorage = (key: string) => {
   window.localStorage.removeItem(key);
 };
 
-const sessionStorageCache: Record<string, any> = {};
 
 export const getSessionStorage = (key: string): string | null => {
   if (key in sessionStorageCache) {
