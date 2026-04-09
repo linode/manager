@@ -121,15 +121,15 @@ describe('Object storage summary page test', () => {
 
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
-      'buckets',
+      'objects',
       mockQuotaUsages[1]
-    ).as('getQuotaUsageBuckets');
+    ).as('getQuotaUsageObjects');
 
     mockGetObjectStorageQuotaUsages(
       selectedDomain,
-      'objects',
+      'buckets',
       mockQuotaUsages[2]
-    ).as('getQuotaUsageObjects');
+    ).as('getQuotaUsageBuckets');
   });
 
   it('should display table with user quotas', () => {
