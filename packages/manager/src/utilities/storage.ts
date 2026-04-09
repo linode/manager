@@ -48,6 +48,27 @@ export const clearStorage = (key: string) => {
   window.localStorage.removeItem(key);
 };
 
+const sessionStorageCache: Record<string, any> = {};
+
+export const getSessionStorage = (key: string): string | null => {
+  if (key in sessionStorageCache) {
+    return sessionStorageCache[key];
+  }
+  const item = window.sessionStorage.getItem(key);
+  sessionStorageCache[key] = item;
+  return item;
+};
+
+export const setSessionStorage = (key: string, value: string) => {
+  sessionStorageCache[key] = value;
+  window.sessionStorage.setItem(key, value);
+};
+
+export const clearSessionStorage = (key: string) => {
+  delete sessionStorageCache[key];
+  window.sessionStorage.removeItem(key);
+};
+
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
 const TOKEN = 'authentication/token';
@@ -150,9 +171,9 @@ export interface Storage {
 export const storage: Storage = {
   authentication: {
     codeVerifier: {
-      get: () => getStorage(CODE_VERIFIER),
-      set: (v) => setStorage(CODE_VERIFIER, v),
-      clear: () => clearStorage(CODE_VERIFIER),
+      get: () => getSessionStorage(CODE_VERIFIER),
+      set: (v) => setSessionStorage(CODE_VERIFIER, v),
+      clear: () => clearSessionStorage(CODE_VERIFIER),
     },
     expire: {
       get: () => getStorage(EXPIRE),
@@ -160,9 +181,9 @@ export const storage: Storage = {
       clear: () => clearStorage(EXPIRE),
     },
     nonce: {
-      get: () => getStorage(NONCE),
-      set: (v) => setStorage(NONCE, v),
-      clear: () => clearStorage(NONCE),
+      get: () => getSessionStorage(NONCE),
+      set: (v) => setSessionStorage(NONCE, v),
+      clear: () => clearSessionStorage(NONCE),
     },
     scopes: {
       get: () => getStorage(SCOPES),
