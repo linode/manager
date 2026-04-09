@@ -1,13 +1,17 @@
 import { useRegionsQuery } from '@linode/queries';
-import { ActionsPanel, Drawer, Stack, styled, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Flag } from 'src/components/Flag';
 import { getCountryAndLabelFromImageRegion } from 'src/features/Images/utils';
+
+import {
+  StyledCloudInitIcon,
+  StyledCopyIcon,
+  StyledLabel,
+} from './ViewImageDrawer.styles';
 
 import type { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
 import type { APIError, Image } from '@linode/api-v4';
@@ -129,25 +133,3 @@ export const ViewImageDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-const StyledLabel = styled('span', {
-  label: 'StyledLabel',
-})(({ theme }) => ({
-  font: theme.font.bold,
-}));
-
-const StyledCloudInitIcon = styled(CloudInitIcon, {
-  label: 'StyledCloudInitIcon',
-})(() => ({
-  height: 16,
-  width: 16,
-}));
-
-const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
-  '& svg': {
-    height: 12,
-    top: 1,
-    width: 12,
-  },
-  marginLeft: theme.spacingFunction(4),
-}));
