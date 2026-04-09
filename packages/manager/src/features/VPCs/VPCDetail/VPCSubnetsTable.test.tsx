@@ -323,7 +323,7 @@ describe('VPC Subnets table', () => {
       await userEvent.click(expandTableButton);
 
       await findByText('Database Cluster');
-      await findByText('IPv4 Address(s)');
+      await findByText('IPv4 Address(es)');
       await findByText('VPC IPv4 Range');
       await findByText('VPC IPv6 Range');
     }

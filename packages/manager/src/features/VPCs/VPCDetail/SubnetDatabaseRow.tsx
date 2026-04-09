@@ -90,7 +90,7 @@ export const SubnetDatabaseRow = ({ assignedDatabase, database }: Props) => {
 export const SubnetDatabasesTableRowHead = (
   <TableRow>
     <TableCell sx={{ width: '20%' }}>Database Cluster</TableCell>
-    <TableCell>IPv4 Address(s)</TableCell>
+    <TableCell>IPv4 Address(es)</TableCell>
     <TableCell>VPC IPv4 Range</TableCell>
     <TableCell>VPC IPv6 Range</TableCell>
   </TableRow>
