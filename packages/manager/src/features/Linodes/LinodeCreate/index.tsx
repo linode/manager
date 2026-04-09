@@ -70,6 +70,7 @@ import {
   defaultValues,
   EMPTY_ACLP_ALERTS,
   getLinodeCreatePayload,
+  transformPasswordLessCreateErrors,
   useHandleLinodeCreateAnalyticsFormError,
 } from './utilities';
 import { VLAN } from './VLAN/VLAN';
@@ -233,6 +234,9 @@ export const LinodeCreate = () => {
     } catch (errors) {
       if (isLinodeInterfacesEnabled) {
         transformLegacyInterfaceErrorsToLinodeInterfaceErrors(errors);
+      }
+      if (isPasswordLessLinodesEnabled) {
+        transformPasswordLessCreateErrors(errors);
       }
       for (const error of errors) {
         if (error.field) {
