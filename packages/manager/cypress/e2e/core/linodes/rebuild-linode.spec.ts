@@ -171,6 +171,9 @@ describe('rebuild linode', () => {
       iam: {
         enabled: false,
       },
+      privateImageSharing: {
+        enabled: false,
+      },
     });
   });
 
