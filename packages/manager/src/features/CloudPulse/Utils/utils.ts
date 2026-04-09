@@ -741,7 +741,7 @@ export const formatObjectStorageUrl = (url: string): string => {
 
   // Need at least 3 parts for a valid object storage URL
   // e.g., 'bucket.region.linodeobjects.com' has 4 parts minimum
-  if (parts.length < 3) {
+  if (parts.length < 4) {
     return url; // Return original if format doesn't match
   }
 
@@ -762,9 +762,9 @@ export const formatObjectStorageUrl = (url: string): string => {
   // Get everything before the region
   const prefix = withoutDomain.slice(0, -1).join('.');
 
-  // If there's no prefix, just return the region in brackets
+  // If there's no prefix, send original URL
   if (!prefix) {
-    return `[${region}]`;
+    return url;
   }
 
   // Combine prefix and region in brackets
