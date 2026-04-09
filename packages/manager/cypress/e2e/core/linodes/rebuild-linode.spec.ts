@@ -526,6 +526,7 @@ describe('rebuild linode', () => {
         enabled: true,
         la: true,
       },
+      privateImageSharing: false,
     }).as('getFeatureFlags');
     mockGetRegionAvailability(linodeCreatePayload.region, []).as(
       'getRegionAvailability'
