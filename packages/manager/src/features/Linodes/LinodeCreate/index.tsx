@@ -193,6 +193,7 @@ export const LinodeCreate = () => {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpServices?.linode?.alerts?.enabled,
       isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
+      isPasswordLessLinodesEnabled,
     });
 
     try {

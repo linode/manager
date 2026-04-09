@@ -13,6 +13,7 @@ import { useEventsPollingActions } from 'src/queries/events/events';
 import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
+import { transformPasswordLessCreateErrors } from '../../LinodeCreate/utilities';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { Actions } from './Actions';
 import { Confirmation } from './Confirmation';
@@ -110,6 +111,9 @@ export const LinodeRebuildForm = (props: Props) => {
       checkForNewEvents();
       onSuccess();
     } catch (errors) {
+      if (isPasswordLessLinodesEnabled) {
+        transformPasswordLessCreateErrors(errors);
+      }
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
       }

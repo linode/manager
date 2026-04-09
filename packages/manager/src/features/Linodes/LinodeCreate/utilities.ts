@@ -58,6 +58,7 @@ interface LinodeCreatePayloadOptions {
   isAclpAlertsPreferenceBeta?: boolean;
   isAclpIntegration?: boolean;
   isDualStackEnabled?: boolean;
+  isPasswordLessLinodesEnabled?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
 
@@ -77,6 +78,7 @@ export const getLinodeCreatePayload = (
     isAclpIntegration,
     isAclpAlertsPreferenceBeta,
     isDualStackEnabled,
+    isPasswordLessLinodesEnabled,
   } = options;
 
   const values: CreateLinodeRequest = omitProps(formValues, [
@@ -125,6 +127,15 @@ export const getLinodeCreatePayload = (
       formValues.interfaces,
       Boolean(values.private_ip)
     );
+  }
+
+  if (isPasswordLessLinodesEnabled) {
+    if (!values.root_pass) {
+      values.root_pass = undefined;
+    }
+    if (values.authorized_keys?.length === 0) {
+      values.authorized_users = undefined;
+    }
   }
 
   return values;

@@ -7,6 +7,7 @@ import type { Region, RegionSite } from '../regions';
 import type {
   CreateLinodeInterfaceSchema,
   ModifyLinodeInterfaceSchema,
+  RebuildLinodeSchema,
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
@@ -788,19 +789,7 @@ export interface LinodeCloneData {
   type?: null | string;
 }
 
-export interface RebuildRequest {
-  authorized_keys?: string[];
-  authorized_users?: string[];
-  booted?: boolean;
-  disk_encryption?: 'disabled' | 'enabled';
-  image: string;
-  metadata?: {
-    user_data: null | string;
-  };
-  root_pass?: string;
-  stackscript_data?: null | Record<string, unknown>;
-  stackscript_id?: number;
-}
+export type RebuildRequest = InferType<typeof RebuildLinodeSchema>;
 
 export interface LinodeDiskCreationData {
   authorized_keys?: string[];
