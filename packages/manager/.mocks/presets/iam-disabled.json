@@ -1,0 +1,20 @@
+[
+  {
+    "endpoint": "https://clientsdk.launchdarkly.com/sdk/evalx/:clientId*",
+    "method": "GET",
+    "paginated": false,
+    "data": {
+      "iam": {
+        "flagVersion": 4,
+        "trackEvents": false,
+        "value": {
+          "beta": false,
+          "enabled": false
+        },
+        "variation": 1,
+        "version": 703
+      }
+    },
+    "storeKey": "flags"
+  }
+]
