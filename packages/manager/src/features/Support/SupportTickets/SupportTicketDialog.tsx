@@ -18,7 +18,6 @@ import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
 
-import { useFlags } from 'src/hooks/useFlags';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
@@ -38,7 +37,11 @@ import {
 import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
-import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
+import {
+  formatDescription,
+  useLiveChatCapability,
+  useTicketSeverityCapability,
+} from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -151,12 +154,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTicketType,
     prefilledTitle,
   } = props;
-  const flags = useFlags();
 
   const location = useLocation();
   const navigate = useNavigate();
   const locationState = location.state as SupportTicketLocationState;
-  const liveChat = Boolean(flags.liveChat) && !locationState?.liveChatDisabled;
+  const liveChatEnabled = useLiveChatCapability();
+  const liveChat = liveChatEnabled && !locationState?.liveChatDisabled;
   const showLiveChatFallbackWarning = Boolean(locationState?.liveChatDisabled);
 
   // Collect prefilled data from props or Link parameters.
@@ -288,12 +291,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const resetDialog = (clearValues: boolean = false) => {
-    resetTicket(clearValues);
-    setFiles([]);
-
     if (clearValues) {
+      debouncedSave.cancel();
       saveFormData(supportTicketStorageDefaults);
     }
+
+    resetTicket(clearValues);
+    setFiles([]);
   };
 
   const handleClose = () => {
@@ -592,7 +596,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 <Notice
                   spacingTop={16}
                   text="Live Chat is not available at this time. Please open a support ticket below."
-                  variant="warning"
+                  variant="info"
                 />
               )}
               {props.hideProductSelection ? null : (
