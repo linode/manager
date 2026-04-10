@@ -25,8 +25,12 @@ export const ShareGroupsCreate = () => {
 
   const { mutateAsync: createShareGroup } = useCreateShareGroupMutation();
 
-  const { control, handleSubmit, setError } =
-    useForm<CreateSharegroupPayload>();
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting },
+  } = useForm<CreateSharegroupPayload>();
 
   const { field: imagesController, fieldState } = useController({
     control,
@@ -142,6 +146,7 @@ export const ShareGroupsCreate = () => {
         <Button
           buttonType="primary"
           data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.createButton}
+          loading={isSubmitting}
           type="submit"
         >
           Create Share Group
