@@ -6,6 +6,7 @@ export const linodeList = defineMockEntity<Linode>({
   name: 'linodes',
   endpoint: '/v4beta/linode/instances',
   method: 'GET',
+  paginated: true,
   factory: (overrides = {}) => ({
     id: overrides.id ?? 1,
     label: overrides.label ?? 'my-linode',
