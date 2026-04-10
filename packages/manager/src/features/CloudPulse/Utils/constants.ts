@@ -168,3 +168,27 @@ export const ASSOCIATED_ENTITY_METRIC_MAP: Record<
   linode: 'Linode',
   nodebalancer: 'Node Balancer',
 };
+
+/**
+ * Configuration constants for virtualized list rendering
+ */
+export const VIRTUALIZATION_CONFIG = {
+  /** Height of each item in the virtualized list (px) */
+  ITEM_HEIGHT: 36,
+  /** Maximum visible height of the virtualized list (px) - shows ~8 items */
+  MAX_VISIBLE_HEIGHT: 389,
+  /** Minimum number of items before virtualization is enabled */
+  THRESHOLD: 100,
+  /** Maximum number of filtered results to show when searching */
+  FILTER_LIMIT: 1300,
+};
+
+/**
+ * Delay times for loading indicators (milliseconds)
+ */
+export const LOADING_DELAYS = {
+  /** Default delay before showing loading indicator */
+  DEFAULT: 5000,
+  /** Extended delay for large dataset operations */
+  LARGE_DATASET: 10000,
+};
