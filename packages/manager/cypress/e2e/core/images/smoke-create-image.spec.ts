@@ -5,6 +5,7 @@ import {
 } from '@linode/utilities';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockGetEvents } from 'support/intercepts/events';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateImage } from 'support/intercepts/images';
 import { mockGetLinodeDisks, mockGetLinodes } from 'support/intercepts/linodes';
 import {
@@ -19,6 +20,10 @@ import { linodeDiskFactory } from 'src/factories/disk';
 import { imageFactory } from 'src/factories/images';
 
 describe('create image (using mocks)', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({ privateImageSharing: false });
+  });
+
   it('create image from a linode', () => {
     const mockDisks = [
       linodeDiskFactory.build({ filesystem: 'ext4', label: 'Debian 12 Disk' }),
