@@ -69,6 +69,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'databaseRestrictPlanResize',
     label: 'Database Restrict Premium Plan Resize',
   },
+  {
+    flag: 'databaseValkey',
+    label: 'Database Valkey',
+  },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'IAM enabled & Beta' },
   {
