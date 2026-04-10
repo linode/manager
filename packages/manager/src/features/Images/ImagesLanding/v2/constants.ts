@@ -5,6 +5,7 @@ export const CREATE_SHARE_GROUP_PENDO_IDS = {
   label: 'Share Groups Create Images-Label',
   description: 'Share Groups Create Images-Description',
   createButton: 'Share Groups Create Images-Create Button',
+};
 // Shared Image drawer Pendo IDs
 export const VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS = {
   xButton: 'Images Library Shared View-X button',
