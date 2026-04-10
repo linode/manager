@@ -289,8 +289,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               inputProps: {
                 'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Name`,
               },
-              tooltipPosition: 'right',
-              tooltipText:
+              labelTooltipText:
                 'Select an existing destination from the list or create a new one by entering a name and clicking Create.',
             }}
             value={field.value ? { label: field.value } : null}
@@ -306,7 +305,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               mode={mode}
             />
           )}
-          {selectedDestinations?.[0] && (
+          {findDestination(selectedDestinations?.[0])?.details && (
             <DestinationAkamaiObjectStorageDetailsSummary
               {...(findDestination(selectedDestinations[0])
                 ?.details as AkamaiObjectStorageDetails)}
@@ -324,7 +323,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                 mode={mode}
               />
             )}
-            {selectedDestinations?.[0] && (
+            {findDestination(selectedDestinations?.[0])?.details && (
               <DestinationCustomHTTPSDetailsSummary
                 {...(findDestination(selectedDestinations[0])
                   ?.details as CustomHTTPSDetails)}
