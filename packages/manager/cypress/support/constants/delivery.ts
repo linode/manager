@@ -114,3 +114,9 @@ export const mockLKEAuditLogsStream: Stream = streamFactory.build({
   destinations: [mockAkamaiObjectStorageDestination],
   version: '1.0',
 });
+
+export const CREATE_DESTINATION_ERROR_MESSAGE =
+  'Cannot create destination at this time.';
+
+export const CREATE_STREAM_ERROR_MESSAGE =
+  'You\u2019ve reached the limit of streams you can create. If you have any questions, please contact support.';

@@ -112,7 +112,9 @@ describe('DestinationCreate', () => {
       it('should render Endpoint input and allow to type text in manual mode', async () => {
         renderDestinationCreate(flags);
 
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
@@ -124,7 +126,9 @@ describe('DestinationCreate', () => {
       it('should render Bucket input and allow to type text in manual mode', async () => {
         renderDestinationCreate(flags);
 
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const bucketInput = screen.getByLabelText('Bucket');
@@ -223,10 +227,12 @@ describe('DestinationCreate', () => {
           expect(endpointInput).toBeDisabled();
         });
 
-        it('should enable the Endpoint field when "Enter Bucket manually" is selected', async () => {
+        it('should enable the Endpoint field when "Enter Bucket details manually" is selected', async () => {
           renderDestinationCreate(flags);
 
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');
@@ -237,7 +243,9 @@ describe('DestinationCreate', () => {
           renderDestinationCreate(flags);
 
           // Switch to manual mode and fill in values
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const bucketInput = screen.getByLabelText('Bucket');
@@ -312,7 +320,9 @@ describe('DestinationCreate', () => {
           await userEvent.type(destinationNameInput, 'Test');
 
           // Switch to manual bucket entry to allow typing
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');

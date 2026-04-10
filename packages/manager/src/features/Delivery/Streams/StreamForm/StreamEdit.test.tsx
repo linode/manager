@@ -103,7 +103,9 @@ describe('StreamEdit', () => {
         await userEvent.click(createNewTestDestination);
 
         // Switch to manual bucket entry mode
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
