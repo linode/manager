@@ -68,7 +68,8 @@ export const DatabaseLanding = () => {
       page_size: newDatabasesPagination.pageSize,
     },
     databasesFilter,
-    isDefaultEnabled // TODO (UIE-8634): Determine if check if still necessary
+    isDefaultEnabled, // TODO (UIE-8634): Determine if check is still necessary
+    20000
   );
 
   if (databasesError) {
