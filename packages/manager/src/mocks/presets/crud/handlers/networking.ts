@@ -80,6 +80,25 @@ export const allocateIP = (mockState: MockState) => [
   ),
 ];
 
+// Reserved IP handlers
+
+export const getReservedIPs = () => [
+  http.get(
+    '*/v4beta/networking/reserved/ips',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<IPAddress>>
+    > => {
+      const reservedIPs = await mswDB.getAll('reservedIPs');
+      return makePaginatedResponse({
+        data: reservedIPs ?? [],
+        request,
+      });
+    }
+  ),
+];
+
 export const reserveIP = (mockState: MockState) => [
   http.post(
     '*/v4beta/networking/reserved/ips',
@@ -95,7 +114,7 @@ export const reserveIP = (mockState: MockState) => [
         type: 'ipv4',
       });
 
-      await mswDB.add('ipAddresses', ipAddress, mockState);
+      await mswDB.add('reservedIPs', ipAddress, mockState);
 
       return makeResponse(ipAddress);
     }
