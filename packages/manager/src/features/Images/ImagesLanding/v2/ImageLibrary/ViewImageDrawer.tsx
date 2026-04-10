@@ -1,0 +1,135 @@
+import { useRegionsQuery } from '@linode/queries';
+import { ActionsPanel, Drawer, Stack, Typography } from '@linode/ui';
+import React from 'react';
+
+import Lock from 'src/assets/icons/lock.svg';
+import Unlock from 'src/assets/icons/unlock.svg';
+import { Flag } from 'src/components/Flag';
+import { getCountryAndLabelFromImageRegion } from 'src/features/Images/utils';
+
+import {
+  StyledCloudInitIcon,
+  StyledCopyIcon,
+  StyledLabel,
+} from './ViewImageDrawer.styles';
+
+import type { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
+import type { APIError, Image } from '@linode/api-v4';
+
+interface Props {
+  image: Image | undefined;
+  imageError?: APIError[] | null;
+  isFetching?: boolean;
+  isSharedImage?: boolean;
+  onClose: () => void;
+  open: boolean;
+  pendoIDs: typeof VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS;
+}
+
+export const ViewImageDrawer = (props: Props) => {
+  const {
+    imageError,
+    isFetching,
+    isSharedImage,
+    onClose,
+    open,
+    pendoIDs,
+    image,
+  } = props;
+
+  const { data: regions } = useRegionsQuery();
+
+  return (
+    <Drawer
+      error={imageError}
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      pendoId={pendoIDs.xButton}
+      title={`View ${isSharedImage ? 'shared ' : ''}image details`}
+    >
+      <Stack spacing={2}>
+        <Typography variant="body1">
+          <StyledLabel>Label:</StyledLabel> {image?.label}
+        </Typography>
+        <Typography variant="body1">
+          <StyledLabel>Image ID:</StyledLabel> {image?.id}
+          <StyledCopyIcon
+            data-pendo-id={pendoIDs.copyImageIdIcon}
+            text={image?.id ?? ''}
+          />
+        </Typography>
+        {isSharedImage && (
+          <Typography variant="body1">
+            <StyledLabel>Share group:</StyledLabel>{' '}
+            {image?.image_sharing?.shared_by?.sharegroup_label}
+          </Typography>
+        )}
+        <Typography variant="body1">
+          <StyledLabel>Original image size:</StyledLabel> {image?.size} MB
+        </Typography>
+        <Typography variant="body1">
+          <StyledLabel>All replicas:</StyledLabel> {image?.total_size} MB
+        </Typography>
+        <Typography variant="body1">
+          <StyledLabel>Created:</StyledLabel> {image?.created}
+        </Typography>
+        {image?.capabilities?.includes('distributed-sites') ? (
+          <Stack alignItems="center" direction="row" spacing={0.5}>
+            <Lock />
+            <Typography data-testid="encrypted-indicator">Encrypted</Typography>
+          </Stack>
+        ) : (
+          <Stack alignItems="center" direction="row" spacing={0.5}>
+            <Unlock />
+            <Typography data-testid="not-encrypted-indicator">
+              Not Encrypted
+            </Typography>
+          </Stack>
+        )}
+        {image?.capabilities?.includes('cloud-init') && (
+          <Stack alignItems="center" direction="row" spacing={0.5}>
+            <StyledCloudInitIcon />
+            <Typography>Supports Metadata service via Cloud-Init</Typography>
+          </Stack>
+        )}
+        {image?.description && (
+          <Stack direction="column" spacing={1}>
+            <StyledLabel>Description</StyledLabel>
+            <Typography variant="body1">{image.description}</Typography>
+          </Stack>
+        )}
+        <StyledLabel>Replicated in the following regions:</StyledLabel>{' '}
+        {image?.regions.map((region) => {
+          const countryAndLabelObject = getCountryAndLabelFromImageRegion(
+            regions ?? [],
+            region
+          );
+
+          const imageCountry = countryAndLabelObject.country ?? 'us';
+          const regionLabel = countryAndLabelObject.label ?? 'Unknown';
+
+          return (
+            <Stack
+              alignItems="center"
+              direction="row"
+              key={region.region}
+              marginTop={1}
+            >
+              <Flag country={imageCountry} />
+              <span style={{ paddingLeft: 8 }}>{regionLabel}</span>
+            </Stack>
+          );
+        })}
+      </Stack>
+      <ActionsPanel
+        data-pendo-id={pendoIDs.closeButton}
+        secondaryButtonProps={{
+          'data-testid': 'cancel',
+          label: 'Close',
+          onClick: onClose,
+        }}
+      />
+    </Drawer>
+  );
+};

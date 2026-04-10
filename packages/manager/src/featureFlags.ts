@@ -294,6 +294,7 @@ export interface Flags {
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
   volumeSummaryPage: boolean;
+  vpcDbaasResources: boolean;
   vpcIpv6: boolean;
 }
 

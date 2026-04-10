@@ -45,6 +45,7 @@ const imageActions = {
   edit: 'edit',
   'manage-replicas': 'manage-replicas',
   rebuild: 'rebuild',
+  view: 'view',
 } as const;
 
 export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
