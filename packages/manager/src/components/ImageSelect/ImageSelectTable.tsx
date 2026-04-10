@@ -57,6 +57,10 @@ interface Props {
    */
   errorText?: string;
   /**
+   * Determines whether additional filtering of images should be applied, typically if there is a StackScript selected.
+   */
+  filter?: (image: Image) => boolean;
+  /**
    * Callback fired when the user selects an image row.
    */
   onSelect: (image: Image) => void;
@@ -79,6 +83,7 @@ export const ImageSelectTable = (props: Props) => {
   const {
     currentRoute,
     errorText,
+    filter,
     onSelect,
     pendoIDs,
     queryParamsPrefix,
@@ -121,7 +126,7 @@ export const ImageSelectTable = (props: Props) => {
   });
 
   const {
-    data: imagesData,
+    data: _imagesData,
     error: imagesError,
     isFetching,
     isLoading,
@@ -129,10 +134,10 @@ export const ImageSelectTable = (props: Props) => {
     {},
     {
       ...combinedFilter,
-      is_public: false,
-      type: 'manual',
     }
   );
+
+  const imagesData = filter ? _imagesData?.filter(filter) : _imagesData;
 
   const pagination = usePaginationV2({
     clientSidePaginationData: imagesData,
