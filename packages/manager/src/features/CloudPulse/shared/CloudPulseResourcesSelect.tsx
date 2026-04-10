@@ -1,19 +1,25 @@
 import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
-import { Box } from '@mui/material';
+import { Box, createFilterOptions } from '@mui/material';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { CLUSTERS_TOOLTIP_TEXT, RESOURCE_FILTER_MAP } from '../Utils/constants';
+import {
+  CLUSTERS_TOOLTIP_TEXT,
+  RESOURCE_FILTER_MAP,
+  VIRTUALIZATION_CONFIG,
+} from '../Utils/constants';
 import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { deepEqual } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
+import { VirtualizedListbox } from './VirtualizedListBox';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { QueryFunctionType } from '../Utils/models';
 import type { AssociatedEntityType } from './types';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
+import type { FilterOptionsState } from '@mui/material';
 
 export interface CloudPulseResources {
   clusterSize?: number;
@@ -139,6 +145,47 @@ export const CloudPulseResourcesSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, region, xFilter, resourceType]);
 
+    // Optimize filtering for large lists - only apply limit when user is actively searching
+    const filterOptions = React.useMemo(() => {
+      const baseFilterOptions = createFilterOptions<CloudPulseResources>({
+        stringify: (resource) => resource.label,
+      });
+
+      return (
+        options: CloudPulseResources[],
+        state: FilterOptionsState<CloudPulseResources>
+      ) => {
+        // Only apply limit when there's search input to improve filtering performance
+        if (state.inputValue) {
+          const filtered = baseFilterOptions(options, state);
+          return filtered.slice(0, VIRTUALIZATION_CONFIG.FILTER_LIMIT);
+        }
+        // Show all options when no search text (virtualization handles performance)
+        return options;
+      };
+    }, []);
+
+    // Wrapper component to connect VirtualizedListbox with MUI Autocomplete
+    const ListboxWrapper = React.useMemo(() => {
+      if (getResourcesList.length <= VIRTUALIZATION_CONFIG.THRESHOLD) {
+        return undefined;
+      }
+      const Wrapper = React.forwardRef<
+        HTMLDivElement,
+        React.HTMLAttributes<HTMLElement>
+      >((props, ref) => {
+        // Extract children and forward to VirtualizedListbox
+        const { children, ...otherProps } = props;
+        return (
+          <div ref={ref} {...otherProps}>
+            <VirtualizedListbox>{children}</VirtualizedListbox>
+          </div>
+        );
+      });
+      Wrapper.displayName = 'VirtualizedListboxWrapper';
+      return Wrapper;
+    }, [getResourcesList.length]);
+
     return (
       <Autocomplete
         autoHighlight
@@ -148,6 +195,7 @@ export const CloudPulseResourcesSelect = React.memo(
         disabled={disabled}
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
+        filterOptions={filterOptions}
         helperText={
           !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
         }
@@ -209,6 +257,11 @@ export const CloudPulseResourcesSelect = React.memo(
               </>
             </ListItem>
           );
+        }}
+        slotProps={{
+          listbox: {
+            component: ListboxWrapper,
+          },
         }}
         textFieldProps={{
           ...CLOUD_PULSE_TEXT_FIELD_PROPS,
