@@ -1,6 +1,6 @@
 import { getTickets } from '@linode/api-v4/lib/support';
 import { useAccount } from '@linode/queries';
-import { isFeatureEnabled } from '@linode/utilities';
+import { isFeatureEnabled, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -70,6 +70,17 @@ export const useTicketSeverityCapability = () => {
   return isFeatureEnabled(
     'Support Ticket Severity',
     Boolean(flags.supportTicketSeverity),
+    account?.capabilities ?? []
+  );
+};
+
+export const useLiveChatCapability = () => {
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  return isFeatureEnabledV2(
+    'Support Live Chat',
+    Boolean(flags.liveChat),
     account?.capabilities ?? []
   );
 };
