@@ -170,7 +170,7 @@ export const CloudPulseResourcesSelect = React.memo(
       if (getResourcesList.length <= VIRTUALIZATION_CONFIG.THRESHOLD) {
         return undefined;
       }
-      const Wrapper = React.forwardRef<
+      return React.forwardRef<
         HTMLDivElement,
         React.HTMLAttributes<HTMLElement>
       >((props, ref) => {
@@ -182,8 +182,6 @@ export const CloudPulseResourcesSelect = React.memo(
           </div>
         );
       });
-      Wrapper.displayName = 'VirtualizedListboxWrapper';
-      return Wrapper;
     }, [getResourcesList.length]);
 
     return (

@@ -62,5 +62,3 @@ export const VirtualizedListbox = React.memo(
     );
   }
 );
-
-VirtualizedListbox.displayName = 'VirtualizedListbox';

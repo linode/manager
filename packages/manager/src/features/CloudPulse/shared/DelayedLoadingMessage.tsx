@@ -17,9 +17,8 @@ export const DelayedLoadingMessage = React.memo(
     return (
       <Typography variant="body1">
         {message ||
-          'Loading data. Processing time may be longer for large datasets.'}
+          'This is taking a bit longer than usual. Loading a large number of entities can take additional time.'}
       </Typography>
     );
   }
 );
-DelayedLoadingMessage.displayName = 'DelayedLoadingMessage';
