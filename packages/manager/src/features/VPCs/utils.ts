@@ -23,9 +23,13 @@ export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   return linodes.length;
 };
 
-export const getUniqueResourcesFromSubnets = (subnets: Subnet[]) => {
+export const getUniqueResourcesFromSubnets = (
+  subnets: Subnet[],
+  countDatabases: boolean
+) => {
   const linodes: number[] = [];
   const nodeBalancer: number[] = [];
+  const databases: number[] = [];
   for (const subnet of subnets) {
     subnet.linodes.forEach((linodeInfo) => {
       if (!linodes.includes(linodeInfo.id)) {
@@ -37,8 +41,15 @@ export const getUniqueResourcesFromSubnets = (subnets: Subnet[]) => {
         nodeBalancer.push(nodeBalancerInfo.id);
       }
     });
+    if (countDatabases) {
+      subnet.databases.forEach((databaseInfo) => {
+        if (!databases.includes(databaseInfo.id)) {
+          databases.push(databaseInfo.id);
+        }
+      });
+    }
   }
-  return linodes.length + nodeBalancer.length;
+  return linodes.length + nodeBalancer.length + databases.length;
 };
 
 // Linode Interfaces: show unrecommended notice if (active) VPC interface has an IPv4 nat_1_1 address but isn't the default IPv4 route
