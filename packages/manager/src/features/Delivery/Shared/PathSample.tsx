@@ -92,6 +92,7 @@ export const PathSample = (props: PathSampleProps) => {
       <InputLabel>
         Sample Destination Object Name
         <TooltipIcon
+          labelTooltipIconSize="small"
           status="info"
           sxTooltipIcon={sxTooltipIcon}
           text={
