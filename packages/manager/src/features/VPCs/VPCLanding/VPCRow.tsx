@@ -17,6 +17,7 @@ import {
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
+  displayVPCDBaaSResources: boolean;
   handleDeleteVPC: () => void;
   handleEditVPC: () => void;
   isNodebalancerVPCEnabled: boolean;
@@ -27,6 +28,7 @@ export const VPCRow = ({
   handleDeleteVPC,
   handleEditVPC,
   isNodebalancerVPCEnabled,
+  displayVPCDBaaSResources,
   vpc,
 }: Props) => {
   const { id, label, subnets } = vpc;
@@ -36,7 +38,7 @@ export const VPCRow = ({
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
   const numResources = isNodebalancerVPCEnabled
-    ? getUniqueResourcesFromSubnets(vpc.subnets)
+    ? getUniqueResourcesFromSubnets(vpc.subnets, displayVPCDBaaSResources)
     : getUniqueLinodesFromSubnets(vpc.subnets);
 
   const { data: permissions, isLoading } = usePermissions(

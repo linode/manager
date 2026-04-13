@@ -4,7 +4,7 @@ import { firewallSeeder } from './firewalls';
 import { kubernetesSeeder } from './kubernetes';
 import { linodesSeeder } from './linodes';
 import { locksSeeder } from './locks';
-import { ipAddressSeeder } from './networking';
+import { ipAddressSeeder, reservedIPSeeder } from './networking';
 import { nodeBalancerSeeder } from './nodebalancers';
 import { placementGroupSeeder } from './placementGroups';
 import { supportTicketsSeeder } from './supportTickets';
@@ -22,6 +22,7 @@ export const dbSeeders = [
   locksSeeder,
   nodeBalancerSeeder,
   placementGroupSeeder,
+  reservedIPSeeder,
   supportTicketsSeeder,
   defaultUsersSeeder,
   parentUsersSeeder,

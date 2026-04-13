@@ -15,6 +15,7 @@ export interface Handlers {
   onEdit?: (image: Image) => void;
   onManageRegions?: (image: Image) => void;
   onRebuild?: (image: Image) => void;
+  onView?: (image: Image) => void;
 }
 
 interface Props {
@@ -32,7 +33,8 @@ export const ImagesActionMenu = (props: Props) => {
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const { onDelete, onDeploy, onEdit, onManageRegions, onRebuild } = handlers;
+  const { onDelete, onDeploy, onEdit, onManageRegions, onRebuild, onView } =
+    handlers;
 
   const { data: imagePermissions, isLoading: isImagePermissionsLoading } =
     usePermissions(
@@ -81,7 +83,7 @@ export const ImagesActionMenu = (props: Props) => {
       return [
         {
           title: 'View Image Details',
-          onClick: () => null,
+          onClick: () => onView?.(image),
           pendoId: pendoIDs?.actionMenu.viewImageDetails,
         },
         { ...deployAction },

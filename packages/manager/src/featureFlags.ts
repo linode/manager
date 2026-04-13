@@ -239,6 +239,7 @@ export interface Flags {
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
+  databaseValkey: BetaFeatureFlag;
   databaseVpc: boolean;
   databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
@@ -294,6 +295,7 @@ export interface Flags {
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
   volumeSummaryPage: boolean;
+  vpcDbaasResources: boolean;
   vpcIpv6: boolean;
 }
 
