@@ -66,7 +66,7 @@ export const UnreserveIPDialog = (props: Props) => {
       }
       onClose={onClose}
       open={open}
-      title={`Unreserve ${ipAddress.address}?`}
+      title={`Unreserve ${ipAddress.address}`}
     >
       {error && <Notice text={error} variant="error" />}
       <Typography>
