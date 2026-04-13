@@ -41,6 +41,10 @@ export interface BreadcrumbProps {
    */
   pathname: string;
   /**
+   * A string that can be used to set a custom Pendo ID for the breadcrumb for tracking purposes.
+   */
+  pendoId?: string;
+  /**
    * A number indicating the position of the crumb to remove. Not zero indexed.
    */
   removeCrumbX?: number | number[];
@@ -65,6 +69,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
     labelTitle,
     onEditHandlers,
     pathname,
+    pendoId,
     removeCrumbX,
     sx,
   } = props;
@@ -91,6 +96,7 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
     <StyledRootDiv
       sx={{ ...(hasError && { marginBottom: (theme) => theme.spacing(3) }) }}
       {...breadcrumbDataAttrs}
+      data-pendo-id={pendoId}
     >
       <StyledPreContainerDiv
         sx={{
