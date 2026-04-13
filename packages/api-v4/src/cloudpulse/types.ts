@@ -4,6 +4,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type CloudPulseServiceType =
+  | 'ai'
   | 'blockstorage'
   | 'dbaas'
   | 'firewall'
@@ -401,6 +402,7 @@ export const capabilityServiceTypeMapping: Record<
   lke: 'Kubernetes',
   netloadbalancer: 'Network LoadBalancer',
   logs: 'Akamai Cloud Pulse Logs',
+  ai: 'AI',
 };
 
 /**
