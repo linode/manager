@@ -49,6 +49,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
+  { flag: 'passwordlessLinodes', label: 'PasswordLess Linodes' },
   {
     flag: 'placementGroupPolicyUpdate',
     label: 'Placement Group Policy Update',
@@ -76,8 +77,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'IAM enabled & Beta' },
   {
-    flag: 'iamLimitedAvailabilityBadges',
-    label: 'IAM Limited Availability Badges',
+    flag: 'iamNewBadge',
+    label: 'IAM New Badge',
   },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   {
