@@ -114,14 +114,14 @@ describe('VPC Detail Summary section', () => {
     });
 
     const { getByText } = renderWithTheme(<VPCDetail />, {
-      flags: { nodebalancerVpc: true },
+      flags: { nodebalancerVpc: true, vpcDbaasResources: true },
     });
 
-    // there is 1 subnet with 8 resources (5 Linodes, 3 nbs)
+    // there is 1 subnet with 11 resources (5 Linodes, 3 nbs, 3 dbs)
     expect(getByText('Subnets')).toBeVisible();
     expect(getByText('1')).toBeVisible();
     expect(getByText('Resources')).toBeVisible();
-    expect(getByText('8')).toBeVisible();
+    expect(getByText('11')).toBeVisible();
 
     expect(getByText('Region')).toBeVisible();
     expect(getByText('US, Newark, NJ')).toBeVisible();

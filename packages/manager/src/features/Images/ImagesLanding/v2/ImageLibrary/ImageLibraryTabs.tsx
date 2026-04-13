@@ -15,8 +15,10 @@ import { DeleteImageDialog } from '../../DeleteImageDialog';
 import { EditImageDrawer } from '../../EditImageDrawer';
 import { ManageImageReplicasForm } from '../../ImageRegions/ManageImageRegionsForm';
 import { RebuildImageDrawer } from '../../RebuildImageDrawer';
+import { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
 import { imageLibrarySubTabs as subTabs } from './imageLibraryTabsConfig';
 import { ImagesView } from './ImagesView';
+import { ViewImageDrawer } from './ViewImageDrawer';
 
 import type { Handlers as ImageHandlers } from '../../ImagesActionMenu';
 import type { Image } from '@linode/api-v4';
@@ -56,6 +58,10 @@ export const ImageLibraryTabs = () => {
       search: (prev) => prev,
       to: '/images/image-library/$imageType/$imageId/$action',
     });
+  };
+
+  const handleView = (image: Image) => {
+    actionHandler(image, 'view');
   };
 
   const handleEdit = (image: Image) => {
@@ -106,6 +112,7 @@ export const ImageLibraryTabs = () => {
     onEdit: handleEdit,
     onManageRegions: handleManageRegions,
     onRebuild: handleRebuild,
+    onView: handleView,
   };
 
   const subTabIndex = getSubTabIndex(subTabs, imageTypeParams?.imageType);
@@ -149,6 +156,15 @@ export const ImageLibraryTabs = () => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
+      <ViewImageDrawer
+        image={selectedImage}
+        imageError={selectedImageError}
+        isFetching={isFetchingSelectedImage}
+        isSharedImage={imageActionParams?.imageType === 'shared-with-me'}
+        onClose={handleCloseDialog}
+        open={imageActionParams?.action === 'view'}
+        pendoIDs={VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS}
+      />
       <EditImageDrawer
         image={selectedImage}
         imageError={selectedImageError}

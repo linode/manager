@@ -2,6 +2,7 @@ import { Factory } from '@linode/utilities';
 
 import type {
   Subnet,
+  SubnetAssignedDatabaseData,
   SubnetAssignedLinodeData,
   SubnetAssignedNodeBalancerData,
 } from '@linode/api-v4/lib/vpcs/types';
@@ -27,6 +28,23 @@ export const subnetAssignedNodebalancerDataFactory =
     ipv4_range: Factory.each((i) => `192.168.${i}.0/30`),
   });
 
+export const subnetAssignedDatabaseDataFactory =
+  Factory.Sync.makeFactory<SubnetAssignedDatabaseData>({
+    id: Factory.each((i) => i),
+    ipv4_range: Factory.each((i) => `192.168.${i}.0/30`),
+    ipv6_ranges: Factory.each((i) => [
+      {
+        range: `2600:3c11:e41c:${i}::/64`,
+      },
+      {
+        range: `2600:3c11:e41c:${i}::/64`,
+      },
+      {
+        range: `2600:3c11:e41c:${i}::/64`,
+      },
+    ]),
+  });
+
 export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
   created: '2023-07-12T16:08:53',
   id: Factory.each((i) => i),
@@ -42,6 +60,13 @@ export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
   nodebalancers: Factory.each((i) =>
     Array.from({ length: 3 }, (_, arrIdx) =>
       subnetAssignedNodebalancerDataFactory.build({
+        id: i * 10 + arrIdx,
+      })
+    )
+  ),
+  databases: Factory.each((i) =>
+    Array.from({ length: 3 }, (_, arrIdx) =>
+      subnetAssignedDatabaseDataFactory.build({
         id: i * 10 + arrIdx,
       })
     )

@@ -1,5 +1,6 @@
 import { linodeFactory } from '@linode/utilities';
 import { firewallFactory, imageFactory } from '@src/factories';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetFirewalls } from 'support/intercepts/firewalls';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { ui } from 'support/ui';
@@ -81,6 +82,10 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
 };
 
 describe('create linode from image, mocked data', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({ privateImageSharing: false });
+  });
+
   /*
    * - Confirms UI flow when user attempts to create a Linode from images without having any images.
    */
