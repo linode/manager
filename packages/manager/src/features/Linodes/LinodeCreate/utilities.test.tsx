@@ -102,6 +102,42 @@ describe('getLinodeCreatePayload', () => {
       }).interfaces
     ).toEqual([{ public: {}, vpc: null, vlan: null }]);
   });
+
+  it('should remove the root_pass and authorized_keys properties when passwordLessLinodes is enabled and no root password or SSH keys are provided', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        root_pass: '',
+        authorized_keys: [],
+      }),
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: false,
+        isPasswordLessLinodesEnabled: true,
+      })
+    ).toEqual({
+      ...values,
+      root_pass: undefined,
+      authorized_users: undefined,
+    });
+  });
+
+  it('should not remove the root_pass and authorized_keys properties when passwordLessLinodes is enabled but a root password and SSH keys are provided', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        root_pass: 'password',
+        authorized_keys: ['ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD...'],
+      }),
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: false,
+        isPasswordLessLinodesEnabled: true,
+      })
+    ).toEqual(values);
+  });
 });
 
 describe('getInterfacesPayload', () => {
