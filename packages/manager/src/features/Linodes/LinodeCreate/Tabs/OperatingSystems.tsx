@@ -6,6 +6,7 @@ import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -17,6 +18,10 @@ export const OperatingSystems = () => {
   const {
     formState: {
       dirtyFields: { label: isLabelFieldDirty },
+      touchedFields: {
+        authorized_users: isAuthorizedUsersFieldTouched,
+        root_pass: isRootPassFieldTouched,
+      },
     },
     getValues,
     setValue,
@@ -32,6 +37,7 @@ export const OperatingSystems = () => {
   const regionId = useWatch<LinodeCreateFormValues, 'region'>({
     name: 'region',
   });
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
 
   const { data: region } = useRegionQuery(regionId);
 
@@ -40,7 +46,12 @@ export const OperatingSystems = () => {
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
 
-    trigger('root_pass');
+    if (
+      isRootPassFieldTouched ||
+      (isPasswordLessLinodesEnabled && isAuthorizedUsersFieldTouched)
+    ) {
+      trigger('root_pass');
+    }
 
     if (!isLabelFieldDirty) {
       const label = await getGeneratedLinodeLabel({
