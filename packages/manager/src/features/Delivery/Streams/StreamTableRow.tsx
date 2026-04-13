@@ -23,9 +23,13 @@ interface StreamTableRowProps extends StreamHandlers {
 export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
   const { stream, onDelete, onDisableOrEnable, onEdit } = props;
   const { id, status } = stream;
-  const iconStatus = (
-    ['active', 'error', 'inactive'].includes(status) ? status : 'other'
-  ) as Status;
+  const iconStatus = ((): Status => {
+    if (status === 'failed') return 'error';
+    if (['active', 'error', 'inactive'].includes(status)) {
+      return status as Status;
+    }
+    return 'other';
+  })();
 
   return (
     <TableRow key={id}>
@@ -72,6 +76,10 @@ const humanizeStreamStatus = (status: StreamStatus) => {
   switch (status) {
     case 'active':
       return 'Active';
+    case 'deactivating':
+      return 'Deactivating';
+    case 'failed':
+      return 'Failed';
     case 'inactive':
       return 'Inactive';
     case 'provisioning':

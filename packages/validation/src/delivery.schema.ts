@@ -351,11 +351,9 @@ const streamSchemaBase = object({
     .min(3, 'Stream name must have at least 3 characters.')
     .max(maxLength, maxLengthMessage)
     .required('Stream name is required.'),
-  status: mixed<'active' | 'inactive' | 'provisioning'>().oneOf([
-    'active',
-    'inactive',
-    'provisioning',
-  ]),
+  status: mixed<
+    'active' | 'deactivating' | 'failed' | 'inactive' | 'provisioning'
+  >().oneOf(['active', 'deactivating', 'failed', 'inactive', 'provisioning']),
   type: string()
     .oneOf(['audit_logs', 'lke_audit_logs'])
     .required('Stream type is required.'),
@@ -372,8 +370,10 @@ export const createStreamSchema = streamSchemaBase;
 export const updateStreamSchema = streamSchemaBase
   .omit(['type'])
   .shape({
-    status: mixed<'active' | 'inactive' | 'provisioning'>()
-      .oneOf(['active', 'inactive', 'provisioning'])
+    status: mixed<
+      'active' | 'deactivating' | 'failed' | 'inactive' | 'provisioning'
+    >()
+      .oneOf(['active', 'deactivating', 'failed', 'inactive', 'provisioning'])
       .required(),
     details: lazy((value) => {
       if (
