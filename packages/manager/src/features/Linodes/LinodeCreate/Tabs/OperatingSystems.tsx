@@ -20,6 +20,7 @@ export const OperatingSystems = () => {
     },
     getValues,
     setValue,
+    trigger,
   } = useFormContext<LinodeCreateFormValues>();
 
   const queryClient = useQueryClient();
@@ -38,6 +39,8 @@ export const OperatingSystems = () => {
 
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
+
+    trigger('root_pass');
 
     if (!isLabelFieldDirty) {
       const label = await getGeneratedLinodeLabel({
