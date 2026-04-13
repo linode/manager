@@ -9,6 +9,7 @@ import {
   useIsGenerationalPlansEnabled,
   useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
+  useIsPasswordLessLinodesEnabled,
 } from './linodes';
 import { wrapWithTheme } from './testHelpers';
 
@@ -304,5 +305,27 @@ describe('useIsGenerationalPlansEnabled', () => {
     );
 
     expect(result.current?.isGenerationalPlansEnabled).toBe(false);
+  });
+});
+
+describe('useIsPasswordLessLinodesEnabled', () => {
+  it('returns isPasswordLessLinodesEnabled: true if the feature is enabled', () => {
+    const options = { flags: { passwordlessLinodes: true } };
+
+    const { result } = renderHook(() => useIsPasswordLessLinodesEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isPasswordLessLinodesEnabled).toBe(true);
+  });
+
+  it('returns isPasswordLessLinodesEnabled: false if the feature is NOT enabled', () => {
+    const options = { flags: { passwordlessLinodes: false } };
+
+    const { result } = renderHook(() => useIsPasswordLessLinodesEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isPasswordLessLinodesEnabled).toBe(false);
   });
 });

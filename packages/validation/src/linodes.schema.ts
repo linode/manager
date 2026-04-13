@@ -451,7 +451,7 @@ export const UpdateLinodeSchema = object({
 
 export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
-  root_pass: string().required('Password is required.'),
+  root_pass: string(),
   authorized_keys: array().of(string().required()),
   authorized_users: array().of(string().required()),
   stackscript_id: number().optional(),
@@ -607,15 +607,7 @@ export const CreateLinodeDiskSchema = object({
   image: string(),
   authorized_keys: array().of(string()),
   authorized_users: array().of(string()),
-  root_pass: string().when('image', {
-    is: (value: any) => Boolean(value),
-    then: (schema) =>
-      schema.required(
-        'You must provide a root password when deploying from an image.',
-      ),
-    // .concat(rootPasswordValidation),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  root_pass: string(),
   stackscript_id: number(),
   stackscript_data,
 });
@@ -635,6 +627,40 @@ export const CreateLinodeDiskFromImageSchema =
     image: string()
       .required('An image is required.')
       .typeError('An image is required.'),
+    root_pass: string().when('image', {
+      is: (value: unknown) => Boolean(value),
+      then: (schema) =>
+        schema.required(
+          'You must provide a root password when deploying from an image.',
+        ),
+      // .concat(rootPasswordValidation),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  });
+
+export const CreateLinodeDiskFromImageWithoutPasswordSchema =
+  CreateLinodeDiskSchema.clone().shape({
+    image: string()
+      .required('An image is required.')
+      .typeError('An image is required.'),
+    root_pass: string().when('image', {
+      is: (value: unknown) => Boolean(value),
+      then: (schema) =>
+        schema.test({
+          name: 'root-pass-or-ssh-key-required',
+          message:
+            'An SSH Key or a Root Password is required to create a disk. We recommend using an SSH Key for better security.',
+          test(value, context) {
+            const { authorized_users, authorized_keys } = context.parent;
+            const hasAuthorizedUsers =
+              Array.isArray(authorized_users) && authorized_users.length > 0;
+            const hasAuthorizedKeys =
+              Array.isArray(authorized_keys) && authorized_keys.length > 0;
+            return Boolean(value) || hasAuthorizedUsers || hasAuthorizedKeys;
+          },
+        }),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   });
 
 const LABEL_LENGTH_MESSAGE = 'Label must be between 1 and 64 characters.';
@@ -793,6 +819,8 @@ export const CreateLinodeSchema = object({
   region: string().ensure().required('Region is required.'),
   stackscript_id: number().nullable().notRequired(),
   backup_id: number().nullable().notRequired(),
+  kernel: string().notRequired(),
+  boot_size: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().when('stackscript_id', {
     is: (value?: number) => value !== undefined,
@@ -811,14 +839,7 @@ export const CreateLinodeSchema = object({
   tags: array().of(string().defined()).notRequired(),
   private_ip: boolean().notRequired(),
   authorized_users: array().of(string().defined()).notRequired(),
-  root_pass: string().when('image', {
-    is: (value: any) => Boolean(value),
-    then: (schema) =>
-      schema.required(
-        'You must provide a root password when deploying from an image.',
-      ),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  root_pass: string(),
   interfaces: array().when(
     'interface_generation',
     ([interface_generation], schema) => {

@@ -91,6 +91,21 @@ export const useIsLinodeCloneFirewallEnabled = () => {
 };
 
 /**
+ * Returns whether or not the feature for deploying Linodes without a root
+ * password should be enabled.
+ *
+ * When enabled, root_pass is optional if authorized_users are provided.
+ * When disabled, root_pass is strictly required.
+ */
+export const useIsPasswordLessLinodesEnabled = () => {
+  const flags = useFlags();
+
+  return {
+    isPasswordLessLinodesEnabled: Boolean(flags.passwordlessLinodes),
+  };
+};
+
+/**
  * Returns whether or not features related to the Generational Compute Plans
  * should be enabled.
  *

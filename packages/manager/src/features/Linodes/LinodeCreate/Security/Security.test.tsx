@@ -13,7 +13,7 @@ import {
 
 import { Security } from './Security';
 
-import type { LinodeCreateFormValues } from './utilities';
+import type { LinodeCreateFormValues } from '../utilities';
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(),
