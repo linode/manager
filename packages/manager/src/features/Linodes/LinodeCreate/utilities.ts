@@ -55,8 +55,8 @@ export const EMPTY_ACLP_ALERTS: CloudPulseAlertsPayload = {
 };
 
 interface LinodeCreatePayloadOptions {
-  isAclpAlertsPreferenceBeta?: boolean;
-  isAclpIntegration?: boolean;
+  isAclpAlertsEnabled?: boolean;
+  isAclpAlertsMode?: boolean;
   isDualStackEnabled?: boolean;
   isPasswordLessLinodesEnabled?: boolean;
   isShowingNewNetworkingUI: boolean;
@@ -75,8 +75,8 @@ export const getLinodeCreatePayload = (
 ): CreateLinodeRequest => {
   const {
     isShowingNewNetworkingUI,
-    isAclpIntegration,
-    isAclpAlertsPreferenceBeta,
+    isAclpAlertsEnabled,
+    isAclpAlertsMode,
     isDualStackEnabled,
     isPasswordLessLinodesEnabled,
   } = options;
@@ -88,7 +88,9 @@ export const getLinodeCreatePayload = (
     'linodeInterfaces',
   ]);
 
-  if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
+  const isLegacyAlerts = !isAclpAlertsEnabled || !isAclpAlertsMode;
+
+  if (isLegacyAlerts) {
     values.alerts = undefined;
   }
 

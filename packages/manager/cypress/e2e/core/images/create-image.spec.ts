@@ -1,4 +1,5 @@
 import { authenticate } from 'support/api/authentication';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
@@ -10,6 +11,10 @@ authenticate();
 describe('create image (e2e)', () => {
   before(() => {
     cleanUp(['linodes', 'images']);
+  });
+
+  beforeEach(() => {
+    mockAppendFeatureFlags({ privateImageSharing: false });
   });
 
   it('create image from a linode', () => {

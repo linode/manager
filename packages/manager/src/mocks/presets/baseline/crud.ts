@@ -14,6 +14,10 @@ import { firewallCrudPreset } from '../crud/firewalls';
 import { imagesCrudPreset } from '../crud/images';
 import { kubernetesCrudPreset } from '../crud/kubernetes';
 import { locksCrudPreset } from '../crud/locks';
+import {
+  networkingCrudPreset,
+  reservedIPsCrudPreset,
+} from '../crud/networking';
 import { nodeBalancerCrudPreset } from '../crud/nodebalancers';
 import { permissionsCrudPreset } from '../crud/permissions';
 import { placementGroupsCrudPreset } from '../crud/placementGroups';
@@ -46,7 +50,10 @@ export const baselineCrudPreset: MockPresetBaseline = {
     ...volumeCrudPreset.handlers,
     ...usersCrudPreset.handlers,
     ...vpcCrudPreset.handlers,
+    ...networkingCrudPreset.handlers,
     ...nodeBalancerCrudPreset.handlers,
+    ...networkingCrudPreset.handlers,
+    ...reservedIPsCrudPreset.handlers,
 
     // Events.
     getEvents,

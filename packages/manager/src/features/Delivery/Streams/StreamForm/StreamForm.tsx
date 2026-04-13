@@ -119,15 +119,17 @@ export const StreamForm = (props: StreamFormProps) => {
         );
         form.setValue('stream.destinations', [id]);
       } catch (errors) {
+        let errorMessage = `There was an issue creating your destination`;
         for (const error of errors) {
           if (error.field) {
             form.setError(error.field, { message: error.reason });
           } else {
+            errorMessage = error.reason;
             form.setError('root', { message: error.reason });
           }
         }
 
-        enqueueSnackbar('There was an issue creating your destination', {
+        enqueueSnackbar(errorMessage, {
           variant: 'error',
         });
         return;
@@ -166,20 +168,19 @@ export const StreamForm = (props: StreamFormProps) => {
 
       navigate({ to: '/logs/delivery/streams' });
     } catch (errors) {
+      let errorMessage = `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`;
       for (const error of errors) {
         if (error.field) {
           form.setError(error.field, { message: error.reason });
         } else {
+          errorMessage = error.reason;
           form.setError('root', { message: error.reason });
         }
       }
 
-      enqueueSnackbar(
-        `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`,
-        {
-          variant: 'error',
-        }
-      );
+      enqueueSnackbar(errorMessage, {
+        variant: 'error',
+      });
     }
   };
 

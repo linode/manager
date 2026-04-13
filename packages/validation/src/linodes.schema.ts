@@ -473,6 +473,7 @@ export const IPAllocationSchema = object({
     .required('IP address type (IPv4) is required.')
     .oneOf(['ipv4'], 'Only IPv4 addresses can be allocated.'),
   public: boolean().required('Must specify public or private IP address.'),
+  address: string().optional(),
 });
 
 export const CreateSnapshotSchema = object({

@@ -70,6 +70,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'databaseRestrictPlanResize',
     label: 'Database Restrict Premium Plan Resize',
   },
+  {
+    flag: 'databaseValkey',
+    label: 'Database Valkey',
+  },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'IAM enabled & Beta' },
   {
@@ -95,6 +99,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'Object Storage Contextual Metrics',
   },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
+  { flag: 'vpcDbaasResources', label: 'VPC DBaaS Resources' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
   { flag: 'reserveIp', label: 'Reserve IP' },
   { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },

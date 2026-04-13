@@ -10,8 +10,8 @@ describe('ErrorBoundaryFallback', () => {
   it('should render the ErrorComponent when an error is thrown', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const { location } = window;
-    window.location = { ...location, reload: vi.fn() };
+    const mockReload = vi.fn();
+    vi.stubGlobal('location', { ...window.location, reload: mockReload });
 
     const ErrorComponent = () => {
       throw new Error('Test error for error boundary');
@@ -43,9 +43,9 @@ describe('ErrorBoundaryFallback', () => {
     expect(reloadButton).toBeInTheDocument();
 
     await userEvent.click(reloadButton);
-    expect(window.location.reload).toHaveBeenCalled();
+    expect(mockReload).toHaveBeenCalled();
 
     consoleSpy.mockRestore();
-    window.location = location;
+    vi.unstubAllGlobals();
   });
 });

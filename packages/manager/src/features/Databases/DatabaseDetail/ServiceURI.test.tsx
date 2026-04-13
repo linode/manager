@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ServiceURI } from './ServiceURI';
 
-import type { DatabaseStatus } from '@linode/api-v4';
+import type { DatabaseStatus, Engine } from '@linode/api-v4';
 
 const mockCredentials = {
   password: 'password123',
@@ -170,7 +170,7 @@ describe('ServiceURI', () => {
     refetch: vi.fn(),
   });
 
-  it('should render the service URI component and copy icon', async () => {
+  it('should render the PgBouncer service URI component and copy icon', async () => {
     const { container } = renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} />
     );
@@ -221,6 +221,24 @@ describe('ServiceURI', () => {
     );
   });
 
+  it('should render general service URI with ssl-mode=REQUIRED if isGeneralServiceURI is true and the engine is mysql', () => {
+    const mockDb = {
+      ...databaseWithNoVPC,
+      engine: 'mysql' as Engine,
+    };
+    renderWithTheme(<ServiceURI database={mockDb} isGeneralServiceURI />);
+
+    const revealPasswordBtn = screen.getByRole('button', {
+      name: '{click to reveal password}',
+    });
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `mysql://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?ssl-mode=REQUIRED`
+    );
+  });
+
   it('should reveal general service URI password after clicking reveal button', async () => {
     renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
@@ -234,7 +252,7 @@ describe('ServiceURI', () => {
     const serviceURIText = screen.getByTestId('service-uri').textContent;
     expect(revealPasswordBtn).not.toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
+      `postgres://lnroot:password123@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 
@@ -315,6 +333,22 @@ describe('ServiceURI', () => {
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
       `postgres://{click to reveal password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
+    );
+  });
+
+  it('should render private service URI placeholder text if there is a VPC with public access, isGeneralServiceURI and showPrivateVPC is true, but hosts are not yet available', () => {
+    const mockDb = {
+      ...databaseWithPublicVPC,
+      hosts: null,
+    };
+
+    renderWithTheme(
+      <ServiceURI database={mockDb} isGeneralServiceURI showPrivateVPC />
+    );
+
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+    expect(serviceURIText).toBe(
+      'Your Service URI will appear here once it is available.'
     );
   });
 

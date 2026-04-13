@@ -23,7 +23,7 @@ export const chooseCluster = (): ObjectStorageCluster => {
  * @returns Override Cloud Manager cluster, or `undefined`.
  */
 export const getOverrideCluster = (): ObjectStorageCluster | undefined => {
-  const overrideClusterId = Cypress.env('CY_TEST_CLUSTER');
+  const overrideClusterId = Cypress.expose('CY_TEST_CLUSTER');
 
   try {
     return getClusterById(overrideClusterId);
@@ -62,7 +62,7 @@ export const getClusterById = (
  *
  * Retrieved via Linode APIv4 during Cypress start-up.
  */
-export const clusters: ObjectStorageCluster[] = Cypress.env(
+export const clusters: ObjectStorageCluster[] = Cypress.expose(
   'cloudManagerClusters'
 ) as ObjectStorageCluster[];
 

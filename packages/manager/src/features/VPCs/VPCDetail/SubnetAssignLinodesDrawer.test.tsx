@@ -52,6 +52,7 @@ const props = {
     label: 'subnet-1',
     linodes: [],
     nodebalancers: [],
+    databases: [],
     created: '',
     updated: '',
   } as Subnet,

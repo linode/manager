@@ -142,7 +142,7 @@ const disallowedRegionIds = [
  * @returns Override Cloud Manager region, or `undefined`.
  */
 export const getOverrideRegion = (): ExtendedRegion | undefined => {
-  const overrideRegionId = Cypress.env('CY_TEST_REGION');
+  const overrideRegionId = Cypress.expose('CY_TEST_REGION');
 
   try {
     return getRegionById(overrideRegionId);
@@ -156,7 +156,7 @@ export const getOverrideRegion = (): ExtendedRegion | undefined => {
  *
  * Retrieved via Linode APIv4 during Cypress start-up.
  */
-export const regions: ExtendedRegion[] = Cypress.env(
+export const regions: ExtendedRegion[] = Cypress.expose(
   'cloudManagerRegions'
 ) as ExtendedRegion[];
 
@@ -165,7 +165,7 @@ export const regions: ExtendedRegion[] = Cypress.env(
  *
  * Retrieved via Linode APIv4 during Cypress start-up.
  */
-export const availability: AccountAvailability[] = Cypress.env(
+export const availability: AccountAvailability[] = Cypress.expose(
   'cloudManagerAvailability'
 ) as AccountAvailability[];
 

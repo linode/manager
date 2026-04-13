@@ -24,7 +24,10 @@ import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFi
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
 import { usePermissions } from '../../hooks/usePermissions';
-import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
+import {
+  IAM_ROLES_PENDO_IDS,
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+} from '../../Shared/constants';
 import { DelegateUserChip } from '../../Shared/DelegateUserChip';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
@@ -195,6 +198,9 @@ export const AssignSelectedRolesDrawer = ({
               name={`username`}
               render={({ field: { onChange }, fieldState }) => (
                 <Autocomplete
+                  data-pendo-id={
+                    IAM_ROLES_PENDO_IDS.assignSelectedRolesToUserOpen
+                  }
                   errorText={fieldState.error?.message}
                   getOptionLabel={(option) => option.label}
                   label="Select a User"
@@ -213,7 +219,17 @@ export const AssignSelectedRolesDrawer = ({
                   options={getUserOptions() || []}
                   placeholder="Select a User"
                   renderOption={(props, option) => (
-                    <li {...props} key={option.value}>
+                    <li
+                      {...props}
+                      data-pendo-id={
+                        option.userType === 'parent'
+                          ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserParent
+                          : option.userType === 'child'
+                            ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserChild
+                            : IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate
+                      }
+                      key={option.value}
+                    >
                       <Stack alignItems="center" direction="row" spacing={1}>
                         <Typography>{option.label}</Typography>
                         {option.userType === 'delegate' && <DelegateUserChip />}
@@ -278,6 +294,8 @@ export const AssignSelectedRolesDrawer = ({
             primaryButtonProps={{
               'data-testid': 'submit',
               label: 'Assign',
+              'data-pendo-id':
+                IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserAssign,
               type: 'submit',
               loading: isPending || formState.isSubmitting,
             }}

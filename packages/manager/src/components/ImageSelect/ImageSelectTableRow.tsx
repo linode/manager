@@ -18,6 +18,7 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 
 import { TABLE_CELL_BASE_STYLE } from './constants';
+import { getRegionListItem } from './utilities';
 
 import type {
   IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS,
@@ -46,7 +47,7 @@ export const ImageSelectTableRow = (props: Props) => {
     id,
     image_sharing,
     label,
-    regions: imageRegions,
+    regions: _imageRegions,
     size,
     status,
     type,
@@ -76,20 +77,14 @@ export const ImageSelectTableRow = (props: Props) => {
     return '—';
   };
 
-  const getRegionListItem = (imageRegion: ImageRegion) => {
-    const matchingRegion = regions.find((r) => r.id === imageRegion.region);
-
-    return matchingRegion
-      ? `${matchingRegion.label} (${imageRegion.region})`
-      : imageRegion.region;
-  };
+  const imageRegions = _imageRegions ?? []; // Failsafe for manual images whose `regions` property is null
 
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
       {imageRegions.map((region: ImageRegion, idx) => {
         return (
           <ListItem disablePadding key={`${region.region}-${idx}`}>
-            {getRegionListItem(region)}
+            {getRegionListItem(regions, region)}
           </ListItem>
         );
       })}
@@ -132,7 +127,9 @@ export const ImageSelectTableRow = (props: Props) => {
                 ? pluralize('Region', 'Regions', imageRegions.length)
                 : '—'
             }
-            tooltipText={<FormattedRegionList />}
+            tooltipText={
+              imageRegions?.length > 0 ? <FormattedRegionList /> : 'N/A'
+            }
           />
         </TableCell>
       </Hidden>
