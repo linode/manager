@@ -179,8 +179,6 @@ export const VIRTUALIZATION_CONFIG = {
   MAX_VISIBLE_HEIGHT: 389,
   /** Minimum number of items before virtualization is enabled */
   THRESHOLD: 100,
-  /** Maximum number of filtered results to show when searching */
-  FILTER_LIMIT: 1300,
 };
 
 /**

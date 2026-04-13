@@ -1,5 +1,5 @@
 import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
-import { Box, createFilterOptions } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -19,7 +19,6 @@ import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLa
 import type { QueryFunctionType } from '../Utils/models';
 import type { AssociatedEntityType } from './types';
 import type { CloudPulseServiceType, FilterValue } from '@linode/api-v4';
-import type { FilterOptionsState } from '@mui/material';
 
 export interface CloudPulseResources {
   clusterSize?: number;
@@ -145,26 +144,6 @@ export const CloudPulseResourcesSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, region, xFilter, resourceType]);
 
-    // Optimize filtering for large lists - only apply limit when user is actively searching
-    const filterOptions = React.useMemo(() => {
-      const baseFilterOptions = createFilterOptions<CloudPulseResources>({
-        stringify: (resource) => resource.label,
-      });
-
-      return (
-        options: CloudPulseResources[],
-        state: FilterOptionsState<CloudPulseResources>
-      ) => {
-        // Only apply limit when there's search input to improve filtering performance
-        if (state.inputValue) {
-          const filtered = baseFilterOptions(options, state);
-          return filtered.slice(0, VIRTUALIZATION_CONFIG.FILTER_LIMIT);
-        }
-        // Show all options when no search text (virtualization handles performance)
-        return options;
-      };
-    }, []);
-
     // Wrapper component to connect VirtualizedListbox with MUI Autocomplete
     const ListboxWrapper = React.useMemo(() => {
       if (getResourcesList.length <= VIRTUALIZATION_CONFIG.THRESHOLD) {
@@ -193,7 +172,6 @@ export const CloudPulseResourcesSelect = React.memo(
         disabled={disabled}
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
-        filterOptions={filterOptions}
         helperText={
           !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
         }
