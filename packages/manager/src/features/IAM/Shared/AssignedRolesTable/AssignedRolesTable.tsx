@@ -3,7 +3,7 @@ import {
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { Button, CircleProgress, Select, Typography } from '@linode/ui';
+import { Button, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -30,6 +30,7 @@ import {
   IAM_ROLES_PENDO_IDS,
   ROLES_LEARN_MORE_LINK,
 } from '../constants';
+import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -362,7 +363,7 @@ export const AssignedRolesTable = () => {
   }, [filteredAndSortedRoles, pagination]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
-    return <CircleProgress />;
+    return <LoadingSpinner size="extra-large" />;
   }
 
   const RoleTableRowHead = (

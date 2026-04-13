@@ -1,11 +1,5 @@
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { ErrorState, Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -23,6 +17,8 @@ import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnable
 import { NO_DELEGATED_USERS_TEXT } from 'src/features/IAM/Shared/constants';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+
+import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 
 import type { Theme } from '@mui/material';
 
@@ -93,7 +89,7 @@ export const UserDelegationsTable = () => {
   }
 
   if (isLoadingChildAccounts) {
-    return <CircleProgress />;
+    return <LoadingSpinner size="extra-large" />;
   }
 
   if (errorChildAccounts) {

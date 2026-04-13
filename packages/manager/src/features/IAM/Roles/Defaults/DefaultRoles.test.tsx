@@ -9,7 +9,7 @@ import {
 } from '../../Shared/constants';
 import { DefaultRoles } from './DefaultRoles';
 
-const loadingTestId = 'circle-progress';
+const loadingTestId = 'loading-spinner';
 
 const queryMocks = vi.hoisted(() => ({
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),

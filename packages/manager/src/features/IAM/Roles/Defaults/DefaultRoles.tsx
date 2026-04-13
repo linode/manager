@@ -1,11 +1,5 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Paper,
-  Typography,
-} from '@linode/ui';
+import { ErrorState, Notice, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { usePermissions } from '../../hooks/usePermissions';
@@ -14,6 +8,7 @@ import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_DEFAULT_ROLES_TEXT,
 } from '../../Shared/constants';
+import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultRoles = () => {
@@ -35,7 +30,7 @@ export const DefaultRoles = () => {
     : false;
 
   if (defaultRolesLoading || isPermissionsLoading) {
-    return <CircleProgress />;
+    return <LoadingSpinner size="extra-large" />;
   }
 
   if (!permissions?.view_default_delegate_access) {

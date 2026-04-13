@@ -1,17 +1,12 @@
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  NotFound,
-  Notice,
-  Stack,
-} from '@linode/ui';
+import { ErrorState, NotFound, Notice, Stack } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
+import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
 import { UserEmailPanel } from './UserEmailPanel';
@@ -35,7 +30,7 @@ export const UserProfile = () => {
   );
 
   if (isLoading) {
-    return <CircleProgress />;
+    return <LoadingSpinner size="extra-large" />;
   }
 
   if (

@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
@@ -16,6 +15,7 @@ import {
   useIsIAMEnabled,
 } from './hooks/useIsIAMEnabled';
 import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
+import { SuspenseLoader } from './Shared/SuspenseLoader/SuspenseLoader';
 
 export const IdentityAccessLanding = React.memo(() => {
   const flags = useFlags();

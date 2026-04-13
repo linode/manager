@@ -1,12 +1,5 @@
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Paper,
-  Typography,
-  useTheme,
-} from '@linode/ui';
+import { ErrorState, Notice, Paper, Typography, useTheme } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -18,6 +11,7 @@ import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_ROLES_TEXT,
 } from '../../Shared/constants';
+import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
@@ -43,7 +37,7 @@ export const UserRoles = () => {
     : false;
 
   if (isLoading) {
-    return <CircleProgress />;
+    return <LoadingSpinner size="extra-large" />;
   }
 
   if (!permissions?.view_user) {
