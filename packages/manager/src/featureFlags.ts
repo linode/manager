@@ -239,6 +239,7 @@ export interface Flags {
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
+  databaseValkey: BetaFeatureFlag;
   databaseVpc: boolean;
   databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
