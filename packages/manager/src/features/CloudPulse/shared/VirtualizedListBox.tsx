@@ -30,21 +30,25 @@ export const VirtualizedListbox = React.memo(
       [itemCount]
     );
 
+    const RowComponent = React.useCallback(
+      ({
+        index,
+        items,
+        style,
+      }: RowComponentProps<{
+        items: React.ReactNode[];
+      }>) => {
+        return (
+          <div style={{ ...style, boxSizing: 'border-box' }}>
+            {items[index]}
+          </div>
+        );
+      },
+      []
+    );
+
     if (itemCount === 0) {
       return <ul>{children}</ul>;
-    }
-
-    // Row component for rendering each virtualized item
-    function RowComponent({
-      index,
-      items,
-      style,
-    }: RowComponentProps<{
-      items: React.ReactNode[];
-    }>) {
-      return (
-        <div style={{ ...style, boxSizing: 'border-box' }}>{items[index]}</div>
-      );
     }
 
     return (
