@@ -40,6 +40,7 @@ import { quotasRouteTree } from './quotas';
 import { reservedIpsRouteTree } from './reservedIps';
 import { rootRoute } from './root';
 import { searchRouteTree } from './search';
+import { serverlessInferenceRouteTree } from './serverlessInference';
 import { serviceTransfersRouteTree } from './serviceTransfers';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
@@ -91,6 +92,7 @@ export const routeTree = rootRoute.addChildren([
   quotasRouteTree,
   reservedIpsRouteTree,
   searchRouteTree,
+  serverlessInferenceRouteTree,
   serviceTransfersRouteTree,
   settingsRouteTree,
   stackScriptsRouteTree,

@@ -3958,6 +3958,7 @@ export const handlers = [
   http.get('*/monitor/services/:serviceType', ({ params }) => {
     const serviceType = params.serviceType as CloudPulseServiceType;
     const serviceTypesMap: Record<CloudPulseServiceType, string> = {
+      ai: 'AI',
       linode: 'Linode',
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',

@@ -7,6 +7,7 @@ import { Box } from '@linode/ui';
 import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
+import AI from 'src/assets/icons/entityIcons/ai.svg';
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import CoreUser from 'src/assets/icons/entityIcons/coreuser.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -26,6 +27,7 @@ import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
+import { useIsServerlessInferenceEnabled } from 'src/features/ServerlessInference/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
 import PrimaryLink from './PrimaryLink';
@@ -67,6 +69,7 @@ export type NavEntity =
   | 'Quick Deploy Apps'
   | 'Quotas'
   | 'Reserved IPs'
+  | 'Serverless Inference'
   | 'Service Transfers'
   | 'StackScripts'
   | 'Users & Grants'
@@ -75,6 +78,7 @@ export type NavEntity =
 
 export type ProductFamily =
   | 'Administration'
+  | 'AI'
   | 'Compute'
   | 'Databases'
   | 'Monitor'
@@ -140,6 +144,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
+
+  const { isServerlessInferenceEnabled } = useIsServerlessInferenceEnabled();
 
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 
@@ -254,6 +260,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
             ],
             name: 'Networking',
+          },
+          {
+            icon: <AI />,
+            links: [
+              {
+                display: 'Serverless Inference',
+                hide: !isServerlessInferenceEnabled,
+                to: '/serverless-inference',
+              },
+            ],
+            name: 'AI',
           },
           {
             icon: <Database />,
@@ -373,6 +390,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         isReserveIpEnabled,
+        isServerlessInferenceEnabled,
         limitsEvolution,
       ]
     );
