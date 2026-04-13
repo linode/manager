@@ -45,6 +45,7 @@ import {
 import {
   useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
+  useIsPasswordLessLinodesEnabled,
 } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
@@ -60,7 +61,7 @@ import { Networking } from './Networking/Networking';
 import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
-import { Security } from './Security';
+import { Security } from './Security/Security';
 import { SMTP } from './SMTP';
 import { Summary } from './Summary/Summary';
 import { UserData } from './UserData/UserData';
@@ -69,6 +70,7 @@ import {
   defaultValues,
   EMPTY_ACLP_ALERTS,
   getLinodeCreatePayload,
+  transformPasswordLessCreateErrors,
   useHandleLinodeCreateAnalyticsFormError,
 } from './utilities';
 import { VLAN } from './VLAN/VLAN';
@@ -86,6 +88,7 @@ export const LinodeCreate = () => {
   });
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
   const { data: profile } = useProfile();
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
@@ -103,7 +106,12 @@ export const LinodeCreate = () => {
   const { isDualStackEnabled } = useVPCDualStack();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
-    context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
+    context: {
+      isPasswordLessLinodesEnabled,
+      isLinodeInterfacesEnabled,
+      profile,
+      secureVMNoticesEnabled,
+    },
     defaultValues: () =>
       defaultValues(linodeCreateType, search, queryClient, {
         isLinodeInterfacesEnabled,
@@ -185,6 +193,7 @@ export const LinodeCreate = () => {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpAlertsEnabled: aclpServices?.linode?.alerts?.enabled,
       isAclpAlertsMode: isAclpAlertsModeCreateFlow,
+      isPasswordLessLinodesEnabled,
     });
 
     try {
@@ -226,6 +235,9 @@ export const LinodeCreate = () => {
     } catch (errors) {
       if (isLinodeInterfacesEnabled) {
         transformLegacyInterfaceErrorsToLinodeInterfaceErrors(errors);
+      }
+      if (isPasswordLessLinodesEnabled) {
+        transformPasswordLessCreateErrors(errors);
       }
       for (const error of errors) {
         if (error.field) {

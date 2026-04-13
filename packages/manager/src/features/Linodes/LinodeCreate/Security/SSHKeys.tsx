@@ -2,16 +2,14 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
 
-import type { RebuildLinodeFormValues } from './utils';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
-interface Props {
-  disabled: boolean;
-}
-
-export const SSHKeys = (props: Props) => {
-  const { control, trigger } = useFormContext<RebuildLinodeFormValues>();
+export const SSHKeys = () => {
+  const { control, trigger } = useFormContext<CreateLinodeRequest>();
+  const { data: permissions } = usePermissions('account', ['create_linode']);
   const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
 
   return (
@@ -21,8 +19,8 @@ export const SSHKeys = (props: Props) => {
       render={({ field }) => (
         <UserSSHKeyPanel
           authorizedUsers={field.value ?? []}
-          disabled={props.disabled}
-          headingVariant="h3"
+          disabled={!permissions.create_linode}
+          headingVariant={isPasswordLessLinodesEnabled ? 'h3' : 'h2'}
           setAuthorizedUsers={(values) => {
             field.onChange(values);
             if (isPasswordLessLinodesEnabled) {

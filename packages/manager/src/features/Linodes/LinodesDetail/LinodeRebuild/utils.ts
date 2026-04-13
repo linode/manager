@@ -27,34 +27,74 @@ export interface RebuildLinodeFormValues extends RebuildRequest {
 }
 
 export interface Context {
+  isPasswordLessLinodesEnabled: boolean;
   isTypeToConfirmEnabled: ManagerPreferences['type_to_confirm'];
   linodeLabel: string | undefined;
   queryClient: QueryClient;
   type: LinodeRebuildType;
 }
 
-const RebuildLinodeFromImageSchema = RebuildLinodeSchema.concat(
+const RebuildLinodeFromImageWithoutPasswordSchema = RebuildLinodeSchema.concat(
   object({
     confirmationText: string(),
     reuseUserData: boolean().required(),
+    root_pass: string().when(['authorized_users', 'authorized_keys'], {
+      is: (authorizedUsers: unknown, authorizedKeys: unknown) => {
+        const hasAuthorizedUsers =
+          Array.isArray(authorizedUsers) && authorizedUsers.length > 0;
+        const hasAuthorizedKeys =
+          Array.isArray(authorizedKeys) && authorizedKeys.length > 0;
+
+        return !hasAuthorizedUsers && !hasAuthorizedKeys;
+      },
+      then: (schema) =>
+        schema.required(
+          'An SSH Key or a Root Password is required to rebuild a Linode. We recommend using an SSH Key for better security.'
+        ),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   })
 );
 
-const RebuildLinodeFromStackScriptSchema = RebuildLinodeFromImageSchema.concat(
-  object({
-    stackscript_id: number().required('You must select a StackScript.'),
-  })
-);
+const RebuildLinodeFromImageSchema =
+  RebuildLinodeFromImageWithoutPasswordSchema.shape({
+    root_pass: string().required('Password is required.'),
+  });
+
+const RebuildLinodeFromStackScriptWithoutPasswordSchema =
+  RebuildLinodeFromImageWithoutPasswordSchema.concat(
+    object({
+      stackscript_id: number().required('You must select a StackScript.'),
+    })
+  );
+
+const RebuildLinodeFromStackScriptSchema =
+  RebuildLinodeFromStackScriptWithoutPasswordSchema.shape({
+    root_pass: string().required('Password is required.'),
+  });
+
+const REBUILD_SCHEMAS = {
+  image: {
+    standard: RebuildLinodeFromImageSchema,
+    passwordless: RebuildLinodeFromImageWithoutPasswordSchema,
+  },
+  stackscript: {
+    standard: RebuildLinodeFromStackScriptSchema,
+    passwordless: RebuildLinodeFromStackScriptWithoutPasswordSchema,
+  },
+} as const;
 
 export const resolver: Resolver<RebuildLinodeFormValues, Context> = async (
   values,
   context,
   options
 ) => {
-  const schema =
-    context?.type === 'Image'
-      ? RebuildLinodeFromImageSchema
-      : RebuildLinodeFromStackScriptSchema;
+  const typeKey = context?.type === 'Image' ? 'image' : 'stackscript';
+  const passwordKey = context?.isPasswordLessLinodesEnabled
+    ? 'passwordless'
+    : 'standard';
+
+  const schema = REBUILD_SCHEMAS[typeKey][passwordKey];
 
   const { errors } = await yupResolver(schema, {}, {})(
     values,
