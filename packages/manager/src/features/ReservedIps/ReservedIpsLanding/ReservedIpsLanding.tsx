@@ -17,6 +17,7 @@ import type { ReservedIpsActionHandlers } from './ReservedIpsActionMenu';
 import type { IPAddress } from '@linode/api-v4';
 
 const preferenceKey = 'reserved-ips';
+import { UnreserveIPDialog } from './UnreserveIPDialog';
 
 export const ReservedIpsLanding = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -24,8 +25,7 @@ export const ReservedIpsLanding = () => {
     React.useState<ReserveIPDrawerMode>('create');
   const [selectedIP, setSelectedIP] = React.useState<IPAddress | undefined>();
 
-  // TODO: Integrate Unreserve dialog
-  // const [isUnreserveDialogOpen, setIsUnreserveDialogOpen] = React.useState(false);
+  const [isUnreserveDialogOpen, setIsUnreserveDialogOpen] = React.useState(false);
 
   const pagination = usePaginationV2({
     currentRoute: '/reserved-ips',
@@ -73,10 +73,9 @@ export const ReservedIpsLanding = () => {
 
   const handlers: ReservedIpsActionHandlers = {
     onEdit: (ip) => openDrawer('edit', ip),
-    onUnreserve: (_ip) => {
-      // TODO: Integrate Unreserve dialog
-      // setSelectedIP(ip);
-      // setIsUnreserveDialogOpen(true);
+    onUnreserve: (ip) => {
+      setSelectedIP(ip);
+      setIsUnreserveDialogOpen(true);
     },
   };
 
@@ -137,6 +136,16 @@ export const ReservedIpsLanding = () => {
         onClose={closeDrawer}
         open={isDrawerOpen}
       />
+      {selectedIP && (
+        <UnreserveIPDialog
+          ipAddress={selectedIP}
+          onClose={() => {
+            setIsUnreserveDialogOpen(false);
+            setSelectedIP(undefined);
+          }}
+          open={isUnreserveDialogOpen}
+        />
+      )}
     </>
   );
 };
