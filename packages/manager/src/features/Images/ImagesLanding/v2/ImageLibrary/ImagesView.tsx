@@ -176,6 +176,7 @@ export const ImagesView = (props: Props) => {
         isSearching={imagesIsFetching}
         label="Search"
         onSearch={onSearch}
+        pendoId={config.searchBarPendoId}
         placeholder="Search Images"
         value={search.query ?? ''}
       />

@@ -10,7 +10,13 @@ import {
   linkAnalyticsEvent,
 } from './ReservedIpsLandingEmptyStateData';
 
-export const ReservedIpsLandingEmptyState = () => {
+interface Props {
+  openReserveIPDrawer: () => void;
+}
+
+export const ReservedIpsLandingEmptyState = ({
+  openReserveIPDrawer,
+}: Props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Reserved IP Addresses" />
@@ -18,9 +24,7 @@ export const ReservedIpsLandingEmptyState = () => {
         buttonProps={[
           {
             children: 'Reserve an IP Address',
-            onClick: () => {
-              // TODO: Open Reserve IP create drawer once ready
-            },
+            onClick: openReserveIPDrawer,
           },
         ]}
         descriptionMaxWidth={500}

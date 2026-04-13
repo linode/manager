@@ -45,6 +45,7 @@ const imageActions = {
   edit: 'edit',
   'manage-replicas': 'manage-replicas',
   rebuild: 'rebuild',
+  view: 'view',
 } as const;
 
 export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
@@ -315,6 +316,15 @@ const shareGroupsTypeRoute = createRoute({
   validateSearch: (search: ImagesSearchParams) => search,
 });
 
+const shareGroupsCreateRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  path: 'share-groups/create',
+}).lazy(() =>
+  import(
+    'src/features/Images/ImagesLanding/v2/ShareGroups/ShareGroupsCreate/ShareGroupsCreateLazyRoute'
+  ).then((m) => m.shareGroupsCreateLazyRoute)
+);
+
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
   imageLibraryLandingRoute.addChildren([
@@ -324,6 +334,7 @@ export const imagesRouteTree = imagesRoute.addChildren([
   ]),
   shareGroupsLandingRoute.addChildren([
     shareGroupsIndexRoute.addChildren([shareGroupsTypeRoute]),
+    shareGroupsCreateRoute,
   ]),
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,

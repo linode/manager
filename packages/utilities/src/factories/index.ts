@@ -11,3 +11,4 @@ export * from './linodes';
 export * from './nodebalancer';
 export * from './profile';
 export * from './regions';
+export * from './sharegroups';

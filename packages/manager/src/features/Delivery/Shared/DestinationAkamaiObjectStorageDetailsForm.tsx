@@ -103,6 +103,17 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
       <Typography sx={{ mt: 2 }} variant="h3">
         Bucket
       </Typography>
+      <Typography
+        sx={{
+          mt: 2,
+          maxWidth: 440,
+          whiteSpace: 'preserve-spaces',
+        }}
+      >
+        Choose how to provide bucket details. Selecting a bucket associated with
+        your account will auto-fill the required settings. Entering a bucket
+        manually requires you to provide all connection details.
+      </Typography>
       <RadioGroup
         onChange={(_, value) => handleBucketConfigurationChange(value)}
         sx={{ '&[role="radiogroup"]': { mb: 0 } }}
@@ -115,7 +126,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
         />
         <FormControlLabel
           control={<Radio />}
-          label="Enter Bucket manually"
+          label="Enter Bucket details manually"
           value="bucket_entered_manually"
         />
       </RadioGroup>
@@ -155,6 +166,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
                   );
                 }}
                 options={buckets}
+                placeholder="Select a Bucket"
                 textFieldProps={{
                   inputProps: {
                     'data-pendo-id': `${pendoPageId}Bucket`,
@@ -200,11 +212,12 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               'data-pendo-id': `${pendoPageId}Host`,
             }}
             label="Endpoint"
+            labelTooltipText="The Object Storage service endpoint associated with your bucket's region"
             onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Endpoint for the destination"
+            placeholder="https://us-ord-1.linodeobjects.com"
             value={field.value}
           />
         )}
@@ -220,6 +233,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               'data-pendo-id': `${pendoPageId}Access Key ID`,
             }}
             label="Access Key ID"
+            labelTooltipText="The access key identifier used for authentication"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
             value={field.value}
@@ -237,6 +251,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               'data-pendo-id': `${pendoPageId}Secret Access Key`,
             }}
             label="Secret Access Key"
+            labelTooltipText="The confidential security credential used with Access Key ID to access Object Storage"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
             value={field.value}
@@ -263,6 +278,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
                 'data-pendo-id': `${pendoPageId}Log Path Prefix`,
               }}
               label="Log Path Prefix"
+              labelTooltipText="The path prefix used for organizing uploaded objects"
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
               optional

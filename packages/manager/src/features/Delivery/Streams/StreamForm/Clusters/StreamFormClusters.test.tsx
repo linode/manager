@@ -156,7 +156,7 @@ describe('StreamFormClusters', () => {
 
   it('should filter clusters by name', async () => {
     await renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Search');
+    const input = screen.getByPlaceholderText('Search for a cluster');
 
     // Type test value inside the search
     await userEvent.click(input);
@@ -169,7 +169,7 @@ describe('StreamFormClusters', () => {
 
   it('should filter clusters by region with search input', async () => {
     await renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Search');
+    const input = screen.getByPlaceholderText('Search for a cluster');
 
     // Type test value inside the search
     await userEvent.click(input);
@@ -185,7 +185,7 @@ describe('StreamFormClusters', () => {
 
   it('should filter clusters by log generation status with search input', async () => {
     await renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Search');
+    const input = screen.getByPlaceholderText('Search for a cluster');
 
     // Type test value inside the search
     await userEvent.click(input);
@@ -198,7 +198,7 @@ describe('StreamFormClusters', () => {
 
   it('should filter clusters by log generation status with autocomplete', async () => {
     await renderComponentWithoutSelectedClusters();
-    const input = screen.getByPlaceholderText('Log Generation');
+    const input = screen.getByPlaceholderText('Logging Status');
 
     // Enabled filter option
     await userEvent.click(input);
@@ -488,7 +488,7 @@ describe('StreamFormClusters', () => {
       it('should only display regions that have clusters and the required capability', async () => {
         await renderComponentWithoutSelectedClusters();
 
-        const regionSelect = screen.getByPlaceholderText('Select Region');
+        const regionSelect = screen.getByPlaceholderText('Select a Region');
         await userEvent.click(regionSelect);
 
         const regionOptions = await screen.findAllByRole('option');

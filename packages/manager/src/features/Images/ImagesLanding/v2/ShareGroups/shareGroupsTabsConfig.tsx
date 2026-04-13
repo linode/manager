@@ -1,16 +1,20 @@
 import React from 'react';
 
+import { SHARE_GROUPS_OWNED_TAB_PENDO_IDS } from 'src/features/Images/constants';
+
 import type { APIError } from '@linode/api-v4';
 import type { HiddenProps } from '@linode/ui';
 import type { ImageSubTab, ShareGroupsType } from 'src/features/Images/utils';
 
 export interface ShareGroupsViewTableColConfig {
+  /* Class name for this column */
+  className?: string;
+
   /* Breakpoint to hide the column (e.g., 'smDown', 'mdUp', etc) */
   hidden?: Exclude<keyof HiddenProps, 'children'>;
 
   /* Column name */
   name: string;
-
   /* Provide sortableProps to enable sorting for this column. */
   sortableProps?: {
     /* API field used for sorting this column */
@@ -34,7 +38,6 @@ export interface ShareGroupsTabsConfig {
     main: string;
   };
   error?: APIError[] | null;
-  eventCategory: string;
   orderByDefault: string;
   orderDefault: 'asc' | 'desc';
   preferenceKey: string;
@@ -61,29 +64,36 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
 ];
 
 const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
-  { name: 'Group', sortableProps: { label: 'label' } },
+  {
+    name: 'Group',
+    sortableProps: { label: 'label' },
+    className: 'group-column',
+  },
   {
     name: 'Description',
     sortableProps: { label: 'description' },
+    className: 'description-column',
   },
   {
     name: '# of members',
+    className: 'membersCount-column',
   },
   {
     name: '# of images',
     hidden: 'smDown',
+    className: 'imagesCount-column',
   },
   {
     name: 'Created',
     sortableProps: { label: 'created' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap' },
+    className: 'created-column',
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
     hidden: 'lgDown',
-    style: { whiteSpace: 'nowrap' },
+    className: 'updated-column',
   },
 ];
 
@@ -124,25 +134,24 @@ export const SHAREGROUPS_CONFIG: Record<
     docsLink: {
       href: `https://techdocs.akamai.com/cloud-computing/docs/image-sharing`,
       label: 'Image sharing',
-      pendoId: 'Images Groups Owned-Docs Link',
+      pendoId: SHARE_GROUPS_OWNED_TAB_PENDO_IDS.imageSharingDocsLink,
     },
     columns: OWNED_GROUPS_TABLE_COLUMNS,
     emptyMessage: {
-      main: 'No Share groups to display',
+      main: 'No share groups to display',
       instruction:
         'Click \u2018Create Share Group\u2019 to create your first share group and share your custom images with other accounts.',
     },
-    eventCategory: 'owned-groups',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'owned-groups',
+    preferenceKey: 'owned-groups-table',
     buttonProps: {
       buttonText: 'Create Share Group',
       navigateTo: '/images/share-groups/create',
       disabledToolTipText: 'You do not have permissions to create share groups',
-      pendoId: 'Images Groups Owned-Create Button',
+      pendoId: SHARE_GROUPS_OWNED_TAB_PENDO_IDS.createButton,
     },
-    searchFieldPendoId: 'Images Groups Owned-Search',
+    searchFieldPendoId: SHARE_GROUPS_OWNED_TAB_PENDO_IDS.searchShareGroupsBar,
   },
   'joined-groups': {
     title: 'Joined groups',
@@ -158,10 +167,9 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         "Go to 'My membership requests' to make a request and join a group",
     },
-    eventCategory: 'joined-groups',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'joined-groups',
+    preferenceKey: 'joined-groups-table',
   },
   'membership-requests': {
     title: 'Membership requests',
@@ -177,9 +185,8 @@ export const SHAREGROUPS_CONFIG: Record<
       instruction:
         "Click 'Request Membership' to create your first membership request",
     },
-    eventCategory: 'membership-requests',
     orderByDefault: 'label',
     orderDefault: 'asc',
-    preferenceKey: 'membership-requests',
+    preferenceKey: 'membership-requests-table',
   },
 };

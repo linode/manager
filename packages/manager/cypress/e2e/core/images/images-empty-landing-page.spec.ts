@@ -1,6 +1,7 @@
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAllImages } from 'support/intercepts/images';
 import {
   mockGetProfile,
@@ -13,6 +14,7 @@ describe('Images empty landing page', () => {
   beforeEach(() => {
     // Mock setup to display the Image landing page in an empty state
     mockGetAllImages([]).as('getImages');
+    mockAppendFeatureFlags({ privateImageSharing: false });
   });
 
   /*

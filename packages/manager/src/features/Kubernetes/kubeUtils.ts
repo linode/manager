@@ -137,26 +137,23 @@ export const getNextVersion = (
   if (versions.length === 0) {
     return null;
   }
-  const versionStrings = versions.map((v) => v.id).sort();
+  const versionStrings = versions
+    .map((v) => v.id)
+    .sort((a, b) => compareByKubernetesVersion(a, b, 'asc'));
   const currentIdx = versionStrings.findIndex(
     (thisVersion) => currentVersion === thisVersion
   );
   if (currentIdx < 0) {
-    // For now, assume that if nothing matches the user is on an obsolete version.
-    // According to the LKE team's deprecation policy, there will only ever be
-    // one such obsolete version, so this is safe. However, we'll eventually
-    // have a version.deprecated field to work with, which will be cleaner
-    // and safer.
-    //
-    // Example:
-    // API returns [1.16, 1.17, 1.18].
-    // You haven't upgraded in ages and your cluster is on 1.15.
-    // The next available upgrade would be 1.16, which is the first item in the list.
-    // Return that.
-    //
-    return versionStrings[0];
+    // The current version is not in the available versions list.
+    // This typically means the user is on an obsolete/deprecated version.
+    // Return the first available version that is actually newer than the current version
+    // to avoid suggesting a downgrade.
+    const nextHigherVersion = versionStrings.find(
+      (v) => compareByKubernetesVersion(v, currentVersion, 'asc') > 0
+    );
+    return nextHigherVersion ?? null;
   }
-  if (currentIdx === versions.length - 1) {
+  if (currentIdx === versionStrings.length - 1) {
     return null;
   }
   return versionStrings[currentIdx + 1];

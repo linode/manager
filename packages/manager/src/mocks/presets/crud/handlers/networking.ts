@@ -1,6 +1,6 @@
 import { http } from 'msw';
 
-import { ipAddressFactory } from 'src/factories';
+import { ipAddressFactory, reservedIPsTypeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import {
   // makeErrorResponse,
@@ -9,7 +9,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { IPAddress } from '@linode/api-v4';
+import type { IPAddress, PriceType } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -76,6 +76,62 @@ export const allocateIP = (mockState: MockState) => [
       await mswDB.add('ipAddresses', ipAddress, mockState);
 
       return makeResponse(ipAddress);
+    }
+  ),
+];
+
+// Reserved IP handlers
+
+export const getReservedIPs = () => [
+  http.get(
+    '*/v4beta/networking/reserved/ips',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<IPAddress>>
+    > => {
+      const reservedIPs = await mswDB.getAll('reservedIPs');
+      return makePaginatedResponse({
+        data: reservedIPs ?? [],
+        request,
+      });
+    }
+  ),
+];
+
+export const reserveIP = (mockState: MockState) => [
+  http.post(
+    '*/v4beta/networking/reserved/ips',
+    async ({
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | IPAddress>> => {
+      const payload = await request.clone().json();
+
+      const ipAddress = ipAddressFactory.build({
+        region: payload.region,
+        reserved: true,
+        tags: payload.tags ?? [],
+        type: 'ipv4',
+      });
+
+      await mswDB.add('reservedIPs', ipAddress, mockState);
+
+      return makeResponse(ipAddress);
+    }
+  ),
+];
+
+export const getReservedIPsTypes = () => [
+  http.get(
+    '*/v4beta/networking/reserved/ips/types',
+    ({
+      request,
+    }): StrictResponse<APIErrorResponse | APIPaginatedResponse<PriceType>> => {
+      const templates = reservedIPsTypeFactory.buildList(1);
+      return makePaginatedResponse({
+        data: templates,
+        request,
+      });
     }
   ),
 ];
