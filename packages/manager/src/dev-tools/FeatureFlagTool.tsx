@@ -77,8 +77,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'IAM enabled & Beta' },
   {
-    flag: 'iamLimitedAvailabilityBadges',
-    label: 'IAM Limited Availability Badges',
+    flag: 'iamNewBadge',
+    label: 'IAM New Badge',
   },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   {
