@@ -1,15 +1,18 @@
 import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
-import { Hidden } from '@linode/ui';
+import { Box, Hidden } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
+import { useFlags } from 'src/hooks/useFlags';
 
+import { getStatusColorMap } from '../NodeBalancerDetail/NodeBalancerSummaryv2/NodeBalancerDetailHeader';
 import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
 import { NodeBalancerVPC } from './NodeBalancerVPC';
@@ -19,8 +22,10 @@ import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 export const NodeBalancerTableRow = (props: NodeBalancer) => {
   const { id, ipv4, label, region, transfer } = props;
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+  const { aclpNbMetricsIntegration } = useFlags();
 
-  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
+  const { data: configs, isLoading: isConfigsLoading } =
+    useAllNodeBalancerConfigsQuery(id);
 
   const nodesUp =
     configs?.reduce((result, config) => config.nodes_status.up + result, 0) ??
@@ -38,7 +43,29 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
       </TableCell>
       <Hidden smDown>
         <TableCell noWrap>
-          <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
+          {aclpNbMetricsIntegration ? (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <StatusIcon
+                pulse={isConfigsLoading}
+                status={getStatusColorMap(isConfigsLoading, nodesUp, nodesDown)}
+                sx={(theme) => ({
+                  marginLeft: theme.spacingFunction(8),
+                })}
+              />
+              <span>
+                {isConfigsLoading
+                  ? 'Loading'
+                  : `${nodesUp} Up - ${nodesDown} Down`}
+              </span>
+            </Box>
+          ) : (
+            <span>{`${nodesUp} up - ${nodesDown} down`}</span>
+          )}
         </TableCell>
       </Hidden>
       <Hidden mdDown>

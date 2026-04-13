@@ -250,21 +250,3 @@ export const useIsNodebalancerIpv6Enabled = () => {
 
   return { isNodebalancerIpv6Enabled: flags.nodebalancerIpv6 ?? false };
 };
-
-/**
- * Returns whether or not features related to the ACLP NB Metrics Integration
- * should be enabled.
- *
- * Currently, this just uses the `aclpNbMetricsIntegration` feature flag as a source of truth,
- * but will eventually also look at account capabilities.
- */
-
-export const useIsAclpNbMetricsIntegrationEnabled = () => {
-  const flags = useFlags();
-
-  // @TODO ACLP NB Metrics Integration: check for customer tag/account capability when it exists
-
-  return {
-    isAclpNbMetricsIntegrationEnabled: flags.aclpNbMetricsIntegration ?? false,
-  };
-};
