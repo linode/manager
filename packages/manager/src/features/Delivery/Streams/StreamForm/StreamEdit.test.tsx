@@ -1,3 +1,4 @@
+import { streamStatus } from '@linode/api-v4';
 import {
   screen,
   waitFor,
@@ -241,47 +242,63 @@ describe('StreamEdit', () => {
             });
           });
 
-          describe('and stream has status: provisioning', () => {
-            it('should have disabled Edit Stream button and show info tooltip', async () => {
-              server.use(
-                http.get('*/monitor/streams/destinations', () => {
-                  return HttpResponse.json(makeResourcePage(mockDestinations));
-                }),
-                http.get(`*/monitor/streams/${streamId}`, () => {
-                  return HttpResponse.json({
-                    ...mockStream,
-                    status: 'provisioning',
-                  });
-                })
-              );
+          const blockingStatuses = [
+            streamStatus.Deactivating,
+            streamStatus.Failed,
+            streamStatus.Provisioning,
+          ];
 
-              renderWithThemeAndHookFormContext({
-                component: <StreamEdit />,
+          describe.each(blockingStatuses)(
+            'and stream has status: %status',
+            (status) => {
+              it('should have disabled Edit Stream button and show info tooltip', async () => {
+                server.use(
+                  http.get('*/monitor/streams/destinations', () => {
+                    return HttpResponse.json(
+                      makeResourcePage(mockDestinations)
+                    );
+                  }),
+                  http.get(`*/monitor/streams/${streamId}`, () => {
+                    return HttpResponse.json({
+                      ...mockStream,
+                      status,
+                    });
+                  })
+                );
+
+                renderWithThemeAndHookFormContext({
+                  component: <StreamEdit />,
+                });
+                const loadingElement = screen.queryByTestId(loadingTestId);
+                await waitForElementToBeRemoved(loadingElement);
+
+                const editStreamButton = screen.getByRole('button', {
+                  name: saveStreamButtonText,
+                });
+
+                // Edit stream button should be disabled
+                expect(editStreamButton).toBeDisabled();
+
+                // Edit stream
+                await userEvent.hover(editStreamButton);
+                await screen.findByRole('tooltip');
+
+                screen.getByText((content) =>
+                  content.includes(
+                    `You cannot save changes while the stream status is ${status}`
+                  )
+                );
+
+                const disabledButtonTooltip = screen.getByText((content) =>
+                  content.includes(
+                    `You cannot save changes while the stream status is ${status}`
+                  )
+                );
+
+                expect(disabledButtonTooltip).toBeInTheDocument();
               });
-              const loadingElement = screen.queryByTestId(loadingTestId);
-              await waitForElementToBeRemoved(loadingElement);
-
-              const editStreamButton = screen.getByRole('button', {
-                name: saveStreamButtonText,
-              });
-
-              // Edit stream button should be disabled
-              expect(editStreamButton).toBeDisabled();
-
-              // Edit stream
-              await userEvent.hover(editStreamButton);
-
-              await waitFor(() => {
-                expect(screen.getByRole('tooltip')).toBeInTheDocument();
-              });
-
-              const disabledButtonTooltip = screen.getByText(
-                'You cannot save changes while the stream is provisioning.'
-              );
-
-              expect(disabledButtonTooltip).toBeInTheDocument();
-            });
-          });
+            }
+          );
         });
       });
 

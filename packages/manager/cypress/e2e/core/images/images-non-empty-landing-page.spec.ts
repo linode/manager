@@ -1,6 +1,7 @@
 import { profileFactory } from '@linode/utilities';
 import { grantsFactory } from '@linode/utilities';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetCustomImages,
   mockGetRecoveryImages,
@@ -73,6 +74,9 @@ describe('image landing checks for non-empty state with restricted user', () => 
           type: 'automatic',
         });
       });
+
+    // Disable Private Image Sharing feature flag.
+    mockAppendFeatureFlags({ privateImageSharing: false });
 
     // Mock setup to display the Image landing page in an non-empty state
     mockGetCustomImages(mockCustomImages).as('getCustomImages');

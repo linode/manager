@@ -7,6 +7,7 @@ import type { RebuildLinodeFormValues } from './utils';
 
 interface Props {
   disabled: boolean;
+  showErrorText?: boolean;
 }
 
 export const Password = (props: Props) => {
@@ -20,7 +21,9 @@ export const Password = (props: Props) => {
         <PasswordInput
           autoComplete="off"
           disabled={props.disabled}
-          errorText={fieldState.error?.message}
+          errorText={
+            props.showErrorText ? fieldState.error?.message : undefined
+          }
           label="Root Password"
           noMarginTop
           onBlur={field.onBlur}

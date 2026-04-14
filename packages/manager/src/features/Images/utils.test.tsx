@@ -1,10 +1,11 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { eventFactory, imageFactory } from 'src/factories';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
+  getCountryAndLabelFromImageRegion,
   getEventsForImages,
   getImageLabelForLinode,
   getImageTypeToImageLibraryType,
@@ -118,6 +119,41 @@ describe('getSubTabIndex', () => {
 
   it('works with an empty subTabs array', () => {
     expect(getSubTabIndex([], 'owned-by-me')).toBe(0);
+  });
+});
+
+describe('getCountryAndLabelFromImageRegion', () => {
+  it('returns the country and label when a matching region is found', () => {
+    const regions = regionFactory.buildList(1, {
+      id: 'us-east',
+      label: 'Newark, NJ',
+      country: 'us',
+    });
+    const imageRegion = { region: 'us-east', status: 'available' as const };
+
+    expect(getCountryAndLabelFromImageRegion(regions, imageRegion)).toEqual({
+      country: 'us',
+      label: 'Newark, NJ',
+    });
+  });
+
+  it('returns undefined for country and label when no matching region is found', () => {
+    const regions = regionFactory.buildList(1, { id: 'us-west' });
+    const imageRegion = { region: 'us-east', status: 'available' as const };
+
+    expect(getCountryAndLabelFromImageRegion(regions, imageRegion)).toEqual({
+      country: undefined,
+      label: undefined,
+    });
+  });
+
+  it('returns undefined for country and label when regions array is empty', () => {
+    const imageRegion = { region: 'us-east', status: 'available' as const };
+
+    expect(getCountryAndLabelFromImageRegion([], imageRegion)).toEqual({
+      country: undefined,
+      label: undefined,
+    });
   });
 });
 

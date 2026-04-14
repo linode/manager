@@ -12,7 +12,10 @@ import { Link } from 'src/components/Link';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import {
+  getIsLinkInactive,
+  useIsDatabasesEnabled,
+} from 'src/features/Databases/utilities';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -64,11 +67,6 @@ export const DatabaseRow = ({
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
-  const isLinkInactive =
-    status === 'suspended' ||
-    status === 'suspending' ||
-    status === 'resuming' ||
-    status === 'migrated';
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const configuration =
@@ -97,7 +95,7 @@ export const DatabaseRow = ({
           flex: '0 1 20.5%',
         }}
       >
-        {isDatabasesV2GA && isLinkInactive ? (
+        {isDatabasesV2GA && getIsLinkInactive(status) ? (
           label
         ) : (
           <Link to={`/databases/${engine}/${id}`}>{label}</Link>
