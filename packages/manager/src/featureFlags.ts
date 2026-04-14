@@ -135,6 +135,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    */
   customHttpsEnabled?: boolean;
   /**
+   * This property indicates whether to show the "Metrics" tab on Logs Stream details page or not
+   */
+  metricsEnabled?: boolean;
+  /**
    * This property indicates whether the feature is new or not
    */
   new?: boolean;

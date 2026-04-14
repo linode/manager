@@ -46,9 +46,7 @@ describe('Edit Stream', () => {
       mockGetStream(mockAuditLogsStream);
 
       // Visit the Edit Stream page
-      cy.visitWithLogin(
-        `/logs/delivery/streams/${mockAuditLogsStream.id}/edit/`
-      );
+      cy.visitWithLogin(`/logs/delivery/streams/${mockAuditLogsStream.id}`);
 
       const updatedLabel = randomLabel();
 
@@ -207,9 +205,7 @@ describe('Edit Stream', () => {
       mockGetClusters([cluster1, cluster2, cluster3, cluster4]);
 
       // Visit the Edit Stream page
-      cy.visitWithLogin(
-        `/logs/delivery/streams/${mockLKEAuditLogsStream.id}/edit/`
-      );
+      cy.visitWithLogin(`/logs/delivery/streams/${mockLKEAuditLogsStream.id}`);
 
       const updatedLabel = randomLabel();
 

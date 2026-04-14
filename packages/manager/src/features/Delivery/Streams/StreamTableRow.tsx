@@ -36,7 +36,7 @@ export const StreamTableRow = React.memo((props: StreamTableRowProps) => {
       <TableCell>
         <LinkWithTooltipAndEllipsis
           pendoId="Logs Delivery Streams-Name"
-          to={`/logs/delivery/streams/${id}/edit`}
+          to={`/logs/delivery/streams/${id}/summary`}
         >
           {stream.label}
         </LinkWithTooltipAndEllipsis>
