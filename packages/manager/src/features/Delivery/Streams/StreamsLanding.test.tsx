@@ -172,7 +172,7 @@ describe('Streams Landing Table', () => {
         await clickOnActionMenuItem('Edit');
 
         expect(mockNavigate).toHaveBeenCalledWith({
-          to: '/logs/delivery/streams/1/edit',
+          to: '/logs/delivery/streams/1/summary',
         });
       });
     });
