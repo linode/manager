@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type {
   AccountMaintenance,
+  DatabaseTypeClass,
   Linode,
   LinodeTypeClass,
   MaintenancePolicySlug,
@@ -121,7 +122,7 @@ export const useIsPasswordLessLinodesEnabled = () => {
  */
 export const useIsGenerationalPlansEnabled = (
   plans: Array<{ id: string }> | undefined,
-  planType: LinodeTypeClass | undefined
+  planType: DatabaseTypeClass | LinodeTypeClass | undefined
 ) => {
   const flags = useFlags();
 
@@ -165,5 +166,6 @@ export const useIsGenerationalPlansEnabled = (
     isGenerationalPlansEnabled:
       isFlagEnabled && !shouldDisableDueToUnavailability,
     allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
+    hasG7DedicatedPlans,
   };
 };

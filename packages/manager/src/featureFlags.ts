@@ -241,6 +241,7 @@ export interface Flags {
   databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
+  databaseResizeGenerationalPlans: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseValkey: BetaFeatureFlag;

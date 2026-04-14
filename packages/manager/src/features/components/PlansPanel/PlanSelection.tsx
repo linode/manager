@@ -60,6 +60,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planHasLimitedAvailability,
     planIsDisabled512Gb,
     planResizeNotSupported,
+    // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+    planDBaaSResizeFromPremiumNotSupported,
+    planDBaaSResizeToPremiumNotSupported,
     planIsSmallerThanUsage,
     planIsTooSmall,
   } = plan;
@@ -90,6 +93,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planIsDisabled512Gb ||
     planHasLimitedAvailability ||
     planResizeNotSupported ||
+    // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+    (isDatabaseFlow && planDBaaSResizeFromPremiumNotSupported) ||
+    (isDatabaseFlow && planDBaaSResizeToPremiumNotSupported) ||
     wholePanelIsDisabled;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
@@ -97,6 +103,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planHasLimitedAvailability,
     planIsDisabled512Gb,
     planResizeNotSupported,
+    // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+    planDBaaSResizeFromPremiumNotSupported,
+    planDBaaSResizeToPremiumNotSupported,
     planIsSmallerThanUsage,
     planIsTooSmall,
     wholePanelIsDisabled,
@@ -112,6 +121,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     (planBelongsToDisabledClass ||
       planIsDisabled512Gb ||
       planHasLimitedAvailability ||
+      // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+      planDBaaSResizeFromPremiumNotSupported ||
+      planDBaaSResizeToPremiumNotSupported ||
       planIsTooSmall ||
       planIsSmallerThanUsage ||
       planResizeNotSupported);
