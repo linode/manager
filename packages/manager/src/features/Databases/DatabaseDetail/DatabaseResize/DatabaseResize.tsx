@@ -26,7 +26,6 @@ import {
 } from 'src/features/components/PlansPanel/utils';
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
-// import dbtypesData from 'src/features/Databases/DatabaseCreate/dbtypes.json';
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import {
   isDefaultDatabase,
@@ -89,11 +88,9 @@ export const DatabaseResize = () => {
 
   const {
     data: dbTypes,
-    // error: typesError,
-    // isLoading: typesLoading,
+    error: typesError,
+    isLoading: typesLoading,
   } = useDatabaseTypesQuery({ platform: database.platform });
-
-  // const dbTypes = dbtypesData.data as DatabaseType[];
 
   const shouldProvideRegions =
     flags.databasePremium && isDefaultDatabase(database);
@@ -421,11 +418,11 @@ export const DatabaseResize = () => {
     return null;
   }
 
-  if (regionsLoading) {
+  if (typesLoading || regionsLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError) {
+  if (typesError || regionsError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
