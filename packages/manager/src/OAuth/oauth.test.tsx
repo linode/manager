@@ -81,7 +81,7 @@ describe('generateOAuthAuthorizeEndpoint', () => {
   it('generates a "state" (aka nonce), stores it in local storage, and includes it in the url', async () => {
     storage.authentication.nonce.clear();
 
-    expect(storage.authentication.nonce.get()).toBeNull();
+    expect(storage.authentication.nonce.get()).toBeUndefined();
 
     const url = await generateOAuthAuthorizeEndpoint('/linodes');
 
@@ -94,7 +94,7 @@ describe('generateOAuthAuthorizeEndpoint', () => {
   it('generates a code verifier and stores it in local storage', async () => {
     storage.authentication.codeVerifier.clear();
 
-    expect(storage.authentication.codeVerifier.get()).toBeNull();
+    expect(storage.authentication.codeVerifier.get()).toBeUndefined();
 
     await generateOAuthAuthorizeEndpoint('/linodes');
 
