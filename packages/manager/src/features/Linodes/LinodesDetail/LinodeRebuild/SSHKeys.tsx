@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
 
 import type { RebuildLinodeFormValues } from './utils';
 
@@ -10,7 +11,8 @@ interface Props {
 }
 
 export const SSHKeys = (props: Props) => {
-  const { control } = useFormContext<RebuildLinodeFormValues>();
+  const { control, trigger } = useFormContext<RebuildLinodeFormValues>();
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
 
   return (
     <Controller
@@ -21,7 +23,12 @@ export const SSHKeys = (props: Props) => {
           authorizedUsers={field.value ?? []}
           disabled={props.disabled}
           headingVariant="h3"
-          setAuthorizedUsers={field.onChange}
+          setAuthorizedUsers={(values) => {
+            field.onChange(values);
+            if (isPasswordLessLinodesEnabled) {
+              trigger('root_pass');
+            }
+          }}
         />
       )}
     />
