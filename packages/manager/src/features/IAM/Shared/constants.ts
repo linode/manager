@@ -73,6 +73,10 @@ export const LAST_ACCOUNT_ADMIN_ERROR =
 export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
 
+export const ERROR_STATE_TITLE = 'An unexpected error occurred.';
+
+export const ERROR_STATE_TEXT_1 = 'Refresh the page or try again later.';
+
 // Delegation error messages
 export const NO_ITEMS_TO_DISPLAY_TEXT = 'No items to display.';
 export const NO_DELEGATED_USERS_TEXT = 'No users added.';

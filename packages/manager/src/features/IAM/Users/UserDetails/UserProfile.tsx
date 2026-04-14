@@ -1,7 +1,7 @@
 import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
-  ErrorState,
+  // ErrorState,
   NotFound,
   Notice,
   Stack,
@@ -10,6 +10,7 @@ import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { DeleteUserPanel } from './DeleteUserPanel';
