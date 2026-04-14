@@ -101,7 +101,8 @@ export const Images = () => {
             errorText={fieldState.error?.message}
             onSelect={onChange}
             pendoIDs={IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS}
-            selectedImageId={field.value}
+            selectedImageIds={field.value ? [field.value] : []}
+            selectionMode="single"
           />
         ) : (
           <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>

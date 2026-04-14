@@ -212,12 +212,12 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               'data-pendo-id': `${pendoPageId}Host`,
             }}
             label="Endpoint"
+            labelTooltipText="The Object Storage service endpoint associated with your bucket's region"
             onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
             placeholder="https://us-ord-1.linodeobjects.com"
-            tooltipText="The Object Storage service endpoint associated with your bucket's region"
             value={field.value}
           />
         )}
@@ -233,9 +233,9 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               'data-pendo-id': `${pendoPageId}Access Key ID`,
             }}
             label="Access Key ID"
+            labelTooltipText="The access key identifier used for authentication"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
-            tooltipText="The access key identifier used for authentication"
             value={field.value}
           />
         )}
@@ -251,9 +251,9 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               'data-pendo-id': `${pendoPageId}Secret Access Key`,
             }}
             label="Secret Access Key"
+            labelTooltipText="The confidential security credential used with Access Key ID to access Object Storage"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
-            tooltipText="The confidential security credential used with Access Key ID to access Object Storage"
             value={field.value}
           />
         )}
@@ -278,12 +278,12 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
                 'data-pendo-id': `${pendoPageId}Log Path Prefix`,
               }}
               label="Log Path Prefix"
+              labelTooltipText="The path prefix used for organizing uploaded objects"
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
               optional
               placeholder="Prefix for log storage path"
               sx={{ maxWidth: 416 }}
-              tooltipText="The path prefix used for organizing uploaded objects"
               value={field.value}
             />
           )}

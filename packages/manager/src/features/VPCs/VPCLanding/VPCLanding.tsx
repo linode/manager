@@ -21,6 +21,7 @@ import {
   VPC_LANDING_TABLE_PREFERENCE_KEY,
 } from 'src/features/VPCs/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -98,7 +99,8 @@ const VPCLanding = () => {
     error: selectedVPCError,
   } = useVPCQuery(params.vpcId ?? -1, !!params.vpcId);
 
-  const flags = useIsNodebalancerVPCEnabled();
+  const flags = useFlags();
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   if (error) {
     return (
@@ -168,7 +170,7 @@ const VPCLanding = () => {
             </Hidden>
             <TableCell>Subnets</TableCell>
             <Hidden mdDown>
-              <TableCell>{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
+              <TableCell>{`${isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
             </Hidden>
             <TableCell />
           </TableRow>
@@ -176,9 +178,10 @@ const VPCLanding = () => {
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
             <VPCRow
+              displayVPCDBaaSResources={Boolean(flags.vpcDbaasResources)}
               handleDeleteVPC={() => handleDeleteVPC(vpc)}
               handleEditVPC={() => handleEditVPC(vpc)}
-              isNodebalancerVPCEnabled={flags.isNodebalancerVPCEnabled}
+              isNodebalancerVPCEnabled={isNodebalancerVPCEnabled}
               key={vpc.id}
               vpc={vpc}
             />

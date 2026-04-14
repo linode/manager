@@ -36,6 +36,10 @@ export interface DrawerProps extends _DrawerProps {
    */
   isFetching?: boolean;
   /**
+   * Optional Pendo ID for tracking clicks on the X icon that closes the drawer.
+   */
+  pendoId?: string;
+  /**
    * Title that appears at the top of the drawer
    */
   title: string;
@@ -72,6 +76,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       isFetching,
       onClose,
       open,
+      pendoId,
       sx,
       title,
       titleSuffix,
@@ -204,6 +209,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             <IconButton
               aria-label="Close drawer"
               color="primary"
+              data-pendo-id={pendoId}
               data-qa-close-drawer
               onClick={() => onClose?.({}, 'escapeKeyDown')}
               size="large"

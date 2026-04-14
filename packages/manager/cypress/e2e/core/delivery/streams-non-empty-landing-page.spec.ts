@@ -88,7 +88,7 @@ function editStreamViaActionMenu(tableAlias: string, stream: Stream) {
       mockGetStream(stream);
       // Edit stream redirect
       ui.actionMenuItem.findByTitle('Edit').click();
-      cy.url().should('endWith', `/streams/${stream.id}/edit`);
+      cy.url().should('endWith', `/streams/${stream.id}/summary`);
     });
 }
 
@@ -180,7 +180,7 @@ describe('Streams non-empty landing page', () => {
 
     // Redirect to stream edit page via name
     cy.findByText(exampleStream.label).click();
-    cy.url().should('endWith', `/streams/${exampleStream.id}/edit`);
+    cy.url().should('endWith', `/streams/${exampleStream.id}/summary`);
     cy.wait(['@getStream', '@getDestinations']);
 
     // Redirect to stream edit page via menu item

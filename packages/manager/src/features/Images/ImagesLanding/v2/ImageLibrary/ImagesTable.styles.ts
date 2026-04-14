@@ -37,8 +37,4 @@ export const StyledImageTableContainer = styled(Box, {
   '& cds-table-row:last-child:not([rowborder])': {
     borderBottom: `1px solid ${theme.tokens.component.Table.Row.Border}`,
   },
-
-  '& cds-table-header-cell, & cds-table-cell': {
-    boxSizing: 'border-box',
-  },
 }));
