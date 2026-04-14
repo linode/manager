@@ -239,6 +239,7 @@ export interface Flags {
   databaseResize: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
+  databaseValkey: BetaFeatureFlag;
   databaseVpc: boolean;
   databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
@@ -251,7 +252,7 @@ export interface Flags {
   hostnameEndpoints: boolean;
   iam: BaseFeatureFlag;
   iamDelegation: BaseFeatureFlag;
-  iamLimitedAvailabilityBadges: boolean;
+  iamNewBadge: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
@@ -274,6 +275,7 @@ export interface Flags {
   objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  passwordlessLinodes: boolean;
   placementGroupPolicyUpdate: boolean;
   privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
@@ -294,6 +296,7 @@ export interface Flags {
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
   volumeSummaryPage: boolean;
+  vpcDbaasResources: boolean;
   vpcIpv6: boolean;
 }
 

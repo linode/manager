@@ -32,6 +32,7 @@ describe('VPC Table Row', () => {
     const { getByText, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
+          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={vi.fn()}
           isNodebalancerVPCEnabled
@@ -57,6 +58,7 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
+          displayVPCDBaaSResources
           handleDeleteVPC={handleDelete}
           handleEditVPC={vi.fn()}
           isNodebalancerVPCEnabled
@@ -78,6 +80,7 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
+          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           isNodebalancerVPCEnabled
@@ -105,6 +108,7 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
+          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           isNodebalancerVPCEnabled
@@ -132,6 +136,7 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
+          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           isNodebalancerVPCEnabled

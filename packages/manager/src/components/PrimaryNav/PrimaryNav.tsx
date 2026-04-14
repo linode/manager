@@ -94,6 +94,20 @@ export interface PrimaryNavProps {
   isCollapsed: boolean;
 }
 
+/** Indices for product-family accordions when the user has not saved `collapsedSideNavProductFamilies` yet. */
+const DEFAULT_COLLAPSED_SIDE_NAV_INDICES = [1, 2, 3, 4, 5, 6, 7];
+
+function getActiveSideNavGroupIndex(
+  groups: ProductFamilyLinkGroup<PrimaryLinkType[]>[],
+  pathname: string
+) {
+  return groups.findIndex((group) => {
+    const filteredLinks = group.links.filter((link) => !link.hide);
+
+    return filteredLinks.some((link) => linkIsActive(pathname, link.to));
+  });
+}
+
 export const PrimaryNav = (props: PrimaryNavProps) => {
   const { closeMenu, desktopMenuToggle, isCollapsed } = props;
   const navItemsRef = React.useRef<HTMLDivElement>(null);
@@ -123,7 +137,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
-  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
@@ -131,19 +144,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
-  const {
-    data: preferences,
-    error: preferencesError,
-    isLoading: preferencesLoading,
-  } = usePreferences();
+  const { data: preferences } = usePreferences();
 
   const collapsedSideNavPreference =
     preferences?.collapsedSideNavProductFamilies;
-
-  const collapsedAccordions = React.useMemo(
-    () => collapsedSideNavPreference ?? [1, 2, 3, 4, 5, 6, 7], // by default, we collapse all categories if no preference is set;
-    [collapsedSideNavPreference]
-  );
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
@@ -277,6 +281,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 hide: !isAlertsEnabled,
                 to: '/alerts',
                 isBeta: flags.aclpAlerting?.beta,
+                isNew: !flags.aclpAlerting?.beta && flags.aclpAlerting?.new,
               },
               {
                 display: 'Logs',
@@ -308,7 +313,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Identity & Access',
                 hide: !isIAMEnabled,
                 to: '/iam',
-                isNew: isIAMEnabled && showLimitedAvailabilityBadges,
+                isNew: isIAMEnabled && flags.iamNewBadge,
               },
               {
                 display: 'Quotas',
@@ -370,6 +375,30 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         limitsEvolution,
       ]
     );
+
+  const collapsedAccordions = React.useMemo(() => {
+    if (preferences === undefined) {
+      return DEFAULT_COLLAPSED_SIDE_NAV_INDICES;
+    }
+    if (collapsedSideNavPreference !== undefined) {
+      return collapsedSideNavPreference;
+    }
+    const activeGroupIndex = getActiveSideNavGroupIndex(
+      productFamilyLinkGroups,
+      location.pathname
+    );
+    if (activeGroupIndex === -1) {
+      return DEFAULT_COLLAPSED_SIDE_NAV_INDICES;
+    }
+    return DEFAULT_COLLAPSED_SIDE_NAV_INDICES.filter(
+      (idx) => idx !== activeGroupIndex
+    );
+  }, [
+    collapsedSideNavPreference,
+    preferences,
+    productFamilyLinkGroups,
+    location.pathname,
+  ]);
 
   const accordionClicked = React.useCallback(
     (index: number) => {
@@ -433,48 +462,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       observer.disconnect();
     };
   }, [checkOverflow]);
-
-  // This effect will only run if the collapsedSideNavPreference is not set
-  // When a user lands on a page and does not have any preference set,
-  // we want to expand the accordion that contains the active link for convenience and discoverability
-  React.useEffect(() => {
-    // Wait for preferences to load or if there's an error
-    if (preferencesLoading || preferencesError) {
-      return;
-    }
-
-    // Wait for preferences data to be available (not just the field, but the whole object)
-    if (!preferences) {
-      return;
-    }
-
-    // If user has already set collapsedSideNavProductFamilies preference, don't override it
-    if (collapsedSideNavPreference) {
-      return;
-    }
-
-    // Find the index of the group containing the active link and expand it
-    const activeGroupIndex = productFamilyLinkGroups.findIndex((group) => {
-      const filteredLinks = group.links.filter((link) => !link.hide);
-
-      return filteredLinks.some((link) =>
-        linkIsActive(location.pathname, link.to)
-      );
-    });
-
-    if (activeGroupIndex !== -1) {
-      accordionClicked(activeGroupIndex);
-    }
-  }, [
-    accordionClicked,
-    location.pathname,
-    location.search,
-    productFamilyLinkGroups,
-    collapsedSideNavPreference,
-    preferences,
-    preferencesLoading,
-    preferencesError,
-  ]);
 
   let activeProductFamily = '';
 

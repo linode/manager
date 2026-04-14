@@ -143,4 +143,66 @@ describe('Alert Resuable Component for contextual view', () => {
     ).not.toBeInTheDocument();
     expect(screen.getByTestId('manage-alerts')).toBeVisible();
   });
+  it('should show the beta chip when beta is enabled in aclpAlerting feature flag', async () => {
+    const flags = {
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: true,
+        new: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
+
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <AlertReusableComponent
+        entityId={entityId}
+        entityName={entityName}
+        onToggleAlert={onToggleAlert}
+        regionId={region}
+        serviceType="dbaas"
+      />,
+      {
+        flags,
+      }
+    );
+
+    const betaChip = await findByTestId('betaChip');
+    const newFeatureChip = queryByTestId('newFeatureChip');
+    expect(betaChip).toBeVisible();
+    expect(newFeatureChip).toBeNull();
+  });
+  it('should show the new chip when beta is disabled and new is enabled in aclpAlerting feature flag', async () => {
+    const flags = {
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: false,
+        new: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
+
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <AlertReusableComponent
+        entityId={entityId}
+        entityName={entityName}
+        onToggleAlert={onToggleAlert}
+        regionId={region}
+        serviceType="dbaas"
+      />,
+      {
+        flags,
+      }
+    );
+
+    const betaChip = queryByTestId('betaChip');
+    const newFeatureChip = await findByTestId('newFeatureChip');
+    expect(betaChip).toBeNull();
+    expect(newFeatureChip).toBeVisible();
+  });
 });

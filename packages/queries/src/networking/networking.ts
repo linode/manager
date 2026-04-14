@@ -1,10 +1,12 @@
 import {
   createIPv6Range,
+  getIP,
   getIPv6RangeInfo,
   getReservedIP,
   getReservedIPs,
   reserveIP,
   unReserveIP,
+  updateIP,
   updateReservedIP,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -18,7 +20,11 @@ import {
 import { useMemo } from 'react';
 
 import { linodeQueries } from '../linodes/linodes';
-import { getAllIps, getAllIPv6Ranges } from './requests';
+import {
+  getAllIps,
+  getAllIPv6Ranges,
+  getAllReservedIPsTypes,
+} from './requests';
 
 import type {
   APIError,
@@ -28,6 +34,7 @@ import type {
   IPRange,
   IPRangeInformation,
   Params,
+  PriceType,
   ReserveIPPayload,
   ResourcePage,
 } from '@linode/api-v4';
@@ -50,6 +57,10 @@ export const networkingQueries = createQueryKeys('networking', {
     },
     queryKey: null,
   },
+  ip: (address: string) => ({
+    queryFn: () => getIP(address),
+    queryKey: [address],
+  }),
   reservedIPs: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getReservedIPs(params, filter),
     queryKey: [params, filter],
@@ -58,6 +69,10 @@ export const networkingQueries = createQueryKeys('networking', {
     queryFn: () => getReservedIP(address),
     queryKey: [address],
   }),
+  reservedIPTypes: {
+    queryFn: getAllReservedIPsTypes,
+    queryKey: null,
+  },
 });
 
 export const useAllIPsQuery = (
@@ -139,6 +154,26 @@ export const useCreateIPv6RangeMutation = () => {
   });
 };
 
+export const useUpdateIPMutation = (address: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IPAddress,
+    APIError[],
+    { address: string; rdns: null | string; reserved: boolean }
+  >({
+    mutationFn: (data) => updateIP(address, data.rdns, data.reserved),
+    onSuccess(ip) {
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
+      queryClient.setQueryData<IPAddress>(
+        networkingQueries.ip(address).queryKey,
+        ip,
+      );
+    },
+  });
+};
+
 export const useReservedIPsQuery = (
   params?: Params,
   filter?: Filter,
@@ -205,5 +240,11 @@ export const useUnReserveIPMutation = (address: string) => {
         queryKey: networkingQueries.reservedIP(address).queryKey,
       });
     },
+  });
+};
+
+export const useReservedIPTypesQuery = () => {
+  return useQuery<PriceType[], APIError[]>({
+    ...networkingQueries.reservedIPTypes,
   });
 };

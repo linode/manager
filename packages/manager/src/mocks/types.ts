@@ -148,6 +148,7 @@ export type MockPresetCrudGroup = {
     | 'Permissions'
     | 'Placement Groups'
     | 'Quotas'
+    | 'Reserved IPs'
     | 'Support Tickets'
     | 'Users'
     | 'Volumes'
@@ -171,6 +172,7 @@ export type MockPresetCrudId =
   | 'permissions:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
+  | 'reserved-ips:crud'
   | 'support-tickets:crud'
   | 'users(default):crud'
   | 'users(parent):crud'
@@ -241,6 +243,7 @@ export interface MockState {
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];
   regions: Region[];
+  reservedIPs: IPAddress[];
   streams: Stream[];
   subnets: [number, Subnet][]; // number is VPC ID
   supportReplies: SupportReply[];
