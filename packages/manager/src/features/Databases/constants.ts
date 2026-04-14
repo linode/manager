@@ -38,8 +38,8 @@ export const RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT =
 export const RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT =
   'Resizing to a Shared CPU or a Dedicated CPU plan is not available for database clusters on a Premium CPU plan.';
 
-export const RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT =
-  'Resizing a 2-node cluster is only allowed with Dedicated plans.';
+export const RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT =
+  'Resizing to a Shared CPU or a non-G7 Dedicated CPU plan is not available for database clusters on a Premium CPU plan.';
 
 export const BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT =
   'Select a time from the past.';
