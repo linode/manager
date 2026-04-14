@@ -39,6 +39,7 @@ export const useIsACLPLogsEnabled = (): {
   isACLPLogsBeta: boolean;
   isACLPLogsCustomHttpsEnabled: boolean;
   isACLPLogsEnabled: boolean;
+  isACLPLogsMetricsEnabled: boolean;
   isACLPLogsNew: boolean;
 } => {
   const { data: account } = useAccount();
@@ -55,6 +56,7 @@ export const useIsACLPLogsEnabled = (): {
   return {
     isACLPLogsBeta: !!flags.aclpLogs?.beta,
     isACLPLogsCustomHttpsEnabled: !!flags.aclpLogs?.customHttpsEnabled,
+    isACLPLogsMetricsEnabled: !!flags.aclpLogs?.metricsEnabled,
     isACLPLogsNew: !!flags.aclpLogs?.new,
     isACLPLogsEnabled,
   };
