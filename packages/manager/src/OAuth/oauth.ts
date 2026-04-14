@@ -207,7 +207,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
 
   if (!codeVerifier) {
     throw new AuthenticationError(
-      'No code codeVerifier found in local storage when running OAuth callback.'
+      'No code codeVerifier found in session storage when running OAuth callback.'
     );
   }
 
