@@ -1,4 +1,4 @@
-import { getUserTimezone } from '@linode/utilities';
+import { getUserTimezone } from '@akamai/compute-ui-core/datetime';
 import { DateTime, Duration } from 'luxon';
 
 import { DATETIME_DISPLAY_FORMAT, ISO_DATE_FORMAT } from 'src/constants';

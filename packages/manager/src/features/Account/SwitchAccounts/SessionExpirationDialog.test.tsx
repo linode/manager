@@ -36,7 +36,10 @@ vi.mock('@tanstack/react-router', async () => {
 const realLocation = window.location;
 
 afterAll(() => {
-  window.location = realLocation;
+  Object.defineProperty(window, 'location', {
+    configurable: true,
+    value: realLocation,
+  });
 });
 
 describe('SessionExpirationDialog', () => {
@@ -68,7 +71,10 @@ describe('SessionExpirationDialog', () => {
     const mockReload = vi.fn();
     delete (window as Partial<Window>).location;
 
-    window.location = { ...realLocation, reload: mockReload };
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { ...realLocation, reload: mockReload },
+    });
 
     const { getByText } = renderWithTheme(
       <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />

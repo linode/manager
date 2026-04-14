@@ -31,6 +31,7 @@
     ]
   },
   "dependencies": {
+    "@akamai/compute-ui-core": "^0.0.4",
     "@linode/api-v4": "workspace:*",
     "luxon": "3.4.4",
     "react": "^19.1.0",

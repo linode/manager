@@ -11,7 +11,10 @@ describe('ErrorBoundaryFallback', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const { location } = window;
-    window.location = { ...location, reload: vi.fn() };
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { ...location, reload: vi.fn() },
+    });
 
     const ErrorComponent = () => {
       throw new Error('Test error for error boundary');
@@ -46,6 +49,9 @@ describe('ErrorBoundaryFallback', () => {
     expect(window.location.reload).toHaveBeenCalled();
 
     consoleSpy.mockRestore();
-    window.location = location;
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: location,
+    });
   });
 });
