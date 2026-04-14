@@ -217,7 +217,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
 
   if (!storedNonce) {
     throw new AuthenticationError(
-      'No nonce found in local storage when running OAuth callback.'
+      'No nonce found in session storage when running OAuth callback.'
     );
   }
 

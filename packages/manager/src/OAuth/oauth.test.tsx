@@ -78,7 +78,7 @@ describe('generateOAuthAuthorizeEndpoint', () => {
     expect(url).toContain('code_challenge=');
   });
 
-  it('generates a "state" (aka nonce), stores it in local storage, and includes it in the url', async () => {
+  it('generates a "state" (aka nonce), stores it in session storage, and includes it in the url', async () => {
     storage.authentication.nonce.clear();
 
     expect(storage.authentication.nonce.get()).toBeUndefined();
@@ -91,7 +91,7 @@ describe('generateOAuthAuthorizeEndpoint', () => {
     expect(url).toContain(`state=${nonceInStorage}`);
   });
 
-  it('generates a code verifier and stores it in local storage', async () => {
+  it('generates a code verifier and stores it in session storage', async () => {
     storage.authentication.codeVerifier.clear();
 
     expect(storage.authentication.codeVerifier.get()).toBeUndefined();
@@ -126,7 +126,7 @@ describe('handleOAuthCallback', () => {
     ).rejects.toThrowError('Error parsing search params on OAuth callback.');
   });
 
-  it('should throw if there is no code verifier found in local storage', async () => {
+  it('should throw if there is no code verifier found in session storage', async () => {
     storage.authentication.codeVerifier.clear();
 
     await expect(
@@ -134,11 +134,11 @@ describe('handleOAuthCallback', () => {
         params: 'state=fehgefhgkefghk&code=gyuwyutfetyfew',
       })
     ).rejects.toThrowError(
-      'No code codeVerifier found in local storage when running OAuth callback.'
+      'No code codeVerifier found in session storage when running OAuth callback.'
     );
   });
 
-  it('should throw if there is no nonce found in local storage', async () => {
+  it('should throw if there is no nonce found in session storage', async () => {
     storage.authentication.codeVerifier.set('fakecodeverifier');
     storage.authentication.nonce.clear();
 
@@ -147,11 +147,11 @@ describe('handleOAuthCallback', () => {
         params: 'state=fehgefhgkefghk&code=gyuwyutfetyfew',
       })
     ).rejects.toThrowError(
-      'No nonce found in local storage when running OAuth callback.'
+      'No nonce found in session storage when running OAuth callback.'
     );
   });
 
-  it('should throw if the nonce in local storage does not match the "state" sent back by login', async () => {
+  it('should throw if the nonce in session storage does not match the "state" sent back by login', async () => {
     storage.authentication.codeVerifier.set('fakecodeverifier');
     storage.authentication.nonce.set('fakenonce');
 
