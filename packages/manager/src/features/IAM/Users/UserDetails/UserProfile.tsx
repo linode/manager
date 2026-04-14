@@ -6,7 +6,7 @@ import React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
-import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
 import { UserEmailPanel } from './UserEmailPanel';
@@ -30,7 +30,7 @@ export const UserProfile = () => {
   );
 
   if (isLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (

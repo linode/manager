@@ -7,11 +7,11 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_ENTITIES_TEXT,
 } from '../../Shared/constants';
-import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserEntities = () => {
@@ -35,7 +35,7 @@ export const UserEntities = () => {
     : false;
 
   if (isLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (!permissions?.list_entities) {

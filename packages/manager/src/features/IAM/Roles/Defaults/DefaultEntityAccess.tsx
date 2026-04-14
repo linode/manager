@@ -4,11 +4,11 @@ import * as React from 'react';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
 } from '../../Shared/constants';
-import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultEntityAccess = () => {
@@ -29,7 +29,7 @@ export const DefaultEntityAccess = () => {
     : false;
 
   if (defaultAccessLoading || isPermissionsLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (!permissions?.view_default_delegate_access) {

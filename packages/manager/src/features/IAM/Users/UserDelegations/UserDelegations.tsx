@@ -6,11 +6,11 @@ import React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ACCOUNT_DELEGATIONS_TEXT,
 } from '../../Shared/constants';
-import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { UserDelegationsTable } from './UserDelegationsTable';
 
@@ -36,7 +36,7 @@ export const UserDelegations = () => {
     : false;
 
   if (isLoading || isPermissionsLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (!permissions?.list_user_delegate_accounts) {

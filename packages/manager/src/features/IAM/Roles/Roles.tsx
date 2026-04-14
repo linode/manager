@@ -3,7 +3,7 @@ import { Notice, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
-import { LoadingSpinner } from 'src/features/IAM/Shared/LoadingSpinner/LoadingSpinner';
+import { CircleProgress } from 'src/features/IAM/Shared/CircleProgress/CircleProgress';
 import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';
@@ -32,7 +32,7 @@ export const RolesLanding = () => {
   }, [accountRoles]);
 
   if (isLoading || isPermissionsLoading || isProfileLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (!permissions?.list_role_permissions) {

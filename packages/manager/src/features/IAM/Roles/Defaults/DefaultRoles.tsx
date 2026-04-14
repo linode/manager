@@ -4,11 +4,11 @@ import * as React from 'react';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_DEFAULT_ROLES_TEXT,
 } from '../../Shared/constants';
-import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultRoles = () => {
@@ -30,7 +30,7 @@ export const DefaultRoles = () => {
     : false;
 
   if (defaultRolesLoading || isPermissionsLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (!permissions?.view_default_delegate_access) {

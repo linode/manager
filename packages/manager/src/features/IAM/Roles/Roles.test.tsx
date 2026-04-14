@@ -52,7 +52,7 @@ describe('RolesLanding', () => {
 
     renderWithTheme(<RolesLanding />);
 
-    expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
+    expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
   });
 
   it('renders roles table when permissions are loaded', async () => {

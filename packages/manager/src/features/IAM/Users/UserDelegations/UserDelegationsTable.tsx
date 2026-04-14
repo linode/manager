@@ -18,7 +18,7 @@ import { NO_DELEGATED_USERS_TEXT } from 'src/features/IAM/Shared/constants';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import { LoadingSpinner } from '../../Shared/LoadingSpinner/LoadingSpinner';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 
 import type { Theme } from '@mui/material';
 
@@ -89,7 +89,7 @@ export const UserDelegationsTable = () => {
   }
 
   if (isLoadingChildAccounts) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   if (errorChildAccounts) {

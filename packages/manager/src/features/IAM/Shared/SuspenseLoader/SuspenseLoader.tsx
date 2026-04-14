@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
+import { CircleProgress } from '../CircleProgress/CircleProgress';
 
 interface Props {
   /**
-   * Ammount of time before the LoadingSpinner shows
+   * Ammount of time before the CircleProgress shows
    * @default 300
    */
   delay?: number;
@@ -21,5 +21,5 @@ export const SuspenseLoader = (props: Props) => {
     };
   }, [delay]);
 
-  return <>{show && <LoadingSpinner size="extra-large" />}</>;
+  return <>{show && <CircleProgress />}</>;
 };

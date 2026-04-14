@@ -25,12 +25,12 @@ import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDeleg
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
+import { CircleProgress } from '../CircleProgress/CircleProgress';
 import {
   ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   IAM_ROLES_PENDO_IDS,
   ROLES_LEARN_MORE_LINK,
 } from '../constants';
-import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -363,7 +363,7 @@ export const AssignedRolesTable = () => {
   }, [filteredAndSortedRoles, pagination]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
-    return <LoadingSpinner size="extra-large" />;
+    return <CircleProgress />;
   }
 
   const RoleTableRowHead = (

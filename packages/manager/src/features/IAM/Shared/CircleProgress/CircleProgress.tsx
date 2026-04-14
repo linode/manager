@@ -1,15 +1,15 @@
-import { LoadingSpinner as CDSLoadingSpinner } from '@akamai/cds-components/react/LoadingSpinner';
+import { LoadingSpinner } from '@akamai/cds-components/react/LoadingSpinner';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-export interface LoadingSpinnerProps {
+export interface CircleProgressProps {
   /**
    * Optional accessible label for the spinner.
    */
   label?: string;
   /**
    * The size of the spinner.
-   * @default "large"
+   * @default "extra-large"
    */
   size?: 'extra-large' | 'large' | 'medium' | 'small';
   /**
@@ -23,16 +23,16 @@ export interface LoadingSpinnerProps {
   state?: 'failure' | 'loading' | 'success';
 }
 
-export const LoadingSpinner = ({
+export const CircleProgress = ({
   label,
-  size = 'large',
+  size = 'extra-large',
   spinnerId,
   state = 'loading',
-}: LoadingSpinnerProps) => {
+}: CircleProgressProps) => {
   return (
     <StyledWrapper>
-      <CDSLoadingSpinner
-        data-testid="loading-spinner"
+      <LoadingSpinner
+        data-testid="circle-progress"
         label={label}
         size={size}
         spinnerId={spinnerId}
@@ -42,7 +42,7 @@ export const LoadingSpinner = ({
   );
 };
 
-const StyledWrapper = styled('div')(({ theme }) => ({
+const StyledWrapper = styled('div')(() => ({
   alignItems: 'center',
   display: 'flex',
   justifyContent: 'center',
