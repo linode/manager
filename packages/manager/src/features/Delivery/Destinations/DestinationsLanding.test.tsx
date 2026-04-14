@@ -166,7 +166,7 @@ describe('Destinations Landing Table', () => {
         await clickOnActionMenuItem('Edit');
 
         expect(mockNavigate).toHaveBeenCalledWith({
-          to: '/logs/delivery/destinations/1/edit',
+          to: '/logs/delivery/destinations/1/summary',
         });
       });
     });
