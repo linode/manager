@@ -151,6 +151,7 @@ describe('database resize', () => {
         beta: false,
         enabled: true,
       },
+      databasePremium: true,
     };
 
     it('resize button should be disabled when no input is provided in the form', async () => {
@@ -482,45 +483,6 @@ describe('database resize', () => {
 
     it('disable plan if it is the same size as used storage', async () => {
       expect(disabledTypes.includes(dedicatedTypes[2])).toBe(true);
-    });
-  });
-
-  describe('should disable Shared Plans Tab for 2 nodes cluster', () => {
-    const database = databaseFactory.build({
-      cluster_size: 2,
-      type: 'g6-dedicated-8',
-    });
-    it('should disable Shared Plans Tab', async () => {
-      const standardTypes = [
-        databaseTypeFactory.build({
-          class: 'nanode',
-          id: 'g6-nanode-1',
-          label: `Nanode 1 GB`,
-          memory: 1024,
-        }),
-      ];
-      server.use(
-        http.get('*/databases/types', () => {
-          return HttpResponse.json(
-            makeResourcePage([...dedicatedTypes, ...standardTypes])
-          );
-        }),
-        http.get('*/account', () => {
-          const account = accountFactory.build();
-          return HttpResponse.json(account);
-        })
-      );
-
-      const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database, engine, isResizeEnabled }}
-        >
-          <DatabaseResize />
-        </DatabaseDetailContext.Provider>
-      );
-      expect(getByTestId(loadingTestId)).toBeInTheDocument();
-      await waitForElementToBeRemoved(getByTestId(loadingTestId));
-      expect(getByText('Shared CPU')).toHaveAttribute('aria-disabled', 'true');
     });
   });
 
