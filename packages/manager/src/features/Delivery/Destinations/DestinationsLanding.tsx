@@ -105,7 +105,7 @@ export const DestinationsLanding = () => {
   }
 
   const handleEdit = ({ id }: Destination) => {
-    navigate({ to: `/logs/delivery/destinations/${id}/edit` });
+    navigate({ to: `/logs/delivery/destinations/${id}/summary` });
   };
 
   const openDeleteDialog = (destination: Destination) => {
