@@ -49,14 +49,13 @@ export const clearStorage = (key: string) => {
   window.localStorage.removeItem(key);
 };
 
-
-export const getSessionStorage = (key: string): string | null => {
+export const getSessionStorage = (key: string): string | undefined => {
   if (key in sessionStorageCache) {
     return sessionStorageCache[key];
   }
   const item = window.sessionStorage.getItem(key);
-  sessionStorageCache[key] = item;
-  return item;
+  sessionStorageCache[key] = item ?? undefined;
+  return item ?? undefined;
 };
 
 export const setSessionStorage = (key: string, value: string) => {

@@ -206,7 +206,6 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
   const codeVerifier = storage.authentication.codeVerifier.get();
 
   if (!codeVerifier) {
-    alert('No code codeVerifier found in local storage when running OAuth callback.');
     throw new AuthenticationError(
       'No code codeVerifier found in local storage when running OAuth callback.'
     );
