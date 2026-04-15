@@ -7,6 +7,10 @@ pipeline {
         disableConcurrentBuilds()
     }
 
+    environment {
+        CI = 'true'
+    }
+
     stages {
         stage("Setup pnpm") {
             steps {
