@@ -654,6 +654,11 @@ export interface CreateLinodeRequest {
    */
   backups_enabled?: boolean | null;
   /**
+   * When deploying from an Image, this field is optional, otherwise it is ignored.
+   * This is used to set the boot size for the newly-created Linode.
+   */
+  boot_size?: null | number;
+  /**
    * If it is deployed from an Image or a Backup and you wish it to remain offline after deployment, set this to false.
    *
    * @default true if the Linode is created with an Image or from a Backup.
@@ -694,6 +699,11 @@ export interface CreateLinodeRequest {
    * Must be empty if Linode is configured to use new Linode Interfaces.
    */
   ipv4?: string[];
+  /**
+   * When deploying from an Image, this field is optional, otherwise it is ignored.
+   * This is used to set the kernel type for the newly-created Linode.
+   */
+  kernel?: null | string;
   /**
    * The Linode's label is for display purposes only.
    * If no label is provided for a Linode, a default will be assigned.
