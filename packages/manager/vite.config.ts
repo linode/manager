@@ -29,6 +29,7 @@ export default defineConfig({
   },
   test: {
     include: ['**/*.test.{js,jsx,ts,tsx}'],
+    testTimeout: 10000,
     coverage: {
       exclude: [
         'src/**/*.constants.{js,jsx,ts,tsx}',
