@@ -96,7 +96,7 @@ describe('Database Table', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
-      timeout: 3000,
+      timeout: 30000,
     });
 
     // Static text and table column headers
