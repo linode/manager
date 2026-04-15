@@ -1,11 +1,5 @@
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { ErrorState, Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -23,6 +17,8 @@ import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnable
 import { NO_ITEMS_TO_DISPLAY_TEXT } from 'src/features/IAM/Shared/constants';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 
 import type { Theme } from '@mui/material';
 

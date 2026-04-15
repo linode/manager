@@ -1,16 +1,10 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { ErrorState, Notice, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,

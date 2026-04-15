@@ -1,11 +1,12 @@
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { ErrorState, Notice } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ACCOUNT_DELEGATIONS_TEXT,

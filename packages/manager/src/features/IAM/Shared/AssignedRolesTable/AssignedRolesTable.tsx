@@ -3,7 +3,7 @@ import {
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { Button, CircleProgress, Select, Typography } from '@linode/ui';
+import { Button, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -25,6 +25,7 @@ import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDeleg
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
+import { CircleProgress } from '../CircleProgress/CircleProgress';
 import {
   ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   IAM_ROLES_PENDO_IDS,

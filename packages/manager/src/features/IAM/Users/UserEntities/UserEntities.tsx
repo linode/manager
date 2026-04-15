@@ -1,12 +1,5 @@
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Paper,
-  Typography,
-  useTheme,
-} from '@linode/ui';
+import { ErrorState, Notice, Paper, Typography, useTheme } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -14,6 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import {
   ERROR_STATE_TEXT,
   NO_ASSIGNED_ENTITIES_TEXT,
