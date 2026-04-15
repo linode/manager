@@ -33,11 +33,12 @@ import {
 } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
   RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
   RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
-  RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
 } from '../../constants';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
@@ -112,45 +113,62 @@ export const DatabaseResize = () => {
     (type: DatabaseType) => type.id === database.type
   );
 
-  const isDisabledSharedTab = database.cluster_size === 2;
-
-  const premiumRestrictedTabsCopy =
-    currentPlanType?.class === 'premium'
-      ? RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT
-      : RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT;
-
-  const restrictPlanTypes = () => {
-    if (currentPlanType?.class === 'premium') {
-      return ['shared', 'dedicated'];
-    } else {
-      return ['premium'];
-    }
-  };
+  const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
+    dbTypes,
+    currentPlanType?.class
+  );
 
   const disabledTabsConfig: {
     disabledTabs: string[];
     disabledTabsCopy: string;
   } = React.useMemo(() => {
-    // For new database clusters, restrict plan types based on the current plan
-    if (isDefaultDatabase(database) && flags.databaseRestrictPlanResize) {
+    if (
+      !flags.databaseRestrictPlanResize ||
+      (flags.databaseResizeGenerationalPlans &&
+        currentPlanType?.class === 'premium')
+    ) {
       return {
-        disabledTabsCopy: premiumRestrictedTabsCopy,
-        disabledTabs: restrictPlanTypes(),
+        disabledTabs: [],
+        disabledTabsCopy: '',
       };
     }
-    // Disable shared tab for legacy database clusters when cluster size is 2
-    if (!isNewDatabaseGA && isDisabledSharedTab) {
+
+    if (!isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
       return {
-        disabledTabsCopy: RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT,
+        disabledTabs: ['shared', 'dedicated'],
+        disabledTabsCopy: RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+      };
+    }
+
+    if (isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
+      return {
         disabledTabs: ['shared'],
+        disabledTabsCopy:
+          RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
+      };
+    }
+
+    if (
+      isGenerationalPlansEnabled &&
+      flags.databaseResizeGenerationalPlans &&
+      currentPlanType?.class !== 'premium'
+    ) {
+      return {
+        disabledTabs: ['premium'],
+        disabledTabsCopy: 'Premium CPUs are now called G7 Dedicated plans.',
       };
     }
 
     return {
-      disabledTabs: [],
-      disabledTabsCopy: '',
+      disabledTabs: ['premium'],
+      disabledTabsCopy: RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
     };
-  }, [database, flags, isNewDatabaseGA]);
+  }, [
+    currentPlanType?.class,
+    flags.databaseResizeGenerationalPlans,
+    flags.databaseRestrictPlanResize,
+    isGenerationalPlansEnabled,
+  ]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -314,12 +332,33 @@ export const DatabaseResize = () => {
     setSelectedTab(initialTab);
   }, []);
 
-  const disabledPlans = isSmallerOrEqualCurrentPlan(
+  const disabledPlansDueToDiskSize = isSmallerOrEqualCurrentPlan(
     currentPlan?.id,
     database?.used_disk_size_gb,
     displayTypes,
     isNewDatabaseGA
   );
+
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  const isCurrentPlanAPremiumPlan =
+    currentPlan?.class.includes('premium') ||
+    currentPlan?.id.includes('g7-dedicated');
+
+  const disabledResizeToPremiumPlans =
+    !flags.databaseResizeGenerationalPlans && !isCurrentPlanAPremiumPlan
+      ? displayTypes.filter(
+          (type) =>
+            type.class.includes('premium') || type.id.includes('g7-dedicated')
+        )
+      : [];
+
+  const disabledResizeFromPremiumPlans =
+    !flags.databaseResizeGenerationalPlans && isCurrentPlanAPremiumPlan
+      ? displayTypes.filter(
+          (type) =>
+            !type.class.includes('premium') && !type.id.includes('g7-dedicated')
+        )
+      : [];
 
   const shouldSubmitBeDisabled = React.useMemo(() => {
     return !summaryText;
@@ -405,7 +444,10 @@ export const DatabaseResize = () => {
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           disabled={disabled}
-          disabledSmallerPlans={disabledPlans}
+          // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+          disabledResizeFromPremiumPlans={disabledResizeFromPremiumPlans}
+          disabledResizeToPremiumPlans={disabledResizeToPremiumPlans}
+          disabledSmallerPlans={disabledPlansDueToDiskSize}
           disabledTabs={disabledTabsConfig.disabledTabs}
           flow="database"
           handleTabChange={handleTabChange}
