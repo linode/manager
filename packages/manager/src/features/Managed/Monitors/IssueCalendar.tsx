@@ -1,5 +1,5 @@
+import { getUserTimezone } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
-import { getUserTimezone } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
