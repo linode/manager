@@ -118,6 +118,29 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
         quantity: 3,
       },
     ],
+    valkey: [
+      {
+        price: {
+          hourly: 0.08,
+          monthly: 80,
+        },
+        quantity: 1,
+      },
+      {
+        price: {
+          hourly: 0.1,
+          monthly: 114,
+        },
+        quantity: 2,
+      },
+      {
+        price: {
+          hourly: 0.2,
+          monthly: 170,
+        },
+        quantity: 3,
+      },
+    ],
   },
   id: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
   label: Factory.each((i) => `Linode ${i} GB`),
@@ -126,10 +149,6 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
 });
 
 const adb10 = (i: number) => i % 2 === 0;
-
-export const getEngineConfig = (engine: string) => {
-  return engine === 'mysql' ? mysqlEngineConfig : postgresqlEngineConfig;
-};
 
 const mysqlEngineConfig = {
   mysql: {
@@ -152,9 +171,24 @@ const postgresqlEngineConfig = {
   },
 };
 
+const valkeyEngineConfig = {
+  valkey_number_of_databases: 5,
+};
+
+const configsByEngine = {
+  mysql: mysqlEngineConfig,
+  postgresql: postgresqlEngineConfig,
+  valkey: valkeyEngineConfig,
+};
+
+export const getEngineConfig = (engine: Engine) => {
+  return configsByEngine[engine];
+};
+
 export const databaseInstanceFactory =
   Factory.Sync.makeFactory<DatabaseInstance>({
     allow_list: [],
+    available_restore_times: null,
     cluster_size: Factory.each((i) =>
       adb10(i)
         ? ([1, 3][i % 2] as ClusterSize)
@@ -163,9 +197,12 @@ export const databaseInstanceFactory =
     connection_strings: [],
     created: '2021-12-09T17:15:12',
     encrypted: false,
-    engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
-    engine_config: Factory.each((i) =>
-      adb10(i) ? mysqlEngineConfig : postgresqlEngineConfig
+    engine: Factory.each(
+      (i) => ['mysql', 'postgresql', 'valkey'][i % 3] as Engine
+    ),
+    engine_config: Factory.each(
+      (i) =>
+        [mysqlEngineConfig, postgresqlEngineConfig, valkeyEngineConfig][i % 3]
     ),
     hosts: Factory.each((i) =>
       adb10(i)
@@ -221,11 +258,12 @@ export const databaseInstanceFactory =
       ],
       week_of_month: null,
     },
-    version: Factory.each((i) => ['8.0.30', '15.7'][i % 2]),
+    version: Factory.each((i) => ['8.0.30', '15.7', '8.1'][i % 3]),
   });
 
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   allow_list: [...IPv4List],
+  available_restore_times: null,
   cluster_size: Factory.each(() => pickRandom([1, 3])),
   connection_strings: [
     {
@@ -236,9 +274,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   created: '2021-12-09T17:15:12',
   encrypted: false,
   engine: 'mysql',
-  engine_config: Factory.each((i) =>
-    adb10(i) ? mysqlEngineConfig : postgresqlEngineConfig
-  ),
+  engine_config: mysqlEngineConfig,
   hosts: Factory.each((i) =>
     adb10(i)
       ? {
@@ -495,6 +531,20 @@ export const postgresConfigResponse = {
     type: 'string',
   },
 };
-export const databaseEngineConfigFactory = Factory.each((i) =>
-  adb10(i) ? mysqlConfigResponse : postgresConfigResponse
+
+export const valkeyConfigResponse = {
+  valkey_number_of_databases: {
+    description:
+      'Set number of Valkey databases. Changing this will cause a restart of the Valkey service.',
+    example: 16,
+    maximum: 128,
+    minimum: 1,
+    requires_restart: true,
+    type: 'integer',
+  },
+};
+
+export const databaseEngineConfigFactory = Factory.each(
+  (i) =>
+    [mysqlConfigResponse, postgresConfigResponse, valkeyConfigResponse][i - 1] // Access first config response by providing 0 to build. Factory index starts at 1 due to factoryProxyHandler
 );

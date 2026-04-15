@@ -219,6 +219,7 @@ export const toDatabaseFork = (
 export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
+  valkey: 'Valkey',
 } as const;
 
 export const getDatabasesDescription = (
