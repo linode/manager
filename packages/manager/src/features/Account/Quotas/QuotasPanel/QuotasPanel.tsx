@@ -52,7 +52,6 @@ export const QuotasPanel: React.FC<QuotasPanelProps> = ({ service, scope }) => {
           <Stack spacing={1}>
             <ScopeValueSelect
               additionalProps={service.scopes[scope]?.scopeValueSelectorProps}
-              data-testid="scope-value-select"
               onChange={(value) => setScopeValue(value)}
               scope={scope}
               sx={{ flexGrow: 1, mr: 2 }}
