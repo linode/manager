@@ -2,18 +2,18 @@ import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Select } from '@linode/ui';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 
+import type { Region } from '@linode/api-v4';
 import type { SelectOption, SelectProps } from '@linode/ui';
 import type {
   QuotaScope,
   ScopeValueSelectorProps,
 } from 'src/features/Account/Quotas/quotaServices';
-import {useState} from "react";
-import {Region} from "@linode/api-v4";
 
 type EndpointSelectOption = SelectOption<string>;
 
@@ -44,11 +44,11 @@ export const ScopeValueSelect: React.FC<ScopeValueSelectProps> = ({
   const { data: endpoints, isFetching: isFetchingEndpoints } =
     useObjectStorageEndpoints(scope === 'obj-endpoint');
 
-  const handleRegionChange = (_: any, region: Region | null) => {
+  const handleRegionChange = (_: any, region: null | Region) => {
     const regionId = region?.id ?? null;
     setSelectedRegion(regionId);
     onChange(regionId);
-  }
+  };
 
   const sortedEndpoints: EndpointSelectOption[] = React.useMemo(() => {
     return (endpoints ?? [])
