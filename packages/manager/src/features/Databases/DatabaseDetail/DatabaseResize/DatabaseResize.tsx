@@ -229,10 +229,10 @@ export const DatabaseResize = () => {
       return undefined;
     }
 
-    const price = selectedPlanType.engines[selectedEngine].find(
+    const price = selectedPlanType.engines[selectedEngine]?.find(
       (cluster: DatabaseClusterSizeObject) => cluster.quantity === clusterSize
     )?.price as DatabasePriceObject;
-    const resizeBasePrice = selectedPlanType.engines[selectedEngine][0]
+    const resizeBasePrice = selectedPlanType.engines[selectedEngine]?.[0]
       .price as DatabasePriceObject;
     const currentPlanPrice = `$${resizeBasePrice?.monthly}/month`;
 
@@ -288,7 +288,7 @@ export const DatabaseResize = () => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
 
-      const nodePricing = type.engines[selectedEngine].find(
+      const nodePricing = type.engines[selectedEngine]?.find(
         (cluster: DatabaseClusterSizeObject) =>
           selectedTab === 1 && database.cluster_size === 2
             ? cluster.quantity === 3
