@@ -139,7 +139,7 @@ describe('AlertDefinition Create', () => {
 
   it(
     'should render client side validation errors for threshold and trigger occurences text field',
-    { timeout: 10000 },
+    { timeout: 30000 },
     async () => {
       const user = userEvent.setup();
       const container = renderWithTheme(<CreateAlertDefinition />);

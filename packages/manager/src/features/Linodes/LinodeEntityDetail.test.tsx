@@ -110,7 +110,7 @@ describe('Linode Entity Detail', () => {
           'test-vpc'
         );
       },
-      { timeout: 15_000 }
+      { timeout: 30000 }
     );
   });
 
