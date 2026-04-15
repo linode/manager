@@ -49,6 +49,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
+  { flag: 'passwordlessLinodes', label: 'PasswordLess Linodes' },
   {
     flag: 'placementGroupPolicyUpdate',
     label: 'Placement Group Policy Update',
@@ -59,6 +60,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
+  {
+    flag: 'databaseResizeGenerationalPlans',
+    label: 'Database Resize Generational Plans',
+  },
   { flag: 'databasePgBouncer', label: 'Database PgBouncer' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
@@ -69,11 +74,15 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'databaseRestrictPlanResize',
     label: 'Database Restrict Premium Plan Resize',
   },
+  {
+    flag: 'databaseValkey',
+    label: 'Database Valkey',
+  },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'IAM enabled & Beta' },
   {
-    flag: 'iamLimitedAvailabilityBadges',
-    label: 'IAM Limited Availability Badges',
+    flag: 'iamNewBadge',
+    label: 'IAM New Badge',
   },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   {
@@ -94,6 +103,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'Object Storage Contextual Metrics',
   },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
+  { flag: 'vpcDbaasResources', label: 'VPC DBaaS Resources' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
   { flag: 'reserveIp', label: 'Reserve IP' },
   { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },

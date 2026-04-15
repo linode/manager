@@ -1,3 +1,4 @@
+import { streamStatus } from '@linode/api-v4';
 import {
   screen,
   waitFor,
@@ -16,6 +17,8 @@ import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit'
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+
+const user = userEvent.setup({ delay: null });
 
 const loadingTestId = 'circle-progress';
 const streamId = 123;
@@ -85,164 +88,170 @@ describe('StreamEdit', () => {
     expect(screen.getByText('file')).toBeVisible();
   });
 
-  describe(
-    'given Test Connection and Edit Stream buttons',
-    { timeout: 10000 },
-    () => {
-      const testConnectionButtonText = 'Test Connection';
-      const saveStreamButtonText = 'Save Changes';
+  describe('given Test Connection and Save Changes buttons', () => {
+    const testConnectionButtonText = 'Test Connection';
+    const saveStreamButtonText = 'Save Changes';
 
-      const fillOutNewDestinationForm = async () => {
-        const destinationNameInput = screen.getByLabelText('Destination Name');
-        await userEvent.type(destinationNameInput, 'Test destination name');
-        const createNewTestDestination = await screen.findByText(
-          'Test destination name',
-          { exact: false }
-        );
-        await userEvent.click(createNewTestDestination);
+    const fillOutNewDestinationForm = async () => {
+      const destinationNameInput = screen.getByLabelText('Destination Name');
+      await user.clear(destinationNameInput);
+      await user.type(destinationNameInput, 'Test destination name');
+      const createNewTestDestination = await screen.findByText(
+        'Test destination name',
+        { exact: false }
+      );
+      await user.click(createNewTestDestination);
 
-        // Switch to manual bucket entry mode
-        const manualRadio = screen.getByLabelText(
-          'Enter Bucket details manually'
-        );
-        await userEvent.click(manualRadio);
+      // Switch to manual bucket entry mode
+      const manualRadio = screen.getByLabelText(
+        'Enter Bucket details manually'
+      );
+      await user.click(manualRadio);
 
-        const endpointInput = screen.getByLabelText('Endpoint');
-        await waitFor(() => {
-          expect(endpointInput).toBeDefined();
+      const endpointInput = screen.getByLabelText('Endpoint');
+      await waitFor(() => {
+        expect(endpointInput).toBeDefined();
+      });
+      await user.type(endpointInput, 'test');
+      const bucketInput = screen.getByLabelText('Bucket');
+      await user.type(bucketInput, 'test');
+      const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+      await user.type(accessKeyIDInput, 'Test');
+      const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+      await user.type(secretAccessKeyInput, 'Test');
+      const logPathPrefixInput = screen.getByLabelText(
+        'Log Path Prefix (optional)'
+      );
+      await user.type(logPathPrefixInput, 'Test');
+    };
+
+    describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
+      describe('and creating new destination', () => {
+        const editStreamSpy = vi.fn();
+        const createDestinationSpy = vi.fn();
+        const verifyDestinationSpy = vi.fn();
+
+        it("should enable Save Changes button and perform proper calls when it's clicked", async () => {
+          server.use(
+            http.get('*/monitor/streams/destinations', () => {
+              return HttpResponse.json(makeResourcePage(mockDestinations));
+            }),
+            http.post('*/monitor/streams/destinations/verify', () => {
+              verifyDestinationSpy();
+              return HttpResponse.json({});
+            }),
+            http.post('*/monitor/streams/destinations', () => {
+              createDestinationSpy();
+              return HttpResponse.json(mockDestinations[0]);
+            }),
+            http.get(`*/monitor/streams/${streamId}`, () => {
+              return HttpResponse.json(mockStream);
+            }),
+            http.put(`*/monitor/streams/${streamId}`, () => {
+              editStreamSpy();
+              return HttpResponse.json({});
+            })
+          );
+
+          renderWithThemeAndHookFormContext({
+            component: <StreamEdit />,
+          });
+
+          const loadingElement = screen.queryByTestId(loadingTestId);
+          await waitForElementToBeRemoved(loadingElement);
+          await fillOutNewDestinationForm();
+
+          const testConnectionButton = screen.getByRole('button', {
+            name: testConnectionButtonText,
+          });
+          const saveStreamButton = screen.getByRole('button', {
+            name: saveStreamButtonText,
+          });
+          expect(saveStreamButton).toBeDisabled();
+
+          // Test connection
+          await user.click(testConnectionButton);
+          expect(verifyDestinationSpy).toHaveBeenCalled();
+
+          await waitFor(() => {
+            expect(saveStreamButton).toBeEnabled();
+          });
+
+          // Edit stream
+          await user.click(saveStreamButton);
+
+          expect(createDestinationSpy).toHaveBeenCalled();
+          await waitFor(() => {
+            expect(editStreamSpy).toHaveBeenCalled();
+          });
         });
-        await userEvent.type(endpointInput, 'test');
-        const bucketInput = screen.getByLabelText('Bucket');
-        await userEvent.type(bucketInput, 'test');
-        const accessKeyIDInput = screen.getByLabelText('Access Key ID');
-        await userEvent.type(accessKeyIDInput, 'Test');
-        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
-        await userEvent.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText(
-          'Log Path Prefix (optional)'
-        );
-        await userEvent.type(logPathPrefixInput, 'Test');
-      };
+      });
 
-      describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
-        describe('and creating new destination', () => {
-          const editStreamSpy = vi.fn();
-          const createDestinationSpy = vi.fn();
-          const verifyDestinationSpy = vi.fn();
+      describe('and selected existing destination', () => {
+        const editStreamSpy = vi.fn();
+        const createDestinationSpy = vi.fn();
 
-          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
-            server.use(
-              http.get('*/monitor/streams/destinations', () => {
-                return HttpResponse.json(makeResourcePage(mockDestinations));
-              }),
-              http.post('*/monitor/streams/destinations/verify', () => {
-                verifyDestinationSpy();
-                return HttpResponse.json({});
-              }),
-              http.post('*/monitor/streams/destinations', () => {
-                createDestinationSpy();
-                return HttpResponse.json(mockDestinations[0]);
-              }),
-              http.get(`*/monitor/streams/${streamId}`, () => {
-                return HttpResponse.json(mockStream);
-              }),
-              http.put(`*/monitor/streams/${streamId}`, () => {
-                editStreamSpy();
-                return HttpResponse.json({});
-              })
-            );
+        it("should enable Save Changes button and perform proper calls when it's clicked", async () => {
+          server.use(
+            http.get('*/monitor/streams/destinations', () => {
+              return HttpResponse.json(makeResourcePage(mockDestinations));
+            }),
+            http.post('*/monitor/streams/destinations', () => {
+              createDestinationSpy();
+              return HttpResponse.json(mockDestinations[0]);
+            }),
+            http.get(`*/monitor/streams/${streamId}`, () => {
+              return HttpResponse.json(mockStream);
+            }),
+            http.put(`*/monitor/streams/${streamId}`, () => {
+              editStreamSpy();
+              return HttpResponse.json({});
+            })
+          );
 
-            renderWithThemeAndHookFormContext({
-              component: <StreamEdit />,
-            });
+          renderWithThemeAndHookFormContext({
+            component: <StreamEdit />,
+          });
+          const loadingElement = screen.queryByTestId(loadingTestId);
+          await waitForElementToBeRemoved(loadingElement);
 
-            const loadingElement = screen.queryByTestId(loadingTestId);
-            await waitForElementToBeRemoved(loadingElement);
-            await fillOutNewDestinationForm();
+          // Change name and leave existing destination
+          const streamNameInput = screen.getByLabelText('Stream Name');
+          await user.type(streamNameInput, 'Test');
 
-            const testConnectionButton = screen.getByRole('button', {
-              name: testConnectionButtonText,
-            });
-            const saveStreamButton = screen.getByRole('button', {
-              name: saveStreamButtonText,
-            });
-            expect(saveStreamButton).toBeDisabled();
+          const testConnectionButton = screen.getByRole('button', {
+            name: testConnectionButtonText,
+          });
+          const editStreamButton = screen.getByRole('button', {
+            name: saveStreamButtonText,
+          });
 
-            // Test connection
-            await userEvent.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
+          // Save Changes button should not be disabled with existing destination selected
+          expect(editStreamButton).toBeEnabled();
 
-            await waitFor(() => {
-              expect(saveStreamButton).toBeEnabled();
-            });
+          // Test connection should be disabled when using existing destination
+          expect(testConnectionButton).toBeDisabled();
 
-            // Edit stream
-            await userEvent.click(saveStreamButton);
+          // Edit stream
+          await user.click(editStreamButton);
 
-            expect(createDestinationSpy).toHaveBeenCalled();
-            await waitFor(() => {
-              expect(editStreamSpy).toHaveBeenCalled();
-            });
+          // New destination should not be created with existing destination selected
+          expect(createDestinationSpy).not.toHaveBeenCalled();
+          await waitFor(() => {
+            expect(editStreamSpy).toHaveBeenCalled();
           });
         });
 
-        describe('and selected existing destination', () => {
-          const editStreamSpy = vi.fn();
-          const createDestinationSpy = vi.fn();
+        const blockingStatuses = [
+          streamStatus.Deactivating,
+          streamStatus.Failed,
+          streamStatus.Provisioning,
+        ];
 
-          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
-            server.use(
-              http.get('*/monitor/streams/destinations', () => {
-                return HttpResponse.json(makeResourcePage(mockDestinations));
-              }),
-              http.post('*/monitor/streams/destinations', () => {
-                createDestinationSpy();
-                return HttpResponse.json(mockDestinations[0]);
-              }),
-              http.get(`*/monitor/streams/${streamId}`, () => {
-                return HttpResponse.json(mockStream);
-              }),
-              http.put(`*/monitor/streams/${streamId}`, () => {
-                editStreamSpy();
-                return HttpResponse.json({});
-              })
-            );
-
-            renderWithThemeAndHookFormContext({
-              component: <StreamEdit />,
-            });
-            const loadingElement = screen.queryByTestId(loadingTestId);
-            await waitForElementToBeRemoved(loadingElement);
-
-            // Change name and leave existing destination
-            const streamNameInput = screen.getByLabelText('Stream Name');
-            await userEvent.type(streamNameInput, 'Test');
-
-            const testConnectionButton = screen.getByRole('button', {
-              name: testConnectionButtonText,
-            });
-            const editStreamButton = screen.getByRole('button', {
-              name: saveStreamButtonText,
-            });
-
-            // Edit stream button should not be disabled with existing destination selected
-            expect(editStreamButton).toBeEnabled();
-
-            // Test connection should be disabled when using existing destination
-            expect(testConnectionButton).toBeDisabled();
-
-            // Edit stream
-            await userEvent.click(editStreamButton);
-
-            // New destination should not be created with existing destination selected
-            expect(createDestinationSpy).not.toHaveBeenCalled();
-            await waitFor(() => {
-              expect(editStreamSpy).toHaveBeenCalled();
-            });
-          });
-
-          describe('and stream has status: provisioning', () => {
-            it('should have disabled Edit Stream button and show info tooltip', async () => {
+        describe.each(blockingStatuses)(
+          'and stream has status: %status',
+          (status) => {
+            it('should have disabled Save Changes button and show info tooltip', async () => {
               server.use(
                 http.get('*/monitor/streams/destinations', () => {
                   return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -250,7 +259,7 @@ describe('StreamEdit', () => {
                 http.get(`*/monitor/streams/${streamId}`, () => {
                   return HttpResponse.json({
                     ...mockStream,
-                    status: 'provisioning',
+                    status,
                   });
                 })
               );
@@ -265,66 +274,71 @@ describe('StreamEdit', () => {
                 name: saveStreamButtonText,
               });
 
-              // Edit stream button should be disabled
+              // Save Changes button should be disabled
               expect(editStreamButton).toBeDisabled();
 
               // Edit stream
-              await userEvent.hover(editStreamButton);
+              await user.hover(editStreamButton);
+              await screen.findByRole('tooltip');
 
-              await waitFor(() => {
-                expect(screen.getByRole('tooltip')).toBeInTheDocument();
-              });
+              screen.getByText((content) =>
+                content.includes(
+                  `You cannot save changes while the stream status is ${status}`
+                )
+              );
 
-              const disabledButtonTooltip = screen.getByText(
-                'You cannot save changes while the stream is provisioning.'
+              const disabledButtonTooltip = screen.getByText((content) =>
+                content.includes(
+                  `You cannot save changes while the stream status is ${status}`
+                )
               );
 
               expect(disabledButtonTooltip).toBeInTheDocument();
             });
-          });
-        });
+          }
+        );
       });
+    });
 
-      describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
-        const verifyDestinationSpy = vi.fn();
+    describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
+      const verifyDestinationSpy = vi.fn();
 
-        it('should not enable Edit Stream button', async () => {
-          server.use(
-            http.get('*/monitor/streams/destinations', () => {
-              return HttpResponse.json(makeResourcePage(mockDestinations));
-            }),
-            http.post('*/monitor/streams/destinations/verify', () => {
-              verifyDestinationSpy();
-              return HttpResponse.error();
-            }),
-            http.get(`*/monitor/streams/${streamId}`, () => {
-              return HttpResponse.json(mockStream);
-            })
-          );
+      it('should not enable Save Changes button', async () => {
+        server.use(
+          http.get('*/monitor/streams/destinations', () => {
+            return HttpResponse.json(makeResourcePage(mockDestinations));
+          }),
+          http.post('*/monitor/streams/destinations/verify', () => {
+            verifyDestinationSpy();
+            return HttpResponse.error();
+          }),
+          http.get(`*/monitor/streams/${streamId}`, () => {
+            return HttpResponse.json(mockStream);
+          })
+        );
 
-          renderWithThemeAndHookFormContext({
-            component: <StreamEdit />,
-          });
-          const loadingElement = screen.queryByTestId(loadingTestId);
-          await waitForElementToBeRemoved(loadingElement);
-
-          const testConnectionButton = screen.getByRole('button', {
-            name: testConnectionButtonText,
-          });
-          const saveStreamButton = screen.getByRole('button', {
-            name: saveStreamButtonText,
-          });
-
-          await fillOutNewDestinationForm();
-
-          expect(saveStreamButton).toBeDisabled();
-
-          await userEvent.click(testConnectionButton);
-
-          expect(verifyDestinationSpy).toHaveBeenCalled();
-          expect(saveStreamButton).toBeDisabled();
+        renderWithThemeAndHookFormContext({
+          component: <StreamEdit />,
         });
+        const loadingElement = screen.queryByTestId(loadingTestId);
+        await waitForElementToBeRemoved(loadingElement);
+
+        const testConnectionButton = screen.getByRole('button', {
+          name: testConnectionButtonText,
+        });
+        const saveStreamButton = screen.getByRole('button', {
+          name: saveStreamButtonText,
+        });
+
+        await fillOutNewDestinationForm();
+
+        expect(saveStreamButton).toBeDisabled();
+
+        await user.click(testConnectionButton);
+
+        expect(verifyDestinationSpy).toHaveBeenCalled();
+        expect(saveStreamButton).toBeDisabled();
       });
-    }
-  );
+    });
+  });
 });

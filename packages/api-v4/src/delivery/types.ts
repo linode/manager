@@ -1,5 +1,7 @@
 export const streamStatus = {
   Active: 'active',
+  Deactivating: 'deactivating',
+  Failed: 'failed',
   Inactive: 'inactive',
   Provisioning: 'provisioning',
 } as const;

@@ -50,6 +50,16 @@ export const streamStatusOptions: AutocompleteOption[] = [
     pendoId: 'Logs Delivery Streams-Status Active',
   },
   {
+    value: streamStatus.Deactivating,
+    label: 'Deactivating',
+    pendoId: 'Logs Delivery Streams-Status Deactivating',
+  },
+  {
+    value: streamStatus.Failed,
+    label: 'Failed',
+    pendoId: 'Logs Delivery Streams-Status Failed',
+  },
+  {
     value: streamStatus.Inactive,
     label: 'Inactive',
     pendoId: 'Logs Delivery Streams-Status Inactive',

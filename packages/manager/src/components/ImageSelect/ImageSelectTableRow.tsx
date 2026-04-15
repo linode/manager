@@ -58,7 +58,7 @@ export const ImageSelectTableRow = (props: Props) => {
     id,
     image_sharing,
     label,
-    regions: imageRegions,
+    regions: _imageRegions,
     size,
     status,
     type,
@@ -87,6 +87,8 @@ export const ImageSelectTableRow = (props: Props) => {
 
     return '—';
   };
+
+  const imageRegions = _imageRegions ?? []; // Failsafe for manual images whose `regions` property is null
 
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
@@ -147,7 +149,9 @@ export const ImageSelectTableRow = (props: Props) => {
                 ? pluralize('Region', 'Regions', imageRegions.length)
                 : '—'
             }
-            tooltipText={<FormattedRegionList />}
+            tooltipText={
+              imageRegions?.length > 0 ? <FormattedRegionList /> : 'N/A'
+            }
           />
         </TableCell>
       </Hidden>
