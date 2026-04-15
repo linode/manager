@@ -29,6 +29,7 @@ export interface LandingHeaderProps {
   onButtonClick?: () => void;
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onDocsClick?: () => void;
+  pendoId?: string;
   removeCrumbX?: number | number[];
   shouldHideDocsAndCreateButtons?: boolean;
   spacingBottom?: 0 | 4 | 16 | 24;
@@ -46,6 +47,7 @@ export const LandingHeader = ({
   breadcrumbProps,
   buttonDataAttrs,
   createButtonText,
+  pendoId,
   disabledBreadcrumbEditButton,
   disabledCreateButton,
   docsLabel,
@@ -98,6 +100,7 @@ export const LandingHeader = ({
           {...breadcrumbDataAttrs}
           {...breadcrumbProps}
           disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
+          pendoId={pendoId}
         />
       </Grid>
       {!shouldHideDocsAndCreateButtons && (

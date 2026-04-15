@@ -18,8 +18,7 @@ export const DefaultsLanding = () => {
   const navigate = useNavigate();
   const flags = useFlags();
   const { isIAMEnabled } = useIsIAMEnabled();
-  const showLimitedAvailabilityBadges =
-    flags.iamLimitedAvailabilityBadges && isIAMEnabled;
+  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
@@ -46,7 +45,7 @@ export const DefaultsLanding = () => {
               label: (
                 <>
                   {IAM_LABEL}
-                  {showLimitedAvailabilityBadges ? (
+                  {showNewBadge ? (
                     <NewFeatureChip sx={{ position: 'relative', top: -1 }} />
                   ) : null}
                 </>

@@ -125,7 +125,7 @@ export const StreamsLanding = () => {
   }
 
   const handleEdit = ({ id }: Stream) => {
-    navigate({ to: `/logs/delivery/streams/${id}/edit` });
+    navigate({ to: `/logs/delivery/streams/${id}/summary` });
   };
 
   const openDeleteDialog = (stream: Stream) => {

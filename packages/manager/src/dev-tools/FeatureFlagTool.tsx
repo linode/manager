@@ -49,6 +49,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
+  { flag: 'passwordlessLinodes', label: 'PasswordLess Linodes' },
   {
     flag: 'placementGroupPolicyUpdate',
     label: 'Placement Group Policy Update',
@@ -59,6 +60,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
+  {
+    flag: 'databaseResizeGenerationalPlans',
+    label: 'Database Resize Generational Plans',
+  },
   { flag: 'databasePgBouncer', label: 'Database PgBouncer' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
@@ -76,8 +81,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'IAM enabled & Beta' },
   {
-    flag: 'iamLimitedAvailabilityBadges',
-    label: 'IAM Limited Availability Badges',
+    flag: 'iamNewBadge',
+    label: 'IAM New Badge',
   },
   { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
   {

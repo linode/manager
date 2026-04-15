@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type {
   AccountMaintenance,
+  DatabaseTypeClass,
   Linode,
   LinodeTypeClass,
   MaintenancePolicySlug,
@@ -91,6 +92,21 @@ export const useIsLinodeCloneFirewallEnabled = () => {
 };
 
 /**
+ * Returns whether or not the feature for deploying Linodes without a root
+ * password should be enabled.
+ *
+ * When enabled, root_pass is optional if authorized_users are provided.
+ * When disabled, root_pass is strictly required.
+ */
+export const useIsPasswordLessLinodesEnabled = () => {
+  const flags = useFlags();
+
+  return {
+    isPasswordLessLinodesEnabled: Boolean(flags.passwordlessLinodes),
+  };
+};
+
+/**
  * Returns whether or not features related to the Generational Compute Plans
  * should be enabled.
  *
@@ -106,7 +122,7 @@ export const useIsLinodeCloneFirewallEnabled = () => {
  */
 export const useIsGenerationalPlansEnabled = (
   plans: Array<{ id: string }> | undefined,
-  planType: LinodeTypeClass | undefined
+  planType: DatabaseTypeClass | LinodeTypeClass | undefined
 ) => {
   const flags = useFlags();
 
@@ -150,5 +166,6 @@ export const useIsGenerationalPlansEnabled = (
     isGenerationalPlansEnabled:
       isFlagEnabled && !shouldDisableDueToUnavailability,
     allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
+    hasG7DedicatedPlans,
   };
 };

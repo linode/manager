@@ -141,7 +141,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
-  const showLimitedAvailabilityBadges = flags.iamLimitedAvailabilityBadges;
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
@@ -331,7 +330,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Identity & Access',
                 hide: !isIAMEnabled,
                 to: '/iam',
-                isNew: isIAMEnabled && showLimitedAvailabilityBadges,
+                isNew: isIAMEnabled && flags.iamNewBadge,
               },
               {
                 display: 'Quotas',
