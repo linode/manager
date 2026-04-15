@@ -14,8 +14,8 @@ import {
   transactionDateOptions,
 } from './BillingActivityPanel';
 
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
+vi.mock('@akamai/compute-ui-core/datetime', async () => {
+  const actual = await vi.importActual('@akamai/compute-ui-core/datetime');
   return {
     ...actual,
     getUserTimezone: vi.fn().mockReturnValue('utc'),
