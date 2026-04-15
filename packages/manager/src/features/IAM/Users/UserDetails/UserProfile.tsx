@@ -2,7 +2,7 @@ import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
   // ErrorState,
-  NotFound,
+  // NotFound,
   Notice,
   Stack,
 } from '@linode/ui';
@@ -11,6 +11,7 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
+import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { DeleteUserPanel } from './DeleteUserPanel';
