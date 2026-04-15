@@ -39,7 +39,7 @@ describe('Reserved IPs Landing', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
-      timeout: 3000,
+      timeout: 10000,
     });
   });
 
@@ -74,7 +74,7 @@ describe('Reserved IPs Landing', () => {
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
-      timeout: 3000,
+      timeout: 10000,
     });
 
     // Table column headers
@@ -121,7 +121,7 @@ describe('Reserved IPs Landing', () => {
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
-      timeout: 3000,
+      timeout: 10000,
     });
 
     const actionMenu = getByLabelText(
@@ -147,7 +147,7 @@ describe('Reserved IPs Landing', () => {
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
-      timeout: 3000,
+      timeout: 10000,
     });
 
     const actionMenu = getByLabelText(

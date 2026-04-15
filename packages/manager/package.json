@@ -101,7 +101,7 @@
     "lint": "eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
-    "test": "vitest run",
+    "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest run",
     "test:ui": "vitest --ui",
     "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",

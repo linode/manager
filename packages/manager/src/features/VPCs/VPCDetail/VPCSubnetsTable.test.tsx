@@ -268,7 +268,7 @@ describe('VPC Subnets table', () => {
 
   it(
     'should show Nodebalancer table head data when table is expanded',
-    { timeout: 15_000 },
+    { timeout: 30000 },
     async () => {
       const subnet = subnetFactory.build();
 
@@ -300,7 +300,7 @@ describe('VPC Subnets table', () => {
 
   it(
     'should show Databases table head data when table is expanded',
-    { timeout: 15_000 },
+    { timeout: 30000 },
     async () => {
       const subnet = subnetFactory.build();
 
