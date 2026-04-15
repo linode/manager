@@ -123,7 +123,7 @@ export const objectStorageQuotaService = (
         ? ({
             global: { apiCollection: 'global-quotas' },
           } satisfies Partial<Record<QuotaScope, QuotaScopeDefinition>>)
-        : null),
+        : {}),
       'obj-endpoint': {
         apiCollection: 'quotas',
         apiFilterFunction: (endpoint: string) => ({ s3_endpoint: endpoint }),

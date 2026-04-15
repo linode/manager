@@ -73,7 +73,7 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
           >
             <Typography>{endpoint}</Typography>
 
-            {!quotaWithUsage.fetchingUsageFailed ? (
+            {quotaWithUsage && !quotaWithUsage.fetchingUsageFailed ? (
               <QuotaUsageBar
                 limit={quotaWithUsage.quota.quota_limit}
                 resourceMetric={quotaWithUsage.quota.resource_metric}
