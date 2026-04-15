@@ -77,12 +77,23 @@ export const StreamForm = (props: StreamFormProps) => {
     control,
     name: 'stream.status',
   });
+
+  const isStreamStatusBlocking =
+    !!selectedStreamStatus &&
+    (
+      [
+        streamStatus.Provisioning,
+        streamStatus.Deactivating,
+        streamStatus.Failed,
+      ] as StreamStatus[]
+    ).includes(selectedStreamStatus);
+
   const submitButtonTooltip = useMemo(
     () =>
-      selectedStreamStatus === streamStatus.Provisioning
-        ? 'You cannot save changes while the stream is provisioning.'
+      isStreamStatusBlocking
+        ? `You cannot save changes while the stream status is ${selectedStreamStatus}`
         : undefined,
-    [selectedStreamStatus]
+    [isStreamStatusBlocking, selectedStreamStatus]
   );
 
   useEffect(() => {
@@ -212,8 +223,7 @@ export const StreamForm = (props: StreamFormProps) => {
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
           <FormSubmitBar
             blockSubmit={
-              selectedStreamStatus === streamStatus.Provisioning ||
-              !selectedDestinations?.length
+              isStreamStatusBlocking || !selectedDestinations?.length
             }
             connectionTested={destinationVerified}
             destinationType={destination?.type}

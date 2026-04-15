@@ -135,6 +135,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    */
   customHttpsEnabled?: boolean;
   /**
+   * This property indicates whether to show the "Metrics" tab on Logs Stream details page or not
+   */
+  metricsEnabled?: boolean;
+  /**
    * This property indicates whether the feature is new or not
    */
   new?: boolean;
@@ -238,6 +242,7 @@ export interface Flags {
   databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
+  databaseResizeGenerationalPlans: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseValkey: BetaFeatureFlag;
@@ -253,7 +258,7 @@ export interface Flags {
   hostnameEndpoints: boolean;
   iam: BaseFeatureFlag;
   iamDelegation: BaseFeatureFlag;
-  iamLimitedAvailabilityBadges: boolean;
+  iamNewBadge: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
@@ -276,6 +281,7 @@ export interface Flags {
   objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  passwordlessLinodes: boolean;
   placementGroupPolicyUpdate: boolean;
   privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
