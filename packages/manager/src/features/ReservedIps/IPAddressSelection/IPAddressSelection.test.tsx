@@ -31,17 +31,25 @@ describe('IPAddressSelection', () => {
       expect(reservedRadio).not.toBeChecked();
     });
 
-    it('should render tooltips for both radio options', () => {
-      const { getAllByRole } = renderWithTheme(<IPAddressSelection />);
-      const tooltipForAuto = getAllByRole('button', {
-        name: "A public IPv4 address automatically assigned to your Linode. Use this for standard web traffic that doesn't require a permanent, static IP.",
-      });
-      expect(tooltipForAuto).toHaveLength(1);
-
-      const tooltipForReserved = getAllByRole('button', {
-        name: "A reserved IPv4 address is a static public IP that can be assigned to Linodes in the same region. Use it for services that require a consistent IP address. Charges apply while the IP is reserved, even if it's not assigned to a Linode.",
-      });
-      expect(tooltipForReserved).toHaveLength(1);
+    it('should render tooltips for both radio options', async () => {
+      const { findByText, getAllByTestId } = renderWithTheme(
+        <IPAddressSelection />
+      );
+      const tooltipIcons = getAllByTestId('tooltip-info-icon');
+      expect(tooltipIcons).toHaveLength(2);
+      await userEvent.hover(tooltipIcons[0]);
+      expect(
+        await findByText(
+          "A public IPv4 address automatically assigned to your Linode. Use this for standard web traffic that doesn't require a permanent, static IP."
+        )
+      ).toBeInTheDocument();
+      await userEvent.unhover(tooltipIcons[0]);
+      await userEvent.hover(tooltipIcons[1]);
+      expect(
+        await findByText(
+          "A reserved IPv4 address is a static public IP that can be assigned to Linodes in the same region. Use it for services that require a consistent IP address. Charges apply while the IP is reserved, even if it's not assigned to a Linode."
+        )
+      ).toBeInTheDocument();
     });
 
     it('should not show reserved IP dropdown by default', () => {

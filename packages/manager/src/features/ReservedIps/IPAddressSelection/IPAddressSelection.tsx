@@ -3,17 +3,18 @@ import {
   Autocomplete,
   Box,
   FormControl,
+  FormControlLabel,
   LinkButton,
   Radio,
   RadioGroup,
+  Stack,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { FormControlLabel, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import React, { ChangeEvent } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { ReserveIPDrawer } from 'src/features/ReservedIps/ReserveIPDrawer';
 
 import type { IPAddress } from '@linode/api-v4';
@@ -72,7 +73,7 @@ export const IPAddressSelection = ({
     data: reservedIPs,
     isLoading,
     refetch,
-  } = useReservedIPsQuery({}, {}, value === 'reserved');
+  } = useReservedIPsQuery({}, {}, value === 'reserved' && Boolean(regionId));
 
   const unassignedReservedIPs = React.useMemo<ReservedIPOption[]>(() => {
     if (!reservedIPs?.data) {
@@ -131,7 +132,7 @@ export const IPAddressSelection = ({
               <TooltipIcon
                 status="info"
                 sxTooltipIcon={{ p: 0, ml: 0.5 }}
-                text="A public IPv4 address automatically assigned to your Linode.  Use this for standard web traffic that doesn't require a permanent, static IP."
+                text="A public IPv4 address automatically assigned to your Linode. Use this for standard web traffic that doesn't require a permanent, static IP."
                 tooltipPosition="right"
               />
             </Stack>
@@ -218,11 +219,3 @@ export const IPAddressSelection = ({
     </FormControl>
   );
 };
-
-export const StyledLinkButtonBox = styled(Box, {
-  label: 'StyledLinkButtonBox',
-})({
-  display: 'flex',
-  justifyContent: 'flex-start',
-  marginTop: '12px',
-});
